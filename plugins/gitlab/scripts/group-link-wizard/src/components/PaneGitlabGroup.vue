@@ -192,6 +192,7 @@ function onClickConfigureSelectedGroup(): void {
     background-color: var(--tlp-background-color);
     color: var(--tlp-dimmed-color);
     text-align: center;
+    text-transform: capitalize;
 }
 
 .gitlab-group-full-path {

@@ -24,3 +24,7 @@
 </template>
 
 <script setup lang="ts"></script>
+
+<style lang="scss">
+@use "@tuleap/plugin-gitlab-administration-theme";
+</style>

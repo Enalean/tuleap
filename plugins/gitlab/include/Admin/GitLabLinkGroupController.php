@@ -46,7 +46,8 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
     public function __construct(
         private ProjectByUnixNameFactory $project_manager,
         private EventDispatcherInterface $event_manager,
-        private JavascriptAssetGeneric $assets,
+        private JavascriptAssetGeneric $wizard_assets,
+        private JavascriptAssetGeneric $linked_group_assets,
         private VerifyProjectIsAlreadyLinked $project_linked_verifier,
         private HeaderRenderer $header_renderer,
         private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
@@ -64,48 +65,61 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
         $project = $this->getProject($variables);
 
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Git service is disabled.'));
         }
 
         $user = $request->getCurrentUser();
         if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
-            throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
+            throw new ForbiddenException(dgettext('tuleap-git', 'User is not Git administrator.'));
         }
 
         $is_a_group_already_linked = $this->project_linked_verifier->isProjectAlreadyLinked((int) $project->getID());
-        if (! $is_a_group_already_linked) {
-            $layout->addJavascriptAsset($this->assets);
+
+        $panes_presenter = $this->getPanesPresenter($project);
+
+        if ($is_a_group_already_linked) {
+            $last_sync_date = new \DateTimeImmutable('@1663665327');
+
+            $layout->addJavascriptAsset($this->linked_group_assets);
+            $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);
+            $this->renderer->renderToPage(
+                'linked-group-information',
+                new LinkedGroupPresenter($panes_presenter, $last_sync_date)
+            );
+        } else {
+            $layout->addJavascriptAsset($this->wizard_assets);
+            $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);
+            $this->renderer->renderToPage(
+                'link-group-wizard',
+                new LinkGroupWizardPresenter($panes_presenter, $project)
+            );
         }
-
-        $this->header_renderer->renderServiceAdministrationHeader(
-            $request,
-            $user,
-            $project
-        );
-
-        $event = new GitAdminGetExternalPanePresenters($project, GitLabLinkGroupTabPresenter::PANE_NAME);
-        $this->event_manager->dispatch($event);
-
-        $this->renderer->renderToPage(
-            'git-administration-gitlab-link-group',
-            new GitLabLinkGroupPanePresenter(
-                $project,
-                ! empty($this->mirror_data_mapper->fetchAllForProject($project)),
-                $event->getExternalPanePresenters(),
-                $is_a_group_already_linked
-            )
-        );
 
         $layout->footer([]);
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {
-            throw new NotFoundException(dgettext("tuleap-git", "Project not found."));
+            throw new NotFoundException(dgettext('tuleap-git', 'Project not found.'));
         }
 
         return $project;
+    }
+
+    private function getPanesPresenter(Project $project): GitLabLinkGroupPanePresenter
+    {
+        $event = new GitAdminGetExternalPanePresenters($project, GitLabLinkGroupTabPresenter::PANE_NAME);
+        $this->event_manager->dispatch($event);
+
+        return new GitLabLinkGroupPanePresenter(
+            $project,
+            ! empty($this->mirror_data_mapper->fetchAllForProject($project)),
+            $event->getExternalPanePresenters(),
+        );
     }
 }

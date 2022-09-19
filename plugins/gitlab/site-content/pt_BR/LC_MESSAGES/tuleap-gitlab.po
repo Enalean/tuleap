@@ -6,7 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "A group is already linked to this project."
+msgid "%1$s repository integrated %2$s"
+msgid_plural "%1$s repositories integrated %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Allow artifact closure"
 msgstr ""
 
 #, php-format
@@ -45,13 +50,25 @@ msgstr ""
 msgid "GitLab commit"
 msgstr ""
 
+msgid "GitLab group"
+msgstr ""
+
 msgid "GitLab integration"
 msgstr ""
 
 msgid "GitLab merge request"
 msgstr ""
 
+msgid "GitLab server URL"
+msgstr ""
+
 msgid "GitLab tag"
+msgstr ""
+
+msgid "Last Synchronization"
+msgstr ""
+
+msgid "Linked"
 msgstr ""
 
 msgid "Linked group information"
@@ -72,6 +89,9 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
+msgid "Prefix the branch name"
+msgstr ""
+
 msgid "Provides an integration GitLab to Tuleap."
 msgstr ""
 
@@ -85,6 +105,12 @@ msgid "Reference to a GitLab merge request"
 msgstr ""
 
 msgid "Reference to a GitLab tag"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Synchronize"
 msgstr ""
 
 msgid "The GitLab repository integration cannot be found."
@@ -112,6 +138,15 @@ msgstr ""
 msgid ""
 "Unable to contact the server with the provided token. Please ensure that "
 "token has \"api\" scope. GitLab server error: %s"
+msgstr ""
+
+msgid "Unlink"
+msgstr ""
+
+msgid "Update configuration"
+msgstr ""
+
+msgid "Update token"
 msgstr ""
 
 msgid ""

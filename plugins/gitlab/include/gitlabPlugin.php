@@ -979,6 +979,10 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                 new IncludeViteAssets(__DIR__ . '/../frontend-assets/gitlab-group-link-wizard', '/assets/gitlab/gitlab-group-link-wizard'),
                 'src/index.ts'
             ),
+            new JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../frontend-assets/linked-group', '/assets/gitlab/linked-group'),
+                'src/main.ts'
+            ),
             new GitlabGroupDAO(),
             $git_plugin->getHeaderRenderer(),
             $git_plugin->getMirrorDataMapper(),

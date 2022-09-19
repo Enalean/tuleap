@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.23.0@f1fe6ff483bf325c803df9f510d09a03fd796f88">
+<files psalm-version="4.26.0@6998fabb2bf528b65777bf9941920888d23c03ac">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$project-&gt;getID()</code>
@@ -982,14 +982,12 @@
       <code>rollBack</code>
       <code>startTransaction</code>
     </DeprecatedMethod>
-    <MissingParamType occurrences="3">
-      <code>$label</code>
+    <MissingParamType occurrences="2">
       <code>$label</code>
       <code>$wip_limit</code>
     </MissingParamType>
-    <MissingReturnType occurrences="7">
+    <MissingReturnType occurrences="6">
       <code>checkAllColumnsAreProvided</code>
-      <code>createColumn</code>
       <code>deleteColumn</code>
       <code>hideColumnFromTrackerFieldStaticValues</code>
       <code>reorderColumns</code>
@@ -9779,14 +9777,13 @@
     <PossiblyFalseOperand occurrences="1">
       <code>$oneRestored</code>
     </PossiblyFalseOperand>
-    <PossiblyNullReference occurrences="8">
+    <PossiblyNullReference occurrences="7">
       <code>addItem</code>
       <code>getGroupId</code>
       <code>getId</code>
       <code>getId</code>
       <code>getParentId</code>
       <code>getParentId</code>
-      <code>setPathId</code>
       <code>setPathTitle</code>
     </PossiblyNullReference>
     <PossiblyUndefinedMethod occurrences="1">
@@ -17217,21 +17214,6 @@
       <code>$replication_key-&gt;setGerritHostId($row['id'])</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/git/include/Git/Gitolite/SSHKey/Provider/User.php">
-    <DeprecatedMethod occurrences="4">
-      <code>current</code>
-      <code>next</code>
-      <code>rewind</code>
-      <code>valid</code>
-    </DeprecatedMethod>
-    <InvalidMethodCall occurrences="2">
-      <code>getAuthorizedKeysArray</code>
-      <code>getUsername</code>
-    </InvalidMethodCall>
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$user_manager-&gt;getUsersWithSshKey()</code>
-    </InvalidPropertyAssignmentValue>
-  </file>
   <file src="plugins/git/include/Git/GitoliteHousekeeping/ChainOfResponsibility/CleanUpGitoliteAdminRepo.class.php">
     <MissingParamType occurrences="2">
       <code>$gitolite_var_path</code>
@@ -18564,10 +18546,9 @@
       <code>$replication_key</code>
       <code>$ssh_port</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="23">
+    <MissingReturnType occurrences="22">
       <code>getCloneSSHUrl</code>
       <code>getEndUserCloneUrl</code>
-      <code>getGenericUserName</code>
       <code>getHTTPPort</code>
       <code>getHTTPProtocol</code>
       <code>getHost</code>
@@ -20475,7 +20456,7 @@
     <InvalidScalarArgument occurrences="1">
       <code>$projectId</code>
     </InvalidScalarArgument>
-    <MissingParamType occurrences="22">
+    <MissingParamType occurrences="21">
       <code>$access</code>
       <code>$backend</code>
       <code>$backendType</code>
@@ -20497,14 +20478,12 @@
       <code>$path</code>
       <code>$revision_hash</code>
       <code>$status</code>
-      <code>$user</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="30">
+    <MissingPropertyType occurrences="29">
       <code>$access</code>
       <code>$backendType</code>
       <code>$backup_path</code>
       <code>$creationDate</code>
-      <code>$creator</code>
       <code>$dao</code>
       <code>$deletionDate</code>
       <code>$description</code>
@@ -20531,7 +20510,7 @@
       <code>$scope</code>
       <code>$this-&gt;notifiedMails</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="64">
+    <MissingReturnType occurrences="62">
       <code>belongsToProject</code>
       <code>canMigrateToGerrit</code>
       <code>changeAccess</code>
@@ -20543,7 +20522,6 @@
       <code>getAccessURL</code>
       <code>getBackupPath</code>
       <code>getCreationDate</code>
-      <code>getCreator</code>
       <code>getCreatorId</code>
       <code>getDeletionDate</code>
       <code>getDescription</code>
@@ -20574,7 +20552,6 @@
       <code>setBackendType</code>
       <code>setBackupPath</code>
       <code>setCreationDate</code>
-      <code>setCreator</code>
       <code>setDeletionDate</code>
       <code>setDescription</code>
       <code>setId</code>
@@ -20638,9 +20615,6 @@
       <code>hasGitShellRepositories</code>
       <code>instanciateFromRow</code>
     </MissingReturnType>
-    <PossiblyNullReference occurrences="1">
-      <code>userCanRead</code>
-    </PossiblyNullReference>
     <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
@@ -20767,8 +20741,7 @@
       <code>_createForm</code>
       <code>_tree</code>
     </UndefinedMethod>
-    <UndefinedThisPropertyAssignment occurrences="4">
-      <code>$this-&gt;access_loger</code>
+    <UndefinedThisPropertyAssignment occurrences="3">
       <code>$this-&gt;groupId</code>
       <code>$this-&gt;projectName</code>
       <code>$this-&gt;userName</code>
@@ -20916,16 +20889,6 @@
       <code>display</code>
       <code>displayTab</code>
     </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="3">
-      <code>$this-&gt;current_pane</code>
-      <code>$this-&gt;current_pane</code>
-      <code>$this-&gt;panes</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;current_pane</code>
-      <code>$this-&gt;current_pane</code>
-      <code>$this-&gt;panes</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/git/include/GitViews/ShowRepo/Content.class.php">
     <MissingPropertyType occurrences="1">
@@ -21358,14 +21321,6 @@
     <ImpureMethodCall occurrences="1">
       <code>getId</code>
     </ImpureMethodCall>
-  </file>
-  <file src="plugins/git/include/REST/v1/GitBranchRepresentation.php">
-    <MissingParamType occurrences="1">
-      <code>$name</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>build</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/git/include/REST/v1/GitCommitStatusRepresentation.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -22013,10 +21968,9 @@
       <code>(int) $response-&gt;getStatusCode()</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/gitlab/include/Repository/Webhook/PostPush/PostPushCommitArtifactUpdater.php">
-    <DeprecatedMethod occurrences="2">
-      <code>createNewChangeset</code>
-      <code>createNewChangeset</code>
+  <file src="plugins/gitlab/include/Admin/LinkedGroupPresenter.php">
+    <DeprecatedMethod occurrences="1">
+      <code>\DateHelper::timeAgoInWords($this-&gt;last_sync_date-&gt;getTimestamp(), true)</code>
     </DeprecatedMethod>
   </file>
   <file src="plugins/gitlfs/include/Admin/AdminDao.php">
@@ -24321,39 +24275,13 @@
     <InvalidNullableReturnType occurrences="1">
       <code>GitRepository</code>
     </InvalidNullableReturnType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="2">
       <code>checkCSRFToken</code>
       <code>getRedirectUrl</code>
-      <code>remove</code>
-      <code>save</code>
     </MissingReturnType>
     <NullableReturnStatement occurrences="1">
       <code>$repository</code>
     </NullableReturnStatement>
-  </file>
-  <file src="plugins/hudson_git/include/HudsonGit/Hook/HookDao.php">
-    <DeprecatedMethod occurrences="9">
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="4">
-      <code>$id</code>
-      <code>$id</code>
-      <code>$jenkins_server</code>
-      <code>$repository_id</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>delete</code>
-      <code>save</code>
-      <code>searchById</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/hudson_git/include/HudsonGit/Hook/HookTriggerController.php">
     <MissingParamType occurrences="1">
@@ -24457,9 +24385,8 @@
       <code>$params</code>
       <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>collectGitRoutesEvent</code>
-      <code>collectRoutesEvent</code>
       <code>cssFile</code>
       <code>display_hudson_addition_info</code>
       <code>getCSRF</code>
@@ -28100,12 +28027,6 @@
       <code>'ProftpdPluginInfo'</code>
     </UndefinedClass>
   </file>
-  <file src="plugins/program_management/include/Adapter/Program/Feature/UserStoriesInMirroredProgramIncrementsPlanner.php">
-    <DeprecatedMethod occurrences="2">
-      <code>createNewChangeset</code>
-      <code>getAnArtifactLinkField</code>
-    </DeprecatedMethod>
-  </file>
   <file src="plugins/project_ownership/include/Notification/Sender.php">
     <MissingParamType occurrences="3">
       <code>$project_id</code>
@@ -29726,7 +29647,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/pullrequestPlugin.php">
-    <MissingParamType occurrences="11">
+    <MissingParamType occurrences="10">
       <code>$branch_name</code>
       <code>$dest_branch_name</code>
       <code>$id</code>
@@ -29736,13 +29657,12 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$refname</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$git_rest_route_additional_informations</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="37">
+    <MissingReturnType occurrences="36">
       <code>abandonFromSourceBranch</code>
       <code>additionalInformationRepresentationCache</code>
       <code>additionalInformationRepresentationRetriever</code>
@@ -29777,7 +29697,6 @@
       <code>postReceiveExecuteEvent</code>
       <code>referenceGetTooltipContentEvent</code>
       <code>repositoryExternalNavigationTabsCollector</code>
-      <code>rest_git_pull_request_endpoints</code>
       <code>rest_git_pull_request_get_for_repository</code>
       <code>rest_resources</code>
     </MissingReturnType>
@@ -30895,14 +30814,6 @@
       <code>update</code>
       <code>update</code>
     </DeprecatedMethod>
-    <FalsableReturnStatement occurrences="2">
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="2">
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-    </InvalidFalsableReturnType>
     <MissingParamType occurrences="49">
       <code>$date</code>
       <code>$date</code>
@@ -36387,23 +36298,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/MailGatewayConfig.php">
-    <MissingParamType occurrences="2">
-      <code>$emailgateway_mode</code>
-      <code>$emailgateway_mode</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$DISABLED</code>
-      <code>$INSECURE</code>
-      <code>$TOKEN</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="6">
-      <code>getEmailgatewayMode</code>
-      <code>isAllowedEmailgatewayMode</code>
-      <code>isEmailgatewayDisabled</code>
-      <code>isInsecureEmailgatewayEnabled</code>
-      <code>isTokenBasedEmailgatewayEnabled</code>
-      <code>setEmailgatewayMode</code>
-    </MissingReturnType>
     <RedundantPropertyInitializationCheck occurrences="1">
       <code>isset($this-&gt;cache_emailgateway_mode)</code>
     </RedundantPropertyInitializationCheck>
@@ -36424,33 +36318,13 @@
       <code>redirect</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/MailGatewayConfigDao.php">
-    <DeprecatedMethod occurrences="4">
-      <code>\DataAccessObject</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="1">
-      <code>$emailgateway_mode</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>save</code>
-      <code>searchEmailgatewayConfiguration</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/MailGatewayConfigPresenter.php">
-    <MissingParamType occurrences="3">
+    <MissingParamType occurrences="1">
       <code>$localinc_path</code>
-      <code>$localinc_path</code>
-      <code>$title</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$sections</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>isLocalIncObsolete</code>
-    </MissingReturnType>
     <UndefinedThisPropertyAssignment occurrences="11">
       <code>$this-&gt;disable</code>
       <code>$this-&gt;disable_desc</code>
@@ -37288,8 +37162,7 @@
     <MissingPropertyType occurrences="1">
       <code>$MAX_LENGTH_FOR_DIFF</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>getContentAsText</code>
+    <MissingReturnType occurrences="1">
       <code>getFullRESTRepresentation</code>
     </MissingReturnType>
     <RedundantCastGivenDocblockType occurrences="1">
@@ -40010,12 +39883,6 @@
       <code>(int) $field-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/File/Upload/FileToUploadCreator.php">
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) $field-&gt;getId()</code>
-      <code>(int) $field-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/File/Upload/FileUploadCleaner.php">
     <MissingReturnType occurrences="1">
       <code>deleteDanglingFilesToUpload</code>
@@ -40364,10 +40231,6 @@
       <code>$value_id</code>
       <code>$value_id</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$cache_canbedeleted_values</code>
-      <code>$cache_canbehidden_values</code>
-    </MissingPropertyType>
     <MissingReturnType occurrences="14">
       <code>canValueBeHiddenWithoutCheckingSemanticStatus</code>
       <code>create</code>
@@ -40987,8 +40850,7 @@
     <DeprecatedMethod occurrences="1">
       <code>$dar</code>
     </DeprecatedMethod>
-    <InvalidNullableReturnType occurrences="3">
-      <code>Tracker_FormElement_Field</code>
+    <InvalidNullableReturnType occurrences="2">
       <code>Tracker_FormElement_Field</code>
       <code>Tracker_FormElement_IComputeValues</code>
     </InvalidNullableReturnType>
@@ -41125,11 +40987,10 @@
     <MoreSpecificReturnType occurrences="1">
       <code>Tracker_FormElement</code>
     </MoreSpecificReturnType>
-    <NullableReturnStatement occurrences="6">
+    <NullableReturnStatement occurrences="5">
       <code>$this-&gt;formElements[$form_element_id]</code>
       <code>$this-&gt;formElements_by_name[$tracker_id][$name]</code>
       <code>$this-&gt;used_formElements[$id]</code>
-      <code>null</code>
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
@@ -48141,9 +48002,6 @@
     <PossiblyInvalidOperand occurrences="1">
       <code>$queries[0]</code>
     </PossiblyInvalidOperand>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $offset</code>
-    </RedundantCastGivenDocblockType>
     <RedundantPropertyInitializationCheck occurrences="3">
       <code>isset($this-&gt;report_session)</code>
       <code>isset($this-&gt;report_session)</code>
@@ -49198,14 +49056,12 @@
       <code>$value_id</code>
       <code>$value_id</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="19">
-      <code>$rule-&gt;source_field</code>
+    <MissingPropertyType occurrences="17">
       <code>$rule-&gt;source_field</code>
       <code>$rule-&gt;source_field</code>
       <code>$rule-&gt;source_field</code>
       <code>$rule-&gt;source_field</code>
       <code>$rule-&gt;source_value</code>
-      <code>$rule-&gt;target_field</code>
       <code>$rule-&gt;target_field</code>
       <code>$rule-&gt;target_field</code>
       <code>$rule-&gt;target_field</code>
@@ -49219,7 +49075,7 @@
       <code>$this-&gt;tracker-&gt;id</code>
       <code>$this-&gt;tracker-&gt;id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="19">
+    <MissingReturnType occurrences="18">
       <code>deleteRulesBySourceTarget</code>
       <code>displayCheckbox</code>
       <code>displayChooseSourceAndTarget</code>
@@ -49232,7 +49088,6 @@
       <code>getAllSourceFields</code>
       <code>getAllTargetFields</code>
       <code>getTrackerFormElementFactory</code>
-      <code>isCyclic</code>
       <code>isFieldUsedInFrozenFieldsTransitionPostAction</code>
       <code>process</code>
       <code>ruleExists</code>
@@ -49456,8 +49311,7 @@
     <MissingPropertyType occurrences="1">
       <code>$_instances</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="14">
-      <code>addOpenValue</code>
+    <MissingReturnType occurrences="13">
       <code>clearInstances</code>
       <code>doesTrackerNotificationUseStatusSemantic</code>
       <code>exportToREST</code>
@@ -49475,13 +49329,6 @@
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;getFieldId(), $xml_mapping)</code>
     </PossiblyFalseArgument>
-    <PossiblyNullPropertyAssignmentValue occurrences="2">
-      <code>$list_field</code>
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $this-&gt;getFieldId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Title.class.php">
     <ArgumentTypeCoercion occurrences="1">
@@ -50334,9 +50181,6 @@
     <MissingReturnType occurrences="1">
       <code>import</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $renderer-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Widget/Tracker_Widget_MyArtifacts.class.php">
     <DeprecatedFunction occurrences="2">
@@ -53643,9 +53487,6 @@
     <PossiblyFalseOperand occurrences="1">
       <code>date('d M Y', $timestamp)</code>
     </PossiblyFalseOperand>
-    <PossiblyNullReference occurrences="1">
-      <code>getName</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/userlog/include/UserLogDao.class.php">
     <DeprecatedMethod occurrences="22">
@@ -54028,9 +53869,8 @@
       <code>$parameters</code>
       <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="12">
+    <MissingReturnType occurrences="11">
       <code>additionalPlanningConfigurationWarningsRetriever</code>
-      <code>beforeEvent</code>
       <code>burningParrotGetJavascriptFiles</code>
       <code>burningParrotGetStylesheets</code>
       <code>cssfile</code>
@@ -56465,8 +56305,7 @@
     </MissingReturnType>
   </file>
   <file src="src/common/FRS/FRSValidator.php">
-    <InvalidArgument occurrences="2">
-      <code>$release_exists</code>
+    <InvalidArgument occurrences="1">
       <code>$res2</code>
     </InvalidArgument>
     <MissingParamType occurrences="5">
@@ -56476,9 +56315,6 @@
       <code>$release</code>
       <code>$release</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$_errors</code>
-    </MissingPropertyType>
     <MissingReturnType occurrences="4">
       <code>addError</code>
       <code>getErrors</code>
@@ -56557,8 +56393,7 @@
       <code>$package</code>
       <code>$package</code>
     </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="2">
-      <code>getName</code>
+    <PossiblyNullReference occurrences="1">
       <code>getName</code>
     </PossiblyNullReference>
     <RedundantCastGivenDocblockType occurrences="2">
@@ -57104,17 +56939,6 @@
       <code>(string) \UserHelper::instance()-&gt;getDisplayNameFromUser($user)</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="src/common/InviteBuddy/InvitationEmailLoginPresenter.php">
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(string) $current_user-&gt;getRealName()</code>
-      <code>(string) $recipient-&gt;getName()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/InviteBuddy/InvitationEmailRegisterPresenter.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(string) $current_user-&gt;getRealName()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="src/common/JWT/REST/JWTRepresentation.class.php">
     <MissingParamType occurrences="1">
       <code>$token</code>
@@ -57259,16 +57083,14 @@
       <code>$imgroot</code>
       <code>$root</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="13">
+    <MissingReturnType occurrences="11">
       <code>addBreadcrumbs</code>
       <code>addCssAssetCollection</code>
       <code>displayStaticWidget</code>
       <code>feedback</code>
-      <code>footer</code>
       <code>getFooterSiteJs</code>
       <code>getImagePath</code>
       <code>getUser</code>
-      <code>header</code>
       <code>includeCalendarScripts</code>
       <code>includeFooterJavascriptFile</code>
       <code>includeFooterJavascriptSnippet</code>
@@ -57438,7 +57260,7 @@
       <code>void</code>
       <code>void</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="29">
+    <MissingParamType occurrences="28">
       <code>$bgcolor</code>
       <code>$cols</code>
       <code>$css</code>
@@ -57459,7 +57281,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$prefix</code>
       <code>$rank</code>
       <code>$service_top_tab</code>
@@ -57469,12 +57290,11 @@
       <code>$value</code>
       <code>$value_prefix</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="3">
+    <MissingPropertyType occurrences="2">
       <code>$icons</code>
       <code>$javascript</code>
-      <code>$version</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="29">
+    <MissingReturnType occurrences="26">
       <code>addStylesheet</code>
       <code>appendJsonEncodedVariable</code>
       <code>box1_bottom</code>
@@ -57486,12 +57306,9 @@
       <code>displayStylesheetElements</code>
       <code>displaySyndicationElements</code>
       <code>feedback</code>
-      <code>footer</code>
-      <code>generic_footer</code>
       <code>generic_header</code>
       <code>getNotificationPlaceholder</code>
       <code>getStylesheetTheme</code>
-      <code>getVersion</code>
       <code>iframe</code>
       <code>includeCalendarScripts</code>
       <code>includeJavascriptPolyfills</code>
@@ -57621,6 +57438,463 @@
     <MissingReturnType occurrences="1">
       <code>buildFromDefaultVariant</code>
     </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/Codendi_Mail.class.php">
+    <InvalidArrayOffset occurrences="6">
+      <code>$row['email']</code>
+      <code>$row['email']</code>
+      <code>$row['email']</code>
+      <code>$row['real_name']</code>
+      <code>$row['real_name']</code>
+      <code>$row['real_name']</code>
+    </InvalidArrayOffset>
+    <MissingParamType occurrences="22">
+      <code>$bcc</code>
+      <code>$cid</code>
+      <code>$comma_separeted_addresses</code>
+      <code>$data</code>
+      <code>$data</code>
+      <code>$data</code>
+      <code>$email</code>
+      <code>$email</code>
+      <code>$email</code>
+      <code>$email</code>
+      <code>$filename</code>
+      <code>$message_id</code>
+      <code>$mime_type</code>
+      <code>$mime_type</code>
+      <code>$mime_type</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$subject</code>
+      <code>$to</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="19">
+      <code>addAdditionalHeader</code>
+      <code>addAttachment</code>
+      <code>addBcc</code>
+      <code>addCc</code>
+      <code>addInlineAttachment</code>
+      <code>addTo</code>
+      <code>clearFrom</code>
+      <code>clearRecipients</code>
+      <code>getBodyPart</code>
+      <code>getMimePartAttachment</code>
+      <code>getSubject</code>
+      <code>setBcc</code>
+      <code>setBody</code>
+      <code>setBodyText</code>
+      <code>setCc</code>
+      <code>setFrom</code>
+      <code>setMessageId</code>
+      <code>setSubject</code>
+      <code>setTo</code>
+    </MissingReturnType>
+    <PossiblyInvalidMethodCall occurrences="2">
+      <code>getAddressList</code>
+      <code>getAddressList</code>
+    </PossiblyInvalidMethodCall>
+    <UndefinedMethod occurrences="2">
+      <code>getAddressList</code>
+      <code>getAddressList</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/common/Mail/Codendi_Mail_Interface.class.php">
+    <MissingParamType occurrences="8">
+      <code>$bcc</code>
+      <code>$body</code>
+      <code>$cc</code>
+      <code>$email</code>
+      <code>$name</code>
+      <code>$subject</code>
+      <code>$to</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="13">
+      <code>addAdditionalHeader</code>
+      <code>getBcc</code>
+      <code>getBody</code>
+      <code>getCc</code>
+      <code>getSubject</code>
+      <code>getTo</code>
+      <code>send</code>
+      <code>setBcc</code>
+      <code>setBody</code>
+      <code>setCc</code>
+      <code>setFrom</code>
+      <code>setSubject</code>
+      <code>setTo</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/MailAccountSuspensionAlertPresenter.php">
+    <MissingPropertyType occurrences="4">
+      <code>$last_access_date</code>
+      <code>$organization_name</code>
+      <code>$suspension_date</code>
+      <code>$tuleap_server_name</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Mail/MailAccountSuspensionPresenter.php">
+    <MissingPropertyType occurrences="4">
+      <code>$last_access_date</code>
+      <code>$notification_delay</code>
+      <code>$organization_name</code>
+      <code>$tuleap_server_name</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Mail/MailBuilder.php">
+    <MissingParamType occurrences="1">
+      <code>$email</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>buildEmail</code>
+      <code>getMailSender</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/MailEnhancer.php">
+    <MissingReturnType occurrences="5">
+      <code>addHeader</code>
+      <code>addPropertiesToLookAndFeel</code>
+      <code>enhanceMail</code>
+      <code>getMessageId</code>
+      <code>setMessageId</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/MailFilter.php">
+    <MissingReturnType occurrences="1">
+      <code>filter</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/MailInstrumentation.php">
+    <MissingReturnType occurrences="2">
+      <code>increment</code>
+      <code>incrementFailure</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/MailNotificationBuilder.php">
+    <MissingParamType occurrences="10">
+      <code>$html_body</code>
+      <code>$html_body</code>
+      <code>$link</code>
+      <code>$link</code>
+      <code>$subject</code>
+      <code>$subject</code>
+      <code>$text_body</code>
+      <code>$text_body</code>
+      <code>$truncated_service_name</code>
+      <code>$truncated_service_name</code>
+    </MissingParamType>
+  </file>
+  <file src="src/common/Mail/MailNotificationPresenter.class.php">
+    <MissingParamType occurrences="8">
+      <code>$color_button</code>
+      <code>$color_logo</code>
+      <code>$redirect_button</code>
+      <code>$redirect_url</code>
+      <code>$section_one</code>
+      <code>$signature</code>
+      <code>$thanks</code>
+      <code>$title</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$color_button</code>
+      <code>$redirect_button</code>
+      <code>$redirect_url</code>
+      <code>$section_one</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Mail/MailOutlinePresenter.class.php">
+    <MissingParamType occurrences="4">
+      <code>$color_logo</code>
+      <code>$signature</code>
+      <code>$thanks</code>
+      <code>$title</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$color_logo</code>
+      <code>$signature</code>
+      <code>$thanks</code>
+      <code>$title</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Mail/MailPresenter.php">
+    <MissingParamType occurrences="3">
+      <code>$goto_link</code>
+      <code>$platform_name</code>
+      <code>$service_shortname</code>
+    </MissingParamType>
+  </file>
+  <file src="src/common/Mail/MailPresenterFactory.class.php">
+    <MissingParamType occurrences="15">
+      <code>$color_button</code>
+      <code>$color_button</code>
+      <code>$color_button</code>
+      <code>$color_logo</code>
+      <code>$color_logo</code>
+      <code>$color_logo</code>
+      <code>$color_logo</code>
+      <code>$confirm_hash</code>
+      <code>$login</code>
+      <code>$logo_url</code>
+      <code>$logo_url</code>
+      <code>$logo_url</code>
+      <code>$logo_url</code>
+      <code>$logo_url</code>
+      <code>$presenter_role</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>createMailProjectNotificationPresenter</code>
+      <code>createMailProjectPresenter</code>
+    </MissingReturnType>
+    <UndefinedVariable occurrences="23">
+      <code>$help</code>
+      <code>$help</code>
+      <code>$help</code>
+      <code>$redirect_button</code>
+      <code>$section_after_login</code>
+      <code>$section_after_login</code>
+      <code>$section_one</code>
+      <code>$section_one</code>
+      <code>$section_one</code>
+      <code>$section_three</code>
+      <code>$section_three</code>
+      <code>$section_two</code>
+      <code>$section_two</code>
+      <code>$section_two</code>
+      <code>$signature</code>
+      <code>$signature</code>
+      <code>$signature</code>
+      <code>$thanks</code>
+      <code>$thanks</code>
+      <code>$thanks</code>
+      <code>$title</code>
+      <code>$title</code>
+      <code>$title</code>
+    </UndefinedVariable>
+  </file>
+  <file src="src/common/Mail/MailProjectNotificationMustBeApprovedPresenter.class.php">
+    <MissingParamType occurrences="2">
+      <code>$color_button</code>
+      <code>$color_logo</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="10">
+      <code>getMessageText</code>
+      <code>get_help</code>
+      <code>get_redirect_button</code>
+      <code>get_section_one</code>
+      <code>get_section_three</code>
+      <code>get_section_two</code>
+      <code>get_signature</code>
+      <code>get_thanks</code>
+      <code>get_title</code>
+      <code>get_url</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/MailProjectNotificationPresenter.class.php">
+    <MissingParamType occurrences="2">
+      <code>$color_button</code>
+      <code>$color_logo</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="10">
+      <code>getMessageText</code>
+      <code>get_help</code>
+      <code>get_redirect_button</code>
+      <code>get_section_one</code>
+      <code>get_section_three</code>
+      <code>get_section_two</code>
+      <code>get_signature</code>
+      <code>get_thanks</code>
+      <code>get_title</code>
+      <code>get_url</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/MailProjectOneStepRegisterPresenter.class.php">
+    <MissingParamType occurrences="1">
+      <code>$color_logo</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="17">
+      <code>getMessageText</code>
+      <code>getUrlDocumentationSite</code>
+      <code>getUrlProjectAdministration</code>
+      <code>getUrlSummaryLink</code>
+      <code>get_help</code>
+      <code>get_project_full_name</code>
+      <code>get_project_full_name_title</code>
+      <code>get_project_short_name</code>
+      <code>get_project_short_name_title</code>
+      <code>get_project_summary_page</code>
+      <code>get_project_summary_page_title</code>
+      <code>get_section_one</code>
+      <code>get_section_three</code>
+      <code>get_section_two</code>
+      <code>get_signature</code>
+      <code>get_thanks</code>
+      <code>get_title</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/MailRegisterByAdminApprovalPresenter.class.php">
+    <MissingParamType occurrences="10">
+      <code>$color_logo</code>
+      <code>$help</code>
+      <code>$login</code>
+      <code>$section_after_login</code>
+      <code>$section_one</code>
+      <code>$section_three</code>
+      <code>$section_two</code>
+      <code>$signature</code>
+      <code>$thanks</code>
+      <code>$title</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$section_three</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Mail/MailRegisterByAdminNotificationPresenter.class.php">
+    <MissingParamType occurrences="11">
+      <code>$color_button</code>
+      <code>$color_logo</code>
+      <code>$login</code>
+      <code>$redirect_button</code>
+      <code>$redirect_url</code>
+      <code>$section_after_login</code>
+      <code>$section_one</code>
+      <code>$section_two</code>
+      <code>$signature</code>
+      <code>$thanks</code>
+      <code>$title</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$login</code>
+      <code>$section_after_login</code>
+      <code>$section_two</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Mail/MailRegisterByAdminPresenter.class.php">
+    <MissingParamType occurrences="10">
+      <code>$color_logo</code>
+      <code>$help</code>
+      <code>$login</code>
+      <code>$section_after_login</code>
+      <code>$section_one</code>
+      <code>$section_three</code>
+      <code>$section_two</code>
+      <code>$signature</code>
+      <code>$thanks</code>
+      <code>$title</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$password</code>
+      <code>$section_three</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Mail/MailRegisterByUserPresenter.class.php">
+    <MissingParamType occurrences="12">
+      <code>$color_button</code>
+      <code>$color_logo</code>
+      <code>$help</code>
+      <code>$login</code>
+      <code>$redirect_button</code>
+      <code>$redirect_url</code>
+      <code>$section_after_login</code>
+      <code>$section_one</code>
+      <code>$section_two</code>
+      <code>$signature</code>
+      <code>$thanks</code>
+      <code>$title</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$color_button</code>
+      <code>$redirect_button</code>
+      <code>$redirect_url</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Mail/MailRegisterPresenter.class.php">
+    <MissingParamType occurrences="9">
+      <code>$color_logo</code>
+      <code>$help</code>
+      <code>$login</code>
+      <code>$section_after_login</code>
+      <code>$section_one</code>
+      <code>$section_two</code>
+      <code>$signature</code>
+      <code>$thanks</code>
+      <code>$title</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="5">
+      <code>$help</code>
+      <code>$login</code>
+      <code>$section_after_login</code>
+      <code>$section_one</code>
+      <code>$section_two</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Mail/MassmailFormPresenter.class.php">
+    <MissingParamType occurrences="2">
+      <code>$action</code>
+      <code>$title</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="8">
+      <code>$action</code>
+      <code>$body_label</code>
+      <code>$close_button</code>
+      <code>$csrf_token</code>
+      <code>$project_id</code>
+      <code>$subject_label</code>
+      <code>$submit_button</code>
+      <code>$title</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="1">
+      <code>getTemplateDir</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/MassmailSender.class.php">
+    <MissingReturnType occurrences="1">
+      <code>sendMassmail</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/RecipientListBuilder.php">
+    <MissingParamType occurrences="3">
+      <code>$address</code>
+      <code>$address</code>
+      <code>$identifier</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$allowed_status</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="6">
+      <code>addExternalAddress</code>
+      <code>addUser</code>
+      <code>addUserFromMatchingOnes</code>
+      <code>fallbackOnExternalAddress</code>
+      <code>fallbackOnFindUser</code>
+      <code>hasAllowedStatus</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Mail/TuleapRegisterMail.class.php">
+    <MissingParamType occurrences="16">
+      <code>$base_url</code>
+      <code>$confirm_hash</code>
+      <code>$from</code>
+      <code>$from</code>
+      <code>$from</code>
+      <code>$login</code>
+      <code>$login</code>
+      <code>$presenter_role</code>
+      <code>$project</code>
+      <code>$project</code>
+      <code>$redirect_url</code>
+      <code>$subject</code>
+      <code>$subject</code>
+      <code>$to</code>
+      <code>$to</code>
+      <code>$to</code>
+    </MissingParamType>
+    <PossiblyUndefinedVariable occurrences="1">
+      <code>$message</code>
+    </PossiblyUndefinedVariable>
   </file>
   <file src="src/common/MailingList/MailingListCreationPresenterBuilder.php">
     <DeprecatedMethod occurrences="1">
@@ -60462,7 +60736,7 @@
       <code>$_dao</code>
       <code>$_instance</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="24">
+    <MissingReturnType occurrences="23">
       <code>activateWithoutNotifications</code>
       <code>assertProjectIsValid</code>
       <code>checkGroupIdForSoap</code>
@@ -60473,7 +60747,6 @@
       <code>getFrsPermissionsCreator</code>
       <code>getMyAndPublicProjectsForRESTByShortname</code>
       <code>getPaginatedProjects</code>
-      <code>getProjectByCaseInsensitiveUnixName</code>
       <code>getProjectsByStatus</code>
       <code>getProjectsWithStatusForREST</code>
       <code>getSynchronizedProjectMembershipProjectVisibilityToggler</code>
@@ -62098,7 +62371,7 @@
       <code>function ($m) use ($self, $group_id, $reftype) {</code>
       <code>function ($match) {</code>
     </MissingClosureReturnType>
-    <MissingParamType occurrences="76">
+    <MissingParamType occurrences="74">
       <code>$artifact_id</code>
       <code>$force</code>
       <code>$force</code>
@@ -62118,8 +62391,6 @@
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$html</code>
       <code>$html</code>
       <code>$html</code>
       <code>$html</code>
@@ -62278,8 +62549,7 @@
     <InvalidArgument occurrences="1">
       <code>$collect_routes</code>
     </InvalidArgument>
-    <MissingReturnType occurrences="29">
-      <code>collect</code>
+    <MissingReturnType occurrences="28">
       <code>getAdminPasswordPolicy</code>
       <code>getAdminSiteContentCustomisation</code>
       <code>getCVSViewVC</code>
@@ -62504,8 +62774,7 @@
     <MissingPropertyType occurrences="1">
       <code>$apacheConfHeaders</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>collectApacheConfHeaders</code>
+    <MissingReturnType occurrences="1">
       <code>getApacheConfHeaders</code>
     </MissingReturnType>
   </file>
@@ -62973,6 +63242,301 @@
       <code>username_helper_lowercase</code>
       <code>username_is_in_lowercase</code>
       <code>warning_ldap</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/Presenters/AdditionalSearchTabsPresenter.class.php">
+    <MissingParamType occurrences="3">
+      <code>$name</code>
+      <code>$type_of_search</code>
+      <code>$url</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$name</code>
+      <code>$type_of_search</code>
+      <code>$url</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Search/Presenters/SearchFacetsPresenter.class.php">
+    <MissingPropertyType occurrences="1">
+      <code>$title</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Search/Presenters/SearchForumResultPresenter.php">
+    <MissingReturnType occurrences="4">
+      <code>message_author</code>
+      <code>message_date</code>
+      <code>message_subject</code>
+      <code>message_uri</code>
+    </MissingReturnType>
+    <UndefinedThisPropertyAssignment occurrences="4">
+      <code>$this-&gt;message_author</code>
+      <code>$this-&gt;message_date</code>
+      <code>$this-&gt;message_id</code>
+      <code>$this-&gt;message_subject</code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch occurrences="4">
+      <code>$this-&gt;message_author</code>
+      <code>$this-&gt;message_date</code>
+      <code>$this-&gt;message_id</code>
+      <code>$this-&gt;message_subject</code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/common/Search/Presenters/SearchPanePresenter.class.php">
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>! empty($search_types)</code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/common/Search/Presenters/SearchPeopleResultPresenter.php">
+    <MissingReturnType occurrences="4">
+      <code>avatar</code>
+      <code>real_name</code>
+      <code>user_name</code>
+      <code>user_uri</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/Presenters/SearchPresenter.class.php">
+    <MissingParamType occurrences="4">
+      <code>$project</code>
+      <code>$search_result</code>
+      <code>$type_of_search</code>
+      <code>$words</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="7">
+      <code>$group_id</code>
+      <code>$number_of_page_results</code>
+      <code>$search_panes</code>
+      <code>$search_result</code>
+      <code>$template</code>
+      <code>$type_of_search</code>
+      <code>$words</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="1">
+      <code>classic_search_tab_label</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/Presenters/SearchProjectResultPresenter.php">
+    <MissingReturnType occurrences="4">
+      <code>project_description</code>
+      <code>project_name</code>
+      <code>project_unix_name</code>
+      <code>project_uri</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/Presenters/SearchResultsIntroPresenter.php">
+    <MissingParamType occurrences="2">
+      <code>$results</code>
+      <code>$words</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$purifier</code>
+      <code>$results</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>getNumberRowsReturned</code>
+      <code>has_results</code>
+      <code>no_match_found_string</code>
+      <code>search_result_title</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/Presenters/SearchResultsPresenter.php">
+    <MissingParamType occurrences="2">
+      <code>$maybe_more_results</code>
+      <code>$template</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$maybe_more_results</code>
+      <code>$more_results</code>
+      <code>$template</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="5">
+      <code>getTemplate</code>
+      <code>has_results</code>
+      <code>no_more_results</code>
+      <code>results</code>
+      <code>results_intro</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/Presenters/SearchTrackerV3ResultPresenter.php">
+    <MissingParamType occurrences="1">
+      <code>$result_display</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>getTemplate</code>
+      <code>result_display</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/Presenters/SearchTypePresenter.class.php">
+    <MissingParamType occurrences="4">
+      <code>$facets</code>
+      <code>$search_type</code>
+      <code>$title</code>
+      <code>$url</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="5">
+      <code>$facets</code>
+      <code>$has_facets</code>
+      <code>$search_type</code>
+      <code>$title</code>
+      <code>$url</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/Search/SearchController.class.php">
+    <InvalidArgument occurrences="1"/>
+    <MissingParamType occurrences="5">
+      <code>$redirect_to_services</code>
+      <code>$results</code>
+      <code>$results</code>
+      <code>$site_search_types</code>
+      <code>$words</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$search_types</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="8">
+      <code>ajaxResults</code>
+      <code>error</code>
+      <code>getAdditionnalProjectWidePresentersIfNeeded</code>
+      <code>getSearchPresenter</code>
+      <code>getSiteWidePane</code>
+      <code>index</code>
+      <code>renderResults</code>
+      <code>results</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/SearchForum.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>$results</code>
+    </DeprecatedMethod>
+    <MissingParamType occurrences="2">
+      <code>$maybe_more_results</code>
+      <code>$words</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>getResultsPresenters</code>
+      <code>getSearchForumResultPresenter</code>
+      <code>search</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/SearchPeople.class.php">
+    <MissingParamType occurrences="2">
+      <code>$maybe_more_results</code>
+      <code>$words</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>getResultsPresenters</code>
+      <code>getSearchPeopleResultPresenter</code>
+      <code>search</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/SearchPlugin.class.php">
+    <MissingReturnType occurrences="1">
+      <code>search</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/SearchProject.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>$results</code>
+    </DeprecatedMethod>
+    <MissingParamType occurrences="2">
+      <code>$maybe_more_results</code>
+      <code>$words</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>getResultsPresenters</code>
+      <code>getSearchProjectResultPresenter</code>
+      <code>search</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/SearchQuery.class.php">
+    <MissingParamType occurrences="1">
+      <code>$number_of_results</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="9">
+      <code>$exact</code>
+      <code>$forum_id</code>
+      <code>$is_ajax</code>
+      <code>$number_of_results</code>
+      <code>$offset</code>
+      <code>$project</code>
+      <code>$trackerv3id</code>
+      <code>$type_of_search</code>
+      <code>$words</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="11">
+      <code>getExact</code>
+      <code>getForumId</code>
+      <code>getNumberOfResults</code>
+      <code>getOffset</code>
+      <code>getProject</code>
+      <code>getTrackerV3Id</code>
+      <code>getTypeOfSearch</code>
+      <code>getWords</code>
+      <code>isAjax</code>
+      <code>isValid</code>
+      <code>setNumberOfResults</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/SearchResults.class.php">
+    <MissingParamType occurrences="3">
+      <code>$count</code>
+      <code>$has_more</code>
+      <code>$results_html</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$has_more</code>
+      <code>$results_count</code>
+      <code>$results_html</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="7">
+      <code>getCountResults</code>
+      <code>getFacetsHtml</code>
+      <code>getResultsHtml</code>
+      <code>hasMore</code>
+      <code>setCountResults</code>
+      <code>setHasMore</code>
+      <code>setResultsHtml</code>
+    </MissingReturnType>
+    <UndefinedThisPropertyFetch occurrences="1">
+      <code>$this-&gt;facets_html</code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/common/Search/SearchRouter.class.php">
+    <MissingPropertyType occurrences="1">
+      <code>$controller</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="1">
+      <code>route</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/Search/SearchTrackerV3.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>foundRows</code>
+    </DeprecatedMethod>
+    <MissingReturnType occurrences="3">
+      <code>getFacets</code>
+      <code>getTrackersv3ForProject</code>
+      <code>search</code>
+    </MissingReturnType>
+    <TypeDoesNotContainType occurrences="3">
+      <code>! $ath</code>
+      <code>! $ath</code>
+      <code>! is_object($ath)</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/common/Search/SearchWiki.class.php">
+    <MissingParamType occurrences="6">
+      <code>$page_name</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$words</code>
+      <code>$words</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="4">
+      <code>getFacets</code>
+      <code>getRedirectUrl</code>
+      <code>getSearchPageName</code>
+      <code>search</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Service/ServiceCreator.php">
@@ -63860,24 +64424,16 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/History/HistoryEntry.php">
-    <MissingParamType occurrences="5">
+    <MissingParamType occurrences="4">
       <code>$color</code>
       <code>$link</code>
       <code>$title</code>
       <code>$visit_time</code>
-      <code>$xref</code>
-    </MissingParamType>
-  </file>
-  <file src="src/common/User/History/HistoryQuickLink.php">
-    <MissingParamType occurrences="2">
-      <code>$name</code>
-      <code>$url</code>
     </MissingParamType>
   </file>
   <file src="src/common/User/IHaveAnSSHKey.php">
-    <MissingReturnType occurrences="2">
+    <MissingReturnType occurrences="1">
       <code>getAuthorizedKeysArray</code>
-      <code>getUserName</code>
     </MissingReturnType>
   </file>
   <file src="src/common/User/ImmutableInfoPresenter.class.php">
@@ -64178,14 +64734,6 @@
       <code>setPreference</code>
     </PossiblyNullReference>
   </file>
-  <file src="src/common/User/RandomNumberGenerator.class.php">
-    <MissingParamType occurrences="1">
-      <code>$token_size</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$token_size</code>
-    </MissingPropertyType>
-  </file>
   <file src="src/common/User/RequestFromAutocompleter.php">
     <InvalidScalarArgument occurrences="2">
       <code>$project-&gt;getID()</code>
@@ -64450,11 +64998,9 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/User/UserHelper.class.php">
-    <MissingParamType occurrences="5">
+    <MissingParamType occurrences="3">
       <code>$instance</code>
-      <code>$realname</code>
       <code>$user_id</code>
-      <code>$user_name</code>
       <code>$user_name</code>
     </MissingParamType>
     <MissingPropertyType occurrences="5">
@@ -64464,13 +65010,12 @@
       <code>$_userdao</code>
       <code>$_username_display</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="11">
+    <MissingReturnType occurrences="10">
       <code>_getCurrentUserUsernameDisplayPreference</code>
       <code>_getUserDao</code>
       <code>_getUserManager</code>
       <code>_isUserNameNone</code>
       <code>clearInstance</code>
-      <code>getDisplayName</code>
       <code>getDisplayNameFromUserName</code>
       <code>getDisplayNameSQLOrder</code>
       <code>getDisplayNameSQLQuery</code>
@@ -64504,24 +65049,11 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/UserManager.class.php">
-    <DeprecatedMethod occurrences="8">
-      <code>$this-&gt;getDao()-&gt;searchByEmail($email)</code>
-      <code>$this-&gt;getDao()-&gt;searchByLdapId($ldap_id)</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>rowCount</code>
-    </DeprecatedMethod>
-    <InvalidScalarArgument occurrences="5">
-      <code>$newUid</code>
-      <code>$this-&gt;getDao()-&gt;foundRows()</code>
-      <code>$this-&gt;getDao()-&gt;foundRows()</code>
+    <InvalidScalarArgument occurrences="2">
       <code>$user-&gt;getId()</code>
       <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
-    <MissingParamType occurrences="23">
+    <MissingParamType occurrences="22">
       <code>$allowpending</code>
       <code>$confirm_hash</code>
       <code>$email</code>
@@ -64538,7 +65070,6 @@
       <code>$offset</code>
       <code>$offset</code>
       <code>$row</code>
-      <code>$row</code>
       <code>$session_hash</code>
       <code>$status</code>
       <code>$timestamp</code>
@@ -64553,7 +65084,7 @@
       <code>$_userid_bynames</code>
       <code>$_users</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="22">
+    <MissingReturnType occurrences="21">
       <code>_getPasswordLifetime</code>
       <code>_getUserInstanceFromRow</code>
       <code>addSSHKeys</code>
@@ -64568,7 +65099,6 @@
       <code>getSSHKeyValidator</code>
       <code>getSessionLifetime</code>
       <code>getUserByIdWithoutCache</code>
-      <code>getUserInstanceFromRow</code>
       <code>logout</code>
       <code>removeConfirmHash</code>
       <code>setDao</code>
@@ -65510,8 +66040,7 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Widget/Widget_ProjectPublicAreas.class.php">
-    <DeprecatedFunction occurrences="18">
-      <code>db_ei($group_id)</code>
+    <DeprecatedFunction occurrences="13">
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
@@ -65522,11 +66051,7 @@
       <code>db_fetch_array($res_count)</code>
       <code>db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=" . db_ei($group_id) . " AND is_public=1")</code>
       <code>db_query($sql)</code>
-      <code>db_query($sql)</code>
       <code>db_result($result, 0, 0)</code>
-      <code>db_result($result, 0, 0)</code>
-      <code>db_result($result, 0, 1)</code>
-      <code>db_result($result, 0, 2)</code>
     </DeprecatedFunction>
     <InvalidScalarArgument occurrences="1">
       <code>$group_id</code>
@@ -65876,9 +66401,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/admin/Admin_UserListExporter.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$users</code>
-    </InvalidArgument>
     <MissingParamType occurrences="1">
       <code>$last_access_date_timestamp</code>
     </MissingParamType>
@@ -69296,149 +69818,11 @@
     </PossiblyFalseReference>
   </file>
   <file src="src/common/dao/UserDao.class.php">
-    <DeprecatedFunction occurrences="3">
-      <code>db_ei($limit)</code>
-      <code>db_ei($offset)</code>
-      <code>db_ei($user['user_id'])</code>
-    </DeprecatedFunction>
-    <DeprecatedMethod occurrences="102">
-      <code>$dar</code>
-      <code>current</code>
-      <code>current</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>getDa</code>
-      <code>getDa</code>
-      <code>getDa</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>isError</code>
-      <code>isError</code>
-      <code>isError</code>
-      <code>isError</code>
-      <code>isError</code>
-      <code>isError</code>
-      <code>parent::__construct($da)</code>
-      <code>quoteLikeValueSurround</code>
-      <code>quoteLikeValueSurround</code>
-      <code>quoteLikeValueSurround</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmartImplode</code>
-      <code>quoteSmartImplode</code>
-      <code>quoteSmartImplode</code>
-      <code>quoteSmartImplode</code>
-      <code>quoteSmartSchema</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>rowCount</code>
-      <code>searchExactMatch</code>
-      <code>searchExactMatch</code>
-      <code>searchExplodeMatch</code>
-      <code>searchExplodeMatch</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <FalsableReturnStatement occurrences="10">
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>false</code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="9">
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
-    </InvalidFalsableReturnType>
-    <InvalidOperand occurrences="1">
-      <code>$this-&gt;update($sqlArtgn)</code>
-    </InvalidOperand>
-    <LessSpecificReturnStatement occurrences="1"/>
-    <MissingParamType occurrences="45">
+    <MissingParamType occurrences="43">
       <code>$add_date</code>
       <code>$authorized_keys</code>
       <code>$confirm_hash</code>
       <code>$confirm_hash</code>
-      <code>$da</code>
-      <code>$email</code>
       <code>$email</code>
       <code>$email</code>
       <code>$email_new</code>
@@ -69479,31 +69863,6 @@
       <code>$user_name</code>
       <code>$words</code>
     </MissingParamType>
-    <MissingReturnType occurrences="13">
-      <code>countAliveUsersRegisteredBefore</code>
-      <code>countAllAliveUsers</code>
-      <code>countAllUsers</code>
-      <code>removeConfirmHash</code>
-      <code>renameUser</code>
-      <code>searchByEmailList</code>
-      <code>searchGlobalPaginated</code>
-      <code>searchPaginatedSSHKeys</code>
-      <code>searchSSHKeys</code>
-      <code>searchUserNameLike</code>
-      <code>storeLoginFailure</code>
-      <code>storeLoginSuccess</code>
-      <code>updateByRow</code>
-    </MissingReturnType>
-    <MoreSpecificReturnType occurrences="1"/>
-    <PossiblyFalseReference occurrences="4">
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-    </PossiblyFalseReference>
-    <PossiblyInvalidOperand occurrences="1">
-      <code>$res</code>
-    </PossiblyInvalidOperand>
   </file>
   <file src="src/common/dao/UserGroupDao.class.php">
     <DeprecatedMethod occurrences="52">
@@ -70734,24 +71093,14 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/include/HTTPRequest.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$netmask</code>
-    </InvalidScalarArgument>
     <MissingParamType occurrences="2">
       <code>$instance</code>
       <code>$validator</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>_get</code>
       <code>clearInstance</code>
       <code>setInstance</code>
-      <code>setTrustedProxies</code>
     </MissingReturnType>
   </file>
   <file src="src/common/include/JSONHeader.php">
@@ -71253,479 +71602,6 @@
       <code>push</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Mail/Codendi_Mail.class.php">
-    <InvalidArrayOffset occurrences="6">
-      <code>$row['email']</code>
-      <code>$row['email']</code>
-      <code>$row['email']</code>
-      <code>$row['real_name']</code>
-      <code>$row['real_name']</code>
-      <code>$row['real_name']</code>
-    </InvalidArrayOffset>
-    <MissingParamType occurrences="22">
-      <code>$bcc</code>
-      <code>$cid</code>
-      <code>$comma_separeted_addresses</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$email</code>
-      <code>$email</code>
-      <code>$email</code>
-      <code>$email</code>
-      <code>$filename</code>
-      <code>$message_id</code>
-      <code>$mime_type</code>
-      <code>$mime_type</code>
-      <code>$mime_type</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$subject</code>
-      <code>$to</code>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="19">
-      <code>addAdditionalHeader</code>
-      <code>addAttachment</code>
-      <code>addBcc</code>
-      <code>addCc</code>
-      <code>addInlineAttachment</code>
-      <code>addTo</code>
-      <code>clearFrom</code>
-      <code>clearRecipients</code>
-      <code>getBodyPart</code>
-      <code>getMimePartAttachment</code>
-      <code>getSubject</code>
-      <code>setBcc</code>
-      <code>setBody</code>
-      <code>setBodyText</code>
-      <code>setCc</code>
-      <code>setFrom</code>
-      <code>setMessageId</code>
-      <code>setSubject</code>
-      <code>setTo</code>
-    </MissingReturnType>
-    <PossiblyInvalidMethodCall occurrences="2">
-      <code>getAddressList</code>
-      <code>getAddressList</code>
-    </PossiblyInvalidMethodCall>
-    <UndefinedMethod occurrences="2">
-      <code>getAddressList</code>
-      <code>getAddressList</code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/common/Mail/Codendi_Mail_Interface.class.php">
-    <MissingParamType occurrences="8">
-      <code>$bcc</code>
-      <code>$body</code>
-      <code>$cc</code>
-      <code>$email</code>
-      <code>$name</code>
-      <code>$subject</code>
-      <code>$to</code>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="13">
-      <code>addAdditionalHeader</code>
-      <code>getBcc</code>
-      <code>getBody</code>
-      <code>getCc</code>
-      <code>getSubject</code>
-      <code>getTo</code>
-      <code>send</code>
-      <code>setBcc</code>
-      <code>setBody</code>
-      <code>setCc</code>
-      <code>setFrom</code>
-      <code>setSubject</code>
-      <code>setTo</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/MailAccountSuspensionAlertPresenter.php">
-    <MissingPropertyType occurrences="4">
-      <code>$last_access_date</code>
-      <code>$organization_name</code>
-      <code>$suspension_date</code>
-      <code>$tuleap_server_name</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Mail/MailAccountSuspensionPresenter.php">
-    <MissingPropertyType occurrences="4">
-      <code>$last_access_date</code>
-      <code>$notification_delay</code>
-      <code>$organization_name</code>
-      <code>$tuleap_server_name</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Mail/MailBuilder.php">
-    <MissingParamType occurrences="1">
-      <code>$email</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>buildEmail</code>
-      <code>getMailSender</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/MailEnhancer.php">
-    <MissingReturnType occurrences="5">
-      <code>addHeader</code>
-      <code>addPropertiesToLookAndFeel</code>
-      <code>enhanceMail</code>
-      <code>getMessageId</code>
-      <code>setMessageId</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/MailFilter.php">
-    <MissingReturnType occurrences="1">
-      <code>filter</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/MailInstrumentation.php">
-    <MissingReturnType occurrences="2">
-      <code>increment</code>
-      <code>incrementFailure</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/MailNotificationBuilder.php">
-    <MissingParamType occurrences="10">
-      <code>$html_body</code>
-      <code>$html_body</code>
-      <code>$link</code>
-      <code>$link</code>
-      <code>$subject</code>
-      <code>$subject</code>
-      <code>$text_body</code>
-      <code>$text_body</code>
-      <code>$truncated_service_name</code>
-      <code>$truncated_service_name</code>
-    </MissingParamType>
-  </file>
-  <file src="src/common/Mail/MailNotificationPresenter.class.php">
-    <MissingParamType occurrences="8">
-      <code>$color_button</code>
-      <code>$color_logo</code>
-      <code>$redirect_button</code>
-      <code>$redirect_url</code>
-      <code>$section_one</code>
-      <code>$signature</code>
-      <code>$thanks</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="4">
-      <code>$color_button</code>
-      <code>$redirect_button</code>
-      <code>$redirect_url</code>
-      <code>$section_one</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Mail/MailOutlinePresenter.class.php">
-    <MissingParamType occurrences="4">
-      <code>$color_logo</code>
-      <code>$signature</code>
-      <code>$thanks</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="4">
-      <code>$color_logo</code>
-      <code>$signature</code>
-      <code>$thanks</code>
-      <code>$title</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Mail/MailPresenter.php">
-    <MissingParamType occurrences="3">
-      <code>$goto_link</code>
-      <code>$platform_name</code>
-      <code>$service_shortname</code>
-    </MissingParamType>
-  </file>
-  <file src="src/common/Mail/MailPresenterFactory.class.php">
-    <InvalidReturnStatement occurrences="5">
-      <code>$presenter</code>
-      <code>$presenter</code>
-      <code>$presenter</code>
-      <code>$presenter</code>
-      <code>$presenter</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="6">
-      <code>MailRegisterByUserPresenter</code>
-      <code>MailRegisterByUserPresenter</code>
-      <code>MailRegisterByUserPresenter</code>
-      <code>MailRegisterByUserPresenter</code>
-      <code>MailRegisterByUserPresenter</code>
-      <code>string</code>
-    </InvalidReturnType>
-    <MissingParamType occurrences="15">
-      <code>$color_button</code>
-      <code>$color_button</code>
-      <code>$color_button</code>
-      <code>$color_logo</code>
-      <code>$color_logo</code>
-      <code>$color_logo</code>
-      <code>$color_logo</code>
-      <code>$confirm_hash</code>
-      <code>$login</code>
-      <code>$logo_url</code>
-      <code>$logo_url</code>
-      <code>$logo_url</code>
-      <code>$logo_url</code>
-      <code>$logo_url</code>
-      <code>$presenter_role</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>createMailProjectNotificationPresenter</code>
-      <code>createMailProjectPresenter</code>
-    </MissingReturnType>
-    <UndefinedVariable occurrences="23">
-      <code>$help</code>
-      <code>$help</code>
-      <code>$help</code>
-      <code>$redirect_button</code>
-      <code>$section_after_login</code>
-      <code>$section_after_login</code>
-      <code>$section_one</code>
-      <code>$section_one</code>
-      <code>$section_one</code>
-      <code>$section_three</code>
-      <code>$section_three</code>
-      <code>$section_two</code>
-      <code>$section_two</code>
-      <code>$section_two</code>
-      <code>$signature</code>
-      <code>$signature</code>
-      <code>$signature</code>
-      <code>$thanks</code>
-      <code>$thanks</code>
-      <code>$thanks</code>
-      <code>$title</code>
-      <code>$title</code>
-      <code>$title</code>
-    </UndefinedVariable>
-  </file>
-  <file src="src/common/Mail/MailProjectNotificationMustBeApprovedPresenter.class.php">
-    <MissingParamType occurrences="2">
-      <code>$color_button</code>
-      <code>$color_logo</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="10">
-      <code>getMessageText</code>
-      <code>get_help</code>
-      <code>get_redirect_button</code>
-      <code>get_section_one</code>
-      <code>get_section_three</code>
-      <code>get_section_two</code>
-      <code>get_signature</code>
-      <code>get_thanks</code>
-      <code>get_title</code>
-      <code>get_url</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/MailProjectNotificationPresenter.class.php">
-    <MissingParamType occurrences="2">
-      <code>$color_button</code>
-      <code>$color_logo</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="10">
-      <code>getMessageText</code>
-      <code>get_help</code>
-      <code>get_redirect_button</code>
-      <code>get_section_one</code>
-      <code>get_section_three</code>
-      <code>get_section_two</code>
-      <code>get_signature</code>
-      <code>get_thanks</code>
-      <code>get_title</code>
-      <code>get_url</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/MailProjectOneStepRegisterPresenter.class.php">
-    <MissingParamType occurrences="1">
-      <code>$color_logo</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="17">
-      <code>getMessageText</code>
-      <code>getUrlDocumentationSite</code>
-      <code>getUrlProjectAdministration</code>
-      <code>getUrlSummaryLink</code>
-      <code>get_help</code>
-      <code>get_project_full_name</code>
-      <code>get_project_full_name_title</code>
-      <code>get_project_short_name</code>
-      <code>get_project_short_name_title</code>
-      <code>get_project_summary_page</code>
-      <code>get_project_summary_page_title</code>
-      <code>get_section_one</code>
-      <code>get_section_three</code>
-      <code>get_section_two</code>
-      <code>get_signature</code>
-      <code>get_thanks</code>
-      <code>get_title</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/MailRegisterByAdminApprovalPresenter.class.php">
-    <MissingParamType occurrences="10">
-      <code>$color_logo</code>
-      <code>$help</code>
-      <code>$login</code>
-      <code>$section_after_login</code>
-      <code>$section_one</code>
-      <code>$section_three</code>
-      <code>$section_two</code>
-      <code>$signature</code>
-      <code>$thanks</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$section_three</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Mail/MailRegisterByAdminNotificationPresenter.class.php">
-    <MissingParamType occurrences="11">
-      <code>$color_button</code>
-      <code>$color_logo</code>
-      <code>$login</code>
-      <code>$redirect_button</code>
-      <code>$redirect_url</code>
-      <code>$section_after_login</code>
-      <code>$section_one</code>
-      <code>$section_two</code>
-      <code>$signature</code>
-      <code>$thanks</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$login</code>
-      <code>$section_after_login</code>
-      <code>$section_two</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Mail/MailRegisterByAdminPresenter.class.php">
-    <MissingParamType occurrences="10">
-      <code>$color_logo</code>
-      <code>$help</code>
-      <code>$login</code>
-      <code>$section_after_login</code>
-      <code>$section_one</code>
-      <code>$section_three</code>
-      <code>$section_two</code>
-      <code>$signature</code>
-      <code>$thanks</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$password</code>
-      <code>$section_three</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Mail/MailRegisterByUserPresenter.class.php">
-    <MissingParamType occurrences="12">
-      <code>$color_button</code>
-      <code>$color_logo</code>
-      <code>$help</code>
-      <code>$login</code>
-      <code>$redirect_button</code>
-      <code>$redirect_url</code>
-      <code>$section_after_login</code>
-      <code>$section_one</code>
-      <code>$section_two</code>
-      <code>$signature</code>
-      <code>$thanks</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$color_button</code>
-      <code>$redirect_button</code>
-      <code>$redirect_url</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Mail/MailRegisterPresenter.class.php">
-    <MissingParamType occurrences="9">
-      <code>$color_logo</code>
-      <code>$help</code>
-      <code>$login</code>
-      <code>$section_after_login</code>
-      <code>$section_one</code>
-      <code>$section_two</code>
-      <code>$signature</code>
-      <code>$thanks</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="5">
-      <code>$help</code>
-      <code>$login</code>
-      <code>$section_after_login</code>
-      <code>$section_one</code>
-      <code>$section_two</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Mail/MassmailFormPresenter.class.php">
-    <MissingParamType occurrences="2">
-      <code>$action</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="8">
-      <code>$action</code>
-      <code>$body_label</code>
-      <code>$close_button</code>
-      <code>$csrf_token</code>
-      <code>$project_id</code>
-      <code>$subject_label</code>
-      <code>$submit_button</code>
-      <code>$title</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>getTemplateDir</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/MassmailSender.class.php">
-    <MissingReturnType occurrences="1">
-      <code>sendMassmail</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/RecipientListBuilder.php">
-    <MissingParamType occurrences="3">
-      <code>$address</code>
-      <code>$address</code>
-      <code>$identifier</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$allowed_status</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="6">
-      <code>addExternalAddress</code>
-      <code>addUser</code>
-      <code>addUserFromMatchingOnes</code>
-      <code>fallbackOnExternalAddress</code>
-      <code>fallbackOnFindUser</code>
-      <code>hasAllowedStatus</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Mail/TuleapRegisterMail.class.php">
-    <MissingParamType occurrences="17">
-      <code>$base_url</code>
-      <code>$confirm_hash</code>
-      <code>$from</code>
-      <code>$from</code>
-      <code>$from</code>
-      <code>$login</code>
-      <code>$login</code>
-      <code>$presenter_role</code>
-      <code>$project</code>
-      <code>$project</code>
-      <code>$redirect_url</code>
-      <code>$subject</code>
-      <code>$subject</code>
-      <code>$template</code>
-      <code>$to</code>
-      <code>$to</code>
-      <code>$to</code>
-    </MissingParamType>
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$message</code>
-    </PossiblyUndefinedVariable>
-  </file>
   <file src="src/common/mailing_list/MailingList.class.php">
     <MissingParamType occurrences="1">
       <code>$row</code>
@@ -72066,301 +71942,6 @@
       <code>searchAllowedProjectsOnResource</code>
       <code>setResourceRestricted</code>
       <code>unsetResourceRestricted</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/Presenters/AdditionalSearchTabsPresenter.class.php">
-    <MissingParamType occurrences="3">
-      <code>$name</code>
-      <code>$type_of_search</code>
-      <code>$url</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$name</code>
-      <code>$type_of_search</code>
-      <code>$url</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Search/Presenters/SearchFacetsPresenter.class.php">
-    <MissingPropertyType occurrences="1">
-      <code>$title</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Search/Presenters/SearchForumResultPresenter.php">
-    <MissingReturnType occurrences="4">
-      <code>message_author</code>
-      <code>message_date</code>
-      <code>message_subject</code>
-      <code>message_uri</code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="4">
-      <code>$this-&gt;message_author</code>
-      <code>$this-&gt;message_date</code>
-      <code>$this-&gt;message_id</code>
-      <code>$this-&gt;message_subject</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;message_author</code>
-      <code>$this-&gt;message_date</code>
-      <code>$this-&gt;message_id</code>
-      <code>$this-&gt;message_subject</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="src/common/Search/Presenters/SearchPanePresenter.class.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>! empty($search_types)</code>
-    </InvalidPropertyAssignmentValue>
-  </file>
-  <file src="src/common/Search/Presenters/SearchPeopleResultPresenter.php">
-    <MissingReturnType occurrences="4">
-      <code>avatar</code>
-      <code>real_name</code>
-      <code>user_name</code>
-      <code>user_uri</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/Presenters/SearchPresenter.class.php">
-    <MissingParamType occurrences="4">
-      <code>$project</code>
-      <code>$search_result</code>
-      <code>$type_of_search</code>
-      <code>$words</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="7">
-      <code>$group_id</code>
-      <code>$number_of_page_results</code>
-      <code>$search_panes</code>
-      <code>$search_result</code>
-      <code>$template</code>
-      <code>$type_of_search</code>
-      <code>$words</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>classic_search_tab_label</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/Presenters/SearchProjectResultPresenter.php">
-    <MissingReturnType occurrences="4">
-      <code>project_description</code>
-      <code>project_name</code>
-      <code>project_unix_name</code>
-      <code>project_uri</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/Presenters/SearchResultsIntroPresenter.php">
-    <MissingParamType occurrences="2">
-      <code>$results</code>
-      <code>$words</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$purifier</code>
-      <code>$results</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="4">
-      <code>getNumberRowsReturned</code>
-      <code>has_results</code>
-      <code>no_match_found_string</code>
-      <code>search_result_title</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/Presenters/SearchResultsPresenter.php">
-    <MissingParamType occurrences="2">
-      <code>$maybe_more_results</code>
-      <code>$template</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$maybe_more_results</code>
-      <code>$more_results</code>
-      <code>$template</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="5">
-      <code>getTemplate</code>
-      <code>has_results</code>
-      <code>no_more_results</code>
-      <code>results</code>
-      <code>results_intro</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/Presenters/SearchTrackerV3ResultPresenter.php">
-    <MissingParamType occurrences="1">
-      <code>$result_display</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>getTemplate</code>
-      <code>result_display</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/Presenters/SearchTypePresenter.class.php">
-    <MissingParamType occurrences="4">
-      <code>$facets</code>
-      <code>$search_type</code>
-      <code>$title</code>
-      <code>$url</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="5">
-      <code>$facets</code>
-      <code>$has_facets</code>
-      <code>$search_type</code>
-      <code>$title</code>
-      <code>$url</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/Search/SearchController.class.php">
-    <InvalidArgument occurrences="1"/>
-    <MissingParamType occurrences="5">
-      <code>$redirect_to_services</code>
-      <code>$results</code>
-      <code>$results</code>
-      <code>$site_search_types</code>
-      <code>$words</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$search_types</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="8">
-      <code>ajaxResults</code>
-      <code>error</code>
-      <code>getAdditionnalProjectWidePresentersIfNeeded</code>
-      <code>getSearchPresenter</code>
-      <code>getSiteWidePane</code>
-      <code>index</code>
-      <code>renderResults</code>
-      <code>results</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/SearchForum.class.php">
-    <DeprecatedMethod occurrences="1">
-      <code>$results</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="2">
-      <code>$maybe_more_results</code>
-      <code>$words</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>getResultsPresenters</code>
-      <code>getSearchForumResultPresenter</code>
-      <code>search</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/SearchPeople.class.php">
-    <MissingParamType occurrences="2">
-      <code>$maybe_more_results</code>
-      <code>$words</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>getResultsPresenters</code>
-      <code>getSearchPeopleResultPresenter</code>
-      <code>search</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/SearchPlugin.class.php">
-    <MissingReturnType occurrences="1">
-      <code>search</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/SearchProject.class.php">
-    <DeprecatedMethod occurrences="1">
-      <code>$results</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="2">
-      <code>$maybe_more_results</code>
-      <code>$words</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>getResultsPresenters</code>
-      <code>getSearchProjectResultPresenter</code>
-      <code>search</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/SearchQuery.class.php">
-    <MissingParamType occurrences="1">
-      <code>$number_of_results</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="9">
-      <code>$exact</code>
-      <code>$forum_id</code>
-      <code>$is_ajax</code>
-      <code>$number_of_results</code>
-      <code>$offset</code>
-      <code>$project</code>
-      <code>$trackerv3id</code>
-      <code>$type_of_search</code>
-      <code>$words</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="11">
-      <code>getExact</code>
-      <code>getForumId</code>
-      <code>getNumberOfResults</code>
-      <code>getOffset</code>
-      <code>getProject</code>
-      <code>getTrackerV3Id</code>
-      <code>getTypeOfSearch</code>
-      <code>getWords</code>
-      <code>isAjax</code>
-      <code>isValid</code>
-      <code>setNumberOfResults</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/SearchResults.class.php">
-    <MissingParamType occurrences="3">
-      <code>$count</code>
-      <code>$has_more</code>
-      <code>$results_html</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$has_more</code>
-      <code>$results_count</code>
-      <code>$results_html</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="7">
-      <code>getCountResults</code>
-      <code>getFacetsHtml</code>
-      <code>getResultsHtml</code>
-      <code>hasMore</code>
-      <code>setCountResults</code>
-      <code>setHasMore</code>
-      <code>setResultsHtml</code>
-    </MissingReturnType>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;facets_html</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="src/common/Search/SearchRouter.class.php">
-    <MissingPropertyType occurrences="1">
-      <code>$controller</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>route</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Search/SearchTrackerV3.class.php">
-    <DeprecatedMethod occurrences="1">
-      <code>foundRows</code>
-    </DeprecatedMethod>
-    <MissingReturnType occurrences="3">
-      <code>getFacets</code>
-      <code>getTrackersv3ForProject</code>
-      <code>search</code>
-    </MissingReturnType>
-    <TypeDoesNotContainType occurrences="3">
-      <code>! $ath</code>
-      <code>! $ath</code>
-      <code>! is_object($ath)</code>
-    </TypeDoesNotContainType>
-  </file>
-  <file src="src/common/Search/SearchWiki.class.php">
-    <MissingParamType occurrences="6">
-      <code>$page_name</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$words</code>
-      <code>$words</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>getFacets</code>
-      <code>getRedirectUrl</code>
-      <code>getSearchPageName</code>
-      <code>search</code>
     </MissingReturnType>
   </file>
   <file src="src/common/soap/SOAPRequestValidator.php">
@@ -73039,14 +72620,6 @@
     </UndefinedMethod>
   </file>
   <file src="src/common/system_event/include/SystemEvent_ROOT_DAILY.class.php">
-    <DeprecatedMethod occurrences="2">
-      <code>$users</code>
-      <code>instanciateWith</code>
-    </DeprecatedMethod>
-    <InvalidArgument occurrences="2">
-      <code>$user</code>
-      <code>[UserManager::instance(), 'getUserInstanceFromRow']</code>
-    </InvalidArgument>
     <MissingReturnType occurrences="5">
       <code>process</code>
       <code>purgeSystemEventsDataOlderThanOneYear</code>
@@ -76264,19 +75837,7 @@
       <code>db_query($sql)</code>
       <code>db_query($sql_artifacts)</code>
     </DeprecatedFunction>
-    <FalsableReturnStatement occurrences="18">
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
+    <FalsableReturnStatement occurrences="6">
       <code>false</code>
       <code>false</code>
       <code>false</code>
@@ -76291,12 +75852,10 @@
       <code>array</code>
       <code>array</code>
     </InvalidFalsableReturnType>
-    <InvalidReturnStatement occurrences="2">
-      <code>$id</code>
+    <InvalidReturnStatement occurrences="1">
       <code>$new_at</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>id</code>
+    <InvalidReturnType occurrences="1">
       <code>the</code>
     </InvalidReturnType>
     <MissingParamType occurrences="15">
@@ -76316,14 +75875,12 @@
       <code>$user_id</code>
       <code>$view</code>
     </MissingParamType>
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>getArtifactGroupListDao</code>
-      <code>getStatusIdCount</code>
       <code>setError</code>
     </MissingReturnType>
-    <UndefinedDocblockClass occurrences="5">
+    <UndefinedDocblockClass occurrences="4">
       <code>db_result</code>
-      <code>id</code>
       <code>query</code>
       <code>resultSet</code>
       <code>the</code>
@@ -79226,17 +78783,8 @@
       <code>getId</code>
     </PossiblyNullReference>
   </file>
-  <file src="src/www/admin/userlist.php">
-    <DeprecatedMethod occurrences="1">
-      <code>getRow</code>
-    </DeprecatedMethod>
-    <PossiblyFalseReference occurrences="1">
-      <code>getRow</code>
-    </PossiblyFalseReference>
-  </file>
   <file src="src/www/api/reference/extractCross.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>$group_id</code>
+    <InvalidScalarArgument occurrences="1">
       <code>$user_id</code>
     </InvalidScalarArgument>
   </file>
@@ -82264,12 +81812,10 @@
     </UndefinedPropertyFetch>
   </file>
   <file src="src/www/soap/common/session.php">
-    <InvalidReturnStatement occurrences="2">
+    <InvalidReturnStatement occurrences="1">
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session.', 'retrieveSession')</code>
-      <code>new SoapFault(LOGIN_FAULT, $loginname . ' : ' . $Language-&gt;getText('include_session', 'invalid_pwd'), 'login')</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>array</code>
+    <InvalidReturnType occurrences="1">
       <code>array</code>
     </InvalidReturnType>
     <MissingReturnType occurrences="1">
@@ -83725,13 +83271,12 @@
       <code>$template_name</code>
       <code>$theme</code>
     </MissingParamType>
-    <MissingReturnType occurrences="13">
+    <MissingReturnType occurrences="12">
       <code>addBodyClassDependingThemeVariant</code>
       <code>addBodyClassDependingUserPreference</code>
       <code>body</code>
       <code>displayCommonStylesheetElements</code>
       <code>endOfPage</code>
-      <code>footer</code>
       <code>getColorOfCurrentTheme</code>
       <code>getTemplateDir</code>
       <code>getVariants</code>

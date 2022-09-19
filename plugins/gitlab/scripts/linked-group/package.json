@@ -1,0 +1,19 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-gitlab-linked-group",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/plugin-gitlab-administration-theme": "link:../lib/administration-theme"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "typecheck": "vue-tsc --noEmit"
+  }
+}
