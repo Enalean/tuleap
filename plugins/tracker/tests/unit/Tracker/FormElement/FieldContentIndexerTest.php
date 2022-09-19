@@ -27,7 +27,6 @@ use Tracker_FormElement_Field;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueueStub;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -42,12 +41,12 @@ final class FieldContentIndexerTest extends TestCase
             self::assertEquals(
                 new ItemToIndex(
                     'plugin_artifact_field',
+                    4,
                     'value',
                     [
                         'field_id'    => '1',
                         'artifact_id' => '2',
                         'tracker_id'  => '3',
-                        'project_id'  => '4',
                     ]
                 ),
                 $item
@@ -69,28 +68,6 @@ final class FieldContentIndexerTest extends TestCase
         );
 
         self::assertTrue($has_been_called);
-    }
-
-    public function testAskForDeletionFromAProject(): void
-    {
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            static function (IndexedItemsToRemove $items_to_remove): IndexedItemsToRemove {
-                self::assertEquals(
-                    new IndexedItemsToRemove(
-                        'plugin_artifact_field',
-                        [
-                            'project_id'  => '4',
-                        ]
-                    ),
-                    $items_to_remove
-                );
-                return $items_to_remove;
-            }
-        );
-
-        $indexer = new FieldContentIndexer(ItemToIndexQueueStub::noop(), $event_dispatcher);
-
-        $indexer->askForDeletionOfIndexedFieldsFromProject(ProjectTestBuilder::aProject()->withId(4)->build());
     }
 
     public function testAskForDeletionFromAnArtifact(): void

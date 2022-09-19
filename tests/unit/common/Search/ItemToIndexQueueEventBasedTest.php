@@ -29,7 +29,7 @@ final class ItemToIndexQueueEventBasedTest extends TestCase
 {
     public function testDispatchEvent(): void
     {
-        $item_to_index = new ItemToIndex('type', 'content', ['A' => 'A']);
+        $item_to_index = new ItemToIndex('type', 102, 'content', ['A' => 'A']);
 
         $event_dispatcher = EventDispatcherStub::withCallback(
             static function (ItemToIndex $received) use ($item_to_index): ItemToIndex {

@@ -20,8 +20,10 @@
 CREATE TABLE IF NOT EXISTS plugin_fts_db_search (
     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     type VARCHAR(255) NOT NULL,
+    project_id INT(11),
     content MEDIUMTEXT NOT NULL,
     INDEX idx_type(type),
+    INDEX idx_project(project_id),
     FULLTEXT idx_content(content)
 ) ENGINE=InnoDB;
 

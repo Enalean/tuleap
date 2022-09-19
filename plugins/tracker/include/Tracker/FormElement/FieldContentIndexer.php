@@ -42,24 +42,12 @@ class FieldContentIndexer
         $this->index_queue->addItemToQueue(
             new \Tuleap\Search\ItemToIndex(
                 self::INDEX_TYPE_FIELD_CONTENT,
+                (int) $field->getTracker()->getGroupId(),
                 $value,
                 [
                     'field_id'    => (string) $field->getId(),
                     'artifact_id' => (string) $artifact->getId(),
                     'tracker_id'  => (string) $field->getTrackerId(),
-                    'project_id'  => (string) $field->getTracker()->getGroupId(),
-                ]
-            )
-        );
-    }
-
-    public function askForDeletionOfIndexedFieldsFromProject(\Project $project): void
-    {
-        $this->event_dispatcher->dispatch(
-            new \Tuleap\Search\IndexedItemsToRemove(
-                self::INDEX_TYPE_FIELD_CONTENT,
-                [
-                    'project_id'  => (string) $project->getID(),
                 ]
             )
         );

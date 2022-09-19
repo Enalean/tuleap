@@ -27,4 +27,5 @@ use Tuleap\Search\IndexedItemsToRemove;
 interface DeleteIndexedItems
 {
     public function deleteIndexedItems(IndexedItemsToRemove $items_to_remove): void;
+    public function deleteIndexedItemsPerProjectID(int $project_id): void;
 }

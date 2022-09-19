@@ -70,24 +70,12 @@ class ChangesetCommentIndexer
         $this->index_queue->addItemToQueue(
             new \Tuleap\Search\ItemToIndex(
                 self::INDEX_TYPE_CHANGESET_COMMENT,
+                (int) $tracker->getGroupId(),
                 Tracker_Artifact_Changeset_Comment::getCommentInPlaintext($this->purifier, $comment_body, $comment_format),
                 [
                     'changeset_id' => $changeset_id,
                     'artifact_id'  => (string) $artifact->getId(),
                     'tracker_id'   => (string) $tracker->getId(),
-                    'project_id'   => (string) $tracker->getGroupId(),
-                ]
-            )
-        );
-    }
-
-    public function askForDeletionOfIndexedCommentsFromProject(\Project $project): void
-    {
-        $this->event_dispatcher->dispatch(
-            new \Tuleap\Search\IndexedItemsToRemove(
-                self::INDEX_TYPE_CHANGESET_COMMENT,
-                [
-                    'project_id' => (string) $project->getID(),
                 ]
             )
         );
