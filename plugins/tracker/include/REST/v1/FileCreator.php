@@ -27,7 +27,6 @@ use PFUser;
 use Tuleap\Tracker\FormElement\Field\File\Upload\EmptyFileToUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadCreationConflictException;
-use Tuleap\Tracker\FormElement\Field\File\Upload\UploadCreationFileMismatchException;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadMaxSizeExceededException;
 
 final class FileCreator
@@ -62,7 +61,8 @@ final class FileCreator
                 $current_time,
                 $file_post_representation->name,
                 $file_post_representation->file_size,
-                $file_post_representation->file_type
+                $file_post_representation->file_type,
+                $file_post_representation->description ?? '',
             );
 
             if ($file_post_representation->file_size === 0) {
@@ -70,8 +70,6 @@ final class FileCreator
             }
             $representation = new CreatedFileRepresentation($file_to_upload, $file_post_representation->file_size);
         } catch (UploadCreationConflictException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (UploadCreationFileMismatchException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (UploadMaxSizeExceededException $exception) {
             throw new RestException(400, $exception->getMessage());

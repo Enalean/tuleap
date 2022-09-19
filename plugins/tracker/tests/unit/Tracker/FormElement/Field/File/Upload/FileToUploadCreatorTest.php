@@ -21,140 +21,99 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
-use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
-use PFUser;
-use Tuleap\ForgeConfigSandbox;
+use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-    use ForgeConfigSandbox;
+    private const UPLOADING_USER_ID = 102;
+    private const FILE_SIZE         = 123;
+    private const MAX_SIZE_UPLOAD   = 1000;
 
     /**
-     * @var MockInterface|FileOngoingUploadDao
+     * @var FileOngoingUploadDao & Stub
      */
     private $dao;
-    /**
-     * @var FileToUploadCreator
-     */
-    private $creator;
-    /**
-     * @var MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var MockInterface|\Tracker_FormElement_Field_File
-     */
-    private $field;
+    private int $file_size;
 
-    /**
-     * @before
-     */
-    public function instantiateCreator(): void
+    protected function setUp(): void
     {
-        $this->dao     = Mockery::mock(FileOngoingUploadDao::class);
-        $this->creator = new FileToUploadCreator(
+        $this->file_size = self::FILE_SIZE;
+
+        $this->dao = $this->createStub(FileOngoingUploadDao::class);
+    }
+
+    private function create(): FileToUpload
+    {
+        $uploader = UserTestBuilder::aUser()->withId(self::UPLOADING_USER_ID)->build();
+
+        $file_field = new \Tracker_FormElement_Field_File(
+            42,
+            67,
+            1,
+            'attachments',
+            'Attachments',
+            'Irrelevant',
+            1,
+            'P',
+            false,
+            '',
+            1
+        );
+
+        $creator = new FileToUploadCreator(
             $this->dao,
             new DBTransactionExecutorPassthrough(),
-            1000
+            self::MAX_SIZE_UPLOAD
         );
-    }
-
-    /**
-     * @before
-     */
-    public function instantiateField(): void
-    {
-        $this->field = Mockery::mock(\Tracker_FormElement_Field_File::class);
-        $this->field->shouldReceive('getId')->andReturn(42);
-    }
-
-    /**
-     * @before
-     */
-    public function instantiateUser(): void
-    {
-        $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn(102);
-    }
-
-    public function testCreation()
-    {
-        $current_time = new DateTimeImmutable();
-
-        $this->dao->shouldReceive('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->andReturn([]);
-        $this->dao->shouldReceive('saveFileOngoingUpload')->once()->andReturn(12);
-
-        $document_to_upload = $this->creator->create(
-            $this->field,
-            $this->user,
-            $current_time,
+        return $creator->create(
+            $file_field,
+            $uploader,
+            new \DateTimeImmutable(),
             'filename.txt',
-            123,
-            'text/plain'
+            $this->file_size,
+            'text/plain',
+            'synderesis apio'
         );
+    }
+
+    public function testCreation(): void
+    {
+        $this->dao->method('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->willReturn([]);
+        $this->dao->method('saveFileOngoingUpload')->willReturn(12);
+
+        $document_to_upload = $this->create();
 
         $this->assertSame('/uploads/tracker/file/12', $document_to_upload->getUploadHref());
     }
 
-    public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile()
+    public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile(): void
     {
-        $current_time = new DateTimeImmutable();
+        $this->dao->method('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->willReturn([
+            ['id' => 12, 'submitted_by' => self::UPLOADING_USER_ID, 'filesize' => self::FILE_SIZE],
+        ]);
 
-        $this->dao->shouldReceive('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->andReturn(
-            [
-                ['id' => 12, 'submitted_by' => 102, 'filesize' => 123],
-            ]
-        );
-
-        $document_to_upload = $this->creator->create(
-            $this->field,
-            $this->user,
-            $current_time,
-            'filename.txt',
-            123,
-            'text/plain'
-        );
+        $document_to_upload = $this->create();
 
         $this->assertSame('/uploads/tracker/file/12', $document_to_upload->getUploadHref());
     }
 
-    public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit()
+    public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit(): void
     {
-        $current_time = new DateTimeImmutable();
+        $this->file_size = self::MAX_SIZE_UPLOAD + 1;
 
         $this->expectException(UploadMaxSizeExceededException::class);
-
-        $this->creator->create(
-            $this->field,
-            $this->user,
-            $current_time,
-            'filename.txt',
-            2000,
-            'text/plain'
-        );
+        $this->create();
     }
 
-    public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument()
+    public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument(): void
     {
-        $current_time = new DateTimeImmutable();
-        $this->dao->shouldReceive('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->andReturn(
-            [
-                ['submitted_by' => 103, 'filesize' => 123],
-            ]
-        );
+        $this->dao->method('searchFileOngoingUploadByFieldIdNameAndExpirationDate')->willReturn([
+            ['submitted_by' => 103, 'filesize' => self::FILE_SIZE],
+        ]);
+
         $this->expectException(UploadCreationConflictException::class);
-        $this->creator->create(
-            $this->field,
-            $this->user,
-            $current_time,
-            'filename.txt',
-            123,
-            'text/plain'
-        );
+        $this->create();
     }
 }
