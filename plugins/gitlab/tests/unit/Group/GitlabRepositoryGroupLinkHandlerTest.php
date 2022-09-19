@@ -30,6 +30,7 @@ use Tuleap\Gitlab\Test\Builder\RepositoryIntegrationBuilder;
 use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
 use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
 use Tuleap\Gitlab\Test\Stubs\LinkARepositoryIntegrationToAGroupStub;
+use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkStub;
 use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGitlabRepositoryIsIntegratedStub;
 use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
@@ -113,7 +114,8 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
             new GitlabGroupFactory(
                 VerifyGroupIsAlreadyLinkedStub::withNeverLinked(),
                 VerifyProjectIsAlreadyLinkedStub::withNeverLinked(),
-                AddNewGroupStub::withGroupId(self::GROUP_ID)
+                AddNewGroupStub::withGroupId(self::GROUP_ID),
+                RetrieveGroupLinkStub::withoutLinkedGroup(),
             ),
             InsertGroupTokenStub::build(),
             $this->link_integration_to_group,

@@ -32,6 +32,7 @@ final class GitlabGroup
     private function __construct(
         public int $id,
         public int $gitlab_group_id,
+        public int $project_id,
         public string $name,
         public string $full_path,
         public string $web_url,
@@ -49,6 +50,7 @@ final class GitlabGroup
         return new self(
             $id,
             $group_DB_insertion->gitlab_group_id,
+            $group_DB_insertion->project_id,
             $group_DB_insertion->name,
             $group_DB_insertion->full_path,
             $group_DB_insertion->web_url,
@@ -56,6 +58,25 @@ final class GitlabGroup
             $group_DB_insertion->last_synchronization_date,
             $group_DB_insertion->allow_artifact_closure,
             $group_DB_insertion->prefix_branch_name
+        );
+    }
+
+    /**
+     * @psalm-param array{id: int, gitlab_group_id: int, project_id: int, name:string, full_path: string, web_url: string, avatar_url: ?string, last_synchronization_date: int, allow_artifact_closure: int, create_branch_prefix: ?string} $row
+     */
+    public static function buildGitlabGroupFromRow(array $row): self
+    {
+        return new self(
+            $row['id'],
+            $row['gitlab_group_id'],
+            $row['project_id'],
+            $row['name'],
+            $row['full_path'],
+            $row['web_url'],
+            $row['avatar_url'],
+            (new DateTimeImmutable())->setTimestamp($row['last_synchronization_date']),
+            (bool) $row['allow_artifact_closure'],
+            $row['create_branch_prefix'],
         );
     }
 }
