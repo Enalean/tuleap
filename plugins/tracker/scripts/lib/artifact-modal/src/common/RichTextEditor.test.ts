@@ -42,7 +42,7 @@ import {
     onTextareaInput,
     setupImageUpload,
 } from "./RichTextEditor";
-import type { FileField } from "../types";
+import type { FirstFileField } from "../model/FirstFileFieldStore";
 
 type CKEditorEventHandler = (event: CKEDITOR.eventInfo) => void;
 
@@ -78,7 +78,7 @@ let format: TextFieldFormat,
     editor_factory: RichTextEditorFactory,
     editor: TextEditorInterface,
     ckeditor: CKEDITOR.editor,
-    first_file_field: FileField | null,
+    first_file_field: FirstFileField | null,
     buildFileUploadHandler: jest.SpyInstance,
     setIsUploadingInCKEditor: jest.SpyInstance,
     setIsNotUploadingInCKEditor: jest.SpyInstance,
@@ -156,7 +156,7 @@ describe(`RichTextEditor`, () => {
         disabled = false;
         format = "text";
         value = "";
-        first_file_field = { field_id: 834 } as FileField;
+        first_file_field = { field_id: 834 } as FirstFileField;
     });
 
     describe(`when the editor's format is "html"`, () => {
@@ -332,7 +332,7 @@ describe(`RichTextEditor`, () => {
                 first_file_field = {
                     field_id: FIRST_FILE_FIELD_ID,
                     max_size_upload: 3000,
-                } as FileField;
+                } as FirstFileField;
             });
 
             it(`informs users that they can paste images`, () => {

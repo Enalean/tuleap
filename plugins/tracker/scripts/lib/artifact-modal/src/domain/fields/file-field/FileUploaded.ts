@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Transform } from "readable-stream/readable-browser.js";
-
-export function getBase64Transform() {
-    const stream = new Transform({
-        readableObjectMode: true,
-    });
-    stream.setEncoding("ascii");
-
-    stream._transform = function (chunk, encoding, callback) {
-        //from https://github.com/dominictarr/arraybuffer-base64/blob/master/index.js
-        let binary_string = "";
-        for (let i = 0; i < chunk.byteLength; i++) {
-            binary_string += String.fromCharCode(chunk[i]);
-        }
-        callback(null, window.btoa(binary_string));
-    };
-
-    return stream;
-}
+export type FileUploaded = {
+    readonly file_id: number;
+};

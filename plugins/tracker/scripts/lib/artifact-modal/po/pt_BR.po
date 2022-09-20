@@ -27,9 +27,6 @@ msgstr "Adicionar link"
 msgid "An error occurred while saving the artifact."
 msgstr ""
 
-msgid "An error occurred while uploading this file: {{ file_name }}."
-msgstr ""
-
 msgid "Artifact id"
 msgstr ""
 
@@ -70,6 +67,9 @@ msgid "Error while retrieving the artifact to link: %s"
 msgstr ""
 
 msgid "Error while retrieving the possible parents: %s"
+msgstr ""
+
+msgid "Error while uploading %(file_name)s: %(error)s"
 msgstr ""
 
 msgid "Error:"
@@ -218,11 +218,6 @@ msgstr "Você não está autorizado a carregar arquivos maiores que %s."
 
 msgid "You can drag 'n drop or paste image directly in the editor."
 msgstr "Você pode arrastar e soltar, ou colar a imagem diretamente no editor."
-
-msgid ""
-"You exceeded your current file upload quota. Please remove existing "
-"temporary files or wait until they are cleaned up."
-msgstr ""
 
 msgid "can only have one parent."
 msgstr ""

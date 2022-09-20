@@ -26,12 +26,10 @@ import BaseModalController from "./tuleap-artifact-modal-controller.js";
 import * as modal_create_mode_state from "./modal-creation-mode-state";
 import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./fields/file-field/file-field-detector";
-import * as file_uploader from "./fields/file-field/file-uploader.js";
 import * as is_uploading_in_ckeditor_state from "./fields/file-field/is-uploading-in-ckeditor-state";
 import * as field_dependencies_helper from "./field-dependencies-helper.js";
 import { getTargetFieldPossibleValues } from "./field-dependencies-helper.js";
-import * as validate_artifact_field_value from "./validate-artifact-field-value.js";
-import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
+import * as fields_validator from "./validate-artifact-field-value.js";
 
 describe("TuleapArtifactModalController", () => {
     let $scope,
@@ -47,8 +45,8 @@ describe("TuleapArtifactModalController", () => {
         editArtifact,
         editArtifactWithConcurrencyChecking,
         getAllFileFields,
-        uploadAllTemporaryFiles,
-        isUploadingInCKEditor;
+        isUploadingInCKEditor,
+        validateValues;
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module, function () {});
@@ -113,8 +111,8 @@ describe("TuleapArtifactModalController", () => {
             "editArtifactWithConcurrencyChecking"
         );
         getAllFileFields = jest.spyOn(file_field_detector, "getAllFileFields");
-        uploadAllTemporaryFiles = jest.spyOn(file_uploader, "uploadAllTemporaryFiles");
         isUploadingInCKEditor = jest.spyOn(is_uploading_in_ckeditor_state, "isUploadingInCKEditor");
+        validateValues = jest.spyOn(fields_validator, "validateArtifactFieldsValues");
     });
 
     describe("init() -", function () {
@@ -192,14 +190,17 @@ describe("TuleapArtifactModalController", () => {
 
     describe("submit() - Given a tracker id, field values, a callback function", () => {
         beforeEach(() => {
-            jest.spyOn(
-                validate_artifact_field_value,
-                "validateArtifactFieldsValues"
-            ).mockImplementation((values) => values);
+            validateValues.mockImplementation((values) => values);
             isUploadingInCKEditor.mockReturnValue(false);
             getAllFileFields.mockReturnValue([]);
             TuleapArtifactModalLoading.loading = false;
         });
+
+        function mockSuccessfulUpload() {
+            jest.spyOn(ArtifactModalController, "uploadAllFileFields").mockReturnValue(
+                $q.when(undefined)
+            );
+        }
 
         it(`and given that an upload is still ongoing in CKEditor,
             then it does nothing`, () => {
@@ -207,6 +208,7 @@ describe("TuleapArtifactModalController", () => {
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
             ArtifactModalController.submit();
+            $scope.$apply();
 
             expect(createArtifact).not.toHaveBeenCalled();
             expect(editArtifact).not.toHaveBeenCalled();
@@ -230,12 +232,13 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController.values = values;
             const followup_comment = { body: "My comment", format: "text" };
             ArtifactModalController.new_followup_comment = followup_comment;
+            mockSuccessfulUpload();
 
             ArtifactModalController.submit();
             expect(TuleapArtifactModalLoading.loading).toBeTruthy();
             $scope.$apply();
 
-            expect(validateArtifactFieldsValues).toHaveBeenCalledWith(
+            expect(validateValues).toHaveBeenCalledWith(
                 values,
                 true,
                 followup_comment,
@@ -254,8 +257,7 @@ describe("TuleapArtifactModalController", () => {
             the artifact will be edited,
             the modal will be closed
             and the callback will be called`, () => {
-            const edit_request = $q.defer();
-            editArtifactWithConcurrencyChecking.mockReturnValue(edit_request.promise);
+            editArtifactWithConcurrencyChecking.mockReturnValue($q.when({ id: 8155 }));
             isInCreationMode.mockReturnValue(false);
             controller_params.modal_model.artifact_id = 8155;
             controller_params.modal_model.last_changeset_id = 78;
@@ -270,13 +272,13 @@ describe("TuleapArtifactModalController", () => {
             const followup_comment = { body: "My comment", format: "text" };
             ArtifactModalController.values = values;
             ArtifactModalController.new_followup_comment = followup_comment;
+            mockSuccessfulUpload();
 
             ArtifactModalController.submit();
             expect(TuleapArtifactModalLoading.loading).toBeTruthy();
-            edit_request.resolve({ id: 8155 });
             $scope.$apply();
 
-            expect(validateArtifactFieldsValues).toHaveBeenCalledWith(
+            expect(validateValues).toHaveBeenCalledWith(
                 values,
                 false,
                 followup_comment,
@@ -295,58 +297,13 @@ describe("TuleapArtifactModalController", () => {
             expect(mockCallback).toHaveBeenCalledWith(8155);
         });
 
-        it("and given that there were 2 file fields, when I submit the modal to Tuleap, then all temporary files chosen in those fields will be uploaded before fields are validated", () => {
-            ArtifactModalController = $controller(BaseModalController, controller_params);
-            var first_field_temporary_files = [{ description: "one" }];
-            var second_field_temporary_files = [{ description: "two" }];
-            var first_file_field_value = {
-                field_id: 198,
-                temporary_files: first_field_temporary_files,
-                type: "file",
-                value: [66],
-            };
-            var second_file_field_value = {
-                field_id: 277,
-                temporary_files: second_field_temporary_files,
-                type: "file",
-                value: [],
-            };
-            var first_upload = $q.defer();
-            var second_upload = $q.defer();
-            uploadAllTemporaryFiles.mockImplementation((temporary_files) => {
-                switch (temporary_files[0].description) {
-                    case "one":
-                        return first_upload.promise;
-                    case "two":
-                        return second_upload.promise;
-                    default:
-                        return $q.reject();
-                }
-            });
-            var edit_request = $q.defer();
-            editArtifact.mockReturnValue(edit_request.promise);
-            var values = [first_file_field_value, second_file_field_value];
-            ArtifactModalController.values = values;
-            getAllFileFields.mockReturnValue(values);
-
-            ArtifactModalController.submit();
-            first_upload.resolve([47]);
-            second_upload.resolve([71, undefined]);
-            edit_request.resolve({ id: 144 });
-            $scope.$apply();
-
-            expect(uploadAllTemporaryFiles).toHaveBeenCalledWith(first_field_temporary_files);
-            expect(uploadAllTemporaryFiles).toHaveBeenCalledWith(second_field_temporary_files);
-            expect(first_file_field_value.value).toEqual([66, 47]);
-            expect(second_file_field_value.value).toEqual([71]);
-        });
-
         it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", () => {
             isInCreationMode.mockReturnValue(false);
             editArtifact.mockReturnValue($q.reject());
             ArtifactModalController = $controller(BaseModalController, controller_params);
             ArtifactModalController.values = [];
             ArtifactModalController.confirm_action_to_edit = true;
+            mockSuccessfulUpload();
 
             ArtifactModalController.submit();
             $scope.$apply();
@@ -373,13 +330,14 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController.values = values;
             ArtifactModalController.new_followup_comment = followup_comment;
             ArtifactModalController.confirm_action_to_edit = true;
+            mockSuccessfulUpload();
 
             ArtifactModalController.submit();
             expect(TuleapArtifactModalLoading.loading).toBeTruthy();
             edit_request.resolve({ id: 8155 });
             $scope.$apply();
 
-            expect(validateArtifactFieldsValues).toHaveBeenCalledWith(
+            expect(validateValues).toHaveBeenCalledWith(
                 values,
                 false,
                 followup_comment,

@@ -19,16 +19,18 @@
 
 import type { FileFieldIdentifier } from "@tuleap/plugin-tracker-constants";
 import type { AttachedFileDescription } from "./AttachedFileDescription";
+import type { Field } from "../Field";
 
 /**
  * I hold a combination of the File field's Tracker representation (field_id, label, required, type)
  * and its value's representation in the last changeset of the current Artifact.
  * Both come from Tuleap API and are combined by the modal into one object.
  */
-export interface FileFieldType {
-    readonly field_id: number;
+export interface FileFieldType extends Field {
     readonly type: FileFieldIdentifier;
     readonly label: string;
     readonly required: boolean;
+    readonly max_size_upload: number;
+    readonly file_creation_uri: string;
     readonly file_descriptions: AttachedFileDescription[] | undefined;
 }
