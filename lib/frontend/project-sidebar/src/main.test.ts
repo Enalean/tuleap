@@ -29,7 +29,7 @@ describe("Main instantiation of the Tuleap Project Sidebar element", () => {
 
         await import("./main");
 
-        expect(document.head.getElementsByTagName("style")).toHaveLength(1);
+        expect(document.head.getElementsByTagName("style").length).toBeGreaterThanOrEqual(1);
         expect(window.customElements.get("tuleap-project-sidebar")).toBeDefined();
     });
 });
