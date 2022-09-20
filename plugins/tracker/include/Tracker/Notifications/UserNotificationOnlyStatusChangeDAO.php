@@ -22,9 +22,9 @@ namespace Tuleap\Tracker\Notifications;
 
 use Tuleap\DB\DataAccessObject;
 
-class UserNotificationOnlyStatusChangeDAO extends DataAccessObject
+class UserNotificationOnlyStatusChangeDAO extends DataAccessObject implements UserNotificationOnlyStatusChange
 {
-    public function doesUserIdHaveSubscribeOnlyForStatusChangeNotification($user_id, $tracker_id)
+    public function doesUserIdHaveSubscribeOnlyForStatusChangeNotification(int $user_id, int $tracker_id): bool
     {
         $sql = 'SELECT COUNT(*)
                   FROM tracker_only_status_change_notification_subscribers

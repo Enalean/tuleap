@@ -71,7 +71,7 @@ class UserNotificationSettingsRetriever
         );
 
         $is_only_on_status_update = $this->only_status_change_dao->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(
-            $user->getId(),
+            (int) $user->getId(),
             $tracker->getId()
         );
 
