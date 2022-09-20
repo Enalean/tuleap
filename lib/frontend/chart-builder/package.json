@@ -22,7 +22,7 @@
     "d3-scale": "4.0.0",
     "d3-selection": "3.0.0",
     "d3-shape": "3.0.1",
-    "moment": "2.29.3",
+    "moment": "2.29.4",
     "sprintf-js": "1.1.2"
   },
   "devDependencies": {

@@ -7,7 +7,7 @@
     "dependencies": {
         "@tuleap/chart-builder": "link:../../lib/frontend/chart-builder",
         "d3-selection": "^3.0.0",
-        "moment": "^2.29.3",
+        "moment": "^2.29.4",
         "node-gettext": "^3.0.0",
         "sprintf-js": "^1.1.2"
     },
