@@ -33,6 +33,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeSelectorPresenter;
 use Tuleap\Tracker\Report\CSVExport\CSVFieldUsageChecker;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 use Tuleap\Tracker\Report\Renderer\Table\ProcessExportEvent;
+use Tuleap\Tracker\Report\Renderer\Table\Sort\SortWithIntegrityChecked;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -669,29 +670,27 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function fetchSort()
+    private function fetchSort(): string
     {
         $purifier     = Codendi_HTMLPurifier::instance();
         $html         = '<div class="tracker_report_table_sortby_panel">';
-        $sort_columns = $this->getSort();
-        if ($this->sortHasUsedField()) {
+        $sort_columns = SortWithIntegrityChecked::getSortOnUsedFields($this->getSort());
+        if (count($sort_columns) > 0) {
             $html .= dgettext('tuleap-tracker', 'Sort by:');
             $html .= ' ';
             $sort  = [];
             foreach ($sort_columns as $row) {
-                if ($row['field'] && $row['field']->isUsed()) {
-                    $sort[] = '<a id="tracker_report_table_sort_by_' . $purifier->purify($row['field_id']) . '"
-                                  href="?' .
-                            $purifier->purify(http_build_query([
-                                'report'                  => $this->report->id,
-                                'renderer'                => $this->id,
-                                'func'                    => 'renderer',
-                                'renderer_table[sort_by]' => $row['field_id'],
-                            ])) . '">' .
-                            $purifier->purify($row['field']->getLabel()) .
-                            $this->getSortIcon($row['is_desc']) .
-                            '</a>';
-                }
+                $sort[] = '<a id="tracker_report_table_sort_by_' . $purifier->purify($row['field_id']) . '"
+                              href="?' .
+                    $purifier->purify(http_build_query([
+                        'report' => $this->report->id,
+                        'renderer' => $this->id,
+                        'func' => 'renderer',
+                        'renderer_table[sort_by]' => $row['field_id'],
+                    ])) . '">' .
+                    $purifier->purify($row['field']->getLabel()) .
+                    $this->getSortIcon($row['is_desc']) .
+                    '</a>';
             }
             $html .= implode(' <i class="fa fa-angle-right"></i> ', $sort);
         }
@@ -934,7 +933,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         } else {
             $columns = $all_columns;
         }
-        $sort_columns = $this->getSort($store_in_session);
+        $sort_columns = SortWithIntegrityChecked::getSort($this->getSort($store_in_session));
 
         $purifier               = Codendi_HTMLPurifier::instance();
         $type_presenter_factory = $this->getTypePresenterFactory();
@@ -1718,13 +1717,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         //only sort if we have 1 query
         // (too complicated to sort on multiple queries)
         if ($ordering && $this->columnsCanBeTechnicallySorted($queries)) {
-            $sort = $this->getSort($store_in_session);
-            if ($this->sortHasUsedField($store_in_session)) {
+            $sort = SortWithIntegrityChecked::getSortOnUsedFields($this->getSort());
+            if (count($sort) > 0) {
                 $order = [];
                 foreach ($sort as $s) {
-                    if (! empty($s['field']) && $s['field']->isUsed()) {
-                        $order[] = $s['field']->getQueryOrderby() . ' ' . ($s['is_desc'] ? 'DESC' : 'ASC');
-                    }
+                    $order[] = $s['field']->getQueryOrderby() . ' ' . ($s['is_desc'] ? 'DESC' : 'ASC');
                 }
                 if (! empty($order)) {
                     $queries[0] .= " ORDER BY " . implode(', ', $order);
@@ -2515,41 +2512,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $renderer->saveColumns($this->_columns);
     }
 
-    /**
-     *Test if sort contains at least one used field
-     *
-     * @return bool true f sort has at least one used field
-     */
-    public function sortHasUsedField($store_in_session = true)
+    public function sortHasUsedField($store_in_session = true): bool
     {
-        $sort = $this->getSort($store_in_session);
-        foreach ($sort as $s) {
-            if (isset($s['field']) && $s['field']->isUsed()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     *Test if multisort does not contain unused fields
-     *
-     *@return bool true if still multisort
-     */
-    public function isMultisort()
-    {
-        $sort = $this->getSort();
-        $used = 0;
-        foreach ($sort as $s) {
-            if ($s['field']->isUsed()) {
-                $used++;
-            }
-        }
-        if ($used < 2) {
-            return false;
-        } else {
-            return true;
-        }
+        $sort = SortWithIntegrityChecked::getSortOnUsedFields($this->getSort($store_in_session));
+        return count($sort) > 0;
     }
 
     private function getSortIcon($is_desc)
@@ -2668,18 +2634,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $from = $this->getBaseQueryFrom();
 
         $dao               = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
-        $sorts             = $this->getSort($store_in_session);
+        $sorts             = SortWithIntegrityChecked::getSortOnUsedFields($this->getSort($store_in_session));
         $additional_select = [];
         $additional_from   = [];
-        if ($ordering && $this->sortHasUsedField($store_in_session)) {
+        if ($ordering && count($sorts) > 0) {
             $order = [];
             foreach ($sorts as $sort_field) {
-                if (! empty($sort_field['field']) && $sort_field['field']->isUsed()) {
-                    $additional_select[] = $sort_field['field']->getQuerySelect();
-                    $additional_from[]   = $sort_field['field']->getQueryFrom();
-                    $order[]             = $sort_field['field']->getQueryOrderby(
-                    ) . ' ' . ($sort_field['is_desc'] ? 'DESC' : 'ASC');
-                }
+                $additional_select[] = $sort_field['field']->getQuerySelect();
+                $additional_from[]   = $sort_field['field']->getQueryFrom();
+                $order[]             = $sort_field['field']->getQueryOrderby() . ' ' . ($sort_field['is_desc'] ? 'DESC' : 'ASC');
             }
         }
 
