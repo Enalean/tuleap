@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/date-helper": "link:../../lib/frontend/date-helper",
+    "@tuleap/project-background": "link:../../lib/frontend/project-background",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/vue-breadcrumb-privacy": "link:../../lib/frontend/vue-breadcrumb-privacy",

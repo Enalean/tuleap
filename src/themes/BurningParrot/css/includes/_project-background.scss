@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../../../themes/common/css/project-background/background" with (
+@use "@tuleap/project-background" with (
     $project-background-images-path: "../../common/images/project-background/"
 );
 @use "sass:map";
 @use "global-variables";
 @import "../../../common/css/project-background/project-background";
 
-@each $identifier, $definition in background.$definitions {
+@each $identifier, $definition in project-background.$definitions {
     .project-admin-background-preview-#{$identifier} {
         background: linear-gradient(
                 var(--tlp-dark-color-transparent-70),
@@ -38,28 +38,28 @@
 
 .project-with-background {
     .project-administration-title {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
 
         margin: 0;
         padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
     }
 
     .dashboard-project-title {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
     }
 
     .dashboard-project-header-trovecat {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
 
         font-weight: 500;
     }
 
     .dashboard-project-header-trovecat-icon {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
     }
 
     .dashboard-project-header-trovecat > .tlp-text-warning {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
 
         > .dashboard-project-header-trovecat-link {
             color: inherit;
@@ -67,7 +67,7 @@
     }
 
     .main-project-tabs > .tlp-tabs {
-        @include background.background-for-links;
+        @include project-background.background-for-links;
 
         box-shadow: none;
 
@@ -79,7 +79,7 @@
             &:hover,
             &:focus,
             &.tlp-tab-active {
-                @include background.background-for-links;
+                @include project-background.background-for-links;
 
                 border-top-color: var(--tlp-white-color);
             }
@@ -100,7 +100,7 @@
     .breadcrumb,
     .breadcrumb-link,
     #dashboard-tabs-dropdown-trigger {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
     }
 
     .breadcrumb-dropdown-item,
@@ -110,7 +110,7 @@
 
     .breadcrumb-item:not(.breadcrumb-item-disabled):hover > .breadcrumb-link,
     .breadcrumb-item:not(.breadcrumb-item-disabled):focus-within > .breadcrumb-link {
-        @include background.background-for-links;
+        @include project-background.background-for-links;
 
         color: var(--tlp-white-color);
     }
@@ -129,14 +129,14 @@
 
         &.fa-lock-open,
         &.fa-tlp-unlock-plus-r {
-            @include background.background-for-links;
+            @include project-background.background-for-links;
 
             color: var(--tlp-white-color);
         }
     }
 
     .breadcrumb-project-privacy-icon-with-flags {
-        @include background.background-for-links;
+        @include project-background.background-for-links;
 
         color: var(--tlp-white-color);
 

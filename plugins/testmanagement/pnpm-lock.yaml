@@ -17,6 +17,7 @@ specifiers:
   '@tuleap/plugin-tracker-artifact-modal': link:../tracker/scripts/lib/artifact-modal
   '@tuleap/plugin-tracker-constants': link:../tracker/scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': link:../tracker/scripts/lib/rich-text-editor
+  '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
@@ -71,6 +72,7 @@ dependencies:
   '@tuleap/plugin-tracker-artifact-modal': link:../tracker/scripts/lib/artifact-modal
   '@tuleap/plugin-tracker-constants': link:../tracker/scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': link:../tracker/scripts/lib/rich-text-editor
+  '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@uirouter/angularjs': 1.0.29_angular@1.8.2

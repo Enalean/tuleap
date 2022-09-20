@@ -17,19 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../src/themes/common/css/project-background/background";
+@use "@tuleap/project-background";
 @use "../../src/themes/BurningParrot/css/includes/global-variables";
 
 .project-with-background {
     .program-management-title-header {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
 
         margin: 0 0 var(--tlp-medium-spacing);
     }
 }
 
 body {
-    @include background.apply-background(
+    @include project-background.apply-background(
         ".program-management-title-header",
         global-variables.$sidebar-expanded-width,
         global-variables.$sidebar-collapsed-width

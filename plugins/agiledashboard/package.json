@@ -10,6 +10,7 @@
     "@tuleap/gettext": "link:../../lib/frontend/gettext",
     "@tuleap/plugin-tracker-artifact-modal": "link:../tracker/scripts/lib/artifact-modal",
     "@tuleap/plugin-tracker-color-picker": "link:../tracker/scripts/lib/colorpicker",
+    "@tuleap/project-background": "link:../../lib/frontend/project-background",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/vue-permissions-per-group-badge": "link:../../lib/frontend/vue-permissions-per-group-badge",

@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
+    "@tuleap/project-background": "link:../../lib/frontend/project-background",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "vue": "^2.7.8",
     "vue-gettext": "^2.1.12"

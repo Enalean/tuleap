@@ -2,6 +2,8 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/cross-ref-badges': link:../../../lib/frontend/cross-ref-badges
+  '@tuleap/project-background': link:../../../lib/frontend/project-background
 
 dependencies:
   '@tuleap/cross-ref-badges': link:../../../lib/frontend/cross-ref-badges
+  '@tuleap/project-background': link:../../../lib/frontend/project-background
