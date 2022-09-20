@@ -24,9 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\REST\v1;
 
 use TestDataBuilder;
+use Tuleap\REST\ForgeAccessSandbox;
 
 final class MediawikiStandaloneProjectResourceTest extends \RestBase
 {
+    use ForgeAccessSandbox;
+
     public function testOPTIONS(): void
     {
         $response = $this->getResponse(
@@ -40,8 +43,9 @@ final class MediawikiStandaloneProjectResourceTest extends \RestBase
     /**
      * @dataProvider getPermissionsData
      */
-    public function testGetWithAdmin(?string $user, array $expected): void
+    public function testGetOnPlatformOpenToAnonymous(?string $user, array $expected): void
     {
+        $this->setForgeToAnonymous();
         if ($user === null) {
             $response = $this->getResponseWithoutAuth(
                 $this->request_factory->createRequest('GET', 'projects/' . $this->getProjectId('mediawiki-standalone-test') . '/mediawiki_standalone_permissions'),
