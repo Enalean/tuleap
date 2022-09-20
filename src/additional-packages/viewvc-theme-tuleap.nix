@@ -27,13 +27,13 @@ let
   name = "viewvc-theme-tuleap";
   src = pkgs.fetchgit {
     url = "https://tuleap.net/plugins/git/tuleap/deps/3rdparty/viewvc-theme-tuleap.git";
-    rev = "fe83d432e5c60b6e39fd3fe029a13862af5262af";
-    sha256 = "sha256-7I9+dICCxyj3WQGhpYwUd/XjgAddwitMvvncyM7TNrI="; # Please also check if the node_modules sha256 does not need to be updated
+    rev = "72a58bd2659e5a5d3b1c16f7fa6605b51779f7df";
+    sha256 = "sha256-xki7J9Z6ERSi5IAdYFOXpBY2gHZqpjyYDjI3p/oM67k="; # Please also check if the node_modules sha256 does not need to be updated
   };
   node_modules = fetchNodeModules {
     inherit src;
     pnpm = jsBuildTool;
-    sha256 = "sha256-tFHeoAsfoGZc2u31ZeAlqwn3VfJ8XCizzl9yZVWmLmc=";
+    sha256 = "sha256-928v1+BXSNz2uSb6iKMTxkYmikCGnhsxgD9xVqRLl0M=";
   };
 in pkgs.stdenvNoCC.mkDerivation {
   inherit name src;

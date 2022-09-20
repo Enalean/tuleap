@@ -7,6 +7,8 @@ services:
   reverse-proxy:
     build:
       context: tools/docker/reverse-proxy
+      platforms:
+        - linux/amd64
     volumes:
       - ./tools/docker/reverse-proxy/nginx.conf:/etc/nginx/nginx.conf:ro,cached
       - reverse-proxy-cert:/etc/pki/tls
@@ -40,6 +42,8 @@ services:
   realtime:
     build:
       context: tools/docker/realtime
+      platforms:
+        - linux/amd64
     command: /tuleap/tools/docker/realtime/run.sh
     volumes:
       - .:/tuleap:ro,cached
@@ -61,6 +65,8 @@ services:
   gerrit:
     build:
       context: tools/docker/gerrit
+      platforms:
+        - linux/amd64
     env_file:
       - .env
     environment:
@@ -73,6 +79,8 @@ services:
   jenkins:
     build:
       context: tools/docker/jenkins
+      platforms:
+        - linux/amd64
     environment:
       - JENKINS_OPTS="--prefix=/jenkins"
     volumes:
@@ -82,6 +90,8 @@ services:
   gitlab:
     build:
       context: tools/docker/gitlab
+      platforms:
+        - linux/amd64
     hostname: 'gitlab.local'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
