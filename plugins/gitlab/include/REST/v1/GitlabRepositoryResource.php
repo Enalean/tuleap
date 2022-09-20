@@ -473,13 +473,15 @@ final class GitlabRepositoryResource
             $prefix_updater = new CreateBranchPrefixUpdater(
                 new GitlabRepositoryIntegrationFactory(
                     new GitlabRepositoryIntegrationDao(),
-                    ProjectManager::instance()
+                    ProjectManager::instance(),
                 ),
-                new CreateBranchPrefixDao()
+                $this->getGitPermissionsManager(),
+                new CreateBranchPrefixDao(),
             );
 
             try {
                 $prefix_updater->updateBranchPrefix(
+                    $current_user,
                     $id,
                     $patch_representation->create_branch_prefix
                 );
@@ -490,6 +492,8 @@ final class GitlabRepositoryResource
                     400,
                     $exception->getMessage()
                 );
+            } catch (GitUserNotAdminException $exception) {
+                throw new RestException(401, "User must be Git administrator.");
             }
         }
 

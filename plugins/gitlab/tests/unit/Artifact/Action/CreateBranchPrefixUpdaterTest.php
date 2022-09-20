@@ -22,11 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Artifact\Action;
 
+use GitPermissionsManager;
+use GitUserNotAdminException;
 use Tuleap\Git\Branch\InvalidBranchNameException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationNotFoundException;
 use Tuleap\Gitlab\Test\Builder\RepositoryIntegrationBuilder;
 use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class CreateBranchPrefixUpdaterTest extends TestCase
@@ -38,11 +41,16 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
     private $integration_factory;
     private SaveIntegrationBranchPrefixStub $branch_prefix_saver;
     private string $branch_prefix;
+    /**
+     * @var GitPermissionsManager&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $git_permissions_manager;
 
     protected function setUp(): void
     {
-        $this->integration_factory = $this->createMock(GitlabRepositoryIntegrationFactory::class);
-        $this->branch_prefix_saver = SaveIntegrationBranchPrefixStub::withCallCount();
+        $this->integration_factory     = $this->createMock(GitlabRepositoryIntegrationFactory::class);
+        $this->git_permissions_manager = $this->createMock(GitPermissionsManager::class);
+        $this->branch_prefix_saver     = SaveIntegrationBranchPrefixStub::withCallCount();
 
         $this->branch_prefix = 'dev-';
     }
@@ -51,10 +59,15 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
     {
         $updater = new CreateBranchPrefixUpdater(
             $this->integration_factory,
-            $this->branch_prefix_saver
+            $this->git_permissions_manager,
+            $this->branch_prefix_saver,
         );
 
-        $updater->updateBranchPrefix(self::INTEGRATION_ID, $this->branch_prefix);
+        $updater->updateBranchPrefix(
+            UserTestBuilder::anActiveUser()->build(),
+            self::INTEGRATION_ID,
+            $this->branch_prefix,
+        );
     }
 
     public function testItStoresTheBranchPrefix(): void
@@ -64,6 +77,11 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
             ->method('getIntegrationById')
             ->with(self::INTEGRATION_ID)
             ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
+
+        $this->git_permissions_manager
+            ->expects(self::once())
+            ->method('userIsGitAdmin')
+            ->willReturn(true);
 
         $this->updateBranchPrefix();
 
@@ -77,6 +95,11 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
             ->method('getIntegrationById')
             ->with(self::INTEGRATION_ID)
             ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
+
+        $this->git_permissions_manager
+            ->expects(self::once())
+            ->method('userIsGitAdmin')
+            ->willReturn(true);
 
         $this->branch_prefix = 'dev/';
         $this->updateBranchPrefix();
@@ -98,6 +121,25 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
         self::assertSame(0, $this->branch_prefix_saver->getCallCount());
     }
 
+    public function testItThrowsAnExceptionIfUserIsNotGitAdministrator(): void
+    {
+        $this->integration_factory
+            ->expects(self::once())
+            ->method('getIntegrationById')
+            ->with(self::INTEGRATION_ID)
+            ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
+
+        $this->git_permissions_manager
+            ->expects(self::once())
+            ->method('userIsGitAdmin')
+            ->willReturn(false);
+
+        $this->expectException(GitUserNotAdminException::class);
+        $this->updateBranchPrefix();
+
+        self::assertSame(0, $this->branch_prefix_saver->getCallCount());
+    }
+
     public function testItThrowsAnExceptionIfBranchPrefixIsNotValid(): void
     {
         $this->integration_factory
@@ -105,6 +147,11 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
             ->method('getIntegrationById')
             ->with(self::INTEGRATION_ID)
             ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
+
+        $this->git_permissions_manager
+            ->expects(self::once())
+            ->method('userIsGitAdmin')
+            ->willReturn(true);
 
         $this->branch_prefix = 'dev:';
 
