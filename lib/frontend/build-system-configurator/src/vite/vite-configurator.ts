@@ -22,7 +22,7 @@ import type { UserConfigExport } from "vitest/config";
 import { configDefaults as config_defaults_vitest } from "vitest/config";
 import type { BuildOptions, CSSOptions, ServerOptions, UserConfig } from "vite";
 import { defineConfig as viteDefineConfig } from "vitest/config";
-import type { C8Options } from "vitest";
+import type { CoverageOptions } from "vitest";
 import { browserlist_config, esbuild_target } from "../browserslist_config";
 import autoprefixer from "autoprefixer";
 
@@ -102,7 +102,7 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
     if (process.env.CI_MODE === "true") {
         test_reporters.push("junit");
     }
-    let test_coverage: C8Options = {
+    let test_coverage: CoverageOptions = {
         reportsDirectory: TEST_OUTPUT_DIRECTORY,
     };
     if (process.env.COLLECT_COVERAGE === "true") {
@@ -136,6 +136,7 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
         test: {
             watch: false,
             restoreMocks: true,
+            css: true,
             environment: "jsdom",
             include: ["**/?(*.)+(test).{js,ts}"],
             exclude: [
