@@ -22,57 +22,38 @@
 namespace Tuleap\Tracker\Notifications;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use UserManager;
 
-class RecipientsManager
+class RecipientsManager implements GetUserFromRecipient
 {
     /**
-     * @var Tracker_FormElementFactory
+     * @var RecipientRemovalStrategy[]
      */
-    private $form_element_factory;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var UnsubscribersNotificationDAO
-     */
-    private $unsubscribers_notification_dao;
-    /**
-     * @var UserNotificationSettingsRetriever
-     */
-    private $notification_settings_retriever;
-    /**
-     * @var UserNotificationOnlyStatusChangeDAO
-     */
-    private $user_status_change_only_dao;
+    private array $recipient_removal_strategies;
 
     public function __construct(
-        Tracker_FormElementFactory $form_element_factory,
-        UserManager $user_manager,
-        UnsubscribersNotificationDAO $unsubscribers_notification_dao,
-        UserNotificationSettingsRetriever $notification_settings_retriever,
-        UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
+        private Tracker_FormElementFactory $form_element_factory,
+        private UserManager $user_manager,
+        private UnsubscribersNotificationDAO $unsubscribers_notification_dao,
+        private UserNotificationSettingsRetriever $notification_settings_retriever,
+        private UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
     ) {
-        $this->form_element_factory            = $form_element_factory;
-        $this->user_manager                    = $user_manager;
-        $this->unsubscribers_notification_dao  = $unsubscribers_notification_dao;
-        $this->notification_settings_retriever = $notification_settings_retriever;
-        $this->user_status_change_only_dao     = $user_status_change_only_dao;
+        $this->recipient_removal_strategies = [
+            new RemoveRecipientWhenTheyAreInCreationOnlyMode($this, $this->notification_settings_retriever),
+        ];
     }
 
     /**
      * Get the recipients for notification
      *
-     * @param Tracker_Artifact_Changeset $changeset Changeset
-     * @param bool                       $is_update It is an update, not a new artifact
-     *
-     * @return array of [$recipient => $checkPermissions] where $recipient is a usenrame or an email and $checkPermissions is bool.
+     * @psalm-return array<string, bool> Structure is [$recipient => $checkPermissions] where $recipient is a username or an email and $checkPermissions is bool.
      */
-    public function getRecipients(Tracker_Artifact_Changeset $changeset, $is_update)
+    public function getRecipients(Tracker_Artifact_Changeset $changeset, bool $is_update, LoggerInterface $logger): array
     {
         // 1 Get from the fields
         $recipients = [];
@@ -107,8 +88,9 @@ class RecipientsManager
         $this->removeRecipientsThatCannotReadAnything($changeset, $tablo);
         $this->removeRecipientsThatHaveUnsubcribedFromNotification($changeset, $tablo);
         $this->removeRecipientsWhenTheyAreInStatusUpdateOnlyMode($changeset, $tablo);
-        if ($is_update) {
-            $this->removeRecipientsWhenTheyAreInCreationOnlyMode($changeset, $tablo);
+
+        foreach ($this->recipient_removal_strategies as $strategy) {
+            $tablo = $strategy->removeRecipient($logger, $changeset, $tablo, $is_update);
         }
 
         return $tablo;
@@ -164,11 +146,7 @@ class RecipientsManager
         }
     }
 
-    /**
-     * @param string $recipient_name
-     * @return null|\PFUser
-     */
-    public function getUserFromRecipientName($recipient_name)
+    public function getUserFromRecipientName(string $recipient_name): ?PFUser
     {
         $user = null;
         if (strpos($recipient_name, '@') !== false) {
@@ -253,26 +231,6 @@ class RecipientsManager
                 ! $user_notification_settings->isInNotifyOnEveryChangeMode() &&
                 ! $user_notification_settings->isInNoGlobalNotificationMode()
             ) {
-                unset($recipients[$recipient]);
-            }
-        }
-    }
-
-    private function removeRecipientsWhenTheyAreInCreationOnlyMode(Tracker_Artifact_Changeset $changeset, array &$recipients)
-    {
-        foreach ($recipients as $recipient => $is_notification_enabled) {
-            $user = $this->getUserFromRecipientName($recipient);
-
-            if ($user === null) {
-                continue;
-            }
-
-            $user_notification_settings = $this->notification_settings_retriever->getUserNotificationSettings(
-                $user,
-                $changeset->getTracker()
-            );
-
-            if ($user_notification_settings->isInNotifyOnArtifactCreationMode()) {
                 unset($recipients[$recipient]);
             }
         }
