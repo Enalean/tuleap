@@ -23,13 +23,13 @@ import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
 export default vite.defineAppConfig(
-    { plugin_name: "gitlab", outDir: "../../frontend-assets/gitlab-group-link/" },
+    { plugin_name: "gitlab", outDir: "../../frontend-assets/gitlab-group-link-wizard/" },
     {
         plugins: [POGettextPlugin.vite(), vue()],
         build: {
             rollupOptions: {
                 input: {
-                    "gitlab-group-link": path.resolve(__dirname, "src/index.ts"),
+                    "gitlab-group-link-wizard": path.resolve(__dirname, "src/index.ts"),
                 },
             },
         },
