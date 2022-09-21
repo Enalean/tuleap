@@ -44,6 +44,7 @@ yarn-error.log
 *.css.map
 node_modules/
 src/frontend-assets/
+src/scripts/**/frontend-assets/
 plugins/**/frontend-assets/
 plugins/**/backend-assets/
 test_results*
