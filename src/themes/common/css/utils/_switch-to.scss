@@ -188,6 +188,7 @@ $items-padding: calc(var(--tlp-small-spacing) / 2);
     text-align: center;
 }
 
+$quick-link-icon-font-height: 0.7rem;
 $items-icon-size: var(--tlp-large-spacing);
 $items-icon-margin: var(--tlp-small-spacing);
 $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-padding);
@@ -204,7 +205,7 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
     border-radius: 50%;
     background: var(--tlp-dark-color-lighter-05);
     color: var(--tlp-neutral-dark-color-darker-10);
-    font-size: 0.7rem;
+    font-size: $quick-link-icon-font-height;
     line-height: normal;
 }
 
@@ -225,7 +226,7 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
     border-radius: 50%;
     opacity: 0;
     color: var(--tlp-dimmed-color-on-dark-background);
-    font-size: 0.8125rem;
+    font-size: $quick-link-icon-font-height;
     cursor: pointer;
 
     &:hover,
