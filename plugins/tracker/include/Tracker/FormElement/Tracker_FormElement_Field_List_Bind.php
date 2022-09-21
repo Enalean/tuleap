@@ -255,6 +255,9 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
      */
     public function getCriteriaFrom($criteria_value)
     {
+        if (! $this->getField()->isUsed()) {
+            return '';
+        }
         //Only filter query if criteria is valuated
         if ($criteria_value) {
             $a = 'A_' . $this->field->id;
@@ -289,6 +292,9 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
      */
     public function getCriteriaWhere($criteria_value)
     {
+        if (! $this->getField()->isUsed()) {
+            return '';
+        }
         //Only filter query if criteria is valuated
         if ($criteria_value) {
             $a = 'A_' . $this->field->id;

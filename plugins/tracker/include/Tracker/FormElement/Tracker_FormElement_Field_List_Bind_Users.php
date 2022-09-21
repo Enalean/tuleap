@@ -451,6 +451,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getQueryOrderby(): string
     {
+        if (! $this->getField()->isUsed()) {
+            return '';
+        }
         $uh = UserHelper::instance();
         $R2 = 'R2_' . $this->field->id;
         return $R2 . "." . str_replace('user.', '', $uh->getDisplayNameSQLOrder());
@@ -461,6 +464,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getQueryGroupby(): string
     {
+        if (! $this->getField()->isUsed()) {
+            return '';
+        }
         $R2 = 'R2_' . $this->field->id;
         return "$R2.user_id";
     }
