@@ -148,6 +148,15 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prom-data:/prometheus
 
+  meilisearch:
+    image: getmeili/meilisearch:v0.28.1
+    volumes:
+      - meilisearch-data:/meili_data
+    environment:
+      - MEILI_ENV=development
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_MASTER_KEY=MEILI_MASTER_KEY_DO_NOT_USE_IN_PRODUCTION
+
   ldap-admin:
     image: osixia/phpldapadmin:0.7.1
     volumes:
@@ -172,3 +181,4 @@ volumes:
   reverse-proxy-cert:
   prom-data:
   jenkins-data:
+  meilisearch-data:
