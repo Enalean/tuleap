@@ -86,10 +86,7 @@ class LatestHeartbeatsCollector
 
     private function getHTMLMessage(Artifact $artifact, Project $project): string
     {
-        return sprintf(
-            dgettext('tuleap-testmanagement', '%s updated'),
-            $this->getTitle($artifact, $project)
-        );
+        return $this->getTitle($artifact, $project);
     }
 
     private function getTitle(Artifact $campaign, Project $project): string
