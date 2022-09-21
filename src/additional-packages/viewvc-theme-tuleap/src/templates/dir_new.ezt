@@ -1,0 +1,140 @@
+[include "include/dir_header.ezt"]
+
+<table cellspacing="1" cellpadding="2" class="fixed">
+<thead>
+<tr>
+  <th style="width: 200px" class="vc_header[is sortby "file"]_sort[end]">
+    [if-any sortby_file_href]<a href="[sortby_file_href]#dirlist">File</a>[else]File[end]
+    [is sortby "file"]
+      <img class="vc_sortarrow" alt="[is sortdir "down"](rev)[end]"
+        width="13" height="13"
+        src="[docroot]/images/[is sortdir "up"]up[else]down[end].png" />
+    [end]
+  </th>
+  <th style="width: 96px" class="vc_header"></th>
+  [if-any sortby_rev_href]
+  <th class="vc_header[is sortby "rev"]_sort[end]">
+    <a href="[sortby_rev_href]#dirlist">Last Change</a>
+    [is sortby "rev"]
+      <img class="vc_sortarrow" alt="[is sortdir "down"](rev)[end]"
+        width="13" height="13"
+        src="[docroot]/images/[is sortdir "up"]up[else]down[end].png" />
+    [end]
+  [else]
+  <th class="vc_header[is sortby "date"]_sort[end]">
+    [if-any sortby_date_href]<a href="[sortby_date_href]#dirlist">Last Change</a>[else]Last Change[end]
+    [is sortby "date"]
+      <img class="vc_sortarrow" alt="[is sortdir "down"](date)[end]"
+        width="13" height="13"
+        src="[docroot]/images/[is sortdir "up"]up[else]down[end].png" />
+    [end]
+  [end]
+  </th>
+</tr>
+</thead>
+
+<tbody>
+[if-any up_href]
+  <tr class="vc_row_odd">
+    <td style="width: 200px">
+      <a href="[up_href]">
+      <img src="[docroot]/images/back_small.png" alt="" class="vc_icon"
+      />&nbsp;Parent&nbsp;Directory</a>
+    </td>
+    <td style="width: 96px; font-size: 0;"></td>
+    <td>&nbsp;</td>
+  </tr>
+ [end]
+[for entries]
+  <tr class="vc_row_[if-index entries even]even[else]odd[end]">
+    <td style="width: 200px">
+    <a name="[entries.anchor]" href="[is entries.pathtype "dir"][entries.view_href][else][if-any entries.prefer_markup][entries.view_href][else][entries.download_href][end][end]" title="[is entries.pathtype "dir"]View Directory Contents[else][if-any entries.prefer_markup]View[else]Download[end] File Contents[end]">
+       <img src="[docroot]/images/[is entries.pathtype "dir"]dir[else][is entries.state "dead"]broken[else]text[end][end].png" alt="" class="vc_icon" />
+       [entries.name][is entries.pathtype "dir"]/[end]</a>
+       [if-any entries.lockinfo]<img src="[docroot]/images/lock.png" alt="locked" class="vc_icon" title="Locked by [entries.lockinfo]" />[end]
+       [is entries.state "dead"](dead)[end]
+    </td>
+
+    [if-any entries.errors]
+      <td colspan="2">[for entries.errors]<em>[entries.errors]</em>[end]</td>
+    [else]
+      [define view_icon_link][end]
+      [define graph_icon_link][end]
+      [define download_icon_link][end]
+      [define annotate_icon_link][end]
+      [define log_icon_link][if-any entries.log_href]<a 
+        href="[entries.log_href]"
+        title="View Log"><img
+          src="[docroot]/images/log.png"
+          alt="View Log" 
+          class="vc_icon" /></a>[end][end]
+
+      [is entries.pathtype "dir"]
+        [is roottype "cvs"]
+          [# no point in showing icon when there's only one to choose from]
+        [else]
+          [define view_icon_link]<a 
+            href="[entries.view_href]"
+            title="View Directory Listing"><img
+              src="[docroot]/images/list.png"
+              alt="View Directory Listing" 
+              class="vc_icon" /></a>[end]
+        [end]
+      [end]
+
+      [is entries.pathtype "file"]
+        [define view_icon_link][if-any entries.view_href]<a 
+          href="[entries.view_href]"
+          title="View File"><img
+            src="[docroot]/images/view.png"
+            alt="View File" 
+            class="vc_icon" /></a>[end][end]
+
+        [define graph_icon_link][if-any entries.graph_href]<a 
+          href="[entries.graph_href]"
+          title="View Revision Graph"><img
+            src="[docroot]/images/cvsgraph_16x16.png"
+            alt="View Revision Graph" 
+            class="vc_icon" /></a>[end][end]
+
+        [define download_icon_link][if-any entries.download_href]<a 
+          href="[entries.download_href]"
+          title="Download File"><img
+            src="[docroot]/images/download.png"
+            alt="Download File"
+            class="vc_icon" /></a>[end][end]
+
+        [define annotate_icon_link][if-any entries.annotate_href]<a 
+          href="[entries.annotate_href]"
+          title="Annotate File"><img
+            src="[docroot]/images/annotate.png"
+            alt="Annotate File" 
+            class="vc_icon" /></a>[end][end]
+      [end]
+
+      <td style="width: 96px"
+        >[# Icon column. We might want to add more icons like a tarball
+          # icon for directories or a diff to previous icon for files.
+          # Make sure this sucker has no whitespace in it, or the fixed
+          # widthness of will suffer for large font sizes
+         ][log_icon_link][view_icon_link][graph_icon_link][download_icon_link][annotate_icon_link]</td>
+
+      <td>
+        [if-any entries.rev]
+          <strong>[if-any entries.revision_href]<a href="[entries.revision_href]" title="Revision [entries.rev]">[entries.rev]</a>[else][entries.rev][end]</strong>
+          ([entries.ago] ago)
+          by <em>[entries.author]</em>:
+          [entries.log]
+          [is entries.pathtype "dir"][is roottype "cvs"]
+            <em>(from [entries.log_file]/[entries.log_rev])</em>
+          [end][end]
+        [end]
+      </td>
+    [end]
+  </tr>
+[end]
+</tbody>
+
+</table>
+
+[include "include/dir_footer.ezt"]

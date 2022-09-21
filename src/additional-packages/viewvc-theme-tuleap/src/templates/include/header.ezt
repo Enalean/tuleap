@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/viewvc-theme-tuleap/style.css" />
+
+<div class="tuleap-viewvc-header">
+
+<div id="tuleap-viewvc-header-breadcrumbs">
+    [if-any nav_path]
+        [for nav_path]
+            [if-index nav_path first]
+            [else]
+                <span class="breadcrumb-item">
+                    <a class="breadcrumb-link" href="[if-any nav_path.href][nav_path.href][end]">[nav_path.name]</a>
+                </span class="breadcrumb-item">
+            [end]
+        [end]
+    [end]
+</div>
+<script>
+(function() {
+    var viewvc_breadcrumbs_steps = document.querySelectorAll('#tuleap-viewvc-header-breadcrumbs > .breadcrumb-item'),
+        tuleap_breadcrumbs = document.querySelector('.main .breadcrumb');
+
+    [].forEach.call(viewvc_breadcrumbs_steps, function (step) {
+        tuleap_breadcrumbs.appendChild(step.remove());
+    });
+})();
+</script>
+<h3 class="[page_title_classname]">[page_title]</h3>

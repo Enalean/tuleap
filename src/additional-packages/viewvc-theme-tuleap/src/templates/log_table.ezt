@@ -1,0 +1,176 @@
+[include "include/log_header.ezt"]
+
+<hr />
+<table cellspacing="1" cellpadding="2">
+<thead>
+<tr>
+  <th class="vc_header[is logsort "rev"]_sort[end]">Revision</th>
+  <th class="vc_header">Tasks</th>
+  [is pathtype "file"]
+  <th class="vc_header">Diffs</th>
+  [end]
+  [is roottype "cvs"]
+  <th class="vc_header">Branches/<br />Tags</th>
+  [end]
+  <th class="vc_header[is logsort "date"]_sort[end]">Age</th>
+  <th class="vc_header">Author</th>
+</tr>
+</thead>
+
+[define first_revision][end]
+[define last_revision][end]
+
+[for entries]
+[if-index entries first][define first_revision][entries.rev][end][end]
+[if-index entries last][define last_revision][entries.rev][end][end]
+  <tbody>
+  <tr style="vertical-align: top;" class="vc_row_[if-index entries even]even[else]odd[end]">
+
+    [# Revision column]
+    <td rowspan="2">
+      [is roottype "svn"]<a href="[entries.revision_href]"><strong>[entries.rev]</strong></a>[else]<strong>[entries.rev]</strong>[end]
+      <a name="rev[entries.rev]"></a>
+    </td>
+
+    [# Tasks column]
+    <td>
+      [if-any entries.view_href]
+        [is pathtype "file"]
+          <a href="[entries.view_href]"><strong>View</strong></a><br />
+        [else]
+          <a href="[entries.view_href]"><strong>Directory Listing</strong></a><br />
+        [end]
+      [end]
+      [if-any entries.download_href]<a href="[entries.download_href]"><strong>Download</strong></a><br />[end]
+      [if-any entries.download_text_href]<a href="[entries.download_text_href]"><strong>As text</strong></a><br />[end]
+      [if-any entries.annotate_href]<a href="[entries.annotate_href]"><strong>Annotate</strong></a><br />[end]
+    </td>
+
+    [is pathtype "file"]
+      <td>
+      [# Diffs column]
+      [is entries.state "dead"]
+        <strong><em>FILE REMOVED</em></strong>
+      [else]
+      [# if you don't want to allow select for diffs then remove this section]
+      [is entries.rev rev_selected]
+        <strong>[[]selected]</strong><br />
+      [else]
+      <a href="[entries.sel_for_diff_href]"><strong>[[]select&nbsp;for&nbsp;diffs]</strong></a><br />
+      [end]
+        [if-any entries.diff_to_sel_href]
+          <a href="[entries.diff_to_sel_href]"><strong>Diff&nbsp;to&nbsp;selected&nbsp;[rev_selected]</strong></a>
+          [if-any human_readable]
+          [else]
+            (<a href="[entries.diff_to_sel_href]&amp;diff_format=h"><strong>colored</strong></a>)
+          [end]<br />
+        [end]
+        [if-any entries.prev]
+          <a href="[entries.diff_to_prev_href]"><strong>Diff&nbsp;to&nbsp;previous&nbsp;[entries.prev]</strong></a>
+          [if-any human_readable]
+          [else]
+            (<a href="[entries.diff_to_prev_href]&amp;diff_format=h"><strong>colored</strong></a>)
+          [end]<br />
+        [end]
+      [end]
+      </td>
+    [end]
+    [is roottype "cvs"]
+    <td>
+      [# Branches column]
+      [if-any entries.vendor_branch]
+        <em>vendor branch</em><br />
+      [end]
+      [if-any entries.branches]
+        [for entries.branches]
+          <a href="[entries.branches.href]"><strong>[entries.branches.name]</strong></a><br />
+        [end]
+      [end]
+      [if-any entries.branch_points]
+        Branch point for:
+        [for entries.branch_points]
+          <a href="[entries.branch_points.href]"><strong>[entries.branch_points.name]</strong></a><br />
+        [end]
+      [end]
+      [if-any entries.next_main]
+        <a href="[entries.diff_to_main_href]"><strong>Diff&nbsp;to&nbsp;next&nbsp;MAIN&nbsp;[entries.next_main]</strong></a>
+        [if-any human_readable]
+        [else]
+          (<a href="[entries.diff_to_main_href]&amp;diff_format=h"><strong>colored</strong></a>)
+        [end]<br />
+      [end]
+      [if-any entries.branch_point]
+        <a href="[entries.diff_to_branch_href]"><strong>Diff&nbsp;to&nbsp;branch&nbsp;point&nbsp;[entries.branch_point]</strong></a>
+        [if-any human_readable]
+        [else]
+          (<a href="[entries.diff_to_branch_href]&amp;diff_format=h"><strong>colored</strong></a>)
+        [end]<br />
+      [end]
+
+      [# Tags ]
+      [if-any entries.tags]
+        <form method=get action="[pathrev_action]" >
+          [for pathrev_hidden_values]<input type="hidden" name="[pathrev_hidden_values.name]" value="[pathrev_hidden_values.value]"/>[end]
+          <select name="pathrev" onChange="submit()">
+          <option value="" [is pathrev ""]selected[end]>Show all tags</option>
+          [for entries.tags]
+            <option [is pathrev entries.tags.name]selected[end]>[entries.tags.name]</option>
+          [end]
+          </select>
+        </form>
+      [else]&nbsp;
+      [end]
+    </td>
+    [end]
+
+    [# Time column]
+    <td>
+      [is roottype "svn"]
+        [if-index entries last]Added[else]Modified[end]
+      [end]
+      [if-any entries.ago][entries.ago] ago<br />[end]
+      [if-any entries.date]<em>[entries.date]</em>[end]
+      [is roottype "cvs"]
+        [if-any entries.prev]
+          [if-any entries.changed]
+            <br />Changes since <strong>[entries.prev]: [entries.changed] lines</strong>
+          [end]
+        [end]
+      [end]
+    </td>
+
+    [# Author column]
+    <td>
+      [entries.author]
+    </td>
+
+  </tr>
+  <tr class="vc_row_[if-index entries even]even[else]odd[end]">
+    <td colspan=5>
+
+      [if-any entries.lockinfo]
+        <strong>Lock status</strong>: <img src="[docroot]/images/lock.png" alt="Locked" width="16" height="16" /> [entries.lockinfo]<br />
+      [end]
+
+      [is roottype "svn"]
+        [if-any entries.orig_path]
+          <strong>Original Path</strong>: <a href="[entries.orig_href]"><em>[entries.orig_path]</em></a><br />
+        [end]
+
+        [if-any entries.size]
+          <strong>File length: </strong>[entries.size] byte(s)<br />
+        [end]
+
+        [if-any entries.copy_path]
+           <strong>Copied from: </strong><a href="[entries.copy_href]"><em>[entries.copy_path]</em></a> revision [entries.copy_rev]<br />
+        [end]
+      [end]
+
+      <strong>Log: </strong><pre class="vc_log">[entries.log]</pre>
+    </td>
+  </tr>
+  </tbody>
+[end]
+</table>
+
+[include "include/log_footer.ezt"]
