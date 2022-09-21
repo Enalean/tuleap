@@ -3,7 +3,10 @@
 exports[`TroveCatLink Display the link 1`] = `
 <a
   href="/softwaremap/trove_list.php"
-/>
+>
+  
+  
+</a>
 `;
 
-exports[`TroveCatLink Does net display the link to trove cat if it is deactivated 1`] = `<!---->`;
+exports[`TroveCatLink Does net display the link to trove cat if it is deactivated 1`] = `<!--v-if-->`;

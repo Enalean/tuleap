@@ -19,16 +19,16 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ListOfProjects from "./ListOfProjects.vue";
-import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import type { Project } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import ProjectLink from "./ProjectLink.vue";
 import type { State } from "../../../stores/type";
 import { defineStore } from "pinia";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ListOfProjects", () => {
-    it("Displays empty state if no projects", async () => {
+    it("Displays empty state if no projects", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
@@ -44,14 +44,13 @@ describe("ListOfProjects", () => {
         useSwitchToStore(pinia);
 
         const wrapper = shallowMount(ListOfProjects, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            global: getGlobalTestOptions(pinia),
         });
 
         expect(wrapper.findComponent(ProjectsEmptyState).exists()).toBe(true);
     });
 
-    it("Display list of filtered projects", async () => {
+    it("Display list of filtered projects", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
@@ -74,8 +73,7 @@ describe("ListOfProjects", () => {
         useSwitchToStore(pinia);
 
         const wrapper = shallowMount(ListOfProjects, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            global: getGlobalTestOptions(pinia),
         });
 
         expect(wrapper.findAllComponents(ProjectLink)).toHaveLength(2);
@@ -84,7 +82,7 @@ describe("ListOfProjects", () => {
 
     it(`Given user is searching for a term
         When there is no matching projects
-        Then we should not display anything`, async () => {
+        Then we should not display anything`, () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
@@ -104,10 +102,9 @@ describe("ListOfProjects", () => {
         useSwitchToStore(pinia);
 
         const wrapper = shallowMount(ListOfProjects, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            global: getGlobalTestOptions(pinia),
         });
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 });

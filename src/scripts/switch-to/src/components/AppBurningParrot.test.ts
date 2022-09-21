@@ -19,8 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import AppBurningParrot from "./AppBurningParrot.vue";
-import { createSwitchToLocalVue } from "../helpers/local-vue-for-test";
-import { createTestingPinia } from "@pinia/testing";
+import { getGlobalTestOptions } from "../helpers/global-options-for-test";
 import { useSwitchToStore } from "../stores";
 
 describe("AppBurningParrot", () => {
@@ -40,8 +39,7 @@ describe("AppBurningParrot", () => {
         document.body.appendChild(button);
 
         const wrapper = await shallowMount(AppBurningParrot, {
-            localVue: await createSwitchToLocalVue(),
-            pinia: createTestingPinia(),
+            global: getGlobalTestOptions(),
             attachTo: div,
         });
 
@@ -62,8 +60,7 @@ describe("AppBurningParrot", () => {
         document.body.appendChild(button);
 
         await shallowMount(AppBurningParrot, {
-            localVue: await createSwitchToLocalVue(),
-            pinia: createTestingPinia(),
+            global: getGlobalTestOptions(),
             attachTo: div,
         });
 

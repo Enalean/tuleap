@@ -20,34 +20,36 @@
 import { shallowMount } from "@vue/test-utils";
 import TroveCatLink from "./TroveCatLink.vue";
 import { createTestingPinia } from "@pinia/testing";
-import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("TroveCatLink", () => {
-    it("Display the link", async () => {
+    it("Display the link", () => {
         const wrapper = shallowMount(TroveCatLink, {
-            localVue: await createSwitchToLocalVue(),
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        is_trove_cat_enabled: true,
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            is_trove_cat_enabled: true,
+                        },
                     },
-                },
-            }),
+                })
+            ),
         });
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Does net display the link to trove cat if it is deactivated", async () => {
+    it("Does net display the link to trove cat if it is deactivated", () => {
         const wrapper = shallowMount(TroveCatLink, {
-            localVue: await createSwitchToLocalVue(),
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        is_trove_cat_enabled: false,
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            is_trove_cat_enabled: false,
+                        },
                     },
-                },
-            }),
+                })
+            ),
         });
 
         expect(wrapper.element).toMatchSnapshot();

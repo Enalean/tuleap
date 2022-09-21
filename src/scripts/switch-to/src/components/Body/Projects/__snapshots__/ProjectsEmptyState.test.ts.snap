@@ -5,25 +5,13 @@ exports[`ProjectsEmptyState Display an empty state 1`] = `
   class="empty-state-pane switch-to-projects-empty"
 >
   <projects-empty-state-svg-stub />
-   
   <p
     class="empty-state-text empty-state-text-smaller switch-to-projects-empty-text"
-    data-current-language="en_US"
-    data-msgid="
-        You don't belong to any projects
-    "
   >
-    
-        You don't belong to any projects
-    
+    You don't belong to any projects
   </p>
-   
   <trove-cat-link-stub
     class="tlp-button-secondary switch-to-projects-softwaremap-empty-state empty-state-action"
-  >
-    
-        Browse all projects
-    
-  </trove-cat-link-stub>
+  />
 </section>
 `;

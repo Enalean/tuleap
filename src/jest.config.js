@@ -40,7 +40,7 @@ module.exports = {
         "!www/**/datepicker/**",
         "!scripts/FlamingParrot/keymaster-sequence/**",
     ],
-    testPathIgnorePatterns: ["/node_modules/", "/themes/tlp/"],
+    testPathIgnorePatterns: ["/node_modules/", "/themes/tlp/", "/scripts/switch-to/"],
     transform: {
         ...jest_base_config.transform,
         "^.+\\.vue$": "unplugin-vue2-script-setup/jest",

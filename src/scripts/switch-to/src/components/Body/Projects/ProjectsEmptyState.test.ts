@@ -19,12 +19,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
-import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ProjectsEmptyState", () => {
-    it("Display an empty state", async () => {
+    it("Display an empty state", () => {
         const wrapper = shallowMount(ProjectsEmptyState, {
-            localVue: await createSwitchToLocalVue(),
+            global: getGlobalTestOptions(),
         });
 
         expect(wrapper.element).toMatchSnapshot();

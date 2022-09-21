@@ -19,7 +19,6 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createSwitchToLocalVue } from "../../../../helpers/local-vue-for-test";
 import ListOfRecentItems from "./ListOfRecentItems.vue";
 import { createTestingPinia } from "@pinia/testing";
 import type { UserHistory, ItemDefinition } from "../../../../type";
@@ -29,9 +28,10 @@ import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import ItemEntry from "../ItemEntry.vue";
 import { defineStore } from "pinia";
 import type { State } from "../../../../stores/type";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("ListOfRecentItems", () => {
-    it("Displays an empty state", async () => {
+    it("Displays an empty state", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
@@ -50,8 +50,7 @@ describe("ListOfRecentItems", () => {
         useSwitchToStore(pinia);
 
         const wrapper = shallowMount(ListOfRecentItems, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            global: getGlobalTestOptions(pinia),
         });
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(true);
@@ -59,7 +58,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(ItemEntry).exists()).toBe(false);
     });
 
-    it("Display a loading state", async () => {
+    it("Display a loading state", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
@@ -78,8 +77,7 @@ describe("ListOfRecentItems", () => {
         useSwitchToStore(pinia);
 
         const wrapper = shallowMount(ListOfRecentItems, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            global: getGlobalTestOptions(pinia),
         });
 
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
@@ -88,7 +86,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(ItemEntry).exists()).toBe(false);
     });
 
-    it("Display recent items", async () => {
+    it("Display recent items", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
@@ -107,8 +105,7 @@ describe("ListOfRecentItems", () => {
         useSwitchToStore(pinia);
 
         const wrapper = shallowMount(ListOfRecentItems, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            global: getGlobalTestOptions(pinia),
         });
 
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
@@ -119,7 +116,7 @@ describe("ListOfRecentItems", () => {
 
     it(`Given user is searching for a term
         When there is no matching recent items
-        Then we should not display anything`, async () => {
+        Then we should not display anything`, () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
@@ -138,14 +135,13 @@ describe("ListOfRecentItems", () => {
         useSwitchToStore(pinia);
 
         const wrapper = shallowMount(ListOfRecentItems, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            global: getGlobalTestOptions(pinia),
         });
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
-    it("Display filtered items", async () => {
+    it("Display filtered items", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
@@ -164,8 +160,7 @@ describe("ListOfRecentItems", () => {
         useSwitchToStore(pinia);
 
         const wrapper = shallowMount(ListOfRecentItems, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            global: getGlobalTestOptions(pinia),
         });
 
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
@@ -174,7 +169,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findAllComponents(ItemEntry)).toHaveLength(1);
     });
 
-    it("Display error state", async () => {
+    it("Display error state", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
@@ -193,8 +188,7 @@ describe("ListOfRecentItems", () => {
         useSwitchToStore(pinia);
 
         const wrapper = shallowMount(ListOfRecentItems, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            global: getGlobalTestOptions(pinia),
         });
 
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(true);

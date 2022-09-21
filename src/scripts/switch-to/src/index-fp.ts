@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AppBurningParrot from "./src/components/AppBurningParrot.vue";
-import { init } from "./src/initiate-app";
+import AppFlamingParrot from "./components/AppFlamingParrot.vue";
+import { init } from "./initiate-app";
 
 document.addEventListener("DOMContentLoaded", () => {
     const vue_mount_point = document.getElementById("switch-to-mount-point");
@@ -26,5 +26,5 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    init(vue_mount_point, AppBurningParrot);
+    init(vue_mount_point, AppFlamingParrot);
 });

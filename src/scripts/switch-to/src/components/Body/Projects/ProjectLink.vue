@@ -35,9 +35,7 @@
                 <span v-if="project.icon" class="switch-to-projects-project-label-icon">
                     {{ project.icon }}
                 </span>
-                <highlight-matching-text>
-                    {{ project.project_name }}
-                </highlight-matching-text>
+                <highlight-matching-text v-bind:text="project.project_name" />
             </span>
         </a>
         <quick-link

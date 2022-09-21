@@ -12,7 +12,6 @@
     "@tuleap/concurrency-limit-pool": "link:../lib/frontend/concurrency-limit-pool",
     "@tuleap/copy-to-clipboard": "link:../lib/frontend/copy-to-clipboard",
     "@tuleap/date-helper": "link:../lib/frontend/date-helper",
-    "@tuleap/fetch-result": "link:../lib/frontend/fetch-result",
     "@tuleap/filter-inline-table": "link:../lib/frontend/filter-table",
     "@tuleap/gettext": "link:../lib/frontend/gettext",
     "@tuleap/html-escaper": "link:../lib/frontend/html-escaper",
@@ -24,6 +23,7 @@
     "@tuleap/project-background": "link:../lib/frontend/project-background",
     "@tuleap/project-privacy-helper": "link:../lib/frontend/project-privacy-helper",
     "@tuleap/project-sidebar-internal": "link:../lib/frontend/project-sidebar-internal",
+    "@tuleap/switch-to": "link:scripts/switch-to",
     "@tuleap/tlp-dropdown": "link:../lib/frontend/tlp-dropdown",
     "@tuleap/tlp-fetch": "link:../lib/frontend/tlp-fetch",
     "@tuleap/tlp-modal": "link:../lib/frontend/tlp-modal",
@@ -32,7 +32,6 @@
     "@tuleap/tlp-swatch-colors": "link:../lib/frontend/tlp-swatch-colors",
     "@tuleap/tooltip": "link:../lib/frontend/tooltip",
     "@tuleap/vue-permissions-per-group-badge": "link:../lib/frontend/vue-permissions-per-group-badge",
-    "@tuleap/vue2-gettext-composition-helper": "link:../lib/frontend/vue2-gettext-composition-helpers",
     "@tuleap/vue2-gettext-init": "link:../lib/frontend/vue2-gettext-init",
     "ckeditor4": "^4.18.0",
     "dompurify": "^2.3.6",
@@ -43,7 +42,6 @@
     "mustache": "^4.2.0",
     "node-gettext": "^3.0.0",
     "panzoom": "^9.4.1",
-    "pinia": "^2.0.21",
     "prismjs": "^1.29.0",
     "slugify": "^1.6.1",
     "sprintf-js": "^1.1.2",
@@ -51,14 +49,10 @@
     "vue": "^2.7.8",
     "vue-dompurify-html": "^2.5.1",
     "vue-router": "^3.5.3",
-    "vue-word-highlighter": "^1.0.5",
-    "vuex": "^3.6.2",
-    "vuex-composition-helpers": "1.2"
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@pinia/testing": "^0.0.14",
     "@tuleap/build-system-configurator": "link:../lib/frontend/build-system-configurator",
-    "@tuleap/fault": "link:../lib/frontend/fault",
     "@tuleap/vuex-store-wrapper-jest": "link:../lib/frontend/vuex-store-wrapper-jest",
     "@types/bootstrap": "^4.5.0",
     "@types/ckeditor": "^4.9.10",
@@ -71,13 +65,12 @@
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.3.0",
     "jquery": "^3.6.0",
-    "neverthrow": "^5.0.0",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
     "vuex-class": "^0.3.2"
   },
   "scripts": {
-    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js",
+    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js && cp -ra ./scripts/switch-to/frontend-assets ./frontend-assets/switch-to",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"
   }

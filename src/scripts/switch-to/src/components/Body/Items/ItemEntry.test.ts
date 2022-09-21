@@ -21,14 +21,14 @@ import { shallowMount } from "@vue/test-utils";
 import type { QuickLink, ItemDefinition } from "../../../type";
 import ItemEntry from "./ItemEntry.vue";
 import { createTestingPinia } from "@pinia/testing";
-import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 import { defineStore } from "pinia";
 import type { KeyboardNavigationState } from "../../../stores/type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ItemEntry", () => {
-    it("Displays a link with a cross ref", async () => {
+    it("Displays a link with a cross ref", () => {
         const wrapper = shallowMount(ItemEntry, {
-            propsData: {
+            props: {
                 entry: {
                     icon_name: "fa-columns",
                     xref: "art #123",
@@ -41,16 +41,15 @@ describe("ItemEntry", () => {
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
             },
-            pinia: createTestingPinia(),
-            localVue: await createSwitchToLocalVue(),
+            global: getGlobalTestOptions(),
         });
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Displays a link with a quick links", async () => {
+    it("Displays a link with a quick links", () => {
         const wrapper = shallowMount(ItemEntry, {
-            propsData: {
+            props: {
                 entry: {
                     icon_name: "fa-columns",
                     xref: "art #123",
@@ -66,16 +65,15 @@ describe("ItemEntry", () => {
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
             },
-            pinia: createTestingPinia(),
-            localVue: await createSwitchToLocalVue(),
+            global: getGlobalTestOptions(),
         });
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Displays a link with an icon", async () => {
+    it("Displays a link with an icon", () => {
         const wrapper = shallowMount(ItemEntry, {
-            propsData: {
+            props: {
                 entry: {
                     icon_name: "fa-columns",
                     title: "Kanban",
@@ -87,8 +85,7 @@ describe("ItemEntry", () => {
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
             },
-            pinia: createTestingPinia(),
-            localVue: await createSwitchToLocalVue(),
+            global: getGlobalTestOptions(),
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -109,12 +106,11 @@ describe("ItemEntry", () => {
 
             const changeFocusCallback = jest.fn();
             const wrapper = shallowMount(ItemEntry, {
-                propsData: {
+                props: {
                     entry,
                     changeFocusCallback,
                 },
-                pinia: createTestingPinia(),
-                localVue: await createSwitchToLocalVue(),
+                global: getGlobalTestOptions(),
             });
 
             await wrapper.find("[data-test=entry-link]").trigger("keydown", { key });
@@ -148,12 +144,11 @@ describe("ItemEntry", () => {
         } as ItemDefinition;
 
         const wrapper = shallowMount(ItemEntry, {
-            propsData: {
+            props: {
                 entry,
                 changeFocusCallback: jest.fn(),
             },
-            pinia,
-            localVue: await createSwitchToLocalVue(),
+            global: getGlobalTestOptions(pinia),
         });
 
         const link = wrapper.find("[data-test=entry-link]");

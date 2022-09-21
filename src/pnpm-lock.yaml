@@ -3,14 +3,11 @@ lockfileVersion: 5.4
 specifiers:
   '@fortawesome/fontawesome-free': ^6.1.1
   '@joeattardi/emoji-button': ^4.6.2
-  '@pinia/testing': ^0.0.14
   '@tuleap/autocomplete-for-select2': link:../lib/frontend/autocomplete-for-select2
   '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
   '@tuleap/concurrency-limit-pool': link:../lib/frontend/concurrency-limit-pool
   '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': link:../lib/frontend/date-helper
-  '@tuleap/fault': link:../lib/frontend/fault
-  '@tuleap/fetch-result': link:../lib/frontend/fetch-result
   '@tuleap/filter-inline-table': link:../lib/frontend/filter-table
   '@tuleap/gettext': link:../lib/frontend/gettext
   '@tuleap/html-escaper': link:../lib/frontend/html-escaper
@@ -22,6 +19,7 @@ specifiers:
   '@tuleap/project-background': link:../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../lib/frontend/project-privacy-helper
   '@tuleap/project-sidebar-internal': link:../lib/frontend/project-sidebar-internal
+  '@tuleap/switch-to': link:scripts/switch-to
   '@tuleap/tlp-dropdown': link:../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../lib/frontend/tlp-modal
@@ -30,7 +28,6 @@ specifiers:
   '@tuleap/tlp-swatch-colors': link:../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip': link:../lib/frontend/tooltip
   '@tuleap/vue-permissions-per-group-badge': link:../lib/frontend/vue-permissions-per-group-badge
-  '@tuleap/vue2-gettext-composition-helper': link:../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': link:../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': ^4.5.0
@@ -51,10 +48,8 @@ specifiers:
   mermaid: ^9.1.3
   moment: ^2.29.4
   mustache: ^4.2.0
-  neverthrow: ^5.0.0
   node-gettext: ^3.0.0
   panzoom: ^9.4.1
-  pinia: ^2.0.21
   prismjs: ^1.29.0
   slugify: ^1.6.1
   sprintf-js: ^1.1.2
@@ -64,10 +59,8 @@ specifiers:
   vue-dompurify-html: ^2.5.1
   vue-property-decorator: ^9.1.2
   vue-router: ^3.5.3
-  vue-word-highlighter: ^1.0.5
   vuex: ^3.6.2
   vuex-class: ^0.3.2
-  vuex-composition-helpers: '1.2'
 
 dependencies:
   '@fortawesome/fontawesome-free': 6.1.1
@@ -76,7 +69,6 @@ dependencies:
   '@tuleap/concurrency-limit-pool': link:../lib/frontend/concurrency-limit-pool
   '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': link:../lib/frontend/date-helper
-  '@tuleap/fetch-result': link:../lib/frontend/fetch-result
   '@tuleap/filter-inline-table': link:../lib/frontend/filter-table
   '@tuleap/gettext': link:../lib/frontend/gettext
   '@tuleap/html-escaper': link:../lib/frontend/html-escaper
@@ -88,6 +80,7 @@ dependencies:
   '@tuleap/project-background': link:../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../lib/frontend/project-privacy-helper
   '@tuleap/project-sidebar-internal': link:../lib/frontend/project-sidebar-internal
+  '@tuleap/switch-to': link:scripts/switch-to
   '@tuleap/tlp-dropdown': link:../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../lib/frontend/tlp-modal
@@ -96,7 +89,6 @@ dependencies:
   '@tuleap/tlp-swatch-colors': link:../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip': link:../lib/frontend/tooltip
   '@tuleap/vue-permissions-per-group-badge': link:../lib/frontend/vue-permissions-per-group-badge
-  '@tuleap/vue2-gettext-composition-helper': link:../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../lib/frontend/vue2-gettext-init
   ckeditor4: 4.18.0
   dompurify: 2.3.6
@@ -107,7 +99,6 @@ dependencies:
   mustache: 4.2.0
   node-gettext: 3.0.0
   panzoom: 9.4.1
-  pinia: 2.0.21_vue@2.7.8
   prismjs: 1.29.0
   slugify: 1.6.1
   sprintf-js: 1.1.2
@@ -115,14 +106,10 @@ dependencies:
   vue: 2.7.8
   vue-dompurify-html: 2.5.1_vue@2.7.8
   vue-router: 3.5.3_vue@2.7.8
-  vue-word-highlighter: 1.0.5_vue@2.7.8
   vuex: 3.6.2_vue@2.7.8
-  vuex-composition-helpers: 1.2.0_vue@2.7.8
 
 devDependencies:
-  '@pinia/testing': 0.0.14_pinia@2.0.21+vue@2.7.8
   '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
-  '@tuleap/fault': link:../lib/frontend/fault
   '@tuleap/vuex-store-wrapper-jest': link:../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': 4.5.1
   '@types/ckeditor': 4.9.10
@@ -135,7 +122,6 @@ devDependencies:
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.7.8
   jquery: 3.6.0
-  neverthrow: 5.0.0
   vue-class-component: 7.2.6_vue@2.7.8
   vue-property-decorator: 9.1.2_chk7q7rgeabwy64hfqmb36krqe
   vuex-class: 0.3.2_sk4yiuanjyyynvfsfpq7vngibm
@@ -216,18 +202,6 @@ packages:
       twemoji: 13.1.0
     dev: false
 
-  /@pinia/testing/0.0.14_pinia@2.0.21+vue@2.7.8:
-    resolution: {integrity: sha512-ZmZwVNd/NnKYLIfjfuKl0zlJ3UdiXFpsHzSlL6wCeezSlyrqGMxsIQKv0J6fleu38gyCNTPBEipfxrt8V4+VIg==}
-    peerDependencies:
-      pinia: '>=2.0.19'
-    dependencies:
-      pinia: 2.0.21_vue@2.7.8
-      vue-demi: 0.13.1_vue@2.7.8
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-    dev: true
-
   /@popperjs/core/2.9.2:
     resolution: {integrity: sha512-VZMYa7+fXHdwIq1TDhSXoVmSPEGM/aa+6Aiq3nVVJ9bXr24zScr+NlKFKC3iPljA7ho/GAZr+d2jOf5GIRC30Q==}
     dev: false
@@ -293,9 +267,6 @@ packages:
       '@babel/parser': 7.18.9
       postcss: 8.4.14
       source-map: 0.6.1
-
-  /@vue/devtools-api/6.2.1:
-    resolution: {integrity: sha512-OEgAMeQXvCoJ+1x8WyQuVZzFo0wcyCmUR3baRVLmKBo1LmYZWMlRiXlux5jd0fqVJu6PfDbOrZItVqUEzLobeQ==}
 
   /@vue/test-utils/1.3.0_vue@2.7.8:
     resolution: {integrity: sha512-Xk2Xiyj2k5dFb8eYUKkcN9PzqZSppTlx7LaQWBbdA8tqh3jHr/KHX2/YLhNFc/xwDrgeLybqd+4ZCPJSGPIqeA==}
@@ -1038,7 +1009,7 @@ packages:
   /jsonfile/4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.6
     dev: false
 
   /jsonfile/5.0.0:
@@ -1118,10 +1089,6 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /neverthrow/5.0.0:
-    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
-    dev: true
-
   /ngraph.events/1.2.1:
     resolution: {integrity: sha512-D4C+nXH/RFxioGXQdHu8ELDtC6EaCiNsZtih0IvyGN81OZSUby4jXoJ5+RNWasfsd0FnKxxpAROyUMzw64QNsw==}
     dev: false
@@ -1161,22 +1128,6 @@ packages:
 
   /picocolors/1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
-
-  /pinia/2.0.21_vue@2.7.8:
-    resolution: {integrity: sha512-6ol04PtL29O0Z6JHI47O3JUSoyOJ7Og0rstXrHVMZSP4zAldsQBXJCNF0i/H7m8vp/Hjd/CSmuPl7C5QAwpeWQ==}
-    peerDependencies:
-      '@vue/composition-api': ^1.4.0
-      typescript: '>=4.4.4'
-      vue: ^2.6.14 || ^3.2.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-      typescript:
-        optional: true
-    dependencies:
-      '@vue/devtools-api': 6.2.1
-      vue: 2.7.8
-      vue-demi: 0.13.1_vue@2.7.8
 
   /popper.js/1.16.1:
     resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
@@ -1307,20 +1258,6 @@ packages:
       vue: 2.7.8
     dev: true
 
-  /vue-demi/0.13.1_vue@2.7.8:
-    resolution: {integrity: sha512-xmkJ56koG3ptpLnpgmIzk9/4nFf4CqduSJbUM0OdPoU87NwRuZ6x49OLhjSa/fC15fV+5CbEnrxU4oyE022svg==}
-    engines: {node: '>=12'}
-    hasBin: true
-    requiresBuild: true
-    peerDependencies:
-      '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^3.0.0-0 || ^2.6.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-    dependencies:
-      vue: 2.7.8
-
   /vue-dompurify-html/2.5.1_vue@2.7.8:
     resolution: {integrity: sha512-B8rQj2jAPJJhtKHHa6jg5B3/RoKBmmUl/awP/GxWXGu75j4Y7+MHqv0DG52v0Uz0taEpHyZun34KEYMAfrPWnA==}
     peerDependencies:
@@ -1348,19 +1285,6 @@ packages:
       vue: 2.7.8
     dev: false
 
-  /vue-word-highlighter/1.0.5_vue@2.7.8:
-    resolution: {integrity: sha512-5Yj9AUNbxgzl1THxoLzMHjvJxzc+Vx5F64n7h2yhqx/+yYk/ch4AgFDnrs63e8rPfD67KZfcvKaJty9RxV8uOg==}
-    peerDependencies:
-      '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^2.0.0 || >=3.0.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-    dependencies:
-      vue: 2.7.8
-      vue-demi: 0.13.1_vue@2.7.8
-    dev: false
-
   /vue/2.7.8:
     resolution: {integrity: sha512-ncwlZx5qOcn754bCu5/tS/IWPhXHopfit79cx+uIlLMyt3vCMGcXai5yCG5y+I6cDmEj4ukRYyZail9FTQh7lQ==}
     dependencies:
@@ -1378,14 +1302,6 @@ packages:
       vue-class-component: 7.2.6_vue@2.7.8
       vuex: 3.6.2_vue@2.7.8
     dev: true
-
-  /vuex-composition-helpers/1.2.0_vue@2.7.8:
-    resolution: {integrity: sha512-3A/cxcNSe2gIkXyydTmKmjy0Nj8570J+3S1H336lTB/F2J8g8KezhXCzq3R59w16KH6xl3mJiEfChBxn0nTVXA==}
-    peerDependencies:
-      vue: ^2.7.0
-    dependencies:
-      vue: 2.7.8
-    dev: false
 
   /vuex/3.6.2_vue@2.7.8:
     resolution: {integrity: sha512-ETW44IqCgBpVomy520DT5jf8n0zoCac+sxWnn+hMe/CzaSejb/eVw2YToiXYX+Ex/AuHHia28vWTq4goAexFbw==}

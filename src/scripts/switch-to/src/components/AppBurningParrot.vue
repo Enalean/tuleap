@@ -34,8 +34,8 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
-import type { Modal } from "tlp";
-import { createModal } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
 import { useSwitchToStore } from "../stores";

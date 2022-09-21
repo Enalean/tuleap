@@ -17,27 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import { PiniaVuePlugin, createPinia } from "pinia";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
-import type { VueClass } from "vue-class-component/lib/declarations";
+import type { Component } from "vue";
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import { createGettext } from "vue3-gettext";
+import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
 import type { FullTextState, State } from "./stores/type";
 import { useSwitchToStore } from "./stores";
 import { useFullTextStore } from "./stores/fulltext";
 import { getProjectsFromDataset } from "./helpers/get-projects-from-dataset";
 
-export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue>): Promise<void> {
-    await initVueGettext(
-        Vue,
-        (locale: string) =>
-            import(/* webpackChunkName: "switch-to-po-" */ "../po/" + getPOFileFromLocale(locale))
-    );
-
-    Vue.use(PiniaVuePlugin);
+export async function init(vue_mount_point: HTMLElement, component: Component): Promise<void> {
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
 
     const pinia = createPinia();
     const root_state: State = {
-        projects: getProjectsFromDataset(vue_mount_point.dataset.projects, Vue.prototype.$gettext),
+        projects: getProjectsFromDataset(vue_mount_point.dataset.projects, gettext.$gettext),
         is_trove_cat_enabled: Boolean(vue_mount_point.dataset.isTroveCatEnabled),
         are_restricted_users_allowed: Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed),
         is_search_available: Boolean(vue_mount_point.dataset.isSearchAvailable),
@@ -52,13 +49,10 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
         is_history_in_error: false,
         history: { entries: [] },
     };
-    const AppComponent = Vue.extend(component);
 
-    new AppComponent({
-        pinia,
-    }).$mount(vue_mount_point);
+    const app = createApp(component);
+    app.use(pinia);
     const store = useSwitchToStore();
-
     store.$patch(root_state);
 
     const fulltext_state: FullTextState = {
@@ -71,4 +65,7 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
     };
     const fulltext_store = useFullTextStore();
     fulltext_store.$patch(fulltext_state);
+
+    app.use(gettext);
+    app.mount(vue_mount_point);
 }

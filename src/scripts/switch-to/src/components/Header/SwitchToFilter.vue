@@ -24,7 +24,7 @@
         type="search"
         name="words"
         v-bind:placeholder="$gettext('Project, recent item, …')"
-        v-bind:value="filter_value.value"
+        v-bind:value="filter_value"
         v-on:keyup="update"
         autocomplete="off"
         data-test="switch-to-filter"
@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, watch } from "vue";
-import type { Modal } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { useSwitchToStore } from "../../stores";
 import { storeToRefs } from "pinia";
@@ -41,7 +41,7 @@ import { storeToRefs } from "pinia";
 const props = defineProps<{ modal: Modal | null }>();
 const store = useSwitchToStore();
 
-const filter_value = storeToRefs(store);
+const { filter_value } = storeToRefs(store);
 
 onMounted((): void => {
     listenToHideModalEvent();
@@ -67,7 +67,7 @@ onUnmounted((): void => {
 });
 
 function clearInput(): void {
-    if (filter_value !== "") {
+    if (filter_value.value !== "") {
         store.updateFilterValue("");
     }
 }

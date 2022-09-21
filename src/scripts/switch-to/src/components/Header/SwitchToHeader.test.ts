@@ -18,68 +18,71 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import SwitchToHeader from "./SwitchToHeader.vue";
 import type { SearchForm } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("SwitchToHeader", () => {
-    it("Does not display the button if search is not available (user is restricted)", async () => {
+    it("Does not display the button if search is not available (user is restricted)", () => {
         const wrapper = shallowMount(SwitchToHeader, {
-            localVue: await createSwitchToLocalVue(),
-            propsData: {
+            props: {
                 modal: null,
             },
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        filter_value: "abc",
-                        is_search_available: false,
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "abc",
+                            is_search_available: false,
+                        },
                     },
-                },
-            }),
+                })
+            ),
         });
 
         expect(wrapper.find("[data-test=legacy-search-button]").exists()).toBe(false);
     });
 
-    it("Does not display the button if user didn't type anything", async () => {
+    it("Does not display the button if user didn't type anything", () => {
         const wrapper = shallowMount(SwitchToHeader, {
-            localVue: await createSwitchToLocalVue(),
-            propsData: {
+            props: {
                 modal: null,
             },
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        filter_value: "",
-                        is_search_available: true,
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "",
+                            is_search_available: true,
+                        },
                     },
-                },
-            }),
+                })
+            ),
         });
 
         expect(wrapper.find("[data-test=legacy-search-button]").exists()).toBe(false);
     });
 
-    it("Displays the button", async () => {
+    it("Displays the button", () => {
         const wrapper = shallowMount(SwitchToHeader, {
-            localVue: await createSwitchToLocalVue(),
-            propsData: {
+            props: {
                 modal: null,
             },
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        filter_value: "abc",
-                        is_search_available: true,
-                        search_form: {
-                            type_of_search: "soft",
-                            hidden_fields: [],
-                        } as SearchForm,
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "abc",
+                            is_search_available: true,
+                            search_form: {
+                                type_of_search: "soft",
+                                hidden_fields: [],
+                            } as SearchForm,
+                        },
                     },
-                },
-            }),
+                })
+            ),
         });
 
         expect(wrapper.find("[data-test=legacy-search-button]").exists()).toBe(true);

@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../../stores/type";
 import { computed } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext, interpolate } = useGettext();
 

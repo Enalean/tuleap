@@ -18,12 +18,12 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import { useSwitchToStore } from "../../stores";
 import SwitchToFilter from "./SwitchToFilter.vue";
-import type { Modal } from "tlp";
-import { createModal } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 jest.useFakeTimers();
 
@@ -36,11 +36,10 @@ describe("SwitchToFilter", () => {
 
     it("Saves the entered value in the store", async () => {
         const wrapper = shallowMount(SwitchToFilter, {
-            localVue: await createSwitchToLocalVue(),
-            propsData: {
+            global: getGlobalTestOptions(),
+            props: {
                 modal,
             },
-            pinia: createTestingPinia(),
         });
 
         if (wrapper.element instanceof HTMLInputElement) {
@@ -51,19 +50,20 @@ describe("SwitchToFilter", () => {
         expect(useSwitchToStore().updateFilterValue).toHaveBeenCalledWith("abc");
     });
 
-    it("Reset the value if the modal is closed", async () => {
+    it("Reset the value if the modal is closed", () => {
         shallowMount(SwitchToFilter, {
-            localVue: await createSwitchToLocalVue(),
-            propsData: {
+            props: {
                 modal,
             },
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        filter_value: "abc",
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "abc",
+                        },
                     },
-                },
-            }),
+                })
+            ),
         });
         modal.hide();
 
@@ -77,17 +77,18 @@ describe("SwitchToFilter", () => {
         const hide = jest.spyOn(modal, "hide");
 
         const wrapper = shallowMount(SwitchToFilter, {
-            localVue: await createSwitchToLocalVue(),
-            propsData: {
+            props: {
                 modal,
             },
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        filter_value: "abc",
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "abc",
+                        },
                     },
-                },
-            }),
+                })
+            ),
         });
 
         await wrapper.trigger("keyup", { key: "Escape" });
