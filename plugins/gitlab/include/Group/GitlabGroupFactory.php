@@ -28,6 +28,7 @@ final class GitlabGroupFactory
         private VerifyGroupIsAlreadyLinked $group_integrated_verifier,
         private VerifyProjectIsAlreadyLinked $project_linked_verifier,
         private AddNewGroup $group_adder,
+        private RetrieveGroupLink $retrieve_group_link,
     ) {
     }
 
@@ -47,5 +48,18 @@ final class GitlabGroupFactory
 
         $group_id = $this->group_adder->addNewGroup($gitlab_group);
         return GitlabGroup::buildGitlabGroupFromInsertionRows($group_id, $gitlab_group);
+    }
+
+    /**
+     * @throws GitlabGroupLinkNotFoundException
+     */
+    public function getGroupLinkById(int $gitlab_group_link_id): GitlabGroup
+    {
+        $group_link_row = $this->retrieve_group_link->retrieveGroupLink($gitlab_group_link_id);
+        if ($group_link_row === null) {
+            throw new GitlabGroupLinkNotFoundException($gitlab_group_link_id);
+        }
+
+        return GitlabGroup::buildGitlabGroupFromRow($group_link_row);
     }
 }

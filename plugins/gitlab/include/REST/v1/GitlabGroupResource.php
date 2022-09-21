@@ -47,8 +47,10 @@ use Tuleap\Gitlab\API\Group\GitlabGroupInformationRetriever;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Group\GitlabGroupDAO;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
+use Tuleap\Gitlab\Group\GitlabGroupLinkNotFoundException;
 use Tuleap\Gitlab\Group\GroupCreator;
 use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
+use Tuleap\Gitlab\Group\GroupUpdator;
 use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
 use Tuleap\Gitlab\Group\Token\GroupTokenInserter;
@@ -61,6 +63,8 @@ use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
+use Tuleap\Gitlab\REST\v1\Group\GitlabGroupLinkRepresentation;
+use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPATCHRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\Http\HttpClientFactory;
@@ -81,11 +85,11 @@ final class GitlabGroupResource
     }
 
     /**
-     * Link a Gitlab group with Tuleap.
+     * Link a GitLab group with Tuleap.
      *
      * /!\ This route is under construction.
      * <br>
-     * It will retrieve and create the Tuleap repositories from a Gitlab group
+     * It will retrieve and create the Tuleap repositories from a GitLab group
      *
      * @url    POST
      * @access protected
@@ -155,7 +159,7 @@ final class GitlabGroupResource
                 $transaction_executor,
                 $integration_dao,
                 $gitlab_repository_creator,
-                new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
+                new GitlabGroupFactory($group_dao, $group_dao, $group_dao, $group_dao),
                 new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
                 new GroupRepositoryIntegrationDAO(),
                 new CreateBranchPrefixDao()
@@ -163,6 +167,69 @@ final class GitlabGroupResource
         );
 
         return $group_creation_handler->createGroupAndIntegrations($credentials, $gitlab_group_link_representation, $project);
+    }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function optionsId(int $id): void
+    {
+        Header::allowOptionsPatch();
+    }
+
+    /**
+     * Update a GitLab group link with Tuleap.
+     *
+     * /!\ This route is under construction.
+     * <br>
+     * It will update a GitLab group integration.
+     *
+     * <p>To update the prefix used in the branch creation for repositories that come with the linked group (feature flag must be enabled):</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"create_branch_prefix" : "dev-"<br>
+     * }<br>
+     * </pre>
+     *
+     * @url    PATCH {id}
+     * @access protected
+     *
+     * @param int $id Id of the GitLab group link
+     * @param GitlabGroupPATCHRepresentation $gitlab_group_link_representation {@from body}
+     *
+     * @return GitlabGroupLinkRepresentation {@type GitlabGroupLinkRepresentation}
+     * @status 200
+     *
+     * @throws RestException 404
+     * @throws RestException 401
+     * @throws RestException 400
+     */
+    protected function updateGroupLink(int $id, GitlabGroupPATCHRepresentation $gitlab_group_link_representation): GitlabGroupLinkRepresentation
+    {
+        $this->optionsId($id);
+
+        $group_dao            = new GitlabGroupDAO();
+        $gitlab_group_factory = new GitlabGroupFactory($group_dao, $group_dao, $group_dao, $group_dao);
+
+        try {
+            $gitlab_group_link = $gitlab_group_factory->getGroupLinkById($id);
+        } catch (GitlabGroupLinkNotFoundException $exception) {
+            throw new RestException(404, "GitLab group link not found");
+        }
+
+        $project      = $this->getProjectById($gitlab_group_link->project_id);
+        $current_user = UserManager::instance()->getCurrentUser();
+        if (! $this->getGitPermissionsManager()->userIsGitAdmin($current_user, $project)) {
+            throw new RestException(401, "User must be Git administrator.");
+        }
+
+        (new GroupUpdator($group_dao))->updateBranchPrefixOfGroupLinkFromPATCHRequest(
+            $gitlab_group_link,
+            $gitlab_group_link_representation
+        );
+
+        $updated_gitlab_group_link = $gitlab_group_factory->getGroupLinkById($id);
+        return GitlabGroupLinkRepresentation::buildFromObject($updated_gitlab_group_link);
     }
 
     /**

@@ -24,12 +24,9 @@ use RestBase;
 
 class TestBase extends RestBase
 {
-    protected $gitlab_project_id;
-
-    /**
-     * @var int
-     */
-    protected $gitlab_repository_id;
+    protected int $gitlab_project_id;
+    protected int $gitlab_repository_id;
+    protected int $gitlab_group_id;
 
     public function setUp(): void
     {
@@ -37,5 +34,6 @@ class TestBase extends RestBase
 
         $this->gitlab_project_id    = $this->getProjectId(GitLabDataBuilder::PROJECT_TEST_GITLAB_SHORTNAME);
         $this->gitlab_repository_id = 1;
+        $this->gitlab_group_id      = 1;
     }
 }
