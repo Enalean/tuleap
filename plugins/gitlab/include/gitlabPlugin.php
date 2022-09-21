@@ -976,7 +976,7 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
             ProjectManager::instance(),
             EventManager::instance(),
             new JavascriptViteAsset(
-                new IncludeViteAssets(__DIR__ . '/../frontend-assets/gitlab-group-link', '/assets/gitlab/gitlab-group-link'),
+                new IncludeViteAssets(__DIR__ . '/../frontend-assets/gitlab-group-link-wizard', '/assets/gitlab/gitlab-group-link-wizard'),
                 'src/index.ts'
             ),
             new GitlabGroupDAO(),

@@ -6,8 +6,8 @@
             "po": "scripts/artifact-create-branch-action/po"
         },
         "gitlab-group-link": {
-            "src": "scripts/gitlab-group-link/src",
-            "po": "scripts/gitlab-group-link/po"
+            "src": "scripts/group-link-wizard/src",
+            "po": "scripts/group-link-wizard/po"
         }
     }
 }
