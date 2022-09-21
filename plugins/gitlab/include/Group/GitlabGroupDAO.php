@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Group;
 
 use Tuleap\DB\DataAccessObject;
 
-final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLink, UpdateBranchPrefixOfGroup
+final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLink, UpdateBranchPrefixOfGroup, UpdateArtifactClosureOfGroup
 {
     public function addNewGroup(NewGroup $gitlab_group): int
     {
@@ -76,6 +76,15 @@ final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, Veri
         $this->getDB()->update(
             'plugin_gitlab_group',
             ['create_branch_prefix' => $create_branch_prefix],
+            ['id' => $id]
+        );
+    }
+
+    public function updateArtifactClosureOfGroupLink(int $id, bool $allow_artifact_closure): void
+    {
+        $this->getDB()->update(
+            'plugin_gitlab_group',
+            ['allow_artifact_closure' => $allow_artifact_closure],
             ['id' => $id]
         );
     }

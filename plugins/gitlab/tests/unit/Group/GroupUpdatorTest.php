@@ -32,33 +32,38 @@ final class GroupUpdatorTest extends TestCase
     /**
      * @var UpdateBranchPrefixOfGroup&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $dao;
+    private $branch_prefix_dao;
+    /**
+     * @var UpdateArtifactClosureOfGroup&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $artifact_closure_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dao     = $this->createMock(UpdateBranchPrefixOfGroup::class);
-        $this->updator = new GroupUpdator($this->dao);
+        $this->branch_prefix_dao    = $this->createMock(UpdateBranchPrefixOfGroup::class);
+        $this->artifact_closure_dao = $this->createMock(UpdateArtifactClosureOfGroup::class);
+        $this->updator              = new GroupUpdator($this->branch_prefix_dao, $this->artifact_closure_dao);
     }
 
     public function testItAsksToSaveThePrefix(): void
     {
-        $this->dao->expects(self::once())->method("updateBranchPrefixOfGroupLink");
+        $this->branch_prefix_dao->expects(self::once())->method("updateBranchPrefixOfGroupLink");
 
-        $this->updator->updateBranchPrefixOfGroupLinkFromPATCHRequest(
+        $this->updator->updateGroupLinkFromPATCHRequest(
             $this->buildGitlabGroup(),
-            GitlabGroupPATCHRepresentation::build("prefix"),
+            GitlabGroupPATCHRepresentation::build("prefix", null),
         );
     }
 
     public function testItDoesNotAskToSaveThePrefixIfNoPrefixProvided(): void
     {
-        $this->dao->expects(self::never())->method("updateBranchPrefixOfGroupLink");
+        $this->branch_prefix_dao->expects(self::never())->method("updateBranchPrefixOfGroupLink");
 
-        $this->updator->updateBranchPrefixOfGroupLinkFromPATCHRequest(
+        $this->updator->updateGroupLinkFromPATCHRequest(
             $this->buildGitlabGroup(),
-            GitlabGroupPATCHRepresentation::build(null),
+            GitlabGroupPATCHRepresentation::build(null, null),
         );
     }
 
@@ -66,9 +71,30 @@ final class GroupUpdatorTest extends TestCase
     {
         $this->expectException(RestException::class);
 
-        $this->updator->updateBranchPrefixOfGroupLinkFromPATCHRequest(
+        $this->updator->updateGroupLinkFromPATCHRequest(
             $this->buildGitlabGroup(),
-            GitlabGroupPATCHRepresentation::build("not_valid[[[~~~prefix"),
+            GitlabGroupPATCHRepresentation::build("not_valid[[[~~~prefix", null),
+        );
+    }
+
+    public function testItAsksToSaveTheArtifactClosure(): void
+    {
+        $this->artifact_closure_dao->expects(self::once())->method("updateArtifactClosureOfGroupLink");
+
+        $this->updator->updateGroupLinkFromPATCHRequest(
+            $this->buildGitlabGroup(),
+            GitlabGroupPATCHRepresentation::build(null, true),
+        );
+    }
+
+    public function testItAsksToSaveBothPrefixAndArtifactClosure(): void
+    {
+        $this->branch_prefix_dao->expects(self::once())->method("updateBranchPrefixOfGroupLink");
+        $this->artifact_closure_dao->expects(self::once())->method("updateArtifactClosureOfGroupLink");
+
+        $this->updator->updateGroupLinkFromPATCHRequest(
+            $this->buildGitlabGroup(),
+            GitlabGroupPATCHRepresentation::build("dev/", true),
         );
     }
 

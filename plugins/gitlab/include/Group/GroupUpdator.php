@@ -31,14 +31,33 @@ final class GroupUpdator
 {
     private const FAKE_BRANCH_NAME = 'branch_name';
 
-    public function __construct(private UpdateBranchPrefixOfGroup $update_group_link)
-    {
+    public function __construct(
+        private UpdateBranchPrefixOfGroup $update_branch_prefix_of_group,
+        private UpdateArtifactClosureOfGroup $update_artifact_closure_of_group,
+    ) {
     }
 
     /**
      * @throws RestException
      */
-    public function updateBranchPrefixOfGroupLinkFromPATCHRequest(
+    public function updateGroupLinkFromPATCHRequest(
+        GitlabGroup $gitlab_group_link,
+        GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
+    ): void {
+        $this->updateBranchPrefixOfGroupLinkFromPATCHRequest(
+            $gitlab_group_link,
+            $gitlab_group_link_representation,
+        );
+        $this->updateArtifactClosureOfGroupLinkFromPATCHRequest(
+            $gitlab_group_link,
+            $gitlab_group_link_representation,
+        );
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function updateBranchPrefixOfGroupLinkFromPATCHRequest(
         GitlabGroup $gitlab_group_link,
         GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
     ): void {
@@ -51,7 +70,7 @@ final class GroupUpdator
         try {
             BranchName::fromBranchNameShortHand($prefix_branch_name . self::FAKE_BRANCH_NAME);
 
-            $this->update_group_link->updateBranchPrefixOfGroupLink(
+            $this->update_branch_prefix_of_group->updateBranchPrefixOfGroupLink(
                 $gitlab_group_link->id,
                 $prefix_branch_name,
             );
@@ -64,5 +83,21 @@ final class GroupUpdator
                 )
             );
         }
+    }
+
+    private function updateArtifactClosureOfGroupLinkFromPATCHRequest(
+        GitlabGroup $gitlab_group_link,
+        GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
+    ): void {
+        $allow_artifact_closure = $gitlab_group_link_representation->allow_artifact_closure;
+
+        if ($allow_artifact_closure === null) {
+            return;
+        }
+
+        $this->update_artifact_closure_of_group->updateArtifactClosureOfGroupLink(
+            $gitlab_group_link->id,
+            $allow_artifact_closure,
+        );
     }
 }

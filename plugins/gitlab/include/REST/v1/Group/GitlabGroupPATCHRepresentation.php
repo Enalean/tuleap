@@ -31,14 +31,19 @@ final class GitlabGroupPATCHRepresentation
      * @var string | null {@required false}
      */
     public $create_branch_prefix;
+    /**
+     * @var bool | null {@required false}
+     */
+    public $allow_artifact_closure;
 
-    private function __construct(?string $create_branch_prefix)
+    private function __construct(?string $create_branch_prefix, ?bool $allow_artifact_closure)
     {
-        $this->create_branch_prefix = $create_branch_prefix;
+        $this->create_branch_prefix   = $create_branch_prefix;
+        $this->allow_artifact_closure = $allow_artifact_closure;
     }
 
-    public static function build(?string $create_branch_prefix): self
+    public static function build(?string $create_branch_prefix, ?bool $allow_artifact_closure): self
     {
-        return new self($create_branch_prefix);
+        return new self($create_branch_prefix, $allow_artifact_closure);
     }
 }
