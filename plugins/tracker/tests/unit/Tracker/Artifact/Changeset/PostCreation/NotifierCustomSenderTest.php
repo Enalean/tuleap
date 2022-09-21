@@ -27,6 +27,7 @@ use ConfigNotificationAssignedTo;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_Artifact_MailGateway_RecipientFactory;
 use Tuleap\GlobalLanguageMock;
@@ -144,7 +145,7 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true), false);
+        return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true, new NullLogger()), false);
     }
 
     public function testFetchesTheCorrectlyFormattedSenderFieldWhenEnabled()
