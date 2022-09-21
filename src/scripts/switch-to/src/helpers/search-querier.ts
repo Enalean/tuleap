@@ -32,11 +32,13 @@ interface Pagination {
 export interface QueryResults {
     readonly results: FullTextState["fulltext_search_results"];
     readonly has_more_results: boolean;
+    readonly next_offset: number;
 }
 
 export function querier(
     url: string,
     keywords: string,
+    previously_fetched_results: QueryResults,
     onItemReceived: (result: ItemDefinition) => void,
     onComplete: (result: ResultAsync<QueryResults, Fault>) => void
 ): StoppableQuery {
@@ -44,35 +46,42 @@ export function querier(
     const MAX_PARALLEL_REQUESTS = 4;
     const limit = 50;
 
-    const deduplicated_results: FullTextState["fulltext_search_results"] = {};
+    const deduplicated_results: FullTextState["fulltext_search_results"] =
+        previously_fetched_results.results;
+    const previous_size = Object.keys(previously_fetched_results.results).length;
+    let next_offset = previously_fetched_results.next_offset;
 
     let stop_pending_requests = false;
 
     function query(): ResultAsync<QueryResults, Fault> {
         if (stop_pending_requests) {
-            return okAsync({
-                results: {},
-                has_more_results: false,
-            });
+            return okAsync(previously_fetched_results);
         }
 
         return getFistPage()
             .andThen(getNextPages)
             .map((): QueryResults => {
                 const keys = Object.keys(deduplicated_results);
-                if (keys.length <= PAGE_SIZE) {
-                    return { results: deduplicated_results, has_more_results: false };
+                if (keys.length - previous_size <= PAGE_SIZE) {
+                    return {
+                        results: deduplicated_results,
+                        has_more_results: false,
+                        next_offset: next_offset,
+                    };
                 }
 
-                const keys_to_keep = keys.slice(0, PAGE_SIZE);
+                const keys_to_keep = keys.slice(0, previous_size + PAGE_SIZE);
                 return {
                     results: extractObject(deduplicated_results, keys_to_keep),
                     has_more_results: true,
+                    next_offset: next_offset,
                 };
             });
 
         function getFistPage(): ResultAsync<Pagination, Fault> {
-            return searchAt(0).andThen(insertItemsAndGetPaginationFromFirstPage);
+            return searchAt(previously_fetched_results.next_offset).andThen(
+                insertItemsAndGetPaginationFromFirstPage
+            );
         }
 
         function insertItemsAndGetPaginationFromFirstPage(
@@ -86,7 +95,9 @@ export function querier(
             const total = Number.parseInt(pagination_size, 10);
 
             return ResultAsync.fromPromise<void, Fault>(
-                response.json().then(insertItemsInDeduplicatedResults),
+                response
+                    .json()
+                    .then(insertItemsInDeduplicatedResults(previously_fetched_results.next_offset)),
                 JSONParseFault.fromError
             ).map(() => ({ total }));
         }
@@ -98,7 +109,7 @@ export function querier(
         function startParallelRequests({ total }: Pagination): Promise<Result<void, Fault>[]> {
             return limitConcurrencyPool(
                 MAX_PARALLEL_REQUESTS,
-                [...getAdditionalOffsets(0, limit, total)],
+                [...getAdditionalOffsets(previously_fetched_results.next_offset, limit, total)],
                 getPageIfNecessary
             );
         }
@@ -114,28 +125,42 @@ export function querier(
         function getPage(offset: number): ResultAsync<void, Fault> {
             return searchAt(offset).andThen((response): ResultAsync<void, Fault> => {
                 return ResultAsync.fromPromise<void, Fault>(
-                    response.json().then(insertItemsInDeduplicatedResults),
+                    response.json().then(insertItemsInDeduplicatedResults(offset)),
                     JSONParseFault.fromError
                 );
             });
         }
 
-        function insertItemsInDeduplicatedResults(json: ItemDefinition[]): void {
-            for (const item of json) {
+        function insertItemsInDeduplicatedResults(
+            current_offset: number
+        ): (json: ItemDefinition[]) => void {
+            return (json: ItemDefinition[]): void => {
                 if (doWeHaveEnoughResults()) {
                     return;
                 }
 
-                if (typeof deduplicated_results[item.html_url] === "undefined") {
-                    deduplicated_results[item.html_url] = item;
-                    onItemReceived(item);
+                let nb_items_encountered = 0;
+                for (const item of json) {
+                    nb_items_encountered++;
+
+                    if (typeof deduplicated_results[item.html_url] === "undefined") {
+                        deduplicated_results[item.html_url] = item;
+                        onItemReceived(item);
+                    }
+
+                    if (doWeHaveEnoughResults()) {
+                        break;
+                    }
                 }
-            }
+
+                next_offset = current_offset + nb_items_encountered;
+            };
         }
 
         function doWeHaveEnoughResults(): boolean {
             return (
-                stop_pending_requests || Object.keys(deduplicated_results).length >= PAGE_SIZE + 1
+                stop_pending_requests ||
+                Object.keys(deduplicated_results).length - previous_size >= PAGE_SIZE + 1
             );
         }
 

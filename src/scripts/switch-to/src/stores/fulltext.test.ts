@@ -83,12 +83,14 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const result = okAsync({ results: {}, has_more_results: false });
+            const result = okAsync({ results: {}, has_more_results: false, next_offset: 0 });
             const query_spy = jest.spyOn(search_querier, "querier");
-            query_spy.mockImplementation((url, keywords, onItemReceived, onComplete) => ({
-                run: (): void => onComplete(result),
-                stop: jest.fn(),
-            }));
+            query_spy.mockImplementation(
+                (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
+                    run: (): void => onComplete(result),
+                    stop: jest.fn(),
+                })
+            );
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -108,10 +110,12 @@ describe("FullText Store", () => {
 
             const result = errAsync(Fault.fromMessage("Something went wrong"));
             const query_spy = jest.spyOn(search_querier, "querier");
-            query_spy.mockImplementation((url, keywords, onItemReceived, onComplete) => ({
-                run: (): void => onComplete(result),
-                stop: jest.fn(),
-            }));
+            query_spy.mockImplementation(
+                (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
+                    run: (): void => onComplete(result),
+                    stop: jest.fn(),
+                })
+            );
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -135,10 +139,12 @@ describe("FullText Store", () => {
                 ...Fault.fromMessage("Something went wrong"),
             });
             const query_spy = jest.spyOn(search_querier, "querier");
-            query_spy.mockImplementation((url, keywords, onItemReceived, onComplete) => ({
-                run: (): void => onComplete(result),
-                stop: jest.fn(),
-            }));
+            query_spy.mockImplementation(
+                (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
+                    run: (): void => onComplete(result),
+                    stop: jest.fn(),
+                })
+            );
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -164,12 +170,15 @@ describe("FullText Store", () => {
                     "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
                 },
                 has_more_results: false,
+                next_offset: 0,
             });
             const query_spy = jest.spyOn(search_querier, "querier");
-            query_spy.mockImplementation((url, keywords, onItemReceived, onComplete) => ({
-                run: (): void => onComplete(result),
-                stop: jest.fn(),
-            }));
+            query_spy.mockImplementation(
+                (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
+                    run: (): void => onComplete(result),
+                    stop: jest.fn(),
+                })
+            );
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -197,17 +206,20 @@ describe("FullText Store", () => {
                     "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
                     "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
                 },
+                next_offset: 0,
                 has_more_results: false,
             });
             const query_spy = jest.spyOn(search_querier, "querier");
-            query_spy.mockImplementation((url, keywords, onItemReceived, onComplete) => ({
-                run: (): void => {
-                    onItemReceived({ title: "toto", html_url: "/toto" } as ItemDefinition);
-                    onItemReceived({ title: "titi", html_url: "/titi" } as ItemDefinition);
-                    onComplete(result);
-                },
-                stop: jest.fn(),
-            }));
+            query_spy.mockImplementation(
+                (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
+                    run: (): void => {
+                        onItemReceived({ title: "toto", html_url: "/toto" } as ItemDefinition);
+                        onItemReceived({ title: "titi", html_url: "/titi" } as ItemDefinition);
+                        onComplete(result);
+                    },
+                    stop: jest.fn(),
+                })
+            );
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -233,12 +245,15 @@ describe("FullText Store", () => {
                     "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
                 },
                 has_more_results: true,
+                next_offset: 0,
             });
             const query_spy = jest.spyOn(search_querier, "querier");
-            query_spy.mockImplementation((url, keywords, onItemReceived, onComplete) => ({
-                run: (): void => onComplete(result),
-                stop: jest.fn(),
-            }));
+            query_spy.mockImplementation(
+                (url, keywords, previously_fetched_results, onItemReceived, onComplete) => ({
+                    run: (): void => onComplete(result),
+                    stop: jest.fn(),
+                })
+            );
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -263,6 +278,84 @@ describe("FullText Store", () => {
 
             store.search("foobar");
             expect(scheduleQuery).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("more", () => {
+        it("should not perform the search if fts is not available", () => {
+            const store = useFullTextStore();
+            store.$patch({
+                fulltext_search_url: "/search",
+                fulltext_search_is_available: false,
+                fulltext_search_results: {},
+            });
+
+            store.more();
+            expect(scheduleQuery).not.toHaveBeenCalled();
+        });
+
+        it("should store more results", async () => {
+            const root_store = useSwitchToStore();
+            root_store.$patch({
+                filter_value: "keyword",
+            });
+
+            const store = useFullTextStore();
+            store.$patch({
+                fulltext_search_url: "/search",
+                fulltext_search_is_available: true,
+                fulltext_search_results: {
+                    "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                    "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+                },
+                fulltext_search_has_more_results: true,
+                fulltext_search_next_offset: 15,
+            });
+
+            const result = okAsync({
+                results: {
+                    "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                    "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+                    "/tata": { title: "tata", html_url: "/tata" } as ItemDefinition,
+                    "/tutu": { title: "tutu", html_url: "/tutu" } as ItemDefinition,
+                },
+                has_more_results: false,
+                next_offset: 20,
+            });
+            const query_spy = jest.spyOn(search_querier, "querier");
+            let received_previously_fetched_results;
+            query_spy.mockImplementation(
+                (url, keywords, previously_fetched_results, onItemReceived, onComplete) => {
+                    received_previously_fetched_results = previously_fetched_results;
+                    return {
+                        run: (): void => onComplete(result),
+                        stop: jest.fn(),
+                    };
+                }
+            );
+
+            store.more();
+            expect(scheduleQuery).toHaveBeenCalled();
+            expect(received_previously_fetched_results).toStrictEqual({
+                has_more_results: true,
+                next_offset: 15,
+                results: {
+                    "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                    "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+                },
+            });
+
+            await result;
+
+            expect(store.fulltext_search_is_loading).toBe(false);
+            expect(store.fulltext_search_is_error).toBe(false);
+            expect(store.fulltext_search_results).toStrictEqual({
+                "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+                "/tata": { title: "tata", html_url: "/tata" } as ItemDefinition,
+                "/tutu": { title: "tutu", html_url: "/tutu" } as ItemDefinition,
+            });
+            expect(store.fulltext_search_has_more_results).toBe(false);
         });
     });
 

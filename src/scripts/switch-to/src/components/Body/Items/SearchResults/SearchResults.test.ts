@@ -32,7 +32,7 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 
 describe("SearchResults", () => {
     describe("FullText search available", () => {
-        it("should display a loading state", () => {
+        it("should display a loading state and potential existing results", () => {
             const wrapper = shallowMount(SearchResults, {
                 global: getGlobalTestOptions(
                     createTestingPinia({
@@ -58,7 +58,7 @@ describe("SearchResults", () => {
             );
             expect(wrapper.findComponent(SearchResultsError).exists()).toBe(false);
             expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(false);
-            expect(wrapper.findComponent(SearchResultsList).exists()).toBe(false);
+            expect(wrapper.findComponent(SearchResultsList).exists()).toBe(true);
         });
 
         it("should display an error state", () => {
