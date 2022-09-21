@@ -21,6 +21,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Artifact\Action;
 
+use GitPermissionsManager;
+use GitUserNotAdminException;
+use PFUser;
 use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Branch\InvalidBranchNameException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
@@ -32,6 +35,7 @@ final class CreateBranchPrefixUpdater
 
     public function __construct(
         private GitlabRepositoryIntegrationFactory $integration_factory,
+        private GitPermissionsManager $git_permissions_manager,
         private SaveIntegrationBranchPrefix $branch_prefix_saver,
     ) {
     }
@@ -39,12 +43,18 @@ final class CreateBranchPrefixUpdater
     /**
      * @throws GitlabRepositoryIntegrationNotFoundException
      * @throws InvalidBranchNameException
+     * @throws GitUserNotAdminException
      */
-    public function updateBranchPrefix(int $integration_id, string $prefix): void
+    public function updateBranchPrefix(PFUser $user, int $integration_id, string $prefix): void
     {
         $gitlab_repository = $this->integration_factory->getIntegrationById($integration_id);
         if (! $gitlab_repository) {
             throw new GitlabRepositoryIntegrationNotFoundException($integration_id);
+        }
+
+        $project = $gitlab_repository->getProject();
+        if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
+            throw new GitUserNotAdminException();
         }
 
         BranchName::fromBranchNameShortHand($prefix . self::FAKE_BRANCH_NAME);
