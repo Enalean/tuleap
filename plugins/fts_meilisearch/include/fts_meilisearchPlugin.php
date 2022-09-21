@@ -20,6 +20,10 @@
 
 declare(strict_types=1);
 
+use Tuleap\FullTextSearchMeilisearch\Server\GenerateServerMasterKey;
+use Tuleap\FullTextSearchMeilisearch\Server\LocalMeilisearchServer;
+use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
+
 require_once __DIR__ . '/../../fts_common/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -47,6 +51,18 @@ final class fts_meilisearchPlugin extends \Tuleap\FullTextSearchCommon\FullTextS
         }
 
         return $this->pluginInfo;
+    }
+
+    public function getHooksAndCallbacks(): Collection
+    {
+        $this->addHook(PluginExecuteUpdateHookEvent::NAME);
+
+        return parent::getHooksAndCallbacks();
+    }
+
+    public function executeUpdateHook(PluginExecuteUpdateHookEvent $event): void
+    {
+        (new GenerateServerMasterKey(new LocalMeilisearchServer(), $event->logger))->generateMasterKey();
     }
 
     protected function getIndexSearcher(): \Tuleap\FullTextSearchCommon\Index\SearchIndexedItem
