@@ -1,0 +1,13 @@
+{
+    "name": "tuleap/plugin-fts_meilisearch",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\FullTextSearchMeilisearch\\": "include/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tuleap\\FullTextSearchMeilisearch\\": "tests/unit/"
+        }
+    }
+}

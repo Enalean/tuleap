@@ -439,6 +439,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
 %description plugin-fts-db
 %{summary}.
 
+%package plugin-fts-meilisearch
+Summary: Full-Text search Meilisearch backend
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
+%description plugin-fts-meilisearch
+%{summary}.
+
 %package plugin-oauth2-server
 Summary: OAuth2 Server
 Group: Development/Tools
@@ -608,6 +615,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testplan
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_common
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_db
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_meilisearch
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
@@ -1458,6 +1466,10 @@ fi
 %files plugin-fts-db
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/fts_db
+
+%files plugin-fts-meilisearch
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/fts_meilisearch
 
 %files plugin-oauth2-server
 %defattr(-,root,root,-)
