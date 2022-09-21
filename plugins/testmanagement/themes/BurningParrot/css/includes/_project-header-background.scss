@@ -18,7 +18,7 @@
  */
 
 @use "../../src/themes/BurningParrot/css/includes/global-variables";
-@use "../../src/themes/common/css/project-background/background";
+@use "@tuleap/project-background";
 
 .project-with-background {
     .execution-header-button-edit,
@@ -26,11 +26,11 @@
     .test-campaign-header-title,
     .test-administration-title,
     .test-dependency-graph-title {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
     }
 
     .execution-header-button-edit:focus-visible {
-        @include background.background-for-links;
+        @include project-background.background-for-links;
 
         box-shadow: none;
     }
@@ -105,7 +105,7 @@ body {
         ".test-administration-title", ".test-dependency-graph-title";
 
     @each $element-with-project-background in $elements-with-project-background {
-        @include background.apply-background(
+        @include project-background.apply-background(
             $element-with-project-background,
             global-variables.$sidebar-expanded-width,
             global-variables.$sidebar-collapsed-width

@@ -15,6 +15,7 @@ specifiers:
   '@tuleap/plugin-tracker-constants': link:scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': link:scripts/lib/rich-text-editor
   '@tuleap/plugin-tracker-tql-codemirror': link:scripts/lib/TQL-CodeMirror
+  '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
@@ -62,6 +63,7 @@ dependencies:
   '@tuleap/plugin-tracker-constants': link:scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': link:scripts/lib/rich-text-editor
   '@tuleap/plugin-tracker-tql-codemirror': link:scripts/lib/TQL-CodeMirror
+  '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors

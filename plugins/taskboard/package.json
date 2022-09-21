@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/drag-and-drop": "link:../../lib/frontend/drag-and-drop",
     "@tuleap/keyboard-shortcuts": "link:../../lib/frontend/keyboard-shortcuts",
+    "@tuleap/project-background": "link:../../lib/frontend/project-background",
     "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",

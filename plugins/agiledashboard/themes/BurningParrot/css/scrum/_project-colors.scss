@@ -18,10 +18,10 @@
  */
 
 @use "sass:color";
-@use "../../../../../../src/themes/common/css/project-background/background";
+@use "@tuleap/project-background";
 
-@each $project-color-name, $project-color-properties in background.$definitions {
-    $project-color: background.get-color($project-color-name);
+@each $project-color-name, $project-color-properties in project-background.$definitions {
+    $project-color: project-background.get-color($project-color-name);
 
     .project-color-#{$project-color-name} {
         --project-color: #{$project-color};

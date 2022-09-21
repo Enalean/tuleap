@@ -21,6 +21,7 @@
     "@tuleap/mention": "link:../lib/frontend/mention",
     "@tuleap/pie-chart": "link:../lib/frontend/pie-chart",
     "@tuleap/potentially-dangerous-bidirectional-characters": "link:../lib/frontend/potentially-dangerous-bidirectional-characters",
+    "@tuleap/project-background": "link:../lib/frontend/project-background",
     "@tuleap/project-privacy-helper": "link:../lib/frontend/project-privacy-helper",
     "@tuleap/project-sidebar-internal": "link:../lib/frontend/project-sidebar-internal",
     "@tuleap/tlp-dropdown": "link:../lib/frontend/tlp-dropdown",

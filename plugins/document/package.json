@@ -11,6 +11,7 @@
     "@tuleap/fetch-result": "link:../../lib/frontend/fetch-result",
     "@tuleap/keyboard-shortcuts": "link:../../lib/frontend/keyboard-shortcuts",
     "@tuleap/list-picker": "link:../../lib/frontend/list-picker",
+    "@tuleap/project-background": "link:../../lib/frontend/project-background",
     "@tuleap/project-privacy-helper": "link:../../lib/frontend/project-privacy-helper",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-relative-date": "link:../../lib/frontend/tlp-relative-date",

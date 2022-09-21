@@ -9,6 +9,7 @@
     "@tuleap/plugin-docgen-docx": "link:../document_generation/scripts/lib/docx",
     "@tuleap/plugin-docgen-xlsx": "link:../document_generation/scripts/lib/xlsx",
     "@tuleap/plugin-testmanagement": "link:../testmanagement",
+    "@tuleap/project-background": "link:../../lib/frontend/project-background",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/vue3-gettext-init": "link:../../lib/frontend/vue3-gettext-init",
     "docx": "^7.3.0",

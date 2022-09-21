@@ -8,6 +8,7 @@ specifiers:
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/potentially-dangerous-bidirectional-characters': link:../../lib/frontend/potentially-dangerous-bidirectional-characters
+  '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
@@ -33,6 +34,7 @@ dependencies:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
+  '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy

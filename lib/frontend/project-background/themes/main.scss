@@ -19,7 +19,7 @@
 
 @use "sass:map";
 
-$project-background-images-path: "../../images/project-background/" !default;
+$project-background-images-path: "../../themes/common/images/project-background/" !default;
 $definitions: (
     aerial-water: (
         // Photo by Chris
@@ -298,7 +298,7 @@ $definitions: (
     }
 }
 
-@mixin project-background-title-header-typography() {
+@mixin title-header-typography() {
     color: var(--tlp-white-color);
     text-shadow: 0 1px 4px rgb(0 0 0 / 30%);
 }
