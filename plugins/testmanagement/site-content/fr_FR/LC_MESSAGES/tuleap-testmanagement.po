@@ -15,10 +15,6 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#, php-format
-msgid "%s updated"
-msgstr "%s mis à jour"
-
 msgid "Administration"
 msgstr "Administration"
 

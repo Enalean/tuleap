@@ -93,22 +93,7 @@ final class LatestHeartbeatsCollector
 
     private function getHTMLMessage(Artifact $artifact): string
     {
-        $is_an_update = $artifact->hasMoreThanOneChangeset();
-        $title        = $this->getTitle($artifact);
-
-        if ($is_an_update) {
-            $message = sprintf(
-                dgettext('tuleap-tracker', '%s updated'),
-                $title
-            );
-        } else {
-            $message = sprintf(
-                dgettext('tuleap-tracker', '%s created'),
-                $title
-            );
-        }
-
-        return $message;
+        return $this->getTitle($artifact);
     }
 
     private function getTitle(Artifact $artifact): string
