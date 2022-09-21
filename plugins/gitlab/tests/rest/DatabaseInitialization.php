@@ -60,7 +60,7 @@ final class DatabaseInitialization extends \DatabaseInitialization
         $project_id = (int) $gitlab_integration_project->getID();
 
         $sql = "INSERT INTO plugin_gitlab_group (gitlab_group_id, project_id, name, full_path, web_url, last_synchronization_date, allow_artifact_closure, create_branch_prefix)
-                VALUES (965, $project_id, 'myGroup01', 'path/myGroup01', 'https://example.com/path/myGroup01', 1663662113, 0, 'dev/')";
+                VALUES (965, $project_id, 'myGroup01', 'path/myGroup01', 'https://example.com/path/myGroup01', 1663662113, 1, 'dev/')";
 
         $this->mysqli->real_query($sql);
     }

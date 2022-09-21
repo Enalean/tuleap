@@ -191,6 +191,21 @@ final class GitlabGroupResource
      * }<br>
      * </pre>
      *
+     * <p>To update the artifact closure for repositories that come with the linked group (feature flag must be enabled):</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"allow_artifact_closure" : false<br>
+     * }<br>
+     * </pre>
+     *
+     * <p>Both parameters can be updated in the same query (feature flag must be enabled):</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"create_branch_prefix" : "dev-",<br>
+     *   &nbsp;"allow_artifact_closure" : false<br>
+     * }<br>
+     * </pre>
+     *
      * @url    PATCH {id}
      * @access protected
      *
@@ -223,7 +238,7 @@ final class GitlabGroupResource
             throw new RestException(401, "User must be Git administrator.");
         }
 
-        (new GroupUpdator($group_dao))->updateBranchPrefixOfGroupLinkFromPATCHRequest(
+        (new GroupUpdator($group_dao, $group_dao))->updateGroupLinkFromPATCHRequest(
             $gitlab_group_link,
             $gitlab_group_link_representation
         );

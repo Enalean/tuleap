@@ -61,4 +61,42 @@ final class GroupTest extends TestBase
         $gitlab_group_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertSame("dev-", $gitlab_group_after_patch["create_branch_prefix"]);
     }
+
+    public function testPatchGitlabGroupLinkToUpdateArtifactClosure(): void
+    {
+        $patch_body = json_encode(
+            [
+                'allow_artifact_closure' => false,
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', 'gitlab_groups/' . urlencode($this->gitlab_group_id))
+                ->withBody($this->stream_factory->createStream($patch_body))
+        );
+        self::assertSame(200, $response->getStatusCode());
+
+        $gitlab_group_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame(false, $gitlab_group_after_patch["allow_artifact_closure"]);
+    }
+
+    public function testPatchGitlabGroupLinkToUpdateBothCreateBranchPrefixAndArtifactClosure(): void
+    {
+        $patch_body = json_encode(
+            [
+                'create_branch_prefix' => "dev2/",
+                'allow_artifact_closure' => true,
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', 'gitlab_groups/' . urlencode($this->gitlab_group_id))
+                ->withBody($this->stream_factory->createStream($patch_body))
+        );
+        self::assertSame(200, $response->getStatusCode());
+
+        $gitlab_group_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame("dev2/", $gitlab_group_after_patch["create_branch_prefix"]);
+        self::assertSame(true, $gitlab_group_after_patch["allow_artifact_closure"]);
+    }
 }
