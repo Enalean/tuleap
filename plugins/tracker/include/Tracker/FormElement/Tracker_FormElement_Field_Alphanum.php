@@ -23,6 +23,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 /**
  * Base class for alphanumeric fields (Int, Float, String, Text)
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Field
 {
     protected function buildMatchExpression($field_name, $criteria_value)
@@ -72,6 +73,9 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
      */
     public function getQueryGroupby(): string
     {
+        if (! $this->isUsed()) {
+            return '';
+        }
         $R2 = 'R2_' . $this->id;
         return "$R2.value";
     }

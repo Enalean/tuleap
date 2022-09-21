@@ -28,6 +28,7 @@ use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
 /**
  * @template-extends Tracker_FormElement_Field_List_Bind<Tracker_FormElement_Field_List_Bind_UgroupsValue>
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind
 {
     public const TYPE = 'ugroups';
@@ -264,6 +265,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function getQueryOrderby(): string
     {
+        if (! $this->getField()->isUsed()) {
+            return '';
+        }
         $R2 = 'R2_' . $this->field->id;
         return "$R2.ugroup_id";
     }
@@ -273,6 +277,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function getQueryGroupby(): string
     {
+        if (! $this->getField()->isUsed()) {
+            return '';
+        }
         $R2 = 'R2_' . $this->field->id;
         return "$R2.id";
     }

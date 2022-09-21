@@ -254,6 +254,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function getQueryGroupby(): string
     {
+        if (! $this->isUsed()) {
+            return '';
+        }
         $R = 'R_' . $this->id;
         return "$R.value_id";
     }
