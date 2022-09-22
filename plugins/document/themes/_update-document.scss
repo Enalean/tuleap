@@ -17,13 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.document-modal-title {
-    min-height: 26px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 .document-new-item-version-button-disabled {
     box-shadow: none;
     color: var(--tlp-main-color-transparent-50);

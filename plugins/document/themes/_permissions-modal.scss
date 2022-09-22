@@ -28,16 +28,15 @@
 }
 
 .document-permissions-update-container {
+    display: flex;
+    flex-direction: column;
     padding: var(--tlp-medium-spacing);
+    gap: var(--tlp-small-spacing);
 }
 
 .document-permissions-ugroups {
     display: flex;
-    justify-content: center;
-
-    > .tlp-form-element {
-        margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
-    }
+    flex-direction: column;
 }
 
 .document-permissions-creation-modal-section {
