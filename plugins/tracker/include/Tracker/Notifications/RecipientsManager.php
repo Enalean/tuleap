@@ -27,6 +27,8 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetector;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetectorImpl;
+use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatCannotReadAnything;
+use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatHaveUnsubscribedFromNotification;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
@@ -50,6 +52,8 @@ class RecipientsManager implements GetUserFromRecipient
     ) {
         $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
+            new RemoveRecipientThatCannotReadAnything($this, $this->form_element_factory),
+            new RemoveRecipientThatHaveUnsubscribedFromNotification($this, $this->unsubscribers_notification_dao),
             new RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode($this, $this->user_status_change_only_dao, $this->status_change_detector),
             new RemoveRecipientWhenTheyAreInCreationOnlyMode($this, $this->notification_settings_retriever),
         ];
@@ -92,64 +96,12 @@ class RecipientsManager implements GetUserFromRecipient
                 }
             }
         }
-        $this->removeRecipientsThatCannotReadAnything($changeset, $tablo);
-        $this->removeRecipientsThatHaveUnsubcribedFromNotification($changeset, $tablo);
 
         foreach ($this->recipient_removal_strategies as $strategy) {
             $tablo = $strategy->removeRecipient($logger, $changeset, $tablo, $is_update);
         }
 
         return $tablo;
-    }
-
-    private function removeRecipientsThatCannotReadAnything(Tracker_Artifact_Changeset $changeset, array &$recipients): void
-    {
-        $comment = $changeset->getComment();
-        if ($comment !== null && ! $comment->hasEmptyBody()) {
-            return;
-        }
-
-        foreach ($recipients as $recipient => $check_perms) {
-            if (! $check_perms) {
-                continue;
-            }
-
-            $user = $this->getUserFromRecipientName($recipient);
-            if (! $user || ! $changeset->getArtifact()->userCanView($user) || ! $this->userCanReadAtLeastOneChangedField($changeset, $user)) {
-                unset($recipients[$recipient]);
-            }
-        }
-    }
-
-    private function userCanReadAtLeastOneChangedField(Tracker_Artifact_Changeset $changeset, PFUser $user)
-    {
-        foreach ($changeset->getValues() as $field_id => $current_changeset_value) {
-            $field             = $this->form_element_factory->getFieldById($field_id);
-            $field_is_readable = $field && $field->userCanRead($user);
-            $field_has_changed = $current_changeset_value && $current_changeset_value->hasChanged();
-            if ($field_is_readable && $field_has_changed) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function removeRecipientsThatHaveUnsubcribedFromNotification(Tracker_Artifact_Changeset $changeset, array &$recipients)
-    {
-        $tracker       = $changeset->getTracker();
-        $artifact      = $changeset->getArtifact();
-        $unsubscribers = $this->unsubscribers_notification_dao->searchUserIDHavingUnsubcribedFromNotificationByTrackerOrArtifactID(
-            $tracker->getId(),
-            $artifact->getId()
-        );
-
-        foreach ($recipients as $recipient => $check_perms) {
-            $user = $this->getUserFromRecipientName($recipient);
-
-            if (! $user || in_array($user->getId(), $unsubscribers)) {
-                unset($recipients[$recipient]);
-            }
-        }
     }
 
     public function getUserFromRecipientName(string $recipient_name): ?PFUser
