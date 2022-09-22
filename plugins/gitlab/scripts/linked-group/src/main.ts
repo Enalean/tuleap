@@ -17,9 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
+import { UnlinkModal } from "./UnlinkModal";
 import "../themes/main.scss";
 
-document.addEventListener("DOMContentLoaded", () => {
-    // eslint-disable-next-line no-console
-    console.log("GitLab administration");
+const UNLINK_SELECTOR = "#unlink-button";
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const locale = getDatasetItemOrThrow(document.body, "userLocale");
+    const gettext_provider = await initGettext(
+        locale,
+        "plugin-gitlab/linked-group",
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
+    );
+
+    openAllTargetModalsOnClick(document, UNLINK_SELECTOR);
+
+    UnlinkModal(document.location, document, gettext_provider).init();
 });

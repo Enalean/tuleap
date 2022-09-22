@@ -22,6 +22,12 @@ msgstr ""
 msgid "An error occurred while creating the merge request on GitLab: %s"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
 msgid "Closed"
 msgstr ""
 
@@ -137,6 +143,16 @@ msgstr ""
 msgid "The repository %s is not found on GitLab server"
 msgstr ""
 
+msgid ""
+"This will not delete the Group on GitLab side. It removes the link between "
+"the Tuleap Project\n"
+"            and the GitLab group. All GitLab projects part of the group will "
+"stay integrated with Tuleap, their configuration will not change. If you "
+"wish to remove\n"
+"            the integrations of the GitLab projects part of this group, you "
+"must remove each one manually."
+msgstr ""
+
 #, php-format
 msgid ""
 "Unable to contact the server with the provided token. Please ensure that "
@@ -144,6 +160,9 @@ msgid ""
 msgstr ""
 
 msgid "Unlink"
+msgstr ""
+
+msgid "Unlink the project from the GitLab group"
 msgstr ""
 
 msgid "Update configuration"
@@ -163,6 +182,11 @@ msgid ""
 msgstr ""
 
 msgid "Yes"
+msgstr ""
+
+msgid ""
+"You are about to unlink %1$s from %2$s GitLab group. Please confirm your "
+"action."
 msgstr ""
 
 msgid "close artifacts"

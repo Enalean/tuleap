@@ -81,7 +81,7 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
 
         if ($group_link) {
             $number_of_repositories = $this->repositories_counter->countIntegratedRepositories($group_link);
-            $presenter              = new LinkedGroupPresenter($panes_presenter, $group_link, $number_of_repositories);
+            $presenter              = new LinkedGroupPresenter($panes_presenter, $project, $group_link, $number_of_repositories);
 
             $layout->addJavascriptAsset($this->linked_group_assets);
             $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);

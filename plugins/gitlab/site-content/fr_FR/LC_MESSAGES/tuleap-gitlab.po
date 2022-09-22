@@ -30,6 +30,12 @@ msgid "An error occurred while creating the merge request on GitLab: %s"
 msgstr ""
 "Une erreur est survenue lors de la création de la branche sur Gitlab: %s"
 
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Closed"
 msgstr "Fermée"
 
@@ -151,6 +157,22 @@ msgstr "La référence %s semble manquante sur %s"
 msgid "The repository %s is not found on GitLab server"
 msgstr "Le dépôt %s n'existe pas sur le server GitLab"
 
+msgid ""
+"This will not delete the Group on GitLab side. It removes the link between "
+"the Tuleap Project\n"
+"            and the GitLab group. All GitLab projects part of the group will "
+"stay integrated with Tuleap, their configuration will not change. If you "
+"wish to remove\n"
+"            the integrations of the GitLab projects part of this group, you "
+"must remove each one manually."
+msgstr ""
+"Cela ne va pas supprimer le Group du côté GitLab. Le lien entre le Projet "
+"Tuleap et le Groupe GitLab va être supprimé. Tous les projets GitLab qui "
+"font partie du groupe vont rester intégrés avec Tuleap, leur configuration "
+"ne va pas changer. Si vous souhaitez supprimer les intégrations des projets "
+"GitLab qui font partie de ce groupe, vous devez les supprimer chacune "
+"manuellement."
+
 #, php-format
 msgid ""
 "Unable to contact the server with the provided token. Please ensure that "
@@ -161,6 +183,9 @@ msgstr ""
 
 msgid "Unlink"
 msgstr "Délier"
+
+msgid "Unlink the project from the GitLab group"
+msgstr "Délier le projet du groupe GitLab"
 
 msgid "Update configuration"
 msgstr "Mettre à jour la configuration"
@@ -186,6 +211,13 @@ msgstr ""
 
 msgid "Yes"
 msgstr "Oui"
+
+msgid ""
+"You are about to unlink %1$s from %2$s GitLab group. Please confirm your "
+"action."
+msgstr ""
+"Vous allez délier %1$s du groupe GitLab %2$s. Veuillez confirmer cette "
+"action."
 
 msgid "close artifacts"
 msgstr "fermer les artéfacts"
