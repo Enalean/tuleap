@@ -27,7 +27,7 @@ use DateTimeImmutable;
 /**
  * @psalm-immutable
  */
-final class GitlabGroup
+final class GroupLink
 {
     private function __construct(
         public int $id,
@@ -43,7 +43,7 @@ final class GitlabGroup
     ) {
     }
 
-    public static function buildGitlabGroupFromInsertionRows(
+    public static function buildGroupLinkFromInsertionRows(
         int $id,
         NewGroup $group_DB_insertion,
     ): self {
@@ -64,7 +64,7 @@ final class GitlabGroup
     /**
      * @psalm-param array{id: int, gitlab_group_id: int, project_id: int, name:string, full_path: string, web_url: string, avatar_url: ?string, last_synchronization_date: int, allow_artifact_closure: int, create_branch_prefix: ?string} $row
      */
-    public static function buildGitlabGroupFromRow(array $row): self
+    public static function buildGroupLinkFromRow(array $row): self
     {
         return new self(
             $row['id'],

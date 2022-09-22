@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Group\Token;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\Group\GitlabGroup;
+use Tuleap\Gitlab\Group\GroupLink;
 
 interface InsertGroupToken
 {
-    public function insertToken(GitlabGroup $gitlab_group, ConcealedString $token): void;
+    public function insertToken(GroupLink $gitlab_group, ConcealedString $token): void;
 }
