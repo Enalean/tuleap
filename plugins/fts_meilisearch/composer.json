@@ -9,5 +9,8 @@
         "psr-4": {
             "Tuleap\\FullTextSearchMeilisearch\\": "tests/unit/"
         }
+    },
+    "require": {
+        "meilisearch/meilisearch-php": "^0.24.2"
     }
 }

@@ -20,6 +20,10 @@
 
 declare(strict_types=1);
 
+use Tuleap\FullTextSearchCommon\Index\NullIndexHandler;
+use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchHandler;
+use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchHandlerFactory;
+use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchMetadataDAO;
 use Tuleap\FullTextSearchMeilisearch\Server\GenerateServerMasterKey;
 use Tuleap\FullTextSearchMeilisearch\Server\LocalMeilisearchServer;
 use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
@@ -30,6 +34,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class fts_meilisearchPlugin extends \Tuleap\FullTextSearchCommon\FullTextSearchBackendPlugin
 {
+    private const MAX_ITEMS_PER_BATCH = 128;
+
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -67,21 +73,33 @@ final class fts_meilisearchPlugin extends \Tuleap\FullTextSearchCommon\FullTextS
 
     protected function getIndexSearcher(): \Tuleap\FullTextSearchCommon\Index\SearchIndexedItem
     {
-        throw new LogicException('Not yet implemented');
+        return $this->getMeilisearchHandler();
     }
 
     protected function getItemInserter(): \Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex
     {
-        throw new LogicException('Not yet implemented');
+        return $this->getMeilisearchHandler();
     }
 
     protected function getItemRemover(): \Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems
     {
-        throw new LogicException('Not yet implemented');
+        return $this->getMeilisearchHandler();
     }
 
     protected function getBatchQueue(): \Tuleap\Search\ItemToIndexBatchQueue
     {
-        throw new LogicException('Not yet implemented');
+        return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexLimitedBatchQueue($this->getItemInserter(), self::MAX_ITEMS_PER_BATCH);
+    }
+    private function getMeilisearchHandler(): MeilisearchHandler|NullIndexHandler
+    {
+        $factory = new MeilisearchHandlerFactory(
+            BackendLogger::getDefaultLogger(),
+            new LocalMeilisearchServer(),
+            new MeilisearchMetadataDAO(),
+            \Tuleap\Http\HTTPFactoryBuilder::requestFactory(),
+            \Tuleap\Http\HttpClientFactory::createClientForInternalTuleapUse(),
+        );
+
+        return $factory->buildHandler();
     }
 }
