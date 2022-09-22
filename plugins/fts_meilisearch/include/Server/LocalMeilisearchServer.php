@@ -22,8 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\FullTextSearchMeilisearch\Server;
 
+use Tuleap\Cryptography\ConcealedString;
+
 final class LocalMeilisearchServer
 {
+    public const ENV_KEY_PREFIX = 'MEILI_MASTER_KEY=';
+
     public function __construct(private string $root_dir = '/')
     {
     }
@@ -40,5 +44,24 @@ final class LocalMeilisearchServer
         }
 
         return $this->root_dir . 'var/lib/tuleap/fts_meilisearch_server/meilisearch-master-key.env';
+    }
+
+    public function getCurrentKey(): ?ConcealedString
+    {
+        $key_path = $this->getExpectedMasterKeyEnvFilePath();
+        if ($key_path === null) {
+            return null;
+        }
+
+        $file_content = @file_get_contents($key_path);
+
+        if ($file_content === false || ! str_starts_with($file_content, self::ENV_KEY_PREFIX)) {
+            return null;
+        }
+
+        $key = new ConcealedString(substr($file_content, strlen(self::ENV_KEY_PREFIX)));
+        sodium_memzero($file_content);
+
+        return $key;
     }
 }

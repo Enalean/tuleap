@@ -68,8 +68,9 @@ seed_data() {
         oauth2_server \
         program_management \
         onlyoffice \
+        hudson_git \
         fts_db \
-        hudson_git
+        fts_meilisearch
 }
 
 setup_tuleap

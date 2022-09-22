@@ -43,7 +43,7 @@ final class GenerateServerMasterKey
         $this->logger->info('Write Meilisearch master key');
 
         $initial_umask = umask(0007);
-        $is_success    = file_put_contents($env_file_path, sprintf('MEILI_MASTER_KEY=%s', sodium_bin2hex(random_bytes(32))));
+        $is_success    = file_put_contents($env_file_path, LocalMeilisearchServer::ENV_KEY_PREFIX . sodium_bin2hex(random_bytes(32)));
         umask($initial_umask);
 
         if (! $is_success) {
