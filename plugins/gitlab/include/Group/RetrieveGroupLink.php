@@ -24,5 +24,5 @@ namespace Tuleap\Gitlab\Group;
 
 interface RetrieveGroupLink
 {
-    public function retrieveGroupLink(int $gitlab_group_link_int): ?array;
+    public function retrieveGroupLink(int $gitlab_group_link_id): ?GitlabGroup;
 }

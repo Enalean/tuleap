@@ -47,7 +47,6 @@ use Tuleap\Gitlab\API\Group\GitlabGroupInformationRetriever;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Group\GitlabGroupDAO;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
-use Tuleap\Gitlab\Group\GitlabGroupLinkNotFoundException;
 use Tuleap\Gitlab\Group\GroupCreator;
 use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Group\GroupUpdator;
@@ -159,7 +158,7 @@ final class GitlabGroupResource
                 $transaction_executor,
                 $integration_dao,
                 $gitlab_repository_creator,
-                new GitlabGroupFactory($group_dao, $group_dao, $group_dao, $group_dao),
+                new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
                 new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
                 new GroupRepositoryIntegrationDAO(),
                 new CreateBranchPrefixDao()
@@ -223,12 +222,10 @@ final class GitlabGroupResource
     {
         $this->optionsId($id);
 
-        $group_dao            = new GitlabGroupDAO();
-        $gitlab_group_factory = new GitlabGroupFactory($group_dao, $group_dao, $group_dao, $group_dao);
+        $group_dao = new GitlabGroupDAO();
 
-        try {
-            $gitlab_group_link = $gitlab_group_factory->getGroupLinkById($id);
-        } catch (GitlabGroupLinkNotFoundException $exception) {
+        $gitlab_group_link = $group_dao->retrieveGroupLink($id);
+        if (! $gitlab_group_link) {
             throw new RestException(404, "GitLab group link not found");
         }
 
@@ -243,7 +240,10 @@ final class GitlabGroupResource
             $gitlab_group_link_representation
         );
 
-        $updated_gitlab_group_link = $gitlab_group_factory->getGroupLinkById($id);
+        $updated_gitlab_group_link = $group_dao->retrieveGroupLink($id);
+        if (! $updated_gitlab_group_link) {
+            throw new RestException(500, "Did not find the GitLab group link we've just updated");
+        }
         return GitlabGroupLinkRepresentation::buildFromObject($updated_gitlab_group_link);
     }
 

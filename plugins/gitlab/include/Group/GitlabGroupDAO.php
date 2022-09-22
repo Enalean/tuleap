@@ -58,15 +58,16 @@ final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, Veri
         return count($rows) > 0;
     }
 
-    /**
-     * @psalm-return null|array{id: int, gitlab_group_id: int, project_id: int, name:string, full_path: string, web_url: string, avatar_url: string, last_synchronization_date: int, allow_artifact_closure: int, create_branch_prefix: string}
-     */
-    public function retrieveGroupLink(int $gitlab_group_link_int): ?array
+    public function retrieveGroupLink(int $gitlab_group_link_id): ?GitlabGroup
     {
-        return $this->getDB()->row(
-            "SELECT * FROM plugin_gitlab_group WHERE id = ?",
-            $gitlab_group_link_int
+        $row = $this->getDB()->row(
+            'SELECT * FROM plugin_gitlab_group WHERE id = ?',
+            $gitlab_group_link_id
         );
+        if ($row === null) {
+            return null;
+        }
+        return GitlabGroup::buildGitlabGroupFromRow($row);
     }
 
     public function updateBranchPrefixOfGroupLink(
