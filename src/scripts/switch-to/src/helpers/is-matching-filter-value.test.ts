@@ -51,4 +51,24 @@ describe("isMatchingFilterValue", () => {
     it("should return false if the string does not match and keyword contains multiple spaces", () => {
         expect(isMatchingFilterValue("Lorem ipsum", "foobar  ")).toBe(false);
     });
+
+    it("should return true for a partial match", () => {
+        expect(isMatchingFilterValue("Brainstorming", "in")).toBe(true);
+    });
+
+    it("should return false if there is a partial match but there is more than one keyword", () => {
+        expect(isMatchingFilterValue("Brainstorming", "search in trackers")).toBe(false);
+    });
+
+    it.each("\\^$.*+?()[]{}|".split(""))(
+        "should escape special characters to not break the RegExp",
+        (special_char) => {
+            expect(
+                isMatchingFilterValue(
+                    `Lorem fo${special_char}obar ipsum`,
+                    `nomatch fo${special_char}obar`
+                )
+            ).toBe(true);
+        }
+    );
 });
