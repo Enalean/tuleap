@@ -25,6 +25,9 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetector;
+use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetectorImpl;
+use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use UserManager;
@@ -36,6 +39,8 @@ class RecipientsManager implements GetUserFromRecipient
      */
     private array $recipient_removal_strategies;
 
+    private ArtifactStatusChangeDetector $status_change_detector;
+
     public function __construct(
         private Tracker_FormElementFactory $form_element_factory,
         private UserManager $user_manager,
@@ -43,7 +48,9 @@ class RecipientsManager implements GetUserFromRecipient
         private UserNotificationSettingsRetriever $notification_settings_retriever,
         private UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
     ) {
+        $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
+            new RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode($this, $this->user_status_change_only_dao, $this->status_change_detector),
             new RemoveRecipientWhenTheyAreInCreationOnlyMode($this, $this->notification_settings_retriever),
         ];
     }
@@ -87,7 +94,6 @@ class RecipientsManager implements GetUserFromRecipient
         }
         $this->removeRecipientsThatCannotReadAnything($changeset, $tablo);
         $this->removeRecipientsThatHaveUnsubcribedFromNotification($changeset, $tablo);
-        $this->removeRecipientsWhenTheyAreInStatusUpdateOnlyMode($changeset, $tablo);
 
         foreach ($this->recipient_removal_strategies as $strategy) {
             $tablo = $strategy->removeRecipient($logger, $changeset, $tablo, $is_update);
@@ -176,12 +182,12 @@ class RecipientsManager implements GetUserFromRecipient
     private function removeRecipientsWhenTrackerIsInOnlyStatusUpdateMode(
         Tracker_Artifact_Changeset $changeset,
         array &$recipients,
-    ) {
+    ): void {
         if (! $this->isTrackerInStatusUpdateOnlyNotificationsMode($changeset)) {
             return;
         }
 
-        if ($this->hasArtifactStatusChange($changeset)) {
+        if ($this->status_change_detector->hasChanged($changeset)) {
             return;
         }
 
@@ -195,20 +201,6 @@ class RecipientsManager implements GetUserFromRecipient
     private function isTrackerInStatusUpdateOnlyNotificationsMode(Tracker_Artifact_Changeset $changeset)
     {
         return (int) $changeset->getTracker()->getNotificationsLevel() === \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
-    }
-
-    /**
-     *
-     * @return bool
-     */
-    private function hasArtifactStatusChange(Tracker_Artifact_Changeset $changeset)
-    {
-        $previous_changeset = $changeset->getArtifact()->getPreviousChangeset((int) $changeset->getId());
-
-        if (! $previous_changeset) {
-            return true;
-        }
-        return $changeset->getArtifact()->getStatusForChangeset($previous_changeset) !== $changeset->getArtifact()->getStatus();
     }
 
     /**
@@ -231,21 +223,6 @@ class RecipientsManager implements GetUserFromRecipient
                 ! $user_notification_settings->isInNotifyOnEveryChangeMode() &&
                 ! $user_notification_settings->isInNoGlobalNotificationMode()
             ) {
-                unset($recipients[$recipient]);
-            }
-        }
-    }
-
-    private function removeRecipientsWhenTheyAreInStatusUpdateOnlyMode(Tracker_Artifact_Changeset $changeset, array &$recipients)
-    {
-        if ($this->hasArtifactStatusChange($changeset)) {
-            return;
-        }
-
-        foreach ($recipients as $recipient => $is_notification_enabled) {
-            $user = $this->getUserFromRecipientName($recipient);
-
-            if ($this->user_status_change_only_dao->doesUserIdHaveSubscribeOnlyForStatusChangeNotification($user->getId(), $changeset->getTracker()->getId())) {
                 unset($recipients[$recipient]);
             }
         }
