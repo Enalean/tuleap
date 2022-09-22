@@ -98,7 +98,7 @@ final class GroupUpdatorTest extends TestCase
         );
     }
 
-    private function buildGitlabGroup(): GitlabGroup
+    private function buildGitlabGroup(): GroupLink
     {
         $row = [
             'id' => 1,
@@ -113,6 +113,6 @@ final class GroupUpdatorTest extends TestCase
             'create_branch_prefix' => "",
         ];
 
-        return GitlabGroup::buildGitlabGroupFromRow($row);
+        return GroupLink::buildGroupLinkFromRow($row);
     }
 }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Test\Stubs;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\Group\GitlabGroup;
+use Tuleap\Gitlab\Group\GroupLink;
 use Tuleap\Gitlab\Group\Token\InsertGroupToken;
 
 final class InsertGroupTokenStub implements InsertGroupToken
@@ -35,7 +35,7 @@ final class InsertGroupTokenStub implements InsertGroupToken
         $this->number_of_call = 0;
     }
 
-    public function insertToken(GitlabGroup $gitlab_group, ConcealedString $token): void
+    public function insertToken(GroupLink $gitlab_group, ConcealedString $token): void
     {
         $this->number_of_call++;
     }

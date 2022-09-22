@@ -31,7 +31,7 @@ use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Artifact\Action\SaveIntegrationBranchPrefix;
-use Tuleap\Gitlab\Group\GitlabGroup;
+use Tuleap\Gitlab\Group\GroupLink;
 use Tuleap\Gitlab\Group\GitlabGroupAlreadyLinkedToProjectException;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\NewGroup;
@@ -97,7 +97,7 @@ final class GitlabRepositoryGroupLinkHandler
         GitlabProject $gitlab_project,
         Project $project,
         Credentials $credentials,
-        GitlabGroup $gitlab_group,
+        GroupLink $gitlab_group,
     ): void {
         $gitlab_repository_id = $gitlab_project->getId();
 

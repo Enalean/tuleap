@@ -43,7 +43,7 @@ final class GitlabGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->group_adder      = AddNewGroupStub::withGroupId(self::INTEGRATED_GROUP_ID);
     }
 
-    private function createGroup(): GitlabGroup
+    private function createGroup(): GroupLink
     {
         $factory = new GitlabGroupFactory($this->group_verifier, $this->project_verifier, $this->group_adder);
 

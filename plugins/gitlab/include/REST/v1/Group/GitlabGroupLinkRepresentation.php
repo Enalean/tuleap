@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\REST\v1\Group;
 
 use DateTimeImmutable;
-use Tuleap\Gitlab\Group\GitlabGroup;
+use Tuleap\Gitlab\Group\GroupLink;
 use Tuleap\REST\JsonCast;
 
 /**
@@ -48,7 +48,7 @@ final class GitlabGroupLinkRepresentation
         $this->last_synchronization_date = JsonCast::fromNotNullDateTimeToDate($last_synchronization_date);
     }
 
-    public static function buildFromObject(GitlabGroup $gitlab_group): self
+    public static function buildFromObject(GroupLink $gitlab_group): self
     {
         return new self(
             $gitlab_group->id,

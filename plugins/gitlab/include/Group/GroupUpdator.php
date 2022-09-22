@@ -41,7 +41,7 @@ final class GroupUpdator
      * @throws RestException
      */
     public function updateGroupLinkFromPATCHRequest(
-        GitlabGroup $gitlab_group_link,
+        GroupLink $gitlab_group_link,
         GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
     ): void {
         $this->updateBranchPrefixOfGroupLinkFromPATCHRequest(
@@ -58,7 +58,7 @@ final class GroupUpdator
      * @throws RestException
      */
     private function updateBranchPrefixOfGroupLinkFromPATCHRequest(
-        GitlabGroup $gitlab_group_link,
+        GroupLink $gitlab_group_link,
         GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
     ): void {
         $prefix_branch_name = $gitlab_group_link_representation->create_branch_prefix;
@@ -86,7 +86,7 @@ final class GroupUpdator
     }
 
     private function updateArtifactClosureOfGroupLinkFromPATCHRequest(
-        GitlabGroup $gitlab_group_link,
+        GroupLink $gitlab_group_link,
         GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
     ): void {
         $allow_artifact_closure = $gitlab_group_link_representation->allow_artifact_closure;

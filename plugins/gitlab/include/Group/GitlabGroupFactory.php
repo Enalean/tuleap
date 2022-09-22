@@ -35,7 +35,7 @@ final class GitlabGroupFactory
      * @throws GitlabGroupAlreadyLinkedToProjectException
      * @throws ProjectAlreadyLinkedToGitlabGroupException
      */
-    public function createGroup(NewGroup $gitlab_group): GitlabGroup
+    public function createGroup(NewGroup $gitlab_group): GroupLink
     {
         if ($this->group_integrated_verifier->isGroupAlreadyLinked($gitlab_group->gitlab_group_id)) {
             throw new GitlabGroupAlreadyLinkedToProjectException($gitlab_group->gitlab_group_id);
@@ -46,6 +46,6 @@ final class GitlabGroupFactory
         }
 
         $group_id = $this->group_adder->addNewGroup($gitlab_group);
-        return GitlabGroup::buildGitlabGroupFromInsertionRows($group_id, $gitlab_group);
+        return GroupLink::buildGroupLinkFromInsertionRows($group_id, $gitlab_group);
     }
 }
