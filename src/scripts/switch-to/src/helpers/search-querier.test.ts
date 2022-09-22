@@ -40,9 +40,19 @@ describe("search-querier", () => {
             const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
 
-            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
-                expected_results = result;
-            }).run();
+            querier(
+                url,
+                keywords,
+                {
+                    results: {},
+                    has_more_results: false,
+                    next_offset: 0,
+                },
+                jest.fn(),
+                (result: ResultAsync<QueryResults, Fault>) => {
+                    expected_results = result;
+                }
+            ).run();
 
             if (!expected_results) {
                 throw Error("No expected results");
@@ -73,9 +83,19 @@ describe("search-querier", () => {
                 } as unknown as Response)
             );
 
-            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
-                expected_results = result;
-            }).run();
+            querier(
+                url,
+                keywords,
+                {
+                    results: {},
+                    has_more_results: false,
+                    next_offset: 0,
+                },
+                jest.fn(),
+                (result: ResultAsync<QueryResults, Fault>) => {
+                    expected_results = result;
+                }
+            ).run();
 
             if (!expected_results) {
                 throw Error("No expected results");
@@ -87,6 +107,108 @@ describe("search-querier", () => {
                     "/titi": { title: "titi", html_url: "/titi" },
                 },
                 has_more_results: false,
+                next_offset: 2,
+            });
+        });
+
+        it("should start at the given offset", async () => {
+            const post_spy = jest.spyOn(fetch_result, "post");
+            let called_offset = 0;
+            post_spy.mockImplementation((url, options: OptionsWithAutoEncodedParameters) => {
+                called_offset = Number(options.params?.offset);
+
+                return okAsync({
+                    headers: {
+                        get: (name: string): string | null =>
+                            name === PAGINATION_SIZE_HEADER
+                                ? "2"
+                                : name === PAGINATION_LIMIT_MAX_HEADER
+                                ? "50"
+                                : name === PAGINATION_LIMIT_HEADER
+                                ? "50"
+                                : null,
+                    },
+                    json: () => Promise.resolve([] as ItemDefinition[]),
+                } as unknown as Response);
+            });
+
+            querier(
+                url,
+                keywords,
+                {
+                    results: {},
+                    has_more_results: false,
+                    next_offset: 111,
+                },
+                jest.fn(),
+                (result: ResultAsync<QueryResults, Fault>) => {
+                    expected_results = result;
+                }
+            ).run();
+
+            if (!expected_results) {
+                throw Error("No expected results");
+            }
+            const result = await expected_results;
+            expect(result.unwrapOr({})).toStrictEqual({
+                results: {},
+                has_more_results: false,
+                next_offset: 111,
+            });
+            expect(called_offset).toBe(111);
+        });
+
+        it("should add the results to the previously fetched ones", async () => {
+            const post_spy = jest.spyOn(fetch_result, "post");
+            post_spy.mockReturnValue(
+                okAsync({
+                    headers: {
+                        get: (name: string): string | null =>
+                            name === PAGINATION_SIZE_HEADER
+                                ? "200"
+                                : name === PAGINATION_LIMIT_MAX_HEADER
+                                ? "50"
+                                : name === PAGINATION_LIMIT_HEADER
+                                ? "50"
+                                : null,
+                    },
+                    json: () =>
+                        Promise.resolve([
+                            { title: "toto", html_url: "/toto" },
+                            { title: "tata", html_url: "/tata" },
+                        ] as ItemDefinition[]),
+                } as unknown as Response)
+            );
+
+            querier(
+                url,
+                keywords,
+                {
+                    results: {
+                        "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                        "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+                    },
+                    has_more_results: true,
+                    next_offset: 50,
+                },
+                jest.fn(),
+                (result: ResultAsync<QueryResults, Fault>) => {
+                    expected_results = result;
+                }
+            ).run();
+
+            if (!expected_results) {
+                throw Error("No expected results");
+            }
+            const result = await expected_results;
+            expect(result.unwrapOr({})).toStrictEqual({
+                results: {
+                    "/toto": { title: "toto", html_url: "/toto" },
+                    "/titi": { title: "titi", html_url: "/titi" },
+                    "/tata": { title: "tata", html_url: "/tata" },
+                },
+                has_more_results: false,
+                next_offset: 152,
             });
         });
 
@@ -113,10 +235,14 @@ describe("search-querier", () => {
             );
 
             const addItemToCollection = jest.fn();
-            await querier(url, keywords, addItemToCollection, jest.fn());
             querier(
                 url,
                 keywords,
+                {
+                    results: {},
+                    has_more_results: false,
+                    next_offset: 0,
+                },
                 addItemToCollection,
                 (result: ResultAsync<QueryResults, Fault>) => {
                     expected_results = result;
@@ -150,9 +276,19 @@ describe("search-querier", () => {
                 } as unknown as Response)
             );
 
-            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
-                expected_results = result;
-            }).run();
+            querier(
+                url,
+                keywords,
+                {
+                    results: {},
+                    has_more_results: false,
+                    next_offset: 0,
+                },
+                jest.fn(),
+                (result: ResultAsync<QueryResults, Fault>) => {
+                    expected_results = result;
+                }
+            ).run();
 
             if (!expected_results) {
                 throw Error("No expected results");
@@ -163,6 +299,7 @@ describe("search-querier", () => {
                     "/toto": { title: "toto", html_url: "/toto" },
                 },
                 has_more_results: false,
+                next_offset: 2,
             });
         });
 
@@ -229,9 +366,19 @@ describe("search-querier", () => {
                 }
             );
 
-            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
-                expected_results = result;
-            }).run();
+            querier(
+                url,
+                keywords,
+                {
+                    results: {},
+                    has_more_results: false,
+                    next_offset: 0,
+                },
+                jest.fn(),
+                (result: ResultAsync<QueryResults, Fault>) => {
+                    expected_results = result;
+                }
+            ).run();
 
             if (!expected_results) {
                 throw Error("No expected results");
@@ -256,6 +403,7 @@ describe("search-querier", () => {
                     "/toto-15": { title: "toto-15", html_url: "/toto-15" },
                 },
                 has_more_results: true,
+                next_offset: 155,
             });
         });
 
@@ -311,9 +459,19 @@ describe("search-querier", () => {
                 }
             );
 
-            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
-                expected_results = result;
-            }).run();
+            querier(
+                url,
+                keywords,
+                {
+                    results: {},
+                    has_more_results: false,
+                    next_offset: 0,
+                },
+                jest.fn(),
+                (result: ResultAsync<QueryResults, Fault>) => {
+                    expected_results = result;
+                }
+            ).run();
 
             if (!expected_results) {
                 throw Error("No expected results");
@@ -327,13 +485,24 @@ describe("search-querier", () => {
                     "/toto-04": { title: "toto-04", html_url: "/toto-04" },
                 },
                 has_more_results: false,
+                next_offset: 1950,
             });
         });
     });
 
     describe("stop()", () => {
         it("should not make any call if the stop() is being called before run()", () => {
-            const query = querier(url, keywords, jest.fn(), jest.fn());
+            const query = querier(
+                url,
+                keywords,
+                {
+                    results: {},
+                    has_more_results: false,
+                    next_offset: 0,
+                },
+                jest.fn(),
+                jest.fn()
+            );
 
             const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockReturnValue(
@@ -363,7 +532,17 @@ describe("search-querier", () => {
         });
 
         it("should not make any subsequent calls if the stop() is being called while during run()", () => {
-            const query = querier(url, keywords, jest.fn(), jest.fn());
+            const query = querier(
+                url,
+                keywords,
+                {
+                    results: {},
+                    has_more_results: false,
+                    next_offset: 0,
+                },
+                jest.fn(),
+                jest.fn()
+            );
 
             const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockImplementation(

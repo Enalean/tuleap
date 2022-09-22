@@ -24,6 +24,9 @@ msgstr "Parcourir tous les projets"
 msgid "Browse all…"
 msgstr "Tout parcourir…"
 
+msgid "Fetch more results"
+msgstr "Chercher plus de résultats"
+
 msgid "Go to project administration of %s"
 msgstr "Aller à l'administration du projet %s"
 
@@ -57,9 +60,6 @@ msgstr "Démarrer l'exploration de Tuleap"
 msgid "Switch to…"
 msgstr "Basculer vers…"
 
-msgid "There are more results, please refine your search."
-msgstr "Il y a plus de résultats, veuillez affiner votre recherche."
-
 msgid "You didn't visit recently any items matching your query."
 msgstr ""
 "Vous n'avez pas visité d'élément récemment qui corresponde à votre recherche."
@@ -72,3 +72,6 @@ msgstr "Vous n'appartenez à aucun projet ou n'avez rien visité pour l'instant"
 
 msgid "Your Tuleap history will appear here"
 msgstr "Votre historique Tuleap apparaîtra ici"
+
+msgid "more"
+msgstr "plus"

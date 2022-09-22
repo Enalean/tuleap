@@ -42,7 +42,7 @@
         <search-results-error v-if="is_error" />
         <search-query-too-small v-else-if="is_query_too_small" />
         <search-results-empty v-else-if="is_empty" />
-        <search-results-list v-else-if="!is_busy" />
+        <search-results-list v-else />
     </div>
 </template>
 

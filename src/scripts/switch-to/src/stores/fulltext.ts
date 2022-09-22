@@ -38,6 +38,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
     const fulltext_search_is_available = ref<FullTextState["fulltext_search_is_available"]>(true);
     const fulltext_search_has_more_results =
         ref<FullTextState["fulltext_search_has_more_results"]>(false);
+    const fulltext_search_next_offset = ref<number>(0);
 
     const delayed_querier = delayedQuerier();
 
@@ -46,12 +47,30 @@ export const useFullTextStore = defineStore("fulltext", () => {
             return;
         }
 
+        fulltext_search_results.value = {};
+        fulltext_search_has_more_results.value = false;
+        fulltext_search_next_offset.value = 0;
+
+        applySearch(keywords);
+    }
+
+    function more(): void {
+        if (fulltext_search_is_available.value === false) {
+            return;
+        }
+
+        applySearch(useSwitchToStore().keywords);
+    }
+
+    function applySearch(keywords: string): void {
+        if (fulltext_search_is_available.value === false) {
+            return;
+        }
+
         const url: string = fulltext_search_url.value;
 
         fulltext_search_is_loading.value = true;
-        fulltext_search_results.value = {};
         fulltext_search_is_error.value = false;
-        fulltext_search_has_more_results.value = false;
 
         delayed_querier.cancelPendingQuery();
 
@@ -60,10 +79,16 @@ export const useFullTextStore = defineStore("fulltext", () => {
             return;
         }
 
+        const previously_fetched_results: QueryResults = {
+            results: fulltext_search_results.value,
+            has_more_results: fulltext_search_has_more_results.value,
+            next_offset: fulltext_search_next_offset.value,
+        };
         delayed_querier.scheduleQuery(
             querier(
                 url,
                 keywords,
+                previously_fetched_results,
                 (result: ItemDefinition): void => {
                     if (typeof fulltext_search_results.value[result.html_url] === "undefined") {
                         fulltext_search_results.value[result.html_url] = result;
@@ -71,10 +96,11 @@ export const useFullTextStore = defineStore("fulltext", () => {
                 },
                 (results: ResultAsync<QueryResults, Fault>): void => {
                     results.match(
-                        ({ results, has_more_results }): void => {
+                        ({ results, has_more_results, next_offset }): void => {
                             fulltext_search_results.value = results;
                             fulltext_search_is_loading.value = false;
                             fulltext_search_has_more_results.value = has_more_results;
+                            fulltext_search_next_offset.value = next_offset;
                         },
                         (fault: Fault) => {
                             fulltext_search_is_loading.value = false;
@@ -166,7 +192,9 @@ export const useFullTextStore = defineStore("fulltext", () => {
         fulltext_search_is_loading,
         fulltext_search_is_available,
         fulltext_search_has_more_results,
+        fulltext_search_next_offset,
         search,
+        more,
         changeFocusFromSearchResult,
         focusFirstSearchResult,
     };

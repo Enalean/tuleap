@@ -26,12 +26,22 @@
             v-bind:entry="item"
             v-bind:change-focus-callback="changeFocus"
         />
-        <div
+        <button
+            type="button"
             v-if="fulltext_search_has_more_results"
-            class="switch-to-search-results-list-has-more tlp-text-muted"
+            class="switch-to-search-results-list-has-more switch-to-search-results-more-button"
+            v-bind:title="$gettext('Fetch more results')"
+            v-on:click="fetchMoreResults"
+            data-test="more-button"
         >
-            {{ $gettext("There are more results, please refine your search.") }}
-        </div>
+            {{ $gettext("more") }}
+        </button>
+        <i
+            class="fa-solid fa-circle-notch fa-spin switch-to-search-results-loading-icon"
+            data-test="more-busy"
+            aria-hidden="true"
+            v-if="fulltext_search_has_more_results && fulltext_search_is_loading"
+        ></i>
     </div>
 </template>
 
@@ -42,9 +52,14 @@ import type { FocusFromItemPayload } from "../../../../stores/type";
 import { storeToRefs } from "pinia";
 
 const fulltext_store = useFullTextStore();
-const { fulltext_search_results, fulltext_search_has_more_results } = storeToRefs(fulltext_store);
+const { fulltext_search_results, fulltext_search_has_more_results, fulltext_search_is_loading } =
+    storeToRefs(fulltext_store);
 
 function changeFocus(payload: FocusFromItemPayload): void {
     fulltext_store.changeFocusFromSearchResult(payload);
+}
+
+function fetchMoreResults(): void {
+    fulltext_store.more();
 }
 </script>

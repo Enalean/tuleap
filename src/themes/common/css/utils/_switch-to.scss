@@ -85,6 +85,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     }
 }
 
+.switch-to-search-results-more-button,
 .switch-to-modal-header-legacy-search-button {
     margin: -2px 0;
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
@@ -106,7 +107,8 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
         background: rgb(0 0 0 / 20%);
     }
 
-    > .fa-long-arrow-right {
+    > .switch-to-search-results-more-button-icon,
+    > .switch-to-modal-header-legacy-search-button-icon {
         margin: 0 0 0 var(--tlp-small-spacing);
     }
 }
