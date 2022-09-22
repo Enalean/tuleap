@@ -33,7 +33,7 @@ jest.mock("./fulltext", () => {
 });
 
 import type { Project, ItemDefinition, QuickLink } from "../type";
-import { useSwitchToStore } from "./index";
+import { useRootStore } from "./root";
 import { useKeyboardNavigationStore } from "./keyboard-navigation";
 import type { State } from "./type";
 
@@ -63,7 +63,7 @@ describe("Keyboard navigation store", () => {
                         quick_links: [] as QuickLink[],
                     } as ItemDefinition;
 
-                    const root_store = useSwitchToStore();
+                    const root_store = useRootStore();
                     root_store.$patch({
                         history: {
                             entries: [entry, next_entry],
@@ -102,7 +102,7 @@ describe("Keyboard navigation store", () => {
                         quick_links: [] as QuickLink[],
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         is_history_loaded: true,
                         is_history_in_error: false,
@@ -144,7 +144,7 @@ describe("Keyboard navigation store", () => {
                         quick_links: [] as QuickLink[],
                     } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [previous_entry, entry],
@@ -183,7 +183,7 @@ describe("Keyboard navigation store", () => {
                         quick_links: [admin_quick_link],
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         is_history_loaded: true,
                         is_history_in_error: false,
@@ -220,7 +220,7 @@ describe("Keyboard navigation store", () => {
                         quick_links: [first_quick_link, second_quick_link],
                     } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [entry],
@@ -254,7 +254,7 @@ describe("Keyboard navigation store", () => {
                             quick_links: [first_quick_link, second_quick_link],
                         } as ItemDefinition;
 
-                        const store = useSwitchToStore();
+                        const store = useRootStore();
                         store.$patch({
                             history: {
                                 entries: [entry],
@@ -286,7 +286,7 @@ describe("Keyboard navigation store", () => {
                             title: "b",
                         } as ItemDefinition;
 
-                        const store = useSwitchToStore();
+                        const store = useRootStore();
                         store.$patch({
                             is_history_loaded: true,
                             is_history_in_error: false,
@@ -322,7 +322,7 @@ describe("Keyboard navigation store", () => {
                             title: "lorem b",
                         } as ItemDefinition;
 
-                        const store = useSwitchToStore();
+                        const store = useRootStore();
                         store.$patch({
                             is_history_loaded: true,
                             is_history_in_error: false,
@@ -360,7 +360,7 @@ describe("Keyboard navigation store", () => {
                         quick_links: [first_quick_link, second_quick_link],
                     } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [entry],
@@ -393,7 +393,7 @@ describe("Keyboard navigation store", () => {
                             title: "b",
                         } as ItemDefinition;
 
-                        const store = useSwitchToStore();
+                        const store = useRootStore();
                         store.$patch({
                             is_history_loaded: true,
                             is_history_in_error: false,
@@ -428,7 +428,7 @@ describe("Keyboard navigation store", () => {
                             quick_links: [first_quick_link, second_quick_link],
                         } as ItemDefinition;
 
-                        const store = useSwitchToStore();
+                        const store = useRootStore();
                         store.$patch({
                             history: {
                                 entries: [entry],
@@ -459,7 +459,7 @@ describe("Keyboard navigation store", () => {
             it("does nothing if user hits left key", () => {
                 const project = {} as Project;
 
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     is_history_loaded: true,
                     is_history_in_error: false,
@@ -489,7 +489,7 @@ describe("Keyboard navigation store", () => {
                             quick_links: [admin_link],
                         } as Project;
 
-                        const store = useSwitchToStore();
+                        const store = useRootStore();
                         store.$patch({});
                         const navigation_store = useKeyboardNavigationStore();
                         navigation_store.$patch({
@@ -549,7 +549,7 @@ describe("Keyboard navigation store", () => {
                             quick_links: [] as QuickLink[],
                         } as Project;
 
-                        const store = useSwitchToStore();
+                        const store = useRootStore();
                         store.$patch(partial_state);
                         const navigation_store = useKeyboardNavigationStore();
                         navigation_store.$patch({
@@ -573,7 +573,7 @@ describe("Keyboard navigation store", () => {
                             title: "b",
                         } as ItemDefinition;
 
-                        const store = useSwitchToStore();
+                        const store = useRootStore();
                         store.$patch({
                             is_history_loaded: true,
                             is_history_in_error: false,
@@ -601,7 +601,7 @@ describe("Keyboard navigation store", () => {
                         project_name: "Guinea Pig",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         projects: [],
                     });
@@ -626,7 +626,7 @@ describe("Keyboard navigation store", () => {
                         project_uri: "/guinea-pig",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         projects: [project],
                     });
@@ -655,7 +655,7 @@ describe("Keyboard navigation store", () => {
                         project_name: "Another",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         projects: [first_project, another_project],
                     });
@@ -684,7 +684,7 @@ describe("Keyboard navigation store", () => {
                         project_name: "Another",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         projects: [first_project, another_project],
                     });
@@ -710,7 +710,7 @@ describe("Keyboard navigation store", () => {
                         project_name: "Guinea Pig",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         projects: [],
                     });
@@ -735,7 +735,7 @@ describe("Keyboard navigation store", () => {
                         project_uri: "/guinea-pig",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         projects: [project],
                     });
@@ -764,7 +764,7 @@ describe("Keyboard navigation store", () => {
                         project_name: "Another",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         projects: [first_project, another_project],
                     });
@@ -793,7 +793,7 @@ describe("Keyboard navigation store", () => {
                         project_name: "Another lorem",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         projects: [first_project, another_project],
                         filter_value: "lorem",
@@ -823,7 +823,7 @@ describe("Keyboard navigation store", () => {
                         project_name: "Another",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         projects: [first_project, another_project],
                     });
@@ -861,7 +861,7 @@ describe("Keyboard navigation store", () => {
                         title: "lorem b",
                     } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         is_history_loaded: true,
                         is_history_in_error: false,
@@ -896,7 +896,7 @@ describe("Keyboard navigation store", () => {
                         project_name: "lorem Another",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         is_history_loaded: true,
                         is_history_in_error: false,
@@ -930,7 +930,7 @@ describe("Keyboard navigation store", () => {
                         quick_links: [] as QuickLink[],
                     } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [entry],
@@ -959,7 +959,7 @@ describe("Keyboard navigation store", () => {
                         quick_links: [first_quick_link, second_quick_link],
                     } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [entry],
@@ -986,7 +986,7 @@ describe("Keyboard navigation store", () => {
                 it("does nothing if the project list is empty", () => {
                     const entry = { html_url: "/first", title: "a" } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [entry],
@@ -1012,7 +1012,7 @@ describe("Keyboard navigation store", () => {
                     const first_project = { project_uri: "/a", project_name: "a" } as Project;
                     const another_project = { project_uri: "/b", project_name: "b" } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [entry],
@@ -1043,7 +1043,7 @@ describe("Keyboard navigation store", () => {
                         project_name: "lorem b",
                     } as Project;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [entry],
@@ -1069,7 +1069,7 @@ describe("Keyboard navigation store", () => {
                 it("does nothing if the history is empty", () => {
                     const entry = { html_url: "/first", title: "a" } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [],
@@ -1091,7 +1091,7 @@ describe("Keyboard navigation store", () => {
                 it("does nothing if the history contains only one element", () => {
                     const entry = { html_url: "/first", title: "a" } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [entry],
@@ -1114,7 +1114,7 @@ describe("Keyboard navigation store", () => {
                     const first_entry = { html_url: "/first", title: "a" } as ItemDefinition;
                     const another_entry = { html_url: "/another", title: "b" } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [first_entry, another_entry],
@@ -1154,7 +1154,7 @@ describe("Keyboard navigation store", () => {
                         title: "b lorem",
                     } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [first_entry, another_entry],
@@ -1181,7 +1181,7 @@ describe("Keyboard navigation store", () => {
                     const first_entry = { html_url: "/first", title: "a" } as ItemDefinition;
                     const another_entry = { html_url: "/another", title: "b" } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [first_entry, another_entry],
@@ -1221,7 +1221,7 @@ describe("Keyboard navigation store", () => {
                         title: "b lorem",
                     } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [first_entry, another_entry],
@@ -1249,7 +1249,7 @@ describe("Keyboard navigation store", () => {
                 it("does nothing if the history is empty", () => {
                     const entry = { html_url: "/first", title: "a" } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [],
@@ -1271,7 +1271,7 @@ describe("Keyboard navigation store", () => {
                 it("does nothing if the history contains only one element", () => {
                     const entry = { html_url: "/first", title: "a" } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [entry],
@@ -1294,7 +1294,7 @@ describe("Keyboard navigation store", () => {
                     const first_entry = { html_url: "/first", title: "a" } as ItemDefinition;
                     const another_entry = { html_url: "/another", title: "b" } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [first_entry, another_entry],
@@ -1319,7 +1319,7 @@ describe("Keyboard navigation store", () => {
                     const first_entry = { html_url: "/first", title: "a" } as ItemDefinition;
                     const another_entry = { html_url: "/another", title: "b" } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [first_entry, another_entry],
@@ -1347,7 +1347,7 @@ describe("Keyboard navigation store", () => {
                         title: "b lorem",
                     } as ItemDefinition;
 
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         history: {
                             entries: [first_entry, another_entry],

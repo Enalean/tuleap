@@ -60,12 +60,12 @@ import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import ItemEntry from "../ItemEntry.vue";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
-import { useSwitchToStore } from "../../../../stores";
+import { useRootStore } from "../../../../stores/root";
 import type { FocusFromItemPayload } from "../../../../stores/type";
 import { storeToRefs } from "pinia";
 import { useKeyboardNavigationStore } from "../../../../stores/keyboard-navigation";
 
-const store = useSwitchToStore();
+const store = useRootStore();
 
 const {
     is_loading_history,

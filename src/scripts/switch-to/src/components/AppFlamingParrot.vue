@@ -37,7 +37,7 @@ import { onMounted, ref } from "vue";
 import jQuery from "jquery";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
-import { useSwitchToStore } from "../stores";
+import { useRootStore } from "../stores/root";
 
 const modal = ref<HTMLElement | null>(null);
 
@@ -45,7 +45,7 @@ onMounted((): void => {
     if (!(modal.value instanceof HTMLElement)) {
         return;
     }
-    const store = useSwitchToStore();
+    const store = useRootStore();
 
     jQuery(modal.value)
         // Force autofocus for bootstrap modal

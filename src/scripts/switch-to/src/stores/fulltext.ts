@@ -23,7 +23,7 @@ import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "./type";
 import { ref } from "vue";
 import { delayedQuerier } from "../helpers/delayed-querier";
 import type { Fault } from "@tuleap/fault";
-import { useSwitchToStore } from "./index";
+import { useRootStore } from "./root";
 import type { QueryResults } from "../helpers/search-querier";
 import { querier } from "../helpers/search-querier";
 import type { ItemDefinition } from "../type";
@@ -59,7 +59,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
             return;
         }
 
-        applySearch(useSwitchToStore().keywords);
+        applySearch(useRootStore().keywords);
     }
 
     function applySearch(keywords: string): void {
@@ -139,7 +139,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
             return;
         }
 
-        const root_store = useSwitchToStore();
+        const root_store = useRootStore();
         const result_keys = Object.keys(fulltext_search_results.value);
         const current_index = result_keys.findIndex(
             (html_url: string) => html_url === payload.entry.html_url

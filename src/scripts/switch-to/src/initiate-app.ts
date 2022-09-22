@@ -23,7 +23,7 @@ import { createPinia } from "pinia";
 import { createGettext } from "vue3-gettext";
 import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
 import type { FullTextState, State } from "./stores/type";
-import { useSwitchToStore } from "./stores";
+import { useRootStore } from "./stores/root";
 import { useFullTextStore } from "./stores/fulltext";
 import { getProjectsFromDataset } from "./helpers/get-projects-from-dataset";
 
@@ -52,7 +52,7 @@ export async function init(vue_mount_point: HTMLElement, component: Component): 
 
     const app = createApp(component);
     app.use(pinia);
-    const store = useSwitchToStore();
+    const store = useRootStore();
     store.$patch(root_state);
 
     const fulltext_state: FullTextState = {

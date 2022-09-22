@@ -35,7 +35,7 @@ jest.mock("./fulltext", () => {
 import * as tlp from "@tuleap/tlp-fetch";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { Project, ItemDefinition } from "../type";
-import { useSwitchToStore } from "./index";
+import { useRootStore } from "./root";
 
 describe("Root store", () => {
     beforeEach(() => {
@@ -53,7 +53,7 @@ describe("Root store", () => {
 
                 mockFetchError(tlpGetMock, {});
 
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     user_id: 102,
                     is_history_loaded: false,
@@ -73,7 +73,7 @@ describe("Root store", () => {
                     },
                 });
 
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     user_id: 102,
                     is_history_loaded: false,
@@ -89,7 +89,7 @@ describe("Root store", () => {
             it("Does not fetch user history if it has already been loaded", async () => {
                 const tlpGetMock = jest.spyOn(tlp, "get");
 
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     user_id: 102,
                     is_history_loaded: true,
@@ -103,7 +103,7 @@ describe("Root store", () => {
 
         describe("updateFilterValue", () => {
             it("updates the filter value in the store and ask to perform a fulltext search", () => {
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     filter_value: "acme",
                 });
@@ -117,7 +117,7 @@ describe("Root store", () => {
             });
 
             it("does not ask to perform a fulltext search if it is the same value as before", () => {
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     filter_value: "acme",
                 });
@@ -130,7 +130,7 @@ describe("Root store", () => {
             });
 
             it("does not ask to perform a fulltext search if there is no keywords", () => {
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     filter_value: "",
                 });
@@ -141,7 +141,7 @@ describe("Root store", () => {
             });
 
             it("should pass the keywords and not the raw filter_value", () => {
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     filter_value: "",
                 });
@@ -156,7 +156,7 @@ describe("Root store", () => {
     describe("Getters", () => {
         describe("filtered_projects", () => {
             it("Filters projects", () => {
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     projects: [
                         { project_name: "Acme" } as Project,
@@ -173,7 +173,7 @@ describe("Root store", () => {
             });
 
             it("No filtered projects when filter is only spaces", () => {
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     projects: [
                         { project_name: "Acme" } as Project,
@@ -189,7 +189,7 @@ describe("Root store", () => {
 
         describe("filtered_history", () => {
             it("Filters recent items", () => {
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     history: {
                         entries: [
@@ -210,7 +210,7 @@ describe("Root store", () => {
             });
 
             it("No filtered recent items when filter is only spaces", () => {
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     history: {
                         entries: [
@@ -232,7 +232,7 @@ describe("Root store", () => {
                 ["   ", ""],
                 ["  acme  ", "acme"],
             ])("should trim the filter_value '%s' to '%s'", (filter_value, expected_keywords) => {
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     filter_value,
                 });
@@ -249,7 +249,7 @@ describe("Root store", () => {
             ])(
                 "when filter_value is '%s' then is_in_search_mode is %s",
                 (filter_value, expected_is_in_search_mode) => {
-                    const store = useSwitchToStore();
+                    const store = useRootStore();
                     store.$patch({
                         filter_value,
                     });

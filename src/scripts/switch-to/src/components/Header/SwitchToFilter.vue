@@ -35,11 +35,11 @@
 import { onMounted, onUnmounted, watch } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
-import { useSwitchToStore } from "../../stores";
+import { useRootStore } from "../../stores/root";
 import { storeToRefs } from "pinia";
 
 const props = defineProps<{ modal: Modal | null }>();
-const store = useSwitchToStore();
+const store = useRootStore();
 
 const { filter_value } = storeToRefs(store);
 

@@ -28,7 +28,7 @@ import { defineStore } from "pinia";
 import type { Project, ItemDefinition } from "../type";
 import { useFullTextStore } from "./fulltext";
 import type { QuickLink } from "../type";
-import { useSwitchToStore } from "./index";
+import { useRootStore } from "./root";
 
 export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () => {
     const programmatically_focused_element =
@@ -55,7 +55,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
                 return;
             }
 
-            const root_store = useSwitchToStore();
+            const root_store = useRootStore();
             if (next_index >= quick_links.length) {
                 if (payload.project && root_store.keywords.length === 0) {
                     focusFirstHistoryEntry();
@@ -89,7 +89,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
             return;
         }
 
-        const root_store = useSwitchToStore();
+        const root_store = useRootStore();
         if (payload.key === "ArrowRight") {
             if (payload.project.quick_links.length > 0) {
                 programmatically_focused_element.value = payload.project.quick_links[0];
@@ -123,7 +123,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
     }
 
     function focusFirstHistoryEntry(): boolean {
-        const root_store = useSwitchToStore();
+        const root_store = useRootStore();
         if (!root_store.is_history_loaded) {
             return false;
         }
@@ -148,7 +148,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
             return;
         }
 
-        const root_store = useSwitchToStore();
+        const root_store = useRootStore();
         if (payload.key === "ArrowLeft") {
             if (root_store.keywords.length !== 0) {
                 return;
