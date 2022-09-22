@@ -203,9 +203,9 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
 
         $this->getDB()->tryFlatTransaction(
             static function (EasyDB $db) use ($ids_to_remove): void {
-                $statement_id = EasyStatement::open()->in('id = ?*', $ids_to_remove);
+                $statement_id = EasyStatement::open()->in('id IN (?*)', $ids_to_remove);
                 $db->safeQuery("DELETE FROM plugin_fts_db_search WHERE $statement_id", $statement_id->values());
-                $statement_search_id = EasyStatement::open()->in('search_id = ?*', $ids_to_remove);
+                $statement_search_id = EasyStatement::open()->in('search_id IN (?*)', $ids_to_remove);
                 $db->safeQuery("DELETE FROM plugin_fts_db_metadata WHERE $statement_search_id", $statement_search_id->values());
             }
         );
