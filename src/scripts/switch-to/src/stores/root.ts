@@ -23,100 +23,107 @@ import { get } from "@tuleap/tlp-fetch";
 import type { Project, UserHistory, ItemDefinition } from "../type";
 import { isMatchingFilterValue } from "../helpers/is-matching-filter-value";
 import { useFullTextStore } from "./fulltext";
+import { computed, ref } from "vue";
 
-export const useRootStore = defineStore("root", {
-    state: (): State => ({
-        projects: [],
-        is_trove_cat_enabled: false,
-        are_restricted_users_allowed: false,
-        is_search_available: false,
-        search_form: {
-            type_of_search: "",
-            hidden_fields: [],
-        },
-        user_id: 100,
-        is_loading_history: false,
-        is_history_loaded: false,
-        is_history_in_error: false,
-        history: { entries: [] },
-        filter_value: "",
-    }),
-    getters: {
-        filtered_history(): UserHistory {
-            return {
-                entries: this.history.entries.reduce(
-                    (
-                        matching_entries: ItemDefinition[],
-                        entry: ItemDefinition
-                    ): ItemDefinition[] => {
-                        if (isMatchingFilterValue(entry.title, this.keywords)) {
-                            matching_entries.push(entry);
-                        } else if (isMatchingFilterValue(entry.xref, this.keywords)) {
-                            matching_entries.push(entry);
-                        }
+export const useRootStore = defineStore("root", () => {
+    const projects = ref<State["projects"]>([]);
+    const is_trove_cat_enabled = ref<State["is_trove_cat_enabled"]>(false);
+    const are_restricted_users_allowed = ref<State["are_restricted_users_allowed"]>(false);
+    const is_search_available = ref<State["is_search_available"]>(false);
+    const search_form = ref<State["search_form"]>({
+        type_of_search: "",
+        hidden_fields: [],
+    });
+    const user_id = ref<State["user_id"]>(100);
+    const is_loading_history = ref<State["is_loading_history"]>(false);
+    const is_history_loaded = ref<State["is_history_loaded"]>(false);
+    const is_history_in_error = ref<State["is_history_in_error"]>(false);
+    const history = ref<State["history"]>({ entries: [] });
+    const filter_value = ref<State["filter_value"]>("");
 
-                        return matching_entries;
-                    },
-                    []
-                ),
-            };
-        },
+    const keywords = computed((): string => filter_value.value.trim());
 
-        filtered_projects(): Project[] {
-            return this.projects.reduce(
-                (matching_projects: Project[], project: Project): Project[] => {
-                    if (isMatchingFilterValue(project.project_name, this.keywords)) {
-                        matching_projects.push(project);
+    const filtered_history = computed(
+        (): UserHistory => ({
+            entries: history.value.entries.reduce(
+                (matching_entries: ItemDefinition[], entry: ItemDefinition): ItemDefinition[] => {
+                    if (isMatchingFilterValue(entry.title, keywords.value)) {
+                        matching_entries.push(entry);
+                    } else if (isMatchingFilterValue(entry.xref, keywords.value)) {
+                        matching_entries.push(entry);
                     }
 
-                    return matching_projects;
+                    return matching_entries;
                 },
                 []
-            );
-        },
+            ),
+        })
+    );
 
-        keywords(): string {
-            return this.filter_value.trim();
-        },
-
-        is_in_search_mode(): boolean {
-            return this.keywords.length > 0;
-        },
-    },
-    actions: {
-        async loadHistory(): Promise<void> {
-            if (this.is_history_loaded) {
-                return;
+    const filtered_projects = computed((): Project[] =>
+        projects.value.reduce((matching_projects: Project[], project: Project): Project[] => {
+            if (isMatchingFilterValue(project.project_name, keywords.value)) {
+                matching_projects.push(project);
             }
 
-            try {
-                const response = await get(`/api/users/${this.user_id}/history`);
-                const history: UserHistory = await response.json();
-                this.saveHistory(history);
-            } catch (e) {
-                this.setErrorForHistory(true);
-                throw e;
+            return matching_projects;
+        }, [])
+    );
+
+    const is_in_search_mode = computed((): boolean => keywords.value.length > 0);
+
+    async function loadHistory(): Promise<void> {
+        if (is_history_loaded.value) {
+            return;
+        }
+
+        try {
+            const response = await get(`/api/users/${user_id.value}/history`);
+            const history: UserHistory = await response.json();
+            saveHistory(history);
+        } catch (e) {
+            setErrorForHistory(true);
+            throw e;
+        }
+    }
+
+    function updateFilterValue(value: string): void {
+        if (filter_value.value !== value) {
+            filter_value.value = value;
+
+            if (is_in_search_mode.value) {
+                useFullTextStore().search(keywords.value);
             }
-        },
+        }
+    }
 
-        updateFilterValue(value: string): void {
-            if (this.filter_value !== value) {
-                this.filter_value = value;
+    function saveHistory(new_history: UserHistory): void {
+        is_history_loaded.value = true;
+        is_loading_history.value = false;
+        history.value = new_history;
+    }
 
-                if (this.is_in_search_mode) {
-                    useFullTextStore().search(this.keywords);
-                }
-            }
-        },
+    function setErrorForHistory(is_error: boolean): void {
+        is_history_in_error.value = is_error;
+    }
 
-        saveHistory(history: UserHistory): void {
-            this.is_history_loaded = true;
-            this.is_loading_history = false;
-            this.history = history;
-        },
-
-        setErrorForHistory(is_error: boolean): void {
-            this.is_history_in_error = is_error;
-        },
-    },
+    return {
+        projects,
+        is_trove_cat_enabled,
+        are_restricted_users_allowed,
+        is_search_available,
+        search_form,
+        user_id,
+        is_loading_history,
+        is_history_loaded,
+        is_history_in_error,
+        history,
+        filter_value,
+        filtered_history,
+        filtered_projects,
+        keywords,
+        is_in_search_mode,
+        loadHistory,
+        updateFilterValue,
+    };
 });
