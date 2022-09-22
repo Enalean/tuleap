@@ -23,9 +23,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Notifications;
 
-use PFUser;
-
-interface GetUserFromRecipient
+/**
+ * @psalm-immutable
+ */
+class Recipient
 {
-    public function getUserFromRecipientName(string $recipient_name): ?PFUser;
+    private function __construct(public \PFUser $user, public bool $check_permissions)
+    {
+    }
+
+    public static function fromUser(\PFUser $user): self
+    {
+        return new self($user, true);
+    }
+
+    public static function fromUserWithPermissions(\PFUser $user, bool $check_permissions): self
+    {
+        return new self($user, $check_permissions);
+    }
 }

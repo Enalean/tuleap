@@ -34,7 +34,7 @@ use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCre
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use UserManager;
 
-class RecipientsManager implements GetUserFromRecipient
+class RecipientsManager
 {
     /**
      * @var RecipientRemovalStrategy[]
@@ -52,10 +52,10 @@ class RecipientsManager implements GetUserFromRecipient
     ) {
         $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
-            new RemoveRecipientThatCannotReadAnything($this, $this->form_element_factory),
-            new RemoveRecipientThatHaveUnsubscribedFromNotification($this, $this->unsubscribers_notification_dao),
-            new RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode($this, $this->user_status_change_only_dao, $this->status_change_detector),
-            new RemoveRecipientWhenTheyAreInCreationOnlyMode($this, $this->notification_settings_retriever),
+            new RemoveRecipientThatCannotReadAnything($this->form_element_factory),
+            new RemoveRecipientThatHaveUnsubscribedFromNotification($this->unsubscribers_notification_dao),
+            new RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode($this->user_status_change_only_dao, $this->status_change_detector),
+            new RemoveRecipientWhenTheyAreInCreationOnlyMode($this->notification_settings_retriever),
         ];
     }
 
@@ -83,7 +83,11 @@ class RecipientsManager implements GetUserFromRecipient
         //now force check perms for all this people
         $tablo = [];
         foreach ($recipients as $r) {
-            $tablo[$r] = true;
+            $user = $this->getUserFromRecipientName($r);
+            if (! $user) {
+                continue;
+            }
+            $tablo[$r] = Recipient::fromUser($user);
         }
 
         $this->removeRecipientsWhenTrackerIsInOnlyStatusUpdateMode($changeset, $tablo);
@@ -92,7 +96,15 @@ class RecipientsManager implements GetUserFromRecipient
         foreach ($changeset->getTracker()->getRecipients() as $r) {
             if ($r['on_updates'] == 1 || ! $is_update) {
                 foreach ($r['recipients'] as $recipient) {
-                    $tablo[$recipient] = $r['check_permissions'];
+                    if (isset($tablo[$recipient])) {
+                        $tablo[$recipient] = Recipient::fromUserWithPermissions($tablo[$recipient]->user, (bool) $r['check_permissions']);
+                    } else {
+                        $user = $this->getUserFromRecipientName($recipient);
+                        if (! $user) {
+                            continue;
+                        }
+                        $tablo[$recipient] = Recipient::fromUserWithPermissions($user, (bool) $r['check_permissions']);
+                    }
                 }
             }
         }
@@ -101,7 +113,7 @@ class RecipientsManager implements GetUserFromRecipient
             $tablo = $strategy->removeRecipient($logger, $changeset, $tablo, $is_update);
         }
 
-        return $tablo;
+        return array_map(static fn (Recipient $recipient) => $recipient->check_permissions, $tablo);
     }
 
     public function getUserFromRecipientName(string $recipient_name): ?PFUser
@@ -156,18 +168,15 @@ class RecipientsManager implements GetUserFromRecipient
     }
 
     /**
-     * @param array                      $recipients
-     *
-     * @return array
+     * @param array<string, Recipient>                      $recipients
      */
-    private function removeUsersWhoAreNotInAllNotificationsOrInvolvedMode(Tracker_Artifact_Changeset $changeset, array &$recipients)
+    private function removeUsersWhoAreNotInAllNotificationsOrInvolvedMode(Tracker_Artifact_Changeset $changeset, array &$recipients): void
     {
         $tracker = $changeset->getTracker();
 
-        foreach ($recipients as $recipient => $is_notification_enabled) {
-            $user                       = $this->getUserFromRecipientName($recipient);
+        foreach ($recipients as $key => $recipient) {
             $user_notification_settings = $this->notification_settings_retriever->getUserNotificationSettings(
-                $user,
+                $recipient->user,
                 $tracker
             );
 
@@ -175,7 +184,7 @@ class RecipientsManager implements GetUserFromRecipient
                 ! $user_notification_settings->isInNotifyOnEveryChangeMode() &&
                 ! $user_notification_settings->isInNoGlobalNotificationMode()
             ) {
-                unset($recipients[$recipient]);
+                unset($recipients[$key]);
             }
         }
     }

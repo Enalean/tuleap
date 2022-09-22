@@ -27,9 +27,9 @@ use Tracker_Artifact_Changeset;
 interface RecipientRemovalStrategy
 {
     /**
-     * @psalm-param array<string, bool> $recipients
+     * @psalm-param array<string, Recipient> $recipients
      *
-     * @psalm-return array<string, bool>
+     * @psalm-return array<string, Recipient>
      */
     public function removeRecipient(LoggerInterface $logger, Tracker_Artifact_Changeset $changeset, array $recipients, bool $is_update): array;
 }

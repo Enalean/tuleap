@@ -25,18 +25,22 @@ namespace Tuleap\Tracker\Notifications\RemoveRecipient;
 
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
-use Tuleap\Tracker\Notifications\GetUserFromRecipient;
+use Tuleap\Tracker\Notifications\Recipient;
 use Tuleap\Tracker\Notifications\RecipientRemovalStrategy;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 
 final class RemoveRecipientThatHaveUnsubscribedFromNotification implements RecipientRemovalStrategy
 {
     public function __construct(
-        private GetUserFromRecipient $get_user_from_recipient,
         private UnsubscribersNotificationDAO $unsubscribers_notification_dao,
     ) {
     }
 
+    /**
+     * @psalm-param array<string, Recipient> $recipients
+     *
+     * @psalm-return array<string, Recipient>
+     */
     public function removeRecipient(
         LoggerInterface $logger,
         Tracker_Artifact_Changeset $changeset,
@@ -50,12 +54,10 @@ final class RemoveRecipientThatHaveUnsubscribedFromNotification implements Recip
             $artifact->getId()
         );
 
-        foreach ($recipients as $recipient => $check_perms) {
-            $user = $this->get_user_from_recipient->getUserFromRecipientName($recipient);
-
-            if (! $user || in_array($user->getId(), $unsubscribers)) {
-                $logger->debug(self::class . ' ' . $recipient . ' removed');
-                unset($recipients[$recipient]);
+        foreach ($recipients as $key => $recipient) {
+            if (in_array($recipient->user->getId(), $unsubscribers)) {
+                $logger->debug(self::class . ' ' . $key . ' removed');
+                unset($recipients[$key]);
             }
         }
 
