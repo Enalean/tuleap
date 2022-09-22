@@ -79,6 +79,7 @@ use Tuleap\Git\Hook\Asynchronous\AsynchronousEventHandler;
 use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushParser;
 use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
 use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
+use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeCommand;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
@@ -2851,6 +2852,12 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
                     $this->getRepositoryFactory(),
                     new GitRepositoryObjectsSizeRetriever()
                 );
+            }
+        );
+        $commands_collector->addCommand(
+            PreReceiveAnalyzeCommand::NAME,
+            function (): PreReceiveAnalyzeCommand {
+                return new PreReceiveAnalyzeCommand();
             }
         );
     }
