@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Group;
 
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
-use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -36,19 +35,17 @@ final class GitlabGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyGroupIsAlreadyLinkedStub $group_verifier;
     private VerifyProjectIsAlreadyLinkedStub $project_verifier;
     private AddNewGroupStub $group_adder;
-    private RetrieveGroupLinkStub $group_retriever;
 
     protected function setUp(): void
     {
         $this->group_verifier   = VerifyGroupIsAlreadyLinkedStub::withNeverLinked();
         $this->project_verifier = VerifyProjectIsAlreadyLinkedStub::withNeverLinked();
         $this->group_adder      = AddNewGroupStub::withGroupId(self::INTEGRATED_GROUP_ID);
-        $this->group_retriever  = RetrieveGroupLinkStub::withoutLinkedGroup();
     }
 
     private function createGroup(): GitlabGroup
     {
-        $factory = new GitlabGroupFactory($this->group_verifier, $this->project_verifier, $this->group_adder, $this->group_retriever);
+        $factory = new GitlabGroupFactory($this->group_verifier, $this->project_verifier, $this->group_adder);
 
         $api_group = GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi([
             'id'         => self::GROUP_ID,
