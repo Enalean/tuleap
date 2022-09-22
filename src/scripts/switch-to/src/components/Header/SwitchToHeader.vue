@@ -55,12 +55,12 @@
 <script setup lang="ts">
 import SwitchToFilter from "./SwitchToFilter.vue";
 import type { Modal } from "tlp";
-import { useSwitchToStore } from "../../stores";
+import { useRootStore } from "../../stores/root";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 defineProps<{ modal: Modal | null }>();
-const store = useSwitchToStore();
+const store = useRootStore();
 
 const { search_form } = storeToRefs(store);
 

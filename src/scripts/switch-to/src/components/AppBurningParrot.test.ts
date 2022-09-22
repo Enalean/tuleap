@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import AppBurningParrot from "./AppBurningParrot.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-test";
-import { useSwitchToStore } from "../stores";
+import { useRootStore } from "../stores/root";
 
 describe("AppBurningParrot", () => {
     beforeEach(() => {
@@ -64,7 +64,7 @@ describe("AppBurningParrot", () => {
             attachTo: div,
         });
 
-        const store = useSwitchToStore();
+        const store = useRootStore();
 
         expect(store.loadHistory).not.toHaveBeenCalled();
         button.click();

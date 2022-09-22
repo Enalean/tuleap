@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createTestingPinia } from "@pinia/testing";
-import { useSwitchToStore } from "../../stores";
+import { useRootStore } from "../../stores/root";
 import SwitchToFilter from "./SwitchToFilter.vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
@@ -47,7 +47,7 @@ describe("SwitchToFilter", () => {
         }
         await wrapper.trigger("keyup");
 
-        expect(useSwitchToStore().updateFilterValue).toHaveBeenCalledWith("abc");
+        expect(useRootStore().updateFilterValue).toHaveBeenCalledWith("abc");
     });
 
     it("Reset the value if the modal is closed", () => {
@@ -70,7 +70,7 @@ describe("SwitchToFilter", () => {
         // There is a TRANSITION_DURATION before listeners are awakened
         jest.advanceTimersByTime(300);
 
-        expect(useSwitchToStore().updateFilterValue).toHaveBeenCalledWith("");
+        expect(useRootStore().updateFilterValue).toHaveBeenCalledWith("");
     });
 
     it("Closes the modal if the user hit [esc]", async () => {
@@ -93,7 +93,7 @@ describe("SwitchToFilter", () => {
 
         await wrapper.trigger("keyup", { key: "Escape" });
 
-        expect(useSwitchToStore().updateFilterValue).toHaveBeenCalledWith("");
+        expect(useRootStore().updateFilterValue).toHaveBeenCalledWith("");
         expect(hide).toHaveBeenCalled();
     });
 });

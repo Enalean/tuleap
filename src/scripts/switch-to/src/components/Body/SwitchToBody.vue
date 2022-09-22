@@ -41,10 +41,10 @@ import ListOfRecentItems from "./Items/RecentItems/ListOfRecentItems.vue";
 import GlobalEmptyState from "./GlobalEmptyState.vue";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
 import SearchResults from "./Items/SearchResults/SearchResults.vue";
-import { useSwitchToStore } from "../../stores";
+import { useRootStore } from "../../stores/root";
 import { storeToRefs } from "pinia";
 
-const store = useSwitchToStore();
+const store = useRootStore();
 const { is_loading_history, is_history_loaded, history, projects, keywords, is_in_search_mode } =
     storeToRefs(store);
 

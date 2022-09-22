@@ -18,7 +18,7 @@
  */
 
 import AppFlamingParrot from "./AppFlamingParrot.vue";
-import { useSwitchToStore } from "../stores";
+import { useRootStore } from "../stores/root";
 import { getGlobalTestOptions } from "../helpers/global-options-for-test";
 import { render, fireEvent, configure, cleanup } from "@testing-library/vue";
 
@@ -56,7 +56,7 @@ describe("AppFlamingParrot", () => {
 
         await fireEvent(getByTestId("switch-to-modal"), new CustomEvent("shown"));
 
-        expect(useSwitchToStore().loadHistory).toHaveBeenCalledTimes(1);
+        expect(useRootStore().loadHistory).toHaveBeenCalledTimes(1);
     });
 
     it("Clears the filter value when modal is closed", async () => {
@@ -66,6 +66,6 @@ describe("AppFlamingParrot", () => {
 
         await fireEvent(getByTestId("switch-to-modal"), new CustomEvent("hidden"));
 
-        expect(useSwitchToStore().updateFilterValue).toHaveBeenCalledWith("");
+        expect(useRootStore().updateFilterValue).toHaveBeenCalledWith("");
     });
 });

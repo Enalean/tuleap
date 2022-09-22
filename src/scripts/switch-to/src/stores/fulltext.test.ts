@@ -26,7 +26,7 @@ import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ItemDefinition } from "../type";
 import type { Project, QuickLink } from "../type";
-import { useSwitchToStore } from "./index";
+import { useRootStore } from "./root";
 import type { StoppableQuery } from "../helpers/delayed-querier";
 import { useKeyboardNavigationStore } from "./keyboard-navigation";
 
@@ -295,7 +295,7 @@ describe("FullText Store", () => {
         });
 
         it("should store more results", async () => {
-            const root_store = useSwitchToStore();
+            const root_store = useRootStore();
             root_store.$patch({
                 filter_value: "keyword",
             });
@@ -501,7 +501,7 @@ describe("FullText Store", () => {
                     },
                 });
 
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     history: {
                         entries: [first_entry, another_entry],
@@ -555,7 +555,7 @@ describe("FullText Store", () => {
                     },
                 });
 
-                const store = useSwitchToStore();
+                const store = useRootStore();
                 store.$patch({
                     history: {
                         entries: [],

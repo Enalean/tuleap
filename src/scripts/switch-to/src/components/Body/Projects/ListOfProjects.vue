@@ -52,13 +52,13 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useSwitchToStore } from "../../../stores";
+import { useRootStore } from "../../../stores/root";
 import { storeToRefs } from "pinia";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import ProjectLink from "./ProjectLink.vue";
 import TroveCatLink from "../TroveCatLink.vue";
 
-const store = useSwitchToStore();
+const store = useRootStore();
 const { projects, filtered_projects, is_in_search_mode } = storeToRefs(store);
 
 const has_projects = computed((): boolean => {

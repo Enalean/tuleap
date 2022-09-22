@@ -32,11 +32,11 @@
 
 <script setup lang="ts">
 import WordHighlighter from "vue-word-highlighter";
-import { useSwitchToStore } from "../../stores";
+import { useRootStore } from "../../stores/root";
 import { computed } from "vue";
 
 defineProps<{ text: string }>();
 
-const root_store = useSwitchToStore();
+const root_store = useRootStore();
 const keywords = computed((): string => root_store.keywords);
 </script>

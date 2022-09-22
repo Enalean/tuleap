@@ -38,7 +38,7 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
-import { useSwitchToStore } from "../stores";
+import { useRootStore } from "../stores/root";
 
 let modal: Modal | null = null;
 let trigger: HTMLElement | null = null;
@@ -71,7 +71,7 @@ onUnmounted((): void => {
 });
 
 function toggleModal(): void {
-    useSwitchToStore().loadHistory();
+    useRootStore().loadHistory();
     if (modal) {
         modal.toggle();
     }

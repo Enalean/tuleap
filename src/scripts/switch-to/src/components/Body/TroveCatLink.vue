@@ -25,8 +25,8 @@
 </template>
 
 <script setup lang="ts">
-import { useSwitchToStore } from "../../stores";
+import { useRootStore } from "../../stores/root";
 import { storeToRefs } from "pinia";
 
-const { is_trove_cat_enabled } = storeToRefs(useSwitchToStore());
+const { is_trove_cat_enabled } = storeToRefs(useRootStore());
 </script>

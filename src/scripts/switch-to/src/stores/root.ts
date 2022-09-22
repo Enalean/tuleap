@@ -24,7 +24,7 @@ import type { Project, UserHistory, ItemDefinition } from "../type";
 import { isMatchingFilterValue } from "../helpers/is-matching-filter-value";
 import { useFullTextStore } from "./fulltext";
 
-export const useSwitchToStore = defineStore("root", {
+export const useRootStore = defineStore("root", {
     state: (): State => ({
         projects: [],
         is_trove_cat_enabled: false,
