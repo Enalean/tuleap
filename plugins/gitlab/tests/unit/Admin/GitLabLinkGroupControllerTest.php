@@ -23,15 +23,11 @@ namespace Tuleap\Gitlab\Admin;
 use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPlugin;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use TemplateRenderer;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Gitlab\Group\VerifyProjectIsAlreadyLinked;
 use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
-use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\JavascriptAssetGeneric;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\ProjectByUnixNameFactory;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -41,9 +37,12 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\Test\Stubs\ProjectByUnixUnixNameFactory;
+use Tuleap\Test\Stubs\TemplateRendererStub;
 
-class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use GlobalLanguageMock;
+
     private const PROJECT_ID        = 150;
     private const PROJECT_UNIX_NAME = 'tuleap-gitlab';
 
@@ -52,60 +51,79 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $header_renderer;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
-    /**
      * @var GitPermissionsManager&\PHPUnit\Framework\MockObject\Stub
      */
     private $git_permission_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TemplateRenderer
-     */
-    private $template_renderer;
+    private TemplateRendererStub $template_renderer;
 
-    private BaseLayout $layout;
-    private \HTTPRequest $request;
     private \Project $project;
-    private JavascriptAssetGeneric $assets;
+    private ProjectByUnixNameFactory $project_factory;
+    private VerifyProjectIsAlreadyLinkedStub $project_linked_verifier;
 
     protected function setUp(): void
     {
-        $current_user = UserTestBuilder::buildWithDefaults();
-
         $this->header_renderer        = $this->createMock(HeaderRenderer::class);
-        $this->mirror_data_mapper     = $this->createStub(Git_Mirror_MirrorDataMapper::class);
         $this->git_permission_manager = $this->createStub(GitPermissionsManager::class);
-        $this->template_renderer      = $this->createMock(TemplateRenderer::class);
-        $this->layout                 = LayoutBuilder::build();
-        $this->assets                 = JavascriptAssetGenericBuilder::build();
-        $this->request                = new \HTTPRequest();
-        $this->request->setCurrentUser($current_user);
+        $this->template_renderer      = new TemplateRendererStub();
 
         $this->project = ProjectTestBuilder::aProject()
             ->withId(self::PROJECT_ID)
             ->withUnixName(self::PROJECT_UNIX_NAME)
             ->withUsedService(GitPlugin::SERVICE_SHORTNAME)
             ->build();
+
+        $this->project_factory         = ProjectByUnixUnixNameFactory::buildWith($this->project);
+        $this->project_linked_verifier = VerifyProjectIsAlreadyLinkedStub::withNeverLinked();
+    }
+
+    private function process(): void
+    {
+        $gitlab_tab  = GitLabLinkGroupTabPresenter::withActiveState($this->project);
+        $another_tab = new AdminExternalPanePresenter('Another pane', 'url/to/another/pane', false);
+
+        $external_tabs    = [$gitlab_tab, $another_tab];
+        $event_dispatcher = EventDispatcherStub::withCallback(
+            static function (GitAdminGetExternalPanePresenters $event) use ($external_tabs) {
+                foreach ($external_tabs as $tab) {
+                    $event->addExternalPanePresenter($tab);
+                }
+                return $event;
+            }
+        );
+
+        $mirror_data_mapper = $this->createStub(Git_Mirror_MirrorDataMapper::class);
+        $mirror_data_mapper->method('fetchAllForProject')->willReturn([]);
+
+        $controller = new GitLabLinkGroupController(
+            $this->project_factory,
+            $event_dispatcher,
+            JavascriptAssetGenericBuilder::build(),
+            JavascriptAssetGenericBuilder::build(),
+            $this->project_linked_verifier,
+            $this->header_renderer,
+            $mirror_data_mapper,
+            $this->git_permission_manager,
+            $this->template_renderer
+        );
+
+        $current_user = UserTestBuilder::buildWithDefaults();
+
+        $request = new \HTTPRequest();
+        $request->setCurrentUser($current_user);
+
+        $controller->process(
+            $request,
+            LayoutBuilder::build(),
+            ['project_name' => self::PROJECT_UNIX_NAME]
+        );
     }
 
     public function testItThrowsWhenProjectIsNotFound(): void
     {
-        $controller = $this->getController(
-            ProjectByUnixUnixNameFactory::buildWithoutProject(),
-            EventDispatcherStub::withIdentityCallback(),
-            VerifyProjectIsAlreadyLinkedStub::withNeverLinked()
-        );
+        $this->project_factory = ProjectByUnixUnixNameFactory::buildWithoutProject();
 
         $this->expectException(NotFoundException::class);
-
-        $controller->process(
-            $this->request,
-            $this->layout,
-            [
-                'project_name' => self::PROJECT_UNIX_NAME,
-            ]
-        );
+        $this->process();
     }
 
     public function testItThrowsWhenGitServiceIsNotUsed(): void
@@ -116,105 +134,38 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUsedService('not_the_git_service')
             ->build();
 
-        $controller = $this->getController(
-            ProjectByUnixUnixNameFactory::buildWith($project),
-            EventDispatcherStub::withIdentityCallback(),
-            VerifyProjectIsAlreadyLinkedStub::withNeverLinked()
-        );
+        $this->project_factory = ProjectByUnixUnixNameFactory::buildWith($project);
 
         $this->expectException(NotFoundException::class);
-
-        $controller->process(
-            $this->request,
-            $this->layout,
-            [
-                'project_name' => self::PROJECT_UNIX_NAME,
-            ]
-        );
+        $this->process();
     }
 
     public function testItThrowsWhenUserIsNotAdministrator(): void
     {
         $this->git_permission_manager->method('userIsGitAdmin')->willReturn(false);
 
-        $controller = $this->getController(
-            ProjectByUnixUnixNameFactory::buildWith($this->project),
-            EventDispatcherStub::withIdentityCallback(),
-            VerifyProjectIsAlreadyLinkedStub::withNeverLinked()
-        );
-
         $this->expectException(ForbiddenException::class);
-
-        $controller->process(
-            $this->request,
-            $this->layout,
-            [
-                'project_name' => self::PROJECT_UNIX_NAME,
-            ]
-        );
+        $this->process();
     }
 
-    public function testItRendersTheGitlabLinkGroupPane(): void
+    public function testItRendersTheGitlabGroupLinkWizard(): void
     {
-        $gitlab_tab  = GitLabLinkGroupTabPresenter::withActiveState($this->project);
-        $another_tab = new AdminExternalPanePresenter('Another pane', 'url/to/another/pane', false);
-
-        $external_tabs = [$gitlab_tab, $another_tab];
-
         $this->git_permission_manager->method('userIsGitAdmin')->willReturn(true);
-        $this->mirror_data_mapper->method('fetchAllForProject')->willReturn([]);
-
         $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
 
-        $this->template_renderer->expects(self::once())
-            ->method('renderToPage')
-            ->with(
-                'git-administration-gitlab-link-group',
-                new GitLabLinkGroupPanePresenter(
-                    $this->project,
-                    false,
-                    [
-                        $gitlab_tab,
-                        $another_tab,
-                    ],
-                    false
-                ),
-            );
+        $this->process();
 
-        $this->getController(
-            ProjectByUnixUnixNameFactory::buildWith($this->project),
-            EventDispatcherStub::withCallback(
-                static function (GitAdminGetExternalPanePresenters $event) use ($external_tabs) {
-                    foreach ($external_tabs as $tab) {
-                        $event->addExternalPanePresenter($tab);
-                    }
-                    return $event;
-                }
-            ),
-            VerifyProjectIsAlreadyLinkedStub::withNeverLinked()
-        )->process(
-            $this->request,
-            $this->layout,
-            [
-                'project_name' => self::PROJECT_UNIX_NAME,
-            ]
-        );
+        self::assertTrue($this->template_renderer->has_rendered_something);
     }
 
-    private function getController(
-        ProjectByUnixNameFactory $project_by_id_factory,
-        EventDispatcherInterface $event_dispatcher,
-        VerifyProjectIsAlreadyLinked $verify_project_is_already_linked,
-    ): GitLabLinkGroupController {
-        return new GitLabLinkGroupController(
-            $project_by_id_factory,
-            $event_dispatcher,
-            $this->assets,
-            $verify_project_is_already_linked,
-            $this->header_renderer,
-            $this->mirror_data_mapper,
-            $this->git_permission_manager,
-            $this->template_renderer
-        );
+    public function testItRendersTheLinkedGroupInformation(): void
+    {
+        $this->git_permission_manager->method('userIsGitAdmin')->willReturn(true);
+        $this->project_linked_verifier = VerifyProjectIsAlreadyLinkedStub::withAlwaysLinked();
+        $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
+
+        $this->process();
+
+        self::assertTrue($this->template_renderer->has_rendered_something);
     }
 }

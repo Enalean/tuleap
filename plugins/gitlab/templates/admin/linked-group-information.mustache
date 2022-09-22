@@ -1,0 +1,85 @@
+{{# administration_pane }}
+    {{> git-administration-panes }}
+{{/ administration_pane }}
+<section class="tlp-pane-section">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }}tuleap-gitlab | Linked group information {{/ dgettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | Status {{/ dgettext }}</label>
+                    <span class="tlp-badge-success">
+                        <i class="fa-solid fa-link tlp-badge-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-gitlab | Linked {{/ dgettext }}
+                    </span>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | Last Synchronization {{/ dgettext }}</label>
+                    <span class="tlp-badge-success tlp-badge-outline">
+                        <i class="fa-solid fa-check tlp-badge-icon" aria-hidden="true"></i>
+                        {{# dngettext }}
+                            tuleap-gitlab |
+                            %1$s repository integrated %2$s |
+                            %1$s repositories integrated %2$s |
+                            {{ number_of_integrated_projects_in_last_sync }} |
+                            {{ number_of_integrated_projects_in_last_sync }} |
+                            {{ last_sync_time }}
+                        {{/ dngettext }}
+                    </span>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}
+                        tuleap-gitlab | GitLab server URL {{/ dgettext }}</label>
+                    <p>{{ gitlab_url }}</p>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | GitLab group {{/ dgettext }}</label>
+                    <p>
+                        <span class="gitlab-group-avatar-container">
+                            {{# avatar_url }}
+                                <img src="{{ avatar_url }}" alt="{{ group_path }}" class="gitlab-group-avatar"/>
+                            {{/ avatar_url }}
+                            {{^ avatar_url }}
+                                <span class="default-gitlab-group-avatar gitlab-group-avatar">{{ first_letter_of_group_name }}</span>
+                            {{/ avatar_url }}
+                        </span>{{ group_name }}<span class="tlp-text-muted gitlab-group-full-path">({{ group_path }})</span>
+                    </p>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}
+                        tuleap-gitlab | Allow artifact closure {{/ dgettext }}</label>
+                    <p>{{ allow_artifact_closure }}</p>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }} tuleap-gitlab | Prefix the branch name {{/ dgettext }}</label>
+                    <p>{{ branch_prefix }}</p>
+                </div>
+            </section>
+            <section class="tlp-pane-section tlp-pane-section-submit gitlab-linked-group-buttons">
+                <button type="button" class="tlp-button-primary" disabled>
+                    <i class="fa-solid fa-rotate tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | Synchronize {{/ dgettext }}
+                </button>
+
+                <button type="button" class="tlp-button-primary tlp-button-outline" disabled>
+                    <i class="fa-solid fa-key tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | Update token {{/ dgettext }}
+                </button>
+
+                <button type="button" class="tlp-button-primary tlp-button-outline" disabled>
+                    <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | Update configuration {{/ dgettext }}
+                </button>
+
+                <button type="button" class="tlp-button-danger tlp-button-outline" disabled>
+                    <i class="fa-solid fa-link-slash tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | Unlink {{/ dgettext }}
+                </button>
+            </section>
+        </div>
+    </section>
+</section>

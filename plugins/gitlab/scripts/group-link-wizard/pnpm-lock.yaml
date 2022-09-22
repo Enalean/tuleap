@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
+  '@tuleap/plugin-gitlab-administration-theme': link:../lib/administration-theme
   '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
   '@vue/test-utils': ^2.0.2
@@ -17,6 +18,7 @@ specifiers:
 dependencies:
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
+  '@tuleap/plugin-gitlab-administration-theme': link:../lib/administration-theme
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
   neverthrow: 5.0.0
   pinia: 2.0.21_vue@3.2.37

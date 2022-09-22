@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import "../themes/main.scss";
 
-namespace Tuleap\Gitlab\Admin;
-
-use GitPresenters_AdminPresenter;
-
-/**
- * @psalm-immutable
- */
-final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
-{
-    public function __construct(
-        \Project $project,
-        bool $are_mirrors_defined,
-        array $external_pane_presenters,
-    ) {
-        parent::__construct((int) $project->getID(), $are_mirrors_defined, $external_pane_presenters);
-    }
-
-    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function form_action(): string
-    {
-        return '';
-    }
-}
+document.addEventListener("DOMContentLoaded", () => {
+    // eslint-disable-next-line no-console
+    console.log("GitLab administration");
+});

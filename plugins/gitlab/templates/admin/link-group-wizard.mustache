@@ -1,0 +1,11 @@
+{{# administration_pane }}
+    {{> git-administration-panes }}
+{{/ administration_pane }}
+<section class="tlp-pane-section">
+    <div
+        id="gitlab-group-link-app"
+        data-current-project-name="{{ current_project_name }}"
+        data-current-project-unix-name="{{ current_project_unix_name }}"
+        data-current-project-id="{{ administration_pane.project_id }}"
+    ></div>
+</section>

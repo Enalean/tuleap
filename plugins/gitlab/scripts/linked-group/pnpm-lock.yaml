@@ -1,0 +1,11 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/plugin-gitlab-administration-theme': link:../lib/administration-theme
+
+dependencies:
+  '@tuleap/plugin-gitlab-administration-theme': link:../lib/administration-theme
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
