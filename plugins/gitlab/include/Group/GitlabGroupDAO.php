@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Group;
 
 use Tuleap\DB\DataAccessObject;
 
-final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLink, UpdateBranchPrefixOfGroup, UpdateArtifactClosureOfGroup
+final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLink, UpdateBranchPrefixOfGroup, UpdateArtifactClosureOfGroup, RetrieveGroupLinkedToProject
 {
     public function addNewGroup(NewGroup $gitlab_group): int
     {
@@ -63,6 +63,18 @@ final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, Veri
         $row = $this->getDB()->row(
             'SELECT * FROM plugin_gitlab_group WHERE id = ?',
             $gitlab_group_link_id
+        );
+        if ($row === null) {
+            return null;
+        }
+        return GroupLink::buildGroupLinkFromRow($row);
+    }
+
+    public function retrieveGroupLinkedToProject(\Project $project): ?GroupLink
+    {
+        $row = $this->getDB()->row(
+            'SELECT * FROM plugin_gitlab_group WHERE project_id = ?',
+            (int) $project->getID()
         );
         if ($row === null) {
             return null;

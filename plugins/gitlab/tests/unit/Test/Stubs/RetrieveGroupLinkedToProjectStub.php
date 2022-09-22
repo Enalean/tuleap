@@ -20,25 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Test\Stubs;
 
-use Tuleap\DB\DataAccessObject;
+use Tuleap\Gitlab\Group\GroupLink;
 
-final class GroupRepositoryIntegrationDAO extends DataAccessObject implements LinkARepositoryIntegrationToAGroup, CountIntegratedRepositories
+final class RetrieveGroupLinkedToProjectStub implements \Tuleap\Gitlab\Group\RetrieveGroupLinkedToProject
 {
-    public function linkARepositoryIntegrationToAGroup(NewRepositoryIntegrationLinkedToAGroup $command): void
+    private function __construct(private ?GroupLink $group)
     {
-        $this->getDB()->insert('plugin_gitlab_group_repository_integration', [
-            'group_id' => $command->group_id,
-            'integration_id' => $command->repository_integration_id,
-        ]);
     }
 
-    public function countIntegratedRepositories(GroupLink $group_link): int
+    public static function withGroupLink(GroupLink $group): self
     {
-        return $this->getDB()->cell(
-            'SELECT COUNT(*) FROM plugin_gitlab_group_repository_integration WHERE group_id = ?',
-            $group_link->id
-        );
+        return new self($group);
+    }
+
+    public static function withNoGroupLink(): self
+    {
+        return new self(null);
+    }
+
+    public function retrieveGroupLinkedToProject(\Project $project): ?GroupLink
+    {
+        return $this->group;
     }
 }

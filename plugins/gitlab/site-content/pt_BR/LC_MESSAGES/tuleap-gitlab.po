@@ -83,6 +83,9 @@ msgid ""
 "GitLab server error: %s"
 msgstr ""
 
+msgid "No"
+msgstr ""
+
 msgid "No credentials found to contact the GitLab server."
 msgstr ""
 
@@ -157,6 +160,9 @@ msgstr ""
 msgid ""
 "We managed to generate a new secret and to send it to the server, but "
 "couldn't parse the response. You should check that everything is ok."
+msgstr ""
+
+msgid "Yes"
 msgstr ""
 
 msgid "close artifacts"

@@ -41,6 +41,7 @@ use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
 use Tuleap\Gitlab\Group\GitlabGroupDAO;
+use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Reference\Branch\BranchReferenceSplitValuesDao;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
@@ -976,14 +977,16 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
             ProjectManager::instance(),
             EventManager::instance(),
             new JavascriptViteAsset(
-                new IncludeViteAssets(__DIR__ . '/../frontend-assets/gitlab-group-link-wizard', '/assets/gitlab/gitlab-group-link-wizard'),
+                new IncludeViteAssets(
+                    __DIR__ . '/../frontend-assets/gitlab-group-link-wizard',
+                    '/assets/gitlab/gitlab-group-link-wizard'
+                ),
                 'src/index.ts'
             ),
             new JavascriptViteAsset(
                 new IncludeViteAssets(__DIR__ . '/../frontend-assets/linked-group', '/assets/gitlab/linked-group'),
                 'src/main.ts'
             ),
-            new GitlabGroupDAO(),
             $git_plugin->getHeaderRenderer(),
             $git_plugin->getMirrorDataMapper(),
             new GitPermissionsManager(
@@ -999,6 +1002,8 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                 new FineGrainedRetriever($fine_grained_dao)
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
+            new GitlabGroupDAO(),
+            new GroupRepositoryIntegrationDAO()
         );
     }
 
