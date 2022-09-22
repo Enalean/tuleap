@@ -7,6 +7,7 @@ packages:  # all packages in subdirs of packages/ and components/  - 'packages/*
   - "src/themes/tlp"
   - "src/themes/BurningParrot"
   - "src/themes/FlamingParrot"
+  - "src/additional-packages/*/"
   - "plugins/*/"
   - "plugins/*/scripts/**/"
   - "plugins/mediawiki_standalone/additional-packages/mediawiki-mathoid/"

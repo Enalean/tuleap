@@ -1,0 +1,18 @@
+  [is picklist_len "0"]
+  [else]
+    [is picklist_len "1"]
+    [else]
+      <form method="get" action="[log_paging_action]">
+        [for log_paging_hidden_values]<input type="hidden" name="[log_paging_hidden_values.name]" value="[log_paging_hidden_values.value]"/>[end]
+        <select name="log_pagestart"  onchange="submit()">
+          [for picklist]
+           [if-any picklist.more]
+            <option [is picklist.count log_pagestart]selected[end] value="[picklist.count]">Page [picklist.page]: [picklist.start] ...</option>
+           [else]
+            <option [is picklist.count log_pagestart]selected[end] value="[picklist.count]">Page [picklist.page]: [picklist.start] - [picklist.end]</option>
+           [end]
+          [end]
+        </select>
+      </form>
+    [end]
+  [end]

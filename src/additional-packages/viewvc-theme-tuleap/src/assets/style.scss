@@ -1,0 +1,510 @@
+.tuleap-viewvc-header {
+    background: #FCFCFC;
+    padding: 20px;
+
+    > h3 {
+        word-break: break-all;
+        line-height: 25px;
+        margin: 0 0 20px;
+
+        > small {
+            display: block;
+            margin: 0 0 5px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #AAA;
+        }
+    }
+
+    > .tuleap-viewvc-revision-title {
+        margin: 10px 0 0;
+    }
+
+    .popover-title {
+        font-size: 15px;
+    }
+}
+
+.tuleap-viewvc-header-title-lastrev {
+    display: flex;
+    align-items: center;
+
+    > .badge {
+        margin: 0 0 0 10px;
+    }
+}
+
+#tuleap-viewvc-header-actions {
+    display: flex;
+    align-items: center;
+    margin: 10px 0 0;
+}
+.tuleap-viewvc-header-actions-entry {
+    display: flex;
+    align-items: center;
+    margin: 0 10px 0 0;
+
+    > span > form {
+        margin: 0;
+
+        > .input-append {
+            margin: 0;
+        }
+    }
+}
+.tuleap-viewvc-header-actions-entry-stickyrevision {
+    margin: 0 5px 0 0;
+}
+
+#tuleap-viewvc-header-breadcrumbs {
+    display: none;
+}
+
+.tuleap-viewvc-body {
+    padding: 20px;
+    max-width: 960px;
+}
+.tuleap-viewvc-body-diff {
+    padding: 20px;
+}
+
+.tuleap-viewvc-sticky-button {
+    vertical-align: top;
+}
+
+#jump-revision-form {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+
+    > .input-append {
+        margin: 0;
+    }
+}
+#tuleap-viewvc-file-content {
+    width: 100%;
+    max-width: 960px;
+    font-size: 12px;
+    font-family: monospace;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.tuleap-viewvc-file-content-line {
+    vertical-align: top;
+
+    &:target {
+        border: none;
+        background: #FCFCFC;
+        > .tuleap-viewvc-file-content-line-number {
+            box-shadow: inset 2px 0px 0px 0px #ddd;
+        }
+    }
+}
+
+.tuleap-viewvc-file-content-line--odd {
+    background: #FCFCFC;
+}
+
+.tuleap-viewvc-file-content-line-number {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    text-align: right;
+
+    > a,
+    > a:hover,
+    > a:visited {
+        color: #999;
+        text-decoration: none;
+    }
+}
+.tuleap-viewvc-file-content-line-text {
+    width: 100%;
+    border-right: 1px solid #ddd;
+    white-space: pre-wrap;
+}
+.tuleap-viewvc-file-content-line-text,
+.tuleap-viewvc-file-content-line-number,
+.tuleap-viewvc-file-content-line-author,
+.tuleap-viewvc-file-content-line-rev {
+    padding: 1px 8px;
+}
+
+.tuleap-viewvc-file-content-line-author,
+.tuleap-viewvc-file-content-line-rev {
+    border-right: 1px solid #ddd;
+}
+
+#tuleap-viewvc-file-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    background: #FCFCFC;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: 10px;
+    width: 100%;
+    max-width: 960px;
+    box-sizing: border-box;
+}
+
+#tuleap-viewvc-file-revision {
+    width: 100%;
+    max-width: 960px;
+    box-sizing: border-box;
+}
+
+#tuleap-viewvc-file-header-info-locked {
+    margin: 0 20px 0 0;
+}
+
+#tuleap-viewvc-file-header-info-mime,
+#tuleap-viewvc-file-header-info-size,
+.log-revision-header-actions-date,
+.log-revision-header-actions-user {
+    color: #999;
+    font-size: 12px;
+    margin: 0 20px 0 0;
+    white-space: nowrap;
+}
+.log-revision-header-actions-date {
+    margin: 0;
+}
+
+#tuleap-viewvc-file-header-info-mime-label,
+#tuleap-viewvc-file-header-info-size-label,
+.log-revision-header-actions-date-label {
+    font-size: 10px;
+    color: #bbb;
+}
+
+#tuleap-viewvc-file-revision-message-description {
+    display: none;
+}
+#tuleap-viewvc-file-revision-message {
+    height: 40px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    + .log-revision-footer {
+        display: none;
+    }
+
+    &.tuleap-viewvc-file-revision-message--expand {
+        height: auto;
+
+        #tuleap-viewvc-file-revision-message-description,
+        + .log-revision-footer {
+            display: block;
+        }
+    }
+}
+#tuleap-viewvc-file-revision-message-button {
+    margin: -4px 0 0 8px;
+}
+
+#tuleap-viewvc-properties {
+    margin: 40px 0 0;
+
+    > table {
+        > thead > tr {
+            background: #E4E4E4;
+
+            > th {
+                vertical-align: top;
+                border-left-color: #D2D2D2;
+                border-bottom: 2px solid #B2B2B2;
+            }
+        }
+
+        > tbody {
+            > tr {
+                &:first-child > td {
+                    border-top: none;
+                }
+
+                > td:last-child {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+#tuleap-viewvc-diff-changes {
+    border-radius: 3px;
+    border-collapse: separate;
+
+    > thead > tr > th {
+        vertical-align: top;
+        border-bottom: 2px solid #B2B2B2;
+        line-height: 20px;
+        padding: 8px;
+
+        &:first-child {
+            border-left: none;
+            border-top-left-radius: 3px;
+        }
+
+        &:last-child {
+            border-top-right-radius: 3px;
+        }
+    }
+
+    > tbody > tr {
+        vertical-align: top;
+
+        > td {
+            border-left: 1px solid #ddd;
+            padding: 0 4px;
+
+            &:first-child {
+                border-left: none;
+                text-align: right;
+            }
+
+            &:not(:first-child) {
+                width: 50%;
+            }
+
+            > a,
+            > a:hover,
+            > a:visited {
+                color: #999;
+                text-decoration: none;
+            }
+        }
+
+        &.tuleap-viewvc-diff-changes-chunk-header {
+            line-height: 10px;
+            font-size: 10px;
+
+            > td {
+                background: #F5F5F5;
+                color: #666;
+                border-top: 1px solid #D2D2D2;
+                border-color: #D2D2D2;
+                padding: 8px;
+            }
+
+            &:first-child > td {
+                border-top: none;
+            }
+        }
+
+        &:not(.tuleap-viewvc-diff-changes-chunk-header) {
+            font-size: 12px;
+            font-family: monospace;
+        }
+    }
+}
+
+#tuleap-viewvc-diff-footer {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0 0;
+}
+
+td.tuleap-viewvc-directory-content-up {
+    font-size: 10px;
+    line-height: 10px;
+}
+
+.pygments-hll { background-color: #ffffcc }
+.pygments-c { color: #408080; font-style: italic } /* Comment */
+.pygments-err { border: 1px solid #FF0000 } /* Error */
+.pygments-k { color: #008000; font-weight: bold } /* Keyword */
+.pygments-o { color: #666666 } /* Operator */
+.pygments-cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.pygments-cp { color: #BC7A00 } /* Comment.Preproc */
+.pygments-c1 { color: #408080; font-style: italic } /* Comment.Single */
+.pygments-cs { color: #408080; font-style: italic } /* Comment.Special */
+.pygments-gd { color: #A00000 } /* Generic.Deleted */
+.pygments-ge { font-style: italic } /* Generic.Emph */
+.pygments-gr { color: #FF0000 } /* Generic.Error */
+.pygments-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.pygments-gi { color: #00A000 } /* Generic.Inserted */
+.pygments-go { color: #808080 } /* Generic.Output */
+.pygments-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.pygments-gs { font-weight: bold } /* Generic.Strong */
+.pygments-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.pygments-gt { color: #0040D0 } /* Generic.Traceback */
+.pygments-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.pygments-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.pygments-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.pygments-kp { color: #008000 } /* Keyword.Pseudo */
+.pygments-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.pygments-kt { color: #B00040 } /* Keyword.Type */
+.pygments-m { color: #666666 } /* Literal.Number */
+.pygments-s { color: #BA2121 } /* Literal.String */
+.pygments-na { color: #7D9029 } /* Name.Attribute */
+.pygments-nb { color: #008000 } /* Name.Builtin */
+.pygments-nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.pygments-no { color: #880000 } /* Name.Constant */
+.pygments-nd { color: #AA22FF } /* Name.Decorator */
+.pygments-ni { color: #999999; font-weight: bold } /* Name.Entity */
+.pygments-ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.pygments-nf { color: #0000FF } /* Name.Function */
+.pygments-nl { color: #A0A000 } /* Name.Label */
+.pygments-nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.pygments-nt { color: #008000; font-weight: bold } /* Name.Tag */
+.pygments-nv { color: #19177C } /* Name.Variable */
+.pygments-ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.pygments-w { color: #bbbbbb } /* Text.Whitespace */
+.pygments-mf { color: #666666 } /* Literal.Number.Float */
+.pygments-mh { color: #666666 } /* Literal.Number.Hex */
+.pygments-mi { color: #666666 } /* Literal.Number.Integer */
+.pygments-mo { color: #666666 } /* Literal.Number.Oct */
+.pygments-sb { color: #BA2121 } /* Literal.String.Backtick */
+.pygments-sc { color: #BA2121 } /* Literal.String.Char */
+.pygments-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.pygments-s2 { color: #BA2121 } /* Literal.String.Double */
+.pygments-se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.pygments-sh { color: #BA2121 } /* Literal.String.Heredoc */
+.pygments-si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.pygments-sx { color: #008000 } /* Literal.String.Other */
+.pygments-sr { color: #BB6688 } /* Literal.String.Regex */
+.pygments-s1 { color: #BA2121 } /* Literal.String.Single */
+.pygments-ss { color: #19177C } /* Literal.String.Symbol */
+.pygments-bp { color: #008000 } /* Name.Builtin.Pseudo */
+.pygments-vc { color: #19177C } /* Name.Variable.Class */
+.pygments-vg { color: #19177C } /* Name.Variable.Global */
+.pygments-vi { color: #19177C } /* Name.Variable.Instance */
+.pygments-il { color: #666666 } /* Literal.Number.Integer.Long */
+
+#revision-changed-files,
+#directory-content {
+    max-width: 960px;
+}
+
+#directory-content > thead > tr > th > a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: inherit;
+    width: 100%;
+}
+#directory-content > thead > tr > th > a:active,
+#directory-content > thead > tr > th > a:hover {
+    text-decoration: none;
+}
+
+.revision-details {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    max-width: 960px;
+    margin: 0 0 40px;
+}
+
+.revision-details-message {
+    margin: 0 20px 0 0;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    min-width: 50%;
+}
+
+.revision-details-metadata {
+    margin: 0;
+}
+
+.revision-details-metadata dt {
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
+
+.revision-details-metadata dd {
+    margin: 0 0 10px;
+}
+
+body .log-revision-header div.avatar,
+body .log-revision-footer div.avatar,
+body .revision-details-metadata div.avatar {
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    margin: 0 4px 0 0;
+}
+
+.log-revision {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin: 0 0 20px;
+    background: #FFFFFF;
+}
+.log-revision-message {
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    padding: 10px;
+}
+.log-revision-footer {
+    padding: 10px;
+    color: #999;
+    font-size: 12px;
+}
+.log-revision-footer-entry {
+    margin: 0 20px 0 0;
+    word-break: break-all;
+}
+.log-revision-footer-entry-label {
+    font-size: 10px;
+    color: #ccc;
+}
+
+.log-revision.log-revision--selected > .log-revision-header {
+    border-bottom: 2px solid #ddd;
+}
+.log-revision-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    white-space: nowrap;
+    background: #FCFCFC;
+}
+.log-revision-header-title,
+.log-revision-header-actions-diffs {
+    margin: 0 20px 0 0;
+}
+.log-revision-header-title-lock,
+.log-revision-header-title-removed,
+.log-revision-header-selectfordiffs {
+    margin: 0 0 0 10px;
+}
+.log-revision-header-actions {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.log-revision-header-title > h4 {
+    margin: 0;
+}
+
+.vc_diff_remove {
+    background: #FFDFDF; /* @color-swatch-fiesta-red-secondary */
+}
+.vc_diff_add {
+    background: #E9FFEB; /* @color-swatch-sherwood-green-secondary */
+}
+.vc_diff_change {
+    background: #FFF0DC; /* @color-swatch-clockwork-orange-secondary */
+}
+.vc_diff_change_empty {
+    background: #F9EBE1; /* @color-swatch-teddy-brown-secondary */
+}
+
+.table .tuleap-viewvc-directory-content-empty {
+    padding: 50px;
+    font-size: 12px;
+    background-color: #f9f9f9;
+    color: #AAAAAA;
+    text-align: center;
+}

@@ -1,0 +1,13 @@
+<p>
+[is pathtype "file"]
+    [if-any log_href]
+        <a href="[log_href]" class="btn btn-small"><i class="far fa-list-alt"></i> Show revision Log</a>
+    [end]
+    [if-any graph_href]
+        <a href="[graph_href]" class="btn btn-small"><i class="fas fa-th-large"></i> Show revision Graph</a>
+    [end]
+    [is view "diff"]
+        <a href="[patch_href]" class="btn btn-small"><b style="font-size: 12px;">±</b> View patch</a>
+    [end]
+[end]
+</p>

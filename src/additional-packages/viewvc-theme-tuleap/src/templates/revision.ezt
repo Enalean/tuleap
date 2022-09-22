@@ -1,0 +1,88 @@
+[# setup page definitions]
+  [define page_title_classname]tuleap-viewvc-revision-title[end]
+  [define page_title]Revision <a href="javascript:;" id="jump-revision-trigger">[rev] <i class="fas fa-caret-down"></i></a>[end]
+  [define help_href][docroot]/help_rootview.html[end]
+[# end]
+
+[include "include/header.ezt" "revision"]
+
+
+<div id="jump-revision-content" style="display: none;">
+    <form method="get" action="[jump_rev_action]" id="jump-revision-form">
+        [for jump_rev_hidden_values]<input type="hidden" name="[jump_rev_hidden_values.name]" value="[jump_rev_hidden_values.value]"/>[end]
+        <div class="input-append">
+            <input type="number" name="revision" value="[rev]" class="input-small" />
+            <input type="submit" class="btn" value="Go" />
+        </div>
+    </form>
+</div>
+
+<script>
+(function ($) {
+    $('#jump-revision-trigger').popover({
+        html: true,
+        placement: 'bottom',
+        title: 'Jump to revision',
+        container: '.tuleap-viewvc-header',
+        content: $('#jump-revision-content').html()
+    });
+})(jQuery);
+</script>
+
+</div>
+<div class="tuleap-viewvc-body">
+    <div class="revision-details">
+        <dl class="revision-details-metadata">
+            <dt>Date:</dt>
+            <dd>[if-any date][date][else]<div class="muted">(unknown date)</div>[end]
+                [if-any ago]<div class="muted">([ago] ago)</div>[end]
+            </dd>
+            <dt>Author:</dt>
+            <dd>
+                [if-any author]<div class="avatar"><img src="/users/[author]/avatar.png" /></div>[author]
+                [else]<span class="muted">(unknown author)</span>[end]
+            </dd>
+        </dl>
+        <div class="revision-details-message">[log]</div>
+    </div>
+
+    <h4>Modified files</h4>
+
+    <table class="table" id="revision-changed-files">
+      <thead>
+      <tr align="left">
+        <th class="vc_header_sort">Path</th>
+        <th class="vc_header">Details</th>
+      </tr>
+      </thead>
+      <tbody>
+      [if-any changes]
+       [for changes]
+        <tr class="vc_row_[if-index changes even]even[else]odd[end]">
+          <td>
+            [if-any changes.view_href]<a href="[changes.view_href]" title="View [is changes.pathtype "dir"]Directory[else]File[end] Contents">[end]
+                <i class="[is changes.pathtype "dir"]fas fa-folder[else]far fa-file[end]"></i>&nbsp;[changes.path]
+            [if-any changes.view_href]</a>[end]
+          [if-any changes.is_copy]<div class="muted">(Copied from [changes.copy_path], r[changes.copy_rev])</div>[end]
+          </td>
+          <td>[if-any changes.log_href]<a href="[changes.log_href]" title="View Log">[end][changes.action][if-any changes.log_href]</a>[end]
+              [if-any changes.text_mods], [if-any changes.diff_href]<a href="[changes.diff_href]" title="View Diff">[end]text changed[if-any changes.diff_href]</a>[end][end]
+              [if-any changes.prop_mods], props changed[end]
+          </td>
+        </tr>
+       [end]
+      [else]
+        <tr>
+        <td colspan="5">No changed paths.</td>
+        </tr>
+      [end]
+      [if-any more_changes]
+        <tr>
+        <td colspan="5">[[]<a href="[more_changes_href]">...</a>]</td>
+        </tr>
+      [end]
+      </tbody>
+    </table>
+
+[include "include/props.ezt"]
+[include "include/footer.ezt"]

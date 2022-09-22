@@ -1,0 +1,30 @@
+[# setup page definitions]
+  [define page_title_classname][end]
+  [define resource_name]
+    [for nav_path]
+        [if-index nav_path last]
+            [if-index nav_path first]
+                /
+            [else]
+                [nav_path.name]
+            [end]
+        [end]
+    [end]
+  [end]
+  [define page_title]<small>Graph of</small> [resource_name][end]
+  [define help_href][docroot]/help_rootview.html[end]
+[# end]
+
+[include "include/header.ezt" "graph"]
+[include "include/file_header.ezt"]
+
+<hr />
+
+<div style="text-align:center;">
+[imagemap]
+<img usemap="#MyMapName"
+  src="[imagesrc]"
+  alt="Revisions of [where]" />
+</div>
+
+[include "include/footer.ezt"]

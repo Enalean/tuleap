@@ -1,0 +1,167 @@
+[include "include/log_header.ezt"]
+
+[define first_revision][end]
+[define last_revision][end]
+
+[for entries]
+[if-index entries first][define first_revision][entries.rev][end][end]
+[if-index entries last][define last_revision][entries.rev][end][end]
+
+<div class="log-revision [is entries.rev rev_selected]log-revision--selected[end]">
+    <div class="log-revision-header">
+        [is entries.state "dead"]
+          <div class="log-revision-header-title">Revision <strong>[entries.rev]</strong>
+              <span class="badge badge-default log-revision-header-title-removed">File removed</span>
+          </div>
+
+        [else]
+          <div class="log-revision-header-title">
+              <a name="rev[entries.rev]"></a>
+              [for entries.tag_names]<a name="[entries.tag_names]"></a>
+              [end]
+              [for entries.branch_names]<a name="[entries.branch_names]"></a>
+              [end]
+
+              <h4>Revision
+                  [is roottype "svn"]<a href="[entries.revision_href]"> [entries.rev]</a>
+                  [else][entries.rev]
+                  [end]
+              </h4>
+
+              [if-any entries.lockinfo]
+                <span class="badge badge-important log-revision-header-title-lock" title="Locked: [entries.lockinfo]"><i class="fas fa-lock"></i></span>
+              [end]
+          </div>
+
+          <div class="log-revision-header-actions">
+              <div class="btn-group log-revision-header-actions-view">
+                  [if-any entries.view_href]
+                    [is pathtype "file"]
+                      <a href="[entries.view_href]" class="btn btn-small"><i class="icon-file-alt"></i> View</a>
+                    [else]
+                      <a href="[entries.view_href]" class="btn btn-small"><i class="icon-folder-close-alt"></i> Directory Listing</a>
+                    [end]
+                  [end]
+                  [if-any entries.download_href]<a href="[entries.download_href]" class="btn btn-small"><i class="fas fa-download"></i> Download</a>[end]
+                  [if-any entries.download_text_href]<a href="[entries.download_text_href]" class="btn btn-small"><i class="far fa-file-alt"></i> As text</a>[end]
+                  [if-any entries.annotate_href]<a href="[entries.annotate_href]" class="btn btn-small"><i class="fas fa-bullhorn"></i> Annotate</a>[end]
+              </div>
+
+              [is pathtype "file"]
+                <div class="log-revision-header-actions-diffs">
+                      [if-any entries.prev]
+                        <span>Diff to: </span>
+                      [end]
+                      <div class="btn-group">
+                        [if-any entries.prev]
+                          <a href="[entries.diff_to_prev_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Previous [entries.prev]</a>
+                        [end]
+
+                        [is roottype "cvs"]
+                          [if-any entries.branch_point]
+                            <a href="[entries.diff_to_branch_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Branch point [entries.branch_point]</a>
+                          [end]
+
+                          [if-any entries.next_main]
+                            <a href="[entries.diff_to_main_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Next main [entries.next_main]</a>
+                          [end]
+                        [end]
+
+                        [if-any entries.diff_to_sel_href]
+                          <a href="[entries.diff_to_sel_href][if-any human_readable][else]&amp;diff_format=h[end]" class="btn btn-small">Selected [rev_selected]</a>
+                        [end]
+                     </div>
+
+                    [is entries.rev rev_selected]
+                      <span class="badge badge-default log-revision-header-selectfordiffs">Selected for diff</button>
+                    [else]
+                      <a href="[entries.sel_for_diff_href]" class="btn btn-small log-revision-header-selectfordiffs">Select for diffs</a>
+                    [end]
+                </div>
+              [end]
+          </div>
+        [end]
+    </div>
+    <div class="log-revision-message">[entries.log]</div>
+    <div class="log-revision-footer">
+        <span class="log-revision-footer-entry">
+            [if-any entries.author]
+                <div class="avatar"><img src="/users/[entries.author]/avatar.png" /></div>[entries.author]
+            [else](unknown author)[end]
+        </span>
+
+        <span class="log-revision-footer-entry">
+            [is roottype "svn"]
+              <span class="log-revision-footer-entry-label">[if-index entries last]Added[else]Modified[end]:</span>
+            [end]
+            [if-any entries.date][entries.date][else](unknown date)[end]
+            [if-any entries.ago]([entries.ago] ago)[end]
+        </span>
+
+        [if-any entries.vendor_branch]
+          <span class="log-revision-footer-entry">(vendor branch)</span>
+        [end]
+
+        [is roottype "svn"]
+            [if-any entries.size]
+                <span class="log-revision-footer-entry">
+                    <span class="log-revision-footer-entry-label">File length:</span> [entries.size] byte(s)
+                </span>
+            [end]
+
+            [if-any entries.copy_path]
+                <span class="log-revision-footer-entry">
+                    <span class="log-revision-footer-entry-label">Copied from:</span>
+                    <a href="[entries.copy_href]">[entries.copy_path]</a> revision [entries.copy_rev]
+                </span>
+            [end]
+        [end]
+
+
+        [if-any entries.orig_path]
+            <span class="log-revision-footer-entry">
+                <span class="log-revision-footer-entry-label">Original path:</span> <a href="[entries.orig_href]">[entries.orig_path]</a>
+            </span>
+        [end]
+
+        [if-any entries.branches]
+            <span class="log-revision-footer-entry">
+                <span class="log-revision-footer-entry-label">Branch:</span>
+                [for entries.branches]
+                  <a href="[entries.branches.href]">[entries.branches.name]</a>[if-index entries.branches last][else],[end]
+                [end]
+            </span>
+        [end]
+
+        [if-any entries.tags]
+            <span class="log-revision-footer-entry">
+                <span class="log-revision-footer-entry-label">CVS Tags:</span>
+                [for entries.tags]
+                  <a href="[entries.tags.href]">[entries.tags.name]</a>[if-index entries.tags last][else],[end]
+                [end]
+            </span>
+        [end]
+
+        [if-any entries.branch_points]
+            <span class="log-revision-footer-entry">
+                <span class="log-revision-footer-entry-label">Branch point for:</span>
+                [for entries.branch_points]
+                  <a href="[entries.branch_points.href]">[entries.branch_points.name]</a>[if-index entries.branch_points last][else],[end]
+                [end]
+            </span>
+        [end]
+
+        [if-any entries.prev]
+            [if-any entries.changed]
+                [is roottype "cvs"]
+                    <span class="log-revision-footer-entry">
+                        <span class="log-revision-footer-entry-label">Changes since [entries.prev]:</span> [entries.changed] lines
+                    </span>
+                [end]
+            [end]
+        [end]
+    </div>
+</div>
+[end]
+
+[include "include/log_footer.ezt"]
