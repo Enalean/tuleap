@@ -890,6 +890,9 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 
 %if %{with enterprise}
 
+# Plugin FTS Meilisearch
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/fts_meilisearch
+
 # Plugin program_management
 %{__install} plugins/program_management/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
@@ -1470,6 +1473,7 @@ fi
 %files plugin-fts-meilisearch
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/fts_meilisearch
+%attr(00750,%{APP_USER},%{APP_USER}) %dir %{APP_DATA_DIR}/fts_meilisearch
 
 %files plugin-oauth2-server
 %defattr(-,root,root,-)

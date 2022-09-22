@@ -49,6 +49,7 @@ in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-meilisearch-server-rpm-package";
   srcs = [
     "${tuleapMeilisearchBin}/bin/tuleap-meilisearch"
+    ./tuleap-meilisearch-server/tuleap-meilisearch.service
   ];
 
   nativeBuildInputs = [ pkgs.rpm ];
@@ -72,6 +73,7 @@ in pkgs.stdenvNoCC.mkDerivation {
      --define "%_tmppath %{_topdir}/TMP" \
      --define "_rpmdir $(pwd)/RPMS" \
      --define "%_bindir /usr/bin" \
+     --define "%_unitdir /usr/lib/systemd/system" \
      -bb ${./tuleap-meilisearch-server/tuleap-meilisearch-server.spec}
   '';
 
