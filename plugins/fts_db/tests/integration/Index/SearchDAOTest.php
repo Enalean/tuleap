@@ -143,6 +143,7 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItemsRemoveWithProject(): void
     {
         $this->dao->indexItems(new ItemToIndex('type', 102, 'content', ['A' => 'A']));
+        $this->dao->indexItems(new ItemToIndex('type2', 102, 'content', ['A' => 'A']));
         $this->dao->indexItems(new ItemToIndex('type', 103, 'content', ['A' => 'A1']));
 
         $this->dao->deleteIndexedItemsPerProjectID(102);
