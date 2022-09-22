@@ -153,7 +153,7 @@ msgid ""
 "Unable to contact the server with the provided token. Please ensure that "
 "token has \"api\" scope. GitLab server error: %s"
 msgstr ""
-"Impossible de contacter le serveur avec le token fourni. Vérifiez bien que "
+"Impossible de contacter le serveur avec le jeton fourni. Vérifiez bien que "
 "le jeton a une portée de niveau \"api\". Erreur du serveur GitLab : %s"
 
 msgid "Unlink"
