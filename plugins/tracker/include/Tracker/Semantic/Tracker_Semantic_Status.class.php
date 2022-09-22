@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticStatusRepresentation;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
@@ -231,6 +232,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic
 
         $template_rendreder      = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
         $admin_presenter_builder = new AdminPresenterBuilder(Tracker_FormElementFactory::instance(), new SemanticDoneDao());
+
+        $assets = new IncludeAssets(__DIR__ . '/../../../frontend-assets', '/assets/trackers');
+        $GLOBALS['HTML']->includeFooterJavascriptFile(
+            $assets->getFileURL("tracker-semantic-status.js")
+        );
 
         echo $template_rendreder->renderToString(
             'semantics/admin-status-open',
