@@ -67,11 +67,11 @@ describe(`lit-html-adapter`, () => {
             );
             expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
                 "
-                            <div class=\\"rte_format\\">
+                            <div class="rte_format">
                                 Format:
                                 <select></select>
                             
-                                <input type=\\"hidden\\">
+                                <input type="hidden">
                             
                                 <button>Preview</button>
                             
@@ -107,7 +107,7 @@ describe(`lit-html-adapter`, () => {
             );
             expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
                 "
-                            <div class=\\"rte_format\\">
+                            <div class="rte_format">
                                 Format:
                                 <select></select>
                             

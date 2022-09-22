@@ -55,109 +55,109 @@ describe("Transform an export report into a XSLX sheet", () => {
         // Make an exception for XLSX output
         // eslint-disable-next-line jest/no-large-snapshots
         expect(sheet).toMatchInlineSnapshot(`
-            Object {
-              "!cols": Array [
-                Object {
+            {
+              "!cols": [
+                {
                   "wch": 12,
                 },
-                Object {
+                {
                   "wch": 15,
                 },
-                Object {
+                {
                   "wch": 65,
                 },
-                Object {
+                {
                   "wch": 15,
                 },
               ],
-              "!merges": Array [
-                Object {
-                  "e": Object {
+              "!merges": [
+                {
+                  "e": {
                     "c": 1,
                     "r": 2,
                   },
-                  "s": Object {
+                  "s": {
                     "c": 0,
                     "r": 2,
                   },
                 },
               ],
               "!ref": "A1:D11",
-              "!rows": Array [
-                Object {},
-                Object {},
-                Object {},
-                Object {},
-                Object {},
-                Object {},
-                Object {},
-                Object {},
-                Object {},
-                Object {
+              "!rows": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {
                   "hpt": 48,
                 },
-                Object {},
+                {},
               ],
-              "A1": Object {
+              "A1": {
                 "character_width": 9,
                 "nb_lines": 1,
                 "t": "s",
                 "v": "Section A",
               },
-              "A10": Object {
+              "A10": {
                 "character_width": 0,
                 "nb_lines": 1,
                 "t": "z",
               },
-              "A11": Object {
+              "A11": {
                 "character_width": 0,
                 "nb_lines": 1,
                 "t": "z",
               },
-              "A2": Object {
+              "A2": {
                 "character_width": 0,
                 "nb_lines": 1,
                 "t": "z",
               },
-              "A3": Object {
+              "A3": {
                 "character_width": 10,
                 "merge_columns": 1,
                 "nb_lines": 1,
                 "t": "s",
                 "v": "Section B with a very very very very very long title",
               },
-              "A4": Object {
+              "A4": {
                 "character_width": 5,
                 "nb_lines": 1,
                 "t": "s",
                 "v": "Col 1",
               },
-              "A5": Object {
+              "A5": {
                 "character_width": 9,
                 "nb_lines": 1,
                 "t": "s",
                 "v": "Section B",
               },
-              "A6": Object {
+              "A6": {
                 "character_width": 10,
                 "nb_lines": 1,
                 "t": "d",
                 "v": 2020-09-07T14:00:00.000Z,
               },
-              "A7": Object {
+              "A7": {
                 "character_width": 12,
                 "nb_lines": 1,
                 "t": "s",
                 "v": "HTML Content",
               },
-              "A8": Object {
+              "A8": {
                 "character_width": 0,
                 "nb_lines": 1,
                 "t": "z",
               },
-              "A9": Object {
-                "c": Array [
-                  Object {
+              "A9": {
+                "c": [
+                  {
                     "t": "A comment",
                   },
                 ],
@@ -166,30 +166,30 @@ describe("Transform an export report into a XSLX sheet", () => {
                 "t": "n",
                 "v": 2020,
               },
-              "B10": Object {
+              "B10": {
                 "character_width": 0,
                 "nb_lines": 1,
                 "t": "z",
               },
-              "B4": Object {
+              "B4": {
                 "character_width": 5,
                 "nb_lines": 1,
                 "t": "s",
                 "v": "Col 2",
               },
-              "B5": Object {
+              "B5": {
                 "character_width": 15,
                 "nb_lines": 1,
                 "t": "s",
                 "v": "Section B col 2",
               },
-              "C10": Object {
+              "C10": {
                 "character_width": 152,
                 "nb_lines": 1,
                 "t": "s",
                 "v": "I'm a very (very very very very very very very very very very very very very very very very very very very very very very very very very) long text line",
               },
-              "D10": Object {
+              "D10": {
                 "character_width": 15,
                 "nb_lines": 4,
                 "t": "s",

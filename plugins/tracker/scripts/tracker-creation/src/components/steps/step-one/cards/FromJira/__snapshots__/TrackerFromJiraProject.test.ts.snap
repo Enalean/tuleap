@@ -32,7 +32,7 @@ exports[`TrackerFromJiraProject renders the component 1`] = `
        
       <option
         data-test="project-TO"
-        value="{\\"id\\":\\"TO\\",\\"label\\":\\"toto\\"}"
+        value="{"id":"TO","label":"toto"}"
       >
         
                 toto
@@ -40,7 +40,7 @@ exports[`TrackerFromJiraProject renders the component 1`] = `
       </option>
       <option
         data-test="project-TU"
-        value="{\\"id\\":\\"TU\\",\\"label\\":\\"tutu\\"}"
+        value="{"id":"TU","label":"tutu"}"
       >
         
                 tutu

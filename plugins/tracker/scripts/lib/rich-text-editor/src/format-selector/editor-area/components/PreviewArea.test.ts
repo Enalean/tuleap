@@ -86,7 +86,7 @@ describe(`PreviewArea`, () => {
                 "
                         <div>
                             
-                    <div class=\\"alert alert-error\\">
+                    <div class="alert alert-error">
                         There was an error in the Markdown preview:
                         <br>
                         Network Error

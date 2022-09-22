@@ -32,9 +32,11 @@ const esModules = [
     "hybrids",
 ].join("|");
 
+type TsJestConfiguration = ["ts-jest", Record<string, boolean>];
+
 type JestConfiguration = Record<string, unknown> & {
     setupFiles: string[];
-    transform: Record<string, string>;
+    transform: Record<string, string | TsJestConfiguration>;
 };
 const OUTPUT_DIRECTORY = "js-test-results/";
 
@@ -68,7 +70,10 @@ export const defineJestConfiguration = (): JestConfiguration => {
         },
         transform: {
             "^.+\\.vue$": "@vue/vue2-jest",
-            "^.+\\.ts$": "ts-jest",
+            "^.+\\.ts$": [
+                "ts-jest",
+                { diagnostics: is_typechecking_enabled, isolatedModules: !is_typechecking_enabled },
+            ],
             "^.+\\.js$": path.resolve(__dirname, "./babel-jest-process.js"),
         },
         moduleNameMapper: {
@@ -92,10 +97,6 @@ export const defineJestConfiguration = (): JestConfiguration => {
                 transform: {
                     "^js$": path.resolve(__dirname, "./babel-jest-process.js"),
                 },
-            },
-            "ts-jest": {
-                diagnostics: is_typechecking_enabled,
-                isolatedModules: !is_typechecking_enabled,
             },
         },
         snapshotSerializers: ["jest-serializer-vue"],

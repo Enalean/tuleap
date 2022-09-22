@@ -35,7 +35,7 @@ describe(`FormatHiddenInput`, () => {
 
         expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
             "
-                    <input type=\\"hidden\\" name=\\"basalt\\" value=\\"html\\">
+                    <input type="hidden" name="basalt" value="html">
                 "
         `);
     });
