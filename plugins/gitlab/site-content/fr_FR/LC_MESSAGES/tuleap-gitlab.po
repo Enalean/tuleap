@@ -95,6 +95,9 @@ msgstr ""
 "Le nouveau secret a été généré, mais nous n'avons pas pu mettre à jour les "
 "hooks GitLab. Erreur du serveur GitLab: %s"
 
+msgid "No"
+msgstr "Non"
+
 msgid "No credentials found to contact the GitLab server."
 msgstr "Aucun identifiant trouvé pour contacter le server GitLab."
 
@@ -180,6 +183,9 @@ msgstr ""
 "Nous avons réussi à générer un nouveau secret et à l'envoyer au serveur, "
 "mais n'avons pas pu analyser sa réponse. Vous devriez vérifier que tout est "
 "ok."
+
+msgid "Yes"
+msgstr "Oui"
 
 msgid "close artifacts"
 msgstr "fermer les artéfacts"

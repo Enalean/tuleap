@@ -26,7 +26,9 @@ use GitPlugin;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
+use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
+use Tuleap\Gitlab\Test\Stubs\CountIntegratedRepositoriesStub;
+use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkedToProjectStub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\ProjectByUnixNameFactory;
 use Tuleap\Request\ForbiddenException;
@@ -58,7 +60,7 @@ final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private \Project $project;
     private ProjectByUnixNameFactory $project_factory;
-    private VerifyProjectIsAlreadyLinkedStub $project_linked_verifier;
+    private RetrieveGroupLinkedToProjectStub $group_retriever;
 
     protected function setUp(): void
     {
@@ -72,8 +74,8 @@ final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUsedService(GitPlugin::SERVICE_SHORTNAME)
             ->build();
 
-        $this->project_factory         = ProjectByUnixUnixNameFactory::buildWith($this->project);
-        $this->project_linked_verifier = VerifyProjectIsAlreadyLinkedStub::withNeverLinked();
+        $this->project_factory = ProjectByUnixUnixNameFactory::buildWith($this->project);
+        $this->group_retriever = RetrieveGroupLinkedToProjectStub::withNoGroupLink();
     }
 
     private function process(): void
@@ -99,11 +101,12 @@ final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $event_dispatcher,
             JavascriptAssetGenericBuilder::build(),
             JavascriptAssetGenericBuilder::build(),
-            $this->project_linked_verifier,
             $this->header_renderer,
             $mirror_data_mapper,
             $this->git_permission_manager,
-            $this->template_renderer
+            $this->template_renderer,
+            $this->group_retriever,
+            CountIntegratedRepositoriesStub::withCount(4),
         );
 
         $current_user = UserTestBuilder::buildWithDefaults();
@@ -161,7 +164,9 @@ final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRendersTheLinkedGroupInformation(): void
     {
         $this->git_permission_manager->method('userIsGitAdmin')->willReturn(true);
-        $this->project_linked_verifier = VerifyProjectIsAlreadyLinkedStub::withAlwaysLinked();
+        $this->group_retriever = RetrieveGroupLinkedToProjectStub::withGroupLink(
+            GroupLinkBuilder::aGroupLink(99)->build()
+        );
         $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
 
         $this->process();

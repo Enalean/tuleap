@@ -31,7 +31,8 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Gitlab\Group\VerifyProjectIsAlreadyLinked;
+use Tuleap\Gitlab\Group\CountIntegratedRepositories;
+use Tuleap\Gitlab\Group\RetrieveGroupLinkedToProject;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\ProjectByUnixNameFactory;
@@ -48,11 +49,12 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
         private EventDispatcherInterface $event_manager,
         private JavascriptAssetGeneric $wizard_assets,
         private JavascriptAssetGeneric $linked_group_assets,
-        private VerifyProjectIsAlreadyLinked $project_linked_verifier,
         private HeaderRenderer $header_renderer,
         private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         private GitPermissionsManager $git_permissions_manager,
         private TemplateRenderer $renderer,
+        private RetrieveGroupLinkedToProject $group_link_retriever,
+        private CountIntegratedRepositories $repositories_counter,
     ) {
     }
 
@@ -73,19 +75,17 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
             throw new ForbiddenException(dgettext('tuleap-git', 'User is not Git administrator.'));
         }
 
-        $is_a_group_already_linked = $this->project_linked_verifier->isProjectAlreadyLinked((int) $project->getID());
+        $group_link = $this->group_link_retriever->retrieveGroupLinkedToProject($project);
 
         $panes_presenter = $this->getPanesPresenter($project);
 
-        if ($is_a_group_already_linked) {
-            $last_sync_date = new \DateTimeImmutable('@1663665327');
+        if ($group_link) {
+            $number_of_repositories = $this->repositories_counter->countIntegratedRepositories($group_link);
+            $presenter              = new LinkedGroupPresenter($panes_presenter, $group_link, $number_of_repositories);
 
             $layout->addJavascriptAsset($this->linked_group_assets);
             $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);
-            $this->renderer->renderToPage(
-                'linked-group-information',
-                new LinkedGroupPresenter($panes_presenter, $last_sync_date)
-            );
+            $this->renderer->renderToPage('linked-group-information', $presenter);
         } else {
             $layout->addJavascriptAsset($this->wizard_assets);
             $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);

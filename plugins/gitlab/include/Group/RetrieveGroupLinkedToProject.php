@@ -22,23 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Tuleap\DB\DataAccessObject;
-
-final class GroupRepositoryIntegrationDAO extends DataAccessObject implements LinkARepositoryIntegrationToAGroup, CountIntegratedRepositories
+interface RetrieveGroupLinkedToProject
 {
-    public function linkARepositoryIntegrationToAGroup(NewRepositoryIntegrationLinkedToAGroup $command): void
-    {
-        $this->getDB()->insert('plugin_gitlab_group_repository_integration', [
-            'group_id' => $command->group_id,
-            'integration_id' => $command->repository_integration_id,
-        ]);
-    }
-
-    public function countIntegratedRepositories(GroupLink $group_link): int
-    {
-        return $this->getDB()->cell(
-            'SELECT COUNT(*) FROM plugin_gitlab_group_repository_integration WHERE group_id = ?',
-            $group_link->id
-        );
-    }
+    public function retrieveGroupLinkedToProject(\Project $project): ?GroupLink;
 }

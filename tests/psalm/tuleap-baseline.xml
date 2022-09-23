@@ -21969,9 +21969,7 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/gitlab/include/Admin/LinkedGroupPresenter.php">
-    <DeprecatedMethod occurrences="1">
-      <code>\DateHelper::timeAgoInWords($this-&gt;last_sync_date-&gt;getTimestamp(), true)</code>
-    </DeprecatedMethod>
+    <DeprecatedMethod occurrences="1"/>
   </file>
   <file src="plugins/gitlfs/include/Admin/AdminDao.php">
     <MissingParamType occurrences="1">
@@ -44313,21 +44311,15 @@
     <InvalidReturnType occurrences="1">
       <code>array</code>
     </InvalidReturnType>
-    <MissingReturnType occurrences="7">
+    <MissingReturnType occurrences="4">
       <code>extractUserIdFromGlobalNotificationsRecipientList</code>
       <code>getAllRecipientsWhoHaveCustomSettingsForATracker</code>
       <code>removeRecipientsThatHaveUnsubcribedFromNotification</code>
-      <code>removeRecipientsWhenTheyAreInCreationOnlyMode</code>
-      <code>removeRecipientsWhenTheyAreInStatusUpdateOnlyMode</code>
-      <code>removeRecipientsWhenTrackerIsInOnlyStatusUpdateMode</code>
       <code>userCanReadAtLeastOneChangedField</code>
     </MissingReturnType>
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="1">
-      <code>getId</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/Settings/Administration/NotificationsAdminSettingsControllerCommon.php">
     <InvalidScalarArgument occurrences="1">
@@ -44515,13 +44507,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/UserNotificationOnlyStatusChangeDAO.php">
-    <MissingParamType occurrences="3">
+    <MissingParamType occurrences="1">
       <code>$tracker_id</code>
       <code>$tracker_id</code>
-      <code>$user_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>doesUserIdHaveSubscribeOnlyForStatusChangeNotification</code>
+    <MissingReturnType occurrences="1">
       <code>searchUserIdsHavingSubscribedForTrackerStatusChangedOnly</code>
     </MissingReturnType>
   </file>
@@ -47932,7 +47922,7 @@
       <code>$chunksz</code>
       <code>$multisort</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="62">
+    <MissingReturnType occurrences="61">
       <code>addBOMToCSVContent</code>
       <code>afterSaveObject</code>
       <code>columnsCanBeTechnicallySorted</code>
@@ -47956,7 +47946,6 @@
       <code>fetchMatchingNumber</code>
       <code>fetchNextPrevious</code>
       <code>fetchRange</code>
-      <code>fetchSort</code>
       <code>fetchTHead</code>
       <code>fetchViewButtons</code>
       <code>fetchWidget</code>

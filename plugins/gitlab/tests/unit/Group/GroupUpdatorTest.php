@@ -24,11 +24,11 @@ namespace Tuleap\Gitlab\Group;
 
 use Luracast\Restler\RestException;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPATCHRepresentation;
+use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class GroupUpdatorTest extends TestCase
 {
-    private GroupUpdator $updator;
     /**
      * @var UpdateBranchPrefixOfGroup&\PHPUnit\Framework\MockObject\MockObject
      */
@@ -37,82 +37,64 @@ final class GroupUpdatorTest extends TestCase
      * @var UpdateArtifactClosureOfGroup&\PHPUnit\Framework\MockObject\MockObject
      */
     private $artifact_closure_dao;
+    private GitlabGroupPATCHRepresentation $patch_payload;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->branch_prefix_dao    = $this->createMock(UpdateBranchPrefixOfGroup::class);
         $this->artifact_closure_dao = $this->createMock(UpdateArtifactClosureOfGroup::class);
-        $this->updator              = new GroupUpdator($this->branch_prefix_dao, $this->artifact_closure_dao);
+
+        $this->patch_payload = GitlabGroupPATCHRepresentation::build('dev/', true);
+    }
+
+    private function updateGroupLink(): void
+    {
+        $group_link = GroupLinkBuilder::aGroupLink(1)
+            ->withAllowArtifactClosure(true)
+            ->withNoBranchPrefix()
+            ->build();
+
+        $updator = new GroupUpdator($this->branch_prefix_dao, $this->artifact_closure_dao);
+
+        $updator->updateGroupLinkFromPATCHRequest($group_link, $this->patch_payload);
     }
 
     public function testItAsksToSaveThePrefix(): void
     {
-        $this->branch_prefix_dao->expects(self::once())->method("updateBranchPrefixOfGroupLink");
+        $this->patch_payload = GitlabGroupPATCHRepresentation::build('prefix', null);
 
-        $this->updator->updateGroupLinkFromPATCHRequest(
-            $this->buildGitlabGroup(),
-            GitlabGroupPATCHRepresentation::build("prefix", null),
-        );
+        $this->branch_prefix_dao->expects(self::once())->method("updateBranchPrefixOfGroupLink");
+        $this->updateGroupLink();
     }
 
     public function testItDoesNotAskToSaveThePrefixIfNoPrefixProvided(): void
     {
-        $this->branch_prefix_dao->expects(self::never())->method("updateBranchPrefixOfGroupLink");
+        $this->patch_payload = GitlabGroupPATCHRepresentation::build(null, null);
 
-        $this->updator->updateGroupLinkFromPATCHRequest(
-            $this->buildGitlabGroup(),
-            GitlabGroupPATCHRepresentation::build(null, null),
-        );
+        $this->branch_prefix_dao->expects(self::never())->method("updateBranchPrefixOfGroupLink");
+        $this->updateGroupLink();
     }
 
     public function testItThrowsAnExceptionIfPrefixIsNotValid(): void
     {
-        $this->expectException(RestException::class);
+        $this->patch_payload = GitlabGroupPATCHRepresentation::build("not_valid[[[~~~prefix", null);
 
-        $this->updator->updateGroupLinkFromPATCHRequest(
-            $this->buildGitlabGroup(),
-            GitlabGroupPATCHRepresentation::build("not_valid[[[~~~prefix", null),
-        );
+        $this->expectException(RestException::class);
+        $this->updateGroupLink();
     }
 
     public function testItAsksToSaveTheArtifactClosure(): void
     {
-        $this->artifact_closure_dao->expects(self::once())->method("updateArtifactClosureOfGroupLink");
+        $this->patch_payload = GitlabGroupPATCHRepresentation::build(null, true);
 
-        $this->updator->updateGroupLinkFromPATCHRequest(
-            $this->buildGitlabGroup(),
-            GitlabGroupPATCHRepresentation::build(null, true),
-        );
+        $this->artifact_closure_dao->expects(self::once())->method("updateArtifactClosureOfGroupLink");
+        $this->updateGroupLink();
     }
 
     public function testItAsksToSaveBothPrefixAndArtifactClosure(): void
     {
         $this->branch_prefix_dao->expects(self::once())->method("updateBranchPrefixOfGroupLink");
         $this->artifact_closure_dao->expects(self::once())->method("updateArtifactClosureOfGroupLink");
-
-        $this->updator->updateGroupLinkFromPATCHRequest(
-            $this->buildGitlabGroup(),
-            GitlabGroupPATCHRepresentation::build("dev/", true),
-        );
-    }
-
-    private function buildGitlabGroup(): GroupLink
-    {
-        $row = [
-            'id' => 1,
-            'gitlab_group_id' => 1,
-            'project_id' => 101,
-            'name' => "myGroup01",
-            'full_path' => "path/myGroup01",
-            'web_url' => "https://example.com/path/myGroup01",
-            'avatar_url' => null,
-            'last_synchronization_date' => 1663660781,
-            'allow_artifact_closure' => 1,
-            'create_branch_prefix' => "",
-        ];
-
-        return GroupLink::buildGroupLinkFromRow($row);
+        $this->updateGroupLink();
     }
 }
