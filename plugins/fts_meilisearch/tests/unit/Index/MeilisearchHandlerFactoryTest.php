@@ -24,6 +24,8 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\FullTextSearchCommon\Index\NullIndexHandler;
 use Tuleap\FullTextSearchMeilisearch\Server\LocalMeilisearchServer;
 use Tuleap\Http\HttpClientFactory;
@@ -32,6 +34,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class MeilisearchHandlerFactoryTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     public function testBuildsMeilisearchHandlerWhenLocalInstanceIsAvailable(): void
     {
         $root = vfsStream::setup()->url() . '/';
@@ -42,6 +46,20 @@ final class MeilisearchHandlerFactoryTest extends TestCase
         file_put_contents($root . '/var/lib/tuleap/fts_meilisearch_server/meilisearch-master-key.env', 'MEILI_MASTER_KEY=foo');
 
         $factory = $this->buildFactory($root);
+
+        $handler = $factory->buildHandler();
+
+        self::assertInstanceOf(MeilisearchHandler::class, $handler);
+    }
+
+    public function testBuildsRemoteMeilisearchHandlerWhenLocalInstanceIsNotAvailableAndRemoteInformationAreSet(): void
+    {
+        $root = vfsStream::setup('root', null, ['conf' => []])->url();
+        \ForgeConfig::set('fts_meilisearch_server_url', 'https://example.com');
+        \ForgeConfig::set('sys_custom_dir', $root);
+        \ForgeConfig::set('fts_meilisearch_api_key', \ForgeConfig::encryptValue(new ConcealedString('something')));
+        \ForgeConfig::set('fts_meilisearch_index_name', 'index_name');
+        $factory = $this->buildFactory($root . '/');
 
         $handler = $factory->buildHandler();
 
@@ -65,6 +83,7 @@ final class MeilisearchHandlerFactoryTest extends TestCase
             $this->createStub(MeilisearchMetadataDAO::class),
             HTTPFactoryBuilder::requestFactory(),
             HttpClientFactory::createClientForInternalTuleapUse(),
+            HttpClientFactory::createClient(),
         );
     }
 }

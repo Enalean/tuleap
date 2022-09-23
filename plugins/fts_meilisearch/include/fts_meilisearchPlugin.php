@@ -20,19 +20,23 @@
 
 declare(strict_types=1);
 
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
+use Tuleap\FullTextSearchCommon\FullTextSearchBackendPlugin;
 use Tuleap\FullTextSearchCommon\Index\NullIndexHandler;
 use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchHandler;
 use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchHandlerFactory;
 use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchMetadataDAO;
 use Tuleap\FullTextSearchMeilisearch\Server\GenerateServerMasterKey;
 use Tuleap\FullTextSearchMeilisearch\Server\LocalMeilisearchServer;
+use Tuleap\FullTextSearchMeilisearch\Server\RemoteMeilisearchServerSettings;
 use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 
 require_once __DIR__ . '/../../fts_common/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class fts_meilisearchPlugin extends \Tuleap\FullTextSearchCommon\FullTextSearchBackendPlugin
+final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements PluginWithConfigKeys
 {
     private const MAX_ITEMS_PER_BATCH = 128;
 
@@ -71,6 +75,11 @@ final class fts_meilisearchPlugin extends \Tuleap\FullTextSearchCommon\FullTextS
         (new GenerateServerMasterKey(new LocalMeilisearchServer(), $event->logger))->generateMasterKey();
     }
 
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(RemoteMeilisearchServerSettings::class);
+    }
+
     protected function getIndexSearcher(): \Tuleap\FullTextSearchCommon\Index\SearchIndexedItem
     {
         return $this->getMeilisearchHandler();
@@ -98,6 +107,7 @@ final class fts_meilisearchPlugin extends \Tuleap\FullTextSearchCommon\FullTextS
             new MeilisearchMetadataDAO(),
             \Tuleap\Http\HTTPFactoryBuilder::requestFactory(),
             \Tuleap\Http\HttpClientFactory::createClientForInternalTuleapUse(),
+            \Tuleap\Http\HttpClientFactory::createClient(),
         );
 
         return $factory->buildHandler();
