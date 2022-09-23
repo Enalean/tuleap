@@ -18,6 +18,9 @@ msgstr "Ver todos os projetos"
 msgid "Browse all…"
 msgstr "Ver todos..."
 
+msgid "Content matches:"
+msgstr ""
+
 msgid "Fetch more results"
 msgstr ""
 

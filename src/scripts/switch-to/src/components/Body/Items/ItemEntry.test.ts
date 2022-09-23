@@ -24,8 +24,19 @@ import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 import type { KeyboardNavigationState } from "../../../stores/type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { render, configure, cleanup, waitFor } from "@testing-library/vue";
 
 describe("ItemEntry", () => {
+    beforeEach(() => {
+        configure({
+            testIdAttribute: "data-test",
+        });
+    });
+
+    afterEach(() => {
+        cleanup();
+    });
+
     it("Displays a link with a cross ref", () => {
         const wrapper = shallowMount(ItemEntry, {
             props: {
@@ -163,5 +174,104 @@ describe("ItemEntry", () => {
         });
 
         expect(focus).toHaveBeenCalled();
+    });
+
+    it("should highlight xref if it matches keywords", async () => {
+        const { getByTestId, queryByTestId } = render(ItemEntry, {
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "plop",
+                        },
+                    },
+                })
+            ),
+            props: {
+                entry: {
+                    xref: "plop #123",
+                    icon_name: "fa-columns",
+                    title: "Kanban",
+                    color_name: "lake-placid-blue",
+                    quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
+                } as ItemDefinition,
+                changeFocusCallback: jest.fn(),
+            },
+        });
+
+        expect(getByTestId("item-xref").querySelector("mark")).toBeTruthy();
+        expect(getByTestId("item-title").querySelector("mark")).toBeFalsy();
+
+        // We need to wait for child component to emit the 'matches' event
+        await waitFor(() => expect(queryByTestId("item-content-matches")).toBeFalsy());
+    });
+
+    it("should highlight title if it matches keywords", async () => {
+        const { getByTestId, queryByTestId } = render(ItemEntry, {
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "kanban",
+                        },
+                    },
+                })
+            ),
+            props: {
+                entry: {
+                    xref: "plop #123",
+                    icon_name: "fa-columns",
+                    title: "Kanban",
+                    color_name: "lake-placid-blue",
+                    quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
+                } as ItemDefinition,
+                changeFocusCallback: jest.fn(),
+            },
+        });
+
+        expect(getByTestId("item-xref").querySelector("mark")).toBeFalsy();
+        expect(getByTestId("item-title").querySelector("mark")).toBeTruthy();
+
+        // We need to wait for child component to emit the 'matches' event
+        await waitFor(() => expect(queryByTestId("item-content-matches")).toBeFalsy());
+    });
+
+    it("should display 'Content matches' when item is displayed but neither xref nor title match the keywords", async () => {
+        const { getByTestId, queryByTestId } = render(ItemEntry, {
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "unmatch",
+                        },
+                    },
+                })
+            ),
+            props: {
+                entry: {
+                    xref: "plop #123",
+                    icon_name: "fa-columns",
+                    title: "Kanban",
+                    color_name: "lake-placid-blue",
+                    quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
+                } as ItemDefinition,
+                changeFocusCallback: jest.fn(),
+            },
+        });
+
+        expect(getByTestId("item-xref").querySelector("mark")).toBeFalsy();
+        expect(getByTestId("item-title").querySelector("mark")).toBeFalsy();
+
+        // We need to wait for child component to emit the 'matches' event
+        await waitFor(() => expect(queryByTestId("item-content-matches")).toBeTruthy());
     });
 });

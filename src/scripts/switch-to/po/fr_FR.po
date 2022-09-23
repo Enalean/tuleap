@@ -24,6 +24,9 @@ msgstr "Parcourir tous les projets"
 msgid "Browse all…"
 msgstr "Tout parcourir…"
 
+msgid "Content matches:"
+msgstr "Le contenu correspond à :"
+
 msgid "Fetch more results"
 msgstr "Chercher plus de résultats"
 

@@ -17,6 +17,7 @@ exports[`ItemEntry Displays a link with a cross ref 1`] = `
       />
       <span
         class="switch-to-item-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
+        data-test="item-xref"
       >
         <highlight-matching-text-stub
           text="art #123"
@@ -24,16 +25,22 @@ exports[`ItemEntry Displays a link with a cross ref 1`] = `
       </span>
       <highlight-matching-text-stub
         class="switch-to-item-entry-label"
+        data-test="item-title"
         text="Lorem ipsum"
       />
     </a>
     <!--v-if-->
   </div>
-  <span
-    class="switch-to-item-project"
+  <div
+    class="switch-to-item-metadata"
   >
-    Guinea Pig
-  </span>
+    <span
+      class="switch-to-item-project"
+    >
+      Guinea Pig
+    </span>
+    <!--v-if-->
+  </div>
 </div>
 `;
 
@@ -54,6 +61,7 @@ exports[`ItemEntry Displays a link with a quick links 1`] = `
       />
       <span
         class="switch-to-item-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
+        data-test="item-xref"
       >
         <highlight-matching-text-stub
           text="art #123"
@@ -61,6 +69,7 @@ exports[`ItemEntry Displays a link with a quick links 1`] = `
       </span>
       <highlight-matching-text-stub
         class="switch-to-item-entry-label"
+        data-test="item-title"
         text="Lorem ipsum"
       />
     </a>
@@ -81,11 +90,16 @@ exports[`ItemEntry Displays a link with a quick links 1`] = `
       
     </div>
   </div>
-  <span
-    class="switch-to-item-project"
+  <div
+    class="switch-to-item-metadata"
   >
-    Guinea Pig
-  </span>
+    <span
+      class="switch-to-item-project"
+    >
+      Guinea Pig
+    </span>
+    <!--v-if-->
+  </div>
 </div>
 `;
 
@@ -107,15 +121,21 @@ exports[`ItemEntry Displays a link with an icon 1`] = `
       <!--v-if-->
       <highlight-matching-text-stub
         class="switch-to-item-entry-label"
+        data-test="item-title"
         text="Kanban"
       />
     </a>
     <!--v-if-->
   </div>
-  <span
-    class="switch-to-item-project"
+  <div
+    class="switch-to-item-metadata"
   >
-    Guinea Pig
-  </span>
+    <span
+      class="switch-to-item-project"
+    >
+      Guinea Pig
+    </span>
+    <!--v-if-->
+  </div>
 </div>
 `;
