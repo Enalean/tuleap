@@ -51,6 +51,7 @@ use Tuleap\Gitlab\Group\GroupCreator;
 use Tuleap\Gitlab\Group\GroupLinkRetriever;
 use Tuleap\Gitlab\Group\GroupLinkUpdateHandler;
 use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
+use Tuleap\Gitlab\Group\GroupUnlinkHandler;
 use Tuleap\Gitlab\Group\GroupUpdator;
 use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
@@ -72,6 +73,7 @@ use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\NeverThrow\Result;
 use Tuleap\REST\Header;
 use UserManager;
 
@@ -192,7 +194,7 @@ final class GitlabGroupResource
      */
     public function optionsId(int $id): void
     {
-        Header::allowOptionsPatch();
+        Header::allowOptionsPatchDelete();
     }
 
     /**
@@ -263,6 +265,42 @@ final class GitlabGroupResource
                 [GitlabGroupLinkRepresentation::class, 'buildFromObject'],
                 [FaultMapper::class, 'mapToRestException']
             );
+    }
+
+    /**
+     * Unlink the Tuleap Project and the GitLab group.
+     *
+     * It will not delete the Group on GitLab side. It deletes the link between the Tuleap Project and the GitLab group.
+     * All GitLab projects part of the group will stay integrated with Tuleap, their configuration will not change.
+     * If you wish to remove the integrations of the GitLab projects part of this group, please call DELETE  `/gitlab_repositories/{id}`
+     * for each one.
+     *
+     * @url    DELETE {id}
+     * @access protected
+     *
+     * @param int $id Id of the GitLab group link
+     * @status 200
+     *
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    protected function deleteGroupLink(int $id): void
+    {
+        $this->optionsId($id);
+
+        $current_user = UserManager::instance()->getCurrentUser();
+        $group_dao    = new GitlabGroupDAO();
+        $unlinker     = new GroupUnlinkHandler(
+            new ProjectRetriever(\ProjectManager::instance()),
+            new GitAdministratorChecker($this->getGitPermissionsManager()),
+            new GroupLinkRetriever($group_dao),
+            $group_dao
+        );
+
+        $result = $unlinker->unlinkProjectAndGroup($id, $current_user);
+        if (Result::isErr($result)) {
+            FaultMapper::mapToRestException($result->error);
+        }
     }
 
     private function getGitPermissionsManager(): GitPermissionsManager

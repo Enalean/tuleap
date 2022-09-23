@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
-final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLink, UpdateBranchPrefixOfGroup, UpdateArtifactClosureOfGroup, RetrieveGroupLinkedToProject
+final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLink, UpdateBranchPrefixOfGroup, UpdateArtifactClosureOfGroup, RetrieveGroupLinkedToProject, DeleteGroupLink
 {
     public function addNewGroup(NewGroup $gitlab_group): int
     {
@@ -100,5 +101,14 @@ final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, Veri
             ['allow_artifact_closure' => $allow_artifact_closure],
             ['id' => $id]
         );
+    }
+
+    public function deleteGroupLink(GroupLink $group_link): void
+    {
+        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($group_link) {
+            $db->delete('plugin_gitlab_group_token', ['group_id' => $group_link->id]);
+            $db->delete('plugin_gitlab_group_repository_integration', ['group_id' => $group_link->id]);
+            $db->delete('plugin_gitlab_group', ['id' => $group_link->id]);
+        });
     }
 }
