@@ -2,8 +2,8 @@
 
 exports[`ComputedField Template when the field is disabled, it only renders its value 1`] = `
 "
-        <div class=\\"tlp-form-element\\">
-            <label class=\\"tlp-label\\">
+        <div class="tlp-form-element">
+            <label class="tlp-label">
                 Computed Field
             </label>
             

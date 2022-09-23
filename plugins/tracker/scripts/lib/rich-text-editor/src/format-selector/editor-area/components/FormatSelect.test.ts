@@ -63,13 +63,13 @@ describe(`FormatSelect`, () => {
 
         expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
             "
-                    <select class=\\"small\\" data-test=\\"format-select\\" id=\\"whimper\\" name=\\"depletive\\">
+                    <select class="small" data-test="format-select" id="whimper" name="depletive">
                         
-                <option value=\\"commonmark\\" selected=\\"\\">Markdown</option>
+                <option value="commonmark" selected="">Markdown</option>
 
-                <option value=\\"html\\">HTML</option>
+                <option value="html">HTML</option>
 
-                <option value=\\"text\\">Text</option>
+                <option value="text">Text</option>
 
                     </select>
                 "
