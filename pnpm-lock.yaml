@@ -22,7 +22,7 @@ specifiers:
   clean-webpack-plugin: ^4.0.0
   copy-webpack-plugin: ^11.0.0
   css-loader: ^6.7.1
-  cypress: ^10.3.0
+  cypress: ^10.8.0
   esbuild-loader: ^2.20.0
   eslint: ^8.12.0
   eslint-config-prettier: ^8.5.0
@@ -107,7 +107,7 @@ devDependencies:
   clean-webpack-plugin: 4.0.0_webpack@5.74.0
   copy-webpack-plugin: 11.0.0_webpack@5.74.0
   css-loader: 6.7.1_webpack@5.74.0
-  cypress: 10.3.0
+  cypress: 10.8.0
   esbuild-loader: 2.20.0_webpack@5.74.0
   eslint: 8.12.0
   eslint-config-prettier: 8.5.0_eslint@8.12.0
@@ -2079,7 +2079,7 @@ packages:
     resolution: {integrity: sha512-Cn6WYCm0tXv8p6k+A8PvbDG763EDpBoTzHdA+Q/MF6H3sapGjCm9NzoaJncJS9tUKSuCoDs9XHxYYsQDgxR6kw==}
     requiresBuild: true
     dependencies:
-      '@types/node': 14.17.9
+      '@types/node': 18.7.18
     dev: true
     optional: true
 
@@ -3991,8 +3991,8 @@ packages:
       cssom: 0.3.8
     dev: true
 
-  /cypress/10.3.0:
-    resolution: {integrity: sha512-txkQWKzvBVnWdCuKs5Xc08gjpO89W2Dom2wpZgT9zWZT5jXxqPIxqP/NC1YArtkpmp3fN5HW8aDjYBizHLUFvg==}
+  /cypress/10.8.0:
+    resolution: {integrity: sha512-QVse0dnLm018hgti2enKMVZR9qbIO488YGX06nH5j3Dg1isL38DwrBtyrax02CANU6y8F4EJUuyW6HJKw1jsFA==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     requiresBuild: true
@@ -4016,7 +4016,7 @@ packages:
       dayjs: 1.10.6
       debug: 4.3.4_supports-color@8.1.1
       enquirer: 2.3.6
-      eventemitter2: 6.4.4
+      eventemitter2: 6.4.7
       execa: 4.1.0
       executable: 4.1.1
       extract-zip: 2.0.1_supports-color@8.1.1
@@ -5005,8 +5005,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /eventemitter2/6.4.4:
-    resolution: {integrity: sha512-HLU3NDY6wARrLCEwyGKRBvuWYyvW6mHYv72SJJAH3iJN3a6eVUvkjFkcxah1bcTgGVBBrFdIopBJPhCQFMLyXw==}
+  /eventemitter2/6.4.7:
+    resolution: {integrity: sha512-tYUSVOGeQPKt/eC1ABfhHy5Xd96N3oIijJvN3O9+TsC28T5V9yX9oEfEK5faP0EFSNVOG97qtAS68GBrQB2hDg==}
     dev: true
 
   /events/3.3.0:
