@@ -18,7 +18,7 @@
  */
 
 import type { Component } from "vue";
-import { createApp } from "vue";
+import { createApp, readonly } from "vue";
 import { createPinia } from "pinia";
 import { createGettext } from "vue3-gettext";
 import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
@@ -26,6 +26,12 @@ import type { FullTextState, State } from "./stores/type";
 import { useRootStore } from "./stores/root";
 import { useFullTextStore } from "./stores/fulltext";
 import { getProjectsFromDataset } from "./helpers/get-projects-from-dataset";
+import {
+    ARE_RESTRICTED_USERS_ALLOWED,
+    IS_SEARCH_AVAILABLE,
+    IS_TROVE_CAT_ENABLED,
+    SEARCH_FORM,
+} from "./injection-keys";
 
 export async function init(vue_mount_point: HTMLElement, component: Component): Promise<void> {
     const gettext = await initVueGettext(createGettext, (locale: string) => {
@@ -35,14 +41,7 @@ export async function init(vue_mount_point: HTMLElement, component: Component): 
     const pinia = createPinia();
     const root_state: State = {
         projects: getProjectsFromDataset(vue_mount_point.dataset.projects, gettext.$gettext),
-        is_trove_cat_enabled: Boolean(vue_mount_point.dataset.isTroveCatEnabled),
-        are_restricted_users_allowed: Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed),
-        is_search_available: Boolean(vue_mount_point.dataset.isSearchAvailable),
         filter_value: "",
-        search_form:
-            typeof vue_mount_point.dataset.searchForm !== "undefined"
-                ? JSON.parse(vue_mount_point.dataset.searchForm)
-                : { type_of_search: "soft", hidden_fields: [] },
         user_id: parseInt(document.body.dataset.userId || "0", 10),
         is_loading_history: true,
         is_history_loaded: false,
@@ -52,6 +51,21 @@ export async function init(vue_mount_point: HTMLElement, component: Component): 
 
     const app = createApp(component);
     app.use(pinia);
+    app.provide(IS_SEARCH_AVAILABLE, Boolean(vue_mount_point.dataset.isSearchAvailable));
+    app.provide(IS_TROVE_CAT_ENABLED, Boolean(vue_mount_point.dataset.isTroveCatEnabled));
+    app.provide(
+        ARE_RESTRICTED_USERS_ALLOWED,
+        Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed)
+    );
+    app.provide(
+        SEARCH_FORM,
+        readonly(
+            typeof vue_mount_point.dataset.searchForm !== "undefined"
+                ? JSON.parse(vue_mount_point.dataset.searchForm)
+                : { type_of_search: "soft", hidden_fields: [] }
+        )
+    );
+
     const store = useRootStore();
     store.$patch(root_state);
 

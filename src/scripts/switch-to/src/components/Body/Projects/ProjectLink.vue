@@ -51,15 +51,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, inject, ref, watch } from "vue";
 import type { Project } from "../../../type";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
-import { useRootStore } from "../../../stores/root";
 import HighlightMatchingText from "../HighlightMatchingText.vue";
 import QuickLink from "../QuickLink.vue";
 import { storeToRefs } from "pinia";
 import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation";
+import { ARE_RESTRICTED_USERS_ALLOWED } from "../../../injection-keys";
 
 const props = defineProps<{ project: Project }>();
 
@@ -94,13 +94,15 @@ function changeFocus(event: KeyboardEvent): void {
     }
 }
 
+const are_restricted_users_allowed = inject<boolean>(ARE_RESTRICTED_USERS_ALLOWED, false);
+
 const project_privacy_icon = computed((): string => {
     const privacy: ProjectPrivacy = {
         project_is_public: props.project.is_public,
         project_is_private: props.project.is_private,
         project_is_private_incl_restricted: props.project.is_private_incl_restricted,
         project_is_public_incl_restricted: props.project.is_public_incl_restricted,
-        are_restricted_users_allowed: useRootStore().are_restricted_users_allowed,
+        are_restricted_users_allowed,
         explanation_text: "",
         privacy_title: "",
     };

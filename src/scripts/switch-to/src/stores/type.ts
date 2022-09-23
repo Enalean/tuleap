@@ -17,14 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Project, SearchForm, UserHistory, ItemDefinition, QuickLink } from "../type";
+import type { Project, UserHistory, ItemDefinition, QuickLink } from "../type";
 
 export interface State {
     readonly projects: Project[];
-    readonly is_trove_cat_enabled: boolean;
-    readonly are_restricted_users_allowed: boolean;
-    readonly is_search_available: boolean;
-    readonly search_form: SearchForm;
     readonly user_id: number;
     is_loading_history: boolean;
     is_history_loaded: boolean;

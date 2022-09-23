@@ -22,6 +22,7 @@ import { createTestingPinia } from "@pinia/testing";
 import SwitchToHeader from "./SwitchToHeader.vue";
 import type { SearchForm } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { IS_SEARCH_AVAILABLE, SEARCH_FORM } from "../../injection-keys";
 
 describe("SwitchToHeader", () => {
     it("Does not display the button if search is not available (user is restricted)", () => {
@@ -29,16 +30,24 @@ describe("SwitchToHeader", () => {
             props: {
                 modal: null,
             },
-            global: getGlobalTestOptions(
-                createTestingPinia({
-                    initialState: {
-                        root: {
-                            filter_value: "abc",
-                            is_search_available: false,
+            global: {
+                ...getGlobalTestOptions(
+                    createTestingPinia({
+                        initialState: {
+                            root: {
+                                filter_value: "abc",
+                            },
                         },
-                    },
-                })
-            ),
+                    })
+                ),
+                provide: {
+                    [IS_SEARCH_AVAILABLE as symbol]: false,
+                    [SEARCH_FORM as symbol]: {
+                        type_of_search: "soft",
+                        hidden_fields: [],
+                    } as SearchForm,
+                },
+            },
         });
 
         expect(wrapper.find("[data-test=legacy-search-button]").exists()).toBe(false);
@@ -49,16 +58,24 @@ describe("SwitchToHeader", () => {
             props: {
                 modal: null,
             },
-            global: getGlobalTestOptions(
-                createTestingPinia({
-                    initialState: {
-                        root: {
-                            filter_value: "",
-                            is_search_available: true,
+            global: {
+                ...getGlobalTestOptions(
+                    createTestingPinia({
+                        initialState: {
+                            root: {
+                                filter_value: "",
+                            },
                         },
-                    },
-                })
-            ),
+                    })
+                ),
+                provide: {
+                    [IS_SEARCH_AVAILABLE as symbol]: true,
+                    [SEARCH_FORM as symbol]: {
+                        type_of_search: "soft",
+                        hidden_fields: [],
+                    } as SearchForm,
+                },
+            },
         });
 
         expect(wrapper.find("[data-test=legacy-search-button]").exists()).toBe(false);
@@ -69,20 +86,24 @@ describe("SwitchToHeader", () => {
             props: {
                 modal: null,
             },
-            global: getGlobalTestOptions(
-                createTestingPinia({
-                    initialState: {
-                        root: {
-                            filter_value: "abc",
-                            is_search_available: true,
-                            search_form: {
-                                type_of_search: "soft",
-                                hidden_fields: [],
-                            } as SearchForm,
+            global: {
+                ...getGlobalTestOptions(
+                    createTestingPinia({
+                        initialState: {
+                            root: {
+                                filter_value: "abc",
+                            },
                         },
-                    },
-                })
-            ),
+                    })
+                ),
+                provide: {
+                    [IS_SEARCH_AVAILABLE as symbol]: true,
+                    [SEARCH_FORM as symbol]: {
+                        type_of_search: "soft",
+                        hidden_fields: [],
+                    } as SearchForm,
+                },
+            },
         });
 
         expect(wrapper.find("[data-test=legacy-search-button]").exists()).toBe(true);
