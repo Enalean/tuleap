@@ -475,13 +475,13 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
     align-items: center;
 }
 
-.switch-to-item-project {
+.switch-to-item-metadata {
     margin: 0 0 calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-x-large-spacing));
     color: var(--tlp-neutral-dark-color-darker-20);
     font-size: 0.65rem;
 }
 
-.switch-to-item-entry-with-links-with-badge + .switch-to-item-project {
+.switch-to-item-entry-with-links-with-badge + .switch-to-item-metadata {
     margin-top: calc(var(--tlp-small-spacing) / 2);
 }
 

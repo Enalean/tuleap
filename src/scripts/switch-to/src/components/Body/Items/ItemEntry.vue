@@ -41,12 +41,18 @@
                     class="switch-to-item-entry-badge cross-ref-badge cross-ref-badge-on-dark-background"
                     v-bind:class="xref_color"
                     v-if="entry.xref"
+                    data-test="item-xref"
                 >
-                    <highlight-matching-text v-bind:text="entry.xref" />
+                    <highlight-matching-text
+                        v-bind:text="entry.xref"
+                        v-on:matches="(words) => (matching_words_in_xref = words.length)"
+                    />
                 </span>
                 <highlight-matching-text
                     class="switch-to-item-entry-label"
                     v-bind:text="entry.title || ''"
+                    v-on:matches="(words) => (matching_words_in_title = words.length)"
+                    data-test="item-title"
                 />
             </a>
             <div class="switch-to-item-entry-quick-links" v-if="has_quick_links">
@@ -60,20 +66,28 @@
                 />
             </div>
         </div>
-        <span class="switch-to-item-project">
-            {{ entry.project.label }}
-        </span>
+        <div class="switch-to-item-metadata">
+            <span class="switch-to-item-project">
+                {{ entry.project.label }}
+            </span>
+            <span v-if="should_display_content_matches" data-test="item-content-matches">
+                |
+                {{ $gettext("Content matches:") }}
+                <mark class="tlp-mark-on-dark-background">{{ keywords }}</mark>
+            </span>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import type { ItemDefinition } from "../../../type";
 import HighlightMatchingText from "../HighlightMatchingText.vue";
 import type { FocusFromItemPayload } from "../../../stores/type";
 import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation";
 import { storeToRefs } from "pinia";
 import QuickLink from "../QuickLink.vue";
+import { useRootStore } from "../../../stores/root";
 
 const props = defineProps<{
     entry: ItemDefinition;
@@ -82,6 +96,18 @@ const props = defineProps<{
 
 const xref_color = ref<string>("tlp-swatch-" + props.entry.color_name);
 const has_quick_links = ref<boolean>(props.entry.quick_links.length > 0);
+
+const { keywords, is_in_search_mode } = storeToRefs(useRootStore());
+
+const matching_words_in_xref = ref<number>(0);
+const matching_words_in_title = ref<number>(0);
+const should_display_content_matches = computed((): boolean => {
+    if (!is_in_search_mode.value) {
+        return false;
+    }
+
+    return matching_words_in_xref.value + matching_words_in_title.value === 0;
+});
 
 const entry_link = ref<HTMLAnchorElement | null>(null);
 
