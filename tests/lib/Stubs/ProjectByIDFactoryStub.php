@@ -28,6 +28,9 @@ use Tuleap\Project\ProjectByIDFactory;
 
 final class ProjectByIDFactoryStub implements ProjectByIDFactory
 {
+    /**
+     * @var array<int, \Project>
+     */
     private array $projects;
 
     private function __construct(\Project ...$projects)
@@ -42,9 +45,12 @@ final class ProjectByIDFactoryStub implements ProjectByIDFactory
         return new self();
     }
 
-    public static function buildWith(\Project ...$projects): self
+    /**
+     * @no-named-arguments
+     */
+    public static function buildWith(\Project $first_project, \Project ...$other_projects): self
     {
-        return new self(...$projects);
+        return new self($first_project, ...$other_projects);
     }
 
     public function getValidProjectById(int $project_id): \Project

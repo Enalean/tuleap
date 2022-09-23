@@ -30,7 +30,6 @@ use gitlabPlugin;
 use GitPermissionsManager;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
-use Project;
 use ProjectManager;
 use SystemEventManager;
 use Tuleap\Cryptography\ConcealedString;
@@ -45,6 +44,7 @@ use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\Group\GitlabGroupInformationRetriever;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
+use Tuleap\Gitlab\Core\ProjectRetriever;
 use Tuleap\Gitlab\Group\GitlabGroupDAO;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\GroupCreator;
@@ -53,6 +53,7 @@ use Tuleap\Gitlab\Group\GroupUpdator;
 use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
 use Tuleap\Gitlab\Group\Token\GroupTokenInserter;
+use Tuleap\Gitlab\Permission\GitAdministratorChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
@@ -99,73 +100,88 @@ final class GitlabGroupResource
      * @status 200
      *
      * @throws RestException 404
-     * @throws RestException 401
+     * @throws RestException 403
      * @throws RestException 400
      */
-    protected function createGroup(GitlabGroupPOSTRepresentation $gitlab_group_link_representation): GitlabGroupRepresentation
-    {
+    protected function createGroup(
+        GitlabGroupPOSTRepresentation $gitlab_group_link_representation,
+    ): GitlabGroupRepresentation {
         $this->options();
-        $group_api_token   = GroupApiToken::buildNewGroupToken(new ConcealedString($gitlab_group_link_representation->gitlab_token));
-        $gitlab_server_url = $gitlab_group_link_representation->gitlab_server_url;
-
-        $project     = $this->getProjectById($gitlab_group_link_representation->project_id);
-        $credentials = new Credentials($gitlab_server_url, $group_api_token);
-
         $current_user = UserManager::instance()->getCurrentUser();
-        if (! $this->getGitPermissionsManager()->userIsGitAdmin($current_user, $project)) {
-            throw new RestException(401, "User must be Git administrator.");
-        }
+        $retriever    = new ProjectRetriever(ProjectManager::instance());
+        $checker      = new GitAdministratorChecker($this->getGitPermissionsManager());
 
-        $gitlab_api_client = new ClientWrapper(
-            HTTPFactoryBuilder::requestFactory(),
-            HTTPFactoryBuilder::streamFactory(),
-            new GitlabHTTPClientFactory(
-                HttpClientFactory::createClient()
+        return $retriever->retrieveProject($gitlab_group_link_representation->project_id)
+            ->andThen(
+                fn(\Project $project) => $checker->checkUserIsGitAdministrator($project, $current_user)->map(
+                    static fn() => $project
+                )
             )
-        );
+            ->match(function (\Project $project) use ($gitlab_group_link_representation) {
+                $group_api_token   = GroupApiToken::buildNewGroupToken(
+                    new ConcealedString($gitlab_group_link_representation->gitlab_token)
+                );
+                $gitlab_server_url = $gitlab_group_link_representation->gitlab_server_url;
 
-        $gitlab_backend_logger = BackendLogger::getDefaultLogger(gitlabPlugin::LOG_IDENTIFIER);
-        $transaction_executor  = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
-        $integration_dao       = new GitlabRepositoryIntegrationDao();
-        $key_factory           = new KeyFactory();
-        $group_dao             = new GitlabGroupDAO();
+                $credentials = new Credentials($gitlab_server_url, $group_api_token);
 
-        $gitlab_repository_creator = new GitlabRepositoryCreator(
-            $transaction_executor,
-            new GitlabRepositoryIntegrationFactory(
-                $integration_dao,
-                ProjectManager::instance()
-            ),
-            $integration_dao,
-            new WebhookCreator(
-                $key_factory,
-                new WebhookDao(),
-                new WebhookDeletor(
-                    new WebhookDao(),
-                    $gitlab_api_client,
-                    $gitlab_backend_logger
-                ),
-                $gitlab_api_client,
-                $gitlab_backend_logger,
-            ),
-            new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), $key_factory)
-        );
+                $gitlab_api_client = new ClientWrapper(
+                    HTTPFactoryBuilder::requestFactory(),
+                    HTTPFactoryBuilder::streamFactory(),
+                    new GitlabHTTPClientFactory(
+                        HttpClientFactory::createClient()
+                    )
+                );
 
-        $group_creation_handler = new GroupCreator(
-            new GitlabProjectBuilder($gitlab_api_client),
-            new GitlabGroupInformationRetriever($gitlab_api_client),
-            new GitlabRepositoryGroupLinkHandler(
-                $transaction_executor,
-                $integration_dao,
-                $gitlab_repository_creator,
-                new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
-                new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
-                new GroupRepositoryIntegrationDAO(),
-                new CreateBranchPrefixDao()
-            )
-        );
+                $gitlab_backend_logger = BackendLogger::getDefaultLogger(gitlabPlugin::LOG_IDENTIFIER);
+                $transaction_executor  = new DBTransactionExecutorWithConnection(
+                    DBFactory::getMainTuleapDBConnection()
+                );
+                $integration_dao       = new GitlabRepositoryIntegrationDao();
+                $key_factory           = new KeyFactory();
+                $group_dao             = new GitlabGroupDAO();
 
-        return $group_creation_handler->createGroupAndIntegrations($credentials, $gitlab_group_link_representation, $project);
+                $gitlab_repository_creator = new GitlabRepositoryCreator(
+                    $transaction_executor,
+                    new GitlabRepositoryIntegrationFactory(
+                        $integration_dao,
+                        ProjectManager::instance()
+                    ),
+                    $integration_dao,
+                    new WebhookCreator(
+                        $key_factory,
+                        new WebhookDao(),
+                        new WebhookDeletor(
+                            new WebhookDao(),
+                            $gitlab_api_client,
+                            $gitlab_backend_logger
+                        ),
+                        $gitlab_api_client,
+                        $gitlab_backend_logger,
+                    ),
+                    new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), $key_factory)
+                );
+
+                $group_creation_handler = new GroupCreator(
+                    new GitlabProjectBuilder($gitlab_api_client),
+                    new GitlabGroupInformationRetriever($gitlab_api_client),
+                    new GitlabRepositoryGroupLinkHandler(
+                        $transaction_executor,
+                        $integration_dao,
+                        $gitlab_repository_creator,
+                        new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
+                        new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
+                        new GroupRepositoryIntegrationDAO(),
+                        new CreateBranchPrefixDao()
+                    )
+                );
+
+                return $group_creation_handler->createGroupAndIntegrations(
+                    $credentials,
+                    $gitlab_group_link_representation,
+                    $project
+                );
+            }, [FaultMapper::class, 'mapToRestException']);
     }
 
     /**
@@ -208,56 +224,46 @@ final class GitlabGroupResource
      * @url    PATCH {id}
      * @access protected
      *
-     * @param int $id Id of the GitLab group link
+     * @param int                            $id                               Id of the GitLab group link
      * @param GitlabGroupPATCHRepresentation $gitlab_group_link_representation {@from body}
      *
      * @return GitlabGroupLinkRepresentation {@type GitlabGroupLinkRepresentation}
      * @status 200
      *
      * @throws RestException 404
-     * @throws RestException 401
+     * @throws RestException 403
      * @throws RestException 400
      */
-    protected function updateGroupLink(int $id, GitlabGroupPATCHRepresentation $gitlab_group_link_representation): GitlabGroupLinkRepresentation
-    {
+    protected function updateGroupLink(
+        int $id,
+        GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
+    ): GitlabGroupLinkRepresentation {
         $this->optionsId($id);
 
         $group_dao = new GitlabGroupDAO();
+        $retriever = new ProjectRetriever(ProjectManager::instance());
+        $checker   = new GitAdministratorChecker($this->getGitPermissionsManager());
 
+        $current_user      = UserManager::instance()->getCurrentUser();
         $gitlab_group_link = $group_dao->retrieveGroupLink($id);
         if (! $gitlab_group_link) {
             throw new RestException(404, "GitLab group link not found");
         }
 
-        $project      = $this->getProjectById($gitlab_group_link->project_id);
-        $current_user = UserManager::instance()->getCurrentUser();
-        if (! $this->getGitPermissionsManager()->userIsGitAdmin($current_user, $project)) {
-            throw new RestException(401, "User must be Git administrator.");
-        }
+        return $retriever->retrieveProject($gitlab_group_link->project_id)
+            ->andThen(fn(\Project $project) => $checker->checkUserIsGitAdministrator($project, $current_user))
+            ->match(function () use ($gitlab_group_link, $gitlab_group_link_representation, $group_dao) {
+                (new GroupUpdator($group_dao, $group_dao))->updateGroupLinkFromPATCHRequest(
+                    $gitlab_group_link,
+                    $gitlab_group_link_representation
+                );
 
-        (new GroupUpdator($group_dao, $group_dao))->updateGroupLinkFromPATCHRequest(
-            $gitlab_group_link,
-            $gitlab_group_link_representation
-        );
-
-        $updated_gitlab_group_link = $group_dao->retrieveGroupLink($id);
-        if (! $updated_gitlab_group_link) {
-            throw new RestException(500, "Did not find the GitLab group link we've just updated");
-        }
-        return GitlabGroupLinkRepresentation::buildFromObject($updated_gitlab_group_link);
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function getProjectById(int $project_id): Project
-    {
-        $project = ProjectManager::instance()->getProject($project_id);
-        if (! $project || $project->isError()) {
-            throw new RestException(404, "Project #$project_id not found.");
-        }
-
-        return $project;
+                $updated_gitlab_group_link = $group_dao->retrieveGroupLink($gitlab_group_link->id);
+                if (! $updated_gitlab_group_link) {
+                    throw new RestException(500, "Did not find the GitLab group link we've just updated");
+                }
+                return GitlabGroupLinkRepresentation::buildFromObject($updated_gitlab_group_link);
+            }, [FaultMapper::class, 'mapToRestException']);
     }
 
     private function getGitPermissionsManager(): GitPermissionsManager
