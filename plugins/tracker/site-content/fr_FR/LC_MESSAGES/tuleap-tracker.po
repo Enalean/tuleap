@@ -211,14 +211,6 @@ msgstr ""
 "accès aux artéfacts B ou C, le champ \"Effort restant\" de A sera la somme "
 "des champs \"Effort restant\" de B et C.</p>"
 
-#, php-format
-msgid ""
-"<p>One will be considered as a contributor/assignee of this artifact if her "
-"name appears in the field <strong>%1$s</strong>.</p>"
-msgstr ""
-"<p>Un utilisateur sera considéré comme contributeur de l'artéfact si la "
-"valeur du champ <strong>%1$s</strong> est valuée avec son nom.</p>"
-
 msgid ""
 "<p>Someone updated this artifact while you were editing it.</p><p>Please "
 "acknowledge all notifications before submit.</p><p>Beware, on submit, your "
@@ -228,19 +220,6 @@ msgstr ""
 "d'accuser réception des notifications.</p><p>Attention, lors de la mise à "
 "jour, vos modifications seront appliquées par dessus les autres changements."
 "</p>"
-
-msgid ""
-"<p>The <strong>contributor(s)/assignee(s)</strong> are the person(s) who are "
-"responsible for the work needed to complete the artifact.</p>"
-msgstr ""
-"<p>Le(s) <strong>contributeur(s)</strong> sont les personne(s) "
-"responsable(s) du travail à effectuer pour la fermeture de cet artéfact.</p>"
-
-msgid ""
-"<p>The artifacts of this tracker does not have any <em>contributor/assignee</"
-"em> yet.</p>"
-msgstr ""
-"<p>Les artéfacts de ce tracker n'ont pas de <em>contributeur</em> défini.</p>"
 
 msgid ""
 "<p>The artifacts of this tracker does not have any <em>description</em> yet."
@@ -1499,9 +1478,6 @@ msgstr "Echec lors de la récupération de la collection de tous les projets."
 msgid "Fast computation"
 msgstr "Calcul automatique"
 
-msgid "Feel free to choose one:"
-msgstr "N'hésitez pas à en choisir un :"
-
 msgid "Field"
 msgstr "Champs"
 
@@ -2187,6 +2163,14 @@ msgstr "Un tracker ou plus n'a pas été trouvé : '%s'"
 #, php-format
 msgid "One tracker or more is duplicated in list: %s"
 msgstr "Un tracker ou plus est dupliqué : %s"
+
+#, php-format
+msgid ""
+"One will be considered as a contributor/assignee of this artifact if her "
+"name appears in the field %1$s."
+msgstr ""
+"Un utilisateur sera considéré comme contributeur de l'artéfact si la valeur "
+"du champ %1$s est valuée avec son nom."
 
 msgid ""
 "Only artifacts linked with the type \"Child\" will be taken into account in "
@@ -3018,6 +3002,11 @@ msgstr "L'artéfact n'a pas été mis à jour"
 msgid "The artifact will be linked to %1$s"
 msgstr "L'artifact sera lié à %1$s"
 
+msgid ""
+"The artifacts of this tracker does not have any contributor/assignee yet."
+msgstr ""
+"Les artéfacts de cet outil de suivi n'ont pas encore de contributeur/assigné."
+
 msgid "The changeset cannot be stored."
 msgstr "Le changeset n'a pas pu être sauvegardé."
 
@@ -3034,6 +3023,13 @@ msgstr ""
 "Le transport d'email configuré pour la plateforme ne permet pas "
 "l'utilisation de la fonctionnalité de passerelle courriel pour les outils de "
 "suivi."
+
+msgid ""
+"The contributor(s)/assignee(s) are the person(s) who are responsible for the "
+"work needed to complete the artifact."
+msgstr ""
+"Le contributeur(s)/assigné(s) est la personne qui est responsable du travail "
+"nécessaire à la complétion de l'artéfact."
 
 #, php-format
 msgid "The contributor/assignee is now: %1$s"
@@ -4466,18 +4462,18 @@ msgid "You cannot access to this tracker"
 msgstr "Vous n'avez pas accès à ce tracker."
 
 msgid ""
-"You cannot define the <em>contributor/assignee</em> semantic since there "
-"isn't any user list field in the tracker"
-msgstr ""
-"Vous ne pouvez pas définir de sémantique <em>contributeur</em> car il n'y a "
-"aucun champ liste d'utilisateur dans votre outil de suivi"
-
-msgid ""
 "You cannot define the <em>title</em> semantic since there isn't any text "
 "field in the tracker"
 msgstr ""
 "Vous ne pouvez pas définir la sémantique <em>titre</em> car il n'y a aucun "
 "champ texte dans votre outil de suivi."
+
+msgid ""
+"You cannot define the contributor/assignee semantic since there isn't any "
+"user list field in the tracker"
+msgstr ""
+"Vous ne pouvez pas définir la sémantique contributeur/assigné car il n'y a "
+"pas de champ liste utilisateur dans cet outil de suivi"
 
 msgid ""
 "You cannot define the description semantic since there isn't any text field "
