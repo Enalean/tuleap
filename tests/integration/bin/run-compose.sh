@@ -37,7 +37,8 @@ case "${2:-}" in
     exit 1
 esac
 
-DOCKERCOMPOSE="docker-compose --project-name db-${PHP_VERSION}-${DB_HOST}-${BUILD_TAG:-$RANDOM} -f tests/integration/docker-compose.yml"
+project_name="$(echo -n "db-${PHP_VERSION}-${DB_HOST}-${BUILD_TAG:-$RANDOM}" | tr '.' '_' | tr '[A-Z]' '[a-z]')"
+DOCKERCOMPOSE="docker-compose --project-name $project_name -f tests/integration/docker-compose.yml"
 
 function cleanup {
     if [ -n "${TESTS_RESULT:-}" ]; then
