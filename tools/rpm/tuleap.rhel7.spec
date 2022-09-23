@@ -1473,7 +1473,6 @@ fi
 %files plugin-fts-meilisearch
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/fts_meilisearch
-%attr(00750,%{APP_USER},%{APP_USER}) %dir %{APP_DATA_DIR}/fts_meilisearch
 
 %files plugin-oauth2-server
 %defattr(-,root,root,-)
