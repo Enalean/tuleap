@@ -27,17 +27,21 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Notifications\GetUserFromRecipient;
+use Tuleap\Tracker\Notifications\Recipient;
 use Tuleap\Tracker\Notifications\RecipientRemovalStrategy;
 
 final class RemoveRecipientThatCannotReadAnything implements RecipientRemovalStrategy
 {
     public function __construct(
-        private GetUserFromRecipient $get_user_from_recipient,
         private Tracker_FormElementFactory $form_element_factory,
     ) {
     }
 
+    /**
+     * @psalm-param array<string, Recipient> $recipients
+     *
+     * @psalm-return array<string, Recipient>
+     */
     public function removeRecipient(
         LoggerInterface $logger,
         Tracker_Artifact_Changeset $changeset,
@@ -50,15 +54,14 @@ final class RemoveRecipientThatCannotReadAnything implements RecipientRemovalStr
             return $recipients;
         }
 
-        foreach ($recipients as $recipient => $check_perms) {
-            if (! $check_perms) {
+        foreach ($recipients as $key => $recipient) {
+            if (! $recipient->check_permissions) {
                 continue;
             }
 
-            $user = $this->get_user_from_recipient->getUserFromRecipientName($recipient);
-            if (! $user || ! $changeset->getArtifact()->userCanView($user) || ! $this->userCanReadAtLeastOneChangedField($changeset, $user)) {
-                $logger->debug(self::class . ' ' . $recipient . ' removed');
-                unset($recipients[$recipient]);
+            if (! $changeset->getArtifact()->userCanView($recipient->user) || ! $this->userCanReadAtLeastOneChangedField($changeset, $recipient->user)) {
+                $logger->debug(self::class . ' ' . $key . ' removed');
+                unset($recipients[$key]);
             }
         }
 

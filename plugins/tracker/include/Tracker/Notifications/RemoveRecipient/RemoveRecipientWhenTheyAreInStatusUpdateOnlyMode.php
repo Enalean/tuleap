@@ -25,19 +25,23 @@ namespace Tuleap\Tracker\Notifications\RemoveRecipient;
 
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
-use Tuleap\Tracker\Notifications\GetUserFromRecipient;
+use Tuleap\Tracker\Notifications\Recipient;
 use Tuleap\Tracker\Notifications\RecipientRemovalStrategy;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChange;
 
 final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode implements RecipientRemovalStrategy
 {
     public function __construct(
-        private GetUserFromRecipient $get_user_from_recipient,
         private UserNotificationOnlyStatusChange $user_status_change_only,
         private ArtifactStatusChangeDetector $artifact_status_change_detector,
     ) {
     }
 
+    /**
+     * @psalm-param array<string, Recipient> $recipients
+     *
+     * @psalm-return array<string, Recipient>
+     */
     public function removeRecipient(
         LoggerInterface $logger,
         Tracker_Artifact_Changeset $changeset,
@@ -49,15 +53,10 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode implements Recipien
             return $recipients;
         }
 
-        foreach ($recipients as $recipient => $is_notification_enabled) {
-            $user = $this->get_user_from_recipient->getUserFromRecipientName($recipient);
-            if (! $user) {
-                continue;
-            }
-
-            if ($this->user_status_change_only->doesUserIdHaveSubscribeOnlyForStatusChangeNotification((int) $user->getId(), $changeset->getTracker()->getId())) {
-                $logger->debug(self::class . ' ' . $recipient . ' want notification only for status change, removed');
-                unset($recipients[$recipient]);
+        foreach ($recipients as $key => $recipient) {
+            if ($this->user_status_change_only->doesUserIdHaveSubscribeOnlyForStatusChangeNotification((int) $recipient->user->getId(), $changeset->getTracker()->getId())) {
+                $logger->debug(self::class . ' ' . $key . ' want notification only for status change, removed');
+                unset($recipients[$key]);
             }
         }
         return $recipients;

@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Notifications\RemoveRecipient;
 
-use PFUser;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Notifications\GetUserFromRecipient;
+use Tuleap\Tracker\Notifications\Recipient;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChange;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -42,12 +41,6 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyModeTest extends TestCas
     public function testRemoval(array $expected, bool $has_subscribed, bool $has_changed): void
     {
         $strategy = new RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode(
-            new class implements GetUserFromRecipient {
-                public function getUserFromRecipientName(string $recipient_name): ?PFUser
-                {
-                    return UserTestBuilder::buildWithId(101);
-                }
-            },
             new class ($has_subscribed) implements UserNotificationOnlyStatusChange {
                 public function __construct(private bool $has_subscribed)
                 {
@@ -86,7 +79,7 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyModeTest extends TestCas
 
         self::assertEquals(
             $expected,
-            $strategy->removeRecipient(new NullLogger(), $changeset, ['john_doe' => false], true),
+            $strategy->removeRecipient(new NullLogger(), $changeset, ['john_doe' => Recipient::fromUser(UserTestBuilder::buildWithDefaults())], true),
         );
     }
 
@@ -94,7 +87,7 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyModeTest extends TestCas
     {
         return [
             'status has changed and user subscribed to get updates, user kept' => [
-                'expected' => ['john_doe' => false],
+                'expected' => ['john_doe' => Recipient::fromUser(UserTestBuilder::buildWithDefaults())],
                 'has_subscribed' => true,
                 'has_changed' => true,
             ],
@@ -104,7 +97,7 @@ final class RemoveRecipientWhenTheyAreInStatusUpdateOnlyModeTest extends TestCas
                 'has_changed' => false,
             ],
             'status did not change and user did not subscribed to get updates, user kept' => [
-                'expected' => ['john_doe' => false],
+                'expected' => ['john_doe' => Recipient::fromUser(UserTestBuilder::buildWithDefaults())],
                 'has_subscribed' => false,
                 'has_changed' => false,
             ],

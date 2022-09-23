@@ -25,18 +25,22 @@ namespace Tuleap\Tracker\Notifications\RemoveRecipient;
 
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
-use Tuleap\Tracker\Notifications\GetUserFromRecipient;
+use Tuleap\Tracker\Notifications\Recipient;
 use Tuleap\Tracker\Notifications\RecipientRemovalStrategy;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 
 final class RemoveRecipientWhenTheyAreInCreationOnlyMode implements RecipientRemovalStrategy
 {
     public function __construct(
-        private GetUserFromRecipient $get_user_from_recipient,
         private UserNotificationSettingsRetriever $notification_settings_retriever,
     ) {
     }
 
+    /**
+     * @psalm-param array<string, Recipient> $recipients
+     *
+     * @psalm-return array<string, Recipient>
+     */
     public function removeRecipient(LoggerInterface $logger, Tracker_Artifact_Changeset $changeset, array $recipients, bool $is_update): array
     {
         if (! $is_update) {
@@ -44,21 +48,15 @@ final class RemoveRecipientWhenTheyAreInCreationOnlyMode implements RecipientRem
             return $recipients;
         }
 
-        foreach ($recipients as $recipient => $is_notification_enabled) {
-            $user = $this->get_user_from_recipient->getUserFromRecipientName($recipient);
-
-            if ($user === null) {
-                continue;
-            }
-
+        foreach ($recipients as $key => $recipient) {
             $user_notification_settings = $this->notification_settings_retriever->getUserNotificationSettings(
-                $user,
+                $recipient->user,
                 $changeset->getTracker()
             );
 
             if ($user_notification_settings->isInNotifyOnArtifactCreationMode()) {
-                $logger->debug(self::class . ' ' . $recipient . ' removed');
-                unset($recipients[$recipient]);
+                $logger->debug(self::class . ' ' . $key . ' removed');
+                unset($recipients[$key]);
             }
         }
         return $recipients;
