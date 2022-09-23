@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,21 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\FullTextSearchMeilisearch\Server;
 
-use Tuleap\Config\InvalidConfigKeyValueException;
-use Tuleap\Config\SecretValidator;
 use Tuleap\Cryptography\ConcealedString;
 
-final class MeilisearchAPIKeyValidator implements SecretValidator
+interface IProvideCurrentKeyForLocalServer
 {
-    public static function buildSelf(): self
-    {
-        return new self();
-    }
-
-    public function checkIsValid(ConcealedString $value): void
-    {
-        if ($value->isIdenticalTo(new ConcealedString(''))) {
-            throw new InvalidConfigKeyValueException('Meilisearch API key cannot be empty');
-        }
-    }
+    public function getCurrentKey(): ?ConcealedString;
 }
