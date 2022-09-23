@@ -29,6 +29,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\FullTextSearchCommon\Index\NullIndexHandler;
 use Tuleap\FullTextSearchMeilisearch\Server\LocalMeilisearchServer;
+use Tuleap\FullTextSearchMeilisearch\Server\RemoteMeilisearchServerSettings;
 
 final class MeilisearchHandlerFactory
 {
@@ -40,6 +41,7 @@ final class MeilisearchHandlerFactory
         private MeilisearchMetadataDAO $metadata_dao,
         private RequestFactoryInterface $request_factory,
         private ClientInterface $client_for_local_use,
+        private ClientInterface $client_for_remote_use,
     ) {
     }
 
@@ -50,6 +52,12 @@ final class MeilisearchHandlerFactory
         if ($key_local_meilisearch_server !== null) {
             $this->logger->debug('Using the local Meilisearch instance');
             return new MeilisearchHandler($this->getClientIndexForLocalMeilisearchInstance($key_local_meilisearch_server), $this->metadata_dao);
+        }
+
+        $remote_meilisearch_server_url = \ForgeConfig::get(RemoteMeilisearchServerSettings::URL, '');
+        if ($remote_meilisearch_server_url !== '' && \ForgeConfig::exists(RemoteMeilisearchServerSettings::API_KEY)) {
+            $this->logger->debug('Using the remote Meilisearch instance ' . $remote_meilisearch_server_url);
+            return new MeilisearchHandler($this->getClientIndexForRemoteMeilisearchInstance(), $this->metadata_dao);
         }
 
         $this->logger->debug('No local or remote Meilisearch instance available, do nothing');
@@ -64,5 +72,15 @@ final class MeilisearchHandlerFactory
             $this->client_for_local_use,
             $this->request_factory,
         ))->index(self::LOCAL_INDEX_NAME);
+    }
+
+    private function getClientIndexForRemoteMeilisearchInstance(): Indexes
+    {
+        return (new \MeiliSearch\Client(
+            \ForgeConfig::get(RemoteMeilisearchServerSettings::URL),
+            \ForgeConfig::getSecretAsClearText(RemoteMeilisearchServerSettings::API_KEY)->getString(),
+            $this->client_for_remote_use,
+            $this->request_factory,
+        ))->index(\ForgeConfig::get(RemoteMeilisearchServerSettings::INDEX_NAME));
     }
 }

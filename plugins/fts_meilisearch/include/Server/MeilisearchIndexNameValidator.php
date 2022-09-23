@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
@@ -17,6 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_fts_meilisearch_item;
-DROP TABLE IF EXISTS plugin_fts_meilisearch_metadata;
-DELETE FROM forgeconfig WHERE name = 'fts_meilisearch_server_url' OR name = 'fts_meilisearch_api_key' OR name = 'fts_meilisearch_index_name';
+declare(strict_types=1);
+
+namespace Tuleap\FullTextSearchMeilisearch\Server;
+
+use Tuleap\Config\InvalidConfigKeyValueException;
+use Tuleap\Config\ValueValidator;
+
+final class MeilisearchIndexNameValidator implements ValueValidator
+{
+    public static function buildSelf(): ValueValidator
+    {
+        return new self();
+    }
+
+    public function checkIsValid(string $value): void
+    {
+        if ($value === '') {
+            throw new InvalidConfigKeyValueException('Meilisearch index name cannot be empty');
+        }
+    }
+}
