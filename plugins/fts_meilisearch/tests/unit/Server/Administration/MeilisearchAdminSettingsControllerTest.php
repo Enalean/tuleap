@@ -20,13 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Administration;
+namespace Tuleap\FullTextSearchMeilisearch\Server\Administration;
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\CSRFSynchronizerTokenPresenter;
-use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchAdminSettingsController;
-use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchAdminSettingsPresenter;
 use Tuleap\FullTextSearchMeilisearch\Server\IProvideCurrentKeyForLocalServer;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -92,6 +90,7 @@ final class MeilisearchAdminSettingsControllerTest extends TestCase
             new MeilisearchAdminSettingsPresenter(
                 'https://meilisearch.example.com/',
                 true,
+                'fts_tuleap',
                 CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', $csrf_store))
             )
         );

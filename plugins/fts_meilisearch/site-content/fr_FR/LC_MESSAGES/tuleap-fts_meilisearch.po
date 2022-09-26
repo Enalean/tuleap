@@ -25,6 +25,9 @@ msgid "Full-Text search of items backed by a Meilisearch instance"
 msgstr ""
 "Recherche plein texte d'éléments s'appuyant sur une instance Meilisearch"
 
+msgid "Index name"
+msgstr "Nom de l'index"
+
 msgid "Meilisearch"
 msgstr "Meilisearch"
 

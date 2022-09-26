@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Administration;
+namespace Tuleap\FullTextSearchMeilisearch\Server\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use org\bovigo\vfs\vfsStream;
@@ -29,9 +29,9 @@ use Tuleap\Config\ConfigSet;
 use Tuleap\Config\GetConfigKeys;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchSaveAdminSettingsController;
 use Tuleap\FullTextSearchMeilisearch\Server\IProvideCurrentKeyForLocalServer;
 use Tuleap\FullTextSearchMeilisearch\Server\MeilisearchAPIKeyValidator;
+use Tuleap\FullTextSearchMeilisearch\Server\MeilisearchIndexNameValidator;
 use Tuleap\FullTextSearchMeilisearch\Server\MeilisearchServerURLValidator;
 use Tuleap\FullTextSearchMeilisearch\Server\RemoteMeilisearchServerSettings;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -55,7 +55,9 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
-            ->withParsedBody(['server_url' => 'https://example.com', 'api_key' => 'some_secret']);
+            ->withParsedBody(
+                ['server_url' => 'https://example.com', 'api_key' => 'some_secret', 'index_name' => 'fts_tuleap']
+            );
 
         $config_dao->expects($this->atLeastOnce())->method('save');
 
@@ -72,7 +74,9 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
-            ->withParsedBody(['server_url' => 'https://example.com', 'api_key' => 'some_secret']);
+            ->withParsedBody(
+                ['server_url' => 'https://example.com', 'api_key' => 'some_secret', 'index_name' => 'fts_tuleap']
+            );
 
         $config_dao->expects($this->never())->method('save');
 
@@ -98,9 +102,10 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
     {
         return [
             ['No parameters' => []],
-            ['No server URL' => ['server_url' => '', 'server_key' => 'something']],
-            ['No server key' => ['server_url' => 'https://example.com', 'server_key' => '']],
-            ['Server URL without HTTPS' => ['server_url' => 'http://example.com', 'server_key' => 'something']],
+            ['No server URL' => ['server_url' => '', 'api_key' => 'something', 'index_name' => 'fts_tuleap']],
+            ['No api key' => ['server_url' => 'https://example.com', 'api_key' => '', 'index_name' => 'fts_tuleap']],
+            ['No index name' => ['server_url' => 'https://example.com', 'api_key' => 'something', 'index_name' => '']],
+            ['Server URL without HTTPS' => ['server_url' => 'http://example.com', 'api_key' => 'something', 'index_name' => 'fts_tuleap']],
         ];
     }
 
@@ -140,6 +145,7 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
             new ConfigSet($event_dispatcher, $config_dao),
             MeilisearchServerURLValidator::buildSelf(),
             MeilisearchAPIKeyValidator::buildSelf(),
+            MeilisearchIndexNameValidator::buildSelf(),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             new SapiEmitter()
         );

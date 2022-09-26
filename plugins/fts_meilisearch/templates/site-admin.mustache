@@ -31,6 +31,22 @@
                         {{# has_existing_key }}placeholder="{{# dgettext }} tuleap-fts_meilisearch | Current key not displayed {{/ dgettext }}"{{/ has_existing_key }}
                     >
                 </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="index-name">
+                        {{# dgettext }} tuleap-fts_meilisearch | Index name {{/ dgettext }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <input
+                        type="text"
+                        size="50"
+                        class="tlp-input"
+                        id="index-name"
+                        name="index_name"
+                        placeholder="fts_tuleap"
+                        value="{{ index_name }}"
+                        required
+                    >
+                </div>
                 <section class="tlp-pane-section-submit">
                     {{# csrf_token }}
                         {{> csrf_token_input }}
