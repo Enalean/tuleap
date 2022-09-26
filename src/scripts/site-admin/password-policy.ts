@@ -15,6 +15,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export {};
+
 document.addEventListener("DOMContentLoaded", () => {
     const blockBreachedPasswordCheckbox = document.getElementById(
         "block-breached-password-checkbox"

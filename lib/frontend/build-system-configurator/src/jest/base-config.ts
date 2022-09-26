@@ -32,7 +32,7 @@ const esModules = [
     "hybrids",
 ].join("|");
 
-type TsJestConfiguration = ["ts-jest", Record<string, boolean>];
+type TsJestConfiguration = ["ts-jest", Record<string, boolean | Record<string, boolean>>];
 
 type JestConfiguration = Record<string, unknown> & {
     setupFiles: string[];
@@ -72,7 +72,10 @@ export const defineJestConfiguration = (): JestConfiguration => {
             "^.+\\.vue$": "@vue/vue2-jest",
             "^.+\\.ts$": [
                 "ts-jest",
-                { diagnostics: is_typechecking_enabled, isolatedModules: !is_typechecking_enabled },
+                {
+                    diagnostics: { warnOnly: is_typechecking_enabled },
+                    isolatedModules: !is_typechecking_enabled,
+                },
             ],
             "^.+\\.js$": path.resolve(__dirname, "./babel-jest-process.js"),
         },

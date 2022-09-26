@@ -39,6 +39,7 @@ module.exports = {
         "!www/**/bootstrap/**",
         "!www/**/datepicker/**",
         "!scripts/FlamingParrot/keymaster-sequence/**",
+        "!scripts/switch-to/**",
     ],
     testPathIgnorePatterns: ["/node_modules/", "/themes/tlp/", "/scripts/switch-to/"],
     transform: {

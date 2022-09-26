@@ -16,7 +16,7 @@
  */
 
 import CKEDITOR from "ckeditor4";
-import * as config from "../tuleap/tuleap-ckeditor-config";
+import { config } from "../tuleap/tuleap-ckeditor-config";
 
 import { autocomplete_users_for_select2 as autocomplete } from "@tuleap/autocomplete-for-select2";
 import { createModal } from "tlp";
@@ -115,6 +115,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function sendAPreview(): void {
+        if (!ckeditor) {
+            return;
+        }
         const editor = document.getElementById("mail_message");
         if (!editor || !(editor instanceof HTMLTextAreaElement)) {
             throw new Error("mail_message editor dom element was not found");

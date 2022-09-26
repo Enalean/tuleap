@@ -1,27 +1,34 @@
 {
     "extends": "../tsconfig.json",
     "compilerOptions": {
-        "module": "esnext", //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
-        "types": ["jest", "bootstrap", "ckeditor"],
+        "module": "es2020", //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
+        "types": ["jest", "bootstrap", "node", "ckeditor"],
         "resolveJsonModule": true
     },
     "include": [
+        "scripts/BurningParrot/**/*",
+        "scripts/FlamingParrot/**/*",
         "scripts/account/**/*",
         "scripts/browser-deprecation/**/*",
+        "scripts/ckeditor4.d.ts",
+        "scripts/dashboards/**/*",
+        "scripts/frs/**/*",
+        "scripts/global-shortcuts/**/*",
+        "scripts/invite-buddies/**/*",
         "scripts/mermaid/**/*",
-        "scripts/syntax-highlight/**/*",
-        "scripts/platform/banner/admin/**/*",
+        "scripts/navbar-dropdowns/**/*",
+        "scripts/platform/**/*",
         "scripts/project/admin/banner/**/*",
         "scripts/project/admin/header-background/**/*",
+        "scripts/project/admin/mailing-list/**/*",
         "scripts/project/admin/src/**/*",
         "scripts/project/banner/**/*",
         "scripts/project/registration/**/*",
-        "scripts/site-admin/project-widgets-configuration/**/*",
+        "scripts/site-admin/**/*",
+        "scripts/syntax-highlight/**/*",
         "scripts/tuleap/**/*",
+        "scripts/user/**/*",
         "themes/tlp/src/**/*",
-        "scripts/BurningParrot/**/*",
-        "scripts/global-shortcuts/**/*",
-        "scripts/frs/permissions-per-group/**/*"
     ],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "scripts/switch-to/"]
 }

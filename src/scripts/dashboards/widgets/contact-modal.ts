@@ -18,7 +18,7 @@
  */
 
 import CKEDITOR from "ckeditor4";
-import { config as ckeditor_config } from "../../../www/scripts/tuleap/tuleap-ckeditor-toolbar";
+import { config as ckeditor_config } from "../../tuleap/tuleap-ckeditor-config";
 import { createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const textarea = document.getElementById("massmail-project-members-body");
-    if (!textarea) {
+    if (!(textarea instanceof HTMLTextAreaElement)) {
         return;
     }
 
