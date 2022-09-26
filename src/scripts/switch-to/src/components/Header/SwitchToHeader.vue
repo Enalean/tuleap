@@ -56,20 +56,26 @@
 import SwitchToFilter from "./SwitchToFilter.vue";
 import type { Modal } from "tlp";
 import { useRootStore } from "../../stores/root";
-import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, inject } from "vue";
+import type { SearchForm } from "../../type";
+import { IS_SEARCH_AVAILABLE, SEARCH_FORM } from "../../injection-keys";
 
 defineProps<{ modal: Modal | null }>();
 const store = useRootStore();
 
-const { search_form } = storeToRefs(store);
+const search_form = inject<SearchForm>(SEARCH_FORM, {
+    type_of_search: "",
+    hidden_fields: [],
+});
+
+const is_search_available = inject<boolean>(IS_SEARCH_AVAILABLE, false);
 
 const should_button_be_displayed = computed((): boolean => {
-    return store.is_search_available && store.is_in_search_mode;
+    return is_search_available && store.is_in_search_mode;
 });
 
 const is_special_search = computed((): boolean => {
-    return search_form.value.type_of_search !== "soft";
+    return search_form.type_of_search !== "soft";
 });
 
 function submit(event: Event): void {

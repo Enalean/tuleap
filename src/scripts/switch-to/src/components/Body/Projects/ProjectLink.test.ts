@@ -22,8 +22,9 @@ import type { Project } from "../../../type";
 import ProjectLink from "./ProjectLink.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation";
-import type { KeyboardNavigationState, State } from "../../../stores/type";
+import type { KeyboardNavigationState } from "../../../stores/type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { ARE_RESTRICTED_USERS_ALLOWED } from "../../../injection-keys";
 
 describe("ProjectLink", () => {
     it("Displays the link to a project", () => {
@@ -36,15 +37,12 @@ describe("ProjectLink", () => {
                     icon: "🐹",
                 } as Project,
             },
-            global: getGlobalTestOptions(
-                createTestingPinia({
-                    initialState: {
-                        root: {
-                            are_restricted_users_allowed: true,
-                        },
-                    },
-                })
-            ),
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [ARE_RESTRICTED_USERS_ALLOWED as symbol]: true,
+                },
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -61,15 +59,12 @@ describe("ProjectLink", () => {
             props: {
                 project,
             },
-            global: getGlobalTestOptions(
-                createTestingPinia({
-                    initialState: {
-                        root: {
-                            are_restricted_users_allowed: true,
-                        },
-                    },
-                })
-            ),
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [ARE_RESTRICTED_USERS_ALLOWED as symbol]: true,
+                },
+            },
         });
 
         const key = "ArrowUp";
@@ -92,18 +87,20 @@ describe("ProjectLink", () => {
             props: {
                 project,
             },
-            global: getGlobalTestOptions(
-                createTestingPinia({
-                    initialState: {
-                        root: {
-                            are_restricted_users_allowed: true,
-                        } as State,
-                        "keyboard-navigation": {
-                            programmatically_focused_element: null,
-                        } as KeyboardNavigationState,
-                    },
-                })
-            ),
+            global: {
+                ...getGlobalTestOptions(
+                    createTestingPinia({
+                        initialState: {
+                            "keyboard-navigation": {
+                                programmatically_focused_element: null,
+                            } as KeyboardNavigationState,
+                        },
+                    })
+                ),
+                provide: {
+                    [ARE_RESTRICTED_USERS_ALLOWED as symbol]: true,
+                },
+            },
         });
 
         const link = wrapper.find("[data-test=project-link]");

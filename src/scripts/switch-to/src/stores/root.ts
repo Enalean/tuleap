@@ -27,13 +27,6 @@ import { computed, ref } from "vue";
 
 export const useRootStore = defineStore("root", () => {
     const projects = ref<State["projects"]>([]);
-    const is_trove_cat_enabled = ref<State["is_trove_cat_enabled"]>(false);
-    const are_restricted_users_allowed = ref<State["are_restricted_users_allowed"]>(false);
-    const is_search_available = ref<State["is_search_available"]>(false);
-    const search_form = ref<State["search_form"]>({
-        type_of_search: "",
-        hidden_fields: [],
-    });
     const user_id = ref<State["user_id"]>(100);
     const is_loading_history = ref<State["is_loading_history"]>(false);
     const is_history_loaded = ref<State["is_history_loaded"]>(false);
@@ -109,10 +102,6 @@ export const useRootStore = defineStore("root", () => {
 
     return {
         projects,
-        is_trove_cat_enabled,
-        are_restricted_users_allowed,
-        is_search_available,
-        search_form,
         user_id,
         is_loading_history,
         is_history_loaded,

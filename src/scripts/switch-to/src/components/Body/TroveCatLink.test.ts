@@ -19,21 +19,18 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TroveCatLink from "./TroveCatLink.vue";
-import { createTestingPinia } from "@pinia/testing";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { IS_TROVE_CAT_ENABLED } from "../../injection-keys";
 
 describe("TroveCatLink", () => {
     it("Display the link", () => {
         const wrapper = shallowMount(TroveCatLink, {
-            global: getGlobalTestOptions(
-                createTestingPinia({
-                    initialState: {
-                        root: {
-                            is_trove_cat_enabled: true,
-                        },
-                    },
-                })
-            ),
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [IS_TROVE_CAT_ENABLED as symbol]: true,
+                },
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -41,15 +38,12 @@ describe("TroveCatLink", () => {
 
     it("Does net display the link to trove cat if it is deactivated", () => {
         const wrapper = shallowMount(TroveCatLink, {
-            global: getGlobalTestOptions(
-                createTestingPinia({
-                    initialState: {
-                        root: {
-                            is_trove_cat_enabled: false,
-                        },
-                    },
-                })
-            ),
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [IS_TROVE_CAT_ENABLED as symbol]: false,
+                },
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();

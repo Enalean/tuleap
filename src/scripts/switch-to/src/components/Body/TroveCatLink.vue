@@ -25,8 +25,8 @@
 </template>
 
 <script setup lang="ts">
-import { useRootStore } from "../../stores/root";
-import { storeToRefs } from "pinia";
+import { inject } from "vue";
+import { IS_TROVE_CAT_ENABLED } from "../../injection-keys";
 
-const { is_trove_cat_enabled } = storeToRefs(useRootStore());
+const is_trove_cat_enabled = inject(IS_TROVE_CAT_ENABLED, false);
 </script>
