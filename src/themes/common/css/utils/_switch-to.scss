@@ -348,6 +348,11 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
     font-size: 0.875rem;
 }
 
+.switch-to-recent-items-list {
+    // force padding bottom at the end of recent items on Chrome
+    padding-bottom: 0.1px;
+}
+
 .switch-to-recent-items-error {
     opacity: 0.75;
     color: var(--tlp-danger-color-on-dark-background);
