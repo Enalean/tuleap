@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,8 +22,5 @@ const { defineJestConfiguration } = require("@tuleap/build-system-configurator")
 const jest_base_config = defineJestConfiguration();
 module.exports = {
     ...jest_base_config,
-    displayName: "git",
-    testPathIgnorePatterns: jest_base_config.testPathIgnorePatterns.concat([
-        "scripts/artifact-create-branch-action",
-    ]),
+    displayName: "git-repositories",
 };

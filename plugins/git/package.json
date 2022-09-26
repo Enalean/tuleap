@@ -40,6 +40,6 @@
     "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.mjs && pnpm run build:backend-assets",
     "build:backend-assets": "rm -rf ./backend-assets && mkdir ./backend-assets && ./node_modules/.bin/potentially-dangerous-bidirectional-characters > ./backend-assets/potentially-dangerous-bidirectional-characters.json",
     "watch": "webpack --config webpack.dev.mjs --watch",
-    "test": "jest"
+    "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js \"$(pwd)\""
   }
 }

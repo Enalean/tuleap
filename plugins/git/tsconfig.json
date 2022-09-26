@@ -1,9 +1,8 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "module": "esnext" //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
+        "module": "es2020"
     },
-    "include": [
-        "scripts/**/*"
-    ]
+    "include": ["scripts/**/*"],
+    "exclude": ["node_modules", "scripts/artifact-create-branch-action"]
 }

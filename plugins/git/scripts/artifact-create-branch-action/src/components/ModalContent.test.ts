@@ -46,7 +46,9 @@ describe("ModalContent", () => {
         ];
     });
 
-    function mountComponent(are_pullrequests_available: boolean): VueWrapper<ModalContent> {
+    function mountComponent(
+        are_pullrequests_available: boolean
+    ): VueWrapper<InstanceType<typeof ModalContent>> {
         return shallowMount(ModalContent, {
             global: getGlobalTestOptions(),
             props: {
