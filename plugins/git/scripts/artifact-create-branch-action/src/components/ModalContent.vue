@@ -40,7 +40,7 @@
                 </label>
                 <select
                     id="artifact-create-git-branch-select-repository"
-                    required="required"
+                    required
                     aria-required="true"
                     v-model="selected_repository"
                     data-test="repositories-select"
@@ -63,7 +63,7 @@
                     type="text"
                     id="artifact-create-git-branch-reference"
                     placeholder="main"
-                    required="required"
+                    required
                     aria-required="true"
                     v-model="reference"
                     data-test="branch-reference-input"

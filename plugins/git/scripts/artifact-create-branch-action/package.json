@@ -12,7 +12,7 @@
     "@tuleap/tlp-modal": "link:../../../../lib/frontend/tlp-modal",
     "@tuleap/vue3-gettext-init": "link:../../../../lib/frontend/vue3-gettext-init",
     "neverthrow": "^5.0.0",
-    "vue": "3.2.31",
+    "vue": "3.2.37",
     "vue3-gettext": "^2.2.1"
   },
   "devDependencies": {
@@ -22,6 +22,7 @@
     "vue-loader": "^17.0.0"
   },
   "scripts": {
+    "typecheck": "vue-tsc --noEmit",
     "test": "jest"
   }
 }
