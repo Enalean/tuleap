@@ -28,18 +28,33 @@
         v-on:keyup="update"
         autocomplete="off"
         data-test="switch-to-filter"
+        ref="input"
     />
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { useRootStore } from "../../stores/root";
 import { storeToRefs } from "pinia";
+import { useKeyboardNavigationStore } from "../../stores/keyboard-navigation";
 
 const props = defineProps<{ modal: Modal | null }>();
 const store = useRootStore();
+const keyboard_navigation = useKeyboardNavigationStore();
+
+const input = ref<HTMLInputElement | null>(null);
+const { programmatically_focused_element } = storeToRefs(keyboard_navigation);
+watch(programmatically_focused_element, () => {
+    if (programmatically_focused_element.value !== null) {
+        return;
+    }
+
+    if (input.value instanceof HTMLInputElement) {
+        input.value.focus();
+    }
+});
 
 const { filter_value } = storeToRefs(store);
 
@@ -78,6 +93,11 @@ function update(event: KeyboardEvent): void {
             props.modal.hide();
         }
         clearInput();
+        return;
+    }
+
+    if (event.key === "ArrowDown") {
+        keyboard_navigation.changeFocusFromFilterInput();
         return;
     }
 

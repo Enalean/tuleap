@@ -34,6 +34,16 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
     const programmatically_focused_element =
         ref<KeyboardNavigationState["programmatically_focused_element"]>(null);
 
+    function changeFocusFromFilterInput(): void {
+        const root_store = useRootStore();
+
+        if (root_store.filtered_projects.length > 0) {
+            programmatically_focused_element.value = root_store.filtered_projects[0];
+        } else if (!focusFirstHistoryEntry()) {
+            useFullTextStore().focusFirstSearchResult();
+        }
+    }
+
     function changeFocusFromQuickLink(payload: FocusFromQuickLinkPayload): void {
         const key = payload.key;
 
@@ -119,6 +129,15 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
             return;
         }
 
+        const is_the_first_project = current_index === 0;
+        if (
+            (root_store.filtered_projects.length <= 1 || is_the_first_project) &&
+            payload.key === "ArrowUp"
+        ) {
+            programmatically_focused_element.value = null;
+            return;
+        }
+
         navigateInCollection(root_store.filtered_projects, current_index, payload.key);
     }
 
@@ -171,6 +190,8 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
             if (root_store.filtered_projects.length !== 0) {
                 programmatically_focused_element.value =
                     root_store.filtered_projects[root_store.filtered_projects.length - 1];
+            } else {
+                programmatically_focused_element.value = null;
             }
             return;
         }
@@ -214,5 +235,6 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
         focusFirstHistoryEntry,
         changeFocusFromHistory,
         setProgrammaticallyFocusedElement,
+        changeFocusFromFilterInput,
     };
 });
