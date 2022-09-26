@@ -27,7 +27,7 @@ use Tuleap\Config\ValueValidator;
 
 final class MeilisearchIndexNameValidator implements ValueValidator
 {
-    public static function buildSelf(): ValueValidator
+    public static function buildSelf(): self
     {
         return new self();
     }

@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\FullTextSearchCommon\FullTextSearchBackendPlugin;
@@ -28,9 +30,13 @@ use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchHandler;
 use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchHandlerFactory;
 use Tuleap\FullTextSearchMeilisearch\Index\MeilisearchMetadataDAO;
 use Tuleap\FullTextSearchMeilisearch\Server\GenerateServerMasterKey;
+use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchAdminSettingsController;
+use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchAdminSettingsPresenter;
+use Tuleap\FullTextSearchMeilisearch\Server\Administration\MeilisearchSaveAdminSettingsController;
 use Tuleap\FullTextSearchMeilisearch\Server\LocalMeilisearchServer;
 use Tuleap\FullTextSearchMeilisearch\Server\RemoteMeilisearchServerSettings;
 use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
+use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../fts_common/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -65,7 +71,9 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
 
     public function getHooksAndCallbacks(): Collection
     {
+        $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(PluginExecuteUpdateHookEvent::NAME);
+        $this->addHook(SiteAdministrationAddOption::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -99,6 +107,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
     {
         return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexLimitedBatchQueue($this->getItemInserter(), self::MAX_ITEMS_PER_BATCH);
     }
+
     private function getMeilisearchHandler(): MeilisearchHandler|NullIndexHandler
     {
         $factory = new MeilisearchHandlerFactory(
@@ -111,5 +120,61 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
         );
 
         return $factory->buildHandler();
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $routes): void
+    {
+        $route_collector = $routes->getRouteCollector();
+        $route_collector->get(MeilisearchAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routeGetAdminSettings'));
+        $route_collector->post(MeilisearchAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routePostAdminSettings'));
+    }
+
+    public function routeGetAdminSettings(): MeilisearchAdminSettingsController
+    {
+        return new MeilisearchAdminSettingsController(
+            new LocalMeilisearchServer(),
+            new \Tuleap\Admin\AdminPageRenderer(),
+            UserManager::instance(),
+            new MeilisearchAdminSettingsPresenter(
+                ForgeConfig::get(RemoteMeilisearchServerSettings::URL, ''),
+                ForgeConfig::exists(RemoteMeilisearchServerSettings::API_KEY),
+                \Tuleap\CSRFSynchronizerTokenPresenter::fromToken(self::buildCSRFTokenAdmin()),
+            )
+        );
+    }
+
+    private static function buildCSRFTokenAdmin(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(MeilisearchAdminSettingsController::ADMIN_SETTINGS_URL);
+    }
+
+    public function routePostAdminSettings(): MeilisearchSaveAdminSettingsController
+    {
+        return new MeilisearchSaveAdminSettingsController(
+            new LocalMeilisearchServer(),
+            self::buildCSRFTokenAdmin(),
+            new \Tuleap\Config\ConfigSet(EventManager::instance(), new \Tuleap\Config\ConfigDao()),
+            \Tuleap\FullTextSearchMeilisearch\Server\MeilisearchServerURLValidator::buildSelf(),
+            \Tuleap\FullTextSearchMeilisearch\Server\MeilisearchAPIKeyValidator::buildSelf(),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(\Tuleap\Http\HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
+        );
+    }
+
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
+    {
+        $key_local_meilisearch_server = (new LocalMeilisearchServer())->getCurrentKey();
+        $is_using_local_server        = $key_local_meilisearch_server !== null;
+        if ($is_using_local_server) {
+            return;
+        }
+
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-fts_meilisearch', 'Meilisearch'),
+                MeilisearchAdminSettingsController::ADMIN_SETTINGS_URL
+            )
+        );
     }
 }

@@ -20,23 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FullTextSearchMeilisearch\Server;
+namespace Tuleap\FullTextSearchMeilisearch\Server\Administration;
 
-use Tuleap\Config\InvalidConfigKeyValueException;
-use Tuleap\Config\SecretValidator;
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 
-final class MeilisearchAPIKeyValidator implements SecretValidator
+/**
+ * @psalm-immutable
+ */
+final class MeilisearchAdminSettingsPresenter
 {
-    public static function buildSelf(): self
-    {
-        return new self();
-    }
-
-    public function checkIsValid(ConcealedString $value): void
-    {
-        if ($value->isIdenticalTo(new ConcealedString(''))) {
-            throw new InvalidConfigKeyValueException('Meilisearch API key cannot be empty');
-        }
+    public function __construct(
+        public string $server_url,
+        public bool $has_existing_key,
+        public CSRFSynchronizerTokenPresenter $csrf_token,
+    ) {
     }
 }

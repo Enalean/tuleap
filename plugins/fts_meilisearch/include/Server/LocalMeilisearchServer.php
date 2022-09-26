@@ -24,7 +24,7 @@ namespace Tuleap\FullTextSearchMeilisearch\Server;
 
 use Tuleap\Cryptography\ConcealedString;
 
-final class LocalMeilisearchServer
+final class LocalMeilisearchServer implements IProvideCurrentKeyForLocalServer
 {
     public const ENV_KEY_PREFIX = 'MEILI_MASTER_KEY=';
 
