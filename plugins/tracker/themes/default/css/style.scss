@@ -1356,7 +1356,7 @@ div.tracker-admin-field-controls {
                 no-repeat 4px center;
         }
 
-        &:not(.field-masschange):not(.in-edition):not(.field-in-modal) > label {
+        &:not(.field-masschange, .in-edition, .field-in-modal) > label {
             display: none;
         }
     }

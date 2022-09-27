@@ -51,8 +51,8 @@ $expert-query-area-height: 75px;
         pre {
             padding: 0 6px;
 
+            /* stylelint-disable-next-line selector-no-qualifying-type */
             &.CodeMirror-placeholder {
-                /* stylelint-disable-line selector-no-qualifying-type */
                 color: #999999;
             }
         }

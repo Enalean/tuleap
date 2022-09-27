@@ -412,8 +412,8 @@ h3 {
 }
 
 #admin-general-settings {
+    /* stylelint-disable-next-line selector-no-qualifying-type */
     ul > li > a.disabled-link {
-        /* stylelint-disable-line selector-no-qualifying-type */
         color: #aaaaaa;
         cursor: default;
         pointer-events: none;

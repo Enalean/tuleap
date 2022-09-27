@@ -166,7 +166,7 @@ textarea.not_resizable {
 .parent-of-immutable,
 .parent-of-whitelist {
     > .children > .tag {
-        &:not(.parent-of-whitelist):not(.parent-of-immutable) {
+        &:not(.parent-of-whitelist, .parent-of-immutable) {
             display: none;
 
             &.immutable,

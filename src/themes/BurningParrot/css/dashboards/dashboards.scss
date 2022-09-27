@@ -232,7 +232,7 @@ body.gu-unselectable {
         @include widget-placeholder(50%, auto, 50%, "column");
     }
 
-    .dashboard-widgets-row:not(.one-column) .dashboard-widget:not(.gu-mirror):not(.gu-transit) {
+    .dashboard-widgets-row:not(.one-column) .dashboard-widget:not(.gu-mirror, .gu-transit) {
         position: relative;
 
         &::after {
