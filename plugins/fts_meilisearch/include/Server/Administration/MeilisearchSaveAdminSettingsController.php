@@ -32,6 +32,7 @@ use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\FullTextSearchMeilisearch\Server\IProvideCurrentKeyForLocalServer;
 use Tuleap\FullTextSearchMeilisearch\Server\MeilisearchAPIKeyValidator;
+use Tuleap\FullTextSearchMeilisearch\Server\MeilisearchIndexNameValidator;
 use Tuleap\FullTextSearchMeilisearch\Server\MeilisearchServerURLValidator;
 use Tuleap\FullTextSearchMeilisearch\Server\RemoteMeilisearchServerSettings;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -47,6 +48,7 @@ final class MeilisearchSaveAdminSettingsController extends DispatchablePSR15Comp
         private ConfigSet $config_set,
         private MeilisearchServerURLValidator $server_url_validator,
         private MeilisearchAPIKeyValidator $api_key_validator,
+        private MeilisearchIndexNameValidator $index_name_validator,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
@@ -67,16 +69,19 @@ final class MeilisearchSaveAdminSettingsController extends DispatchablePSR15Comp
         $body       = $request->getParsedBody();
         $server_url = (string) ($body['server_url'] ?? '');
         $api_key    = new ConcealedString((string) ($body['api_key'] ?? ''));
+        $index_name = (string) ($body['index_name'] ?? '');
 
         try {
             $this->server_url_validator->checkIsValid($server_url);
             $this->api_key_validator->checkIsValid($api_key);
+            $this->index_name_validator->checkIsValid($index_name);
         } catch (InvalidConfigKeyValueException $exception) {
             throw new ForbiddenException();
         }
 
         $this->config_set->set(RemoteMeilisearchServerSettings::URL, $server_url);
         $this->config_set->set(RemoteMeilisearchServerSettings::API_KEY, $api_key);
+        $this->config_set->set(RemoteMeilisearchServerSettings::INDEX_NAME, $index_name);
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);

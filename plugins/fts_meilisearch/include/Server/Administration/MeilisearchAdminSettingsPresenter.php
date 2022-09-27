@@ -32,6 +32,7 @@ final class MeilisearchAdminSettingsPresenter
     public function __construct(
         public string $server_url,
         public bool $has_existing_key,
+        public string $index_name,
         public CSRFSynchronizerTokenPresenter $csrf_token,
     ) {
     }

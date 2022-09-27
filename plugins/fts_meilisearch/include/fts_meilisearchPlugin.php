@@ -138,6 +138,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
             new MeilisearchAdminSettingsPresenter(
                 ForgeConfig::get(RemoteMeilisearchServerSettings::URL, ''),
                 ForgeConfig::exists(RemoteMeilisearchServerSettings::API_KEY),
+                ForgeConfig::get(RemoteMeilisearchServerSettings::INDEX_NAME),
                 \Tuleap\CSRFSynchronizerTokenPresenter::fromToken(self::buildCSRFTokenAdmin()),
             )
         );
@@ -156,6 +157,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
             new \Tuleap\Config\ConfigSet(EventManager::instance(), new \Tuleap\Config\ConfigDao()),
             \Tuleap\FullTextSearchMeilisearch\Server\MeilisearchServerURLValidator::buildSelf(),
             \Tuleap\FullTextSearchMeilisearch\Server\MeilisearchAPIKeyValidator::buildSelf(),
+            \Tuleap\FullTextSearchMeilisearch\Server\MeilisearchIndexNameValidator::buildSelf(),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(\Tuleap\Http\HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
             new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
             new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
