@@ -45,6 +45,7 @@ final class SearchResultEntryRepresentation
         public ?string $icon,
         public MinimalProjectRepresentation $project,
         public array $quick_links,
+        public ?string $cropped_content,
     ) {
     }
 
@@ -64,7 +65,8 @@ final class SearchResultEntryRepresentation
             $entry->small_icon?->getInlineString(),
             $entry->normal_icon?->getInlineString(),
             new MinimalProjectRepresentation($entry->project),
-            $quick_links
+            $quick_links,
+            $entry->cropped_content,
         );
     }
 }

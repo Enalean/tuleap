@@ -497,6 +497,11 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
 
 .switch-to-search-results-list {
     margin: 0 0 0 calc(-1 * $content-text-spacing-left);
+
+    > .switch-to-item-entry {
+        margin: 0 0 calc(var(--tlp-medium-spacing) / 2);
+        padding-bottom: calc(var(--tlp-medium-spacing) / 2);
+    }
 }
 
 .switch-to-search-results-list-has-more {

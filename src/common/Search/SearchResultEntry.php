@@ -43,6 +43,7 @@ final class SearchResultEntry
         public string $icon_name,
         public \Project $project,
         public array $quick_links,
+        public ?string $cropped_content,
     ) {
     }
 }

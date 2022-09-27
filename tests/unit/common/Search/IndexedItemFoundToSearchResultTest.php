@@ -31,7 +31,7 @@ final class IndexedItemFoundToSearchResultTest extends TestCase
     public function testCanProvideASearchResultForAnIdentifiedIndexedItem(): void
     {
         $user  = UserTestBuilder::buildWithDefaults();
-        $event = new IndexedItemFoundToSearchResult([1, new IndexedItemFound('type', ['a' => 'a'])], $user);
+        $event = new IndexedItemFoundToSearchResult([1, new IndexedItemFound('type', ['a' => 'a'], null)], $user);
 
         $search_result = self::buildSearchResultEntry();
         $event->addSearchResult(1, $search_result);
@@ -42,7 +42,7 @@ final class IndexedItemFoundToSearchResultTest extends TestCase
 
     public function testCannotProvideASearchResultAtAPriorityThatDoesNotExist(): void
     {
-        $event = new IndexedItemFoundToSearchResult([1, new IndexedItemFound('type', ['a' => 'a'])], UserTestBuilder::buildWithDefaults());
+        $event = new IndexedItemFoundToSearchResult([1, new IndexedItemFound('type', ['a' => 'a'], null)], UserTestBuilder::buildWithDefaults());
 
         $this->expectException(\LogicException::class);
         $event->addSearchResult(2, self::buildSearchResultEntry());
@@ -50,7 +50,7 @@ final class IndexedItemFoundToSearchResultTest extends TestCase
 
     public function testCannotOverwriteASearchResultAtAGivenPriority(): void
     {
-        $event = new IndexedItemFoundToSearchResult([1, new IndexedItemFound('type', ['a' => 'a'])], UserTestBuilder::buildWithDefaults());
+        $event = new IndexedItemFoundToSearchResult([1, new IndexedItemFound('type', ['a' => 'a'], null)], UserTestBuilder::buildWithDefaults());
 
         $event->addSearchResult(1, self::buildSearchResultEntry());
         $this->expectException(\LogicException::class);
@@ -59,6 +59,17 @@ final class IndexedItemFoundToSearchResultTest extends TestCase
 
     private static function buildSearchResultEntry(): SearchResultEntry
     {
-        return new SearchResultEntry(null, '/', 'Title', 'Color', null, null, 'icon_name', ProjectTestBuilder::aProject()->build(), []);
+        return new SearchResultEntry(
+            null,
+            '/',
+            'Title',
+            'Color',
+            null,
+            null,
+            'icon_name',
+            ProjectTestBuilder::aProject()->build(),
+            [],
+            null,
+        );
     }
 }

@@ -75,6 +75,10 @@
                 {{ $gettext("Content matches:") }}
                 <mark class="tlp-mark-on-dark-background">{{ keywords }}</mark>
             </span>
+            <span v-if="has_cropped_content">
+                |
+                <highlight-matching-text v-bind:text="entry.cropped_content" />
+            </span>
         </div>
     </div>
 </template>
@@ -99,10 +103,18 @@ const has_quick_links = ref<boolean>(props.entry.quick_links.length > 0);
 
 const { keywords, is_in_search_mode } = storeToRefs(useRootStore());
 
+const has_cropped_content = computed(
+    (): boolean => props.entry.cropped_content && props.entry.cropped_content.trim().length > 0
+);
+
 const matching_words_in_xref = ref<number>(0);
 const matching_words_in_title = ref<number>(0);
 const should_display_content_matches = computed((): boolean => {
     if (!is_in_search_mode.value) {
+        return false;
+    }
+
+    if (has_cropped_content.value) {
         return false;
     }
 

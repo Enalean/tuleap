@@ -131,7 +131,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
     /**
      * @return IndexedItemFound[]
      */
-    public function searchMatchingResultsByItemIDs(array $item_ids): array
+    public function searchMatchingResultsByItemIDs(array $item_ids, array $cropped_content_by_id): array
     {
         $ids_statement = EasyStatement::open()->in('plugin_fts_meilisearch_item.id IN (?*)', $item_ids);
         /** @psalm-var array<int,string> $type_rows_by_id */
@@ -172,7 +172,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
                 continue;
             }
 
-            $results[] = new IndexedItemFound($type, $metadata_key_value);
+            $results[] = new IndexedItemFound($type, $metadata_key_value, $cropped_content_by_id[$item_id] ?? null);
         }
 
         return $results;

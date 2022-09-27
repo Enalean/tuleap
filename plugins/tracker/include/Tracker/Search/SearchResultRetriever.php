@@ -55,17 +55,15 @@ class SearchResultRetriever
     private function processIndexedItem(\PFUser $user, IndexedItemFound $indexed_item): ?SearchResultEntry
     {
         return match ($indexed_item->type) {
-            FieldContentIndexer::INDEX_TYPE_FIELD_CONTENT => $this->processIndexedFieldContentItem($user, $indexed_item->metadata),
-            ChangesetCommentIndexer::INDEX_TYPE_CHANGESET_COMMENT => $this->processChangesetCommentItem($user, $indexed_item->metadata),
+            FieldContentIndexer::INDEX_TYPE_FIELD_CONTENT => $this->processIndexedFieldContentItem($user, $indexed_item),
+            ChangesetCommentIndexer::INDEX_TYPE_CHANGESET_COMMENT => $this->processChangesetCommentItem($user, $indexed_item),
             default => null
         };
     }
 
-    /**
-     * @param non-empty-array<non-empty-string,string> $metadata
-     */
-    private function processIndexedFieldContentItem(\PFUser $user, array $metadata): ?SearchResultEntry
+    private function processIndexedFieldContentItem(\PFUser $user, IndexedItemFound $indexed_item): ?SearchResultEntry
     {
+        $metadata = $indexed_item->metadata;
         if (! isset($metadata['artifact_id'], $metadata['field_id'])) {
             return null;
         }
@@ -80,11 +78,12 @@ class SearchResultRetriever
             return null;
         }
 
-        return $this->buildSearchResultEntry($user, $artifact);
+        return $this->buildSearchResultEntry($user, $artifact, $indexed_item->cropped_content);
     }
 
-    private function processChangesetCommentItem(\PFUser $user, array $metadata): ?SearchResultEntry
+    private function processChangesetCommentItem(\PFUser $user, IndexedItemFound $indexed_item): ?SearchResultEntry
     {
+        $metadata = $indexed_item->metadata;
         if (! isset($metadata['artifact_id'])) {
             return null;
         }
@@ -94,10 +93,10 @@ class SearchResultRetriever
             return null;
         }
 
-        return $this->buildSearchResultEntry($user, $artifact);
+        return $this->buildSearchResultEntry($user, $artifact, $indexed_item->cropped_content);
     }
 
-    private function buildSearchResultEntry(\PFUser $user, Artifact $artifact): SearchResultEntry
+    private function buildSearchResultEntry(\PFUser $user, Artifact $artifact, ?string $cropped_content): SearchResultEntry
     {
         $collection = $this->event_dispatcher->dispatch(new SwitchToLinksCollection($artifact, $user));
         $tracker    = $artifact->getTracker();
@@ -111,7 +110,8 @@ class SearchResultRetriever
             $this->glyph_finder->get('tuleap-tracker'),
             $collection->getIconName(),
             $tracker->getProject(),
-            $collection->getQuickLinks()
+            $collection->getQuickLinks(),
+            $cropped_content
         );
     }
 }
