@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const config = {
+export const config: CKEDITOR.config = {
     toolbar: [
         ["Bold", "Italic"],
         ["NumberedList", "BulletedList", "-", "Blockquote", "Styles", "Format"],
@@ -25,8 +25,8 @@ export const config = {
         ["Source"],
     ],
     stylesSet: [
-        { name: "Bold", element: "strong", overrides: "b" },
-        { name: "Italic", element: "em", overrides: "i" },
+        { name: "Bold", element: "strong", overrides: { b: true } },
+        { name: "Italic", element: "em", overrides: { i: true } },
         { name: "Code", element: "code" },
         { name: "Subscript", element: "sub" },
         { name: "Superscript", element: "sup" },
