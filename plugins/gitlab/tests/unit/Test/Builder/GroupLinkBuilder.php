@@ -52,9 +52,21 @@ final class GroupLinkBuilder
         return $this;
     }
 
+    public function withBranchPrefix(string $branch_prefix): self
+    {
+        $this->branch_prefix = $branch_prefix;
+        return $this;
+    }
+
     public function withNoBranchPrefix(): self
     {
         $this->branch_prefix = null;
+        return $this;
+    }
+
+    public function withProjectId(int $project_id): self
+    {
+        $this->project_id = $project_id;
         return $this;
     }
 

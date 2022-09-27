@@ -20,29 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\REST\v1;
+namespace Tuleap\Gitlab\Group;
 
-use Luracast\Restler\RestException;
-use Tuleap\Gitlab\Core\ProjectNotFoundFault;
-use Tuleap\Gitlab\Group\GroupLinkNotFoundFault;
-use Tuleap\Gitlab\Group\InvalidBranchPrefixFault;
-use Tuleap\Gitlab\Permission\UserIsNotGitAdministratorFault;
 use Tuleap\NeverThrow\Fault;
 
-final class FaultMapper
+/**
+ * @psalm-immutable
+ */
+final class GroupLinkNotFoundFault extends \Tuleap\NeverThrow\Fault
 {
-    /**
-     * @psalm-return never-return
-     * @throws RestException
-     */
-    public static function mapToRestException(Fault $fault): void
+    public static function fromId(int $group_link_id): Fault
     {
-        $status_code = match ($fault::class) {
-            ProjectNotFoundFault::class, GroupLinkNotFoundFault::class => 404,
-            UserIsNotGitAdministratorFault::class => 403,
-            InvalidBranchPrefixFault::class => 400,
-            default => 500,
-        };
-        throw new RestException($status_code, (string) $fault);
+        return new self(sprintf('GitLab group link with id #%d not found', $group_link_id));
     }
 }

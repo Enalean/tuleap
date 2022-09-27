@@ -20,29 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\REST\v1;
+namespace Tuleap\Gitlab\Group;
 
-use Luracast\Restler\RestException;
-use Tuleap\Gitlab\Core\ProjectNotFoundFault;
-use Tuleap\Gitlab\Group\GroupLinkNotFoundFault;
-use Tuleap\Gitlab\Group\InvalidBranchPrefixFault;
-use Tuleap\Gitlab\Permission\UserIsNotGitAdministratorFault;
 use Tuleap\NeverThrow\Fault;
 
-final class FaultMapper
+/**
+ * @psalm-immutable
+ */
+final class InvalidBranchPrefixFault extends Fault
 {
-    /**
-     * @psalm-return never-return
-     * @throws RestException
-     */
-    public static function mapToRestException(Fault $fault): void
+    public static function fromBranchPrefix(string $branch_prefix): Fault
     {
-        $status_code = match ($fault::class) {
-            ProjectNotFoundFault::class, GroupLinkNotFoundFault::class => 404,
-            UserIsNotGitAdministratorFault::class => 403,
-            InvalidBranchPrefixFault::class => 400,
-            default => 500,
-        };
-        throw new RestException($status_code, (string) $fault);
+        return new self(sprintf("The branch name prefix '%s' produces invalid git branch names", $branch_prefix));
     }
 }

@@ -22,79 +22,95 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Luracast\Restler\RestException;
-use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPATCHRepresentation;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
+use Tuleap\Gitlab\Test\Stubs\UpdateArtifactClosureOfGroupStub;
+use Tuleap\Gitlab\Test\Stubs\UpdateBranchPrefixOfGroupStub;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class GroupUpdatorTest extends TestCase
 {
-    /**
-     * @var UpdateBranchPrefixOfGroup&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $branch_prefix_dao;
-    /**
-     * @var UpdateArtifactClosureOfGroup&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $artifact_closure_dao;
-    private GitlabGroupPATCHRepresentation $patch_payload;
+    private UpdateBranchPrefixOfGroupStub $branch_prefix_updater;
+    private UpdateArtifactClosureOfGroupStub $artifact_closure_updater;
+    private ?string $branch_prefix;
+    private ?bool $allow_artifact_closure;
 
     protected function setUp(): void
     {
-        $this->branch_prefix_dao    = $this->createMock(UpdateBranchPrefixOfGroup::class);
-        $this->artifact_closure_dao = $this->createMock(UpdateArtifactClosureOfGroup::class);
+        $this->branch_prefix_updater    = UpdateBranchPrefixOfGroupStub::withCallCount();
+        $this->artifact_closure_updater = UpdateArtifactClosureOfGroupStub::withCallCount();
 
-        $this->patch_payload = GitlabGroupPATCHRepresentation::build('dev/', true);
+        $this->branch_prefix          = 'dev/';
+        $this->allow_artifact_closure = true;
     }
 
-    private function updateGroupLink(): void
+    private function updateGroupLink(): Ok|Err
     {
-        $group_link = GroupLinkBuilder::aGroupLink(1)
+        $group_link_id  = 1;
+        $update_command = new UpdateGroupLinkCommand(
+            $group_link_id,
+            $this->branch_prefix,
+            $this->allow_artifact_closure,
+            UserTestBuilder::buildWithDefaults()
+        );
+
+        $group_link = GroupLinkBuilder::aGroupLink($group_link_id)
             ->withAllowArtifactClosure(true)
             ->withNoBranchPrefix()
             ->build();
 
-        $updator = new GroupUpdator($this->branch_prefix_dao, $this->artifact_closure_dao);
-
-        $updator->updateGroupLinkFromPATCHRequest($group_link, $this->patch_payload);
+        $updator = new GroupUpdator($this->branch_prefix_updater, $this->artifact_closure_updater);
+        return $updator->updateGroupLink($group_link, $update_command);
     }
 
     public function testItAsksToSaveThePrefix(): void
     {
-        $this->patch_payload = GitlabGroupPATCHRepresentation::build('prefix', null);
+        $this->branch_prefix          = 'prefix';
+        $this->allow_artifact_closure = null;
 
-        $this->branch_prefix_dao->expects(self::once())->method("updateBranchPrefixOfGroupLink");
-        $this->updateGroupLink();
+        $result = $this->updateGroupLink();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(1, $this->branch_prefix_updater->getCallCount());
     }
 
     public function testItDoesNotAskToSaveThePrefixIfNoPrefixProvided(): void
     {
-        $this->patch_payload = GitlabGroupPATCHRepresentation::build(null, null);
+        $this->branch_prefix          = null;
+        $this->allow_artifact_closure = null;
 
-        $this->branch_prefix_dao->expects(self::never())->method("updateBranchPrefixOfGroupLink");
-        $this->updateGroupLink();
+        $result = $this->updateGroupLink();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(0, $this->branch_prefix_updater->getCallCount());
     }
 
-    public function testItThrowsAnExceptionIfPrefixIsNotValid(): void
+    public function testItReturnsAFaultIfPrefixIsNotValid(): void
     {
-        $this->patch_payload = GitlabGroupPATCHRepresentation::build("not_valid[[[~~~prefix", null);
+        $this->branch_prefix          = "not_valid[[[~~~prefix";
+        $this->allow_artifact_closure = null;
 
-        $this->expectException(RestException::class);
-        $this->updateGroupLink();
+        $result = $this->updateGroupLink();
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(InvalidBranchPrefixFault::class, $result->error);
     }
 
     public function testItAsksToSaveTheArtifactClosure(): void
     {
-        $this->patch_payload = GitlabGroupPATCHRepresentation::build(null, true);
+        $this->branch_prefix          = null;
+        $this->allow_artifact_closure = true;
 
-        $this->artifact_closure_dao->expects(self::once())->method("updateArtifactClosureOfGroupLink");
-        $this->updateGroupLink();
+        $result = $this->updateGroupLink();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(1, $this->artifact_closure_updater->getCallCount());
     }
 
     public function testItAsksToSaveBothPrefixAndArtifactClosure(): void
     {
-        $this->branch_prefix_dao->expects(self::once())->method("updateBranchPrefixOfGroupLink");
-        $this->artifact_closure_dao->expects(self::once())->method("updateArtifactClosureOfGroupLink");
-        $this->updateGroupLink();
+        $result = $this->updateGroupLink();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(1, $this->branch_prefix_updater->getCallCount());
+        self::assertSame(1, $this->artifact_closure_updater->getCallCount());
     }
 }
