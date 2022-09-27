@@ -436,6 +436,7 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Summary: Full-Text search DB backend
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
+Conflicts: tuleap-plugin-fts-meilisearch
 %description plugin-fts-db
 %{summary}.
 
@@ -443,6 +444,7 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
 Summary: Full-Text search Meilisearch backend
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
+Conflicts: tuleap-plugin-fts-db
 %description plugin-fts-meilisearch
 %{summary}.
 
