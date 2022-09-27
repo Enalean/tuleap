@@ -156,6 +156,8 @@ export const useFullTextStore = defineStore("fulltext", () => {
                 navigation_store.setProgrammaticallyFocusedElement(
                     root_store.filtered_projects[root_store.filtered_projects.length - 1]
                 );
+            } else {
+                navigation_store.setProgrammaticallyFocusedElement(null);
             }
             return;
         }

@@ -577,6 +577,49 @@ describe("FullText Store", () => {
                     another_project
                 );
             });
+
+            it("should focus the filter input if the first search result has already the focus and there is no recent items and there is no projects", () => {
+                const first_search_result = {
+                    title: "first search result",
+                    html_url: "/first-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+                const second_search_result = {
+                    title: "second search result",
+                    html_url: "/second-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+
+                const fts = useFullTextStore();
+                fts.$patch({
+                    fulltext_search_url: "/search",
+                    fulltext_search_is_available: true,
+                    fulltext_search_results: {
+                        "/first-search-result": first_search_result,
+                        "/second-search-result": second_search_result,
+                    },
+                });
+
+                const store = useRootStore();
+                store.$patch({
+                    history: {
+                        entries: [],
+                    },
+                    projects: [],
+                    filter_value: "lorem",
+                });
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
+                    programmatically_focused_element: first_search_result,
+                });
+
+                fts.changeFocusFromSearchResult({
+                    entry: first_search_result,
+                    key: "ArrowUp",
+                });
+
+                expect(navigation_store.programmatically_focused_element).toBeNull();
+            });
         });
 
         describe("When user hits ArrowDown", () => {

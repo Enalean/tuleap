@@ -24,6 +24,10 @@ import SwitchToFilter from "./SwitchToFilter.vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { Project } from "../../type";
+import { ARE_RESTRICTED_USERS_ALLOWED } from "../../injection-keys";
+import { useKeyboardNavigationStore } from "../../stores/keyboard-navigation";
+import type { KeyboardNavigationState } from "../../stores/type";
 
 jest.useFakeTimers();
 
@@ -95,5 +99,65 @@ describe("SwitchToFilter", () => {
 
         expect(useRootStore().updateFilterValue).toHaveBeenCalledWith("");
         expect(hide).toHaveBeenCalled();
+    });
+
+    it("Changes the focus with arrow down key", async () => {
+        const wrapper = shallowMount(SwitchToFilter, {
+            props: {
+                modal,
+            },
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "abc",
+                        },
+                    },
+                })
+            ),
+        });
+
+        await wrapper.trigger("keyup", { key: "ArrowDown" });
+
+        expect(useKeyboardNavigationStore().changeFocusFromFilterInput).toHaveBeenCalled();
+    });
+
+    it("Forces the focus from the outside", async () => {
+        const project = {
+            is_public: true,
+            project_name: "Guinea Pig",
+            project_uri: "/pojects/gpig",
+        } as Project;
+
+        const wrapper = shallowMount(SwitchToFilter, {
+            props: {
+                modal,
+            },
+            global: {
+                ...getGlobalTestOptions(
+                    createTestingPinia({
+                        initialState: {
+                            "keyboard-navigation": {
+                                programmatically_focused_element: project,
+                            } as KeyboardNavigationState,
+                        },
+                    })
+                ),
+                provide: {
+                    [ARE_RESTRICTED_USERS_ALLOWED as symbol]: true,
+                },
+            },
+        });
+
+        const input = wrapper.find("[data-test=switch-to-filter]");
+        if (!(input.element instanceof HTMLInputElement)) {
+            throw Error("Unable to find the input");
+        }
+
+        const focus = jest.spyOn(input.element, "focus");
+
+        await useKeyboardNavigationStore().$patch({ programmatically_focused_element: null });
+
+        expect(focus).toHaveBeenCalled();
     });
 });

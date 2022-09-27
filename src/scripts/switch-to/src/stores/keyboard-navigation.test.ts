@@ -596,7 +596,7 @@ describe("Keyboard navigation store", () => {
             });
 
             describe("When user hits ArrowUp", () => {
-                it("does nothing if the project list is empty", () => {
+                it("focus the filter input if the project list is empty", () => {
                     const project = {
                         project_name: "Guinea Pig",
                     } as Project;
@@ -615,12 +615,10 @@ describe("Keyboard navigation store", () => {
                         key: "ArrowUp",
                     });
 
-                    expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        project
-                    );
+                    expect(navigation_store.programmatically_focused_element).toBeNull();
                 });
 
-                it("does nothing if the project list contains only one element", () => {
+                it("focus the filter input if the project list contains only one element", () => {
                     const project = {
                         project_name: "Guinea Pig",
                         project_uri: "/guinea-pig",
@@ -640,9 +638,7 @@ describe("Keyboard navigation store", () => {
                         key: "ArrowUp",
                     });
 
-                    expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        project
-                    );
+                    expect(navigation_store.programmatically_focused_element).toBeNull();
                 });
 
                 it("goes up", () => {
@@ -674,7 +670,7 @@ describe("Keyboard navigation store", () => {
                     );
                 });
 
-                it("does nothing if the first project has already the focus", () => {
+                it("focus the filter input if the first project has already the focus", () => {
                     const first_project = {
                         project_uri: "/first",
                         project_name: "First",
@@ -698,9 +694,7 @@ describe("Keyboard navigation store", () => {
                         key: "ArrowUp",
                     });
 
-                    expect(navigation_store.programmatically_focused_element).toStrictEqual(
-                        first_project
-                    );
+                    expect(navigation_store.programmatically_focused_element).toBeNull();
                 });
             });
 
@@ -1243,6 +1237,37 @@ describe("Keyboard navigation store", () => {
                         another_project
                     );
                 });
+
+                it("should focus the filter input if the first recent item has already the focus and we are searching for something and there is no project", () => {
+                    const first_entry = {
+                        html_url: "/first-entry",
+                        title: "a lorem",
+                    } as ItemDefinition;
+                    const another_entry = {
+                        html_url: "/another-entry",
+                        title: "b lorem",
+                    } as ItemDefinition;
+
+                    const store = useRootStore();
+                    store.$patch({
+                        history: {
+                            entries: [first_entry, another_entry],
+                        },
+                        projects: [],
+                        filter_value: "lorem",
+                    });
+                    const navigation_store = useKeyboardNavigationStore();
+                    navigation_store.$patch({
+                        programmatically_focused_element: first_entry,
+                    });
+
+                    navigation_store.changeFocusFromHistory({
+                        entry: first_entry,
+                        key: "ArrowUp",
+                    });
+
+                    expect(navigation_store.programmatically_focused_element).toBeNull();
+                });
             });
 
             describe("When user hits ArrowDown", () => {
@@ -1381,6 +1406,98 @@ describe("Keyboard navigation store", () => {
                 store.setProgrammaticallyFocusedElement(quick_link);
 
                 expect(store.programmatically_focused_element).toStrictEqual(quick_link);
+            });
+        });
+
+        describe("changeFocusFromFilterInput", () => {
+            it("should focus the first project", () => {
+                const first_project = {
+                    project_uri: "/first",
+                    project_name: "First lorem",
+                } as Project;
+                const another_project = {
+                    project_uri: "/another",
+                    project_name: "Another lorem",
+                } as Project;
+
+                const first_entry = {
+                    html_url: "/first-entry",
+                    title: "a lorem",
+                } as ItemDefinition;
+                const another_entry = {
+                    html_url: "/another-entry",
+                    title: "b lorem",
+                } as ItemDefinition;
+
+                const store = useRootStore();
+                store.$patch({
+                    history: {
+                        entries: [first_entry, another_entry],
+                    },
+                    projects: [first_project, another_project],
+                    filter_value: "lorem",
+                });
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
+                    programmatically_focused_element: null,
+                });
+
+                navigation_store.changeFocusFromFilterInput();
+
+                expect(navigation_store.programmatically_focused_element).toStrictEqual(
+                    first_project
+                );
+            });
+
+            it("should focus the first recent item if there is no project", () => {
+                const first_entry = {
+                    html_url: "/first-entry",
+                    title: "a lorem",
+                } as ItemDefinition;
+                const another_entry = {
+                    html_url: "/another-entry",
+                    title: "b lorem",
+                } as ItemDefinition;
+
+                const store = useRootStore();
+                store.$patch({
+                    history: {
+                        entries: [first_entry, another_entry],
+                    },
+                    projects: [],
+                    filter_value: "lorem",
+                    is_history_loaded: true,
+                });
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
+                    programmatically_focused_element: null,
+                });
+
+                navigation_store.changeFocusFromFilterInput();
+
+                expect(navigation_store.programmatically_focused_element).toStrictEqual(
+                    first_entry
+                );
+            });
+
+            it("should focus the first search result if there is no project and there is no recent item", () => {
+                const store = useRootStore();
+                store.$patch({
+                    history: {
+                        entries: [],
+                    },
+                    projects: [],
+                    filter_value: "lorem",
+                    is_history_loaded: true,
+                });
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
+                    programmatically_focused_element: null,
+                });
+
+                navigation_store.changeFocusFromFilterInput();
+
+                expect(focusFirstSearchResult).toHaveBeenCalled();
             });
         });
     });
