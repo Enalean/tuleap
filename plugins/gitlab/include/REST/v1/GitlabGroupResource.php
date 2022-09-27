@@ -48,11 +48,14 @@ use Tuleap\Gitlab\Core\ProjectRetriever;
 use Tuleap\Gitlab\Group\GitlabGroupDAO;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\GroupCreator;
+use Tuleap\Gitlab\Group\GroupLinkRetriever;
+use Tuleap\Gitlab\Group\GroupLinkUpdateHandler;
 use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Group\GroupUpdator;
 use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
 use Tuleap\Gitlab\Group\Token\GroupTokenInserter;
+use Tuleap\Gitlab\Group\UpdateGroupLinkCommand;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
@@ -240,30 +243,26 @@ final class GitlabGroupResource
     ): GitlabGroupLinkRepresentation {
         $this->optionsId($id);
 
-        $group_dao = new GitlabGroupDAO();
-        $retriever = new ProjectRetriever(ProjectManager::instance());
-        $checker   = new GitAdministratorChecker($this->getGitPermissionsManager());
-
-        $current_user      = UserManager::instance()->getCurrentUser();
-        $gitlab_group_link = $group_dao->retrieveGroupLink($id);
-        if (! $gitlab_group_link) {
-            throw new RestException(404, "GitLab group link not found");
-        }
-
-        return $retriever->retrieveProject($gitlab_group_link->project_id)
-            ->andThen(fn(\Project $project) => $checker->checkUserIsGitAdministrator($project, $current_user))
-            ->match(function () use ($gitlab_group_link, $gitlab_group_link_representation, $group_dao) {
-                (new GroupUpdator($group_dao, $group_dao))->updateGroupLinkFromPATCHRequest(
-                    $gitlab_group_link,
-                    $gitlab_group_link_representation
-                );
-
-                $updated_gitlab_group_link = $group_dao->retrieveGroupLink($gitlab_group_link->id);
-                if (! $updated_gitlab_group_link) {
-                    throw new RestException(500, "Did not find the GitLab group link we've just updated");
-                }
-                return GitlabGroupLinkRepresentation::buildFromObject($updated_gitlab_group_link);
-            }, [FaultMapper::class, 'mapToRestException']);
+        $current_user = UserManager::instance()->getCurrentUser();
+        $group_dao    = new GitlabGroupDAO();
+        $handler      = new GroupLinkUpdateHandler(
+            new ProjectRetriever(\ProjectManager::instance()),
+            new GitAdministratorChecker($this->getGitPermissionsManager()),
+            new GroupLinkRetriever($group_dao),
+            new GroupUpdator($group_dao, $group_dao)
+        );
+        return $handler->handleGroupLinkUpdate(
+            new UpdateGroupLinkCommand(
+                $id,
+                $gitlab_group_link_representation->create_branch_prefix,
+                $gitlab_group_link_representation->allow_artifact_closure,
+                $current_user
+            )
+        )
+            ->match(
+                [GitlabGroupLinkRepresentation::class, 'buildFromObject'],
+                [FaultMapper::class, 'mapToRestException']
+            );
     }
 
     private function getGitPermissionsManager(): GitPermissionsManager

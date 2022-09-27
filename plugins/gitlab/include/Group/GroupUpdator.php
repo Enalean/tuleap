@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Luracast\Restler\RestException;
 use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Branch\InvalidBranchNameException;
-use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPATCHRepresentation;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 final class GroupUpdator
 {
@@ -38,58 +40,46 @@ final class GroupUpdator
     }
 
     /**
-     * @throws RestException
+     * @return Ok<null> | Err<Fault>
      */
-    public function updateGroupLinkFromPATCHRequest(
+    public function updateGroupLink(
         GroupLink $gitlab_group_link,
-        GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
-    ): void {
-        $this->updateBranchPrefixOfGroupLinkFromPATCHRequest(
-            $gitlab_group_link,
-            $gitlab_group_link_representation,
-        );
-        $this->updateArtifactClosureOfGroupLinkFromPATCHRequest(
-            $gitlab_group_link,
-            $gitlab_group_link_representation,
-        );
+        UpdateGroupLinkCommand $command,
+    ): Ok|Err {
+        return $this->updateBranchPrefixOfGroupLink($gitlab_group_link, $command)
+            ->map(fn() => $this->updateArtifactClosureOfGroupLink($gitlab_group_link, $command));
     }
 
     /**
-     * @throws RestException
+     * @return Ok<null> | Err<Fault>
      */
-    private function updateBranchPrefixOfGroupLinkFromPATCHRequest(
+    private function updateBranchPrefixOfGroupLink(
         GroupLink $gitlab_group_link,
-        GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
-    ): void {
-        $prefix_branch_name = $gitlab_group_link_representation->create_branch_prefix;
+        UpdateGroupLinkCommand $command,
+    ): Ok|Err {
+        $prefix_branch_name = $command->branch_prefix;
 
         if ($prefix_branch_name === null) {
-            return;
+            return Result::ok(null);
         }
 
         try {
             BranchName::fromBranchNameShortHand($prefix_branch_name . self::FAKE_BRANCH_NAME);
-
-            $this->update_branch_prefix_of_group->updateBranchPrefixOfGroupLink(
-                $gitlab_group_link->id,
-                $prefix_branch_name,
-            );
-        } catch (InvalidBranchNameException $exception) {
-            throw new RestException(
-                400,
-                sprintf(
-                    "The branch name prefix '%s' produces invalid git branch names",
-                    $prefix_branch_name
-                )
-            );
+        } catch (InvalidBranchNameException) {
+            return Result::err(InvalidBranchPrefixFault::fromBranchPrefix($prefix_branch_name));
         }
+        $this->update_branch_prefix_of_group->updateBranchPrefixOfGroupLink(
+            $gitlab_group_link->id,
+            $prefix_branch_name,
+        );
+        return Result::ok(null);
     }
 
-    private function updateArtifactClosureOfGroupLinkFromPATCHRequest(
+    private function updateArtifactClosureOfGroupLink(
         GroupLink $gitlab_group_link,
-        GitlabGroupPATCHRepresentation $gitlab_group_link_representation,
+        UpdateGroupLinkCommand $command,
     ): void {
-        $allow_artifact_closure = $gitlab_group_link_representation->allow_artifact_closure;
+        $allow_artifact_closure = $command->allow_artifact_closure;
 
         if ($allow_artifact_closure === null) {
             return;

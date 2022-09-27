@@ -20,29 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\REST\v1;
+namespace Tuleap\Gitlab\Test\Stubs;
 
-use Luracast\Restler\RestException;
-use Tuleap\Gitlab\Core\ProjectNotFoundFault;
-use Tuleap\Gitlab\Group\GroupLinkNotFoundFault;
-use Tuleap\Gitlab\Group\InvalidBranchPrefixFault;
-use Tuleap\Gitlab\Permission\UserIsNotGitAdministratorFault;
-use Tuleap\NeverThrow\Fault;
+use Tuleap\Gitlab\Group\GroupLink;
 
-final class FaultMapper
+final class RetrieveGroupLinkStub implements \Tuleap\Gitlab\Group\RetrieveGroupLink
 {
     /**
-     * @psalm-return never-return
-     * @throws RestException
+     * @param GroupLink[] $return_values
      */
-    public static function mapToRestException(Fault $fault): void
+    private function __construct(private array $return_values)
     {
-        $status_code = match ($fault::class) {
-            ProjectNotFoundFault::class, GroupLinkNotFoundFault::class => 404,
-            UserIsNotGitAdministratorFault::class => 403,
-            InvalidBranchPrefixFault::class => 400,
-            default => 500,
-        };
-        throw new RestException($status_code, (string) $fault);
+    }
+
+    /**
+     * @no-named-arguments
+     */
+    public static function withSuccessiveGroupLinks(GroupLink $first_group_link, GroupLink ...$other_group_links): self
+    {
+        return new self([$first_group_link, ...$other_group_links]);
+    }
+
+    public function retrieveGroupLink(int $gitlab_group_link_id): ?GroupLink
+    {
+        if (count($this->return_values) > 0) {
+            return array_shift($this->return_values);
+        }
+        throw new \LogicException('No group link configured');
     }
 }

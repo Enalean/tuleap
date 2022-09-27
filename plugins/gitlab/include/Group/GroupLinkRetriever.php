@@ -20,29 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\REST\v1;
+namespace Tuleap\Gitlab\Group;
 
-use Luracast\Restler\RestException;
-use Tuleap\Gitlab\Core\ProjectNotFoundFault;
-use Tuleap\Gitlab\Group\GroupLinkNotFoundFault;
-use Tuleap\Gitlab\Group\InvalidBranchPrefixFault;
-use Tuleap\Gitlab\Permission\UserIsNotGitAdministratorFault;
+use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-final class FaultMapper
+final class GroupLinkRetriever
 {
-    /**
-     * @psalm-return never-return
-     * @throws RestException
-     */
-    public static function mapToRestException(Fault $fault): void
+    public function __construct(private RetrieveGroupLink $group_link_retriever)
     {
-        $status_code = match ($fault::class) {
-            ProjectNotFoundFault::class, GroupLinkNotFoundFault::class => 404,
-            UserIsNotGitAdministratorFault::class => 403,
-            InvalidBranchPrefixFault::class => 400,
-            default => 500,
-        };
-        throw new RestException($status_code, (string) $fault);
+    }
+
+    /**
+     * @return Ok<GroupLink> | Err<Fault>
+     */
+    public function retrieveGroupLink(int $group_link_id): Ok|Err
+    {
+        $group_link = $this->group_link_retriever->retrieveGroupLink($group_link_id);
+        if (! $group_link) {
+            return Result::err(GroupLinkNotFoundFault::fromId($group_link_id));
+        }
+        return Result::ok($group_link);
     }
 }
