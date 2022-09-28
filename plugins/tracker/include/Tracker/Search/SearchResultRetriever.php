@@ -27,9 +27,11 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
 use Tuleap\Search\SearchResultEntry;
+use Tuleap\Search\SearchResultEntryBadge;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
+use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 class SearchResultRetriever
@@ -39,6 +41,7 @@ class SearchResultRetriever
         private \Tracker_FormElementFactory $form_element_factory,
         private EventDispatcherInterface $event_dispatcher,
         private GlyphFinder $glyph_finder,
+        private StatusBadgeBuilder $status_badge_builder,
     ) {
     }
 
@@ -55,8 +58,14 @@ class SearchResultRetriever
     private function processIndexedItem(\PFUser $user, IndexedItemFound $indexed_item): ?SearchResultEntry
     {
         return match ($indexed_item->type) {
-            FieldContentIndexer::INDEX_TYPE_FIELD_CONTENT => $this->processIndexedFieldContentItem($user, $indexed_item),
-            ChangesetCommentIndexer::INDEX_TYPE_CHANGESET_COMMENT => $this->processChangesetCommentItem($user, $indexed_item),
+            FieldContentIndexer::INDEX_TYPE_FIELD_CONTENT => $this->processIndexedFieldContentItem(
+                $user,
+                $indexed_item
+            ),
+            ChangesetCommentIndexer::INDEX_TYPE_CHANGESET_COMMENT => $this->processChangesetCommentItem(
+                $user,
+                $indexed_item
+            ),
             default => null
         };
     }
@@ -96,10 +105,14 @@ class SearchResultRetriever
         return $this->buildSearchResultEntry($user, $artifact, $indexed_item->cropped_content);
     }
 
-    private function buildSearchResultEntry(\PFUser $user, Artifact $artifact, ?string $cropped_content): SearchResultEntry
-    {
+    private function buildSearchResultEntry(
+        \PFUser $user,
+        Artifact $artifact,
+        ?string $cropped_content,
+    ): SearchResultEntry {
         $collection = $this->event_dispatcher->dispatch(new SwitchToLinksCollection($artifact, $user));
         $tracker    = $artifact->getTracker();
+
 
         return new SearchResultEntry(
             $collection->getXRef(),
@@ -111,7 +124,8 @@ class SearchResultRetriever
             $collection->getIconName(),
             $tracker->getProject(),
             $collection->getQuickLinks(),
-            $cropped_content
+            $cropped_content,
+            $this->status_badge_builder->buildBadgesFromArtifactStatus($artifact, static fn(string $label, ?string $color) => new SearchResultEntryBadge($label, $color)),
         );
     }
 }

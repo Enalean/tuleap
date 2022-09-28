@@ -231,6 +231,7 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Search\IndexAllArtifactsProcessor;
+use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -1696,7 +1697,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $visit_retriever = new \Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever(
             new RecentlyVisitedDao(),
             $this->getArtifactFactory(),
-            new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
+            new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
+            new StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
         );
         $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY);
     }
@@ -1722,7 +1724,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $this->getArtifactFactory(),
             $this->getTrackerFormElementFactory(),
             $event_dispatcher,
-            new \Tuleap\Glyph\GlyphFinder($event_dispatcher)
+            new \Tuleap\Glyph\GlyphFinder($event_dispatcher),
+            new StatusBadgeBuilder(\Tracker_Semantic_StatusFactory::instance()),
         );
 
         $retriever->retrieveSearchResult($indexed_item_convertor);

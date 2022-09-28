@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,32 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Search;
-
-use Tuleap\Glyph\Glyph;
-use Tuleap\QuickLink\SwitchToQuickLink;
+namespace Tuleap\User\History;
 
 /**
  * @psalm-immutable
  */
-final class SearchResultEntry
+final class HistoryEntryBadge
 {
-    /**
-     * @param SwitchToQuickLink[]          $quick_links
-     * @param list<SearchResultEntryBadge> $badges
-     */
-    public function __construct(
-        public ?string $xref,
-        public string $link,
-        public string $title,
-        public string $color,
-        public ?Glyph $small_icon,
-        public ?Glyph $normal_icon,
-        public string $icon_name,
-        public \Project $project,
-        public array $quick_links,
-        public ?string $cropped_content,
-        public array $badges,
-    ) {
+    public function __construct(public string $label, public ?string $color)
+    {
     }
 }

@@ -70,6 +70,7 @@ final class IndexedItemFoundToSearchResultTest extends TestCase
             ProjectTestBuilder::aProject()->build(),
             [],
             null,
+            [],
         );
     }
 }

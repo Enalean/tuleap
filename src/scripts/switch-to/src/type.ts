@@ -55,6 +55,11 @@ interface ProjectReference {
     readonly label: string;
 }
 
+export interface ItemBadge {
+    readonly color: string | null;
+    readonly label: string;
+}
+
 export interface ItemDefinition extends ElementWithQuickLinks {
     readonly xref: string | null;
     readonly html_url: string;
@@ -63,6 +68,7 @@ export interface ItemDefinition extends ElementWithQuickLinks {
     readonly icon_name: string;
     readonly project: ProjectReference;
     readonly cropped_content: string | null;
+    readonly badges: ReadonlyArray<ItemBadge>;
 }
 
 export interface UserHistory {

@@ -26,6 +26,7 @@ use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\QuickLink\REST\v1\SwitchToQuickLinkRepresentation;
 use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\Search\SearchResultEntry;
+use Tuleap\Search\SearchResultEntryBadge;
 
 /**
  * @psalm-immutable
@@ -34,6 +35,7 @@ final class SearchResultEntryRepresentation
 {
     /**
      * @param SwitchToQuickLinkRepresentation[] $quick_links
+     * @param list<SearchResultEntryBadge>      $badges
      */
     private function __construct(
         public ?string $xref,
@@ -46,6 +48,7 @@ final class SearchResultEntryRepresentation
         public MinimalProjectRepresentation $project,
         public array $quick_links,
         public ?string $cropped_content,
+        public array $badges,
     ) {
     }
 
@@ -67,6 +70,7 @@ final class SearchResultEntryRepresentation
             new MinimalProjectRepresentation($entry->project),
             $quick_links,
             $entry->cropped_content,
+            $entry->badges,
         );
     }
 }

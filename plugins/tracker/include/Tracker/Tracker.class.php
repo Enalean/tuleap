@@ -1069,7 +1069,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             $visit_retriever            = new VisitRetriever(
                 new RecentlyVisitedDao(),
                 $this->getTrackerArtifactFactory(),
-                new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
+                new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
+                new \Tuleap\Tracker\Artifact\StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
             );
             $recently_visited_artifacts = $visit_retriever->getMostRecentlySeenArtifacts(
                 $current_user,

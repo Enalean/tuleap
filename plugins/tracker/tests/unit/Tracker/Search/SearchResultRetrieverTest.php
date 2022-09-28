@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class SearchResultRetrieverTest extends TestCase
@@ -53,11 +54,18 @@ final class SearchResultRetrieverTest extends TestCase
         $glyph_finder = $this->createStub(GlyphFinder::class);
         $glyph_finder->method('get')->willReturn(null);
 
+        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status->method('getField')->willReturn(null);
+
+        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
+        $status_factory->method('getByTracker')->willReturn($semantic_status);
+
         $this->retriever = new SearchResultRetriever(
             $this->artifact_factory,
             $this->form_element_factory,
             EventDispatcherStub::withIdentityCallback(),
             $glyph_finder,
+            new StatusBadgeBuilder($status_factory)
         );
     }
 
@@ -89,7 +97,8 @@ final class SearchResultRetrieverTest extends TestCase
                     'fa-solid fa-list-ol',
                     $project,
                     [],
-                    "... excerpt ..."
+                    "... excerpt ...",
+                    [],
                 ),
             ],
             $indexed_item_convertor->search_results
@@ -121,7 +130,8 @@ final class SearchResultRetrieverTest extends TestCase
                     'fa-solid fa-list-ol',
                     $project,
                     [],
-                    "... excerpt ..."
+                    "... excerpt ...",
+                    [],
                 ),
             ],
             $indexed_item_convertor->search_results

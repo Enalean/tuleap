@@ -21,32 +21,19 @@
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\User\History\HistoryEntry;
+use Tuleap\User\History\HistoryEntryBadge;
 use Tuleap\User\History\HistoryEntryCollection;
 
 class VisitRetriever
 {
-    /**
-     * @var RecentlyVisitedDao
-     */
-    private $dao;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var GlyphFinder
-     */
-    private $glyph_finder;
-
     public function __construct(
-        RecentlyVisitedDao $dao,
-        \Tracker_ArtifactFactory $artifact_factory,
-        GlyphFinder $glyph_finder,
+        private RecentlyVisitedDao $dao,
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private GlyphFinder $glyph_finder,
+        private StatusBadgeBuilder $status_badge_builder,
     ) {
-        $this->dao              = $dao;
-        $this->artifact_factory = $artifact_factory;
-        $this->glyph_finder     = $glyph_finder;
     }
 
     /**
@@ -103,7 +90,11 @@ class VisitRetriever
                     $this->glyph_finder->get('tuleap-tracker'),
                     $collection->getIconName(),
                     $tracker->getProject(),
-                    $collection->getQuickLinks()
+                    $collection->getQuickLinks(),
+                    $this->status_badge_builder->buildBadgesFromArtifactStatus(
+                        $artifact,
+                        static fn (string $label, ?string $color) => new HistoryEntryBadge($label, $color),
+                    ),
                 )
             );
         }

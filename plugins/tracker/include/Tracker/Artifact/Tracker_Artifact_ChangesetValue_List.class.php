@@ -27,7 +27,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListFullRepresentation;
 class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator
 {
     /**
-     * @var array (of ListValue) the list of list values
+     * @var Tracker_FormElement_Field_List_BindValue[]
      */
     protected $list_values;
 
@@ -50,7 +50,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return int the number of files
      */
-    public function count()
+    public function count(): int
     {
         return count($this->list_values);
     }
@@ -62,7 +62,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return mixed value at given offset
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): Tracker_FormElement_Field_List_BindValue
     {
         return $this->list_values[$offset];
     }
@@ -73,9 +73,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * @param int   $offset to modify
      * @param mixed $value  new value
      *
-     * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->list_values[$offset] = $value;
     }
@@ -87,7 +86,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return bool wether the offset exists
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->list_values[$offset]);
     }
@@ -97,9 +96,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @param int $offset to delete
      *
-     * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->files[$offset]);
     }
@@ -114,10 +112,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
 
     /**
      * spl\Iterator
-     *
-     * @return Tracker_FileInfo the current one
      */
-    public function current()
+    public function current(): Tracker_FormElement_Field_List_BindValue
     {
         return $this->list_values[$this->index];
     }
@@ -127,19 +123,15 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return int the current index
      */
-    public function key()
+    public function key(): int
     {
         return $this->index;
     }
 
     /**
      * spl\Iterator
-     *
-     * Jump to the next Tracker_FileInfo
-     *
-     * @return void
      */
-    public function next()
+    public function next(): void
     {
         $this->index++;
     }
@@ -148,10 +140,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * spl\Iterator
      *
      * Reset the pointer to the start of the collection
-     *
-     * @return Tracker_FileInfo the current one
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
     }
@@ -161,7 +151,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return bool true if the current pointer is valid
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->list_values[$this->index]);
     }
