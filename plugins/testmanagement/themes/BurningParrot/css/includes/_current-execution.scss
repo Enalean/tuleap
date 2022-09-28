@@ -482,7 +482,6 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
 
 .current-test-comment-attachments {
     display: flex;
-    // stylelint-disable-next-line function-calc-no-unspaced-operator
     gap: calc(#{$attachments-gap});
     flex: 0 0 auto;
     flex-direction: column;

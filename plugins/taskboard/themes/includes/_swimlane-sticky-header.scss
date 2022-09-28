@@ -31,7 +31,7 @@
     }
 
     > .taskboard-cell-parent-card {
-        &:not(.taskboard-cell-parent-card-edit-mode):not(.taskboard-cell-parent-card-no-mapping) {
+        &:not(.taskboard-cell-parent-card-edit-mode, .taskboard-cell-parent-card-no-mapping) {
             position: sticky;
             z-index: 9;
             top: calc(

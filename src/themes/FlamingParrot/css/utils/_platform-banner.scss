@@ -34,7 +34,7 @@ body.has-visible-project-banner .platform-banner {
     background: $button-color !important;
 
     &:hover,
-    &:hover:not(.btn-link):not(:disabled) {
+    &:hover:not(.btn-link, :disabled) {
         background: $button-color !important;
     }
 }

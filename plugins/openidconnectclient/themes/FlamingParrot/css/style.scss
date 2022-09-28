@@ -33,7 +33,7 @@
     }
 }
 
-.btn:not(.btn-link):not(.disabled).btn-primary.provider-button {
+.btn:not(.btn-link, .disabled).btn-primary.provider-button {
     @include button-colors.provider-button-colors;
 }
 

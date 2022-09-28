@@ -67,6 +67,7 @@ module.exports = {
             "fr"
         ],
         // Plugins
+        "annotation-no-unknown": [true, { ignoreAnnotations: ["default"] }], // !default is a valid flag in Sass
         "order/properties-alphabetical-order": null, // Overridden by stylelint-config-property-sort-order-smacss
         "scss/at-else-empty-line-before": ["never"],
         "scss/dollar-variable-colon-space-before": null,

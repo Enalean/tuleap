@@ -61,9 +61,9 @@ header {
                 background: none !important;
                 box-shadow: none !important;
 
-                &:hover:not(:disabled):not(.disabled):not(.active),
-                &:focus:not(:disabled):not(.disabled):not(.active),
-                &:active:not(:disabled):not(.disabled):not(.active) {
+                &:hover:not(:disabled, .disabled, .active),
+                &:focus:not(:disabled, .disabled, .active),
+                &:active:not(:disabled, .disabled, .active) {
                     border-color: transparent !important;
                     opacity: 0.7;
                     background: none !important;
@@ -128,9 +128,9 @@ body.has-sidebar {
         white-space: nowrap;
         cursor: pointer;
 
-        &:hover:not(:disabled):not(.disabled):not(.active),
-        &:active:not(:disabled):not(.disabled):not(.active),
-        &:focus:not(:disabled):not(.disabled):not(.active) {
+        &:hover:not(:disabled, .disabled, .active),
+        &:active:not(:disabled, .disabled, .active),
+        &:focus:not(:disabled, .disabled, .active) {
             transition: box-shadow 75ms ease-in-out, background 75ms ease-in-out,
                 border-color 75ms ease-in-out;
             border-color: var(--tlp-white-color) !important;
@@ -139,8 +139,8 @@ body.has-sidebar {
             text-decoration: none;
         }
 
-        &:active:not(:disabled):not(.disabled):not(.active),
-        &:focus:not(:disabled):not(.disabled):not(.active) {
+        &:active:not(:disabled, .disabled, .active),
+        &:focus:not(:disabled, .disabled, .active) {
             background: var(--tlp-background-color-lighter-50) !important;
         }
 

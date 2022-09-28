@@ -41,7 +41,7 @@
         border-bottom-left-radius: 0;
     }
 
-    &:not(:first-child):not(:last-child) > [class*="tlp-button"] {
+    &:not(:first-child, :last-child) > [class*="tlp-button"] {
         border-radius: 0;
     }
 }
