@@ -3,33 +3,33 @@
 exports[`ProjectSidebar > displays sidebar 1`] = `
 <aside
   class="sidebar"
-  data-v-1c1ebe88=""
+  data-v-73c4a8c1=""
 >
   <sidebar-logo-stub
-    data-v-1c1ebe88=""
+    data-v-73c4a8c1=""
   />
   <div
     class="sidebar-content-vertical-scroll"
-    data-v-1c1ebe88=""
+    data-v-73c4a8c1=""
   >
     <sidebar-header-stub
-      data-v-1c1ebe88=""
+      data-v-73c4a8c1=""
     />
     <tool-list-stub
-      data-v-1c1ebe88=""
+      data-v-73c4a8c1=""
     />
     <sidebar-collapse-button-stub
       can_sidebar_be_collapsed="true"
-      data-v-1c1ebe88=""
+      data-v-73c4a8c1=""
       is_sidebar_collapsed="false"
     />
   </div>
   <div
     class="sidebar-spacer"
-    data-v-1c1ebe88=""
+    data-v-73c4a8c1=""
   />
   <sidebar-footer-stub
-    data-v-1c1ebe88=""
+    data-v-73c4a8c1=""
   />
 </aside>
 `;
