@@ -170,26 +170,10 @@ msgid ""
 "\"Remaining Effort\" fields in B and C.</p>"
 msgstr ""
 
-#, php-format
-msgid ""
-"<p>One will be considered as a contributor/assignee of this artifact if her "
-"name appears in the field <strong>%1$s</strong>.</p>"
-msgstr ""
-
 msgid ""
 "<p>Someone updated this artifact while you were editing it.</p><p>Please "
 "acknowledge all notifications before submit.</p><p>Beware, on submit, your "
 "modifications will be applied on top of previous changes.</p>"
-msgstr ""
-
-msgid ""
-"<p>The <strong>contributor(s)/assignee(s)</strong> are the person(s) who are "
-"responsible for the work needed to complete the artifact.</p>"
-msgstr ""
-
-msgid ""
-"<p>The artifacts of this tracker does not have any <em>contributor/assignee</"
-"em> yet.</p>"
 msgstr ""
 
 msgid ""
@@ -1315,9 +1299,6 @@ msgstr ""
 msgid "Fast computation"
 msgstr ""
 
-msgid "Feel free to choose one:"
-msgstr ""
-
 msgid "Field"
 msgstr ""
 
@@ -1951,6 +1932,12 @@ msgstr ""
 
 #, php-format
 msgid "One tracker or more is duplicated in list: %s"
+msgstr ""
+
+#, php-format
+msgid ""
+"One will be considered as a contributor/assignee of this artifact if her "
+"name appears in the field %1$s."
 msgstr ""
 
 msgid ""
@@ -2700,6 +2687,10 @@ msgstr ""
 msgid "The artifact will be linked to %1$s"
 msgstr ""
 
+msgid ""
+"The artifacts of this tracker does not have any contributor/assignee yet."
+msgstr ""
+
 msgid "The changeset cannot be stored."
 msgstr ""
 
@@ -2712,6 +2703,11 @@ msgstr ""
 msgid ""
 "The configured mail transport of the platform does not allow the usage of "
 "the tracker email gateway."
+msgstr ""
+
+msgid ""
+"The contributor(s)/assignee(s) are the person(s) who are responsible for the "
+"work needed to complete the artifact."
 msgstr ""
 
 #, php-format
@@ -3913,13 +3909,13 @@ msgid "You cannot access to this tracker"
 msgstr ""
 
 msgid ""
-"You cannot define the <em>contributor/assignee</em> semantic since there "
-"isn't any user list field in the tracker"
+"You cannot define the <em>title</em> semantic since there isn't any text "
+"field in the tracker"
 msgstr ""
 
 msgid ""
-"You cannot define the <em>title</em> semantic since there isn't any text "
-"field in the tracker"
+"You cannot define the contributor/assignee semantic since there isn't any "
+"user list field in the tracker"
 msgstr ""
 
 msgid ""
