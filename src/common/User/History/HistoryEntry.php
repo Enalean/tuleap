@@ -62,6 +62,9 @@ class HistoryEntry
      */
     private $icon_name;
 
+    /**
+     * @param HistoryEntryBadge[] $badges
+     */
     public function __construct(
         $visit_time,
         private ?string $xref,
@@ -73,6 +76,7 @@ class HistoryEntry
         string $icon_name,
         \Project $project,
         array $quick_links,
+        private array $badges,
     ) {
         $this->visit_time  = (int) $visit_time;
         $this->link        = $link;
@@ -160,5 +164,13 @@ class HistoryEntry
     public function getIconName(): string
     {
         return $this->icon_name;
+    }
+
+    /**
+     * @return HistoryEntryBadge[]
+     */
+    public function getBadges(): array
+    {
+        return $this->badges;
     }
 }

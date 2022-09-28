@@ -24,47 +24,55 @@
             class="switch-to-item-entry-with-links"
             v-bind:class="{ 'switch-to-item-entry-with-links-with-badge': entry.xref }"
         >
-            <a
-                v-bind:href="entry.html_url"
-                v-bind:class="entry.color_name"
-                class="switch-to-item-entry-link"
-                ref="entry_link"
-                data-test="entry-link"
-                v-on:keydown="changeFocus"
-            >
-                <i
-                    class="fa fa-fw switch-to-item-entry-icon"
-                    v-bind:class="entry.icon_name"
-                    aria-hidden="true"
-                ></i>
-                <span
-                    class="switch-to-item-entry-badge cross-ref-badge cross-ref-badge-on-dark-background"
-                    v-bind:class="xref_color"
-                    v-if="entry.xref"
-                    data-test="item-xref"
+            <div class="switch-to-item-entry-links">
+                <a
+                    v-bind:href="entry.html_url"
+                    v-bind:class="entry.color_name"
+                    class="switch-to-item-entry-link"
+                    ref="entry_link"
+                    data-test="entry-link"
+                    v-on:keydown="changeFocus"
                 >
+                    <i
+                        class="fa fa-fw switch-to-item-entry-icon"
+                        v-bind:class="entry.icon_name"
+                        aria-hidden="true"
+                    ></i>
+                    <span
+                        class="switch-to-item-entry-badge cross-ref-badge cross-ref-badge-on-dark-background"
+                        v-bind:class="xref_color"
+                        v-if="entry.xref"
+                        data-test="item-xref"
+                    >
+                        <highlight-matching-text
+                            v-bind:text="entry.xref"
+                            v-on:matches="(words) => (matching_words_in_xref = words.length)"
+                        />
+                    </span>
                     <highlight-matching-text
-                        v-bind:text="entry.xref"
-                        v-on:matches="(words) => (matching_words_in_xref = words.length)"
+                        class="switch-to-item-entry-label"
+                        v-bind:text="entry.title || ''"
+                        v-on:matches="(words) => (matching_words_in_title = words.length)"
+                        data-test="item-title"
                     />
-                </span>
-                <highlight-matching-text
-                    class="switch-to-item-entry-label"
-                    v-bind:text="entry.title || ''"
-                    v-on:matches="(words) => (matching_words_in_title = words.length)"
-                    data-test="item-title"
-                />
-            </a>
-            <div class="switch-to-item-entry-quick-links" v-if="has_quick_links">
-                <quick-link
-                    v-for="link of entry.quick_links"
-                    v-bind:key="link.html_url"
-                    class="switch-to-item-entry-quick-links-link"
-                    v-bind:link="link"
-                    v-bind:item="entry"
-                    v-bind:project="null"
-                />
+                </a>
+                <div class="switch-to-item-entry-quick-links" v-if="has_quick_links">
+                    <quick-link
+                        v-for="link of entry.quick_links"
+                        v-bind:key="link.html_url"
+                        class="switch-to-item-entry-quick-links-link"
+                        v-bind:link="link"
+                        v-bind:item="entry"
+                        v-bind:project="null"
+                    />
+                </div>
             </div>
+            <item-badge
+                v-bind:badge="entry.badges[0]"
+                v-if="entry.badges.length > 0"
+                class="switch-to-item-entry-additional-badge"
+                data-test="additional-badge"
+            />
         </div>
         <div class="switch-to-item-metadata">
             <span class="switch-to-item-project">
@@ -92,6 +100,7 @@ import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation"
 import { storeToRefs } from "pinia";
 import QuickLink from "../QuickLink.vue";
 import { useRootStore } from "../../../stores/root";
+import ItemBadge from "./ItemBadge.vue";
 
 const props = defineProps<{
     entry: ItemDefinition;

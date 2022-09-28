@@ -18,13 +18,14 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { QuickLink, ItemDefinition } from "../../../type";
+import type { QuickLink, ItemDefinition, ItemBadge } from "../../../type";
 import ItemEntry from "./ItemEntry.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 import type { KeyboardNavigationState } from "../../../stores/type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { render, configure, cleanup, waitFor } from "@testing-library/vue";
+import { default as ItemBadgeComponent } from "./ItemBadge.vue";
 
 describe("ItemEntry", () => {
     beforeEach(() => {
@@ -49,6 +50,7 @@ describe("ItemEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
+                    badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
             },
@@ -56,6 +58,36 @@ describe("ItemEntry", () => {
         });
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("should display only the first additional badge", () => {
+        const wrapper = shallowMount(ItemEntry, {
+            props: {
+                entry: {
+                    icon_name: "fa-columns",
+                    xref: "art #123",
+                    title: "Lorem ipsum",
+                    color_name: "lake-placid-blue",
+                    quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
+                    badges: [
+                        { label: "On going", color: null },
+                        { label: "Other", color: null },
+                    ] as ReadonlyArray<ItemBadge>,
+                } as ItemDefinition,
+                changeFocusCallback: jest.fn(),
+            },
+            global: getGlobalTestOptions(),
+        });
+
+        const additional_badges = wrapper.findAllComponents(ItemBadgeComponent);
+        expect(additional_badges).toHaveLength(1);
+        expect(additional_badges[0].props().badge).toStrictEqual({
+            label: "On going",
+            color: null,
+        });
     });
 
     it("Displays a link with a quick links", () => {
@@ -73,6 +105,7 @@ describe("ItemEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
+                    badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
             },
@@ -93,6 +126,7 @@ describe("ItemEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
+                    badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
             },
@@ -113,6 +147,7 @@ describe("ItemEntry", () => {
                 project: {
                     label: "Guinea Pig",
                 },
+                badges: [] as ReadonlyArray<ItemBadge>,
             } as ItemDefinition;
 
             const changeFocusCallback = jest.fn();
@@ -152,6 +187,7 @@ describe("ItemEntry", () => {
             project: {
                 label: "Guinea Pig",
             },
+            badges: [] as ReadonlyArray<ItemBadge>,
         } as ItemDefinition;
 
         const wrapper = shallowMount(ItemEntry, {
@@ -197,6 +233,7 @@ describe("ItemEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
+                    badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
             },
@@ -230,6 +267,7 @@ describe("ItemEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
+                    badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
             },
@@ -263,6 +301,7 @@ describe("ItemEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
+                    badges: [] as ReadonlyArray<ItemBadge>,
                     cropped_content: null,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
@@ -297,6 +336,7 @@ describe("ItemEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
+                    badges: [] as ReadonlyArray<ItemBadge>,
                     cropped_content: "... excerpt ...",
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
