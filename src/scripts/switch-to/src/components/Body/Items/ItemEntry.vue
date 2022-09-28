@@ -83,7 +83,7 @@
                 {{ $gettext("Content matches:") }}
                 <mark class="tlp-mark-on-dark-background">{{ keywords }}</mark>
             </span>
-            <span v-if="has_cropped_content">
+            <span v-if="should_display_cropped_content">
                 |
                 <highlight-matching-text v-bind:text="entry.cropped_content" />
             </span>
@@ -124,6 +124,18 @@ const should_display_content_matches = computed((): boolean => {
     }
 
     if (has_cropped_content.value) {
+        return false;
+    }
+
+    return matching_words_in_xref.value + matching_words_in_title.value === 0;
+});
+
+const should_display_cropped_content = computed((): boolean => {
+    if (!is_in_search_mode.value) {
+        return false;
+    }
+
+    if (!has_cropped_content.value) {
         return false;
     }
 
