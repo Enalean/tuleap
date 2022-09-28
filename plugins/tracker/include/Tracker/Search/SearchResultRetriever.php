@@ -125,7 +125,11 @@ class SearchResultRetriever
             $tracker->getProject(),
             $collection->getQuickLinks(),
             $cropped_content,
-            $this->status_badge_builder->buildBadgesFromArtifactStatus($artifact, static fn(string $label, ?string $color) => new SearchResultEntryBadge($label, $color)),
+            $this->status_badge_builder->buildBadgesFromArtifactStatus(
+                $artifact,
+                $user,
+                static fn(string $label, ?string $color) => new SearchResultEntryBadge($label, $color)
+            ),
         );
     }
 }

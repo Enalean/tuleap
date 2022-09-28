@@ -27,6 +27,7 @@ use PFUser;
 use Project;
 use Tracker;
 use Tracker_ArtifactFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\TrackerColor;
@@ -79,7 +80,7 @@ class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $visit_retriever    = new VisitRetriever($recently_visited_dao, $artifact_factory, $glyph_finder, new StatusBadgeBuilder($status_factory));
         $max_length_history = 2;
         $collection         = new HistoryEntryCollection($user);
-        $visit_retriever->getVisitHistory($collection, $max_length_history);
+        $visit_retriever->getVisitHistory($collection, $max_length_history, UserTestBuilder::anActiveUser()->build());
 
         $history = $collection->getEntries();
         $this->assertCount($max_length_history, $history);
@@ -108,7 +109,7 @@ class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $max_length_history = 30;
 
         $collection = new HistoryEntryCollection($user);
-        $visit_retriever->getVisitHistory($collection, $max_length_history);
+        $visit_retriever->getVisitHistory($collection, $max_length_history, UserTestBuilder::anActiveUser()->build());
 
         $this->assertCount(0, $collection->getEntries());
     }
