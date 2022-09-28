@@ -19,6 +19,7 @@
 
 import type { Shortcut, ShortcutsGroup } from "../../type";
 import { createShortcutCell } from "./create-shortcut-cell";
+import { selectOrThrow } from "@tuleap/dom";
 
 export function createShortcutsGroupTable(
     doc: Document,
@@ -38,11 +39,11 @@ export function createShortcutsGroupTable(
 }
 
 export function getTableHead(doc: Document): Node {
-    const table_head_template = doc.querySelector("[data-shortcuts-help-header-template]");
-    if (!(table_head_template instanceof HTMLTemplateElement)) {
-        throw new Error("table_head_template was not found or is not a HTMLTemplateElement");
-    }
-
+    const table_head_template = selectOrThrow(
+        doc,
+        "[data-shortcuts-help-header-template]",
+        HTMLTemplateElement
+    );
     const table_head = table_head_template.content.firstElementChild;
     if (!table_head) {
         throw new Error("table_head_template should have one element child");

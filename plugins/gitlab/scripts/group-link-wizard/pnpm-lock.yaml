@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@pinia/testing': ^0.0.14
   '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/dom': link:../../../../lib/frontend/dom
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
   '@tuleap/plugin-gitlab-administration-theme': link:../lib/administration-theme
@@ -16,6 +17,7 @@ specifiers:
   vue3-gettext: ^2.2.1
 
 dependencies:
+  '@tuleap/dom': link:../../../../lib/frontend/dom
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
   '@tuleap/plugin-gitlab-administration-theme': link:../lib/administration-theme
