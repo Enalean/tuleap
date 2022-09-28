@@ -350,4 +350,40 @@ describe("ItemEntry", () => {
         // We need to wait for child component to emit the 'matches' event
         await waitFor(() => expect(queryByTestId("item-content-matches")).toBeFalsy());
     });
+
+    it("should not display the cropped content when xref or title match", async () => {
+        const { getByTestId, queryByTestId, queryByText } = render(ItemEntry, {
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "plop",
+                        },
+                    },
+                })
+            ),
+            props: {
+                entry: {
+                    xref: "plop #123",
+                    icon_name: "fa-columns",
+                    title: "Kanban",
+                    color_name: "lake-placid-blue",
+                    quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
+                    badges: [] as ReadonlyArray<ItemBadge>,
+                    cropped_content: "... excerpt ...",
+                } as ItemDefinition,
+                changeFocusCallback: jest.fn(),
+            },
+        });
+
+        expect(getByTestId("item-xref").querySelector("mark")).toBeTruthy();
+        expect(getByTestId("item-title").querySelector("mark")).toBeFalsy();
+
+        // We need to wait for child component to emit the 'matches' event
+        await waitFor(() => expect(queryByTestId("item-content-matches")).toBeFalsy());
+        expect(queryByText("... excerpt ...")).toBeFalsy();
+    });
 });
