@@ -174,7 +174,7 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
                 continue;
             }
 
-            $results[] = new IndexedItemFound($row['type'], $metadata_key_value);
+            $results[] = new IndexedItemFound($row['type'], $metadata_key_value, null);
         }
 
         return $results;

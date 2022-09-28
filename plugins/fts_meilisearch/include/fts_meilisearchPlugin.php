@@ -86,6 +86,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(RemoteMeilisearchServerSettings::class);
+        $event->addConfigClass(MeilisearchHandler::class);
     }
 
     protected function getIndexSearcher(): \Tuleap\FullTextSearchCommon\Index\SearchIndexedItem

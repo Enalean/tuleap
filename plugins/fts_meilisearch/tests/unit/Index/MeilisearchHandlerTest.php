@@ -24,6 +24,7 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Search\SearchResult;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\FullTextSearchCommon\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
@@ -32,6 +33,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class MeilisearchHandlerTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     /**
      * @var Indexes&\PHPUnit\Framework\MockObject\MockObject
      */
@@ -93,11 +96,68 @@ final class MeilisearchHandlerTest extends TestCase
 
     public function testSearchItems(): void
     {
-        $this->client_index->method('search')->willReturn(
-            new SearchResult(['hits' => [['id' => 1], ['id' => 2]], 'estimatedTotalHits' => 99, 'limit' => 2, 'offset' => 0, 'processingTimeMs' => 2, 'query' => ''])
-        );
+        $this->client_index
+            ->method('search')
+            ->with('keywords', ['attributesToRetrieve' => ['id'], 'limit' => 2, 'offset' => 0])
+            ->willReturn(
+                new SearchResult(
+                    [
+                        'hits'               => [['id' => 1], ['id' => 2]],
+                        'estimatedTotalHits' => 99,
+                        'limit'              => 2,
+                        'offset'             => 0,
+                        'processingTimeMs'   => 2,
+                        'query'              => '',
+                    ]
+                )
+            );
 
-        $found_items = [new IndexedItemFound('type', ['A' => '1']), new IndexedItemFound('type', ['A' => '2'])];
+        $found_items = [new IndexedItemFound('type', ['A' => '1'], null),
+            new IndexedItemFound('type', ['A' => '2'], null),
+        ];
+        $this->metadata_dao->method('searchMatchingResultsByItemIDs')->willReturn($found_items);
+
+        self::assertEquals(
+            SearchResultPage::page(99, $found_items),
+            $this->handler->searchItems('keywords', 2, 0),
+        );
+    }
+
+    public function testSearchItemsWithCroppedContent(): void
+    {
+        $this->client_index
+            ->method('search')
+            ->with('keywords', ['attributesToRetrieve' => ['id'], 'limit' => 2, 'offset' => 0])
+            ->willReturn(
+                new SearchResult(
+                    [
+                        'hits'               => [
+                            [
+                                'id'         => 1,
+                                '_formatted' => [
+                                    'content' => "... excerpt ...",
+                                ],
+                            ],
+                            [
+                                'id'         => 2,
+                                '_formatted' => [
+                                    'content' => "... another excerpt ...",
+                                ],
+                            ],
+                        ],
+                        'estimatedTotalHits' => 99,
+                        'limit'              => 2,
+                        'offset'             => 0,
+                        'processingTimeMs'   => 2,
+                        'query'              => '',
+                    ]
+                )
+            );
+
+        $found_items = [
+            new IndexedItemFound('type', ['A' => '1'], "... excerpt ..."),
+            new IndexedItemFound('type', ['A' => '2'], "... another excerpt ..."),
+        ];
         $this->metadata_dao->method('searchMatchingResultsByItemIDs')->willReturn($found_items);
 
         self::assertEquals(
@@ -109,7 +169,16 @@ final class MeilisearchHandlerTest extends TestCase
     public function testSearchItemsButNoMatchFound(): void
     {
         $this->client_index->method('search')->willReturn(
-            new SearchResult(['hits' => [], 'estimatedTotalHits' => 0, 'limit' => 50, 'offset' => 0, 'processingTimeMs' => 2, 'query' => ''])
+            new SearchResult(
+                [
+                    'hits'               => [],
+                    'estimatedTotalHits' => 0,
+                    'limit'              => 50,
+                    'offset'             => 0,
+                    'processingTimeMs'   => 2,
+                    'query'              => '',
+                ]
+            )
         );
 
         self::assertEquals(

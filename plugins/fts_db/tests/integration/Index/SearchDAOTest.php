@@ -94,7 +94,7 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     private function searchMostRelevantItem(): void
     {
         self::assertEquals(
-            SearchResultPage::page(2, [new IndexedItemFound('type A', ['A' => 'A', 'B' => 'B'])]),
+            SearchResultPage::page(2, [new IndexedItemFound('type A', ['A' => 'A', 'B' => 'B'], null)]),
             $this->dao->searchItems('content', 1, 0),
         );
     }
@@ -102,7 +102,7 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     private function searchMostRecentItemBetweenItemsWithEquivalentRelevance(): void
     {
         self::assertEquals(
-            SearchResultPage::page(2, [new IndexedItemFound('type B', ['A' => 'A', 'B' => 'B2'])]),
+            SearchResultPage::page(2, [new IndexedItemFound('type B', ['A' => 'A', 'B' => 'B2'], null)]),
             $this->dao->searchItems('value', 1, 0),
         );
     }

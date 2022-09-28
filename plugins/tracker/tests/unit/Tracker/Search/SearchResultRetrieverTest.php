@@ -64,7 +64,7 @@ final class SearchResultRetrieverTest extends TestCase
     public function testTransformIndexedFieldContentIntoASearchUserWhenUserCanAccessTheArtifactAndField(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
-            [2 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '123', 'field_id' => '777'])],
+            [2 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '123', 'field_id' => '777'], "... excerpt ...")],
             UserTestBuilder::buildWithDefaults()
         );
 
@@ -88,7 +88,8 @@ final class SearchResultRetrieverTest extends TestCase
                     null,
                     'fa-solid fa-list-ol',
                     $project,
-                    []
+                    [],
+                    "... excerpt ..."
                 ),
             ],
             $indexed_item_convertor->search_results
@@ -98,7 +99,7 @@ final class SearchResultRetrieverTest extends TestCase
     public function testTransformIndexedChangesetCommentIntoASearchUserWhenUserCanAccessTheArtifactd(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
-            [2 => new IndexedItemFound('plugin_artifact_changeset_comment', ['artifact_id' => '123'])],
+            [2 => new IndexedItemFound('plugin_artifact_changeset_comment', ['artifact_id' => '123'], "... excerpt ...")],
             UserTestBuilder::buildWithDefaults()
         );
 
@@ -119,7 +120,8 @@ final class SearchResultRetrieverTest extends TestCase
                     null,
                     'fa-solid fa-list-ol',
                     $project,
-                    []
+                    [],
+                    "... excerpt ..."
                 ),
             ],
             $indexed_item_convertor->search_results
@@ -129,7 +131,7 @@ final class SearchResultRetrieverTest extends TestCase
     public function testDoesNotTouchIndexedItemsWithUnknownTypes(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
-            [3 => new IndexedItemFound('something', ['name' => 'value'])],
+            [3 => new IndexedItemFound('something', ['name' => 'value'], null)],
             UserTestBuilder::buildWithDefaults()
         );
 
@@ -141,7 +143,7 @@ final class SearchResultRetrieverTest extends TestCase
     public function testDoesNotTransformIndexedItemWithCorruptedMetadata(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
-            [4 => new IndexedItemFound('plugin_artifact_field', ['bad' => 'value'])],
+            [4 => new IndexedItemFound('plugin_artifact_field', ['bad' => 'value'], null)],
             UserTestBuilder::buildWithDefaults()
         );
 
@@ -154,8 +156,8 @@ final class SearchResultRetrieverTest extends TestCase
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
             [
-                8 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '403', 'field_id' => '777']),
-                9 => new IndexedItemFound('plugin_artifact_changeset_comment', ['artifact_id' => '403']),
+                8 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '403', 'field_id' => '777'], null),
+                9 => new IndexedItemFound('plugin_artifact_changeset_comment', ['artifact_id' => '403'], null),
             ],
             UserTestBuilder::buildWithDefaults()
         );
@@ -170,7 +172,7 @@ final class SearchResultRetrieverTest extends TestCase
     public function testDoesNotTransformIndexedItemRelatedToAFieldTheUserCannotRead(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
-            [8 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '147', 'field_id' => '403'])],
+            [8 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '147', 'field_id' => '403'], null)],
             UserTestBuilder::buildWithDefaults()
         );
 
@@ -188,7 +190,7 @@ final class SearchResultRetrieverTest extends TestCase
     public function testDoesNotTransformIndexedItemRelatedToANotUsedField(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
-            [8 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '147', 'field_id' => '404'])],
+            [8 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '147', 'field_id' => '404'], null)],
             UserTestBuilder::buildWithDefaults()
         );
 

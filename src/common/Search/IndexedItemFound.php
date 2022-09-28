@@ -33,6 +33,7 @@ final class IndexedItemFound
     public function __construct(
         public string $type,
         public array $metadata,
+        public ?string $cropped_content,
     ) {
     }
 }

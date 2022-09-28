@@ -242,7 +242,7 @@ describe("ItemEntry", () => {
         await waitFor(() => expect(queryByTestId("item-content-matches")).toBeFalsy());
     });
 
-    it("should display 'Content matches' when item is displayed but neither xref nor title match the keywords", async () => {
+    it("should display 'Content matches' when item is displayed without excerpt and neither xref nor title match the keywords", async () => {
         const { getByTestId, queryByTestId } = render(ItemEntry, {
             global: getGlobalTestOptions(
                 createTestingPinia({
@@ -263,6 +263,7 @@ describe("ItemEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
+                    cropped_content: null,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
             },
@@ -273,5 +274,40 @@ describe("ItemEntry", () => {
 
         // We need to wait for child component to emit the 'matches' event
         await waitFor(() => expect(queryByTestId("item-content-matches")).toBeTruthy());
+    });
+
+    it("should display the cropped content instead of 'Content matches'", async () => {
+        const { getByTestId, queryByTestId, getByText } = render(ItemEntry, {
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "unmatch",
+                        },
+                    },
+                })
+            ),
+            props: {
+                entry: {
+                    xref: "plop #123",
+                    icon_name: "fa-columns",
+                    title: "Kanban",
+                    color_name: "lake-placid-blue",
+                    quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
+                    cropped_content: "... excerpt ...",
+                } as ItemDefinition,
+                changeFocusCallback: jest.fn(),
+            },
+        });
+
+        expect(getByTestId("item-xref").querySelector("mark")).toBeFalsy();
+        expect(getByTestId("item-title").querySelector("mark")).toBeFalsy();
+        expect(getByText("... excerpt ...")).toBeTruthy();
+
+        // We need to wait for child component to emit the 'matches' event
+        await waitFor(() => expect(queryByTestId("item-content-matches")).toBeFalsy());
     });
 });

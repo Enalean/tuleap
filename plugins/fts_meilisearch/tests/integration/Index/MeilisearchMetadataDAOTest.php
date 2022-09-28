@@ -61,10 +61,10 @@ final class MeilisearchMetadataDAOTest extends TestCase
 
         self::assertEquals(
             [
-                new IndexedItemFound('type', ['A' => 'A2']),
-                new IndexedItemFound('type', ['A' => 'A1']),
+                new IndexedItemFound('type', ['A' => 'A2'], '... another excerpt ...'),
+                new IndexedItemFound('type', ['A' => 'A1'], '... excerpt ...'),
             ],
-            $this->dao->searchMatchingResultsByItemIDs([$item_2_id, $item_1_id])
+            $this->dao->searchMatchingResultsByItemIDs([$item_2_id, $item_1_id], [$item_1_id => '... excerpt ...', $item_2_id => '... another excerpt ...'])
         );
     }
 

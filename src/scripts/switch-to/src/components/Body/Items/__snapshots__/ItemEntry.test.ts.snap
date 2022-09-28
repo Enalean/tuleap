@@ -40,6 +40,7 @@ exports[`ItemEntry Displays a link with a cross ref 1`] = `
       Guinea Pig
     </span>
     <!--v-if-->
+    <!--v-if-->
   </div>
 </div>
 `;
@@ -99,6 +100,7 @@ exports[`ItemEntry Displays a link with a quick links 1`] = `
       Guinea Pig
     </span>
     <!--v-if-->
+    <!--v-if-->
   </div>
 </div>
 `;
@@ -135,6 +137,7 @@ exports[`ItemEntry Displays a link with an icon 1`] = `
     >
       Guinea Pig
     </span>
+    <!--v-if-->
     <!--v-if-->
   </div>
 </div>

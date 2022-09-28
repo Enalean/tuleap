@@ -24,6 +24,8 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Search\SearchResult;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems;
 use Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex;
 use Tuleap\FullTextSearchCommon\Index\SearchIndexedItem;
@@ -33,6 +35,13 @@ use Tuleap\Search\ItemToIndex;
 
 final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoIndex, DeleteIndexedItems
 {
+    private const ID_FIELD      = 'id';
+    private const CONTENT_FIELD = 'content';
+
+    #[FeatureFlagConfigKey('Display matching content in FTS results. 1 to activate, 0 to deactivate. Activated by default.')]
+    #[ConfigKeyString('1')]
+    public const DISPLAY_MATCHING_CONTENT_CONFIG_KEY = 'fts_meilisearch_display_matching_content';
+
     public function __construct(private Indexes $client_index, private MeilisearchMetadataDAO $metadata_dao)
     {
     }
@@ -52,8 +61,8 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoInde
     private function mapItemToIndexToMeilisearchDocument(ItemToIndex $item): array
     {
         return [
-            'id' => $this->metadata_dao->saveItemMetadata($item),
-            'content' => $item->content,
+            self::ID_FIELD      => $this->metadata_dao->saveItemMetadata($item),
+            self::CONTENT_FIELD => $item->content,
         ];
     }
 
@@ -83,7 +92,17 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoInde
 
     public function searchItems(string $keywords, int $limit, int $offset): SearchResultPage
     {
-        $meilisearch_search_result = $this->client_index->search($keywords, ['attributesToRetrieve' => ['id'], 'limit' => $limit, 'offset' => $offset]);
+        $parameters = [
+            'attributesToRetrieve' => [self::ID_FIELD],
+            'limit'                => $limit,
+            'offset'               => $offset,
+        ];
+        if (\ForgeConfig::getFeatureFlag(self::DISPLAY_MATCHING_CONTENT_CONFIG_KEY) === "1") {
+            $parameters['attributesToCrop'] = [self::CONTENT_FIELD];
+            $parameters['cropLength']       = 20;
+        }
+
+        $meilisearch_search_result = $this->client_index->search($keywords, $parameters);
         assert($meilisearch_search_result instanceof SearchResult);
 
         $estimated_total_hits = $meilisearch_search_result->getEstimatedTotalHits();
@@ -91,14 +110,18 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoInde
             return SearchResultPage::noHits();
         }
 
-        $found_item_ids = [];
+        $found_item_ids        = [];
+        $cropped_content_by_id = [];
         foreach ($meilisearch_search_result->getHits() as $hit) {
-            $found_item_ids[] = $hit['id'];
+            $found_item_ids[] = $hit[self::ID_FIELD];
+            if (isset($hit['_formatted'][self::CONTENT_FIELD])) {
+                $cropped_content_by_id[$hit[self::ID_FIELD]] = $hit['_formatted'][self::CONTENT_FIELD];
+            }
         }
 
         return SearchResultPage::page(
             $estimated_total_hits,
-            $this->metadata_dao->searchMatchingResultsByItemIDs($found_item_ids)
+            $this->metadata_dao->searchMatchingResultsByItemIDs($found_item_ids, $cropped_content_by_id)
         );
     }
 }
