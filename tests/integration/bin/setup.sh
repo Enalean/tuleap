@@ -70,7 +70,8 @@ seed_data() {
         onlyoffice \
         hudson_git \
         fts_db \
-        fts_meilisearch
+        fts_meilisearch \
+        gitlab
 }
 
 setup_tuleap
