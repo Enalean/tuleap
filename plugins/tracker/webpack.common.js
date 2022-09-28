@@ -63,6 +63,7 @@ const config_for_flaming_parrot = {
             "./scripts/semantics/progress/admin-selectors.ts",
         "tracker-admin-fields-permissions": "./scripts/tracker-admin/admin-fields-permissions",
         "tracker-semantic-status": "./scripts/semantics/status/status-picker.ts",
+        "tracker-semantic-done": "./scripts/semantics/status/done-picker.ts",
     },
     context,
     output,

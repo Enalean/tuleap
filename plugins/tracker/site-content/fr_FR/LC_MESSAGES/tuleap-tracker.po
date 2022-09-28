@@ -1314,7 +1314,7 @@ msgstr ""
 "quelques minutes."
 
 msgid "Done"
-msgstr "Terminé"
+msgstr "Fini"
 
 msgid "Done values successfully cleared."
 msgstr "Les valeurs finies ont été supprimées avec succès."
@@ -1610,9 +1610,6 @@ msgstr "Règles globales"
 
 msgid "Global rules are not respected"
 msgstr "Règles globales non respectées"
-
-msgid "Go back to semantic overview"
-msgstr "retour à l'administration de la sémantique"
 
 msgid "Go see this tracker"
 msgstr "Aller voir cet outil de suivi"
@@ -2600,6 +2597,9 @@ msgstr "Enregistrer sous..."
 msgid "Save configuration"
 msgstr "Sauvegarder la configuration"
 
+msgid "Save done values"
+msgstr "Sauvegarder les valeurs finies"
+
 msgid "Save new report"
 msgstr "Enregistrer"
 
@@ -2822,7 +2822,7 @@ msgstr "État"
 msgid "Status cannot be unset, because this tracker uses Done semantic"
 msgstr ""
 "L'état ne peut pas être réinitialisé, car l'outil de suivi utilise la "
-"sémantique Terminé"
+"sémantique fini"
 
 msgid "Status change notifications"
 msgstr "Notifications lors de la mise à jour de l'état"
@@ -3979,9 +3979,6 @@ msgstr "Permissions de l'outil de suivi"
 
 msgid "Tracker renderer"
 msgstr "Rendu d'un tracker"
-
-msgid "Tracker semantic done"
-msgstr "Sémantique fini"
 
 msgid "Tracker service is disabled."
 msgstr "Le service tracker est désactivé."
