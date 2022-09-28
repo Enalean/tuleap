@@ -33,13 +33,21 @@ final class StatusBadgeBuilder
      * @psalm-param Closure(string, ?string):T $build_badge_instance_callback
      * @return list<T>
      */
-    public function buildBadgesFromArtifactStatus(Artifact $artifact, callable $build_badge_instance_callback): array
-    {
+    public function buildBadgesFromArtifactStatus(
+        Artifact $artifact,
+        \PFUser $user,
+        callable $build_badge_instance_callback,
+    ): array {
         $semantic_status = $this->status_factory->getByTracker($artifact->getTracker());
         $status_field    = $semantic_status->getField();
         if (! $status_field) {
             return [];
         }
+
+        if (! $status_field->userCanRead($user)) {
+            return [];
+        }
+
         if (! $semantic_status->isFieldBoundToStaticValues()) {
             return [];
         }

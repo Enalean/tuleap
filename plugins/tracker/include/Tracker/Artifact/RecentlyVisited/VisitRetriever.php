@@ -58,7 +58,7 @@ class VisitRetriever
     /**
      * @throws \DataAccessException
      */
-    public function getVisitHistory(HistoryEntryCollection $entry_collection, int $max_length_history): void
+    public function getVisitHistory(HistoryEntryCollection $entry_collection, int $max_length_history, \PFUser $user): void
     {
         $user_id               = $entry_collection->getUser()->getId();
         $recently_visited_rows = $this->dao->searchVisitByUserId(
@@ -93,6 +93,7 @@ class VisitRetriever
                     $collection->getQuickLinks(),
                     $this->status_badge_builder->buildBadgesFromArtifactStatus(
                         $artifact,
+                        $user,
                         static fn (string $label, ?string $color) => new HistoryEntryBadge($label, $color),
                     ),
                 )

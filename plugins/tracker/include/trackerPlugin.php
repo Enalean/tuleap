@@ -1700,7 +1700,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
             new StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
         );
-        $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY);
+        $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY, $collection->getUser());
     }
 
     /**

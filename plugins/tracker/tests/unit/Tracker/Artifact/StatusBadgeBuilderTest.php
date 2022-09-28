@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class StatusBadgeBuilderTest extends TestCase
@@ -40,6 +41,31 @@ class StatusBadgeBuilderTest extends TestCase
 
         $badges = $builder->buildBadgesFromArtifactStatus(
             $artifact,
+            UserTestBuilder::anActiveUser()->build(),
+            static fn(string $label, ?string $color) => new \Tuleap\Search\SearchResultEntryBadge($label, $color)
+        );
+
+        self::assertEquals([], $badges);
+    }
+
+    public function testEmptyArrayWhenSemanticStatusFieldIsNotReadableByUser(): void
+    {
+        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field->method('userCanRead')->willReturn(false);
+
+        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status->method('getField')->willReturn($field);
+
+        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
+        $status_factory->method('getByTracker')->willReturn($semantic_status);
+
+        $builder = new StatusBadgeBuilder($status_factory);
+
+        $artifact = \Tuleap\Tracker\Test\Builders\ArtifactTestBuilder::anArtifact(101)->build();
+
+        $badges = $builder->buildBadgesFromArtifactStatus(
+            $artifact,
+            UserTestBuilder::anActiveUser()->build(),
             static fn(string $label, ?string $color) => new \Tuleap\Search\SearchResultEntryBadge($label, $color)
         );
 
@@ -49,6 +75,7 @@ class StatusBadgeBuilderTest extends TestCase
     public function testEmptyArrayWhenSemanticStatusIsDefinedOnUsers(): void
     {
         $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field->method('userCanRead')->willReturn(true);
 
         $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
         $semantic_status->method('getField')->willReturn($field);
@@ -63,6 +90,7 @@ class StatusBadgeBuilderTest extends TestCase
 
         $badges = $builder->buildBadgesFromArtifactStatus(
             $artifact,
+            UserTestBuilder::anActiveUser()->build(),
             static fn(string $label, ?string $color) => new \Tuleap\Search\SearchResultEntryBadge($label, $color)
         );
 
@@ -72,6 +100,7 @@ class StatusBadgeBuilderTest extends TestCase
     public function testEmptyArrayWhenArtifactHasNoValueForTheField(): void
     {
         $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1100);
         $field->method('getDecorators')->willReturn([]);
 
@@ -93,6 +122,7 @@ class StatusBadgeBuilderTest extends TestCase
 
         $badges = $builder->buildBadgesFromArtifactStatus(
             $artifact,
+            UserTestBuilder::anActiveUser()->build(),
             static fn(string $label, ?string $color) => new \Tuleap\Search\SearchResultEntryBadge($label, $color)
         );
 
@@ -102,6 +132,7 @@ class StatusBadgeBuilderTest extends TestCase
     public function testBuildBadgeForEachStatusValue(): void
     {
         $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1100);
         $field->method('getDecorators')->willReturn([]);
 
@@ -133,6 +164,7 @@ class StatusBadgeBuilderTest extends TestCase
 
         $badges = $builder->buildBadgesFromArtifactStatus(
             $artifact,
+            UserTestBuilder::anActiveUser()->build(),
             static fn(string $label, ?string $color) => new \Tuleap\Search\SearchResultEntryBadge($label, $color)
         );
 
@@ -146,6 +178,7 @@ class StatusBadgeBuilderTest extends TestCase
     public function testBuildBadgeWithTLPColorForEachStatusValue(): void
     {
         $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1100);
         $field->method('getDecorators')->willReturn([
             2001 => new \Tracker_FormElement_Field_List_BindDecorator(1100, 2001, 255, 0, 0, ''),
@@ -180,6 +213,7 @@ class StatusBadgeBuilderTest extends TestCase
 
         $badges = $builder->buildBadgesFromArtifactStatus(
             $artifact,
+            UserTestBuilder::anActiveUser()->build(),
             static fn(string $label, ?string $color) => new \Tuleap\Search\SearchResultEntryBadge($label, $color)
         );
 
