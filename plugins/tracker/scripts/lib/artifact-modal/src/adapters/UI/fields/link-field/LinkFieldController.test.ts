@@ -39,7 +39,6 @@ import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactC
 import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
-import type { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
@@ -268,21 +267,6 @@ describe(`LinkFieldController`, () => {
                 (linked_artifact) => linked_artifact.is_marked_for_removal
             );
             expect(is_marked).toBe(false);
-        });
-    });
-
-    describe(`onLinkableArtifactSelection`, () => {
-        const onSelection = (artifact: LinkableArtifact | null): LinkAdditionPresenter =>
-            getController().onLinkableArtifactSelection(artifact);
-
-        it(`when selection is null, it will return a presenter with disabled button`, () => {
-            const presenter = onSelection(null);
-            expect(presenter.is_add_button_disabled).toBe(true);
-        });
-
-        it(`when an artifact is selected, it will return a presenter with enabled button`, () => {
-            const presenter = onSelection(LinkableArtifactStub.withDefaults());
-            expect(presenter.is_add_button_disabled).toBe(false);
         });
     });
 

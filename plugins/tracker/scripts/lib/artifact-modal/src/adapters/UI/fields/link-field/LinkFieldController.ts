@@ -35,7 +35,6 @@ import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossRef
 import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
 import type { LinkSelector, LinkSelectorSearchFieldCallback } from "@tuleap/link-selector";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
-import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import type { AddNewLink } from "../../../../domain/fields/link-field/AddNewLink";
 import type { RetrieveNewLinks } from "../../../../domain/fields/link-field/RetrieveNewLinks";
@@ -70,7 +69,6 @@ export type LinkFieldControllerType = {
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     autoComplete: LinkSelectorSearchFieldCallback;
-    onLinkableArtifactSelection(artifact: LinkableArtifact | null): LinkAdditionPresenter;
     addNewLink(artifact: LinkableArtifact): NewLinkCollectionPresenter;
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
     setSelectedLinkType(link_selector: LinkSelector, type: LinkType): LinkType;
@@ -160,13 +158,6 @@ export const LinkFieldController = (
         },
 
         autoComplete: links_autocompleter.autoComplete,
-
-        onLinkableArtifactSelection: (artifact): LinkAdditionPresenter => {
-            if (!artifact) {
-                return LinkAdditionPresenter.withoutSelection();
-            }
-            return LinkAdditionPresenter.withArtifactSelected(artifact);
-        },
 
         addNewLink(artifact): NewLinkCollectionPresenter {
             const previous_link_type = type_retriever.getSelectedLinkType();

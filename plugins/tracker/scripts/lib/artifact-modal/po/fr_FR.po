@@ -31,9 +31,6 @@ msgstr "...pour voir"
 msgid "Add another file"
 msgstr "Ajouter un autre fichier"
 
-msgid "Add link"
-msgstr "Ajouter le lien"
-
 msgid "An error occurred while saving the artifact."
 msgstr "Une erreur s'est produite pendant la sauvegarde de cet artéfact."
 
