@@ -36,10 +36,9 @@ final class XMLUser
      */
     private $format;
     /**
-     * @var string
      * @readonly
      */
-    private $name;
+    public string $name;
 
     /**
      * @param self::FORMAT_* $format
@@ -53,6 +52,11 @@ final class XMLUser
     public static function buildUsername(string $name): self
     {
         return new self(self::FORMAT_USERNAME, $name);
+    }
+
+    public static function buildUsernameFromUser(\PFUser $user): self
+    {
+        return new self(self::FORMAT_USERNAME, $user->getUserName());
     }
 
     public function export(string $node_name, \SimpleXMLElement $parent_node): \SimpleXMLElement
