@@ -80,6 +80,7 @@ use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushParser;
 use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
 use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
 use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeCommand;
+use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeAction;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
@@ -2857,7 +2858,11 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         $commands_collector->addCommand(
             PreReceiveAnalyzeCommand::NAME,
             function (): PreReceiveAnalyzeCommand {
-                return new PreReceiveAnalyzeCommand();
+                return new PreReceiveAnalyzeCommand(
+                    new PreReceiveAnalyzeAction(
+                        $this->getRepositoryFactory()
+                    )
+                );
             }
         );
     }

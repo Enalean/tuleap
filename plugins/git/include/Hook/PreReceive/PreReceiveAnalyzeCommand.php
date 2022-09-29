@@ -23,19 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook\PreReceive;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-// ARG: Repo ID + reference
-// Use Git_Exec.class.php to 'git cat-file'
+use Symfony\Component\Console\Formatter\OutputFormatter;
 
 final class PreReceiveAnalyzeCommand extends Command
 {
     public const NAME = 'git:pre-receive-analyze';
 
-    public function __construct()
+    public function __construct(private PreReceiveAnalyzeAction $action)
     {
         parent::__construct(self::NAME);
     }
@@ -43,42 +40,29 @@ final class PreReceiveAnalyzeCommand extends Command
     protected function configure(): void
     {
         $this->setDescription('Does nothing as of yet')
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt or json)', 'txt')->setHidden(true);
+        ->addArgument(
+            'repository_id',
+            InputArgument::REQUIRED,
+            'A git repository ID'
+        )
+        ->addArgument(
+            'git_reference',
+            InputArgument::REQUIRED,
+            'A reference to a git object'
+        )
+        ->setHidden(true);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        switch ($format = $input->getOption('format')) {
-            case 'txt':
-                $this->displayAsText($output);
-                break;
-            case 'json':
-                $this->displayAsJSON($output);
-                break;
-            default:
-                $output->writeln(sprintf('<error>Unsupported format "%s". See help for supported formats.</error>', OutputFormatter::escape($format)));
-                return self::FAILURE;
+        try {
+            return $this->action->preReceiveAnalyse($input->getArgument('repository_id'), $input->getArgument('git_reference'));
+        } catch (PreReceiveRepositoryNotFoundException $e) {
+            $output->writeln(sprintf('<error>The ID "%s" does not correspond to any repository.</error>', OutputFormatter::escape($input->getArgument('repository_id'))));
+            return self::FAILURE;
+        } catch (PreReceiveCannotRetrieveReferenceException $e) {
+            $output->writeln('<error>Git command execution failure, check your git reference.</error>');
+            return self::FAILURE;
         }
-
-        return self::SUCCESS;
-    }
-
-    private function preReceiveAnalyse(OutputInterface $output): int
-    {
-        return 0;
-    }
-
-    private function displayAsText(OutputInterface $output): void
-    {
-        $message = "rejection_message: " . $this->preReceiveAnalyse($output);
-        $output->write($message);
-    }
-
-    private function displayAsJSON(OutputInterface $output): void
-    {
-        $rows = [
-            'rejection_message' => $this->preReceiveAnalyse($output),
-        ];
-        $output->write(json_encode($rows));
     }
 }
