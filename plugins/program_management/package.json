@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/date-helper": "link:../../lib/frontend/date-helper",
+    "@tuleap/dom": "link:../../lib/frontend/dom",
     "@tuleap/drag-and-drop": "link:../../lib/frontend/drag-and-drop",
     "@tuleap/fp-feedback": "link:../../lib/frontend/fp-feedback",
     "@tuleap/gettext": "link:../../lib/frontend/gettext",

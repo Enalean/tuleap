@@ -1,23 +1,18 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/keyboard-shortcuts",
+  "name": "@tuleap/dom",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/keyboard-shortcuts.js",
-  "main": "dist/keyboard-shortcuts.umd.cjs",
-  "types": "dist/index.d.ts",
+  "module": "dist/dom.js",
+  "main": "dist/dom.umd.cjs",
+  "types": "dist/main.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/keyboard-shortcuts.js",
-      "require": "./dist/keyboard-shortcuts.umd.cjs"
+      "import": "./dist/dom.js",
+      "require": "./dist/dom.umd.cjs"
     }
-  },
-  "dependencies": {
-    "@tuleap/dom": "link:../dom",
-    "hotkeys-js": "^3.8.3"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../build-system-configurator"
