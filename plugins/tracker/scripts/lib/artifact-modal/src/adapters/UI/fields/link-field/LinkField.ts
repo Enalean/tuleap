@@ -34,11 +34,9 @@ import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { LinkSelector } from "@tuleap/link-selector";
 import { createLinkSelector } from "@tuleap/link-selector";
-import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { getLinkableArtifact, getLinkableArtifactTemplate } from "./LinkableArtifactTemplate";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
-import { getAddLinkButtonTemplate } from "./AddLinkButtonTemplate";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { LinkedArtifactPopoverElement } from "./LinkedArtifactsPopoversController";
@@ -52,7 +50,6 @@ export interface LinkField {
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
     allowed_link_types: CollectionOfAllowedLinksTypesPresenters;
-    link_addition_presenter: LinkAdditionPresenter;
     new_links_presenter: NewLinkCollectionPresenter;
     current_link_type: LinkType;
 }
@@ -251,7 +248,9 @@ export const LinkField = define<LinkField>({
                 templating_callback: getLinkableArtifactTemplate,
                 selection_callback: (value) => {
                     const artifact = getLinkableArtifact(value);
-                    host.link_addition_presenter = controller.onLinkableArtifactSelection(artifact);
+                    if (artifact) {
+                        host.new_links_presenter = controller.addNewLink(artifact);
+                    }
                 },
             });
             host.current_link_type = selected_link_type;
@@ -271,10 +270,6 @@ export const LinkField = define<LinkField>({
     },
     new_links_presenter: {
         set: setNewLinks,
-    },
-    link_addition_presenter: {
-        get: (host, last_value) => last_value ?? LinkAdditionPresenter.withoutSelection(),
-        set: (host, presenter) => presenter,
     },
     current_link_type: {
         set: setCurrentLinkType,
@@ -299,13 +294,10 @@ export const LinkField = define<LinkField>({
                         <td class="link-field-table-footer-type">
                             ${getTypeSelectorTemplate(host)}
                         </td>
-                        <td class="link-field-table-footer-input" colspan="2">
+                        <td class="link-field-table-footer-input" colspan="3">
                             <div class="link-field-selector-wrapper">
                                 <select data-select="artifact-link-select"></select>
                             </div>
-                        </td>
-                        <td class="link-field-table-footer-add-link">
-                            ${getAddLinkButtonTemplate(host)}
                         </td>
                     </tr>
                 </tfoot>

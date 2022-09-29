@@ -21,9 +21,6 @@ msgstr "...para obter"
 msgid "Add another file"
 msgstr ""
 
-msgid "Add link"
-msgstr "Adicionar link"
-
 msgid "An error occurred while saving the artifact."
 msgstr ""
 
