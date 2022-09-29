@@ -56,6 +56,7 @@ use Tuleap\Gitlab\Group\GroupUpdator;
 use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
 use Tuleap\Gitlab\Group\Token\GroupTokenInserter;
+use Tuleap\Gitlab\Group\Token\GroupLinkTokenUpdater;
 use Tuleap\Gitlab\Group\UpdateGroupLinkCommand;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
@@ -218,18 +219,26 @@ final class GitlabGroupResource
      * }<br>
      * </pre>
      *
-     * <p>Both parameters can be updated in the same query (feature flag must be enabled):</p>
+     * <p>To update the Gitlab token of the linked group (feature flag must be enabled):</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"gitlab_token" : "my_t0k3n"<br>
+     * }<br>
+     * </pre>
+     *
+     * <p>All parameters can be updated in the same query (feature flag must be enabled):</p>
      * <pre>
      * {<br>
      *   &nbsp;"create_branch_prefix" : "dev-",<br>
-     *   &nbsp;"allow_artifact_closure" : false<br>
+     *   &nbsp;"allow_artifact_closure" : false,<br>
+     *   &nbsp;"gitlab_token" : "my_t0k3n"<br>
      * }<br>
      * </pre>
      *
      * @url    PATCH {id}
      * @access protected
      *
-     * @param int                            $id                               Id of the GitLab group link
+     * @param int $id Id of the GitLab group link
      * @param GitlabGroupPATCHRepresentation $gitlab_group_link_representation {@from body}
      *
      * @return GitlabGroupLinkRepresentation {@type GitlabGroupLinkRepresentation}
@@ -245,19 +254,25 @@ final class GitlabGroupResource
     ): GitlabGroupLinkRepresentation {
         $this->optionsId($id);
 
+        $group_api_token = $gitlab_group_link_representation->gitlab_token ? GroupApiToken::buildNewGroupToken(
+            new ConcealedString($gitlab_group_link_representation->gitlab_token)
+        ) : null;
+
+
         $current_user = UserManager::instance()->getCurrentUser();
         $group_dao    = new GitlabGroupDAO();
         $handler      = new GroupLinkUpdateHandler(
             new ProjectRetriever(\ProjectManager::instance()),
             new GitAdministratorChecker($this->getGitPermissionsManager()),
             new GroupLinkRetriever($group_dao),
-            new GroupUpdator($group_dao, $group_dao)
+            new GroupUpdator($group_dao, $group_dao, new GroupLinkTokenUpdater(new GroupApiTokenDAO(), new KeyFactory()))
         );
         return $handler->handleGroupLinkUpdate(
             new UpdateGroupLinkCommand(
                 $id,
                 $gitlab_group_link_representation->create_branch_prefix,
                 $gitlab_group_link_representation->allow_artifact_closure,
+                $group_api_token,
                 $current_user
             )
         )

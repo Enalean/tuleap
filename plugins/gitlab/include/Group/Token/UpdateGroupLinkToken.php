@@ -22,31 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group\Token;
 
-use Tuleap\DB\DataAccessObject;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Group\GroupLink;
 
-final class GroupApiTokenDAO extends DataAccessObject
+interface UpdateGroupLinkToken
 {
-    public function storeToken(int $group_id, string $encrypted_token): void
-    {
-        $this->getDB()->insertOnDuplicateKeyUpdate(
-            'plugin_gitlab_group_token',
-            [
-                'group_id'                                => $group_id,
-                'token'                                   => $encrypted_token,
-            ],
-            [
-                'token',
-            ]
-        );
-    }
-
-    public function updateGitlabTokenOfGroupLink(GroupLink $group_link, string $gitlab_token): void
-    {
-        $this->getDB()->update(
-            'plugin_gitlab_group_token',
-            ['token' => $gitlab_token],
-            ['group_id' => $group_link->id]
-        );
-    }
+    public function updateToken(GroupLink $group_link, ConcealedString $token): void;
 }
