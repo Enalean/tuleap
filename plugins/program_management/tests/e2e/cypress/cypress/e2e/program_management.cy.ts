@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ConditionPredicate } from "@tuleap/cypress-utilities-support";
+
 describe("Program management", () => {
     let program_project_name: string, team_project_name: string, other_team_project_name: string;
 
@@ -245,46 +247,17 @@ function checkThatProgramAndTeamsAreCorrect(
     cy.get("[data-test=milestone-backlog-items]").contains("My US");
 }
 
-const MAX_ATTEMPTS = 10;
-type ReloadCallback = () => void;
-type ConditionPredicate = (number_of_attempts: number) => PromiseLike<boolean>;
-
-function reloadUntilCondition(
-    reloadCallback: ReloadCallback,
-    conditionCallback: ConditionPredicate,
-    max_attempts_reached_message: string,
-    number_of_attempts = 0
-): PromiseLike<void> {
-    if (number_of_attempts > MAX_ATTEMPTS) {
-        throw new Error(max_attempts_reached_message);
-    }
-    return conditionCallback(number_of_attempts).then((is_condition_fulfilled) => {
-        if (is_condition_fulfilled) {
-            return Promise.resolve();
-        }
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(100);
-        reloadCallback();
-        return reloadUntilCondition(
-            reloadCallback,
-            conditionCallback,
-            max_attempts_reached_message,
-            number_of_attempts + 1
-        );
-    });
-}
-
 function checkPIExistsInReleases(expected_text: string, team_project_name: string): void {
     const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Agile Dashboard");
-    const conditionCallback: ConditionPredicate = (number_of_attempts) => {
+    const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
         cy.log(
-            `Check that mirror program increment ${expected_text} has been created (attempt ${number_of_attempts}/${MAX_ATTEMPTS})`
+            `Check that mirror program increment ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`
         );
         return cy
             .get("[data-test=home-releases]")
             .then((home_releases) => home_releases.text().includes(expected_text));
     };
-    reloadUntilCondition(
+    cy.reloadUntilCondition(
         reloadCallback,
         conditionCallback,
         "Timed out while checking if mirror program increment has been created"
@@ -296,15 +269,15 @@ function checkMirrorIterationExistsInSprint(
     team_project_name: string
 ): void {
     const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Agile Dashboard");
-    const conditionCallback: ConditionPredicate = (number_of_attempts) => {
+    const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
         cy.log(
-            `Check that mirror iteration ${expected_text} has been created (attempt ${number_of_attempts}/${MAX_ATTEMPTS})`
+            `Check that mirror iteration ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`
         );
         return cy
             .get("[data-test=home-sprint-title]")
             .then((home_sprints) => home_sprints.text().includes(expected_text));
     };
-    reloadUntilCondition(
+    cy.reloadUntilCondition(
         reloadCallback,
         conditionCallback,
         "Timed out while checking if mirror iteration has been created"
