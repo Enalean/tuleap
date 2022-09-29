@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-modal-header">
         <h1
-            class="tlp-modal-title document-modal-title"
+            class="tlp-modal-title"
             v-bind:id="ariaLabelledBy"
             v-bind:title="`${$gettext('Close')}`"
         >
