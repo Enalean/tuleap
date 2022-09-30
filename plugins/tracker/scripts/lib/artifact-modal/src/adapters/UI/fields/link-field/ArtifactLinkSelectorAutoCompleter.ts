@@ -17,12 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    GroupOfItems,
-    LinkSelector,
-    LinkSelectorSearchFieldCallback,
-    GroupCollection,
-} from "@tuleap/link-selector";
+import type { GroupCollection, GroupOfItems } from "@tuleap/link-selector";
 import type { Fault } from "@tuleap/fault";
 import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field/RetrieveMatchingArtifact";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
@@ -31,7 +26,6 @@ import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { NotifyFault } from "../../../../domain/NotifyFault";
 import { MatchingArtifactRetrievalFault } from "../../../../domain/fields/link-field/MatchingArtifactRetrievalFault";
-import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field/RetrieveSelectedLinkType";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import type { LinkableNumber } from "../../../../domain/fields/link-field/LinkableNumber";
@@ -40,20 +34,23 @@ import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTracker
 import { LinkableArtifactFilter } from "../../../../domain/fields/link-field/LinkableArtifactFilter";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
+import type { LinkField } from "./LinkField";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
-    autoComplete: LinkSelectorSearchFieldCallback;
+    autoComplete(host: LinkField, query: string): void;
 };
 
 const isExpectedFault = (fault: Fault): boolean =>
     ("isForbidden" in fault && fault.isForbidden() === true) ||
     ("isNotFound" in fault && fault.isNotFound() === true);
 
+const isParentSelected = (host: LinkField): boolean =>
+    LinkType.isReverseChild(host.current_link_type);
+
 export const ArtifactLinkSelectorAutoCompleter = (
     retrieve_matching_artifact: RetrieveMatchingArtifact,
     fault_notifier: NotifyFault,
     notification_clearer: ClearFaultNotification,
-    type_retriever: RetrieveSelectedLinkType,
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
@@ -61,12 +58,9 @@ export const ArtifactLinkSelectorAutoCompleter = (
 ): ArtifactLinkSelectorAutoCompleterType => {
     let loaded_possible_parents_cache: GroupCollection = [PossibleParentsGroup.buildLoadingState()];
 
-    const isParentSelected = (): boolean => {
-        const selected_type = type_retriever.getSelectedLinkType();
-        return LinkType.isReverseChild(selected_type);
-    };
-
-    const getMatchingArtifactsGroup = (linkable_number: LinkableNumber): Promise<GroupOfItems> =>
+    const getMatchingArtifactsGroup = (
+        linkable_number: LinkableNumber
+    ): PromiseLike<GroupOfItems> =>
         retrieve_matching_artifact.getMatchingArtifact(linkable_number).match(
             (artifact) => MatchingArtifactsGroup.fromMatchingArtifact(link_verifier, artifact),
             (fault) => {
@@ -77,7 +71,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
             }
         );
 
-    const getPossibleParentsGroup = (query: string): Promise<GroupCollection> => {
+    const getPossibleParentsGroup = (query: string): PromiseLike<GroupCollection> => {
         const filter = LinkableArtifactFilter(query);
         return parents_retriever
             .getPossibleParents(current_tracker_identifier)
@@ -109,26 +103,26 @@ export const ArtifactLinkSelectorAutoCompleter = (
     };
 
     return {
-        autoComplete: async (link_selector: LinkSelector, query: string): Promise<void> => {
+        autoComplete: async (host: LinkField, query: string): Promise<void> => {
             notification_clearer.clearFaultNotification();
 
             const linkable_number = LinkableNumberProxy.fromQueryString(
                 query,
                 current_artifact_identifier
             );
-            const is_parent_selected = isParentSelected();
+            const is_parent_selected = isParentSelected(host);
             if (!linkable_number && !is_parent_selected) {
-                link_selector.setDropdownContent([]);
+                host.dropdown_content = [];
                 return;
             }
             let loading_groups = [];
             if (linkable_number) {
                 loading_groups.push(MatchingArtifactsGroup.buildLoadingState());
             }
-            if (is_parent_selected && loaded_possible_parents_cache !== null) {
+            if (is_parent_selected) {
                 loading_groups = loading_groups.concat(loaded_possible_parents_cache);
             }
-            link_selector.setDropdownContent(loading_groups);
+            host.dropdown_content = loading_groups;
 
             let groups = [];
             if (linkable_number) {
@@ -137,7 +131,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
             if (is_parent_selected) {
                 groups = groups.concat(await getFilteredPossibleParentsGroups(query));
             }
-            link_selector.setDropdownContent(groups);
+            host.dropdown_content = groups;
         },
     };
 };

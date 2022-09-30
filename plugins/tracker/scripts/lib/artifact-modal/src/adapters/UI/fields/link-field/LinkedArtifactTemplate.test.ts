@@ -44,8 +44,6 @@ import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLink
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
-import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
-import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
@@ -144,9 +142,6 @@ describe(`LinkedArtifactTemplate`, () => {
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(72);
             const fault_notifier = NotifyFaultStub.withCount();
-            const type_retriever = RetrieveSelectedLinkTypeStub.withType(
-                LinkTypeStub.buildUntyped()
-            );
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(75);
             const notification_clearer = ClearFaultNotificationStub.withCount();
             const parents_retriever = RetrievePossibleParentsStub.withoutParents();
@@ -165,7 +160,6 @@ describe(`LinkedArtifactTemplate`, () => {
                     ),
                     fault_notifier,
                     notification_clearer,
-                    type_retriever,
                     parents_retriever,
                     link_verifier,
                     current_artifact_identifier,
@@ -175,8 +169,6 @@ describe(`LinkedArtifactTemplate`, () => {
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
                 VerifyHasParentLinkStub.withNoParentLink(),
-                type_retriever,
-                SetSelectedLinkTypeStub.buildPassThrough(),
                 parents_retriever,
                 link_verifier,
                 {

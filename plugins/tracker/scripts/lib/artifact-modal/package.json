@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator",
+    "@tuleap/dom": "link:../../../../../lib/frontend/dom",
     "@types/ckeditor": "^4.9.10",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2"
