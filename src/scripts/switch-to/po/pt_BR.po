@@ -30,6 +30,9 @@ msgstr "Ir para a administração do projeto de %s"
 msgid "Legacy search"
 msgstr ""
 
+msgid "More…"
+msgstr ""
+
 msgid "My projects"
 msgstr ""
 
@@ -67,7 +70,4 @@ msgid "You don’t belong to any project or haven’t viewed anything yet"
 msgstr ""
 
 msgid "Your Tuleap history will appear here"
-msgstr ""
-
-msgid "more"
 msgstr ""
