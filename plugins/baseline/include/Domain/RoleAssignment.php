@@ -21,9 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Adapter;
-
-use Tuleap\Baseline\Domain\ProjectIdentifier;
+namespace Tuleap\Baseline\Domain;
 
 /**
  * Assign a pair project / user group id to a role, which gives permissions.

@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use DateTimeInterface;
-use PFUser;
 
 class Baseline extends TransientBaseline
 {
     /** @var int */
     private $id;
 
-    /** @var PFUser */
+    /** @var UserIdentifier */
     private $author;
 
     public function __construct(
@@ -39,7 +38,7 @@ class Baseline extends TransientBaseline
         string $name,
         BaselineArtifact $artifact,
         DateTimeInterface $snapshot_date,
-        PFUser $author,
+        UserIdentifier $author,
     ) {
         parent::__construct($name, $artifact, $snapshot_date);
         $this->id     = $id;
@@ -51,7 +50,7 @@ class Baseline extends TransientBaseline
         return $this->id;
     }
 
-    public function getAuthor(): PFUser
+    public function getAuthor(): UserIdentifier
     {
         return $this->author;
     }

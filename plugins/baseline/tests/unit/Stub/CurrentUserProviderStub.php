@@ -23,28 +23,32 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
-use PFUser;
+use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
+use Tuleap\Baseline\Domain\UserIdentifier;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 /**
  * Implementation of CurrentUserProvider used for tests.
  */
 class CurrentUserProviderStub implements CurrentUserProvider
 {
-    /** @var PFUser */
+    /** @var UserIdentifier */
     private $user;
 
     public function __construct()
     {
-        $this->user = new PFUser(['timezone' => 'GMT+3']);
+        $this->user = UserProxy::fromUser(
+            UserTestBuilder::aUser()->withTimezone('GMT+3')->build()
+        );
     }
 
-    public function setUser(PFUser $current_user): void
+    public function setUser(UserIdentifier $current_user): void
     {
         $this->user = $current_user;
     }
 
-    public function getUser(): PFUser
+    public function getUser(): UserIdentifier
     {
         return $this->user;
     }

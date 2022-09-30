@@ -27,13 +27,10 @@ require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\JsonCast;
 
 class ProjectComparisonControllerIntTest extends IntegrationTestCaseWithStubs
 {
-    use GlobalLanguageMock;
-
     /** @var ProjectComparisonController */
     private $controller;
 

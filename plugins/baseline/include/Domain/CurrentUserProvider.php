@@ -23,9 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use PFUser;
-
 interface CurrentUserProvider
 {
-    public function getUser(): PFUser;
+    public function getUser(): UserIdentifier;
 }

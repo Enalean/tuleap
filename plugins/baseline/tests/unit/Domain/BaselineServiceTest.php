@@ -28,6 +28,7 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use Tuleap\Baseline\Adapter\AuthorizationsImpl;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientBaselineFactory;
@@ -90,7 +91,7 @@ class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->baseline_repository
             ->shouldReceive('add')
             ->with($baseline, $this->current_user, $this->clock->now())
-            ->atLeast()->once()->atLeast()->once();
+            ->atLeast()->once();
 
         $this->service->create($this->current_user, $baseline);
     }
@@ -132,7 +133,7 @@ class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
         $baseline = BaselineFactory::one()->build();
         $this->baseline_repository
             ->shouldReceive('delete')
-            ->with($baseline, $this->current_user)
+            ->with($baseline)
             ->atLeast()->once();
 
         $this->service->delete($this->current_user, $baseline);

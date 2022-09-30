@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use PFUser;
 
 class BaselineArtifactService
 {
@@ -40,7 +39,7 @@ class BaselineArtifactService
      * baseline's snapshot date.
      * @throws BaselineRootArtifactNotFoundException
      */
-    public function findFirstLevelByBaseline(PFUser $current_user, Baseline $baseline): array
+    public function findFirstLevelByBaseline(UserIdentifier $current_user, Baseline $baseline): array
     {
         $baseline_artifact = $this->baseline_artifact_repository->findByIdAt(
             $current_user,
@@ -61,7 +60,7 @@ class BaselineArtifactService
      * @return array BaselineArtifact[] Artifacts with given ids, as they were at baseline's snapshot date.
      * @throws BaselineArtifactNotFoundException when at least one artifact is not found
      */
-    public function findByBaselineAndIds(PFUser $current_user, ?Baseline $baseline, array $artifact_ids): array
+    public function findByBaselineAndIds(UserIdentifier $current_user, ?Baseline $baseline, array $artifact_ids): array
     {
         return array_map(
             function (int $id) use ($current_user, $baseline) {

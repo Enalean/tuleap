@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
-use PFUser;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\ComparisonRepository;
@@ -31,6 +30,7 @@ use Tuleap\Baseline\Domain\ComparisonService;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
 use Tuleap\Baseline\Domain\InvalidComparisonException;
 use Tuleap\Baseline\Domain\NotAuthorizedException;
+use Tuleap\Baseline\Domain\UserIdentifier;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Domain\TransientComparison;
@@ -124,7 +124,7 @@ class ComparisonController
     /**
      * @throws NotFoundRestException
      */
-    private function findBaselineByIdOrThrow(PFUser $current_user, int $baseline_id): Baseline
+    private function findBaselineByIdOrThrow(UserIdentifier $current_user, int $baseline_id): Baseline
     {
         $base_baseline = $this->baseline_repository->findById($current_user, $baseline_id);
         if ($base_baseline === null) {

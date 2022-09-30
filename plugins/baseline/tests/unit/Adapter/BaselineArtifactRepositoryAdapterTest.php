@@ -64,11 +64,18 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->semantic_value_adapter = Mockery::mock(SemanticValueAdapter::class);
         $this->artifact_link_adapter  = Mockery::mock(ArtifactLinkRepository::class);
 
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager
+            ->method('getUserById')
+            ->with($this->current_user->getId())
+            ->willReturn($this->current_tuleap_user);
+
         $this->adapter = new BaselineArtifactRepositoryAdapter(
             $this->artifact_factory,
             $this->changeset_factory,
             $this->semantic_value_adapter,
-            $this->artifact_link_adapter
+            $this->artifact_link_adapter,
+            $user_manager,
         );
     }
 
@@ -106,11 +113,11 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
                     'findInitialEffort' => 5,
                 ]
             )
-            ->with($changeset, $this->current_user);
+            ->with($changeset, $this->current_tuleap_user);
 
         $this->artifact_link_adapter
             ->shouldReceive('findLinkedArtifactIds')
-            ->with($this->current_user, $changeset)
+            ->with($this->current_tuleap_user, $changeset)
             ->andReturn([2, 3, 4]);
 
         $baseline_artifact = $this->adapter->findById($this->current_user, 1);
@@ -157,11 +164,11 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
                     'findInitialEffort' => 5,
                 ]
             )
-            ->with($changeset, $this->current_user);
+            ->with($changeset, $this->current_tuleap_user);
 
         $this->artifact_link_adapter
             ->shouldReceive('findLinkedArtifactIds')
-            ->with($this->current_user, $changeset)
+            ->with($this->current_tuleap_user, $changeset)
             ->andReturn([2, 3, 4]);
 
         $baseline_artifact = $this->adapter->findByIdAt($this->current_user, 1, $date);

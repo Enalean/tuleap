@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,18 +16,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Domain;
+namespace Tuleap\Baseline\Adapter;
 
-use DateTimeInterface;
+use Tuleap\Baseline\Domain\UserIdentifier;
 
-interface BaselineArtifactRepository
+class UserProxy implements UserIdentifier
 {
-    public function findById(UserIdentifier $current_user, int $id): ?BaselineArtifact;
+    private function __construct(private \PFUser $user)
+    {
+    }
 
-    public function findByIdAt(UserIdentifier $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact;
+    public static function fromUser(\PFUser $user): self
+    {
+        return new self($user);
+    }
+
+    public function getId(): int
+    {
+        return (int) $this->user->getId();
+    }
 }

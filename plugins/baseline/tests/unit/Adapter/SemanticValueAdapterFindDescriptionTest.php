@@ -49,7 +49,7 @@ class SemanticValueAdapterFindDescriptionTest extends SemanticValueAdapterTest
             ->with($field)
             ->andReturn($this->mockChangesetValue('Custom description'));
 
-        $title = $this->adapter->findDescription($this->changeset, $this->current_user);
+        $title = $this->adapter->findDescription($this->changeset, $this->current_tuleap_user);
 
         $this->assertEquals('Custom description', $title);
     }
@@ -67,7 +67,7 @@ class SemanticValueAdapterFindDescriptionTest extends SemanticValueAdapterTest
             ->with($this->tracker)
             ->andReturn($field);
 
-        $title = $this->adapter->findDescription($this->changeset, $this->current_user);
+        $title = $this->adapter->findDescription($this->changeset, $this->current_tuleap_user);
 
         $this->assertNull($title);
     }
@@ -81,7 +81,7 @@ class SemanticValueAdapterFindDescriptionTest extends SemanticValueAdapterTest
             ->with($this->tracker)
             ->andReturn(null);
 
-        $title = $this->adapter->findDescription($this->changeset, $this->current_user);
+        $title = $this->adapter->findDescription($this->changeset, $this->current_tuleap_user);
 
         $this->assertNull($title);
     }
@@ -104,7 +104,7 @@ class SemanticValueAdapterFindDescriptionTest extends SemanticValueAdapterTest
             ->with($field)
             ->andReturn(null);
 
-        $title = $this->adapter->findDescription($this->changeset, $this->current_user);
+        $title = $this->adapter->findDescription($this->changeset, $this->current_tuleap_user);
 
         $this->assertNull($title);
     }

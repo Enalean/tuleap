@@ -28,6 +28,7 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\ComparisonRepository;
 use Tuleap\Baseline\Domain\ComparisonService;
@@ -36,12 +37,11 @@ use Tuleap\Baseline\Factory\ComparisonFactory;
 use Tuleap\Baseline\Domain\NotAuthorizedException;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
-use Tuleap\Baseline\Support\CurrentUserContext;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class ComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-    use CurrentUserContext;
 
     /** @var ComparisonController */
     private $controller;
@@ -57,10 +57,13 @@ class ComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var ComparisonRepository|MockInterface */
     private $comparison_repository;
+    private UserProxy $current_user;
 
     /** @before */
     protected function createInstance()
     {
+        $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());
+
         $this->comparison_service    = Mockery::mock(ComparisonService::class);
         $this->current_user_provider = Mockery::mock(CurrentUserProvider::class);
         $this->current_user_provider->allows(['getUser' => $this->current_user]);

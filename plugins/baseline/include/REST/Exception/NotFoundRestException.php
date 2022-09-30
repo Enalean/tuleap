@@ -28,7 +28,7 @@ class NotFoundRestException extends RestException
     {
         parent::__construct(
             404,
-            null,
+            '',
             ['i18n_error_message' => $message]
         );
     }

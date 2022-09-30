@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use Tuleap\Baseline\Adapter\RoleAssignment;
-
 interface RoleAssignmentRepository
 {
     /**

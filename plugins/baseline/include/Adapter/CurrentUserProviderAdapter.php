@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use PFUser;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
+use Tuleap\Baseline\Domain\UserIdentifier;
 use UserManager;
 
 class CurrentUserProviderAdapter implements CurrentUserProvider
@@ -37,8 +37,8 @@ class CurrentUserProviderAdapter implements CurrentUserProvider
         $this->current_user_manager = $current_user_manager;
     }
 
-    public function getUser(): PFUser
+    public function getUser(): UserIdentifier
     {
-        return $this->current_user_manager->getCurrentUser();
+        return UserProxy::fromUser($this->current_user_manager->getCurrentUser());
     }
 }

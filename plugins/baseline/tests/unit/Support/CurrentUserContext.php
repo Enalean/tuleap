@@ -23,19 +23,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Support;
 
-use PFUser;
-use Tuleap\GlobalLanguageMock;
+use Tuleap\Baseline\Adapter\UserProxy;
+use Tuleap\Baseline\Domain\UserIdentifier;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 trait CurrentUserContext
 {
-    use GlobalLanguageMock;
-
-    /** @var PFUser */
+    /** @var UserIdentifier */
     protected $current_user;
+
+    /** @var \PFUser */
+    protected $current_tuleap_user;
 
     /** @before */
     protected function buildCurrentUser(): void
     {
-        $this->current_user = new PFUser();
+        $this->current_tuleap_user = UserTestBuilder::aUser()->build();
+        $this->current_user        = UserProxy::fromUser($this->current_tuleap_user);
     }
 }
