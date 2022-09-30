@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use PFUser;
-use Project;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\Comparison;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\TransientBaseline;
 use Tuleap\Baseline\Domain\TransientComparison;
 
@@ -48,7 +48,7 @@ class FullAccessAuthorizationsStub implements Authorizations
         return true;
     }
 
-    public function canReadBaselinesOnProject(PFUser $current_user, Project $project): bool
+    public function canReadBaselinesOnProject(PFUser $current_user, ProjectIdentifier $project): bool
     {
         return true;
     }
@@ -63,7 +63,7 @@ class FullAccessAuthorizationsStub implements Authorizations
         return true;
     }
 
-    public function canReadComparisonsOnProject(PFUser $current_user, Project $project): bool
+    public function canReadComparisonsOnProject(PFUser $current_user, ProjectIdentifier $project): bool
     {
         return true;
     }

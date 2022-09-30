@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use Project;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 
 class TransientComparisonFactory
 {
@@ -41,7 +41,7 @@ class TransientComparisonFactory
             );
     }
 
-    public static function fromProject(Project $project): TransientComparisonBuilder
+    public static function fromProject(ProjectIdentifier $project): TransientComparisonBuilder
     {
         $base_baseline = BaselineFactory::fromProject($project)->build();
         return self::one()

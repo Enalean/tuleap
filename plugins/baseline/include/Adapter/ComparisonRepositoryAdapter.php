@@ -25,12 +25,12 @@ namespace Tuleap\Baseline\Adapter;
 
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
-use Project;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\Comparison;
 use Tuleap\Baseline\Domain\ComparisonRepository;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\TransientComparison;
 use UserManager;
 
@@ -131,10 +131,10 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
      * Note: Authorizations may have been checked earlier
      * @return Comparison[]
      */
-    public function findByProject(PFUser $current_user, Project $project, int $page_size, int $comparison_offset): array
+    public function findByProject(PFUser $current_user, ProjectIdentifier $project, int $page_size, int $comparison_offset): array
     {
         $rows = $this->db->safeQuery(
-            'SELECT 
+            'SELECT
                 comparison.id,
                 comparison.name,
                 comparison.comment,
@@ -169,7 +169,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
     /**
      * Note: Authorizations may have been check earlier
      */
-    public function countByProject(Project $project): int
+    public function countByProject(ProjectIdentifier $project): int
     {
         return $this->db->single(
             'SELECT COUNT(comparison.id) as nb

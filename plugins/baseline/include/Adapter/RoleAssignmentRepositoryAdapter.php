@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use ParagonIE\EasyDB\EasyDB;
-use Project;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 
 class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
@@ -40,7 +40,7 @@ class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
     /**
      * @return RoleAssignment[]
      */
-    public function findByProjectAndRole(Project $project, string $role): array
+    public function findByProjectAndRole(ProjectIdentifier $project, string $role): array
     {
         $rows = $this->db->safeQuery(
             "SELECT user_group_id, role, project_id

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use DateTimeInterface;
-use Project;
 
 class TransientBaseline
 {
@@ -59,7 +58,7 @@ class TransientBaseline
         return $this->snapshot_date;
     }
 
-    public function getProject(): Project
+    public function getProject(): ProjectIdentifier
     {
         return $this->artifact->getProject();
     }

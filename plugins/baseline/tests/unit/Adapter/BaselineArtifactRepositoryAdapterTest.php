@@ -31,10 +31,10 @@ use Mockery\MockInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
-use Tuleap\Baseline\Factory\ProjectFactory;
-use Tuleap\Baseline\Factory\TrackerFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -74,8 +74,10 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testFindById()
     {
+        $project = ProjectTestBuilder::aProject()->build();
+
         $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->allows(['userCanView' => true, 'getTracker->getProject' => ProjectFactory::one()]);
+        $artifact->allows(['userCanView' => true, 'getTracker->getProject' => $project]);
 
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -85,9 +87,9 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getArtifact->getTracker')
             ->andReturn(
-                TrackerFactory::one()
-                    ->id(10)
-                    ->itemName('Tracker name')
+                TrackerTestBuilder::aTracker()
+                    ->withId(10)
+                    ->withName('Tracker name')
                     ->build()
             );
         $this->changeset_factory
@@ -122,9 +124,11 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public function testFindByIdAt()
     {
+        $project = ProjectTestBuilder::aProject()->build();
+
         $date     = DateTimeFactory::one();
         $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->allows(['userCanView' => true, 'getTracker->getProject' => ProjectFactory::one()]);
+        $artifact->allows(['userCanView' => true, 'getTracker->getProject' => $project]);
 
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -134,9 +138,9 @@ class BaselineArtifactRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCas
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getArtifact->getTracker')
             ->andReturn(
-                TrackerFactory::one()
-                    ->id(10)
-                    ->itemName('Tracker name')
+                TrackerTestBuilder::aTracker()
+                    ->withId(10)
+                    ->withName('Tracker name')
                     ->build()
             );
         $this->changeset_factory

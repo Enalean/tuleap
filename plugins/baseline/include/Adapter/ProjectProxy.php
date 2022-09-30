@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,28 +21,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Factory;
+namespace Tuleap\Baseline\Adapter;
 
-use Mockery\MockInterface;
-use Project;
-use Tuleap\Baseline\Adapter\ProjectProxy;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ProjectFactory
+/**
+ * @psalm-immutable
+ */
+final class ProjectProxy implements ProjectIdentifier
 {
-    /**
-     * @return Project|MockInterface
-     */
-    public static function one(): ProjectIdentifier
-    {
-        return self::oneWithId(103);
+    private function __construct(
+        private int $project_id,
+    ) {
     }
 
-    public static function oneWithId(int $id): ProjectIdentifier
+    public static function buildFromProject(\Project $project): self
     {
-        return ProjectProxy::buildFromProject(
-            ProjectTestBuilder::aProject()->withId($id)->build()
+        return new self(
+            (int) $project->getID(),
         );
+    }
+
+    public function getID(): int
+    {
+        return $this->project_id;
     }
 }

@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use Project;
 use Tuleap\Baseline\Domain\BaselineArtifact;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 
 class BaselineArtifactBuilder
 {
@@ -43,7 +43,7 @@ class BaselineArtifactBuilder
     /** @var string */
     private $status;
 
-    /** @var Project */
+    /** @var ProjectIdentifier */
     private $project;
 
     /**  @var int */
@@ -85,7 +85,7 @@ class BaselineArtifactBuilder
         return $this;
     }
 
-    public function project(Project $project): self
+    public function project(ProjectIdentifier $project): self
     {
         $this->project = $project;
         return $this;

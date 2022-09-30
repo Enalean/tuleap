@@ -25,12 +25,12 @@ namespace Tuleap\Baseline\Adapter;
 
 use DateTimeInterface;
 use PFUser;
-use Project;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\BaselineArtifact;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 
 class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
 {
@@ -76,7 +76,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         return $this->buildArtifact(
             $current_user,
             $id,
-            $artifact->getTracker()->getProject(),
+            ProjectProxy::buildFromProject($artifact->getTracker()->getProject()),
             $last_changeset
         );
     }
@@ -94,7 +94,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         return $this->buildArtifact(
             $current_user,
             $id,
-            $tracker_artifact->getTracker()->getProject(),
+            ProjectProxy::buildFromProject($tracker_artifact->getTracker()->getProject()),
             $changeset
         );
     }
@@ -102,7 +102,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
     private function buildArtifact(
         PFUser $current_user,
         int $id,
-        Project $project,
+        ProjectIdentifier $project,
         Tracker_Artifact_Changeset $changeset,
     ): BaselineArtifact {
         $title          = $this->semantic_value_adapter->findTitle($changeset, $current_user);
