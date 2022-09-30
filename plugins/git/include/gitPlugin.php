@@ -31,6 +31,8 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
@@ -81,6 +83,7 @@ use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
 use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
 use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeCommand;
 use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeAction;
+use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeFFI;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
@@ -210,7 +213,7 @@ use Tuleap\User\PasswordVerifier;
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const LOG_IDENTIFIER = 'git_syslog';
 
@@ -482,6 +485,11 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
     public function getConfigurationParameter($key)
     {
         return $this->getPluginInfo()->getPropertyValueForName($key);
+    }
+
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(PreReceiveAnalyzeCommand::class);
     }
 
     public function cssFile($params)
@@ -2863,16 +2871,19 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
                 );
             }
         );
-        $commands_collector->addCommand(
-            PreReceiveAnalyzeCommand::NAME,
-            function (): PreReceiveAnalyzeCommand {
-                return new PreReceiveAnalyzeCommand(
-                    new PreReceiveAnalyzeAction(
-                        $this->getRepositoryFactory()
-                    )
-                );
-            }
-        );
+        if (\ForgeConfig::getFeatureFlag(PreReceiveAnalyzeCommand::FEATURE_FLAG_KEY) === '1') {
+            $commands_collector->addCommand(
+                PreReceiveAnalyzeCommand::NAME,
+                function (): PreReceiveAnalyzeCommand {
+                    return new PreReceiveAnalyzeCommand(
+                        new PreReceiveAnalyzeAction(
+                            $this->getRepositoryFactory(),
+                            new PreReceiveAnalyzeFFI()
+                        )
+                    );
+                }
+            );
+        }
     }
 
     public function collectAccessKeyScopeBuilder(AccessKeyScopeBuilderCollector $collector): void
