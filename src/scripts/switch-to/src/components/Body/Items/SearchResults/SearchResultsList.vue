@@ -34,7 +34,7 @@
             v-on:click="fetchMoreResults"
             data-test="more-button"
         >
-            {{ $gettext("more") }}
+            {{ $gettext("More…") }}
         </button>
         <i
             class="fa-solid fa-circle-notch fa-spin switch-to-search-results-loading-icon"
