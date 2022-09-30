@@ -24,8 +24,6 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Search\SearchResult;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems;
 use Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex;
 use Tuleap\FullTextSearchCommon\Index\SearchIndexedItem;
@@ -37,10 +35,6 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoInde
 {
     private const ID_FIELD      = 'id';
     private const CONTENT_FIELD = 'content';
-
-    #[FeatureFlagConfigKey('Display matching content in FTS results. 1 to activate, 0 to deactivate. Activated by default.')]
-    #[ConfigKeyString('1')]
-    public const DISPLAY_MATCHING_CONTENT_CONFIG_KEY = 'fts_meilisearch_display_matching_content';
 
     public function __construct(private Indexes $client_index, private MeilisearchMetadataDAO $metadata_dao)
     {
@@ -96,11 +90,9 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoInde
             'attributesToRetrieve' => [self::ID_FIELD],
             'limit'                => $limit,
             'offset'               => $offset,
+            'attributesToCrop'     => [self::CONTENT_FIELD],
+            'cropLength'           => 20,
         ];
-        if (\ForgeConfig::getFeatureFlag(self::DISPLAY_MATCHING_CONTENT_CONFIG_KEY) === "1") {
-            $parameters['attributesToCrop'] = [self::CONTENT_FIELD];
-            $parameters['cropLength']       = 20;
-        }
 
         $meilisearch_search_result = $this->client_index->search($keywords, $parameters);
         assert($meilisearch_search_result instanceof SearchResult);
