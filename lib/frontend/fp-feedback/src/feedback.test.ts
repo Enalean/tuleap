@@ -17,9 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
 import type { FeedbackLevel } from "./feedback";
 import { addFeedback, clearAllFeedbacks } from "./feedback";
+
+jest.mock("dompurify", () => ({
+    default: {
+        sanitize(html_string: string): DocumentFragment {
+            const doc = document.implementation.createHTMLDocument();
+            const template = doc.createElement("template");
+            template.innerHTML = html_string;
+            return template.content;
+        },
+    },
+}));
 
 const MESSAGE = "A feedback message";
 const MESSAGE_WITH_HTML_LINK = 'A feedback message with <a href="#">link</a>';

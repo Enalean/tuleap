@@ -1,6 +1,6 @@
-// Vitest Snapshot v1
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PrivacyBadge > displays the badge with its popover 1`] = `
+exports[`PrivacyBadge displays the badge with its popover 1`] = `
 <div
   data-v-app=""
 >

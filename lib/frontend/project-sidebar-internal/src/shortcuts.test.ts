@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect, vi } from "vitest";
 import { getAvailableShortcuts, getAvailableShortcutsFromToolsConfiguration } from "./shortcuts";
 import { example_config } from "./project-sidebar-example-config";
 
@@ -54,11 +53,11 @@ describe("Project Sidebar shortcuts", () => {
     it("associates shortcuts with an action", () => {
         const doc = document.implementation.createHTMLDocument();
         const first_tool = buildToolElementLookAlike(doc, "something");
-        vi.spyOn(first_tool, "focus").mockImplementation(() => {
+        jest.spyOn(first_tool, "focus").mockImplementation(() => {
             // Do nothing
         });
         const git_service = buildToolElementLookAlike(doc, "plugin_git");
-        vi.spyOn(git_service, "click").mockImplementation(() => {
+        jest.spyOn(git_service, "click").mockImplementation(() => {
             // Do nothing
         });
 

@@ -1,6 +1,6 @@
-// Vitest Snapshot v1
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SidebarHeader > displays the sidebar header 1`] = `
+exports[`SidebarHeader displays the sidebar header 1`] = `
 <div
   data-v-app=""
 >
