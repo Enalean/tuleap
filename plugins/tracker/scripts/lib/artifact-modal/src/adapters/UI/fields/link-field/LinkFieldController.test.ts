@@ -51,22 +51,19 @@ import type { RetrieveNewLinks } from "../../../../domain/fields/link-field/Retr
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ParentLinkVerifier } from "../../../../domain/fields/link-field/ParentLinkVerifier";
-import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field/RetrieveSelectedLinkType";
-import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
-import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
-import type { SetSelectedLinkType } from "../../../../domain/fields/link-field/SetSelectedLinkType";
 import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field/LinkType";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
-import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import { setCatalog } from "../../../../gettext-catalog";
 import type { GroupCollection } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
+import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
+import type { ParentArtifactIdentifier } from "../../../../domain/parent/ParentArtifactIdentifier";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -83,10 +80,10 @@ describe(`LinkFieldController`, () => {
         new_link_adder: AddNewLinkStub,
         new_links_retriever: RetrieveNewLinks,
         new_link_remover: DeleteNewLinkStub,
-        type_retriever: RetrieveSelectedLinkType,
-        type_setter: SetSelectedLinkType,
         notification_clearer: ClearFaultNotificationStub,
-        parents_retriever: RetrievePossibleParents;
+        parents_retriever: RetrievePossibleParents,
+        allowed_link_types: AllowedLinkTypeRepresentation[],
+        parent_identifier: ParentArtifactIdentifier | null;
 
     beforeEach(() => {
         setCatalog({
@@ -101,10 +98,18 @@ describe(`LinkFieldController`, () => {
         new_link_adder = AddNewLinkStub.withCount();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
         new_link_remover = DeleteNewLinkStub.withCount();
-        type_retriever = RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped());
-        type_setter = SetSelectedLinkTypeStub.buildPassThrough();
         notification_clearer = ClearFaultNotificationStub.withCount();
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
+        parent_identifier = null;
+
+        allowed_link_types = [
+            { shortname: IS_CHILD_LINK_TYPE, forward_label: "Child", reverse_label: "Parent" },
+            {
+                shortname: "custom",
+                forward_label: "Custom Forward",
+                reverse_label: "Custom Reverse",
+            },
+        ];
     });
 
     const getController = (): LinkFieldControllerType => {
@@ -126,7 +131,6 @@ describe(`LinkFieldController`, () => {
                 ),
                 fault_notifier,
                 notification_clearer,
-                type_retriever,
                 parents_retriever,
                 link_verifier,
                 current_artifact_identifier,
@@ -135,27 +139,14 @@ describe(`LinkFieldController`, () => {
             new_link_adder,
             new_link_remover,
             new_links_retriever,
-            ParentLinkVerifier(links_retriever_sync, new_links_retriever, null),
-            type_retriever,
-            type_setter,
+            ParentLinkVerifier(links_retriever_sync, new_links_retriever, parent_identifier),
             parents_retriever,
             link_verifier,
             {
                 field_id: FIELD_ID,
                 type: "art_link",
                 label: "Artifact link",
-                allowed_types: [
-                    {
-                        shortname: IS_CHILD_LINK_TYPE,
-                        forward_label: "Child",
-                        reverse_label: "Parent",
-                    },
-                    {
-                        shortname: "custom",
-                        forward_label: "Custom Forward",
-                        reverse_label: "Custom Reverse",
-                    },
-                ],
+                allowed_types: allowed_link_types,
             },
             current_artifact_identifier,
             current_tracker_identifier,
@@ -165,8 +156,9 @@ describe(`LinkFieldController`, () => {
     };
 
     describe(`displayField()`, () => {
-        const displayField = (): LinkFieldPresenterAndAllowedLinkTypes =>
-            getController().displayField();
+        const displayField = (): LinkFieldPresenterAndAllowedLinkTypes => {
+            return getController().displayField();
+        };
 
         it(`returns a presenter for the field and current artifact cross reference`, () => {
             const { field } = displayField();
@@ -193,7 +185,7 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`displayLinkedArtifacts()`, () => {
-        const displayLinkedArtifacts = (): Promise<LinkedArtifactCollectionPresenter> =>
+        const displayLinkedArtifacts = (): PromiseLike<LinkedArtifactCollectionPresenter> =>
             getController().displayLinkedArtifacts();
 
         it(`when the modal is in creation mode,
@@ -271,24 +263,19 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`addNewLink`, () => {
-        let first_type: LinkType, second_type: LinkType;
+        let link_type: LinkType;
         beforeEach(() => {
-            first_type = LinkTypeStub.buildParentLinkType();
-            second_type = LinkTypeStub.buildUntyped();
+            link_type = LinkTypeStub.buildParentLinkType();
         });
 
         const addNewLink = (): NewLinkCollectionPresenter => {
-            type_retriever = RetrieveSelectedLinkTypeStub.withSuccessiveTypes(
-                first_type,
-                second_type
-            );
             const linkable_artifact = LinkableArtifactStub.withDefaults({
                 id: ARTIFACT_ID,
             });
             new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-                NewLinkStub.withIdAndType(ARTIFACT_ID, first_type)
+                NewLinkStub.withIdAndType(ARTIFACT_ID, link_type)
             );
-            return getController().addNewLink(linkable_artifact);
+            return getController().addNewLink(linkable_artifact, link_type);
         };
 
         it(`adds a new link to the stored new links and returns an updated presenter`, () => {
@@ -316,87 +303,46 @@ describe(`LinkFieldController`, () => {
         });
     });
 
-    describe(`setSelectedLinkType`, () => {
-        let link_selector: LinkSelectorStub;
-
+    describe(`retrievePossibleParentsGroups`, () => {
         beforeEach(() => {
-            link_selector = LinkSelectorStub.withDropdownContentRecord();
+            const first_parent = LinkableArtifactStub.withDefaults({ id: FIRST_PARENT_ID });
+            const second_parent = LinkableArtifactStub.withDefaults({ id: SECOND_PARENT_ID });
+            parents_retriever = RetrievePossibleParentsStub.withParents(
+                first_parent,
+                second_parent
+            );
         });
 
-        const getGroupCollection = (): GroupCollection => {
-            const groups = link_selector.getGroupCollection();
-            if (groups === undefined) {
-                throw new Error("Expected a group collection to be set");
-            }
-            return groups;
+        const retrieveParents = (): PromiseLike<GroupCollection> => {
+            return getController().retrievePossibleParentsGroups();
         };
 
-        const setSelectedLinkType = (type: LinkType): LinkType => {
-            return getController().setSelectedLinkType(link_selector, type);
-        };
+        it(`will return the groups of possible parents for this tracker`, async () => {
+            const groups = await retrieveParents();
 
-        it(`when the new type is NOT reverse _is_child
-            it stores the new selected link type,
-            and returns the new selected link type`, () => {
-            const new_type = LinkTypeStub.buildReverseCustom();
-            const result = setSelectedLinkType(new_type);
-
-            expect(result).toBe(new_type);
+            expect(notification_clearer.getCallCount()).toBe(1);
+            expect(groups).toHaveLength(1);
+            expect(groups[0].is_loading).toBe(false);
+            const parent_ids = groups[0].items.map((item) => {
+                const linkable_artifact = item.value as LinkableArtifact;
+                return linkable_artifact.id;
+            });
+            expect(parent_ids).toHaveLength(2);
+            expect(parent_ids).toContain(FIRST_PARENT_ID);
+            expect(parent_ids).toContain(SECOND_PARENT_ID);
         });
 
-        describe(`when the new type is reverse _is_child (Parent)`, () => {
-            let parent_type: LinkType;
-            beforeEach(() => {
-                parent_type = LinkTypeStub.buildParentLinkType();
-                const first_parent = LinkableArtifactStub.withDefaults({ id: FIRST_PARENT_ID });
-                const second_parent = LinkableArtifactStub.withDefaults({ id: SECOND_PARENT_ID });
-                parents_retriever = RetrievePossibleParentsStub.withParents(
-                    first_parent,
-                    second_parent
-                );
-            });
+        it(`when there is an error during retrieval of the possible parents,
+            it will notify that there has been a fault
+            and will return an empty group`, async () => {
+            parents_retriever = RetrievePossibleParentsStub.withFault(Fault.fromMessage("Ooops"));
 
-            it(`will load the possible parents for this tracker
-                and will set the dropdown content with a group of possible parents
-                and returns the new selected link type`, async () => {
-                const result = setSelectedLinkType(parent_type);
+            const groups = await retrieveParents();
 
-                expect(notification_clearer.getCallCount()).toBe(1);
-                const loading_groups = getGroupCollection();
-                expect(loading_groups).toHaveLength(1);
-                expect(loading_groups[0].is_loading).toBe(true);
-
-                await result; // wait for the ResultAsync of parents_retriever
-
-                expect(result).toBe(parent_type);
-                const groups = getGroupCollection();
-                expect(groups).toHaveLength(1);
-                expect(groups[0].is_loading).toBe(false);
-                const parent_ids = groups[0].items.map((item) => {
-                    const linkable_artifact = item.value as LinkableArtifact;
-                    return linkable_artifact.id;
-                });
-                expect(parent_ids).toHaveLength(2);
-                expect(parent_ids).toContain(FIRST_PARENT_ID);
-                expect(parent_ids).toContain(SECOND_PARENT_ID);
-            });
-
-            it(`and there is an error during retrieval of the possible parents,
-                it will notify that there has been a fault
-                and will set the dropdown content with an empty group of possible parents`, async () => {
-                parents_retriever = RetrievePossibleParentsStub.withFault(
-                    Fault.fromMessage("Ooops")
-                );
-
-                const result = await setSelectedLinkType(parent_type);
-
-                expect(result).toBe(parent_type);
-                expect(fault_notifier.getCallCount()).toBe(1);
-                const groups = getGroupCollection();
-                expect(groups).toHaveLength(1);
-                expect(groups[0].is_loading).toBe(false);
-                expect(groups[0].items).toHaveLength(0);
-            });
+            expect(fault_notifier.getCallCount()).toBe(1);
+            expect(groups).toHaveLength(1);
+            expect(groups[0].is_loading).toBe(false);
+            expect(groups[0].items).toHaveLength(0);
         });
     });
 });

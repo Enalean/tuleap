@@ -41,25 +41,17 @@ import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaul
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
-import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
-import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
-import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
-import type { LinkSelector } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
+import { selectOrThrow } from "@tuleap/dom";
 
-function getSelectMainOptionsGroup(select: HTMLSelectElement): HTMLOptGroupElement {
-    const optgroup = select.querySelector("[data-test=link-type-select-optgroup]");
-    if (!(optgroup instanceof HTMLOptGroupElement)) {
-        throw new Error("The main <optgroup> can't be found in the target");
-    }
-    return optgroup;
-}
+const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupElement =>
+    selectOrThrow(select, "[data-test=link-type-select-optgroup]", HTMLOptGroupElement);
 
 describe("TypeSelectorTemplate", () => {
     let host: HostElement,
@@ -99,7 +91,6 @@ describe("TypeSelectorTemplate", () => {
         };
         const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
         const fault_notifier = NotifyFaultStub.withCount();
-        const type_retriever = RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped());
         const notification_clearer = ClearFaultNotificationStub.withCount();
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(30);
         const parents_retriever = RetrievePossibleParentsStub.withoutParents();
@@ -118,7 +109,6 @@ describe("TypeSelectorTemplate", () => {
                 ),
                 fault_notifier,
                 notification_clearer,
-                type_retriever,
                 parents_retriever,
                 link_verifier,
                 current_artifact_identifier,
@@ -128,8 +118,6 @@ describe("TypeSelectorTemplate", () => {
             DeleteNewLinkStub.withCount(),
             RetrieveNewLinksStub.withoutLink(),
             VerifyHasParentLinkStub.withNoParentLink(),
-            type_retriever,
-            SetSelectedLinkTypeStub.buildPassThrough(),
             parents_retriever,
             link_verifier,
             field,
@@ -143,17 +131,12 @@ describe("TypeSelectorTemplate", () => {
             field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(field, cross_reference),
             allowed_link_types,
             current_link_type: LinkTypeStub.buildUntyped(),
-            link_selector: LinkSelectorStub.withResetSelectionCallCount() as LinkSelector,
         } as HostElement;
 
         const updateFunction = getTypeSelectorTemplate(host);
         updateFunction(host, target);
 
-        const select = target.querySelector("[data-test=link-type-select]");
-        if (!(select instanceof HTMLSelectElement)) {
-            throw new Error("An expected element has not been found in template");
-        }
-        return select;
+        return selectOrThrow(target, "[data-test=link-type-select]", HTMLSelectElement);
     };
 
     it("should build the type selector", () => {

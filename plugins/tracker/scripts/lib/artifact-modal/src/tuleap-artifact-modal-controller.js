@@ -66,7 +66,6 @@ import { NewLinksStore } from "./adapters/Memory/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
 import { ParentLinkVerifier } from "./domain/fields/link-field/ParentLinkVerifier";
 import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
-import { SelectedLinkTypeStore } from "./adapters/Memory/SelectedLinkTypeStore";
 import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
 import { PossibleParentsCache } from "./adapters/Memory/PossibleParentsCache";
 import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedVerifier";
@@ -110,7 +109,6 @@ function ArtifactModalController(
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
     const new_links_store = NewLinksStore();
-    const type_store = SelectedLinkTypeStore();
     const possible_parents_cache = PossibleParentsCache(api_client);
     const already_linked_verifier = AlreadyLinkedVerifier(links_store, new_links_store);
     const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
@@ -175,7 +173,6 @@ function ArtifactModalController(
                     api_client,
                     fault_feedback_controller,
                     fault_feedback_controller,
-                    type_store,
                     possible_parents_cache,
                     already_linked_verifier,
                     current_artifact_identifier,
@@ -185,8 +182,6 @@ function ArtifactModalController(
                 new_links_store,
                 new_links_store,
                 ParentLinkVerifier(links_store, new_links_store, parent_identifier),
-                type_store,
-                type_store,
                 possible_parents_cache,
                 already_linked_verifier,
                 field,
