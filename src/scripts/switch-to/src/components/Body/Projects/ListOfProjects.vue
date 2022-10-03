@@ -37,6 +37,7 @@
                     v-for="project of filtered_projects"
                     v-bind:key="project.project_uri"
                     v-bind:project="project"
+                    v-bind:location="location"
                 />
             </nav>
             <trove-cat-link
@@ -51,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRootStore } from "../../../stores/root";
 import { storeToRefs } from "pinia";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
@@ -76,4 +77,6 @@ const should_be_displayed = computed((): boolean => {
 const should_softwaremap_link_be_displayed = computed((): boolean => {
     return is_in_search_mode.value === false;
 });
+
+const location = ref(window.location);
 </script>

@@ -42,6 +42,7 @@
                     v-bind:key="entry.html_url"
                     v-bind:entry="entry"
                     v-bind:change-focus-callback="changeFocus"
+                    v-bind:location="location"
                 />
             </nav>
             <p class="switch-to-modal-no-matching-history" v-else>
@@ -55,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import ItemEntry from "../ItemEntry.vue";
@@ -111,4 +112,6 @@ const has_filtered_history = computed((): boolean => {
 const should_be_displayed = computed((): boolean => {
     return is_in_search_mode.value === false || has_filtered_history.value;
 });
+
+const location = ref(window.location);
 </script>

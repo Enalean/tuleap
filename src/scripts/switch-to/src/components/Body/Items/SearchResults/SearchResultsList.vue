@@ -25,6 +25,7 @@
             v-bind:key="key"
             v-bind:entry="item"
             v-bind:change-focus-callback="changeFocus"
+            v-bind:location="location"
         />
         <button
             type="button"
@@ -50,6 +51,7 @@ import { useFullTextStore } from "../../../../stores/fulltext";
 import ItemEntry from "../ItemEntry.vue";
 import type { FocusFromItemPayload } from "../../../../stores/type";
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
 const fulltext_store = useFullTextStore();
 const { fulltext_search_results, fulltext_search_has_more_results, fulltext_search_is_loading } =
@@ -62,4 +64,6 @@ function changeFocus(payload: FocusFromItemPayload): void {
 function fetchMoreResults(): void {
     fulltext_store.more();
 }
+
+const location = ref(window.location);
 </script>

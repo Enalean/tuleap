@@ -53,6 +53,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
             global: getGlobalTestOptions(),
         });
@@ -78,6 +79,7 @@ describe("ItemEntry", () => {
                     ] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
             global: getGlobalTestOptions(),
         });
@@ -108,6 +110,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
             global: getGlobalTestOptions(),
         });
@@ -129,6 +132,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
             global: getGlobalTestOptions(),
         });
@@ -155,6 +159,7 @@ describe("ItemEntry", () => {
                 props: {
                     entry,
                     changeFocusCallback,
+                    location: window.location,
                 },
                 global: getGlobalTestOptions(),
             });
@@ -194,6 +199,7 @@ describe("ItemEntry", () => {
             props: {
                 entry,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
             global: getGlobalTestOptions(pinia),
         });
@@ -236,6 +242,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
         });
 
@@ -270,6 +277,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
         });
 
@@ -305,6 +313,7 @@ describe("ItemEntry", () => {
                     cropped_content: null,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
         });
 
@@ -340,6 +349,7 @@ describe("ItemEntry", () => {
                     cropped_content: "... excerpt ...",
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
         });
 
@@ -376,6 +386,7 @@ describe("ItemEntry", () => {
                     cropped_content: "... excerpt ...",
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
+                location: window.location,
             },
         });
 
@@ -385,5 +396,57 @@ describe("ItemEntry", () => {
         // We need to wait for child component to emit the 'matches' event
         await waitFor(() => expect(queryByTestId("item-content-matches")).toBeFalsy());
         expect(queryByText("... excerpt ...")).toBeFalsy();
+    });
+
+    it("should go to the item when I click on the container", async () => {
+        const location = { assign: jest.fn() };
+
+        const wrapper = shallowMount(ItemEntry, {
+            props: {
+                entry: {
+                    icon_name: "fa-columns",
+                    xref: "art #123",
+                    title: "Lorem ipsum",
+                    color_name: "lake-placid-blue",
+                    quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
+                    badges: [] as ReadonlyArray<ItemBadge>,
+                } as ItemDefinition,
+                changeFocusCallback: jest.fn(),
+                location,
+            },
+            global: getGlobalTestOptions(),
+        });
+
+        await wrapper.find("[data-test=switch-to-item-entry]").trigger("click");
+        expect(location.assign).toHaveBeenCalled();
+    });
+
+    it("should not manually assign the location when the real link is clicked", async () => {
+        const location = { assign: jest.fn() };
+
+        const wrapper = shallowMount(ItemEntry, {
+            props: {
+                entry: {
+                    icon_name: "fa-columns",
+                    xref: "art #123",
+                    title: "Lorem ipsum",
+                    color_name: "lake-placid-blue",
+                    quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
+                    badges: [] as ReadonlyArray<ItemBadge>,
+                } as ItemDefinition,
+                changeFocusCallback: jest.fn(),
+                location,
+            },
+            global: getGlobalTestOptions(),
+        });
+
+        await wrapper.find("[data-test=entry-link]").trigger("click");
+        expect(location.assign).not.toHaveBeenCalled();
     });
 });
