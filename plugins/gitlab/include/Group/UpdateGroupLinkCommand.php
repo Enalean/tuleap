@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
+use Tuleap\Gitlab\Group\Token\GroupApiToken;
+
 /**
  * @psalm-immutable
  */
@@ -31,6 +33,7 @@ final class UpdateGroupLinkCommand
         public int $group_link_id,
         public ?string $branch_prefix,
         public ?bool $allow_artifact_closure,
+        public ?GroupApiToken $gitlab_token,
         public \PFUser $user,
     ) {
     }

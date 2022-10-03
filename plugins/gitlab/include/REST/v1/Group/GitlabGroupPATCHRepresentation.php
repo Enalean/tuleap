@@ -35,15 +35,20 @@ final class GitlabGroupPATCHRepresentation
      * @var bool | null {@required false}
      */
     public $allow_artifact_closure;
+    /**
+     * @var string | null {@required false}
+     */
+    public $gitlab_token;
 
-    private function __construct(?string $create_branch_prefix, ?bool $allow_artifact_closure)
+    private function __construct(?string $create_branch_prefix, ?bool $allow_artifact_closure, ?string $gitlab_token)
     {
         $this->create_branch_prefix   = $create_branch_prefix;
         $this->allow_artifact_closure = $allow_artifact_closure;
+        $this->gitlab_token           = $gitlab_token;
     }
 
-    public static function build(?string $create_branch_prefix, ?bool $allow_artifact_closure): self
+    public static function build(?string $create_branch_prefix, ?bool $allow_artifact_closure, ?string $gitlab_token): self
     {
-        return new self($create_branch_prefix, $allow_artifact_closure);
+        return new self($create_branch_prefix, $allow_artifact_closure, $gitlab_token);
     }
 }

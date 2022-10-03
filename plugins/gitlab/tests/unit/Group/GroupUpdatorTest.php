@@ -22,9 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Stubs\UpdateArtifactClosureOfGroupStub;
 use Tuleap\Gitlab\Test\Stubs\UpdateBranchPrefixOfGroupStub;
+use Tuleap\Gitlab\Test\Stubs\UpdateGroupLinkTokenStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -35,16 +38,20 @@ final class GroupUpdatorTest extends TestCase
 {
     private UpdateBranchPrefixOfGroupStub $branch_prefix_updater;
     private UpdateArtifactClosureOfGroupStub $artifact_closure_updater;
+    private UpdateGroupLinkTokenStub $group_token_updater;
     private ?string $branch_prefix;
     private ?bool $allow_artifact_closure;
+    private ?GroupApiToken $gitlab_token;
 
     protected function setUp(): void
     {
         $this->branch_prefix_updater    = UpdateBranchPrefixOfGroupStub::withCallCount();
         $this->artifact_closure_updater = UpdateArtifactClosureOfGroupStub::withCallCount();
+        $this->group_token_updater      = UpdateGroupLinkTokenStub::withCallCount();
 
         $this->branch_prefix          = 'dev/';
         $this->allow_artifact_closure = true;
+        $this->gitlab_token           = GroupApiToken::buildNewGroupToken(new ConcealedString("az3rty_s3cure_t0ken"));
     }
 
     private function updateGroupLink(): Ok|Err
@@ -54,15 +61,20 @@ final class GroupUpdatorTest extends TestCase
             $group_link_id,
             $this->branch_prefix,
             $this->allow_artifact_closure,
+            $this->gitlab_token,
             UserTestBuilder::buildWithDefaults()
         );
 
         $group_link = GroupLinkBuilder::aGroupLink($group_link_id)
-            ->withAllowArtifactClosure(true)
-            ->withNoBranchPrefix()
-            ->build();
+                                      ->withAllowArtifactClosure(true)
+                                      ->withNoBranchPrefix()
+                                      ->build();
 
-        $updator = new GroupUpdator($this->branch_prefix_updater, $this->artifact_closure_updater);
+        $updator = new GroupUpdator(
+            $this->branch_prefix_updater,
+            $this->artifact_closure_updater,
+            $this->group_token_updater
+        );
         return $updator->updateGroupLink($group_link, $update_command);
     }
 
@@ -76,14 +88,17 @@ final class GroupUpdatorTest extends TestCase
         self::assertSame(1, $this->branch_prefix_updater->getCallCount());
     }
 
-    public function testItDoesNotAskToSaveThePrefixIfNoPrefixProvided(): void
+    public function testItDoesNotAskToSaveAnyParameter(): void
     {
         $this->branch_prefix          = null;
         $this->allow_artifact_closure = null;
+        $this->gitlab_token           = null;
 
         $result = $this->updateGroupLink();
         self::assertTrue(Result::isOk($result));
         self::assertSame(0, $this->branch_prefix_updater->getCallCount());
+        self::assertSame(0, $this->artifact_closure_updater->getCallCount());
+        self::assertSame(0, $this->group_token_updater->getCallCount());
     }
 
     public function testItReturnsAFaultIfPrefixIsNotValid(): void
@@ -106,11 +121,23 @@ final class GroupUpdatorTest extends TestCase
         self::assertSame(1, $this->artifact_closure_updater->getCallCount());
     }
 
-    public function testItAsksToSaveBothPrefixAndArtifactClosure(): void
+    public function testItAsksToSaveTheNewToken(): void
+    {
+        $this->branch_prefix          = null;
+        $this->allow_artifact_closure = null;
+        $this->gitlab_token           = GroupApiToken::buildNewGroupToken(new ConcealedString("az3rty_s3cure_t0ken"));
+
+        $result = $this->updateGroupLink();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(1, $this->group_token_updater->getCallCount());
+    }
+
+    public function testItAsksToSaveAllParameters(): void
     {
         $result = $this->updateGroupLink();
         self::assertTrue(Result::isOk($result));
         self::assertSame(1, $this->branch_prefix_updater->getCallCount());
         self::assertSame(1, $this->artifact_closure_updater->getCallCount());
+        self::assertSame(1, $this->group_token_updater->getCallCount());
     }
 }

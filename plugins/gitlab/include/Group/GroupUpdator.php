@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Group;
 
 use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Branch\InvalidBranchNameException;
+use Tuleap\Gitlab\Group\Token\UpdateGroupLinkToken;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -36,6 +37,7 @@ final class GroupUpdator
     public function __construct(
         private UpdateBranchPrefixOfGroup $update_branch_prefix_of_group,
         private UpdateArtifactClosureOfGroup $update_artifact_closure_of_group,
+        private UpdateGroupLinkToken $update_group_token,
     ) {
     }
 
@@ -47,7 +49,8 @@ final class GroupUpdator
         UpdateGroupLinkCommand $command,
     ): Ok|Err {
         return $this->updateBranchPrefixOfGroupLink($gitlab_group_link, $command)
-            ->map(fn() => $this->updateArtifactClosureOfGroupLink($gitlab_group_link, $command));
+            ->map(fn() => $this->updateArtifactClosureOfGroupLink($gitlab_group_link, $command))
+            ->map(fn () => $this->updateGroupToken($gitlab_group_link, $command));
     }
 
     /**
@@ -89,5 +92,18 @@ final class GroupUpdator
             $gitlab_group_link->id,
             $allow_artifact_closure,
         );
+    }
+
+    private function updateGroupToken(
+        GroupLink $gitlab_group_link,
+        UpdateGroupLinkCommand $command,
+    ): void {
+        $gitlab_token = $command->gitlab_token;
+
+        if ($gitlab_token === null) {
+            return;
+        }
+
+        $this->update_group_token->updateToken($gitlab_group_link, $gitlab_token->getToken());
     }
 }

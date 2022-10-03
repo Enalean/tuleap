@@ -20,33 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group\Token;
+namespace Tuleap\Gitlab\Test\Stubs;
 
-use Tuleap\DB\DataAccessObject;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\Token\UpdateGroupLinkToken;
 
-final class GroupApiTokenDAO extends DataAccessObject
+final class UpdateGroupLinkTokenStub implements UpdateGroupLinkToken
 {
-    public function storeToken(int $group_id, string $encrypted_token): void
+    private int $call_count = 0;
+
+    private function __construct()
     {
-        $this->getDB()->insertOnDuplicateKeyUpdate(
-            'plugin_gitlab_group_token',
-            [
-                'group_id'                                => $group_id,
-                'token'                                   => $encrypted_token,
-            ],
-            [
-                'token',
-            ]
-        );
     }
 
-    public function updateGitlabTokenOfGroupLink(GroupLink $group_link, string $gitlab_token): void
+    public static function withCallCount(): self
     {
-        $this->getDB()->update(
-            'plugin_gitlab_group_token',
-            ['token' => $gitlab_token],
-            ['group_id' => $group_link->id]
-        );
+        return new self();
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
+
+    public function updateToken(GroupLink $group_link, ConcealedString $token): void
+    {
+        $this->call_count++;
     }
 }

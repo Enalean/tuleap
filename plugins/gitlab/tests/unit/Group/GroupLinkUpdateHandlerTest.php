@@ -22,13 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Git\Stub\VerifyUserIsGitAdministratorStub;
 use Tuleap\Gitlab\Core\ProjectRetriever;
+use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkStub;
 use Tuleap\Gitlab\Test\Stubs\UpdateArtifactClosureOfGroupStub;
 use Tuleap\Gitlab\Test\Stubs\UpdateBranchPrefixOfGroupStub;
+use Tuleap\Gitlab\Test\Stubs\UpdateGroupLinkTokenStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -62,6 +65,7 @@ final class GroupLinkUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             self::GROUP_LINK_ID,
             'dev/',
             false,
+            GroupApiToken::buildNewGroupToken(new ConcealedString("")),
             UserTestBuilder::buildWithDefaults()
         );
 
@@ -75,7 +79,8 @@ final class GroupLinkUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             new GroupUpdator(
                 UpdateBranchPrefixOfGroupStub::withCallCount(),
-                UpdateArtifactClosureOfGroupStub::withCallCount()
+                UpdateArtifactClosureOfGroupStub::withCallCount(),
+                UpdateGroupLinkTokenStub::withCallCount()
             )
         );
         return $handler->handleGroupLinkUpdate($command);
