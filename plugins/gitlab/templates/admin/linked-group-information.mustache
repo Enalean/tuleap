@@ -32,8 +32,7 @@
                     </span>
                 </div>
                 <div class="tlp-property">
-                    <label class="tlp-label">{{# dgettext }}
-                        tuleap-gitlab | GitLab server URL {{/ dgettext }}</label>
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | GitLab server URL {{/ dgettext }}</label>
                     <p>{{ gitlab_url }}</p>
                 </div>
                 <div class="tlp-property">
@@ -50,12 +49,11 @@
                     </p>
                 </div>
                 <div class="tlp-property">
-                    <label class="tlp-label">{{# dgettext }}
-                        tuleap-gitlab | Allow artifact closure {{/ dgettext }}</label>
+                    <label class="tlp-label">{{# dgettext }} tuleap-gitlab | Allow artifact closure {{/ dgettext }}</label>
                     <p>{{ allow_artifact_closure }}</p>
                 </div>
                 <div class="tlp-property">
-                    <label class="tlp-label">{{# dgettext }} tuleap-gitlab | Prefix the branch name {{/ dgettext }}</label>
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | Prefix the branch name {{/ dgettext }}</label>
                     <p>{{ branch_prefix }}</p>
                 </div>
             </section>
@@ -75,7 +73,7 @@
                     {{# dgettext }}tuleap-gitlab | Update configuration {{/ dgettext }}
                 </button>
 
-                <button type="button" class="tlp-button-danger tlp-button-outline" disabled>
+                <button type="button" class="tlp-button-danger tlp-button-outline" id="unlink-button" data-target-modal-id="unlink-modal">
                     <i class="fa-solid fa-link-slash tlp-button-icon" aria-hidden="true"></i>
                     {{# dgettext }}tuleap-gitlab | Unlink {{/ dgettext }}
                 </button>
@@ -83,3 +81,39 @@
         </div>
     </section>
 </section>
+
+<div id="unlink-modal" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="unlink-modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="unlink-modal-title">
+            {{# dgettext }}tuleap-gitlab | Unlink the project from the GitLab group {{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-gitlab | Close {{/ dgettext }}">
+            <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-feedback gitlab-modal-feebdack-hidden" id="unlink-modal-feedback">
+        <div class="tlp-alert-danger" id="unlink-modal-alert"></div>
+    </div>
+    <div class="tlp-modal-body">
+        <p>{{# dgettext }}
+            tuleap-gitlab
+            | You are about to unlink %1$s from %2$s GitLab group. Please confirm your action.
+            | <b>{{ current_project_label }}</b>
+            | <b>{{ group_name }}</b>
+        {{/dgettext}}</p>
+        <p class="tlp-text-info">
+            {{# dgettext }}tuleap-gitlab | This will not delete the Group on GitLab side. It removes the link between the Tuleap Project
+            and the GitLab group. All GitLab projects part of the group will stay integrated with Tuleap, their configuration will not change. If you wish to remove
+            the integrations of the GitLab projects part of this group, you must remove each one manually.{{/ dgettext }}
+        </p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }}tuleap-gitlab | Cancel {{/ dgettext }}
+        </button>
+        <button type="button" class="tlp-button-danger tlp-modal-action" id="unlink-confirm" data-group-id="{{ group_id }}">
+            <i class="fa-solid fa-link-slash tlp-button-icon" aria-hidden="true" id="unlink-icon"></i>
+            {{# dgettext }}tuleap-gitlab | Unlink {{/ dgettext }}
+        </button>
+    </div>
+</div>

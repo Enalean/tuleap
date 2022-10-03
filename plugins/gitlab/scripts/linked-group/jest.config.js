@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,20 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
-import PoGettextPlugin from "@tuleap/po-gettext-plugin";
+import { env } from "process";
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
-export default vite.defineAppConfig(
-    { plugin_name: "gitlab", outDir: "../../frontend-assets/linked-group/" },
-    {
-        plugins: [PoGettextPlugin.vite()],
-        build: {
-            rollupOptions: {
-                input: {
-                    "linked-group": path.resolve(__dirname, "src/main.ts"),
-                },
-            },
-        },
-    }
-);
+env.DISABLE_TS_TYPECHECK = "true";
+
+const jest_base_config = defineJestConfiguration();
+export default {
+    ...jest_base_config,
+    displayName: "gitlab-linked-group",
+};

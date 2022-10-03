@@ -32,17 +32,21 @@ final class LinkedGroupPresenter
     public string $last_sync_time;
     public string $gitlab_url;
     public ?string $avatar_url;
+    public int $group_id;
     public string $group_name;
     public string $first_letter_of_group_name;
     public string $group_path;
     public string $allow_artifact_closure;
     public string $branch_prefix;
+    public string $current_project_label;
 
     public function __construct(
         public GitLabLinkGroupPanePresenter $administration_pane,
+        \Project $project,
         GroupLink $group_link,
         public int $number_of_integrated_projects_in_last_sync,
     ) {
+        $this->group_id                   = $group_link->id;
         $this->group_name                 = $group_link->name;
         $this->first_letter_of_group_name = mb_substr($group_link->name, 0, 1);
         $this->group_path                 = $group_link->full_path;
@@ -52,6 +56,7 @@ final class LinkedGroupPresenter
         $this->branch_prefix              = $group_link->prefix_branch_name ?? '';
         $this->gitlab_url                 = $group_link->web_url;
         $this->avatar_url                 = $group_link->avatar_url;
+        $this->current_project_label      = $project->getPublicName();
 
         $this->last_sync_time = \DateHelper::timeAgoInWords(
             $group_link->last_synchronization_date->getTimestamp(),

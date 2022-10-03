@@ -9,5 +9,11 @@
             "src": "scripts/group-link-wizard/src",
             "po": "scripts/group-link-wizard/po"
         }
+    },
+    "gettext-ts": {
+        "linked-group": {
+            "src": "scripts/linked-group/src",
+            "po": "scripts/linked-group/po"
+        }
     }
 }
