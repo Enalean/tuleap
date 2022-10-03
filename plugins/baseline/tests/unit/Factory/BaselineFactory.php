@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Factory;
 
 use PFUser;
-use Project;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Support\DateTimeFactory;
 
 /**
@@ -42,7 +42,7 @@ class BaselineFactory
             ->snapshotDate(DateTimeFactory::one());
     }
 
-    public static function fromProject(Project $project): BaselineBuilder
+    public static function fromProject(ProjectIdentifier $project): BaselineBuilder
     {
         return self::one()
             ->artifact(

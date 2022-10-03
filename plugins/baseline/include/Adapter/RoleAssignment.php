@@ -23,14 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use Project;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 
 /**
  * Assign a pair project / user group id to a role, which gives permissions.
  */
 class RoleAssignment
 {
-    /** @var Project */
+    /** @var ProjectIdentifier */
     private $project;
 
     /** @var int */
@@ -39,14 +39,14 @@ class RoleAssignment
     /** @var string */
     private $role;
 
-    public function __construct(Project $project, int $user_group_id, string $role)
+    public function __construct(ProjectIdentifier $project, int $user_group_id, string $role)
     {
         $this->project       = $project;
         $this->user_group_id = $user_group_id;
         $this->role          = $role;
     }
 
-    public function getProject(): Project
+    public function getProject(): ProjectIdentifier
     {
         return $this->project;
     }

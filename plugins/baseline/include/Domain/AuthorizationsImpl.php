@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use PFUser;
-use Project;
 
 class AuthorizationsImpl implements Authorizations
 {
@@ -53,7 +52,7 @@ class AuthorizationsImpl implements Authorizations
         return $this->canReadBaselinesOnProject($current_user, $baseline->getProject());
     }
 
-    public function canReadBaselinesOnProject(PFUser $current_user, Project $project): bool
+    public function canReadBaselinesOnProject(PFUser $current_user, ProjectIdentifier $project): bool
     {
         if ($this->isUserAdminOnProject($current_user, $project)) {
             return true;
@@ -62,7 +61,7 @@ class AuthorizationsImpl implements Authorizations
             || $this->hasUserRoleOnProject($current_user, Role::READER, $project);
     }
 
-    private function canUserAdministrateBaselineOnProject(PFUser $user, Project $project): bool
+    private function canUserAdministrateBaselineOnProject(PFUser $user, ProjectIdentifier $project): bool
     {
         if ($this->isUserAdminOnProject($user, $project)) {
             return true;
@@ -70,7 +69,7 @@ class AuthorizationsImpl implements Authorizations
         return $this->hasUserRoleOnProject($user, Role::ADMIN, $project);
     }
 
-    private function hasUserRoleOnProject(PFUser $user, string $role, Project $project): bool
+    private function hasUserRoleOnProject(PFUser $user, string $role, ProjectIdentifier $project): bool
     {
         $assignments = $this->role_assignment_repository->findByProjectAndRole($project, $role);
         foreach ($assignments as $assignment) {
@@ -81,7 +80,7 @@ class AuthorizationsImpl implements Authorizations
         return false;
     }
 
-    private function isUserAdminOnProject(PFUser $user, Project $project): bool
+    private function isUserAdminOnProject(PFUser $user, ProjectIdentifier $project): bool
     {
         return $user->isSuperUser() || $user->isAdmin($project->getID());
     }
@@ -102,7 +101,7 @@ class AuthorizationsImpl implements Authorizations
         return $this->canReadComparisonsOnProject($current_user, $comparison->getProject());
     }
 
-    public function canReadComparisonsOnProject(PFUser $current_user, Project $project): bool
+    public function canReadComparisonsOnProject(PFUser $current_user, ProjectIdentifier $project): bool
     {
         return $this->canReadBaselinesOnProject($current_user, $project);
     }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use PFUser;
-use Project;
 
 interface ComparisonRepository
 {
@@ -43,7 +42,7 @@ interface ComparisonRepository
      */
     public function findByProject(
         PFUser $current_user,
-        Project $project,
+        ProjectIdentifier $project,
         int $page_size,
         int $comparison_offset,
     ): array;
@@ -52,7 +51,7 @@ interface ComparisonRepository
      * @return int total count of all available comparisons in given project, excluding any security policy
      * (for performances reasons)
      */
-    public function countByProject(Project $project): int;
+    public function countByProject(ProjectIdentifier $project): int;
 
     public function delete(Comparison $comparison, PFUser $current_user): void;
 

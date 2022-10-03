@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use PFUser;
-use Project;
 
 interface Authorizations
 {
@@ -34,7 +33,7 @@ interface Authorizations
 
     public function canReadBaseline(PFUser $current_user, Baseline $baseline): bool;
 
-    public function canReadBaselinesOnProject(PFUser $current_user, Project $project): bool;
+    public function canReadBaselinesOnProject(PFUser $current_user, ProjectIdentifier $project): bool;
 
     public function canCreateComparison(PFUser $current_user, TransientComparison $comparison): bool;
 
@@ -42,5 +41,5 @@ interface Authorizations
 
     public function canReadComparison(PFUser $current_user, Comparison $comparison): bool;
 
-    public function canReadComparisonsOnProject(PFUser $current_user, Project $project): bool;
+    public function canReadComparisonsOnProject(PFUser $current_user, ProjectIdentifier $project): bool;
 }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use PFUser;
-use Project;
 
 class BaselineService
 {
@@ -108,7 +107,7 @@ class BaselineService
      */
     public function findByProject(
         PFUser $current_user,
-        Project $project,
+        ProjectIdentifier $project,
         int $page_size,
         int $baseline_offset,
     ): BaselinesPage {

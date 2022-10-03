@@ -24,9 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use PFUser;
-use Project;
 
 interface ProjectRepository
 {
-    public function findById(PFUser $current_user, int $id): ?Project;
+    public function findById(PFUser $current_user, int $id): ?ProjectIdentifier;
 }

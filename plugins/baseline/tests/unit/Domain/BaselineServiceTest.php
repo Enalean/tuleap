@@ -28,7 +28,6 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use Project;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientBaselineFactory;

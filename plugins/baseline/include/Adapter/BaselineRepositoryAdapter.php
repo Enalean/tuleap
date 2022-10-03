@@ -26,11 +26,11 @@ namespace Tuleap\Baseline\Adapter;
 use DateTimeInterface;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
-use Project;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\BaselineRepository;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\TransientBaseline;
 use UserManager;
 
@@ -128,7 +128,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
      * Note: Authorizations may have been checked earlier
      * @return Baseline[]
      */
-    public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array
+    public function findByProject(PFUser $current_user, ProjectIdentifier $project, int $page_size, int $baseline_offset): array
     {
         $rows = $this->db->safeQuery(
             'SELECT baseline.id, baseline.name, baseline.artifact_id, baseline.user_id, baseline.snapshot_date
@@ -157,10 +157,10 @@ class BaselineRepositoryAdapter implements BaselineRepository
     /**
      * Note: Authorizations may have been check earlier
      */
-    public function countByProject(Project $project): int
+    public function countByProject(ProjectIdentifier $project): int
     {
         return $this->db->single(
-            'SELECT COUNT(baseline.id) as nb 
+            'SELECT COUNT(baseline.id) as nb
             FROM plugin_baseline_baseline as baseline
                  INNER JOIN tracker_artifact as artifact
             ON artifact.id = baseline.artifact_id

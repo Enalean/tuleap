@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use Project;
-
 class TransientComparison
 {
     /** @var string|null */
@@ -71,7 +69,7 @@ class TransientComparison
         return $this->compared_to_baseline;
     }
 
-    public function getProject(): Project
+    public function getProject(): ProjectIdentifier
     {
         return $this->getBaseBaseline()->getProject();
     }

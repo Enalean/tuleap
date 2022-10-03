@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use PFUser;
-use Project;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\Clock;
 use Tuleap\Baseline\Domain\Comparison;
 use Tuleap\Baseline\Domain\ComparisonRepository;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\TransientComparison;
 
 class ComparisonRepositoryStub implements ComparisonRepository
@@ -87,7 +87,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
     /**
      * @return Comparison[]
      */
-    public function findByProject(PFUser $current_user, Project $project, int $page_size, int $comparison_offset): array
+    public function findByProject(PFUser $current_user, ProjectIdentifier $project, int $page_size, int $comparison_offset): array
     {
         $matching_comparisons = array_filter(
             $this->comparisons_by_id,
@@ -98,7 +98,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
         return array_slice($matching_comparisons, $comparison_offset, $page_size);
     }
 
-    public function countByProject(Project $project): int
+    public function countByProject(ProjectIdentifier $project): int
     {
         return count($this->comparisons_by_id);
     }

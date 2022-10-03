@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use Project;
-
 class BaselineArtifact
 {
     /** @var int */
@@ -42,7 +40,7 @@ class BaselineArtifact
     /** @var string|null */
     private $status;
 
-    /** @var Project */
+    /** @var ProjectIdentifier */
     private $project;
 
     /**  @var int */
@@ -63,7 +61,7 @@ class BaselineArtifact
         ?string $description,
         ?int $initial_effort,
         ?string $status,
-        Project $project,
+        ProjectIdentifier $project,
         int $tracker_id,
         string $tracker_name,
         array $linked_artifact_ids,
@@ -104,7 +102,7 @@ class BaselineArtifact
         return $this->status;
     }
 
-    public function getProject(): Project
+    public function getProject(): ProjectIdentifier
     {
         return $this->project;
     }

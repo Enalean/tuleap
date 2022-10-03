@@ -24,25 +24,25 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use PFUser;
-use Project;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\ProjectRepository;
 
 class ProjectRepositoryStub implements ProjectRepository
 {
-    /** @var array Project[] */
+    /** @var array ProjectIdentifier[] */
     private $projects = [];
 
-    public function add(Project $project): void
+    public function add(ProjectIdentifier $project): void
     {
         $this->projects[] = $project;
     }
 
-    public function findById(PFUser $current_user, int $id): ?Project
+    public function findById(PFUser $current_user, int $id): ?ProjectIdentifier
     {
         $matching_projects = array_filter(
             $this->projects,
-            function (Project $project) use ($id) {
-                return $project->getId() === $id;
+            function (ProjectIdentifier $project) use ($id) {
+                return $project->getID() === $id;
             }
         );
         if (count($matching_projects) === 0) {
