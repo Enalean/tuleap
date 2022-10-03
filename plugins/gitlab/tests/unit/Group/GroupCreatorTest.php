@@ -53,7 +53,7 @@ final class GroupCreatorTest extends TestCase
     private BuildGitlabProjectsStub $project_builder;
     private VerifyGroupIsAlreadyLinkedStub $group_integrated_verifier;
     private VerifyProjectIsAlreadyLinkedStub $project_linked_verifier;
-    private string $branch_prefix;
+    private ?string $branch_prefix;
 
     protected function setUp(): void
     {
@@ -118,6 +118,13 @@ final class GroupCreatorTest extends TestCase
         return $creator->createGroupAndIntegrations($credentials, $post, $project);
     }
 
+    public function testItReturnsTheRepresentation(): void
+    {
+        $result = $this->createGroup();
+        self::assertSame(self::INTEGRATED_GROUP_ID, $result->id);
+        self::assertSame(3, $result->number_of_integrations);
+    }
+
     public function testItThrowsExceptionIfTheGitlabRepositoryIsInError(): void
     {
         $this->project_builder = BuildGitlabProjectsStub::buildWithException(
@@ -166,10 +173,12 @@ final class GroupCreatorTest extends TestCase
         $this->createGroup();
     }
 
-    public function testItReturnsTheRepresentation(): void
+    public function testItThrowsWhenTheBranchPrefixIsNull(): void
     {
-        $result = $this->createGroup();
-        self::assertSame(self::INTEGRATED_GROUP_ID, $result->id);
-        self::assertSame(3, $result->number_of_integrations);
+        $this->branch_prefix = null;
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->createGroup();
     }
 }

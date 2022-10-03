@@ -39,7 +39,7 @@ final class GroupLink
         public ?string $avatar_url,
         public DateTimeImmutable $last_synchronization_date,
         public bool $allow_artifact_closure,
-        public ?string $prefix_branch_name,
+        public string $prefix_branch_name,
     ) {
     }
 
@@ -76,7 +76,7 @@ final class GroupLink
             $row['avatar_url'],
             (new DateTimeImmutable())->setTimestamp($row['last_synchronization_date']),
             (bool) $row['allow_artifact_closure'],
-            $row['create_branch_prefix'],
+            $row['create_branch_prefix'] ?? '',
         );
     }
 }

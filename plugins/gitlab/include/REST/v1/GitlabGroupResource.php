@@ -91,11 +91,14 @@ final class GitlabGroupResource
     }
 
     /**
-     * Link a GitLab group with Tuleap.
+     * Link a GitLab group to a Tuleap project.
      *
      * /!\ This route is under construction.
      * <br>
-     * It will retrieve and create the Tuleap repositories from a GitLab group
+     * It will link a GitLab group to a Tuleap project. It will retrieve all the GitLab projects of the group and integrate
+     * them with Tuleap.
+     * <br>
+     * Use an empty string for `create_branch_prefix` if you don't want any prefix: `"create_branch_prefix": ""`.
      *
      * @url    POST
      * @access protected
@@ -204,35 +207,36 @@ final class GitlabGroupResource
      * /!\ This route is under construction.
      * <br>
      * It will update a GitLab group integration.
-     *
-     * <p>To update the prefix used in the branch creation for repositories that come with the linked group (feature flag must be enabled):</p>
+     * <br>
+     * <p>To update the prefix used in the branch creation for repositories that come with the linked group:</p>
      * <pre>
      * {<br>
-     *   &nbsp;"create_branch_prefix" : "dev-"<br>
-     * }<br>
+     *   &nbsp;"create_branch_prefix": "dev-"<br>
+     * }
+     * </pre>
+     * <p>Use an empty string for `create_branch_prefix` if you want to remove a prefix: `"create_branch_prefix": ""`.</p>
+     *
+     * <p>To update the artifact closure for repositories that come with the linked group:</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"allow_artifact_closure": false<br>
+     * }
      * </pre>
      *
-     * <p>To update the artifact closure for repositories that come with the linked group (feature flag must be enabled):</p>
+     * <p>To update the Gitlab token of the linked group:</p>
      * <pre>
      * {<br>
-     *   &nbsp;"allow_artifact_closure" : false<br>
-     * }<br>
+     *   &nbsp;"gitlab_token": "my_t0k3n"<br>
+     * }
      * </pre>
      *
-     * <p>To update the Gitlab token of the linked group (feature flag must be enabled):</p>
+     * <p>All parameters can be updated at once:</p>
      * <pre>
      * {<br>
-     *   &nbsp;"gitlab_token" : "my_t0k3n"<br>
-     * }<br>
-     * </pre>
-     *
-     * <p>All parameters can be updated in the same query (feature flag must be enabled):</p>
-     * <pre>
-     * {<br>
-     *   &nbsp;"create_branch_prefix" : "dev-",<br>
-     *   &nbsp;"allow_artifact_closure" : false,<br>
-     *   &nbsp;"gitlab_token" : "my_t0k3n"<br>
-     * }<br>
+     *   &nbsp;"create_branch_prefix": "dev-",<br>
+     *   &nbsp;"allow_artifact_closure": false,<br>
+     *   &nbsp;"gitlab_token": "my_t0k3n"<br>
+     * }
      * </pre>
      *
      * @url    PATCH {id}

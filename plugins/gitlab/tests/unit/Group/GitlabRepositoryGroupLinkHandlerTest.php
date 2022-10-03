@@ -47,7 +47,7 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
     private VerifyGitlabRepositoryIsIntegratedStub $verify_gitlab_repository_is_integrated;
     private LinkARepositoryIntegrationToAGroupStub $link_integration_to_group;
     private SaveIntegrationBranchPrefixStub $branch_prefix_saver;
-    private ?string $branch_prefix;
+    private string $branch_prefix;
 
     protected function setUp(): void
     {
@@ -147,9 +147,9 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
         self::assertSame(0, $this->branch_prefix_saver->getCallCount());
     }
 
-    public function testItDoesNotSetBranchPrefixIfItIsNull(): void
+    public function testItDoesNotSetBranchPrefixIfItIsEmpty(): void
     {
-        $this->branch_prefix = null;
+        $this->branch_prefix = '';
 
         $this->integrate();
 

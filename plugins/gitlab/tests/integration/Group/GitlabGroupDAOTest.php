@@ -89,7 +89,7 @@ final class GitlabGroupDAOTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project,
             new \DateTimeImmutable('@' . self::LAST_SYNCHRONIZATION_TIMESTAMP),
             false,
-            null
+            ''
         );
 
         $group_link_id = $this->group_dao->addNewGroup($new_group);
@@ -110,7 +110,7 @@ final class GitlabGroupDAOTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::WEB_URL, $retrieved_group_link->web_url);
         self::assertSame(self::AVATAR_URL, $retrieved_group_link->avatar_url);
         self::assertFalse($retrieved_group_link->allow_artifact_closure);
-        self::assertNull($retrieved_group_link->prefix_branch_name);
+        self::assertSame('', $retrieved_group_link->prefix_branch_name);
 
         return $group_link_id;
     }
