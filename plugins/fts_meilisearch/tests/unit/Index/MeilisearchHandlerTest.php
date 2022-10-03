@@ -24,7 +24,6 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Search\SearchResult;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\FullTextSearchCommon\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
@@ -33,8 +32,6 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class MeilisearchHandlerTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     /**
      * @var Indexes&\PHPUnit\Framework\MockObject\MockObject
      */
@@ -98,8 +95,16 @@ final class MeilisearchHandlerTest extends TestCase
     {
         $this->client_index
             ->method('search')
-            ->with('keywords', ['attributesToRetrieve' => ['id'], 'limit' => 2, 'offset' => 0])
-            ->willReturn(
+            ->with(
+                'keywords',
+                [
+                    'attributesToRetrieve' => ['id'],
+                    'limit'                => 2,
+                    'offset'               => 0,
+                    'attributesToCrop'     => ['content'],
+                    'cropLength'           => 20,
+                ]
+            )->willReturn(
                 new SearchResult(
                     [
                         'hits'               => [['id' => 1], ['id' => 2]],
@@ -127,8 +132,16 @@ final class MeilisearchHandlerTest extends TestCase
     {
         $this->client_index
             ->method('search')
-            ->with('keywords', ['attributesToRetrieve' => ['id'], 'limit' => 2, 'offset' => 0])
-            ->willReturn(
+            ->with(
+                'keywords',
+                [
+                    'attributesToRetrieve' => ['id'],
+                    'limit'                => 2,
+                    'offset'               => 0,
+                    'attributesToCrop'     => ['content'],
+                    'cropLength'           => 20,
+                ]
+            )->willReturn(
                 new SearchResult(
                     [
                         'hits'               => [
