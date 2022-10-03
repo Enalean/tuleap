@@ -30,6 +30,10 @@ ln -s /data/lib/tuleap/svn_plugin /var/lib/tuleap/svn_plugin
 
 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy
 
+if [ -n "$TULEAP_DISTLP_TEST" ]; then
+    echo "Storage=persistent" >> /etc/systemd/journald.conf
+fi
+
 systemctl enable tuleap \
     httpd \
     nginx \
