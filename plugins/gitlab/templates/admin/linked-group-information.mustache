@@ -50,7 +50,7 @@
                 </div>
                 <div class="tlp-property">
                     <label class="tlp-label">{{# dgettext }} tuleap-gitlab | Allow artifact closure {{/ dgettext }}</label>
-                    <p>{{ allow_artifact_closure }}</p>
+                    <p>{{ allow_closure_string }}</p>
                 </div>
                 <div class="tlp-property">
                     <label class="tlp-label">{{# dgettext }}tuleap-gitlab | Prefix the branch name {{/ dgettext }}</label>
@@ -68,7 +68,7 @@
                     {{# dgettext }}tuleap-gitlab | Update token {{/ dgettext }}
                 </button>
 
-                <button type="button" class="tlp-button-primary tlp-button-outline" disabled>
+                <button type="button" class="tlp-button-primary tlp-button-outline" id="edit-config-button">
                     <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
                     {{# dgettext }}tuleap-gitlab | Update configuration {{/ dgettext }}
                 </button>
@@ -82,6 +82,79 @@
     </section>
 </section>
 
+<div id="edit-config-modal" class="tlp-modal" role="dialog" aria-labelledby="edit-config-modal-title">
+    <form id="edit-config-modal-form">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="edit-config-modal-title">
+                {{# dgettext }}tuleap-gitlab | Edit configuration{{/ dgettext }}
+            </h1>
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-gitlab | Close {{/ dgettext }}">
+                <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-feedback gitlab-modal-feedback-hidden" id="edit-config-modal-feedback">
+            <div class="tlp-alert-danger" id="edit-config-modal-alert"></div>
+        </div>
+        <div class="tlp-modal-body">
+            <p>{{# dgettext }}tuleap-gitlab | Please note that the following settings will be applied for all new synchronized
+                repositories and may be overridden by each repository once linked.{{/ dgettext }}
+            </p>
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                        type="checkbox"
+                        id="edit-config-modal-allow-artifact-closure"
+                        {{# allow_artifact_closure }}checked{{/ allow_artifact_closure }}
+                    >
+                    {{# dgettext }}tuleap-gitlab | Allow artifact closure{{/ dgettext }}
+                </label>
+                <p class="tlp-text-info">
+                    <i class="fa-regular fa-life-ring" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository.{{/ dgettext }}
+                </p>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" id="edit-config-modal-has-prefix" {{# has_branch_prefix }}checked{{/ has_branch_prefix }}>
+                    {{# dgettext }}tuleap-gitlab | Prefix the branch name{{/ dgettext }}
+                </label>
+                <p class="tlp-text-info">
+                    <i class="fa-regular fa-life-ring" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | If set, this prefix will be automatically added to the branch name in the create GitLab branch action.{{/ dgettext }}
+                </p>
+            </div>
+            <div class="tlp-form-element" id="edit-config-branch-prefix-box">
+                <label for="edit-config-branch-prefix" class="tlp-label">
+                    {{# dgettext }}tuleap-gitlab | Prefix{{/dgettext}}
+                    <i id="edit-config-branch-prefix-icon" class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <input
+                    type="text"
+                    id="edit-config-branch-prefix"
+                    class="tlp-input"
+                    size="40"
+                    value="{{ branch_prefix }}"
+                >
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# dgettext }}tuleap-gitlab | Cancel{{/ dgettext }}
+            </button>
+            <button
+                type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                id="edit-config-confirm"
+                data-group-id="{{ group_id }}"
+                disabled
+            >
+                <i id="edit-icon" class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
+                {{# dgettext }}tuleap-gitlab | Update configuration{{/ dgettext }}
+            </button>
+        </div>
+    </form>
+</div>
+
 <div id="unlink-modal" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="unlink-modal-title">
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="unlink-modal-title">
@@ -91,7 +164,7 @@
             <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
         </button>
     </div>
-    <div class="tlp-modal-feedback gitlab-modal-feebdack-hidden" id="unlink-modal-feedback">
+    <div class="tlp-modal-feedback gitlab-modal-feedback-hidden" id="unlink-modal-feedback">
         <div class="tlp-alert-danger" id="unlink-modal-alert"></div>
     </div>
     <div class="tlp-modal-body">
@@ -111,8 +184,13 @@
         <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# dgettext }}tuleap-gitlab | Cancel {{/ dgettext }}
         </button>
-        <button type="button" class="tlp-button-danger tlp-modal-action" id="unlink-confirm" data-group-id="{{ group_id }}">
-            <i class="fa-solid fa-link-slash tlp-button-icon" aria-hidden="true" id="unlink-icon"></i>
+        <button
+            type="button"
+            class="tlp-button-danger tlp-modal-action"
+            id="unlink-confirm"
+            data-group-id="{{ group_id }}"
+        >
+            <i id="unlink-icon" class="fa-solid fa-link-slash tlp-button-icon" aria-hidden="true"></i>
             {{# dgettext }}tuleap-gitlab | Unlink {{/ dgettext }}
         </button>
     </div>

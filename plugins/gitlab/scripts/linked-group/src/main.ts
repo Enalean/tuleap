@@ -20,6 +20,7 @@
 import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
+import { EditConfigurationModal } from "./EditConfigurationModal";
 import { UnlinkModal } from "./UnlinkModal";
 import "../themes/main.scss";
 
@@ -35,5 +36,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     openAllTargetModalsOnClick(document, UNLINK_SELECTOR);
 
+    EditConfigurationModal(document).init();
     UnlinkModal(document.location, document, gettext_provider).init();
 });
