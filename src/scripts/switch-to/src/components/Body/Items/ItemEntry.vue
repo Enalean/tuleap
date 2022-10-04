@@ -19,7 +19,12 @@
   -->
 
 <template>
-    <div class="switch-to-item-entry">
+    <div
+        class="switch-to-item-entry"
+        v-on:click="onClick"
+        v-bind:data-target-id="target_id"
+        data-test="switch-to-item-entry"
+    >
         <div
             class="switch-to-item-entry-with-links"
             v-bind:class="{ 'switch-to-item-entry-with-links-with-badge': entry.xref }"
@@ -105,6 +110,7 @@ import ItemBadge from "./ItemBadge.vue";
 const props = defineProps<{
     entry: ItemDefinition;
     changeFocusCallback: (payload: FocusFromItemPayload) => void;
+    location: Location;
 }>();
 
 const xref_color = ref<string>("tlp-swatch-" + props.entry.color_name);
@@ -167,6 +173,18 @@ function changeFocus(event: KeyboardEvent): void {
             props.changeFocusCallback({ entry: props.entry, key: event.key });
             break;
         default:
+    }
+}
+
+const target_id = computed((): string => "switch-to-item-entry-" + encodeURI(props.entry.html_url));
+function onClick(event: MouseEvent): void {
+    if (!(event.target instanceof HTMLElement)) {
+        return;
+    }
+
+    const closest = event.target.closest(`a, [data-target-id="${target_id.value}"]`);
+    if (closest instanceof HTMLElement && closest.dataset.targetId === target_id.value) {
+        props.location.assign(props.entry.html_url);
     }
 }
 </script>

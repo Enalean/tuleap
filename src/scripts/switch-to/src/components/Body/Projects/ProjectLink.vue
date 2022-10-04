@@ -19,7 +19,12 @@
   -->
 
 <template>
-    <div class="switch-to-projects-project" data-test="switch-to-projects-project">
+    <div
+        class="switch-to-projects-project"
+        data-test="switch-to-projects-project"
+        v-on:click="onClick"
+        v-bind:data-target-id="target_id"
+    >
         <a
             v-bind:href="project.project_uri"
             class="switch-to-projects-project-link"
@@ -61,7 +66,7 @@ import { storeToRefs } from "pinia";
 import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation";
 import { ARE_RESTRICTED_USERS_ALLOWED } from "../../../injection-keys";
 
-const props = defineProps<{ project: Project }>();
+const props = defineProps<{ project: Project; location: Location }>();
 
 const project_link = ref<HTMLAnchorElement | undefined>(undefined);
 
@@ -109,4 +114,18 @@ const project_privacy_icon = computed((): string => {
 
     return getProjectPrivacyIcon(privacy);
 });
+
+const target_id = computed(
+    (): string => "switch-to-project-" + encodeURI(props.project.project_uri)
+);
+function onClick(event: MouseEvent): void {
+    if (!(event.target instanceof HTMLElement)) {
+        return;
+    }
+
+    const closest = event.target.closest(`a, [data-target-id="${target_id.value}"]`);
+    if (closest instanceof HTMLElement && closest.dataset.targetId === target_id.value) {
+        props.location.assign(props.project.project_uri);
+    }
+}
 </script>

@@ -3,6 +3,8 @@
 exports[`ItemEntry Displays a link with a cross ref 1`] = `
 <div
   class="switch-to-item-entry"
+  data-target-id="switch-to-item-entry-undefined"
+  data-test="switch-to-item-entry"
 >
   <div
     class="switch-to-item-entry-with-links switch-to-item-entry-with-links-with-badge"
@@ -53,6 +55,8 @@ exports[`ItemEntry Displays a link with a cross ref 1`] = `
 exports[`ItemEntry Displays a link with a quick links 1`] = `
 <div
   class="switch-to-item-entry"
+  data-target-id="switch-to-item-entry-undefined"
+  data-test="switch-to-item-entry"
 >
   <div
     class="switch-to-item-entry-with-links switch-to-item-entry-with-links-with-badge"
@@ -118,6 +122,8 @@ exports[`ItemEntry Displays a link with a quick links 1`] = `
 exports[`ItemEntry Displays a link with an icon 1`] = `
 <div
   class="switch-to-item-entry"
+  data-target-id="switch-to-item-entry-undefined"
+  data-test="switch-to-item-entry"
 >
   <div
     class="switch-to-item-entry-with-links"
