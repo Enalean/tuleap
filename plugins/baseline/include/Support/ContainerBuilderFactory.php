@@ -40,7 +40,7 @@ use Tuleap\Baseline\Adapter\CurrentUserProviderAdapter;
 use Tuleap\Baseline\Adapter\ProjectRepositoryAdapter;
 use Tuleap\Baseline\Adapter\RoleAssignmentRepositoryAdapter;
 use Tuleap\Baseline\Domain\Authorizations;
-use Tuleap\Baseline\Domain\AuthorizationsImpl;
+use Tuleap\Baseline\Adapter\AuthorizationsImpl;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\Clock;

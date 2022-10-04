@@ -31,9 +31,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
-use PFUser;
 use Tuleap\Baseline\Domain\Authorizations;
-use Tuleap\Baseline\Domain\AuthorizationsImpl;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\Comparison;
 use Tuleap\Baseline\Factory\BaselineFactory;
@@ -41,6 +39,7 @@ use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
 class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -156,7 +155,7 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $author = new PFUser();
+        $author = UserTestBuilder::buildWithId(9);
         $this->user_manager
             ->shouldReceive('getUserById')
             ->with(9)
@@ -180,7 +179,7 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             $base_baseline,
             $compared_to_baseline,
-            $author,
+            UserProxy::fromUser($author),
             $creation_date
         );
         $this->assertEquals($expected_comparison, $comparison);
@@ -232,7 +231,7 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager
             ->shouldReceive('getUserById')
             ->with(9)
-            ->andReturn(new PFUser());
+            ->andReturn(UserTestBuilder::aUser()->build());
 
         $this->clock
             ->shouldReceive('at')
@@ -330,16 +329,18 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             );
 
         $base_baseline = BaselineFactory::one()->build();
-        $this->baseline_repository->allows()
-            ->findById($this->current_user, 1)
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 1)
             ->andReturn($base_baseline);
 
         $compared_to_baseline = BaselineFactory::one()->build();
-        $this->baseline_repository->allows()
-            ->findById($this->current_user, 2)
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 2)
             ->andReturn($compared_to_baseline);
 
-        $user = new PFUser();
+        $user = UserTestBuilder::buildWithId(22);
         $this->user_manager->allows()
             ->getUserById(22)
             ->andReturn($user);
@@ -359,7 +360,7 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             $base_baseline,
             $compared_to_baseline,
-            $user,
+            UserProxy::fromUser($user),
             $creation_date
         ),
         ];
@@ -384,11 +385,12 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->baseline_repository->allows()
-            ->findById($this->current_user, 1)
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 1)
             ->andReturn(null);
 
-        $user = new PFUser();
+        $user = UserTestBuilder::aUser()->build();
         $this->user_manager->allows()
             ->getUserById(22)
             ->andReturn($user);

@@ -25,13 +25,13 @@ namespace Tuleap\Baseline\Adapter;
 
 use DateTimeInterface;
 use ParagonIE\EasyDB\EasyDB;
-use PFUser;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\TransientBaseline;
+use Tuleap\Baseline\Domain\UserIdentifier;
 use UserManager;
 
 class BaselineRepositoryAdapter implements BaselineRepository
@@ -70,7 +70,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
      */
     public function add(
         TransientBaseline $baseline,
-        PFUser $current_user,
+        UserIdentifier $current_user,
         DateTimeInterface $snapshot_date,
     ): Baseline {
         $id = (int) $this->db->insertReturnId(
@@ -92,7 +92,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
         );
     }
 
-    public function findById(PFUser $current_user, int $id): ?Baseline
+    public function findById(UserIdentifier $current_user, int $id): ?Baseline
     {
         $rows = $this->db->safeQuery(
             'SELECT id, name, artifact_id, user_id, snapshot_date
@@ -113,13 +113,14 @@ class BaselineRepositoryAdapter implements BaselineRepository
         if (! $this->authorizations->canReadBaseline($current_user, $baseline)) {
             return null;
         }
+
         return $baseline;
     }
 
     /**
      * Note: Authorizations may have been checked earlier
      */
-    public function delete(Baseline $baseline, PFUser $current_user): void
+    public function delete(Baseline $baseline): void
     {
         $this->db->delete('plugin_baseline_baseline', ['id' => $baseline->getId()]);
     }
@@ -128,8 +129,12 @@ class BaselineRepositoryAdapter implements BaselineRepository
      * Note: Authorizations may have been checked earlier
      * @return Baseline[]
      */
-    public function findByProject(PFUser $current_user, ProjectIdentifier $project, int $page_size, int $baseline_offset): array
-    {
+    public function findByProject(
+        UserIdentifier $current_user,
+        ProjectIdentifier $project,
+        int $page_size,
+        int $baseline_offset,
+    ): array {
         $rows = $this->db->safeQuery(
             'SELECT baseline.id, baseline.name, baseline.artifact_id, baseline.user_id, baseline.snapshot_date
             FROM plugin_baseline_baseline as baseline
@@ -171,14 +176,20 @@ class BaselineRepositoryAdapter implements BaselineRepository
         );
     }
 
-    private function mapRow(PFUser $current_user, array $row): ?Baseline
+    private function mapRow(UserIdentifier $current_user, array $row): ?Baseline
     {
         $artifact = $this->baseline_artifact_repository->findById($current_user, $row['artifact_id']);
         if ($artifact === null) {
             return null;
         }
-        $author        = $this->user_manager->getUserById($row['user_id']);
+        $user = $this->user_manager->getUserById($row['user_id']);
+        if ($user === null) {
+            return null;
+        }
+
+        $author        = UserProxy::fromUser($user);
         $snapshot_date = $this->clock->at($row['snapshot_date']);
+
         return new Baseline(
             $row['id'],
             $row['name'],

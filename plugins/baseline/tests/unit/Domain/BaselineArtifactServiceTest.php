@@ -28,7 +28,6 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PFUser;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
@@ -53,22 +52,21 @@ class BaselineArtifactServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFindByBaselineAndIds()
     {
-        $current_user = new PFUser();
-        $baseline     = BaselineFactory::one()->build();
+        $baseline = BaselineFactory::one()->build();
 
         $artifact1 = BaselineArtifactFactory::one()->build();
         $this->baseline_artifact_repository
             ->shouldReceive('findByIdAt')
-            ->with($current_user, 1, $baseline->getSnapshotDate())
+            ->with($this->current_user, 1, $baseline->getSnapshotDate())
             ->andReturn($artifact1);
 
         $artifact2 = BaselineArtifactFactory::one()->build();
         $this->baseline_artifact_repository
             ->shouldReceive('findByIdAt')
-            ->with($current_user, 2, $baseline->getSnapshotDate())
+            ->with($this->current_user, 2, $baseline->getSnapshotDate())
             ->andReturn($artifact2);
 
-        $artifacts = $this->service->findByBaselineAndIds($current_user, $baseline, [1, 2]);
+        $artifacts = $this->service->findByBaselineAndIds($this->current_user, $baseline, [1, 2]);
 
         $this->assertEquals([$artifact1, $artifact2], $artifacts);
     }
@@ -77,8 +75,7 @@ class BaselineArtifactServiceTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(BaselineArtifactNotFoundException::class);
 
-        $current_user = new PFUser();
-        $baseline     = BaselineFactory::one()->build();
+        $baseline = BaselineFactory::one()->build();
 
         $this->baseline_artifact_repository
             ->shouldReceive('findByIdAt')
@@ -87,9 +84,9 @@ class BaselineArtifactServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->baseline_artifact_repository
             ->shouldReceive('findByIdAt')
-            ->with($current_user, 2, $baseline->getSnapshotDate())
+            ->with($this->current_user, 2, $baseline->getSnapshotDate())
             ->andReturn(null);
 
-        $this->service->findByBaselineAndIds($current_user, $baseline, [1, 2, 3]);
+        $this->service->findByBaselineAndIds($this->current_user, $baseline, [1, 2, 3]);
     }
 }

@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
-use PFUser;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\ProjectRepository;
+use Tuleap\Baseline\Domain\UserIdentifier;
 
 class ProjectRepositoryStub implements ProjectRepository
 {
@@ -37,7 +37,7 @@ class ProjectRepositoryStub implements ProjectRepository
         $this->projects[] = $project;
     }
 
-    public function findById(PFUser $current_user, int $id): ?ProjectIdentifier
+    public function findById(UserIdentifier $current_user, int $id): ?ProjectIdentifier
     {
         $matching_projects = array_filter(
             $this->projects,

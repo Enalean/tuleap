@@ -28,14 +28,16 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PFUser;
 use Project;
+use Tuleap\Baseline\Adapter\AuthorizationsImpl;
+use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ComparisonFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -50,6 +52,7 @@ class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var Authorizations|MockInterface */
     private $authorizations;
+    private UserProxy $a_user;
 
     /** @before */
     protected function createInstance(): void
@@ -63,16 +66,13 @@ class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /** @var PFUser */
-    private $a_user;
-
     /** @var Project|MockInterface */
     private $a_project;
 
     /** @before */
     public function createEntities()
     {
-        $this->a_user    = new PFUser();
+        $this->a_user    = UserProxy::fromUser(UserTestBuilder::aUser()->build());
         $this->a_project = ProjectFactory::one();
     }
 

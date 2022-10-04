@@ -28,7 +28,7 @@ class ForbiddenRestException extends RestException
     {
         parent::__construct(
             403,
-            null,
+            '',
             ['i18n_error_message' => $message]
         );
     }

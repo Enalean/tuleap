@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
-use PFUser;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\Clock;
 use Tuleap\Baseline\Domain\Comparison;
 use Tuleap\Baseline\Domain\ComparisonRepository;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\TransientComparison;
+use Tuleap\Baseline\Domain\UserIdentifier;
 
 class ComparisonRepositoryStub implements ComparisonRepository
 {
@@ -47,7 +47,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
         $this->clock = $clock;
     }
 
-    public function add(TransientComparison $transient_comparison, PFUser $current_user): Comparison
+    public function add(TransientComparison $transient_comparison, UserIdentifier $current_user): Comparison
     {
         $comparison = new Comparison(
             $this->id_sequence++,
@@ -63,7 +63,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
         return $comparison;
     }
 
-    public function findById(PFUser $current_user, int $id): ?Comparison
+    public function findById(UserIdentifier $current_user, int $id): ?Comparison
     {
         if (! isset($this->comparisons_by_id[$id])) {
             return null;
@@ -87,7 +87,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
     /**
      * @return Comparison[]
      */
-    public function findByProject(PFUser $current_user, ProjectIdentifier $project, int $page_size, int $comparison_offset): array
+    public function findByProject(UserIdentifier $current_user, ProjectIdentifier $project, int $page_size, int $comparison_offset): array
     {
         $matching_comparisons = array_filter(
             $this->comparisons_by_id,
@@ -112,7 +112,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
         return $this->comparisons_by_id;
     }
 
-    public function delete(Comparison $comparison, PFUser $current_user): void
+    public function delete(Comparison $comparison, UserIdentifier $current_user): void
     {
         unset($this->comparisons_by_id[$comparison->getId()]);
     }

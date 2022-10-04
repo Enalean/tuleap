@@ -72,7 +72,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_link = $this->mockArtifactLink(
             $this->changeset,
-            $this->current_user,
+            $this->current_tuleap_user,
             [
                 $this->mockArtifactWithId(1),
                 $this->mockArtifactWithId(2),
@@ -82,7 +82,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)
             ->shouldReceive('getAnArtifactLinkField')
-            ->with($this->current_user)
+            ->with($this->current_tuleap_user)
             ->andReturn($artifact_link)
             ->getMock();
 
@@ -90,7 +90,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getArtifact')
             ->andReturn($artifact);
 
-        $artifact_ids = $this->repository->findLinkedArtifactIds($this->current_user, $this->changeset);
+        $artifact_ids = $this->repository->findLinkedArtifactIds($this->current_tuleap_user, $this->changeset);
 
         $this->assertEquals([1, 2, 3], $artifact_ids);
     }
@@ -102,7 +102,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getArtifact')
             ->andReturn($artifact);
 
-        $artifact_ids = $this->repository->findLinkedArtifactIds($this->current_user, $this->changeset);
+        $artifact_ids = $this->repository->findLinkedArtifactIds($this->current_tuleap_user, $this->changeset);
 
         $this->assertEquals([], $artifact_ids);
     }
@@ -117,7 +117,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->planning_factory
             ->shouldReceive('getPlannings')
-            ->with($this->current_user, 200)
+            ->with($this->current_tuleap_user, 200)
             ->andReturn(
                 [
                     Mockery::mock(Planning::class)
@@ -129,7 +129,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact_link = $this->mockArtifactLink(
             $this->changeset,
-            $this->current_user,
+            $this->current_tuleap_user,
             [
                 $this->mockArtifactWithIdAndTrackerId(1, 10),
                 $this->mockArtifactWithIdAndTrackerId(2, 11),
@@ -138,7 +138,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)
             ->shouldReceive('getAnArtifactLinkField')
-            ->with($this->current_user)
+            ->with($this->current_tuleap_user)
             ->andReturn($artifact_link)
             ->getMock();
 
@@ -146,7 +146,7 @@ class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getArtifact')
             ->andReturn($artifact);
 
-        $artifact_ids = $this->repository->findLinkedArtifactIds($this->current_user, $this->changeset);
+        $artifact_ids = $this->repository->findLinkedArtifactIds($this->current_tuleap_user, $this->changeset);
 
         $this->assertEquals([2], $artifact_ids);
     }
