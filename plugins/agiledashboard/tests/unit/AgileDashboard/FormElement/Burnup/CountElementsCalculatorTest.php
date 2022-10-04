@@ -22,15 +22,15 @@ namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -57,7 +57,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $form_element_factory;
 
     /**
-     * @var Mockery\MockInterface|BurnupDao
+     * @var Mockery\MockInterface|BurnupDataDAO
      */
     private $burnup_dao;
 
@@ -68,7 +68,9 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset_factory    = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
         $this->artifact_factory     = Mockery::mock(Tracker_ArtifactFactory::class);
         $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->burnup_dao           = Mockery::mock(BurnupDao::class);
+        $this->burnup_dao           = Mockery::mock(BurnupDataDAO::class);
+        $this->user_story_tracker   = TrackerTestBuilder::aTracker()->withId(10)->build();
+        $this->task_tracker         = TrackerTestBuilder::aTracker()->withId(20)->build();
 
         $this->calculator = new CountElementsCalculator(
             $this->changeset_factory,
@@ -85,7 +87,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mockEpicUserStoriesAndTasks($artifact_id, $timestamp);
 
-        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp);
+        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()]);
 
         $this->assertSame(5, $count_elements_cache_info->getTotalElements());
         $this->assertSame(3, $count_elements_cache_info->getClosedElements());
@@ -98,7 +100,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mockEpicUserStoriesAndTasksWithMultipleLinksToTask($artifact_id, $timestamp);
 
-        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp);
+        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp, [10, 20]);
 
         $this->assertSame(5, $count_elements_cache_info->getTotalElements());
         $this->assertSame(3, $count_elements_cache_info->getClosedElements());
@@ -111,7 +113,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mockUserStoriesWithoutArtLinkField($artifact_id, $timestamp);
 
-        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp);
+        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp, [10, 20]);
 
         $this->assertSame(3, $count_elements_cache_info->getTotalElements());
         $this->assertSame(1, $count_elements_cache_info->getClosedElements());
@@ -124,7 +126,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mockUserStoriesWithoutChildren($artifact_id, $timestamp);
 
-        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp);
+        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp, [10, 20]);
 
         $this->assertSame(3, $count_elements_cache_info->getTotalElements());
         $this->assertSame(1, $count_elements_cache_info->getClosedElements());
@@ -134,12 +136,12 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
             ->once()
-            ->with($artifact_id, $timestamp)
+            ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
             ->andReturn([
                 ['id' => 2],
             ]);
 
-        $epic_tracker = Mockery::mock(Tracker::class);
+        $epic_tracker = TrackerTestBuilder::aTracker()->build();
 
         $epic = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
@@ -181,8 +183,6 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             4,
         ]);
 
-        $user_story_tracker = Mockery::mock(Tracker::class);
-
         $user_story_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
@@ -220,15 +220,15 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_story_01->shouldReceive('getId')->andReturn(3);
         $user_story_02->shouldReceive('getId')->andReturn(4);
 
-        $user_story_01->shouldReceive('getTracker')->andReturn($user_story_tracker);
-        $user_story_02->shouldReceive('getTracker')->andReturn($user_story_tracker);
+        $user_story_01->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
+        $user_story_02->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
 
         $user_story_01->shouldReceive('getParentWithoutPermissionChecking')->andReturn($epic);
         $user_story_02->shouldReceive('getParentWithoutPermissionChecking')->andReturn($epic);
 
         $user_story_artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->with($user_story_tracker)
+            ->with($this->user_story_tracker)
             ->twice()
             ->andReturn([$user_story_artifact_link_field]);
 
@@ -249,8 +249,6 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             5,
             6,
         ]);
-
-        $task_tracker = Mockery::mock(Tracker::class);
 
         $task_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
@@ -286,8 +284,8 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($changeset_task_02)
             ->andReturnFalse();
 
-        $task_01->shouldReceive('getTracker')->andReturn($task_tracker);
-        $task_02->shouldReceive('getTracker')->andReturn($task_tracker);
+        $task_01->shouldReceive('getTracker')->andReturn($this->task_tracker);
+        $task_02->shouldReceive('getTracker')->andReturn($this->task_tracker);
 
         $task_01->shouldReceive('getParentWithoutPermissionChecking')->andReturn($user_story_02);
         $task_02->shouldReceive('getParentWithoutPermissionChecking')->andReturn($user_story_02);
@@ -296,7 +294,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $task_02->shouldReceive('getId')->andReturn(6);
 
         $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->with($task_tracker)
+            ->with($this->task_tracker)
             ->twice()
             ->andReturn([]);
     }
@@ -308,13 +306,13 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
             ->once()
-            ->with($artifact_id, $timestamp)
+            ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
             ->andReturn([
                 ['id' => 2],
                 ['id' => 5],
             ]);
 
-        $epic_tracker = Mockery::mock(Tracker::class);
+        $epic_tracker = TrackerTestBuilder::aTracker()->build();
 
         $epic = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
@@ -356,8 +354,6 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             4,
         ]);
 
-        $user_story_tracker = Mockery::mock(Tracker::class);
-
         $user_story_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
             ->once()
@@ -395,15 +391,15 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_story_01->shouldReceive('getId')->andReturn(3);
         $user_story_02->shouldReceive('getId')->andReturn(4);
 
-        $user_story_01->shouldReceive('getTracker')->andReturn($user_story_tracker);
-        $user_story_02->shouldReceive('getTracker')->andReturn($user_story_tracker);
+        $user_story_01->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
+        $user_story_02->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
 
         $user_story_01->shouldReceive('getParentWithoutPermissionChecking')->andReturn($epic);
         $user_story_02->shouldReceive('getParentWithoutPermissionChecking')->andReturn($epic);
 
         $user_story_artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->with($user_story_tracker)
+            ->with($this->user_story_tracker)
             ->twice()
             ->andReturn([$user_story_artifact_link_field]);
 
@@ -424,8 +420,6 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             5,
             6,
         ]);
-
-        $task_tracker = Mockery::mock(Tracker::class);
 
         $task_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
@@ -461,8 +455,8 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($changeset_task_02)
             ->andReturnFalse();
 
-        $task_01->shouldReceive('getTracker')->andReturn($task_tracker);
-        $task_02->shouldReceive('getTracker')->andReturn($task_tracker);
+        $task_01->shouldReceive('getTracker')->andReturn($this->task_tracker);
+        $task_02->shouldReceive('getTracker')->andReturn($this->task_tracker);
 
         $task_01->shouldReceive('getParentWithoutPermissionChecking')->andReturn($user_story_02);
         $task_02->shouldReceive('getParentWithoutPermissionChecking')->andReturn($user_story_02);
@@ -471,7 +465,7 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $task_02->shouldReceive('getId')->andReturn(6);
 
         $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')
-            ->with($task_tracker)
+            ->with($this->task_tracker)
             ->twice()
             ->andReturn([]);
     }
@@ -480,14 +474,12 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
             ->once()
-            ->with($artifact_id, $timestamp)
+            ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
             ->andReturn([
                 ['id' => 2],
                 ['id' => 3],
                 ['id' => 4],
             ]);
-
-        $user_story_tracker = Mockery::mock(Tracker::class);
 
         $user_story_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
@@ -544,9 +536,9 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_story_02->shouldReceive('getId')->andReturn(4);
         $user_story_03->shouldReceive('getId')->andReturn(5);
 
-        $user_story_01->shouldReceive('getTracker')->andReturn($user_story_tracker);
-        $user_story_02->shouldReceive('getTracker')->andReturn($user_story_tracker);
-        $user_story_03->shouldReceive('getTracker')->andReturn($user_story_tracker);
+        $user_story_01->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
+        $user_story_02->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
+        $user_story_03->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
 
         $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->andReturn([]);
     }
@@ -555,14 +547,12 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
             ->once()
-            ->with($artifact_id, $timestamp)
+            ->with($artifact_id, $timestamp, [$this->user_story_tracker->getId(), $this->task_tracker->getId()])
             ->andReturn([
                 ['id' => 2],
                 ['id' => 3],
                 ['id' => 4],
             ]);
-
-        $user_story_tracker = Mockery::mock(Tracker::class);
 
         $user_story_01 = Mockery::mock(Artifact::class);
         $this->artifact_factory->shouldReceive('getArtifactById')
@@ -619,9 +609,9 @@ final class CountElementsCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_story_02->shouldReceive('getId')->andReturn(4);
         $user_story_03->shouldReceive('getId')->andReturn(5);
 
-        $user_story_01->shouldReceive('getTracker')->andReturn($user_story_tracker);
-        $user_story_02->shouldReceive('getTracker')->andReturn($user_story_tracker);
-        $user_story_03->shouldReceive('getTracker')->andReturn($user_story_tracker);
+        $user_story_01->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
+        $user_story_02->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
+        $user_story_03->shouldReceive('getTracker')->andReturn($this->user_story_tracker);
 
         $artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $this->form_element_factory->shouldReceive('getUsedArtifactLinkFields')->andReturn([

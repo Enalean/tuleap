@@ -27,47 +27,22 @@ use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class CountElementsCalculator
 {
-    /**
-     * @var Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
-
-    /**
-     * @var BurnupDao
-     */
-    private $burnup_dao;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-
     public function __construct(
-        Tracker_Artifact_ChangesetFactory $changeset_factory,
-        Tracker_ArtifactFactory $artifact_factory,
-        Tracker_FormElementFactory $form_element_factory,
-        BurnupDao $burnup_dao,
+        private Tracker_Artifact_ChangesetFactory $changeset_factory,
+        private Tracker_ArtifactFactory $artifact_factory,
+        private Tracker_FormElementFactory $form_element_factory,
+        private BurnupDataDAO $burnup_dao,
     ) {
-        $this->changeset_factory    = $changeset_factory;
-        $this->burnup_dao           = $burnup_dao;
-        $this->artifact_factory     = $artifact_factory;
-        $this->form_element_factory = $form_element_factory;
     }
 
-    public function getValue(int $artifact_id, int $timestamp): CountElementsInfo
+    public function getValue(int $artifact_id, int $timestamp, array $backlog_trackers_ids): CountElementsInfo
     {
-        $items_dar     = $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp);
+        $items_dar     = $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp, $backlog_trackers_ids);
         $backlog_items = [];
         array_push($backlog_items, ...$items_dar);
         $elements_count = array_reduce(

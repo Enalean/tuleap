@@ -40,6 +40,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\v1\Artifact\BurnupRepresentation;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -385,10 +386,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         );
     }
 
-    /**
-     * @return BurnupDataBuilder
-     */
-    private function getBurnupDataBuilder()
+    private function getBurnupDataBuilder(): BurnupDataBuilder
     {
         $burnup_cache_dao = new BurnupCacheDao();
 
@@ -413,23 +411,22 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
                 Tracker_Artifact_ChangesetFactoryBuilder::build(),
                 Tracker_ArtifactFactory::instance(),
                 Tracker_FormElementFactory::instance(),
-                new BurnupDao()
+                new BurnupDataDAO()
             ),
-            $this->getCountElementsModeChecker()
+            $this->getCountElementsModeChecker(),
+            new PlanningDao(),
+            \PlanningFactory::build()
         );
     }
 
-    /**
-     * @return BurnupCalculator
-     */
-    private function getBurnupCalculator()
+    private function getBurnupCalculator(): BurnupCalculator
     {
         $changeset_factory = Tracker_Artifact_ChangesetFactoryBuilder::build();
 
         return new BurnupCalculator(
             $changeset_factory,
             Tracker_ArtifactFactory::instance(),
-            new BurnupDao(),
+            new BurnupDataDAO(),
             AgileDashboard_Semantic_InitialEffortFactory::instance(),
             new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker())
         );

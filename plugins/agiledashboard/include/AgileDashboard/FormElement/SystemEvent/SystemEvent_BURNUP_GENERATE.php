@@ -30,67 +30,37 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
-use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreLine
+final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreLine
 {
-    /**
-     * @var BurnupCalculator
-     */
-    public $burnup_calculator;
-
-    /**
-     * @var BurnupDao
-     */
-    private $burnup_dao;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var BurnupCacheDao
-     */
-    private $cache_dao;
-
-    /**
-     * @var BurnupCacheDateRetriever
-     */
-    private $date_retriever;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-
-    /**
-     * @var CountElementsCalculator
-     */
-    private $burnup_count_elements_calculator;
-
-    /**
-     * @var CountElementsCacheDao
-     */
-    private $count_elements_cache_dao;
+    public BurnupCalculator $burnup_calculator;
+    private BurnupDataDAO $burnup_dao;
+    private LoggerInterface $logger;
+    private BurnupCacheDao $cache_dao;
+    private BurnupCacheDateRetriever $date_retriever;
+    private Tracker_ArtifactFactory $artifact_factory;
+    private SemanticTimeframeBuilder $semantic_timeframe_builder;
+    private CountElementsCalculator $burnup_count_elements_calculator;
+    private CountElementsCacheDao $count_elements_cache_dao;
+    private \PlanningFactory $planning_factory;
+    private PlanningDao $planning_dao;
 
     public function injectDependencies(
         Tracker_ArtifactFactory $artifact_factory,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
-        BurnupDao $burnup_dao,
+        BurnupDataDAO $burnup_dao,
         BurnupCalculator $burnup_calculator,
         CountElementsCalculator $burnup_count_elements_calculator,
         BurnupCacheDao $cache_dao,
         CountElementsCacheDao $count_elements_cache_dao,
         LoggerInterface $logger,
         BurnupCacheDateRetriever $date_retriever,
-    ) {
+        PlanningDao $planning_dao,
+        \PlanningFactory $planning_factory,
+    ): void {
         $this->artifact_factory                 = $artifact_factory;
         $this->semantic_timeframe_builder       = $semantic_timeframe_builder;
         $this->burnup_dao                       = $burnup_dao;
@@ -100,6 +70,8 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
         $this->cache_dao                        = $cache_dao;
         $this->count_elements_cache_dao         = $count_elements_cache_dao;
         $this->date_retriever                   = $date_retriever;
+        $this->planning_dao                     = $planning_dao;
+        $this->planning_factory                 = $planning_factory;
     }
 
     private function getArtifactIdFromParameters()
@@ -172,10 +144,19 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
             $burnup_information['id']
         );
 
+        $planning_infos = $this->planning_dao->searchByMilestoneTrackerId($artifact->getTrackerId());
+        if (! $planning_infos) {
+            $warning = "Artifact artifact #" . $artifact_id . "does not belong to a planning";
+            $this->warning($warning);
+            $this->logger->debug($warning);
+            return false;
+        }
+
+        $backlog_trackers_ids = $this->planning_factory->getBacklogTrackersIds($planning_infos['id']);
         foreach ($this->date_retriever->getWorkedDaysToCacheForPeriod($burnup_period, $yesterday) as $worked_day) {
             $this->logger->debug("Day " . date("Y-m-d H:i:s", $worked_day));
 
-            $effort       = $this->burnup_calculator->getValue($burnup_information['id'], $worked_day);
+            $effort       = $this->burnup_calculator->getValue($burnup_information['id'], $worked_day, $backlog_trackers_ids);
             $team_effort  = $effort->getTeamEffort();
             $total_effort = $effort->getTotalEffort();
 
@@ -187,9 +168,11 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
                 $team_effort
             );
 
+
             $subelements_cache_info = $this->burnup_count_elements_calculator->getValue(
                 $burnup_information['id'],
-                $worked_day
+                $worked_day,
+                $backlog_trackers_ids
             );
 
             $closed_subelements = $subelements_cache_info->getClosedElements();

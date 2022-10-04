@@ -32,55 +32,30 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 
 class BurnupCalculator
 {
-    /**
-     * @var Tracker_Artifact_ChangesetFactory
-     */
-    private $changeset_factory;
-    /**
-     * @var BurnupDao
-     */
-    private $burnup_dao;
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var AgileDashboard_Semantic_InitialEffortFactory
-     */
-    private $initial_effort_factory;
-    /**
-     * @var SemanticDoneFactory
-     */
-    private $semantic_done_factory;
-
     public function __construct(
-        Tracker_Artifact_ChangesetFactory $changeset_factory,
-        Tracker_ArtifactFactory $artifact_factory,
-        BurnupDao $burnup_dao,
-        AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
-        SemanticDoneFactory $semantic_done_factory,
+        private Tracker_Artifact_ChangesetFactory $changeset_factory,
+        private Tracker_ArtifactFactory $artifact_factory,
+        private BurnupDataDAO $burnup_dao,
+        private AgileDashboard_Semantic_InitialEffortFactory $initial_effort_factory,
+        private SemanticDoneFactory $semantic_done_factory,
     ) {
-        $this->changeset_factory      = $changeset_factory;
-        $this->burnup_dao             = $burnup_dao;
-        $this->artifact_factory       = $artifact_factory;
-        $this->initial_effort_factory = $initial_effort_factory;
-        $this->semantic_done_factory  = $semantic_done_factory;
     }
 
-    /**
-     * @return BurnupEffort
-     */
-    public function getValue($artifact_id, $timestamp)
+    public function getValue(int $artifact_id, int $timestamp, array $backlog_trackers_ids): BurnupEffort
     {
         $backlog_items = $this->getPlanningLinkedArtifactAtTimestamp(
             $artifact_id,
-            $timestamp
+            $timestamp,
+            $backlog_trackers_ids
         );
 
         $total_effort = 0;
         $team_effort  = 0;
         foreach ($backlog_items as $item) {
             $artifact = $this->artifact_factory->getArtifactById($item['id']);
+            if (! $artifact) {
+                continue;
+            }
 
             $effort        = $this->getEffort($artifact, $timestamp);
             $total_effort += $effort->getTotalEffort();
@@ -91,10 +66,11 @@ class BurnupCalculator
     }
 
     private function getPlanningLinkedArtifactAtTimestamp(
-        $artifact_id,
-        $timestamp,
+        int $artifact_id,
+        int $timestamp,
+        array $backlog_trackers_ids,
     ) {
-        return $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp);
+        return $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp, $backlog_trackers_ids);
     }
 
     /**

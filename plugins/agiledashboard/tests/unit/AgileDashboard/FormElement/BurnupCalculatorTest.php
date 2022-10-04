@@ -24,7 +24,6 @@ use AgileDashBoard_Semantic_InitialEffort;
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue;
@@ -32,15 +31,14 @@ use Tracker_ArtifactFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var BurnupCalculator
-     */
-    private $calculator;
+    private BurnupCalculator $calculator;
+    private array $plannable_trackers;
 
     protected function setUp(): void
     {
@@ -48,9 +46,12 @@ class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_factory      = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
         $artifact_factory       = Mockery::mock(Tracker_ArtifactFactory::class);
-        $burnup_dao             = Mockery::mock(BurnupDao::class);
+        $burnup_dao             = Mockery::mock(BurnupDataDAO::class);
         $initial_effort_factory = Mockery::mock(AgileDashboard_Semantic_InitialEffortFactory::class);
         $semantic_done_factory  = Mockery::mock(SemanticDoneFactory::class);
+
+        $tracker                  = TrackerTestBuilder::aTracker()->withId(10)->build();
+        $this->plannable_trackers = [$tracker->getId()];
 
         $this->calculator = new BurnupCalculator(
             $changeset_factory,
@@ -61,20 +62,19 @@ class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
-            ->with(101, 1537187828)
+            ->with(101, 1537187828, $this->plannable_trackers)
             ->andReturn([
                 ['id' => 102],
                 ['id' => 103],
             ]);
 
         $burnup_dao->shouldReceive('searchLinkedArtifactsAtGivenTimestamp')
-            ->with(101, 1537189326)
+            ->with(101, 1537189326, $this->plannable_trackers)
             ->andReturn([
                 ['id' => 102],
                 ['id' => 103],
             ]);
 
-        $tracker       = Mockery::mock(Tracker::class);
         $user_story_01 = Mockery::mock(Artifact::class);
         $user_story_02 = Mockery::mock(Artifact::class);
 
@@ -143,17 +143,17 @@ class BurnupCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_story_02->shouldReceive('getValue')->with($initial_effort_field, $changeset_04)->andReturn($value_02);
     }
 
-    public function testItCalculsBurnupWithFirstChangeset()
+    public function testItCalculsBurnupWithFirstChangeset(): void
     {
-        $effort = $this->calculator->getValue(101, 1537187828);
+        $effort = $this->calculator->getValue(101, 1537187828, $this->plannable_trackers);
 
         $this->assertSame($effort->getTeamEffort(), 0.0);
         $this->assertSame($effort->getTotalEffort(), 9.0);
     }
 
-    public function testItCalculsBurnupWithLastChangeset()
+    public function testItCalculsBurnupWithLastChangeset(): void
     {
-        $effort = $this->calculator->getValue(101, 1537189326);
+        $effort = $this->calculator->getValue(101, 1537189326, $this->plannable_trackers);
 
         $this->assertSame($effort->getTeamEffort(), 4.0);
         $this->assertSame($effort->getTotalEffort(), 9.0);
