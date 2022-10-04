@@ -21,8 +21,10 @@
 
 declare(strict_types=1);
 
+use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
+use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -108,11 +110,14 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
 
     public function routeGetSlash(): ServiceController
     {
+        $container = ContainerBuilderFactory::create()->build();
+
         return new ServiceController(
             ProjectManager::instance(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
             $this,
-            new ProjectFlagsBuilder(new ProjectFlagsDao())
+            new ProjectFlagsBuilder(new ProjectFlagsDao()),
+            $container->get(Authorizations::class),
         );
     }
 
