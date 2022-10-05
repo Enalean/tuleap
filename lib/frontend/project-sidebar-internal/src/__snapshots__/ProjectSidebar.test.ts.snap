@@ -1,35 +1,23 @@
-// Vitest Snapshot v1
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ProjectSidebar > displays sidebar 1`] = `
+exports[`ProjectSidebar displays sidebar 1`] = `
 <aside
   class="sidebar"
-  data-v-73c4a8c1=""
 >
-  <sidebar-logo-stub
-    data-v-73c4a8c1=""
-  />
+  <sidebar-logo-stub />
   <div
     class="sidebar-content-vertical-scroll"
-    data-v-73c4a8c1=""
   >
-    <sidebar-header-stub
-      data-v-73c4a8c1=""
-    />
-    <tool-list-stub
-      data-v-73c4a8c1=""
-    />
+    <sidebar-header-stub />
+    <tool-list-stub />
     <sidebar-collapse-button-stub
       can_sidebar_be_collapsed="true"
-      data-v-73c4a8c1=""
       is_sidebar_collapsed="false"
     />
   </div>
   <div
     class="sidebar-spacer"
-    data-v-73c4a8c1=""
   />
-  <sidebar-footer-stub
-    data-v-73c4a8c1=""
-  />
+  <sidebar-footer-stub />
 </aside>
 `;

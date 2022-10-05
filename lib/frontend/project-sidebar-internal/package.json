@@ -4,10 +4,9 @@
   "license": "MIT",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "types": "dist/index.d.ts",
-  "module": "dist/project-sidebar-internal.js",
-  "main": "dist/project-sidebar-internal.umd.cjs",
+  "module": "dist/project-sidebar-internal.mjs",
+  "main": "dist/project-sidebar-internal.umd.js",
   "style": "dist/style.css",
   "files": [
     "dist/",
@@ -31,6 +30,6 @@
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
     "dev": "vite",
-    "test": "vitest --no-threads"
+    "test": "jest"
   }
 }
