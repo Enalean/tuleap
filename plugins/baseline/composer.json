@@ -5,6 +5,11 @@
             "Tuleap\\Baseline\\": "include/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tuleap\\Baseline\\": "tests/unit/"
+        }
+    },
     "require": {
         "php-di/php-di": "^6.0"
     },

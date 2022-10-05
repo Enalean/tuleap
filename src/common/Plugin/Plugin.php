@@ -31,7 +31,7 @@ use Tuleap\Project\Service\ServiceDisabledCollector;
 /**
  * Plugin
  */
-class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var LoggerInterface */
     private $backend_logger;
@@ -75,8 +75,12 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->scope = self::SCOPE_SYSTEM;
     }
 
-    public function isAllowed($group_id)
+    public function isAllowed($group_id): bool
     {
+        if ($group_id === null) {
+            return false;
+        }
+
         if (! isset($this->allowedForProject[$group_id])) {
             $this->allowedForProject[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
         }

@@ -22,33 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var ProjectRetriever */
     private $project_retriever;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectManager */
-    private $project_manager;
+    private ProjectManager|\PHPUnit\Framework\MockObject\MockObject $project_manager;
 
     protected function setUp(): void
     {
-        $this->project_manager   = M::mock(ProjectManager::class);
+        $this->project_manager   = $this->createMock(ProjectManager::class);
         $this->project_retriever = new ProjectRetriever($this->project_manager);
     }
 
     public function testGetProjectFromIdThrowsWhenNoProjectFound(): void
     {
         $invalid_id = '0';
-        $this->project_manager->shouldReceive('getProject')
+        $this->project_manager
+            ->method('getProject')
             ->with($invalid_id)
-            ->once()
-            ->andReturnNull();
+            ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
         $this->project_retriever->getProjectFromId($invalid_id);
@@ -57,14 +53,13 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetProjectFromIdThrowsWhenProjectIsInError(): void
     {
         $project_id    = '104';
-        $error_project = M::mock(Project::class)->shouldReceive('isError')
-            ->once()
-            ->andReturnTrue()
-            ->getMock();
-        $this->project_manager->shouldReceive('getProject')
+        $error_project = $this->createMock(Project::class);
+        $error_project->method('isError')
+            ->willReturn(true);
+        $this->project_manager
+            ->method('getProject')
             ->with($project_id)
-            ->once()
-            ->andReturn($error_project);
+            ->willReturn($error_project);
 
         $this->expectException(NotFoundException::class);
         $this->project_retriever->getProjectFromId($project_id);
@@ -73,16 +68,39 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetProjectFromIdReturnsValidProject(): void
     {
         $project_id = '104';
-        $project    = M::mock(Project::class)->shouldReceive('isError')
-            ->once()
-            ->andReturnFalse()
-            ->getMock();
-        $this->project_manager->shouldReceive('getProject')
+        $project    = $this->createMock(Project::class);
+        $project->method('isError')
+            ->willReturn(false);
+        $this->project_manager
+            ->method('getProject')
             ->with($project_id)
-            ->once()
-            ->andReturn($project);
+            ->willReturn($project);
 
         $result = $this->project_retriever->getProjectFromId($project_id);
         $this->assertSame($project, $result);
+    }
+
+    public function testGetProjectFromNameThrowsWhenNoProjectFound(): void
+    {
+        $notfound = 'notfound';
+        $this->project_manager
+            ->method('getValidProjectByShortNameOrId')
+            ->with($notfound)
+            ->willThrowException(new \Project_NotFoundException());
+
+        $this->expectException(NotFoundException::class);
+        $this->project_retriever->getProjectFromName($notfound);
+    }
+
+    public function testGetProjectFromNameReturnsValidProject(): void
+    {
+        $name    = 'acme';
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->project_manager
+            ->method('getValidProjectByShortNameOrId')
+            ->with($name)
+            ->willReturn($project);
+
+        self::assertSame($project, $this->project_retriever->getProjectFromName($name));
     }
 }

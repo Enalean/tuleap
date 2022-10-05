@@ -32,6 +32,9 @@ msgstr "Le service baseline est désactivé pour ce projet"
 msgid "Baselines"
 msgstr "Baselines"
 
+msgid "Baselines administration"
+msgstr "Administration des baselines"
+
 #, php-format
 msgid "No artifact found with id %u"
 msgstr "Aucun artefact trouvée avec l'id %u"
@@ -55,6 +58,12 @@ msgstr "Un maximum de %u artefacts peuvent être demandés en une seule fois."
 msgid "No project found with this id"
 msgstr "Aucun projet trouvé avec cet identifiant"
 
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid "Save configuration"
+msgstr "Sauvegarder la configuration"
+
 msgid "Set and compare baseline of items"
 msgstr "Poser des baselines et les comparer"
 
@@ -73,6 +82,13 @@ msgstr "Cette opération n'est pas autorisée. %s"
 #, php-format
 msgid "This operation is possible for now. %s"
 msgstr "Cette opération n'est pas possible actuellement. %s"
+
+msgid ""
+"User groups who can administrate the baseline service, in addition of "
+"project administrators"
+msgstr ""
+"Groupes d'utilisateurs qui peuvent administrer le service baseline, en plus "
+"des administrateurs de projet"
 
 msgid "You are not allowed to access baseline service"
 msgstr "Vous n'êtes pas autorisé à accéder au service baseline"

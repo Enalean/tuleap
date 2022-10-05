@@ -50,4 +50,13 @@ class ProjectRetriever
         }
         return $project;
     }
+
+    public function getProjectFromName(string $project_name): \Project
+    {
+        try {
+            return $this->project_manager->getValidProjectByShortNameOrId($project_name);
+        } catch (\Project_NotFoundException $exception) {
+            throw new NotFoundException(gettext('Project does not exist'));
+        }
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,36 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Plugin;
 
-class BaselineTuleapService extends \Service
+/**
+ * @psalm-import-type ProjectID from \Group
+ */
+interface IsProjectAllowedToUsePlugin
 {
-    public function getIconName(): string
-    {
-        return 'fas fa-tlp-baseline';
-    }
-
-    public function getUrl(?string $url = null): string
-    {
-        return '/plugins/baseline/' . urlencode($this->project->getUnixNameLowerCase());
-    }
-
-    public function urlCanChange(): bool
-    {
-        return false;
-    }
-
-    public function displayAdministrationHeader(): void
-    {
-        $this->displayHeader(
-            dgettext('tuleap-baseline', 'Baselines administration'),
-            [],
-            []
-        );
-    }
+    /**
+     * @param ProjectID|null $group_id
+     */
+    public function isAllowed($group_id): bool;
 }

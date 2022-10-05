@@ -31,16 +31,16 @@ use Tuleap\Baseline\Domain\TransientBaseline;
 use Tuleap\Baseline\Domain\TransientComparison;
 use Tuleap\Baseline\Domain\UserIdentifier;
 
-class FullAccessAuthorizationsStub implements Authorizations
+class ReaderAuthorizationsStub implements Authorizations
 {
     public function canCreateBaseline(UserIdentifier $current_user, TransientBaseline $baseline): bool
     {
-        return true;
+        return false;
     }
 
     public function canDeleteBaseline(UserIdentifier $current_user, Baseline $baseline): bool
     {
-        return true;
+        return false;
     }
 
     public function canReadBaseline(UserIdentifier $current_user, Baseline $baseline): bool
@@ -55,7 +55,7 @@ class FullAccessAuthorizationsStub implements Authorizations
 
     public function canCreateComparison(UserIdentifier $current_user, TransientComparison $comparison): bool
     {
-        return true;
+        return false;
     }
 
     public function canReadComparison(UserIdentifier $current_user, Comparison $comparison): bool
@@ -70,11 +70,11 @@ class FullAccessAuthorizationsStub implements Authorizations
 
     public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison)
     {
-        return true;
+        return false;
     }
 
     public function canUserAdministrateBaselineOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
-        return true;
+        return false;
     }
 }

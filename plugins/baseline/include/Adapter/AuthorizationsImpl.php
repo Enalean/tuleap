@@ -44,18 +44,12 @@ class AuthorizationsImpl implements Authorizations
 
     public function canCreateBaseline(UserIdentifier $current_user, TransientBaseline $baseline): bool
     {
-        return $this->canUserAdministrateBaselineOnProject(
-            $this->getUserFromIdentifier($current_user),
-            $baseline->getProject()
-        );
+        return $this->canUserAdministrateBaselineOnProject($current_user, $baseline->getProject());
     }
 
     public function canDeleteBaseline(UserIdentifier $current_user, Baseline $baseline): bool
     {
-        return $this->canUserAdministrateBaselineOnProject(
-            $this->getUserFromIdentifier($current_user),
-            $baseline->getProject()
-        );
+        return $this->canUserAdministrateBaselineOnProject($current_user, $baseline->getProject());
     }
 
     private function getUserFromIdentifier(UserIdentifier $identifier): PFUser
@@ -80,15 +74,18 @@ class AuthorizationsImpl implements Authorizations
         if ($this->isUserAdminOnProject($user, $project)) {
             return true;
         }
-        return $this->canUserAdministrateBaselineOnProject($user, $project)
+        return $this->canUserAdministrateBaselineOnProject($current_user, $project)
             || $this->hasUserRoleOnProject($user, Role::READER, $project);
     }
 
-    private function canUserAdministrateBaselineOnProject(PFUser $user, ProjectIdentifier $project): bool
+    public function canUserAdministrateBaselineOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
+        $user = $this->getUserFromIdentifier($current_user);
+
         if ($this->isUserAdminOnProject($user, $project)) {
             return true;
         }
+
         return $this->hasUserRoleOnProject($user, Role::ADMIN, $project);
     }
 
@@ -110,18 +107,12 @@ class AuthorizationsImpl implements Authorizations
 
     public function canCreateComparison(UserIdentifier $current_user, TransientComparison $comparison): bool
     {
-        return $this->canUserAdministrateBaselineOnProject(
-            $this->getUserFromIdentifier($current_user),
-            $comparison->getProject()
-        );
+        return $this->canUserAdministrateBaselineOnProject($current_user, $comparison->getProject());
     }
 
     public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison): bool
     {
-        return $this->canUserAdministrateBaselineOnProject(
-            $this->getUserFromIdentifier($current_user),
-            $comparison->getProject()
-        );
+        return $this->canUserAdministrateBaselineOnProject($current_user, $comparison->getProject());
     }
 
     public function canReadComparison(UserIdentifier $current_user, Comparison $comparison): bool
