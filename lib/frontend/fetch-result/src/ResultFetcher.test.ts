@@ -24,7 +24,6 @@ import type { FetchResult } from "./ResultFetcher";
 import { ResultFetcher } from "./ResultFetcher";
 import { FetchInterfaceStub } from "../tests/stubs/FetchInterfaceStub";
 import { ResponseRetriever } from "./ResponseRetriever";
-import { AllGetter } from "./AllGetter";
 import {
     DELETE_METHOD,
     GET_METHOD,
@@ -35,7 +34,6 @@ import {
     PUT_METHOD,
 } from "./constants";
 
-type ResponseResult = ResultAsync<Response, Fault>;
 type JSONResponsePayload = {
     readonly id: number;
     readonly value: string;
@@ -47,6 +45,8 @@ type JSONRequestPayload = {
 type Parameters = {
     readonly [key: string]: string | number | boolean;
 };
+type ResponseResult = ResultAsync<Response, Fault>;
+type JSONResult = ResultAsync<JSONResponsePayload, Fault>;
 
 const ID = 521;
 const REQUEST_ID = 196;
@@ -73,8 +73,7 @@ describe(`ResultFetcher`, () => {
 
     const getFetcher = (): FetchResult => {
         const response_retriever = ResponseRetriever(fetcher);
-        const all_getter = AllGetter(response_retriever);
-        return ResultFetcher(response_retriever, all_getter);
+        return ResultFetcher(response_retriever);
     };
 
     describe(`methods returning a JSON payload`, () => {
@@ -117,15 +116,33 @@ describe(`ResultFetcher`, () => {
             });
         });
 
-        describe(`postJSON()`, () => {
-            it(`will encode the given URI and stringify the given JSON payload and add the JSON Content-Type header
-                and will return a ResultAsync with the decoded JSON from the Response body,`, async () => {
-                const result = await getFetcher().postJSON<JSONResponsePayload>(
-                    uri,
-                    json_request_payload
-                );
+        it.each([
+            [
+                "patchJSON()",
+                (): JSONResult => getFetcher().patchJSON(uri, json_request_payload),
+                PATCH_METHOD,
+            ],
+            [
+                "postJSON()",
+                (): JSONResult => getFetcher().postJSON(uri, json_request_payload),
+                POST_METHOD,
+            ],
+            [
+                "putJSON()",
+                (): JSONResult => getFetcher().putJSON(uri, json_request_payload),
+                PUT_METHOD,
+            ],
+        ])(
+            `%s will encode the given URI and stringify the given JSON payload and add the JSON Content-Type header
+            and will return a ResultAsync with the decoded JSON from the Response body`,
+            async (
+                _method_name: string,
+                method_under_test: () => JSONResult,
+                expected_http_method: string
+            ) => {
+                const result = await method_under_test();
                 if (!result.isOk()) {
-                    throw new Error("Expected an Ok");
+                    throw Error("Expected an Ok");
                 }
 
                 expect(result.value).toBe(json_response_payload);
@@ -133,11 +150,13 @@ describe(`ResultFetcher`, () => {
                 expect(fetcher.getRequestInfo(0)).toBe(
                     "https://example.com/result-fetcher-test/d%C3%A9mo"
                 );
+
                 const request_init = fetcher.getRequestInit(0);
                 if (request_init === undefined) {
-                    throw new Error("Expected request init to be defined");
+                    throw Error("Expected request init to be defined");
                 }
-                expect(request_init.method).toBe(POST_METHOD);
+
+                expect(request_init.method).toBe(expected_http_method);
                 expect(request_init.credentials).toBe("same-origin");
 
                 if (!(request_init.headers instanceof Headers)) {
@@ -145,8 +164,8 @@ describe(`ResultFetcher`, () => {
                 }
                 expect(request_init.headers.get("Content-Type")).toBe("application/json");
                 expect(request_init.body).toBe(`{"request_id":196,"request_value":"Sphindus"}`);
-            });
-        });
+            }
+        );
     });
 
     describe(`methods returning a Response`, () => {
@@ -181,18 +200,6 @@ describe(`ResultFetcher`, () => {
         });
 
         it.each([
-            [
-                "putJSON()",
-                (): ResponseResult => getFetcher().putJSON(uri, json_request_payload),
-                "https://example.com/result-fetcher-test/d%C3%A9mo",
-                PUT_METHOD,
-            ],
-            [
-                "patchJSON()",
-                (): ResponseResult => getFetcher().patchJSON(uri, json_request_payload),
-                "https://example.com/result-fetcher-test/d%C3%A9mo",
-                PATCH_METHOD,
-            ],
             [
                 "post()",
                 (): ResponseResult => getFetcher().post(uri, { params }, json_request_payload),

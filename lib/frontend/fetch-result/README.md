@@ -89,11 +89,15 @@ import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { putJSON } from "@tuleap/fetch-result";
 
-function updateReport(report_id: number, trackers_id: number): ResultAsync<Response, Fault> {
+type UpdatedReport = {
+    readonly report_id: number;
+};
+
+function updateReport(report_id: number, trackers_id: number): ResultAsync<UpdatedReport, Fault> {
     // URI is automatically encoded
     // "Content-Type" header is automatically set to "application/json"
     // The second parameter is automatically encoded to JSON string in the Request body
-    return putJSON(`/api/v1/cross_tracker_reports/
+    return putJSON<UpdatedReport>(`/api/v1/cross_tracker_reports/
     ${report_id}`, { trackers_id });
 }
 ```
@@ -105,11 +109,15 @@ import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { patchJSON } from "@tuleap/fetch-result";
 
-function removeLabel(label_id: number): ResultAsync<Response, Fault> {
+type UpdatedLabel = {
+    readonly label_id: number;
+};
+
+function removeLabel(label_id: number): ResultAsync<UpdatedLabel, Fault> {
     // URI is automatically encoded
     // "Content-Type" header is automatically set to "application/json"
     // The second parameter is automatically encoded to JSON string in the Request body
-    return patchJSON("/api/v1/labels", { remove: [{id: label_id }]});
+    return patchJSON<UpdatedLabel>("/api/v1/labels", { remove: [{id: label_id }]});
 }
 ```
 
@@ -121,7 +129,7 @@ import type { Fault } from "@tuleap/fault";
 import { postJSON } from "@tuleap/fetch-result";
 
 type CreatedArtifact = {
-    readonly artifact_id: number
+    readonly artifact_id: number;
 };
 
 function createArtifact(tracker_id: number, field_values: unknown): ResultAsync<CreatedArtifact, Fault> {
