@@ -61,6 +61,8 @@ services:
       - tests-tuleap-data:/data
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - ./tests/e2e/distlp/environment-backend-web:/root/.tuleap_env:ro
+    environment:
+      TULEAP_DISTLP_TEST: true
     tmpfs: /run
     depends_on:
       - ldap
@@ -79,6 +81,7 @@ services:
     tmpfs: /run
     environment:
       MYSQL_ROOT_PASSWORD: welcome0
+      TULEAP_DISTLP_TEST: true
     depends_on:
       - ldap
       - ${DB_HOST}
