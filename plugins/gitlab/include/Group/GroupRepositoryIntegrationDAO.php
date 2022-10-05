@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Group;
 
 use Tuleap\DB\DataAccessObject;
 
-final class GroupRepositoryIntegrationDAO extends DataAccessObject implements LinkARepositoryIntegrationToAGroup, CountIntegratedRepositories
+final class GroupRepositoryIntegrationDAO extends DataAccessObject implements LinkARepositoryIntegrationToAGroup, CountIntegratedRepositories, VerifyRepositoryIntegrationsAlreadyLinked
 {
     public function linkARepositoryIntegrationToAGroup(NewRepositoryIntegrationLinkedToAGroup $command): void
     {
@@ -40,5 +40,15 @@ final class GroupRepositoryIntegrationDAO extends DataAccessObject implements Li
             'SELECT COUNT(*) FROM plugin_gitlab_group_repository_integration WHERE group_id = ?',
             $group_link->id
         );
+    }
+
+    public function isRepositoryIntegrationAlreadyLinkedToAGroup(int $integration_id): bool
+    {
+        $row = $this->getDB()->run(
+            'SELECT NULL FROM plugin_gitlab_group_repository_integration WHERE integration_id = ?',
+            $integration_id
+        );
+
+        return count($row) > 0;
     }
 }

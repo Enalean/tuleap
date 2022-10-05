@@ -20,16 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Group\Token;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-
-interface RetrieveGroupLink
+interface GetTokenByGroupId
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public function getTokenByGroupId(int $group_id): string;
 }

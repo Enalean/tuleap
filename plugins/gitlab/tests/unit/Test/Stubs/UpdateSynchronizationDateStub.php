@@ -20,16 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Test\Stubs;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\UpdateSynchronizationDate;
 
-interface RetrieveGroupLink
+final class UpdateSynchronizationDateStub implements UpdateSynchronizationDate
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    private int $call_count;
+
+    private function __construct()
+    {
+        $this->call_count = 0;
+    }
+
+    public function updateSynchronizationDate(GroupLink $group_link): void
+    {
+        $this->call_count++;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
 }

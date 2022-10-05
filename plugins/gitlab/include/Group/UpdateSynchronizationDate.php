@@ -22,14 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-
-interface RetrieveGroupLink
+interface UpdateSynchronizationDate
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public function updateSynchronizationDate(GroupLink $group_link): void;
 }

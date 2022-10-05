@@ -22,14 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-
-interface RetrieveGroupLink
+/**
+ * @psalm-immutable
+ */
+final class SynchronizeGroupLinkCommand
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public function __construct(public int $group_link_id)
+    {
+    }
 }

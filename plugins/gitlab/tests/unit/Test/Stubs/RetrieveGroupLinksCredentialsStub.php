@@ -20,16 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Test\Stubs;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\Gitlab\API\Credentials;
+use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\Token\RetrieveGroupLinksCredentials;
+use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
-interface RetrieveGroupLink
+final class RetrieveGroupLinksCredentialsStub implements RetrieveGroupLinksCredentials
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public function __construct(private Credentials $credentials)
+    {
+    }
+
+    public function retrieveCredentials(GroupLink $group_link): Credentials
+    {
+        return $this->credentials;
+    }
+
+    public static function withDefaultCredentials(): self
+    {
+        return new self(CredentialsTestBuilder::get()->build());
+    }
 }

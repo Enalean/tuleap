@@ -23,8 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Test\Stubs;
 
 use Project;
+use Throwable;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Gitlab\API\GitlabRequestException;
+use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\CreateGitlabRepositories;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
@@ -34,16 +37,22 @@ final class CreateGitlabRepositoriesStub implements CreateGitlabRepositories
     /**
      * @param GitlabRepositoryIntegration[] $return_values
      */
-    private function __construct(private array $return_values)
+    private function __construct(private array $return_values, private ?Throwable $exception)
     {
     }
 
+    /**
+     * @throws Throwable
+     */
     public function createGitlabRepositoryIntegration(
         Credentials $credentials,
         GitlabProject $gitlab_project,
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration,
     ): GitlabRepositoryIntegration {
+        if ($this->exception) {
+            throw $this->exception;
+        }
         if (count($this->return_values) > 0) {
             return array_shift($this->return_values);
         }
@@ -57,6 +66,16 @@ final class CreateGitlabRepositoriesStub implements CreateGitlabRepositories
         GitlabRepositoryIntegration $first_integration,
         GitlabRepositoryIntegration ...$other_integrations,
     ): self {
-        return new self([$first_integration, ...$other_integrations]);
+        return new self([$first_integration, ...$other_integrations], null);
+    }
+
+    public static function withGitlabRequestException(): self
+    {
+        return new self([], new GitlabRequestException(400, 'fail'));
+    }
+
+    public static function withGitlabResponseAPIException(): self
+    {
+        return new self([], new GitlabResponseAPIException("echec"));
     }
 }

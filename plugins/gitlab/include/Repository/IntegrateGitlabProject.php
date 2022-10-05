@@ -20,16 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Repository;
 
+use Project;
+use Tuleap\Gitlab\API\Credentials;
+use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Gitlab\Group\GroupLink;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
-interface RetrieveGroupLink
+interface IntegrateGitlabProject
 {
     /**
-     * @return Ok<GroupLink> | Err<Fault>
+     * @param GitlabProject[] $gitlab_projects
+     * @return Ok<null>|Err<Fault>
      */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public function integrateSeveralProjects(
+        array $gitlab_projects,
+        Project $project,
+        Credentials $credentials,
+        GroupLink $gitlab_group,
+    ): Ok|Err;
 }

@@ -27,9 +27,9 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class GroupLinkRetriever
+final class GroupLinkRetriever implements RetrieveGroupLink
 {
-    public function __construct(private RetrieveGroupLink $group_link_retriever)
+    public function __construct(private RetrieveGroupLinkById $group_link_retriever)
     {
     }
 

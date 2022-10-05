@@ -20,16 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Group\Token;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\Gitlab\API\Credentials;
+use Tuleap\Gitlab\Group\GroupLink;
 
-interface RetrieveGroupLink
+interface RetrieveGroupLinksCredentials
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public function retrieveCredentials(GroupLink $group_link): Credentials;
 }

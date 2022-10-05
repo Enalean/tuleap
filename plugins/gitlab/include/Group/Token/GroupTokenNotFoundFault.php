@@ -20,16 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Group\Token;
 
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
 
-interface RetrieveGroupLink
+/**
+ * @psalm-immutable
+ */
+final class GroupTokenNotFoundFault extends Fault
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public static function build(int $group_link_id): Fault
+    {
+        return new self(sprintf('GitLab group link token of from group #%d not found', $group_link_id));
+    }
 }

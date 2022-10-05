@@ -27,7 +27,7 @@ use Tuleap\Gitlab\Core\ProjectRetriever;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Stubs\DeleteGroupLinkStub;
-use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkStub;
+use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkByIdStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -55,7 +55,7 @@ final class GroupUnlinkHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             new GitAdministratorChecker(VerifyUserIsGitAdministratorStub::withAlwaysGitAdministrator()),
             new GroupLinkRetriever(
-                RetrieveGroupLinkStub::withSuccessiveGroupLinks(
+                RetrieveGroupLinkByIdStub::withSuccessiveGroupLinks(
                     GroupLinkBuilder::aGroupLink(self::GROUP_LINK_ID)->withProjectId($project_id)->build()
                 )
             ),
