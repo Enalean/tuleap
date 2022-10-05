@@ -26,6 +26,9 @@ namespace Tuleap\Baseline;
 use HTTPRequest;
 use Project;
 use TemplateRenderer;
+use Tuleap\Baseline\Adapter\ProjectProxy;
+use Tuleap\Baseline\Adapter\UserProxy;
+use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
@@ -43,33 +46,13 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
 {
     public const PROJECT_NAME_VARIABLE_NAME = 'project_name';
 
-    /**
-     * @var TemplateRenderer
-     */
-    private $template_renderer;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \baselinePlugin
-     */
-    private $plugin;
-    /**
-     * @var ProjectFlagsBuilder
-     */
-    private $project_flags_builder;
-
     public function __construct(
-        \ProjectManager $project_manager,
-        TemplateRenderer $template_renderer,
-        \baselinePlugin $plugin,
-        ProjectFlagsBuilder $project_flags_builder,
+        private \ProjectManager $project_manager,
+        private TemplateRenderer $template_renderer,
+        private \baselinePlugin $plugin,
+        private ProjectFlagsBuilder $project_flags_builder,
+        private Authorizations $authorizations,
     ) {
-        $this->project_manager       = $project_manager;
-        $this->template_renderer     = $template_renderer;
-        $this->plugin                = $plugin;
-        $this->project_flags_builder = $project_flags_builder;
     }
 
 
@@ -116,6 +99,18 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
             $layout->addFeedback(
                 \Feedback::ERROR,
                 dgettext('tuleap-baseline', 'Baseline service is disabled for this project')
+            );
+            $layout->redirect('/projects/' . $project_name);
+        }
+
+        $can_read_baselines_on_project = $this->authorizations->canReadBaselinesOnProject(
+            UserProxy::fromUser($request->getCurrentUser()),
+            ProjectProxy::buildFromProject($project)
+        );
+        if (! $can_read_baselines_on_project) {
+            $layout->addFeedback(
+                \Feedback::ERROR,
+                dgettext('tuleap-baseline', 'You are not allowed to access baseline service'),
             );
             $layout->redirect('/projects/' . $project_name);
         }
