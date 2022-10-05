@@ -43,7 +43,7 @@ final class GitlabGroupLinkRepresentation
         public ?string $avatar_url,
         DateTimeImmutable $last_synchronization_date,
         public bool $allow_artifact_closure,
-        public ?string $create_branch_prefix,
+        public string $create_branch_prefix,
     ) {
         $this->last_synchronization_date = JsonCast::fromNotNullDateTimeToDate($last_synchronization_date);
     }

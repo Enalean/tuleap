@@ -51,6 +51,9 @@ final class GroupCreator
         GitlabGroupPOSTRepresentation $gitlab_group_representation,
         Project $project,
     ): GitlabGroupRepresentation {
+        if ($gitlab_group_representation->create_branch_prefix === null) {
+            throw new RestException(400, '`gitlab_group_link_representation[create_branch_prefix]` is required.');
+        }
         try {
             $gitlab_group_information = $this->gitlab_group_information_retriever->getGitlabGroupFromGitlabApi(
                 $credentials,
@@ -87,7 +90,7 @@ final class GroupCreator
                 400,
                 sprintf(
                     "The branch name prefix '%s' produces invalid git branch names",
-                    $gitlab_group_representation->create_branch_prefix ?? ''
+                    $gitlab_group_representation->create_branch_prefix
                 )
             );
         }

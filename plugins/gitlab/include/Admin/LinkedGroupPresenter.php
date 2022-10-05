@@ -53,7 +53,7 @@ final class LinkedGroupPresenter
         $this->allow_artifact_closure     = $group_link->allow_artifact_closure
             ? dgettext('tuleap-gitlab', 'Yes')
             : dgettext('tuleap-gitlab', 'No');
-        $this->branch_prefix              = $group_link->prefix_branch_name ?? '';
+        $this->branch_prefix              = $group_link->prefix_branch_name;
         $this->gitlab_url                 = $group_link->web_url;
         $this->avatar_url                 = $group_link->avatar_url;
         $this->current_project_label      = $project->getPublicName();

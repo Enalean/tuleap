@@ -34,7 +34,7 @@ final class GroupLinkBuilder
     private ?string $avatar_url  = 'https://gitlab.example.com/uploads/-/system/group/avatar/45/avatar.png';
     private int $last_synchronization_timestamp;
     private bool $allow_artifact_closure = true;
-    private ?string $branch_prefix       = 'dev-';
+    private string $branch_prefix        = 'dev-';
 
     private function __construct(private int $id)
     {
@@ -60,7 +60,7 @@ final class GroupLinkBuilder
 
     public function withNoBranchPrefix(): self
     {
-        $this->branch_prefix = null;
+        $this->branch_prefix = '';
         return $this;
     }
 

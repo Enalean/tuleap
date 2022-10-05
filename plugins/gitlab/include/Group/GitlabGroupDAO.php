@@ -40,7 +40,7 @@ final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, Veri
                 'avatar_url'                => $gitlab_group->avatar_url,
                 'last_synchronization_date' => $gitlab_group->last_synchronization_date->getTimestamp(),
                 'allow_artifact_closure'    => $gitlab_group->allow_artifact_closure,
-                'create_branch_prefix'      => $gitlab_group->prefix_branch_name,
+                'create_branch_prefix'      => $gitlab_group->prefix_branch_name !== '' ? $gitlab_group->prefix_branch_name : null,
             ]
         );
     }
@@ -85,11 +85,11 @@ final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, Veri
 
     public function updateBranchPrefixOfGroupLink(
         int $id,
-        string $create_branch_prefix,
+        string $prefix_branch_name,
     ): void {
         $this->getDB()->update(
             'plugin_gitlab_group',
-            ['create_branch_prefix' => $create_branch_prefix],
+            ['create_branch_prefix' => $prefix_branch_name !== '' ? $prefix_branch_name : null],
             ['id' => $id]
         );
     }

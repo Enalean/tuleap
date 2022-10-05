@@ -117,7 +117,7 @@ final class GitlabRepositoryGroupLinkHandler
                 $project,
                 $configuration
             );
-            if ($gitlab_group->prefix_branch_name !== null) {
+            if ($gitlab_group->prefix_branch_name !== '') {
                 $this->branch_prefix_saver->setCreateBranchPrefixForIntegration(
                     $new_integration->getId(),
                     $gitlab_group->prefix_branch_name

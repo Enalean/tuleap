@@ -39,7 +39,7 @@ final class NewGroup
         public ?string $avatar_url,
         public DateTimeImmutable $last_synchronization_date,
         public bool $allow_artifact_closure,
-        public ?string $prefix_branch_name,
+        public string $prefix_branch_name,
     ) {
     }
 
@@ -48,7 +48,7 @@ final class NewGroup
         \Project $project,
         \DateTimeImmutable $last_synchronization_date,
         bool $allow_artifact_closure,
-        ?string $prefix_branch_name,
+        string $prefix_branch_name,
     ): self {
         return new self(
             $representation->getGitlabGroupId(),
