@@ -24,14 +24,19 @@
         <fake-caret v-bind:item="item" />
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="ICON_LINK"></i>
         <a v-bind:href="document_link_url" class="document-folder-subitem-link" draggable="false">
-            {{ item.title }}
+            {{ item.title
+            }}<i
+                class="fas document-action-icon"
+                v-bind:class="ACTION_ICON_LINK"
+                aria-hidden="true"
+            ></i>
         </a>
     </div>
 </template>
 
 <script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
-import { ICON_LINK } from "../../../constants";
+import { ICON_LINK, ACTION_ICON_LINK } from "../../../constants";
 import type { Item } from "../../../type";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";

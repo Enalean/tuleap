@@ -24,6 +24,13 @@ export const TYPE_EMBEDDED = "embedded";
 export const TYPE_WIKI = "wiki";
 export const TYPE_EMPTY = "empty";
 
+export const ACTION_ICON_FOLDER = "fa-turn-down";
+export const ACTION_ICON_FILE = "fa-download";
+export const ACTION_ICON_LINK = "fa-arrow-right";
+export const ACTION_ICON_EMBEDDED = "fa-arrow-right";
+export const ACTION_ICON_ONLYOFFICE = "fa-arrow-right";
+export const ACTION_ICON_WIKI = "fa-arrow-right";
+
 export const ICON_LINK = "fa-link document-link-icon";
 export const ICON_EMBEDDED = "fa-file-text document-text-icon";
 export const ICON_WIKI = "fa-wikipedia-w document-wiki-icon";

@@ -29,14 +29,19 @@
             draggable="false"
             data-test="wiki-document-link"
         >
-            {{ item.title }}
+            {{ item.title
+            }}<i
+                class="fas document-action-icon"
+                v-bind:class="ACTION_ICON_WIKI"
+                aria-hidden="true"
+            ></i>
         </a>
     </div>
 </template>
 
 <script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
-import { ICON_WIKI } from "../../../constants";
+import { ICON_WIKI, ACTION_ICON_WIKI } from "../../../constants";
 import type { Item } from "../../../type";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";

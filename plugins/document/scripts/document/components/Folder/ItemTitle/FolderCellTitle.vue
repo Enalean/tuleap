@@ -46,13 +46,19 @@
             data-test="document-go-to-folder-link"
             draggable="false"
         >
-            {{ item.title }}
+            {{ item.title
+            }}<i
+                class="fas document-action-icon"
+                v-bind:class="ACTION_ICON_FOLDER"
+                aria-hidden="true"
+            ></i>
         </a>
     </div>
 </template>
 
 <script setup lang="ts">
 import type { Folder, State } from "../../../type";
+import { ACTION_ICON_FOLDER } from "../../../constants";
 import {
     useActions,
     useGetters,

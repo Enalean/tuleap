@@ -205,8 +205,20 @@
     text-align: left;
 }
 
-.document-folder-subitem-link:not(:hover) {
-    color: inherit;
+.document-folder-subitem-link {
+    &:hover > .document-action-icon {
+        display: inline-block;
+    }
+
+    &:not(:hover) {
+        color: inherit;
+    }
+}
+
+.document-action-icon {
+    display: none;
+    margin: 0 0 0 calc(var(--tlp-small-spacing) / 2);
+    font-size: 0.65rem;
 }
 
 .document-empty-folder-for-writers {
