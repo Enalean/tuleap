@@ -56,10 +56,7 @@ export const IntField = define<IntField>({
     content: (host) => html`
         <div class="tlp-form-element">
             <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">
-                ${host.label}${host.required &&
-                html`
-                    <i class="fas fa-asterisk"></i>
-                `}
+                ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
             </label>
             <input
                 type="number"

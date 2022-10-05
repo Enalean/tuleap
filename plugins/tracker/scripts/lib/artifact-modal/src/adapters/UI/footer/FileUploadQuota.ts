@@ -40,9 +40,7 @@ const getNoDiskUsageTemplate = (host: FileUploadQuota): UpdateFunction<FileUploa
         getEmptyDiskQuotaMessage(),
         prettyKibibytes(host.presenter.disk_quota_in_bytes)
     );
-    return html`
-        <div class="tlp-text-info">${quota_message}</div>
-    `;
+    return html`<div class="tlp-text-info">${quota_message}</div>`;
 };
 
 const getQuotaPercentageTemplate = (host: FileUploadQuota): UpdateFunction<FileUploadQuota> => {

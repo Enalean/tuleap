@@ -130,9 +130,7 @@ export const getAttachedFileTemplate = (
 
 const getAttachedFilesTemplate = (host: FileField): UpdateFunction<FileField> => {
     if (!host.attached_files) {
-        return html`
-            <span class="tlp-text-muted">${getEmptyLabel()}</span>
-        `;
+        return html` <span class="tlp-text-muted">${getEmptyLabel()}</span> `;
     }
     return html`
         ${host.attached_files.map((file) => getAttachedFileTemplate(file, host.disabled))}
@@ -184,9 +182,7 @@ export const FileField = define<FileField>({
         <div class="tlp-form-element">
             <label class="tlp-label" data-test="file-field-label">
                 ${host.field.label}${host.field.required &&
-                html`
-                    <i class="fas fa-asterisk" aria-hidden="true"></i>
-                `}
+                html`<i class="fas fa-asterisk" aria-hidden="true"></i>`}
             </label>
             ${getAttachedFilesTemplate(host)}
             ${host.new_files.map((file) => {
