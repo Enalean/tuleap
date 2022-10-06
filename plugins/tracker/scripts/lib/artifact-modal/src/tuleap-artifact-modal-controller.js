@@ -73,6 +73,8 @@ import { LinkedArtifactsPopoversController } from "./adapters/UI/fields/link-fie
 import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploader";
 import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
 import { getFileUploadErrorMessage } from "./gettext-catalog";
+import { AllowedLinksTypesCollection } from "./adapters/UI/fields/link-field/AllowedLinksTypesCollection";
+import { TrackerInAHierarchyVerifier } from "./domain/fields/link-field/TrackerInAHierarchyVerifier";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -192,7 +194,9 @@ function ArtifactModalController(
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
                     modal_model.tracker.color_name
                 ),
-                LinkedArtifactsPopoversController()
+                LinkedArtifactsPopoversController(),
+                AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
+                TrackerInAHierarchyVerifier(modal_model.tracker.parent)
             );
         },
         getFileFieldController: (field) => {

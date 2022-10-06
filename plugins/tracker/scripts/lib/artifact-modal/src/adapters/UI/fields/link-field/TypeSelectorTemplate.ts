@@ -24,7 +24,7 @@ import { getDefaultLinkTypeLabel, getNewArtifactLabel } from "../../../../gettex
 import type { AllowedLinkTypesPresenterContainer } from "./CollectionOfAllowedLinksTypesPresenters";
 import { UNTYPED_LINK, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { LinkTypeProxy } from "./LinkTypeProxy";
-import type { AllowedLinkTypePresenter } from "./CollectionOfAllowedLinksTypesPresenters";
+import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { REVERSE_DIRECTION } from "../../../../domain/fields/link-field/LinkType";
 
 const onChange = (host: LinkField, event: Event): void => {
@@ -35,21 +35,18 @@ const onChange = (host: LinkField, event: Event): void => {
     host.current_link_type = new_link_type;
 };
 
-const getOption = (
-    host: LinkField,
-    presenter: AllowedLinkTypePresenter
-): UpdateFunction<LinkField> => {
-    const value = presenter.shortname + " " + presenter.direction;
+const getOption = (host: LinkField, link_type: LinkType): UpdateFunction<LinkField> => {
+    const value = link_type.shortname + " " + link_type.direction;
     const is_selected =
-        host.current_link_type.shortname === presenter.shortname &&
-        host.current_link_type.direction === presenter.direction;
+        host.current_link_type.shortname === link_type.shortname &&
+        host.current_link_type.direction === link_type.direction;
     const is_disabled =
-        presenter.shortname === IS_CHILD_LINK_TYPE &&
-        presenter.direction === REVERSE_DIRECTION &&
+        link_type.shortname === IS_CHILD_LINK_TYPE &&
+        link_type.direction === REVERSE_DIRECTION &&
         host.allowed_link_types.is_parent_type_disabled;
     return html`
         <option value="${value}" selected="${is_selected}" disabled="${is_disabled}">
-            ${presenter.label}
+            ${link_type.label}
         </option>
     `;
 };

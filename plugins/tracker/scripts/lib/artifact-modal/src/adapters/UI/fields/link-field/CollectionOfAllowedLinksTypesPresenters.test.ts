@@ -20,26 +20,22 @@
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
+import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
+
+const allowed_types = [
+    {
+        shortname: IS_CHILD_LINK_TYPE,
+        forward_label: "Child",
+        reverse_label: "Parent",
+    },
+];
 
 describe("CollectionOfAllowedLinksTypesPresenters", () => {
     it(`Given a collection of allowed links types,
         then it should build a collection of presenters for each type and each direction`, () => {
-        const allowed_types = [
-            {
-                shortname: IS_CHILD_LINK_TYPE,
-                forward_label: "Child",
-                reverse_label: "Parent",
-            },
-            {
-                shortname: "_covered_by",
-                forward_label: "Covered by",
-                reverse_label: "Covers",
-            },
-        ];
-
         const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
             VerifyHasParentLinkStub.withNoParentLink(),
-            allowed_types
+            AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types)
         );
 
         expect(presenter.is_parent_type_disabled).toBe(false);
@@ -56,18 +52,6 @@ describe("CollectionOfAllowedLinksTypesPresenters", () => {
                     direction: "reverse",
                 },
             },
-            {
-                forward_type_presenter: {
-                    label: "Covered by",
-                    shortname: "_covered_by",
-                    direction: "forward",
-                },
-                reverse_type_presenter: {
-                    label: "Covers",
-                    shortname: "_covered_by",
-                    direction: "reverse",
-                },
-            },
         ]);
     });
 
@@ -75,13 +59,7 @@ describe("CollectionOfAllowedLinksTypesPresenters", () => {
         as an Artifact should only have one Parent`, () => {
         const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
             VerifyHasParentLinkStub.withParentLink(),
-            [
-                {
-                    shortname: IS_CHILD_LINK_TYPE,
-                    forward_label: "Child",
-                    reverse_label: "Parent",
-                },
-            ]
+            AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types)
         );
         expect(presenter.is_parent_type_disabled).toBe(true);
         expect(presenter.types).toHaveLength(1);
