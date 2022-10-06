@@ -22,8 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 interface IBuildAdminPermissionsPresenter
 {
-    public function getPresenter(\Project $project): AdminPermissionsPresenter;
+    public function getPresenter(
+        \Project $project,
+        string $post_url,
+        CSRFSynchronizerTokenInterface $token,
+    ): AdminPermissionsPresenter;
 }

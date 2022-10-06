@@ -26,6 +26,7 @@ use Tuleap\Baseline\Adapter\ProjectProxy;
 use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final class AdminPermissionsPresenterBuilder implements IBuildAdminPermissionsPresenter
 {
@@ -35,20 +36,25 @@ final class AdminPermissionsPresenterBuilder implements IBuildAdminPermissionsPr
     ) {
     }
 
-    public function getPresenter(\Project $project): AdminPermissionsPresenter
-    {
+    public function getPresenter(
+        \Project $project,
+        string $post_url,
+        CSRFSynchronizerTokenInterface $token,
+    ): AdminPermissionsPresenter {
         $administrators           = $this->role_assignment_repository->findByProjectAndRole(
             ProjectProxy::buildFromProject($project),
             Role::ADMIN
         );
         $administrators_ugroup_id = array_map(
-            static fn (RoleAssignment $assignment) => $assignment->getUserGroupId(),
+            static fn(RoleAssignment $assignment) => $assignment->getUserGroupId(),
             $administrators
         );
 
         return new AdminPermissionsPresenter(
+            $post_url,
+            $token,
             array_map(
-                static fn (\User_ForgeUGroup $ugroup) => new UgroupPresenter(
+                static fn(\User_ForgeUGroup $ugroup) => new UgroupPresenter(
                     $ugroup->getId(),
                     $ugroup->getName(),
                     in_array($ugroup->getId(), $administrators_ugroup_id, true)

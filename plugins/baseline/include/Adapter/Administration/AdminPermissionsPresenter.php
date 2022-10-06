@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+
 /**
  * @psalm-immutable
  */
@@ -30,7 +32,10 @@ final class AdminPermissionsPresenter
     /**
      * @param list<UgroupPresenter> $administrators
      */
-    public function __construct(public array $administrators)
-    {
+    public function __construct(
+        public string $post_url,
+        public CSRFSynchronizerTokenInterface $csrf_token,
+        public array $administrators,
+    ) {
     }
 }

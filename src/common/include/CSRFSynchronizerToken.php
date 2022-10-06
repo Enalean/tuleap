@@ -40,7 +40,7 @@
  *
  * That's it!
  */
-class CSRFSynchronizerToken
+class CSRFSynchronizerToken implements \Tuleap\Request\CSRFSynchronizerTokenInterface // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const DEFAULT_TOKEN_NAME    = 'challenge';
     public const STORAGE_PREFIX        = 'synchronizer_token';
@@ -122,9 +122,8 @@ class CSRFSynchronizerToken
      * @param Codendi_Request $request     The request object, if null then use HTTPRequest
      * @param string          $redirect_to Url to be redirected to in case of error. if null then use $url instead. Default is null
      *
-     * @return void
      */
-    public function check($redirect_to = null, $request = null)
+    public function check(?string $redirect_to = null, ?Codendi_Request $request = null): void
     {
         if (! $request) {
             $request = HTTPRequest::instance();
@@ -152,18 +151,12 @@ class CSRFSynchronizerToken
         return $renderer->renderToString('csrf_token_input', $this);
     }
 
-    /**
-     * @return string The token
-     */
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
 
-    /**
-     * @return string The token name
-     */
-    public function getTokenName()
+    public function getTokenName(): string
     {
         return $this->token_name;
     }

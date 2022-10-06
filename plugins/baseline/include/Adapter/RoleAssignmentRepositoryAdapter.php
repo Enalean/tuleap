@@ -62,4 +62,28 @@ class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
 
         return $assignments;
     }
+
+    public function saveAssignmentsForProject(ProjectIdentifier $project, RoleAssignment ...$assignments): void
+    {
+        $insertions = [];
+        foreach ($assignments as $assignment) {
+            if ($project->getID() !== $assignment->getProject()->getID()) {
+                throw new \LogicException("Trying to set assignments on the wrong project, this is not expected.");
+            }
+            $insertions[] = [
+                'user_group_id' => $assignment->getUserGroupId(),
+                'role'          => $assignment->getRole(),
+                'project_id'    => $assignment->getProject()->getID(),
+            ];
+        }
+
+        $this->db->tryFlatTransaction(
+            function () use ($project, $insertions): void {
+                $this->db->delete('plugin_baseline_role_assignment', ['project_id' => $project->getID()]);
+                if (! empty($insertions)) {
+                    $this->db->insertMany('plugin_baseline_role_assignment', $insertions);
+                }
+            }
+        );
+    }
 }

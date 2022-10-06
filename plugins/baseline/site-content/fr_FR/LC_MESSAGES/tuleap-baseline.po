@@ -26,6 +26,9 @@ msgstr ""
 msgid "Baseline"
 msgstr "Baseline"
 
+msgid "Baseline permissions have been saved"
+msgstr "Les permissions pour le service Baseline ont été sauvegardées"
+
 msgid "Baseline service is disabled for this project"
 msgstr "Le service baseline est désactivé pour ce projet"
 

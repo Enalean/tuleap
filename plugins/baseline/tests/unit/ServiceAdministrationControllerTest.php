@@ -24,6 +24,7 @@ namespace Tuleap\Baseline;
 
 use Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenter;
 use Tuleap\Baseline\Adapter\Administration\UgroupPresenter;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Baseline\Support\NoopSapiEmitter;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\BaseLayout;
@@ -44,6 +45,7 @@ class ServiceAdministrationControllerTest extends TestCase
             \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(\Tuleap\Baseline\Adapter\Administration\IBuildAdminPermissionsPresenter::class),
+            $this->createMock(CSRFSynchronizerTokenProvider::class),
             new NoopSapiEmitter(),
         );
 
@@ -62,6 +64,7 @@ class ServiceAdministrationControllerTest extends TestCase
             \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(\Tuleap\Baseline\Adapter\Administration\IBuildAdminPermissionsPresenter::class),
+            $this->createMock(CSRFSynchronizerTokenProvider::class),
             new NoopSapiEmitter(),
         );
 
@@ -77,12 +80,24 @@ class ServiceAdministrationControllerTest extends TestCase
 
     public function testHappyPath(): void
     {
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
         $presenter_builder = $this->createMock(
             \Tuleap\Baseline\Adapter\Administration\IBuildAdminPermissionsPresenter::class
         );
-        $presenter_builder->method('getPresenter')->willReturn(new AdminPermissionsPresenter([
-            new UgroupPresenter(104, 'Lorem ipsum', true),
-        ]));
+        $presenter_builder->method('getPresenter')->willReturn(
+            new AdminPermissionsPresenter(
+                '/admin/url',
+                $token,
+                [
+                    new UgroupPresenter(104, 'Lorem ipsum', true),
+                ]
+            )
+        );
+
+        $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
+        $token_provider->method('getCSRF')
+            ->willReturn($token);
 
         $controller = new ServiceAdministrationController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
@@ -90,6 +105,7 @@ class ServiceAdministrationControllerTest extends TestCase
             \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $presenter_builder,
+            $token_provider,
             new NoopSapiEmitter(),
         );
 

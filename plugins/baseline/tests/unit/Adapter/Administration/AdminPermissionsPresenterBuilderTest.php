@@ -26,6 +26,7 @@ use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -55,21 +56,31 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
                         new RoleAssignment($project, 105, Role::ADMIN),
                     ];
                 }
+
+                public function saveAssignmentsForProject(
+                    ProjectIdentifier $project,
+                    RoleAssignment ...$assignments,
+                ): void {
+                }
             }
         );
 
-        $presenter = $builder->getPresenter($project);
+        $csrf_token = CSRFSynchronizerTokenStub::buildSelf();
+        $presenter  = $builder->getPresenter($project, '/admin/url', $csrf_token);
+
+        self::assertEquals('/admin/url', $presenter->post_url);
+        self::assertSame($csrf_token, $presenter->csrf_token);
         self::assertSame(
             [\ProjectUGroup::PROJECT_MEMBERS, 104, 105, 106],
             array_map(
-                static fn (UgroupPresenter $presenter) => $presenter->id,
+                static fn(UgroupPresenter $presenter) => $presenter->id,
                 $presenter->administrators
             )
         );
         self::assertSame(
             [false, true, true, false],
             array_map(
-                static fn (UgroupPresenter $presenter) => $presenter->is_selected,
+                static fn(UgroupPresenter $presenter) => $presenter->is_selected,
                 $presenter->administrators
             )
         );
