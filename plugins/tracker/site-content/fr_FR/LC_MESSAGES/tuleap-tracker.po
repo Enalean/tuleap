@@ -337,7 +337,7 @@ msgid "Access to tracker artifacts submitted by group"
 msgstr "Accès à tous les artefacts soumis par le groupe"
 
 msgid "Access to tracker artifacts the user submitted"
-msgstr "Accès à tous les artefacts confié à l'auteur"
+msgstr "Accès à tous les artefacts soumis par l'utilisateur"
 
 msgid "Actions"
 msgstr "Actions"
