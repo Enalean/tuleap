@@ -46,7 +46,6 @@ touch /etc/aliases.codendi
 
 # Conf
 mv /etc/httpd/conf            /data/etc/httpd
-mv /etc/httpd/conf.d/tuleap-plugins /etc/httpd-conf.d-tuleap-plugins
 mv /etc/httpd/conf.d          /data/etc/httpd
 mv /etc/tuleap                /data/etc
 mv /etc/aliases               /data/etc
