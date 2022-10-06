@@ -58,7 +58,7 @@ msgid "No tracked time have been found for this period"
 msgstr "Aucun temps suivi n'a été trouvé pour cette période"
 
 msgid "No tracked times have been found for this period and artifact"
-msgstr "Aucun temps suivi n'a été trouvé sur cette période et cet artefact"
+msgstr "Aucun temps suivi n'a été trouvé sur cette période et cet artéfact"
 
 msgid "No trackers selected"
 msgstr "Aucun élément séléctionné"

@@ -129,7 +129,7 @@ msgid "Time tracking"
 msgstr "Suivi de temps"
 
 msgid "Time tracking for Tuleap artifacts"
-msgstr "Suivi de temps pour les artefacts de Tuleap"
+msgstr "Suivi de temps pour les artéfacts de Tuleap"
 
 msgid "Time tracking is disabled for tracker."
 msgstr "Le suivi de temps est désactivé pour ce tracker."

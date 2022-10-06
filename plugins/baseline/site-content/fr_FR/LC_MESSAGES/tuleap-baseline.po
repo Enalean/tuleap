@@ -20,7 +20,7 @@ msgid ""
 "Base baseline is not on same artifact (id %u) than compared to baseline (id "
 "%u)"
 msgstr ""
-"La baseline de référence n'est pas sur le même artefact (id %u) que la "
+"La baseline de référence n'est pas sur le même artéfact (id %u) que la "
 "baseline à comparer (id %u)"
 
 msgid "Baseline"
@@ -37,11 +37,11 @@ msgstr "Administration des baselines"
 
 #, php-format
 msgid "No artifact found with id %u"
-msgstr "Aucun artefact trouvée avec l'id %u"
+msgstr "Aucun artéfact trouvé avec l'id %u"
 
 #, php-format
 msgid "No artifact found with id %u on %s"
-msgstr "Aucun artefact trouvée avec l'id %u à la date %s"
+msgstr "Aucun artéfact trouvé avec l'id %u à la date %s"
 
 #, php-format
 msgid "No baseline found with id %u"
@@ -53,7 +53,7 @@ msgstr "Aucune comparaison trouvée avec l'id %u"
 
 #, php-format
 msgid "No more than %u artifacts can be requested at once."
-msgstr "Un maximum de %u artefacts peuvent être demandés en une seule fois."
+msgstr "Un maximum de %u artéfacts peuvent être demandés en une seule fois."
 
 msgid "No project found with this id"
 msgstr "Aucun projet trouvé avec cet identifiant"

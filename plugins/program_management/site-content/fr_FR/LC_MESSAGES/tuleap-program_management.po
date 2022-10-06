@@ -308,7 +308,7 @@ msgstr "Le Programme %d ne peut pas être à la fois un Programme et une Équipe
 
 #, php-format
 msgid "Program Increment artifact #%d could not be found"
-msgstr "L'artefact Incrément de Programme #%d n'a pas été trouvé"
+msgstr "L'artéfact Incrément de Programme #%d n'a pas été trouvé"
 
 msgid ""
 "Program Increment tracker id must not be contained into plannable tracker ids"

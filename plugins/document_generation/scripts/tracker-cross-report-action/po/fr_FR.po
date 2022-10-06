@@ -78,7 +78,7 @@ msgid ""
 "The selected artifacts will be the linked ones that are not filtered by a "
 "criteria of the selected report."
 msgstr ""
-"Les artefacts sélectionnés seront les artefacts liés qui ne sont pas filtrés "
+"Les artéfacts sélectionnés seront les artéfacts liés qui ne sont pas filtrés "
 "par un critère du rapport sélectionné."
 
 msgid "Third level"

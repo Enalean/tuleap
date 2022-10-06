@@ -15,7 +15,7 @@ widget_imageviewer	invalid_url	Seules les URLs http:// et https:// sont accepté
 widget_dashboard	updated	Votre <a href="$1">tableau de bord</a> a été modifié.
 
 widget_description_my_bookmarks	description	Affiche la liste de vos favoris (sur Tuleap ou externes).<br>A noter que ces pointeurs vers vos favoris peuvent être très sophistiqués. Ils permettent par exemple de mémoriser une requête multi-critères effectuée sur un outil de suivi.<br>Les marques-pages peuvent étre édités, ce qui signifie que vous pouvez modifier à la fois le titre et l'url.
-widget_description_my_artifacts	description	Affiche la liste des artefacts par projet que vous avez soumis ou qui vous ont été assignés.
+widget_description_my_artifacts	description	Affiche la liste des artéfacts par projet que vous avez soumis ou qui vous ont été assignés.
 widget_description_my_latest_svn_commits	description	Affiche la liste de vos derniers commits SVN par projet.
 widget_description_my_monitored_forums	description	Affiche la liste les forums que vous surveillez, par projet. Pour interrompre la surveillance, il vous suffit de cliquer sur la corbeille à côté de l'item concerné.
 widget_description_my_monitored_fp	description	Affiche la liste les fichiers que vous surveillez, par projet. Pour interrompre la surveillance, il vous suffit de cliquer sur la corbeille à côté de l'item concerné.
@@ -28,7 +28,7 @@ widget_description_project_latest_file_releases	description	Affiche la liste des
 widget_description_project_classification	description	Affiche la liste des catégories auxquelles le projet appartient.
 widget_description_project_description	description	Affiche la description du projet.
 widget_description_project_latest_news	description	Affiche les dix dernières annonces publiées par les membres du projet.
-widget_description_project_public_areas	description	Affiche tous les services disponibles pour ce projet assortis d'informations complémentaires (comme par exemple le nombre d'artefact ouvert ou fermé). <br>Le rôle de cette liste est quasiment identique à celui du menu principal du projet situé en haut de la page à savoir fournir un accès rapide à chacun des services du projet.
+widget_description_project_public_areas	description	Affiche tous les services disponibles pour ce projet assortis d'informations complémentaires (comme par exemple le nombre d'artéfact ouvert ou fermé). <br>Le rôle de cette liste est quasiment identique à celui du menu principal du projet situé en haut de la page à savoir fournir un accès rapide à chacun des services du projet.
 widget_description_project_latest_svn_commits	description	Affiche  la liste des derniers commits SVN du projet.
 widget_description_project_latest_cvs_commits	description	Affiche  la liste des derniers commits CVS du projet.
 widget_description_project_svn_stats	description	Affiche les statistiques svn du projet par semaine.Le résultat s'affiche sous forme d'histogramme empilé.

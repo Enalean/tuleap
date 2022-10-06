@@ -363,7 +363,7 @@ msgid ""
 "restore the artifact</strong>. This operation should be an exception."
 msgstr ""
 
-msgid "Allow user to give permissions to an artefact"
+msgid "Allow user to give permissions to an artifact"
 msgstr ""
 
 msgid "Allow user to interact with trackers by email."
