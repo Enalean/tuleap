@@ -33,10 +33,8 @@ describe(`FormatHiddenInput`, () => {
         const template = createFormatHiddenInput({ name: "basalt", value: TEXT_FORMAT_HTML });
         render(template, mount_point);
 
-        expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
-            "
-                    <input type="hidden" name="basalt" value="html">
-                "
-        `);
+        expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(
+            `<input type="hidden" name="basalt" value="html">`
+        );
     });
 });

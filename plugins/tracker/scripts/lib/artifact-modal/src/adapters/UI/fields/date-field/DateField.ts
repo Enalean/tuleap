@@ -97,9 +97,7 @@ export const DateField = define<DateField>({
             <label for="${"tracker_field_" + host.field.field_id}" class="tlp-label">
                 ${host.field.label}
                 ${host.field.required &&
-                html`
-                    <i class="fas fa-asterisk" data-test="date-field-required-flag"></i>
-                `}
+                html`<i class="fas fa-asterisk" data-test="date-field-required-flag"></i>`}
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>

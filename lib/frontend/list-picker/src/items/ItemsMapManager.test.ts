@@ -75,8 +75,6 @@ describe("ItemsMapManager", () => {
     });
 
     function buildTemplateResult(value: string): TemplateResult {
-        return html`
-            ${value}
-        `;
+        return html`${value}`;
     }
 });

@@ -27,6 +27,4 @@ export interface FormatHiddenInputPresenter {
 }
 
 export const createFormatHiddenInput = (presenter: FormatHiddenInputPresenter): TemplateResult =>
-    html`
-        <input type="hidden" name="${presenter.name}" value="${presenter.value}" />
-    `;
+    html`<input type="hidden" name="${presenter.name}" value="${presenter.value}" />`;

@@ -156,9 +156,7 @@ const getManualValueTemplate = (host: ComputedField): UpdateFunction<ComputedFie
 
 const getFieldTemplate = (host: ComputedField): UpdateFunction<ComputedField> => {
     if (host.disabled) {
-        return html`
-            ${getDisplayedValue(host)}
-        `;
+        return html`${getDisplayedValue(host)}`;
     }
     if (host.autocomputed) {
         return getAutoComputedTemplate(host);
@@ -178,10 +176,7 @@ export const ComputedField = define<ComputedField>({
     content: (host) => html`
         <div class="tlp-form-element">
             <label class="tlp-label">
-                ${host.label}${host.required &&
-                html`
-                    <i class="fas fa-asterisk"></i>
-                `}
+                ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
             </label>
             ${getFieldTemplate(host)}
         </div>

@@ -86,9 +86,7 @@ const content = [
         <h1>${title}</h1>
     `;
     for (let width = 0; width < max_width; width += step) {
-        content = html`
-            ${content}${getExampleSvg(width, height, color, callback)}
-        `;
+        content = html`${content}${getExampleSvg(width, height, color, callback)}`;
     }
 
     return content;

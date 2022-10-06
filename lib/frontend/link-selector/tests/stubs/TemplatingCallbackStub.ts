@@ -38,8 +38,5 @@ const getItemValue = (item: LinkSelectorItem): string => {
 };
 
 export const TemplatingCallbackStub = {
-    build: (): LinkSelectorTemplatingCallback => (html, item) =>
-        html`
-            ${getItemValue(item)}
-        `,
+    build: (): LinkSelectorTemplatingCallback => (html, item) => html`${getItemValue(item)}`,
 };

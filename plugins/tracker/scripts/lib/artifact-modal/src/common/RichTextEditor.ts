@@ -256,8 +256,6 @@ export const RichTextEditor = define<RichTextEditor>({
 ${host.contentValue}</textarea
         >
         ${host.is_help_shown &&
-        html`
-            <p data-test="help" class="tlp-text-muted">${getRTEHelpMessage()}</p>
-        `}
+        html`<p data-test="help" class="tlp-text-muted">${getRTEHelpMessage()}</p>`}
     `,
 });
