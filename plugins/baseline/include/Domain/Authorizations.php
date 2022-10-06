@@ -40,4 +40,6 @@ interface Authorizations
     public function canReadComparison(UserIdentifier $current_user, Comparison $comparison): bool;
 
     public function canReadComparisonsOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool;
+
+    public function canUserAdministrateBaselineOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool;
 }

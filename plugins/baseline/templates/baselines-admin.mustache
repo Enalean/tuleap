@@ -1,0 +1,38 @@
+<h1 class="tlp-framed-horizontally baseline-title-header">
+    {{# dgettext }}tuleap-baseline | Baselines administration{{/ dgettext }}
+</h1>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }}tuleap-baseline | Permissions{{/ dgettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="administrators">
+                        {{# dgettext }}
+                            tuleap-baseline |
+                            User groups who can administrate the baseline service, in addition of project administrators
+                        {{/ dgettext }}
+                    </label>
+                    <select class="tlp-select tlp-select-adjusted" id="administrators" name="administrators[]" multiple>
+                        {{# administrators }}
+                            <option value="{{ id }}" {{# is_selected }}selected="selected"{{/is_selected}}>
+                                {{ name }}
+                            </option>
+                        {{/ administrators }}
+                    </select>
+                </div>
+
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary" disabled>
+                        <i class="fa-regular fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-baseline | Save configuration{{/ dgettext }}
+                    </button>
+                </div>
+            </section>
+        </div>
+    </section>
+</div>

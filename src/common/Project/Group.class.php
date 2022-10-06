@@ -42,6 +42,9 @@ function group_get_object_by_name($groupname)
     return $pm->getProjectByUnixName($groupname);
 }
 
+/**
+ * @psalm-type ProjectID = int|string
+ */
 class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     //associative array of data from db
@@ -223,7 +226,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     }
 
     /**
-     * @return int|string|null group_id | null.
+     * @return ProjectID|null
      *
      * @psalm-ignore-nullable-return
      * @psalm-mutation-free

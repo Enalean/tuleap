@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Baseline\Adapter\Routing\RejectNonBaselineAdministratorMiddleware;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
@@ -121,11 +122,39 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         );
     }
 
+    public function routeGetProjectAdmin(): \Tuleap\Request\DispatchableWithRequest
+    {
+        $container = ContainerBuilderFactory::create()->build();
+
+        return new \Tuleap\Baseline\ServiceAdministrationController(
+            \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
+            \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
+            $this,
+            TemplateRendererFactory::build(),
+            new \Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenterBuilder(
+                new User_ForgeUserGroupFactory(new UserGroupDao()),
+                $container->get(\Tuleap\Baseline\Domain\RoleAssignmentRepository::class),
+            ),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new \Tuleap\Http\Server\ServiceInstrumentationMiddleware(self::NAME),
+            new \Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware(\Tuleap\Request\ProjectRetriever::buildSelf()),
+            new RejectNonBaselineAdministratorMiddleware(
+                UserManager::instance(),
+                new \Tuleap\Project\Admin\Routing\ProjectAdministratorChecker(),
+                $container->get(Authorizations::class),
+            )
+        );
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup(
             $this->getPluginPath(),
             function (FastRoute\RouteCollector $r) {
+                $r->get(
+                    '/{' . ServiceController::PROJECT_NAME_VARIABLE_NAME . '}/admin',
+                    $this->getRouteHandler('routeGetProjectAdmin')
+                );
                 $r->get(
                     '/{' . ServiceController::PROJECT_NAME_VARIABLE_NAME . '}[/{vue-routing:.*}]',
                     $this->getRouteHandler('routeGetSlash')

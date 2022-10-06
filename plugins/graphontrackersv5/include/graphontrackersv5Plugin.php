@@ -257,7 +257,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     /**
      * Return true if current project has the right to use this plugin.
      */
-    public function isAllowed($group_id)
+    public function isAllowed($group_id): bool
     {
         $request  = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');

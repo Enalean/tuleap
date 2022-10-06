@@ -18,12 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @psalm-import-type ProjectID from \Group
+ */
 interface PFO_Project
 {
     /**
      * Returns project numeric id (aka group_id)
      *
-     * @return int
+     * @return ProjectID|null
+     * @psalm-ignore-nullable-return
+     * @psalm-mutation-free
      */
     public function getID();
 
