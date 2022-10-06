@@ -12,7 +12,6 @@ set -x
 [ -f /etc/nsswitch.conf ]         && rm -f /etc/nsswitch.conf
 [ -d /etc/tuleap ]                && rm -rf /etc/tuleap
 [ -d /etc/httpd/conf ]            && rm -rf /etc/httpd/conf
-[ -d /etc/httpd/conf.d/tuleap-plugins ] && mv /etc/httpd/conf.d/tuleap-plugins /etc/httpd-conf.d-tuleap-plugins
 [ -d /etc/httpd/conf.d ]          && rm -rf /etc/httpd/conf.d
 
 [ -d /home/codendiadm ]  && rm -rf /home/codendiadm
@@ -37,9 +36,6 @@ ln -s /data/etc/logrotate.d/httpd httpd
 cd /etc/httpd
 ln -s /data/etc/httpd/conf conf
 ln -s /data/etc/httpd/conf.d conf.d
-cd /etc/httpd/conf.d
-rm -rf tuleap-plugins
-ln -s /etc/httpd-conf.d-tuleap-plugins tuleap-plugins
 
 cd /home
 ln -s /data/home/codendiadm codendiadm
