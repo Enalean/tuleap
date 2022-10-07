@@ -91,7 +91,8 @@ class ServiceAdministrationControllerTest extends TestCase
                 $token,
                 [
                     new UgroupPresenter(104, 'Lorem ipsum', true),
-                ]
+                ],
+                []
             )
         );
 

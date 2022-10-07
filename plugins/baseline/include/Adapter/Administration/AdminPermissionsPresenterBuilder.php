@@ -41,25 +41,76 @@ final class AdminPermissionsPresenterBuilder implements IBuildAdminPermissionsPr
         string $post_url,
         CSRFSynchronizerTokenInterface $token,
     ): AdminPermissionsPresenter {
-        $administrators           = $this->role_assignment_repository->findByProjectAndRole(
+        $administrators = $this->role_assignment_repository->findByProjectAndRole(
             ProjectProxy::buildFromProject($project),
             Role::ADMIN
         );
+        $readers        = $this->role_assignment_repository->findByProjectAndRole(
+            ProjectProxy::buildFromProject($project),
+            Role::READER
+        );
+
         $administrators_ugroup_id = array_map(
             static fn(RoleAssignment $assignment) => $assignment->getUserGroupId(),
             $administrators
+        );
+        $readers_ugroup_id        = array_map(
+            static fn(RoleAssignment $assignment) => $assignment->getUserGroupId(),
+            $readers
         );
 
         return new AdminPermissionsPresenter(
             $post_url,
             $token,
-            array_map(
-                static fn(\User_ForgeUGroup $ugroup) => new UgroupPresenter(
-                    $ugroup->getId(),
-                    $ugroup->getName(),
-                    in_array($ugroup->getId(), $administrators_ugroup_id, true)
-                ),
-                $this->user_group_factory->getProjectUGroupsWithMembersWithoutNobody($project)
+            $this->getAdministratorsPresenter($administrators_ugroup_id, $project),
+            $this->getReadersPresenter($readers_ugroup_id, $administrators_ugroup_id, $project),
+        );
+    }
+
+    /**
+     * @param int[] $administrators_ugroup_id
+     *
+     * @return UgroupPresenter[]
+     */
+    private function getAdministratorsPresenter(array $administrators_ugroup_id, \Project $project): array
+    {
+        return array_map(
+            static fn(\User_ForgeUGroup $ugroup) => new UgroupPresenter(
+                $ugroup->getId(),
+                $ugroup->getName(),
+                in_array($ugroup->getId(), $administrators_ugroup_id, true)
+            ),
+            $this->user_group_factory->getProjectUGroupsWithMembersWithoutNobody($project)
+        );
+    }
+
+    /**
+     * @param int[] $administrators_ugroup_id
+     *
+     * @return UgroupPresenter[]
+     */
+    private function getReadersPresenter(
+        array $readers_ugroup_id,
+        array $administrators_ugroup_id,
+        \Project $project,
+    ): array {
+        return array_values(
+            array_filter(
+                array_map(
+                    static function (\User_ForgeUGroup $ugroup) use ($readers_ugroup_id, $administrators_ugroup_id) {
+                        $is_ugroup_already_administrator = in_array($ugroup->getId(), $administrators_ugroup_id, true);
+                        if ($is_ugroup_already_administrator) {
+                            return null;
+                        }
+
+                        return new UgroupPresenter(
+                            $ugroup->getId(),
+                            $ugroup->getName(),
+                            in_array($ugroup->getId(), $readers_ugroup_id, true)
+                        );
+                    },
+                    $this->user_group_factory->getProjectUGroupsWithMembersWithoutNobody($project)
+                )
             )
         );
     }

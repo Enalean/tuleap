@@ -53,16 +53,8 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
 
         $this->token_provider->getCSRF($project)->check();
 
-        $body           = $request->getParsedBody();
-        $administrators = (array) ($body['administrators'] ?? []);
-
         $project_proxy = ProjectProxy::buildFromProject($project);
-
-        $assigments = array_map(
-            static fn (string $administrator_ugroup_id) =>
-                new RoleAssignment($project_proxy, (int) $administrator_ugroup_id, Role::ADMIN),
-            $administrators
-        );
+        $assigments    = $this->getAssignementsFromBody($project_proxy, $request->getParsedBody());
 
         $this->role_assignment_repository->saveAssignmentsForProject($project_proxy, ...$assigments);
 
@@ -76,6 +68,50 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
                 \Feedback::SUCCESS,
                 dgettext('tuleap-baseline', 'Baseline permissions have been saved')
             ),
+        );
+    }
+
+    /**
+     * @param array|object|null $body
+     *
+     * @return RoleAssignment[]
+     */
+    private function getAssignementsFromBody(ProjectProxy $project, $body): array
+    {
+        if (! is_array($body)) {
+            throw new \LogicException("Expected body to be an associative array");
+        }
+
+        $administrators = array_values((array) ($body['administrators'] ?? []));
+        $readers        = array_values((array) ($body['readers'] ?? []));
+
+        $roles = array_merge(
+            array_fill_keys($administrators, Role::ADMIN),
+            array_fill_keys($readers, Role::READER)
+        );
+
+        $already_processed_ugroup_id = [];
+
+        return array_values(
+            array_filter(
+                array_map(
+                    static function (string $ugroup_id, string $role) use ($project, &$already_processed_ugroup_id) {
+                        if (isset($already_processed_ugroup_id[$ugroup_id])) {
+                            return null;
+                        }
+
+                        $already_processed_ugroup_id[$ugroup_id] = true;
+
+                        return new RoleAssignment(
+                            $project,
+                            (int) $ugroup_id,
+                            $role
+                        );
+                    },
+                    [...$administrators, ...$readers],
+                    array_values($roles),
+                )
+            )
         );
     }
 }

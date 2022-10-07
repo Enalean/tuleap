@@ -83,7 +83,10 @@ class ServiceSavePermissionsControllerTest extends TestCase
             ->withAttribute(\Project::class, $project)
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
             ->withParsedBody(
-                ['administrators' => ['102', '103']]
+                [
+                    'administrators' => ['102', '103'],
+                    'readers' => ['103', '104'],
+                ]
             );
 
         $response = $controller->handle($request);
@@ -97,5 +100,7 @@ class ServiceSavePermissionsControllerTest extends TestCase
         self::assertEquals(Role::ADMIN, $save_parameters[1][0]->getRole());
         self::assertEquals(103, $save_parameters[1][1]->getUserGroupId());
         self::assertEquals(Role::ADMIN, $save_parameters[1][1]->getRole());
+        self::assertEquals(104, $save_parameters[1][2]->getUserGroupId());
+        self::assertEquals(Role::READER, $save_parameters[1][2]->getRole());
     }
 }

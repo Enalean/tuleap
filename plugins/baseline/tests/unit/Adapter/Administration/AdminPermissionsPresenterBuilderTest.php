@@ -51,10 +51,15 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
             new class implements RoleAssignmentRepository {
                 public function findByProjectAndRole(ProjectIdentifier $project, string $role): array
                 {
-                    return [
-                        new RoleAssignment($project, 104, Role::ADMIN),
-                        new RoleAssignment($project, 105, Role::ADMIN),
-                    ];
+                    return match ($role) {
+                        Role::ADMIN => [
+                            new RoleAssignment($project, 104, Role::ADMIN),
+                            new RoleAssignment($project, 105, Role::ADMIN),
+                        ],
+                        Role::READER => [
+                            new RoleAssignment($project, 106, Role::ADMIN),
+                        ]
+                    };
                 }
 
                 public function saveAssignmentsForProject(
@@ -82,6 +87,20 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
             array_map(
                 static fn(UgroupPresenter $presenter) => $presenter->is_selected,
                 $presenter->administrators
+            )
+        );
+        self::assertSame(
+            [\ProjectUGroup::PROJECT_MEMBERS, 106],
+            array_map(
+                static fn(UgroupPresenter $presenter) => $presenter->id,
+                $presenter->readers
+            )
+        );
+        self::assertSame(
+            [false, true],
+            array_map(
+                static fn(UgroupPresenter $presenter) => $presenter->is_selected,
+                $presenter->readers
             )
         );
     }
