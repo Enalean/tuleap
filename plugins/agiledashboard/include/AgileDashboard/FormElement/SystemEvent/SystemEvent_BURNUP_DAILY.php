@@ -28,44 +28,20 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
-use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
 
-class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
+final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
 {
-    /**
-     * @var BurnupDao
-     */
-    private $burnup_dao;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var  BurnupCalculator
-     */
-    private $burnup_calculator;
-
-    /**
-     * @var BurnupCacheDao
-     */
-    private $cache_dao;
-
-    /**
-     * @var BurnupCacheDateRetriever
-     */
-    private $date_retriever;
-
-    /**
-     * @var CountElementsCalculator
-     */
-    private $burnup_count_elements_calculator;
-
-    /**
-     * @var CountElementsCacheDao
-     */
-    private $count_elements_cache_dao;
+    private BurnupDataDAO $burnup_dao;
+    private LoggerInterface $logger;
+    private BurnupCalculator $burnup_calculator;
+    private BurnupCacheDao $cache_dao;
+    private BurnupCacheDateRetriever $date_retriever;
+    private CountElementsCalculator $burnup_count_elements_calculator;
+    private CountElementsCacheDao $count_elements_cache_dao;
+    private PlanningDao $planning_dao;
+    private \PlanningFactory $planning_factory;
 
     public function verbalizeParameters($with_link)
     {
@@ -73,14 +49,16 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
     }
 
     public function injectDependencies(
-        BurnupDao $burnup_dao,
+        BurnupDataDAO $burnup_dao,
         BurnupCalculator $burnup_calculator,
         CountElementsCalculator $burnup_count_elements_calculator,
         BurnupCacheDao $cache_dao,
         CountElementsCacheDao $count_elements_cache_dao,
         LoggerInterface $logger,
         BurnupCacheDateRetriever $date_retriever,
-    ) {
+        PlanningDao $planning_dao,
+        \PlanningFactory $planning_factory,
+    ): void {
         $this->burnup_dao                       = $burnup_dao;
         $this->logger                           = $logger;
         $this->burnup_calculator                = $burnup_calculator;
@@ -88,6 +66,8 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
         $this->cache_dao                        = $cache_dao;
         $this->count_elements_cache_dao         = $count_elements_cache_dao;
         $this->date_retriever                   = $date_retriever;
+        $this->planning_dao                     = $planning_dao;
+        $this->planning_factory                 = $planning_factory;
     }
 
     public function process()
@@ -131,12 +111,15 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
                 continue;
             }
 
-            if ($burnup_period->getEndDate() >= $yesterday) {
+            $planning_infos = $this->planning_dao->searchByMilestoneTrackerId($burnup['id']);
+
+            if ($burnup_period->getEndDate() >= $yesterday && $planning_infos) {
+                $backlog_trackers_ids = $this->planning_factory->getBacklogTrackersIds($planning_infos['id']);
                 $this->logger->debug(
                     "Calculating burnup for artifact #" . $burnup['id'] . ' at ' . date('Y-m-d H:i:s', $yesterday)
                 );
 
-                $effort       = $this->burnup_calculator->getValue($burnup['id'], $yesterday);
+                $effort       = $this->burnup_calculator->getValue($burnup['id'], $yesterday, $backlog_trackers_ids);
                 $team_effort  = $effort->getTeamEffort();
                 $total_effort = $effort->getTotalEffort();
 
@@ -150,7 +133,8 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
 
                 $subelements_cache_info = $this->burnup_count_elements_calculator->getValue(
                     $burnup['id'],
-                    $yesterday
+                    $yesterday,
+                    $backlog_trackers_ids
                 );
 
                 $closed_subelements = $subelements_cache_info->getClosedElements();

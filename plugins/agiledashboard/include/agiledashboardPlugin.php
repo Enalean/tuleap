@@ -44,7 +44,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
-use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
@@ -65,6 +65,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
@@ -1408,13 +1409,15 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             case SystemEvent_BURNUP_DAILY::class:
                 $params['class']        = SystemEvent_BURNUP_DAILY::class;
                 $params['dependencies'] = [
-                    $this->getBurnupDao(),
+                    new BurnupDataDAO(),
                     $this->getBurnupCalculator(),
                     $this->getBurnupCountElementsCalculator(),
                     new BurnupCacheDao(),
                     new CountElementsCacheDao(),
                     $this->getLogger(),
                     new BurnupCacheDateRetriever(),
+                    new PlanningDao(),
+                    \PlanningFactory::build(),
                 ];
                 break;
             case SystemEvent_BURNUP_GENERATE::class:
@@ -1423,13 +1426,15 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 $params['dependencies']   = [
                     $tracker_artifact_factory,
                     SemanticTimeframeBuilder::build(),
-                    new BurnupDao(),
+                    new BurnupDataDAO(),
                     $this->getBurnupCalculator(),
                     $this->getBurnupCountElementsCalculator(),
                     new BurnupCacheDao(),
                     new CountElementsCacheDao(),
                     $this->getLogger(),
                     new BurnupCacheDateRetriever(),
+                    new PlanningDao(),
+                    \PlanningFactory::build(),
                 ];
                 break;
             default:
@@ -1443,39 +1448,25 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $params['types'][] = SystemEvent_BURNUP_GENERATE::class;
     }
 
-    /**
-     * @return BurnupDao
-     */
-    private function getBurnupDao()
-    {
-        return new BurnupDao();
-    }
-
     private function getLogger(): \Psr\Log\LoggerInterface
     {
         return BackendLogger::getDefaultLogger();
     }
 
-    /**
-     * @return BurnupCalculator
-     */
-    private function getBurnupCalculator()
+    private function getBurnupCalculator(): BurnupCalculator
     {
         $changeset_factory = Tracker_Artifact_ChangesetFactoryBuilder::build();
 
         return new BurnupCalculator(
             $changeset_factory,
             $this->getArtifactFactory(),
-            $this->getBurnupDao(),
+            new BurnupDataDAO(),
             $this->getSemanticInitialEffortFactory(),
             $this->getSemanticDoneFactory()
         );
     }
 
-    /**
-     * @return CountElementsCalculator
-     */
-    private function getBurnupCountElementsCalculator()
+    private function getBurnupCountElementsCalculator(): CountElementsCalculator
     {
         $changeset_factory = Tracker_Artifact_ChangesetFactoryBuilder::build();
 
@@ -1483,7 +1474,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $changeset_factory,
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
-            $this->getBurnupDao()
+            new BurnupDataDAO()
         );
     }
 

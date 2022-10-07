@@ -22,26 +22,26 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Project;
+use Psr\Log\Test\TestLogger;
 use Tracker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var BurnupDataBuilder
-     */
-    private $burnup_data_builder;
+    private BurnupDataBuilder $burnup_data_builder;
 
-    private $logger;
+    private TestLogger $logger;
     private $burnup_cache_checker;
     private $chart_configuration_value_retriever;
     private $burnup_cache_dao;
@@ -61,12 +61,13 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\MockInterface|CountElementsModeChecker
      */
     private $mode_checker;
+    private Tracker $artifact_tracker;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->logger                              = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger                              = new TestLogger();
         $this->burnup_cache_checker                = Mockery::mock(BurnupCacheChecker::class);
         $this->chart_configuration_value_retriever = Mockery::mock(ChartConfigurationValueRetriever::class);
         $this->burnup_cache_dao                    = Mockery::mock(BurnupCacheDao::class);
@@ -74,6 +75,13 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->count_cache_dao                     = Mockery::mock(CountElementsCacheDao::class);
         $this->count_calculator                    = Mockery::mock(CountElementsCalculator::class);
         $this->mode_checker                        = Mockery::mock(CountElementsModeChecker::class);
+        $planning_dao                              = $this->createMock(PlanningDao::class);
+        $planning_factory                          = $this->createMock(\PlanningFactory::class);
+
+        $this->artifact_tracker = TrackerTestBuilder::aTracker()->withId(10)->withProject(ProjectTestBuilder::aProject()->build())->build();
+
+        $planning_dao->method('searchByMilestoneTrackerId')->willReturn(['id' => $this->artifact_tracker->getId()]);
+        $planning_factory->method('getBacklogTrackersIds')->willReturn([[$this->artifact_tracker->getId()]]);
 
         $this->burnup_data_builder = new BurnupDataBuilder(
             $this->logger,
@@ -83,7 +91,9 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->burnup_calculator,
             $this->count_cache_dao,
             $this->count_calculator,
-            $this->mode_checker
+            $this->mode_checker,
+            $planning_dao,
+            $planning_factory
         );
     }
 
@@ -91,17 +101,12 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnFalse();
 
-        $tracker  = Mockery::mock(Tracker::class);
         $artifact = Mockery::mock(Artifact::class);
-        $user     = Mockery::mock(PFUser::class);
-
-        $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+        $user     = UserTestBuilder::buildWithDefaults();
 
         $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-
-        $this->logger->shouldReceive('debug');
-        $this->logger->shouldReceive('info');
+        $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
+        $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
         $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
 
@@ -130,17 +135,12 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnTrue();
 
-        $tracker  = Mockery::mock(Tracker::class);
         $artifact = Mockery::mock(Artifact::class);
-        $user     = Mockery::mock(PFUser::class);
-
-        $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+        $user     = UserTestBuilder::buildWithDefaults();
 
         $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-
-        $this->logger->shouldReceive('debug');
-        $this->logger->shouldReceive('info');
+        $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
+        $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
         $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
 
@@ -176,12 +176,10 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnFalse();
 
         $artifact = Mockery::mock(Artifact::class);
-        $user     = Mockery::mock(PFUser::class);
+        $user     = UserTestBuilder::buildWithDefaults();
 
         $artifact->shouldReceive('getId')->andReturn(101);
-
-        $this->logger->shouldReceive('debug');
-        $this->logger->shouldReceive('info');
+        $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
         $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
 
@@ -207,17 +205,12 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnTrue();
 
-        $tracker  = Mockery::mock(Tracker::class);
         $artifact = Mockery::mock(Artifact::class);
-        $user     = Mockery::mock(PFUser::class);
-
-        $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+        $user     = UserTestBuilder::buildWithDefaults();
 
         $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-
-        $this->logger->shouldReceive('debug');
-        $this->logger->shouldReceive('info');
+        $artifact->shouldReceive('getTracker')->andReturn($this->artifact_tracker);
+        $artifact->shouldReceive('getTrackerId')->andReturn($this->artifact_tracker->getId());
 
         $start_date = new \DateTime();
         $start_date->setTime(0, 0, 0);
@@ -243,11 +236,11 @@ class BurnupDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([]);
 
         $this->burnup_calculator->shouldReceive('getValue')
-            ->with(101, Mockery::any())
+            ->with(101, Mockery::any(), [[$this->artifact_tracker->getId()]])
             ->andReturn(new BurnupEffort(5, 10));
 
         $this->count_calculator->shouldReceive('getValue')
-            ->with(101, Mockery::any())
+            ->with(101, Mockery::any(), [[$this->artifact_tracker->getId()]])
             ->andReturn(new CountElementsInfo(3, 5));
 
         $burnup_data = $this->burnup_data_builder->buildBurnupData($artifact, $user);

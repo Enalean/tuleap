@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\FormElement;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
-class BurnupDao extends DataAccessObject
+class BurnupDataDAO extends DataAccessObject
 {
-    public function searchArtifactsWithBurnup()
+    public function searchArtifactsWithBurnup(): array
     {
         $sql = "SELECT
                   tracker_artifact.id,
@@ -86,15 +88,11 @@ class BurnupDao extends DataAccessObject
               ON duration_value.changeset_value_id = duration_changeset_value.id
                 AND duration_value.value IS NOT NULL";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
     }
 
-    public function getBurnupInformationBasedOnDuration(int $artifact_id, int $start_date_field_id, int $duration_field_id)
+    public function getBurnupInformationBasedOnDuration(int $artifact_id, int $start_date_field_id, int $duration_field_id): array
     {
-        $artifact_id         = $this->da->escapeInt($artifact_id);
-        $start_date_field_id = $this->da->escapeInt($start_date_field_id);
-        $duration_field_id   = $this->da->escapeInt($duration_field_id);
-
         $sql = "SELECT
                   tracker_artifact.id,
                   SUM(tracker_changeset_value_date.value) AS start_date,
@@ -104,10 +102,10 @@ class BurnupDao extends DataAccessObject
               ON tracker.id = burnup_field.tracker_id
             INNER JOIN tracker_field AS tracker_field_for_start_date
               ON tracker.id = tracker_field_for_start_date.tracker_id
-              AND tracker_field_for_start_date.id = $start_date_field_id
+              AND tracker_field_for_start_date.id = ?
             INNER JOIN tracker_field AS tracker_field_for_duration
               ON tracker.id = tracker_field_for_duration.tracker_id
-              AND tracker_field_for_duration.id = $duration_field_id
+              AND tracker_field_for_duration.id = ?
             INNER JOIN tracker_artifact
               ON tracker.id = tracker_artifact.tracker_id
             INNER JOIN tracker_changeset
@@ -123,20 +121,16 @@ class BurnupDao extends DataAccessObject
             WHERE
               burnup_field.formElement_type = 'burnup'
               AND burnup_field.use_it = 1
-              AND tracker_artifact.id = $artifact_id
+              AND tracker_artifact.id = ?
               GROUP BY tracker_artifact.id, burnup_field.id
               HAVING start_date IS NOT NULL
               AND duration IS NOT NULL";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $start_date_field_id, $duration_field_id, $artifact_id);
     }
 
-    public function getBurnupInformationBasedOnEndDate(int $artifact_id, int $start_date_field_id, int $end_date_field_id)
+    public function getBurnupInformationBasedOnEndDate(int $artifact_id, int $start_date_field_id, int $end_date_field_id): array
     {
-        $artifact_id         = $this->da->escapeInt($artifact_id);
-        $start_date_field_id = $this->da->escapeInt($start_date_field_id);
-        $end_date_field_id   = $this->da->escapeInt($end_date_field_id);
-
         $sql = "SELECT
                   tracker_artifact.id,
                   SUM(start_date_value.value) AS start_date,
@@ -146,10 +140,10 @@ class BurnupDao extends DataAccessObject
               ON tracker.id = burnup_field.tracker_id
             INNER JOIN tracker_field AS tracker_field_for_start_date
               ON tracker.id = tracker_field_for_start_date.tracker_id
-              AND tracker_field_for_start_date.id = $start_date_field_id
+              AND tracker_field_for_start_date.id = ?
             INNER JOIN tracker_field AS tracker_field_for_end_date
               ON tracker.id = tracker_field_for_end_date.tracker_id
-              AND tracker_field_for_end_date.id = $end_date_field_id
+              AND tracker_field_for_end_date.id = ?
             INNER JOIN tracker_artifact
               ON tracker.id = tracker_artifact.tracker_id
             INNER JOIN tracker_changeset
@@ -165,19 +159,16 @@ class BurnupDao extends DataAccessObject
             WHERE
               burnup_field.formElement_type = 'burnup'
               AND burnup_field.use_it = 1
-              AND tracker_artifact.id = $artifact_id
+              AND tracker_artifact.id = ?
               GROUP BY tracker_artifact.id, burnup_field.id
               HAVING start_date IS NOT NULL
               AND end_date IS NOT NULL";
 
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $start_date_field_id, $end_date_field_id, $artifact_id);
     }
 
-    public function searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp)
+    public function searchLinkedArtifactsAtGivenTimestamp(int $artifact_id, int $timestamp, array $backlog_trackers_ids): array
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $timestamp   = $this->da->escapeInt($timestamp);
-
         $sql = "SELECT linked_art.id AS id
                 FROM tracker_artifact AS parent_art
                     INNER JOIN tracker ON parent_art.tracker_id = tracker.id
@@ -186,7 +177,7 @@ class BurnupDao extends DataAccessObject
                         ON (
                             changeset2.artifact_id = parent_art.id
                             AND changeset1.id < changeset2.id
-                            AND changeset2.submitted_on <= $timestamp
+                            AND changeset2.submitted_on <= ?
                         )
                     INNER JOIN tracker_field AS f
                         ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
@@ -196,16 +187,13 @@ class BurnupDao extends DataAccessObject
                         ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact AS linked_art
                         ON (linked_art.id = artlink.artifact_id)
-                    INNER JOIN plugin_agiledashboard_planning
-                        ON plugin_agiledashboard_planning.planning_tracker_id = parent_art.tracker_id
-                    INNER JOIN plugin_agiledashboard_planning_backlog_tracker
-                        ON plugin_agiledashboard_planning_backlog_tracker.planning_id = plugin_agiledashboard_planning.id
-                        AND linked_art.tracker_id = plugin_agiledashboard_planning_backlog_tracker.tracker_id
-                WHERE parent_art.id = $artifact_id
+                WHERE parent_art.id = ?
                     AND tracker.deletion_date IS NULL
                     AND changeset2.id IS NULL
-                    AND changeset1.submitted_on <= $timestamp";
+                    AND changeset1.submitted_on <= ?
+                    AND linked_art.tracker_id IN ( ? )";
 
-        return $this->retrieve($sql);
+
+        return $this->getDB()->run($sql, $timestamp, $artifact_id, $timestamp, implode(',', $backlog_trackers_ids));
     }
 }
