@@ -20,7 +20,6 @@
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { RetrieveResponse } from "./ResponseRetriever";
-import type { GetAll } from "./AllGetter";
 import { decodeJSON } from "./json-decoder";
 import type { AutoEncodedParameters } from "./auto-encoder";
 import { getURI } from "./auto-encoder";
@@ -48,9 +47,15 @@ export type FetchResult = {
 
     options(uri: string): ResultAsync<Response, Fault>;
 
-    putJSON(uri: string, json_payload: unknown): ResultAsync<Response, Fault>;
+    putJSON<TypeOfJSONPayload>(
+        uri: string,
+        json_payload: unknown
+    ): ResultAsync<TypeOfJSONPayload, Fault>;
 
-    patchJSON(uri: string, json_payload: unknown): ResultAsync<Response, Fault>;
+    patchJSON<TypeOfJSONPayload>(
+        uri: string,
+        json_payload: unknown
+    ): ResultAsync<TypeOfJSONPayload, Fault>;
 
     postJSON<TypeOfJSONPayload>(
         uri: string,
@@ -64,39 +69,38 @@ export type FetchResult = {
     ): ResultAsync<Response, Fault>;
 
     del(uri: string): ResultAsync<Response, Fault>;
-} & GetAll;
+};
 
 const json_headers = new Headers({ "Content-Type": "application/json" });
 
-export const ResultFetcher = (
-    response_retriever: RetrieveResponse,
-    all_getter: GetAll
-): FetchResult => ({
+export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult => ({
     getJSON: <TypeOfJSONPayload>(uri: string, options?: OptionsWithAutoEncodedParameters) =>
         response_retriever
             .retrieveResponse(getURI(uri, options?.params), { method: GET_METHOD })
             .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
-
-    getAllJSON: all_getter.getAllJSON,
 
     head: (uri, options) =>
         response_retriever.retrieveResponse(getURI(uri, options?.params), { method: HEAD_METHOD }),
 
     options: (uri) => response_retriever.retrieveResponse(getURI(uri), { method: OPTIONS_METHOD }),
 
-    putJSON: (uri, json_payload) =>
-        response_retriever.retrieveResponse(getURI(uri), {
-            method: PUT_METHOD,
-            headers: json_headers,
-            body: JSON.stringify(json_payload),
-        }),
+    putJSON: <TypeOfJSONPayload>(uri: string, json_payload: unknown) =>
+        response_retriever
+            .retrieveResponse(getURI(uri), {
+                method: PUT_METHOD,
+                headers: json_headers,
+                body: JSON.stringify(json_payload),
+            })
+            .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
 
-    patchJSON: (uri, json_payload) =>
-        response_retriever.retrieveResponse(getURI(uri), {
-            method: PATCH_METHOD,
-            headers: json_headers,
-            body: JSON.stringify(json_payload),
-        }),
+    patchJSON: <TypeOfJSONPayload>(uri: string, json_payload: unknown) =>
+        response_retriever
+            .retrieveResponse(getURI(uri), {
+                method: PATCH_METHOD,
+                headers: json_headers,
+                body: JSON.stringify(json_payload),
+            })
+            .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
 
     postJSON: <TypeOfJSONPayload>(uri: string, json_payload: unknown) =>
         response_retriever

@@ -28,13 +28,12 @@ export type { OptionsWithAutoEncodedParameters } from "./ResultFetcher";
 
 const response_retriever = ResponseRetriever(window);
 const all_getter = AllGetter(response_retriever);
-const result_fetcher = ResultFetcher(response_retriever, all_getter);
+const result_fetcher = ResultFetcher(response_retriever);
 
 // Define an unused type alias just so we can import ResultAsync and Fault types for the doc-blocks.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type _Unused = ResultAsync<never, Fault>;
 
-export { ResultFetcher };
 export { decodeJSON } from "./json-decoder";
 
 export { JSONParseFault } from "./JSONParseFault";
@@ -99,7 +98,7 @@ export const getJSON = result_fetcher.getJSON;
  * at the same time. Defaults to 6.
  * @returns {ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault>}
  */
-export const getAllJSON = result_fetcher.getAllJSON;
+export const getAllJSON = all_getter.getAllJSON;
 
 /**
  * `head` queries the given URI with HEAD method and returns an `Ok` variant containing a Response.
@@ -128,32 +127,36 @@ export const head = result_fetcher.head;
 export const options = result_fetcher.options;
 
 /**
- * `putJSON` queries the given URI with PUT method and returns an `Ok` variant containing a Response.
+ * `putJSON` queries the given URI with PUT method and returns a `ResultAsync<TypeOfJSONPayload, Fault>`
+ * with `TypeOfJSONPayload` supplied as a generic type.
  * It automatically sets the "Content-type" header to "application/json".
  * If there was a problem (network error, remote API error, JSON parsing error), it returns an `Err` variant
  * containing a `Fault`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
+ * @template TypeOfJSONPayload
  * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
  * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
  * string.
- * @returns {ResultAsync<Response, Fault>}
+ * @returns {ResultAsync<TypeOfJSONPayload, Fault>}
  */
 export const putJSON = result_fetcher.putJSON;
 
 /**
- * `patchJSON` queries the given URI with PATCH method and returns an `Ok` variant containing a Response.
+ * `patchJSON` queries the given URI with PATCH method and returns a `ResultAsync<TypeOfJSONPayload, Fault>`
+ * with `TypeOfJSONPayload` supplied as a generic type.
  * It automatically sets the "Content-type" header to "application/json".
  * If there was a problem (network error, remote API error, JSON parsing error), it returns an `Err` variant
  * containing a `Fault`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
+ * @template TypeOfJSONPayload
  * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
  * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
  * string.
- * @returns {ResultAsync<Response, Fault>}
+ * @returns {ResultAsync<TypeOfJSONPayload, Fault>}
  */
 export const patchJSON = result_fetcher.patchJSON;
 
