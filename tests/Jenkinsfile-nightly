@@ -114,7 +114,11 @@ pipeline {
             options { retry(1) }
             steps {
                 script { actions.runEndToEndTests('full', 'mysql57') }
-                junit 'results/e2e/full/*.xml'
+            }
+            post {
+                always {
+                    junit 'results/e2e/full/*.xml'
+                }
             }
         }
         stage('Psalm static analysis (unused code)') {
