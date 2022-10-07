@@ -29,13 +29,18 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
  */
 final class AdminPermissionsPresenter
 {
+    public bool $has_readers;
+
     /**
      * @param list<UgroupPresenter> $administrators
+     * @param list<UgroupPresenter> $readers
      */
     public function __construct(
         public string $post_url,
         public CSRFSynchronizerTokenInterface $csrf_token,
         public array $administrators,
+        public array $readers,
     ) {
+        $this->has_readers = ! empty($this->readers);
     }
 }

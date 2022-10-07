@@ -11,6 +11,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
 
+msgid "All user groups are already administrators"
+msgstr "Tous les groupes d'utilisateurs sont administrateurs"
+
 #, php-format
 msgid "Bad snapshot date format: %s. Expected: %s"
 msgstr "Mauvais format de date de capture: %s: Attendu: %s"
@@ -92,6 +95,11 @@ msgid ""
 msgstr ""
 "Groupes d'utilisateurs qui peuvent administrer le service baseline, en plus "
 "des administrateurs de projet"
+
+msgid "User groups who can only read baselines and comparisons"
+msgstr ""
+"Groupes d'utilisateurs qui peuvent seulement lire les baselines et les "
+"comparaisons"
 
 msgid "You are not allowed to access baseline service"
 msgstr "Vous n'êtes pas autorisé à accéder au service baseline"
