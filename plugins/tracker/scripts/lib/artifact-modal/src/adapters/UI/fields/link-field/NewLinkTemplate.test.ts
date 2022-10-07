@@ -47,6 +47,8 @@ import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/Current
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 import { selectOrThrow } from "@tuleap/dom";
+import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
+import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -119,6 +121,14 @@ describe(`NewLinkTemplate`, () => {
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(28);
             const parents_retriever = RetrievePossibleParentsStub.withoutParents();
             const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
+            const allowed_types = [
+                {
+                    shortname: IS_CHILD_LINK_TYPE,
+                    forward_label: "Child",
+                    reverse_label: "Parent",
+                },
+            ];
+
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
                 RetrieveLinkedArtifactsSyncStub.withoutLink(),
@@ -148,18 +158,14 @@ describe(`NewLinkTemplate`, () => {
                     field_id: 525,
                     label: "Artifact link",
                     type: "art_link",
-                    allowed_types: [
-                        {
-                            shortname: IS_CHILD_LINK_TYPE,
-                            forward_label: "Child",
-                            reverse_label: "Parent",
-                        },
-                    ],
+                    allowed_types,
                 },
                 current_artifact_identifier,
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("bug #22"),
-                ControlLinkedArtifactsPopoversStub.build()
+                ControlLinkedArtifactsPopoversStub.build(),
+                AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types),
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
             );
 
             return {

@@ -18,10 +18,7 @@
  */
 
 import type { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
-import type {
-    LinkFieldControllerType,
-    LinkFieldPresenterAndAllowedLinkTypes,
-} from "./LinkFieldController";
+import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field/RetrieveAllLinkedArtifacts";
@@ -52,7 +49,10 @@ import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub"
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ParentLinkVerifier } from "../../../../domain/fields/link-field/ParentLinkVerifier";
 import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
-import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field/LinkType";
+import {
+    FORWARD_DIRECTION,
+    REVERSE_DIRECTION,
+} from "../../../../domain/fields/link-field/LinkType";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
@@ -64,6 +64,10 @@ import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ParentArtifactIdentifier } from "../../../../domain/parent/ParentArtifactIdentifier";
+import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
+import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
+import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
+import { ParentArtifactIdentifierStub } from "../../../../../tests/stubs/ParentArtifactIdentifierStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -83,7 +87,8 @@ describe(`LinkFieldController`, () => {
         notification_clearer: ClearFaultNotificationStub,
         parents_retriever: RetrievePossibleParents,
         allowed_link_types: AllowedLinkTypeRepresentation[],
-        parent_identifier: ParentArtifactIdentifier | null;
+        parent_identifier: ParentArtifactIdentifier | null,
+        verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy;
 
     beforeEach(() => {
         setCatalog({
@@ -101,6 +106,7 @@ describe(`LinkFieldController`, () => {
         notification_clearer = ClearFaultNotificationStub.withCount();
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
         parent_identifier = null;
+        verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
 
         allowed_link_types = [
             { shortname: IS_CHILD_LINK_TYPE, forward_label: "Child", reverse_label: "Parent" },
@@ -151,22 +157,55 @@ describe(`LinkFieldController`, () => {
             current_artifact_identifier,
             current_tracker_identifier,
             cross_reference,
-            ControlLinkedArtifactsPopoversStub.build()
+            ControlLinkedArtifactsPopoversStub.build(),
+            AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_link_types),
+            verify_is_tracker_in_a_hierarchy
         );
     };
 
     describe(`displayField()`, () => {
-        const displayField = (): LinkFieldPresenterAndAllowedLinkTypes => {
-            return getController().displayField();
-        };
-
         it(`returns a presenter for the field and current artifact cross reference`, () => {
-            const { field } = displayField();
+            const field = getController().displayField();
             expect(field.field_id).toBe(FIELD_ID);
         });
+    });
 
-        it(`returns a presenter containing the selected link type`, () => {
-            const { selected_link_type } = displayField();
+    describe("getCurrentLinkType()", () => {
+        it(`When the tracker has a parent, Then it will return a presenter for the reverse child type`, () => {
+            verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withHierarchy();
+
+            const selected_link_type = getController().getCurrentLinkType(false);
+            expect(selected_link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
+            expect(selected_link_type.direction).toBe(REVERSE_DIRECTION);
+        });
+
+        it(`When the tracker has no parent,
+            And the current artifact has no possible parents
+            Then it will return a presenter for the untyped link type`, () => {
+            verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
+
+            const selected_link_type = getController().getCurrentLinkType(false);
+            expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
+            expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
+        });
+
+        it(`When the tracker has no parent,
+            And the current artifact has possible parents
+            Then it will return a presenter for the reverse child type`, () => {
+            verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
+
+            const selected_link_type = getController().getCurrentLinkType(true);
+
+            expect(selected_link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
+            expect(selected_link_type.direction).toBe(REVERSE_DIRECTION);
+        });
+
+        it(`When the artifact has already a parent, then it should return a presenter for the untyped link type`, () => {
+            parent_identifier = ParentArtifactIdentifierStub.withId(123);
+            verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withHierarchy();
+
+            const selected_link_type = getController().getCurrentLinkType(true);
+
             expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
             expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
         });

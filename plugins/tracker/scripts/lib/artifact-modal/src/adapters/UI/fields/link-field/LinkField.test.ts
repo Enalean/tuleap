@@ -48,6 +48,7 @@ import type { LinkFieldControllerType } from "./LinkFieldController";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { selectOrThrow } from "@tuleap/dom";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
+import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -240,13 +241,13 @@ describe("LinkField", () => {
                 setTypes(
                     CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                         VerifyHasParentLinkStub.withParentLink(),
-                        [
+                        AllowedLinksTypesCollection.buildFromTypesRepresentations([
                             {
                                 shortname: IS_CHILD_LINK_TYPE,
                                 forward_label: "Child",
                                 reverse_label: "Parent",
                             },
-                        ]
+                        ])
                     )
                 );
 
@@ -266,13 +267,13 @@ describe("LinkField", () => {
                         displayAllowedTypes: (): CollectionOfAllowedLinksTypesPresenters => {
                             return CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                                 VerifyHasParentLinkStub.withNoParentLink(),
-                                [
+                                AllowedLinksTypesCollection.buildFromTypesRepresentations([
                                     {
                                         shortname: IS_CHILD_LINK_TYPE,
                                         forward_label: "Child",
                                         reverse_label: "Parent",
                                     },
-                                ]
+                                ])
                             );
                         },
                     } as LinkFieldControllerType,

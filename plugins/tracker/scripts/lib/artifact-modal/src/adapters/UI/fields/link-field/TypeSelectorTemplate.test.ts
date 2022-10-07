@@ -49,6 +49,8 @@ import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/Current
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 import { selectOrThrow } from "@tuleap/dom";
+import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
+import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 
 const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupElement =>
     selectOrThrow(select, "[data-test=link-type-select-optgroup]", HTMLOptGroupElement);
@@ -63,18 +65,13 @@ describe("TypeSelectorTemplate", () => {
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                 VerifyHasParentLinkStub.withNoParentLink(),
-                [
+                AllowedLinksTypesCollection.buildFromTypesRepresentations([
                     {
                         shortname: IS_CHILD_LINK_TYPE,
                         forward_label: "Child",
                         reverse_label: "Parent",
                     },
-                    {
-                        shortname: "_covered_by",
-                        forward_label: "Covered by",
-                        reverse_label: "Covers",
-                    },
-                ]
+                ])
             );
         cross_reference = ArtifactCrossReferenceStub.withRef("story #150");
     });
@@ -124,7 +121,9 @@ describe("TypeSelectorTemplate", () => {
             current_artifact_identifier,
             current_tracker_identifier,
             ArtifactCrossReferenceStub.withRef("bug #22"),
-            ControlLinkedArtifactsPopoversStub.build()
+            ControlLinkedArtifactsPopoversStub.build(),
+            AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
+            VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
         );
         host = {
             controller,
@@ -149,17 +148,14 @@ describe("TypeSelectorTemplate", () => {
             (option) => option.label !== "–"
         );
         const separators = Array.from(select.options).filter((option) => option.label === "–");
-        expect(separators).toHaveLength(2);
-        expect(options_with_label).toHaveLength(5);
+        expect(separators).toHaveLength(1);
+        expect(options_with_label).toHaveLength(3);
 
-        const [untyped_option, child_option, parent_option, covered_by_option, covers_option] =
-            options_with_label;
+        const [untyped_option, child_option, parent_option] = options_with_label;
         expect(untyped_option.selected).toBe(true);
         expect(untyped_option.label).toBe("Linked to");
         expect(child_option.label).toBe("Child");
         expect(parent_option.label).toBe("Parent");
-        expect(covered_by_option.label).toBe("Covered by");
-        expect(covers_option.label).toBe("Covers");
 
         expect(options_with_label.every((option) => !option.disabled)).toBe(true);
     });
@@ -168,7 +164,13 @@ describe("TypeSelectorTemplate", () => {
         allowed_link_types =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                 VerifyHasParentLinkStub.withParentLink(),
-                [{ shortname: IS_CHILD_LINK_TYPE, forward_label: "Child", reverse_label: "Parent" }]
+                AllowedLinksTypesCollection.buildFromTypesRepresentations([
+                    {
+                        shortname: IS_CHILD_LINK_TYPE,
+                        forward_label: "Child",
+                        reverse_label: "Parent",
+                    },
+                ])
             );
         const select = render();
 

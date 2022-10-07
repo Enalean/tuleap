@@ -230,8 +230,7 @@ export const LinkField = define<LinkField>({
     link_selector: undefined,
     controller: {
         set(host, controller: LinkFieldControllerType) {
-            const { field, selected_link_type } = controller.displayField();
-            host.field_presenter = field;
+            host.field_presenter = controller.displayField();
             host.allowed_link_types = controller.displayAllowedTypes();
             controller.displayLinkedArtifacts().then((artifacts) => {
                 host.linked_artifacts_presenter = artifacts;
@@ -252,11 +251,13 @@ export const LinkField = define<LinkField>({
                     }
                 },
             });
-            // defer to avoid a loop between current_link_type and controller
-            setTimeout(() => {
-                host.current_link_type = selected_link_type;
+
+            controller.retrievePossibleParentsGroups().then((groups) => {
+                host.current_link_type = controller.getCurrentLinkType(groups.length > 0);
+                host.dropdown_content = groups;
                 host.allowed_link_types = controller.displayAllowedTypes();
             });
+
             return controller;
         },
     },

@@ -42,7 +42,6 @@ import { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import type { DeleteNewLink } from "../../../../domain/fields/link-field/DeleteNewLink";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
@@ -55,14 +54,11 @@ import type {
     LinkedArtifactPopoverElement,
 } from "./LinkedArtifactsPopoversController";
 import type { LinkField } from "./LinkField";
-
-export type LinkFieldPresenterAndAllowedLinkTypes = {
-    readonly field: LinkFieldPresenter;
-    readonly selected_link_type: LinkType;
-};
+import type { CollectAllowedLinksTypes } from "../../../../domain/fields/link-field/CollectAllowedLinksTypes";
+import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 
 export type LinkFieldControllerType = {
-    displayField(): LinkFieldPresenterAndAllowedLinkTypes;
+    displayField(): LinkFieldPresenter;
     displayLinkedArtifacts(): PromiseLike<LinkedArtifactCollectionPresenter>;
     displayAllowedTypes(): CollectionOfAllowedLinksTypesPresenters;
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
@@ -72,6 +68,7 @@ export type LinkFieldControllerType = {
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
     initPopovers: (popover_elements: LinkedArtifactPopoverElement[]) => void;
     retrievePossibleParentsGroups(): PromiseLike<GroupCollection>;
+    getCurrentLinkType(has_possible_parents: boolean): LinkType;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -111,78 +108,82 @@ export const LinkFieldController = (
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
     current_artifact_reference: ArtifactCrossReference | null,
-    control_popovers: ControlLinkedArtifactsPopovers
-): LinkFieldControllerType => {
-    const only_is_child_type = field.allowed_types.filter(
-        (type) => type.shortname === IS_CHILD_LINK_TYPE
-    );
-    return {
-        displayField: () => ({
-            field: LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
-            selected_link_type: LinkType.buildUntyped(),
-        }),
+    control_popovers: ControlLinkedArtifactsPopovers,
+    allowed_links_types_collection: CollectAllowedLinksTypes,
+    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy
+): LinkFieldControllerType => ({
+    displayField: () =>
+        LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
 
-        displayAllowedTypes: () =>
-            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-                parent_verifier,
-                only_is_child_type
-            ),
+    getCurrentLinkType: (has_possible_parents: boolean): LinkType => {
+        const reverse_child_type = allowed_links_types_collection.getReverseChildType();
+        return reverse_child_type &&
+            !parent_verifier.hasParentLink() &&
+            (tracker_hierarchy_verifier.isTrackerInAHierarchy() || has_possible_parents)
+            ? reverse_child_type
+            : LinkType.buildUntyped();
+    },
 
-        displayLinkedArtifacts: () =>
-            links_retriever.getLinkedArtifacts(current_artifact_identifier).match(
-                (artifacts) => {
-                    const presenters = artifacts.map((linked_artifact) =>
-                        LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, false)
-                    );
-                    return LinkedArtifactCollectionPresenter.fromArtifacts(presenters);
-                },
-                (fault) => {
-                    if (!isCreationModeFault(fault)) {
-                        fault_notifier.onFault(LinkRetrievalFault(fault));
-                    }
-                    return LinkedArtifactCollectionPresenter.forFault();
+    displayAllowedTypes: () =>
+        CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+            parent_verifier,
+            allowed_links_types_collection
+        ),
+
+    displayLinkedArtifacts: () =>
+        links_retriever.getLinkedArtifacts(current_artifact_identifier).match(
+            (artifacts) => {
+                const presenters = artifacts.map((linked_artifact) =>
+                    LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, false)
+                );
+                return LinkedArtifactCollectionPresenter.fromArtifacts(presenters);
+            },
+            (fault) => {
+                if (!isCreationModeFault(fault)) {
+                    fault_notifier.onFault(LinkRetrievalFault(fault));
                 }
-            ),
+                return LinkedArtifactCollectionPresenter.forFault();
+            }
+        ),
 
-        markForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {
-            deleted_link_adder.addLinkMarkedForRemoval(artifact_identifier);
-            return buildPresenter(links_store, deleted_link_verifier);
-        },
+    markForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {
+        deleted_link_adder.addLinkMarkedForRemoval(artifact_identifier);
+        return buildPresenter(links_store, deleted_link_verifier);
+    },
 
-        unmarkForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {
-            deleted_link_remover.deleteLinkMarkedForRemoval(artifact_identifier);
-            return buildPresenter(links_store, deleted_link_verifier);
-        },
+    unmarkForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {
+        deleted_link_remover.deleteLinkMarkedForRemoval(artifact_identifier);
+        return buildPresenter(links_store, deleted_link_verifier);
+    },
 
-        autoComplete: links_autocompleter.autoComplete,
+    autoComplete: links_autocompleter.autoComplete,
 
-        addNewLink(artifact, type): NewLinkCollectionPresenter {
-            new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));
-            return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
-        },
+    addNewLink(artifact, type): NewLinkCollectionPresenter {
+        new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));
+        return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
+    },
 
-        removeNewLink(link): NewLinkCollectionPresenter {
-            new_link_remover.deleteNewLink(link);
-            return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
-        },
+    removeNewLink(link): NewLinkCollectionPresenter {
+        new_link_remover.deleteNewLink(link);
+        return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
+    },
 
-        retrievePossibleParentsGroups(): PromiseLike<GroupCollection> {
-            notification_clearer.clearFaultNotification();
-            return parents_retriever.getPossibleParents(current_tracker_identifier).match(
-                (possible_parents) =>
-                    LinkFieldPossibleParentsGroupsByProjectBuilder.buildGroupsSortedByProject(
-                        link_verifier,
-                        possible_parents
-                    ),
-                (fault) => {
-                    fault_notifier.onFault(fault);
-                    return [PossibleParentsGroup.buildEmpty()];
-                }
-            );
-        },
+    retrievePossibleParentsGroups(): PromiseLike<GroupCollection> {
+        notification_clearer.clearFaultNotification();
+        return parents_retriever.getPossibleParents(current_tracker_identifier).match(
+            (possible_parents) =>
+                LinkFieldPossibleParentsGroupsByProjectBuilder.buildGroupsSortedByProject(
+                    link_verifier,
+                    possible_parents
+                ),
+            (fault) => {
+                fault_notifier.onFault(fault);
+                return [PossibleParentsGroup.buildEmpty()];
+            }
+        );
+    },
 
-        initPopovers(popover_elements: LinkedArtifactPopoverElement[]): void {
-            control_popovers.initPopovers(popover_elements);
-        },
-    };
-};
+    initPopovers(popover_elements: LinkedArtifactPopoverElement[]): void {
+        control_popovers.initPopovers(popover_elements);
+    },
+});

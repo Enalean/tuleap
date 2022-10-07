@@ -48,6 +48,8 @@ import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/Retrieve
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
+import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
+import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -180,7 +182,9 @@ describe(`LinkedArtifactTemplate`, () => {
                 current_artifact_identifier,
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("story #72"),
-                ControlLinkedArtifactsPopoversStub.build()
+                ControlLinkedArtifactsPopoversStub.build(),
+                AllowedLinksTypesCollection.buildFromTypesRepresentations([]),
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
             );
 
             return {
