@@ -1853,7 +1853,7 @@ msgid "Invited by"
 msgstr "Invitation envoyée par"
 
 msgid "Is Public?"
-msgstr "Publique ?"
+msgstr "Est public ?"
 
 msgid "Is default?"
 msgstr "Par défaut ?"

@@ -70,7 +70,7 @@ admin_approve_pending_users	status_standard	standard
 admin_approve_pending_users	email_title	Bienvenue sur $1 !
 admin_approve_pending_users	data_not_parsed	Désolé, le format de la date du d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
 admin_approve_pending_users	expiry_date	Date d'expiration
-admin_approve_pending_users	expiry_date_directions	Une fois cette date passée, le compte sera suspendu.<br>Ne remplissez pas le champs si vous en souhaitez pas que le compte ait de date d'expiration.
+admin_approve_pending_users	expiry_date_directions	Une fois cette date passée, le compte sera suspendu.<br>Ne remplissez pas le champ si vous en souhaitez pas que le compte ait de date d'expiration.
 admin_approve_pending_users	resend	Renvoyer l'email
 admin_approve_pending_users	resend_notice	Renvoyer l'email d'activation du compte
 admin_approve_pending_users	resend_mail_success	L'email à destination de $1 a été renvoyé avec succès

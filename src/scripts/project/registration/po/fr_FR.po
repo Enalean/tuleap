@@ -141,7 +141,7 @@ msgid "Project shortname:"
 msgstr "Nom court de projet :"
 
 msgid "Public"
-msgstr "Publique"
+msgstr "Public"
 
 msgid "Public incl. restricted"
 msgstr "Publique incl. les utilisateurs restreints"

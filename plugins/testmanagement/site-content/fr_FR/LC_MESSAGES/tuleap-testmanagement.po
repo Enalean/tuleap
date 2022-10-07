@@ -170,7 +170,7 @@ msgid ""
 msgstr ""
 "Les post actions ne peuvent être enregistrées car ce tracker est utilisé "
 "dans la configuration de TestManagement et des \"champs figés\" sont définis "
-"sur un champs de type lien d'artéfacts"
+"sur un champ de type lien d'artéfacts"
 
 msgid ""
 "The post actions cannot be saved because this tracker is used in "
