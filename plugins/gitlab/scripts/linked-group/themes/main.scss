@@ -47,9 +47,11 @@
 }
 
 .gitlab-linked-group-buttons {
+    gap: var(--tlp-medium-spacing);
     justify-content: flex-start;
 }
 
-.gitlab-modal-feebdack-hidden {
+.gitlab-modal-feedback-hidden,
+.gitlab-modal-icon-hidden {
     display: none;
 }

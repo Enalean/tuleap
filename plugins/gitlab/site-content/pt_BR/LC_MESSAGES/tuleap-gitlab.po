@@ -34,6 +34,9 @@ msgstr ""
 msgid "Create GitLab branch and merge request"
 msgstr ""
 
+msgid "Edit configuration"
+msgstr ""
+
 #, php-format
 msgid "Forbidden, please check that you have merge permission on repository %s"
 msgstr ""
@@ -71,6 +74,16 @@ msgstr ""
 msgid "GitLab tag"
 msgstr ""
 
+msgid ""
+"If selected, artifacts of this project can be closed with GitLab commit "
+"messages from the selected repository."
+msgstr ""
+
+msgid ""
+"If set, this prefix will be automatically added to the branch name in the "
+"create GitLab branch action."
+msgstr ""
+
 msgid "Last Synchronization"
 msgstr ""
 
@@ -96,6 +109,16 @@ msgid "No credentials found to contact the GitLab server."
 msgstr ""
 
 msgid "Open"
+msgstr ""
+
+msgid ""
+"Please note that the following settings will be applied for all new "
+"synchronized\n"
+"                repositories and may be overridden by each repository once "
+"linked."
+msgstr ""
+
+msgid "Prefix"
 msgstr ""
 
 msgid "Prefix the branch name"

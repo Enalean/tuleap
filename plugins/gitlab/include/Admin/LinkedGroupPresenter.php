@@ -36,8 +36,10 @@ final class LinkedGroupPresenter
     public string $group_name;
     public string $first_letter_of_group_name;
     public string $group_path;
-    public string $allow_artifact_closure;
+    public bool $allow_artifact_closure;
+    public string $allow_closure_string;
     public string $branch_prefix;
+    public bool $has_branch_prefix;
     public string $current_project_label;
 
     public function __construct(
@@ -50,10 +52,12 @@ final class LinkedGroupPresenter
         $this->group_name                 = $group_link->name;
         $this->first_letter_of_group_name = mb_substr($group_link->name, 0, 1);
         $this->group_path                 = $group_link->full_path;
-        $this->allow_artifact_closure     = $group_link->allow_artifact_closure
+        $this->allow_artifact_closure     = $group_link->allow_artifact_closure;
+        $this->allow_closure_string       = $group_link->allow_artifact_closure
             ? dgettext('tuleap-gitlab', 'Yes')
             : dgettext('tuleap-gitlab', 'No');
         $this->branch_prefix              = $group_link->prefix_branch_name;
+        $this->has_branch_prefix          = $group_link->prefix_branch_name !== '';
         $this->gitlab_url                 = $group_link->web_url;
         $this->avatar_url                 = $group_link->avatar_url;
         $this->current_project_label      = $project->getPublicName();
