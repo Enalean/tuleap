@@ -17,7 +17,10 @@ exports[`LinkCellTitle should render link title 1`] = `
   >
     
         my link
-    
+    <i
+      aria-hidden="true"
+      class="fas document-action-icon fa-arrow-right"
+    />
   </a>
 </div>
 `;

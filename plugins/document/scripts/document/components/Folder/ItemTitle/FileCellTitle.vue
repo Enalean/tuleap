@@ -29,7 +29,8 @@
             data-test="document-folder-subitem-link"
             draggable="false"
         >
-            {{ item.title }}
+            {{ item.title
+            }}<i class="fas document-action-icon" v-bind:class="action_icon" aria-hidden="true"></i>
         </a>
         <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
             Corrupted
@@ -39,7 +40,7 @@
 
 <script setup lang="ts">
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
-import { ICON_EMPTY } from "../../../constants";
+import { ICON_EMPTY, ACTION_ICON_FILE, ACTION_ICON_ONLYOFFICE } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 import type { ItemFile } from "../../../type";
 import { computed } from "vue";
@@ -63,5 +64,13 @@ const file_url = computed((): string => {
         return "";
     }
     return props.item.file_properties.open_href ?? props.item.file_properties.download_href;
+});
+
+const action_icon = computed((): string => {
+    if (props.item.file_properties && props.item.file_properties.open_href) {
+        return ACTION_ICON_ONLYOFFICE;
+    }
+
+    return ACTION_ICON_FILE;
 });
 </script>

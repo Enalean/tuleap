@@ -22,7 +22,12 @@
         <fake-caret v-bind:item="item" />
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="ICON_EMBEDDED"></i>
         <a v-bind:href="document_link_url" class="document-folder-subitem-link" draggable="false">
-            {{ item.title }}
+            {{ item.title
+            }}<i
+                class="fas document-action-icon"
+                v-bind:class="ACTION_ICON_EMBEDDED"
+                aria-hidden="true"
+            ></i>
         </a>
         <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
             Corrupted
@@ -31,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ICON_EMBEDDED } from "../../../constants";
+import { ICON_EMBEDDED, ACTION_ICON_EMBEDDED } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 import type { Embedded, Folder } from "../../../type";
 import { useState } from "vuex-composition-helpers";
