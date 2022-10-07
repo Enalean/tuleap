@@ -39,7 +39,12 @@
             <action-button icon="eye" v-bind:disabled="true">
                 <span v-translate>Consult</span>
             </action-button>
-            <action-button icon="trash-o" v-bind:disabled="true" class="tlp-button-danger">
+            <action-button
+                icon="trash-o"
+                v-bind:disabled="true"
+                class="tlp-button-danger"
+                v-if="is_admin"
+            >
                 <span v-translate>Delete</span>
             </action-button>
         </td>
@@ -50,5 +55,6 @@ import ActionButton from "../common/ActionButton.vue";
 export default {
     name: "BaselineSkeleton",
     components: { ActionButton },
+    inject: ["is_admin"],
 };
 </script>

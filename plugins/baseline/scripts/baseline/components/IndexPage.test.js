@@ -41,6 +41,7 @@ describe("IndexPage", () => {
             mocks: {
                 $store,
             },
+            provide: () => ({ is_admin: true }),
         });
     });
 

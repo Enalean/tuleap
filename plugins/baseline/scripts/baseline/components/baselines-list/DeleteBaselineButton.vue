@@ -19,7 +19,12 @@
   -->
 
 <template>
-    <action-button icon="trash-o" v-on:click="showConfirmation()" class="tlp-button-danger">
+    <action-button
+        icon="trash-o"
+        v-on:click="showConfirmation()"
+        class="tlp-button-danger"
+        v-if="is_admin"
+    >
         <span v-translate>Delete</span>
     </action-button>
 </template>
@@ -31,6 +36,8 @@ import DeleteBaselineConfirmationModal from "./DeleteBaselineConfirmationModal.v
 export default {
     name: "DeleteBaselineButton",
     components: { ActionButton },
+
+    inject: ["is_admin"],
 
     props: {
         baseline: { required: true, type: Object },

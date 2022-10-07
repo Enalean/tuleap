@@ -42,6 +42,7 @@ describe("DeleteBaselineButton", () => {
             propsData: {
                 baseline,
             },
+            provide: () => ({ is_admin: true }),
         });
     });
 
