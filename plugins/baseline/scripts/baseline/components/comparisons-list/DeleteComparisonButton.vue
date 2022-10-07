@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <action-button icon="trash-o" v-on:click="showConfirmation()" class="tlp-button-danger">
+    <action-button
+        icon="trash-o"
+        v-on:click="showConfirmation()"
+        class="tlp-button-danger"
+        v-if="is_admin"
+    >
         <span v-translate>Delete</span>
     </action-button>
 </template>
@@ -30,7 +35,7 @@ import DeleteComparisonConfirmationModal from "./DeleteComparisonConfirmationMod
 export default {
     name: "DeleteComparisonButton",
     components: { ActionButton },
-
+    inject: ["is_admin"],
     props: {
         comparison: { required: true, type: Object },
         base_baseline: { required: true, type: Object },

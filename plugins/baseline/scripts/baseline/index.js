@@ -70,5 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
             project_flags,
         },
         router,
+        provide: () => ({
+            is_admin: Boolean(vue_mount_point.dataset.isAdmin),
+        }),
     }).$mount(vue_mount_point);
 });

@@ -103,9 +103,12 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
             $layout->redirect('/projects/' . $project_name);
         }
 
+        $user_proxy    = UserProxy::fromUser($request->getCurrentUser());
+        $project_proxy = ProjectProxy::buildFromProject($project);
+
         $can_read_baselines_on_project = $this->authorizations->canReadBaselinesOnProject(
-            UserProxy::fromUser($request->getCurrentUser()),
-            ProjectProxy::buildFromProject($project)
+            $user_proxy,
+            $project_proxy
         );
         if (! $can_read_baselines_on_project) {
             $layout->addFeedback(
@@ -135,6 +138,10 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
                 'privacy'             => json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR),
                 'project_flags'       => json_encode($this->project_flags_builder->buildProjectFlags($project), JSON_THROW_ON_ERROR),
                 'project_icon'        => EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()),
+                'is_admin'            => $this->authorizations->canUserAdministrateBaselineOnProject(
+                    $user_proxy,
+                    $project_proxy
+                ),
             ]
         );
         $layout->footer(FooterConfiguration::withoutContent());

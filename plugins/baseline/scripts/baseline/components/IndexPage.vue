@@ -43,6 +43,7 @@
                             class="tlp-button-primary"
                             data-test-action="new-baseline"
                             v-on:click="showNewBaselineModal()"
+                            v-if="is_admin"
                         >
                             <i class="fa fa-plus tlp-button-icon"></i>
                             <translate>New baseline</translate>
@@ -78,6 +79,7 @@
                             data-test-action="show-comparison"
                             v-bind:disabled="are_baselines_loading || !are_baselines_available"
                             v-on:click="showNewComparisonModal()"
+                            v-if="is_admin"
                             v-translate
                         >
                             Compare baselines
@@ -101,6 +103,8 @@ export default {
     name: "IndexPage",
 
     components: { BaselinesList, ComparisonsList },
+
+    inject: ["is_admin"],
 
     props: {
         project_id: { mandatory: true, type: Number },
