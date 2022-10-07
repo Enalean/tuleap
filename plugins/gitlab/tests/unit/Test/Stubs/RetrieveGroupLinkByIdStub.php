@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Test\Stubs;
 
 use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\RetrieveGroupLinkById;
 
-final class RetrieveGroupLinkStub implements \Tuleap\Gitlab\Group\RetrieveGroupLink
+final class RetrieveGroupLinkByIdStub implements RetrieveGroupLinkById
 {
     /**
      * @param GroupLink[] $return_values
@@ -41,7 +42,7 @@ final class RetrieveGroupLinkStub implements \Tuleap\Gitlab\Group\RetrieveGroupL
         return new self([$first_group_link, ...$other_group_links]);
     }
 
-    public function retrieveGroupLink(int $gitlab_group_link_id): ?GroupLink
+    public function retrieveGroupLink(int $group_link_id): ?GroupLink
     {
         if (count($this->return_values) > 0) {
             return array_shift($this->return_values);

@@ -28,7 +28,7 @@ use Tuleap\Gitlab\Core\ProjectRetriever;
 use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
-use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkStub;
+use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkByIdStub;
 use Tuleap\Gitlab\Test\Stubs\UpdateArtifactClosureOfGroupStub;
 use Tuleap\Gitlab\Test\Stubs\UpdateBranchPrefixOfGroupStub;
 use Tuleap\Gitlab\Test\Stubs\UpdateGroupLinkTokenStub;
@@ -75,7 +75,7 @@ final class GroupLinkUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             new GitAdministratorChecker(VerifyUserIsGitAdministratorStub::withAlwaysGitAdministrator()),
             new GroupLinkRetriever(
-                RetrieveGroupLinkStub::withSuccessiveGroupLinks($group_link, $this->updated_group_link)
+                RetrieveGroupLinkByIdStub::withSuccessiveGroupLinks($group_link, $this->updated_group_link)
             ),
             new GroupUpdator(
                 UpdateBranchPrefixOfGroupStub::withCallCount(),

@@ -22,14 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\Gitlab\API\Credentials;
+use Tuleap\Gitlab\API\GitlabProject;
 
-interface RetrieveGroupLink
+/**
+ * @psalm-immutable
+ */
+final class IntegrateRepositoriesInGroupLinkCommand
 {
     /**
-     * @return Ok<GroupLink> | Err<Fault>
+     * @param GitlabProject[] $gitlab_projects
      */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public function __construct(
+        public GroupLink $group_link,
+        public \Project $project,
+        public Credentials $credentials,
+        public array $gitlab_projects,
+    ) {
+    }
 }

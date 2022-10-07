@@ -20,16 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\API;
 
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
 
-interface RetrieveGroupLink
+/**
+ * @psalm-immutable
+ */
+final class GitlabResponseAPIFault extends Fault
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public static function fromGitlabResponseAPIException(GitlabResponseAPIException $exception): Fault
+    {
+        return new self($exception->getMessage());
+    }
 }

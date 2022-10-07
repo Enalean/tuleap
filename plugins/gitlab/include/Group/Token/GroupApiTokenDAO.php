@@ -25,15 +25,15 @@ namespace Tuleap\Gitlab\Group\Token;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Gitlab\Group\GroupLink;
 
-final class GroupApiTokenDAO extends DataAccessObject
+final class GroupApiTokenDAO extends DataAccessObject implements GetTokenByGroupId
 {
     public function storeToken(int $group_id, string $encrypted_token): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_group_token',
             [
-                'group_id'                                => $group_id,
-                'token'                                   => $encrypted_token,
+                'group_id' => $group_id,
+                'token'    => $encrypted_token,
             ],
             [
                 'token',
@@ -47,6 +47,14 @@ final class GroupApiTokenDAO extends DataAccessObject
             'plugin_gitlab_group_token',
             ['token' => $gitlab_token],
             ['group_id' => $group_link->id]
+        );
+    }
+
+    public function getTokenByGroupId(int $group_id): string
+    {
+        return $this->getDB()->cell(
+            'SELECT token FROM plugin_gitlab_group_token WHERE group_id = ?',
+            $group_id
         );
     }
 }

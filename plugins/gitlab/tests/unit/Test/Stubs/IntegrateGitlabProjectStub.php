@@ -20,16 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Test\Stubs;
 
+use Project;
+use Tuleap\Gitlab\API\Credentials;
+use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Repository\IntegrateGitlabProject;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-interface RetrieveGroupLink
+final class IntegrateGitlabProjectStub implements IntegrateGitlabProject
 {
+    private function __construct(private Ok $result)
+    {
+    }
+
     /**
-     * @return Ok<GroupLink> | Err<Fault>
+     * @param GitlabProject[] $gitlab_projects
+     * @return Ok<null>|Err<Fault>
      */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public function integrateSeveralProjects(array $gitlab_projects, Project $project, Credentials $credentials, GroupLink $gitlab_group,): Ok|Err
+    {
+        return $this->result;
+    }
+
+    public static function withOkResult(): self
+    {
+        return new self(Result::ok(null));
+    }
 }

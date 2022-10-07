@@ -20,16 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Group\Token;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Gitlab\Group\GroupLink;
 
-interface RetrieveGroupLink
+final class GroupLinkTokenRetriever
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    public function __construct(private GetTokenByGroupId $get_token_by_group_id, private KeyFactory $key_factory)
+    {
+    }
+
+    public function retrieveToken(GroupLink $gitlab_group): GroupApiToken
+    {
+        $token = $this->get_token_by_group_id->getTokenByGroupId($gitlab_group->id);
+
+        $concealed_secret = SymmetricCrypto::decrypt(
+            $token,
+            $this->key_factory->getEncryptionKey()
+        );
+
+        return GroupApiToken::buildNewGroupToken($concealed_secret);
+    }
 }

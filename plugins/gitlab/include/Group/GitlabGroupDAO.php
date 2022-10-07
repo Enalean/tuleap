@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
+use DateTimeImmutable;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
-final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLink, UpdateBranchPrefixOfGroup, UpdateArtifactClosureOfGroup, RetrieveGroupLinkedToProject, DeleteGroupLink
+final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLinkById, UpdateBranchPrefixOfGroup, UpdateArtifactClosureOfGroup, RetrieveGroupLinkedToProject, DeleteGroupLink, UpdateSynchronizationDate
 {
     public function addNewGroup(NewGroup $gitlab_group): int
     {
@@ -59,11 +60,11 @@ final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, Veri
         return count($rows) > 0;
     }
 
-    public function retrieveGroupLink(int $gitlab_group_link_id): ?GroupLink
+    public function retrieveGroupLink(int $group_link_id): ?GroupLink
     {
         $row = $this->getDB()->row(
             'SELECT * FROM plugin_gitlab_group WHERE id = ?',
-            $gitlab_group_link_id
+            $group_link_id
         );
         if ($row === null) {
             return null;
@@ -105,10 +106,21 @@ final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, Veri
 
     public function deleteGroupLink(GroupLink $group_link): void
     {
-        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($group_link) {
-            $db->delete('plugin_gitlab_group_token', ['group_id' => $group_link->id]);
-            $db->delete('plugin_gitlab_group_repository_integration', ['group_id' => $group_link->id]);
-            $db->delete('plugin_gitlab_group', ['id' => $group_link->id]);
-        });
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($group_link) {
+                $db->delete('plugin_gitlab_group_token', ['group_id' => $group_link->id]);
+                $db->delete('plugin_gitlab_group_repository_integration', ['group_id' => $group_link->id]);
+                $db->delete('plugin_gitlab_group', ['id' => $group_link->id]);
+            }
+        );
+    }
+
+    public function updateSynchronizationDate(GroupLink $group_link): void
+    {
+        $this->getDB()->update(
+            'plugin_gitlab_group',
+            ['last_synchronization_date' => (new DateTimeImmutable())->getTimestamp()],
+            ['id' => $group_link->id]
+        );
     }
 }

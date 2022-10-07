@@ -20,16 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Test\Stubs;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
+use Tuleap\Gitlab\Group\VerifyRepositoryIntegrationsAlreadyLinked;
 
-interface RetrieveGroupLink
+final class VerifyRepositoryIntegrationsAlreadyLinkedStub implements VerifyRepositoryIntegrationsAlreadyLinked
 {
-    /**
-     * @return Ok<GroupLink> | Err<Fault>
-     */
-    public function retrieveGroupLink(int $group_link_id): Ok|Err;
+    private function __construct(private bool $is_repository_integration_already_linked)
+    {
+    }
+
+    public function isRepositoryIntegrationAlreadyLinkedToAGroup(int $integration_id): bool
+    {
+        return $this->is_repository_integration_already_linked;
+    }
+
+    public static function withAlreadyLinked(): self
+    {
+        return new self(true);
+    }
+
+    public static function withNeverLinked(): self
+    {
+        return new self(false);
+    }
 }

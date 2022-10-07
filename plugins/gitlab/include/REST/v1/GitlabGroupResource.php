@@ -48,17 +48,22 @@ use Tuleap\Gitlab\Core\ProjectRetriever;
 use Tuleap\Gitlab\Group\GitlabGroupDAO;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\GroupCreator;
+use Tuleap\Gitlab\Group\GroupLinkCredentialsRetriever;
 use Tuleap\Gitlab\Group\GroupLinkRetriever;
+use Tuleap\Gitlab\Group\GroupLinkSynchronizer;
 use Tuleap\Gitlab\Group\GroupLinkUpdateHandler;
 use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Group\GroupUnlinkHandler;
 use Tuleap\Gitlab\Group\GroupUpdator;
+use Tuleap\Gitlab\Group\SynchronizeGroupLinkCommand;
 use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
 use Tuleap\Gitlab\Group\Token\GroupTokenInserter;
 use Tuleap\Gitlab\Group\Token\GroupLinkTokenUpdater;
+use Tuleap\Gitlab\Group\Token\GroupLinkTokenRetriever;
 use Tuleap\Gitlab\Group\UpdateGroupLinkCommand;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
+use Tuleap\Gitlab\Repository\GitlabProjectIntegrator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
@@ -69,6 +74,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupLinkRepresentation;
+use Tuleap\Gitlab\REST\v1\Group\GitlabGroupLinkSynchronizedRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPATCHRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
@@ -310,7 +316,7 @@ final class GitlabGroupResource
         $current_user = UserManager::instance()->getCurrentUser();
         $group_dao    = new GitlabGroupDAO();
         $unlinker     = new GroupUnlinkHandler(
-            new ProjectRetriever(\ProjectManager::instance()),
+            new ProjectRetriever(ProjectManager::instance()),
             new GitAdministratorChecker($this->getGitPermissionsManager()),
             new GroupLinkRetriever($group_dao),
             $group_dao
@@ -320,6 +326,112 @@ final class GitlabGroupResource
         if (Result::isErr($result)) {
             FaultMapper::mapToRestException($result->error);
         }
+    }
+
+    /**
+     * @url OPTIONS {id}/synchronize
+     */
+    public function optionsSynchronizeGroupLink(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Synchronize GitLab projects of a group with Tuleap
+     *
+     * /!\ This route is under construction.
+     * <br>
+     * <p> <strong>Note:</strong> If a Gitlab project is removed on the Gitlab side, the group link and
+     * the repository integration in the Tuleap side will still exist.</p>
+     * </p>
+     * <p>To group unlink an integration you can use: DELETE /gitlab_groups/{id} route </p>
+     * <p>To remove an integration you can use: DELETE /gitlab_repositories/{id} route</p>
+     * @url    POST {id}/synchronize
+     * @access protected
+     *
+     * @param int $id Id of the GitLab group link
+     * @return GitlabGroupLinkSynchronizedRepresentation {@type GitlabGroupLinkSynchronizedRepresentation}
+     * @status 200
+     *
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    protected function postSynchronizeGroupLink(int $id): GitlabGroupLinkSynchronizedRepresentation
+    {
+        $this->optionsSynchronizeGroupLink($id);
+
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        $group_dao                         = new GitlabGroupDAO();
+        $group_token_dao                   = new GroupApiTokenDAO();
+        $integration_dao                   = new GitlabRepositoryIntegrationDao();
+        $create_branch_prefix_dao          = new CreateBranchPrefixDao();
+        $group_link_repository_integration = new GroupRepositoryIntegrationDAO();
+
+        $transaction_executor = new DBTransactionExecutorWithConnection(
+            DBFactory::getMainTuleapDBConnection()
+        );
+
+        $key_factory = new KeyFactory();
+
+        $gitlab_api_client = new ClientWrapper(
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new GitlabHTTPClientFactory(
+                HttpClientFactory::createClient()
+            )
+        );
+
+        $gitlab_backend_logger = BackendLogger::getDefaultLogger(gitlabPlugin::LOG_IDENTIFIER);
+
+        $gitlab_repository_creator = new GitlabRepositoryCreator(
+            $transaction_executor,
+            new GitlabRepositoryIntegrationFactory(
+                $integration_dao,
+                ProjectManager::instance()
+            ),
+            $integration_dao,
+            new WebhookCreator(
+                $key_factory,
+                new WebhookDao(),
+                new WebhookDeletor(
+                    new WebhookDao(),
+                    $gitlab_api_client,
+                    $gitlab_backend_logger
+                ),
+                $gitlab_api_client,
+                $gitlab_backend_logger,
+            ),
+            new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), $key_factory)
+        );
+
+        $gitlab_project_integrator = new GitlabProjectIntegrator(
+            $integration_dao,
+            $gitlab_repository_creator,
+            $create_branch_prefix_dao,
+            $group_link_repository_integration,
+            $group_link_repository_integration
+        );
+
+        $synchronizer = new GroupLinkSynchronizer(
+            $transaction_executor,
+            new GroupLinkRetriever($group_dao),
+            new GroupLinkCredentialsRetriever(
+                HTTPFactoryBuilder::URIFactory(),
+                new GroupLinkTokenRetriever($group_token_dao, $key_factory),
+            ),
+            new GitlabProjectBuilder($gitlab_api_client),
+            $group_dao,
+            $gitlab_project_integrator,
+            new ProjectRetriever(ProjectManager::instance()),
+            new GitAdministratorChecker($this->getGitPermissionsManager()),
+        );
+
+        return $synchronizer->synchronizeGroupLink(new SynchronizeGroupLinkCommand($id), $current_user)->match(
+            fn(GitlabGroupLinkSynchronizedRepresentation $representation) => $representation,
+            [FaultMapper::class, 'mapToRestException']
+        );
     }
 
     private function getGitPermissionsManager(): GitPermissionsManager
