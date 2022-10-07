@@ -28,7 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
 
-class JiraUserRetriever
+class JiraUserRetriever implements GetTuleapUserFromJiraUser
 {
     /**
      * @var LoggerInterface

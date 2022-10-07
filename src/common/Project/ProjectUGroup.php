@@ -49,6 +49,8 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     public const NEWS_WRITER        = 18;
     public const SVN_ADMIN          = 19;
 
+    public const PROJECT_ADMIN_NAME = 'project_admins';
+
     public const WIKI_ADMIN_PERMISSIONS    = 'W2';
     public const PROJECT_ADMIN_PERMISSIONS = 'A';
 
@@ -79,7 +81,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::REGISTERED         => 'registered_users',
         self::AUTHENTICATED      => 'authenticated_users',
         self::PROJECT_MEMBERS    => 'project_members',
-        self::PROJECT_ADMIN      => 'project_admins',
+        self::PROJECT_ADMIN      => self::PROJECT_ADMIN_NAME,
         self::FILE_MANAGER_ADMIN => 'file_manager_admins',
         self::DOCUMENT_TECH      => 'document_techs',
         self::DOCUMENT_ADMIN     => 'document_admins',
