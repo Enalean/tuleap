@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,19 +16,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Domain;
+namespace Tuleap\Request;
 
-interface RoleAssignmentRepository
+use Codendi_Request;
+
+interface CSRFSynchronizerTokenInterface
 {
-    /**
-     * @return RoleAssignment[]
-     */
-    public function findByProjectAndRole(ProjectIdentifier $project, string $role): array;
+    public function getToken(): string;
 
-    public function saveAssignmentsForProject(ProjectIdentifier $project, RoleAssignment ...$assignments): void;
+    public function getTokenName(): string;
+
+    /**
+     * Redirect to somewhere else if the token in request is not valid
+     *
+     * @param Codendi_Request $request     The request object, if null then use HTTPRequest
+     * @param string          $redirect_to Url to be redirected to in case of error.
+     */
+    public function check(?string $redirect_to = null, ?Codendi_Request $request = null): void;
 }

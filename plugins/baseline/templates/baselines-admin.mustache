@@ -9,7 +9,7 @@
                     {{# dgettext }}tuleap-baseline | Permissions{{/ dgettext }}
                 </h1>
             </div>
-            <section class="tlp-pane-section">
+            <form class="tlp-pane-section" action="{{ post_url }}" method="post">
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="administrators">
                         {{# dgettext }}
@@ -27,12 +27,15 @@
                 </div>
 
                 <div class="tlp-pane-section-submit">
-                    <button type="submit" class="tlp-button-primary" disabled>
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/csrf_token}}
+                    <button type="submit" class="tlp-button-primary">
                         <i class="fa-regular fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
                         {{# dgettext }}tuleap-baseline | Save configuration{{/ dgettext }}
                     </button>
                 </div>
-            </section>
+            </form>
         </div>
     </section>
 </div>

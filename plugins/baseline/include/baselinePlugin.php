@@ -135,6 +135,26 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
                 new User_ForgeUserGroupFactory(new UserGroupDao()),
                 $container->get(\Tuleap\Baseline\Domain\RoleAssignmentRepository::class),
             ),
+            new \Tuleap\Baseline\CSRFSynchronizerTokenProvider(),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new \Tuleap\Http\Server\ServiceInstrumentationMiddleware(self::NAME),
+            new \Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware(\Tuleap\Request\ProjectRetriever::buildSelf()),
+            new RejectNonBaselineAdministratorMiddleware(
+                UserManager::instance(),
+                new \Tuleap\Project\Admin\Routing\ProjectAdministratorChecker(),
+                $container->get(Authorizations::class),
+            )
+        );
+    }
+
+    public function routePostProjectAdmin(): \Tuleap\Request\DispatchableWithRequest
+    {
+        $container = ContainerBuilderFactory::create()->build();
+
+        return new \Tuleap\Baseline\ServiceSavePermissionsController(
+            $container->get(\Tuleap\Baseline\Domain\RoleAssignmentRepository::class),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(\Tuleap\Http\HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
+            new \Tuleap\Baseline\CSRFSynchronizerTokenProvider(),
             new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
             new \Tuleap\Http\Server\ServiceInstrumentationMiddleware(self::NAME),
             new \Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware(\Tuleap\Request\ProjectRetriever::buildSelf()),
@@ -154,6 +174,10 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
                 $r->get(
                     '/{' . ServiceController::PROJECT_NAME_VARIABLE_NAME . '}/admin',
                     $this->getRouteHandler('routeGetProjectAdmin')
+                );
+                $r->post(
+                    '/{' . ServiceController::PROJECT_NAME_VARIABLE_NAME . '}/admin',
+                    $this->getRouteHandler('routePostProjectAdmin')
                 );
                 $r->get(
                     '/{' . ServiceController::PROJECT_NAME_VARIABLE_NAME . '}[/{vue-routing:.*}]',

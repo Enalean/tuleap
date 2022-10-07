@@ -45,6 +45,7 @@ class ServiceAdministrationController extends DispatchablePSR15Compatible implem
         private IsProjectAllowedToUsePlugin $plugin,
         private \TemplateRendererFactory $renderer_factory,
         private IBuildAdminPermissionsPresenter $presenter_builder,
+        private CSRFSynchronizerTokenProvider $token_provider,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -82,11 +83,23 @@ class ServiceAdministrationController extends DispatchablePSR15Compatible implem
         $service->displayAdministrationHeader();
         $this->renderer_factory
             ->getRenderer(__DIR__ . '/../templates')
-            ->renderToPage('baselines-admin', $this->presenter_builder->getPresenter($project));
+            ->renderToPage(
+                'baselines-admin',
+                $this->presenter_builder->getPresenter(
+                    $project,
+                    self::getAdminUrl($project),
+                    $this->token_provider->getCSRF($project)
+                )
+            );
         $service->displayFooter();
 
         return $this->response_factory->createResponse()->withBody(
             $this->stream_factory->createStream((string) ob_get_clean())
         );
+    }
+
+    public static function getAdminUrl(\Project $project): string
+    {
+        return '/plugins/baseline/' . urlencode($project->getUnixNameMixedCase()) . '/admin';
     }
 }

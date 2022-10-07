@@ -71,6 +71,7 @@ seed_data() {
         hudson_git \
         fts_db \
         fts_meilisearch \
+        baseline \
         gitlab
 }
 

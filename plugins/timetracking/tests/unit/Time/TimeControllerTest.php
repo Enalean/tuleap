@@ -21,8 +21,8 @@
 namespace Tuleap\Timetracking\Time;
 
 use Codendi_Request;
-use CSRFSynchronizerToken;
 use Tracker;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -55,10 +55,7 @@ final class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Artifact\Artifact
      */
     private $artifact;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&CSRFSynchronizerToken
-     */
-    private $csrf;
+    private CSRFSynchronizerTokenStub $csrf;
 
     public function setUp(): void
     {
@@ -84,8 +81,7 @@ final class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->request->method('get')->with('time-id')->willReturn(83);
 
-        $this->csrf = $this->createMock(CSRFSynchronizerToken::class);
-        $this->csrf->method('check')->willReturn(true);
+        $this->csrf = CSRFSynchronizerTokenStub::buildSelf();
     }
 
     public function testItThrowsTimeTrackingNoTimeExceptionToDeleteTime(): void
