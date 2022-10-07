@@ -186,7 +186,7 @@ msgstr ""
 "couleur peuvent être choisis comme couleur de fond des cartes"
 
 msgid "Please select a field to group artifacts in columns."
-msgstr "Sélectionnez un champ pour grouper les artefacts en colonnes."
+msgstr "Sélectionnez un champ pour grouper les artéfacts en colonnes."
 
 msgid "Preview of the card"
 msgstr "Aperçu des cartes"

@@ -17,8 +17,8 @@ codendi.locales['tracker_artifact'] = {
     edit_followup_cancel: 'Annuler',
     disable_notifications: 'Désactiver les notifications',
     enable_notifications: 'Activer les notifications',
-    disable_notifications_alternate_text: 'Ne plus recevoir les notifications de cet artefact',
-    enable_notifications_alternate_text: 'Recevoir les notifications de cet artefact',
+    disable_notifications_alternate_text: 'Ne plus recevoir les notifications de cet artéfact',
+    enable_notifications_alternate_text: 'Recevoir les notifications de cet artéfact',
     notification_update_error: 'Une erreur est survenue lors de la modification de vos paramaètres de notification',
     please_select_at_least_one: 'Merci de choisir au moins une de ces options',
     please_fill_out: 'Merci de remplir ce champ',
@@ -28,16 +28,16 @@ codendi.locales['tracker_renderer'] = {
     order_dragdrop: 'Vous pouvez ordonner les onglets avec le glisser/déposer'
 };
 codendi.locales['tracker_artifact_link'] = {
-    nb_artifacts: 'artefact(s)',
+    nb_artifacts: 'artéfact(s)',
     or: ' ou ',
-    select: 'Sélectionner les artefacts à lier',
-    create: 'Créer un nouvel artefact',
-    advanced: 'Les fonctionnalités avancées (recherche d\'artefacts...) ne sont pas disponibles à la création d\'un artefact.',
+    select: 'Sélectionner les artéfacts à lier',
+    create: 'Créer un nouvel artéfact',
+    advanced: 'Les fonctionnalités avancées (recherche d\'artéfacts...) ne sont pas disponibles à la création d\'un artéfact.',
     trackers_label: 'Trackers',
     type_label: 'Liens par nature'
 };
 codendi.locales['tracker_hierarchy'] = {
-    no_child_artifacts: 'Cet artefact n\'as pas encore d\'enfants',
+    no_child_artifacts: 'Cet artéfact n\'as pas encore d\'enfants',
     title_column_name: 'Titre',
     status_column_name: 'Status'
 };
@@ -67,7 +67,7 @@ codendi.locales['tracker_report'] = {
 };
 codendi.locales['type_column_editor'] = {
     title                    : 'Configuration de la colonne',
-    how_to                   : 'Vous pouvez définir comment les artefacts s\'afficheront dans cette colonne en utilisant le format suivant : <code>%nom_du_champ</code>.',
+    how_to                   : 'Vous pouvez définir comment les artéfacts s\'afficheront dans cette colonne en utilisant le format suivant : <code>%nom_du_champ</code>.',
     supported_types          : 'Seuls les champs de type chaîne de caractères, id de l\'artéfact, entier, flottant, ou liste de choix peuvent être formatés.',
     something_went_wrong     : 'Une erreur est survenue. Veuillez contacter un administrateur.',
     column_format_label      : 'Format :',

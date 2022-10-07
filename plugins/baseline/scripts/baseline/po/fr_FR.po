@@ -13,25 +13,25 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 
 msgid "All artifacts are hidden"
-msgstr "Tous les artefacts sont masqués"
+msgstr "Tous les artéfacts sont masqués"
 
 msgid "Artifact added"
-msgstr "Artefact ajouté"
+msgstr "Artéfact ajouté"
 
 msgid "Artifact deleted"
-msgstr "Artefact supprimé"
+msgstr "Artéfact supprimé"
 
 msgid "Artifact modified"
-msgstr "Artefact modifié"
+msgstr "Artéfact modifié"
 
 msgid "Artifacts added"
-msgstr "Artefacts ajoutés"
+msgstr "Artéfacts ajoutés"
 
 msgid "Artifacts deleted"
-msgstr "Artefacts supprimés"
+msgstr "Artéfacts supprimés"
 
 msgid "Artifacts modified"
-msgstr "Artefacts modifiés"
+msgstr "Artéfacts modifiés"
 
 msgid "Author"
 msgstr "Auteur"
@@ -67,7 +67,7 @@ msgid "Cannot fetch baseline"
 msgstr "Impossible de charger la baseline"
 
 msgid "Cannot fetch baseline artifacts"
-msgstr "Impossible de charger les artefacts de la baseline"
+msgstr "Impossible de charger les artéfacts de la baseline"
 
 msgid "Cannot fetch milestones"
 msgstr "Impossible de charger les milestones"
@@ -137,7 +137,7 @@ msgstr "Id"
 
 msgid "Linked artifacts are skipped because depth limit has been reached."
 msgstr ""
-"Les artefacts liés sont ignorés parce que la limite de profondeur a été "
+"Les artéfacts liés sont ignorés parce que la limite de profondeur a été "
 "atteinte."
 
 msgid "Milestone"
@@ -153,10 +153,10 @@ msgid "New comparison"
 msgstr "Nouvelle comparaison"
 
 msgid "No artifact to compare"
-msgstr "Aucun artefact à comparer"
+msgstr "Aucun artéfact à comparer"
 
 msgid "No artifacts"
-msgstr "Aucun artefact disponible"
+msgstr "Aucun artéfact disponible"
 
 msgid "No baseline available"
 msgstr "Aucune baseline disponible"
@@ -168,7 +168,7 @@ msgid "No milestone available"
 msgstr "Aucune milestone disponible"
 
 msgid "No other baseline available on same artifact."
-msgstr "Aucune autre baseline disponible posée sur le même artefact."
+msgstr "Aucune autre baseline disponible posée sur le même artéfact."
 
 msgid "Only open milestone are visible here"
 msgstr "Seules les milestones ouvertes sont visibles ici"

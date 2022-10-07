@@ -43,7 +43,7 @@ msgid "Add new import endpoint"
 msgstr "Ajouter un nouveau point d'accès pour l'importation"
 
 msgid "Allows to replicate artifacts from one Tuleap instance to another"
-msgstr "Permet de recopier les artefacts d'une instance Tuleap sur une autre"
+msgstr "Permet de recopier les artéfacts d'une instance Tuleap sur une autre"
 
 msgid "Base URI's \"Source\" Project"
 msgstr "URI du Projet \"Source\""

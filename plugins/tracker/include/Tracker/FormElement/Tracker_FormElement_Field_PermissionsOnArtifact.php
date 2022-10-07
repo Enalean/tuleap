@@ -339,7 +339,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
 
     public static function getFactoryDescription()
     {
-        return dgettext('tuleap-tracker', 'Allow user to give permissions to an artefact');
+        return dgettext('tuleap-tracker', 'Allow user to give permissions to an artifact');
     }
 
     public static function getFactoryIconUseIt()
