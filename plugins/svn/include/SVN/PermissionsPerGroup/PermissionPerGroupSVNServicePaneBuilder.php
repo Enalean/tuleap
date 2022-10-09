@@ -59,7 +59,9 @@ class PermissionPerGroupSVNServicePaneBuilder
         $permissions = new PermissionPerGroupSVNGlobalAdminPermissionCollection();
         $this->addUGroupsToPermissions($event, $permissions);
 
-        $user_group = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
+        $user_group = $selected_group
+            ? $this->ugroup_manager->getUGroup($event->getProject(), $selected_group)
+            : null;
 
         return new PermissionPerGroupServicePresenter(
             $permissions->getPermissions(),

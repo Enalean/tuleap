@@ -60,7 +60,9 @@ class PermissionPerGroupDocmanServicePaneBuilder
         $this->addGroupsToPermission($event, $formatted_permissions);
 
         $selected_group = $event->getSelectedUGroupId();
-        $user_group     = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
+        $user_group     = $selected_group
+            ? $this->ugroup_manager->getUGroup($event->getProject(), $selected_group)
+            : null;
 
         $docman_admin = [];
         if (count($formatted_permissions->getPermissions()) > 0) {

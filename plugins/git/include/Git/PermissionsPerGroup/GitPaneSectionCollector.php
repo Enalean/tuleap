@@ -49,7 +49,10 @@ class GitPaneSectionCollector
         $service_section_presenter = $this->git_section_builder->buildPresenter($pane_collector);
         $project                   = $pane_collector->getProject();
 
-        $user_group = $this->ugroup_manager->getUGroup($project, $pane_collector->getSelectedUGroupId());
+        $selected_group = $pane_collector->getSelectedUGroupId();
+        $user_group     = $selected_group
+            ? $this->ugroup_manager->getUGroup($project, $selected_group)
+            : null;
 
         $pane_presenter = new GitPanePresenter(
             $service_section_presenter,

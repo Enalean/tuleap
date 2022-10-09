@@ -54,9 +54,12 @@ final class PermissionPerGroupSectionBuilder
             return;
         }
 
-        $selected_ugroup = $this->ugroup_manager->getUGroup($project, $event->getSelectedUGroupId());
+        $selected_ugroup_id = $event->getSelectedUGroupId();
+        $selected_ugroup    = $selected_ugroup_id
+            ? $this->ugroup_manager->getUGroup($project, $selected_ugroup_id)
+            : null;
+
         if ($selected_ugroup !== null) {
-            $selected_ugroup_id = $selected_ugroup->getId();
             if (! in_array($selected_ugroup_id, $ugroup_ids, true)) {
                 $formatted_ugroups = [];
             } else {
