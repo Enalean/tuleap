@@ -45,6 +45,8 @@ describe("App", () => {
                 project_icon: "🌷",
                 privacy: {},
                 project_flags: [],
+                is_admin: false,
+                admin_url: "/admin/url",
             },
         });
     });
