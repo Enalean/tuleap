@@ -31,9 +31,6 @@ use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\XML\XMLUser;
 
-/**
- * @covers XMLUserGroup
- */
 final class XMLUserGroupsTest extends TestCase
 {
     use TemporaryTestDirectory;
