@@ -32,11 +32,20 @@
                         {{ project_icon }} {{ project_public_name }}
                     </a>
                 </div>
-                <div class="breadcrumb-item">
+                <div class="breadcrumb-item" v-bind:class="{ 'breadcrumb-switchable': is_admin }">
                     <router-link v-bind:to="{ name: 'IndexPage' }" class="breadcrumb-link">
                         <i class="fa fa-tlp-baseline breadcrumb-link-icon"></i>
                         <translate>Baselines</translate>
                     </router-link>
+                    <div class="breadcrumb-switch-menu-container" v-if="is_admin">
+                        <nav class="breadcrumb-switch-menu">
+                            <span class="breadcrumb-dropdown-item">
+                                <a class="breadcrumb-dropdown-link" v-bind:href="admin_url">
+                                    <translate>Administration</translate>
+                                </a>
+                            </span>
+                        </nav>
+                    </div>
                 </div>
                 <div v-if="!is_current_page_root" class="breadcrumb-item">
                     <router-link to="" class="breadcrumb-link">
@@ -91,6 +100,14 @@ export default {
         project_flags: {
             required: true,
             type: Array,
+        },
+        is_admin: {
+            required: true,
+            type: Boolean,
+        },
+        admin_url: {
+            required: true,
+            type: String,
         },
     },
     data() {

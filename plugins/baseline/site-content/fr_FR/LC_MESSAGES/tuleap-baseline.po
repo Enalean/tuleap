@@ -11,6 +11,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
 
+msgid "Administration"
+msgstr "Administration"
+
 msgid "All user groups are already administrators"
 msgstr "Tous les groupes d'utilisateurs sont administrateurs"
 

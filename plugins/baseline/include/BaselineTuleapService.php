@@ -23,6 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+
 class BaselineTuleapService extends \Service
 {
     public function getIconName(): string
@@ -42,9 +49,34 @@ class BaselineTuleapService extends \Service
 
     public function displayAdministrationHeader(): void
     {
+        $crumb = new BreadCrumb(
+            new BreadCrumbLink(
+                dgettext('tuleap-baseline', 'Baselines'),
+                $this->getUrl()
+            )
+        );
+
+        $sub_items = new BreadCrumbSubItems();
+        $sub_items->addSection(
+            new SubItemsUnlabelledSection(
+                new BreadCrumbLinkCollection(
+                    [
+                        new BreadCrumbLink(
+                            dgettext('tuleap-baseline', 'Administration'),
+                            ServiceAdministrationController::getAdminUrl($this->project)
+                        ),
+                    ]
+                )
+            )
+        );
+        $crumb->setSubItems($sub_items);
+
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb($crumb);
+
         $this->displayHeader(
             dgettext('tuleap-baseline', 'Baselines administration'),
-            [],
+            $breadcrumbs,
             []
         );
     }

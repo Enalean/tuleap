@@ -142,6 +142,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
                     $user_proxy,
                     $project_proxy
                 ),
+                'admin_url' => ServiceAdministrationController::getAdminUrl($project),
             ]
         );
         $layout->footer(FooterConfiguration::withoutContent());
