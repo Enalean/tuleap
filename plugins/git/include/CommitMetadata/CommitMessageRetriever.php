@@ -30,7 +30,6 @@ final class CommitMessageRetriever implements RetrieveCommitMessage
 
     public function getCommitMessage(string $ref): string
     {
-        $commit_message = $this->git_exec->getCommitMessage($ref);
-        return implode("\n", $commit_message);
+        return $this->git_exec->getCommitMessage($ref);
     }
 }

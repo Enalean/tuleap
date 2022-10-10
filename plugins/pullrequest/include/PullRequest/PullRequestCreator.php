@@ -73,8 +73,9 @@ class PullRequestCreator
         );
 
         $commit_message = $executor_repository_source->getCommitMessage($sha1_src);
-        $first_line     = array_shift($commit_message);
-        $other_lines    = implode("\n", $commit_message);
+        $split_commit   = explode("\n", $commit_message, 2);
+        $first_line     = $split_commit[0];
+        $other_lines    = ltrim($split_commit[1] ?? '');
 
         $pull_request = new PullRequest(
             0,

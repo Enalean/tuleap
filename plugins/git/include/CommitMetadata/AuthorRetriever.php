@@ -35,12 +35,11 @@ final class AuthorRetriever implements RetrieveAuthor
      */
     public function getAuthor(string $sha1): UserName
     {
-        $author      = $this->git_exec->getAuthorEmail($sha1);
-        $tuleap_user = $this->user_manager->getUserByEmail($author);
+        $author_information = $this->git_exec->getAuthorInformation($sha1);
+        $tuleap_user        = $this->user_manager->getUserByEmail($author_information['email']);
 
         if (! $tuleap_user) {
-            $author = $this->git_exec->getAuthorName($sha1);
-            return UserName::fromUsername($author);
+            return UserName::fromUsername($author_information['name']);
         }
         return UserName::fromUser($tuleap_user);
     }

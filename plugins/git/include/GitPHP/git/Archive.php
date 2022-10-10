@@ -389,6 +389,7 @@ class Archive
         }
 
         $args[] = '--prefix=' . escapeshellarg($this->GetPrefix());
+        $args[] = '--';
         $args[] = escapeshellarg($this->gitObject->GetHash());
 
         $this->handle = $exe->Open(GitExe::ARCHIVE, $args);

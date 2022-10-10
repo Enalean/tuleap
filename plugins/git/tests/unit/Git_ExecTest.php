@@ -192,13 +192,12 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
             . "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n"
             . "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\n"
             . "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n"
-            . "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n";
+            . "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
         $commit_sha1 = $this->getSha1($message);
 
         $result = $this->git_exec->getCommitMessage($commit_sha1);
 
-        self::assertCount(8, $result);
-        self::assertSame($message, implode("\n", $result));
+        self::assertSame($message, $result);
     }
 
     public function testItThrowsWhenTheReferenceDoesNotExist(): void
@@ -235,7 +234,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->setLocalCommiter('test', $author);
         $commit_sha1 = $this->getSha1("add stuff");
 
-        self::assertSame($author, $this->git_exec->getAuthorEmail($commit_sha1));
+        self::assertSame($author, $this->git_exec->getAuthorInformation($commit_sha1)['email']);
     }
 
 
@@ -245,7 +244,7 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->setLocalCommiter($author, "test@example.com");
         $commit_sha1 = $this->getSha1("add stuff");
 
-        self::assertSame($author, $this->git_exec->getAuthorName($commit_sha1));
+        self::assertSame($author, $this->git_exec->getAuthorInformation($commit_sha1)['name']);
     }
 
     private function getSha1(string $commit_message): string
