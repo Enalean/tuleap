@@ -49,6 +49,14 @@ final class ProjectUGroupTestBuilder
         ]);
     }
 
+    public static function buildProjectAdmins(): \ProjectUGroup
+    {
+        return new \ProjectUgroup([
+            'ugroup_id' => \ProjectUGroup::PROJECT_ADMIN,
+            'name'      => NameTranslator::PROJECT_ADMINS,
+        ]);
+    }
+
     public function withName(string $name): self
     {
         $this->name = $name;
