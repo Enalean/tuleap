@@ -341,11 +341,12 @@ final class GitlabGroupResource
      *
      * /!\ This route is under construction.
      * <br>
-     * <p> <strong>Note:</strong> If a Gitlab project is removed on the Gitlab side, the group link and
-     * the repository integration in the Tuleap side will still exist.</p>
-     * </p>
-     * <p>To group unlink an integration you can use: DELETE /gitlab_groups/{id} route </p>
-     * <p>To remove an integration you can use: DELETE /gitlab_repositories/{id} route</p>
+     * Please note that Group link settings such as the branch prefix name will only be applied to
+     * <strong>new</strong> GitLab repository integrations. Existing integrations' settings will not change
+     * after synchronization.
+     * <p><strong>Note:</strong> If a GitLab project is removed on the GitLab side, the group link and
+     * the repository integration on the Tuleap side will not be removed.</p>
+     *
      * @url    POST {id}/synchronize
      * @access protected
      *
@@ -428,7 +429,7 @@ final class GitlabGroupResource
             new GitAdministratorChecker($this->getGitPermissionsManager()),
         );
 
-        return $synchronizer->synchronizeGroupLink(new SynchronizeGroupLinkCommand($id), $current_user)->match(
+        return $synchronizer->synchronizeGroupLink(new SynchronizeGroupLinkCommand($id, $current_user))->match(
             fn(GitlabGroupLinkSynchronizedRepresentation $representation) => $representation,
             [FaultMapper::class, 'mapToRestException']
         );

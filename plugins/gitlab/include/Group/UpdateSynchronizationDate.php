@@ -24,5 +24,5 @@ namespace Tuleap\Gitlab\Group;
 
 interface UpdateSynchronizationDate
 {
-    public function updateSynchronizationDate(GroupLink $group_link): void;
+    public function updateSynchronizationDate(GroupLink $group_link, \DateTimeImmutable $new_date): void;
 }

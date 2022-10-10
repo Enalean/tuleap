@@ -53,6 +53,7 @@ final class GroupLinkSynchronizerTest extends TestCase
     private const PROJECT_ID    = 101;
 
     private BuildGitlabProjectsStub $project_builder;
+    private UpdateSynchronizationDateStub $date_updater;
 
     protected function setUp(): void
     {
@@ -62,6 +63,7 @@ final class GroupLinkSynchronizerTest extends TestCase
                 GitlabProjectBuilder::aGitlabProject(15)->build(),
             ]
         );
+        $this->date_updater    = UpdateSynchronizationDateStub::withCallCount();
     }
 
     /**
@@ -85,7 +87,7 @@ final class GroupLinkSynchronizerTest extends TestCase
             ),
             RetrieveGroupLinksCredentialsStub::withDefaultCredentials(),
             $this->project_builder,
-            UpdateSynchronizationDateStub::build(),
+            $this->date_updater,
             IntegrateGitlabProjectStub::withOkResult(),
             new ProjectRetriever(
                 ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build())
@@ -93,10 +95,9 @@ final class GroupLinkSynchronizerTest extends TestCase
             new GitAdministratorChecker(VerifyUserIsGitAdministratorStub::withAlwaysGitAdministrator()),
         );
 
-        $group_link_command = new SynchronizeGroupLinkCommand(self::GROUP_LINK_ID);
-        $user               = UserTestBuilder::aUser()->build();
+        $group_link_command = new SynchronizeGroupLinkCommand(self::GROUP_LINK_ID, UserTestBuilder::buildWithDefaults());
 
-        return $group_link_synchronize->synchronizeGroupLink($group_link_command, $user);
+        return $group_link_synchronize->synchronizeGroupLink($group_link_command);
     }
 
     public function testItSynchronizesTheGroupLink(): void
@@ -106,6 +107,7 @@ final class GroupLinkSynchronizerTest extends TestCase
         self::assertTrue(Result::isOk($result));
         self::assertSame(self::GROUP_LINK_ID, $result->value->id);
         self::assertSame(2, $result->value->number_of_integrations);
+        self::assertSame(1, $this->date_updater->getCallCount());
     }
 
     public function testItReturnAnErrorIfTheGitlabRequestFail(): void

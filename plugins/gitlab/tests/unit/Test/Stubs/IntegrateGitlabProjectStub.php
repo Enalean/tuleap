@@ -22,10 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Test\Stubs;
 
-use Project;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
-use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\IntegrateRepositoriesInGroupLinkCommand;
 use Tuleap\Gitlab\Repository\IntegrateGitlabProject;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -39,10 +36,9 @@ final class IntegrateGitlabProjectStub implements IntegrateGitlabProject
     }
 
     /**
-     * @param GitlabProject[] $gitlab_projects
      * @return Ok<null>|Err<Fault>
      */
-    public function integrateSeveralProjects(array $gitlab_projects, Project $project, Credentials $credentials, GroupLink $gitlab_group,): Ok|Err
+    public function integrateSeveralProjects(IntegrateRepositoriesInGroupLinkCommand $command): Ok|Err
     {
         return $this->result;
     }

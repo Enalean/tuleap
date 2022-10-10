@@ -27,7 +27,7 @@ namespace Tuleap\Gitlab\Group;
  */
 final class SynchronizeGroupLinkCommand
 {
-    public function __construct(public int $group_link_id)
+    public function __construct(public int $group_link_id, public \PFUser $user)
     {
     }
 }

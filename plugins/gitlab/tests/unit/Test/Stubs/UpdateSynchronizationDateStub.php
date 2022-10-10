@@ -27,14 +27,13 @@ use Tuleap\Gitlab\Group\UpdateSynchronizationDate;
 
 final class UpdateSynchronizationDateStub implements UpdateSynchronizationDate
 {
-    private int $call_count;
+    private int $call_count = 0;
 
     private function __construct()
     {
-        $this->call_count = 0;
     }
 
-    public function updateSynchronizationDate(GroupLink $group_link): void
+    public function updateSynchronizationDate(GroupLink $group_link, \DateTimeImmutable $new_date): void
     {
         $this->call_count++;
     }
@@ -44,7 +43,7 @@ final class UpdateSynchronizationDateStub implements UpdateSynchronizationDate
         return $this->call_count;
     }
 
-    public static function build(): self
+    public static function withCallCount(): self
     {
         return new self();
     }

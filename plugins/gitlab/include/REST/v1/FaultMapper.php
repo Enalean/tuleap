@@ -28,7 +28,6 @@ use Tuleap\Gitlab\API\GitlabResponseAPIFault;
 use Tuleap\Gitlab\Core\ProjectNotFoundFault;
 use Tuleap\Gitlab\Group\GroupLinkNotFoundFault;
 use Tuleap\Gitlab\Group\InvalidBranchPrefixFault;
-use Tuleap\Gitlab\Group\Token\GroupTokenNotFoundFault;
 use Tuleap\Gitlab\Permission\UserIsNotGitAdministratorFault;
 use Tuleap\NeverThrow\Fault;
 
@@ -41,7 +40,7 @@ final class FaultMapper
     public static function mapToRestException(Fault $fault): void
     {
         $status_code = match ($fault::class) {
-            ProjectNotFoundFault::class, GroupLinkNotFoundFault::class, GroupTokenNotFoundFault::class => 404,
+            ProjectNotFoundFault::class, GroupLinkNotFoundFault::class => 404,
             UserIsNotGitAdministratorFault::class => 403,
             InvalidBranchPrefixFault::class, GitlabResponseAPIFault::class => 400,
             GitlabRequestFault::class => $fault->getStatusCode(),
