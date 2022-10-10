@@ -42,11 +42,22 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoInde
 
     public function indexItems(ItemToIndex ...$items): void
     {
-        $documents = [];
+        $documents_to_add    = [];
+        $documents_to_remove = [];
         foreach ($items as $item) {
-            $documents[] = $this->mapItemToIndexToMeilisearchDocument($item);
+            if (trim($item->content) === '') {
+                $documents_to_remove = [...$documents_to_remove, ...array_values($this->metadata_dao->searchMatchingEntries($item))];
+                continue;
+            }
+            $documents_to_add[] = $this->mapItemToIndexToMeilisearchDocument($item);
         }
-        $this->client_index->addDocuments($documents);
+        if (count($documents_to_remove) > 0) {
+            $this->client_index->deleteDocuments($documents_to_remove);
+            $this->metadata_dao->deleteIndexedItemsFromIDs($documents_to_remove);
+        }
+        if (count($documents_to_add) > 0) {
+            $this->client_index->addDocuments($documents_to_add);
+        }
     }
 
     /**
