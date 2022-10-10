@@ -149,7 +149,7 @@ services:
       - prom-data:/prometheus
 
   meilisearch:
-    image: getmeili/meilisearch:v0.28.1
+    image: getmeili/meilisearch:v0.29.0
     volumes:
       - meilisearch-data:/meili_data
     environment:
