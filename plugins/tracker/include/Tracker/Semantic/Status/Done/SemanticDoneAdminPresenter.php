@@ -34,7 +34,7 @@ final class SemanticDoneAdminPresenter
 
     public function __construct(
         public CSRFSynchronizerToken $csrf_token,
-        private Tracker $tracker,
+        Tracker $tracker,
         public array $closed_values,
         public string $form_url,
         public string $tracker_admin_semantic_url,

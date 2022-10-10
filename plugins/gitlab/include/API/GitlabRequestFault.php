@@ -29,9 +29,9 @@ use Tuleap\NeverThrow\Fault;
  */
 final class GitlabRequestFault extends Fault
 {
-    private function __construct(private string $message, private int $status_code)
+    private function __construct(string $message, private int $status_code)
     {
-        parent::__construct($this->message);
+        parent::__construct($message);
     }
 
     public static function fromGitlabRequestException(GitlabRequestException $exception): Fault
