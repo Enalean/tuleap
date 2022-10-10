@@ -31,7 +31,7 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 require_once __DIR__ . '/../../www/include/account.php';
 
-class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private const FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS = 100;
 
@@ -110,10 +110,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $ugroup;
     }
 
-    /**
-     * @return ProjectUGroup|null
-     */
-    public function getUGroup(Project $project, $ugroup_id)
+    public function getUGroup(Project $project, $ugroup_id): ?ProjectUGroup
     {
         $project_id = $project->getID();
         if ($ugroup_id <= 100) {

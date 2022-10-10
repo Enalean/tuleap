@@ -216,7 +216,8 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             $msg_key  = $field;
             $arr_args = "";
         }
-        $msg = $Language->getOverridableText('project_admin_utils', $msg_key, $arr_args);
+        $event = EventManager::instance()->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($msg_key));
+        $msg   = $event->getLabel() ?? $Language->getOverridableText('project_admin_utils', $msg_key, $arr_args);
         if (! (strpos($msg, "*** Unkown msg") === false)) {
             $msg = $field;
         }
@@ -230,10 +231,10 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             $ugroupList = explode(",", $val);
             $val        = '';
             foreach ($ugroupList as $ugroup) {
-                if ($val === '') {
+                if ($val !== '') {
                     $val .= ', ';
                 }
-                $val .= \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroup);
+                $val .= \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayName((string) $ugroup);
             }
         } elseif ($msg_key == "group_type") {
             $template = TemplateSingleton::instance();
@@ -341,7 +342,13 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     foreach ($history_entries as $sub_event_category => $sub_events) {
         $translated_sub_events = [];
         foreach ($sub_events as $sub_event) {
-            $translated_sub_events[$sub_event] = $GLOBALS['Language']->getOverridableText('project_admin_utils', $sub_event);
+            $event                             = EventManager::instance()->dispatch(
+                new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($sub_event)
+            );
+            $translated_sub_events[$sub_event] = $event->getLabel() ?? $GLOBALS['Language']->getOverridableText(
+                'project_admin_utils',
+                $sub_event
+            );
         }
         $translated_events[$sub_event_category] = $translated_sub_events;
     }
@@ -357,7 +364,13 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     if ($subEventsBox !== null) {
         foreach (array_keys($subEventsBox) as $sub_event) {
             if (is_string($sub_event)) {
-                $translated_selected_sub_events[$sub_event] = $GLOBALS['Language']->getOverridableText('project_admin_utils', $sub_event);
+                $event                                      = EventManager::instance()->dispatch(
+                    new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($sub_event)
+                );
+                $translated_selected_sub_events[$sub_event] = $event->getLabel() ?? $GLOBALS['Language']->getOverridableText(
+                    'project_admin_utils',
+                    $sub_event
+                );
             }
         }
     }

@@ -49,7 +49,7 @@ class Tracker_UgroupPermissionsGoldenRetriever
         $project = $template_tracker->getProject();
         $ugroups = [];
         foreach ($this->permissions_dao->getAuthorizedStaticUgroupIds($template_tracker->getId()) as $id) {
-            $ugroup = $this->ugroup_manager->getUGroup($project, $id);
+            $ugroup = $this->ugroup_manager->getUGroup($project, (int) $id);
             if ($ugroup) {
                 $ugroups[] = $ugroup;
             }

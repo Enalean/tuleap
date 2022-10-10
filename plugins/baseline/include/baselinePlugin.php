@@ -61,8 +61,9 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(Event::REST_RESOURCES);
-
+        $this->addHook(\Tuleap\Project\Admin\History\GetHistoryKeyLabel::NAME);
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
 
         return parent::getHooksAndCallbacks();
     }
@@ -151,8 +152,12 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
     {
         $container = ContainerBuilderFactory::create()->build();
 
+        $ugroup_manager = new UGroupManager();
+
         return new \Tuleap\Baseline\ServiceSavePermissionsController(
             $container->get(\Tuleap\Baseline\Domain\RoleAssignmentRepository::class),
+            $ugroup_manager,
+            new \Tuleap\Baseline\Adapter\Administration\ProjectHistory(new ProjectHistoryDao(), $ugroup_manager),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(\Tuleap\Http\HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
             new \Tuleap\Baseline\CSRFSynchronizerTokenProvider(),
             new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
@@ -194,5 +199,18 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
     {
         $injector = new BaselineRestResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function getHistoryKeyLabel(\Tuleap\Project\Admin\History\GetHistoryKeyLabel $event): void
+    {
+        $label = \Tuleap\Baseline\Adapter\Administration\ProjectHistory::getLabelFromKey($event->getKey());
+        if ($label) {
+            $event->setLabel($label);
+        }
+    }
+
+    public function fillProjectHistorySubEvents(array $params): void
+    {
+        \Tuleap\Baseline\Adapter\Administration\ProjectHistory::fillProjectHistorySubEvents($params);
     }
 }

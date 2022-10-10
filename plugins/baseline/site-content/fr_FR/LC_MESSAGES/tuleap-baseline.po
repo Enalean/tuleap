@@ -64,6 +64,18 @@ msgstr "Un maximum de %u artéfacts peuvent être demandés en une seule fois."
 msgid "No project found with this id"
 msgstr "Aucun projet trouvé avec cet identifiant"
 
+msgid "Permission granted for baseline administrators"
+msgstr "Permission accordée pour les administrateurs de baseline"
+
+msgid "Permission granted for baseline readers"
+msgstr "Permission accordée pour les lecteurs de baseline"
+
+msgid "Permission reset for baseline administrators"
+msgstr "Réinitialisation des permissions pour les administrateurs de baseline"
+
+msgid "Permission reset for baseline readers"
+msgstr "Réinitialisation des permissions pour les lecteurs de baseline"
+
 msgid "Permissions"
 msgstr "Permissions"
 

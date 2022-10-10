@@ -26,18 +26,23 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Baseline\Adapter\Administration\ISaveProjectHistory;
 use Tuleap\Baseline\Adapter\ProjectProxy;
 use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\Project\UGroupRetriever;
 use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\Request\ForbiddenException;
 
 class ServiceSavePermissionsController extends DispatchablePSR15Compatible
 {
     public function __construct(
         private RoleAssignmentRepository $role_assignment_repository,
+        private UGroupRetriever $ugroup_retriever,
+        private ISaveProjectHistory $project_history,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         private CSRFSynchronizerTokenProvider $token_provider,
         EmitterInterface $emitter,
@@ -54,9 +59,10 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
         $this->token_provider->getCSRF($project)->check();
 
         $project_proxy = ProjectProxy::buildFromProject($project);
-        $assigments    = $this->getAssignementsFromBody($project_proxy, $request->getParsedBody());
+        $assigments    = $this->getAssignementsFromBody($project, $request->getParsedBody());
 
         $this->role_assignment_repository->saveAssignmentsForProject($project_proxy, ...$assigments);
+        $this->project_history->saveHistory($project, ...$assigments);
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);
@@ -76,7 +82,7 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
      *
      * @return RoleAssignment[]
      */
-    private function getAssignementsFromBody(ProjectProxy $project, $body): array
+    private function getAssignementsFromBody(\Project $project, $body): array
     {
         if (! is_array($body)) {
             throw new \LogicException("Expected body to be an associative array");
@@ -92,18 +98,23 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
 
         $already_processed_ugroup_id = [];
 
+        $project_proxy = ProjectProxy::buildFromProject($project);
+
         return array_values(
             array_filter(
                 array_map(
-                    static function (string $ugroup_id, string $role) use ($project, &$already_processed_ugroup_id) {
+                    function (string $ugroup_id, string $role) use ($project, $project_proxy, &$already_processed_ugroup_id) {
                         if (isset($already_processed_ugroup_id[$ugroup_id])) {
                             return null;
                         }
 
                         $already_processed_ugroup_id[$ugroup_id] = true;
+                        if (! $this->ugroup_retriever->getUGroup($project, $ugroup_id)) {
+                            throw new ForbiddenException("Invalid user group $ugroup_id");
+                        }
 
                         return new RoleAssignment(
-                            $project,
+                            $project_proxy,
                             (int) $ugroup_id,
                             $role
                         );
