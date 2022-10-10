@@ -27,6 +27,7 @@ use PFUser;
 use Project;
 use ProjectManager;
 use Tuleap\Project\Service\ProjectDefinedService;
+use Tuleap\Project\Service\UserCanAccessToServiceEvent;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\ServerHostname;
 
@@ -126,7 +127,9 @@ class ProjectSidebarToolsBuilder
             return false;
         }
 
-        return true;
+        return $this->event_manager
+            ->dispatch(new UserCanAccessToServiceEvent($service, $user))
+            ->isAllowed();
     }
 
     private function getLink(\Service $service, Project $project): string

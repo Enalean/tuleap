@@ -32,6 +32,7 @@ use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\Project\Service\UserCanAccessToServiceEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -60,6 +61,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
 
     public function getHooksAndCallbacks(): Collection
     {
+        $this->addHook(UserCanAccessToServiceEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(\Tuleap\Project\Admin\History\GetHistoryKeyLabel::NAME);
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
@@ -75,6 +77,26 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         }
 
         return $this->pluginInfo;
+    }
+
+    public function userCanAccessToService(UserCanAccessToServiceEvent $event): void
+    {
+        if ($event->getService()->getShortName() !== self::SERVICE_SHORTNAME) {
+            return;
+        }
+
+        $authorizations = ContainerBuilderFactory::create()->build()->get(Authorizations::class);
+        assert($authorizations instanceof Authorizations);
+
+        $user    = \Tuleap\Baseline\Adapter\UserProxy::fromUser($event->getUser());
+        $project = \Tuleap\Baseline\Adapter\ProjectProxy::buildFromProject($event->getService()->getProject());
+
+        $can_read_baselines_on_project   = $authorizations->canReadBaselinesOnProject($user, $project);
+        $can_read_comparisons_on_project = $authorizations->canReadComparisonsOnProject($user, $project);
+
+        if (! $can_read_baselines_on_project && ! $can_read_comparisons_on_project) {
+            $event->forbidAccessToService();
+        }
     }
 
     /**
