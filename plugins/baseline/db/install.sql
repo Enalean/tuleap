@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS plugin_baseline_baseline
 	name varchar(255) not null,
 	artifact_id int not null,
 	user_id int not null,
-	snapshot_date int not null
+	snapshot_date int not null,
+	INDEX idx_artifact(artifact_id)
 );
 
 -- Comparison entity
@@ -30,7 +31,9 @@ CREATE TABLE IF NOT EXISTS plugin_baseline_comparison
 	base_baseline_id int not null,
 	compared_to_baseline_id int not null,
 	user_id int not null,
-	creation_date int not null
+	creation_date int not null,
+	INDEX idx_base(base_baseline_id),
+	INDEX idx_compare(compared_to_baseline_id)
 );
 
 -- Role Assignment entity
@@ -39,6 +42,7 @@ CREATE TABLE IF NOT EXISTS plugin_baseline_role_assignment
 	id int auto_increment primary key,
 	user_group_id int not null,
 	role varchar(255) not null,
-	project_id int not null
+	project_id int not null,
+    INDEX idx_project(project_id, role(11))
 );
 
