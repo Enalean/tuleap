@@ -105,13 +105,6 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
      */
     public function widgetInstance(GetWidget $get_widget_event)
     {
-        $project = HTTPRequest::instance()->getProject();
-
-        $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
-        if (! $agiledashboard_plugin || ! $agiledashboard_plugin->isAllowed($project->getID())) {
-            return;
-        }
-
         $project_milestones_widget_retriever = new ProjectMilestonesWidgetRetriever(
             new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance()),
             ProjectManager::instance(),
@@ -121,6 +114,13 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         );
 
         if ($get_widget_event->getName() === DashboardProjectMilestones::NAME) {
+            $project = HTTPRequest::instance()->getProject();
+
+            $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
+            if (! $agiledashboard_plugin || ! $agiledashboard_plugin->isAllowed($project->getID())) {
+                return;
+            }
+
             $get_widget_event->setWidget(new DashboardProjectMilestones(
                 $project_milestones_widget_retriever,
                 new ProjectMilestonesDao(),
