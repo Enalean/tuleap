@@ -32,8 +32,8 @@ use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Builder\RepositoryIntegrationBuilder;
 use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
 use Tuleap\Gitlab\Test\Stubs\LinkARepositoryIntegrationToAGroupStub;
+use Tuleap\Gitlab\Test\Stubs\RetrieveIntegrationDaoStub;
 use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
-use Tuleap\Gitlab\Test\Stubs\VerifyGitlabRepositoryIsIntegratedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyRepositoryIntegrationsAlreadyLinkedStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -48,16 +48,15 @@ final class GitlabProjectIntegratorTest extends TestCase
 
     private Project $project;
 
-    private VerifyGitlabRepositoryIsIntegratedStub $is_gitlab_repository_integrated;
     private CreateGitlabRepositoriesStub $gitlab_repository_creator;
     private VerifyRepositoryIntegrationsAlreadyLinkedStub $is_repository_integration_already_linked;
     private SaveIntegrationBranchPrefixStub $branch_prefix_saver;
     private LinkARepositoryIntegrationToAGroupStub $repository_integration_group_link;
+    private RetrieveIntegrationDaoStub $integration_retriever_dao;
+
 
     protected function setUp(): void
     {
-        $this->is_gitlab_repository_integrated = VerifyGitlabRepositoryIsIntegratedStub::withNeverIntegrated();
-
         $this->project      = ProjectTestBuilder::aProject()
             ->withId(self::PROJECT_ID)
             ->withPublicName('exegetist')
@@ -78,6 +77,8 @@ final class GitlabProjectIntegratorTest extends TestCase
             $first_integration,
             $second_integration
         );
+
+        $this->integration_retriever_dao = RetrieveIntegrationDaoStub::fromNullRow();
     }
 
     /**
@@ -86,11 +87,13 @@ final class GitlabProjectIntegratorTest extends TestCase
     private function integrateGitlabProject(): Ok|Err
     {
         $gitlab_project_integrator = new GitlabProjectIntegrator(
-            $this->is_gitlab_repository_integrated,
             $this->gitlab_repository_creator,
             $this->branch_prefix_saver,
             $this->repository_integration_group_link,
-            $this->is_repository_integration_already_linked
+            $this->is_repository_integration_already_linked,
+            new RepositoryIntegrationRetriever(
+                $this->integration_retriever_dao
+            )
         );
 
         $command = new IntegrateRepositoriesInGroupLinkCommand(
@@ -107,8 +110,8 @@ final class GitlabProjectIntegratorTest extends TestCase
 
     public function testItReturnsOkIfTheGitlabProjectIsAlreadyGroupLinkedAndIntegrated(): void
     {
-        $this->is_gitlab_repository_integrated          = VerifyGitlabRepositoryIsIntegratedStub::withAlwaysIntegrated();
         $this->is_repository_integration_already_linked = VerifyRepositoryIntegrationsAlreadyLinkedStub::withAlreadyLinked();
+        $this->integration_retriever_dao                = RetrieveIntegrationDaoStub::fromDefaultRow();
 
         $result = $this->integrateGitlabProject();
 
@@ -150,8 +153,8 @@ final class GitlabProjectIntegratorTest extends TestCase
 
     public function testLinksAnAlreadyExistingIntegratedRepository(): void
     {
-        $this->is_gitlab_repository_integrated          = VerifyGitlabRepositoryIsIntegratedStub::withAlwaysIntegrated();
         $this->is_repository_integration_already_linked = VerifyRepositoryIntegrationsAlreadyLinkedStub::withNeverLinked();
+        $this->integration_retriever_dao                = RetrieveIntegrationDaoStub::fromDefaultRow();
 
         $result = $this->integrateGitlabProject();
 
