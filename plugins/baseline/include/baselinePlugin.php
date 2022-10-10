@@ -21,11 +21,20 @@
 
 declare(strict_types=1);
 
+use Tuleap\Baseline\Adapter\Administration\PermissionPerGroupBaselineServicePaneBuilder;
+use Tuleap\Baseline\Adapter\Administration\ProjectHistory;
 use Tuleap\Baseline\Adapter\Routing\RejectNonBaselineAdministratorMiddleware;
+use Tuleap\Baseline\BaselineTuleapService;
 use Tuleap\Baseline\Domain\Authorizations;
+use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
+use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -63,9 +72,11 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
     {
         $this->addHook(UserCanAccessToServiceEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(\Tuleap\Project\Admin\History\GetHistoryKeyLabel::NAME);
+        $this->addHook(GetHistoryKeyLabel::NAME);
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
         $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
+        $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -100,17 +111,19 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
     }
 
     /**
-     * @see Event::SERVICE_CLASSNAMES
      * @param array{classnames: array<string, class-string>, project: \Project} $params
+     *
+     * @see Event::SERVICE_CLASSNAMES
      */
     public function serviceClassnames(array &$params): void
     {
-        $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Baseline\BaselineTuleapService::class;
+        $params['classnames'][self::SERVICE_SHORTNAME] = BaselineTuleapService::class;
     }
 
     /**
-     * @see Event::SERVICE_IS_USED
      * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     *
+     * @see Event::SERVICE_IS_USED
      */
     public function serviceIsUsed(array $params): void
     {
@@ -156,7 +169,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
             TemplateRendererFactory::build(),
             new \Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenterBuilder(
                 new User_ForgeUserGroupFactory(new UserGroupDao()),
-                $container->get(\Tuleap\Baseline\Domain\RoleAssignmentRepository::class),
+                $container->get(RoleAssignmentRepository::class),
             ),
             new \Tuleap\Baseline\CSRFSynchronizerTokenProvider(),
             new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
@@ -177,10 +190,13 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         $ugroup_manager = new UGroupManager();
 
         return new \Tuleap\Baseline\ServiceSavePermissionsController(
-            $container->get(\Tuleap\Baseline\Domain\RoleAssignmentRepository::class),
+            $container->get(RoleAssignmentRepository::class),
             $ugroup_manager,
-            new \Tuleap\Baseline\Adapter\Administration\ProjectHistory(new ProjectHistoryDao(), $ugroup_manager),
-            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(\Tuleap\Http\HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
+            new ProjectHistory(new ProjectHistoryDao(), $ugroup_manager),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
             new \Tuleap\Baseline\CSRFSynchronizerTokenProvider(),
             new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
             new \Tuleap\Http\Server\ServiceInstrumentationMiddleware(self::NAME),
@@ -223,9 +239,9 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         $injector->populate($params['restler']);
     }
 
-    public function getHistoryKeyLabel(\Tuleap\Project\Admin\History\GetHistoryKeyLabel $event): void
+    public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
     {
-        $label = \Tuleap\Baseline\Adapter\Administration\ProjectHistory::getLabelFromKey($event->getKey());
+        $label = ProjectHistory::getLabelFromKey($event->getKey());
         if ($label) {
             $event->setLabel($label);
         }
@@ -233,6 +249,60 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
 
     public function fillProjectHistorySubEvents(array $params): void
     {
-        \Tuleap\Baseline\Adapter\Administration\ProjectHistory::fillProjectHistorySubEvents($params);
+        ProjectHistory::fillProjectHistorySubEvents($params);
+    }
+
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void
+    {
+        $project = $event->getProject();
+        $service = $project->getService(self::SERVICE_SHORTNAME);
+        if (! $service instanceof BaselineTuleapService) {
+            return;
+        }
+
+        if (! $this->isAllowed($project->getID())) {
+            return;
+        }
+
+        $ugroup_manager = new UGroupManager();
+        $container      = ContainerBuilderFactory::create()->build();
+
+        $service_pane_builder = new PermissionPerGroupBaselineServicePaneBuilder(
+            new PermissionPerGroupUGroupFormatter($ugroup_manager),
+            $container->get(RoleAssignmentRepository::class),
+            $ugroup_manager,
+        );
+
+        $template_factory      = TemplateRendererFactory::build();
+        $admin_permission_pane = $template_factory
+            ->getRenderer(__DIR__ . '/../templates')
+            ->renderToString(
+                'project-admin-permission-per-group',
+                $service_pane_builder->buildPresenter($event)
+            );
+
+        $rank_in_project = $service->getRank();
+        $event->addPane($admin_permission_pane, $rank_in_project);
+    }
+
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(
+        NavigationDropdownQuickLinksCollector $quick_links_collector,
+    ): void {
+        $project = $quick_links_collector->getProject();
+        $service = $project->getService(self::SERVICE_SHORTNAME);
+        if (! $service instanceof BaselineTuleapService) {
+            return;
+        }
+
+        if (! $this->isAllowed($project->getID())) {
+            return;
+        }
+
+        $quick_links_collector->addQuickLink(
+            new NavigationDropdownItemPresenter(
+                dgettext('tuleap-baseline', 'Baseline'),
+                \Tuleap\Baseline\ServiceAdministrationController::getAdminUrl($project),
+            )
+        );
     }
 }
