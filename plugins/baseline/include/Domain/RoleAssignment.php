@@ -34,9 +34,14 @@ class RoleAssignment
     /** @var int */
     private $user_group_id;
 
-    /** @var string */
+    /**
+     * @psalm-var Role::*
+     */
     private $role;
 
+    /**
+     * @psalm-param Role::* $role
+     */
     public function __construct(ProjectIdentifier $project, int $user_group_id, string $role)
     {
         $this->project       = $project;
