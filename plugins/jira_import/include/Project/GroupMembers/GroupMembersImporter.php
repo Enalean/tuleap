@@ -49,16 +49,18 @@ final class GroupMembersImporter
             $this->logger->warning('No roles found');
             return null;
         }
-        $groups = [];
+        $groups               = [];
+        $project_member_users = [];
         foreach ($payload as $group_name => $url) {
-            if ($group_name !== self::ADMINISTRATOR_ROLE) {
-                continue;
+            if ($group_name === self::ADMINISTRATOR_ROLE) {
+                $project_admin_users  = $this->getUsers($url);
+                $groups[]             = new XMLUserGroup(\ProjectUGroup::PROJECT_ADMIN_NAME, $project_admin_users);
+                $project_member_users = array_merge($project_member_users, $project_admin_users);
+            } else {
+                $project_member_users = array_merge($project_member_users, $this->getUsers($url));
             }
-
-            $groups[] = new XMLUserGroup(\ProjectUGroup::PROJECT_ADMIN_NAME, $this->getUsers($url));
-
-            break;
         }
+        $groups[] = new XMLUserGroup(\ProjectUGroup::PROJECT_MEMBERS_NAME, $project_member_users);
         return new XMLUserGroups($groups);
     }
 
