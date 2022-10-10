@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use DateTimeImmutable;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
@@ -32,16 +31,17 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class GitlabGroupDAOTest extends TestCase
 {
-    private const GITLAB_GROUP_ID      = 99;
-    private const NAME                 = 'lamany';
-    private const FULL_PATH            = 'sheikly/lamany';
-    private const WEB_URL              = 'https://gitlab.example.com/' . self::FULL_PATH;
-    private const AVATAR_URL           = 'https://gitlab.example.com/uploads/-/system/group/avatar/99/avatar.png';
-    private const PROJECT_ID           = 113;
-    private const BRANCH_PREFIX        = 'dev-';
-    private const FIRST_REPOSITORY_ID  = 117;
-    private const SECOND_REPOSITORY_ID = 267;
-    private const ENCRYPTED_TOKEN      = 'OxFA97D2DFD016C0E9E42E';
+    private const GITLAB_GROUP_ID                = 99;
+    private const NAME                           = 'lamany';
+    private const FULL_PATH                      = 'sheikly/lamany';
+    private const WEB_URL                        = 'https://gitlab.example.com/' . self::FULL_PATH;
+    private const AVATAR_URL                     = 'https://gitlab.example.com/uploads/-/system/group/avatar/99/avatar.png';
+    private const PROJECT_ID                     = 113;
+    private const LAST_SYNCHRONIZATION_TIMESTAMP = 1685019983;
+    private const BRANCH_PREFIX                  = 'dev-';
+    private const FIRST_REPOSITORY_ID            = 117;
+    private const SECOND_REPOSITORY_ID           = 267;
+    private const ENCRYPTED_TOKEN                = 'OxFA97D2DFD016C0E9E42E';
 
     private GitlabGroupDAO $group_dao;
     private GroupRepositoryIntegrationDAO $integrations_dao;
@@ -89,7 +89,7 @@ final class GitlabGroupDAOTest extends TestCase
                 'avatar_url' => self::AVATAR_URL,
             ]),
             $this->project,
-            new DateTimeImmutable(),
+            new \DateTimeImmutable('@' . self::LAST_SYNCHRONIZATION_TIMESTAMP),
             false,
             ''
         );
@@ -104,7 +104,8 @@ final class GitlabGroupDAOTest extends TestCase
         self::assertSame(self::GITLAB_GROUP_ID, $retrieved_group_link->gitlab_group_id);
         self::assertSame(self::PROJECT_ID, $retrieved_group_link->project_id);
         self::assertSame(self::NAME, $retrieved_group_link->name);
-        self::assertNotNull(
+        self::assertSame(
+            self::LAST_SYNCHRONIZATION_TIMESTAMP,
             $retrieved_group_link->last_synchronization_date->getTimestamp()
         );
         self::assertSame(self::FULL_PATH, $retrieved_group_link->full_path);
@@ -161,8 +162,9 @@ final class GitlabGroupDAOTest extends TestCase
 
     private function updateSynchronizationDate(GroupLink $group_link): void
     {
-        $this->group_dao->updateSynchronizationDate($group_link);
+        $new_last_sync_date = 1685106363;
+        $this->group_dao->updateSynchronizationDate($group_link, new \DateTimeImmutable('@' . $new_last_sync_date));
         $updated_group_link = $this->group_dao->retrieveGroupLink($group_link->id);
-        self::assertGreaterThanOrEqual($updated_group_link->last_synchronization_date->getTimestamp(), $group_link->last_synchronization_date->getTimestamp());
+        self::assertSame($new_last_sync_date, $updated_group_link->last_synchronization_date->getTimestamp());
     }
 }

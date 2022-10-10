@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use PFUser;
 use Project;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Gitlab\API\BuildGitlabProjects;
@@ -57,12 +56,12 @@ final class GroupLinkSynchronizer
     /**
      * @return Ok<GitlabGroupLinkSynchronizedRepresentation>|Err<Fault>
      */
-    public function synchronizeGroupLink(SynchronizeGroupLinkCommand $group_link_command, PFUser $user): Ok|Err
+    public function synchronizeGroupLink(SynchronizeGroupLinkCommand $group_link_command): Ok|Err
     {
         return $this->db_transaction_executor->execute(
             fn() => $this->group_link_retriever->retrieveGroupLink($group_link_command->group_link_id)
                 ->andThen(fn(GroupLink $group_link) => $this->project_retriever->retrieveProject($group_link->project_id)
-                    ->andThen(fn(Project $project) => $this->administrator_checker->checkUserIsGitAdministrator($project, $user)
+                    ->andThen(fn(Project $project) => $this->administrator_checker->checkUserIsGitAdministrator($project, $group_link_command->user)
                         ->map(static fn() => $project))
                     ->andThen(function (Project $project) use ($group_link) {
                             try {
@@ -89,13 +88,8 @@ final class GroupLinkSynchronizer
      */
     private function integrateProjects(IntegrateRepositoriesInGroupLinkCommand $command): Ok|Err
     {
-        return $this->repository_integrator->integrateSeveralProjects(
-            $command->gitlab_projects,
-            $command->project,
-            $command->credentials,
-            $command->group_link
-        )->map(function () use ($command) {
-            $this->update_synchronization_date->updateSynchronizationDate($command->group_link);
+        return $this->repository_integrator->integrateSeveralProjects($command)->map(function () use ($command) {
+            $this->update_synchronization_date->updateSynchronizationDate($command->group_link, new \DateTimeImmutable());
             return new GitlabGroupLinkSynchronizedRepresentation(
                 $command->group_link->id,
                 count($command->gitlab_projects)

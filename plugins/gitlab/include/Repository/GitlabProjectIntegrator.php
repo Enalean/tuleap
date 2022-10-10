@@ -31,6 +31,7 @@ use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\API\GitlabResponseAPIFault;
 use Tuleap\Gitlab\Artifact\Action\SaveIntegrationBranchPrefix;
 use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\IntegrateRepositoriesInGroupLinkCommand;
 use Tuleap\Gitlab\Group\LinkARepositoryIntegrationToAGroup;
 use Tuleap\Gitlab\Group\NewRepositoryIntegrationLinkedToAGroup;
 use Tuleap\Gitlab\Group\VerifyRepositoryIntegrationsAlreadyLinked;
@@ -51,17 +52,12 @@ final class GitlabProjectIntegrator implements IntegrateGitlabProject
     }
 
     /**
-     * @param GitlabProject[] $gitlab_projects
      * @return Ok<null>|Err<Fault>
      */
-    public function integrateSeveralProjects(
-        array $gitlab_projects,
-        Project $project,
-        Credentials $credentials,
-        GroupLink $gitlab_group,
-    ): Ok|Err {
-        foreach ($gitlab_projects as $gitlab_project) {
-            $result = $this->integrateOneProject($gitlab_project, $project, $credentials, $gitlab_group);
+    public function integrateSeveralProjects(IntegrateRepositoriesInGroupLinkCommand $command): Ok|Err
+    {
+        foreach ($command->gitlab_projects as $gitlab_project) {
+            $result = $this->integrateOneProject($gitlab_project, $command->project, $command->credentials, $command->group_link);
             if (Result::isErr($result)) {
                 return Result::err($result->error);
             }

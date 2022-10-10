@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Repository;
 use Project;
 use Tuleap\Gitlab\API\GitlabRequestFault;
 use Tuleap\Gitlab\API\GitlabResponseAPIFault;
-use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\IntegrateRepositoriesInGroupLinkCommand;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Gitlab\Test\Builder\GitlabProjectBuilder;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
@@ -53,20 +53,21 @@ final class GitlabProjectIntegratorTest extends TestCase
     private VerifyRepositoryIntegrationsAlreadyLinkedStub $is_repository_integration_already_linked;
     private SaveIntegrationBranchPrefixStub $branch_prefix_saver;
     private LinkARepositoryIntegrationToAGroupStub $repository_integration_group_link;
-    private GroupLink $group_link;
-
 
     protected function setUp(): void
     {
         $this->is_gitlab_repository_integrated = VerifyGitlabRepositoryIsIntegratedStub::withNeverIntegrated();
 
-        $this->project      = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->withPublicName('exegetist')->build();
+        $this->project      = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->withPublicName('exegetist')
+            ->build();
         $first_integration  = RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(91)
-                                                          ->inProject($this->project)
-                                                          ->build();
+            ->inProject($this->project)
+            ->build();
         $second_integration = RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(92)
-                                                          ->inProject($this->project)
-                                                          ->build();
+            ->inProject($this->project)
+            ->build();
 
         $this->is_repository_integration_already_linked = VerifyRepositoryIntegrationsAlreadyLinkedStub::withNeverLinked();
 
@@ -77,8 +78,6 @@ final class GitlabProjectIntegratorTest extends TestCase
             $first_integration,
             $second_integration
         );
-
-        $this->group_link = GroupLinkBuilder::aGroupLink(3)->build();
     }
 
     /**
@@ -94,12 +93,16 @@ final class GitlabProjectIntegratorTest extends TestCase
             $this->is_repository_integration_already_linked
         );
 
-        $gitlab_project_1 = GitlabProjectBuilder::aGitlabProject(10)->build();
-        $gitlab_project_2 = GitlabProjectBuilder::aGitlabProject(11)->build();
-        $credentials      = CredentialsTestBuilder::get()->build();
-
-
-        return $gitlab_project_integrator->integrateSeveralProjects([$gitlab_project_1, $gitlab_project_2], $this->project, $credentials, $this->group_link);
+        $command = new IntegrateRepositoriesInGroupLinkCommand(
+            GroupLinkBuilder::aGroupLink(3)->build(),
+            $this->project,
+            CredentialsTestBuilder::get()->build(),
+            [
+                GitlabProjectBuilder::aGitlabProject(10)->build(),
+                GitlabProjectBuilder::aGitlabProject(11)->build(),
+            ]
+        );
+        return $gitlab_project_integrator->integrateSeveralProjects($command);
     }
 
     public function testItReturnsOkIfTheGitlabProjectIsAlreadyGroupLinkedAndIntegrated(): void

@@ -30,7 +30,6 @@ use Tuleap\Gitlab\API\GitlabResponseAPIFault;
 use Tuleap\Gitlab\Core\ProjectNotFoundFault;
 use Tuleap\Gitlab\Group\GroupLinkNotFoundFault;
 use Tuleap\Gitlab\Group\InvalidBranchPrefixFault;
-use Tuleap\Gitlab\Group\Token\GroupTokenNotFoundFault;
 use Tuleap\Gitlab\Permission\UserIsNotGitAdministratorFault;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -41,7 +40,6 @@ final class FaultMapperTest extends TestCase
     {
         yield 'Project not found' => [ProjectNotFoundFault::fromProjectId(135), 404];
         yield 'GitLab Group link not found' => [GroupLinkNotFoundFault::fromId(86), 404];
-        yield 'GitLab Group token not found' => [GroupTokenNotFoundFault::build(86), 404];
         yield 'User is not git administrator' => [UserIsNotGitAdministratorFault::build(), 403];
         yield 'Invalid branch prefix' => [InvalidBranchPrefixFault::fromBranchPrefix('dev:'), 400];
         yield 'Invalid Gitlab response' => [GitlabResponseAPIFault::fromGitlabResponseAPIException(new GitlabResponseAPIException("Bad request")), 400];

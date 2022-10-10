@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use DateTimeImmutable;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
@@ -115,11 +114,11 @@ final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, Veri
         );
     }
 
-    public function updateSynchronizationDate(GroupLink $group_link): void
+    public function updateSynchronizationDate(GroupLink $group_link, \DateTimeImmutable $new_date): void
     {
         $this->getDB()->update(
             'plugin_gitlab_group',
-            ['last_synchronization_date' => (new DateTimeImmutable())->getTimestamp()],
+            ['last_synchronization_date' => $new_date->getTimestamp()],
             ['id' => $group_link->id]
         );
     }

@@ -22,10 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository;
 
-use Project;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
-use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\IntegrateRepositoriesInGroupLinkCommand;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -33,13 +30,7 @@ use Tuleap\NeverThrow\Ok;
 interface IntegrateGitlabProject
 {
     /**
-     * @param GitlabProject[] $gitlab_projects
      * @return Ok<null>|Err<Fault>
      */
-    public function integrateSeveralProjects(
-        array $gitlab_projects,
-        Project $project,
-        Credentials $credentials,
-        GroupLink $gitlab_group,
-    ): Ok|Err;
+    public function integrateSeveralProjects(IntegrateRepositoriesInGroupLinkCommand $command): Ok|Err;
 }
