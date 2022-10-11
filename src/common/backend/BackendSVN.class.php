@@ -39,6 +39,7 @@ class BackendSVN extends Backend
      * @var SvnCoreUsage
      */
     private $svn_core_usage;
+    private ?\Tuleap\Project\CachedProjectAccessChecker $project_access_checker = null;
 
     /**
      * For mocking (unit tests)
@@ -637,12 +638,17 @@ class BackendSVN extends Backend
         return $conf;
     }
 
-    protected function getProjectAccessChecker()
+    protected function getProjectAccessChecker(): \Tuleap\Project\CheckProjectAccess
     {
-        return new \Tuleap\Project\ProjectAccessChecker(
-            new \Tuleap\Project\RestrictedUserCanAccessProjectVerifier(),
-            EventManager::instance()
-        );
+        if ($this->project_access_checker === null) {
+            $this->project_access_checker = new \Tuleap\Project\CachedProjectAccessChecker(
+                new \Tuleap\Project\ProjectAccessChecker(
+                    new \Tuleap\Project\RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                )
+            );
+        }
+        return $this->project_access_checker;
     }
 
     /**
