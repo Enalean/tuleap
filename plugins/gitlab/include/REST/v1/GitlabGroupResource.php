@@ -68,6 +68,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
+use Tuleap\Gitlab\Repository\RepositoryIntegrationRetriever;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -182,12 +183,14 @@ final class GitlabGroupResource
                     new GitlabGroupInformationRetriever($gitlab_api_client),
                     new GitlabRepositoryGroupLinkHandler(
                         $transaction_executor,
-                        $integration_dao,
                         $gitlab_repository_creator,
                         new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
                         new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
                         new GroupRepositoryIntegrationDAO(),
-                        new CreateBranchPrefixDao()
+                        new CreateBranchPrefixDao(),
+                        new RepositoryIntegrationRetriever(
+                            $integration_dao
+                        )
                     )
                 );
 
@@ -408,11 +411,13 @@ final class GitlabGroupResource
         );
 
         $gitlab_project_integrator = new GitlabProjectIntegrator(
-            $integration_dao,
             $gitlab_repository_creator,
             $create_branch_prefix_dao,
             $group_link_repository_integration,
-            $group_link_repository_integration
+            $group_link_repository_integration,
+            new RepositoryIntegrationRetriever(
+                $integration_dao
+            )
         );
 
         $synchronizer = new GroupLinkSynchronizer(

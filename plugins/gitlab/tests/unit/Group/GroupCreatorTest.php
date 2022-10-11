@@ -26,6 +26,7 @@ use Luracast\Restler\RestException;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
+use Tuleap\Gitlab\Repository\RepositoryIntegrationRetriever;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
@@ -37,8 +38,8 @@ use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
 use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
 use Tuleap\Gitlab\Test\Stubs\LinkARepositoryIntegrationToAGroupStub;
 use Tuleap\Gitlab\Test\Stubs\RetrieveGitlabGroupInformationStub;
+use Tuleap\Gitlab\Test\Stubs\RetrieveIntegrationDaoStub;
 use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
-use Tuleap\Gitlab\Test\Stubs\VerifyGitlabRepositoryIsIntegratedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -88,7 +89,6 @@ final class GroupCreatorTest extends TestCase
             RetrieveGitlabGroupInformationStub::buildDefault(),
             new GitlabRepositoryGroupLinkHandler(
                 new DBTransactionExecutorPassthrough(),
-                VerifyGitlabRepositoryIsIntegratedStub::withNeverIntegrated(),
                 CreateGitlabRepositoriesStub::withSuccessiveIntegrations(
                     $first_integration,
                     $second_integration,
@@ -101,7 +101,10 @@ final class GroupCreatorTest extends TestCase
                 ),
                 InsertGroupTokenStub::build(),
                 LinkARepositoryIntegrationToAGroupStub::withCallCount(),
-                SaveIntegrationBranchPrefixStub::withCallCount()
+                SaveIntegrationBranchPrefixStub::withCallCount(),
+                new RepositoryIntegrationRetriever(
+                    RetrieveIntegrationDaoStub::fromDefaultRow(),
+                )
             )
         );
 

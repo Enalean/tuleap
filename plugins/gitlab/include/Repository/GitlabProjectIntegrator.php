@@ -43,11 +43,11 @@ use Tuleap\NeverThrow\Result;
 final class GitlabProjectIntegrator implements IntegrateGitlabProject
 {
     public function __construct(
-        private VerifyGitlabRepositoryIsIntegrated $verify_gitlab_repository_is_integrated,
         private CreateGitlabRepositories $gitlab_repository_creator,
         private SaveIntegrationBranchPrefix $branch_prefix_saver,
         private LinkARepositoryIntegrationToAGroup $link_integration_to_group,
         private VerifyRepositoryIntegrationsAlreadyLinked $verify_repository_integrations_already_linked,
+        private RepositoryIntegrationRetriever $repository_integration_retriever,
     ) {
     }
 
@@ -74,26 +74,16 @@ final class GitlabProjectIntegrator implements IntegrateGitlabProject
         Credentials $credentials,
         GroupLink $gitlab_group,
     ): Ok|Err {
-        $gitlab_repository_id = $gitlab_project->getId();
+        $integration_result = $this->repository_integration_retriever->getOneIntegration($project, $gitlab_project);
 
-        $already_existing_gitlab_repository = $this->verify_gitlab_repository_is_integrated->isTheGitlabRepositoryAlreadyIntegratedInProject(
-            (int) $project->getID(),
-            $gitlab_repository_id,
-            $gitlab_project->getWebUrl()
-        );
-
-        $is_integration_already_linked_to_a_group = $this->verify_repository_integrations_already_linked->isRepositoryIntegrationAlreadyLinkedToAGroup($gitlab_repository_id);
-
-        if ($already_existing_gitlab_repository && $is_integration_already_linked_to_a_group) {
-            return Result::ok(null);
-        }
-
-        if (! $already_existing_gitlab_repository) {
+        if (Result::isOk($integration_result)) {
+            $integration = $integration_result->value;
+        } else {
             $configuration = $gitlab_group->allow_artifact_closure
                 ? GitlabRepositoryCreatorConfiguration::buildConfigurationAllowingArtifactClosure()
                 : GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration();
             try {
-                $new_integration = $this->gitlab_repository_creator->createGitlabRepositoryIntegration(
+                $integration = $this->gitlab_repository_creator->createGitlabRepositoryIntegration(
                     $credentials,
                     $gitlab_project,
                     $project,
@@ -106,16 +96,18 @@ final class GitlabProjectIntegrator implements IntegrateGitlabProject
             }
             if ($gitlab_group->prefix_branch_name !== "") {
                 $this->branch_prefix_saver->setCreateBranchPrefixForIntegration(
-                    $new_integration->getId(),
+                    $integration->getId(),
                     $gitlab_group->prefix_branch_name
                 );
             }
         }
 
+        $is_integration_already_linked_to_a_group = $this->verify_repository_integrations_already_linked->isRepositoryIntegrationAlreadyLinkedToAGroup($integration->getId());
+
         if (! $is_integration_already_linked_to_a_group) {
             $this->link_integration_to_group->linkARepositoryIntegrationToAGroup(
                 new NewRepositoryIntegrationLinkedToAGroup(
-                    $gitlab_repository_id,
+                    $integration->getId(),
                     $gitlab_group->id
                 )
             );
