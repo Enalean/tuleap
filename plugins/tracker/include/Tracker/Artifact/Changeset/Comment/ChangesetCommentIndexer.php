@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_Artifact_Changeset_Comment;
+use Tracker_Artifact_Changeset_CommentDao;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -35,22 +36,23 @@ class ChangesetCommentIndexer
         private ItemToIndexQueue $index_queue,
         private EventDispatcherInterface $event_dispatcher,
         private \Codendi_HTMLPurifier $purifier,
+        private Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
     ) {
     }
 
     public function indexChangesetCommentFromChangeset(\Tracker_Artifact_Changeset $changeset): void
     {
-        $comment = $changeset->getComment();
+        $row = $this->changeset_comment_dao->searchLastVersion($changeset->getId())->getRow();
 
-        if ($comment === null) {
+        if (! $row) {
             return;
         }
 
         $this->indexComment(
             $changeset->getArtifact(),
             $changeset->getId(),
-            $comment->body,
-            CommentFormatIdentifier::fromFormatString($comment->bodyFormat)
+            $row['body'],
+            CommentFormatIdentifier::fromFormatString($row['body_format'])
         );
     }
 

@@ -58,14 +58,12 @@ final class ChangesetCommentIndexerTest extends TestCase
                 return $item_to_index;
             }
         );
-        $changeset_comment_indexer = self::buildChangesetCommentIndexer($event_dispatcher);
+        $changeset_comment_dao     = $this->createStub(\Tracker_Artifact_Changeset_CommentDao::class);
+        $changeset_comment_indexer = self::buildChangesetCommentIndexer($event_dispatcher, $changeset_comment_dao);
 
-        $changeset                     = $this->createStub(Tracker_Artifact_Changeset::class);
-        $changeset_comment             = $this->createStub(Tracker_Artifact_Changeset_Comment::class);
-        $changeset_comment->body       = 'Some comment';
-        $changeset_comment->bodyFormat = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+        $changeset = $this->createStub(Tracker_Artifact_Changeset::class);
         $changeset->method('getId')->willReturn('888');
-        $changeset->method('getComment')->willReturn($changeset_comment);
+        $changeset_comment_dao->method('searchLastVersion')->willReturn(\TestHelper::arrayToDar(['body' => 'Some comment', 'body_format' => Tracker_Artifact_Changeset_Comment::TEXT_COMMENT]));
         $changeset->method('getArtifact')->willReturn($artifact);
 
         $changeset_comment_indexer->indexChangesetCommentFromChangeset($changeset);
@@ -95,7 +93,7 @@ final class ChangesetCommentIndexerTest extends TestCase
                 return $item_to_index;
             }
         );
-        $changeset_comment_indexer = self::buildChangesetCommentIndexer($event_dispatcher);
+        $changeset_comment_indexer = self::buildChangesetCommentIndexer($event_dispatcher, $this->createStub(\Tracker_Artifact_Changeset_CommentDao::class));
 
         $comment_creation = CommentCreation::fromNewComment(
             NewComment::buildEmpty(UserTestBuilder::buildWithDefaults(), 1),
@@ -114,10 +112,12 @@ final class ChangesetCommentIndexerTest extends TestCase
     public function testDoesNothingWhenNoCommentIsAttachedToTheChangeset(): void
     {
         $event_dispatcher          = EventDispatcherStub::withIdentityCallback();
-        $changeset_comment_indexer = self::buildChangesetCommentIndexer($event_dispatcher);
+        $changeset_comment_dao     = $this->createStub(\Tracker_Artifact_Changeset_CommentDao::class);
+        $changeset_comment_indexer = self::buildChangesetCommentIndexer($event_dispatcher, $changeset_comment_dao);
 
         $changeset = $this->createStub(Tracker_Artifact_Changeset::class);
-        $changeset->method('getComment')->willReturn(null);
+        $changeset->method('getId')->willReturn(404);
+        $changeset_comment_dao->method('searchLastVersion')->willReturn(\TestHelper::emptyDar());
 
         $changeset_comment_indexer->indexChangesetCommentFromChangeset($changeset);
 
@@ -141,17 +141,18 @@ final class ChangesetCommentIndexerTest extends TestCase
             }
         );
 
-        $indexer = self::buildChangesetCommentIndexer($event_dispatcher);
+        $indexer = self::buildChangesetCommentIndexer($event_dispatcher, $this->createStub(\Tracker_Artifact_Changeset_CommentDao::class));
 
         $indexer->askForDeletionOfIndexedCommentsFromArtifact(ArtifactTestBuilder::anArtifact(999)->build());
     }
 
-    public static function buildChangesetCommentIndexer(EventDispatcherInterface $event_dispatcher): ChangesetCommentIndexer
+    public static function buildChangesetCommentIndexer(EventDispatcherInterface $event_dispatcher, \Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao): ChangesetCommentIndexer
     {
         return new ChangesetCommentIndexer(
             new ItemToIndexQueueEventBased($event_dispatcher),
             $event_dispatcher,
             \Codendi_HTMLPurifier::instance(),
+            $changeset_comment_dao,
         );
     }
 }

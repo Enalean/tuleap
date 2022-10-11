@@ -2620,6 +2620,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )
         );
@@ -2661,6 +2662,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                         $index_queue,
                         EventManager::instance(),
                         Codendi_HTMLPurifier::instance(),
+                        new \Tracker_Artifact_Changeset_CommentDao(),
                     )
                 ))->queueAllPendingArtifactsIntoIndexQueue(
                     $index_all_possible_items_event->getProcessQueueForItemCategory('artifacts')

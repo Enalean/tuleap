@@ -565,7 +565,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 $event_manager = EventManager::instance();
                 $event_manager->processEvent('tracker_followup_event_update', $params);
 
-                $changeset_comment_indexer = new ChangesetCommentIndexer(new ItemToIndexQueueEventBased($event_manager), $event_manager, Codendi_HTMLPurifier::instance());
+                $changeset_comment_indexer = new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                );
                 $changeset_comment_indexer->indexChangesetCommentFromChangeset($this);
 
                 return true;

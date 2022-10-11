@@ -369,6 +369,7 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                     new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )
         );
@@ -596,6 +597,7 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                     new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )
         );

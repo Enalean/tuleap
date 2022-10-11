@@ -205,6 +205,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                     new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )
         );
