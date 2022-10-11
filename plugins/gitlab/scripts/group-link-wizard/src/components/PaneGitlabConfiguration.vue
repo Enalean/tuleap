@@ -188,24 +188,21 @@ function onClickLinkGroupAndSynchronize(event: Event): void {
         credentials_store.credentials.token,
         uses_branch_name_prefix.value ? branch_name_prefix.value : "",
         is_artifact_closure_allowed.value
-    )
-        .match(
-            () => {
-                location.assign(root_store.base_url);
-            },
-            (fault) => {
-                error_message.value = interpolate(
-                    $gettext(
-                        "An error occurred while linking the selected group and synchronizing its repositories: %{ error }"
-                    ),
-                    { error: String(fault) },
-                    true
-                );
-            }
-        )
-        .finally(() => {
+    ).match(
+        () => {
+            location.assign(root_store.base_url);
+        },
+        (fault) => {
+            error_message.value = interpolate(
+                $gettext(
+                    "An error occurred while linking the selected group and synchronizing its repositories: %{ error }"
+                ),
+                { error: String(fault) },
+                true
+            );
             is_linking_group.value = false;
-        });
+        }
+    );
 }
 </script>
 
