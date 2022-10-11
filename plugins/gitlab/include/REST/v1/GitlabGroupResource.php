@@ -100,8 +100,6 @@ final class GitlabGroupResource
     /**
      * Link a GitLab group to a Tuleap project.
      *
-     * /!\ This route is under construction.
-     * <br>
      * It will link a GitLab group to a Tuleap project. It will retrieve all the GitLab projects of the group and integrate
      * them with Tuleap.
      * <br>
@@ -211,10 +209,8 @@ final class GitlabGroupResource
     }
 
     /**
-     * Update a GitLab group link with Tuleap.
+     * Update a GitLab group linked with Tuleap.
      *
-     * /!\ This route is under construction.
-     * <br>
      * It will update a GitLab group integration.
      * <br>
      * <p>To update the prefix used in the branch creation for repositories that come with the linked group:</p>
@@ -342,11 +338,12 @@ final class GitlabGroupResource
     /**
      * Synchronize GitLab projects of a group with Tuleap
      *
-     * /!\ This route is under construction.
-     * <br>
+     * It will retrieve all the GitLab projects of the group and integrate them with Tuleap.
+     *
      * Please note that Group link settings such as the branch prefix name will only be applied to
-     * <strong>new</strong> GitLab repository integrations. Existing integrations' settings will not change
-     * after synchronization.
+     * GitLab projects that were <strong>created since last synchronisation</strong>.
+     * Existing integrations' settings will not change after synchronization.
+     *
      * <p><strong>Note:</strong> If a GitLab project is removed on the GitLab side, the group link and
      * the repository integration on the Tuleap side will not be removed.</p>
      *

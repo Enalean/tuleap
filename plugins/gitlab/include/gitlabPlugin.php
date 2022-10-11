@@ -19,7 +19,6 @@
  */
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\DB\DBFactory;
@@ -29,7 +28,6 @@ use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
-use Tuleap\Gitlab\Admin\FeatureFlagGitLabLinkGroup;
 use Tuleap\Gitlab\Admin\GitLabLinkGroupController;
 use Tuleap\Gitlab\Admin\GitLabLinkGroupTabPresenter;
 use Tuleap\Gitlab\API\ClientWrapper;
@@ -163,7 +161,7 @@ require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class gitlabPlugin extends Plugin implements PluginWithConfigKeys
+class gitlabPlugin extends Plugin
 {
     public const SERVICE_NAME          = "gitlab";
     public const LOG_IDENTIFIER        = "gitlab_syslog";
@@ -957,10 +955,6 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
 
     public function gitAdminGetExternalPanePresenters(GitAdminGetExternalPanePresenters $event): void
     {
-        if (! FeatureFlagGitLabLinkGroup::isEnabled()) {
-            return;
-        }
-
         if ($event->getCurrentTabName() === GitLabLinkGroupTabPresenter::PANE_NAME) {
             $event->addExternalPanePresenter(GitLabLinkGroupTabPresenter::withActiveState($event->getProject()));
             return;
@@ -1007,10 +1001,5 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
             new GitlabGroupDAO(),
             new GroupRepositoryIntegrationDAO()
         );
-    }
-
-    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
-    {
-        $event->addConfigClass(FeatureFlagGitLabLinkGroup::class);
     }
 }

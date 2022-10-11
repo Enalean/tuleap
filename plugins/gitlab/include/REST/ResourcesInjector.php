@@ -21,7 +21,6 @@
 namespace Tuleap\Gitlab\REST;
 
 use Project;
-use Tuleap\Gitlab\Admin\FeatureFlagGitLabLinkGroup;
 use Tuleap\Gitlab\REST\v1\GitlabBranchResource;
 use Tuleap\Gitlab\REST\v1\GitlabGroupResource;
 use Tuleap\Gitlab\REST\v1\GitlabMergeRequestResource;
@@ -42,9 +41,7 @@ class ResourcesInjector
         $restler->addAPIClass(GitlabRepositoryResource::class, GitlabRepositoryRepresentation::ROUTE);
         $restler->addAPIClass(GitlabBranchResource::class, GitlabBranchResource::ROUTE);
         $restler->addAPIClass(GitlabMergeRequestResource::class, GitlabMergeRequestResource::ROUTE);
-        if (FeatureFlagGitLabLinkGroup::isEnabled()) {
-            $restler->addAPIClass(GitlabGroupResource::class, GitlabGroupResource::ROUTE);
-        }
+        $restler->addAPIClass(GitlabGroupResource::class, GitlabGroupResource::ROUTE);
     }
 
     public function declareProjectGitlabResource(array &$resources, Project $project): void
