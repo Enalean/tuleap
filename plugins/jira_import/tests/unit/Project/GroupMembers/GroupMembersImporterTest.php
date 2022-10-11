@@ -25,6 +25,7 @@ namespace Tuleap\JiraImport\Project\GroupMembers;
 
 use PFUser;
 use Psr\Log\NullLogger;
+use Tuleap\Project\UGroups\XML\XMLUserGroup;
 use Tuleap\Project\XML\XMLUserGroups;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -32,6 +33,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\User\GetTuleapUserFromJiraUser;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraServerClientStub;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
+use Tuleap\Tracker\XML\XMLUser;
 
 final class GroupMembersImporterTest extends TestCase
 {
@@ -117,6 +119,38 @@ final class GroupMembersImporterTest extends TestCase
 
                 ],
             ],
+            '/rest/api/2/project/11102/role/10101' => [
+                "self"        => "https://jira.example.com/rest/api/2/project/11102/role/10101",
+                "name"        => "Developers",
+                "id"          => 10101,
+                "description" => "foo",
+                "actors"      => [
+                    [
+                        "id"          => 11340,
+                        "displayName" => "Foo Bar",
+                        "type"        => "atlassian-user-role-actor",
+                        "name"        => "foo_bar",
+                        "avatarUrl"   => "https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605",
+                    ],
+
+                ],
+            ],
+            '/rest/api/2/project/11102/role/10102' => [
+                "self"        => "https://jira.example.com/rest/api/2/project/11102/role/10102",
+                "name"        => "Testers",
+                "id"          => 10102,
+                "description" => "foo",
+                "actors"      => [
+                    [
+                        "id"          => 11341,
+                        "displayName" => "Jane Biz",
+                        "type"        => "atlassian-user-role-actor",
+                        "name"        => "jane_biz",
+                        "avatarUrl"   => "https://jira.example.com/secure/useravatar?size=xsmall&ownerId=JIRAUSER10125&avatarId=10605",
+                    ],
+
+                ],
+            ],
         ];
 
         return [
@@ -126,29 +160,35 @@ final class GroupMembersImporterTest extends TestCase
                     'john_doe' => UserTestBuilder::aUser()->withUserName('jdoe')->build(),
                 ],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    self::assertCount(1, $user_groups_xml->user_groups);
-                    self::assertEquals(\ProjectUGroup::PROJECT_ADMIN_NAME, $user_groups_xml->user_groups[0]->name);
-                    self::assertCount(1, $user_groups_xml->user_groups[0]->users);
-                    self::assertEquals('jdoe', $user_groups_xml->user_groups[0]->users[0]->name);
+                    $project_admin = array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_ADMIN_NAME)[0];
+                    self::assertCount(1, $project_admin->users);
+                    self::assertEquals('jdoe', $project_admin->users[0]->name);
                 },
             ],
             'it excludes missing users that are converted as XML import user' => [
                 'jira_payloads' => $payload_only_administrators,
                 'jira_to_tuleap_users' => [],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    self::assertCount(1, $user_groups_xml->user_groups);
-                    self::assertEquals(\ProjectUGroup::PROJECT_ADMIN_NAME, $user_groups_xml->user_groups[0]->name);
-                    self::assertCount(0, $user_groups_xml->user_groups[0]->users);
+                    $project_admin = array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_ADMIN_NAME)[0];
+                    self::assertCount(0, $project_admin->users);
                 },
             ],
-            'it ignore groups that are not administrators' => [
+            'it collect all members of all groups as project members' => [
                 'jira_payloads' => $payload_with_multiple_groups,
                 'jira_to_tuleap_users' => [
                     'john_doe' => UserTestBuilder::aUser()->withUserName('jdoe')->build(),
+                    'foo_bar' => UserTestBuilder::aUser()->withUserName('fbar')->build(),
+                    'jane_biz' => UserTestBuilder::aUser()->withUserName('jbiz')->build(),
                 ],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    self::assertCount(1, $user_groups_xml->user_groups);
-                    self::assertEquals(\ProjectUGroup::PROJECT_ADMIN_NAME, $user_groups_xml->user_groups[0]->name);
+                    self::assertCount(2, $user_groups_xml->user_groups);
+
+                    $project_members = array_values(array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_MEMBERS_NAME))[0];
+
+                    self::assertCount(3, $project_members->users);
+                    self::assertContains('jdoe', array_map(static fn (XMLUser $user) => $user->name, $project_members->users));
+                    self::assertContains('fbar', array_map(static fn (XMLUser $user) => $user->name, $project_members->users));
+                    self::assertContains('jbiz', array_map(static fn (XMLUser $user) => $user->name, $project_members->users));
                 },
             ],
         ];
@@ -219,10 +259,9 @@ final class GroupMembersImporterTest extends TestCase
                     '5d2ece042d76f30c36bf7e96' => UserTestBuilder::aUser()->withUserName('jdoe')->build(),
                 ],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    self::assertCount(1, $user_groups_xml->user_groups);
-                    self::assertEquals(\ProjectUGroup::PROJECT_ADMIN_NAME, $user_groups_xml->user_groups[0]->name);
-                    self::assertCount(1, $user_groups_xml->user_groups[0]->users);
-                    self::assertEquals('jdoe', $user_groups_xml->user_groups[0]->users[0]->name);
+                    $project_admin = array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_ADMIN_NAME)[0];
+                    self::assertCount(1, $project_admin->users);
+                    self::assertEquals('jdoe', $project_admin->users[0]->name);
                 },
             ],
             'it excludes groups of groups' => [
@@ -262,10 +301,9 @@ final class GroupMembersImporterTest extends TestCase
                     '5d2ece042d76f30c36bf7e96' => UserTestBuilder::aUser()->withUserName('jdoe')->build(),
                 ],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    self::assertCount(1, $user_groups_xml->user_groups);
-                    self::assertEquals(\ProjectUGroup::PROJECT_ADMIN_NAME, $user_groups_xml->user_groups[0]->name);
-                    self::assertCount(1, $user_groups_xml->user_groups[0]->users);
-                    self::assertEquals('jdoe', $user_groups_xml->user_groups[0]->users[0]->name);
+                    $project_admin = array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_ADMIN_NAME)[0];
+                    self::assertCount(1, $project_admin->users);
+                    self::assertEquals('jdoe', $project_admin->users[0]->name);
                 },
             ],
         ];
