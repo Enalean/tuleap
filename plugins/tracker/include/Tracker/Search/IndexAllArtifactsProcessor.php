@@ -45,19 +45,23 @@ class IndexAllArtifactsProcessor
         $seen_since_last_clear_cache = 0;
         $artifact_factory            = ($this->artifact_factory_builder)();
         $rows                        = $this->artifact_dao->searchAllPendingArtifactsToIndex();
+        $processed_artifacts         = [];
         foreach ($progress_queue_index_item_category->iterate($rows) as $row) {
             $artifact_id = $row['id'];
             $artifact    = $artifact_factory->getArtifactById($artifact_id);
             if ($artifact !== null) {
                 $this->queueArtifactInformationIntoIndex($artifact);
             }
-            $this->artifact_dao->markPendingArtifactAsProcessed($artifact_id);
+            $processed_artifacts[] = $artifact_id;
             $seen_since_last_clear_cache++;
             if ($seen_since_last_clear_cache > 100) {
                 $artifact_factory            = ($this->artifact_factory_builder)();
                 $seen_since_last_clear_cache = 0;
+                $this->artifact_dao->markPendingArtifactAsProcessed(...$processed_artifacts);
+                $processed_artifacts = [];
             }
         }
+        $this->artifact_dao->markPendingArtifactAsProcessed(...$processed_artifacts);
     }
 
     private function queueArtifactInformationIntoIndex(Artifact $artifact): void
