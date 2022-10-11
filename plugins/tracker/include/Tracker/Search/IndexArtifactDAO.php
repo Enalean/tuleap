@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Search;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class IndexArtifactDAO extends DataAccessObject
@@ -47,8 +48,12 @@ class IndexArtifactDAO extends DataAccessObject
         return $this->getDB()->run('SELECT id FROM plugin_tracker_artifact_pending_indexation');
     }
 
-    public function markPendingArtifactAsProcessed(int $artifact_id): void
+    public function markPendingArtifactAsProcessed(int ...$artifact_ids): void
     {
-        $this->getDB()->run('DELETE FROM plugin_tracker_artifact_pending_indexation WHERE id = ?', $artifact_id);
+        if (count($artifact_ids) === 0) {
+            return;
+        }
+        $ids_statement = EasyStatement::open()->in('id IN (?*)', $artifact_ids);
+        $this->getDB()->safeQuery("DELETE FROM plugin_tracker_artifact_pending_indexation WHERE $ids_statement", $ids_statement->values());
     }
 }
