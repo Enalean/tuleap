@@ -61,6 +61,18 @@ final class MeilisearchHandlerTest extends TestCase
         $this->handler->indexItems($item_1, $item_2);
     }
 
+    public function testDoesNotIndexItemsWithEmptyContent(): void
+    {
+        $item_1 = new ItemToIndex('type_1', 102, '', ['A' => 'A']);
+        $item_2 = new ItemToIndex('type_2', 102, '', ['A' => 'B']);
+
+        $this->metadata_dao->expects(self::exactly(2))->method('searchMatchingEntries')->willReturnOnConsecutiveCalls([], [2]);
+        $this->metadata_dao->expects(self::once())->method('deleteIndexedItemsFromIDs')->with([2]);
+        $this->client_index->expects(self::once())->method('deleteDocuments');
+
+        $this->handler->indexItems($item_1, $item_2);
+    }
+
     public function testDeletesItem(): void
     {
         $this->metadata_dao->method('searchMatchingEntries')->willReturn([1, 2]);
