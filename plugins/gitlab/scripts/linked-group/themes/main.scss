@@ -19,6 +19,10 @@
 
 @use "@tuleap/plugin-gitlab-administration-theme";
 
+.gitlab-linked-group-feedback {
+    margin: var(--tlp-medium-spacing) 0 0 var(--tlp-medium-spacing);
+}
+
 .gitlab-group-full-path {
     margin: 0 0 0 4px;
 }
@@ -52,6 +56,7 @@
 }
 
 .gitlab-linked-group-hidden-button,
+.gitlab-linked-group-alert-hidden,
 .gitlab-modal-feedback-hidden,
 .gitlab-modal-icon-hidden {
     display: none;

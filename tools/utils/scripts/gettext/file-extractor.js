@@ -67,7 +67,12 @@ function createParser(gettext_extractor) {
             }
         ),
         JsExtractors.callExpression(
-            ["[this].$ngettext", "$ngettext", "gettext_provider.$ngettext"],
+            [
+                "[this].$ngettext",
+                "$ngettext",
+                "gettext_provider.$ngettext",
+                "gettext_provider.ngettext",
+            ],
             {
                 arguments: { text: 0, textPlural: 1 },
             }

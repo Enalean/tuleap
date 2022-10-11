@@ -20,3 +20,7 @@
 export const SPINNER_CLASSNAME = "fa-circle-notch";
 export const SPIN_CLASSNAME = "fa-spin";
 export const FEEDBACK_HIDDEN_CLASSNAME = "gitlab-modal-feedback-hidden";
+export const FEEDBACK_SUCCESS_CLASSNAME = "tlp-alert-success";
+export const FEEDBACK_ERROR_CLASSNAME = "tlp-alert-danger";
+export const BADGE_SUCCESS_CLASSNAME = "tlp-badge-success";
+export const BADGE_ERROR_CLASSNAME = "tlp-badge-danger";

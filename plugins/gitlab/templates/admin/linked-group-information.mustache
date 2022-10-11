@@ -1,6 +1,7 @@
 {{# administration_pane }}
     {{> git-administration-panes }}
 {{/ administration_pane }}
+<div id="linked-group-alert" class="gitlab-linked-group-feedback gitlab-linked-group-alert-hidden"></div>
 <section class="tlp-pane-section">
     <section class="tlp-pane">
         <div class="tlp-pane-container">
@@ -19,7 +20,7 @@
                 </div>
                 <div class="tlp-property">
                     <label class="tlp-label">{{# dgettext }}tuleap-gitlab | Last Synchronization {{/ dgettext }}</label>
-                    <span class="tlp-badge-success tlp-badge-outline">
+                    <span class="tlp-badge-success tlp-badge-outline" id="last-sync-badge">
                         <i class="fa-solid fa-check tlp-badge-icon" aria-hidden="true"></i>
                         {{# dngettext }}
                             tuleap-gitlab |
@@ -58,8 +59,8 @@
                 </div>
             </section>
             <section class="tlp-pane-section tlp-pane-section-submit gitlab-linked-group-buttons">
-                <button type="button" class="tlp-button-primary gitlab-linked-group-hidden-button" disabled>
-                    <i class="fa-solid fa-rotate tlp-button-icon" aria-hidden="true"></i>
+                <button type="button" class="tlp-button-primary" id="synchronize-button" data-group-id="{{ group_id }}">
+                    <i class="fa-solid fa-rotate tlp-button-icon" aria-hidden="true" id="synchronize-icon"></i>
                     {{# dgettext }}tuleap-gitlab | Synchronize {{/ dgettext }}
                 </button>
 
