@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.26.0@6998fabb2bf528b65777bf9941920888d23c03ac">
+<files psalm-version="4.29.0@7ec5ffbd5f68ae03782d7fd33fff0c45a69f95b3">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$project-&gt;getID()</code>
@@ -606,50 +606,18 @@
     <MissingDocblockType occurrences="1">
       <code>$initial_effort_field</code>
     </MissingDocblockType>
-    <MissingParamType occurrences="5">
-      <code>$artifact_id</code>
-      <code>$artifact_id</code>
-      <code>$timestamp</code>
-      <code>$timestamp</code>
+    <MissingParamType occurrences="1">
       <code>$timestamp</code>
     </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>getPlanningLinkedArtifactAtTimestamp</code>
     </MissingReturnType>
-    <PossiblyNullArgument occurrences="2">
-      <code>$artifact</code>
+    <PossiblyNullArgument occurrences="1">
       <code>$changeset</code>
     </PossiblyNullArgument>
     <PossiblyNullReference occurrences="1">
       <code>getValue</code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupDao.php">
-    <DeprecatedMethod occurrences="13">
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieveFirstRow</code>
-      <code>retrieveFirstRow</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="2">
-      <code>$artifact_id</code>
-      <code>$timestamp</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>getBurnupInformationBasedOnDuration</code>
-      <code>getBurnupInformationBasedOnEndDate</code>
-      <code>searchArtifactsWithBurnup</code>
-      <code>searchLinkedArtifactsAtGivenTimestamp</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupData.php">
     <MissingParamType occurrences="2">
@@ -659,15 +627,6 @@
     <MissingReturnType occurrences="1">
       <code>addEffort</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupDataBuilder.php">
-    <MissingReturnType occurrences="1">
-      <code>addEfforts</code>
-    </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) $artifact-&gt;getId()</code>
-      <code>(int) $artifact-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupEffort.php">
     <MissingParamType occurrences="2">
@@ -703,9 +662,8 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/SystemEvent/SystemEvent_BURNUP_DAILY.php">
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>cacheYesterdayValues</code>
-      <code>injectDependencies</code>
       <code>process</code>
     </MissingReturnType>
     <RedundantCast occurrences="1">
@@ -713,9 +671,8 @@
     </RedundantCast>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/SystemEvent/SystemEvent_BURNUP_GENERATE.php">
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>getArtifactIdFromParameters</code>
-      <code>injectDependencies</code>
       <code>process</code>
     </MissingReturnType>
     <RedundantCast occurrences="1">
@@ -821,6 +778,12 @@
     <MissingReturnType occurrences="1">
       <code>showKanban</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
+    <RedundantCast occurrences="1">
+      <code>(int) $_SERVER['REQUEST_TIME']</code>
+    </RedundantCast>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Kanban/TrackerReport/ReportFilterFromWhereBuilder.php">
     <DeprecatedMethod occurrences="1">
@@ -3416,6 +3379,12 @@
       <code>showEmptyHome</code>
       <code>updateCardwallConfig</code>
     </MissingReturnType>
+    <PossiblyInvalidArrayAccess occurrences="1">
+      <code>$_FILES["template_file"]["tmp_name"]</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$_FILES["template_file"]["tmp_name"]</code>
+    </PossiblyInvalidArrayOffset>
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $root_planning-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
@@ -3879,6 +3848,10 @@
     <PossiblyNullArgument occurrences="1">
       <code>$milestone</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$result</code>
     </PossiblyUndefinedVariable>
@@ -4198,6 +4171,10 @@
       <code>tracker_is_type_valid</code>
       <code>tracker_xml_import_artifact_link_can_be_disabled</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/baseline/include/Adapter/ArtifactLinkRepository.php">
     <DeprecatedMethod occurrences="1">
@@ -4217,9 +4194,11 @@
     <PossiblyInvalidArrayAccess occurrences="1">
       <code>$rows[0]</code>
     </PossiblyInvalidArrayAccess>
-    <PossiblyNullArgument occurrences="1">
-      <code>$author</code>
-    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/baseline/include/Adapter/ClockAdapter.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER[REQUEST_TIME]</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/baseline/include/Adapter/ComparisonRepositoryAdapter.php">
     <PossiblyInvalidArgument occurrences="2">
@@ -4229,9 +4208,6 @@
     <PossiblyInvalidArrayAccess occurrences="1">
       <code>$rows[0]</code>
     </PossiblyInvalidArrayAccess>
-    <PossiblyNullArgument occurrences="1">
-      <code>$author</code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/baseline/include/Adapter/RoleAssignmentRepositoryAdapter.php">
     <PossiblyInvalidIterator occurrences="1">
@@ -4242,12 +4218,6 @@
     <MissingReturnType occurrences="1">
       <code>canDeleteComparison</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/baseline/include/Domain/AuthorizationsImpl.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>$project-&gt;getID()</code>
-      <code>$project-&gt;getID()</code>
-    </InvalidScalarArgument>
   </file>
   <file src="plugins/baseline/include/Domain/BaselineArtifactService.php">
     <PossiblyNullArgument occurrences="2">
@@ -4682,6 +4652,11 @@
       <code>collectRoutesEvent</code>
       <code>loadCSSFiles</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/cardwall/include/Board.class.php">
     <MissingReturnType occurrences="2">
@@ -6102,6 +6077,11 @@
       <code>tracker_event_trackers_duplicated</code>
       <code>tracker_report_renderer_types</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -6136,6 +6116,9 @@
       <code>insert</code>
       <code>purgeOldData</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/create_test_env/include/CreateTestEnv/CreateTestEnvironment.php">
     <MissingParamType occurrences="4">
@@ -6261,6 +6244,9 @@
       <code>getHooksAndCallbacks</code>
       <code>serviceAccessEvent</code>
     </MissingReturnType>
+    <PossiblyFalseReference occurrences="1">
+      <code>getTimestamp</code>
+    </PossiblyFalseReference>
   </file>
   <file src="plugins/crosstracker/bin/migrate_old_crosstracker_widgets.php">
     <DeprecatedMethod occurrences="13">
@@ -7166,9 +7152,9 @@
       <code>migrate</code>
       <code>removeTemporaryDirectory</code>
     </MissingReturnType>
-    <PossiblyFalseOperand occurrences="1">
-      <code>date('c', $_SERVER['REQUEST_TIME'])</code>
-    </PossiblyFalseOperand>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/docman/bin/DocmanImport/Trees.class.php">
     <MissingParamType occurrences="8">
@@ -7960,6 +7946,9 @@
     <NullableReturnStatement occurrences="1">
       <code>$um-&gt;getUserById($table-&gt;owner)</code>
     </NullableReturnStatement>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/docman/include/ApprovalTable/Reviewer/Reviewer.class.php">
     <MissingParamType occurrences="7">
@@ -8444,9 +8433,23 @@
       <code>updateLink</code>
       <code>update_monitoring</code>
     </MissingReturnType>
+    <PossiblyInvalidArrayAccess occurrences="3">
+      <code>$_FILES['file']['name']</code>
+      <code>$_FILES['file']['size']</code>
+      <code>$_FILES['file']['type']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="3">
+      <code>$_FILES['file']['name']</code>
+      <code>$_FILES['file']['size']</code>
+      <code>$_FILES['file']['type']</code>
+    </PossiblyInvalidArrayOffset>
     <PossiblyNullArgument occurrences="1">
       <code>$parentItem</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="3">
       <code>$item</code>
       <code>$mdrow</code>
@@ -8734,6 +8737,9 @@
       <code>setName</code>
       <code>setRank</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$metadataFactory</code>
     </PossiblyUndefinedVariable>
@@ -8809,6 +8815,9 @@
       <code>buildInterface</code>
       <code>buildPermissionDeniedInterface</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/docman/include/Docman_ExpandAllHierarchyVisitor.class.php">
     <MissingParamType occurrences="14">
@@ -9178,6 +9187,9 @@
     <PossiblyNullReference occurrences="1">
       <code>getEmail</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/docman/include/Docman_HtmlFilter.php">
     <MissingParamType occurrences="4">
@@ -9602,6 +9614,9 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$sql_where</code>
     </PossiblyUndefinedVariable>
@@ -9786,6 +9801,9 @@
       <code>getParentId</code>
       <code>setPathTitle</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedMethod occurrences="1">
       <code>setCurrentVersion</code>
     </PossiblyUndefinedMethod>
@@ -9930,6 +9948,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_ListMetadata.php">
+    <InvalidClass occurrences="1">
+      <code>iterator</code>
+    </InvalidClass>
     <MissingParamType occurrences="2">
       <code>$l</code>
       <code>$v</code>
@@ -9993,6 +10014,9 @@
     <MissingPropertyType occurrences="1">
       <code>$_cachedItem</code>
     </MissingPropertyType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/docman/include/Docman_Log.class.php">
     <DeprecatedMethod occurrences="1">
@@ -11906,6 +11930,22 @@
       <code>$msg</code>
     </MissingParamType>
   </file>
+  <file src="plugins/docman/include/Docman_ValidateUpload.class.php">
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$_FILES['file']['name'] ?? ''</code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidArrayAccess occurrences="2">
+      <code>$_FILES['file']['error']</code>
+      <code>$_FILES['file']['name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="2">
+      <code>$_FILES['file']['error']</code>
+      <code>$_FILES['file']['name']</code>
+    </PossiblyInvalidArrayOffset>
+    <RiskyCast occurrences="1">
+      <code>$_FILES['file']['size']</code>
+    </RiskyCast>
+  </file>
   <file src="plugins/docman/include/Docman_ValidateValueNotEmpty.php">
     <MissingParamType occurrences="2">
       <code>$msg</code>
@@ -12125,6 +12165,10 @@
     <PossiblyFalseReference occurrences="1">
       <code>getRow</code>
     </PossiblyFalseReference>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/docman/include/Docman_VersionFactory.class.php">
     <MissingParamType occurrences="5">
@@ -13177,6 +13221,9 @@
       <code>wiki_display_remove_button</code>
       <code>wiki_page_updated</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/docman/include/soap.php">
     <InvalidScalarArgument occurrences="1">
@@ -15322,6 +15369,11 @@
       <code>search_type</code>
       <code>search_types_presenters</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/forumml/include/forumml_utils.php">
     <DeprecatedFunction occurrences="18">
@@ -15392,6 +15444,16 @@
       <code>plugin_forumml_show_message</code>
       <code>plugin_forumml_show_thread</code>
     </MissingReturnType>
+    <PossiblyInvalidArrayAccess occurrences="3">
+      <code>$_FILES["files"]["tmp_name"]</code>
+      <code>$_FILES["files"]["type"]</code>
+      <code>$_FILES["files"]['name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="3">
+      <code>$_FILES["files"]["tmp_name"]</code>
+      <code>$_FILES["files"]["type"]</code>
+      <code>$_FILES["files"]['name']</code>
+    </PossiblyInvalidArrayOffset>
     <PossiblyUndefinedVariable occurrences="2">
       <code>$curMsg</code>
       <code>$message</code>
@@ -16862,6 +16924,9 @@
       <code>addUrlParametersToRequest</code>
       <code>redirectOutdatedActions</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git/Gitolite/ConfigPermissionsSerializer.class.php">
     <InvalidArgument occurrences="1">
@@ -17294,6 +17359,10 @@
       <code>setPathInfo</code>
       <code>setQueryString</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['QUERY_STRING']</code>
+      <code>$_SERVER['REQUEST_METHOD']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git/HTTP/CommandFactory.class.php">
     <MissingReturnType occurrences="2">
@@ -17324,6 +17393,10 @@
       <code>isInPrivateProject</code>
       <code>updateLastAccessDateForUser</code>
     </MissingReturnType>
+    <TypeDoesNotContainType occurrences="2">
+      <code>$_SERVER['PHP_AUTH_PW'] == ''</code>
+      <code>$_SERVER['PHP_AUTH_USER'] == ''</code>
+    </TypeDoesNotContainType>
   </file>
   <file src="plugins/git/include/Git/HTTP/HTTPController.php">
     <MissingParamType occurrences="1">
@@ -17333,11 +17406,17 @@
       <code>checkUserCanAccess</code>
       <code>getRepoPathWithFinalDotGit</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git/HTTP/Wrapper.class.php">
     <MissingReturnType occurrences="1">
       <code>stream</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_METHOD']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git/LatestHeartbeatsCollector.php">
     <MissingParamType occurrences="1">
@@ -17407,6 +17486,11 @@
       <code>updateCurrentTimeOfRepository</code>
       <code>writeManifest</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git/Mirror/ManifestManager.class.php">
     <MissingParamType occurrences="1">
@@ -19127,6 +19211,9 @@
       <code>getLogs</code>
       <code>searchWebhooksForRepository</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git/Webhook/WebhookLogPresenter.php">
     <MissingParamType occurrences="2">
@@ -19448,6 +19535,11 @@
       <code>(int) $groupId</code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="plugins/git/include/GitLegacyURLRedirectController.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['QUERY_STRING']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="plugins/git/include/GitLog.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>CodendiDataAccess::instance()</code>
@@ -19618,6 +19710,9 @@
       <code>LoadHeaders</code>
       <code>ReadQuery</code>
     </MissingReturnType>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>isset($_GET['o']) ? $_GET['o'] : ''</code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_History.php">
     <MissingPropertyType occurrences="2">
@@ -19902,6 +19997,9 @@
       <code>SetMode</code>
       <code>SetPath</code>
     </MissingReturnType>
+    <PossiblyInvalidOperand occurrences="1">
+      <code>$_GET['f']</code>
+    </PossiblyInvalidOperand>
   </file>
   <file src="plugins/git/include/GitPHP/git/GitExe.php">
     <ForbiddenCode occurrences="1">
@@ -20155,6 +20253,12 @@
       <code>SetRenames</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/git/include/GitPHP/smartyplugins/function.scripturl.php">
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['HTTP_HOST']</code>
+      <code>$_SERVER['PHP_SELF']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="plugins/git/include/GitPHP/smartyplugins/modifier.agestring.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $age</code>
@@ -20180,7 +20284,7 @@
       <code>$permission_name</code>
       <code>$project_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="9">
+    <MissingReturnType occurrences="8">
       <code>getCurrentGitAdminPermissionsForProject</code>
       <code>getCurrentGitAdminUgroups</code>
       <code>getDefaultGitAdminPermissions</code>
@@ -20189,7 +20293,6 @@
       <code>queueProjectsConfigurationUpdate</code>
       <code>updateProjectAccess</code>
       <code>updateSiteAccess</code>
-      <code>userIsGitAdmin</code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitPluginInfo.class.php">
@@ -20780,6 +20883,9 @@
       <code>displayGitPHP</code>
       <code>setupGitPHPConfiguration</code>
     </MissingReturnType>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$_GET['a'] ?? ''</code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="plugins/git/include/GitViews/GitViewHeader.php">
     <MissingReturnType occurrences="2">
@@ -20841,6 +20947,9 @@
       <code>getServers</code>
       <code>getTemplates</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <RedundantCast occurrences="2">
       <code>(int) $plugin_enabled</code>
       <code>(int) $should_delete</code>
@@ -21165,6 +21274,9 @@
     <PossiblyNullReference occurrences="1">
       <code>userCanRead</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git_LogDao.class.php">
     <InvalidReturnStatement occurrences="2">
@@ -21242,6 +21354,9 @@
       <code>getPreferences</code>
       <code>hasPreferences</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/History/Dao.php">
     <MissingParamType occurrences="7">
@@ -21264,11 +21379,17 @@
     <MissingReturnType occurrences="1">
       <code>logAccess</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Hook/LogPushes.php">
     <InvalidScalarArgument occurrences="1">
       <code>$push_details-&gt;getUser()-&gt;getId()</code>
     </InvalidScalarArgument>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Hook/PostReceiveMailSender.php">
     <MissingParamType occurrences="8">
@@ -21869,6 +21990,10 @@
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <TooManyArguments occurrences="1"/>
     <UndefinedInterfaceMethod occurrences="1">
       <code>setUserAccountInactive</code>
@@ -23651,9 +23776,9 @@
       <code>setSummary</code>
       <code>setTitle</code>
     </MissingReturnType>
-    <PossiblyFalseOperand occurrences="1">
-      <code>$dateDisp</code>
-    </PossiblyFalseOperand>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <TypeDoesNotContainType occurrences="2">
       <code>! $start_date</code>
       <code>! $start_date</code>
@@ -23686,8 +23811,7 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>'GraphOnTrackersV5PluginInfo'</code>
     </ArgumentTypeCoercion>
-    <MissingParamType occurrences="7">
-      <code>$group_id</code>
+    <MissingParamType occurrences="6">
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -23707,7 +23831,7 @@
       <code>$report_id</code>
       <code>$set</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="14">
+    <MissingReturnType occurrences="13">
       <code>canIncludeStylesheets</code>
       <code>collectRoutesEvent</code>
       <code>getPluginInfo</code>
@@ -23715,7 +23839,6 @@
       <code>getUserWidgetList</code>
       <code>graphontrackersv5_load_chart_factories</code>
       <code>importRendererFromXmlEvent</code>
-      <code>isAllowed</code>
       <code>tracker_report_add_renderer</code>
       <code>tracker_report_create_renderer</code>
       <code>tracker_report_renderer_types</code>
@@ -23723,6 +23846,9 @@
       <code>uninstall</code>
       <code>widgetInstance</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/hudson/include/HudsonBuild.class.php">
     <MissingPropertyType occurrences="1">
@@ -24056,6 +24182,11 @@
       <code>uninstall</code>
       <code>widgetInstance</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/hudson/include/hudsonPluginInfo.class.php">
     <MissingParamType occurrences="1">
@@ -24392,6 +24523,9 @@
       <code>restResources</code>
       <code>routeGetPostLegacyController</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/hudson_svn/include/BuildParams.php">
     <MissingReturnType occurrences="1">
@@ -24522,6 +24656,10 @@
       <code>save_ci_triggers</code>
       <code>update_ci_triggers</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/label/include/Label/REST/ResourcesInjector.php">
     <MissingReturnType occurrences="2">
@@ -24725,6 +24863,9 @@
       <code>$eqpos</code>
       <code>$eqpos</code>
     </PossiblyFalseOperand>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['argv']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$argname</code>
     </PossiblyUndefinedVariable>
@@ -24748,6 +24889,9 @@
       <code>$eqpos</code>
       <code>$eqpos</code>
     </PossiblyFalseOperand>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['argv']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$argname</code>
     </PossiblyUndefinedVariable>
@@ -24937,6 +25081,10 @@
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/ldap/include/LDAP_DirectoryCleanUpDao.class.php">
     <DeprecatedMethod occurrences="12">
@@ -25436,6 +25584,9 @@
       <code>updateWithUserId</code>
       <code>userIsFirstAdmin</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/ldap/include/LinkModalContentPresenter.php">
     <MissingParamType occurrences="7">
@@ -25482,6 +25633,9 @@
       <code>$text</code>
       <code>$title</code>
     </MissingParamType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/ldap/include/exception/AddException.class.php">
     <MissingParamType occurrences="2">
@@ -25609,6 +25763,9 @@
       <code>user_manager_update_db</code>
       <code>warnNoPwChange</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$result</code>
     </PossiblyUndefinedVariable>
@@ -26107,6 +26264,9 @@
     <MissingReturnType occurrences="1">
       <code>getFusionForgeProjectName</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/mediawiki/include/MediawikiGroupPresenter.class.php">
     <MissingParamType occurrences="4">
@@ -26683,6 +26843,19 @@
     <PossiblyNullReference occurrences="1">
       <code>getID</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="6">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/mediawiki/www/setpath.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/mfa/include/Enrollment/EnrollmentDisplayController.php">
     <NullReference occurrences="1">
@@ -27288,6 +27461,10 @@
       <code>get_login_url</code>
       <code>login_additional_connector</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/pluginsadministration/include/AvailablePluginsPresenter.php">
     <MissingPropertyType occurrences="12">
@@ -27501,6 +27678,11 @@
       <code>burning_parrot_get_stylesheets</code>
       <code>getPluginInfo</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/proftpd/bin/switch_to_unix_password.php">
     <DeprecatedMethod occurrences="1">
@@ -27730,6 +27912,9 @@
       <code>renderIndex</code>
       <code>userHasPermissionToExploreSFTP</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/proftpd/include/ProFTPd/Plugin/ProftpdPluginInfo.php">
     <MissingParamType occurrences="1">
@@ -28021,6 +28206,9 @@
       <code>rename_project</code>
       <code>system_event_get_types_for_default_queue</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedClass occurrences="1">
       <code>'ProftpdPluginInfo'</code>
     </UndefinedClass>
@@ -31156,6 +31344,9 @@
     <MissingReturnType occurrences="1">
       <code>deleteCustomQuota</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/statistics/include/Statistics_SOAPServer.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -31468,6 +31659,12 @@
       <code>uninstall</code>
       <code>wsdl_doc2soap_types</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="4">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/svn/bin/migrate_to_plugin.php">
     <MissingReturnType occurrences="1">
@@ -31619,6 +31816,9 @@
       <code>getUrl</code>
       <code>saveAuthFile</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <TooManyArguments occurrences="1">
       <code>new AccessFileReader($repository)</code>
     </TooManyArguments>
@@ -33028,6 +33228,11 @@
       <code>retrieve</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/svn/include/SVN/RedirectOldViewVCUrls.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['QUERY_STRING']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="plugins/svn/include/SVN/Repository/Destructor.php">
     <MissingReturnType occurrences="1">
       <code>delete</code>
@@ -33525,6 +33730,13 @@
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="5">
+      <code>$_SERVER['QUERY_STRING']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/taskboard/include/Admin/ScrumBoardTypeSelectorController.php">
     <MissingParamType occurrences="1">
@@ -33618,6 +33830,9 @@
       <code>collectRoutesEvent</code>
       <code>getPluginInfo</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tee_container/include/tee_containerPlugin.php">
     <MissingParamType occurrences="1">
@@ -33877,6 +34092,9 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/testmanagement/include/testmanagementPlugin.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <RedundantCast occurrences="2">
       <code>(int) $tracker-&gt;getId()</code>
       <code>(int) $tracker-&gt;getId()</code>
@@ -33930,6 +34148,11 @@
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $milestone_artifact-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
+  </file>
+  <file src="plugins/testplan/include/testplanPlugin.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Admin/AdminController.php">
     <InvalidScalarArgument occurrences="3">
@@ -34031,9 +34254,9 @@
       <code>$formatted_total_time</code>
       <code>$user_can_add_time</code>
     </MissingParamType>
-    <PossiblyFalsePropertyAssignmentValue occurrences="1">
-      <code>date('Y-m-d', $request_time)</code>
-    </PossiblyFalsePropertyAssignmentValue>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Permissions/PermissionsRetriever.php">
     <InvalidScalarArgument occurrences="2">
@@ -34185,6 +34408,10 @@
       <code>deleteTimeForUser</code>
       <code>editTimeForUser</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Time/TimeDao.php">
     <MissingParamType occurrences="20">
@@ -34340,6 +34567,9 @@
       <code>tracker_artifact_editrenderer_add_view_in_collection</code>
       <code>widgetInstance</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/bin/create_tracker_structure_from_tv3.php">
     <InvalidScalarArgument occurrences="1">
@@ -34624,6 +34854,11 @@
       <code>$changeset</code>
       <code>$changeset</code>
     </PossiblyNullArgument>
+  </file>
+  <file src="plugins/tracker/include/REST/Artifact/ArtifactUpdater.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/BurndownPointRepresentation.php">
     <MissingParamType occurrences="2">
@@ -35231,6 +35466,9 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;children_xml_exporter</code>
       <code>$this-&gt;tracker_factory</code>
@@ -35402,6 +35640,9 @@
       <code>index</code>
       <code>update</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedClass occurrences="1">
       <code>Exception</code>
     </UndefinedClass>
@@ -35474,6 +35715,9 @@
       <code>getCopyArtifactButton</code>
       <code>isAlreadyCopyingArtifact</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ActionButtons/ArtifactIncomingEmailButtonPresenterBuilder.php">
     <MissingReturnType occurrences="1">
@@ -35669,6 +35913,15 @@
       <code>getValue</code>
       <code>getValue</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
+    <RedundantCast occurrences="2">
+      <code>(int) $submitted_on</code>
+      <code>(int) $submitted_on</code>
+    </RedundantCast>
     <RedundantCastGivenDocblockType occurrences="3">
       <code>(bool) $send_notification</code>
       <code>(string) $comment</code>
@@ -35965,6 +36218,11 @@
       <code>$user</code>
       <code>$user</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $offset</code>
     </RedundantCastGivenDocblockType>
@@ -36312,6 +36570,9 @@
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedMethod occurrences="1">
       <code>redirect</code>
     </UndefinedMethod>
@@ -36521,6 +36782,11 @@
       <code>clearVisitedArtifacts</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Artifact/RecentlyVisited/VisitRecorder.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/RecentlyVisited/VisitRetriever.php">
     <DeprecatedMethod occurrences="2">
       <code>$recently_visited_rows</code>
@@ -36550,6 +36816,9 @@
       <code>fetchRulesAsJavascript</code>
       <code>getConcurrentEditMessage</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/CopyRenderer.class.php">
     <MissingReturnType occurrences="6">
@@ -36711,6 +36980,9 @@
       <code>setInstance</code>
       <code>setTitles</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactLinkInfo.class.php">
     <InvalidScalarArgument occurrences="1">
@@ -37019,14 +37291,10 @@
     </NullableReturnStatement>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_List.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>Tracker_FileInfo</code>
-    </ImplementedReturnTypeMismatch>
     <InvalidReturnStatement occurrences="1">
       <code>$returned_values</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>Tracker_FileInfo</code>
+    <InvalidReturnType occurrences="1">
       <code>string</code>
     </InvalidReturnType>
     <MissingParamType occurrences="13">
@@ -38249,6 +38517,9 @@
       <code>removeNullRemainingEffort</code>
       <code>setIsBeingCalculated</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/Config/ConfigController.php">
     <MissingReturnType occurrences="1">
@@ -38340,6 +38611,11 @@
       <code>(string) $status_field-&gt;getXMLId()</code>
     </RedundantCast>
   </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/PendingJiraImportCleaner.php">
+    <PossiblyFalseReference occurrences="1">
+      <code>getTimestamp</code>
+    </PossiblyFalseReference>
+  </file>
   <file src="plugins/tracker/include/Tracker/Creation/TrackerCreationBreadCrumbsBuilder.php">
     <InvalidScalarArgument occurrences="1">
       <code>$project-&gt;getID()</code>
@@ -38362,6 +38638,14 @@
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$current_project-&gt;getID()</code>
     </PossiblyInvalidPropertyAssignmentValue>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Creation/TrackerCreationProcessorController.php">
+    <PossiblyInvalidArrayAccess occurrences="1">
+      <code>$file['tracker-xml-file']['tmp_name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$file['tracker-xml-file']['tmp_name']</code>
+    </PossiblyInvalidArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/TrackerCreatorXmlErrorDisplayer.php">
     <MissingPropertyType occurrences="1">
@@ -38720,6 +39004,10 @@
       <code>compareCachedDaysWithPeriodDays</code>
       <code>isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ChartConfigurationValueChecker.php">
     <MissingReturnType occurrences="2">
@@ -39339,6 +39627,9 @@
     <PossiblyInvalidMethodCall occurrences="1">
       <code>getId</code>
     </PossiblyInvalidMethodCall>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownCacheGenerator.php">
     <MissingParamType occurrences="1">
@@ -39353,6 +39644,9 @@
       <code>$capacity</code>
       <code>$user_timezone</code>
     </MissingParamType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownDataBuilderForLegacy.php">
     <MissingParamType occurrences="4">
@@ -39366,6 +39660,9 @@
       <code>build</code>
       <code>getBurndownCalculationStatus</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Burndown/BurndownDataBuilderForREST.php">
     <MissingParamType occurrences="2">
@@ -41450,6 +41747,9 @@
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$value</code>
     </MoreSpecificImplementedParamType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Checkbox.php">
     <MissingParamType occurrences="4">
@@ -41684,6 +41984,10 @@
     <PossiblyNullReference occurrences="1">
       <code>getValue</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedDocblockClass occurrences="1">
       <code>date</code>
     </UndefinedDocblockClass>
@@ -41706,6 +42010,12 @@
     <InvalidArgument occurrences="1">
       <code>$value</code>
     </InvalidArgument>
+    <InvalidReturnStatement occurrences="1">
+      <code>isset($_FILES['artifact']) ? $_FILES['artifact'] : null</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>null|array</code>
+    </InvalidReturnType>
     <MismatchingDocblockParamType occurrences="1">
       <code>Tracker_ChangesetValue_File</code>
     </MismatchingDocblockParamType>
@@ -44308,18 +44618,10 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/RecipientsManager.php">
-    <InvalidReturnType occurrences="1">
-      <code>array</code>
-    </InvalidReturnType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="2">
       <code>extractUserIdFromGlobalNotificationsRecipientList</code>
       <code>getAllRecipientsWhoHaveCustomSettingsForATracker</code>
-      <code>removeRecipientsThatHaveUnsubcribedFromNotification</code>
-      <code>userCanReadAtLeastOneChangedField</code>
     </MissingReturnType>
-    <PossiblyNullArgument occurrences="1">
-      <code>$user</code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/Settings/Administration/NotificationsAdminSettingsControllerCommon.php">
     <InvalidScalarArgument occurrences="1">
@@ -44508,7 +44810,6 @@
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/UserNotificationOnlyStatusChangeDAO.php">
     <MissingParamType occurrences="1">
-      <code>$tracker_id</code>
       <code>$tracker_id</code>
     </MissingParamType>
     <MissingReturnType occurrences="1">
@@ -47355,6 +47656,9 @@
       <code>display</code>
       <code>update</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedMethod occurrences="1">
       <code>redirect</code>
     </UndefinedMethod>
@@ -48040,6 +48344,9 @@
       <code>storeRenderer</code>
       <code>updateCriterion</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/WidgetAddToDashboardDropdownBuilder.php">
     <InvalidScalarArgument occurrences="1">
@@ -48281,6 +48588,9 @@
       <code>submitterOnlyApplies</code>
       <code>userIsAdmin</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/dao/Tracker_Report_CriteriaDao.class.php">
     <DeprecatedMethod occurrences="18">
@@ -49712,6 +50022,12 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
+    <PossiblyInvalidArrayAccess occurrences="1">
+      <code>$_FILES['csv_filename']['tmp_name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$_FILES['csv_filename']['tmp_name']</code>
+    </PossiblyInvalidArrayOffset>
     <PossiblyNullArgument occurrences="2">
       <code>$source_artifact</code>
       <code>$user</code>
@@ -49719,6 +50035,9 @@
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="3">
       <code>$artifact_id</code>
       <code>$column_name</code>
@@ -49829,6 +50148,10 @@
       <code>SimpleSanitizer::unsanitize($tracker_v3-&gt;getName())</code>
       <code>isError</code>
     </DeprecatedMethod>
+    <InvalidArgument occurrences="2">
+      <code>$_SERVER</code>
+      <code>$_SERVER</code>
+    </InvalidArgument>
     <InvalidScalarArgument occurrences="2">
       <code>$project-&gt;getID()</code>
       <code>$request-&gt;getProject()-&gt;getID()</code>
@@ -50050,6 +50373,9 @@
     <DeprecatedMethod occurrences="1">
       <code>$this-&gt;permissions_dao-&gt;getAuthorizedStaticUgroupIds($template_tracker-&gt;getId())</code>
     </DeprecatedMethod>
+    <RiskyCast occurrences="1">
+      <code>$id</code>
+    </RiskyCast>
   </file>
   <file src="plugins/tracker/include/Tracker/Webhook/Actions/AdminWebhooks.php">
     <MissingReturnType occurrences="1">
@@ -51550,6 +51876,9 @@
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;getFieldId(), $xmlMapping)</code>
     </PossiblyFalseArgument>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Field/Transition_PostAction_Field_Float.class.php">
     <InvalidScalarArgument occurrences="1">
@@ -52734,6 +53063,19 @@
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="11">
+      <code>$_SERVER['QUERY_STRING']</code>
+      <code>$_SERVER['QUERY_STRING']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$params</code>
     </PossiblyUndefinedVariable>
@@ -52801,6 +53143,9 @@
     <MissingReturnType occurrences="1">
       <code>codexDaily</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker_date_reminder/include/ArtifactDateReminderFactory.class.php">
     <DeprecatedFunction occurrences="49">
@@ -53092,6 +53437,21 @@
       <code>getPluginInfo</code>
       <code>isLoggingEnabled</code>
     </MissingReturnType>
+    <PossiblyInvalidArgument occurrences="5">
+      <code>$_REQUEST['frequency']</code>
+      <code>$_REQUEST['notified_groups']</code>
+      <code>$_REQUEST['notified_users']</code>
+      <code>$_REQUEST['recurse']</code>
+      <code>$_REQUEST['start']</code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidIterator occurrences="2">
+      <code>$_REQUEST['notified_groups']</code>
+      <code>$_REQUEST['notified_users']</code>
+    </PossiblyInvalidIterator>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_REQUEST['notified_users']</code>
+      <code>$_REQUEST['notified_users']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker_encryption/include/ChangesetValue.php">
     <MissingParamType occurrences="14">
@@ -53275,6 +53635,10 @@
       <code>tracker_event_fetch_admin_buttons</code>
       <code>tracker_formelement_get_classnames</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tuleap_synchro/include/Tuleap_Synchro/Dao/TuleapSynchroDao.php">
     <MissingParamType occurrences="10">
@@ -53871,6 +54235,9 @@
       <code>tracker_event_manage_semantics</code>
       <code>tracker_event_semantic_from_xml</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/webdav/include/BrowserPlugin.class.php">
     <DeprecatedMethod occurrences="1">
@@ -53879,6 +54246,25 @@
     <MissingPropertyType occurrences="1">
       <code>$purifier</code>
     </MissingPropertyType>
+    <PossiblyInvalidArgument occurrences="9">
+      <code>$_POST['name']</code>
+      <code>$_POST['name']</code>
+      <code>$_POST['name']</code>
+      <code>$_POST['name']</code>
+      <code>$_POST['node']</code>
+      <code>$_POST['node']</code>
+      <code>$_POST['node']</code>
+      <code>$_POST['select']</code>
+      <code>$name</code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidArrayAccess occurrences="2">
+      <code>$file['name']</code>
+      <code>$file['tmp_name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="2">
+      <code>$file['name']</code>
+      <code>$file['tmp_name']</code>
+    </PossiblyInvalidArrayOffset>
     <PossiblyNullArgument occurrences="1">
       <code>$type</code>
     </PossiblyNullArgument>
@@ -55649,6 +56035,9 @@
       <code>getPackageID</code>
       <code>getPackageID</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/FRS/FRSFileDownloadController.php">
     <InvalidScalarArgument occurrences="1">
@@ -55715,6 +56104,11 @@
       <code>getGroup</code>
       <code>getGroup</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $release_id</code>
     </RedundantCastGivenDocblockType>
@@ -56772,6 +57166,9 @@
       <code>updateAnonymousForSiteHomePage</code>
       <code>updateLabels</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['SCRIPT_NAME']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedMethod occurrences="3">
       <code>includeFooterJavascriptFile</code>
       <code>redirect</code>
@@ -57174,6 +57571,9 @@
     <MissingReturnType occurrences="1">
       <code>details</code>
     </MissingReturnType>
+    <RedundantCastGivenDocblockType occurrences="1">
+      <code>(int) $date-&gt;getTimestamp()</code>
+    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/Layout/HomePage/LastMonthStatisticsCollectorSVN.php">
     <MissingReturnType occurrences="1">
@@ -57361,6 +57761,11 @@
       <code>isProjectSuperPublic</code>
       <code>restrictedMemberIsNotProjectMember</code>
     </MissingReturnType>
+  </file>
+  <file src="src/common/Layout/SearchFormPresenterBuilder.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/Layout/ServiceUrlCollector.php">
     <MissingParamType occurrences="1">
@@ -58204,6 +58609,11 @@
       <code>$request-&gt;getProject()-&gt;getID()</code>
     </InvalidScalarArgument>
   </file>
+  <file src="src/common/OAuth2ServerCore/OpenIDConnect/OpenIDConnectSigningKeyFactoryDBPersistent.php">
+    <PossiblyFalseReference occurrences="1">
+      <code>getTimestamp</code>
+    </PossiblyFalseReference>
+  </file>
   <file src="src/common/OpenGraph/OpenGraphPresenter.php">
     <MissingParamType occurrences="3">
       <code>$description</code>
@@ -58316,8 +58726,7 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Plugin/Plugin.php">
-    <MissingParamType occurrences="5">
-      <code>$group_id</code>
+    <MissingParamType occurrences="4">
       <code>$hook</code>
       <code>$is_custom</code>
       <code>$is_restricted</code>
@@ -58328,7 +58737,7 @@
       <code>$id</code>
       <code>$pluginInfo</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="16">
+    <MissingReturnType occurrences="15">
       <code>currentRequestIsForPlugin</code>
       <code>deduceCallbackFromHook</code>
       <code>getAdministrationOptions</code>
@@ -58338,7 +58747,6 @@
       <code>getPluginEtcRoot</code>
       <code>getPluginInfo</code>
       <code>getThemePath</code>
-      <code>isAllowed</code>
       <code>isCustom</code>
       <code>removeOrphanWidgets</code>
       <code>services_allowed_for_project</code>
@@ -58346,6 +58754,9 @@
       <code>setIsRestricted</code>
       <code>setName</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <RedundantPropertyInitializationCheck occurrences="1">
       <code>isset($this-&gt;name)</code>
     </RedundantPropertyInitializationCheck>
@@ -59461,6 +59872,12 @@
       <code>redirect</code>
       <code>removeUserFromProject</code>
     </MissingReturnType>
+    <PossiblyInvalidArrayAccess occurrences="1">
+      <code>$_FILES['user_filename']['tmp_name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$_FILES['user_filename']['tmp_name']</code>
+    </PossiblyInvalidArrayOffset>
   </file>
   <file src="src/common/Project/Admin/ProjectMembers/ProjectMembersDAO.php">
     <DeprecatedMethod occurrences="3">
@@ -60060,9 +60477,6 @@
     <DeprecatedMethod occurrences="1">
       <code>userIsAdmin</code>
     </DeprecatedMethod>
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>int|string|null</code>
-    </ImplementedReturnTypeMismatch>
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;members_data_array</code>
     </InvalidReturnStatement>
@@ -60647,6 +61061,9 @@
       <code>setMessageToRequesterFromTemplate</code>
       <code>setProjectAdmin</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/Project/ProjectManager.class.php">
     <DeprecatedMethod occurrences="9">
@@ -60753,6 +61170,9 @@
     <NullableReturnStatement occurrences="1">
       <code>$p</code>
     </NullableReturnStatement>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/Project/ProjectPresentersBuilder.php">
     <InvalidScalarArgument occurrences="1">
@@ -61356,7 +61776,7 @@
     <InvalidScalarArgument occurrences="1">
       <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
-    <MissingParamType occurrences="10">
+    <MissingParamType occurrences="9">
       <code>$group_id</code>
       <code>$name</code>
       <code>$name</code>
@@ -61364,7 +61784,6 @@
       <code>$name</code>
       <code>$project_id</code>
       <code>$ugroup_description</code>
-      <code>$ugroup_id</code>
       <code>$ugroup_id</code>
       <code>$ugroup_name</code>
     </MissingParamType>
@@ -61587,6 +62006,9 @@
     <MissingReturnType occurrences="1">
       <code>log</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/Project/Webhook/Log/StatusRetriever.php">
     <DeprecatedMethod occurrences="1">
@@ -62060,6 +62482,11 @@
       <code>checkProjectStatusAllowsAllUsersToAccessIt</code>
     </MissingReturnType>
   </file>
+  <file src="src/common/REST/RESTAuthenticationFlowIsAllowed.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_METHOD']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="src/common/REST/RESTLogger.php">
     <MissingReturnType occurrences="1">
       <code>getLogger</code>
@@ -62157,6 +62584,10 @@
     <NullableReturnStatement occurrences="1">
       <code>$this-&gt;user_manager-&gt;getUserById($token-&gt;getUserId())</code>
     </NullableReturnStatement>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/REST/UserManager.class.php">
     <MissingReturnType occurrences="1">
@@ -62503,6 +62934,10 @@
     <DeprecatedMethod occurrences="1">
       <code>isProjectDashboard</code>
     </DeprecatedMethod>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/Request/FrontRouter.php">
     <MissingReturnType occurrences="6">
@@ -62513,6 +62948,12 @@
       <code>route</code>
       <code>routeHandler</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="4">
+      <code>$_SERVER['REQUEST_METHOD']</code>
+      <code>$_SERVER['REQUEST_METHOD']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/Request/LegacyRoutesController.php">
     <MissingParamType occurrences="1">
@@ -62521,6 +62962,11 @@
     <MissingPropertyType occurrences="1">
       <code>$script_location</code>
     </MissingPropertyType>
+  </file>
+  <file src="src/common/Request/RequestInstrumentation.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME_FLOAT']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/Request/RestrictedUsersAreHandledByPluginEvent.php">
     <MissingParamType occurrences="1">
@@ -62709,6 +63155,9 @@
       <code>saveNewAccessFileVersionInProject</code>
       <code>updateAccessFileVersionInProject</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/SVNCore/SVN_AccessFile_NoFilePresenter.php">
     <MissingReturnType occurrences="2">
@@ -63035,6 +63484,11 @@
       <code>getDefaultUsedBy</code>
       <code>setDateForUser</code>
     </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/ViewVC/ViewVCController.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/SVNCore/ViewVC/ViewVCProxy.php">
     <InvalidScalarArgument occurrences="1">
@@ -63810,6 +64264,23 @@
       <code>$i</code>
     </MissingPropertyType>
   </file>
+  <file src="src/common/User/Account/Appearance/AppearancePresenter.php">
+    <PossiblyFalseReference occurrences="1">
+      <code>getTimestamp</code>
+    </PossiblyFalseReference>
+  </file>
+  <file src="src/common/User/Account/ChangeAvatarController.php">
+    <InvalidArrayOffset occurrences="1">
+      <code>$_FILES['avatar']['tmp_name']</code>
+    </InvalidArrayOffset>
+    <PossiblyInvalidArrayAccess occurrences="2">
+      <code>$_FILES['avatar']['error']</code>
+      <code>$_FILES['avatar']['tmp_name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$_FILES['avatar']['error']</code>
+    </PossiblyInvalidArrayOffset>
+  </file>
   <file src="src/common/User/Account/ConfirmNewEmailController.php">
     <MissingReturnType occurrences="2">
       <code>buildSelf</code>
@@ -64238,6 +64709,11 @@
       <code>getId</code>
     </InvalidNullableReturnType>
   </file>
+  <file src="src/common/User/ForgeUserGroupPermission/RESTReadOnlyAdmin/RestReadOnlyAdminUserBuilder.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_METHOD']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="src/common/User/ForgeUserGroupPermission/RetrieveUserMembershipInformation.class.php">
     <InvalidNullableReturnType occurrences="1">
       <code>getId</code>
@@ -64561,6 +65037,9 @@
       <code>userPasswordHasExpired</code>
       <code>warnUserAboutPasswordExpiration</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/User/Password/PasswordExpiredException.class.php">
     <MissingReturnType occurrences="1">
@@ -65100,6 +65579,12 @@
       <code>$user</code>
       <code>null</code>
     </NullableReturnStatement>
+    <PossiblyUndefinedArrayOffset occurrences="4">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <TooManyArguments occurrences="1">
       <code>new User_SSHKeyValidator($this, $this-&gt;_getEventManager())</code>
     </TooManyArguments>
@@ -65134,6 +65619,14 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/UserSuspensionManager.php">
+    <FalsableReturnStatement occurrences="2">
+      <code>$date-&gt;modify($date_param)</code>
+      <code>$date-&gt;modify($date_param)</code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType occurrences="2">
+      <code>DateTimeImmutable</code>
+      <code>DateTimeImmutable</code>
+    </InvalidFalsableReturnType>
     <MissingReturnType occurrences="7">
       <code>checkUserAccountValidity</code>
       <code>sendAndLogSuspensionMailToUser</code>
@@ -65143,9 +65636,17 @@
       <code>suspendUser</code>
       <code>suspendUserNotProjectMembers</code>
     </MissingReturnType>
+    <PossiblyFalseArgument occurrences="1">
+      <code>$lastValidAccess</code>
+    </PossiblyFalseArgument>
     <PossiblyFalseOperand occurrences="1">
       <code>date('Y-m-d\TH:i:sO', $idle_user['last_access_date'])</code>
     </PossiblyFalseOperand>
+    <PossiblyFalseReference occurrences="3">
+      <code>format</code>
+      <code>getTimestamp</code>
+      <code>sub</code>
+    </PossiblyFalseReference>
   </file>
   <file src="src/common/User/User_SOAPServer.class.php">
     <ImplicitToStringCast occurrences="1">
@@ -66082,6 +66583,9 @@
       <code>process</code>
       <code>sortByTop</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/Widget/Widget_ProjectSvnStats_Layout.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -66416,6 +66920,17 @@
       <code>removeCustomLogo</code>
       <code>update</code>
     </MissingReturnType>
+    <PossiblyInvalidArrayAccess occurrences="2">
+      <code>$uploaded_logo['error']</code>
+      <code>$uploaded_logo['tmp_name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="2">
+      <code>$uploaded_logo['error']</code>
+      <code>$uploaded_logo['tmp_name']</code>
+    </PossiblyInvalidArrayOffset>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['SCRIPT_NAME']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedMethod occurrences="5">
       <code>includeFooterJavascriptFile</code>
       <code>includeFooterJavascriptFile</code>
@@ -67183,6 +67698,9 @@
       <code>createProjectFRSDirectory</code>
       <code>createProjectWebDirectory</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/backend/FileExtensionFilterIterator.php">
     <UndefinedInterfaceMethod occurrences="1">
@@ -68015,6 +68533,10 @@
       <code>searchInfoFileByReleaseID</code>
       <code>updateFromArray</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="2">
       <code>$file_id</code>
       <code>$sql_where</code>
@@ -68074,6 +68596,9 @@
       <code>escapeInt</code>
       <code>update</code>
     </DeprecatedMethod>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/dao/FRSPackageDao.class.php">
     <DeprecatedMethod occurrences="45">
@@ -69069,6 +69594,9 @@
     <InvalidParamDefault occurrences="1">
       <code>int</code>
     </InvalidParamDefault>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/dao/ReferenceDao.class.php">
     <DeprecatedMethod occurrences="81">
@@ -69852,6 +70380,9 @@
       <code>$user_name</code>
       <code>$words</code>
     </MissingParamType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/dao/UserGroupDao.class.php">
     <DeprecatedMethod occurrences="52">
@@ -70180,6 +70711,11 @@
       <code>instanciateWith</code>
     </MissingReturnType>
   </file>
+  <file src="src/common/date/Admin/RelativeDatesDisplayAdminPresenter.php">
+    <PossiblyFalseReference occurrences="1">
+      <code>getTimestamp</code>
+    </PossiblyFalseReference>
+  </file>
   <file src="src/common/date/DateHelper.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>floor(($end - $start) / self::SECONDS_IN_A_DAY)</code>
@@ -70209,6 +70745,9 @@
     <PossiblyFalseOperand occurrences="1">
       <code>date($GLOBALS['Language']-&gt;getText('system', 'datefmt'), $time)</code>
     </PossiblyFalseOperand>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/date/TimeInterval.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -70248,8 +70787,9 @@
       <code>$day</code>
       <code>$duration</code>
     </MissingParamType>
-    <RedundantCastGivenDocblockType occurrences="2">
+    <RedundantCastGivenDocblockType occurrences="3">
       <code>(string) date('Y-m-d')</code>
+      <code>(string) date('Y-m-d', $_SERVER['REQUEST_TIME'])</code>
       <code>(string) date('Y-m-d', $day)</code>
     </RedundantCastGivenDocblockType>
   </file>
@@ -70357,6 +70897,9 @@
       <code>getDocumentPermissions</code>
       <code>getTree</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/encoding/SupportedXmlCharEncoding.class.php">
     <MissingParamType occurrences="2">
@@ -70632,6 +71175,17 @@
       <code>isManagingLabels</code>
       <code>isSoftwareMap</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="9">
+      <code>$_SERVER['QUERY_STRING']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <TypeDoesNotContainType occurrences="1">
       <code>IS_SCRIPT</code>
     </TypeDoesNotContainType>
@@ -70996,6 +71550,9 @@
       <code>set</code>
       <code>setCurrentUser</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/include/Codendi_UnifiedDiffFormatter.php">
     <MissingParamType occurrences="9">
@@ -71025,6 +71582,11 @@
     <MissingReturnType occurrences="1">
       <code>_split</code>
     </MissingReturnType>
+  </file>
+  <file src="src/common/include/CookieManager.php">
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$_COOKIE[self::getCookieName($name)]</code>
+    </PossiblyInvalidArrayOffset>
   </file>
   <file src="src/common/include/Feedback.class.php">
     <MissingParamType occurrences="3">
@@ -71091,6 +71653,9 @@
       <code>clearInstance</code>
       <code>setInstance</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_METHOD']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/include/JSONHeader.php">
     <MissingParamType occurrences="1">
@@ -71286,6 +71851,11 @@
       <code>update</code>
     </MissingReturnType>
   </file>
+  <file src="src/common/include/TmpWatch.php">
+    <PossiblyFalseReference occurrences="1">
+      <code>getTimestamp</code>
+    </PossiblyFalseReference>
+  </file>
   <file src="src/common/include/Toggler.class.php">
     <InvalidScalarArgument occurrences="1">
       <code>1 - (int) $current_user-&gt;getPreference('toggle_' . $id)</code>
@@ -71346,6 +71916,9 @@
     </TooManyArguments>
   </file>
   <file src="src/common/include/URLRedirect.class.php">
+    <InvalidArgument occurrences="1">
+      <code>$_SERVER</code>
+    </InvalidArgument>
     <MissingParamType occurrences="2">
       <code>$return_to</code>
       <code>$url</code>
@@ -71384,6 +71957,9 @@
       <code>$project</code>
       <code>$project</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$allowedAnonymous</code>
     </PossiblyUndefinedVariable>
@@ -72241,6 +72817,11 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
@@ -73251,6 +73832,9 @@
     <InvalidParamDefault occurrences="1">
       <code>array</code>
     </InvalidParamDefault>
+    <InvalidScalarArgument occurrences="1">
+      <code>$key</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="122">
       <code>$ArtifactType</code>
       <code>$added_by</code>
@@ -73406,6 +73990,9 @@
       <code>isRestricted</code>
       <code>isRestricted</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="12">
       <code>$arr_addresses</code>
       <code>$arr_addresses</code>
@@ -74106,6 +74693,20 @@
     <InvalidReturnType occurrences="1">
       <code>bool</code>
     </InvalidReturnType>
+    <InvalidScalarArgument occurrences="12">
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$key</code>
+    </InvalidScalarArgument>
     <LessSpecificReturnStatement occurrences="1">
       <code>$fields_contained_in_fieldset</code>
     </LessSpecificReturnStatement>
@@ -75914,6 +76515,11 @@
     </MissingReturnType>
   </file>
   <file src="src/common/tracker/ArtifactXMLExporterArtifact.class.php">
+    <InvalidClass occurrences="3">
+      <code>DomElement</code>
+      <code>DomElement</code>
+      <code>private $last_changeset_for_truncated_history = null;</code>
+    </InvalidClass>
     <MissingParamType occurrences="29">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
@@ -75973,6 +76579,9 @@
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;attachment_exporter</code>
     </UndefinedThisPropertyAssignment>
@@ -76320,6 +76929,10 @@
       <code>displayAdd</code>
       <code>displayRSS</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <RedundantCast occurrences="6">
       <code>(int) $columns_number</code>
       <code>(int) $columns_number</code>
@@ -76808,6 +77421,9 @@
       <code>(int) $this-&gt;getId()</code>
       <code>(int) $this-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
+    <RiskyCast occurrences="1">
+      <code>$this-&gt;num_roles</code>
+    </RiskyCast>
   </file>
   <file src="src/common/tracker/TrackerV3.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -77539,6 +78155,9 @@
     </MissingParamType>
   </file>
   <file src="src/common/wiki/actions/WikiServiceAdminActions.class.php">
+    <InvalidArgument occurrences="1">
+      <code>$_POST['ugroups']</code>
+    </InvalidArgument>
     <MissingParamType occurrences="2">
       <code>$controler</code>
       <code>$page</code>
@@ -77694,6 +78313,10 @@
     <PossiblyInvalidOperand occurrences="1">
       <code>$purgeState</code>
     </PossiblyInvalidOperand>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
     <RedundantCastGivenDocblockType occurrences="2">
       <code>(int) $groupId</code>
       <code>(int) $id</code>
@@ -77747,6 +78370,9 @@
     <MissingParamType occurrences="1">
       <code>$filesystemName</code>
     </MissingParamType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_TIME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/wiki/lib/WikiAttachmentRevision.class.php">
     <MissingParamType occurrences="12">
@@ -78334,6 +78960,9 @@
       <code>wikiPages</code>
       <code>wikiPerms</code>
     </MissingReturnType>
+    <RiskyCast occurrences="1">
+      <code>$_GET['id']</code>
+    </RiskyCast>
   </file>
   <file src="src/common/wiki/views/WikiServiceViews.class.php">
     <MissingParamType occurrences="4">
@@ -78362,6 +78991,9 @@
       <code>pagePerms</code>
       <code>wiki</code>
     </MissingReturnType>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$_REQUEST['pagename']</code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="src/common/wiki/views/WikiViews.class.php">
     <DeprecatedFunction occurrences="1">
@@ -78393,6 +79025,9 @@
       <code>wiki_display_footer</code>
       <code>wiki_display_header</code>
     </MissingReturnType>
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$_REQUEST['hide_' . $svc]</code>
+    </PossiblyInvalidArrayOffset>
   </file>
   <file src="src/common/xml/MappingsRegistry.php">
     <MissingParamType occurrences="5">
@@ -78510,6 +79145,9 @@
     <PossiblyInvalidArgument occurrences="1">
       <code>$project_id</code>
     </PossiblyInvalidArgument>
+    <RiskyCast occurrences="1">
+      <code>$arguments['t']</code>
+    </RiskyCast>
   </file>
   <file src="src/utils/generate_user_mapping_for_project_import.php">
     <PossiblyInvalidArgument occurrences="1">
@@ -78520,12 +79158,18 @@
     <PossiblyNullArgument occurrences="1">
       <code>$import_project_xml_command-&gt;getName()</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['argv']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/utils/launch_system_check.php">
     <PossiblyNullArgument occurrences="2">
       <code>$launch_system_check_command-&gt;getName()</code>
       <code>$launch_system_check_command-&gt;getName()</code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['argv']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/utils/svn/codendi_svn_pre_commit.php">
     <InvalidScalarArgument occurrences="1">
@@ -78628,10 +79272,20 @@
       <code>$res</code>
     </PossiblyUndefinedGlobalVariable>
   </file>
+  <file src="src/www/admin/forgeaccess.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['SCRIPT_NAME']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="src/www/admin/grouplist.php">
     <InvalidArgument occurrences="1">
       <code>$status_values</code>
     </InvalidArgument>
+  </file>
+  <file src="src/www/admin/homepage.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['SCRIPT_NAME']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/www/admin/index.php">
     <DeprecatedFunction occurrences="5">
@@ -78771,6 +79425,11 @@
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
     </PossiblyNullReference>
+  </file>
+  <file src="src/www/api/index.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/www/api/reference/extractCross.php">
     <InvalidScalarArgument occurrences="1">
@@ -79110,6 +79769,10 @@
     <DeprecatedMethod occurrences="1">
       <code>$dar</code>
     </DeprecatedMethod>
+    <InvalidArrayOffset occurrences="2">
+      <code>$_FILES['uploaded_change_log']['tmp_name']</code>
+      <code>$_FILES['uploaded_release_notes']['tmp_name']</code>
+    </InvalidArrayOffset>
     <InvalidScalarArgument occurrences="6">
       <code>$date_list[0]</code>
       <code>$date_list[0]</code>
@@ -79178,6 +79841,30 @@
       <code>frs_show_release_popup2</code>
       <code>frs_show_status_popup</code>
     </MissingReturnType>
+    <PossiblyInvalidArrayAccess occurrences="11">
+      <code>$_FILES['file']['error']</code>
+      <code>$_FILES['file']['error']</code>
+      <code>$_FILES['file']['name']</code>
+      <code>$_FILES['file']['name']</code>
+      <code>$_FILES['file']['name']</code>
+      <code>$_FILES['file']['tmp_name']</code>
+      <code>$_FILES['file']['tmp_name']</code>
+      <code>$_FILES['uploaded_change_log']['error']</code>
+      <code>$_FILES['uploaded_change_log']['tmp_name']</code>
+      <code>$_FILES['uploaded_release_notes']['error']</code>
+      <code>$_FILES['uploaded_release_notes']['tmp_name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="9">
+      <code>$_FILES['file']['error']</code>
+      <code>$_FILES['file']['error']</code>
+      <code>$_FILES['file']['name']</code>
+      <code>$_FILES['file']['name']</code>
+      <code>$_FILES['file']['name']</code>
+      <code>$_FILES['file']['tmp_name']</code>
+      <code>$_FILES['file']['tmp_name']</code>
+      <code>$_FILES['uploaded_change_log']['error']</code>
+      <code>$_FILES['uploaded_release_notes']['error']</code>
+    </PossiblyInvalidArrayOffset>
     <PossiblyNullReference occurrences="1">
       <code>getRealName</code>
     </PossiblyNullReference>
@@ -79598,6 +80285,9 @@
       <code>user_monitor_forum</code>
       <code>user_monitor_forum_thread</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
     <TooManyArguments occurrences="1">
       <code>db_result($result, 0, 'details', $group_id)</code>
     </TooManyArguments>
@@ -79799,6 +80489,10 @@
       <code>exit_permission_denied</code>
       <code>print_soap_fault</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['SCRIPT_NAME']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="2">
       <code>$text</code>
       <code>$text</code>
@@ -79961,7 +80655,7 @@
     <ForbiddenCode occurrences="1">
       <code>var_dump($data)</code>
     </ForbiddenCode>
-    <InvalidArgument occurrences="10">
+    <InvalidArgument occurrences="12">
       <code>$attrs</code>
       <code>$attrs</code>
       <code>$namespaces</code>
@@ -79972,6 +80666,8 @@
       <code>$this-&gt;wsdl-&gt;getDebug()</code>
       <code>$this-&gt;wsdl-&gt;namespaces</code>
       <code>$tr-&gt;getDebug()</code>
+      <code>$v</code>
+      <code>$v</code>
     </InvalidArgument>
     <InvalidClass occurrences="2">
       <code>xmlschema</code>
@@ -80007,7 +80703,8 @@
       <code>string</code>
       <code>string</code>
     </InvalidParamDefault>
-    <InvalidPropertyAssignmentValue occurrences="3">
+    <InvalidPropertyAssignmentValue occurrences="4">
+      <code>$v</code>
       <code>''</code>
       <code>''</code>
       <code>true</code>
@@ -80028,7 +80725,7 @@
       <code>debug</code>
       <code>debug</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="11">
+    <InvalidScalarArgument occurrences="12">
       <code>$data</code>
       <code>$data</code>
       <code>$data</code>
@@ -80040,6 +80737,7 @@
       <code>$data</code>
       <code>$this-&gt;decode_utf8</code>
       <code>$timestamp</code>
+      <code>$v</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="38">
       <code>$arrayType</code>
@@ -80341,6 +81039,13 @@
       <code>$regs[5]</code>
       <code>$regs[5]</code>
     </PossiblyInvalidOperand>
+    <PossiblyUndefinedArrayOffset occurrences="5">
+      <code>$_SERVER['SCRIPT_NAME']</code>
+      <code>$_SERVER['SCRIPT_NAME']</code>
+      <code>$_SERVER['SERVER_NAME']</code>
+      <code>$_SERVER['SERVER_NAME']</code>
+      <code>$_SERVER['SERVER_PORT']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="50">
       <code>$HTTPS</code>
       <code>$SCRIPT_NAME</code>
@@ -80456,9 +81161,9 @@
     </UndefinedVariable>
   </file>
   <file src="src/www/include/pre.php">
-    <TypeDoesNotContainNull occurrences="1">
-      <code>[]</code>
-    </TypeDoesNotContainNull>
+    <RiskyCast occurrences="1">
+      <code>$_REQUEST[$variable]</code>
+    </RiskyCast>
   </file>
   <file src="src/www/include/proj_email.php">
     <MissingParamType occurrences="9">
@@ -80652,6 +81357,12 @@
       <code>db_result($result, 0, 0)</code>
       <code>db_result($result, 0, 0)</code>
     </DeprecatedFunction>
+    <InvalidReturnStatement occurrences="1">
+      <code>$_SERVER[$key]</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>string</code>
+    </InvalidReturnType>
     <MissingParamType occurrences="50">
       <code>$absolute</code>
       <code>$address</code>
@@ -81147,6 +81858,10 @@
     <InvalidReturnType occurrences="1">
       <code>false</code>
     </InvalidReturnType>
+    <InvalidScalarArgument occurrences="2">
+      <code>$key</code>
+      <code>$key</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="101">
       <code>$atid</code>
       <code>$atid</code>
@@ -81285,6 +82000,17 @@
     <ParadoxicalCondition occurrences="1">
       <code>$permission_type == 'TRACKER_ACCESS_FULL'</code>
     </ParadoxicalCondition>
+    <PossiblyInvalidArrayOffset occurrences="9">
+      <code>$_REQUEST[$prefixe_expected . $GLOBALS['UGROUP_ANONYMOUS']]</code>
+      <code>$_REQUEST[$prefixe_expected . $GLOBALS['UGROUP_ANONYMOUS']]</code>
+      <code>$_REQUEST[$prefixe_expected . $GLOBALS['UGROUP_ANONYMOUS']]</code>
+      <code>$_REQUEST[$prefixe_expected . $GLOBALS['UGROUP_REGISTERED']]</code>
+      <code>$_REQUEST[$prefixe_expected . $stored_ugroup_id]</code>
+      <code>$_REQUEST[$prefixe_expected . $stored_ugroup_id]</code>
+      <code>$_REQUEST[$prefixe_expected . $stored_ugroup_id]</code>
+      <code>$_REQUEST[$prefixe_expected . $stored_ugroup_id]</code>
+      <code>$_REQUEST[$prefixe_expected . $stored_ugroup_id]</code>
+    </PossiblyInvalidArrayOffset>
     <PossiblyNullReference occurrences="1">
       <code>isSuperUser</code>
     </PossiblyNullReference>
@@ -81508,6 +82234,14 @@
       <code>DB</code>
       <code>ugroup_id</code>
     </UndefinedDocblockClass>
+  </file>
+  <file src="src/www/project/admin/userimport.php">
+    <PossiblyInvalidArrayAccess occurrences="1">
+      <code>$_FILES['user_filename']['tmp_name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$_FILES['user_filename']['tmp_name']</code>
+    </PossiblyInvalidArrayOffset>
   </file>
   <file src="src/www/project/admin/userperms.php">
     <DeprecatedFunction occurrences="18">
@@ -82979,6 +83713,11 @@
       <code>$request</code>
     </UndefinedGlobalVariable>
   </file>
+  <file src="src/www/svn/admin/index.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="src/www/svn/admin/notification.php">
     <DeprecatedMethod occurrences="1">
       <code>$svnNotificationsDetails</code>
@@ -83068,6 +83807,11 @@
       <code>$Language</code>
       <code>$Language</code>
     </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/svn/index.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/www/svn/svn_data.php">
     <DeprecatedFunction occurrences="16">
@@ -83276,7 +84020,9 @@
     </MissingReturnType>
   </file>
   <file src="src/www/tlp-doc/index.php">
-    <InvalidArrayOffset occurrences="1">
+    <InvalidArrayOffset occurrences="3">
+      <code>$sections[$_GET['section']]</code>
+      <code>[$_GET['section'] =&gt; true]</code>
       <code>[$current_section =&gt; $sections[$current_section]]</code>
     </InvalidArrayOffset>
   </file>
@@ -83812,6 +84558,12 @@
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
+    <PossiblyInvalidArrayAccess occurrences="1">
+      <code>$_FILES['csv_filename']['tmp_name']</code>
+    </PossiblyInvalidArrayAccess>
+    <PossiblyInvalidArrayOffset occurrences="1">
+      <code>$_FILES['csv_filename']['tmp_name']</code>
+    </PossiblyInvalidArrayOffset>
     <PossiblyUndefinedGlobalVariable occurrences="3">
       <code>$data</code>
       <code>$data</code>
@@ -83926,6 +84678,11 @@
       <code>$request</code>
       <code>$request</code>
     </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/wiki/uploads.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="tests/lib/Stubs/RetrieveUserByIdStub.php">
     <MissingParamType occurrences="1">
