@@ -26,6 +26,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
+use Tuleap\Tracker\Semantic\Timeframe\Events\GetSemanticTimeframeUsageEvent;
 use Tuleap\Tracker\Template\CompleteIssuesTemplateEvent;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -82,6 +83,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(CompleteIssuesTemplateEvent::NAME);
             $this->addHook(IssuesTemplateDashboardDefinition::NAME);
+            $this->addHook(GetSemanticTimeframeUsageEvent::NAME);
         }
         $this->allowedForProject = [];
     }
@@ -367,5 +369,12 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     public function issuesTemplateDashboardDefinition(IssuesTemplateDashboardDefinition $dashboard_definition): void
     {
         CompleteIssuesTemplate::defineDashboards($dashboard_definition);
+    }
+
+    public function getSemanticTimeframeUsageEvent(GetSemanticTimeframeUsageEvent $event): void
+    {
+        $event->addUsageLocation(
+            dgettext('tuleap-graphontrackersv5', 'graph on tracker')
+        );
     }
 }

@@ -3118,6 +3118,10 @@ msgstr ""
 msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr ""
 
+#, php-format
+msgid "The timeframe semantic summarizes the duration of artifact in %s."
+msgstr ""
+
 msgid ""
 "The title summarizes an artifact and will be used in various places: "
 "widgets, artifact links, email notifications, ..."

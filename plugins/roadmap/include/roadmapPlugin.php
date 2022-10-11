@@ -32,6 +32,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
+use Tuleap\Tracker\Semantic\Timeframe\Events\GetSemanticTimeframeUsageEvent;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -74,6 +75,7 @@ class RoadmapPlugin extends Plugin
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(ConfigureAtXMLImport::NAME);
         $this->addHook(GetSemanticProgressUsageEvent::NAME);
+        $this->addHook(GetSemanticTimeframeUsageEvent::NAME);
         $this->addHook(ProjectDashboardIsDisplayed::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -119,6 +121,13 @@ class RoadmapPlugin extends Plugin
     {
         $event->addUsageLocation(
             dgettext('tuleap-roadmap', 'the Roadmap widget')
+        );
+    }
+
+    public function getSemanticTimeframeUsageEvent(GetSemanticTimeframeUsageEvent $event): void
+    {
+        $event->addUsageLocation(
+            dgettext('tuleap-roadmap', 'Roadmap widget')
         );
     }
 

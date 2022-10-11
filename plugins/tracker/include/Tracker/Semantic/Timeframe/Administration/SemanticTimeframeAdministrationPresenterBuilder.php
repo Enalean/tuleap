@@ -24,23 +24,17 @@ namespace Tuleap\Tracker\Semantic\Timeframe\Administration;
 
 use Tracker;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
+use Tuleap\Tracker\Semantic\Timeframe\Events\GetSemanticTimeframeUsageEvent;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever;
 
 class SemanticTimeframeAdministrationPresenterBuilder
 {
-    /**
-     * @var \Tracker_FormElementFactory
-     */
-    private $tracker_formelement_factory;
-    private SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever;
-
     public function __construct(
-        \Tracker_FormElementFactory $tracker_formelement_factory,
-        SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever,
+        private \Tracker_FormElementFactory $tracker_formelement_factory,
+        private SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever $suitable_trackers_retriever,
+        private \EventManager $event_manager,
     ) {
-        $this->tracker_formelement_factory = $tracker_formelement_factory;
-        $this->suitable_trackers_retriever = $suitable_trackers_retriever;
     }
 
     public function build(
@@ -50,6 +44,8 @@ class SemanticTimeframeAdministrationPresenterBuilder
         SemanticTimeframeCurrentConfigurationPresenter $configuration_presenter,
         IComputeTimeframes $timeframe,
     ): SemanticTimeframeAdministrationPresenter {
+        $event = new GetSemanticTimeframeUsageEvent();
+        $this->event_manager->processEvent($event);
         return new SemanticTimeframeAdministrationPresenter(
             $csrf,
             $tracker,
@@ -60,7 +56,8 @@ class SemanticTimeframeAdministrationPresenterBuilder
             $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['int', 'float', 'computed']),
             $timeframe,
             $configuration_presenter,
-            $this->getSuitableTrackersSelectBoxEntries($tracker)
+            $this->getSuitableTrackersSelectBoxEntries($tracker),
+            $event->getSemanticUsage()
         );
     }
 

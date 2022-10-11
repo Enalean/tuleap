@@ -171,3 +171,6 @@ msgstr "Semana"
 
 msgid "Width"
 msgstr ""
+
+msgid "graph on tracker"
+msgstr ""

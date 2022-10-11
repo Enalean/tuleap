@@ -15,6 +15,9 @@ msgstr ""
 msgid "Roadmap"
 msgstr ""
 
+msgid "Roadmap widget"
+msgstr ""
+
 msgid "The roadmap cannot be found."
 msgstr ""
 

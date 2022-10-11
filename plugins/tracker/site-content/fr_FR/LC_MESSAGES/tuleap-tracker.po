@@ -3532,6 +3532,10 @@ msgstr "Le champ texte '%s' ne peut pas être comparé à NOW()."
 msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à OPEN()."
 
+#, php-format
+msgid "The timeframe semantic summarizes the duration of artifact in %s."
+msgstr "La sémantique plage de temps résume la durée de l'artéfact dans %s."
+
 msgid ""
 "The title summarizes an artifact and will be used in various places: "
 "widgets, artifact links, email notifications, ..."

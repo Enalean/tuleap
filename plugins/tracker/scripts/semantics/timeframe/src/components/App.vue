@@ -19,6 +19,7 @@
 
 <template>
     <div>
+        <p>{{ semantic_presentation }}</p>
         <timeframe-config-mode-selector
             v-on:timeframe-mode-selected="toggleTimeframeConfigs"
             v-bind:implied_from_tracker_id="implied_from_tracker_id"
@@ -120,6 +121,9 @@ export default class App extends Vue {
 
     @Prop({ required: true })
     private readonly has_artifact_link_field!: boolean;
+
+    @Prop({ required: true })
+    private readonly semantic_presentation!: string;
 
     private is_based_on_tracker_fields_mode_enabled = true;
 

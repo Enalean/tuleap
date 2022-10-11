@@ -83,7 +83,11 @@ class SemanticTimeframe extends Tracker_Semantic
         Codendi_Request $request,
         PFUser $current_user,
     ): void {
-        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
+        $this->tracker->displayAdminItemHeaderBurningParrot(
+            $tracker_manager,
+            'editsemantic',
+            $this->getLabel()
+        );
 
         $builder = new SemanticTimeframeAdministrationPresenterBuilder(
             \Tracker_FormElementFactory::instance(),
@@ -91,7 +95,8 @@ class SemanticTimeframe extends Tracker_Semantic
                 new SemanticTimeframeDao(),
                 \TrackerFactory::instance(),
                 \Tracker_FormElementFactory::instance(),
-            )
+            ),
+            \EventManager::instance()
         );
 
         $presenter = $builder->build(

@@ -18,11 +18,14 @@
   -->
 
 <template>
-    <div>
-        <translate>The timeframe of an artifact will be</translate>
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="imeframe-mode">
+            {{ $gettext("The timeframe of an artifact will be") }}
+        </label>
         <select
             id="timeframe-mode"
             name="timeframe-mode"
+            class="tlp-form-element tlp-select tlp-select-adjusted"
             v-on:change="dispatchSelection"
             v-model="active_timeframe_mode"
             data-test="timeframe-mode-select-box"
@@ -33,7 +36,6 @@
                 {{ mode.name }}
             </option>
         </select>
-        :
     </div>
 </template>
 

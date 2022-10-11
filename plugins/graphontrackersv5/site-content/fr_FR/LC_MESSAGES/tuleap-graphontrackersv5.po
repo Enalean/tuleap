@@ -180,3 +180,6 @@ msgstr "Semaine"
 
 msgid "Width"
 msgstr "Largeur"
+
+msgid "graph on tracker"
+msgstr "graphiques d'outil de suivi"

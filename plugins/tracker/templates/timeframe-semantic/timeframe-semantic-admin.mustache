@@ -1,31 +1,41 @@
-<div class="tracker-administration-semantic-timeframe">
-    {{# configuration_presenter }}
-        <div class="alert alert-info">
-            {{> semantic-timeframe-current-configuration  }}
+<div class="tlp-framed">
+    <p>
+         <a href="{{ tracker_semantic_admin_url }}" class="back-to-semantics">
+            <i class="fa-solid fa-long-arrow-alt-left" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-tracker | Back to semantics {{/ dgettext }}
+         </a>
+    </p>
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"> {{# dgettext }} tuleap-tracker | Timeframe {{/ dgettext }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                {{# configuration_presenter }}
+                    <div class="tlp-alert-info">
+                        {{> semantic-timeframe-current-configuration  }}
+                    </div>
+                {{/ configuration_presenter }}
+
+                <div
+                    id="semantic-timeframe-admin-mount-point"
+                    data-usable-date-fields="{{ usable_date_fields }}"
+                    data-usable-numeric-fields="{{ usable_numeric_fields }}"
+                    data-start-date-field-id="{{ start_date_field_id }}"
+                    data-end-date-field-id="{{ end_date_field_id }}"
+                    data-duration-field-id="{{ duration_field_id }}"
+                    data-target-url="{{ target_url }}"
+                    data-csrf-token="{{ csrf_token }}"
+                    data-has-other-trackers-implying-their-timeframes="{{ has_other_trackers_implying_their_timeframes }}"
+                    data-has-tracker-charts="{{ has_tracker_charts }}"
+                    data-suitable-trackers="{{ suitable_trackers }}"
+                    data-implied-from-tracker-id="{{ implied_from_tracker_id }}"
+                    data-has-artifact-link-field="{{ has_artifact_link_field }}"
+                    data-current-tracker-id="{{ current_tracker_id }}"
+                    data-semantic-presentation="{{ semantic_presentation }}"
+                ></div>
+            </section>
         </div>
-        <br />
-    {{/ configuration_presenter }}
-
-    <div
-        id="semantic-timeframe-admin-mount-point"
-        data-usable-date-fields="{{ usable_date_fields }}"
-        data-usable-numeric-fields="{{ usable_numeric_fields }}"
-        data-start-date-field-id="{{ start_date_field_id }}"
-        data-end-date-field-id="{{ end_date_field_id }}"
-        data-duration-field-id="{{ duration_field_id }}"
-        data-target-url="{{ target_url }}"
-        data-csrf-token="{{ csrf_token }}"
-        data-has-other-trackers-implying-their-timeframes="{{ has_other_trackers_implying_their_timeframes }}"
-        data-has-tracker-charts="{{ has_tracker_charts }}"
-        data-suitable-trackers="{{ suitable_trackers }}"
-        data-implied-from-tracker-id="{{ implied_from_tracker_id }}"
-        data-has-artifact-link-field="{{ has_artifact_link_field }}"
-        data-current-tracker-id="{{ current_tracker_id }}"
-    ></div>
-
-    <div>
-        <a href="{{ tracker_semantic_admin_url }}">
-            {{# dgettext }} tuleap-tracker | « Go back to semantic overview {{/ dgettext }}
-        </a>
-    </div>
+    </section>
 </div>
