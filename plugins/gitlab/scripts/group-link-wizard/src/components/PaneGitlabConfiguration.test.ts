@@ -95,7 +95,9 @@ describe("PaneGitlabConfiguration", () => {
             });
         });
 
-        it("should call the tuleap api with all the information needed", async () => {
+        it(`should call the tuleap api with all the information needed
+            and should keep the button disabled with a spinner
+            to prevent user from triggering create again while the page is reloading`, async () => {
             const create_link_spy = jest
                 .spyOn(tuleap_api, "linkGitlabGroupWithTuleap")
                 .mockReturnValue(okAsync(undefined));
@@ -103,9 +105,10 @@ describe("PaneGitlabConfiguration", () => {
             await wrapper.get("[data-test=checkbox-prefix-branch-name]").setValue(true);
             await wrapper.get("[data-test=branch-name-prefix-input]").setValue("my-prefix");
 
-            wrapper
-                .get<HTMLButtonElement>("[data-test=gitlab-configuration-submit-button]")
-                .element.click();
+            const button = wrapper.get<HTMLButtonElement>(
+                "[data-test=gitlab-configuration-submit-button]"
+            );
+            button.element.click();
 
             await flushPromises();
 
@@ -117,6 +120,7 @@ describe("PaneGitlabConfiguration", () => {
                 "my-prefix",
                 false
             );
+            expect(button.element.disabled).toBe(true);
         });
 
         it("When an error occurs, Then it should display an error message", async () => {
