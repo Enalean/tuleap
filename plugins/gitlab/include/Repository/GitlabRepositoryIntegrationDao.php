@@ -104,10 +104,13 @@ class GitlabRepositoryIntegrationDao extends DataAccessObject implements VerifyG
 
     public function deleteIntegration(int $integration_id): void
     {
-        $this->getDB()->delete(
-            'plugin_gitlab_repository_integration',
-            ['id' => $integration_id]
-        );
+        $this->getDB()->tryFlatTransaction(function () use ($integration_id): void {
+            $this->getDB()->delete('plugin_gitlab_group_repository_integration', ['integration_id' => $integration_id]);
+            $this->getDB()->delete(
+                'plugin_gitlab_repository_integration',
+                ['id' => $integration_id]
+            );
+        });
     }
 
     public function createGitlabRepositoryIntegration(
