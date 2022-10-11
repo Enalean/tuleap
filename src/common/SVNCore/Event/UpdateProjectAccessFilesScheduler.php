@@ -28,14 +28,8 @@ use SystemEventManager;
 
 class UpdateProjectAccessFilesScheduler
 {
-    /**
-     * @var SystemEventManager
-     */
-    private $system_event_manager;
-
-    public function __construct(SystemEventManager $system_event_manager)
+    public function __construct(private SystemEventManager $system_event_manager)
     {
-        $this->system_event_manager = $system_event_manager;
     }
 
     public function scheduleUpdateOfProjectAccessFiles(Project $project): void
@@ -43,6 +37,15 @@ class UpdateProjectAccessFilesScheduler
         if (
             $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
                 SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES,
+                $project->getID()
+            )
+        ) {
+            return;
+        }
+
+        if (
+            $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
+                SystemEvent::TYPE_UGROUP_MODIFY,
                 $project->getID()
             )
         ) {
