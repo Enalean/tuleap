@@ -358,7 +358,7 @@ msgstr "Ajouter"
 
 #, php-format
 msgid "Add a new %s"
-msgstr "Ajouter un nouveau %s"
+msgstr "Ajouter un(e) nouveau(elle) %s"
 
 msgid "Add a new comment..."
 msgstr "Ajouter un nouveau commentaire..."
@@ -1417,7 +1417,7 @@ msgstr "Erreur lors de la mise à jour de l'artéfact %1$s : %2$s"
 
 #, php-format
 msgid "Error with the field '%s'. The user '%s' does not exist."
-msgstr "Error sur le champs '%s'. L'utilisateur '%s' n'existe pas."
+msgstr "Error sur le champ '%s'. L'utilisateur '%s' n'existe pas."
 
 msgid "Example: (field_1 = 'value' OR field_2 = 'value') AND field_3 = 'value'"
 msgstr ""
@@ -1629,7 +1629,7 @@ msgid ""
 "field below. Use a comma to separate each ids if you have more than one."
 msgstr ""
 "Si vous connaissez l'id de l'artéfact, entrez-le manuellement dans le champs "
-"texte ci-dessous. Le champs attends une liste d'ids séparés par des virgules."
+"texte ci-dessous. Le champ attends une liste d'ids séparés par des virgules."
 
 msgid "Import"
 msgstr "Importer"
@@ -2099,8 +2099,8 @@ msgid ""
 "one report is public! Tracker access should be managed via the permission "
 "settings."
 msgstr ""
-"Aucun des rapports de ce tracker n'est publique, veuillez créer au moins un "
-"rapport publique ! Les droits d'accès d'un tracker doivent être gérés via la "
+"Aucun des rapports de ce tracker n'est public, veuillez créer au moins un "
+"rapport public ! Les droits d'accès d'un tracker doivent être gérés via la "
 "configuration des permissions."
 
 msgid "Normal mode"
@@ -3103,7 +3103,7 @@ msgstr ""
 
 #, php-format
 msgid "The field \"%1$s\" cannot be stored."
-msgstr "Le champs \"%1$s\" n'a pas pu être sauvegardé."
+msgstr "Le champ \"%1$s\" n'a pas pu être sauvegardé."
 
 #, php-format
 msgid "The field \"%1$s\" will not be taken into account."
@@ -3441,7 +3441,7 @@ msgid ""
 "The provided field can't be shared with this tracker because the project it "
 "comes from is not active."
 msgstr ""
-"Le champs entré ne peut pas être partagé avec cet outil de suivi parce que "
+"Le champ entré ne peut pas être partagé avec cet outil de suivi parce que "
 "son projet d'origine n'est pas actif."
 
 msgid "The provided file is not a valid file"
@@ -4493,8 +4493,8 @@ msgid ""
 "You cannot remove a field used in a trigger. Please update trigger rules "
 "before deleting field."
 msgstr ""
-"Il est interdit de supprimer un champs utilisé dans un déclencheur. Merci de "
-"mettre le déclencheur à jour avant de supprimer le champs."
+"Il est interdit de supprimer un champ utilisé dans un déclencheur. Merci de "
+"mettre le déclencheur à jour avant de supprimer le champ."
 
 msgid ""
 "You cannot reset this semantic because some trackers inherit their own "
@@ -4584,7 +4584,7 @@ msgid ""
 "You will not able to edit by hand the field \"%1$s\" since no update and "
 "submit permissions will be granted."
 msgstr ""
-"Il ne vous sera pas possible de modifier manuellement la valeur du champs "
+"Il ne vous sera pas possible de modifier manuellement la valeur du champ "
 "\"%1$s\" tant que les permissions de mise à jour et de soumission n'auront "
 "pas été actualisées."
 

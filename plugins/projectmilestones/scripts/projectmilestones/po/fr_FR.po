@@ -36,7 +36,7 @@ msgstr[0] "%{total_closed_sprint} %{tracker_label} fermé(e)"
 msgstr[1] "%{total_closed_sprint} %{tracker_label} fermé(e)s"
 
 msgid "'%s' field is empty or invalid."
-msgstr "Le champs '%s' est vide ou invalide."
+msgstr "Le champ '%s' est vide ou invalide."
 
 msgid "Blocked"
 msgstr "Bloqué"
