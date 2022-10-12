@@ -48,8 +48,8 @@ describe(`rest-querier`, () => {
     });
 
     it("asks to create the GitLab merge request", async () => {
-        const postSpy = jest.spyOn(fetch_result, "postJSON");
-        postSpy.mockReturnValue(okAsync({}));
+        const postSpy = jest.spyOn(fetch_result, "post");
+        postSpy.mockReturnValue(okAsync({} as Response));
 
         const result = await postGitlabMergeRequest(
             GITLAB_INTEGRATION_ID,
@@ -57,11 +57,15 @@ describe(`rest-querier`, () => {
             "prefix/tuleap-123"
         );
 
-        expect(postSpy).toHaveBeenCalledWith("/api/v1/gitlab_merge_request", {
-            gitlab_integration_id: GITLAB_INTEGRATION_ID,
-            artifact_id: ARTIFACT_ID,
-            source_branch: "prefix/tuleap-123",
-        });
+        expect(postSpy).toHaveBeenCalledWith(
+            "/api/v1/gitlab_merge_request",
+            {},
+            {
+                gitlab_integration_id: GITLAB_INTEGRATION_ID,
+                artifact_id: ARTIFACT_ID,
+                source_branch: "prefix/tuleap-123",
+            }
+        );
         expect(result.isOk()).toBe(true);
     });
 
