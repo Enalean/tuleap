@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue.ts";
 import ComparisonsList from "./ComparisonsList.vue";
 import ComparisonSkeleton from "./ComparisonSkeleton.vue";
 import ComparisonItem from "./ComparisonItem.vue";

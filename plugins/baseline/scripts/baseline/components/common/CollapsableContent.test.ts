@@ -18,15 +18,16 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue";
 import CollapsableContent from "./CollapsableContent.vue";
 
 describe("CollapsableContent", () => {
     const toggle_selector = '[data-test-action="toggle-expand-collapse"]';
     const header_slot_selector = '[data-test-type="header-slot"]';
 
-    let wrapper;
+    let wrapper: Wrapper<CollapsableContent>;
 
     beforeEach(() => {
         wrapper = shallowMount(CollapsableContent, {
@@ -43,9 +44,11 @@ describe("CollapsableContent", () => {
     });
 
     it("shows default slot", () => {
-        expect(
-            wrapper.get("[data-test=collapsible-slot]").element.style.getPropertyValue("display")
-        ).not.toBe("none");
+        const slot = wrapper.find("[data-test=collapsible-slot]").element;
+        if (!(slot instanceof HTMLElement)) {
+            throw Error("Unable to find the slot");
+        }
+        expect(slot.style.display).not.toBe("none");
     });
 
     describe("when toggle expand/collapse", () => {
@@ -59,11 +62,11 @@ describe("CollapsableContent", () => {
         });
 
         it("hides default slot", () => {
-            expect(
-                wrapper
-                    .get("[data-test=collapsible-slot]")
-                    .element.style.getPropertyValue("display")
-            ).toBe("none");
+            const slot = wrapper.find("[data-test=collapsible-slot]").element;
+            if (!(slot instanceof HTMLElement)) {
+                throw Error("Unable to find the slot");
+            }
+            expect(slot.style.display).toBe("none");
         });
 
         describe("when toggle expand/collapse again", () => {
@@ -73,11 +76,11 @@ describe("CollapsableContent", () => {
             });
 
             it("shows default slot", () => {
-                expect(
-                    wrapper
-                        .get("[data-test=collapsible-slot]")
-                        .element.style.getPropertyValue("display")
-                ).not.toBe("none");
+                const slot = wrapper.find("[data-test=collapsible-slot]").element;
+                if (!(slot instanceof HTMLElement)) {
+                    throw Error("Unable to find the slot");
+                }
+                expect(slot.style.display).not.toBe("none");
             });
         });
     });

@@ -20,7 +20,7 @@
 
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue.ts";
 import MilestoneList from "./MilestonesSelect.vue";
 import { create } from "../../support/factories";
 

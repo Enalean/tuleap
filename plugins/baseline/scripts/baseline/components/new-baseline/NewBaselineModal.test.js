@@ -20,7 +20,7 @@
 
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue.ts";
 import * as rest_querier from "../../api/rest-querier.js";
 import NewBaselineModal from "./NewBaselineModal.vue";
 import MilestonesSelect from "./MilestonesSelect.vue";

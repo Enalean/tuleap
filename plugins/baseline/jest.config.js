@@ -17,8 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const path = require("path");
+
 const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+
+const jest_base_config = defineJestConfiguration();
 module.exports = {
-    ...defineJestConfiguration(),
+    ...jest_base_config,
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+    },
+    moduleNameMapper: {
+        ...jest_base_config.moduleNameMapper,
+        "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
+    },
     displayName: "baseline",
 };

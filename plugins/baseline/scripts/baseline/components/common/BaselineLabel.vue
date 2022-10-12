@@ -30,25 +30,18 @@
     </h2>
 </template>
 
-<script>
+<script setup lang="ts">
 import UserBadge from "./UserBadge.vue";
-import { mapGetters } from "vuex";
 import DateUtils from "../../support/date-utils";
+import type { Baseline, User } from "../../type";
+import { useState } from "vuex-composition-helpers";
+import { computed } from "vue";
 
-export default {
-    name: "BaselineLabel",
-    components: { UserBadge },
-    props: {
-        baseline: { required: true, type: Object },
-    },
-    computed: {
-        ...mapGetters(["findUserById"]),
-        author() {
-            return this.findUserById(this.baseline.author_id);
-        },
-        humanized_snapshot_date() {
-            return DateUtils.humanFormat(this.baseline.snapshot_date);
-        },
-    },
-};
+const { users_by_id } = useState<{ users_by_id: Record<number, User> }>(["users_by_id"]);
+
+const props = defineProps<{ baseline: Baseline }>();
+const author = computed((): User => users_by_id.value[props.baseline.author_id]);
+const humanized_snapshot_date = computed((): string =>
+    DateUtils.humanFormat(props.baseline.snapshot_date)
+);
 </script>

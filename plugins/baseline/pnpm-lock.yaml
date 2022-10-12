@@ -18,6 +18,7 @@ specifiers:
   vue-gettext: ^2.1.12
   vue-router: ^3.5.3
   vuex: ^3.6.2
+  vuex-composition-helpers: ^1.2.0
   vuex-mock-store: 0.0.8
 
 dependencies:
@@ -36,6 +37,7 @@ dependencies:
   vue-gettext: 2.1.12
   vue-router: 3.5.3_vue@2.7.8
   vuex: 3.6.2_vue@2.7.8
+  vuex-composition-helpers: 1.2.0_vue@2.7.8
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
@@ -350,6 +352,14 @@ packages:
     dependencies:
       '@vue/compiler-sfc': 2.7.8
       csstype: 3.1.0
+
+  /vuex-composition-helpers/1.2.0_vue@2.7.8:
+    resolution: {integrity: sha512-3A/cxcNSe2gIkXyydTmKmjy0Nj8570J+3S1H336lTB/F2J8g8KezhXCzq3R59w16KH6xl3mJiEfChBxn0nTVXA==}
+    peerDependencies:
+      vue: ^2.7.0
+    dependencies:
+      vue: 2.7.8
+    dev: false
 
   /vuex-mock-store/0.0.8:
     resolution: {integrity: sha512-pRCNdUuS4KRtycDuJKLNFqSJB8vb2XeVilM+QUVPM5Tp6HKFSdAVOmpbwWoMbEnPnJEypkb7s6Ee4fFxp1b32g==}

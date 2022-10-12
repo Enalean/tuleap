@@ -29,12 +29,6 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "StatisticItem",
-
-    props: {
-        label: { required: true, type: String },
-    },
-};
+<script setup lang="ts">
+defineProps<{ label: string }>();
 </script>

@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue.ts";
 import BaselinesList from "./BaselinesList.vue";
 import BaselineSkeleton from "./BaselineSkeleton.vue";
 import BaselineListItem from "./BaselineListItem.vue";

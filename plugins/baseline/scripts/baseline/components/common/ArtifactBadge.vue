@@ -22,24 +22,14 @@
         {{ tracker.item_name }} #{{ artifact.id }}
     </span>
 </template>
-<script>
-export default {
-    name: "ArtifactBadge",
-    props: {
-        artifact: {
-            required: true,
-            type: Object,
-        },
-        tracker: {
-            required: true,
-            type: Object,
-        },
-    },
-    computed: {
-        artifact_badge_class() {
-            const normalized_color = this.tracker.color_name.replace("_", "-");
-            return `tlp-swatch-${normalized_color}`;
-        },
-    },
-};
+<script setup lang="ts">
+import type { Artifact, Tracker } from "../../type";
+import { computed } from "vue";
+
+const props = defineProps<{ artifact: Artifact; tracker: Tracker }>();
+const artifact_badge_class = computed((): string => {
+    const normalized_color = props.tracker.color_name.replace("_", "-");
+
+    return `tlp-swatch-${normalized_color}`;
+});
 </script>

@@ -22,31 +22,32 @@ import moment from "moment";
 import "moment-timezone";
 import "moment/locale/fr";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
+import type { UserPreferences } from "../type";
 
 let time_zone = "CET";
 let format = "d/m/Y H:i";
 
 export default {
-    setOptions(preferences) {
+    setOptions(preferences: UserPreferences): void {
         const locale = preferences.user_locale.replace(/_/g, "-");
         moment.locale(locale);
         time_zone = preferences.user_timezone;
         format = formatFromPhpToMoment(preferences.format);
     },
 
-    format(date) {
+    format(date: string): string {
         return moment(date).tz(time_zone).format(format);
     },
 
-    humanFormat(date) {
+    humanFormat(date: string): string {
         return moment(date).tz(time_zone).format("LLL");
     },
 
-    getFromNow(date) {
+    getFromNow(date: string): string {
         return moment(date).tz(time_zone).fromNow();
     },
 
-    formatToISO(date) {
+    formatToISO(date: string): string {
         return moment.tz(date, time_zone).format();
     },
 };

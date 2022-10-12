@@ -58,13 +58,10 @@
         </div>
     </div>
 </template>
-<script>
-export default {
-    name: "ContentLayout",
-    computed: {
-        has_comment_slot() {
-            return Boolean(this.$slots.comment);
-        },
-    },
-};
+<script setup lang="ts">
+import { computed, useSlots } from "vue";
+
+const slots = useSlots();
+
+const has_comment_slot = computed((): boolean => Boolean(slots.comment));
 </script>

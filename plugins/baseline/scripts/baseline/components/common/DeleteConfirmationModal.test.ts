@@ -17,18 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue";
 import DeleteConfirmationModal from "./DeleteConfirmationModal.vue";
 
 describe("DeleteConfirmationModal", () => {
     const confirm_selector = '[data-test-action="confirm"]';
     const spinner_selector = '[data-test-type="spinner"]';
 
-    let confirm;
-    let confirmResolve;
+    let confirm: jest.Mock;
+    let confirmResolve: (value: unknown) => void;
 
-    let wrapper;
+    let wrapper: Wrapper<DeleteConfirmationModal>;
 
     beforeEach(() => {
         confirm = jest.fn().mockReturnValue(
