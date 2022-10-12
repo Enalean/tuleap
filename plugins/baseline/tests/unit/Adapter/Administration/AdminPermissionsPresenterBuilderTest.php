@@ -57,7 +57,8 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
                             new RoleAssignment($project, 105, Role::ADMIN),
                         ],
                         Role::READER => [
-                            new RoleAssignment($project, 106, Role::ADMIN),
+                            new RoleAssignment($project, 105, Role::READER),
+                            new RoleAssignment($project, 106, Role::READER),
                         ]
                     };
                 }
@@ -90,14 +91,14 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
             )
         );
         self::assertSame(
-            [\ProjectUGroup::PROJECT_MEMBERS, 106],
+            [\ProjectUGroup::PROJECT_MEMBERS, 104, 105, 106],
             array_map(
                 static fn(UgroupPresenter $presenter) => $presenter->id,
                 $presenter->readers
             )
         );
         self::assertSame(
-            [false, true],
+            [false, false, true, true],
             array_map(
                 static fn(UgroupPresenter $presenter) => $presenter->is_selected,
                 $presenter->readers

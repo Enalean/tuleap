@@ -132,8 +132,10 @@ class ServiceSavePermissionsControllerTest extends TestCase
         self::assertEquals(Role::ADMIN, $save_parameters[1][0]->getRole());
         self::assertEquals(103, $save_parameters[1][1]->getUserGroupId());
         self::assertEquals(Role::ADMIN, $save_parameters[1][1]->getRole());
-        self::assertEquals(104, $save_parameters[1][2]->getUserGroupId());
+        self::assertEquals(103, $save_parameters[1][2]->getUserGroupId());
         self::assertEquals(Role::READER, $save_parameters[1][2]->getRole());
+        self::assertEquals(104, $save_parameters[1][3]->getUserGroupId());
+        self::assertEquals(Role::READER, $save_parameters[1][3]->getRole());
 
 
         $save_history_parameters = $project_history_saver->getCapturedSaveParameters();
@@ -142,8 +144,10 @@ class ServiceSavePermissionsControllerTest extends TestCase
         self::assertEquals(Role::ADMIN, $save_history_parameters[1][0]->getRole());
         self::assertEquals(103, $save_history_parameters[1][1]->getUserGroupId());
         self::assertEquals(Role::ADMIN, $save_history_parameters[1][1]->getRole());
-        self::assertEquals(104, $save_history_parameters[1][2]->getUserGroupId());
+        self::assertEquals(103, $save_history_parameters[1][2]->getUserGroupId());
         self::assertEquals(Role::READER, $save_history_parameters[1][2]->getRole());
+        self::assertEquals(104, $save_history_parameters[1][3]->getUserGroupId());
+        self::assertEquals(Role::READER, $save_history_parameters[1][3]->getRole());
     }
 
     public function testExceptionWhenUGroupIsNotValid(): void

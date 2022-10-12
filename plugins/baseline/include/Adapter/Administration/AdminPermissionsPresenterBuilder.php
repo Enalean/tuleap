@@ -62,56 +62,25 @@ final class AdminPermissionsPresenterBuilder implements IBuildAdminPermissionsPr
         return new AdminPermissionsPresenter(
             $post_url,
             $token,
-            $this->getAdministratorsPresenter($administrators_ugroup_id, $project),
-            $this->getReadersPresenter($readers_ugroup_id, $administrators_ugroup_id, $project),
+            $this->getUserGroupsPresenter($administrators_ugroup_id, $project),
+            $this->getUserGroupsPresenter($readers_ugroup_id, $project),
         );
     }
 
     /**
-     * @param int[] $administrators_ugroup_id
+     * @param int[] $ugroup_ids
      *
      * @return UgroupPresenter[]
      */
-    private function getAdministratorsPresenter(array $administrators_ugroup_id, \Project $project): array
+    private function getUserGroupsPresenter(array $ugroup_ids, \Project $project): array
     {
         return array_map(
             static fn(\User_ForgeUGroup $ugroup) => new UgroupPresenter(
                 $ugroup->getId(),
                 $ugroup->getName(),
-                in_array($ugroup->getId(), $administrators_ugroup_id, true)
+                in_array($ugroup->getId(), $ugroup_ids, true)
             ),
             $this->user_group_factory->getProjectUGroupsWithMembersWithoutNobody($project)
-        );
-    }
-
-    /**
-     * @param int[] $administrators_ugroup_id
-     *
-     * @return UgroupPresenter[]
-     */
-    private function getReadersPresenter(
-        array $readers_ugroup_id,
-        array $administrators_ugroup_id,
-        \Project $project,
-    ): array {
-        return array_values(
-            array_filter(
-                array_map(
-                    static function (\User_ForgeUGroup $ugroup) use ($readers_ugroup_id, $administrators_ugroup_id) {
-                        $is_ugroup_already_administrator = in_array($ugroup->getId(), $administrators_ugroup_id, true);
-                        if ($is_ugroup_already_administrator) {
-                            return null;
-                        }
-
-                        return new UgroupPresenter(
-                            $ugroup->getId(),
-                            $ugroup->getName(),
-                            in_array($ugroup->getId(), $readers_ugroup_id, true)
-                        );
-                    },
-                    $this->user_group_factory->getProjectUGroupsWithMembersWithoutNobody($project)
-                )
-            )
         );
     }
 }
