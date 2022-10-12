@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectIsAProgramOrUsedInPlanCheckerStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildUGroupRepresentationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
@@ -47,6 +48,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProjectUsedInPlanStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsSynchronizationPendingStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTeamSynchronizationHasErrorStub;
@@ -124,7 +126,9 @@ final class ProgramAdminTest extends TestCase
             $program_for_administration_identifier,
             UserReferenceStub::withDefaults(),
             $this->project_reference,
-            $aggregated_teams
+            $aggregated_teams,
+            ProjectIsAProgramOrUsedInPlanCheckerStub::stubValidProgram(),
+            VerifyIsProjectUsedInPlanStub::withProjectUsedInPlan()
         );
     }
 

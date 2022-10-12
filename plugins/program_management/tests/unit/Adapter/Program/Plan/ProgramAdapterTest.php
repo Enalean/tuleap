@@ -26,11 +26,13 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\VerifyIsProjectAProgramOrUsedInPlan;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProjectAProgramOrUsedInPlanStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -51,16 +53,18 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_access_checker;
     private \Project $project;
+    private VerifyIsProjectAProgramOrUsedInPlan $program_for_administration_verifier;
 
     protected function setUp(): void
     {
-        $this->retrieve_full_project  = RetrieveFullProjectStub::withProject(ProjectTestBuilder::aProject()->build());
-        $this->project_access_checker = $this->createMock(ProjectAccessChecker::class);
-        $this->program_verifier       = VerifyIsProgramStub::withValidProgram();
-        $user                         = UserTestBuilder::aUser()->build();
-        $this->user_retriever         = RetrieveUserStub::withUser($user);
-        $this->user_identifier        = UserReferenceStub::withDefaults();
-        $this->project                = new \Project(['group_id' => self::PROJECT_ID, 'status' => 'A']);
+        $this->retrieve_full_project               = RetrieveFullProjectStub::withProject(ProjectTestBuilder::aProject()->build());
+        $this->project_access_checker              = $this->createMock(ProjectAccessChecker::class);
+        $this->program_verifier                    = VerifyIsProgramStub::withValidProgram();
+        $this->program_for_administration_verifier = VerifyIsProjectAProgramOrUsedInPlanStub::withValidProgram();
+        $user                                      = UserTestBuilder::aUser()->build();
+        $this->user_retriever                      = RetrieveUserStub::withUser($user);
+        $this->user_identifier                     = UserReferenceStub::withDefaults();
+        $this->project                             = new \Project(['group_id' => self::PROJECT_ID, 'status' => 'A']);
     }
 
     private function getAdapter(): ProgramAdapter
@@ -69,7 +73,8 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->retrieve_full_project,
             $this->project_access_checker,
             $this->program_verifier,
-            $this->user_retriever
+            $this->user_retriever,
+            $this->program_for_administration_verifier
         );
     }
 
@@ -81,6 +86,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(ProjectIsNotAProgramException::class);
         $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
+        $this->getAdapter()->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier, null);
     }
 
     public function testItSucceedWhenProgramIsAProjectAndUsesCache(): void
@@ -91,7 +97,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $adapter =  $this->getAdapter();
 
         $adapter->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
-        $adapter->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
+        $adapter->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier, null);
     }
 
     public function testItSucceedsWithBypassEvenWhenUserCannotAccessProject(): void
@@ -101,6 +107,11 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retrieve_full_project = RetrieveFullProjectStub::withProject($this->project);
 
         $this->getAdapter()->ensureProgramIsAProject(
+            self::PROJECT_ID,
+            $this->user_identifier,
+            new WorkflowUserPermissionBypass()
+        );
+        $this->getAdapter()->ensureProjectIsAProgramOrIsPartOfPlan(
             self::PROJECT_ID,
             $this->user_identifier,
             new WorkflowUserPermissionBypass()

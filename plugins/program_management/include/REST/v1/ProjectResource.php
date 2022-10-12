@@ -53,7 +53,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\TrackerConfigurationChecker;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
@@ -122,7 +122,7 @@ final class ProjectResource extends AuthenticatedResource
         $this->user_manager          = \UserManager::instance();
         $team_dao                    = new TeamDao();
         $project_manager             = \ProjectManager::instance();
-        $program_dao                 = new ProgramDao();
+        $program_dao                 = new ProgramDaoProject();
         $explicit_backlog_dao        = new ExplicitBacklogDao();
         $this->user_manager_adapter  = new UserManagerAdapter($this->user_manager);
         $project_retriever           = new ProjectManagerAdapter($project_manager, $this->user_manager_adapter);

@@ -69,6 +69,7 @@ final class ProgramAdminPresenter
     public ?TrackerErrorPresenter $program_increment_error_presenter;
     public ?TrackerErrorPresenter $iteration_error_presenter;
     public ?TrackerErrorPresenter $plannable_error_presenter;
+    public bool $is_project_used_in_plan;
 
     private function __construct(ProgramAdmin $program_admin)
     {
@@ -76,6 +77,7 @@ final class ProgramAdminPresenter
         $this->program_shortname                 = $program_admin->program_shortname;
         $this->aggregated_teams                  = $program_admin->aggregated_teams;
         $this->has_aggregated_teams              = count($program_admin->aggregated_teams) > 0;
+        $this->is_project_used_in_plan           = $program_admin->is_project_used_in_plan;
         $this->potential_program_increments      = ProgramSelectOptionConfigurationPresenter::build($program_admin->potential_program_increments);
         $this->potential_plannable_trackers      = ProgramSelectOptionConfigurationPresenter::build($program_admin->potential_plannable_trackers);
         $this->ugroups_can_prioritize            = ProgramSelectOptionConfigurationPresenter::build($program_admin->ugroups_can_prioritize);

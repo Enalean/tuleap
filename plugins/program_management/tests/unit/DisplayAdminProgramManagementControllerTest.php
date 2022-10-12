@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Builder\IterationCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProjectIsAProgramOrUsedInPlanCheckerStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildUGroupRepresentationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
@@ -49,6 +50,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProjectUsedInPlanStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsSynchronizationPendingStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
@@ -152,6 +154,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             VerifyTeamSynchronizationHasErrorStub::buildWithoutError(),
             RetrievePlannableTrackersStub::build(TrackerReferenceStub::withId(1), TrackerReferenceStub::withId(2)),
             VerifyTrackerSemanticsStub::withAllSemantics(),
+            ProjectIsAProgramOrUsedInPlanCheckerStub::stubValidProgram(),
+            VerifyIsProjectUsedInPlanStub::withProjectUsedInPlan()
         );
     }
 

@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\Team\TeamAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
@@ -73,7 +73,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $user_adapter                 = new UserManagerAdapter($user_manager);
         $this->artifact_factory       = Tracker_ArtifactFactory::instance();
         $team_dao                     = new TeamDao();
-        $program_dao                  = new ProgramDao();
+        $program_dao                  = new ProgramDaoProject();
         $this->program_increment_DAO  = new ProgramIncrementsDAO();
         $project_permissions_verifier = new ProjectPermissionVerifier(RetrieveUserStub::withGenericUser());
 

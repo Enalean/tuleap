@@ -24,14 +24,16 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsFeature;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackersIds;
 use Tuleap\ProgramManagement\Domain\Program\Plan\SavePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsProjectUsedInPlan;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePlannedInProgramIncrement, VerifyIsPlannable, VerifyIsFeature, RetrievePlannableTrackersIds
+final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePlannedInProgramIncrement, VerifyIsPlannable, VerifyIsFeature, RetrievePlannableTrackersIds, VerifyIsProjectUsedInPlan
 {
     /**
      * @throws \Throwable
@@ -180,6 +182,15 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
                 WHERE plannable_tracker_id = ? OR program_increment_tracker_id = ? OR iteration_tracker_id = ?';
 
         return $this->getDB()->exists($sql, $tracker->getId(), $tracker->getId(), $tracker->getId());
+    }
+
+    public function isProjectUsedInPlan(ProgramForAdministrationIdentifier $administration_identifier): bool
+    {
+        $sql = 'SELECT 1
+                FROM plugin_program_management_program
+                WHERE program_project_id = ?';
+
+        return $this->getDB()->exists($sql, $administration_identifier->id);
     }
 
     public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool

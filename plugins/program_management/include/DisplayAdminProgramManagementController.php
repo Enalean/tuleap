@@ -38,7 +38,9 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationE
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\VerifyTeamSynchronizationHasError;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsAProgramOrUsedInPlanChecker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsProjectUsedInPlan;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
@@ -91,6 +93,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private VerifyTeamSynchronizationHasError $verify_team_synchronization_has_error,
         private RetrievePlannableTrackers $plannable_trackers_retriever,
         private VerifyTrackerSemantics $verify_tracker_semantics,
+        private ProjectIsAProgramOrUsedInPlanChecker $build_program_for_administration,
+        private VerifyIsProjectUsedInPlan $verify_is_project_used_in_plan,
     ) {
     }
 
@@ -169,7 +173,9 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 $admin_program,
                 $user_identifier,
                 $project_identifier,
-                $aggregated_teams
+                $aggregated_teams,
+                $this->build_program_for_administration,
+                $this->verify_is_project_used_in_plan
             );
         } catch (ProgramAccessException $e) {
             throw new ForbiddenException(
