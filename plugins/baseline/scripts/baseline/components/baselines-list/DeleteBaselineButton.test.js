@@ -20,40 +20,76 @@
 
 import { mount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
-import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
-import store_options from "../../store/store_options";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import DeleteBaselineButton from "./DeleteBaselineButton.vue";
 import { create } from "../../support/factories";
+import ActionButton from "../common/ActionButton.vue";
 
 describe("DeleteBaselineButton", () => {
     const baseline = create("baseline", { id: 1 });
+    let store;
 
-    let $store;
-    let wrapper;
+    function createWrapper(comparisons) {
+        store = createStoreMock({
+            state: {
+                comparisons,
+                dialog_interface: {},
+            },
+        });
 
-    beforeEach(() => {
-        $store = createStoreMock(store_options);
-
-        wrapper = mount(DeleteBaselineButton, {
+        return mount(DeleteBaselineButton, {
             localVue,
             mocks: {
-                $store,
+                $store: store,
             },
             propsData: {
                 baseline,
             },
             provide: () => ({ is_admin: true }),
         });
+    }
+
+    it("should display delete button as disabled while comparisons are loading", () => {
+        const wrapper = createWrapper({ is_loading: true, comparisons: [] });
+
+        expect(wrapper.findComponent(ActionButton).props("disabled")).toBe(true);
     });
 
-    describe("when clicking", () => {
-        beforeEach(() => wrapper.trigger("click"));
+    it.each([
+        [[{ base_baseline_id: 1, compared_to_baseline_id: 2 }]],
+        [[{ base_baseline_id: 2, compared_to_baseline_id: 1 }]],
+    ])(
+        "should display delete button as disabled if baseline is part of a comparison %s",
+        (comparisons) => {
+            const wrapper = createWrapper({
+                is_loading: false,
+                comparisons,
+            });
 
-        it("shows modal", () => {
-            expect($store.commit).toHaveBeenCalledWith(
-                "dialog_interface/showModal",
-                expect.any(Object)
-            );
+            expect(wrapper.findComponent(ActionButton).props("disabled")).toBe(true);
+        }
+    );
+
+    it.each([[[]], [[{ base_baseline_id: 2, compared_to_baseline_id: 3 }]]])(
+        "should display delete button as enabled if baseline is not part of comparison %s",
+        (comparisons) => {
+            const wrapper = createWrapper({
+                is_loading: false,
+                comparisons,
+            });
+
+            expect(wrapper.findComponent(ActionButton).props("disabled")).toBe(false);
+        }
+    );
+
+    it("shows modal on click", async () => {
+        const wrapper = createWrapper({
+            is_loading: false,
+            comparisons: [],
         });
+
+        await wrapper.trigger("click");
+
+        expect(store.commit).toHaveBeenCalledWith("dialog_interface/showModal", expect.any(Object));
     });
 });

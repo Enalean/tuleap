@@ -206,6 +206,12 @@ msgstr "Date de la capture"
 msgid "Snapshot date"
 msgstr "Date de la capture"
 
+msgid ""
+"The baseline cannot be deleted because it is associated to a comparison."
+msgstr ""
+"La baseline ne peut pas être supprimée car elle est associée à une "
+"comparaison."
+
 msgid "The baseline was created"
 msgstr "La baseline a été créée"
 
