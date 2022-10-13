@@ -68,6 +68,6 @@ final class fts_dbPlugin extends \Tuleap\FullTextSearchCommon\FullTextSearchBack
 
     protected function getBatchQueue(): \Tuleap\Search\ItemToIndexBatchQueue
     {
-        return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexLimitedBatchQueue($this->getItemInserter(), self::MAX_ITEMS_PER_BATCH);
+        return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexLimitedBatchQueue($this->getItemInserterWithMetricCollector(), self::MAX_ITEMS_PER_BATCH);
     }
 }

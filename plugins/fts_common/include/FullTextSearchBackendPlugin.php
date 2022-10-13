@@ -29,13 +29,16 @@ use Plugin;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\FullTextSearchCommon\Index\FindIndexSearcher;
+use Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndexMetricCollector;
 use Tuleap\FullTextSearchCommon\Index\SearchIndexedItem;
+use Tuleap\FullTextSearchCommon\Index\SearchIndexedItemMetricCollector;
 use Tuleap\FullTextSearchCommon\REST\ResourcesInjector;
 use Tuleap\FullTextSearchCommon\CLI\IdentifyAllItemsToIndexCommand;
 use Tuleap\FullTextSearchCommon\CLI\IndexAllPendingItemsCommand;
 use Tuleap\FullTextSearchCommon\Index\Asynchronous\IndexingWorkerEventDispatcher;
 use Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems;
 use Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Search\IdentifyAllItemsToIndexEvent;
 use Tuleap\Search\IndexedItemsToRemove;
@@ -79,7 +82,7 @@ abstract class FullTextSearchBackendPlugin extends Plugin
 
     public function findIndexSearcher(FindIndexSearcher $find_index_searcher): void
     {
-        $find_index_searcher->searcher = $this->getIndexSearcher();
+        $find_index_searcher->searcher = new SearchIndexedItemMetricCollector($this->getIndexSearcher(), Prometheus::instance());
     }
 
     public function indexItem(ItemToIndex $item): void
@@ -98,7 +101,7 @@ abstract class FullTextSearchBackendPlugin extends Plugin
 
     public function workerEvent(WorkerEvent $event): void
     {
-        (new IndexingWorkerEventDispatcher($this->getItemInserter(), $this->getItemRemover()))->process($event);
+        (new IndexingWorkerEventDispatcher($this->getItemInserterWithMetricCollector(), $this->getItemRemover()))->process($event);
     }
 
     public function collectCLICommands(CLICommandsCollector $collector): void
@@ -127,6 +130,11 @@ abstract class FullTextSearchBackendPlugin extends Plugin
         }
 
         $this->getItemRemover()->deleteIndexedItemsPerProjectID((int) $event->project->getID());
+    }
+
+    final protected function getItemInserterWithMetricCollector(): InsertItemsIntoIndex
+    {
+        return new InsertItemsIntoIndexMetricCollector($this->getItemInserter(), Prometheus::instance());
     }
 
     abstract protected function getIndexSearcher(): SearchIndexedItem;
