@@ -96,19 +96,12 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
             array_fill_keys($readers, Role::READER)
         );
 
-        $already_processed_ugroup_id = [];
-
         $project_proxy = ProjectProxy::buildFromProject($project);
 
         return array_values(
             array_filter(
                 array_map(
-                    function (string $ugroup_id, string $role) use ($project, $project_proxy, &$already_processed_ugroup_id) {
-                        if (isset($already_processed_ugroup_id[$ugroup_id])) {
-                            return null;
-                        }
-
-                        $already_processed_ugroup_id[$ugroup_id] = true;
+                    function (string $ugroup_id, string $role) use ($project, $project_proxy) {
                         if (! $this->ugroup_retriever->getUGroup($project, $ugroup_id)) {
                             throw new ForbiddenException("Invalid user group $ugroup_id");
                         }
