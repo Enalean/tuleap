@@ -30,89 +30,32 @@ use Tuleap\Tracker\Semantic\Progress\MethodBasedOnLinksCount;
  */
 final class SemanticProgressAdminPresenter
 {
-    /**
-     * @var string
-     */
-    public $tracker_semantic_admin_url;
-    /**
-     * @var string
-     */
-    public $semantic_usages_description;
-    /**
-     * @var bool
-     */
-    public $is_semantic_defined;
-    /**
-     * @var string
-     */
-    public $updater_url;
-    /**
-     * @var string
-     */
-    public $current_method;
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    public $csrf_token;
-    /**
-     * @var array
-     */
-    public $total_effort_options;
-    /**
-     * @var array
-     */
-    public $remaining_effort_options;
-    /**
-     * @var array
-     */
-    public $available_computation_methods;
-    /**
-     * @var bool
-     */
-    public $is_method_effort_based;
-    /**
-     * @var bool
-     */
-    public $is_method_links_count_based;
-    /**
-     * @var bool
-     */
-    public $has_a_link_field;
-    /**
-     * @var string
-     */
-    public $tracker_fields_admin_url;
+    public bool $is_method_effort_based;
+    public bool $is_method_links_count_based;
+    public string $tracker_fields_admin_url;
+    public string $tracker_semantic_admin_url;
 
     public function __construct(
         \Tracker $tracker,
-        string $semantic_usages_description,
-        bool $is_semantic_defined,
-        string $updater_url,
-        string $current_method,
-        \CSRFSynchronizerToken $csrf_token,
-        array $total_effort_options,
-        array $remaining_effort_options,
-        array $available_computation_methods,
-        bool $has_a_link_field,
+        public string $semantic_usages_description,
+        public bool $is_semantic_defined,
+        public string $updater_url,
+        public string $current_method,
+        public \CSRFSynchronizerToken $csrf_token,
+        public array $total_effort_options,
+        public array $remaining_effort_options,
+        public array $available_computation_methods,
+        public bool $has_a_link_field,
     ) {
-        $this->semantic_usages_description   = $semantic_usages_description;
-        $this->is_semantic_defined           = $is_semantic_defined;
-        $this->updater_url                   = $updater_url;
-        $this->current_method                = $current_method;
-        $this->csrf_token                    = $csrf_token;
-        $this->total_effort_options          = $total_effort_options;
-        $this->remaining_effort_options      = $remaining_effort_options;
-        $this->available_computation_methods = $available_computation_methods;
-        $this->is_method_effort_based        = $current_method === MethodBasedOnEffort::getMethodName();
-        $this->is_method_links_count_based   = $current_method === MethodBasedOnLinksCount::getMethodName();
-        $this->has_a_link_field              = $has_a_link_field;
-        $this->tracker_semantic_admin_url    = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->is_method_effort_based      = $current_method === MethodBasedOnEffort::getMethodName();
+        $this->is_method_links_count_based = $current_method === MethodBasedOnLinksCount::getMethodName();
+        $this->tracker_semantic_admin_url  = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func' => 'admin-semantic',
             ]
         );
-        $this->tracker_fields_admin_url      = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->tracker_fields_admin_url    = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => $tracker->getId(),
                 'func' => 'admin-formElements',
