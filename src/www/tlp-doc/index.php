@@ -98,7 +98,7 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
         if (isset($section['children']) && count($section['children'])) {
             ?>
             <div class="tlp-tab <?php echo $selected_class; ?>">
-                <?php echo $section['label'] ?> <i class="fas fa-caret-down"></i>
+                <?php echo $section['label'] ?> <i class="fa-solid fa-caret-down"></i>
                 <nav class="tlp-tab-menu">
                     <?php foreach ($section['children'] as $id => $subsection) : ?>
                         <a href="?section=<?php echo $main ?>#<?php echo $id ?>" class="tlp-tab-menu-item">

@@ -1,4 +1,4 @@
 {
   "label": "Font Awesome TLP extension",
-  "shortcode": ".fas .fa-tlp-[icon]"
+  "shortcode": ".fa-solid .fa-tlp-[icon]"
 }
