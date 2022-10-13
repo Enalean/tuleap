@@ -18,9 +18,6 @@
  */
 
 import {
-    HIDDEN_CLASSNAME,
-    SPIN_CLASSNAME,
-    SPINNER_CLASSNAME,
     UNLINK_CONFIRM_ICON_SELECTOR,
     UNLINK_CONFIRM_SELECTOR,
     UNLINK_ICON_CLASSNAME,
@@ -30,8 +27,9 @@ import {
 import type { GetText } from "@tuleap/gettext";
 import * as fetch_result from "@tuleap/fetch-result";
 import { selectOrThrow } from "@tuleap/dom";
-import { okAsync, errAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+import { FEEDBACK_HIDDEN_CLASSNAME, SPIN_CLASSNAME, SPINNER_CLASSNAME } from "./classnames";
 
 const GROUP_ID = 77;
 
@@ -45,7 +43,7 @@ describe(`UnlinkModal`, () => {
     });
 
     describe(`when I click the "confirm" button in the modal`, () => {
-        let button: HTMLButtonElement, icon: HTMLElement;
+        let button: HTMLButtonElement, icon: HTMLElement, feedback: HTMLElement;
 
         const clickOnConfirm = (): void => {
             const gettext = {
@@ -56,7 +54,7 @@ describe(`UnlinkModal`, () => {
                 "afterbegin",
                 `<div id="unlink-modal">
                         <div id="unlink-modal-feedback">
-                          <div id="unlink-modal-alert" class="${HIDDEN_CLASSNAME}"></div>
+                          <div id="unlink-modal-alert" class="${FEEDBACK_HIDDEN_CLASSNAME}"></div>
                         </div>
                         <button type="button" id="unlink-confirm" data-group-id="${GROUP_ID}">
                             <i id="unlink-icon" class="fa-solid fa-link-slash"></i>
@@ -68,25 +66,32 @@ describe(`UnlinkModal`, () => {
 
             button = selectOrThrow(doc.body, UNLINK_CONFIRM_SELECTOR, HTMLButtonElement);
             icon = selectOrThrow(doc.body, UNLINK_CONFIRM_ICON_SELECTOR);
+            feedback = selectOrThrow(doc, UNLINK_MODAL_FEEDBACK_SELECTOR);
             button.click();
         };
+
+        function assertLoadingState(is_loading: boolean): void {
+            expect(icon.classList.contains(SPINNER_CLASSNAME)).toBe(is_loading);
+            expect(icon.classList.contains(SPIN_CLASSNAME)).toBe(is_loading);
+            expect(icon.classList.contains(UNLINK_ICON_CLASSNAME)).toBe(!is_loading);
+            expect(button.disabled).toBe(is_loading);
+        }
 
         it(`will call the REST route, reload the page
             and will keep the button disabled with a spinner
             to prevent user from triggering delete again while the page is reloading`, async () => {
             const reload = jest.spyOn(loc, "reload");
             const result = okAsync({} as Response);
-            const delSpy = jest.spyOn(fetch_result, "del");
-            delSpy.mockReturnValue(result);
+            const delSpy = jest.spyOn(fetch_result, "del").mockReturnValue(result);
 
             clickOnConfirm();
+
+            expect(feedback.classList.contains(FEEDBACK_HIDDEN_CLASSNAME)).toBe(true);
+
             await result;
 
             expect(delSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_ID}`);
-            expect(icon.classList.contains(SPINNER_CLASSNAME)).toBe(true);
-            expect(icon.classList.contains(SPIN_CLASSNAME)).toBe(true);
-            expect(icon.classList.contains(UNLINK_ICON_CLASSNAME)).toBe(false);
-            expect(button.hasAttribute("disabled")).toBe(true);
+            assertLoadingState(true);
             expect(reload).toHaveBeenCalled();
         });
 
@@ -95,27 +100,17 @@ describe(`UnlinkModal`, () => {
             const error_message = "Forbidden";
             const reload = jest.spyOn(loc, "reload");
             const result = errAsync(Fault.fromMessage(error_message));
-            const delSpy = jest.spyOn(fetch_result, "del");
-            delSpy.mockReturnValue(result);
+            jest.spyOn(fetch_result, "del").mockReturnValue(result);
 
             clickOnConfirm();
 
-            const feedback = selectOrThrow(doc, UNLINK_MODAL_FEEDBACK_SELECTOR);
-
-            expect(icon.classList.contains(SPINNER_CLASSNAME)).toBe(true);
-            expect(icon.classList.contains(SPIN_CLASSNAME)).toBe(true);
-            expect(icon.classList.contains(UNLINK_ICON_CLASSNAME)).toBe(false);
-            expect(button.hasAttribute("disabled")).toBe(true);
+            assertLoadingState(true);
 
             await result;
 
             expect(reload).not.toHaveBeenCalled();
-            expect(icon.classList.contains(SPINNER_CLASSNAME)).toBe(false);
-            expect(icon.classList.contains(SPIN_CLASSNAME)).toBe(false);
-            expect(icon.classList.contains(UNLINK_ICON_CLASSNAME)).toBe(true);
-            expect(button.hasAttribute("disabled")).toBe(false);
-
-            expect(feedback.classList.contains(HIDDEN_CLASSNAME)).toBe(false);
+            assertLoadingState(false);
+            expect(feedback.classList.contains(FEEDBACK_HIDDEN_CLASSNAME)).toBe(false);
             expect(feedback.textContent).toContain(error_message);
         });
     });

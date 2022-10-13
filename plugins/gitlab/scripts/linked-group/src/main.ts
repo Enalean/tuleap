@@ -36,6 +36,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     openAllTargetModalsOnClick(document, UNLINK_SELECTOR);
 
-    EditConfigurationModal(document).init();
+    EditConfigurationModal(document, gettext_provider).init();
     UnlinkModal(document.location, document, gettext_provider).init();
 });

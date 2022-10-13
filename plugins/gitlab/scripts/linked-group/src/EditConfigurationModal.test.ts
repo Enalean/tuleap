@@ -18,9 +18,13 @@
  */
 
 import * as tlp_modal from "@tuleap/tlp-modal";
+import * as fetch_result from "@tuleap/fetch-result";
 import {
     EDIT_CONFIG_SELECTOR,
     EDIT_CONFIGURATION_MODAL_SELECTOR,
+    EDIT_CONFIRM_ICON_SELECTOR,
+    EDIT_CONFIRM_SELECTOR,
+    EDIT_ICON_CLASSNAME,
     EditConfigurationModal,
     FORM_ELEMENT_DISABLED_CLASSNAME,
     HAS_PREFIX_CHECKBOX_SELECTOR,
@@ -28,31 +32,63 @@ import {
     PREFIX_BOX_SELECTOR,
     PREFIX_ICON_SELECTOR,
     PREFIX_INPUT_SELECTOR,
+    ALLOW_ARTIFACT_CLOSURE_INPUT_SELECTOR,
+    ALLOW_ARTIFACT_CLOSURE_DISPLAY_SELECTOR,
+    PREFIX_DISPLAY_SELECTOR,
+    MODAL_FEEDBACK_SELECTOR,
+    FORM_ELEMENTS_SELECTOR,
+    INPUTS_SELECTOR,
 } from "./EditConfigurationModal";
 import { selectOrThrow } from "@tuleap/dom";
+import type { GetText } from "@tuleap/gettext";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
+import { SPIN_CLASSNAME, SPINNER_CLASSNAME, FEEDBACK_HIDDEN_CLASSNAME } from "./classnames";
 
 const noop = (): void => {
     // Do nothing;
 };
 
+const GROUP_ID = 33;
+const BRANCH_PREFIX = "dev-";
+
 describe(`EditConfigurationModal`, () => {
-    let edit_button: HTMLButtonElement, edit_modal: HTMLElement, modal_instance: tlp_modal.Modal;
+    let edit_button: HTMLButtonElement,
+        edit_modal: HTMLElement,
+        modal_instance: tlp_modal.Modal,
+        prefix_checkbox: HTMLInputElement,
+        body: HTMLElement;
 
     beforeEach(() => {
         const doc = document.implementation.createHTMLDocument();
+        const gettext = {
+            gettext: (msgid: string) => msgid,
+        } as GetText;
 
         doc.body.insertAdjacentHTML(
             "afterbegin",
             `
+            <p id="group-information-allow-artifact-closure"></p>
+            <p id="group-information-branch-prefix"></p>
             <button id="edit-config-button"></button>
             <div id="edit-config-modal">
               <form id="edit-config-modal-form">
-                <input type="checkbox" id="edit-config-modal-allow-artifact-closure">
-                <input type="checkbox" id="edit-config-modal-has-prefix">
-                <div class="tlp-form-element" id="edit-config-branch-prefix-box">
+                <div id="edit-config-modal-feedback" class="${FEEDBACK_HIDDEN_CLASSNAME}">
+                  <div id="edit-config-modal-alert"></div>
+                </div>
+                <div data-form-element>
+                  <input type="checkbox" id="edit-config-modal-allow-artifact-closure">
+                </div>
+                <div data-form-element>
+                  <input type="checkbox" id="edit-config-modal-has-prefix">
+                </div>
+                <div class="tlp-form-element" id="edit-config-branch-prefix-box" data-form-element>
                   <i id="edit-config-branch-prefix-icon"></i>
                   <input type="text" id="edit-config-branch-prefix">
                 </div>
+                <button type="submit" id="edit-config-confirm" data-group-id="${GROUP_ID}">
+                  <i id="edit-icon" class="${EDIT_ICON_CLASSNAME}"></i>
+                </button>
               </form>
             </div>`
         );
@@ -63,25 +99,19 @@ describe(`EditConfigurationModal`, () => {
         } as tlp_modal.Modal;
         jest.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
 
-        EditConfigurationModal(doc).init();
+        EditConfigurationModal(doc, gettext).init();
+        body = doc.body;
         edit_button = selectOrThrow(doc, EDIT_CONFIG_SELECTOR, HTMLButtonElement);
         edit_modal = selectOrThrow(doc, EDIT_CONFIGURATION_MODAL_SELECTOR);
+        prefix_checkbox = selectOrThrow(edit_modal, HAS_PREFIX_CHECKBOX_SELECTOR, HTMLInputElement);
     });
 
     describe(`enable/disable prefix`, () => {
-        let prefix_box: HTMLElement,
-            prefix_input: HTMLInputElement,
-            prefix_icon: HTMLElement,
-            prefix_checkbox: HTMLInputElement;
+        let prefix_box: HTMLElement, prefix_input: HTMLInputElement, prefix_icon: HTMLElement;
         beforeEach(() => {
             prefix_box = selectOrThrow(edit_modal, PREFIX_BOX_SELECTOR);
             prefix_input = selectOrThrow(prefix_box, PREFIX_INPUT_SELECTOR, HTMLInputElement);
             prefix_icon = selectOrThrow(prefix_box, PREFIX_ICON_SELECTOR);
-            prefix_checkbox = selectOrThrow(
-                edit_modal,
-                HAS_PREFIX_CHECKBOX_SELECTOR,
-                HTMLInputElement
-            );
         });
 
         it(`when I click on the "edit" button, it will show the modal`, () => {
@@ -116,6 +146,108 @@ describe(`EditConfigurationModal`, () => {
             expect(prefix_input.disabled).toBe(true);
             expect(prefix_input.required).toBe(false);
             expect(prefix_icon.classList.contains(HIDDEN_ICON_CLASSNAME)).toBe(true);
+        });
+    });
+
+    describe(`when I click the "confirm" button in the modal`, () => {
+        let confirm_button: HTMLButtonElement,
+            button_icon: HTMLElement,
+            feedback: HTMLElement,
+            prefix_input: HTMLInputElement;
+
+        beforeEach(() => {
+            confirm_button = selectOrThrow(edit_modal, EDIT_CONFIRM_SELECTOR, HTMLButtonElement);
+            button_icon = selectOrThrow(edit_modal, EDIT_CONFIRM_ICON_SELECTOR);
+            feedback = selectOrThrow(edit_modal, MODAL_FEEDBACK_SELECTOR);
+
+            const allow_closure_checkbox = selectOrThrow(
+                edit_modal,
+                ALLOW_ARTIFACT_CLOSURE_INPUT_SELECTOR,
+                HTMLInputElement
+            );
+            prefix_input = selectOrThrow(edit_modal, PREFIX_INPUT_SELECTOR, HTMLInputElement);
+            allow_closure_checkbox.checked = true;
+            prefix_checkbox.checked = true;
+            prefix_input.value = BRANCH_PREFIX;
+        });
+
+        function assertLoadingState(is_loading: boolean): void {
+            const icon_classes = button_icon.classList;
+            expect(icon_classes.contains(SPINNER_CLASSNAME)).toBe(is_loading);
+            expect(icon_classes.contains(SPIN_CLASSNAME)).toBe(is_loading);
+            expect(icon_classes.contains(EDIT_ICON_CLASSNAME)).toBe(!is_loading);
+            expect(confirm_button.disabled).toBe(is_loading);
+            edit_modal.querySelectorAll(FORM_ELEMENTS_SELECTOR).forEach((form_element) => {
+                expect(form_element.classList.contains(FORM_ELEMENT_DISABLED_CLASSNAME)).toBe(
+                    is_loading
+                );
+            });
+            edit_modal.querySelectorAll(INPUTS_SELECTOR).forEach((input) => {
+                expect(input.disabled).toBe(is_loading);
+            });
+        }
+
+        it(`will show a spinner, disable the form elements, call the REST route,
+            close the modal and update the page information`, async () => {
+            const result = okAsync({
+                allow_artifact_closure: true,
+                create_branch_prefix: BRANCH_PREFIX,
+            });
+            const patchSpy = jest.spyOn(fetch_result, "patchJSON").mockReturnValue(result);
+            const modalHide = jest.spyOn(modal_instance, "hide");
+
+            confirm_button.click();
+
+            expect(feedback.classList.contains(FEEDBACK_HIDDEN_CLASSNAME)).toBe(true);
+            assertLoadingState(true);
+
+            await result;
+
+            assertLoadingState(false);
+            expect(patchSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_ID}`, {
+                allow_artifact_closure: true,
+                create_branch_prefix: BRANCH_PREFIX,
+            });
+            const allow_closure_display = selectOrThrow(
+                body,
+                ALLOW_ARTIFACT_CLOSURE_DISPLAY_SELECTOR
+            );
+            const prefix_display = selectOrThrow(body, PREFIX_DISPLAY_SELECTOR);
+            expect(allow_closure_display.textContent).toBe("Yes");
+            expect(prefix_display.textContent).toBe(BRANCH_PREFIX);
+            expect(modalHide).toHaveBeenCalled();
+        });
+
+        it(`when prefix checkbox is unchecked, it will clear the value of the prefix input`, async () => {
+            const result = okAsync({
+                allow_artifact_closure: true,
+                create_branch_prefix: "",
+            });
+            const patchSpy = jest.spyOn(fetch_result, "patchJSON").mockReturnValue(result);
+            prefix_checkbox.checked = false;
+
+            confirm_button.click();
+            await result;
+
+            expect(patchSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_ID}`, {
+                allow_artifact_closure: true,
+                create_branch_prefix: "",
+            });
+            expect(prefix_input.value).toBe("");
+        });
+
+        it(`and there is a REST error, it will show an error message in the modal feedback`, async () => {
+            const error_message = "Forbidden";
+            const result = errAsync(Fault.fromMessage(error_message));
+            jest.spyOn(fetch_result, "patchJSON").mockReturnValue(result);
+            const modalHide = jest.spyOn(modal_instance, "hide");
+
+            confirm_button.click();
+            await result;
+
+            expect(feedback.classList.contains(FEEDBACK_HIDDEN_CLASSNAME)).toBe(false);
+            expect(feedback.textContent).toContain(error_message);
+            expect(modalHide).not.toHaveBeenCalled();
         });
     });
 });

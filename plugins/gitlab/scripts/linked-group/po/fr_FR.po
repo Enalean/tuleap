@@ -14,3 +14,12 @@ msgstr ""
 
 msgid "Error during the removal of the link: %(error)s"
 msgstr "Erreur pendant la suppression du lien : %(error)s"
+
+msgid "Error during the update of configuration: %(error)s"
+msgstr "Erreur pendant la modification de la configuration : %(error)s"
+
+msgid "No"
+msgstr "Non"
+
+msgid "Yes"
+msgstr "Oui"

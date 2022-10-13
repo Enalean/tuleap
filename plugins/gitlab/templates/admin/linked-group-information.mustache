@@ -50,11 +50,11 @@
                 </div>
                 <div class="tlp-property">
                     <label class="tlp-label">{{# dgettext }} tuleap-gitlab | Allow artifact closure {{/ dgettext }}</label>
-                    <p>{{ allow_closure_string }}</p>
+                    <p id="group-information-allow-artifact-closure">{{ allow_closure_string }}</p>
                 </div>
                 <div class="tlp-property">
                     <label class="tlp-label">{{# dgettext }}tuleap-gitlab | Prefix the branch name {{/ dgettext }}</label>
-                    <p>{{ branch_prefix }}</p>
+                    <p id="group-information-branch-prefix">{{ branch_prefix }}</p>
                 </div>
             </section>
             <section class="tlp-pane-section tlp-pane-section-submit gitlab-linked-group-buttons">
@@ -68,7 +68,7 @@
                     {{# dgettext }}tuleap-gitlab | Update token {{/ dgettext }}
                 </button>
 
-                <button type="button" class="tlp-button-primary tlp-button-outline gitlab-linked-group-hidden-button" id="edit-config-button" disabled>
+                <button type="button" class="tlp-button-primary tlp-button-outline" id="edit-config-button">
                     <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
                     {{# dgettext }}tuleap-gitlab | Update configuration {{/ dgettext }}
                 </button>
@@ -99,7 +99,7 @@
             <p>{{# dgettext }}tuleap-gitlab | Please note that the following settings will be applied for all new synchronized
                 repositories and may be overridden by each repository once linked.{{/ dgettext }}
             </p>
-            <div class="tlp-form-element">
+            <div class="tlp-form-element" data-form-element>
                 <label class="tlp-label tlp-checkbox">
                     <input
                         type="checkbox"
@@ -113,7 +113,7 @@
                     {{# dgettext }}tuleap-gitlab | If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository.{{/ dgettext }}
                 </p>
             </div>
-            <div class="tlp-form-element">
+            <div class="tlp-form-element" data-form-element>
                 <label class="tlp-label tlp-checkbox">
                     <input type="checkbox" id="edit-config-modal-has-prefix" {{# has_branch_prefix }}checked{{/ has_branch_prefix }}>
                     {{# dgettext }}tuleap-gitlab | Prefix the branch name{{/ dgettext }}
@@ -123,7 +123,7 @@
                     {{# dgettext }}tuleap-gitlab | If set, this prefix will be automatically added to the branch name in the create GitLab branch action.{{/ dgettext }}
                 </p>
             </div>
-            <div class="tlp-form-element" id="edit-config-branch-prefix-box">
+            <div class="tlp-form-element" id="edit-config-branch-prefix-box" data-form-element>
                 <label for="edit-config-branch-prefix" class="tlp-label">
                     {{# dgettext }}tuleap-gitlab | Prefix{{/dgettext}}
                     <i id="edit-config-branch-prefix-icon" class="fa-solid fa-asterisk" aria-hidden="true"></i>
@@ -146,7 +146,6 @@
                 class="tlp-button-primary tlp-modal-action"
                 id="edit-config-confirm"
                 data-group-id="{{ group_id }}"
-                disabled
             >
                 <i id="edit-icon" class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
                 {{# dgettext }}tuleap-gitlab | Update configuration{{/ dgettext }}
