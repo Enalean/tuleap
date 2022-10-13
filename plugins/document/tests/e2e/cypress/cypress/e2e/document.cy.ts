@@ -404,69 +404,6 @@ describe("Document new UI", () => {
                 cy.get("[data-test=delete-folder-button]").click({ force: true });
                 cy.get("[data-test=document-confirm-deletion-button]").click();
             });
-
-            it("user can navigate and manipulate items using keyboard shortcuts", () => {
-                cy.get("[data-test=document-header-actions]").should("be.visible");
-
-                testNewFolderShortcut();
-                testNewItemShortcut();
-                testNavigationShortcuts();
-                deleteItems();
-            });
         });
     });
 });
-
-function testNewFolderShortcut(): void {
-    typeShortcut("b");
-    cy.get("[data-test=document-new-folder-modal]")
-        .should("be.visible")
-        .within(() => {
-            cy.focused()
-                .should("have.attr", "data-test", "document-new-item-title")
-                .type("First item");
-            cy.get("[data-test=document-modal-submit-button-create-folder]").click();
-        });
-    cy.get("[data-test=document-new-folder-modal]").should("not.be.visible");
-    cy.get("[data-test=folder-title]").contains("First item");
-}
-
-function testNewItemShortcut(): void {
-    typeShortcut("n");
-    cy.get("[data-test=document-new-item-modal]")
-        .should("be.visible")
-        .within(() => {
-            cy.focused()
-                .should("have.attr", "data-test", "document-new-item-title")
-                .type("Last item");
-            cy.get("[data-test=empty]").click();
-            cy.get("[data-test=document-modal-submit-button-create-item]").click();
-        });
-    cy.get("[data-test=document-new-item-modal]").should("not.be.visible");
-    cy.get("[data-test=empty-file-title]").contains("Last item");
-}
-
-function testNavigationShortcuts(): void {
-    typeShortcut("{ctrl}{uparrow}");
-    cy.focused().should("contain", "First item");
-
-    typeShortcut("{downarrow}");
-    cy.focused().should("contain", "Last item");
-}
-
-function deleteItems(): void {
-    typeShortcut("{del}");
-    cy.get("[data-test=document-confirm-deletion-button]").click();
-    cy.get("[data-test=document-delete-item-modal]").should("not.exist");
-
-    typeShortcut("{ctrl}{uparrow}", "{del}");
-    cy.get("[data-test=document-confirm-deletion-button]").click();
-    cy.get("[data-test=document-delete-item-modal]").should("not.exist");
-}
-
-function typeShortcut(...inputs: string[]): void {
-    for (const input of inputs) {
-        // eslint-disable-next-line cypress/require-data-selectors
-        cy.get("body").type(input);
-    }
-}
