@@ -17,11 +17,6 @@ echo "--- Beginning of $script ---"
 # computed
 ./db_project_metric.pl
 
-# Feed the database with CVS statistics extracted
-# from daily CVS log files
-#
-./db_stats_cvs_history.pl $*
-
 ##
 ## END order sensitive section
 ##

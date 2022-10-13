@@ -57,36 +57,6 @@ sub db_connect {
         $sth->execute();
 }
 
-##############################
-# File open function, spews the entire file to an array.
-##############################
-sub open_array_file {
-        my $filename = shift(@_);
-
-        open (FD, $filename) || die "Can't open $filename: $!.\n";
-        @tmp_array = <FD>;
-        close(FD);
-
-        return @tmp_array;
-}
-
-#############################
-# File write function.
-# Now use a temporary file first, then rename once the file is fully written.
-#############################
-sub write_array_file {
-        my ($file_name, @file_array) = @_;
-
-        open(FD, ">$file_name.codenditemp") || die "Can't open $file_name: $!.\n";
-        foreach (@file_array) {
-                if ($_ ne '') {
-                        print FD;
-                }
-        }
-        close(FD);
-        rename "$file_name.codenditemp","$file_name" || die "Can't rename $file_name.codenditemp to $file_name: $!.\n";
-}
-
 
 #############################
 # Get Codendi apache user from local.inc
