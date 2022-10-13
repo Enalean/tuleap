@@ -29,6 +29,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Tuleap\Cryptography\ConcealedString;
 
 final class AddLDAPUserCommand extends Command
 {
@@ -82,7 +83,9 @@ final class AddLDAPUserCommand extends Command
 
         $ldap = $ldap_plugin->getLdap();
         $ldap->connect();
-        $ldap->bind();
+        $ldap->unbind();
+        $ldap->bind('cn=Manager,dc=tuleap,dc=local', new ConcealedString(getenv('LDAP_MANAGER_PASSWORD')));
+
 
         $search_login_iterator = $ldap->searchLogin($login);
         if ($search_login_iterator === false || count($search_login_iterator) !== 0) {
@@ -96,7 +99,8 @@ final class AddLDAPUserCommand extends Command
             return Command::INVALID;
         }
 
-        $result_iterator = $ldap->search(\ForgeConfig::get('sys_ldap_people_dn'), '(objectclass=inetOrgPerson)', \LDAP::SCOPE_SUBTREE, ['employeeNumber', 'gidNumber', 'uidNumber']);
+        $result_iterator = $ldap->search(\ForgeConfig::get('sys_ldap_people_dn'), '(objectclass=inetOrgPerson)', \LDAP::SCOPE_ONELEVEL, ['employeeNumber', 'gidNumber', 'uidNumber']);
+
         foreach ($result_iterator as $result) {
             if ((int) $result->get('employeeNumber') > $employee_number) {
                 $employee_number = (int) $result->get('employeeNumber');
@@ -144,7 +148,7 @@ final class AddLDAPUserCommand extends Command
             return self::FAILURE;
         }
 
-        $output->writeln('User `' . $user_dn . '` added into LDAP');
+        $output->writeln('User `' . $login . '` (`' . $employee_number . '`) added into LDAP');
 
         return self::SUCCESS;
     }

@@ -33,21 +33,10 @@ use Project_AccessRestrictedException;
 
 class ProjectAccessChecker implements CheckProjectAccess
 {
-    /**
-     * @var RestrictedUserCanAccessVerifier
-     */
-    private $verifier;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
     public function __construct(
-        RestrictedUserCanAccessVerifier $verifier,
-        EventManager $event_manager,
+        private RestrictedUserCanAccessVerifier $verifier,
+        private EventManager $event_manager,
     ) {
-        $this->verifier      = $verifier;
-        $this->event_manager = $event_manager;
     }
 
     /**
