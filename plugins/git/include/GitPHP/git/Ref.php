@@ -109,6 +109,7 @@ abstract class Ref extends GitObject
         $args   = [];
         $args[] = '--hash';
         $args[] = '--verify';
+        $args[] = '--';
         $args[] = escapeshellarg($this->GetRefPath());
         $hash   = trim($exe->Execute(GitExe::SHOW_REF, $args));
 

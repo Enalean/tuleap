@@ -34,7 +34,7 @@ class GitExec extends Git_Exec
         $output = [];
 
         try {
-            $this->gitCmdWithOutput('show-ref --hash ' . escapeshellarg($branch_name), $output);
+            $this->gitCmdWithOutput('show-ref --hash -- ' . escapeshellarg($branch_name), $output);
         } catch (Git_Command_Exception $exception) {
             throw new UnknownBranchNameException($branch_name, 0, $exception);
         }
@@ -82,7 +82,7 @@ class GitExec extends Git_Exec
         $output = [];
         $remote = escapeshellarg($remote);
         $branch = escapeshellarg($branch_name);
-        $cmd    = "clone --shared -b $branch $remote " . escapeshellarg($this->getPath());
+        $cmd    = "clone --shared -b -- $branch $remote " . escapeshellarg($this->getPath());
 
         $retVal = 1;
         $git    = self::getGitCommand();
@@ -103,12 +103,12 @@ class GitExec extends Git_Exec
         $reference = escapeshellarg($reference);
 
         $this->setLocalCommiter($user->getRealName(), $user->getEmail());
-        return $this->gitCmdWithOutput("merge --no-edit " . $reference, $output);
+        return $this->gitCmdWithOutput("merge --no-edit -- " . $reference, $output);
     }
 
     public function fastForwardMergeOnly($reference)
     {
-        $this->gitCmdWithOutput('merge --ff-only ' . escapeshellarg($reference), $output);
+        $this->gitCmdWithOutput('merge --ff-only -- ' . escapeshellarg($reference), $output);
     }
 
     /**
@@ -121,7 +121,7 @@ class GitExec extends Git_Exec
         $first_commit_reference  = escapeshellarg($first_commit_reference);
         $second_commit_reference = escapeshellarg($second_commit_reference);
 
-        $this->gitCmdWithOutput("merge-base $first_commit_reference $second_commit_reference", $output);
+        $this->gitCmdWithOutput("merge-base -- $first_commit_reference $second_commit_reference", $output);
 
         return $output;
     }
@@ -136,7 +136,7 @@ class GitExec extends Git_Exec
         $conflict_marker_regex   = escapeshellarg(self::GIT_MERGE_CONFLICT_MARKER_REGEX);
 
         $this->gitCmdWithOutput(
-            "merge-tree $merge_base $second_commit_reference $first_commit_reference | /usr/bin/grep --max-count=1 --only-matching $conflict_marker_regex || [[ $? == 1 ]]",
+            "merge-tree -- $merge_base $second_commit_reference $first_commit_reference | /usr/bin/grep --max-count=1 --only-matching $conflict_marker_regex || [[ $? == 1 ]]",
             $output
         );
 
@@ -154,7 +154,7 @@ class GitExec extends Git_Exec
     {
         $ref1   = escapeshellarg($ref1);
         $ref2   = escapeshellarg($ref2);
-        $cmd    = "merge-base $ref1 $ref2";
+        $cmd    = "merge-base -- $ref1 $ref2";
         $output = [];
 
         $this->gitCmdWithOutput($cmd, $output);
@@ -168,7 +168,7 @@ class GitExec extends Git_Exec
         $merged_ref = escapeshellarg($merged_ref);
 
         try {
-            $this->gitCmd("merge-base --is-ancestor $merged_ref $base_ref");
+            $this->gitCmd("merge-base --is-ancestor -- $merged_ref $base_ref");
             return true;
         } catch (Git_Command_Exception $e) {
             return false;
@@ -210,7 +210,7 @@ class GitExec extends Git_Exec
     public function removeReference($reference)
     {
         $output = null;
-        $this->execAsGitoliteGroup('update-ref -d ' . escapeshellarg($reference), $output);
+        $this->execAsGitoliteGroup('update-ref -d -- ' . escapeshellarg($reference), $output);
     }
 
     private function parseDiffNumStatOutput($output)

@@ -777,6 +777,7 @@ class Commit extends GitObject
         $exe    = new GitExe($this->GetProject());
         $args   = [];
         $args[] = '--tags';
+        $args[] = '--';
         $args[] = escapeshellarg($this->hash);
         $revs   = explode("\n", $exe->Execute(GitExe::NAME_REV, $args));
 

@@ -280,7 +280,7 @@ class Git_Driver_Gerrit_ProjectCreator
             $this->git_exec->remoteAdd($gerrit_project_url);
         }
         $this->git_exec->pullBranch('origin', 'refs/meta/config');
-        $this->git_exec->checkoutBranch('FETCH_HEAD');
+        $this->git_exec->checkoutToFetchHead();
     }
 
     /**
