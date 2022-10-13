@@ -27,12 +27,6 @@ export dump_dir
 cd $CODENDI_UTILS_PREFIX/download
 ./stats_logparse.sh $*
 
-# Then the script that analyzes CVS history
-# files and reshape them all in one single
-# file for later analysis
-cd $CODENDI_UTILS_PREFIX/cvs1
-./cvs_history_parse.pl $*
-
 # Now make all the stat internal to the
 # Codendi DB
 cd $CODENDI_UTILS_PREFIX/underworld-root
