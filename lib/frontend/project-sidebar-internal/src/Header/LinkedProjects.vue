@@ -32,11 +32,11 @@
                 v-if="config.project.linked_projects.is_in_children_projects_context"
                 class="project-sidebar-linked-projects-icon"
             >
-                <i class="fas fa-fw fa-tlp-project-boxes" aria-hidden="true"></i>
+                <i class="fa-solid fa-fw fa-tlp-project-boxes" aria-hidden="true"></i>
             </span>
             <span v-else class="project-sidebar-linked-projects-icon">
                 <i
-                    class="fas fa-fw fa-level-up-alt fa-flip-horizontal project-sidebar-linked-projects-icon-parent"
+                    class="fa-solid fa-fw fa-turn-up fa-flip-horizontal project-sidebar-linked-projects-icon-parent"
                     aria-hidden="true"
                 ></i>
             </span>
@@ -63,7 +63,7 @@
                     </span>
                     <i
                         v-else
-                        class="project-sidebar-linked-projects-item-icon fas fa-archive"
+                        class="project-sidebar-linked-projects-item-icon fa-solid fa-box-archive"
                         aria-hidden="true"
                     ></i>
                     <span class="project-sidebar-linked-projects-item-name">
@@ -83,12 +83,12 @@
         <div class="tlp-popover-header">
             <i
                 v-if="config.project.linked_projects.is_in_children_projects_context"
-                class="fas fa-fw fa-tlp-project-boxes"
+                class="fa-solid fa-fw fa-tlp-project-boxes"
                 aria-hidden="true"
             ></i>
             <i
                 v-else
-                class="fas fa-fw fa-level-up-alt fa-flip-horizontal project-sidebar-linked-projects-icon-parent"
+                class="fa-solid fa-fw fa-turn-up fa-flip-horizontal project-sidebar-linked-projects-icon-parent"
                 aria-hidden="true"
             ></i>
             <h1 class="tlp-popover-title">
@@ -112,7 +112,7 @@
                         </span>
                         <i
                             v-else
-                            class="project-sidebar-linked-projects-item-icon fas fa-archive"
+                            class="project-sidebar-linked-projects-item-icon fa-solid fa-box-archive"
                             aria-hidden="true"
                         ></i>
                         <span class="project-sidebar-linked-projects-item-name">

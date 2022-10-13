@@ -41,7 +41,7 @@
                 data-test="project-administration-link"
             >
                 <i
-                    class="fas fa-cog project-administration-link-icon"
+                    class="fa-solid fa-gear project-administration-link-icon"
                     v-bind:title="config.internationalization.project_administration"
                 ></i>
             </a>

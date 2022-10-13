@@ -30,7 +30,7 @@
         v-on:click="triggerShowProjectAnnouncement()"
     >
         <span class="project-sidebar-banner-button-icon">
-            <i class="fas fa-bullhorn" aria-hidden="true"></i>
+            <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
         </span>
         <span class="project-sidebar-banner-button-label">
             {{ config.internationalization.project_announcement }}
