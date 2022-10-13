@@ -23,10 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
+use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
-use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
+use Tuleap\Baseline\Stub\RetrieveBaselineUserGroupStub;
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class RoleAssignmentRepositoryAdapterTest extends TestCase
@@ -36,7 +41,14 @@ final class RoleAssignmentRepositoryAdapterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->repository = new RoleAssignmentRepositoryAdapter($this->getDB());
+        $this->repository = new RoleAssignmentRepositoryAdapter(
+            $this->getDB(),
+            RetrieveBaselineUserGroupStub::withUserGroups(
+                ProjectUGroupTestBuilder::buildProjectMembers(),
+                ProjectUGroupTestBuilder::aCustomUserGroup(102)->build(),
+                ProjectUGroupTestBuilder::aCustomUserGroup(103)->build()
+            )
+        );
         $this->project    = new class implements ProjectIdentifier {
             public function getID(): int
             {
@@ -58,21 +70,25 @@ final class RoleAssignmentRepositoryAdapterTest extends TestCase
     public function testCanInsertRolesAndRetrieveThem(): void
     {
         $this->repository->saveAssignmentsForProject(
-            $this->project,
-            new RoleAssignment($this->project, 3, Role::ADMIN),
-            new RoleAssignment($this->project, 101, Role::READER),
-            new RoleAssignment($this->project, 102, Role::READER),
+            RoleAssignmentsUpdate::build(
+                $this->project,
+                ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(ProjectUGroupTestBuilder::buildProjectMembers())->withProject($this->project)->build(),
+                ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineReader())->withUserGroups(
+                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(103)->build()
+                )->withProject($this->project)->build(),
+            )
         );
 
-        $administrators = $this->repository->findByProjectAndRole($this->project, Role::ADMIN);
+        $administrators = $this->repository->findByProjectAndRole($this->project, new RoleBaselineAdmin());
         self::assertEquals(
             [3],
             $this->getUgroupIdsFrom($administrators)
         );
 
-        $readers = $this->repository->findByProjectAndRole($this->project, Role::READER);
+        $readers = $this->repository->findByProjectAndRole($this->project, new RoleBaselineReader());
         self::assertEquals(
-            [101, 102],
+            [102, 103],
             $this->getUgroupIdsFrom($readers),
         );
     }
@@ -81,32 +97,36 @@ final class RoleAssignmentRepositoryAdapterTest extends TestCase
     {
         // set up some roles…
         $this->repository->saveAssignmentsForProject(
-            $this->project,
-            new RoleAssignment($this->project, 3, Role::ADMIN),
-            new RoleAssignment($this->project, 101, Role::READER),
-            new RoleAssignment($this->project, 102, Role::READER),
+            RoleAssignmentsUpdate::build(
+                $this->project,
+                ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(ProjectUGroupTestBuilder::buildProjectMembers())->withProject($this->project)->build(),
+                ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineReader())->withUserGroups(
+                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(103)->build()
+                )->withProject($this->project)->build(),
+            )
         );
 
         // …and remove them
-        $this->repository->saveAssignmentsForProject($this->project);
+        $this->repository->saveAssignmentsForProject(RoleAssignmentsUpdate::build($this->project));
 
-        $administrators = $this->repository->findByProjectAndRole($this->project, Role::ADMIN);
+        $administrators = $this->repository->findByProjectAndRole($this->project, new RoleBaselineAdmin());
         self::assertEmpty($administrators);
 
-        $readers = $this->repository->findByProjectAndRole($this->project, Role::READER);
+        $readers = $this->repository->findByProjectAndRole($this->project, new RoleBaselineReader());
         self::assertEmpty($readers);
     }
 
     /**
-     * @param RoleAssignment[] $assigments
+     * @param RoleAssignment[] $assignments
      *
      * @return int[]
      */
-    private function getUgroupIdsFrom(array $assigments): array
+    private function getUgroupIdsFrom(array $assignments): array
     {
         return array_map(
             static fn (RoleAssignment $role) => $role->getUserGroupId(),
-            $assigments,
+            $assignments,
         );
     }
 }

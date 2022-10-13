@@ -27,7 +27,10 @@ use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
-use Tuleap\Project\UGroupRetriever;
+use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
+use Tuleap\Baseline\Stub\RetrieveBaselineUserGroupStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
@@ -49,18 +52,6 @@ class ServiceSavePermissionsControllerTest extends TestCase
         $feedback_serializer = $this->createStub(FeedbackSerializer::class);
         $feedback_serializer->method('serialize');
 
-        $ugroup_retriever = new class implements UGroupRetriever {
-            public function getUGroup(\Project $project, $ugroup_id): ?\ProjectUGroup
-            {
-                return match ((int) $ugroup_id) {
-                    102 => ProjectUGroupTestBuilder::aCustomUserGroup(102)->build(),
-                    103 => ProjectUGroupTestBuilder::aCustomUserGroup(103)->build(),
-                    104 => ProjectUGroupTestBuilder::aCustomUserGroup(104)->build(),
-                    default => null,
-                };
-            }
-        };
-
         $project_history_saver = new class implements ISaveProjectHistory {
             private $captured_save_parameters = [];
 
@@ -76,21 +67,20 @@ class ServiceSavePermissionsControllerTest extends TestCase
         };
 
         $role_assignment_repository = new class implements RoleAssignmentRepository {
-            private $captured_save_parameters = [];
+            private ?RoleAssignmentsUpdate $captured_save_parameters;
 
-            public function findByProjectAndRole(ProjectIdentifier $project, string $role): array
+            public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
             {
                 return [];
             }
 
             public function saveAssignmentsForProject(
-                ProjectIdentifier $project,
-                RoleAssignment ...$assignments,
+                RoleAssignmentsUpdate $role_assignments_update,
             ): void {
-                $this->captured_save_parameters = [$project, $assignments];
+                $this->captured_save_parameters = $role_assignments_update;
             }
 
-            public function getCapturedSaveParameters(): array
+            public function getCapturedSaveParameters(): ?RoleAssignmentsUpdate
             {
                 return $this->captured_save_parameters;
             }
@@ -102,7 +92,11 @@ class ServiceSavePermissionsControllerTest extends TestCase
 
         $controller = new ServiceSavePermissionsController(
             $role_assignment_repository,
-            $ugroup_retriever,
+            RetrieveBaselineUserGroupStub::withUserGroups(
+                ProjectUGroupTestBuilder::aCustomUserGroup(102)->build(),
+                ProjectUGroupTestBuilder::aCustomUserGroup(103)->build(),
+                ProjectUGroupTestBuilder::aCustomUserGroup(104)->build(),
+            ),
             $project_history_saver,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $token_provider,
@@ -127,27 +121,28 @@ class ServiceSavePermissionsControllerTest extends TestCase
         self::assertEquals(302, $response->getStatusCode());
 
         $save_parameters = $role_assignment_repository->getCapturedSaveParameters();
-        self::assertEquals((int) $project->getID(), $save_parameters[0]->getID());
-        self::assertEquals(102, $save_parameters[1][0]->getUserGroupId());
-        self::assertEquals(Role::ADMIN, $save_parameters[1][0]->getRole());
-        self::assertEquals(103, $save_parameters[1][1]->getUserGroupId());
-        self::assertEquals(Role::ADMIN, $save_parameters[1][1]->getRole());
-        self::assertEquals(103, $save_parameters[1][2]->getUserGroupId());
-        self::assertEquals(Role::READER, $save_parameters[1][2]->getRole());
-        self::assertEquals(104, $save_parameters[1][3]->getUserGroupId());
-        self::assertEquals(Role::READER, $save_parameters[1][3]->getRole());
+
+        self::assertEquals((int) $project->getID(), $save_parameters->getProject()->getID());
+        self::assertEquals(102, $save_parameters->getAssignments()[0]->getUserGroupId());
+        self::assertEquals(RoleBaselineAdmin::NAME, $save_parameters->getAssignments()[0]->getRoleName());
+        self::assertEquals(103, $save_parameters->getAssignments()[1]->getUserGroupId());
+        self::assertEquals(RoleBaselineAdmin::NAME, $save_parameters->getAssignments()[1]->getRoleName());
+        self::assertEquals(103, $save_parameters->getAssignments()[2]->getUserGroupId());
+        self::assertEquals(RoleBaselineReader::NAME, $save_parameters->getAssignments()[2]->getRoleName());
+        self::assertEquals(104, $save_parameters->getAssignments()[3]->getUserGroupId());
+        self::assertEquals(RoleBaselineReader::NAME, $save_parameters->getAssignments()[3]->getRoleName());
 
 
         $save_history_parameters = $project_history_saver->getCapturedSaveParameters();
         self::assertEquals((int) $project->getID(), $save_history_parameters[0]->getID());
         self::assertEquals(102, $save_history_parameters[1][0]->getUserGroupId());
-        self::assertEquals(Role::ADMIN, $save_history_parameters[1][0]->getRole());
+        self::assertEquals(RoleBaselineAdmin::NAME, $save_history_parameters[1][0]->getRoleName());
         self::assertEquals(103, $save_history_parameters[1][1]->getUserGroupId());
-        self::assertEquals(Role::ADMIN, $save_history_parameters[1][1]->getRole());
+        self::assertEquals(RoleBaselineAdmin::NAME, $save_history_parameters[1][1]->getRoleName());
         self::assertEquals(103, $save_history_parameters[1][2]->getUserGroupId());
-        self::assertEquals(Role::READER, $save_history_parameters[1][2]->getRole());
+        self::assertEquals(RoleBaselineReader::NAME, $save_history_parameters[1][2]->getRoleName());
         self::assertEquals(104, $save_history_parameters[1][3]->getUserGroupId());
-        self::assertEquals(Role::READER, $save_history_parameters[1][3]->getRole());
+        self::assertEquals(RoleBaselineReader::NAME, $save_history_parameters[1][3]->getRoleName());
     }
 
     public function testExceptionWhenUGroupIsNotValid(): void
@@ -159,16 +154,9 @@ class ServiceSavePermissionsControllerTest extends TestCase
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')->willReturn($token);
 
-        $ugroup_retriever = new class implements UGroupRetriever {
-            public function getUGroup(\Project $project, $ugroup_id): ?\ProjectUGroup
-            {
-                return null;
-            }
-        };
-
         $controller = new ServiceSavePermissionsController(
             $this->createMock(RoleAssignmentRepository::class),
-            $ugroup_retriever,
+            RetrieveBaselineUserGroupStub::withUserGroups(),
             $this->createMock(ISaveProjectHistory::class),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $token_provider,
@@ -188,6 +176,6 @@ class ServiceSavePermissionsControllerTest extends TestCase
             );
 
         $this->expectException(ForbiddenException::class);
-        $response = $controller->handle($request);
+        $controller->handle($request);
     }
 }

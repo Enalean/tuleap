@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
-use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
-use Tuleap\Project\UGroupRetriever;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
 
 final class ProjectHistory implements ISaveProjectHistory
 {
@@ -67,40 +67,36 @@ final class ProjectHistory implements ISaveProjectHistory
         );
     }
 
-    public function __construct(private \ProjectHistoryDao $dao, private UGroupRetriever $ugroup_retriever)
+    public function __construct(private \ProjectHistoryDao $dao)
     {
     }
 
     public function saveHistory(\Project $project, RoleAssignment ...$assignments): void
     {
         $ugroup_names = [
-            Role::READER => [],
-            Role::ADMIN  => [],
+            RoleBaselineReader::NAME  => [],
+            RoleBaselineAdmin::NAME => [],
         ];
         foreach ($assignments as $assignment) {
-            $ugroup = $this->ugroup_retriever->getUGroup($project, $assignment->getUserGroupId());
-            if (! $ugroup) {
-                throw new \LogicException('Unable to find ugroup ' . $assignment->getUserGroupId());
-            }
-            $ugroup_names[$assignment->getRole()][] = $ugroup->getName();
+            $ugroup_names[$assignment->getRoleName()][] = $assignment->getUserGroupName();
         }
 
-        if (empty($ugroup_names[Role::READER])) {
+        if (empty($ugroup_names[RoleBaselineReader::NAME])) {
             $this->dao->groupAddHistory(self::PERM_RESET_FOR_BASELINE_READERS, '', (int) $project->getID());
         } else {
             $this->dao->groupAddHistory(
                 self::PERM_GRANTED_FOR_BASELINE_READERS,
-                implode(',', $ugroup_names[Role::READER]),
+                implode(',', $ugroup_names[RoleBaselineReader::NAME]),
                 (int) $project->getID()
             );
         }
 
-        if (empty($ugroup_names[Role::ADMIN])) {
+        if (empty($ugroup_names[RoleBaselineAdmin::NAME])) {
             $this->dao->groupAddHistory(self::PERM_RESET_FOR_BASELINE_ADMINISTRATORS, '', (int) $project->getID());
         } else {
             $this->dao->groupAddHistory(
                 self::PERM_GRANTED_FOR_BASELINE_ADMINISTRATORS,
-                implode(',', $ugroup_names[Role::ADMIN]),
+                implode(',', $ugroup_names[RoleBaselineAdmin::NAME]),
                 (int) $project->getID()
             );
         }

@@ -28,7 +28,7 @@ interface RoleAssignmentRepository
     /**
      * @return RoleAssignment[]
      */
-    public function findByProjectAndRole(ProjectIdentifier $project, string $role): array;
+    public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array;
 
-    public function saveAssignmentsForProject(ProjectIdentifier $project, RoleAssignment ...$assignments): void;
+    public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void;
 }

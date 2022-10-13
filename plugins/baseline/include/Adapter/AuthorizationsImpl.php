@@ -30,6 +30,8 @@ use Tuleap\Baseline\Domain\Comparison;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Baseline\Domain\TransientBaseline;
 use Tuleap\Baseline\Domain\TransientComparison;
 use Tuleap\Baseline\Domain\UserIdentifier;
@@ -75,7 +77,7 @@ class AuthorizationsImpl implements Authorizations
             return true;
         }
         return $this->canUserAdministrateBaselineOnProject($current_user, $project)
-            || $this->hasUserRoleOnProject($user, Role::READER, $project);
+            || $this->hasUserRoleOnProject($user, new RoleBaselineReader(), $project);
     }
 
     public function canUserAdministrateBaselineOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
@@ -86,10 +88,10 @@ class AuthorizationsImpl implements Authorizations
             return true;
         }
 
-        return $this->hasUserRoleOnProject($user, Role::ADMIN, $project);
+        return $this->hasUserRoleOnProject($user, new RoleBaselineAdmin(), $project);
     }
 
-    private function hasUserRoleOnProject(PFUser $user, string $role, ProjectIdentifier $project): bool
+    private function hasUserRoleOnProject(PFUser $user, Role $role, ProjectIdentifier $project): bool
     {
         $assignments = $this->role_assignment_repository->findByProjectAndRole($project, $role);
         foreach ($assignments as $assignment) {

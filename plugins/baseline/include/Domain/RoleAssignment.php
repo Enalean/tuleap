@@ -24,29 +24,15 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 /**
- * Assign a pair project / user group id to a role, which gives permissions.
+ * Assign a pair of project / user group id to a role, which gives permissions.
  */
 class RoleAssignment
 {
-    /** @var ProjectIdentifier */
-    private $project;
-
-    /** @var int */
-    private $user_group_id;
-
-    /**
-     * @psalm-var Role::*
-     */
-    private $role;
-
-    /**
-     * @psalm-param Role::* $role
-     */
-    public function __construct(ProjectIdentifier $project, int $user_group_id, string $role)
-    {
-        $this->project       = $project;
-        $this->user_group_id = $user_group_id;
-        $this->role          = $role;
+    private function __construct(
+        private ProjectIdentifier $project,
+        private BaselineUserGroup $user_group,
+        private Role $role,
+    ) {
     }
 
     public function getProject(): ProjectIdentifier
@@ -56,11 +42,37 @@ class RoleAssignment
 
     public function getUserGroupId(): int
     {
-        return $this->user_group_id;
+        return $this->user_group->getId();
     }
 
-    public function getRole(): string
+    public function getUserGroupName(): string
     {
-        return $this->role;
+        return $this->user_group->getName();
+    }
+
+    public function getRoleName(): string
+    {
+        return $this->role->getName();
+    }
+
+    /**
+     * @param int[] $ugroups_ids
+     * @throws UserGroupDoesNotExistOrBelongToCurrentBaselineProjectException
+     * @return self[]
+     */
+    public static function fromRoleAssignmentsIds(
+        RetrieveBaselineUserGroup $retrieve_ugroups,
+        ProjectIdentifier $project,
+        Role $role,
+        int ...$ugroups_ids,
+    ): array {
+        return array_map(
+            static fn(int $ugroup_id) => new self(
+                $project,
+                $retrieve_ugroups->retrieveUserGroupFromBaselineProjectAndId($project, $ugroup_id),
+                $role
+            ),
+            $ugroups_ids
+        );
     }
 }
