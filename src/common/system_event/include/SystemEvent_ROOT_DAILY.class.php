@@ -121,6 +121,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
     {
         $process = new Process([__DIR__ . '/../../../utils/compute_all_daily_stats.sh']);
         $this->runCommand($process, $logger, $warnings);
+        (new \Tuleap\FRS\FRSMetricsDAO())->executeDailyRun(new DateTimeImmutable());
         $project_metrics_dao->executeDailyRun();
     }
 
