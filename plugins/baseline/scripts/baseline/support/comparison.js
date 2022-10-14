@@ -18,8 +18,6 @@
  *
  */
 
-import ArrayUtils from "./array-utils";
-
 export { compareArtifacts };
 
 function compareArtifacts(base_artifacts, compared_to_artifacts) {
@@ -41,8 +39,7 @@ class ArtifactsListComparison {
     get identical_or_modified() {
         return this.base_artifacts
             .map((base) => {
-                const compared_to = ArrayUtils.find(
-                    this.compared_to_artifacts,
+                const compared_to = this.compared_to_artifacts.find(
                     (compared) => base.id === compared.id
                 );
                 if (!compared_to) {

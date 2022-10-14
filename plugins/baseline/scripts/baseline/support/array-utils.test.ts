@@ -21,23 +21,6 @@
 import ArrayUtils from "./array-utils";
 
 describe("ArrayUtils:", () => {
-    describe("find", () => {
-        const ALWAYS_TRUE = () => true;
-        const ALWAYS_FALSE = () => false;
-
-        it("returns first element which match given predicate", () => {
-            expect(ArrayUtils.find([1, 2, 3], (value) => value > 1)).toBe(2);
-        });
-
-        it("returns undefined when no element match with given predicate", () => {
-            expect(ArrayUtils.find([1, 2, 3], ALWAYS_FALSE)).toBeUndefined();
-        });
-
-        it("returns undefined when array is empty", () => {
-            expect(ArrayUtils.find([], ALWAYS_TRUE)).toBeUndefined();
-        });
-    });
-
     describe("mapAttribute", () => {
         it("returns specifics objects attribute", () => {
             expect(
@@ -48,15 +31,17 @@ describe("ArrayUtils:", () => {
                     ],
                     "id"
                 )
-            ).toEqual([1, 2]);
+            ).toStrictEqual([1, 2]);
         });
 
         it("returns empty array when no element match with given attribute", () => {
-            expect(ArrayUtils.mapAttribute([{ id: 1, title: "Scra" }], "not_exist")).toEqual([]);
+            expect(ArrayUtils.mapAttribute([{ id: 1, title: "Scra" }], "not_exist")).toStrictEqual(
+                []
+            );
         });
 
         it("returns empty array when array is empty", () => {
-            expect(ArrayUtils.mapAttribute([], "id")).toEqual([]);
+            expect(ArrayUtils.mapAttribute([], "id")).toStrictEqual([]);
         });
     });
 
@@ -65,7 +50,7 @@ describe("ArrayUtils:", () => {
             const object = { id: 1, title: "Scra" };
 
             it("identifies double", () => {
-                expect(ArrayUtils.unique([object, object])).toEqual([object]);
+                expect(ArrayUtils.unique([object, object])).toStrictEqual([object]);
             });
         });
 
@@ -74,19 +59,19 @@ describe("ArrayUtils:", () => {
             const object2 = { id: 1, title: "title" };
 
             it("does not identify double", () => {
-                expect(ArrayUtils.unique([object1, object2])).toEqual([object1, object2]);
+                expect(ArrayUtils.unique([object1, object2])).toStrictEqual([object1, object2]);
             });
         });
 
         describe("when they are numbers", () => {
             it("returns unique values", () => {
-                expect(ArrayUtils.unique([1, 1, 2])).toEqual([1, 2]);
+                expect(ArrayUtils.unique([1, 1, 2])).toStrictEqual([1, 2]);
             });
         });
 
         describe("when they are booleans", () => {
             it("returns unique values", () => {
-                expect(ArrayUtils.unique([true, true, false])).toEqual([true, false]);
+                expect(ArrayUtils.unique([true, true, false])).toStrictEqual([true, false]);
             });
         });
 
@@ -94,19 +79,19 @@ describe("ArrayUtils:", () => {
             it("returns unique values", () => {
                 expect(
                     ArrayUtils.unique(["unique string", "unique string", "other string"])
-                ).toEqual(["unique string", "other string"]);
+                ).toStrictEqual(["unique string", "other string"]);
             });
         });
 
         describe("when array is empty", () => {
             it("returns empty array", () => {
-                expect(ArrayUtils.unique([])).toEqual([]);
+                expect(ArrayUtils.unique([])).toStrictEqual([]);
             });
         });
 
         describe("when they are null values", () => {
             it("returns unique null values", () => {
-                expect(ArrayUtils.unique([null, null])).toEqual([null]);
+                expect(ArrayUtils.unique([null, null])).toStrictEqual([null]);
             });
         });
     });
@@ -116,7 +101,9 @@ describe("ArrayUtils:", () => {
             const object = { id: 1, title: "Scra" };
 
             it("identifies double", () => {
-                expect(ArrayUtils.uniqueByAttribute([object, object], "id")).toEqual([object]);
+                expect(ArrayUtils.uniqueByAttribute([object, object], "id")).toStrictEqual([
+                    object,
+                ]);
             });
         });
 
@@ -125,7 +112,9 @@ describe("ArrayUtils:", () => {
             const object2 = { id: 1, title: "title" };
 
             it("identifies double", () => {
-                expect(ArrayUtils.uniqueByAttribute([object1, object2], "id")).toEqual([object1]);
+                expect(ArrayUtils.uniqueByAttribute([object1, object2], "id")).toStrictEqual([
+                    object1,
+                ]);
             });
         });
 
@@ -134,23 +123,11 @@ describe("ArrayUtils:", () => {
             const object2 = { id: 2, title: "title" };
 
             it("returns identical array", () => {
-                expect(ArrayUtils.uniqueByAttribute([object1, object2], "id")).toEqual([
+                expect(ArrayUtils.uniqueByAttribute([object1, object2], "id")).toStrictEqual([
                     object1,
                     object2,
                 ]);
             });
-        });
-    });
-
-    describe("clone", () => {
-        const obj = { id: 1, title: "Scra" };
-
-        it("returns clones", () => {
-            expect(ArrayUtils.clone([obj])[0]).not.toBe(obj);
-        });
-
-        it("returns empty array when array is empty", () => {
-            expect(ArrayUtils.clone([obj])[0]).not.toBe(obj);
         });
     });
 });
