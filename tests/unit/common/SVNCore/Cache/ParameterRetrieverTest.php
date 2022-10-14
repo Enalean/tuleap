@@ -23,7 +23,7 @@ namespace Tuleap\SVNCore\Cache;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use TestHelper;
 
-class ParameterRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ParameterRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -36,17 +36,12 @@ class ParameterRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $parameter = $parameter_manager->getParameters();
 
-        $this->assertEquals(ParameterRetriever::MAXIMUM_CREDENTIALS_DEFAULT, $parameter->getMaximumCredentials());
         $this->assertEquals(ParameterRetriever::LIFETIME_DEFAULT, $parameter->getLifetime());
     }
 
     public function testItUsesDatabaseInformationsToCreateParameters(): void
     {
         $parameters_data = TestHelper::arrayToDar(
-            [
-                'name'  => ParameterRetriever::MAXIMUM_CREDENTIALS,
-                'value' => 877,
-            ],
             [
                 'name' => ParameterRetriever::LIFETIME,
                 'value' => 947,
@@ -59,7 +54,6 @@ class ParameterRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $parameter = $parameter_manager->getParameters();
 
-        $this->assertEquals(877, $parameter->getMaximumCredentials());
         $this->assertEquals(947, $parameter->getLifetime());
     }
 

@@ -29,8 +29,6 @@ use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectManager;
 use SVNAccessFile;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\DB\DBAuthUserConfig;
 
 final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -64,7 +62,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        \ForgeConfig::setFeatureFlag('disable_php_based_svn_auth', '1');
         $this->tmp_dir      = $this->getTmpDir();
         $this->bin_dir      = __DIR__ . '/_fixtures';
         $this->fake_revprop = $this->bin_dir . '/post-revprop-change.php';
@@ -92,8 +89,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
         ForgeConfig::set('sys_custom_dir', $this->tmp_dir);
         mkdir($this->tmp_dir . '/conf');
-        ForgeConfig::set(DBAuthUserConfig::USER, 'dbauthuser');
-        ForgeConfig::set(DBAuthUserConfig::PASSWORD, ForgeConfig::encryptValue(new ConcealedString('welcome0')));
 
         $this->project_manager  = \Mockery::spy(\ProjectManager::class);
         $this->cache_parameters = \Mockery::spy(\Tuleap\SVNCore\Cache\Parameters::class);
@@ -351,7 +346,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertNotFalse($svnroots);
         $this->assertStringContainsString("gpig2", $svnroots, "Project name not found in SVN root");
-        $this->assertStringContainsString("AuthName \"Subversion Authorization (Guinea Pig is 'back')\"", $svnroots, "Group name double quotes in realm");
     }
 
     public function testSetSVNPrivacyPrivate(): void

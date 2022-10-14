@@ -176,9 +176,6 @@ msgstr ""
 msgid "Maximum individual file size (in Megabytes)"
 msgstr ""
 
-msgid "Maximum number of credentials cached by repository"
-msgstr ""
-
 msgid "Migrate from core"
 msgstr ""
 

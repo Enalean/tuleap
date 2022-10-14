@@ -150,7 +150,6 @@ class LdapPlugin extends Plugin
 
         // Backend SVN
         $this->addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
-        $this->addHook(Event::SVN_APACHE_AUTH, 'svn_apache_auth', false);
         $this->addHook(GetSVNLoginNameEvent::NAME);
 
         // Daily codendi job
@@ -901,19 +900,6 @@ class LdapPlugin extends Plugin
         if ($this->isLdapAuthType()) {
             $params['base']  = 'LDAP_BackendSVN';
             $params['setup'] = [$this->getLdap()];
-        }
-    }
-
-    public function svn_apache_auth($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($this->isLdapAuthType()) {
-            $ldapProjectManager = new LDAP_ProjectManager();
-            if ($ldapProjectManager->hasSVNLDAPAuth($params['project']->getID())) {
-                $params['svn_apache_auth'] = new LDAP_SVN_Apache_ModPerl(
-                    $this->getLdap(),
-                    $params['cache_parameters']
-                );
-            }
         }
     }
 

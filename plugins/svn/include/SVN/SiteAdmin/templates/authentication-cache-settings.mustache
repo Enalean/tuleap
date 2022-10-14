@@ -9,15 +9,6 @@
                 {{# csrf_token }}
                     {{> csrf_token_input }}
                 {{/ csrf_token }}
-                {{# is_php_based_auth_enabled }}
-                    <input type="hidden" name="cache-maximum-credentials" value="{{ maximum_credentials }}">
-                {{/ is_php_based_auth_enabled }}
-                {{^ is_php_based_auth_enabled }}
-                    <div class="tlp-form-element">
-                        <label for="cache-maximum-credentials" class="tlp-label">{{# dgettext }} tuleap-svn |Maximum number of credentials cached by repository{{/ dgettext }}</label>
-                        <input id="cache-maximum-credentials" type="number" min="0" name="cache-maximum-credentials" value="{{ maximum_credentials }}" class="tlp-input" size="5">
-                    </div>
-                {{/ is_php_based_auth_enabled }}
                 <div class="tlp-form-element">
                     <label for="cache-lifetime" class="tlp-label">{{# dgettext }} tuleap-svn |Cache lifetime (in minutes){{/ dgettext }}</label>
                     <input id="cache-lifetime" type="number" name="cache-lifetime" min="0" value="{{ lifetime }}" class="tlp-input" size="5">

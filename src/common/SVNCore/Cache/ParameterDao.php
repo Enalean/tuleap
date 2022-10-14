@@ -30,13 +30,12 @@ class ParameterDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function save($maximum_credentials, $lifetime)
+    public function save($lifetime)
     {
-        $maximum_credentials = $this->getDa()->quoteSmart($maximum_credentials);
-        $lifetime            = $this->getDa()->quoteSmart($lifetime);
+        $lifetime = $this->getDa()->quoteSmart($lifetime);
 
         $sql = "REPLACE INTO svn_cache_parameter(name, value)
-                VALUES ('maximum_credentials' , $maximum_credentials), ('lifetime', $lifetime)";
+                VALUES ('lifetime', $lifetime)";
         return $this->update($sql);
     }
 }
