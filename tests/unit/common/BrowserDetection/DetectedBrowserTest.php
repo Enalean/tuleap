@@ -22,14 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\BrowserDetection;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public const CHROME_USER_AGENT_STRING           = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36';
-    public const FIREFOX_USER_AGENT_STRING          = 'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0';
+    public const CHROME_USER_AGENT_STRING           = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36';
+    public const FIREFOX_USER_AGENT_STRING          = 'Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0';
     public const IE11_USER_AGENT_STRING             = 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko';
     private const OLD_IE_USER_AGENT_STRING          = 'Mozilla/4.0 (compatible; MSIE 4.01; Mac_PowerPC)';
     public const EDGE_LEGACY_USER_AGENT_STRING      = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/18.17763';
@@ -46,7 +42,7 @@ final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
         bool $expected_browser_is_outdated,
         bool $expected_browser_is_completely_broken,
     ): void {
-        $detected_browser = self::buildDetectedBrowserFromSpecificUserAgentString($user_agent);
+        $detected_browser = $this->buildDetectedBrowserFromSpecificUserAgentString($user_agent);
         self::assertEquals($expected_browser_name, $detected_browser->getName());
         self::assertEquals($expected_is_ie, $detected_browser->isIE());
         self::assertEquals($expected_edge_legacy, $detected_browser->isEdgeLegacy());
@@ -122,7 +118,7 @@ final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
                 false,
             ],
             'Chromium' => [
-                'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+                'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
                 'Chrome',
                 false,
                 false,
@@ -142,8 +138,8 @@ final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesNotIdentifyAnythingWhenNoUserAgentHeaderIsSet(): void
     {
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_USER_AGENT')->andReturn(false);
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_USER_AGENT')->willReturn(false);
 
         $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
 
@@ -154,10 +150,10 @@ final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($detected_browser->isACompletelyBrokenBrowser());
     }
 
-    private static function buildDetectedBrowserFromSpecificUserAgentString(string $user_agent): DetectedBrowser
+    private function buildDetectedBrowserFromSpecificUserAgentString(string $user_agent): DetectedBrowser
     {
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_USER_AGENT')->andReturn($user_agent);
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_USER_AGENT')->willReturn($user_agent);
 
         return DetectedBrowser::detectFromTuleapHTTPRequest($request);
     }
