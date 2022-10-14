@@ -55,7 +55,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
@@ -208,7 +208,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $artifact_factory        = \Tracker_ArtifactFactory::instance();
         $program_increments_dao  = new ProgramIncrementsDAO();
         $plan_dao                = new PlanDao();
-        $program_dao             = new ProgramDao();
+        $program_dao             = new ProgramDaoProject();
         $artifact_retriever      = new ArtifactFactoryAdapter($artifact_factory);
         $tracker_factory         = \TrackerFactory::instance();
         $tracker_retriever       = new TrackerFactoryAdapter($tracker_factory);

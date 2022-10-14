@@ -42,10 +42,12 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\Retr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\VerifyTeamSynchronizationHasError;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsAProgramOrUsedInPlanChecker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
+use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsProjectUsedInPlan;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
@@ -92,6 +94,7 @@ final class ProgramAdmin
         public bool $has_plannable_error,
         public bool $has_program_increment_error,
         public bool $has_iteration_error,
+        public bool $is_project_used_in_plan,
     ) {
     }
 
@@ -123,6 +126,8 @@ final class ProgramAdmin
         UserReference $user_identifier,
         ProjectReference $project_reference,
         TeamProjectsCollection $aggregated_teams,
+        ProjectIsAProgramOrUsedInPlanChecker $build_program_for_administration,
+        VerifyIsProjectUsedInPlan $verify_is_project_used_in_plan,
     ): self {
         $increment_error              = null;
         $iteration_error              = null;
@@ -133,8 +138,8 @@ final class ProgramAdmin
 
 
         try {
-            $program = ProgramIdentifier::fromId(
-                $build_program,
+            $program = ProgramIdentifier::fromIdForAdministration(
+                $build_program_for_administration,
                 $program_for_administration_identifier->id,
                 $user_identifier,
                 null
@@ -260,7 +265,8 @@ final class ProgramAdmin
             $has_errors,
             $has_plannable_error,
             $has_program_increment_error,
-            $has_iteration_increment_error
+            $has_iteration_increment_error,
+            $verify_is_project_used_in_plan->isProjectUsedInPlan($program_for_administration_identifier)
         );
     }
 }

@@ -35,7 +35,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Cha
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
@@ -92,7 +92,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
         $artifact_factory         = \Tracker_ArtifactFactory::instance();
         $tracker_factory          = \TrackerFactory::instance();
         $form_element_factory     = \Tracker_FormElementFactory::instance();
-        $program_DAO              = new ProgramDao();
+        $program_DAO              = new ProgramDaoProject();
         $project_manager          = \ProjectManager::instance();
         $event_manager            = \EventManager::instance();
         $user_retriever           = new UserManagerAdapter(\UserManager::instance());

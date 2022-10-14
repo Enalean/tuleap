@@ -110,7 +110,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVe
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\TrackerConfigurationChecker;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker\VisibleProgramIncrementTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramUserGroupRetriever;
 use Tuleap\ProgramManagement\Adapter\ProjectAdmin\PermissionPerGroupSectionBuilder;
@@ -435,7 +435,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 new QueueFactory($logger),
             ),
             new VisibleTeamSearcher(
-                new ProgramDao(),
+                new ProgramDaoProject(),
                 $user_manager,
                 new ProjectManagerAdapter($project_manager, $user_manager),
                 new ProjectAccessChecker(
@@ -489,7 +489,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     public function routeGetAdminProgramManagement(): DisplayAdminProgramManagementController
     {
         $project_manager               = ProjectManager::instance();
-        $program_dao                   = new ProgramDao();
+        $program_dao                   = new ProgramDaoProject();
         $team_dao                      = new TeamDao();
         $tracker_factory               = TrackerFactory::instance();
         $user_manager                  = UserManager::instance();
@@ -577,6 +577,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
         $artifact_visible_verifier   = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
         $pending_synchronization_dao = new PendingSynchronizationDao();
+        $plan_dao                    = new PlanDao();
         return new DisplayAdminProgramManagementController(
             new ProjectManagerAdapter($project_manager, $user_manager_adapter),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
@@ -587,7 +588,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $program_adapter,
             $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
             $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
-            new PotentialPlannableTrackersConfigurationBuilder(new PlannableTrackersRetriever(new PlanDao(), TrackerFactory::instance())),
+            new PotentialPlannableTrackersConfigurationBuilder(new PlannableTrackersRetriever($plan_dao, TrackerFactory::instance())),
             new ProjectUGroupCanPrioritizeItemsBuilder(
                 new UGroupManagerAdapter($project_manager_adapter, new UGroupManager()),
                 new CanPrioritizeFeaturesDAO(),
@@ -614,7 +615,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     $checker,
                     $logger_message
                 ),
-                new ProgramDao(),
+                new ProgramDaoProject(),
                 new ProjectReferenceRetriever($project_manager_adapter)
             ),
             $project_manager,
@@ -649,8 +650,10 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $pending_synchronization_dao,
             $visible_searcher,
             $pending_synchronization_dao,
-            new PlannableTrackersRetriever(new PlanDao(), TrackerFactory::instance()),
-            new TrackerSemantics($tracker_factory)
+            new PlannableTrackersRetriever($plan_dao, TrackerFactory::instance()),
+            new TrackerSemantics($tracker_factory),
+            $program_adapter,
+            $plan_dao
         );
     }
 
@@ -667,7 +670,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $program_increments_DAO   = new ProgramIncrementsDAO();
         $update_verifier          = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
         $project_manager_adapter  = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
-        $program_dao              = new ProgramDao();
+        $program_dao              = new ProgramDaoProject();
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
@@ -833,7 +836,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $artifact_retriever        = new ArtifactFactoryAdapter($tracker_artifact_factory);
         $program_increments_dao    = new ProgramIncrementsDAO();
         $artifact_visible_verifier = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
-        $program_dao               = new ProgramDao();
+        $program_dao               = new ProgramDaoProject();
         $program_adapter           = ProgramAdapter::instance();
         $project_manager_adapter   = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
 
@@ -1110,7 +1113,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
     public function blockScrumAccess(BlockScrumAccess $block_scrum_access): void
     {
-        $program_store = new ProgramDao();
+        $program_store = new ProgramDaoProject();
         if ($program_store->isAProgram((int) $block_scrum_access->getProject()->getID())) {
             $block_scrum_access->disableScrumAccess();
         }
@@ -1398,7 +1401,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
     public function collectLinkedProjects(CollectLinkedProjects $event): void
     {
-        $program_dao     = new ProgramDao();
+        $program_dao     = new ProgramDaoProject();
         $team_dao        = new TeamDao();
         $project_manager = ProjectManager::instance();
         $handler         = new CollectLinkedProjectsHandler(
@@ -1445,7 +1448,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     {
         $component_involved_verifier = new ComponentInvolvedVerifier(
             new TeamDao(),
-            new ProgramDao()
+            new ProgramDaoProject()
         );
 
         return $component_involved_verifier;
@@ -1540,7 +1543,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     $checker,
                     $logger_message
                 ),
-                new ProgramDao(),
+                new ProgramDaoProject(),
                 new ProjectReferenceRetriever(new ProjectManagerAdapter(ProjectManager::instance(), $retrieve_user)),
             )
         );

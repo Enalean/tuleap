@@ -31,9 +31,10 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfIteration;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Program\VerifyIsProjectAProgramOrUsedInPlan;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 
-final class ProgramDao extends DataAccessObject implements RetrieveProgramOfProgramIncrement, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher, RetrieveProgramOfIteration
+final class ProgramDaoProject extends DataAccessObject implements RetrieveProgramOfProgramIncrement, SearchTeamsOfProgram, VerifyIsProgram, AllProgramSearcher, RetrieveProgramOfIteration, VerifyIsProjectAProgramOrUsedInPlan
 {
     public function isAProgram(int $project_id): bool
     {
@@ -42,6 +43,19 @@ final class ProgramDao extends DataAccessObject implements RetrieveProgramOfProg
                 WHERE program_project_id = ?';
 
         return $this->getDB()->exists($sql, $project_id);
+    }
+
+    public function isProjectAProgramOrIsPartOfPlan(int $project_id): bool
+    {
+        $sql = 'SELECT COUNT(*)
+                FROM plugin_program_management_team_projects
+                WHERE program_project_id = ?';
+
+        $sql_plan = 'SELECT COUNT(*)
+                FROM plugin_program_management_plan
+                WHERE project_id = ?';
+
+        return $this->getDB()->exists($sql, $project_id) || $this->getDB()->exists($sql_plan, $project_id);
     }
 
     /**

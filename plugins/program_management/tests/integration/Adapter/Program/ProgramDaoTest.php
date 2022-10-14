@@ -31,7 +31,7 @@ final class ProgramDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROGRAM_INCREMENT_TRACKER_ID = 60;
     private const PROGRAM_ID                   = 115;
     private static int $valid_artifact_id;
-    private ProgramDao $dao;
+    private ProgramDaoProject $dao;
 
     public static function setUpBeforeClass(): void
     {
@@ -55,7 +55,7 @@ final class ProgramDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->dao = new ProgramDao();
+        $this->dao = new ProgramDaoProject();
     }
 
     public static function tearDownAfterClass(): void

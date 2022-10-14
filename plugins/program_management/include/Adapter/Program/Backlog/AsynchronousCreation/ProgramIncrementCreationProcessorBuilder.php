@@ -44,7 +44,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgra
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoryInOneMirrorPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
-use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
+use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
@@ -97,7 +97,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
     public function getProcessor(): ProcessProgramIncrementCreation
     {
         $user_manager                   = \UserManager::instance();
-        $program_dao                    = new ProgramDao();
+        $program_dao                    = new ProgramDaoProject();
         $form_element_factory           = \Tracker_FormElementFactory::instance();
         $logger                         = \BackendLogger::getDefaultLogger('program_management_syslog');
         $artifact_factory               = \Tracker_ArtifactFactory::instance();
