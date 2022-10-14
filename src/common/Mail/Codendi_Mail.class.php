@@ -164,11 +164,11 @@ class Codendi_Mail implements Codendi_Mail_Interface
     {
         $allowed = ['To', 'Cc', 'Bcc'];
         if (in_array($recipient_type, $allowed)) {
-            $headers = $this->message->getHeaders();
-            if ($headers->has($recipient_type)) {
-                $recipient_header = $headers->get($recipient_type);
-                $list_addresses   = $recipient_header->getAddressList();
-                $addresses        = [];
+            $headers          = $this->message->getHeaders();
+            $recipient_header = $headers->get($recipient_type);
+            if ($recipient_header !== false) {
+                $list_addresses = $recipient_header->getAddressList();
+                $addresses      = [];
                 foreach ($list_addresses as $address) {
                     $addresses[] = $address->getEmail();
                 }
@@ -532,8 +532,9 @@ class Codendi_Mail implements Codendi_Mail_Interface
             $this->logger->debug("Mail notification failed");
             $this->logger->debug("Laminas mail Exception: " . $e->getMessage());
 
-            if ($this->message->getHeaders()->get('to')) {
-                $list      = $this->message->getHeaders()->get('to')->getAddressList();
+            $to_header = $this->message->getHeaders()->get('to');
+            if ($to_header) {
+                $list      = $to_header->getAddressList();
                 $addresses = [];
                 foreach ($list as $address) {
                     $addresses[] = $address->getEmail();
