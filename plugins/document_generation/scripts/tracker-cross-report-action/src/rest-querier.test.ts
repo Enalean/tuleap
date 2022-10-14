@@ -31,7 +31,7 @@ import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper"
 import type {
     TrackerReportResponse,
     TrackerUsedArtifactLinkResponse,
-} from "@tuleap/plugin-tracker-rest-api-types/src";
+} from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactForCrossReportDocGen } from "./type";
 
 vi.mock("@tuleap/tlp-fetch");

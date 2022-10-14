@@ -24,7 +24,7 @@ import type {
     UserGroupsBindIdentifier,
     UsersBindIdentifier,
 } from "@tuleap/plugin-tracker-constants";
-import type { RegisteredUserRepresentation } from "./artifacts";
+import type { RegisteredUserWithEmailAndStatus } from "./users";
 import type { BaseFieldStructure } from "./trackers";
 
 type StaticOpenListItem = {
@@ -53,7 +53,7 @@ export type UserBoundOpenListField = CommonOpenListFieldStructure & {
     readonly bindings: {
         readonly type: UsersBindIdentifier;
     };
-    readonly default_value: ReadonlyArray<RegisteredUserRepresentation>;
+    readonly default_value: ReadonlyArray<RegisteredUserWithEmailAndStatus>;
 };
 
 export type UserGroupBoundOpenListField = CommonOpenListFieldStructure & {

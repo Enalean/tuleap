@@ -46,7 +46,7 @@
 import { computed } from "vue";
 import { getTrackers as getTrackersFromAPI } from "../rest-querier";
 import type { SelectedTracker } from "../type";
-import type { MinimalTrackerResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type { MinimalTrackerResponse } from "@tuleap/plugin-tracker-rest-api-types";
 import { usePromise } from "../Helpers/use-promise";
 import { generateElementID } from "../Helpers/id-element-generator";
 

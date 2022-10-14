@@ -66,7 +66,7 @@ import { computed, watch } from "vue";
 import { getTrackerReports as getTrackerReportsFromAPI } from "../rest-querier";
 import { usePromise } from "../Helpers/use-promise";
 import type { SelectedReport } from "../type";
-import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types";
 import { generateElementID } from "../Helpers/id-element-generator";
 
 const props = defineProps<{ tracker_id: number | null; report: SelectedReport | null }>();

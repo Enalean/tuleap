@@ -8,7 +8,7 @@
   "type": "module",
   "module": "dist/plugin-tracker-rest-api-types.js",
   "main": "dist/plugin-tracker-rest-api-types.umd.cjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/main.d.ts",
   "exports": {
     ".": {
       "import": "./dist/plugin-tracker-rest-api-types.js",

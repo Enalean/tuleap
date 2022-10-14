@@ -22,7 +22,7 @@ import { flushPromises, shallowMount } from "@vue/test-utils";
 import ArtifactLinkTypesSelector from "./ArtifactLinkTypesSelector.vue";
 import { getGlobalTestOptions } from "./global-options-for-test";
 import * as rest_querier from "../rest-querier";
-import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types";
 
 describe("ArtifactLinkTypesSelector", () => {
     it("displays possible reports and select them all by default", async () => {
