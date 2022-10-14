@@ -15,20 +15,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-const getMessageFromException = async (exception) => {
-    let response = await exception.response.json();
+import { shallowMount } from "@vue/test-utils";
+import localVue from "../../support/local-vue";
+import ArtifactBadge from "./ArtifactBadge.vue";
+import type { Artifact, Tracker } from "../../type";
 
-    if (Object.prototype.hasOwnProperty.call(response, "error")) {
-        if (Object.prototype.hasOwnProperty.call(response.error, "i18n_error_message")) {
-            return response.error.i18n_error_message;
-        }
+describe("ArtifactBadge", () => {
+    it("shows tlp badge custom class", () => {
+        const wrapper = shallowMount(ArtifactBadge, {
+            localVue,
+            propsData: {
+                artifact: {} as Artifact,
+                tracker: { color_name: "blue_cyan" } as Tracker,
+            },
+        });
 
-        return response.error.message;
-    }
-
-    return null;
-};
-
-export { getMessageFromException };
+        expect(wrapper.find(".tlp-swatch-blue-cyan").exists()).toBeTruthy();
+    });
+});

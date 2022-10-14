@@ -34,6 +34,7 @@ module.exports = [
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
         resolve: {
+            extensions: [".ts", ".js", ".vue"],
             alias: {
                 vue: path.resolve(__dirname, "node_modules", "vue"),
             },
@@ -44,6 +45,7 @@ module.exports = [
         },
         module: {
             rules: [
+                ...webpack_configurator.configureTypescriptRules(),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
@@ -52,6 +54,7 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            webpack_configurator.getTypescriptCheckerPlugin(true),
             webpack_configurator.getVueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],

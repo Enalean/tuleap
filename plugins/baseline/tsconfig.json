@@ -1,4 +1,9 @@
 {
   "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "module": "es2020", //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
+        "types": ["jest"],
+        "incremental": false
+    },
   "include": ["scripts/**/*"]
 }

@@ -19,32 +19,36 @@
  */
 
 import { getMessageFromException } from "./rest-utils";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("RestUtils:", () => {
-    describe("getErrorMessage()", () => {
-        const exception = {
-            response: {},
-        };
-        describe("with no error in exception", () => {
-            let result;
+    let result: string | null;
+    function getFetchWrapperError(json: unknown): FetchWrapperError {
+        const error: FetchWrapperError = {
+            response: {
+                json: () => Promise.resolve(json),
+            },
+        } as FetchWrapperError;
 
+        return error;
+    }
+
+    describe("getErrorMessage()", () => {
+        describe("with no error in exception", () => {
             beforeEach(async () => {
-                exception.response.json = () => Promise.resolve({});
-                result = await getMessageFromException(exception);
+                result = await getMessageFromException(getFetchWrapperError({}));
             });
 
             it("returns nothing", () => expect(result).toBeNull());
         });
 
         describe("with non internationalized exception", () => {
-            let result;
-
             beforeEach(async () => {
-                exception.response.json = () =>
-                    Promise.resolve({
+                result = await getMessageFromException(
+                    getFetchWrapperError({
                         error: { message: "non internationalized" },
-                    });
-                result = await getMessageFromException(exception);
+                    })
+                );
             });
 
             it("returns a non internationalized message", () =>
@@ -52,16 +56,14 @@ describe("RestUtils:", () => {
         });
 
         describe("with internationalized exception", () => {
-            let result;
-
             beforeEach(async () => {
-                exception.response.json = () =>
-                    Promise.resolve({
+                result = await getMessageFromException(
+                    getFetchWrapperError({
                         error: {
                             i18n_error_message: "internationalized message",
                         },
-                    });
-                result = await getMessageFromException(exception);
+                    })
+                );
             });
 
             it("returns an internationalized message", () =>

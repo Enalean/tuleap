@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../support/local-vue.js";
+import localVue from "../../../support/local-vue.ts";
 import ComparisonContent from "./ComparisonContent.vue";
 import { createList } from "../../../support/factories";
 import { createStoreMock } from "../../../support/store-wrapper.test-helper";

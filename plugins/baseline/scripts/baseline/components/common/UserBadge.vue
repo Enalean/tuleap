@@ -32,14 +32,8 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "UserBadge",
-    props: {
-        user: {
-            required: true,
-            type: Object,
-        },
-    },
-};
+<script setup lang="ts">
+import type { User } from "../../type";
+
+defineProps<{ user: User }>();
 </script>

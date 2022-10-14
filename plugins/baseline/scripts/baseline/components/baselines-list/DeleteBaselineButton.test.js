@@ -19,7 +19,7 @@
  */
 
 import { mount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue.ts";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import DeleteBaselineButton from "./DeleteBaselineButton.vue";
 import { create } from "../../support/factories";

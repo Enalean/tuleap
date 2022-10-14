@@ -18,20 +18,21 @@
  *
  */
 
-import { mount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
 import HumanizedDate from "./HumanizedDate.vue";
+import type { Wrapper } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
+import localVue from "../../support/local-vue";
 import DateFormatter from "../../support/date-utils";
 import moment from "moment";
 import "moment/locale/fr";
 
 describe("HumanizedDate", () => {
-    let wrapper;
+    let wrapper: Wrapper<HumanizedDate>;
 
     const now = moment("2019/02/23 09:37:20 +0001", "YYYY/MM/DD HH:mm:ss Z").toDate();
 
     beforeEach(() => {
-        jest.spyOn(Date, "now").mockReturnValue(now);
+        jest.spyOn(Date, "now").mockReturnValue(now.getTime());
 
         DateFormatter.setOptions({
             user_locale: "fr_FR",

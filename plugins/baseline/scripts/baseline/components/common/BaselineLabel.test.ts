@@ -19,21 +19,14 @@
  */
 
 import { mount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue";
 import BaselineLabel from "./BaselineLabel.vue";
-import { create } from "../../support/factories";
 import DateFormatter from "../../support/date-utils";
-import { createStoreMock } from "../../support/store-wrapper.test-helper";
-import store_options from "../../store/store_options";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { Baseline, User } from "../../type";
 
 describe("BaselineLabel", () => {
-    let $store;
-    let wrapper;
-
-    beforeEach(() => {
-        $store = createStoreMock(store_options);
-        $store.getters.findUserById = () => create("user", { display_name: "Alita" });
-
+    it("shows baseline information", () => {
         DateFormatter.setOptions({
             user_locale: "en_EN",
             user_timezone: "Europe/London",
@@ -42,21 +35,27 @@ describe("BaselineLabel", () => {
 
         const past_snapshot_date = new Date("2019-05-02T06:48:22+00:00");
 
-        wrapper = mount(BaselineLabel, {
+        const wrapper = mount(BaselineLabel, {
             propsData: {
-                baseline: create("baseline", {
+                baseline: {
                     id: 1,
                     name: "Baseline V1",
                     snapshot_date: past_snapshot_date.toISOString(),
                     author_id: 9,
-                }),
+                } as Baseline,
             },
             localVue,
-            mocks: { $store },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        users_by_id: {
+                            9: { display_name: "Alita" } as User,
+                        },
+                    },
+                }),
+            },
         });
-    });
 
-    it("shows baseline information", () => {
         expect(wrapper.text()).toMatch(
             /Baseline #1 - Baseline V1\s*Created by\s*Alita\s*on\s*May 2, 2019 7:48 AM/
         );

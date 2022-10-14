@@ -30,13 +30,9 @@
         </artifact-link>
     </span>
 </template>
-<script>
+<script setup lang="ts">
 import ArtifactLink from "./ArtifactLink.vue";
-export default {
-    name: "ArtifactLabel",
-    components: { ArtifactLink },
-    props: {
-        artifact: { required: true, type: Object },
-    },
-};
+import type { Artifact } from "../../type";
+
+defineProps<{ artifact: Artifact }>();
 </script>

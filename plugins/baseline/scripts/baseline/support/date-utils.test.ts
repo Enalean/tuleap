@@ -26,7 +26,7 @@ describe("DateUtils:", () => {
     const now = moment("2019/02/23 09:37:20 +0001", "YYYY/MM/DD HH:mm:ss Z").toDate();
 
     beforeEach(() => {
-        jest.spyOn(Date, "now").mockReturnValue(now);
+        jest.spyOn(Date, "now").mockReturnValue(now.getTime());
 
         DateFormatter.setOptions({
             user_locale: "de",

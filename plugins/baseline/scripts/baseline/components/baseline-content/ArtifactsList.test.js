@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue.ts";
 import Vuex from "vuex";
 import { createList } from "../../support/factories";
 import ContentArtifact from "./ContentArtifact.vue";

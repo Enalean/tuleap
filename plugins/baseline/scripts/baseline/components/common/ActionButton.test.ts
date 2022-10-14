@@ -18,14 +18,15 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../support/local-vue";
 import ActionButton from "./ActionButton.vue";
 
 describe("ActionButton", () => {
     const spinner_selector = '[data-test-type="spinner"]';
     const button_selector = '[data-test-type="button"]';
-    let wrapper;
+    let wrapper: Wrapper<ActionButton>;
 
     beforeEach(() => {
         wrapper = mount(ActionButton, {

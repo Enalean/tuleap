@@ -36,13 +36,13 @@
             <span class="tlp-skeleton-text"></span>
         </td>
         <td class="tlp-table-cell-actions">
-            <action-button icon="eye" v-bind:disabled="true">
+            <action-button icon="eye" v-bind:disabled="true" class="tlp-table-cell-actions-button">
                 <span v-translate>Consult</span>
             </action-button>
             <action-button
                 icon="trash-o"
                 v-bind:disabled="true"
-                class="tlp-button-danger"
+                class="tlp-button-danger tlp-table-cell-actions-button"
                 v-if="is_admin"
             >
                 <span v-translate>Delete</span>
@@ -50,11 +50,9 @@
         </td>
     </tr>
 </template>
-<script>
+<script setup lang="ts">
 import ActionButton from "../common/ActionButton.vue";
-export default {
-    name: "BaselineSkeleton",
-    components: { ActionButton },
-    inject: ["is_admin"],
-};
+import { inject } from "vue";
+
+const is_admin = inject("is_admin");
 </script>
