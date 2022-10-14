@@ -70,7 +70,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->reconnectAfterALongRunningProcess();
         $this->cleanupDB($current_time);
 
-        $this->runWeeklyStats($logger, $warnings);
+        $this->runWeeklyStats($logger, $project_metric_dao);
 
         try {
             $frs_directory_cleaner = new \Tuleap\FRS\FRSIncomingDirectoryCleaner();
@@ -134,12 +134,11 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
      * run the weekly stats for projects. Run it on Monday morning so that
      * it computes the stats for the week before
      */
-    private function runWeeklyStats(\Psr\Log\LoggerInterface $logger, array &$warnings)
+    private function runWeeklyStats(\Psr\Log\LoggerInterface $logger, \Tuleap\Project\ProjectMetricsDAO $project_metrics_dao): void
     {
         $now = new DateTimeImmutable();
         if ($now->format('l') === self::DAY_OF_WEEKLY_STATS) {
-            $process = new Process(['./db_project_weekly_metric.pl'], __DIR__ . '/../../../utils/underworld-root');
-            $this->runCommand($process, $logger, $warnings);
+            $project_metrics_dao->executeWeeklyRun($now);
         }
     }
 
