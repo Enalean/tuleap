@@ -82,7 +82,7 @@ class GitExec extends Git_Exec
         $output = [];
         $remote = escapeshellarg($remote);
         $branch = escapeshellarg($branch_name);
-        $cmd    = "clone --shared -b -- $branch $remote " . escapeshellarg($this->getPath());
+        $cmd    = "clone --shared -b $branch -- $remote " . escapeshellarg($this->getPath());
 
         $retVal = 1;
         $git    = self::getGitCommand();
