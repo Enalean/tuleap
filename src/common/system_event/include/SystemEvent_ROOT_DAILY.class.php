@@ -64,7 +64,8 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         // Purge system_event table: we only keep one year history in db
         $this->purgeSystemEventsDataOlderThanOneYear();
 
-        $this->runComputeAllDailyStats($logger, $warnings);
+        $project_metric_dao = new \Tuleap\Project\ProjectMetricsDAO();
+        $this->runComputeAllDailyStats($logger, $project_metric_dao, $warnings);
         $current_time = new DateTimeImmutable();
         \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->reconnectAfterALongRunningProcess();
         $this->cleanupDB($current_time);
@@ -116,10 +117,11 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         return $system_event_purger->purgeSystemEventsDataOlderThanOneYear();
     }
 
-    private function runComputeAllDailyStats(\Psr\Log\LoggerInterface $logger, array &$warnings)
+    private function runComputeAllDailyStats(\Psr\Log\LoggerInterface $logger, \Tuleap\Project\ProjectMetricsDAO $project_metrics_dao, array &$warnings): void
     {
         $process = new Process([__DIR__ . '/../../../utils/compute_all_daily_stats.sh']);
         $this->runCommand($process, $logger, $warnings);
+        $project_metrics_dao->executeDailyRun();
     }
 
     private function cleanupDB(DateTimeImmutable $current_time): void

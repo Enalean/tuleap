@@ -26,8 +26,3 @@ export dump_dir
 # files
 cd $CODENDI_UTILS_PREFIX/download
 ./stats_logparse.sh $*
-
-# Now make all the stat internal to the
-# Codendi DB
-cd $CODENDI_UTILS_PREFIX/underworld-root
-./stats_nightly.sh $*
