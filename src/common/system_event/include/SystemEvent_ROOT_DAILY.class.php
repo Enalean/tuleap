@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Symfony\Component\Process\Process;
 use Tuleap\SystemEvent\RootDailyStartEvent;
 
 class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
@@ -65,9 +64,8 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         $this->purgeSystemEventsDataOlderThanOneYear();
 
         $project_metric_dao = new \Tuleap\Project\ProjectMetricsDAO();
-        $this->runComputeAllDailyStats($logger, $project_metric_dao, $warnings);
+        $this->runComputeAllDailyStats($project_metric_dao);
         $current_time = new DateTimeImmutable();
-        \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->reconnectAfterALongRunningProcess();
         $this->cleanupDB($current_time);
 
         $this->runWeeklyStats($logger, $project_metric_dao);
@@ -117,10 +115,8 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         return $system_event_purger->purgeSystemEventsDataOlderThanOneYear();
     }
 
-    private function runComputeAllDailyStats(\Psr\Log\LoggerInterface $logger, \Tuleap\Project\ProjectMetricsDAO $project_metrics_dao, array &$warnings): void
+    private function runComputeAllDailyStats(\Tuleap\Project\ProjectMetricsDAO $project_metrics_dao): void
     {
-        $process = new Process([__DIR__ . '/../../../utils/compute_all_daily_stats.sh']);
-        $this->runCommand($process, $logger, $warnings);
         (new \Tuleap\FRS\FRSMetricsDAO())->executeDailyRun(new DateTimeImmutable());
         $project_metrics_dao->executeDailyRun();
     }
@@ -140,18 +136,6 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         $now = new DateTimeImmutable();
         if ($now->format('l') === self::DAY_OF_WEEKLY_STATS) {
             $project_metrics_dao->executeWeeklyRun($now);
-        }
-    }
-
-    private function runCommand(Process $process, \Psr\Log\LoggerInterface $logger, array &$warnings): void
-    {
-        $process->setTimeout(null);
-        $process->run();
-        if (! $process->isSuccessful()) {
-            $warnings[] = $process->getCommandLine() . ' ran with errors, check ' . ForgeConfig::get('codendi_log');
-            $logger->error(sprintf("%s %s errors. Stdout:\n%s\nStderr:\n%s", self::class, $process->getCommandLine(), $process->getOutput(), $process->getErrorOutput()));
-        } else {
-            $logger->debug(sprintf("%s %s Stdout:\n%s\nStderr:\n%s", self::class, $process->getCommandLine(), $process->getOutput(), $process->getErrorOutput()));
         }
     }
 }
