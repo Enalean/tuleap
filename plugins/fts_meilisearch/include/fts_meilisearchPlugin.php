@@ -105,7 +105,7 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
 
     protected function getBatchQueue(): \Tuleap\Search\ItemToIndexBatchQueue
     {
-        return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexLimitedBatchQueue($this->getItemInserter(), self::MAX_ITEMS_PER_BATCH);
+        return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexLimitedBatchQueue($this->getItemInserterWithMetricCollector(), self::MAX_ITEMS_PER_BATCH);
     }
 
     private function getMeilisearchHandler(): MeilisearchHandler|NullIndexHandler
