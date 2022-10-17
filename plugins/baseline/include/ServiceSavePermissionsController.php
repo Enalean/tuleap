@@ -26,7 +26,6 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Baseline\Adapter\Administration\ISaveProjectHistory;
 use Tuleap\Baseline\Adapter\ProjectProxy;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\RetrieveBaselineUserGroup;
@@ -34,6 +33,7 @@ use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
+use Tuleap\Baseline\Domain\RoleAssignmentsHistorySaver;
 use Tuleap\Baseline\Domain\RoleBaselineAdmin;
 use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Baseline\Domain\UserGroupDoesNotExistOrBelongToCurrentBaselineProjectException;
@@ -47,7 +47,7 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
     public function __construct(
         private RoleAssignmentRepository $role_assignment_repository,
         private RetrieveBaselineUserGroup $ugroup_retriever,
-        private ISaveProjectHistory $project_history,
+        private RoleAssignmentsHistorySaver $role_assignments_history_saver,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         private CSRFSynchronizerTokenProvider $token_provider,
         EmitterInterface $emitter,
@@ -75,10 +75,14 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
             $this->getAssignmentsFromBodyAndRole($project_proxy, new RoleBaselineReader(), array_values((array) ($body['readers'] ?? []))),
         );
 
+
         $this->role_assignment_repository->saveAssignmentsForProject(
             $this->buildRoleAssignmentUpdate($project_proxy, $assignments)
         );
-        $this->project_history->saveHistory($project, ...$assignments);
+        $this->role_assignments_history_saver->saveHistory(
+            $this->buildRoleAssignmentUpdate($project_proxy, $assignments)
+        );
+
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);
