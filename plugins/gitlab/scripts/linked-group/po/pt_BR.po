@@ -12,10 +12,26 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.1.1\n"
 
+msgid "%d repository has just been integrated."
+msgid_plural "%d repositories have just been integrated."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d repository integrated just now"
+msgid_plural "%d repositories integrated just now"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Error during last sync: %(error)s"
+msgstr ""
+
 msgid "Error during the removal of the link: %(error)s"
 msgstr ""
 
 msgid "Error during the update of configuration: %(error)s"
+msgstr ""
+
+msgid "In error, just now"
 msgstr ""
 
 msgid "No"

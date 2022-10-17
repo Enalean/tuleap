@@ -22,6 +22,7 @@ import { getDatasetItemOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
 import { EditConfigurationModal } from "./EditConfigurationModal";
 import { UnlinkModal } from "./UnlinkModal";
+import { SynchronizeButton } from "./SynchronizeButton";
 import "../themes/main.scss";
 
 const UNLINK_SELECTOR = "#unlink-button";
@@ -36,6 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     openAllTargetModalsOnClick(document, UNLINK_SELECTOR);
 
+    SynchronizeButton(document, gettext_provider).init();
     EditConfigurationModal(document, gettext_provider).init();
     UnlinkModal(document.location, document, gettext_provider).init();
 });
