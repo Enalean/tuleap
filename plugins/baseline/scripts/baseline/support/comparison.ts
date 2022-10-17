@@ -18,17 +18,33 @@
  *
  */
 
+import type { Artifact } from "../type";
+
 export { compareArtifacts };
 
-function compareArtifacts(base_artifacts, compared_to_artifacts) {
+function compareArtifacts(
+    base_artifacts: ReadonlyArray<Artifact>,
+    compared_to_artifacts: ReadonlyArray<Artifact>
+): ArtifactsListComparison {
     return new ArtifactsListComparison(base_artifacts, compared_to_artifacts);
+}
+
+interface Couple {
+    readonly base: Artifact;
+    readonly compared_to: Artifact;
 }
 
 /**
  * Compare two list of artifacts by identifying added, removed and modified artifacts.
  */
-class ArtifactsListComparison {
-    constructor(base_artifacts, compared_to_artifacts) {
+export class ArtifactsListComparison {
+    private base_artifacts: ReadonlyArray<Artifact>;
+    private compared_to_artifacts: ReadonlyArray<Artifact>;
+
+    constructor(
+        base_artifacts: ReadonlyArray<Artifact>,
+        compared_to_artifacts: ReadonlyArray<Artifact>
+    ) {
         this.base_artifacts = base_artifacts;
         this.compared_to_artifacts = compared_to_artifacts;
     }
@@ -36,37 +52,38 @@ class ArtifactsListComparison {
     /**
      * returns comparison couples with base and compared to artifacts.
      */
-    get identical_or_modified() {
-        return this.base_artifacts
-            .map((base) => {
+    get identical_or_modified(): Array<Couple> {
+        return this.base_artifacts.reduce(
+            (accumulator: Array<Couple>, base: Artifact): Array<Couple> => {
                 const compared_to = this.compared_to_artifacts.find(
                     (compared) => base.id === compared.id
                 );
-                if (!compared_to) {
-                    return null;
+                if (compared_to) {
+                    accumulator.push({ base, compared_to });
                 }
-                return { base, compared_to };
-            })
-            .filter((comparison) => comparison !== null);
+                return accumulator;
+            },
+            []
+        );
     }
 
     /**
      * returns comparison couples with base and compared to artifacts.
      */
-    get modified() {
+    get modified(): Array<Couple> {
         return this.identical_or_modified.filter(
             ({ base, compared_to }) =>
                 base.description !== compared_to.description || base.status !== compared_to.status
         );
     }
 
-    get removed() {
+    get removed(): Array<Artifact> {
         return this.base_artifacts.filter((base) =>
             this.compared_to_artifacts.every((compared_to) => base.id !== compared_to.id)
         );
     }
 
-    get added() {
+    get added(): Array<Artifact> {
         return this.compared_to_artifacts.filter((compared_to) =>
             this.base_artifacts.every((base) => base.id !== compared_to.id)
         );

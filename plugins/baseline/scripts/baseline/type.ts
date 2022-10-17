@@ -36,6 +36,8 @@ export interface Artifact {
     readonly id: number;
     readonly title: string;
     readonly tracker_name: string;
+    readonly description: string;
+    readonly status: string;
 }
 
 export interface Tracker {
