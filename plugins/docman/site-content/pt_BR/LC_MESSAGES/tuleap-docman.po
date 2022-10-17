@@ -2159,6 +2159,9 @@ msgstr ""
 msgid "Version label"
 msgstr ""
 
+msgid "Version name"
+msgstr ""
+
 msgid "Version name:"
 msgstr ""
 
