@@ -23,15 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Baseline;
 
 use Tuleap\Baseline\Adapter\ProjectProxy;
-use Tuleap\Baseline\Domain\ProjectIdentifier;
-use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
-use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
 use Tuleap\Baseline\Domain\RoleAssignmentsHistorySaver;
 use Tuleap\Baseline\Domain\RoleBaselineAdmin;
 use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Baseline\Stub\AddRoleAssignmentsHistoryEntryStub;
 use Tuleap\Baseline\Stub\RetrieveBaselineUserGroupStub;
+use Tuleap\Baseline\Stub\RoleAssignmentRepositoryStub;
 use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
@@ -56,25 +54,7 @@ class ServiceSavePermissionsControllerTest extends TestCase
 
         $history_entry_adder = AddRoleAssignmentsHistoryEntryStub::build();
 
-        $role_assignment_repository = new class implements RoleAssignmentRepository {
-            private ?RoleAssignmentsUpdate $captured_save_parameters;
-
-            public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
-            {
-                return [];
-            }
-
-            public function saveAssignmentsForProject(
-                RoleAssignmentsUpdate $role_assignments_update,
-            ): void {
-                $this->captured_save_parameters = $role_assignments_update;
-            }
-
-            public function getCapturedSaveParameters(): ?RoleAssignmentsUpdate
-            {
-                return $this->captured_save_parameters;
-            }
-        };
+        $role_assignment_repository = RoleAssignmentRepositoryStub::buildDefault();
 
         $token          = CSRFSynchronizerTokenStub::buildSelf();
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
@@ -110,7 +90,7 @@ class ServiceSavePermissionsControllerTest extends TestCase
         self::assertTrue($token->hasBeenChecked());
         self::assertEquals(302, $response->getStatusCode());
 
-        $save_parameters = $role_assignment_repository->getCapturedSaveParameters();
+        $save_parameters = $role_assignment_repository->getLastAssignmentUpdate();
 
         self::assertEquals((int) $project->getID(), $save_parameters->getProject()->getID());
         self::assertEquals(102, $save_parameters->getAssignments()[0]->getUserGroupId());

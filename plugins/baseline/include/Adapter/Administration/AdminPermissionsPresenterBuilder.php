@@ -29,7 +29,7 @@ use Tuleap\Baseline\Domain\RoleBaselineAdmin;
 use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
-final class AdminPermissionsPresenterBuilder implements IBuildAdminPermissionsPresenter
+final class AdminPermissionsPresenterBuilder
 {
     public function __construct(
         private \User_ForgeUserGroupFactory $user_group_factory,

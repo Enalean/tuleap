@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
-use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
+use Tuleap\Baseline\Stub\RoleAssignmentRepositoryStub;
 use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
-use Tuleap\Baseline\Domain\ProjectIdentifier;
-use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 use Tuleap\Baseline\Domain\RoleBaselineAdmin;
 use Tuleap\Baseline\Domain\RoleBaselineReader;
@@ -84,19 +82,14 @@ class PermissionPerGroupBaselineServicePaneBuilderTest extends TestCase
                 ],
             ]);
 
-        $this->role_assignment_repository = new class implements RoleAssignmentRepository {
-            public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
-            {
-                return match ($role->getName()) {
-                    RoleBaselineAdmin::NAME => RoleAssignmentTestBuilder::aRoleAssignment($role)->withUserGroups(ProjectUGroupTestBuilder::buildProjectMembers())->build(),
-                    RoleBaselineReader::NAME => RoleAssignmentTestBuilder::aRoleAssignment($role)->withUserGroups(ProjectUGroupTestBuilder::aCustomUserGroup(102)->build())->build(),
-                };
-            }
-
-            public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void
-            {
-            }
-        };
+        $this->role_assignment_repository = RoleAssignmentRepositoryStub::withRoles(
+            RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())
+                ->withUserGroups(ProjectUGroupTestBuilder::buildProjectMembers())
+                ->build(),
+            RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineReader())
+                ->withUserGroups(ProjectUGroupTestBuilder::aCustomUserGroup(102)->build())
+                ->build()
+        );
 
         $this->ugroup_retriever = new class ($this->project_admins, $this->project_members, $this->developers) implements UGroupRetriever {
             public function __construct(

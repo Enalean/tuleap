@@ -28,7 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Baseline\Adapter\Administration\IBuildAdminPermissionsPresenter;
+use Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -44,7 +44,7 @@ class ServiceAdministrationController extends DispatchablePSR15Compatible implem
         private StreamFactoryInterface $stream_factory,
         private IsProjectAllowedToUsePlugin $plugin,
         private \TemplateRendererFactory $renderer_factory,
-        private IBuildAdminPermissionsPresenter $presenter_builder,
+        private AdminPermissionsPresenterBuilder $presenter_builder,
         private CSRFSynchronizerTokenProvider $token_provider,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
