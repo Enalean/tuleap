@@ -18,78 +18,79 @@
  *
  */
 
+import type { ArtifactsListComparison } from "./comparison";
 import { compareArtifacts } from "./comparison";
-import { create } from "./factories";
+import type { Artifact } from "../type";
 
 describe("comparison :", () => {
     describe("ArtifactsListComparison", () => {
-        let comparison;
+        let comparison: ArtifactsListComparison;
 
         describe("when one artifact added", () => {
-            const added_artifact = create("baseline_artifact");
+            const added_artifact = { id: 1 } as Artifact;
             beforeEach(() => (comparison = compareArtifacts([], [added_artifact])));
 
             it("#identical_or_modified returns empty array", () => {
-                expect(comparison.identical_or_modified).toEqual([]);
+                expect(comparison.identical_or_modified).toStrictEqual([]);
             });
             it("#modified returns empty array", () => {
-                expect(comparison.modified).toEqual([]);
+                expect(comparison.modified).toStrictEqual([]);
             });
             it("#removed returns empty array", () => {
-                expect(comparison.removed).toEqual([]);
+                expect(comparison.removed).toStrictEqual([]);
             });
             it("#added returns this artifact", () => {
-                expect(comparison.added).toEqual([added_artifact]);
+                expect(comparison.added).toStrictEqual([added_artifact]);
             });
         });
 
         describe("when one artifact was removed", () => {
-            const removed_artifact = create("baseline_artifact");
+            const removed_artifact = { id: 1 } as Artifact;
             beforeEach(() => (comparison = compareArtifacts([removed_artifact], [])));
 
             it("#identical_or_modified returns empty array", () => {
-                expect(comparison.identical_or_modified).toEqual([]);
+                expect(comparison.identical_or_modified).toStrictEqual([]);
             });
             it("#modified returns empty array", () => {
-                expect(comparison.modified).toEqual([]);
+                expect(comparison.modified).toStrictEqual([]);
             });
             it("#removed returns this artifact", () => {
-                expect(comparison.removed).toEqual([removed_artifact]);
+                expect(comparison.removed).toStrictEqual([removed_artifact]);
             });
             it("#added returns empty array", () => {
-                expect(comparison.added).toEqual([]);
+                expect(comparison.added).toStrictEqual([]);
             });
         });
 
         describe("when one artifact was modified", () => {
-            const base_artifact = create("baseline_artifact", {
+            const base_artifact = {
                 id: 1,
                 description: "old description",
-            });
-            const compared_to_artifact = create("baseline_artifact", {
+            } as Artifact;
+            const compared_to_artifact = {
                 id: 1,
                 description: "new description",
-            });
+            } as Artifact;
 
             beforeEach(
                 () => (comparison = compareArtifacts([base_artifact], [compared_to_artifact]))
             );
 
             it("#identical_or_modified returns old and new artifact", () => {
-                expect(comparison.identical_or_modified).toEqual([
+                expect(comparison.identical_or_modified).toStrictEqual([
                     { base: base_artifact, compared_to: compared_to_artifact },
                 ]);
             });
             it("#modified returns old and new artifact", () => {
-                expect(comparison.modified).toEqual([
+                expect(comparison.modified).toStrictEqual([
                     { base: base_artifact, compared_to: compared_to_artifact },
                 ]);
             });
             it("#removed returns empty array", () => {
-                expect(comparison.removed).toEqual([]);
+                expect(comparison.removed).toStrictEqual([]);
             });
             it("#added returns empty array", () => {
-                expect(comparison.added).toEqual([]);
+                expect(comparison.added).toStrictEqual([]);
             });
         });
     });
