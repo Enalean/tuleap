@@ -115,13 +115,11 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
 
     public function testItHasNoChangesWhenNoNewValues(): void
     {
-        $old_values = [];
-        /**
-         * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
-         */
+        $old_values      = [];
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
+        \assert($changeset_value instanceof \Mockery\Mock || $changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
         $new_value = ['list_of_artifactlinkinfo' => ''];
@@ -130,16 +128,14 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
 
     public function testItHasNoChangesWhenSameValues(): void
     {
-        $old_values = [
+        $old_values      = [
             1 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
             2 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
         ];
-        /**
-         * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
-         */
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
+        \assert($changeset_value instanceof \Mockery\Mock || $changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
 
@@ -155,16 +151,14 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
 
     public function testItHasChangesWhenLinksAreAdded(): void
     {
-        $old_values = [
+        $old_values      = [
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
             2 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
         ];
-        /**
-         * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
-         */
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
+        \assert($changeset_value instanceof \Mockery\Mock || $changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
 
@@ -181,16 +175,14 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
 
     public function testItHasChangesWhenLinksAreRemoved(): void
     {
-        $old_values = [
+        $old_values      = [
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
             2 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
         ];
-        /**
-         * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
-         */
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
+        \assert($changeset_value instanceof \Mockery\Mock || $changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
 
@@ -205,16 +197,14 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
 
     public function testItHasChangesWhenTypeIsChanged(): void
     {
-        $old_values = [
+        $old_values      = [
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => '_is_child']),
             2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getType' => '']),
         ];
-        /**
-         * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
-         */
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
+        \assert($changeset_value instanceof \Mockery\Mock || $changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
 

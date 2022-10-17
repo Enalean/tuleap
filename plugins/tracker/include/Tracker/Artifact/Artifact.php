@@ -73,6 +73,7 @@ use Tracker_FormElement;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Burndown;
+use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
@@ -831,11 +832,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             case 'preview-attachment': // deprecated urls: /plugins/tracker/?aid=193&field=94&func=preview-attachment&attachment=39
             case 'show-attachment':    //                  /plugins/tracker/?aid=193&field=94&func=show-attachment&attachment=39
                 if ((int) $request->get('field') && (int) $request->get('attachment')) {
-                    $ff = Tracker_FormElementFactory::instance();
-                    /**
-                     * @var $field Tracker_FormElement_Field_File
-                     */
+                    $ff    = Tracker_FormElementFactory::instance();
                     $field = $ff->getFormElementById($request->get('field'));
+                    \assert($field instanceof Tracker_FormElement_Field_File);
                     if ($field === null || ! $field->userCanRead($current_user)) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,

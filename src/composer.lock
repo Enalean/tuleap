@@ -7317,16 +7317,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.6.4",
+            "version": "1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "135607f9ccc297d6923d49c2bcf309f509413215"
+                "reference": "7d1e81213b0c7eb8d5a9f524456cbc2778ed5c65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/135607f9ccc297d6923d49c2bcf309f509413215",
-                "reference": "135607f9ccc297d6923d49c2bcf309f509413215",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/7d1e81213b0c7eb8d5a9f524456cbc2778ed5c65",
+                "reference": "7d1e81213b0c7eb8d5a9f524456cbc2778ed5c65",
                 "shasum": ""
             },
             "require": {
@@ -7356,9 +7356,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.6.4"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.11.0"
             },
-            "time": "2022-06-26T13:09:08+00:00"
+            "time": "2022-10-14T13:32:28+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -8860,37 +8860,37 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "8.3.0",
+            "version": "8.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "a14df437f2efe861ca9118508f304de9655957e4"
+                "reference": "d4175d8bf1246f4bf8be04ab688fbdc6fed18ece"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/a14df437f2efe861ca9118508f304de9655957e4",
-                "reference": "a14df437f2efe861ca9118508f304de9655957e4",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/d4175d8bf1246f4bf8be04ab688fbdc6fed18ece",
+                "reference": "d4175d8bf1246f4bf8be04ab688fbdc6fed18ece",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7",
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpdoc-parser": "^1.6.2",
+                "phpstan/phpdoc-parser": ">=1.11.0 <1.12.0",
                 "squizlabs/php_codesniffer": "^3.7.1"
             },
             "require-dev": {
                 "phing/phing": "2.17.4",
                 "php-parallel-lint/php-parallel-lint": "1.3.2",
-                "phpstan/phpstan": "1.4.10|1.8.1",
+                "phpstan/phpstan": "1.4.10|1.8.9",
                 "phpstan/phpstan-deprecation-rules": "1.0.0",
                 "phpstan/phpstan-phpunit": "1.0.0|1.1.1",
-                "phpstan/phpstan-strict-rules": "1.3.0",
-                "phpunit/phpunit": "7.5.20|8.5.21|9.5.21"
+                "phpstan/phpstan-strict-rules": "1.4.4",
+                "phpunit/phpunit": "7.5.20|8.5.21|9.5.25"
             },
             "type": "phpcodesniffer-standard",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "7.x-dev"
+                    "dev-master": "8.x-dev"
                 }
             },
             "autoload": {
@@ -8903,9 +8903,13 @@
                 "MIT"
             ],
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
+            "keywords": [
+                "dev",
+                "phpcs"
+            ],
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/8.3.0"
+                "source": "https://github.com/slevomat/coding-standard/tree/8.6.0"
             },
             "funding": [
                 {
@@ -8917,7 +8921,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-16T11:59:39+00:00"
+            "time": "2022-10-16T10:31:02+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",

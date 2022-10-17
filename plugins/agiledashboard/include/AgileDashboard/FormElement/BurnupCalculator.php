@@ -83,11 +83,9 @@ class BurnupCalculator
         $semantic_initial_effort = $this->initial_effort_factory->getByTracker($artifact->getTracker());
         $semantic_done           = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
 
-        /**
-         * @var $initial_effort_field \Tracker_FormElement_Field
-         */
         $initial_effort_field = $semantic_initial_effort->getField();
-        $changeset            = $this->changeset_factory->getChangesetAtTimestamp($artifact, $timestamp);
+        \assert($initial_effort_field instanceof \Tracker_FormElement_Field);
+        $changeset = $this->changeset_factory->getChangesetAtTimestamp($artifact, $timestamp);
 
         $total_effort = 0;
         $team_effort  = 0;
