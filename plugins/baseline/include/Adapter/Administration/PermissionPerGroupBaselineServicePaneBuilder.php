@@ -26,12 +26,13 @@ use Tuleap\Baseline\Adapter\ProjectProxy;
 use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Baseline\ServiceAdministrationController;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\UGroupRetriever;
-use function dgettext;
 
 class PermissionPerGroupBaselineServicePaneBuilder
 {
@@ -70,7 +71,7 @@ class PermissionPerGroupBaselineServicePaneBuilder
     private function getAdministrators(\Project $project): array
     {
         $admins = $this->getPermissionsFor(
-            Role::ADMIN,
+            new RoleBaselineAdmin(),
             dgettext('tuleap-baseline', 'Baseline administrators'),
             $project
         );
@@ -85,13 +86,10 @@ class PermissionPerGroupBaselineServicePaneBuilder
 
     private function getReaders(\Project $project): array
     {
-        return $this->getPermissionsFor(Role::READER, dgettext('tuleap-baseline', 'Baseline readers'), $project);
+        return $this->getPermissionsFor(new RoleBaselineReader(), dgettext('tuleap-baseline', 'Baseline readers'), $project);
     }
 
-    /**
-     * @psalm-param Role::* $role
-     */
-    private function getPermissionsFor(string $role, string $name, \Project $project): array
+    private function getPermissionsFor(Role $role, string $name, \Project $project): array
     {
         $user_groups  = [];
         $assignements = $this->role_assignment_repository->findByProjectAndRole(
@@ -119,7 +117,7 @@ class PermissionPerGroupBaselineServicePaneBuilder
                 $selected_ugroup->getId(),
                 array_map(
                     static fn (RoleAssignment $assignment): int => $assignment->getUserGroupId(),
-                    $this->role_assignment_repository->findByProjectAndRole(ProjectProxy::buildFromProject($project), Role::ADMIN)
+                    $this->role_assignment_repository->findByProjectAndRole(ProjectProxy::buildFromProject($project), new RoleBaselineAdmin())
                 ),
                 true
             );
@@ -127,7 +125,7 @@ class PermissionPerGroupBaselineServicePaneBuilder
             $selected_ugroup->getId(),
             array_map(
                 static fn (RoleAssignment $assignment): int => $assignment->getUserGroupId(),
-                $this->role_assignment_repository->findByProjectAndRole(ProjectProxy::buildFromProject($project), Role::READER)
+                $this->role_assignment_repository->findByProjectAndRole(ProjectProxy::buildFromProject($project), new RoleBaselineReader())
             ),
             true
         );

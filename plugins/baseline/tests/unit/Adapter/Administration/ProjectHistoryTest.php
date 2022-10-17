@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter\Administration;
 
 use Tuleap\Baseline\Adapter\ProjectProxy;
-use Tuleap\Baseline\Domain\Role;
-use Tuleap\Baseline\Domain\RoleAssignment;
-use Tuleap\Project\UGroupRetriever;
+use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -50,18 +50,7 @@ class ProjectHistoryTest extends TestCase
 
         $this->dao = $this->createMock(\ProjectHistoryDao::class);
 
-        $ugroup_retriever = new class implements UGroupRetriever {
-            public function getUGroup(\Project $project, $ugroup_id): ?\ProjectUGroup
-            {
-                return match ($ugroup_id) {
-                    \ProjectUGroup::PROJECT_MEMBERS => ProjectUGroupTestBuilder::buildProjectMembers(),
-                    104 => ProjectUGroupTestBuilder::aCustomUserGroup(104)->withName('Developers')->build(),
-                    default => null,
-                };
-            }
-        };
-
-        $this->history = new ProjectHistory($this->dao, $ugroup_retriever);
+        $this->history = new ProjectHistory($this->dao);
     }
 
     public function testSaveHistoryWithoutReadersNorAdministrators(): void
@@ -93,8 +82,10 @@ class ProjectHistoryTest extends TestCase
 
         $this->history->saveHistory(
             $this->project,
-            new RoleAssignment($this->project_proxy, \ProjectUGroup::PROJECT_MEMBERS, Role::ADMIN),
-            new RoleAssignment($this->project_proxy, 104, Role::ADMIN)
+            ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
+                ProjectUGroupTestBuilder::buildProjectMembers(),
+                $this->getDeveloperUserGroup()
+            )->withProject($this->project_proxy)->build(),
         );
     }
 
@@ -114,8 +105,10 @@ class ProjectHistoryTest extends TestCase
 
         $this->history->saveHistory(
             $this->project,
-            new RoleAssignment($this->project_proxy, \ProjectUGroup::PROJECT_MEMBERS, Role::READER),
-            new RoleAssignment($this->project_proxy, 104, Role::READER)
+            ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineReader())->withUserGroups(
+                ProjectUGroupTestBuilder::buildProjectMembers(),
+                $this->getDeveloperUserGroup()
+            )->withProject($this->project_proxy)->build(),
         );
     }
 
@@ -139,18 +132,13 @@ class ProjectHistoryTest extends TestCase
 
         $this->history->saveHistory(
             $this->project,
-            new RoleAssignment($this->project_proxy, \ProjectUGroup::PROJECT_MEMBERS, Role::ADMIN),
-            new RoleAssignment($this->project_proxy, 104, Role::READER)
+            ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(ProjectUGroupTestBuilder::buildProjectMembers())->withProject($this->project_proxy)->build(),
+            ...RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineReader())->withUserGroups($this->getDeveloperUserGroup())->withProject($this->project_proxy)->build()
         );
     }
 
-    public function testExceptionWhenUGroupIsNotFound(): void
+    private function getDeveloperUserGroup(): \ProjectUGroup
     {
-        $this->expectException(\LogicException::class);
-
-        $this->history->saveHistory(
-            $this->project,
-            new RoleAssignment($this->project_proxy, 106, Role::READER)
-        );
+        return ProjectUGroupTestBuilder::aCustomUserGroup(self::DEVELOPER_UGROUP_ID)->withName("Developers")->build();
     }
 }

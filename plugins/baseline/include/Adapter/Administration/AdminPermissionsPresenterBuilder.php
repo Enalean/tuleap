@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter\Administration;
 
 use Tuleap\Baseline\Adapter\ProjectProxy;
-use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final class AdminPermissionsPresenterBuilder implements IBuildAdminPermissionsPresenter
@@ -43,11 +44,11 @@ final class AdminPermissionsPresenterBuilder implements IBuildAdminPermissionsPr
     ): AdminPermissionsPresenter {
         $administrators = $this->role_assignment_repository->findByProjectAndRole(
             ProjectProxy::buildFromProject($project),
-            Role::ADMIN
+            new RoleBaselineAdmin()
         );
         $readers        = $this->role_assignment_repository->findByProjectAndRole(
             ProjectProxy::buildFromProject($project),
-            Role::READER
+            new RoleBaselineReader()
         );
 
         $administrators_ugroup_id = array_map(

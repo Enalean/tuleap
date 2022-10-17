@@ -24,8 +24,12 @@ namespace Tuleap\Baseline\Adapter\Administration;
 
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\Role;
-use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
+use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -49,24 +53,25 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
         $builder = new AdminPermissionsPresenterBuilder(
             $ugroup_factory,
             new class implements RoleAssignmentRepository {
-                public function findByProjectAndRole(ProjectIdentifier $project, string $role): array
+                public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
                 {
-                    return match ($role) {
-                        Role::ADMIN => [
-                            new RoleAssignment($project, 104, Role::ADMIN),
-                            new RoleAssignment($project, 105, Role::ADMIN),
-                        ],
-                        Role::READER => [
-                            new RoleAssignment($project, 105, Role::READER),
-                            new RoleAssignment($project, 106, Role::READER),
-                        ]
+                    return match ($role->getName()) {
+                        RoleBaselineAdmin::NAME =>
+                            RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
+                                ProjectUGroupTestBuilder::aCustomUserGroup(104)->build(),
+                                ProjectUGroupTestBuilder::aCustomUserGroup(105)->build()
+                            )->build()
+                        ,
+                        RoleBaselineReader::NAME =>
+                            RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
+                                ProjectUGroupTestBuilder::aCustomUserGroup(105)->build(),
+                                ProjectUGroupTestBuilder::aCustomUserGroup(106)->build()
+                            )->build(),
                     };
                 }
 
-                public function saveAssignmentsForProject(
-                    ProjectIdentifier $project,
-                    RoleAssignment ...$assignments,
-                ): void {
+                public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void
+                {
                 }
             }
         );

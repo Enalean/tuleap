@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,14 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-interface Role
+interface BaselineUserGroup
 {
+    public function getId(): int;
+
     public function getName(): string;
 }

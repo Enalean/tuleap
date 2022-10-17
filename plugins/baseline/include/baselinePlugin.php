@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Baseline\Adapter\Administration\BaselineUserGroupRetriever;
 use Tuleap\Baseline\Adapter\Administration\PermissionPerGroupBaselineServicePaneBuilder;
 use Tuleap\Baseline\Adapter\Administration\ProjectHistory;
 use Tuleap\Baseline\Adapter\Routing\RejectNonBaselineAdministratorMiddleware;
@@ -187,12 +188,10 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
     {
         $container = ContainerBuilderFactory::create()->build();
 
-        $ugroup_manager = new UGroupManager();
-
         return new \Tuleap\Baseline\ServiceSavePermissionsController(
             $container->get(RoleAssignmentRepository::class),
-            $ugroup_manager,
-            new ProjectHistory(new ProjectHistoryDao(), $ugroup_manager),
+            new BaselineUserGroupRetriever(ProjectManager::instance(), new UGroupManager()),
+            new ProjectHistory(new ProjectHistoryDao()),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
                 new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())

@@ -32,6 +32,7 @@ use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\Baseline\Adapter\Administration\BaselineUserGroupRetriever;
 use Tuleap\Baseline\Adapter\BaselineArtifactRepositoryAdapter;
 use Tuleap\Baseline\Adapter\BaselineRepositoryAdapter;
 use Tuleap\Baseline\Adapter\ClockAdapter;
@@ -47,9 +48,13 @@ use Tuleap\Baseline\Domain\Clock;
 use Tuleap\Baseline\Domain\ComparisonRepository;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
 use Tuleap\Baseline\Domain\ProjectRepository;
+use Tuleap\Baseline\Domain\RetrieveBaselineUserGroup;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 use Tuleap\DB\DBFactory;
+use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Project\UGroupRetriever;
 use Tuleap\REST\RESTLogger;
+use UGroupManager;
 use UserManager;
 use function DI\autowire;
 use function DI\factory;
@@ -73,6 +78,9 @@ class ContainerBuilderFactory
                 BaselineArtifactRepository::class        => autowire(BaselineArtifactRepositoryAdapter::class),
                 ProjectRepository::class                 => autowire(ProjectRepositoryAdapter::class),
                 RoleAssignmentRepository::class          => autowire(RoleAssignmentRepositoryAdapter::class),
+                RetrieveBaselineUserGroup::class         => autowire(BaselineUserGroupRetriever::class),
+                UGroupRetriever::class                   => autowire(UGroupManager::class),
+                ProjectByIDFactory::class                => factory([ProjectManager::class, 'instance']),
                 ProjectManager::class                    => factory([ProjectManager::class, 'instance']),
                 Tracker_ArtifactFactory::class           => factory([Tracker_ArtifactFactory::class, 'instance']),
                 Tracker_Artifact_ChangesetFactory::class => factory(

@@ -28,12 +28,17 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Baseline\Adapter\Administration\ISaveProjectHistory;
 use Tuleap\Baseline\Adapter\ProjectProxy;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
+use Tuleap\Baseline\Domain\RetrieveBaselineUserGroup;
 use Tuleap\Baseline\Domain\Role;
 use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
+use Tuleap\Baseline\Domain\UserGroupDoesNotExistOrBelongToCurrentBaselineProjectException;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
-use Tuleap\Project\UGroupRetriever;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
 
@@ -41,7 +46,7 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
 {
     public function __construct(
         private RoleAssignmentRepository $role_assignment_repository,
-        private UGroupRetriever $ugroup_retriever,
+        private RetrieveBaselineUserGroup $ugroup_retriever,
         private ISaveProjectHistory $project_history,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         private CSRFSynchronizerTokenProvider $token_provider,
@@ -59,10 +64,21 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
         $this->token_provider->getCSRF($project)->check();
 
         $project_proxy = ProjectProxy::buildFromProject($project);
-        $assigments    = $this->getAssignementsFromBody($project, $request->getParsedBody());
 
-        $this->role_assignment_repository->saveAssignmentsForProject($project_proxy, ...$assigments);
-        $this->project_history->saveHistory($project, ...$assigments);
+        $body = $request->getParsedBody();
+        if (! is_array($body)) {
+            throw new \LogicException("Expected body to be an associative array");
+        }
+
+        $assignments = array_merge(
+            $this->getAssignmentsFromBodyAndRole($project_proxy, new RoleBaselineAdmin(), array_values((array) ($body['administrators'] ?? []))),
+            $this->getAssignmentsFromBodyAndRole($project_proxy, new RoleBaselineReader(), array_values((array) ($body['readers'] ?? []))),
+        );
+
+        $this->role_assignment_repository->saveAssignmentsForProject(
+            $this->buildRoleAssignmentUpdate($project_proxy, $assignments)
+        );
+        $this->project_history->saveHistory($project, ...$assignments);
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);
@@ -78,44 +94,32 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
     }
 
     /**
-     * @param array|object|null $body
-     *
+     * @param string[] $role_assignments_ids
      * @return RoleAssignment[]
      */
-    private function getAssignementsFromBody(\Project $project, $body): array
+    private function getAssignmentsFromBodyAndRole(ProjectIdentifier $project, Role $role, array $role_assignments_ids): array
     {
-        if (! is_array($body)) {
-            throw new \LogicException("Expected body to be an associative array");
+        try {
+            return RoleAssignment::fromRoleAssignmentsIds(
+                $this->ugroup_retriever,
+                $project,
+                $role,
+                ...array_map(static fn($id) => (int) $id, $role_assignments_ids)
+            );
+        } catch (UserGroupDoesNotExistOrBelongToCurrentBaselineProjectException $e) {
+            throw new ForbiddenException($e->getMessage());
         }
+    }
 
-        $administrators = array_values((array) ($body['administrators'] ?? []));
-        $readers        = array_values((array) ($body['readers'] ?? []));
-
-        $roles = array_merge(
-            array_fill_keys($administrators, Role::ADMIN),
-            array_fill_keys($readers, Role::READER)
-        );
-
-        $project_proxy = ProjectProxy::buildFromProject($project);
-
-        return array_values(
-            array_filter(
-                array_map(
-                    function (string $ugroup_id, string $role) use ($project, $project_proxy) {
-                        if (! $this->ugroup_retriever->getUGroup($project, $ugroup_id)) {
-                            throw new ForbiddenException("Invalid user group $ugroup_id");
-                        }
-
-                        return new RoleAssignment(
-                            $project_proxy,
-                            (int) $ugroup_id,
-                            $role
-                        );
-                    },
-                    [...$administrators, ...$readers],
-                    array_values($roles),
-                )
-            )
-        );
+    private function buildRoleAssignmentUpdate(ProjectIdentifier $project, array $role_assignments): RoleAssignmentsUpdate
+    {
+        try {
+            return RoleAssignmentsUpdate::build(
+                $project,
+                ...$role_assignments
+            );
+        } catch (UserGroupDoesNotExistOrBelongToCurrentBaselineProjectException $e) {
+            throw new ForbiddenException($e->getMessage());
+        }
     }
 }

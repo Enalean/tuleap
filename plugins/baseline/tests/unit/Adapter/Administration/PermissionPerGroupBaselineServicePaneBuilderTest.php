@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
+use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
+use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\Role;
-use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleBaselineAdmin;
+use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
@@ -82,22 +85,16 @@ class PermissionPerGroupBaselineServicePaneBuilderTest extends TestCase
             ]);
 
         $this->role_assignment_repository = new class implements RoleAssignmentRepository {
-            public function findByProjectAndRole(ProjectIdentifier $project, string $role): array
+            public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
             {
-                return match ($role) {
-                    Role::ADMIN => [
-                        new RoleAssignment($project, \ProjectUGroup::PROJECT_MEMBERS, $role),
-                    ],
-                    Role::READER => [
-                        new RoleAssignment($project, 102, $role),
-                    ]
+                return match ($role->getName()) {
+                    RoleBaselineAdmin::NAME => RoleAssignmentTestBuilder::aRoleAssignment($role)->withUserGroups(ProjectUGroupTestBuilder::buildProjectMembers())->build(),
+                    RoleBaselineReader::NAME => RoleAssignmentTestBuilder::aRoleAssignment($role)->withUserGroups(ProjectUGroupTestBuilder::aCustomUserGroup(102)->build())->build(),
                 };
             }
 
-            public function saveAssignmentsForProject(
-                ProjectIdentifier $project,
-                RoleAssignment ...$assignments,
-            ): void {
+            public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void
+            {
             }
         };
 
