@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { selectOrThrow, getDatasetItemOrThrow } from "@tuleap/dom";
+import { selectOrThrow } from "@tuleap/dom";
 import { FEEDBACK_HIDDEN_CLASSNAME, SPIN_CLASSNAME, SPINNER_CLASSNAME } from "./classnames";
 import { patchJSON } from "@tuleap/fetch-result";
 import type { GetText } from "@tuleap/gettext";
@@ -55,7 +55,8 @@ type EditConfigurationModalType = {
 
 export const EditConfigurationModal = (
     doc: Document,
-    gettext_provider: GetText
+    gettext_provider: GetText,
+    group_id: number
 ): EditConfigurationModalType => {
     const edit_button = selectOrThrow(doc, EDIT_CONFIG_SELECTOR, HTMLButtonElement);
     const edit_modal = selectOrThrow(doc, EDIT_CONFIGURATION_MODAL_SELECTOR);
@@ -112,7 +113,6 @@ export const EditConfigurationModal = (
 
     const onSubmit = async (event: Event): Promise<void> => {
         event.preventDefault();
-        const group_id = getDatasetItemOrThrow(confirm_edit_button, "groupId");
         const create_branch_prefix = prefix_checkbox.checked ? prefix_input.value : "";
 
         modal_feedback.classList.add(FEEDBACK_HIDDEN_CLASSNAME);

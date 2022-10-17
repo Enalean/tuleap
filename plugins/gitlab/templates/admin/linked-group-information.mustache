@@ -58,8 +58,12 @@
                     <p id="group-information-branch-prefix">{{ branch_prefix }}</p>
                 </div>
             </section>
-            <section class="tlp-pane-section tlp-pane-section-submit gitlab-linked-group-buttons">
-                <button type="button" class="tlp-button-primary" id="synchronize-button" data-group-id="{{ group_id }}">
+            <section
+                class="tlp-pane-section tlp-pane-section-submit gitlab-linked-group-buttons"
+                id="buttons-section"
+                data-group-id="{{ group_id }}"
+            >
+                <button type="button" class="tlp-button-primary" id="synchronize-button">
                     <i class="fa-solid fa-rotate tlp-button-icon" aria-hidden="true" id="synchronize-icon"></i>
                     {{# dgettext }}tuleap-gitlab | Synchronize {{/ dgettext }}
                 </button>
@@ -142,12 +146,7 @@
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{# dgettext }}tuleap-gitlab | Cancel{{/ dgettext }}
             </button>
-            <button
-                type="submit"
-                class="tlp-button-primary tlp-modal-action"
-                id="edit-config-confirm"
-                data-group-id="{{ group_id }}"
-            >
+            <button type="submit" class="tlp-button-primary tlp-modal-action" id="edit-config-confirm">
                 <i id="edit-icon" class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
                 {{# dgettext }}tuleap-gitlab | Update configuration{{/ dgettext }}
             </button>
@@ -184,12 +183,7 @@
         <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# dgettext }}tuleap-gitlab | Cancel {{/ dgettext }}
         </button>
-        <button
-            type="button"
-            class="tlp-button-danger tlp-modal-action"
-            id="unlink-confirm"
-            data-group-id="{{ group_id }}"
-        >
+        <button type="button" class="tlp-button-danger tlp-modal-action" id="unlink-confirm">
             <i id="unlink-icon" class="fa-solid fa-link-slash tlp-button-icon" aria-hidden="true"></i>
             {{# dgettext }}tuleap-gitlab | Unlink {{/ dgettext }}
         </button>

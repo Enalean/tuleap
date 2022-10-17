@@ -31,7 +31,7 @@ import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { FEEDBACK_HIDDEN_CLASSNAME, SPIN_CLASSNAME, SPINNER_CLASSNAME } from "./classnames";
 
-const GROUP_ID = 77;
+const GROUP_LINK_ID = 77;
 
 describe(`UnlinkModal`, () => {
     let doc: Document, loc: Location;
@@ -56,13 +56,13 @@ describe(`UnlinkModal`, () => {
                         <div id="unlink-modal-feedback">
                           <div id="unlink-modal-alert" class="${FEEDBACK_HIDDEN_CLASSNAME}"></div>
                         </div>
-                        <button type="button" id="unlink-confirm" data-group-id="${GROUP_ID}">
+                        <button type="button" id="unlink-confirm">
                             <i id="unlink-icon" class="fa-solid fa-link-slash"></i>
                         </button>
                     </div>`
             );
 
-            UnlinkModal(loc, doc, gettext).init();
+            UnlinkModal(loc, doc, gettext, GROUP_LINK_ID).init();
 
             button = selectOrThrow(doc.body, UNLINK_CONFIRM_SELECTOR, HTMLButtonElement);
             icon = selectOrThrow(doc.body, UNLINK_CONFIRM_ICON_SELECTOR);
@@ -90,7 +90,7 @@ describe(`UnlinkModal`, () => {
 
             await result;
 
-            expect(delSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_ID}`);
+            expect(delSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_LINK_ID}`);
             assertLoadingState(true);
             expect(reload).toHaveBeenCalled();
         });

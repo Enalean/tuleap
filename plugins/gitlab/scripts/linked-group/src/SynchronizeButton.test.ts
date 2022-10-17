@@ -61,12 +61,12 @@ describe(`SynchronizeButton`, () => {
                 <span id="last-sync-badge">
                   <i data-test="badge-icon"></i>
                 </span>
-                <button type="button" id="synchronize-button" data-group-id="${GROUP_LINK_ID}">
+                <button type="button" id="synchronize-button">
                   <i class="fa-rotate" id="synchronize-icon"></i>
                 </button>`
             );
 
-            SynchronizeButton(doc, gettext).init();
+            SynchronizeButton(doc, gettext, GROUP_LINK_ID).init();
 
             button = selectOrThrow(doc, SYNCHRONIZE_BUTTON_SELECTOR, HTMLButtonElement);
             button_icon = selectOrThrow(button, SYNCHRONIZE_BUTTON_ICON_SELECTOR);
