@@ -27,7 +27,6 @@
 </template>
 <script>
 import { select2 } from "tlp";
-import ArrayUtils from "../../support/array-utils";
 
 export default {
     name: "TrackersMultiSelect",
@@ -68,7 +67,7 @@ export default {
             return values.map((value) => Number(value));
         },
         findTrackerById(id) {
-            return ArrayUtils.find(this.trackers, (tracker) => tracker.id === id);
+            return this.trackers.find((tracker) => tracker.id === id);
         },
         onChange() {
             const tracker_ids = this.convertToInts(this.select2_control.val()) || [];
