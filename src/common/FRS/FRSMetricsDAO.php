@@ -28,6 +28,48 @@ class FRSMetricsDAO extends DataAccessObject
 {
     public function executeDailyRun(\DateTimeImmutable $now): void
     {
+        // build the agregates by project for all times
+        $rows_available_project = $this->getDB()->run("SELECT group_id AS project_id FROM `groups` WHERE status='A'");
+
+        $this->getDB()->run("DROP TABLE IF EXISTS frs_dlstats_grouptotal_agg_tmp");
+        $this->getDB()->run("CREATE TABLE frs_dlstats_grouptotal_agg_tmp (
+            group_id int(11) DEFAULT '0' NOT NULL,
+            downloads int(11) DEFAULT '0' NOT NULL,
+            KEY idx_stats_agr_tmp_gid (group_id)
+        )");
+
+        $rows = $this->getDB()->run("SELECT frs_package.group_id AS project_id, COUNT(*) AS downloads
+            FROM filedownload_log,frs_file,frs_release,frs_package
+            WHERE frs_file.file_id=filedownload_log.filerelease_id AND
+            frs_file.release_id=frs_release.release_id AND
+            frs_release.package_id=frs_package.package_id GROUP BY group_id");
+
+        $downloads = [];
+        foreach ($rows as $row) {
+            $project_id = $row['project_id'];
+            if (isset($downloads[$project_id])) {
+                $downloads[$project_id] += $row['downloads'];
+            } else {
+                $downloads[$project_id] = $row['downloads'];
+            }
+        }
+
+        foreach ($rows_available_project as $row_available_project) {
+            $xfers      = 0;
+            $project_id = $row_available_project['project_id'];
+            if (isset($downloads[$project_id])) {
+                $xfers = $downloads[$project_id];
+            }
+
+            $this->getDB()->run("INSERT INTO frs_dlstats_grouptotal_agg_tmp VALUES (?, ?)", $project_id, $xfers);
+        }
+
+        // Drop the old agregate table
+        $this->getDB()->run('DROP TABLE IF EXISTS frs_dlstats_grouptotal_agg');
+        // Relocate the new table to take its place
+        $this->getDB()->run('ALTER TABLE frs_dlstats_grouptotal_agg_tmp RENAME AS frs_dlstats_grouptotal_agg');
+
+        // Update the agregates by project for the day before
         $time_begin = $now->modify('- 1 day')->setTime(0, 0, 0)->getTimestamp();
         $time_end   = $now->modify('- 1 day')->setTime(23, 59, 59)->getTimestamp();
         $today      = $now->modify('- 1 day')->format('Ymd');
