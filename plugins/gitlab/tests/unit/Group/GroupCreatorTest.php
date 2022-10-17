@@ -26,22 +26,21 @@ use Luracast\Restler\RestException;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
-use Tuleap\Gitlab\Repository\RepositoryIntegrationRetriever;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Gitlab\Test\Builder\GitlabProjectBuilder;
-use Tuleap\Gitlab\Test\Builder\RepositoryIntegrationBuilder;
 use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
 use Tuleap\Gitlab\Test\Stubs\BuildGitlabProjectsStub;
-use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
 use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
-use Tuleap\Gitlab\Test\Stubs\LinkARepositoryIntegrationToAGroupStub;
+use Tuleap\Gitlab\Test\Stubs\IntegrateGitlabProjectStub;
 use Tuleap\Gitlab\Test\Stubs\RetrieveGitlabGroupInformationStub;
-use Tuleap\Gitlab\Test\Stubs\RetrieveIntegrationDaoStub;
-use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -70,41 +69,26 @@ final class GroupCreatorTest extends TestCase
         $this->branch_prefix = 'dev-';
     }
 
-    private function createGroup(): GitlabGroupRepresentation
+    /**
+     * @return Ok<GitlabGroupRepresentation>|Err<Fault>
+     * @throws RestException
+     */
+    private function createGroup(): Ok|Err
     {
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->withPublicName('exegetist')->build();
-
-        $first_integration  = RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(91)
-            ->inProject($project)
-            ->build();
-        $second_integration = RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(92)
-            ->inProject($project)
-            ->build();
-        $third_integration  = RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(93)
-            ->inProject($project)
-            ->build();
 
         $creator = new GroupCreator(
             $this->project_builder,
             RetrieveGitlabGroupInformationStub::buildDefault(),
             new GitlabRepositoryGroupLinkHandler(
                 new DBTransactionExecutorPassthrough(),
-                CreateGitlabRepositoriesStub::withSuccessiveIntegrations(
-                    $first_integration,
-                    $second_integration,
-                    $third_integration
-                ),
                 new GitlabGroupFactory(
                     $this->group_integrated_verifier,
                     $this->project_linked_verifier,
                     AddNewGroupStub::withGroupId(self::INTEGRATED_GROUP_ID),
                 ),
                 InsertGroupTokenStub::build(),
-                LinkARepositoryIntegrationToAGroupStub::withCallCount(),
-                SaveIntegrationBranchPrefixStub::withCallCount(),
-                new RepositoryIntegrationRetriever(
-                    RetrieveIntegrationDaoStub::fromDefaultRow(),
-                )
+                IntegrateGitlabProjectStub::withOkResult()
             )
         );
 
@@ -124,8 +108,10 @@ final class GroupCreatorTest extends TestCase
     public function testItReturnsTheRepresentation(): void
     {
         $result = $this->createGroup();
-        self::assertSame(self::INTEGRATED_GROUP_ID, $result->id);
-        self::assertSame(3, $result->number_of_integrations);
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(self::INTEGRATED_GROUP_ID, $result->value->id);
+        self::assertSame(3, $result->value->number_of_integrations);
     }
 
     public function testItThrowsExceptionIfTheGitlabRepositoryIsInError(): void

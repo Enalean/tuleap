@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\Repository;
 use Project;
 use Tuleap\Gitlab\API\GitlabRequestFault;
 use Tuleap\Gitlab\API\GitlabResponseAPIFault;
+use Tuleap\Gitlab\Group\GroupLink;
 use Tuleap\Gitlab\Group\IntegrateRepositoriesInGroupLinkCommand;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Gitlab\Test\Builder\GitlabProjectBuilder;
@@ -53,20 +54,23 @@ final class GitlabProjectIntegratorTest extends TestCase
     private SaveIntegrationBranchPrefixStub $branch_prefix_saver;
     private LinkARepositoryIntegrationToAGroupStub $repository_integration_group_link;
     private RetrieveIntegrationDaoStub $integration_retriever_dao;
+    private GroupLink $group_link;
 
 
     protected function setUp(): void
     {
+        $this->group_link = GroupLinkBuilder::aGroupLink(3)->build();
+
         $this->project      = ProjectTestBuilder::aProject()
-            ->withId(self::PROJECT_ID)
-            ->withPublicName('exegetist')
-            ->build();
+                                                ->withId(self::PROJECT_ID)
+                                                ->withPublicName('exegetist')
+                                                ->build();
         $first_integration  = RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(91)
-            ->inProject($this->project)
-            ->build();
+                                                          ->inProject($this->project)
+                                                          ->build();
         $second_integration = RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(92)
-            ->inProject($this->project)
-            ->build();
+                                                          ->inProject($this->project)
+                                                          ->build();
 
         $this->is_repository_integration_already_linked = VerifyRepositoryIntegrationsAlreadyLinkedStub::withNeverLinked();
 
@@ -97,7 +101,7 @@ final class GitlabProjectIntegratorTest extends TestCase
         );
 
         $command = new IntegrateRepositoriesInGroupLinkCommand(
-            GroupLinkBuilder::aGroupLink(3)->build(),
+            $this->group_link,
             $this->project,
             CredentialsTestBuilder::get()->build(),
             [
@@ -162,5 +166,17 @@ final class GitlabProjectIntegratorTest extends TestCase
         self::assertNull($result->value);
         self::assertSame(0, $this->branch_prefix_saver->getCallCount());
         self::assertSame(2, $this->repository_integration_group_link->getCallCount());
+    }
+
+    public function testItDoesNotSetBranchPrefixIfItIsEmpty(): void
+    {
+        $this->is_repository_integration_already_linked = VerifyRepositoryIntegrationsAlreadyLinkedStub::withAlreadyLinked();
+        $this->group_link                               = GroupLinkBuilder::aGroupLink(3)->withNoBranchPrefix()->build();
+
+        $result = $this->integrateGitlabProject();
+
+        self::assertTrue(Result::isOk($result));
+        self::assertNull($result->value);
+        self::assertSame(0, $this->branch_prefix_saver->getCallCount());
     }
 }
