@@ -33,7 +33,7 @@ exports[`SidebarHeader displays the sidebar header 1`] = `
         href="https://myinstance.example.com/project/admin/?group_id=999"
       >
         <i
-          class="fas fa-cog project-administration-link-icon"
+          class="fa-solid fa-gear project-administration-link-icon"
           title="Project administration"
         />
       </a>

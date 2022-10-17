@@ -21,19 +21,22 @@
  */
 
 // Solid
-.fas {
+.fas,
+.fa-solid {
     font-family: var(--tuleap-project-sidebar-icon-font-family);
     font-weight: 900;
 }
 
 // Regular
-.far {
+.far,
+.fa-regular {
     font-family: var(--tuleap-project-sidebar-icon-font-family);
     font-weight: 400;
 }
 
 // Brand
-.fab {
+.fab,
+.fa-brand {
     font-family: var(--tuleap-project-sidebar-icon-font-family-brands);
     font-weight: 400;
 }

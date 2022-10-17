@@ -88,7 +88,7 @@ const getGroupLabel = (group: GroupOfItems): HTMLTemplateResult => {
             <strong class="link-selector-group-label">
                 ${getGroupIcon(group)} ${group.label}
                 <i
-                    class="fas fa-spin fa-circle-notch link-selector-loading-group-spinner"
+                    class="fa-solid fa-spin fa-circle-notch link-selector-loading-group-spinner"
                     data-test="link-selector-loading-group-spinner"
                 ></i>
             </strong>
