@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Baseline;
 
 use Tuleap\Baseline\Adapter\ProjectProxy;
-use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 use Tuleap\Baseline\Domain\RoleAssignmentsHistorySaver;
+use Tuleap\Baseline\Domain\RoleAssignmentsSaver;
 use Tuleap\Baseline\Domain\RoleBaselineAdmin;
 use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Baseline\Stub\AddRoleAssignmentsHistoryEntryStub;
@@ -61,13 +61,15 @@ class ServiceSavePermissionsControllerTest extends TestCase
         $token_provider->method('getCSRF')->willReturn($token);
 
         $controller = new ServiceSavePermissionsController(
-            $role_assignment_repository,
-            RetrieveBaselineUserGroupStub::withUserGroups(
-                ProjectUGroupTestBuilder::aCustomUserGroup(102)->build(),
-                ProjectUGroupTestBuilder::aCustomUserGroup(103)->build(),
-                ProjectUGroupTestBuilder::aCustomUserGroup(104)->build(),
+            new RoleAssignmentsSaver(
+                $role_assignment_repository,
+                RetrieveBaselineUserGroupStub::withUserGroups(
+                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(103)->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(104)->build(),
+                ),
+                new RoleAssignmentsHistorySaver($history_entry_adder),
             ),
-            new RoleAssignmentsHistorySaver($history_entry_adder),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $token_provider,
             new NoopSapiEmitter(),
@@ -141,9 +143,11 @@ class ServiceSavePermissionsControllerTest extends TestCase
         $token_provider->method('getCSRF')->willReturn($token);
 
         $controller = new ServiceSavePermissionsController(
-            $this->createMock(RoleAssignmentRepository::class),
-            RetrieveBaselineUserGroupStub::withUserGroups(),
-            new RoleAssignmentsHistorySaver(AddRoleAssignmentsHistoryEntryStub::build()),
+            new RoleAssignmentsSaver(
+                RoleAssignmentRepositoryStub::buildDefault(),
+                RetrieveBaselineUserGroupStub::withUserGroups(),
+                new RoleAssignmentsHistorySaver(AddRoleAssignmentsHistoryEntryStub::build()),
+            ),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $token_provider,
             new NoopSapiEmitter(),
