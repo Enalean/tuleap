@@ -39,6 +39,7 @@ use Tuleap\Log\LogToGraylog2;
 use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\ServerHostname;
 use Tuleap\SVNCore\AccessControl\SVNProjectAccessController;
 use Tuleap\System\ServiceControl;
@@ -75,6 +76,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         ProjectExportController::class,
         SVNProjectAccessController::class,
         MailTransportBuilder::class,
+        MercureClient::class,
     ];
 
     /**

@@ -52,6 +52,9 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\RealTimeMercure\Client;
+use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\RealTimeMercure\MercureMessageDataPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
@@ -175,11 +178,11 @@ class KanbanResource extends AuthenticatedResource
     private $filtered_diagram_builder;
     /** @var ItemRepresentationBuilder */
     private $item_representation_builder;
-
     /**
      * @var TrackerReportUpdater
      */
     private $tracker_report_updater;
+    private Client $mercure_client;
     private FirstPossibleValueInListRetriever $first_possible_value_retriever;
 
     public function __construct()
@@ -240,6 +243,12 @@ class KanbanResource extends AuthenticatedResource
 
         $this->node_js_client         = new NodeJSClient(
             HttpClientFactory::createClient(),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            BackendLogger::getDefaultLogger()
+        );
+        $this->mercure_client         = new MercureClient(
+            HttpClientFactory::createClientForInternalTuleapUse(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger()
@@ -1208,6 +1217,13 @@ class KanbanResource extends AuthenticatedResource
             );
 
             $this->node_js_client->sendMessage($message);
+        }
+        if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+            $mercure_message = new MercureMessageDataPresenter(
+                'kanban/' . $kanban->getId() . '/',
+                '{"cmd":[{"kanban":"delete"}]}'
+            );
+            $this->mercure_client->sendMessage($mercure_message);
         }
     }
 
