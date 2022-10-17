@@ -22,15 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
-use Tuleap\Baseline\Adapter\Administration\ISaveProjectHistory;
+use Tuleap\Baseline\Adapter\ProjectProxy;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\Role;
-use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
+use Tuleap\Baseline\Domain\RoleAssignmentsHistorySaver;
 use Tuleap\Baseline\Domain\RoleBaselineAdmin;
 use Tuleap\Baseline\Domain\RoleBaselineReader;
+use Tuleap\Baseline\Stub\AddRoleAssignmentsHistoryEntryStub;
 use Tuleap\Baseline\Stub\RetrieveBaselineUserGroupStub;
+use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
@@ -52,19 +54,7 @@ class ServiceSavePermissionsControllerTest extends TestCase
         $feedback_serializer = $this->createStub(FeedbackSerializer::class);
         $feedback_serializer->method('serialize');
 
-        $project_history_saver = new class implements ISaveProjectHistory {
-            private $captured_save_parameters = [];
-
-            public function saveHistory(\Project $project, RoleAssignment ...$assignments): void
-            {
-                $this->captured_save_parameters = [$project, $assignments];
-            }
-
-            public function getCapturedSaveParameters(): array
-            {
-                return $this->captured_save_parameters;
-            }
-        };
+        $history_entry_adder = AddRoleAssignmentsHistoryEntryStub::build();
 
         $role_assignment_repository = new class implements RoleAssignmentRepository {
             private ?RoleAssignmentsUpdate $captured_save_parameters;
@@ -97,7 +87,7 @@ class ServiceSavePermissionsControllerTest extends TestCase
                 ProjectUGroupTestBuilder::aCustomUserGroup(103)->build(),
                 ProjectUGroupTestBuilder::aCustomUserGroup(104)->build(),
             ),
-            $project_history_saver,
+            new RoleAssignmentsHistorySaver($history_entry_adder),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $token_provider,
             new NoopSapiEmitter(),
@@ -133,16 +123,32 @@ class ServiceSavePermissionsControllerTest extends TestCase
         self::assertEquals(RoleBaselineReader::NAME, $save_parameters->getAssignments()[3]->getRoleName());
 
 
-        $save_history_parameters = $project_history_saver->getCapturedSaveParameters();
-        self::assertEquals((int) $project->getID(), $save_history_parameters[0]->getID());
-        self::assertEquals(102, $save_history_parameters[1][0]->getUserGroupId());
-        self::assertEquals(RoleBaselineAdmin::NAME, $save_history_parameters[1][0]->getRoleName());
-        self::assertEquals(103, $save_history_parameters[1][1]->getUserGroupId());
-        self::assertEquals(RoleBaselineAdmin::NAME, $save_history_parameters[1][1]->getRoleName());
-        self::assertEquals(103, $save_history_parameters[1][2]->getUserGroupId());
-        self::assertEquals(RoleBaselineReader::NAME, $save_history_parameters[1][2]->getRoleName());
-        self::assertEquals(104, $save_history_parameters[1][3]->getUserGroupId());
-        self::assertEquals(RoleBaselineReader::NAME, $save_history_parameters[1][3]->getRoleName());
+        $save_history_parameters = $history_entry_adder->getAddedHistoryEntries();
+        self::assertCount(2, $save_history_parameters);
+
+        self::assertEquals(
+            [
+                ProjectProxy::buildFromProject($project),
+                'perm_granted_for_baseline_readers',
+                RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineReader())->withUserGroups(
+                    ProjectUGroupTestBuilder::aCustomUserGroup(103)->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(104)->build(),
+                )->build(),
+            ],
+            $save_history_parameters[0]
+        );
+
+        self::assertEquals(
+            [
+                ProjectProxy::buildFromProject($project),
+                'perm_granted_for_baseline_administrators',
+                RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
+                    ProjectUGroupTestBuilder::aCustomUserGroup(102)->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(103)->build(),
+                )->build(),
+            ],
+            $save_history_parameters[1]
+        );
     }
 
     public function testExceptionWhenUGroupIsNotValid(): void
@@ -157,7 +163,7 @@ class ServiceSavePermissionsControllerTest extends TestCase
         $controller = new ServiceSavePermissionsController(
             $this->createMock(RoleAssignmentRepository::class),
             RetrieveBaselineUserGroupStub::withUserGroups(),
-            $this->createMock(ISaveProjectHistory::class),
+            new RoleAssignmentsHistorySaver(AddRoleAssignmentsHistoryEntryStub::build()),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $token_provider,
             new NoopSapiEmitter(),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Adapter\Administration;
+namespace Tuleap\Baseline\Domain;
 
-use Tuleap\Baseline\Domain\RoleAssignment;
-use Tuleap\Baseline\Domain\RoleBaselineAdmin;
-use Tuleap\Baseline\Domain\RoleBaselineReader;
-
-final class ProjectHistory implements ISaveProjectHistory
+final class RoleAssignmentsHistorySaver
 {
     private const PERM_RESET_FOR_BASELINE_READERS          = 'perm_reset_for_baseline_readers';
     private const PERM_RESET_FOR_BASELINE_ADMINISTRATORS   = 'perm_reset_for_baseline_administrators';
     private const PERM_GRANTED_FOR_BASELINE_READERS        = 'perm_granted_for_baseline_readers';
     private const PERM_GRANTED_FOR_BASELINE_ADMINISTRATORS = 'perm_granted_for_baseline_administrators';
+
+    public function __construct(private AddRoleAssignmentsHistoryEntry $history_entry_adder)
+    {
+    }
 
     public static function getLabelFromKey(string $key): ?string
     {
@@ -67,37 +67,39 @@ final class ProjectHistory implements ISaveProjectHistory
         );
     }
 
-    public function __construct(private \ProjectHistoryDao $dao)
+    public function saveHistory(RoleAssignmentsUpdate $role_assignments_update): void
     {
-    }
-
-    public function saveHistory(\Project $project, RoleAssignment ...$assignments): void
-    {
-        $ugroup_names = [
+        $assignments_by_roles = [
             RoleBaselineReader::NAME  => [],
             RoleBaselineAdmin::NAME => [],
         ];
-        foreach ($assignments as $assignment) {
-            $ugroup_names[$assignment->getRoleName()][] = $assignment->getUserGroupName();
+        foreach ($role_assignments_update->getAssignments() as $assignment) {
+            $assignments_by_roles[$assignment->getRoleName()][] = $assignment;
         }
 
-        if (empty($ugroup_names[RoleBaselineReader::NAME])) {
-            $this->dao->groupAddHistory(self::PERM_RESET_FOR_BASELINE_READERS, '', (int) $project->getID());
+        if (empty($assignments_by_roles[RoleBaselineReader::NAME])) {
+            $this->history_entry_adder->addProjectHistoryEntryForRoleAndGroups(
+                $role_assignments_update->getProject(),
+                self::PERM_RESET_FOR_BASELINE_READERS,
+            );
         } else {
-            $this->dao->groupAddHistory(
+            $this->history_entry_adder->addProjectHistoryEntryForRoleAndGroups(
+                $role_assignments_update->getProject(),
                 self::PERM_GRANTED_FOR_BASELINE_READERS,
-                implode(',', $ugroup_names[RoleBaselineReader::NAME]),
-                (int) $project->getID()
+                ...$assignments_by_roles[RoleBaselineReader::NAME]
             );
         }
 
-        if (empty($ugroup_names[RoleBaselineAdmin::NAME])) {
-            $this->dao->groupAddHistory(self::PERM_RESET_FOR_BASELINE_ADMINISTRATORS, '', (int) $project->getID());
+        if (empty($assignments_by_roles[RoleBaselineAdmin::NAME])) {
+            $this->history_entry_adder->addProjectHistoryEntryForRoleAndGroups(
+                $role_assignments_update->getProject(),
+                self::PERM_RESET_FOR_BASELINE_ADMINISTRATORS,
+            );
         } else {
-            $this->dao->groupAddHistory(
+            $this->history_entry_adder->addProjectHistoryEntryForRoleAndGroups(
+                $role_assignments_update->getProject(),
                 self::PERM_GRANTED_FOR_BASELINE_ADMINISTRATORS,
-                implode(',', $ugroup_names[RoleBaselineAdmin::NAME]),
-                (int) $project->getID()
+                ...$assignments_by_roles[RoleBaselineAdmin::NAME]
             );
         }
     }

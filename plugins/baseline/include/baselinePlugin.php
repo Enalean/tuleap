@@ -23,11 +23,12 @@ declare(strict_types=1);
 
 use Tuleap\Baseline\Adapter\Administration\BaselineUserGroupRetriever;
 use Tuleap\Baseline\Adapter\Administration\PermissionPerGroupBaselineServicePaneBuilder;
-use Tuleap\Baseline\Adapter\Administration\ProjectHistory;
+use Tuleap\Baseline\Adapter\Administration\RoleAssignmentsHistoryEntryAdder;
 use Tuleap\Baseline\Adapter\Routing\RejectNonBaselineAdministratorMiddleware;
 use Tuleap\Baseline\BaselineTuleapService;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleAssignmentsHistorySaver;
 use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
@@ -191,7 +192,11 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         return new \Tuleap\Baseline\ServiceSavePermissionsController(
             $container->get(RoleAssignmentRepository::class),
             new BaselineUserGroupRetriever(ProjectManager::instance(), new UGroupManager()),
-            new ProjectHistory(new ProjectHistoryDao()),
+            new RoleAssignmentsHistorySaver(
+                new RoleAssignmentsHistoryEntryAdder(
+                    new ProjectHistoryDao()
+                )
+            ),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
                 new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
@@ -240,7 +245,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
 
     public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
     {
-        $label = ProjectHistory::getLabelFromKey($event->getKey());
+        $label = RoleAssignmentsHistorySaver::getLabelFromKey($event->getKey());
         if ($label) {
             $event->setLabel($label);
         }
@@ -248,7 +253,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
 
     public function fillProjectHistorySubEvents(array $params): void
     {
-        ProjectHistory::fillProjectHistorySubEvents($params);
+        RoleAssignmentsHistorySaver::fillProjectHistorySubEvents($params);
     }
 
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void

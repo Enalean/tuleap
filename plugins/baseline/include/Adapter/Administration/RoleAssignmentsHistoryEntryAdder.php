@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,9 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
+use ProjectHistoryDao;
+use Tuleap\Baseline\Domain\AddRoleAssignmentsHistoryEntry;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\RoleAssignment;
 
-interface ISaveProjectHistory
+final class RoleAssignmentsHistoryEntryAdder implements AddRoleAssignmentsHistoryEntry
 {
-    public function saveHistory(\Project $project, RoleAssignment ...$assignments): void;
+    public function __construct(private ProjectHistoryDao $dao)
+    {
+    }
+
+    public function addProjectHistoryEntryForRoleAndGroups(
+        ProjectIdentifier $project,
+        string $history_key,
+        RoleAssignment ...$assignments,
+    ): void {
+        $this->dao->groupAddHistory(
+            $history_key,
+            implode(',', array_map(static fn(RoleAssignment $assignment) => $assignment->getUserGroupName(), $assignments)),
+            $project->getID()
+        );
+    }
 }
