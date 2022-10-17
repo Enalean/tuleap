@@ -38,12 +38,12 @@ import type {
     TextChangesetValue,
     TrackerResponseNoInstance,
     UnknownChangesetValue,
-    UserRepresentation,
+    UserWithEmailAndStatus,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactLinkFieldIdentifier } from "@tuleap/plugin-tracker-constants";
 export type {
     StructureFormat,
-    UserRepresentation as ArtifactReportResponseUserRepresentation,
+    UserWithEmailAndStatus as ArtifactReportResponseUserRepresentation,
     UserGroupRepresentation as ArtifactReportResponseUserGroupRepresentation,
     UnknownChangesetValue as ArtifactReportResponseUnknownFieldValue,
     ArtifactLink,
@@ -304,7 +304,7 @@ export interface TestExecutionResponse {
     previous_result: {
         status: TestExecStatus | null;
         submitted_on: string;
-        submitted_by: UserRepresentation;
+        submitted_by: UserWithEmailAndStatus;
         result: string;
     } | null;
     status: TestExecStatus | null;

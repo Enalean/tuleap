@@ -31,7 +31,7 @@ import type {
     StaticValueRepresentation,
     UserGroupBoundOpenListField,
     UserGroupRepresentation,
-    UserRepresentation,
+    UserWithEmailAndStatus,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type {
     UserOpenListValueModel,
@@ -109,12 +109,12 @@ export function formatDefaultValue(field: OpenListFieldStructure): OpenListValue
 }
 
 type OpenListBindValueObject =
-    | UserRepresentation
+    | UserWithEmailAndStatus
     | OpenListValueRepresentation
     | StaticValueRepresentation
     | UserGroupRepresentation;
 
-const isUserValue = (value: OpenListBindValueObject): value is UserRepresentation =>
+const isUserValue = (value: OpenListBindValueObject): value is UserWithEmailAndStatus =>
     "email" in value;
 
 const mapToUserValueModel = (

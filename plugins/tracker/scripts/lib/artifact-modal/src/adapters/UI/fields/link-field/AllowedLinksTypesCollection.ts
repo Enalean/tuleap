@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import type { CollectAllowedLinksTypes } from "../../../../domain/fields/link-field/CollectAllowedLinksTypes";

@@ -22,7 +22,7 @@ import { flushPromises, shallowMount } from "@vue/test-utils";
 import TrackerSelector from "./TrackerSelector.vue";
 import { getGlobalTestOptions } from "./global-options-for-test";
 import * as rest_querier from "../rest-querier";
-import type { MinimalTrackerResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type { MinimalTrackerResponse } from "@tuleap/plugin-tracker-rest-api-types";
 
 const tracker_a = {
     id: 2,

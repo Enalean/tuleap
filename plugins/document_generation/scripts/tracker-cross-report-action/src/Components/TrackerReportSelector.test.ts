@@ -22,7 +22,7 @@ import { flushPromises, shallowMount } from "@vue/test-utils";
 import TrackerReportSelector from "./TrackerReportSelector.vue";
 import { getGlobalTestOptions } from "./global-options-for-test";
 import * as rest_querier from "../rest-querier";
-import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types";
 
 describe("TrackerReportSelector", () => {
     it("displays possible reports", async () => {
