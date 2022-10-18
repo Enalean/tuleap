@@ -72,6 +72,11 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return "c.submitted_by AS " . $this->getQuerySelectName();
     }
 
+    public function getQueryOrderby(): string
+    {
+        return $this->getQuerySelectName();
+    }
+
     public function getQueryFrom()
     {
         return '';
