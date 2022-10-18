@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
-use Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenter;
-use Tuleap\Baseline\Adapter\Administration\UgroupPresenter;
+use Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenterBuilder;
+use Tuleap\Baseline\Stub\RoleAssignmentRepositoryStub;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Baseline\Support\NoopSapiEmitter;
 use Tuleap\Http\Server\NullServerRequest;
@@ -32,6 +32,7 @@ use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use User_ForgeUGroup;
 
 class ServiceAdministrationControllerTest extends TestCase
 {
@@ -44,7 +45,10 @@ class ServiceAdministrationControllerTest extends TestCase
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
             \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            $this->createMock(\Tuleap\Baseline\Adapter\Administration\IBuildAdminPermissionsPresenter::class),
+            new AdminPermissionsPresenterBuilder(
+                $this->createStub(\User_ForgeUserGroupFactory::class),
+                RoleAssignmentRepositoryStub::buildDefault()
+            ),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
             new NoopSapiEmitter(),
         );
@@ -63,7 +67,10 @@ class ServiceAdministrationControllerTest extends TestCase
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
             \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            $this->createMock(\Tuleap\Baseline\Adapter\Administration\IBuildAdminPermissionsPresenter::class),
+            new AdminPermissionsPresenterBuilder(
+                $this->createStub(\User_ForgeUserGroupFactory::class),
+                RoleAssignmentRepositoryStub::buildDefault()
+            ),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
             new NoopSapiEmitter(),
         );
@@ -82,30 +89,24 @@ class ServiceAdministrationControllerTest extends TestCase
     {
         $token = CSRFSynchronizerTokenStub::buildSelf();
 
-        $presenter_builder = $this->createMock(
-            \Tuleap\Baseline\Adapter\Administration\IBuildAdminPermissionsPresenter::class
-        );
-        $presenter_builder->method('getPresenter')->willReturn(
-            new AdminPermissionsPresenter(
-                '/admin/url',
-                $token,
-                [
-                    new UgroupPresenter(104, 'Lorem ipsum', true),
-                ],
-                []
-            )
-        );
-
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')
             ->willReturn($token);
+
+        $user_group_factory = $this->createStub(\User_ForgeUserGroupFactory::class);
+        $user_group_factory->method('getProjectUGroupsWithMembersWithoutNobody')->willReturn([
+            new User_ForgeUGroup(104, 'Lorem ipsum', ''),
+        ]);
 
         $controller = new ServiceAdministrationController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
             \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            $presenter_builder,
+            new AdminPermissionsPresenterBuilder(
+                $user_group_factory,
+                RoleAssignmentRepositoryStub::buildDefault()
+            ),
             $token_provider,
             new NoopSapiEmitter(),
         );

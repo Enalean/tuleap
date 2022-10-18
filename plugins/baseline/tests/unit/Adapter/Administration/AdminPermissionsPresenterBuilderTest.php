@@ -22,13 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
-use Tuleap\Baseline\Domain\ProjectIdentifier;
-use Tuleap\Baseline\Domain\Role;
-use Tuleap\Baseline\Domain\RoleAssignmentRepository;
-use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
+use Tuleap\Baseline\Stub\RoleAssignmentRepositoryStub;
 use Tuleap\Baseline\Support\RoleAssignmentTestBuilder;
 use Tuleap\Baseline\Domain\RoleBaselineAdmin;
-use Tuleap\Baseline\Domain\RoleBaselineReader;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -52,28 +48,16 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
 
         $builder = new AdminPermissionsPresenterBuilder(
             $ugroup_factory,
-            new class implements RoleAssignmentRepository {
-                public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
-                {
-                    return match ($role->getName()) {
-                        RoleBaselineAdmin::NAME =>
-                            RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
-                                ProjectUGroupTestBuilder::aCustomUserGroup(104)->build(),
-                                ProjectUGroupTestBuilder::aCustomUserGroup(105)->build()
-                            )->build()
-                        ,
-                        RoleBaselineReader::NAME =>
-                            RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
-                                ProjectUGroupTestBuilder::aCustomUserGroup(105)->build(),
-                                ProjectUGroupTestBuilder::aCustomUserGroup(106)->build()
-                            )->build(),
-                    };
-                }
-
-                public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void
-                {
-                }
-            }
+            RoleAssignmentRepositoryStub::withRoles(
+                RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
+                    ProjectUGroupTestBuilder::aCustomUserGroup(104)->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(105)->build()
+                )->build(),
+                RoleAssignmentTestBuilder::aRoleAssignment(new RoleBaselineAdmin())->withUserGroups(
+                    ProjectUGroupTestBuilder::aCustomUserGroup(105)->build(),
+                    ProjectUGroupTestBuilder::aCustomUserGroup(106)->build()
+                )->build()
+            ),
         );
 
         $csrf_token = CSRFSynchronizerTokenStub::buildSelf();
