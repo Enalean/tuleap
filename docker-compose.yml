@@ -106,7 +106,7 @@ services:
           - gitlab.local
 
   onlyoffice:
-    image: onlyoffice/documentserver:7.1.1.23
+    image: onlyoffice/documentserver:7.2.0.204
     environment:
       - JWT_ENABLED=true
       - JWT_SECRET=TULEAP_DO_NOT_USE_THIS_IN_PRODUCTION
