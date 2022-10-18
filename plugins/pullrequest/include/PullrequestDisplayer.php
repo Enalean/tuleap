@@ -101,7 +101,7 @@ class PullrequestDisplayer
 
             $presenter = new PullRequestPresenter(
                 $repository->getId(),
-                $user->getId(),
+                (int) $user->getId(),
                 $user->getShortLocale(),
                 $nb_pull_requests,
                 $this->merge_setting_retriever->getMergeSettingForRepository($repository)

@@ -20,39 +20,27 @@
 
 namespace Tuleap\PullRequest;
 
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\PullRequest\MergeSetting\MergeSetting;
 
-class PullRequestPresenter
+final class PullRequestPresenter
 {
-    /** @var PullRequestCount */
-    private $nb_pull_requests;
+    #[FeatureFlagConfigKey("Feature flag to allow use pullrequest v2")]
+    public const FEATURE_FLAG_KEY = 'allow_pullrequest_v2';
 
-    /** @var int */
-    public $repository_id;
 
-    /** @var int */
-    public $user_id;
+    public bool $is_there_at_least_one_pull_request;
+    public bool $is_merge_commit_allowed;
+    public bool $allow_pullrequest_v2;
 
-    /** @var string */
-    public $language;
-
-    /** @var bool */
-    public $is_there_at_least_one_pull_request;
-
-    /** @var bool */
-    public $is_merge_commit_allowed;
-
-    public function __construct($repository_id, $user_id, $language, PullRequestCount $nb_pull_requests, MergeSetting $merge_setting)
+    public function __construct(public int $repository_id, public int $user_id, public string $language, private PullRequestCount $nb_pull_requests, MergeSetting $merge_setting)
     {
-        $this->repository_id                      = $repository_id;
-        $this->user_id                            = $user_id;
-        $this->language                           = $language;
-        $this->nb_pull_requests                   = $nb_pull_requests;
         $this->is_there_at_least_one_pull_request = $nb_pull_requests->isThereAtLeastOnePullRequest();
         $this->is_merge_commit_allowed            = $merge_setting->isMergeCommitAllowed();
+        $this->allow_pullrequest_v2               = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY);
     }
 
-    public function getTemplateName()
+    public function getTemplateName(): string
     {
         return 'angular-pullrequest';
     }
