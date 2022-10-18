@@ -33,6 +33,9 @@ use Tuleap\Gitlab\API\Group\RetrieveGitlabGroupInformation;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
 final class GroupCreator
 {
@@ -44,13 +47,15 @@ final class GroupCreator
     }
 
     /**
+     * @return Ok<GitlabGroupRepresentation>|Err<Fault>
+     *
      * @throws RestException
      */
     public function createGroupAndIntegrations(
         Credentials $credentials,
         GitlabGroupPOSTRepresentation $gitlab_group_representation,
         Project $project,
-    ): GitlabGroupRepresentation {
+    ): Ok|Err {
         if ($gitlab_group_representation->create_branch_prefix === null) {
             throw new RestException(400, '`gitlab_group_link_representation[create_branch_prefix]` is required.');
         }

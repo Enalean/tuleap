@@ -125,79 +125,90 @@ final class GitlabGroupResource
         $retriever    = new ProjectRetriever(ProjectManager::instance());
         $checker      = new GitAdministratorChecker($this->getGitPermissionsManager());
 
-        return $retriever->retrieveProject($gitlab_group_link_representation->project_id)
+        return $retriever
+            ->retrieveProject($gitlab_group_link_representation->project_id)
             ->andThen(
                 fn(\Project $project) => $checker->checkUserIsGitAdministrator($project, $current_user)->map(
                     static fn() => $project
                 )
             )
-            ->match(function (\Project $project) use ($gitlab_group_link_representation) {
-                $group_api_token   = GroupApiToken::buildNewGroupToken(
-                    new ConcealedString($gitlab_group_link_representation->gitlab_token)
-                );
-                $gitlab_server_url = $gitlab_group_link_representation->gitlab_server_url;
+            ->andThen(
+                function (\Project $project) use ($gitlab_group_link_representation) {
+                    $group_api_token   = GroupApiToken::buildNewGroupToken(
+                        new ConcealedString($gitlab_group_link_representation->gitlab_token)
+                    );
+                    $gitlab_server_url = $gitlab_group_link_representation->gitlab_server_url;
 
-                $credentials = new Credentials($gitlab_server_url, $group_api_token);
+                    $credentials = new Credentials($gitlab_server_url, $group_api_token);
 
-                $gitlab_api_client = new ClientWrapper(
-                    HTTPFactoryBuilder::requestFactory(),
-                    HTTPFactoryBuilder::streamFactory(),
-                    new GitlabHTTPClientFactory(
-                        HttpClientFactory::createClient()
-                    )
-                );
+                    $gitlab_api_client = new ClientWrapper(
+                        HTTPFactoryBuilder::requestFactory(),
+                        HTTPFactoryBuilder::streamFactory(),
+                        new GitlabHTTPClientFactory(
+                            HttpClientFactory::createClient()
+                        )
+                    );
 
-                $gitlab_backend_logger = BackendLogger::getDefaultLogger(gitlabPlugin::LOG_IDENTIFIER);
-                $transaction_executor  = new DBTransactionExecutorWithConnection(
-                    DBFactory::getMainTuleapDBConnection()
-                );
-                $integration_dao       = new GitlabRepositoryIntegrationDao();
-                $key_factory           = new KeyFactory();
-                $group_dao             = new GitlabGroupDAO();
+                    $gitlab_backend_logger = BackendLogger::getDefaultLogger(gitlabPlugin::LOG_IDENTIFIER);
+                    $transaction_executor  = new DBTransactionExecutorWithConnection(
+                        DBFactory::getMainTuleapDBConnection()
+                    );
+                    $integration_dao       = new GitlabRepositoryIntegrationDao();
+                    $key_factory           = new KeyFactory();
+                    $group_dao             = new GitlabGroupDAO();
 
-                $gitlab_repository_creator = new GitlabRepositoryCreator(
-                    $transaction_executor,
-                    new GitlabRepositoryIntegrationFactory(
-                        $integration_dao,
-                        ProjectManager::instance()
-                    ),
-                    $integration_dao,
-                    new WebhookCreator(
-                        $key_factory,
-                        new WebhookDao(),
-                        new WebhookDeletor(
-                            new WebhookDao(),
-                            $gitlab_api_client,
-                            $gitlab_backend_logger
-                        ),
-                        $gitlab_api_client,
-                        $gitlab_backend_logger,
-                    ),
-                    new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), $key_factory)
-                );
-
-                $group_creation_handler = new GroupCreator(
-                    new GitlabProjectBuilder($gitlab_api_client),
-                    new GitlabGroupInformationRetriever($gitlab_api_client),
-                    new GitlabRepositoryGroupLinkHandler(
+                    $gitlab_repository_creator = new GitlabRepositoryCreator(
                         $transaction_executor,
+                        new GitlabRepositoryIntegrationFactory(
+                            $integration_dao,
+                            ProjectManager::instance()
+                        ),
+                        $integration_dao,
+                        new WebhookCreator(
+                            $key_factory,
+                            new WebhookDao(),
+                            new WebhookDeletor(
+                                new WebhookDao(),
+                                $gitlab_api_client,
+                                $gitlab_backend_logger
+                            ),
+                            $gitlab_api_client,
+                            $gitlab_backend_logger,
+                        ),
+                        new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), $key_factory)
+                    );
+
+                    $create_branch_prefix_dao          = new CreateBranchPrefixDao();
+                    $group_link_repository_integration = new GroupRepositoryIntegrationDAO();
+
+                    $gitlab_project_integrator = new GitlabProjectIntegrator(
                         $gitlab_repository_creator,
-                        new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
-                        new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
-                        new GroupRepositoryIntegrationDAO(),
-                        new CreateBranchPrefixDao(),
+                        $create_branch_prefix_dao,
+                        $group_link_repository_integration,
+                        $group_link_repository_integration,
                         new RepositoryIntegrationRetriever(
                             $integration_dao
                         )
-                    )
-                );
+                    );
 
-                return $group_creation_handler->createGroupAndIntegrations(
-                    $credentials,
-                    $gitlab_group_link_representation,
-                    $project
-                );
-            }, [FaultMapper::class, 'mapToRestException']);
+                    $group_creation_handler = new GroupCreator(
+                        new GitlabProjectBuilder($gitlab_api_client),
+                        new GitlabGroupInformationRetriever($gitlab_api_client),
+                        new GitlabRepositoryGroupLinkHandler(
+                            $transaction_executor,
+                            new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
+                            new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
+                            $gitlab_project_integrator
+                        )
+                    );
+
+                    return $group_creation_handler->createGroupAndIntegrations(
+                        $credentials,
+                        $gitlab_group_link_representation,
+                        $project
+                    );
+                }
+            )->match(fn(GitlabGroupRepresentation $representation) => $representation, [FaultMapper::class, 'mapToRestException']);
     }
 
     /**

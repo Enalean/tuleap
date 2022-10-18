@@ -25,17 +25,17 @@ namespace Tuleap\Gitlab\Group;
 use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
-use Tuleap\Gitlab\Repository\RepositoryIntegrationRetriever;
+use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
-use Tuleap\Gitlab\Test\Builder\RepositoryIntegrationBuilder;
 use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
-use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
-use Tuleap\Gitlab\Test\Stubs\LinkARepositoryIntegrationToAGroupStub;
-use Tuleap\Gitlab\Test\Stubs\RetrieveIntegrationDaoStub;
-use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
+use Tuleap\Gitlab\Test\Stubs\IntegrateGitlabProjectStub;
 use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -45,21 +45,17 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
     private const GROUP_ID                    = 45;
     private const SECOND_GITLAB_REPOSITORY_ID = 10;
     private const FIRST_GITLAB_REPOSITORY_ID  = 9;
-    private LinkARepositoryIntegrationToAGroupStub $link_integration_to_group;
-    private SaveIntegrationBranchPrefixStub $branch_prefix_saver;
     private string $branch_prefix;
-    private RetrieveIntegrationDaoStub $integration_retriever_dao;
 
     protected function setUp(): void
     {
-        $this->link_integration_to_group = LinkARepositoryIntegrationToAGroupStub::withCallCount();
-        $this->branch_prefix_saver       = SaveIntegrationBranchPrefixStub::withCallCount();
-        $this->integration_retriever_dao = RetrieveIntegrationDaoStub::fromDefaultRow();
-
         $this->branch_prefix = 'dev-';
     }
 
-    private function integrate(): \Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation
+    /**
+     * @return Ok<GitlabGroupRepresentation>|Err<Fault>
+     */
+    private function integrate(): Ok|Err
     {
         $gitlab_projects = [
             new GitlabProject(
@@ -96,31 +92,15 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
             $this->branch_prefix
         );
 
-        $gitlab_repository_creator = CreateGitlabRepositoriesStub::withSuccessiveIntegrations(
-            RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(1)
-                ->withGitLabProjectId(self::FIRST_GITLAB_REPOSITORY_ID)
-                ->inProject($project)
-                ->build(),
-            RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(2)
-                ->withGitLabProjectId(self::SECOND_GITLAB_REPOSITORY_ID)
-                ->inProject($project)
-                ->build()
-        );
-
         $handler = new GitlabRepositoryGroupLinkHandler(
             new DBTransactionExecutorPassthrough(),
-            $gitlab_repository_creator,
             new GitlabGroupFactory(
                 VerifyGroupIsAlreadyLinkedStub::withNeverLinked(),
                 VerifyProjectIsAlreadyLinkedStub::withNeverLinked(),
                 AddNewGroupStub::withGroupId(self::GROUP_ID),
             ),
             InsertGroupTokenStub::build(),
-            $this->link_integration_to_group,
-            $this->branch_prefix_saver,
-            new RepositoryIntegrationRetriever(
-                $this->integration_retriever_dao
-            )
+            IntegrateGitlabProjectStub::withOkResult()
         );
 
         $credentials = CredentialsTestBuilder::get()->build();
@@ -130,32 +110,19 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
 
     public function testItReturnsTheNewGroupIDAndTheNumberOfRepositoriesIntegrated(): void
     {
-        $this->integration_retriever_dao = RetrieveIntegrationDaoStub::fromNullRow();
-
         $result = $this->integrate();
 
-        self::assertSame(self::GROUP_ID, $result->id);
-        self::assertSame(2, $result->number_of_integrations);
-        self::assertSame(2, $this->link_integration_to_group->getCallCount());
-        self::assertSame(2, $this->branch_prefix_saver->getCallCount());
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(self::GROUP_ID, $result->value->id);
+        self::assertSame(2, $result->value->number_of_integrations);
     }
 
     public function testItDoesNotRecreateRepositoriesThatWereAlreadyIntegrated(): void
     {
         $result = $this->integrate();
 
-        self::assertSame(self::GROUP_ID, $result->id);
-        self::assertSame(2, $result->number_of_integrations);
-        self::assertSame(2, $this->link_integration_to_group->getCallCount());
-        self::assertSame(0, $this->branch_prefix_saver->getCallCount());
-    }
-
-    public function testItDoesNotSetBranchPrefixIfItIsEmpty(): void
-    {
-        $this->branch_prefix = '';
-
-        $this->integrate();
-
-        self::assertSame(0, $this->branch_prefix_saver->getCallCount());
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(self::GROUP_ID, $result->value->id);
+        self::assertSame(2, $result->value->number_of_integrations);
     }
 }
