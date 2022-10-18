@@ -190,12 +190,14 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         $container = ContainerBuilderFactory::create()->build();
 
         return new \Tuleap\Baseline\ServiceSavePermissionsController(
-            $container->get(RoleAssignmentRepository::class),
-            new BaselineUserGroupRetriever(ProjectManager::instance(), new UGroupManager()),
-            new RoleAssignmentsHistorySaver(
-                new RoleAssignmentsHistoryEntryAdder(
-                    new ProjectHistoryDao()
-                )
+            new \Tuleap\Baseline\Domain\RoleAssignmentsSaver(
+                $container->get(RoleAssignmentRepository::class),
+                new BaselineUserGroupRetriever(ProjectManager::instance(), new UGroupManager()),
+                new RoleAssignmentsHistorySaver(
+                    new RoleAssignmentsHistoryEntryAdder(
+                        new ProjectHistoryDao()
+                    )
+                ),
             ),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
                 \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
