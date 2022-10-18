@@ -114,7 +114,7 @@ final class GitlabRepositoryResource
      * @return GitlabRepositoryRepresentation {@type GitlabRepositoryRepresentation}
      *
      * @throws RestException 400
-     * @throws RestException 401
+     * @throws RestException 403
      * @throws RestException 404
      *
      */
@@ -137,7 +137,7 @@ final class GitlabRepositoryResource
 
         $current_user = UserManager::instance()->getCurrentUser();
         if (! $this->getGitPermissionsManager()->userIsGitAdmin($current_user, $project)) {
-            throw new RestException(401, "User must be Git administrator.");
+            throw new RestException(403, "User must be Git administrator.");
         }
 
         try {
@@ -242,7 +242,7 @@ final class GitlabRepositoryResource
      * @status 204
      *
      * @throws RestException 400
-     * @throws RestException 401
+     * @throws RestException 403
      * @throws RestException 404
      */
     protected function deleteGitlabRepository(int $id): void
@@ -292,7 +292,7 @@ final class GitlabRepositoryResource
                 $current_user
             );
         } catch (GitUserNotAdminException $exception) {
-            throw new RestException(401, "User is not Git administrator.");
+            throw new RestException(403, "User is not Git administrator.");
         } catch (GitlabRepositoryNotInProjectException | GitlabRepositoryIntegrationNotFoundException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
@@ -352,7 +352,7 @@ final class GitlabRepositoryResource
      *
      * @return GitlabRepositoryRepresentation {@type GitlabRepositoryRepresentation}
      *
-     * @throws RestException 401
+     * @throws RestException 403
      * @throws RestException 404
      * @throws RestException 500
      */
@@ -463,7 +463,7 @@ final class GitlabRepositoryResource
 
                 return $this->buildUpdatedIntegrationRepresentation($id);
             } catch (GitUserNotAdminException $e) {
-                throw new RestException(401, "User must be Git administrator.");
+                throw new RestException(403, "User must be Git administrator.");
             } catch (GitlabRepositoryIntegrationNotFoundException $e) {
                 throw new RestException(404, $e->getMessage());
             }
@@ -493,7 +493,7 @@ final class GitlabRepositoryResource
                     $exception->getMessage()
                 );
             } catch (GitUserNotAdminException $exception) {
-                throw new RestException(401, "User must be Git administrator.");
+                throw new RestException(403, "User must be Git administrator.");
             } catch (GitlabRepositoryIntegrationNotFoundException $exception) {
                 throw new RestException(404, $exception->getMessage());
             }
