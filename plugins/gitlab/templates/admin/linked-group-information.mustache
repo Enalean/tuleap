@@ -68,7 +68,7 @@
                     {{# dgettext }}tuleap-gitlab | Synchronize {{/ dgettext }}
                 </button>
 
-                <button type="button" class="tlp-button-primary tlp-button-outline gitlab-linked-group-hidden-button" disabled>
+                <button type="button" class="tlp-button-primary tlp-button-outline" id="edit-token-button">
                     <i class="fa-solid fa-key tlp-button-icon" aria-hidden="true"></i>
                     {{# dgettext }}tuleap-gitlab | Update token {{/ dgettext }}
                 </button>
@@ -149,6 +149,67 @@
             <button type="submit" class="tlp-button-primary tlp-modal-action" id="edit-config-confirm">
                 <i id="edit-icon" class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
                 {{# dgettext }}tuleap-gitlab | Update configuration{{/ dgettext }}
+            </button>
+        </div>
+    </form>
+</div>
+
+<div id="token-modal" class="tlp-modal" role="dialog" aria-labelledby="token-modal-title">
+    <form action="" id="token-modal-form">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="token-modal-title">
+                {{# dgettext }}tuleap-gitlab | Edit access token{{/ dgettext }}
+            </h1>
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-gitlab | Close{{/ dgettext }}">
+                <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-feedback gitlab-modal-feedback-hidden" id="token-modal-feedback">
+            <div class="tlp-alert-danger" id="token-modal-alert"></div>
+        </div>
+        <div class="tlp-modal-body">
+            <div class="tlp-property">
+                <label class="tlp-label">{{# dgettext }}tuleap-gitlab | GitLab server URL{{/ dgettext }}</label>
+                <p>{{ gitlab_url }}</p>
+            </div>
+            <div class="tlp-property">
+                <label class="tlp-label">{{# dgettext }}tuleap-gitlab | GitLab group {{/ dgettext }}</label>
+                <p>
+                    <span class="gitlab-group-avatar-container">
+                        {{# avatar_url }}
+                            <img src="{{ avatar_url }}" alt="{{ group_path }}" class="gitlab-group-avatar"/>
+                        {{/ avatar_url }}
+                        {{^ avatar_url }}
+                            <span class="default-gitlab-group-avatar gitlab-group-avatar">{{ first_letter_of_group_name }}</span>
+                        {{/ avatar_url }}
+                    </span>{{ group_name }}<span class="tlp-text-muted gitlab-group-full-path">({{ group_path }})</span>
+                </p>
+            </div>
+            <div class="tlp-form-element" data-form-element>
+                <label for="token-modal-token-input" class="tlp-label">
+                    {{# dgettext }}tuleap-gitlab | GitLab access token{{/ dgettext }}
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <input
+                    type="password"
+                    class="tlp-input"
+                    id="token-modal-token-input"
+                    required
+                    autocomplete="off"
+                >
+                <p class="tlp-text-info">
+                    <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | GitLab access token scope must contain at least: api.{{/ dgettext }}
+                </p>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# dgettext }}tuleap-gitlab | Cancel{{/ dgettext }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action" id="token-modal-confirm" disabled>
+                {{# dgettext }}tuleap-gitlab | Save token{{/ dgettext }}
+                <i id="token-icon" class="fa-solid fa-long-arrow-alt-right tlp-button-icon-right" aria-hidden="true"></i>
             </button>
         </div>
     </form>

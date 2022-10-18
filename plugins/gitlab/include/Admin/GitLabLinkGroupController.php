@@ -32,6 +32,7 @@ use TemplateRenderer;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Gitlab\Group\CountIntegratedRepositories;
+use Tuleap\Gitlab\Group\GitlabServerURIDeducer;
 use Tuleap\Gitlab\Group\RetrieveGroupLinkedToProject;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\JavascriptAssetGeneric;
@@ -55,6 +56,7 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
         private TemplateRenderer $renderer,
         private RetrieveGroupLinkedToProject $group_link_retriever,
         private CountIntegratedRepositories $repositories_counter,
+        private GitlabServerURIDeducer $server_uri_deducer,
     ) {
     }
 
@@ -81,7 +83,13 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
 
         if ($group_link) {
             $number_of_repositories = $this->repositories_counter->countIntegratedRepositories($group_link);
-            $presenter              = new LinkedGroupPresenter($panes_presenter, $project, $group_link, $number_of_repositories);
+            $presenter              = new LinkedGroupPresenter(
+                $panes_presenter,
+                $project,
+                $group_link,
+                $this->server_uri_deducer->deduceServerURI($group_link),
+                $number_of_repositories,
+            );
 
             $layout->addJavascriptAsset($this->linked_group_assets);
             $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);

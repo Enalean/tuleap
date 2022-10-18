@@ -42,6 +42,9 @@ msgstr "Fermée"
 msgid "Create GitLab branch and merge request"
 msgstr "Créer une branche et une demande de fusion GitLab"
 
+msgid "Edit access token"
+msgstr "Éditer le jeton d'accès"
+
 msgid "Edit configuration"
 msgstr "Modifier la configuration"
 
@@ -62,6 +65,12 @@ msgstr "Lien vers un groupe GitLab"
 
 msgid "GitLab Tag"
 msgstr "Étiquette GitLab"
+
+msgid "GitLab access token"
+msgstr "Jeton d'accès de GitLab"
+
+msgid "GitLab access token scope must contain at least: api."
+msgstr "La portée du jeton d'accès de GitLab doit contenir au moins : api."
 
 msgid "GitLab branch"
 msgstr "Branche GitLab"
@@ -156,6 +165,9 @@ msgstr "Référence vers une demande de fusion GitLab"
 
 msgid "Reference to a GitLab tag"
 msgstr "Référence vers une étiquette GitLab"
+
+msgid "Save token"
+msgstr "Sauvegarder le jeton"
 
 msgid "Status"
 msgstr "Statut"

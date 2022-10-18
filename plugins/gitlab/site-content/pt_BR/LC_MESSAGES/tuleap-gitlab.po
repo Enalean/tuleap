@@ -34,6 +34,9 @@ msgstr ""
 msgid "Create GitLab branch and merge request"
 msgstr ""
 
+msgid "Edit access token"
+msgstr ""
+
 msgid "Edit configuration"
 msgstr ""
 
@@ -51,6 +54,12 @@ msgid "GitLab Group Link"
 msgstr ""
 
 msgid "GitLab Tag"
+msgstr ""
+
+msgid "GitLab access token"
+msgstr ""
+
+msgid "GitLab access token scope must contain at least: api."
 msgstr ""
 
 msgid "GitLab branch"
@@ -137,6 +146,9 @@ msgid "Reference to a GitLab merge request"
 msgstr ""
 
 msgid "Reference to a GitLab tag"
+msgstr ""
+
+msgid "Save token"
 msgstr ""
 
 msgid "Status"

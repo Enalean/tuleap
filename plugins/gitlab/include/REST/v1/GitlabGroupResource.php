@@ -45,6 +45,7 @@ use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\Group\GitlabGroupInformationRetriever;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Core\ProjectRetriever;
+use Tuleap\Gitlab\Group\GitlabServerURIDeducer;
 use Tuleap\Gitlab\Group\GroupLinkDAO;
 use Tuleap\Gitlab\Group\GroupLinkFactory;
 use Tuleap\Gitlab\Group\GroupLinkCreator;
@@ -432,7 +433,7 @@ final class GitlabGroupResource
             $transaction_executor,
             new GroupLinkRetriever($group_dao),
             new GroupLinkCredentialsRetriever(
-                HTTPFactoryBuilder::URIFactory(),
+                new GitlabServerURIDeducer(HTTPFactoryBuilder::URIFactory()),
                 new GroupLinkTokenRetriever($group_token_dao, $key_factory),
             ),
             new GitlabProjectBuilder($gitlab_api_client),

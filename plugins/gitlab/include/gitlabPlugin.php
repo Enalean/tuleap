@@ -999,7 +999,8 @@ class gitlabPlugin extends Plugin
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
             new GroupLinkDAO(),
-            new GroupLinkRepositoryIntegrationDAO()
+            new GroupLinkRepositoryIntegrationDAO(),
+            new \Tuleap\Gitlab\Group\GitlabServerURIDeducer(HTTPFactoryBuilder::URIFactory())
         );
     }
 }

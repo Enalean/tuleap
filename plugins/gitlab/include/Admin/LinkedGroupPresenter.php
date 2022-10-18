@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Admin;
 
+use Psr\Http\Message\UriInterface;
 use Tuleap\Gitlab\Group\GroupLink;
 
 /**
@@ -46,6 +47,7 @@ final class LinkedGroupPresenter
         public GitLabLinkGroupPanePresenter $administration_pane,
         \Project $project,
         GroupLink $group_link,
+        UriInterface $gitlab_url,
         public int $number_of_integrated_projects_in_last_sync,
     ) {
         $this->group_id                   = $group_link->id;
@@ -58,7 +60,7 @@ final class LinkedGroupPresenter
             : dgettext('tuleap-gitlab', 'No');
         $this->branch_prefix              = $group_link->prefix_branch_name;
         $this->has_branch_prefix          = $group_link->prefix_branch_name !== '';
-        $this->gitlab_url                 = $group_link->web_url;
+        $this->gitlab_url                 = (string) $gitlab_url;
         $this->avatar_url                 = $group_link->avatar_url;
         $this->current_project_label      = $project->getPublicName();
 

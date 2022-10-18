@@ -46,6 +46,24 @@ final class GroupLinkBuilder
         return new self($group_link_id);
     }
 
+    public function withName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function withWebURL(string $web_url): self
+    {
+        $this->web_url = $web_url;
+        return $this;
+    }
+
+    public function withFullPath(string $full_path): self
+    {
+        $this->full_path = $full_path;
+        return $this;
+    }
+
     public function withAllowArtifactClosure(bool $allow_artifact_closure): self
     {
         $this->allow_artifact_closure = $allow_artifact_closure;
