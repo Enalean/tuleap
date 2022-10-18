@@ -18,7 +18,7 @@
  */
 
 import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
-import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getDatasetItemOrThrow, selectOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
 import { EditConfigurationModal } from "./EditConfigurationModal";
 import { UnlinkModal } from "./UnlinkModal";
@@ -26,6 +26,7 @@ import { SynchronizeButton } from "./SynchronizeButton";
 import "../themes/main.scss";
 
 const UNLINK_SELECTOR = "#unlink-button";
+const SECTION_SELECTOR = "#buttons-section";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getDatasetItemOrThrow(document.body, "userLocale");
@@ -35,9 +36,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
 
+    const buttons_section = selectOrThrow(document.body, SECTION_SELECTOR);
+    const group_id = Number.parseInt(getDatasetItemOrThrow(buttons_section, "groupId"), 10);
+
     openAllTargetModalsOnClick(document, UNLINK_SELECTOR);
 
-    SynchronizeButton(document, gettext_provider).init();
-    EditConfigurationModal(document, gettext_provider).init();
-    UnlinkModal(document.location, document, gettext_provider).init();
+    SynchronizeButton(document, gettext_provider, group_id).init();
+    EditConfigurationModal(document, gettext_provider, group_id).init();
+    UnlinkModal(document.location, document, gettext_provider, group_id).init();
 });

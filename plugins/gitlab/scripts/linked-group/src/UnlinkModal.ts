@@ -18,7 +18,7 @@
  */
 
 import { del } from "@tuleap/fetch-result";
-import { getDatasetItemOrThrow, selectOrThrow } from "@tuleap/dom";
+import { selectOrThrow } from "@tuleap/dom";
 import type { GetText } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
 import { FEEDBACK_HIDDEN_CLASSNAME, SPIN_CLASSNAME, SPINNER_CLASSNAME } from "./classnames";
@@ -37,7 +37,8 @@ type UnlinkModalType = {
 export const UnlinkModal = (
     loc: Location,
     doc: Document,
-    gettext_provider: GetText
+    gettext_provider: GetText,
+    group_id: number
 ): UnlinkModalType => {
     const unlink_modal = selectOrThrow(doc, UNLINK_MODAL_SELECTOR);
     const modal_feedback = selectOrThrow(unlink_modal, UNLINK_MODAL_FEEDBACK_SELECTOR);
@@ -56,8 +57,6 @@ export const UnlinkModal = (
     };
 
     const onClick = (): void => {
-        const group_id = getDatasetItemOrThrow(confirm_unlink_button, "groupId");
-
         modal_feedback.classList.add(FEEDBACK_HIDDEN_CLASSNAME);
 
         toggleLoadingState(true);

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getDatasetItemOrThrow, selectOrThrow } from "@tuleap/dom";
+import { selectOrThrow } from "@tuleap/dom";
 import { postJSON } from "@tuleap/fetch-result";
 import type { GetText } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
@@ -46,7 +46,8 @@ type SynchronizeButtonType = {
 
 export const SynchronizeButton = (
     doc: Document,
-    gettext_provider: GetText
+    gettext_provider: GetText,
+    group_id: number
 ): SynchronizeButtonType => {
     const button = selectOrThrow(doc, SYNCHRONIZE_BUTTON_SELECTOR, HTMLButtonElement);
     const button_icon = selectOrThrow(button, SYNCHRONIZE_BUTTON_ICON_SELECTOR);
@@ -74,8 +75,6 @@ export const SynchronizeButton = (
     };
 
     const onClick = async (): Promise<void> => {
-        const group_id = getDatasetItemOrThrow(button, "groupId");
-
         feedback.classList.add(FEEDBACK_HIDDEN_CLASSNAME);
         toggleLoadingState(true);
         await postJSON<SynchronizationResponse>(

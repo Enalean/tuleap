@@ -49,7 +49,7 @@ const noop = (): void => {
     // Do nothing;
 };
 
-const GROUP_ID = 33;
+const GROUP_LINK_ID = 33;
 const BRANCH_PREFIX = "dev-";
 
 describe(`EditConfigurationModal`, () => {
@@ -86,7 +86,7 @@ describe(`EditConfigurationModal`, () => {
                   <i id="edit-config-branch-prefix-icon"></i>
                   <input type="text" id="edit-config-branch-prefix">
                 </div>
-                <button type="submit" id="edit-config-confirm" data-group-id="${GROUP_ID}">
+                <button type="submit" id="edit-config-confirm">
                   <i id="edit-icon" class="${EDIT_ICON_CLASSNAME}"></i>
                 </button>
               </form>
@@ -99,7 +99,7 @@ describe(`EditConfigurationModal`, () => {
         } as tlp_modal.Modal;
         jest.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
 
-        EditConfigurationModal(doc, gettext).init();
+        EditConfigurationModal(doc, gettext, GROUP_LINK_ID).init();
         body = doc.body;
         edit_button = selectOrThrow(doc, EDIT_CONFIG_SELECTOR, HTMLButtonElement);
         edit_modal = selectOrThrow(doc, EDIT_CONFIGURATION_MODAL_SELECTOR);
@@ -204,7 +204,7 @@ describe(`EditConfigurationModal`, () => {
             await result;
 
             assertLoadingState(false);
-            expect(patchSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_ID}`, {
+            expect(patchSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_LINK_ID}`, {
                 allow_artifact_closure: true,
                 create_branch_prefix: BRANCH_PREFIX,
             });
@@ -229,7 +229,7 @@ describe(`EditConfigurationModal`, () => {
             confirm_button.click();
             await result;
 
-            expect(patchSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_ID}`, {
+            expect(patchSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_LINK_ID}`, {
                 allow_artifact_closure: true,
                 create_branch_prefix: "",
             });
