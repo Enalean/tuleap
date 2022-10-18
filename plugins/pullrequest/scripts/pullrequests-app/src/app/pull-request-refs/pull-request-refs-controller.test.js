@@ -18,7 +18,7 @@
  */
 
 import angular from "angular";
-import tuleap_pullrequest_module from "../../app/app.js";
+import tuleap_pullrequest_module from "../app.js";
 import pullrequest_refs_controller from "./pull-request-refs-controller.js";
 
 import "angular-mocks";
