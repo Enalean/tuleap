@@ -47,7 +47,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
     public function testProvidesJWToken(): void
     {
         $token_provider = self::buildTokenProvider(
-            Result::ok(new OnlyOfficeDocumentConfig('docx', 'key', 'Doc.docx', 'https://example.com/download'))
+            Result::ok(new OnlyOfficeDocumentConfig('docx', 'key', 'Doc.docx', 'https://example.com/download', true))
         );
 
         $root = vfsStream::setup()->url();
@@ -73,10 +73,10 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
         );
 
         self::assertEquals(
-            ['fileType' => 'docx', 'key' => 'key', 'title' => 'Doc.docx', 'url' => 'https://example.com/download', 'permissions' => ['chat' => false, 'print' => false]],
+            ['fileType' => 'docx', 'key' => 'key', 'title' => 'Doc.docx', 'url' => 'https://example.com/download', 'permissions' => ['chat' => false, 'print' => false, 'edit' => true]],
             $parsed_token->claims()->get('document')
         );
-        self::assertEquals(['mode' => 'view', 'lang' => 'en', 'region' => 'en-US', 'user' => ['id' => '110', 'name' => 'User #110']], $parsed_token->claims()->get('editorConfig'));
+        self::assertEquals(['lang' => 'en', 'region' => 'en-US', 'user' => ['id' => '110', 'name' => 'User #110']], $parsed_token->claims()->get('editorConfig'));
     }
 
     public function testReturnsFaultWhenDocumentConfigCannotBeProvided(): void

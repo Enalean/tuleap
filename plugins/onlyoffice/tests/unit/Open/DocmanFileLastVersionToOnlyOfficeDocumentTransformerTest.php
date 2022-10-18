@@ -53,6 +53,7 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
             new DocmanFileLastVersion(
                 new \Docman_File(['group_id' => self::PROJECT_ID]),
                 new \Docman_Version(['filename' => 'spec.docx']),
+                true,
             ),
         );
 
@@ -66,14 +67,18 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
         $result = $provider->transformToOnlyOfficeDocument(
             new DocmanFileLastVersion(
                 new \Docman_File(['group_id' => self::PROJECT_ID]),
-                new \Docman_Version(['filename' => 'not_something_onlyoffice_can_open'])
+                new \Docman_Version(['filename' => 'not_something_onlyoffice_can_open']),
+                false,
             ),
         );
 
         self::assertTrue(Result::isErr($result));
     }
 
-    public function testHappyPath(): void
+    /**
+     * @dataProvider dataProviderHappyPath
+     */
+    public function testHappyPath(string $filename, bool $user_can_write_it, bool $expected_can_be_edited): void
     {
         $provider = $this->getTransformer(self::ONLYOFFICE_IS_AVAILABLE);
 
@@ -81,13 +86,25 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
         $result = $provider->transformToOnlyOfficeDocument(
             new DocmanFileLastVersion(
                 $item,
-                new \Docman_Version(['filename' => 'spec.docx'])
+                new \Docman_Version(['filename' => $filename]),
+                $user_can_write_it,
             ),
         );
 
         self::assertTrue(Result::isOk($result));
         self::assertSame($item, $result->unwrapOr(null)->item);
         self::assertSame($this->project, $result->unwrapOr(null)->project);
+        self::assertSame($expected_can_be_edited, $result->unwrapOr(null)->can_be_edited);
+    }
+
+    public function dataProviderHappyPath(): array
+    {
+        return [
+            'Editable document user can write' => ['spec.docx', true, true],
+            'Editable document user cannot write' => ['spec.docx', false, false],
+            'Non editable document user can write' => ['spec.csv', true, false],
+            'Non editable document user cannot write' => ['spec.csv', false, false],
+        ];
     }
 
     private function getTransformer(

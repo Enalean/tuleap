@@ -28,13 +28,15 @@ namespace Tuleap\OnlyOffice\Open\Editor;
  */
 final class OnlyOfficeDocumentConfig
 {
-    public array $permissions = ['chat' => false, 'print' => false];
+    public array $permissions;
 
     public function __construct(
         public string $fileType,
         public string $key,
         public string $title,
         public string $url,
+        bool $can_be_edited,
     ) {
+        $this->permissions = ['chat' => false, 'print' => false, 'edit' => $can_be_edited];
     }
 }

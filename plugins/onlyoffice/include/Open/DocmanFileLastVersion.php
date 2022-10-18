@@ -27,7 +27,7 @@ namespace Tuleap\OnlyOffice\Open;
  */
 final class DocmanFileLastVersion
 {
-    public function __construct(public \Docman_Item $item, public \Docman_Version $version)
+    public function __construct(public \Docman_Item $item, public \Docman_Version $version, public bool $can_be_edited)
     {
     }
 }

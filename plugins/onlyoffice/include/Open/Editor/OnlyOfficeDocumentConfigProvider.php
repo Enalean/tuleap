@@ -56,7 +56,8 @@ final class OnlyOfficeDocumentConfigProvider implements ProvideOnlyOfficeConfigD
                             pathinfo($document->filename, PATHINFO_EXTENSION),
                             sprintf('tuleap_document_%d_%d', $document->item->getId(), $document->version_id),
                             $document->filename,
-                            ServerHostname::HTTPSUrl() . '/onlyoffice/document_download?token=' . urlencode($token->getString())
+                            ServerHostname::HTTPSUrl() . '/onlyoffice/document_download?token=' . urlencode($token->getString()),
+                            $document->can_be_edited,
                         )
                     );
                 }

@@ -22,12 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
+use Tuleap\Docman\FilenamePattern\RetrieveFilenamePattern;
+use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class DocmanFileLastVersionProviderTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     private const PROJECT_ID = 102;
 
     /**
@@ -42,17 +47,11 @@ final class DocmanFileLastVersionProviderTest extends TestCase
      * @var \Docman_PermissionsManager&\PHPUnit\Framework\MockObject\Stub
      */
     private $permissions_manager;
-    private DocmanFileLastVersionProvider $provider;
 
     protected function setUp(): void
     {
         $this->item_factory    = $this->createStub(\Docman_ItemFactory::class);
         $this->version_factory = $this->createStub(\Docman_VersionFactory::class);
-
-        $this->provider = new DocmanFileLastVersionProvider(
-            $this->item_factory,
-            $this->version_factory,
-        );
 
         $this->permissions_manager = $this->createStub(\Docman_PermissionsManager::class);
         \Docman_PermissionsManager::setInstance(self::PROJECT_ID, $this->permissions_manager);
@@ -63,26 +62,53 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         \Docman_PermissionsManager::clearInstances();
     }
 
-    public function testCanRetrieveTheLastVersionOfADocmanFile(): void
-    {
+    /**
+     * @dataProvider dataProviderLastVersionFileEdit
+     */
+    public function testCanRetrieveTheLastVersionOfADocmanFile(
+        bool $user_can_write,
+        RetrieveFilenamePattern $filename_pattern_retriever,
+        bool $feature_flag_edition_is_enabled,
+        bool $expected_can_be_edited,
+    ): void {
         $item = new \Docman_File(['group_id' => self::PROJECT_ID]);
         $this->item_factory->method('getItemFromDb')->willReturn($item);
         $this->permissions_manager->method('userCanAccess')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->willReturn($user_can_write);
         $expected_version = new \Docman_Version();
         $this->version_factory->method('getCurrentVersionForItem')->willReturn($expected_version);
 
-        $result = $this->provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 741);
+        if ($feature_flag_edition_is_enabled) {
+            \ForgeConfig::setFeatureFlag('onlyoffice_edit_document', '1');
+        }
+
+        $provider = $this->buildProvider($filename_pattern_retriever);
+
+        $result = $provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 741);
 
         self::assertTrue(Result::isOk($result));
         self::assertSame($item, $result->unwrapOr(null)->item);
         self::assertSame($expected_version, $result->unwrapOr(null)->version);
+        self::assertSame($expected_can_be_edited, $result->unwrapOr(null)->can_be_edited);
+    }
+
+    public function dataProviderLastVersionFileEdit(): array
+    {
+        return [
+            'Document can be edited in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), true, true],
+            'Feature flag to allow edition is disabled' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), false, false],
+            'User cannot edit the document' => [false, FilenamePatternRetrieverStub::buildWithNoPattern(), true, false],
+            'Filename pattern prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithPattern('something'), true, false],
+        ];
     }
 
     public function testCannotRetrieveANonExistingFile(): void
     {
         $this->item_factory->method('getItemFromDb')->willReturn(null);
 
-        $result = $this->provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 404);
+        $provider = $this->buildProvider(FilenamePatternRetrieverStub::buildWithNoPattern());
+
+        $result = $provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 404);
 
         self::assertTrue(Result::isErr($result));
     }
@@ -91,7 +117,9 @@ final class DocmanFileLastVersionProviderTest extends TestCase
     {
         $this->item_factory->method('getItemFromDb')->willReturn(new \Docman_Folder());
 
-        $result = $this->provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 999);
+        $provider = $this->buildProvider(FilenamePatternRetrieverStub::buildWithNoPattern());
+
+        $result = $provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 999);
 
         self::assertTrue(Result::isErr($result));
     }
@@ -101,7 +129,9 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         $this->item_factory->method('getItemFromDb')->willReturn(new \Docman_File(['group_id' => self::PROJECT_ID]));
         $this->permissions_manager->method('userCanAccess')->willReturn(false);
 
-        $result = $this->provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 403);
+        $provider = $this->buildProvider(FilenamePatternRetrieverStub::buildWithNoPattern());
+
+        $result = $provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 403);
 
 
         self::assertTrue(Result::isErr($result));
@@ -113,8 +143,20 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         $this->permissions_manager->method('userCanAccess')->willReturn(true);
         $this->version_factory->method('getCurrentVersionForItem')->willReturn(null);
 
-        $result = $this->provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 852);
+        $provider = $this->buildProvider(FilenamePatternRetrieverStub::buildWithNoPattern());
+
+        $result = $provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 852);
 
         self::assertTrue(Result::isErr($result));
+    }
+
+    private function buildProvider(
+        RetrieveFilenamePattern $filename_pattern_retriever,
+    ): DocmanFileLastVersionProvider {
+        return new DocmanFileLastVersionProvider(
+            $this->item_factory,
+            $this->version_factory,
+            $filename_pattern_retriever,
+        );
     }
 }

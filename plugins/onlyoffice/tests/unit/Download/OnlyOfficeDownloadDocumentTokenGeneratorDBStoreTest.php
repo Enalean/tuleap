@@ -49,7 +49,7 @@ final class OnlyOfficeDownloadDocumentTokenGeneratorDBStoreTest extends TestCase
 
         $token = $token_generator->generateDownloadToken(
             $user,
-            new OnlyOfficeDocument(ProjectTestBuilder::aProject()->build(), $item, 123, 'document.docx'),
+            new OnlyOfficeDocument(ProjectTestBuilder::aProject()->build(), $item, 123, 'document.docx', true),
             new \DateTimeImmutable('@10'),
         );
 

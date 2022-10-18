@@ -32,7 +32,9 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\Download\DocmanFileDownloadController;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
+use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\REST\v1\OpenItemHref;
+use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -50,6 +52,7 @@ use Tuleap\OnlyOffice\Open\DocmanFileLastVersionProvider;
 use Tuleap\OnlyOffice\Open\DocmanFileLastVersionToOnlyOfficeDocumentTransformer;
 use Tuleap\OnlyOffice\Open\OnlyOfficeEditorController;
 use Tuleap\OnlyOffice\Open\OpenInOnlyOfficeController;
+use Tuleap\OnlyOffice\Open\ProvideDocmanFileLastVersion;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -97,6 +100,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(OnlyOfficeDocumentServerSettings::class);
+        $event->addConfigClass(ProvideDocmanFileLastVersion::class);
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $routes): void
@@ -150,7 +154,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         );
 
         $result = $transformer->transformToOnlyOfficeDocument(
-            new \Tuleap\OnlyOffice\Open\DocmanFileLastVersion($open_item_href->getItem(), $open_item_href->getVersion())
+            new \Tuleap\OnlyOffice\Open\DocmanFileLastVersion($open_item_href->getItem(), $open_item_href->getVersion(), false)
         );
         if (\Tuleap\NeverThrow\Result::isOk($result)) {
             $open_item_href->setHref(
@@ -166,7 +170,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         return new OpenInOnlyOfficeController(
             UserManager::instance(),
             new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
-                new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
+                new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory(), new FilenamePatternRetriever(new SettingsDAO())),
                 new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
                     new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger),
                     ProjectManager::instance(),
@@ -187,7 +191,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeGlobalEditorJWTokenProvider(
                 new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeDocumentConfigProvider(
                     new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
-                        new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
+                        new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory(), new FilenamePatternRetriever(new SettingsDAO())),
                         new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
                             new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, BackendLogger::getDefaultLogger()),
                             ProjectManager::instance(),

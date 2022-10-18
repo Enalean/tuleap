@@ -82,4 +82,31 @@ final class AllowedFileExtensionsTest extends TestCase
             ['md', false],
         ];
     }
+
+    /**
+     * @dataProvider getEditableExtensionsToTest
+     */
+    public function testIsFilenameAllowedToBeEditedInOnlyOffice(string $ext, bool $expected): void
+    {
+        self::assertSame(
+            $expected,
+            AllowedFileExtensions::isFilenameAllowedToBeEditedInOnlyOffice("myfile.$ext"),
+            "Mismatch for .{$ext} extension",
+        );
+    }
+
+    public function getEditableExtensionsToTest(): array
+    {
+        return [
+            ['docx', true],
+            ['DOCX', true],
+            ['docxf', true],
+            ['oform', true],
+            ['ppsx', true],
+            ['pptx', true],
+            ['xlsx', true],
+            ['md', false],
+            ['epub', false],
+        ];
+    }
 }

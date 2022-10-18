@@ -28,8 +28,6 @@ namespace Tuleap\OnlyOffice\Open\Editor;
  */
 final class OnlyOfficeEditorConfig
 {
-    public string $mode = 'view';
-
     private function __construct(
         public string $lang,
         public string $region,

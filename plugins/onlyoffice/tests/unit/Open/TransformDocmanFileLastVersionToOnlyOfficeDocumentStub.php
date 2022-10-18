@@ -43,7 +43,7 @@ class TransformDocmanFileLastVersionToOnlyOfficeDocumentStub implements Transfor
 
     public static function buildWithDocmanItem(\Project $project, \Docman_File $item, int $version_id, string $filename): self
     {
-        return new self(Result::ok(new OnlyOfficeDocument($project, $item, $version_id, $filename)));
+        return new self(Result::ok(new OnlyOfficeDocument($project, $item, $version_id, $filename, true)));
     }
 
     public function transformToOnlyOfficeDocument(DocmanFileLastVersion $file_last_version): Ok|Err

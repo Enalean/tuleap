@@ -46,7 +46,7 @@ final class ProvideDocmanFileLastVersionStub implements ProvideDocmanFileLastVer
 
     public static function buildWithDocmanVersion(\Docman_File $item, \Docman_Version $version): self
     {
-        return new self(Result::ok(new DocmanFileLastVersion($item, $version)));
+        return new self(Result::ok(new DocmanFileLastVersion($item, $version, true)));
     }
 
     public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err
