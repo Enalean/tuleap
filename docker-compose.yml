@@ -119,13 +119,22 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
-  db:
+  db57:
     image: mysql:5.7
     env_file:
       - .env
     volumes:
       - ./src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/conf.d/tuleap.cnf:ro,cached
       - db57-data:/var/lib/mysql
+
+  db:
+    image: mysql:8.0
+    env_file:
+      - .env
+    command: --upgrade=FORCE
+    volumes:
+      - ./src/etc/tuleap-mysql80-dev.cnf:/etc/mysql/conf.d/tuleap.cnf:ro,cached
+      - db80-data:/var/lib/mysql
 
   db-maria-10.3:
      image: mariadb:10.3
@@ -174,6 +183,7 @@ volumes:
   gitlab-data:
   db-data:
   db57-data:
+  db80-data:
   mariadb103-data:
   redis-data:
   realtime-conf:
