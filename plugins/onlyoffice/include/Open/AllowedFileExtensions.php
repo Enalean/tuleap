@@ -62,17 +62,34 @@ final class AllowedFileExtensions
         'xltx',
     ];
 
+    private const EXTENSIONS_THAT_CAN_BE_EDITED = [
+        'docx',
+        'docxf',
+        'oform',
+        'ppsx',
+        'pptx',
+        'xlsx',
+    ];
+
     private function __construct()
     {
     }
 
     public static function isFilenameAllowedToBeOpenInOnlyOffice(string $filename): bool
     {
-        return self::isExtensionAllowedToBeOpenInOnlyOffice(pathinfo($filename, PATHINFO_EXTENSION));
+        return self::isExtensionAllowed(pathinfo($filename, PATHINFO_EXTENSION), self::EXTENSIONS);
     }
 
-    private static function isExtensionAllowedToBeOpenInOnlyOffice(string $extension): bool
+    public static function isFilenameAllowedToBeEditedInOnlyOffice(string $filename): bool
     {
-        return in_array(strtolower($extension), self::EXTENSIONS, true);
+        return self::isExtensionAllowed(pathinfo($filename, PATHINFO_EXTENSION), self::EXTENSIONS_THAT_CAN_BE_EDITED);
+    }
+
+    /**
+     * @param list<string> $allow_list
+     */
+    private static function isExtensionAllowed(string $extension, array $allow_list): bool
+    {
+        return in_array(strtolower($extension), $allow_list, true);
     }
 }

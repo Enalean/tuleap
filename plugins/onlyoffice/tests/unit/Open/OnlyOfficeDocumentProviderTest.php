@@ -27,7 +27,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class OnlyOfficeDocumentProviderTest extends TestCase
+final class OnlyOfficeDocumentProviderTest extends TestCase
 {
     private const ITEM_ID = 123;
     private \Project $project;

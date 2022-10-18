@@ -22,12 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
+#[ConfigKeyCategory('ONLYOFFICE')]
 interface ProvideDocmanFileLastVersion
 {
+    #[FeatureFlagConfigKey("Feature flag to allow editing documents via ONLYOFFICE")]
+    public const FEATURE_FLAG_EDITION = 'onlyoffice_edit_document';
+
     /**
      * @psalm-return Ok<DocmanFileLastVersion>|Err<Fault>
      */

@@ -32,6 +32,7 @@ final class OnlyOfficeDocument
         public \Docman_Item $item,
         public int $version_id,
         public string $filename,
+        public bool $can_be_edited,
     ) {
     }
 }

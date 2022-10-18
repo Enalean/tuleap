@@ -39,7 +39,11 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testProvidesDocumentConfig(): void
+    /**
+     * @testWith [true]
+     *           [false]
+     */
+    public function testProvidesDocumentConfig(bool $can_be_edited): void
     {
         $provider = self::buildProvider(
             Result::ok(
@@ -47,7 +51,8 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
                     ProjectTestBuilder::aProject()->build(),
                     new \Docman_Item(['item_id' => 123]),
                     963,
-                    'something.docx'
+                    'something.docx',
+                    $can_be_edited,
                 )
             )
         );
@@ -57,7 +62,7 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
         \ForgeConfig::set('sys_default_domain', 'example.com');
 
         self::assertEquals(
-            new OnlyOfficeDocumentConfig('docx', 'tuleap_document_123_963', 'something.docx', 'https:///onlyoffice/document_download?token=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
+            new OnlyOfficeDocumentConfig('docx', 'tuleap_document_123_963', 'something.docx', 'https:///onlyoffice/document_download?token=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', $can_be_edited),
             $result->unwrapOr(null)
         );
     }

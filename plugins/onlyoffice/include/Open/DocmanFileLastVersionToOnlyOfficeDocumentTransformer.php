@@ -65,7 +65,8 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformer implements TransformD
                 $project,
                 $file_last_version->item,
                 (int) $file_last_version->version->getId(),
-                $filename
+                $filename,
+                $file_last_version->can_be_edited && AllowedFileExtensions::isFilenameAllowedToBeEditedInOnlyOffice($filename)
             )
         );
     }

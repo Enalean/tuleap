@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
+use Tuleap\Docman\FilenamePattern\RetrieveFilenamePattern;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -33,6 +34,7 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
     public function __construct(
         private \Docman_ItemFactory $item_factory,
         private \Docman_VersionFactory $version_factory,
+        private RetrieveFilenamePattern $filename_pattern_retriever,
     ) {
     }
 
@@ -52,8 +54,9 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
             return Result::err(Fault::fromMessage(sprintf('Item #%d is not a file', $item_id)));
         }
 
-        $docman_permissions_manager = \Docman_PermissionsManager::instance($item->getGroupId());
-        if (! $docman_permissions_manager->userCanAccess($user, $item->getId())) {
+        $project_id                 = $item->getGroupId();
+        $docman_permissions_manager = \Docman_PermissionsManager::instance($project_id);
+        if (! $docman_permissions_manager->userCanAccess($user, $item_id)) {
             return Result::err(Fault::fromMessage(sprintf('User #%d cannot access file #%d', $user->getId(), $item_id)));
         }
 
@@ -62,8 +65,13 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
             return Result::err(Fault::fromMessage(sprintf('Cannot find current version of file #%d', $item_id)));
         }
 
+        $can_write = false;
+        if (\ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_EDITION) === '1') {
+            $can_write = (! $this->filename_pattern_retriever->getPattern($project_id)->isEnforced()) && $docman_permissions_manager->userCanWrite($user, $item_id);
+        }
+
         return Result::ok(
-            new DocmanFileLastVersion($item, $version)
+            new DocmanFileLastVersion($item, $version, $can_write)
         );
     }
 }
