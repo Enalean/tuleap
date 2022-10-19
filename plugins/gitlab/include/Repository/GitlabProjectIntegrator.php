@@ -57,9 +57,9 @@ final class GitlabProjectIntegrator implements IntegrateGitlabProject
     public function integrateSeveralProjects(IntegrateRepositoriesInGroupLinkCommand $command): Ok|Err
     {
         foreach ($command->gitlab_projects as $gitlab_project) {
-            $result = $this->integrateOneProject($gitlab_project, $command->project, $command->credentials, $command->group_link);
+            $result = $this->linkIntegrationToGroup($gitlab_project, $command->project, $command->credentials, $command->group_link);
             if (Result::isErr($result)) {
-                return Result::err($result->error);
+                return $result;
             }
         }
         return Result::ok(null);
@@ -68,50 +68,57 @@ final class GitlabProjectIntegrator implements IntegrateGitlabProject
     /**
      * @return Ok<null>|Err<Fault>
      */
-    private function integrateOneProject(
+    private function linkIntegrationToGroup(
         GitlabProject $gitlab_project,
         Project $project,
         Credentials $credentials,
         GroupLink $gitlab_group,
     ): Ok|Err {
-        $integration_result = $this->repository_integration_retriever->getOneIntegration($project, $gitlab_project);
+        return $this->repository_integration_retriever->getOneIntegration($project, $gitlab_project)
+            ->orElse(fn() => $this->createRepositoryIntegration($gitlab_project, $project, $credentials, $gitlab_group))
+            ->map(function (GitlabRepositoryIntegration $integration) use ($gitlab_group) {
+                $is_integration_already_linked_to_a_group = $this->verify_repository_integrations_already_linked->isRepositoryIntegrationAlreadyLinkedToAGroup(
+                    $integration->getId()
+                );
+                if (! $is_integration_already_linked_to_a_group) {
+                    $this->link_integration_to_group->linkARepositoryIntegrationToAGroup(
+                        new NewRepositoryIntegrationLinkedToAGroup($integration->getId(), $gitlab_group->id)
+                    );
+                }
+                return null;
+            });
+    }
 
-        if (Result::isOk($integration_result)) {
-            $integration = $integration_result->value;
-        } else {
-            $configuration = $gitlab_group->allow_artifact_closure
-                ? GitlabRepositoryCreatorConfiguration::buildConfigurationAllowingArtifactClosure()
-                : GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration();
-            try {
-                $integration = $this->gitlab_repository_creator->createGitlabRepositoryIntegration(
-                    $credentials,
-                    $gitlab_project,
-                    $project,
-                    $configuration
-                );
-            } catch (GitlabRequestException $e) {
-                return Result::err(GitlabRequestFault::fromGitlabRequestException($e));
-            } catch (GitlabResponseAPIException $e) {
-                return Result::err(GitlabResponseAPIFault::fromGitlabResponseAPIException($e));
-            }
-            if ($gitlab_group->prefix_branch_name !== "") {
-                $this->branch_prefix_saver->setCreateBranchPrefixForIntegration(
-                    $integration->getId(),
-                    $gitlab_group->prefix_branch_name
-                );
-            }
+    /**
+     * @return Ok<GitlabRepositoryIntegration> | Err<Fault>
+     */
+    private function createRepositoryIntegration(
+        GitlabProject $gitlab_project,
+        Project $project,
+        Credentials $credentials,
+        GroupLink $gitlab_group,
+    ): Ok|Err {
+        $configuration = $gitlab_group->allow_artifact_closure
+            ? GitlabRepositoryCreatorConfiguration::buildConfigurationAllowingArtifactClosure()
+            : GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration();
+        try {
+            $integration = $this->gitlab_repository_creator->createGitlabRepositoryIntegration(
+                $credentials,
+                $gitlab_project,
+                $project,
+                $configuration
+            );
+        } catch (GitlabRequestException $e) {
+            return Result::err(GitlabRequestFault::fromGitlabRequestException($e));
+        } catch (GitlabResponseAPIException $e) {
+            return Result::err(GitlabResponseAPIFault::fromGitlabResponseAPIException($e));
         }
-
-        $is_integration_already_linked_to_a_group = $this->verify_repository_integrations_already_linked->isRepositoryIntegrationAlreadyLinkedToAGroup($integration->getId());
-
-        if (! $is_integration_already_linked_to_a_group) {
-            $this->link_integration_to_group->linkARepositoryIntegrationToAGroup(
-                new NewRepositoryIntegrationLinkedToAGroup(
-                    $integration->getId(),
-                    $gitlab_group->id
-                )
+        if ($gitlab_group->prefix_branch_name !== '') {
+            $this->branch_prefix_saver->setCreateBranchPrefixForIntegration(
+                $integration->getId(),
+                $gitlab_group->prefix_branch_name
             );
         }
-        return Result::ok(null);
+        return Result::ok($integration);
     }
 }

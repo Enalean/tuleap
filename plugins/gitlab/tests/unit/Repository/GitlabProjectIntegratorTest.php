@@ -45,32 +45,25 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class GitlabProjectIntegratorTest extends TestCase
 {
-    private const PROJECT_ID = 101;
-
-    private Project $project;
-
     private CreateGitlabRepositoriesStub $gitlab_repository_creator;
     private VerifyRepositoryIntegrationsAlreadyLinkedStub $is_repository_integration_already_linked;
     private SaveIntegrationBranchPrefixStub $branch_prefix_saver;
     private LinkARepositoryIntegrationToAGroupStub $repository_integration_group_link;
     private RetrieveIntegrationDaoStub $integration_retriever_dao;
+    private Project $project;
     private GroupLink $group_link;
-
 
     protected function setUp(): void
     {
         $this->group_link = GroupLinkBuilder::aGroupLink(3)->build();
 
-        $this->project      = ProjectTestBuilder::aProject()
-                                                ->withId(self::PROJECT_ID)
-                                                ->withPublicName('exegetist')
-                                                ->build();
+        $this->project      = ProjectTestBuilder::aProject()->withPublicName('exegetist')->build();
         $first_integration  = RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(91)
-                                                          ->inProject($this->project)
-                                                          ->build();
+            ->inProject($this->project)
+            ->build();
         $second_integration = RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(92)
-                                                          ->inProject($this->project)
-                                                          ->build();
+            ->inProject($this->project)
+            ->build();
 
         $this->is_repository_integration_already_linked = VerifyRepositoryIntegrationsAlreadyLinkedStub::withNeverLinked();
 
