@@ -24,6 +24,7 @@ import angular_moment from "angular-moment";
 
 import "angular-gettext";
 import translations from "../../po/fr_FR.po";
+import { setCatalog } from "./gettext-catalog";
 
 import angular_tlp from "@tuleap/angular-tlp";
 
@@ -34,6 +35,8 @@ import InlineCommentComponent from "./file-diff/inline-comment-component.js";
 import FileDiffComponent from "./file-diff/file-diff-component.js";
 import UnidiffComponent from "./file-diff/diff-modes/unidiff-component.js";
 import SideBySideDiffComponent from "./file-diff/diff-modes/side-by-side-diff-component.js";
+import OverviewWrapper from "./overview/overview-wrapper-component.js";
+import VueOverComponent from "./overview/vue-over/vue-over-component.js";
 
 import DashboardDirective from "./dashboard/dashboard-directive.js";
 import PullRequestSummaryDirective from "./dashboard/pull-request-summary/pull-request-summary-directive.js";
@@ -96,6 +99,8 @@ export default angular
     .component("fileDiff", FileDiffComponent)
     .component("fileUnidiff", UnidiffComponent)
     .component("sideBySideDiff", SideBySideDiffComponent)
+    .component("overviewWrapper", OverviewWrapper)
+    .component("vueOverComponent", VueOverComponent)
 
     .directive("dashboard", DashboardDirective)
     .directive("pullRequestSummary", PullRequestSummaryDirective)
@@ -143,6 +148,7 @@ export default angular
         function (gettextCatalog) {
             for (const [language, strings] of Object.entries(translations)) {
                 gettextCatalog.setStrings(language, strings);
+                setCatalog(gettextCatalog);
             }
         },
     ]).name;

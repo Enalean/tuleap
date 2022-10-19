@@ -15,13 +15,15 @@
     "angular-moment": "^1.3.0",
     "angular-sanitize": "^1.8.2",
     "codemirror": "^5.62.0",
-    "sprintf-js": "^1.1.2"
+    "sprintf-js": "^1.1.2",
+    "vue": "^3.2.41"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator",
     "@types/codemirror": "^5.60.1",
     "angular-mocks": "^1.8.2",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.0",
+    "vue-loader": "^17.0.0"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
