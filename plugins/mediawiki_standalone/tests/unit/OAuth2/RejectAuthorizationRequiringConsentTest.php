@@ -75,7 +75,7 @@ final class RejectAuthorizationRequiringConsentTest extends TestCase
     private static function buildScope(): AuthenticationScope
     {
         /**
-         * @var AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>
+         * @var AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier> $scope
          */
         $scope = AuthenticationTestCoveringScope::fromIdentifier(
             OAuth2ScopeIdentifier::fromIdentifierKey('requested:scope')
