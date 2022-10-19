@@ -559,9 +559,16 @@ final class DocmanFilesResource extends AuthenticatedResource
         $project       = $items_request->getProject();
 
         $item->accept($this->getValidator($project, $user, $item), []);
+        // validator make sure that we have a File but we still need $item to have the correct type
+        assert($item instanceof Docman_File);
 
-        $item_representation_builder = new VersionRepresentationCollectionBuilder(new VersionDao());
-        $items_representation        = $item_representation_builder->buildVersionsCollection($item, $limit, $offset);
+        $item_representation_builder = new VersionRepresentationCollectionBuilder(
+            new VersionDao(),
+            UserManager::instance(),
+            new \Docman_ApprovalTableFactoriesFactory()
+        );
+
+        $items_representation = $item_representation_builder->buildVersionsCollection($item, $limit, $offset);
 
         Header::sendPaginationHeaders($limit, $offset, $items_representation->getTotalSize(), self::MAX_LIMIT);
 

@@ -72,7 +72,7 @@ describe("FileVersionHistory", () => {
                 filename: "convert.pdf",
                 download_href: "https://example.com/convert.pdf",
             },
-        ];
+        ] as FileHistory[];
         version_history_spy.mockResolvedValue(versions);
 
         const wrapper = createWrapper();
@@ -118,7 +118,7 @@ describe("FileVersionHistory", () => {
                 filename: "2jz.pdf",
                 download_href: "https://example.com/convert.pdf",
             },
-        ];
+        ] as FileHistory[];
         version_history_spy.mockResolvedValue(versions);
 
         const wrapper = createWrapper();

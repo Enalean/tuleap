@@ -21,6 +21,9 @@
 
 namespace Tuleap\Docman\REST\v1\Files;
 
+use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\UserRepresentation;
+
 /**
  * @psalm-immutable
  */
@@ -42,7 +45,22 @@ final class FileVersionRepresentation
      * @var string link to download the version
      */
     public $download_href;
-
+    /**
+     * @var string|null link to the approval table
+     */
+    public ?string $approval_href;
+    /**
+     * @var UserRepresentation User who made the change
+     */
+    public UserRepresentation $author;
+    /**
+     * @var string Date of the change
+     */
+    public string $date;
+    /**
+     * @var string Description of the changes
+     */
+    public string $changelog;
 
     private function __construct(
         int $id,
@@ -50,22 +68,50 @@ final class FileVersionRepresentation
         string $filename,
         int $group_id,
         int $item_id,
+        ?string $approval_href,
+        UserRepresentation $author,
+        string $date,
+        string $changelog,
     ) {
         $this->id            = $id;
         $this->name          = ($label) ?: "";
         $this->filename      = $filename;
-        $this->download_href = "/plugins/docman/?" . http_build_query(
-            [
-                'group_id' => $group_id,
-                'action' => 'show',
-                'id' => $item_id,
-                'version_number' => $id,
-            ]
-        );
+        $this->author        = $author;
+        $this->date          = $date;
+        $this->changelog     = $changelog;
+        $this->approval_href = $approval_href;
+        $this->download_href = "/plugins/docman/?"
+            . http_build_query(
+                [
+                    'group_id'       => $group_id,
+                    'action'         => 'show',
+                    'id'             => $item_id,
+                    'version_number' => $id,
+                ]
+            );
     }
 
-    public static function build(int $version_id, ?string $label, string $filename, int $group_id, int $item_id): self
-    {
-        return new self($version_id, $label, $filename, $group_id, $item_id);
+    public static function build(
+        int $version_id,
+        ?string $label,
+        string $filename,
+        int $group_id,
+        int $item_id,
+        ?string $approval_href,
+        \PFUser $author,
+        \DateTimeInterface $date,
+        string $changelog,
+    ): self {
+        return new self(
+            $version_id,
+            $label,
+            $filename,
+            $group_id,
+            $item_id,
+            $approval_href,
+            UserRepresentation::build($author),
+            JsonCast::fromNotNullDateTimeToDate($date),
+            $changelog,
+        );
     }
 }

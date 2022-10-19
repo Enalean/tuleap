@@ -22,33 +22,72 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Tuleap\Docman\ApprovalTable\TableFactoryForFileBuilder;
 use Tuleap\Docman\Item\PaginatedFileVersionRepresentationCollection;
 use Tuleap\Docman\REST\v1\Files\FileVersionRepresentation;
 use Tuleap\Docman\Version\VersionDao;
+use Tuleap\Docman\View\DocmanViewURLBuilder;
+use Tuleap\User\RetrieveUserById;
 
 final class VersionRepresentationCollectionBuilder
 {
-    public function __construct(private VersionDao $docman_version_dao)
-    {
+    public function __construct(
+        private VersionDao $docman_version_dao,
+        private RetrieveUserById $user_retriever,
+        private TableFactoryForFileBuilder $table_factory_builder,
+    ) {
     }
 
     public function buildVersionsCollection(
-        \Docman_Item $item,
+        \Docman_File $item,
         int $limit,
         int $offset,
     ): PaginatedFileVersionRepresentationCollection {
+        $table_factory = $this->table_factory_builder->getTableFactoryForFile($item);
+
         $dar      = $this->docman_version_dao->searchByItemId($item->getId(), $offset, $limit);
         $versions = [];
         foreach ($dar as $row) {
+            $version = new \Docman_Version();
+            $version->initFromRow($row);
+
+            $table         = $table_factory->getTableFromVersion($version);
+            $approval_href = $table
+                ? DocmanViewURLBuilder::buildActionUrl(
+                    $item,
+                    ['default_url' => '/plugins/docman/?'],
+                    [
+                        'group_id' => $item->getGroupId(),
+                        'action'   => 'details',
+                        'section'  => 'approval',
+                        'id'       => $item->getId(),
+                        'version'  => $version->getNumber(),
+                    ],
+                    true,
+                )
+                : null;
+
+            $author = $this->user_retriever->getUserById((int) $version->getAuthorId());
+            if (! $author) {
+                continue;
+            }
+
             $versions[] = FileVersionRepresentation::build(
                 $row["number"],
                 $row["label"],
                 $row["filename"],
                 (int) $item->getGroupId(),
-                (int) $item->getId()
+                (int) $item->getId(),
+                $approval_href,
+                $author,
+                (new \DateTimeImmutable())->setTimestamp((int) $version->getDate()),
+                (string) $version->getChangelog(),
             );
         }
 
-        return new PaginatedFileVersionRepresentationCollection($versions, $this->docman_version_dao->countByItemId($item->getId()));
+        return new PaginatedFileVersionRepresentationCollection(
+            $versions,
+            $this->docman_version_dao->countByItemId($item->getId())
+        );
     }
 }

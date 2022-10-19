@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2018-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,30 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.document-history-versions {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
+declare(strict_types=1);
 
-.document-history-logs {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
+namespace Tuleap\Docman\ApprovalTable;
 
-.document-history-section-title {
-    margin: 0 0 var(--tlp-small-spacing);
-    color: var(--tlp-dark-color);
-    font-size: 1.5rem;
-    font-weight: 400;
-    line-height: 1.875rem;
-}
-
-.document-history-error-state {
-    height: 100px;
-    color: var(--tlp-danger-color);
-    font-style: italic;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.document-history-merged-values {
-    text-align: center;
+interface TableFactoryForFileBuilder
+{
+    public function getTableFactoryForFile(\Docman_File $item): \Docman_ApprovalTableFileFactory;
 }
