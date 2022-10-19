@@ -103,7 +103,7 @@ final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAndThenCombinesIdenticalScalarErrorTypes(): void
     {
         /**
-         * @var Ok<int> | Err<string>
+         * @var Ok<int> | Err<string> $result
          */
         $result = Result::ok(123);
 
@@ -123,7 +123,7 @@ final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAndThenCombinesIdenticalCustomErrorTypes(): void
     {
         /**
-         * @var Ok<int> | Err<CustomErrorType>
+         * @var Ok<int> | Err<CustomErrorType> $result
          */
         $result = Result::ok(123);
 
@@ -143,7 +143,7 @@ final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testAndThenCreatesAUnionTypeForError(): void
     {
         /**
-         * @var Ok<int> | Err<CustomErrorType>
+         * @var Ok<int> | Err<CustomErrorType> $result
          */
         $result = Result::ok(123);
 
@@ -163,7 +163,7 @@ final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testOrElseCombinesIdenticalScalarOkTypes(): void
     {
         /**
-         * @var Ok<int> | Err<string>
+         * @var Ok<int> | Err<string> $result
          */
         $result = Result::err('Ooops');
 
@@ -183,7 +183,7 @@ final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testOrElseCombinesIdenticalCustomValueTypes(): void
     {
         /**
-         * @var Ok<CustomValueType> | Err<string
+         * @var Ok<CustomValueType> | Err<string> $result
          */
         $result = Result::err('Ooops');
 
@@ -247,7 +247,7 @@ final class TypeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testOrElseCreatesAUnionTypeForOk(): void
     {
         /**
-         * @var Ok<CustomValueType> | Err<int>
+         * @var Ok<CustomValueType> | Err<int> $result
          */
         $result = Result::err(404);
 

@@ -210,7 +210,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildRequiredScope(): AuthenticationScope
     {
         /**
-         * @var AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>
+         * @var AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier> $scope
          */
         $scope = new /** @psalm-immutable */ class implements AuthenticationScope
         {
