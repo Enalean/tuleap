@@ -30,13 +30,13 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class GroupUpdator
+final class GroupLinkUpdater
 {
     private const FAKE_BRANCH_NAME = 'branch_name';
 
     public function __construct(
-        private UpdateBranchPrefixOfGroup $update_branch_prefix_of_group,
-        private UpdateArtifactClosureOfGroup $update_artifact_closure_of_group,
+        private UpdateBranchPrefixOfGroupLink $update_branch_prefix_of_group,
+        private UpdateArtifactClosureOfGroupLink $update_artifact_closure_of_group,
         private UpdateGroupLinkToken $update_group_token,
     ) {
     }

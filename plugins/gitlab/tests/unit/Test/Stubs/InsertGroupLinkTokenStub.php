@@ -22,31 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Test\Stubs;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
-use Tuleap\Gitlab\Group\Token\GetTokenByGroupId;
+use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\Token\InsertGroupLinkToken;
 
-final class GetTokenByGroupIdStub implements GetTokenByGroupId
+final class InsertGroupLinkTokenStub implements InsertGroupLinkToken
 {
-    /**
-     * @param KeyFactory&MockObject $key_factory
-     */
-    private function __construct(private ConcealedString $token, private $key_factory)
+    private int $number_of_call;
+
+    private function __construct()
     {
+        $this->number_of_call = 0;
     }
 
-    public function getTokenByGroupId(int $group_id): string
+    public function insertToken(GroupLink $gitlab_group, ConcealedString $token): void
     {
-        return SymmetricCrypto::encrypt($this->token, $this->key_factory->getEncryptionKey());
+        $this->number_of_call++;
     }
 
-    /**
-     * @param KeyFactory&MockObject $key_factory
-     */
-    public static function withStoredToken(string $token, $key_factory): self
+    public function getNumberOfCallInsertTokenMethod(): int
     {
-        return new self(new ConcealedString($token), $key_factory);
+        return $this->number_of_call;
+    }
+
+    public static function build(): self
+    {
+        return new self();
     }
 }

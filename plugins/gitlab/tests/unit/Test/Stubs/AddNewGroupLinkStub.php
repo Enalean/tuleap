@@ -20,12 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Test\Stubs;
 
-interface UpdateArtifactClosureOfGroup
+use Tuleap\Gitlab\Group\NewGroupLink;
+
+final class AddNewGroupLinkStub implements \Tuleap\Gitlab\Group\AddNewGroupLink
 {
-    public function updateArtifactClosureOfGroupLink(
-        int $id,
-        bool $allow_artifact_closure,
-    ): void;
+    private function __construct(private int $group_id)
+    {
+    }
+
+    public function addNewGroup(NewGroupLink $gitlab_group): int
+    {
+        return $this->group_id;
+    }
+
+    public static function withGroupId(int $group_id): self
+    {
+        return new self($group_id);
+    }
 }

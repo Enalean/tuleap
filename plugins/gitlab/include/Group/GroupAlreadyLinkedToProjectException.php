@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,17 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-final class ProjectAlreadyLinkedToGitlabGroupException extends \Exception
+final class GroupAlreadyLinkedToProjectException extends \Exception
 {
-    public function __construct(int $project_id)
+    public function __construct(int $gitlab_group_id)
     {
-        parent::__construct(sprintf('Project #%d is already linked to a GitLab group', $project_id));
+        parent::__construct(sprintf('GitLab group #%d is already linked to a Tuleap project', $gitlab_group_id));
     }
 }

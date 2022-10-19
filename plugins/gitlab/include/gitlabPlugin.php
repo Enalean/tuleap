@@ -38,8 +38,8 @@ use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
-use Tuleap\Gitlab\Group\GitlabGroupDAO;
-use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
+use Tuleap\Gitlab\Group\GroupLinkDAO;
+use Tuleap\Gitlab\Group\GroupLinkRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Reference\Branch\BranchReferenceSplitValuesDao;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
@@ -998,8 +998,8 @@ class gitlabPlugin extends Plugin
                 new FineGrainedRetriever($fine_grained_dao)
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
-            new GitlabGroupDAO(),
-            new GroupRepositoryIntegrationDAO()
+            new GroupLinkDAO(),
+            new GroupLinkRepositoryIntegrationDAO()
         );
     }
 }

@@ -25,9 +25,9 @@ namespace Tuleap\Gitlab\Group;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
-final class GitlabGroupDAO extends DataAccessObject implements AddNewGroup, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLinkById, UpdateBranchPrefixOfGroup, UpdateArtifactClosureOfGroup, RetrieveGroupLinkedToProject, DeleteGroupLink, UpdateSynchronizationDate
+final class GroupLinkDAO extends DataAccessObject implements AddNewGroupLink, VerifyGroupIsAlreadyLinked, VerifyProjectIsAlreadyLinked, RetrieveGroupLinkById, UpdateBranchPrefixOfGroupLink, UpdateArtifactClosureOfGroupLink, RetrieveGroupLinkedToProject, DeleteGroupLink, UpdateSynchronizationDate
 {
-    public function addNewGroup(NewGroup $gitlab_group): int
+    public function addNewGroup(NewGroupLink $gitlab_group): int
     {
         return (int) $this->getDB()->insertReturnId(
             'plugin_gitlab_group',

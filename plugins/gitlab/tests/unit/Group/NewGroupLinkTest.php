@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
+use DateTimeImmutable;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class NewGroupTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NewGroupLinkTest extends TestCase
 {
     private const PROJECT_ID                     = 136;
     private const GITLAB_GROUP_ID                = 84;
@@ -48,9 +50,9 @@ final class NewGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
-        $last_synchronization_date = new \DateTimeImmutable('@' . self::LAST_SYNCHRONIZATION_TIMESTAMP);
+        $last_synchronization_date = new DateTimeImmutable('@' . self::LAST_SYNCHRONIZATION_TIMESTAMP);
 
-        $group = NewGroup::fromAPIRepresentation(
+        $group = NewGroupLink::fromAPIRepresentation(
             $api_group,
             $project,
             $last_synchronization_date,

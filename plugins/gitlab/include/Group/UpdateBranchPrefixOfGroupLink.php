@@ -20,30 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Test\Stubs;
+namespace Tuleap\Gitlab\Group;
 
-use Tuleap\Gitlab\Group\UpdateArtifactClosureOfGroup;
-
-final class UpdateArtifactClosureOfGroupStub implements UpdateArtifactClosureOfGroup
+interface UpdateBranchPrefixOfGroupLink
 {
-    private int $call_count = 0;
-
-    private function __construct()
-    {
-    }
-
-    public static function withCallCount(): self
-    {
-        return new self();
-    }
-
-    public function updateArtifactClosureOfGroupLink(int $id, bool $allow_artifact_closure,): void
-    {
-        $this->call_count++;
-    }
-
-    public function getCallCount(): int
-    {
-        return $this->call_count;
-    }
+    public function updateBranchPrefixOfGroupLink(
+        int $id,
+        string $prefix_branch_name,
+    ): void;
 }

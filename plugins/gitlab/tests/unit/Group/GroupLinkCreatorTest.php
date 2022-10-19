@@ -30,9 +30,9 @@ use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Gitlab\Test\Builder\GitlabProjectBuilder;
-use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
+use Tuleap\Gitlab\Test\Stubs\AddNewGroupLinkStub;
 use Tuleap\Gitlab\Test\Stubs\BuildGitlabProjectsStub;
-use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
+use Tuleap\Gitlab\Test\Stubs\InsertGroupLinkTokenStub;
 use Tuleap\Gitlab\Test\Stubs\IntegrateGitlabProjectStub;
 use Tuleap\Gitlab\Test\Stubs\RetrieveGitlabGroupInformationStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
@@ -45,7 +45,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class GroupCreatorTest extends TestCase
+final class GroupLinkCreatorTest extends TestCase
 {
     private const INTEGRATED_GROUP_ID = 15;
     private const PROJECT_ID          = 101;
@@ -77,17 +77,17 @@ final class GroupCreatorTest extends TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->withPublicName('exegetist')->build();
 
-        $creator = new GroupCreator(
+        $creator = new GroupLinkCreator(
             $this->project_builder,
             RetrieveGitlabGroupInformationStub::buildDefault(),
             new GitlabRepositoryGroupLinkHandler(
                 new DBTransactionExecutorPassthrough(),
-                new GitlabGroupFactory(
+                new GroupLinkFactory(
                     $this->group_integrated_verifier,
                     $this->project_linked_verifier,
-                    AddNewGroupStub::withGroupId(self::INTEGRATED_GROUP_ID),
+                    AddNewGroupLinkStub::withGroupId(self::INTEGRATED_GROUP_ID),
                 ),
-                InsertGroupTokenStub::build(),
+                InsertGroupLinkTokenStub::build(),
                 IntegrateGitlabProjectStub::withOkResult()
             )
         );

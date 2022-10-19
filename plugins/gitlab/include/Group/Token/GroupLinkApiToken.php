@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,33 +15,29 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Test\Stubs;
+namespace Tuleap\Gitlab\Group\Token;
 
-final class UpdateBranchPrefixOfGroupStub implements \Tuleap\Gitlab\Group\UpdateBranchPrefixOfGroup
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Gitlab\API\ApiToken;
+
+final class GroupLinkApiToken implements ApiToken
 {
-    private int $call_count = 0;
-
-    private function __construct()
+    private function __construct(private ConcealedString $token)
     {
     }
 
-    public static function withCallCount(): self
+    public static function buildNewGroupToken(ConcealedString $token): self
     {
-        return new self();
+        return new self($token);
     }
 
-    public function updateBranchPrefixOfGroupLink(int $id, string $prefix_branch_name,): void
+    public function getToken(): ConcealedString
     {
-        $this->call_count++;
-    }
-
-    public function getCallCount(): int
-    {
-        return $this->call_count;
+        return $this->token;
     }
 }

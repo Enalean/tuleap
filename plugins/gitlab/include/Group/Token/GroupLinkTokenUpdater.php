@@ -29,7 +29,7 @@ use Tuleap\Gitlab\Group\GroupLink;
 
 final class GroupLinkTokenUpdater implements UpdateGroupLinkToken
 {
-    public function __construct(private GroupApiTokenDAO $group_api_token_DAO, private KeyFactory $key_factory)
+    public function __construct(private GroupLinkApiTokenDAO $group_api_token_DAO, private KeyFactory $key_factory)
     {
     }
 

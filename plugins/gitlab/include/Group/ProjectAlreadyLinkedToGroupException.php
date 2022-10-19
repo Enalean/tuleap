@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,22 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group\Token;
+namespace Tuleap\Gitlab\Group;
 
-use Tuleap\Gitlab\Group\GroupLink;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-
-interface RetrieveGroupLinkToken
+final class ProjectAlreadyLinkedToGroupException extends \Exception
 {
-    /**
-     * @return Ok<GroupApiToken> | Err<Fault>
-     */
-    public function retrieveToken(GroupLink $gitlab_group): Ok|Err;
+    public function __construct(int $project_id)
+    {
+        parent::__construct(sprintf('Project #%d is already linked to a GitLab group', $project_id));
+    }
 }

@@ -28,7 +28,7 @@ use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 /**
  * @psalm-immutable
  */
-final class NewGroup
+final class NewGroupLink
 {
     private function __construct(
         public int $gitlab_group_id,

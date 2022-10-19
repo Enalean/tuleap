@@ -28,11 +28,11 @@ use Tuleap\Gitlab\Group\GroupLink;
 
 final class GroupLinkTokenRetriever
 {
-    public function __construct(private GetTokenByGroupId $get_token_by_group_id, private KeyFactory $key_factory)
+    public function __construct(private GetTokenByGroupLinkId $get_token_by_group_id, private KeyFactory $key_factory)
     {
     }
 
-    public function retrieveToken(GroupLink $gitlab_group): GroupApiToken
+    public function retrieveToken(GroupLink $gitlab_group): GroupLinkApiToken
     {
         $token = $this->get_token_by_group_id->getTokenByGroupId($gitlab_group->id);
 
@@ -41,6 +41,6 @@ final class GroupLinkTokenRetriever
             $this->key_factory->getEncryptionKey()
         );
 
-        return GroupApiToken::buildNewGroupToken($concealed_secret);
+        return GroupLinkApiToken::buildNewGroupToken($concealed_secret);
     }
 }

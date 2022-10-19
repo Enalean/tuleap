@@ -23,9 +23,26 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Group\Token;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Gitlab\Group\GroupLink;
 
-interface InsertGroupToken
+final class GroupLinkTokenInserter implements InsertGroupLinkToken
 {
-    public function insertToken(GroupLink $gitlab_group, ConcealedString $token): void;
+    public function __construct(private GroupLinkApiTokenDAO $group_api_token_DAO, private KeyFactory $key_factory)
+    {
+    }
+
+    public function insertToken(GroupLink $gitlab_group, ConcealedString $token): void
+    {
+        $encrypted_secret = SymmetricCrypto::encrypt(
+            $token,
+            $this->key_factory->getEncryptionKey()
+        );
+
+        $this->group_api_token_DAO->storeToken(
+            $gitlab_group->id,
+            $encrypted_secret
+        );
+    }
 }

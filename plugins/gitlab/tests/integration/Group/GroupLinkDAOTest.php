@@ -25,11 +25,11 @@ namespace Tuleap\Gitlab\Group;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
-use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
+use Tuleap\Gitlab\Group\Token\GroupLinkApiTokenDAO;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class GitlabGroupDAOTest extends TestCase
+final class GroupLinkDAOTest extends TestCase
 {
     private const GITLAB_GROUP_ID                = 99;
     private const NAME                           = 'lamany';
@@ -43,16 +43,16 @@ final class GitlabGroupDAOTest extends TestCase
     private const SECOND_REPOSITORY_ID           = 267;
     private const ENCRYPTED_TOKEN                = 'OxFA97D2DFD016C0E9E42E';
 
-    private GitlabGroupDAO $group_dao;
-    private GroupRepositoryIntegrationDAO $integrations_dao;
-    private GroupApiTokenDAO $token_dao;
+    private GroupLinkDAO $group_dao;
+    private GroupLinkRepositoryIntegrationDAO $integrations_dao;
+    private GroupLinkApiTokenDAO $token_dao;
     private \Project $project;
 
     protected function setUp(): void
     {
-        $this->group_dao        = new GitlabGroupDAO();
-        $this->integrations_dao = new GroupRepositoryIntegrationDAO();
-        $this->token_dao        = new GroupApiTokenDAO();
+        $this->group_dao        = new GroupLinkDAO();
+        $this->integrations_dao = new GroupLinkRepositoryIntegrationDAO();
+        $this->token_dao        = new GroupLinkApiTokenDAO();
         $this->project          = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
     }
 
@@ -80,7 +80,7 @@ final class GitlabGroupDAOTest extends TestCase
 
     private function saveAndRetrieveGroupLink(): int
     {
-        $new_group = NewGroup::fromAPIRepresentation(
+        $new_group = NewGroupLink::fromAPIRepresentation(
             GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi([
                 'id'         => self::GITLAB_GROUP_ID,
                 'name'       => self::NAME,

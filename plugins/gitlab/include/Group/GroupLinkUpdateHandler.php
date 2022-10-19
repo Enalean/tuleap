@@ -34,7 +34,7 @@ final class GroupLinkUpdateHandler
         private ProjectRetriever $project_retriever,
         private GitAdministratorChecker $checker,
         private GroupLinkRetriever $group_link_retriever,
-        private GroupUpdator $updater,
+        private GroupLinkUpdater $updater,
     ) {
     }
 

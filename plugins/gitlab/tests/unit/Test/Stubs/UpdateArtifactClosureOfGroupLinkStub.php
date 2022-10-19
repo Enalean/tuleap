@@ -18,9 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Gitlab\Group;
+declare(strict_types=1);
 
-interface AddNewGroup
+namespace Tuleap\Gitlab\Test\Stubs;
+
+use Tuleap\Gitlab\Group\UpdateArtifactClosureOfGroupLink;
+
+final class UpdateArtifactClosureOfGroupLinkStub implements UpdateArtifactClosureOfGroupLink
 {
-    public function addNewGroup(NewGroup $gitlab_group): int;
+    private int $call_count = 0;
+
+    private function __construct()
+    {
+    }
+
+    public static function withCallCount(): self
+    {
+        return new self();
+    }
+
+    public function updateArtifactClosureOfGroupLink(int $id, bool $allow_artifact_closure,): void
+    {
+        $this->call_count++;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,17 +15,33 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group;
+namespace Tuleap\Gitlab\Test\Stubs;
 
-final class GitlabGroupAlreadyLinkedToProjectException extends \Exception
+final class UpdateBranchPrefixOfGroupLinkStub implements \Tuleap\Gitlab\Group\UpdateBranchPrefixOfGroupLink
 {
-    public function __construct(int $gitlab_group_id)
+    private int $call_count = 0;
+
+    private function __construct()
     {
-        parent::__construct(sprintf('GitLab group #%d is already linked to a Tuleap project', $gitlab_group_id));
+    }
+
+    public static function withCallCount(): self
+    {
+        return new self();
+    }
+
+    public function updateBranchPrefixOfGroupLink(int $id, string $prefix_branch_name,): void
+    {
+        $this->call_count++;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
     }
 }

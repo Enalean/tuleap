@@ -25,12 +25,12 @@ namespace Tuleap\Gitlab\Group;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Git\Stub\VerifyUserIsGitAdministratorStub;
 use Tuleap\Gitlab\Core\ProjectRetriever;
-use Tuleap\Gitlab\Group\Token\GroupApiToken;
+use Tuleap\Gitlab\Group\Token\GroupLinkApiToken;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkByIdStub;
-use Tuleap\Gitlab\Test\Stubs\UpdateArtifactClosureOfGroupStub;
-use Tuleap\Gitlab\Test\Stubs\UpdateBranchPrefixOfGroupStub;
+use Tuleap\Gitlab\Test\Stubs\UpdateArtifactClosureOfGroupLinkStub;
+use Tuleap\Gitlab\Test\Stubs\UpdateBranchPrefixOfGroupLinkStub;
 use Tuleap\Gitlab\Test\Stubs\UpdateGroupLinkTokenStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
@@ -65,7 +65,7 @@ final class GroupLinkUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             self::GROUP_LINK_ID,
             'dev/',
             false,
-            GroupApiToken::buildNewGroupToken(new ConcealedString("")),
+            GroupLinkApiToken::buildNewGroupToken(new ConcealedString("")),
             UserTestBuilder::buildWithDefaults()
         );
 
@@ -77,9 +77,9 @@ final class GroupLinkUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             new GroupLinkRetriever(
                 RetrieveGroupLinkByIdStub::withSuccessiveGroupLinks($group_link, $this->updated_group_link)
             ),
-            new GroupUpdator(
-                UpdateBranchPrefixOfGroupStub::withCallCount(),
-                UpdateArtifactClosureOfGroupStub::withCallCount(),
+            new GroupLinkUpdater(
+                UpdateBranchPrefixOfGroupLinkStub::withCallCount(),
+                UpdateArtifactClosureOfGroupLinkStub::withCallCount(),
                 UpdateGroupLinkTokenStub::withCallCount()
             )
         );
