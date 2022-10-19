@@ -112,7 +112,7 @@ final class SetupMysqlInitCommand extends Command
             ->addOption(self::OPT_APP_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user to be used for Tuleap (`tuleapadm`) by default', DBConfig::DEFAULT_MYSQL_TULEAP_USER_NAME)
             ->addOption(self::OPT_GRANT_HOSTNAME, '', InputOption::VALUE_REQUIRED, 'Hostname value for mysql grant. This is the right hand side of `user`@`hostname`. Default is `%`', '%')
             ->addOption(self::OPT_APP_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for the application dbuser (typically tuleapadm)')
-            ->addOption(self::OPT_NSS_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user that will be used for libnss-mysql or http authentication', 'dbauthuser')
+            ->addOption(self::OPT_NSS_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user that will be used for libnss-mysql', 'dbauthuser')
             ->addOption(self::OPT_NSS_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for nss-user')
             ->addOption(self::OPT_MEDIAWIKI, '', InputOption::VALUE_REQUIRED, 'Grant permissions for mediawiki. Possible values: `per-project` or `central`')
             ->addOption(self::OPT_LOG_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Write user & password into given file')

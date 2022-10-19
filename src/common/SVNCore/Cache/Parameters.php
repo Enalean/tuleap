@@ -25,24 +25,8 @@ namespace Tuleap\SVNCore\Cache;
  */
 class Parameters
 {
-    /**
-     * @var int
-     */
-    private $maximum_credentials;
-    /**
-     * @var int
-     */
-    private $lifetime;
-
-    public function __construct(int $maximum_credentials, int $lifetime)
+    public function __construct(private int $lifetime)
     {
-        $this->maximum_credentials = $maximum_credentials;
-        $this->lifetime            = $lifetime;
-    }
-
-    public function getMaximumCredentials(): int
-    {
-        return $this->maximum_credentials;
     }
 
     public function getLifetime(): int

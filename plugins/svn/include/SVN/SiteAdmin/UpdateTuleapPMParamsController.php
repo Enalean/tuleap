@@ -55,7 +55,6 @@ final class UpdateTuleapPMParamsController implements DispatchableWithRequest
 
         try {
             $this->parameter_saver->save(
-                $request->get('cache-maximum-credentials'),
                 $request->get('cache-lifetime')
             );
             $layout->addFeedback(

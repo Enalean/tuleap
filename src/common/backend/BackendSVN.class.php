@@ -772,19 +772,10 @@ class BackendSVN extends Backend
             )
         );
         assert($get_all_repositories instanceof GetAllRepositories);
-        $factory = $this->getSVNApacheAuthFactory();
 
-        $conf = new SVN_Apache_SvnrootConf($factory, $get_all_repositories->getRepositories());
+        $conf = new SVN_Apache_SvnrootConf(new SVN_Apache(), $get_all_repositories->getRepositories());
 
         return $conf->getFullConf();
-    }
-
-    protected function getSVNApacheAuthFactory()
-    {
-        return new SVN_Apache_Auth_Factory(
-            EventManager::instance(),
-            $this->getSVNCacheParameters()
-        );
     }
 
     /**

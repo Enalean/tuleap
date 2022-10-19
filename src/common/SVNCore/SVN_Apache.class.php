@@ -24,16 +24,8 @@ use Tuleap\SVNCore\ApacheConfRepository;
  * and authorization
  * It generates the content of /etc/httpd/conf.d/codendi_svnroot.conf file
  */
-abstract class SVN_Apache
+class SVN_Apache
 {
-    /**
-     * Return something to be inserted at the top of the svnroot.conf file
-     */
-    public function getHeaders(): string
-    {
-        return '';
-    }
-
     /**
      * Return project location configuration
      */
@@ -43,54 +35,16 @@ abstract class SVN_Apache
         $conf .= "<Location " . $repository->getURLPath() . ">\n";
         $conf .= "    DAV svn\n";
         $conf .= "    SVNPath " . $repository->getFilesystemPath() . "\n";
-        $conf .= $this->getRepositoryAuthorization($repository);
-        if (ForgeConfig::getFeatureFlag(\Tuleap\SVNCore\AccessControl\SVNProjectAccessController::FEATURE_FLAG_DISABLE) === '1') {
-            $conf .= $this->getProjectAuthentication($repository->getProject());
-        } else {
-            // The authentication is managed by nginx but we need to "register" the current user so it can be validated
-            // against the SVNAccessFile
-            $conf .= "    Require valid-user\n";
-            $conf .= "    AuthType Basic\n";
-            $conf .= "    AuthBasicProvider anon\n";
-            $conf .= "    AuthName SVN\n";
-            $conf .= "    Anonymous '*'\n";
-        }
+        $conf .= "    AuthzSVNAccessFile " . $repository->getFilesystemPath() . "/.SVNAccessFile\n";
+        // The authentication is managed by nginx but we need to "register" the current user so it can be validated
+        // against the SVNAccessFile
+        $conf .= "    Require valid-user\n";
+        $conf .= "    AuthType Basic\n";
+        $conf .= "    AuthBasicProvider anon\n";
+        $conf .= "    AuthName SVN\n";
+        $conf .= "    Anonymous '*'\n";
         $conf .= "</Location>\n\n";
 
         return $conf;
-    }
-
-    /**
-     * Returns the Apache authentication directives for given project
-     */
-    abstract protected function getProjectAuthentication(Project $project): string;
-
-    /**
-     * Returns the standard Apache authentication directives (shared by most modules)
-     */
-    protected function getCommonAuthentication(Project $project): string
-    {
-        $conf  = '';
-        $conf .= "    Require valid-user\n";
-        $conf .= "    AuthType Basic\n";
-        $conf .= "    AuthName \"Subversion Authorization (" . $this->escapeStringForApacheConf($project->getPublicName()) . ")\"\n";
-        return $conf;
-    }
-
-
-    protected function getRepositoryAuthorization(ApacheConfRepository $repository): string
-    {
-        return "    AuthzSVNAccessFile " . $repository->getFilesystemPath() . "/.SVNAccessFile\n";
-    }
-
-    /**
-     * Replace double quotes by single quotes in project name (conflict with Apache realm name)
-     */
-    protected function escapeStringForApacheConf(?string $str): string
-    {
-        if ($str === null) {
-            return '';
-        }
-        return strtr($str, "\"", "'");
     }
 }

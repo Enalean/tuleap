@@ -28,24 +28,10 @@ class SVN_Apache_SvnrootConf
     public const CONFIG_SVN_LOG_PATH = 'svn_log_path';
 
     /**
-     * @var ApacheConfRepository[]
-     */
-    private $repositories;
-
-    /**
-     * @var SVN_Apache_Auth_Factory
-     */
-    private $authFactory;
-
-    private $apacheConfHeaders = [];
-
-    /**
      * @param ApacheConfRepository[] $repositories
      */
-    public function __construct(SVN_Apache_Auth_Factory $authFactory, array $repositories)
+    public function __construct(private SVN_Apache $svn_apache_conf_auth, private array $repositories)
     {
-        $this->authFactory  = $authFactory;
-        $this->repositories = $repositories;
     }
 
     /**
@@ -55,24 +41,13 @@ class SVN_Apache_SvnrootConf
     {
         $conf = '';
         foreach ($this->repositories as $repository) {
-            $auth = $this->authFactory->get($repository->getProject());
-            $this->collectApacheConfHeaders($auth);
-            $conf .= $auth->getConf($repository);
+            $conf .= $this->svn_apache_conf_auth->getConf($repository);
         }
 
         return $this->getApacheConfHeaders() . $conf;
     }
 
-    private function collectApacheConfHeaders(SVN_Apache $auth): void
-    {
-        if (ForgeConfig::getFeatureFlag(\Tuleap\SVNCore\AccessControl\SVNProjectAccessController::FEATURE_FLAG_DISABLE) === '1') {
-            $headers                       = $auth->getHeaders();
-            $key                           = md5($headers);
-            $this->apacheConfHeaders[$key] = $headers;
-        }
-    }
-
-    private function getApacheConfHeaders()
+    private function getApacheConfHeaders(): string
     {
         $log_file_path = ForgeConfig::get(self::CONFIG_SVN_LOG_PATH);
         $headers       = '';
@@ -80,7 +55,6 @@ class SVN_Apache_SvnrootConf
         $headers      .= '# Generated at ' . date('c') . "\n";
         $headers      .= "# Custom log file for SVN queries\n";
         $headers      .= 'CustomLog ' . $log_file_path . ' "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION' . "\n\n";
-        $headers      .= implode(PHP_EOL, $this->apacheConfHeaders);
         return $headers;
     }
 }

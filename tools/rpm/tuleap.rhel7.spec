@@ -3,7 +3,6 @@
 %define _bindir /usr/bin
 %define _unitdir /usr/lib/systemd/system
 %define _tmpfilesdir /usr/lib/tmpfiles.d
-%define perl_vendorlib /usr/share/perl5/vendor_perl
 
 %define _buildhost tuleap-builder
 %define _source_payload w9.xzdio
@@ -105,7 +104,6 @@ Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.8
 Requires: python
-Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-DBD-MySQL, perl(Crypt::Eksblowfish::Bcrypt), perl(Redis)
 Requires: perl-libwww-perl, perl-LWP-Protocol-https
 Requires: tuleap-theme-flamingparrot
 Requires: sha1collisiondetector
@@ -162,7 +160,7 @@ Group: Development/Tools
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
-Requires: php80-php-ldap, perl-LDAP
+Requires: php80-php-ldap
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
@@ -757,10 +755,6 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 # Run dir
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/tuleap
 
-# Core subversion mod_perl
-%{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
-%{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
-
 # Sudoers directory
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 %{__install} src/utils/sudoers.d/tuleap_fileforge $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_fileforge
@@ -1224,7 +1218,6 @@ fi
 
 %files core-subversion
 %defattr(-,root,root,-)
-%{perl_vendorlib}/Apache/Tuleap.pm
 %attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
 
 %files core-cvs

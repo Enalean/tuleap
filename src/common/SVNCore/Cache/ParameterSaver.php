@@ -45,13 +45,13 @@ class ParameterSaver
      * @throws ParameterDataAccessException
      * @throws ParameterMalformedDataException
      */
-    public function save($maximum_credentials, $lifetime)
+    public function save($lifetime)
     {
-        if (! $this->areParametersValid($maximum_credentials, $lifetime)) {
+        if (! $this->areParametersValid($lifetime)) {
             throw new ParameterMalformedDataException();
         }
 
-        $is_saved = $this->dao->save($maximum_credentials, $lifetime);
+        $is_saved = $this->dao->save($lifetime);
         if ($is_saved === false) {
             throw new ParameterDataAccessException();
         }
@@ -62,12 +62,11 @@ class ParameterSaver
     /**
      * @return bool
      */
-    private function areParametersValid($maximum_credentials, $lifetime)
+    private function areParametersValid($lifetime)
     {
         $unsigned_integer_validator = new Valid_UInt();
         $unsigned_integer_validator->required();
 
-        return $unsigned_integer_validator->validate($maximum_credentials) &&
-            $unsigned_integer_validator->validate($lifetime);
+        return $unsigned_integer_validator->validate($lifetime);
     }
 }
