@@ -418,6 +418,14 @@ switch-to-mysql57:
 	$(DOCKER_COMPOSE) exec db sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
 	@echo "Data were migrated to MySQL 5.7"
 
+switch-to-mysql80:
+	$(eval DB80 := $(shell $(DOCKER_COMPOSE) ps -q db))
+	$(DOCKER_COMPOSE) exec db57 sh -c 'exec mysqldump --all-databases -uroot -p"$$MYSQL_ROOT_PASSWORD"' | $(DOCKER) exec -i $(DB80) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -f'
+	$(DOCKER_COMPOSE) exec db sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
+	$(DOCKER_COMPOSE) restart db
+	$(DOCKER_COMPOSE) stop db57
+	@echo "Data were migrated to MySQL 8.0"
+
 load-mariadb: # Works only with tuleap DB ATM (not mediawiki)
 	$(eval MARIADB := $(shell $(DOCKER_COMPOSE) ps -q db-maria-10.3))
 	$(DOCKER_COMPOSE) exec db57 sh -c 'exec mysqldump -uroot -p"$$MYSQL_ROOT_PASSWORD" tuleap' 2>/dev/null 1>all.sql
