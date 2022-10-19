@@ -1,0 +1,233 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HistoryLogsContent should collapse cols when there is no new value 1`] = `
+<tbody>
+  <tr>
+    <td>
+      <tlp-relative-date-stub
+        absolute-date="2021-10-06 00:00"
+        date="2021-10-06"
+        locale="en_US"
+        placement="top"
+        preference="relative"
+      >
+        
+                date =&gt; {
+    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
+  }
+            
+      </tlp-relative-date-stub>
+    </td>
+     
+    <td>
+      <user-badge-stub
+        user="[object Object]"
+      />
+    </td>
+     
+    <td>
+      WAT
+    </td>
+     
+    <td
+      class="document-history-merged-values"
+      colspan="2"
+    >
+      
+                old
+            
+    </td>
+     
+    <!---->
+     
+    <!---->
+  </tr>
+</tbody>
+`;
+
+exports[`HistoryLogsContent should collapse cols when there is no new value nor old value 1`] = `
+<tbody>
+  <tr>
+    <td>
+      <tlp-relative-date-stub
+        absolute-date="2021-10-06 00:00"
+        date="2021-10-06"
+        locale="en_US"
+        placement="top"
+        preference="relative"
+      >
+        
+                date =&gt; {
+    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
+  }
+            
+      </tlp-relative-date-stub>
+    </td>
+     
+    <td>
+      <user-badge-stub
+        user="[object Object]"
+      />
+    </td>
+     
+    <td>
+      WAT
+    </td>
+     
+    <!---->
+     
+    <!---->
+     
+    <td
+      class="document-history-merged-values"
+      colspan="2"
+    >
+      <!---->
+    </td>
+  </tr>
+</tbody>
+`;
+
+exports[`HistoryLogsContent should collapse cols when there is no old value 1`] = `
+<tbody>
+  <tr>
+    <td>
+      <tlp-relative-date-stub
+        absolute-date="2021-10-06 00:00"
+        date="2021-10-06"
+        locale="en_US"
+        placement="top"
+        preference="relative"
+      >
+        
+                date =&gt; {
+    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
+  }
+            
+      </tlp-relative-date-stub>
+    </td>
+     
+    <td>
+      <user-badge-stub
+        user="[object Object]"
+      />
+    </td>
+     
+    <td>
+      WAT
+    </td>
+     
+    <!---->
+     
+    <td
+      class="document-history-merged-values"
+      colspan="2"
+    >
+      
+                new
+            
+    </td>
+     
+    <!---->
+  </tr>
+</tbody>
+`;
+
+exports[`HistoryLogsContent should display a link to a diff 1`] = `
+<tbody>
+  <tr>
+    <td>
+      <tlp-relative-date-stub
+        absolute-date="2021-10-06 00:00"
+        date="2021-10-06"
+        locale="en_US"
+        placement="top"
+        preference="relative"
+      >
+        
+                date =&gt; {
+    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
+  }
+            
+      </tlp-relative-date-stub>
+    </td>
+     
+    <td>
+      <user-badge-stub
+        user="[object Object]"
+      />
+    </td>
+     
+    <td>
+      WAT
+    </td>
+     
+    <!---->
+     
+    <!---->
+     
+    <td
+      class="document-history-merged-values"
+      colspan="2"
+    >
+      <a
+        href="/path/to/diff"
+      >
+        diff
+      </a>
+    </td>
+  </tr>
+</tbody>
+`;
+
+exports[`HistoryLogsContent should display old and new value 1`] = `
+<tbody>
+  <tr>
+    <td>
+      <tlp-relative-date-stub
+        absolute-date="2021-10-06 00:00"
+        date="2021-10-06"
+        locale="en_US"
+        placement="top"
+        preference="relative"
+      >
+        
+                date =&gt; {
+    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
+  }
+            
+      </tlp-relative-date-stub>
+    </td>
+     
+    <td>
+      <user-badge-stub
+        user="[object Object]"
+      />
+    </td>
+     
+    <td>
+      WAT
+    </td>
+     
+    <td
+      class=""
+      colspan="1"
+    >
+      
+                old
+            
+    </td>
+     
+    <td
+      class=""
+      colspan="1"
+    >
+      
+                new
+            
+    </td>
+     
+    <!---->
+  </tr>
+</tbody>
+`;
