@@ -21,64 +21,38 @@ const path = require("path");
 const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
 const assets_output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "./frontend-assets")
+    path.resolve(__dirname, "../../frontend-assets/pullrequest-app")
 );
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 
-const webpack_config_main_angular_app = {
-    entry: {
-        "tuleap-pullrequest": "./scripts/src/app/app.js",
-    },
-    context: path.resolve(__dirname),
-    output: assets_output,
-    externals: {
-        jquery: "jQuery",
-        tlp: "tlp",
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_ng_cache_loader,
-            webpack_configurator.rule_angular_gettext_loader,
-        ],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
-    resolve: {
-        extensions: [".ts", ".js"],
-    },
-};
-
-const entry_points = {
-    "create-pullrequest-button": "./scripts/create-pullrequest-button/src/index.js",
-    "repository-style": "./themes/repository.scss",
-    "pull-requests-style": "./themes/pull-requests.scss",
-};
-
 module.exports = [
-    webpack_config_main_angular_app,
     {
-        entry: entry_points,
+        entry: {
+            "tuleap-pullrequest": "./src/app/app.js",
+            "pull-requests-style": "../../themes/pull-requests.scss",
+        },
         context: path.resolve(__dirname),
         output: assets_output,
         externals: {
-            tlp: "tlp",
             jquery: "jQuery",
+            tlp: "tlp",
         },
         module: {
             rules: [
+                ...webpack_configurator.configureTypescriptRules(),
+                webpack_configurator.rule_ng_cache_loader,
+                webpack_configurator.rule_angular_gettext_loader,
                 webpack_configurator.rule_scss_loader,
                 webpack_configurator.rule_css_assets,
-                webpack_configurator.rule_easygettext_loader,
-                webpack_configurator.rule_vue_loader,
             ],
         },
         plugins: [
             manifest_plugin,
+            webpack_configurator.getMomentLocalePlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
-            webpack_configurator.getVueLoaderPlugin(),
         ],
-        resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias,
+        resolve: {
+            extensions: [".ts", ".js"],
         },
     },
 ];

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../scripts/pullrequests-app/node_modules/codemirror/lib/codemirror";
-@use "../scripts/pullrequests-app/node_modules/codemirror/addon/merge/merge";
-@use "./includes/dashboard";
-@use "./includes/pull-request";
-@use "./includes/overview";
-@use "./includes/commits";
-@use "./includes/files";
-@use "./includes/file-diff";
-@use "./includes/tuleap-username";
-@use "./includes/pull-request-refs";
-@use "./includes/codemirror-overrides";
-@use "../../../src/themes/BurningParrot/css/includes/labels/labels-box";
+const { defineAngularMocksJestConfiguration } = require("@tuleap/build-system-configurator");
+
+process.env.DISABLE_TS_TYPECHECK = "true";
+
+const jest_base_config = defineAngularMocksJestConfiguration();
+module.exports = {
+    ...jest_base_config,
+    displayName: "pullrequest-create-button",
+};
