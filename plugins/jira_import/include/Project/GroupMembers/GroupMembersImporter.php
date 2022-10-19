@@ -57,7 +57,9 @@ final class GroupMembersImporter
                 $groups[]             = new XMLUserGroup(\ProjectUGroup::PROJECT_ADMIN_NAME, $project_admin_users);
                 $project_member_users = array_merge($project_member_users, $project_admin_users);
             } else {
-                $project_member_users = array_merge($project_member_users, $this->getUsers($url));
+                $group_members        = $this->getUsers($url);
+                $groups[]             = XMLUserGroup::fromUnconstrainedName($group_name, $group_members);
+                $project_member_users = array_merge($project_member_users, $group_members);
             }
         }
         $groups[] = new XMLUserGroup(\ProjectUGroup::PROJECT_MEMBERS_NAME, $project_member_users);

@@ -99,7 +99,7 @@ final class GroupMembersImporterTest extends TestCase
 
         $payload_with_multiple_groups = [
             '/rest/api/2/project/SP/role' => [
-                'Developers'     => "https://jira.example.com/rest/api/2/project/11102/role/10101",
+                'Développeur / Exploitant'     => "https://jira.example.com/rest/api/2/project/11102/role/10101",
                 "Administrators" => "https://jira.example.com/rest/api/2/project/11102/role/10002",
                 'Testers'        => "https://jira.example.com/rest/api/2/project/11102/role/10102",
             ],
@@ -121,7 +121,7 @@ final class GroupMembersImporterTest extends TestCase
             ],
             '/rest/api/2/project/11102/role/10101' => [
                 "self"        => "https://jira.example.com/rest/api/2/project/11102/role/10101",
-                "name"        => "Developers",
+                "name"        => "Développeur / Exploitant",
                 "id"          => 10101,
                 "description" => "foo",
                 "actors"      => [
@@ -160,7 +160,7 @@ final class GroupMembersImporterTest extends TestCase
                     'john_doe' => UserTestBuilder::aUser()->withUserName('jdoe')->build(),
                 ],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    $project_admin = array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_ADMIN_NAME)[0];
+                    $project_admin = $this->getMemberOf($user_groups_xml, \ProjectUGroup::PROJECT_ADMIN_NAME);
                     self::assertCount(1, $project_admin->users);
                     self::assertEquals('jdoe', $project_admin->users[0]->name);
                 },
@@ -169,7 +169,7 @@ final class GroupMembersImporterTest extends TestCase
                 'jira_payloads' => $payload_only_administrators,
                 'jira_to_tuleap_users' => [],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    $project_admin = array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_ADMIN_NAME)[0];
+                    $project_admin = $this->getMemberOf($user_groups_xml, \ProjectUGroup::PROJECT_ADMIN_NAME);
                     self::assertCount(0, $project_admin->users);
                 },
             ],
@@ -181,9 +181,7 @@ final class GroupMembersImporterTest extends TestCase
                     'jane_biz' => UserTestBuilder::aUser()->withUserName('jbiz')->build(),
                 ],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    self::assertCount(2, $user_groups_xml->user_groups);
-
-                    $project_members = array_values(array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_MEMBERS_NAME))[0];
+                    $project_members = $this->getMemberOf($user_groups_xml, \ProjectUGroup::PROJECT_MEMBERS_NAME);
 
                     self::assertCount(3, $project_members->users);
                     self::assertContains('jdoe', array_map(static fn (XMLUser $user) => $user->name, $project_members->users));
@@ -191,7 +189,31 @@ final class GroupMembersImporterTest extends TestCase
                     self::assertContains('jbiz', array_map(static fn (XMLUser $user) => $user->name, $project_members->users));
                 },
             ],
+            'each jira role correspond to a project user group' => [
+                'jira_payloads' => $payload_with_multiple_groups,
+                'jira_to_tuleap_users' => [
+                    'john_doe' => UserTestBuilder::aUser()->withUserName('jdoe')->build(),
+                    'foo_bar' => UserTestBuilder::aUser()->withUserName('fbar')->build(),
+                    'jane_biz' => UserTestBuilder::aUser()->withUserName('jbiz')->build(),
+                ],
+                'tests' => function (XMLUserGroups $user_groups_xml) {
+                    self::assertCount(4, $user_groups_xml->user_groups);
+
+                    $testers = $this->getMemberOf($user_groups_xml, 'Testers');
+                    self::assertCount(1, $testers->users);
+                    self::assertContains('jbiz', array_map(static fn (XMLUser $user) => $user->name, $testers->users));
+
+                    $devs = $this->getMemberOf($user_groups_xml, 'Developpeur_Exploitant');
+                    self::assertCount(1, $devs->users);
+                    self::assertContains('fbar', array_map(static fn (XMLUser $user) => $user->name, $devs->users));
+                },
+            ],
         ];
+    }
+
+    private function getMemberOf(XMLUserGroups $user_groups_xml, string $wanted_user_group_name): XMLUserGroup
+    {
+        return array_values(array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === $wanted_user_group_name))[0];
     }
 
     /**
@@ -259,7 +281,7 @@ final class GroupMembersImporterTest extends TestCase
                     '5d2ece042d76f30c36bf7e96' => UserTestBuilder::aUser()->withUserName('jdoe')->build(),
                 ],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    $project_admin = array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_ADMIN_NAME)[0];
+                    $project_admin = $this->getMemberOf($user_groups_xml, \ProjectUGroup::PROJECT_ADMIN_NAME);
                     self::assertCount(1, $project_admin->users);
                     self::assertEquals('jdoe', $project_admin->users[0]->name);
                 },
@@ -301,7 +323,7 @@ final class GroupMembersImporterTest extends TestCase
                     '5d2ece042d76f30c36bf7e96' => UserTestBuilder::aUser()->withUserName('jdoe')->build(),
                 ],
                 'tests' => function (XMLUserGroups $user_groups_xml) {
-                    $project_admin = array_filter($user_groups_xml->user_groups, static fn (XMLUserGroup $user_group) => $user_group->name === \ProjectUGroup::PROJECT_ADMIN_NAME)[0];
+                    $project_admin = $this->getMemberOf($user_groups_xml, \ProjectUGroup::PROJECT_ADMIN_NAME);
                     self::assertCount(1, $project_admin->users);
                     self::assertEquals('jdoe', $project_admin->users[0]->name);
                 },

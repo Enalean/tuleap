@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\XML;
 
+use Cocur\Slugify\Slugify;
 use Tuleap\Tracker\XML\XMLUser;
 
 final class XMLUserGroup
@@ -42,6 +43,12 @@ final class XMLUserGroup
          */
         public array $users = [],
     ) {
+    }
+
+    public static function fromUnconstrainedName(string $name, array $users = []): self
+    {
+        $slugify = new Slugify(['regexp' => '/[^A-Za-z_]+/', 'lowercase' => false, 'separator' => '_']);
+        return new self($slugify->slugify($name), $users);
     }
 
     public function export(\SimpleXMLElement $parent_node): \SimpleXMLElement
