@@ -67,7 +67,11 @@ describe("BacklogService", () => {
 
             BacklogService.appendBacklogItems([{ id: 64 }, { id: 13 }]);
 
-            expect(BacklogService.items.content).toEqual([{ id: 37 }, { id: 64 }, { id: 13 }]);
+            expect(BacklogService.items.content).toStrictEqual([
+                { id: 37 },
+                { id: 64 },
+                { id: 13 },
+            ]);
             expect(augment).toHaveBeenCalledWith({ id: 64 });
             expect(augment).toHaveBeenCalledWith({ id: 13 });
             expect(BacklogService.items.loading).toBeFalsy();
@@ -79,12 +83,16 @@ describe("BacklogService", () => {
             var initial_backlog = [{ id: 18 }, { id: 31 }];
             BacklogService.items.content = initial_backlog;
 
-            BacklogService.addOrReorderBacklogItemsInBacklog(
-                { id: 98 },
-                { item_id: 18, direction: "after" }
-            );
+            BacklogService.addOrReorderBacklogItemsInBacklog([{ id: 98 }], {
+                item_id: 18,
+                direction: "after",
+            });
 
-            expect(BacklogService.items.content).toEqual([{ id: 18 }, { id: 98 }, { id: 31 }]);
+            expect(BacklogService.items.content).toStrictEqual([
+                { id: 18 },
+                { id: 98 },
+                { id: 31 },
+            ]);
             expect(BacklogService.items.content).toBe(initial_backlog);
         });
 
@@ -92,12 +100,16 @@ describe("BacklogService", () => {
             var initial_backlog = [{ id: 18 }, { id: 31 }];
             BacklogService.items.content = initial_backlog;
 
-            BacklogService.addOrReorderBacklogItemsInBacklog(
-                { id: 98 },
-                { item_id: 31, direction: "after" }
-            );
+            BacklogService.addOrReorderBacklogItemsInBacklog([{ id: 98 }], {
+                item_id: 31,
+                direction: "after",
+            });
 
-            expect(BacklogService.items.content).toEqual([{ id: 18 }, { id: 31 }, { id: 98 }]);
+            expect(BacklogService.items.content).toStrictEqual([
+                { id: 18 },
+                { id: 31 },
+                { id: 98 },
+            ]);
             expect(BacklogService.items.content).toBe(initial_backlog);
         });
 
@@ -105,12 +117,16 @@ describe("BacklogService", () => {
             var initial_backlog = [{ id: 18 }, { id: 31 }];
             BacklogService.items.content = initial_backlog;
 
-            BacklogService.addOrReorderBacklogItemsInBacklog(
-                { id: 98 },
-                { item_id: 31, direction: "before" }
-            );
+            BacklogService.addOrReorderBacklogItemsInBacklog([{ id: 98 }], {
+                item_id: 31,
+                direction: "before",
+            });
 
-            expect(BacklogService.items.content).toEqual([{ id: 18 }, { id: 98 }, { id: 31 }]);
+            expect(BacklogService.items.content).toStrictEqual([
+                { id: 18 },
+                { id: 98 },
+                { id: 31 },
+            ]);
             expect(BacklogService.items.content).toBe(initial_backlog);
         });
 
@@ -118,12 +134,16 @@ describe("BacklogService", () => {
             var initial_backlog = [{ id: 18 }, { id: 31 }];
             BacklogService.items.content = initial_backlog;
 
-            BacklogService.addOrReorderBacklogItemsInBacklog(
-                { id: 98 },
-                { item_id: 18, direction: "before" }
-            );
+            BacklogService.addOrReorderBacklogItemsInBacklog([{ id: 98 }], {
+                item_id: 18,
+                direction: "before",
+            });
 
-            expect(BacklogService.items.content).toEqual([{ id: 98 }, { id: 18 }, { id: 31 }]);
+            expect(BacklogService.items.content).toStrictEqual([
+                { id: 98 },
+                { id: 18 },
+                { id: 31 },
+            ]);
             expect(BacklogService.items.content).toBe(initial_backlog);
         });
     });
@@ -136,8 +156,8 @@ describe("BacklogService", () => {
 
             BacklogService.removeBacklogItemsFromBacklog([{ id: 92 }]);
 
-            expect(BacklogService.items.content).toEqual([{ id: 48 }, { id: 69 }]);
-            expect(BacklogService.items.filtered_content).toEqual([{ id: 48 }, { id: 69 }]);
+            expect(BacklogService.items.content).toStrictEqual([{ id: 48 }, { id: 69 }]);
+            expect(BacklogService.items.filtered_content).toStrictEqual([{ id: 48 }, { id: 69 }]);
         });
 
         it("Given an item that was not in the backlog's items collection, when I remove it, then the the backlog's items collection won't change", function () {
@@ -147,8 +167,8 @@ describe("BacklogService", () => {
 
             BacklogService.removeBacklogItemsFromBacklog([{ id: 92 }]);
 
-            expect(BacklogService.items.content).toEqual([{ id: 48 }, { id: 69 }]);
-            expect(BacklogService.items.filtered_content).toEqual([{ id: 48 }, { id: 69 }]);
+            expect(BacklogService.items.content).toStrictEqual([{ id: 48 }, { id: 69 }]);
+            expect(BacklogService.items.filtered_content).toStrictEqual([{ id: 48 }, { id: 69 }]);
         });
     });
 
@@ -175,7 +195,7 @@ describe("BacklogService", () => {
             BacklogService.filterItems("6");
 
             expect($filter).toHaveBeenCalledWith("InPropertiesFilter");
-            expect(BacklogService.items.filtered_content).toEqual([{ id: 46 }, { id: 62 }]);
+            expect(BacklogService.items.filtered_content).toStrictEqual([{ id: 46 }, { id: 62 }]);
         });
     });
 
@@ -211,10 +231,11 @@ describe("BacklogService", () => {
 
             expect(ProjectService.getProject).toHaveBeenCalledWith(736);
             expect(ProjectService.getProjectBacklog).toHaveBeenCalledWith(736);
-            expect(BacklogService.backlog).toEqual({
+            expect(BacklogService.backlog).toStrictEqual({
                 rest_base_route: "projects",
                 rest_route_id: 736,
                 current_milestone: undefined,
+                original_project: undefined,
                 submilestone_type: {
                     id: 218,
                     label: "Releases",
@@ -227,11 +248,11 @@ describe("BacklogService", () => {
             expect(BacklogService.backlog.rest_base_route).toBe("projects");
             expect(BacklogService.backlog.rest_route_id).toBe(736);
             expect(BacklogService.backlog.current_milestone).toBeUndefined();
-            expect(BacklogService.backlog.submilestone_type).toEqual({
+            expect(BacklogService.backlog.submilestone_type).toStrictEqual({
                 id: 218,
                 label: "Releases",
             });
-            expect(BacklogService.backlog.accepted_types.content).toEqual([
+            expect(BacklogService.backlog.accepted_types.content).toStrictEqual([
                 { id: 5, label: "Epic" },
             ]);
             expect(BacklogService.backlog.user_can_move_cards).toBeTruthy();
@@ -255,15 +276,15 @@ describe("BacklogService", () => {
             expect(BacklogService.backlog.rest_base_route).toBe("milestones");
             expect(BacklogService.backlog.rest_route_id).toBe(592);
             expect(BacklogService.backlog.current_milestone).toBe(milestone);
-            expect(BacklogService.backlog.submilestone_type).toEqual({
+            expect(BacklogService.backlog.submilestone_type).toStrictEqual({
                 id: 66,
                 label: "Sprints",
             });
-            expect(BacklogService.backlog.accepted_types.content).toEqual([
+            expect(BacklogService.backlog.accepted_types.content).toStrictEqual([
                 { id: 72, label: "User Stories" },
             ]);
             expect(BacklogService.backlog.user_can_move_cards).toBeTruthy();
-            expect(BacklogService.backlog.original_project).toEqual({
+            expect(BacklogService.backlog.original_project).toStrictEqual({
                 id: 101,
                 label: "other project",
             });

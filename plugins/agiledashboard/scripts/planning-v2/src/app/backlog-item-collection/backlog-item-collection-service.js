@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable-next-line you-dont-need-lodash-underscore/some */
-import { remove, some } from "lodash";
+import { remove } from "lodash";
 
 export default BacklogItemCollectionService;
 
@@ -71,7 +70,7 @@ function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
 
     function removeBacklogItemsFromCollection(backlog_items_collection, backlog_items_to_remove) {
         remove(backlog_items_collection, function (item) {
-            return some(backlog_items_to_remove, item);
+            return backlog_items_to_remove.some((to_remove) => to_remove.id === item.id);
         });
     }
 
