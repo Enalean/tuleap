@@ -606,8 +606,8 @@ msgid "Cascade deletion to wiki service"
 msgstr "Propager la suppression au service wiki"
 
 #, php-format
-msgid "Change <em>%1$s</em>"
-msgstr "Mise à jour de <em>%1$s</em>"
+msgid "Change \"%1$s\""
+msgstr ""
 
 msgid "Change Log"
 msgstr "Description des changements"
@@ -1080,9 +1080,6 @@ msgstr ""
 
 msgid "Error while getting file checksum."
 msgstr "Erreur lors de la récupération de la somme de contrôle du fichier."
-
-msgid "Error while searching document history!"
-msgstr "Erreur lors de la récupération de l'historique !"
 
 msgid "Error while searching for old versions"
 msgstr "Erreur lors de la récupération des versions"

@@ -47,7 +47,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
         }
 
         if ($this->logger) {
-            $content .= $this->logger->fetchLogsForItem($this->item->getId(), $this->display_access_logs, $current_user);
+            $content .= $this->logger->fetchLogsForItem($this->item, $this->display_access_logs, $current_user);
         }
 
         return $content;

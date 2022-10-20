@@ -75,6 +75,9 @@ msgstr ""
 msgid "An error has occurred, please contact your administrator"
 msgstr ""
 
+msgid "An error occurred while loading logs"
+msgstr ""
+
 msgid "An error occurred while searching for results."
 msgstr ""
 
@@ -91,6 +94,9 @@ msgid "Apply new values on this folder and its subfolders only"
 msgstr ""
 
 msgid "Apply same permissions to all sub-items of this folder"
+msgstr ""
+
+msgid "Approval"
 msgstr ""
 
 msgid "Approval table"
@@ -111,6 +117,9 @@ msgstr ""
 msgid "Ascending sort on %{label}."
 msgstr ""
 
+msgid "Author"
+msgstr ""
+
 msgid "Before"
 msgstr ""
 
@@ -121,6 +130,9 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgid "Cancel upload"
+msgstr ""
+
+msgid "Change Log"
 msgstr ""
 
 msgid "Changelog"
@@ -176,6 +188,9 @@ msgid "Creation"
 msgstr ""
 
 msgid "Cut"
+msgstr ""
+
+msgid "Date"
 msgstr ""
 
 msgid "Default properties"
@@ -339,6 +354,9 @@ msgstr ""
 msgid "Lock new version"
 msgstr ""
 
+msgid "Logs"
+msgstr ""
+
 msgid "Mail content is required"
 msgstr ""
 
@@ -384,6 +402,9 @@ msgstr ""
 msgid "New folder"
 msgstr ""
 
+msgid "New value"
+msgstr ""
+
 msgid "New version for \"%s\""
 msgstr ""
 
@@ -409,6 +430,9 @@ msgid "Obsolescence date"
 msgstr ""
 
 msgid "Obsolete today"
+msgstr ""
+
+msgid "Old value"
 msgstr ""
 
 msgid "On"
@@ -630,6 +654,12 @@ msgstr ""
 msgid "There are no items here or you don't have permissions to see them."
 msgstr ""
 
+msgid "There are no logs yet"
+msgstr ""
+
+msgid "There are no versions yet"
+msgstr ""
+
 msgid "There is no upload in progress"
 msgstr ""
 
@@ -689,10 +719,19 @@ msgstr "Versão"
 msgid "Version name"
 msgstr ""
 
+msgid "Versions"
+msgstr ""
+
 msgid "View all versions"
 msgstr ""
 
 msgid "We detect you are using OSX"
+msgstr ""
+
+msgid "What"
+msgstr ""
+
+msgid "When"
 msgstr ""
 
 msgid ""
@@ -709,6 +748,9 @@ msgstr ""
 msgid ""
 "When you delete a folder, all its content is also deleted. Please think "
 "wisely!"
+msgstr ""
+
+msgid "Who"
 msgstr ""
 
 msgid "Wiki page"
@@ -764,6 +806,9 @@ msgid ""
 "You should also be aware that the following wiki documents referencing page "
 "\"%s\" will no longer be valid if you choose to propagate the deletion to "
 "the wiki service:"
+msgstr ""
+
+msgid "diff"
 msgstr ""
 
 msgid "lorem => exactly \"lorem\""

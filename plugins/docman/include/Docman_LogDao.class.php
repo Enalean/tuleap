@@ -26,27 +26,6 @@
 class Docman_LogDao extends DataAccessObject
 {
     /**
-    * Searches Docman_LogDao by ItemId
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchByItemId($itemId, $order = '')
-    {
-        $sql = sprintf(
-            "SELECT time, group_id, user_id, type, old_value, new_value, field FROM plugin_docman_log WHERE item_id = %s " . $order,
-            $this->da->quoteSmart($itemId)
-        );
-        return $this->retrieve($sql);
-    }
-    /**
-    * Searches Docman_LogDao by ItemId order by time
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchByItemIdOrderByTimestamp($itemId)
-    {
-        return $this->searchByItemId($itemId, ' ORDER BY time DESC ');
-    }
-
-    /**
      * Search in logs if user accessed the given item after the given date.
      */
     public function searchUserAccessSince($userId, $itemId, $date)

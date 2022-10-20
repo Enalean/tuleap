@@ -37,6 +37,7 @@
 @use "download-as-zip";
 @use "project_background_header";
 @use "search";
+@use "history";
 
 .document-app {
     display: flex;
