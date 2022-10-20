@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Group\Token;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Gitlab\Group\GroupLink;
 
-final class GroupApiTokenDAO extends DataAccessObject implements GetTokenByGroupId
+final class GroupLinkApiTokenDAO extends DataAccessObject implements GetTokenByGroupLinkId
 {
     public function storeToken(int $group_id, string $encrypted_token): void
     {

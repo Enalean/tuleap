@@ -20,29 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Group\Token;
+namespace Tuleap\Gitlab\Test\Stubs;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
-use Tuleap\Gitlab\Group\GroupLink;
+use Tuleap\Gitlab\Group\Token\GetTokenByGroupLinkId;
 
-final class GroupTokenInserter implements InsertGroupToken
+final class GetTokenByGroupLinkIdStub implements GetTokenByGroupLinkId
 {
-    public function __construct(private GroupApiTokenDAO $group_api_token_DAO, private KeyFactory $key_factory)
+    /**
+     * @param KeyFactory&MockObject $key_factory
+     */
+    private function __construct(private ConcealedString $token, private $key_factory)
     {
     }
 
-    public function insertToken(GroupLink $gitlab_group, ConcealedString $token): void
+    public function getTokenByGroupId(int $group_id): string
     {
-        $encrypted_secret = SymmetricCrypto::encrypt(
-            $token,
-            $this->key_factory->getEncryptionKey()
-        );
+        return SymmetricCrypto::encrypt($this->token, $this->key_factory->getEncryptionKey());
+    }
 
-        $this->group_api_token_DAO->storeToken(
-            $gitlab_group->id,
-            $encrypted_secret
-        );
+    /**
+     * @param KeyFactory&MockObject $key_factory
+     */
+    public static function withStoredToken(string $token, $key_factory): self
+    {
+        return new self(new ConcealedString($token), $key_factory);
     }
 }

@@ -27,7 +27,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
-use Tuleap\Gitlab\Test\Stubs\GetTokenByGroupIdStub;
+use Tuleap\Gitlab\Test\Stubs\GetTokenByGroupLinkIdStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class GroupLinkTokenRetrieverTest extends TestCase
@@ -38,14 +38,14 @@ final class GroupLinkTokenRetrieverTest extends TestCase
      * @var KeyFactory&MockObject
      */
     private $key_factory;
-    private GetTokenByGroupIdStub $get_token_by_group_id;
+    private GetTokenByGroupLinkIdStub $get_token_by_group_id;
 
     protected function setUp(): void
     {
         $this->key_factory = $this->createMock(KeyFactory::class);
     }
 
-    private function retrieveGroupLinkToken(): GroupApiToken
+    private function retrieveGroupLinkToken(): GroupLinkApiToken
     {
         $group_link_token_retriever = new GroupLinkTokenRetriever(
             $this->get_token_by_group_id,
@@ -57,7 +57,7 @@ final class GroupLinkTokenRetrieverTest extends TestCase
 
     public function testItReturnsOkWhenTheTokenIsFound(): void
     {
-        $this->get_token_by_group_id = GetTokenByGroupIdStub::withStoredToken(self::STORED_TOKEN, $this->key_factory);
+        $this->get_token_by_group_id = GetTokenByGroupLinkIdStub::withStoredToken(self::STORED_TOKEN, $this->key_factory);
 
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', 32)));
         $this->key_factory->expects(self::atLeastOnce())->method('getEncryptionKey')->willReturn($encryption_key);

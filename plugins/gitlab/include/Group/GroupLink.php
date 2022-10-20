@@ -45,7 +45,7 @@ final class GroupLink
 
     public static function buildGroupLinkFromInsertionRows(
         int $id,
-        NewGroup $group_DB_insertion,
+        NewGroupLink $group_DB_insertion,
     ): self {
         return new self(
             $id,

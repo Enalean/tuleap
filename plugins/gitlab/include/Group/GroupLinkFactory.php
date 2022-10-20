@@ -22,27 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-final class GitlabGroupFactory
+final class GroupLinkFactory
 {
     public function __construct(
         private VerifyGroupIsAlreadyLinked $group_integrated_verifier,
         private VerifyProjectIsAlreadyLinked $project_linked_verifier,
-        private AddNewGroup $group_adder,
+        private AddNewGroupLink $group_adder,
     ) {
     }
 
     /**
-     * @throws GitlabGroupAlreadyLinkedToProjectException
-     * @throws ProjectAlreadyLinkedToGitlabGroupException
+     * @throws GroupAlreadyLinkedToProjectException
+     * @throws ProjectAlreadyLinkedToGroupException
      */
-    public function createGroup(NewGroup $gitlab_group): GroupLink
+    public function createGroup(NewGroupLink $gitlab_group): GroupLink
     {
         if ($this->group_integrated_verifier->isGroupAlreadyLinked($gitlab_group->gitlab_group_id)) {
-            throw new GitlabGroupAlreadyLinkedToProjectException($gitlab_group->gitlab_group_id);
+            throw new GroupAlreadyLinkedToProjectException($gitlab_group->gitlab_group_id);
         }
 
         if ($this->project_linked_verifier->isProjectAlreadyLinked($gitlab_group->project_id)) {
-            throw new ProjectAlreadyLinkedToGitlabGroupException($gitlab_group->project_id);
+            throw new ProjectAlreadyLinkedToGroupException($gitlab_group->project_id);
         }
 
         $group_id = $this->group_adder->addNewGroup($gitlab_group);

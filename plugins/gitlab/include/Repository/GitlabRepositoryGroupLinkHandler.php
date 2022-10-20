@@ -28,12 +28,12 @@ use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Branch\InvalidBranchNameException;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
-use Tuleap\Gitlab\Group\GitlabGroupAlreadyLinkedToProjectException;
-use Tuleap\Gitlab\Group\GitlabGroupFactory;
+use Tuleap\Gitlab\Group\GroupAlreadyLinkedToProjectException;
+use Tuleap\Gitlab\Group\GroupLinkFactory;
 use Tuleap\Gitlab\Group\IntegrateRepositoriesInGroupLinkCommand;
-use Tuleap\Gitlab\Group\NewGroup;
-use Tuleap\Gitlab\Group\ProjectAlreadyLinkedToGitlabGroupException;
-use Tuleap\Gitlab\Group\Token\InsertGroupToken;
+use Tuleap\Gitlab\Group\NewGroupLink;
+use Tuleap\Gitlab\Group\ProjectAlreadyLinkedToGroupException;
+use Tuleap\Gitlab\Group\Token\InsertGroupLinkToken;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -45,8 +45,8 @@ final class GitlabRepositoryGroupLinkHandler
 
     public function __construct(
         private DBTransactionExecutor $db_transaction_executor,
-        private GitlabGroupFactory $gitlab_group_factory,
-        private InsertGroupToken $group_token_inserter,
+        private GroupLinkFactory $gitlab_group_factory,
+        private InsertGroupLinkToken $group_token_inserter,
         private IntegrateGitlabProject $gitlab_project_integrator,
     ) {
     }
@@ -57,14 +57,14 @@ final class GitlabRepositoryGroupLinkHandler
      * @return Ok<GitlabGroupRepresentation>|Err<Fault>
      *
      * @throws InvalidBranchNameException
-     * @throws GitlabGroupAlreadyLinkedToProjectException
-     * @throws ProjectAlreadyLinkedToGitlabGroupException
+     * @throws GroupAlreadyLinkedToProjectException
+     * @throws ProjectAlreadyLinkedToGroupException
      */
     public function integrateGitlabRepositoriesInProject(
         Credentials $credentials,
         array $gitlab_projects,
         Project $project,
-        NewGroup $new_group,
+        NewGroupLink $new_group,
     ): Ok|Err {
         BranchName::fromBranchNameShortHand($new_group->prefix_branch_name . self::FAKE_BRANCH_NAME);
 

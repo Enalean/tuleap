@@ -37,7 +37,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
-final class GroupCreator
+final class GroupLinkCreator
 {
     public function __construct(
         private BuildGitlabProjects $build_gitlab_project,
@@ -69,7 +69,7 @@ final class GroupCreator
                 $gitlab_group_representation->gitlab_group_id
             );
 
-            $new_group = NewGroup::fromAPIRepresentation(
+            $new_group = NewGroupLink::fromAPIRepresentation(
                 $gitlab_group_information,
                 $project,
                 new \DateTimeImmutable(),
@@ -84,8 +84,8 @@ final class GroupCreator
                 $new_group
             );
         } catch (
-            GitlabGroupAlreadyLinkedToProjectException
-            | ProjectAlreadyLinkedToGitlabGroupException
+            GroupAlreadyLinkedToProjectException
+            | ProjectAlreadyLinkedToGroupException
             | GitlabRequestException
             | GitlabResponseAPIException $exception
         ) {

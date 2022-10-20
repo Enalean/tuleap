@@ -45,20 +45,20 @@ use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\Group\GitlabGroupInformationRetriever;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Core\ProjectRetriever;
-use Tuleap\Gitlab\Group\GitlabGroupDAO;
-use Tuleap\Gitlab\Group\GitlabGroupFactory;
-use Tuleap\Gitlab\Group\GroupCreator;
+use Tuleap\Gitlab\Group\GroupLinkDAO;
+use Tuleap\Gitlab\Group\GroupLinkFactory;
+use Tuleap\Gitlab\Group\GroupLinkCreator;
 use Tuleap\Gitlab\Group\GroupLinkCredentialsRetriever;
 use Tuleap\Gitlab\Group\GroupLinkRetriever;
 use Tuleap\Gitlab\Group\GroupLinkSynchronizer;
 use Tuleap\Gitlab\Group\GroupLinkUpdateHandler;
-use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
+use Tuleap\Gitlab\Group\GroupLinkRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Group\GroupUnlinkHandler;
-use Tuleap\Gitlab\Group\GroupUpdator;
+use Tuleap\Gitlab\Group\GroupLinkUpdater;
 use Tuleap\Gitlab\Group\SynchronizeGroupLinkCommand;
-use Tuleap\Gitlab\Group\Token\GroupApiToken;
-use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
-use Tuleap\Gitlab\Group\Token\GroupTokenInserter;
+use Tuleap\Gitlab\Group\Token\GroupLinkApiToken;
+use Tuleap\Gitlab\Group\Token\GroupLinkApiTokenDAO;
+use Tuleap\Gitlab\Group\Token\GroupLinkTokenInserter;
 use Tuleap\Gitlab\Group\Token\GroupLinkTokenUpdater;
 use Tuleap\Gitlab\Group\Token\GroupLinkTokenRetriever;
 use Tuleap\Gitlab\Group\UpdateGroupLinkCommand;
@@ -134,7 +134,7 @@ final class GitlabGroupResource
             )
             ->andThen(
                 function (\Project $project) use ($gitlab_group_link_representation) {
-                    $group_api_token   = GroupApiToken::buildNewGroupToken(
+                    $group_api_token   = GroupLinkApiToken::buildNewGroupToken(
                         new ConcealedString($gitlab_group_link_representation->gitlab_token)
                     );
                     $gitlab_server_url = $gitlab_group_link_representation->gitlab_server_url;
@@ -155,7 +155,7 @@ final class GitlabGroupResource
                     );
                     $integration_dao       = new GitlabRepositoryIntegrationDao();
                     $key_factory           = new KeyFactory();
-                    $group_dao             = new GitlabGroupDAO();
+                    $group_dao             = new GroupLinkDAO();
 
                     $gitlab_repository_creator = new GitlabRepositoryCreator(
                         $transaction_executor,
@@ -179,7 +179,7 @@ final class GitlabGroupResource
                     );
 
                     $create_branch_prefix_dao          = new CreateBranchPrefixDao();
-                    $group_link_repository_integration = new GroupRepositoryIntegrationDAO();
+                    $group_link_repository_integration = new GroupLinkRepositoryIntegrationDAO();
 
                     $gitlab_project_integrator = new GitlabProjectIntegrator(
                         $gitlab_repository_creator,
@@ -191,13 +191,13 @@ final class GitlabGroupResource
                         )
                     );
 
-                    $group_creation_handler = new GroupCreator(
+                    $group_creation_handler = new GroupLinkCreator(
                         new GitlabProjectBuilder($gitlab_api_client),
                         new GitlabGroupInformationRetriever($gitlab_api_client),
                         new GitlabRepositoryGroupLinkHandler(
                             $transaction_executor,
-                            new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
-                            new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
+                            new GroupLinkFactory($group_dao, $group_dao, $group_dao),
+                            new GroupLinkTokenInserter(new GroupLinkApiTokenDAO(), $key_factory),
                             $gitlab_project_integrator
                         )
                     );
@@ -274,18 +274,18 @@ final class GitlabGroupResource
     ): GitlabGroupLinkRepresentation {
         $this->optionsId($id);
 
-        $group_api_token = $gitlab_group_link_representation->gitlab_token ? GroupApiToken::buildNewGroupToken(
+        $group_api_token = $gitlab_group_link_representation->gitlab_token ? GroupLinkApiToken::buildNewGroupToken(
             new ConcealedString($gitlab_group_link_representation->gitlab_token)
         ) : null;
 
 
         $current_user = UserManager::instance()->getCurrentUser();
-        $group_dao    = new GitlabGroupDAO();
+        $group_dao    = new GroupLinkDAO();
         $handler      = new GroupLinkUpdateHandler(
             new ProjectRetriever(\ProjectManager::instance()),
             new GitAdministratorChecker($this->getGitPermissionsManager()),
             new GroupLinkRetriever($group_dao),
-            new GroupUpdator($group_dao, $group_dao, new GroupLinkTokenUpdater(new GroupApiTokenDAO(), new KeyFactory()))
+            new GroupLinkUpdater($group_dao, $group_dao, new GroupLinkTokenUpdater(new GroupLinkApiTokenDAO(), new KeyFactory()))
         );
         return $handler->handleGroupLinkUpdate(
             new UpdateGroupLinkCommand(
@@ -324,7 +324,7 @@ final class GitlabGroupResource
         $this->optionsId($id);
 
         $current_user = UserManager::instance()->getCurrentUser();
-        $group_dao    = new GitlabGroupDAO();
+        $group_dao    = new GroupLinkDAO();
         $unlinker     = new GroupUnlinkHandler(
             new ProjectRetriever(ProjectManager::instance()),
             new GitAdministratorChecker($this->getGitPermissionsManager()),
@@ -375,11 +375,11 @@ final class GitlabGroupResource
 
         $current_user = UserManager::instance()->getCurrentUser();
 
-        $group_dao                         = new GitlabGroupDAO();
-        $group_token_dao                   = new GroupApiTokenDAO();
+        $group_dao                         = new GroupLinkDAO();
+        $group_token_dao                   = new GroupLinkApiTokenDAO();
         $integration_dao                   = new GitlabRepositoryIntegrationDao();
         $create_branch_prefix_dao          = new CreateBranchPrefixDao();
-        $group_link_repository_integration = new GroupRepositoryIntegrationDAO();
+        $group_link_repository_integration = new GroupLinkRepositoryIntegrationDAO();
 
         $transaction_executor = new DBTransactionExecutorWithConnection(
             DBFactory::getMainTuleapDBConnection()

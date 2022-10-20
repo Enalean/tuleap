@@ -27,9 +27,9 @@ use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
-use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
+use Tuleap\Gitlab\Test\Stubs\AddNewGroupLinkStub;
 use Tuleap\Gitlab\Test\Stubs\IntegrateGitlabProjectStub;
-use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
+use Tuleap\Gitlab\Test\Stubs\InsertGroupLinkTokenStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
 use Tuleap\NeverThrow\Err;
@@ -78,7 +78,7 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()->build();
 
-        $new_group = NewGroup::fromAPIRepresentation(
+        $new_group = NewGroupLink::fromAPIRepresentation(
             GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi([
                 'id'         => 102,
                 'name'       => 'nine-nine',
@@ -94,12 +94,12 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
 
         $handler = new GitlabRepositoryGroupLinkHandler(
             new DBTransactionExecutorPassthrough(),
-            new GitlabGroupFactory(
+            new GroupLinkFactory(
                 VerifyGroupIsAlreadyLinkedStub::withNeverLinked(),
                 VerifyProjectIsAlreadyLinkedStub::withNeverLinked(),
-                AddNewGroupStub::withGroupId(self::GROUP_ID),
+                AddNewGroupLinkStub::withGroupId(self::GROUP_ID),
             ),
-            InsertGroupTokenStub::build(),
+            InsertGroupLinkTokenStub::build(),
             IntegrateGitlabProjectStub::withOkResult()
         );
 

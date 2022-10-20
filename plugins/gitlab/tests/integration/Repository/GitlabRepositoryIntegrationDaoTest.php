@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Repository;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
-use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
+use Tuleap\Gitlab\Group\GroupLinkRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Group\NewRepositoryIntegrationLinkedToAGroup;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
@@ -39,12 +39,12 @@ final class GitlabRepositoryIntegrationDaoTest extends \Tuleap\Test\PHPUnit\Test
     private const GROUP_LINK_ID        = 4;
 
     private GitlabRepositoryIntegrationDao $repository_dao;
-    private GroupRepositoryIntegrationDAO $group_repositories_dao;
+    private GroupLinkRepositoryIntegrationDAO $group_repositories_dao;
 
     protected function setUp(): void
     {
         $this->repository_dao         = new GitlabRepositoryIntegrationDao();
-        $this->group_repositories_dao = new GroupRepositoryIntegrationDAO();
+        $this->group_repositories_dao = new GroupLinkRepositoryIntegrationDAO();
     }
 
     protected function tearDown(): void

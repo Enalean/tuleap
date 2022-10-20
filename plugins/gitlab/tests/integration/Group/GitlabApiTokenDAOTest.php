@@ -26,12 +26,12 @@ use DateTimeImmutable;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\Gitlab\Group\GroupLink;
-use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
+use Tuleap\Gitlab\Group\Token\GroupLinkApiTokenDAO;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class GitlabApiTokenDAOTest extends TestCase
 {
-    private GroupApiTokenDAO $token_dao;
+    private GroupLinkApiTokenDAO $token_dao;
 
     private const GROUP_LINK_ID           = 1;
     private const ENCRYPTED_TOKEN         = 'Oxt0ken1';
@@ -39,7 +39,7 @@ final class GitlabApiTokenDAOTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->token_dao = new GroupApiTokenDAO();
+        $this->token_dao = new GroupLinkApiTokenDAO();
     }
 
     protected function tearDown(): void

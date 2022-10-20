@@ -22,22 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group\Token;
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\API\ApiToken;
-
-final class GroupApiToken implements ApiToken
+interface GetTokenByGroupLinkId
 {
-    private function __construct(private ConcealedString $token)
-    {
-    }
-
-    public static function buildNewGroupToken(ConcealedString $token): self
-    {
-        return new self($token);
-    }
-
-    public function getToken(): ConcealedString
-    {
-        return $this->token;
-    }
+    public function getTokenByGroupId(int $group_id): string;
 }

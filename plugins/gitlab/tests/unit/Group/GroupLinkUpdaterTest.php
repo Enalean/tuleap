@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Group;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\Group\Token\GroupApiToken;
+use Tuleap\Gitlab\Group\Token\GroupLinkApiToken;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
-use Tuleap\Gitlab\Test\Stubs\UpdateArtifactClosureOfGroupStub;
-use Tuleap\Gitlab\Test\Stubs\UpdateBranchPrefixOfGroupStub;
+use Tuleap\Gitlab\Test\Stubs\UpdateArtifactClosureOfGroupLinkStub;
+use Tuleap\Gitlab\Test\Stubs\UpdateBranchPrefixOfGroupLinkStub;
 use Tuleap\Gitlab\Test\Stubs\UpdateGroupLinkTokenStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
@@ -34,24 +34,24 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class GroupUpdatorTest extends TestCase
+final class GroupLinkUpdaterTest extends TestCase
 {
-    private UpdateBranchPrefixOfGroupStub $branch_prefix_updater;
-    private UpdateArtifactClosureOfGroupStub $artifact_closure_updater;
+    private UpdateBranchPrefixOfGroupLinkStub $branch_prefix_updater;
+    private UpdateArtifactClosureOfGroupLinkStub $artifact_closure_updater;
     private UpdateGroupLinkTokenStub $group_token_updater;
     private ?string $branch_prefix;
     private ?bool $allow_artifact_closure;
-    private ?GroupApiToken $gitlab_token;
+    private ?GroupLinkApiToken $gitlab_token;
 
     protected function setUp(): void
     {
-        $this->branch_prefix_updater    = UpdateBranchPrefixOfGroupStub::withCallCount();
-        $this->artifact_closure_updater = UpdateArtifactClosureOfGroupStub::withCallCount();
+        $this->branch_prefix_updater    = UpdateBranchPrefixOfGroupLinkStub::withCallCount();
+        $this->artifact_closure_updater = UpdateArtifactClosureOfGroupLinkStub::withCallCount();
         $this->group_token_updater      = UpdateGroupLinkTokenStub::withCallCount();
 
         $this->branch_prefix          = 'dev/';
         $this->allow_artifact_closure = true;
-        $this->gitlab_token           = GroupApiToken::buildNewGroupToken(new ConcealedString("az3rty_s3cure_t0ken"));
+        $this->gitlab_token           = GroupLinkApiToken::buildNewGroupToken(new ConcealedString("az3rty_s3cure_t0ken"));
     }
 
     private function updateGroupLink(): Ok|Err
@@ -70,7 +70,7 @@ final class GroupUpdatorTest extends TestCase
                                       ->withNoBranchPrefix()
                                       ->build();
 
-        $updator = new GroupUpdator(
+        $updator = new GroupLinkUpdater(
             $this->branch_prefix_updater,
             $this->artifact_closure_updater,
             $this->group_token_updater
@@ -125,7 +125,7 @@ final class GroupUpdatorTest extends TestCase
     {
         $this->branch_prefix          = null;
         $this->allow_artifact_closure = null;
-        $this->gitlab_token           = GroupApiToken::buildNewGroupToken(new ConcealedString("az3rty_s3cure_t0ken"));
+        $this->gitlab_token           = GroupLinkApiToken::buildNewGroupToken(new ConcealedString("az3rty_s3cure_t0ken"));
 
         $result = $this->updateGroupLink();
         self::assertTrue(Result::isOk($result));

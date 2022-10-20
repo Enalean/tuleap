@@ -23,29 +23,30 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Group;
 
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
-use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
+use Tuleap\Gitlab\Test\Stubs\AddNewGroupLinkStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class GitlabGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GroupLinkFactoryTest extends TestCase
 {
     private const GROUP_ID            = 85;
     private const INTEGRATED_GROUP_ID = 77;
     private VerifyGroupIsAlreadyLinkedStub $group_verifier;
     private VerifyProjectIsAlreadyLinkedStub $project_verifier;
-    private AddNewGroupStub $group_adder;
+    private AddNewGroupLinkStub $group_adder;
 
     protected function setUp(): void
     {
         $this->group_verifier   = VerifyGroupIsAlreadyLinkedStub::withNeverLinked();
         $this->project_verifier = VerifyProjectIsAlreadyLinkedStub::withNeverLinked();
-        $this->group_adder      = AddNewGroupStub::withGroupId(self::INTEGRATED_GROUP_ID);
+        $this->group_adder      = AddNewGroupLinkStub::withGroupId(self::INTEGRATED_GROUP_ID);
     }
 
     private function createGroup(): GroupLink
     {
-        $factory = new GitlabGroupFactory($this->group_verifier, $this->project_verifier, $this->group_adder);
+        $factory = new GroupLinkFactory($this->group_verifier, $this->project_verifier, $this->group_adder);
 
         $api_group = GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi([
             'id'         => self::GROUP_ID,
@@ -55,7 +56,7 @@ final class GitlabGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'avatar_url' => 'https://gitlab.example.com/avatar',
         ]);
 
-        $new_group = NewGroup::fromAPIRepresentation(
+        $new_group = NewGroupLink::fromAPIRepresentation(
             $api_group,
             ProjectTestBuilder::aProject()->withId(153)->build(),
             new \DateTimeImmutable(),
@@ -78,7 +79,7 @@ final class GitlabGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->group_verifier = VerifyGroupIsAlreadyLinkedStub::withAlwaysLinked();
 
-        $this->expectException(GitlabGroupAlreadyLinkedToProjectException::class);
+        $this->expectException(GroupAlreadyLinkedToProjectException::class);
         $this->createGroup();
     }
 
@@ -86,7 +87,7 @@ final class GitlabGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->project_verifier = VerifyProjectIsAlreadyLinkedStub::withAlwaysLinked();
 
-        $this->expectException(ProjectAlreadyLinkedToGitlabGroupException::class);
+        $this->expectException(ProjectAlreadyLinkedToGroupException::class);
         $this->createGroup();
     }
 }
