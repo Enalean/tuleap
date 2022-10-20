@@ -26,10 +26,12 @@ use GitPlugin;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\Gitlab\Group\GitlabServerURIDeducer;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Stubs\CountIntegratedRepositoriesStub;
 use Tuleap\Gitlab\Test\Stubs\RetrieveGroupLinkedToProjectStub;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\ProjectByUnixNameFactory;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -107,6 +109,7 @@ final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->template_renderer,
             $this->group_retriever,
             CountIntegratedRepositoriesStub::withCount(4),
+            new GitlabServerURIDeducer(HTTPFactoryBuilder::URIFactory())
         );
 
         $current_user = UserTestBuilder::buildWithDefaults();

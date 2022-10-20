@@ -22,22 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Psr\Http\Message\UriFactoryInterface;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Group\Token\GroupLinkTokenRetriever;
 use Tuleap\Gitlab\Group\Token\RetrieveGroupLinksCredentials;
 
 final class GroupLinkCredentialsRetriever implements RetrieveGroupLinksCredentials
 {
-    public function __construct(private UriFactoryInterface $uri_factory, private GroupLinkTokenRetriever $group_link_token_retriever)
-    {
+    public function __construct(
+        private GitlabServerURIDeducer $server_uri_deducer,
+        private GroupLinkTokenRetriever $group_link_token_retriever,
+    ) {
     }
 
     public function retrieveCredentials(GroupLink $group_link): Credentials
     {
-        $token                = $this->group_link_token_retriever->retrieveToken($group_link);
-        $gitlab_group_web_uri = $this->uri_factory->createUri($group_link->web_url);
-        $gitlab_server        = $gitlab_group_web_uri->getScheme() . '://' . $gitlab_group_web_uri->getHost();
-        return new Credentials($gitlab_server, $token);
+        $token         = $this->group_link_token_retriever->retrieveToken($group_link);
+        $gitlab_server = $this->server_uri_deducer->deduceServerURI($group_link);
+        return new Credentials((string) $gitlab_server, $token);
     }
 }
