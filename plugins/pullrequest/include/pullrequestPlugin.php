@@ -53,6 +53,7 @@ use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -167,7 +168,7 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
         return ['git'];
     }
 
-    public function collectAssets(CollectAssets $retriever)
+    public function collectAssets(CollectAssets $retriever): void
     {
         $assets = new IncludeAssets(
             __DIR__ . '/../frontend-assets/pullrequest-create-button',
@@ -180,10 +181,8 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
         );
         $retriever->addStylesheet($css_assets);
 
-
-
-//        $create_pullrequest = new JavascriptAsset($assets, 'create-pullrequest-button.js');
-//        $retriever->addScript($create_pullrequest);
+        $create_pullrequest = new JavascriptAsset($assets, 'create-pullrequest-button.js');
+        $retriever->addScript($create_pullrequest);
     }
 
     /**
