@@ -632,6 +632,9 @@ msgstr ""
 "Les raccourcis s'appliquent au document ou dossier sélectionné. S'il n'y a "
 "pas d'élément sélectionné, ils s'appliqueront au dossier courant."
 
+msgid "Show"
+msgstr "Afficher"
+
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
@@ -724,6 +727,9 @@ msgstr "Ce dossier est vide"
 
 msgid "This is a private folder"
 msgstr "Ce dossier est privé"
+
+msgid "This item is not versionable"
+msgstr "Cet élément n'est pas versionnable"
 
 msgid ""
 "This page is asking you to confirm that you want to leave - data you have "

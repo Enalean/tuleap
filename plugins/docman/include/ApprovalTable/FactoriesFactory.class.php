@@ -18,8 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableFactoriesFactory
+class Docman_ApprovalTableFactoriesFactory implements \Tuleap\Docman\ApprovalTable\TableFactoryForFileBuilder
 {
+    public function getTableFactoryForFile(Docman_File $item): Docman_ApprovalTableFileFactory
+    {
+        return new Docman_ApprovalTableFileFactory($item, null);
+    }
+
     /**
      * Return the right ApprovalTableFactory depending of the item.
      */

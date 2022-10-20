@@ -23,6 +23,7 @@ import RootFolder from "../components/Folder/RootFolder.vue";
 import ChildFolder from "../components/Folder/ChildFolder.vue";
 import DisplayEmbedded from "../components/EmbeddedDisplay/DisplayEmbedded.vue";
 import DisplayHistory from "../components/History/DisplayHistory.vue";
+import DisplayVersions from "../components/Versions/DisplayVersions.vue";
 import SearchContainer from "../components/AdvancedSearch/SearchContainer.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads";
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
@@ -58,6 +59,11 @@ export function createRouter(store, project_name) {
                 path: "/history/:item_id",
                 name: "history",
                 component: DisplayHistory,
+            },
+            {
+                path: "/versions/:item_id",
+                name: "versions",
+                component: DisplayVersions,
             },
             {
                 path: "/search/:folder_id?",

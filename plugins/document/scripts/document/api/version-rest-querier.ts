@@ -19,8 +19,11 @@
 
 import { get } from "@tuleap/tlp-fetch";
 import type { FileHistory } from "../type";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { getAllJSON } from "@tuleap/fetch-result";
 
-export { getFileVersionHistory };
+export { getFileVersionHistory, getAllFileVersionHistory };
 
 async function getFileVersionHistory(id: number): Promise<ReadonlyArray<FileHistory>> {
     const escaped_file_id = encodeURIComponent(id);
@@ -32,4 +35,8 @@ async function getFileVersionHistory(id: number): Promise<ReadonlyArray<FileHist
     });
 
     return versions.json();
+}
+
+function getAllFileVersionHistory(id: number): ResultAsync<readonly FileHistory[], Fault> {
+    return getAllJSON<readonly FileHistory[], FileHistory>(`/api/docman_files/${id}/versions`);
 }

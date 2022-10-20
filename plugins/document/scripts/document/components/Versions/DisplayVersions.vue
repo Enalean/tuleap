@@ -26,17 +26,13 @@
             <h1 class="document-header-title">{{ item.title }}</h1>
         </div>
         <nav class="tlp-tabs">
-            <span class="tlp-tab tlp-tab-active">{{ $gettext("History") }}</span>
-            <router-link
-                class="tlp-tab"
-                v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
-                v-if="item_type_has_versions"
-                data-test="versions-link"
-                >{{ $gettext("Versions") }}</router-link
-            >
+            <span class="tlp-tab tlp-tab-active">{{ $gettext("Versions") }}</span>
         </nav>
         <div class="tlp-framed-horizontally">
-            <history-logs v-bind:item="item" />
+            <history-versions v-if="item_type_has_versions" v-bind:item="item" />
+            <div class="tlp-alert-danger" v-else>
+                {{ $gettext("This item is not versionable") }}
+            </div>
         </div>
     </section>
 </template>
@@ -47,7 +43,7 @@ import { useRoute } from "../../helpers/use-router";
 import { useActions } from "vuex-composition-helpers";
 import { onBeforeMount, ref } from "vue";
 import type { Item } from "../../type";
-import HistoryLogs from "./HistoryLogs.vue";
+import HistoryVersions from "./HistoryVersions.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
 
 const item = ref<Item | null>(null);

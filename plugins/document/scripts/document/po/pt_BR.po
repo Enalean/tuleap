@@ -593,6 +593,9 @@ msgid ""
 "selected item they will apply to the current folder."
 msgstr ""
 
+msgid "Show"
+msgstr ""
+
 msgid "Show error details"
 msgstr ""
 
@@ -670,6 +673,9 @@ msgid "This folder is empty"
 msgstr ""
 
 msgid "This is a private folder"
+msgstr ""
+
+msgid "This item is not versionable"
 msgstr ""
 
 msgid ""

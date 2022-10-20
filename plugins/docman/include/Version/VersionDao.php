@@ -26,12 +26,12 @@ use Tuleap\DB\DataAccessObject;
 class VersionDao extends DataAccessObject
 {
     /**
-     * @psalm-return list<array{number: int, label: string, filename: string}>
+     * @psalm-return list<array{id: int, number: int, label: string, filename: string, user_id: int, date: int, changelog: string|null}>
      */
     public function searchByItemId(int $id, int $offset, int $limit): array
     {
         $sql =
-            "SELECT number, label, filename
+            "SELECT id, number, label, filename, user_id, date, changelog
                 FROM plugin_docman_version WHERE item_id = ? ORDER BY number DESC LIMIT ?, ?";
 
         return $this->getDB()->run($sql, $id, $offset, $limit);

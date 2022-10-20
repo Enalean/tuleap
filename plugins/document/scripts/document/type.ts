@@ -22,6 +22,7 @@ import type { ErrorState } from "./store/error/module";
 import type { PermissionsState } from "./store/permissions/permissions-default-state";
 import type { PropertiesState } from "./store/properties/module";
 import type { Upload } from "tus-js-client";
+import type { RestUser } from "./api/rest-querier";
 
 export interface State {
     is_loading_folder: boolean;
@@ -469,8 +470,12 @@ export type ListOfSearchResultColumnDefinition = ReadonlyArray<SearchResultColum
 export interface FileHistory {
     readonly id: number;
     readonly name: string;
+    readonly changelog: string;
     readonly filename: string;
     readonly download_href: string;
+    readonly approval_href: string | null;
+    readonly date: string;
+    readonly author: RestUser;
 }
 
 export interface DocumentJsonError {
