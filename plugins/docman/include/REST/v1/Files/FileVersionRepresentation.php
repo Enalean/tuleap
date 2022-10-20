@@ -30,9 +30,13 @@ use Tuleap\User\REST\UserRepresentation;
 final class FileVersionRepresentation
 {
     /**
-     * @var int Item identifier
+     * @var int Version identifier
      */
     public $id;
+    /**
+     * @var int Version number
+     */
+    public $number;
     /**
      * @var string name of version
      */
@@ -64,6 +68,7 @@ final class FileVersionRepresentation
 
     private function __construct(
         int $id,
+        int $number,
         ?string $label,
         string $filename,
         int $group_id,
@@ -74,6 +79,7 @@ final class FileVersionRepresentation
         string $changelog,
     ) {
         $this->id            = $id;
+        $this->number        = $number;
         $this->name          = ($label) ?: "";
         $this->filename      = $filename;
         $this->author        = $author;
@@ -86,13 +92,14 @@ final class FileVersionRepresentation
                     'group_id'       => $group_id,
                     'action'         => 'show',
                     'id'             => $item_id,
-                    'version_number' => $id,
+                    'version_number' => $number,
                 ]
             );
     }
 
     public static function build(
         int $version_id,
+        int $number,
         ?string $label,
         string $filename,
         int $group_id,
@@ -104,6 +111,7 @@ final class FileVersionRepresentation
     ): self {
         return new self(
             $version_id,
+            $number,
             $label,
             $filename,
             $group_id,
