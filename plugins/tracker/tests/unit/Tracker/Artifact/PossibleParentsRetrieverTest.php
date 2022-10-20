@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Artifact;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use function PHPUnit\Framework\assertEquals;

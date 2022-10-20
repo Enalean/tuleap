@@ -25,7 +25,7 @@ namespace Tuleap\FullTextSearchCommon\CLI;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\Search\ItemToIndexBatchQueue;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class IndexAllPendingItemsCommandTest extends TestCase
 {

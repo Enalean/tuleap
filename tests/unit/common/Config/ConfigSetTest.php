@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Config;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class ConfigSetTest extends TestCase
 {
