@@ -89,10 +89,6 @@ msgstr ""
 msgid "Please select a %s group."
 msgstr ""
 
-#, php-format
-msgid "Please use your %1$s login (not the %2$s one)."
-msgstr ""
-
 msgid "Preserve members"
 msgstr ""
 

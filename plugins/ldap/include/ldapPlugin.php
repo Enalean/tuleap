@@ -416,7 +416,13 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType()) {
             if ($event->user->getLdapId() != null) {
-                $event->refuseLogin(sprintf(dgettext('tuleap-ldap', 'Please use your %1$s login (not the %2$s one).'), $this->getLDAPServerCommonName(), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
+                $this->getLogger()->info(
+                    sprintf(
+                        "User %s was found in LDAP but LDAP authentication failed. No fallback on local login.",
+                        $event->user->getUserName(),
+                    )
+                );
+                $event->refuseLogin(_('Invalid Password Or User Name'));
                 return;
             }
         }
@@ -434,7 +440,13 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType() && (new LDAP_ProjectManager())->hasSVNLDAPAuth((int) $event->project->getID())) {
             if ($event->user->getLdapId() !== null) {
-                $event->refuseLogin(sprintf(dgettext('tuleap-ldap', 'Please use your %1$s login (not the %2$s one).'), $this->getLDAPServerCommonName(), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
+                $this->getLogger()->info(
+                    sprintf(
+                        "User %s was found in LDAP but LDAP authentication failed. No fallback on SVN login.",
+                        $event->user->getUserName(),
+                    )
+                );
+                $event->refuseLogin(_('Invalid Password Or User Name'));
             }
         }
     }
