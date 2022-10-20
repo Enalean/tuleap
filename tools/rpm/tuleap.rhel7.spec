@@ -567,7 +567,7 @@ BurningParrot, default theme starting Tuleap 10
 #
 # Package setup
 %prep
-%setup -q
+%setup -q -c tuleap-src
 
 #
 # Build
@@ -626,9 +626,6 @@ done
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/tsconfig.tsbuildinfo
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/composer.lock
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/css
@@ -642,30 +639,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/common
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/tlp
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/tlp-doc
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/jetbrains
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/nix
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/signing-keys
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/version_numbers
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload.sh
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-mo.sh
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-po.php
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/run_dev/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/publish_js_libraries/
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/scripts" -type d -execdir %{__rm} -rf "{}" \;
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/themes" -type d -execdir %{__rm} -rf "{}" \;
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/tests" -type d -execdir %{__rm} -rf "{}" \;
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/additional-packages
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/additional-packages" -type d -execdir %{__rm} -rf "{}" \;
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
-    -name 'composer.json' -o -name 'composer.lock' -o -name 'package.json' -o -name 'pnpm-lock.yaml' -o \
-    -name 'tsconfig.json' -o -name 'tsconfig.tsbuildinfo' -o \
-    -name 'vite.config.ts' -o \
-    -name 'webpack.common.js' -o -name 'webpack.dev.js' -o -name 'webpack.prod.js' -o \
-    -name 'Makefile' -o -name 'jest.config.js' -o -name 'build-manifest.json' \
-    \) -a -delete
 
 # Configuration
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}

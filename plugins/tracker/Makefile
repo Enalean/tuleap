@@ -1,5 +1,5 @@
 SHELL=/usr/bin/env bash
 
 generate-templates:
-	cp -f $(CURDIR)/../../tools/utils/setup_templates/generate-templates/trackers/bug.xml \
+	install -D $(CURDIR)/../../tools/utils/setup_templates/generate-templates/trackers/bug.xml \
 		resources/templates/Tracker_Bugs.xml

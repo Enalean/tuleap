@@ -170,8 +170,8 @@ class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:
     public function collectAssets(CollectAssets $retriever)
     {
         $assets = new IncludeAssets(
-            __DIR__ . '/../frontend-assets/pullrequest-create-button',
-            '/assets/pullrequest/pullrequest-create-button'
+            __DIR__ . '/../scripts/create-pullrequest-button/frontend-assets',
+            '/assets/pullrequest/create-pullrequest-button'
         );
 
         $css_assets = new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons(

@@ -47,13 +47,12 @@ describe(`vite-configurator`, () => {
         expect(config.build?.outDir).toBe("./frontend-assets/");
     });
 
-    it(`given an outDir, it will replace the outDir configuration
-        and its final directory will be added to the end of the base path configuration`, async () => {
-        tuleap_configuration.outDir = `../../frontend-assets/${APP_NAME}/`;
+    it(`given a "sub" app name, it will set the proper base path configuration`, async () => {
+        tuleap_configuration.sub_app_name = APP_NAME;
 
         const config = await getConfig();
 
         expect(config.base).toBe(`/assets/${PLUGIN_NAME}/${APP_NAME}/`);
-        expect(config.build?.outDir).toBe(tuleap_configuration.outDir);
+        expect(config.build?.outDir).toBe("./frontend-assets/");
     });
 });

@@ -936,7 +936,7 @@ class gitlabPlugin extends Plugin
                 new CreateBranchPrefixDao()
             ),
             new JavascriptViteAsset(
-                new IncludeViteAssets(__DIR__ . '/../frontend-assets/artifact-create-branch', '/assets/gitlab/artifact-create-branch'),
+                new IncludeViteAssets(__DIR__ . '/../scripts/artifact-create-branch-action/frontend-assets', '/assets/gitlab/artifact-create-branch-action'),
                 'src/index.ts'
             )
         );
@@ -974,13 +974,13 @@ class gitlabPlugin extends Plugin
             EventManager::instance(),
             new JavascriptViteAsset(
                 new IncludeViteAssets(
-                    __DIR__ . '/../frontend-assets/gitlab-group-link-wizard',
-                    '/assets/gitlab/gitlab-group-link-wizard'
+                    __DIR__ . '/../scripts/group-link-wizard/frontend-assets',
+                    '/assets/gitlab/group-link-wizard'
                 ),
                 'src/index.ts'
             ),
             new JavascriptViteAsset(
-                new IncludeViteAssets(__DIR__ . '/../frontend-assets/linked-group', '/assets/gitlab/linked-group'),
+                new IncludeViteAssets(__DIR__ . '/../scripts/linked-group/frontend-assets', '/assets/gitlab/linked-group'),
                 'src/main.ts'
             ),
             $git_plugin->getHeaderRenderer(),

@@ -20,11 +20,6 @@
 const path = require("path");
 const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
-const assets_output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "../../frontend-assets/pullrequest-create-button")
-);
-const manifest_plugin = webpack_configurator.getManifestPlugin();
-
 const entry_points = {
     "create-pullrequest-button": "./src/index.js",
     "repository-style": "../../themes/repository.scss",
@@ -34,7 +29,7 @@ module.exports = [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
-        output: assets_output,
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             tlp: "tlp",
         },
@@ -47,7 +42,8 @@ module.exports = [
             ],
         },
         plugins: [
-            manifest_plugin,
+            webpack_configurator.getCleanWebpackPlugin(),
+            webpack_configurator.getManifestPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
             webpack_configurator.getVueLoaderPlugin(),
         ],

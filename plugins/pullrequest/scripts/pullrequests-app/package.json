@@ -27,7 +27,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "rm -rf ../../../../frontend-assets/pullrequest-app && webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"
   }

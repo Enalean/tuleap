@@ -14,7 +14,7 @@
     "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator"
   },
   "scripts": {
-    "build": "rm -rf ../../frontend-assets/create-pullrequest-button && webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"
   }

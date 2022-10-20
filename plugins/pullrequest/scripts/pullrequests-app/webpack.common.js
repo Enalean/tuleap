@@ -21,11 +21,6 @@ const path = require("path");
 const { VueLoaderPlugin } = require("vue-loader");
 const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
-const assets_output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "../../frontend-assets/pullrequest-app")
-);
-const manifest_plugin = webpack_configurator.getManifestPlugin();
-
 module.exports = [
     {
         entry: {
@@ -33,7 +28,7 @@ module.exports = [
             "pull-requests-style": "../../themes/pull-requests.scss",
         },
         context: path.resolve(__dirname),
-        output: assets_output,
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             jquery: "jQuery",
             tlp: "tlp",
@@ -53,7 +48,8 @@ module.exports = [
             ],
         },
         plugins: [
-            manifest_plugin,
+            webpack_configurator.getCleanWebpackPlugin(),
+            webpack_configurator.getManifestPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
             new VueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
