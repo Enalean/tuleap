@@ -32,6 +32,7 @@ final class OnlyOfficeEditorConfig
         public string $lang,
         public string $region,
         public OnlyOfficeEditorUserConfig $user,
+        public string $callbackUrl,
     ) {
     }
 
@@ -40,7 +41,8 @@ final class OnlyOfficeEditorConfig
         return new self(
             $user->getShortLocale(),
             str_replace('_', '-', $user->getLocale()),
-            OnlyOfficeEditorUserConfig::fromUser($user)
+            OnlyOfficeEditorUserConfig::fromUser($user),
+            \Tuleap\ServerHostname::HTTPSUrl() . '/onlyoffice/document_save',
         );
     }
 }

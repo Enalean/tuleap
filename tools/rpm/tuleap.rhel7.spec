@@ -849,6 +849,11 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 
+## Plugin onlyoffice
+%{__install} plugins/onlyoffice/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_onlyoffice
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_onlyoffice
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_onlyoffice
+
 #
 ## Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
@@ -1357,6 +1362,8 @@ fi
 %files plugin-onlyoffice
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/onlyoffice
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_onlyoffice
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_onlyoffice
 
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)
