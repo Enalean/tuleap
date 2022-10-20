@@ -34,7 +34,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\User\UserName;
 

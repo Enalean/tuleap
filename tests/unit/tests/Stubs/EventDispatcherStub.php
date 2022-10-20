@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test\Stub;
+namespace Tuleap\Test\Stubs;
 
 final class EventDispatcherStub implements \Psr\EventDispatcher\EventDispatcherInterface
 {

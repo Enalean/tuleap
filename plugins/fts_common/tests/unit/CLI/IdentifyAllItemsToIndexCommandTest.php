@@ -24,7 +24,7 @@ namespace Tuleap\FullTextSearchCommon\CLI;
 
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class IdentifyAllItemsToIndexCommandTest extends TestCase
 {

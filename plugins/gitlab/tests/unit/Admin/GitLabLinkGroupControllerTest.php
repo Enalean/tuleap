@@ -37,7 +37,7 @@ use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ProjectByUnixUnixNameFactory;
 use Tuleap\Test\Stubs\TemplateRendererStub;
 

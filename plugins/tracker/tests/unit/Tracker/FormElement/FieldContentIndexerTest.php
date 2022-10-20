@@ -28,7 +28,7 @@ use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueueStub;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class FieldContentIndexerTest extends TestCase

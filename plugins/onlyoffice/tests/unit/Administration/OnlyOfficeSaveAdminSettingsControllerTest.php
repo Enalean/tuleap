@@ -35,7 +35,7 @@ use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
 {

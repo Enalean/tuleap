@@ -29,7 +29,7 @@ use GitRepositoryFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Git\PullRequestEndpointsAvailableChecker;
 use Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Layout\IncludeAssetsGeneric;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Test\Builders\ProjectTestBuilder;
