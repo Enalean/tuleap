@@ -71,6 +71,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         $item     = new \Docman_File($dar_item);
 
         $dar = [
+            'id' => 234,
             'item_id' => 4,
             'number' => 1,
             'label' => "my version label",
@@ -88,7 +89,8 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
 
         self::assertEquals(1, $collection->getTotalSize());
         $representation = $collection->getPaginatedFileversionrepresentations()[0];
-        self::assertEquals(1, $representation->id);
+        self::assertEquals(234, $representation->id);
+        self::assertEquals(1, $representation->number);
         self::assertEquals("my version label", $representation->name);
         self::assertEquals("a_file.txt", $representation->filename);
         self::assertEquals('', $representation->changelog);
@@ -111,6 +113,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         $item     = new \Docman_File($dar_item);
 
         $dar = [
+            'id' => 234,
             'item_id' => 4,
             'number' => 1,
             'label' => "my version label",

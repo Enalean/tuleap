@@ -469,6 +469,7 @@ export type ListOfSearchResultColumnDefinition = ReadonlyArray<SearchResultColum
 
 export interface FileHistory {
     readonly id: number;
+    readonly number: number;
     readonly name: string;
     readonly changelog: string;
     readonly filename: string;

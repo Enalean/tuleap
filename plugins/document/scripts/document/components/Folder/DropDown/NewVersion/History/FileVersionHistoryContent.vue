@@ -20,7 +20,7 @@
 <template functional>
     <tr>
         <td>
-            <a v-bind:href="encodeURI(props.version.download_href)">{{ props.version.id }}</a>
+            <a v-bind:href="encodeURI(props.version.download_href)">{{ props.version.number }}</a>
         </td>
         <td>
             {{ props.version.name }}

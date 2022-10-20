@@ -32,7 +32,7 @@ describe("HistoryVersionsContent", () => {
             propsData: {
                 versions: [
                     {
-                        id: 1,
+                        number: 1,
                         name: "Plop",
                         changelog: "The changelog",
                         filename: "duck.png",

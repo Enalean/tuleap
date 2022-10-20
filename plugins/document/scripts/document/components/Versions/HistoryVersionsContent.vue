@@ -22,7 +22,7 @@
     <tbody>
         <tr v-for="version in versions" v-bind:key="version.id">
             <td class="tlp-table-cell-numeric">
-                <a v-bind:href="version.download_href">{{ version.id }}</a>
+                <a v-bind:href="version.download_href">{{ version.number }}</a>
             </td>
             <td>
                 <tlp-relative-date
