@@ -21,9 +21,9 @@ import { get } from "@tuleap/tlp-fetch";
 import type { FileHistory } from "../type";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { getAllJSON } from "@tuleap/fetch-result";
+import { getAllJSON, del } from "@tuleap/fetch-result";
 
-export { getFileVersionHistory, getAllFileVersionHistory };
+export { getFileVersionHistory, getAllFileVersionHistory, deleteVersion };
 
 async function getFileVersionHistory(id: number): Promise<ReadonlyArray<FileHistory>> {
     const escaped_file_id = encodeURIComponent(id);
@@ -39,4 +39,8 @@ async function getFileVersionHistory(id: number): Promise<ReadonlyArray<FileHist
 
 function getAllFileVersionHistory(id: number): ResultAsync<readonly FileHistory[], Fault> {
     return getAllJSON<readonly FileHistory[], FileHistory>(`/api/docman_files/${id}/versions`);
+}
+
+function deleteVersion(id: number): ResultAsync<Response, Fault> {
+    return del(`/api/docman_file_versions/${id}`);
 }

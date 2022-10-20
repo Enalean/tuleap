@@ -648,6 +648,9 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "The last version of an item cannot be deleted"
+msgstr ""
+
 msgid ""
 "The size of the zip file you are attempting to download is exceeding the "
 "threshold\n"
@@ -771,6 +774,10 @@ msgid "Writer"
 msgstr ""
 
 msgid "You are about to delete \"%s\" permanently. Please confirm your action."
+msgstr ""
+
+msgid ""
+"You are about to delete a version permanently. Please confirm your action."
 msgstr ""
 
 msgid ""

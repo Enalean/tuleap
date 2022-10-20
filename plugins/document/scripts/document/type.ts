@@ -118,6 +118,7 @@ export interface Item extends MinimalItem {
     last_update_date: Date | string | number;
     creation_date: string;
     user_can_write: boolean;
+    user_can_delete: boolean;
     can_user_manage: boolean;
     lock_info: LockInfo | null;
     type: string;

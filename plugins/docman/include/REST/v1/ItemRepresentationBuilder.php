@@ -150,6 +150,7 @@ class ItemRepresentationBuilder
         }
 
         $user_can_write  = $this->permissions_manager->userCanWrite($current_user, $item->getId());
+        $user_can_delete = $this->permissions_manager->userCanDelete($current_user, $item);
         $can_user_manage = $this->permissions_manager->userCanManage($current_user, $item->getId());
 
         $lock_info                 = $this->getLockInformation($item);
@@ -164,6 +165,7 @@ class ItemRepresentationBuilder
             $this->purifier,
             $owner_representation,
             $user_can_write,
+            $user_can_delete,
             $type,
             $is_expanded,
             $can_user_manage,

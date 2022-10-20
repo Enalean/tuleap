@@ -85,6 +85,11 @@ class ItemRepresentation
     public $user_can_write;
 
     /**
+     * @var bool {@type bool}
+     */
+    public $user_can_delete;
+
+    /**
      * @var string | null
      */
     public $type;
@@ -170,6 +175,7 @@ class ItemRepresentation
         ?string $last_update_date,
         ?string $creation_date,
         bool $user_can_write,
+        bool $user_can_delete,
         bool $can_user_manage,
         ?string $type,
         ?FilePropertiesRepresentation $file_properties,
@@ -194,6 +200,7 @@ class ItemRepresentation
         $this->last_update_date           = $last_update_date;
         $this->creation_date              = $creation_date;
         $this->user_can_write             = $user_can_write;
+        $this->user_can_delete            = $user_can_delete;
         $this->can_user_manage            = $can_user_manage;
         $this->type                       = $type;
         $this->file_properties            = $file_properties;
@@ -219,6 +226,7 @@ class ItemRepresentation
         Codendi_HTMLPurifier $purifier,
         MinimalUserRepresentation $owner,
         bool $user_can_write,
+        bool $user_can_delete,
         ?string $type,
         bool $is_expanded,
         bool $can_user_manage,
@@ -244,6 +252,7 @@ class ItemRepresentation
             JsonCast::toDate($item->getUpdateDate()),
             JsonCast::toDate($item->getCreateDate()),
             $user_can_write,
+            $user_can_delete,
             $can_user_manage,
             $type,
             $file_properties,
