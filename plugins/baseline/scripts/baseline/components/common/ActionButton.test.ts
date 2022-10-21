@@ -26,7 +26,7 @@ import ActionButton from "./ActionButton.vue";
 describe("ActionButton", () => {
     const spinner_selector = '[data-test-type="spinner"]';
     const button_selector = '[data-test-type="button"]';
-    let wrapper: Wrapper<ActionButton>;
+    let wrapper: Wrapper<Vue>;
 
     beforeEach(() => {
         wrapper = mount(ActionButton, {

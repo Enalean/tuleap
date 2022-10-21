@@ -27,7 +27,7 @@ import moment from "moment";
 import "moment/locale/fr";
 
 describe("HumanizedDate", () => {
-    let wrapper: Wrapper<HumanizedDate>;
+    let wrapper: Wrapper<Vue>;
 
     const now = moment("2019/02/23 09:37:20 +0001", "YYYY/MM/DD HH:mm:ss Z").toDate();
 

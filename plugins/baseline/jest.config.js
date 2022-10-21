@@ -19,6 +19,8 @@
 
 const path = require("path");
 
+process.env.DISABLE_TS_TYPECHECK = "true";
+
 const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
 
 const jest_base_config = defineJestConfiguration();
