@@ -29,15 +29,19 @@
                     <th>{{ $gettext("Author") }}</th>
                     <th>{{ $gettext("Version name") }}</th>
                     <th>{{ $gettext("Change Log") }}</th>
-                    <th>{{ $gettext("Approval") }}</th>
-                    <th></th>
+                    <th v-if="!is_link">{{ $gettext("Approval") }}</th>
+                    <th v-if="!is_link"></th>
                 </tr>
             </thead>
 
-            <history-versions-loading-state v-if="is_loading" />
-            <history-versions-error-state v-else-if="is_in_error" v-bind:colspan="7" />
-            <history-versions-empty-state v-else-if="is_empty" v-bind:colspan="7" />
-            <history-versions-content v-else v-bind:item="item" v-bind:versions="versions" />
+            <history-versions-loading-state v-if="is_loading" v-bind:item="item" />
+            <history-versions-error-state v-else-if="is_in_error" v-bind:colspan="colspan" />
+            <history-versions-empty-state v-else-if="is_empty" v-bind:colspan="colspan" />
+            <history-versions-content-for-link
+                v-else-if="is_link"
+                v-bind:versions="link_versions"
+            />
+            <history-versions-content v-else v-bind:item="item" v-bind:versions="file_versions" />
         </table>
     </div>
 </template>
@@ -47,26 +51,47 @@ import HistoryVersionsLoadingState from "./HistoryVersionsLoadingState.vue";
 import HistoryVersionsErrorState from "./HistoryVersionsErrorState.vue";
 import HistoryVersionsEmptyState from "./HistoryVersionsEmptyState.vue";
 import HistoryVersionsContent from "./HistoryVersionsContent.vue";
-import type { FileHistory, Item } from "../../type";
+import type { FileHistory, Item, LinkVersion } from "../../type";
 import { computed, onMounted, ref } from "vue";
-import { getAllFileVersionHistory } from "../../api/version-rest-querier";
+import { getAllFileVersionHistory, getAllLinkVersionHistory } from "../../api/version-rest-querier";
 import { isEmbedded, isLink } from "../../helpers/type-check-helper";
+import HistoryVersionsContentForLink from "./HistoryVersionsContentForLink.vue";
 
 const props = defineProps<{ item: Item }>();
 
 const is_loading = ref(true);
 const is_in_error = ref(false);
-const versions = ref<readonly FileHistory[]>([]);
-const is_empty = computed((): boolean => versions.value.length === 0);
+const file_versions = ref<readonly FileHistory[]>([]);
+const link_versions = ref<readonly LinkVersion[]>([]);
+const is_empty = computed(
+    (): boolean => file_versions.value.length === 0 && link_versions.value.length === 0
+);
+
+const is_link = computed((): boolean => isLink(props.item));
+const colspan = computed((): number => (is_link.value ? 5 : 7));
 
 onMounted(() => {
-    if (isEmbedded(props.item) || isLink(props.item)) {
+    if (isEmbedded(props.item)) {
+        return;
+    }
+
+    if (is_link.value) {
+        getAllLinkVersionHistory(props.item.id).match(
+            (versions: readonly LinkVersion[]): void => {
+                link_versions.value = versions;
+                is_loading.value = false;
+            },
+            (): void => {
+                is_in_error.value = true;
+                is_loading.value = false;
+            }
+        );
         return;
     }
 
     getAllFileVersionHistory(props.item.id).match(
-        (file_versions: readonly FileHistory[]): void => {
-            versions.value = file_versions;
+        (versions: readonly FileHistory[]): void => {
+            file_versions.value = versions;
             is_loading.value = false;
         },
         (): void => {
