@@ -3,7 +3,11 @@
     "compilerOptions": {
         "module": "es2020", //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
         "types": ["jest"],
-        "incremental": false
+        "allowJs": true,
+        "skipLibCheck": true,
     },
+  "vueCompilerOptions": {
+    "target": 2.7
+  },
   "include": ["scripts/**/*"]
 }

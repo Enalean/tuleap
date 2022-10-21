@@ -73,7 +73,7 @@ export const defineJestConfiguration = (): JestConfiguration => {
             "^.+\\.ts$": [
                 "ts-jest",
                 {
-                    diagnostics: { warnOnly: is_typechecking_enabled },
+                    diagnostics: is_typechecking_enabled,
                     isolatedModules: !is_typechecking_enabled,
                 },
             ],

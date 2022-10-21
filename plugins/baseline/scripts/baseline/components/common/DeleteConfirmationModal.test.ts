@@ -29,7 +29,7 @@ describe("DeleteConfirmationModal", () => {
     let confirm: jest.Mock;
     let confirmResolve: (value: unknown) => void;
 
-    let wrapper: Wrapper<DeleteConfirmationModal>;
+    let wrapper: Wrapper<Vue>;
 
     beforeEach(() => {
         confirm = jest.fn().mockReturnValue(

@@ -27,7 +27,7 @@ describe("CollapsableContent", () => {
     const toggle_selector = '[data-test-action="toggle-expand-collapse"]';
     const header_slot_selector = '[data-test-type="header-slot"]';
 
-    let wrapper: Wrapper<CollapsableContent>;
+    let wrapper: Wrapper<Vue>;
 
     beforeEach(() => {
         wrapper = shallowMount(CollapsableContent, {
