@@ -37,6 +37,7 @@ use Tuleap\Docman\REST\v1\OpenItemHref;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\CssViteAsset;
@@ -53,6 +54,7 @@ use Tuleap\OnlyOffice\Open\DocmanFileLastVersionToOnlyOfficeDocumentTransformer;
 use Tuleap\OnlyOffice\Open\OnlyOfficeEditorController;
 use Tuleap\OnlyOffice\Open\OpenInOnlyOfficeController;
 use Tuleap\OnlyOffice\Open\ProvideDocmanFileLastVersion;
+use Tuleap\OnlyOffice\Save\OnlyOfficeSaveController;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -61,6 +63,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 {
+    public const LOG_IDENTIFIER = 'onlyoffice_syslog';
+
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -109,6 +113,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         $route_collector->addGroup(
             '/onlyoffice',
             function (FastRoute\RouteCollector $r): void {
+                $r->post('/document_save', $this->getRouteHandler('routeGetDocumentSave'));
                 $r->get('/document_download', $this->getRouteHandler('routeGetDocumentDownload'));
                 $r->get('/open/{id:\d+}', $this->getRouteHandler('routeGetOpenOnlyOffice'));
                 $r->get('/editor/{id:\d+}', $this->getRouteHandler('routeGetEditorOnlyOffice'));
@@ -118,9 +123,22 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         $route_collector->post(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routePostAdminSettings'));
     }
 
+    public function routeGetDocumentSave(): OnlyOfficeSaveController
+    {
+        return new OnlyOfficeSaveController(
+            new JSONResponseBuilder(
+                HTTPFactoryBuilder::responseFactory(),
+                HTTPFactoryBuilder::streamFactory(),
+            ),
+            \BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER),
+            new SapiStreamEmitter(),
+            new SessionWriteCloseMiddleware(),
+        );
+    }
+
     public function routeGetDocumentDownload(): DocmanFileDownloadController
     {
-        $logger           = BackendLogger::getDefaultLogger();
+        $logger           = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $token_middleware = new DownloadDocumentWithTokenMiddleware(
             new PrefixedSplitTokenSerializer(new PrefixOnlyOfficeDocumentDownload()),
@@ -165,7 +183,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeGetOpenOnlyOffice(): OpenInOnlyOfficeController
     {
-        $logger = BackendLogger::getDefaultLogger();
+        $logger = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
 
         return new OpenInOnlyOfficeController(
             UserManager::instance(),

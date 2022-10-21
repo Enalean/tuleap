@@ -76,7 +76,15 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
             ['fileType' => 'docx', 'key' => 'key', 'title' => 'Doc.docx', 'url' => 'https://example.com/download', 'permissions' => ['chat' => false, 'print' => false, 'edit' => true]],
             $parsed_token->claims()->get('document')
         );
-        self::assertEquals(['lang' => 'en', 'region' => 'en-US', 'user' => ['id' => '110', 'name' => 'User #110']], $parsed_token->claims()->get('editorConfig'));
+        self::assertEquals(
+            [
+                'lang'        => 'en',
+                'region'      => 'en-US',
+                'user'        => ['id' => '110', 'name' => 'User #110'],
+                'callbackUrl' => 'https:///onlyoffice/document_save',
+            ],
+            $parsed_token->claims()->get('editorConfig')
+        );
     }
 
     public function testReturnsFaultWhenDocumentConfigCannotBeProvided(): void
