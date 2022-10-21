@@ -85,7 +85,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->generator->regenerate($id, $this->createMock(\PFUser::class));
     }
 
-    public function test404IfUserIsNotGitAdminOfTheProjectWhereTheGitlabRepositoryIsIntegrated(): void
+    public function test403IfUserIsNotGitAdminOfTheProjectWhereTheGitlabRepositoryIsIntegrated(): void
     {
         $user = $this->createMock(\PFUser::class);
 
@@ -107,7 +107,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn(false);
 
         $this->expectException(RestException::class);
-        $this->expectExceptionCode(404);
+        $this->expectExceptionCode(403);
 
         $this->generator->regenerate($id, $user);
     }

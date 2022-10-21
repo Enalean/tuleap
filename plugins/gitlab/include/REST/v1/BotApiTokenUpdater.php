@@ -79,6 +79,10 @@ class BotApiTokenUpdater
         $this->logger                         = $logger;
     }
 
+    /**
+     * @throws I18NRestException
+     * @throws RestException
+     */
     public function update(ConcealedBotApiTokenPatchRepresentation $patch_representation, \PFUser $current_user): void
     {
         $repository = $this->repository_integration_factory->getIntegrationById(
