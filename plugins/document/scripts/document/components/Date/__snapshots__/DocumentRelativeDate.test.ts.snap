@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DocumentRelativeDate should display a tlp-relative-date element 1`] = `
+<tlp-relative-date-stub
+  absolute-date="2021-10-06 00:00"
+  date="2021-10-06"
+  locale="en_US"
+  placement="top"
+  preference="relative"
+>
+  
+    2021-10-06 00:00
+
+</tlp-relative-date-stub>
+`;
+
+exports[`DocumentRelativeDate should display a tlp-relative-date element with placement on right 1`] = `
+<tlp-relative-date-stub
+  absolute-date="2021-10-06 00:00"
+  date="2021-10-06"
+  locale="en_US"
+  placement="right"
+  preference="relative"
+>
+  
+    2021-10-06 00:00
+
+</tlp-relative-date-stub>
+`;

@@ -23,7 +23,6 @@ import QuickLookDocumentProperties from "./QuickLookDocumentProperties.vue";
 import localVue from "../../helpers/local-vue";
 
 import { TYPE_FILE, TYPE_FOLDER } from "../../constants";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type {
     FileProperties,
     Folder,
@@ -35,28 +34,11 @@ import type {
 } from "../../type";
 
 describe("QuickLookDocumentProperties", () => {
-    let store = {};
-
     function createWrapper(item: Item): Wrapper<QuickLookDocumentProperties> {
-        const store_options = {
-            state: {
-                configuration: {
-                    date_time_format: "d/m/Y H:i",
-                    relative_dates_display: true,
-                    user_locale: "en_EN",
-                },
-            },
-        };
-        store = createStoreMock(store_options);
-
         return shallowMount(QuickLookDocumentProperties, {
             localVue,
             propsData: {
                 item,
-            },
-            mocks: { $store: store },
-            stubs: {
-                "tlp-relative-date": true,
             },
         });
     }
@@ -75,6 +57,7 @@ describe("QuickLookDocumentProperties", () => {
                 { name: "other", short_name: "other property" } as Property,
             ],
             creation_date: "2019-06-25T16:56:22+04:00",
+            last_update_date: "2019-06-25T16:56:22+04:00",
         } as ItemFile;
 
         const wrapper = createWrapper(item);
@@ -94,6 +77,7 @@ describe("QuickLookDocumentProperties", () => {
             } as User,
             properties: [{ name: "title document", short_name: "title" } as Property],
             creation_date: "2019-06-25T16:56:22+04:00",
+            last_update_date: "2019-06-25T16:56:22+04:00",
         } as ItemFile;
 
         const wrapper = createWrapper(item);
@@ -112,6 +96,8 @@ describe("QuickLookDocumentProperties", () => {
                 id: 102,
             } as User,
             properties: [{ name: "title document", short_name: "title" } as FolderProperty],
+            creation_date: "2019-06-25T16:56:22+04:00",
+            last_update_date: "2019-06-25T16:56:22+04:00",
         } as Folder;
 
         const wrapper = createWrapper(item);
@@ -133,6 +119,7 @@ describe("QuickLookDocumentProperties", () => {
                 file_size: 123456,
             } as FileProperties,
             creation_date: "2019-06-25T16:56:22+04:00",
+            last_update_date: "2019-06-25T16:56:22+04:00",
             properties,
         } as ItemFile;
 
@@ -155,6 +142,7 @@ describe("QuickLookDocumentProperties", () => {
                 approval_state: "Approved",
             },
             creation_date: "2019-06-25T16:56:22+04:00",
+            last_update_date: "2019-06-25T16:56:22+04:00",
             properties,
         } as ItemFile;
 
@@ -176,6 +164,7 @@ describe("QuickLookDocumentProperties", () => {
             },
             approval_table: null,
             creation_date: "2019-06-25T16:56:22+04:00",
+            last_update_date: "2019-06-25T16:56:22+04:00",
             properties,
         } as ItemFile;
 

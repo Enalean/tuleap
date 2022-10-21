@@ -4,19 +4,10 @@ exports[`HistoryLogsContent should collapse cols when there is no new value 1`] 
 <tbody>
   <tr>
     <td>
-      <tlp-relative-date-stub
-        absolute-date="2021-10-06 00:00"
+      <document-relative-date-stub
         date="2021-10-06"
-        locale="en_US"
-        placement="top"
-        preference="relative"
-      >
-        
-                date =&gt; {
-    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
-  }
-            
-      </tlp-relative-date-stub>
+        relative_placement="top"
+      />
     </td>
      
     <td>
@@ -49,19 +40,10 @@ exports[`HistoryLogsContent should collapse cols when there is no new value nor 
 <tbody>
   <tr>
     <td>
-      <tlp-relative-date-stub
-        absolute-date="2021-10-06 00:00"
+      <document-relative-date-stub
         date="2021-10-06"
-        locale="en_US"
-        placement="top"
-        preference="relative"
-      >
-        
-                date =&gt; {
-    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
-  }
-            
-      </tlp-relative-date-stub>
+        relative_placement="top"
+      />
     </td>
      
     <td>
@@ -92,19 +74,10 @@ exports[`HistoryLogsContent should collapse cols when there is no old value 1`] 
 <tbody>
   <tr>
     <td>
-      <tlp-relative-date-stub
-        absolute-date="2021-10-06 00:00"
+      <document-relative-date-stub
         date="2021-10-06"
-        locale="en_US"
-        placement="top"
-        preference="relative"
-      >
-        
-                date =&gt; {
-    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
-  }
-            
-      </tlp-relative-date-stub>
+        relative_placement="top"
+      />
     </td>
      
     <td>
@@ -137,19 +110,10 @@ exports[`HistoryLogsContent should display a link to a diff 1`] = `
 <tbody>
   <tr>
     <td>
-      <tlp-relative-date-stub
-        absolute-date="2021-10-06 00:00"
+      <document-relative-date-stub
         date="2021-10-06"
-        locale="en_US"
-        placement="top"
-        preference="relative"
-      >
-        
-                date =&gt; {
-    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
-  }
-            
-      </tlp-relative-date-stub>
+        relative_placement="top"
+      />
     </td>
      
     <td>
@@ -184,19 +148,10 @@ exports[`HistoryLogsContent should display old and new value 1`] = `
 <tbody>
   <tr>
     <td>
-      <tlp-relative-date-stub
-        absolute-date="2021-10-06 00:00"
+      <document-relative-date-stub
         date="2021-10-06"
-        locale="en_US"
-        placement="top"
-        preference="relative"
-      >
-        
-                date =&gt; {
-    return (0, date_formatter_1.formatDateUsingPreferredUserFormat)(date, date_time_format.value);
-  }
-            
-      </tlp-relative-date-stub>
+        relative_placement="top"
+      />
     </td>
      
     <td>

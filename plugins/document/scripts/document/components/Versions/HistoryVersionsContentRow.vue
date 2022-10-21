@@ -24,15 +24,7 @@
             <a v-bind:href="version.download_href">{{ version.number }}</a>
         </td>
         <td>
-            <tlp-relative-date
-                v-bind:date="version.date"
-                v-bind:absolute-date="formatted_full_date(version.date)"
-                v-bind:placement="relative_date_placement"
-                v-bind:preference="relative_date_preference"
-                v-bind:locale="user_locale"
-            >
-                {{ formatted_full_date }}
-            </tlp-relative-date>
+            <document-relative-date v-bind:date="version.date" />
         </td>
         <td>
             <user-badge v-bind:user="version.author" />
@@ -129,15 +121,12 @@
 
 <script setup lang="ts">
 import UserBadge from "../User/UserBadge.vue";
-import { useState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../store/configuration";
-import { formatDateUsingPreferredUserFormat } from "../../helpers/date-formatter";
-import { computed, onMounted, onUnmounted, ref } from "vue";
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
+import { onMounted, onUnmounted, ref } from "vue";
 import type { FileHistory, Item } from "../../type";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { deleteVersion } from "../../api/version-rest-querier";
+import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
 
 const props = defineProps<{
     item: Item;
@@ -145,22 +134,6 @@ const props = defineProps<{
     has_more_than_one_version: boolean;
     location: Location;
 }>();
-
-const { date_time_format, relative_dates_display, user_locale } = useState<
-    Pick<ConfigurationState, "date_time_format" | "relative_dates_display" | "user_locale">
->("configuration", ["date_time_format", "relative_dates_display", "user_locale"]);
-
-const formatted_full_date = (date: string): string => {
-    return formatDateUsingPreferredUserFormat(date, date_time_format.value);
-};
-
-const relative_date_preference = computed((): string => {
-    return relativeDatePreference(relative_dates_display.value);
-});
-
-const relative_date_placement = computed((): string => {
-    return relativeDatePlacement(relative_dates_display.value, "top");
-});
 
 const confirm_deletion = ref<HTMLElement | null>(null);
 const delete_button = ref<HTMLButtonElement | null>(null);
