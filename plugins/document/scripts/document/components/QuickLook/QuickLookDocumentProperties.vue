@@ -42,27 +42,17 @@
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
                 <label class="tlp-label" v-translate>Creation</label>
-                <tlp-relative-date
+                <document-relative-date
                     v-bind:date="item.creation_date"
-                    v-bind:absolute-date="getFormattedDate(item.creation_date)"
-                    v-bind:placement="relative_date_placement"
-                    v-bind:preference="relative_date_preference"
-                    v-bind:locale="user_locale"
-                >
-                    {{ getFormattedDate(item.creation_date) }}
-                </tlp-relative-date>
+                    v-bind:relative_placement="'right'"
+                />
             </div>
             <div class="tlp-property">
                 <label class="tlp-label" v-translate>Last update date</label>
-                <tlp-relative-date
+                <document-relative-date
                     v-bind:date="item.last_update_date"
-                    v-bind:absolute-date="getFormattedDate(item.last_update_date)"
-                    v-bind:placement="relative_date_placement"
-                    v-bind:preference="relative_date_preference"
-                    v-bind:locale="user_locale"
-                >
-                    {{ getFormattedDate(item.last_update_date) }}
-                </tlp-relative-date>
+                    v-bind:relative_placement="'right'"
+                />
             </div>
             <div
                 class="tlp-property"
@@ -100,21 +90,14 @@
 
 <script setup lang="ts">
 import prettyBytes from "pretty-kibibytes";
-import { formatDateUsingPreferredUserFormat } from "../../helpers/date-formatter";
 import UserBadge from "../User/UserBadge.vue";
 import QuickLookDocumentAdditionalProperties from "./QuickLookDocumentAdditionalProperties.vue";
 import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { isFile, isFolder } from "../../helpers/type-check-helper";
-import { useState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../store/configuration";
 import type { Item, Property } from "../../type";
 import { computed } from "vue";
 import { hasAnApprovalTable } from "../../helpers/approval-table-helper";
-
-const { date_time_format, relative_dates_display, user_locale } = useState<
-    Pick<ConfigurationState, "date_time_format" | "relative_dates_display" | "user_locale">
->("configuration", ["date_time_format", "relative_dates_display", "user_locale"]);
+import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
 
 const props = defineProps<{ item: Item }>();
 
@@ -147,13 +130,6 @@ const has_an_approval_table = computed((): boolean => {
     return hasAnApprovalTable(props.item);
 });
 
-const relative_date_preference = computed((): string => {
-    return relativeDatePreference(relative_dates_display.value);
-});
-const relative_date_placement = computed((): string => {
-    return relativeDatePlacement(relative_dates_display.value, "right");
-});
-
 const is_file = computed((): boolean => {
     return isFile(props.item);
 });
@@ -161,8 +137,4 @@ const is_file = computed((): boolean => {
 const is_document = computed((): boolean => {
     return !isFolder(props.item);
 });
-
-function getFormattedDate(date: string): string {
-    return formatDateUsingPreferredUserFormat(date, date_time_format.value);
-}
 </script>

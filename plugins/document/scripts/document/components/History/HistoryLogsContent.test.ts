@@ -22,8 +22,6 @@ import localVue from "../../helpers/local-vue";
 import HistoryLogsContent from "./HistoryLogsContent.vue";
 import type { LogEntry } from "../../api/log-rest-querier";
 import type { RestUser } from "../../api/rest-querier";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ConfigurationState } from "../../store/configuration";
 
 describe("HistoryLogsContent", () => {
     it("should display old and new value", () => {
@@ -40,20 +38,6 @@ describe("HistoryLogsContent", () => {
                         diff_link: null,
                     } as LogEntry,
                 ],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
             },
         });
 
@@ -75,20 +59,6 @@ describe("HistoryLogsContent", () => {
                     } as LogEntry,
                 ],
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
-            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -108,20 +78,6 @@ describe("HistoryLogsContent", () => {
                         diff_link: null,
                     } as LogEntry,
                 ],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
             },
         });
 
@@ -143,20 +99,6 @@ describe("HistoryLogsContent", () => {
                     } as LogEntry,
                 ],
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
-            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -176,20 +118,6 @@ describe("HistoryLogsContent", () => {
                         diff_link: "/path/to/diff",
                     } as LogEntry,
                 ],
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
             },
         });
 

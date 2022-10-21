@@ -54,9 +54,6 @@ describe("CellLocation", () => {
                 } as unknown as ItemSearchResult,
             },
             router,
-            stubs: {
-                "tlp-relative-date": true,
-            },
         });
 
         expect(wrapper.element).toMatchSnapshot();

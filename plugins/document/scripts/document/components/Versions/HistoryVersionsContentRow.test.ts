@@ -30,8 +30,6 @@ import localVue from "../../helpers/local-vue";
 import HistoryVersionsContentRow from "./HistoryVersionsContentRow.vue";
 import type { RestUser } from "../../api/rest-querier";
 import type { FileHistory, User } from "../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ConfigurationState } from "../../store/configuration";
 
 describe("HistoryVersionsContentRow", () => {
     let location: Pick<Location, "reload">;
@@ -56,20 +54,6 @@ describe("HistoryVersionsContentRow", () => {
                     author: { id: 102 } as unknown as RestUser,
                 } as FileHistory,
                 location,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
             },
         });
     }
