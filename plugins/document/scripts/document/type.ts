@@ -480,6 +480,16 @@ export interface FileHistory {
     readonly author: RestUser;
 }
 
+export interface LinkVersion {
+    readonly id: number;
+    readonly number: number;
+    readonly name: string;
+    readonly changelog: string;
+    readonly date: string;
+    readonly author: RestUser;
+    readonly link_href: string;
+}
+
 export interface DocumentJsonError {
     error: JsonError;
 }

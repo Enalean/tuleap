@@ -20,26 +20,26 @@
 
 <template>
     <tbody>
-        <tr v-for="index in 3" v-bind:key="index">
-            <td><span class="tlp-skeleton-text"></span></td>
-            <td><span class="tlp-skeleton-text"></span></td>
-            <td>
-                <i class="fa-solid fa-user tlp-skeleton-icon" aria-hidden="true"></i>
-                <span class="tlp-skeleton-text"></span>
+        <tr v-for="version in versions" v-bind:key="version.id">
+            <td class="tlp-table-cell-numeric">
+                <a v-bind:href="version.link_href">{{ version.number }}</a>
             </td>
-            <td><span class="tlp-skeleton-text"></span></td>
-            <td><span class="tlp-skeleton-text"></span></td>
-            <td v-if="!is_link"><span class="tlp-skeleton-text"></span></td>
-            <td v-if="!is_link"></td>
+            <td>
+                <document-relative-date v-bind:date="version.date" />
+            </td>
+            <td>
+                <user-badge v-bind:user="version.author" />
+            </td>
+            <td>{{ version.name }}</td>
+            <td>{{ version.changelog }}</td>
         </tr>
     </tbody>
 </template>
+
 <script setup lang="ts">
-import type { Item } from "../../type";
-import { computed } from "vue";
-import { isLink } from "../../helpers/type-check-helper";
+import UserBadge from "../User/UserBadge.vue";
+import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
+import type { LinkVersion } from "../../type";
 
-const props = defineProps<{ item: Item }>();
-
-const is_link = computed((): boolean => isLink(props.item));
+defineProps<{ versions: readonly LinkVersion[] }>();
 </script>

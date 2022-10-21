@@ -383,6 +383,15 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
         $this->checkItemHasADisabledApprovalTable($items, $title);
+
+        $versions_response = $this->getResponseByName(
+            \TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest('GET', 'docman_links/' . $item_to_update_id . "/version")
+        );
+        $this->assertEquals(200, $versions_response->getStatusCode());
+        $this->assertIsArray(
+            json_decode($versions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)
+        );
     }
 
     /**
@@ -718,7 +727,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
             \TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -756,7 +765,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
     }
 
