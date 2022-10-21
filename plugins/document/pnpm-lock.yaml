@@ -13,6 +13,7 @@ specifiers:
   '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants
@@ -54,6 +55,7 @@ dependencies:
   '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants

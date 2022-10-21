@@ -698,6 +698,9 @@ msgstr[1] ""
 "fichier. Si vous voulez téléverser un dossier, nous vous conseillons de "
 "d'abord créer un nouveau dossier, puis d'y téléverser son contenu."
 
+msgid "The last version of an item cannot be deleted"
+msgstr "La dernière version d'un élément ne peut pas être supprimée"
+
 msgid ""
 "The size of the zip file you are attempting to download is exceeding the "
 "threshold\n"
@@ -838,6 +841,12 @@ msgstr "Rédacteur"
 msgid "You are about to delete \"%s\" permanently. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer \"%s\" de manière définitive. Veuillez "
+"confirmer cette action."
+
+msgid ""
+"You are about to delete a version permanently. Please confirm your action."
+msgstr ""
+"Vous êtes sur le point de supprimer définitivement une version. Veuillez "
 "confirmer cette action."
 
 msgid ""

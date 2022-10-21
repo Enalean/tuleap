@@ -44,4 +44,14 @@ class VersionDao extends DataAccessObject
             [$id]
         );
     }
+
+    /**
+     * @psalm-return null|array{id: int, number: int, label: string, filename: string, user_id: int, date: int, changelog: string|null}
+     */
+    public function searchById(int $id): ?array
+    {
+        $sql = "SELECT * FROM plugin_docman_version WHERE id = ?";
+
+        return $this->getDB()->row($sql, $id);
+    }
 }

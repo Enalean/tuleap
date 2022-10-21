@@ -37,7 +37,7 @@
             <history-versions-loading-state v-if="is_loading" />
             <history-versions-error-state v-else-if="is_in_error" v-bind:colspan="7" />
             <history-versions-empty-state v-else-if="is_empty" v-bind:colspan="7" />
-            <history-versions-content v-else v-bind:versions="versions" />
+            <history-versions-content v-else v-bind:item="item" v-bind:versions="versions" />
         </table>
     </div>
 </template>
