@@ -79,6 +79,8 @@ export type GetAll = {
     ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault>;
 };
 
+const credentials: RequestCredentials = "same-origin";
+
 export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
     function getAllJSON<TypeOfJSONPayload, TypeOfArrayItem>(
         uri: string,
@@ -94,7 +96,7 @@ export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
 
         const first_call_params = { ...params, limit, offset };
         const first_call = response_retriever
-            .retrieveResponse(getURI(uri, first_call_params), { method: GET_METHOD })
+            .retrieveResponse(getURI(uri, first_call_params), { method: GET_METHOD, credentials })
             .andThen((response) => {
                 const pagination_size = response.headers.get(PAGINATION_SIZE_HEADER);
                 if (pagination_size === null) {
@@ -126,7 +128,10 @@ export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
                     (new_offset) => {
                         const new_params = { ...params, limit, offset: new_offset };
                         return response_retriever
-                            .retrieveResponse(getURI(uri, new_params), { method: GET_METHOD })
+                            .retrieveResponse(getURI(uri, new_params), {
+                                method: GET_METHOD,
+                                credentials,
+                            })
                             .andThen((response) => {
                                 // Abuse response.json() returning Promise<any> to "cheat" the types.
                                 // We assume response.json() will return some type compatible with TypeOfArrayItem

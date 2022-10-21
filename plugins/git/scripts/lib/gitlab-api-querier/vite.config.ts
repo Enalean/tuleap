@@ -17,15 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import pkg from "./package.json";
 
-export const NetworkFault = {
-    fromError: (error: unknown): Fault => {
-        const fault =
-            error instanceof Error
-                ? Fault.fromError(error)
-                : Fault.fromMessage("Error during fetch operation");
-
-        return { isNetworkFault: () => true, ...fault };
+export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/main.ts"),
+            name: "GitlabAPIQuerier",
+        },
+        rollupOptions: {
+            external: Object.keys(pkg.dependencies),
+            output: {
+                globals: {
+                    "@tuleap/fault": "Fault",
+                    "@tuleap/fetch-result": "FetchResult",
+                    neverthrow: "neverthrow",
+                },
+            },
+        },
     },
-};
+});

@@ -17,15 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import type { RetrieveResponse } from "@tuleap/fetch-result";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 
-export const NetworkFault = {
-    fromError: (error: unknown): Fault => {
-        const fault =
-            error instanceof Error
-                ? Fault.fromError(error)
-                : Fault.fromMessage("Error during fetch operation");
-
-        return { isNetworkFault: () => true, ...fault };
-    },
+export type GitLabCredentials = {
+    readonly token: string;
 };
+
+type QueryGitlab = {
+    get: (uri: string, credentials: GitLabCredentials) => ResultAsync<Response, Fault>;
+};
+
+export const Querier = (response_retriever: RetrieveResponse): QueryGitlab => ({
+    get: (uri, credentials): ResultAsync<Response, Fault> =>
+        response_retriever.retrieveResponse(uri, {
+            headers: new Headers({ Authorization: "Bearer " + credentials.token }),
+            method: "GET",
+            mode: "cors",
+        }),
+});

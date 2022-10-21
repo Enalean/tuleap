@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import type { Fault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
 
-export const GitLabCredentialsFault = {
-    fromMessage: (message: string): Fault => {
-        const fault = Fault.fromMessage(message);
-
-        return {
-            isGitlabCredentialsFault: () => true,
-            ...fault,
-        };
-    },
+export type ErrorResponseHandler = {
+    handleErrorResponse(response: Response): ResultAsync<Response, Fault>;
 };
-
-export const isGitLabCredentialsFault = (fault: Fault): boolean =>
-    "isGitlabCredentialsFault" in fault && fault.isGitlabCredentialsFault() === true;

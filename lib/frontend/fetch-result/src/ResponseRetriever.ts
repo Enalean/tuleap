@@ -18,74 +18,38 @@
  */
 
 import type { Fault } from "@tuleap/fault";
-import { ResultAsync, okAsync, errAsync } from "neverthrow";
+import { ResultAsync } from "neverthrow";
 import type { FetchInterface } from "./FetchInterface";
 import { NetworkFault } from "./NetworkFault";
-import { TuleapAPIFault } from "./TuleapAPIFault";
-import { decodeJSON } from "./json-decoder";
-import type { PatchMethod, PostMethod, PutMethod, SupportedHTTPMethod } from "./constants";
-
-type RestlerErrorMessage = {
-    readonly message?: string;
-    readonly i18n_error_message?: string;
-};
-
-type RestlerError = {
-    readonly error?: RestlerErrorMessage;
-};
-
-const convertRestlerErrorResponseToFault = (response: Response): ResultAsync<never, Fault> =>
-    decodeJSON<RestlerError>(response).andThen((error_json) => {
-        if (error_json.error !== undefined) {
-            if (error_json.error.i18n_error_message !== undefined) {
-                return errAsync(
-                    TuleapAPIFault.fromCodeAndMessage(
-                        response.status,
-                        error_json.error.i18n_error_message
-                    )
-                );
-            }
-            if (error_json.error.message !== undefined) {
-                return errAsync(
-                    TuleapAPIFault.fromCodeAndMessage(response.status, error_json.error.message)
-                );
-            }
-        }
-        return errAsync(TuleapAPIFault.fromCodeAndMessage(response.status, response.statusText));
-    });
+import type { SupportedHTTPMethod } from "./constants";
+import type { ErrorResponseHandler } from "./ErrorResponseHandler";
 
 type GeneralOptions = {
     readonly method: SupportedHTTPMethod;
+    readonly headers?: Headers;
+    readonly credentials?: RequestCredentials;
+    readonly mode?: RequestMode;
 };
 
-type PostPutPatchOptions = {
-    readonly method: PostMethod | PutMethod | PatchMethod;
-    readonly headers: Headers;
+type PostPutPatchOptions = GeneralOptions & {
+    readonly method: "POST" | "PUT" | "PATCH";
     readonly body: BodyInit;
 };
-type ResponseRetrieverOptions = GeneralOptions | PostPutPatchOptions;
+export type ResponseRetrieverOptions = GeneralOptions | PostPutPatchOptions;
 
 export type RetrieveResponse = {
     retrieveResponse(uri: string, options: ResponseRetrieverOptions): ResultAsync<Response, Fault>;
 };
 
-export const ResponseRetriever = (fetcher: FetchInterface): RetrieveResponse => ({
+export const ResponseRetriever = (
+    fetcher: FetchInterface,
+    error_handler: ErrorResponseHandler
+): RetrieveResponse => ({
     retrieveResponse(uri: string, options: ResponseRetrieverOptions): ResultAsync<Response, Fault> {
-        const credentials = "same-origin";
-
-        const init: RequestInit = { method: options.method, credentials };
-        if ("headers" in options) {
-            init.headers = options.headers;
-            init.body = options.body;
-        }
+        const init: RequestInit = { ...options };
         const fetch_promise = fetcher.fetch(uri, init);
         return ResultAsync.fromPromise(fetch_promise, NetworkFault.fromError).andThen(
-            (response: Response) => {
-                if (!response.ok) {
-                    return convertRestlerErrorResponseToFault(response);
-                }
-                return okAsync(response);
-            }
+            error_handler.handleErrorResponse
         );
     },
 });

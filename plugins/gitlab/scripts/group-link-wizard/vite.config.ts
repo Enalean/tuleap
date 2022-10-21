@@ -33,5 +33,8 @@ export default vite.defineAppConfig(
                 },
             },
         },
+        resolve: {
+            dedupe: ["neverthrow"],
+        },
     }
 );

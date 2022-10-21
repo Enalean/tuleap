@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import type { ErrorResponseHandler } from "@tuleap/fetch-result";
+import type { ResultAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { GitLabAPIFault } from "./GitLabAPIFault";
 
-export const GitlabApiFault = {
-    fromStatusAndReason: (status: number, reason: string): Fault => {
-        const fault = Fault.fromMessage(`${status} ${reason}`);
-
-        return {
-            isGitlabApiFault: () => true,
-            ...fault,
-        };
-    },
-};
-
-export const isGitlabApiFault = (fault: Fault): boolean =>
-    "isGitlabApiFault" in fault && fault.isGitlabApiFault() === true;
+export const GitLabErrorHandler = (): ErrorResponseHandler => ({
+    handleErrorResponse: (response): ResultAsync<Response, Fault> =>
+        response.ok
+            ? okAsync(response)
+            : errAsync(GitLabAPIFault.fromStatusAndReason(response.status, response.statusText)),
+});
