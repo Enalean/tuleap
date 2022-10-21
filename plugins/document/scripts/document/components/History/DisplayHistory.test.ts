@@ -37,6 +37,44 @@ describe("DisplayHistory", () => {
         dispatch: jest.fn(),
     };
 
+    it("should not display anything if user tries direct access while feature flag is off", async () => {
+        const router = new VueRouter({
+            routes: [
+                {
+                    path: "/history/42",
+                    name: "item",
+                },
+            ],
+        });
+
+        store = createStoreMock({});
+
+        store.dispatch.mockImplementation((action_name) => {
+            if (action_name === "loadDocumentWithAscendentHierarchy") {
+                return {
+                    id: 42,
+                };
+            }
+
+            return null;
+        });
+
+        const wrapper = shallowMount(DisplayHistory, {
+            localVue,
+            router,
+            mocks: { $store: store },
+            provide: {
+                should_display_history_in_document: false,
+            },
+        });
+
+        // wait for loadDocumentWithAscendentHierarchy() to be called
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+    });
+
     it("should display logs", async () => {
         const router = new VueRouter({
             routes: [
@@ -63,6 +101,9 @@ describe("DisplayHistory", () => {
             localVue,
             router,
             mocks: { $store: store },
+            provide: {
+                should_display_history_in_document: true,
+            },
         });
 
         // wait for loadDocumentWithAscendentHierarchy() to be called
@@ -108,6 +149,9 @@ describe("DisplayHistory", () => {
                 localVue,
                 router,
                 mocks: { $store: store },
+                provide: {
+                    should_display_history_in_document: true,
+                },
             });
 
             // wait for loadDocumentWithAscendentHierarchy() to be called

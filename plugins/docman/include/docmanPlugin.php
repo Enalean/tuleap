@@ -1740,6 +1740,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     {
         $event->addConfigClass(self::class);
         $event->addConfigClass(SwitchToOldUi::class);
+        $event->addConfigClass(\Tuleap\Document\Tree\DocumentTreePresenter::class);
     }
 
     public function getItemsReferencingWikiPageCollectionEvent(GetItemsReferencingWikiPageCollectionEvent $event): void

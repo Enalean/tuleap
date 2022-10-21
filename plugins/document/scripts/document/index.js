@@ -77,6 +77,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const filename_pattern = vue_mount_point.dataset.filenamePattern;
     const is_filename_pattern_enforced = Boolean(vue_mount_point.dataset.isFilenamePatternEnforced);
     const can_user_switch_to_old_ui = Boolean(vue_mount_point.dataset.canUserSwitchToOldUi);
+    const should_display_history_in_document = Boolean(
+        vue_mount_point.dataset.shouldDisplayHistoryInDocument
+    );
 
     const consider_string_criteria_as_text = (criterion) => ({
         ...criterion,
@@ -137,6 +140,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         propsData: {
             csrf_token_name,
             csrf_token,
+        },
+        provide: {
+            should_display_history_in_document,
         },
     }).$mount(vue_mount_point);
 

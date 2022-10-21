@@ -168,6 +168,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
             $summary          = '';
             $can_be_modified  = true;
             $is_secret        = false;
+            $is_hidden        = false;
             $secret_validator = null;
             $value_validator  = null;
             foreach ($const->getAttributes() as $attribute) {
@@ -198,6 +199,9 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
                 if ($attribute_object instanceof ConfigKeyValueValidator) {
                     $value_validator = $attribute_object->validator_class_name::buildSelf();
                 }
+                if ($attribute_object instanceof ConfigKeyHidden) {
+                    $is_hidden = true;
+                }
             }
             if (! $key) {
                 continue;
@@ -206,6 +210,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
                 $summary,
                 $can_be_modified,
                 $is_secret,
+                $is_hidden,
                 $secret_validator,
                 $value_validator,
                 $category,

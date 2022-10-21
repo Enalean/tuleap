@@ -36,6 +36,7 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Is project creation allowed to regular users (1) or not (0)',
                 true,
                 false,
+                false,
                 null,
                 null,
                 null
@@ -177,5 +178,26 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $key_metadata = $get_config_keys->getKeyMetadata($class::SOME_STUFF);
         self::assertTrue($key_metadata->is_secret);
         self::assertInstanceOf(GetConfigKeysSecretValidator::class, $key_metadata->secret_validator);
+    }
+
+    public function testHiddenConfigKey(): void
+    {
+        $class = new class {
+            #[ConfigKey('summary hidden key')]
+            #[ConfigKeyHidden]
+            public const HIDDEN_KEY = 'foo';
+
+            #[ConfigKey('summary regular key')]
+            public const SOME_STUFF = 'bar';
+        };
+
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
+
+        $key_metadata = $get_config_keys->getKeyMetadata($class::HIDDEN_KEY);
+        self::assertTrue($key_metadata->is_hidden);
+
+        $key_metadata = $get_config_keys->getKeyMetadata($class::SOME_STUFF);
+        self::assertFalse($key_metadata->is_hidden);
     }
 }

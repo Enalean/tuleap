@@ -71,6 +71,9 @@ describe("DisplayVersions", () => {
             localVue,
             router,
             mocks: { $store: store },
+            provide: {
+                should_display_history_in_document: true,
+            },
         });
 
         // wait for loadDocumentWithAscendentHierarchy() to be called
@@ -78,5 +81,42 @@ describe("DisplayVersions", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(HistoryVersions).exists()).toBe(should_versions_be_displayed);
+    });
+
+    it("should not display anything if user tries direct access while feature flag is off", async () => {
+        const router = new VueRouter({
+            routes: [
+                {
+                    path: "/history/42",
+                    name: "item",
+                },
+            ],
+        });
+
+        store.dispatch.mockImplementation((action_name) => {
+            if (action_name === "loadDocumentWithAscendentHierarchy") {
+                return {
+                    id: 42,
+                    type: TYPE_FILE,
+                };
+            }
+
+            return null;
+        });
+
+        const wrapper = shallowMount(DisplayVersions, {
+            localVue,
+            router,
+            mocks: { $store: store },
+            provide: {
+                should_display_history_in_document: false,
+            },
+        });
+
+        // wait for loadDocumentWithAscendentHierarchy() to be called
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
     });
 });

@@ -19,13 +19,18 @@
   -->
 
 <template>
-    <section v-if="item">
+    <section v-if="item && should_display_history_in_document">
         <div class="document-header tlp-framed-horizontally">
             <document-title-lock-info v-bind:item="item" v-bind:is-displaying-in-header="true" />
 
             <h1 class="document-header-title">{{ item.title }}</h1>
         </div>
         <nav class="tlp-tabs">
+            <router-link
+                class="tlp-tab"
+                v-bind:to="{ name: 'history', params: { item_id: item.id } }"
+                >{{ $gettext("History") }}</router-link
+            >
             <span class="tlp-tab tlp-tab-active">{{ $gettext("Versions") }}</span>
         </nav>
         <div class="tlp-framed-horizontally">
@@ -41,10 +46,12 @@
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import { useRoute } from "../../helpers/use-router";
 import { useActions } from "vuex-composition-helpers";
-import { onBeforeMount, ref } from "vue";
+import { inject, onBeforeMount, ref } from "vue";
 import type { Item } from "../../type";
 import HistoryVersions from "./HistoryVersions.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
+
+const should_display_history_in_document = inject("should_display_history_in_document", false);
 
 const item = ref<Item | null>(null);
 const item_type_has_versions = ref(false);

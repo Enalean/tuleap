@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <section v-if="item">
+    <section v-if="item && should_display_history_in_document">
         <div class="document-header tlp-framed-horizontally">
             <document-title-lock-info v-bind:item="item" v-bind:is-displaying-in-header="true" />
 
@@ -45,10 +45,12 @@
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import { useRoute } from "../../helpers/use-router";
 import { useActions } from "vuex-composition-helpers";
-import { onBeforeMount, ref } from "vue";
+import { inject, onBeforeMount, ref } from "vue";
 import type { Item } from "../../type";
 import HistoryLogs from "./HistoryLogs.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
+
+const should_display_history_in_document = inject("should_display_history_in_document", false);
 
 const item = ref<Item | null>(null);
 const item_type_has_versions = ref(false);
