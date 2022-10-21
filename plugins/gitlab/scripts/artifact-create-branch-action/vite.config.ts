@@ -23,7 +23,10 @@ import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
 export default vite.defineAppConfig(
-    { plugin_name: "gitlab", outDir: "../../frontend-assets/artifact-create-branch/" },
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
     {
         plugins: [POGettextPlugin.vite(), vue()],
         build: {

@@ -28,7 +28,7 @@ import autoprefixer from "autoprefixer";
 
 export type TuleapSpecificConfiguration = {
     plugin_name: string;
-    outDir?: string;
+    sub_app_name?: string;
 };
 
 type OverloadedBuildOptions = Omit<BuildOptions, "reportCompressedSize" | "minify" | "target">;
@@ -55,19 +55,14 @@ type OverloadedAppUserConfig = Omit<UserConfigWithoutBuildAndServerAndTest, "bas
     server?: OverloadedServerOptions;
 };
 
-const getBaseAndOutDir = (
-    tuleap_config: TuleapSpecificConfiguration
-): { base: string; outDir: string } => {
-    if (tuleap_config.outDir !== undefined) {
-        const app_name = path.basename(tuleap_config.outDir);
+const getBaseDir = (tuleap_config: TuleapSpecificConfiguration): { base: string } => {
+    if (tuleap_config.sub_app_name !== undefined) {
         return {
-            base: `/assets/${tuleap_config.plugin_name}/${app_name}/`,
-            outDir: tuleap_config.outDir,
+            base: `/assets/${tuleap_config.plugin_name}/${tuleap_config.sub_app_name}/`,
         };
     }
     return {
         base: `/assets/${tuleap_config.plugin_name}/`,
-        outDir: "./frontend-assets/",
     };
 };
 
@@ -75,7 +70,7 @@ export function defineAppConfig(
     tuleap_config: TuleapSpecificConfiguration,
     config: OverloadedAppUserConfig
 ): UserConfigExport {
-    const { base, outDir } = getBaseAndOutDir(tuleap_config);
+    const { base } = getBaseDir(tuleap_config);
 
     const overridable_build_default: BuildOptions = {
         chunkSizeWarningLimit: 3000,
@@ -89,7 +84,7 @@ export function defineAppConfig(
             ...config.build,
             manifest: true,
             emptyOutDir: true,
-            outDir,
+            outDir: "./frontend-assets/",
         },
     });
 }

@@ -81,21 +81,8 @@ composer:
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo generate-templates
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
-	cd $(RPM_TMP)/SOURCES && \
-		find $(PKG_NAME)-$(version)/ \(\
-			-path '*/.svn' -o\
-			-name '*.less' -o\
-			-name '*.scss' -o\
-			-name 'pnpm-lock.yaml' -o\
-			-name ".git" -o\
-			-name ".gitignore" -o\
-			-name ".gitmodules" -o\
-			-name "node_modules" -o\
-			-name ".turbo" -o\
-			-path "*/.DS_Store" \)\
-			-prune -o -print | \
-		cpio -o -H ustar --quiet |\
-		gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+	rm -rf $(RPM_TMP)/nix
+	cp -f `HOME=$(RPM_TMP)/nix nix-build --no-out-link $(BASE_DIR)/tools/rpm/tuleap-source-tarball.nix` $@
 
 ##
 ## Build RPM

@@ -22,7 +22,10 @@ import * as path from "path";
 import PoGettextPlugin from "@tuleap/po-gettext-plugin";
 
 export default vite.defineAppConfig(
-    { plugin_name: "gitlab", outDir: "../../frontend-assets/linked-group/" },
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
     {
         plugins: [PoGettextPlugin.vite()],
         build: {
