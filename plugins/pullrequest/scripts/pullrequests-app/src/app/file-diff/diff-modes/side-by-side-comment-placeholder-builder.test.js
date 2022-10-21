@@ -18,7 +18,7 @@
  */
 
 import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "./side-by-side-line-grouper.js";
-import { NAME as INLINE_COMMENT_NAME } from "../inline-comment-component.js";
+import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment.ts";
 import { buildCommentsPlaceholderWidget } from "./side-by-side-comment-placeholder-builder.js";
 
 import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
@@ -41,7 +41,10 @@ describe("side-by-side widget builder", () => {
             describe("when it has a comment on the right side", () => {
                 const fake_widget = {
                     height: 20,
-                    node: { localName: INLINE_COMMENT_NAME },
+                    node: {
+                        localName: INLINE_COMMENT_NAME,
+                        getBoundingClientRect: () => ({ height: 20 }),
+                    },
                 };
                 const left_handle = {};
                 const right_handle = { widgets: [fake_widget] };
@@ -88,7 +91,12 @@ describe("side-by-side widget builder", () => {
             });
 
             describe("when it has a comment on the left side", () => {
-                const fake_widget = { height: 66, node: { localName: INLINE_COMMENT_NAME } };
+                const fake_widget = {
+                    node: {
+                        localName: INLINE_COMMENT_NAME,
+                        getBoundingClientRect: () => ({ height: 66 }),
+                    },
+                };
                 const right_handle = {};
                 const left_handle = { widgets: [fake_widget] };
 
@@ -168,12 +176,16 @@ describe("side-by-side widget builder", () => {
             const first_added_line = { unidiff_offset: 1, old_offset: null, new_offset: 1 };
             const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 2 };
             const first_widget = {
-                height: 48,
-                node: { localName: INLINE_COMMENT_NAME },
+                node: {
+                    localName: INLINE_COMMENT_NAME,
+                    getBoundingClientRect: () => ({ height: 48 }),
+                },
             };
             const second_widget = {
-                height: 95,
-                node: { localName: INLINE_COMMENT_NAME },
+                node: {
+                    localName: INLINE_COMMENT_NAME,
+                    getBoundingClientRect: () => ({ height: 95 }),
+                },
             };
             const left_handle = {};
             const first_right_handle = { widgets: [first_widget] };
@@ -253,12 +265,16 @@ describe("side-by-side widget builder", () => {
             const first_deleted_line = { unidiff_offset: 55, old_offset: 55, new_offset: null };
             const second_deleted_line = { unidiff_offset: 56, old_offset: 56, new_offset: null };
             const first_widget = {
-                height: 62,
-                node: { localName: INLINE_COMMENT_NAME },
+                node: {
+                    localName: INLINE_COMMENT_NAME,
+                    getBoundingClientRect: () => ({ height: 62 }),
+                },
             };
             const second_widget = {
-                height: 42,
-                node: { localName: INLINE_COMMENT_NAME },
+                node: {
+                    localName: INLINE_COMMENT_NAME,
+                    getBoundingClientRect: () => ({ height: 42 }),
+                },
             };
             const first_left_handle = { widgets: [first_widget] };
             const second_left_handle = { widgets: [second_widget] };
@@ -339,8 +355,10 @@ describe("side-by-side widget builder", () => {
             const third_added_line = { unidiff_offset: 7, old_offset: null, new_offset: 7 };
             const fourth_added_line = { unidiff_offset: 8, old_offset: null, new_offset: 8 };
             const first_widget = {
-                height: 89,
-                node: { localName: INLINE_COMMENT_NAME },
+                node: {
+                    localName: INLINE_COMMENT_NAME,
+                    getBoundingClientRect: () => ({ height: 89 }),
+                },
             };
             const left_handle = {
                 widgets: [first_widget],

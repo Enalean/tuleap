@@ -24,7 +24,7 @@ import {
     getLineHandles,
     getLineOfHandle,
 } from "./side-by-side-lines-state.js";
-import { NAME as INLINE_COMMENT_NAME } from "../inline-comment-component.js";
+import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment.ts";
 import { NAME as NEW_INLINE_COMMENT_NAME } from "../new-inline-comment-component.js";
 
 import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
@@ -234,7 +234,6 @@ function sumCommentsHeight(handle) {
     }
 
     const comments_widgets = handle.widgets.filter((widget) => isCommentWidget(widget));
-
     if (!comments_widgets.length) {
         return 0;
     }
@@ -250,7 +249,9 @@ function isCommentWidget(line_widget) {
 }
 
 function getSumOfWidgetsHeights(widgets) {
-    return widgets.map((widget) => widget.height).reduce((sum, value) => sum + value, 0);
+    return widgets
+        .map((widget) => widget.node.getBoundingClientRect().height)
+        .reduce((sum, value) => sum + value, 0);
 }
 
 function hasNoWidgets(handle) {

@@ -69,6 +69,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
                 gutters: ["gutter-lines"],
                 mode: self.diff.mime_type,
                 scrollbarStyle: "overlay",
+                viewportMargin: 20,
             });
 
         const left_code_mirror = CodeMirror(left_element, options);
@@ -103,37 +104,52 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
         });
 
-        const promises = getComments().map((comment) => {
-            return displayInlineComment(comment, left_code_mirror, right_code_mirror);
+        file_lines.forEach((line) => {
+            addCommentsPlaceholder(line, left_code_mirror, right_code_mirror);
         });
 
-        $q.all(promises).then(() => {
-            TooltipService.setupTooltips();
-
-            file_lines.forEach((line) => {
-                addCommentsPlaceholder(line, left_code_mirror, right_code_mirror);
-            });
-
-            handleCodeMirrorEvents(left_code_mirror, right_code_mirror);
+        getComments().forEach((comment) => {
+            displayInlineComment(comment, left_code_mirror, right_code_mirror);
         });
+
+        TooltipService.setupTooltips();
+
+        handleCodeMirrorEvents(left_code_mirror, right_code_mirror);
     }
 
     function displayInlineComment(comment, left_code_mirror, right_code_mirror) {
         const comment_line = getCommentLine(comment);
+
         if (comment_line.new_offset === null) {
-            return CodeMirrorHelperService.displayInlineComment(
+            CodeMirrorHelperService.displayInlineComment(
                 left_code_mirror,
                 comment,
                 comment_line.old_offset - 1
-            );
+            ).node.post_rendering_callback = () => {
+                recomputeCommentPlaceholderHeight(
+                    left_code_mirror,
+                    right_code_mirror,
+                    getLeftLine(comment_line.old_offset - 1)
+                );
+            };
+
+            return addCommentsPlaceholder(comment_line, left_code_mirror, right_code_mirror);
         }
 
         if (comment_line.old_offset === null) {
-            return CodeMirrorHelperService.displayInlineComment(
+            CodeMirrorHelperService.displayInlineComment(
                 right_code_mirror,
                 comment,
                 comment_line.new_offset - 1
-            );
+            ).node.post_rendering_callback = () => {
+                recomputeCommentPlaceholderHeight(
+                    left_code_mirror,
+                    right_code_mirror,
+                    getRightLine(comment_line.new_offset - 1)
+                );
+            };
+
+            return addCommentsPlaceholder(comment_line, left_code_mirror, right_code_mirror);
         }
 
         const target_code_mirror =
@@ -143,68 +159,74 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
                 ? comment_line.old_offset - 1
                 : comment_line.new_offset - 1;
 
-        return CodeMirrorHelperService.displayInlineComment(
+        CodeMirrorHelperService.displayInlineComment(
             target_code_mirror,
             comment,
             line_number
+        ).node.post_rendering_callback = () => {
+            recomputeCommentPlaceholderHeight(
+                left_code_mirror,
+                right_code_mirror,
+                comment.position === POSITION_LEFT
+                    ? getLeftLine(line_number)
+                    : getRightLine(line_number)
+            );
+        };
+
+        return addCommentsPlaceholder(comment_line, left_code_mirror, right_code_mirror);
+    }
+
+    function recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line) {
+        const placeholder_to_create = equalizeSides(
+            left_code_mirror,
+            right_code_mirror,
+            getLineHandles(line)
         );
+
+        if (placeholder_to_create) {
+            CodeMirrorHelperService.displayPlaceholderWidget(placeholder_to_create);
+        }
     }
 
     function handleCodeMirrorEvents(left_code_mirror, right_code_mirror) {
         left_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
-            const line = getLeftLine(line_number);
-            const placeholder_to_create = equalizeSides(
+            recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
-                getLineHandles(line)
+                getLeftLine(line_number)
             );
-
-            if (placeholder_to_create) {
-                CodeMirrorHelperService.displayPlaceholderWidget(placeholder_to_create);
-            }
         });
         right_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
-            const line = getRightLine(line_number);
-            const placeholder_to_create = equalizeSides(
+            recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
-                getLineHandles(line)
+                getRightLine(line_number)
             );
-
-            if (placeholder_to_create) {
-                CodeMirrorHelperService.displayPlaceholderWidget(placeholder_to_create);
-            }
         });
         left_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
-            const line = getLeftLine(line_number);
-            const placeholder_to_create = equalizeSides(
+            recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
-                getLineHandles(line)
+                getLeftLine(line_number)
             );
-
-            if (placeholder_to_create) {
-                CodeMirrorHelperService.displayPlaceholderWidget(placeholder_to_create);
-            }
         });
         right_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
-            const line = getRightLine(line_number);
-            const placeholder_to_create = equalizeSides(
+            recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
-                getLineHandles(line)
+                getRightLine(line_number)
             );
-
-            if (placeholder_to_create) {
-                CodeMirrorHelperService.displayPlaceholderWidget(placeholder_to_create);
-            }
         });
 
-        left_code_mirror.on("gutterClick", addCommentOnLeftCodeMirror);
-        right_code_mirror.on("gutterClick", addCommentOnRightCodeMirror);
+        left_code_mirror.on("gutterClick", (left_code_mirror, line_number) =>
+            addCommentOnLeftCodeMirror(left_code_mirror, right_code_mirror, line_number)
+        );
+        right_code_mirror.on("gutterClick", (right_code_mirror, line_number) =>
+            addCommentOnRightCodeMirror(left_code_mirror, right_code_mirror, line_number)
+        );
     }
 
-    function addCommentOnLeftCodeMirror(left_code_mirror, line_number) {
+    function addCommentOnLeftCodeMirror(left_code_mirror, right_code_mirror, line_number) {
         const line = getLeftLine(line_number);
         if (!line) {
             return;
@@ -216,11 +238,12 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             line_number,
             self.filePath,
             self.pullRequestId,
-            POSITION_LEFT
+            POSITION_LEFT,
+            () => recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line)
         );
     }
 
-    function addCommentOnRightCodeMirror(right_code_mirror, line_number) {
+    function addCommentOnRightCodeMirror(left_code_mirror, right_code_mirror, line_number) {
         const line = getRightLine(line_number);
         if (!line) {
             return;
@@ -232,7 +255,8 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             line_number,
             self.filePath,
             self.pullRequestId,
-            POSITION_RIGHT
+            POSITION_RIGHT,
+            () => recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line)
         );
     }
 

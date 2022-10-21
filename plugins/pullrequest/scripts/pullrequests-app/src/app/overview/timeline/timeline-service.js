@@ -1,8 +1,29 @@
+/*
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { PullRequestCommentPresenterBuilder } from "../../comments/pullrequest-comment-presenter-builder";
+
 export default TimelineService;
 
-TimelineService.$inject = ["$sce", "TimelineRestService", "gettextCatalog"];
+TimelineService.$inject = ["TimelineRestService", "gettextCatalog", "moment", "$state"];
 
-function TimelineService($sce, TimelineRestService, gettextCatalog) {
+function TimelineService(TimelineRestService, gettextCatalog, moment, $state) {
     const self = this;
 
     Object.assign(self, {
@@ -12,7 +33,6 @@ function TimelineService($sce, TimelineRestService, gettextCatalog) {
         },
         getTimeline,
         addComment,
-        formatEvent,
     });
 
     function getPaginatedTimeline(pull_request, accTimeline, limit, offset) {
@@ -37,52 +57,27 @@ function TimelineService($sce, TimelineRestService, gettextCatalog) {
         return getPaginatedTimeline(pull_request, initialTimeline, limit, offset).then(function (
             timeline
         ) {
-            timeline = timeline.filter((event) => event.type !== "reviewer-change");
-            timeline.forEach((event) => {
-                self.formatEvent(event, pull_request);
-            });
-            return timeline;
+            const pull_request_comment_presenter_builder = PullRequestCommentPresenterBuilder(
+                $state,
+                moment
+            );
+            return timeline
+                .filter((event) => event.type !== "reviewer-change")
+                .map((event) =>
+                    pull_request_comment_presenter_builder.fromTimelineEvent(event, pull_request)
+                );
         });
     }
 
     function addComment(pullRequest, timeline, newComment) {
+        const pull_request_comment_presenter_builder = PullRequestCommentPresenterBuilder(
+            $state,
+            moment
+        );
         return TimelineRestService.addComment(pullRequest.id, newComment).then(function (event) {
-            self.formatEvent(event, pullRequest);
-            timeline.push(event);
+            timeline.push(
+                pull_request_comment_presenter_builder.fromTimelineEvent(event, pullRequest)
+            );
         });
-    }
-
-    function getContentMessage(event) {
-        var eventMessages = {
-            comment: function (content) {
-                return content.replace(/(?:\r\n|\r|\n)/g, "<br/>");
-            },
-            "inline-comment": function (content) {
-                return content.replace(/(?:\r\n|\r|\n)/g, "<br/>");
-            },
-            update: function () {
-                return gettextCatalog.getString("Has updated the pull request.");
-            },
-            rebase: function () {
-                return gettextCatalog.getString("Has rebased the pull request.");
-            },
-            merge: function () {
-                return gettextCatalog.getString("Has merged the pull request.");
-            },
-            abandon: function () {
-                return gettextCatalog.getString("Has abandoned the pull request.");
-            },
-        };
-
-        var content = eventMessages[event.event_type || event.type](event.content);
-
-        return $sce.trustAsHtml(content);
-    }
-
-    function formatEvent(event, pull_request) {
-        event.isFromPRAuthor = event.user.id === pull_request.user_id;
-        event.isInlineComment = event.type === "inline-comment";
-
-        event.content = getContentMessage(event);
     }
 }

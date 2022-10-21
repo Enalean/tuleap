@@ -7,29 +7,11 @@
     </p>
 </div>
 
-<div class="pull-request-event"
-    ng-repeat="event in timeline_controller.timeline track by $index"
-    ng-class="[event.type, { 'from-pr-author': event.isFromPRAuthor, 'is-outdated': event.is_outdated, 'is-inline-comment': event.isInlineComment }]"
->
-    <div class="tlp-avatar">
-        <img ng-src="{{ ::event.user.avatar_url }}" class="media-object">
-    </div>
-
-    <div class="pull-request-event-content">
-        <div class="pull-request-event-content-info">
-            <a href="{{ event.user.user_url }}">{{ event.user.display_name }}</a>
-            <span class="tlp-text-muted" am-time-ago="event.post_date"></span>
-        </div>
-
-        <span ng-if="event.isInlineComment" class="pull-request-event-file-path">
-            <a ng-if="! event.is_outdated" ui-sref="diff({id: {{ timeline_controller.pull_request.id }} , file_path: '{{ event.file_path }}'})">
-                <i class="far fa-file-alt"></i> {{ event.file_path }}
-            </a>
-            <span ng-if="event.is_outdated"><i class="far fa-file-alt"></i> {{ event.file_path }}</span>
-        </span>
-
-        <p ng-bind-html="event.content"></p>
-    </div>
+<div class="pullrequest-timeline-comment-container" ng-repeat="comment in timeline_controller.timeline track by $index">
+    <tuleap-pullrequest-comment
+        ce-one-way
+        comment="comment"
+    ></tuleap-pullrequest-comment>
 </div>
 
 <div ng-if="timeline_controller.loading_timeline" class="pull-request-timeline-loading"></div>

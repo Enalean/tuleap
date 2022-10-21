@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { TAG_NAME as PULLREQUEST_COMMENT_TAG_NAME } from "../../comments/PullRequestComment.ts";
 import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
 
 import * as side_by_side_widget_finder from "./side-by-side-widget-finder.js";
@@ -41,10 +42,10 @@ describe("line-height-equalizer", () => {
                     text: "Ceci est un text",
                     widgets: [
                         {
-                            height: 20,
                             node: {
                                 localName: "new-inline-comment",
                                 classList: { contains: () => false },
+                                getBoundingClientRect: () => ({ height: 20 }),
                             },
                         },
                     ],
@@ -82,8 +83,20 @@ describe("line-height-equalizer", () => {
                 left_handle: {
                     text: "Ceci est un text",
                     widgets: [
-                        { height: 25, node: { localName: "inline-comment", className: "" } },
-                        { height: 20, node: { localName: "new-inline-comment", className: "" } },
+                        {
+                            node: {
+                                localName: PULLREQUEST_COMMENT_TAG_NAME,
+                                className: "",
+                                getBoundingClientRect: () => ({ height: 25 }),
+                            },
+                        },
+                        {
+                            node: {
+                                localName: "new-inline-comment",
+                                className: "",
+                                getBoundingClientRect: () => ({ height: 20 }),
+                            },
+                        },
                     ],
                 },
                 right_handle: {
@@ -116,15 +129,33 @@ describe("line-height-equalizer", () => {
                 left_handle: {
                     text: "Ceci est un text",
                     widgets: [
-                        { height: 25, node: { localName: "inline-comment", className: "" } },
-                        { height: 20, node: { localName: "inline-comment", className: "" } },
+                        {
+                            node: {
+                                localName: PULLREQUEST_COMMENT_TAG_NAME,
+                                className: "",
+                                getBoundingClientRect: () => ({ height: 25 }),
+                            },
+                        },
+                        {
+                            node: {
+                                localName: PULLREQUEST_COMMENT_TAG_NAME,
+                                className: "",
+                                getBoundingClientRect: () => ({ height: 20 }),
+                            },
+                        },
                     ],
                 },
                 right_handle: {
                     text: "Ceci est un autre text",
                     name: "right",
                     widgets: [
-                        { height: 20, node: { localName: "new-inline-comment", className: "" } },
+                        {
+                            node: {
+                                localName: "new-inline-comment",
+                                className: "",
+                                getBoundingClientRect: () => ({ height: 20 }),
+                            },
+                        },
                         placeholder,
                     ],
                 },
@@ -157,13 +188,27 @@ describe("line-height-equalizer", () => {
             const handles = {
                 left_handle: {
                     text: "Ceci est un text",
-                    widgets: [{ height: 20, node: { localName: "inline-comment", className: "" } }],
+                    widgets: [
+                        {
+                            node: {
+                                localName: PULLREQUEST_COMMENT_TAG_NAME,
+                                className: "",
+                                getBoundingClientRect: () => ({ height: 20 }),
+                            },
+                        },
+                    ],
                 },
                 right_handle: {
                     text: "Ceci est un autre text",
                     widgets: [
                         placeholder,
-                        { height: 20, node: { localName: "new-inline-comment", className: "" } },
+                        {
+                            node: {
+                                localName: "new-inline-comment",
+                                className: "",
+                                getBoundingClientRect: () => ({ height: 20 }),
+                            },
+                        },
                     ],
                 },
             };
@@ -196,13 +241,27 @@ describe("line-height-equalizer", () => {
             const handles = {
                 left_handle: {
                     text: "",
-                    widgets: [{ height: 20, node: { localName: "inline-comment", className: "" } }],
+                    widgets: [
+                        {
+                            node: {
+                                localName: PULLREQUEST_COMMENT_TAG_NAME,
+                                className: "",
+                                getBoundingClientRect: () => ({ height: 20 }),
+                            },
+                        },
+                    ],
                 },
                 right_handle: {
                     text: "Ceci est un text",
                     widgets: [
                         placeholder,
-                        { height: 45, node: { localName: "new-inline-comment", className: "" } },
+                        {
+                            node: {
+                                localName: "new-inline-comment",
+                                className: "",
+                                getBoundingClientRect: () => ({ height: 45 }),
+                            },
+                        },
                     ],
                 },
             };
@@ -234,7 +293,15 @@ describe("line-height-equalizer", () => {
             },
             right_handle: {
                 text: "Ceci est un autre text",
-                widgets: [{ height: 20, node: { localName: "new-inline-comment", className: "" } }],
+                widgets: [
+                    {
+                        node: {
+                            localName: "new-inline-comment",
+                            className: "",
+                            getBoundingClientRect: () => ({ height: 20 }),
+                        },
+                    },
+                ],
             },
         };
 
