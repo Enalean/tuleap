@@ -19,7 +19,7 @@
 
 import * as version_rest_querier from "../api/version-rest-querier";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_FOLDER, TYPE_LINK } from "../constants";
-import type { Item } from "../type";
+import type { FileHistory, Item } from "../type";
 import { getVersionHistory } from "./version-history-retriever";
 
 describe("getVersionHistory", () => {
@@ -31,7 +31,7 @@ describe("getVersionHistory", () => {
                 name: "Version 2",
                 filename: "CocoLasticot.lol",
                 download_href: "https://example.test/Coco",
-            },
+            } as FileHistory,
         ]);
 
         const item = { id: 25, type: TYPE_FILE } as Item;
@@ -63,7 +63,7 @@ describe("getVersionHistory", () => {
                 name: "Version 2",
                 filename: "CocoLasticot.lol",
                 download_href: "https://example.test/Coco",
-            },
+            } as FileHistory,
         ]);
         await expect(getVersionHistory(item)).rejects.toThrowError(
             "Item type's history not implemented"

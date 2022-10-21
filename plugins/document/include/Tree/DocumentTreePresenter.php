@@ -24,6 +24,9 @@ namespace Tuleap\Document\Tree;
 
 use CSRFSynchronizerToken;
 use DocmanPlugin;
+use Tuleap\Config\ConfigKeyHidden;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePattern;
 use Tuleap\Document\Config\FileDownloadLimits;
@@ -32,6 +35,11 @@ use Tuleap\Project\ProjectPrivacyPresenter;
 
 class DocumentTreePresenter
 {
+    #[FeatureFlagConfigKey('Do not display history in legacy docman interface')]
+    #[ConfigKeyInt(0)]
+    #[ConfigKeyHidden]
+    public const FEATURE_FLAG_HISTORY = 'display_history_in_document';
+
     /**
      * @var int
      */
@@ -142,6 +150,7 @@ class DocumentTreePresenter
 
     public bool $is_filename_pattern_enforced;
     public bool $can_user_switch_to_old_ui;
+    public bool $should_display_history_in_document;
 
     public function __construct(
         \Project $project,
@@ -194,5 +203,7 @@ class DocumentTreePresenter
         $this->is_filename_pattern_enforced = $filename_pattern->isEnforced();
 
         $this->can_user_switch_to_old_ui = SwitchToOldUi::isAllowed($user, $project);
+
+        $this->should_display_history_in_document = (int) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_HISTORY) === 1;
     }
 }

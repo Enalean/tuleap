@@ -58,6 +58,9 @@ class ConfigListCommand extends Command
         $categorized_rows   = [];
         $uncategorized_rows = [];
         foreach ($config_keys->getSortedKeysWithMetadata() as $key => $key_metadata) {
+            if ($key_metadata->is_hidden) {
+                continue;
+            }
             if ($key_metadata->category) {
                 $categorized_rows[$key_metadata->category][] = $this->getKeyRow($key, $key_metadata);
             } else {
