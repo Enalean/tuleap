@@ -90,7 +90,7 @@
             </span>
             <span v-if="should_display_cropped_content">
                 |
-                <highlight-matching-text v-bind:text="entry.cropped_content" />
+                <highlight-matching-text v-bind:text="entry.cropped_content ?? ''" />
             </span>
         </div>
     </div>
@@ -119,7 +119,8 @@ const has_quick_links = ref<boolean>(props.entry.quick_links.length > 0);
 const { keywords, is_in_search_mode } = storeToRefs(useRootStore());
 
 const has_cropped_content = computed(
-    (): boolean => props.entry.cropped_content && props.entry.cropped_content.trim().length > 0
+    (): boolean =>
+        props.entry.cropped_content !== null && props.entry.cropped_content.trim().length > 0
 );
 
 const matching_words_in_xref = ref<number>(0);

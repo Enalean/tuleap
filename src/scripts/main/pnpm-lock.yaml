@@ -1,35 +1,36 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@fortawesome/fontawesome-free': ^6.1.1
   '@joeattardi/emoji-button': ^4.6.2
-  '@tuleap/autocomplete-for-select2': link:../lib/frontend/autocomplete-for-select2
-  '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
-  '@tuleap/concurrency-limit-pool': link:../lib/frontend/concurrency-limit-pool
-  '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
-  '@tuleap/date-helper': link:../lib/frontend/date-helper
-  '@tuleap/filter-inline-table': link:../lib/frontend/filter-table
-  '@tuleap/gettext': link:../lib/frontend/gettext
-  '@tuleap/html-escaper': link:../lib/frontend/html-escaper
-  '@tuleap/keyboard-shortcuts': link:../lib/frontend/keyboard-shortcuts
-  '@tuleap/list-picker': link:../lib/frontend/list-picker
-  '@tuleap/mention': link:../lib/frontend/mention
-  '@tuleap/pie-chart': link:../lib/frontend/pie-chart
-  '@tuleap/potentially-dangerous-bidirectional-characters': link:../lib/frontend/potentially-dangerous-bidirectional-characters
-  '@tuleap/project-background': link:../lib/frontend/project-background
-  '@tuleap/project-privacy-helper': link:../lib/frontend/project-privacy-helper
-  '@tuleap/project-sidebar-internal': link:../lib/frontend/project-sidebar-internal
-  '@tuleap/switch-to': link:scripts/switch-to
-  '@tuleap/tlp-dropdown': link:../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-fetch': link:../lib/frontend/tlp-fetch
-  '@tuleap/tlp-modal': link:../lib/frontend/tlp-modal
-  '@tuleap/tlp-popovers': link:../lib/frontend/tlp-popovers
-  '@tuleap/tlp-relative-date': link:../lib/frontend/tlp-relative-date
-  '@tuleap/tlp-swatch-colors': link:../lib/frontend/tlp-swatch-colors
-  '@tuleap/tooltip': link:../lib/frontend/tooltip
-  '@tuleap/vue-permissions-per-group-badge': link:../lib/frontend/vue-permissions-per-group-badge
-  '@tuleap/vue2-gettext-init': link:../lib/frontend/vue2-gettext-init
-  '@tuleap/vuex-store-wrapper-jest': link:../lib/frontend/vuex-store-wrapper-jest
+  '@tuleap/autocomplete-for-select2': link:../../../lib/frontend/autocomplete-for-select2
+  '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
+  '@tuleap/burningparrot-theme': link:../../themes/BurningParrot
+  '@tuleap/common-theme': link:../../themes/common
+  '@tuleap/concurrency-limit-pool': link:../../../lib/frontend/concurrency-limit-pool
+  '@tuleap/copy-to-clipboard': link:../../../lib/frontend/copy-to-clipboard
+  '@tuleap/date-helper': link:../../../lib/frontend/date-helper
+  '@tuleap/filter-inline-table': link:../../../lib/frontend/filter-table
+  '@tuleap/flamingparrot-theme': link:../../themes/FlamingParrot
+  '@tuleap/gettext': link:../../../lib/frontend/gettext
+  '@tuleap/html-escaper': link:../../../lib/frontend/html-escaper
+  '@tuleap/keyboard-shortcuts': link:../../../lib/frontend/keyboard-shortcuts
+  '@tuleap/list-picker': link:../../../lib/frontend/list-picker
+  '@tuleap/mention': link:../../../lib/frontend/mention
+  '@tuleap/pie-chart': link:../../../lib/frontend/pie-chart
+  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../../lib/frontend/potentially-dangerous-bidirectional-characters
+  '@tuleap/project-background': link:../../../lib/frontend/project-background
+  '@tuleap/project-privacy-helper': link:../../../lib/frontend/project-privacy-helper
+  '@tuleap/project-sidebar-internal': link:../../../lib/frontend/project-sidebar-internal
+  '@tuleap/tlp': link:../../themes/tlp
+  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-fetch': link:../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
+  '@tuleap/tlp-relative-date': link:../../../lib/frontend/tlp-relative-date
+  '@tuleap/tooltip': link:../../../lib/frontend/tooltip
+  '@tuleap/vue-permissions-per-group-badge': link:../../../lib/frontend/vue-permissions-per-group-badge
+  '@tuleap/vue2-gettext-init': link:../../../lib/frontend/vue2-gettext-init
+  '@tuleap/vuex-store-wrapper-jest': link:../../../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': ^4.5.0
   '@types/ckeditor': ^4.9.10
   '@types/dompurify': ^2.3.2
@@ -63,33 +64,34 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
-  '@fortawesome/fontawesome-free': 6.1.1
   '@joeattardi/emoji-button': 4.6.2
-  '@tuleap/autocomplete-for-select2': link:../lib/frontend/autocomplete-for-select2
-  '@tuleap/concurrency-limit-pool': link:../lib/frontend/concurrency-limit-pool
-  '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
-  '@tuleap/date-helper': link:../lib/frontend/date-helper
-  '@tuleap/filter-inline-table': link:../lib/frontend/filter-table
-  '@tuleap/gettext': link:../lib/frontend/gettext
-  '@tuleap/html-escaper': link:../lib/frontend/html-escaper
-  '@tuleap/keyboard-shortcuts': link:../lib/frontend/keyboard-shortcuts
-  '@tuleap/list-picker': link:../lib/frontend/list-picker
-  '@tuleap/mention': link:../lib/frontend/mention
-  '@tuleap/pie-chart': link:../lib/frontend/pie-chart
-  '@tuleap/potentially-dangerous-bidirectional-characters': link:../lib/frontend/potentially-dangerous-bidirectional-characters
-  '@tuleap/project-background': link:../lib/frontend/project-background
-  '@tuleap/project-privacy-helper': link:../lib/frontend/project-privacy-helper
-  '@tuleap/project-sidebar-internal': link:../lib/frontend/project-sidebar-internal
-  '@tuleap/switch-to': link:scripts/switch-to
-  '@tuleap/tlp-dropdown': link:../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-fetch': link:../lib/frontend/tlp-fetch
-  '@tuleap/tlp-modal': link:../lib/frontend/tlp-modal
-  '@tuleap/tlp-popovers': link:../lib/frontend/tlp-popovers
-  '@tuleap/tlp-relative-date': link:../lib/frontend/tlp-relative-date
-  '@tuleap/tlp-swatch-colors': link:../lib/frontend/tlp-swatch-colors
-  '@tuleap/tooltip': link:../lib/frontend/tooltip
-  '@tuleap/vue-permissions-per-group-badge': link:../lib/frontend/vue-permissions-per-group-badge
-  '@tuleap/vue2-gettext-init': link:../lib/frontend/vue2-gettext-init
+  '@tuleap/autocomplete-for-select2': link:../../../lib/frontend/autocomplete-for-select2
+  '@tuleap/burningparrot-theme': link:../../themes/BurningParrot
+  '@tuleap/common-theme': link:../../themes/common
+  '@tuleap/concurrency-limit-pool': link:../../../lib/frontend/concurrency-limit-pool
+  '@tuleap/copy-to-clipboard': link:../../../lib/frontend/copy-to-clipboard
+  '@tuleap/date-helper': link:../../../lib/frontend/date-helper
+  '@tuleap/filter-inline-table': link:../../../lib/frontend/filter-table
+  '@tuleap/flamingparrot-theme': link:../../themes/FlamingParrot
+  '@tuleap/gettext': link:../../../lib/frontend/gettext
+  '@tuleap/html-escaper': link:../../../lib/frontend/html-escaper
+  '@tuleap/keyboard-shortcuts': link:../../../lib/frontend/keyboard-shortcuts
+  '@tuleap/list-picker': link:../../../lib/frontend/list-picker
+  '@tuleap/mention': link:../../../lib/frontend/mention
+  '@tuleap/pie-chart': link:../../../lib/frontend/pie-chart
+  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../../lib/frontend/potentially-dangerous-bidirectional-characters
+  '@tuleap/project-background': link:../../../lib/frontend/project-background
+  '@tuleap/project-privacy-helper': link:../../../lib/frontend/project-privacy-helper
+  '@tuleap/project-sidebar-internal': link:../../../lib/frontend/project-sidebar-internal
+  '@tuleap/tlp': link:../../themes/tlp
+  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-fetch': link:../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
+  '@tuleap/tlp-relative-date': link:../../../lib/frontend/tlp-relative-date
+  '@tuleap/tooltip': link:../../../lib/frontend/tooltip
+  '@tuleap/vue-permissions-per-group-badge': link:../../../lib/frontend/vue-permissions-per-group-badge
+  '@tuleap/vue2-gettext-init': link:../../../lib/frontend/vue2-gettext-init
   ckeditor4: 4.18.0
   dompurify: 2.3.6
   dragula: 3.7.3
@@ -109,8 +111,8 @@ dependencies:
   vuex: 3.6.2_vue@2.7.8
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
-  '@tuleap/vuex-store-wrapper-jest': link:../lib/frontend/vuex-store-wrapper-jest
+  '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
+  '@tuleap/vuex-store-wrapper-jest': link:../../../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': 4.5.1
   '@types/ckeditor': 4.9.10
   '@types/dompurify': 2.3.2
@@ -152,12 +154,6 @@ packages:
 
   /@fortawesome/fontawesome-common-types/0.2.36:
     resolution: {integrity: sha512-a/7BiSgobHAgBWeN7N0w+lAhInrGxksn13uK7231n2m8EDPE3BMCl9NZLTGrj9ZXfCmC6LM0QLqXidIizVQ6yg==}
-    engines: {node: '>=6'}
-    requiresBuild: true
-    dev: false
-
-  /@fortawesome/fontawesome-free/6.1.1:
-    resolution: {integrity: sha512-J/3yg2AIXc9wznaVqpHVX3Wa5jwKovVF0AMYSnbmcXTiL3PpRPfF58pzWucCwEiCJBp+hCNRLWClTomD8SseKg==}
     engines: {node: '>=6'}
     requiresBuild: true
     dev: false
@@ -1009,7 +1005,7 @@ packages:
   /jsonfile/4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.10
     dev: false
 
   /jsonfile/5.0.0:

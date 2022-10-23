@@ -178,6 +178,7 @@ class HeaderPresenterBuilder
                 new CssAssetWithoutVariantDeclinaisons($core_assets, 'tlp'),
                 new CssAssetWithDensityVariants($core_assets, 'tlp-vars'),
                 new CssAssetWithoutVariantDeclinaisons($core_assets, 'BurningParrot/burning-parrot'),
+                new CssAssetWithoutVariantDeclinaisons($core_assets, 'common-theme/project-sidebar'),
             ]
         );
         $this->css_assets = $css_assets->merge($this->css_assets);

@@ -6,7 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/core": "link:../../src",
+    "@tuleap/burningparrot-theme": "link:../../src/themes/BurningParrot",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
     "mustache": "^4.2.0",

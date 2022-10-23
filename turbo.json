@@ -38,7 +38,8 @@
         "src/**",
         "themes/**",
         "css/**",
-        "images/**"
+        "images/**",
+        "po/**"
       ],
       "outputs": ["dist/**", "frontend-assets/**", "backend-assets/**"]
     },

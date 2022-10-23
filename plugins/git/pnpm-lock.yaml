@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
@@ -32,6 +33,7 @@ specifiers:
 
 dependencies:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
+  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/project-background': link:../../lib/frontend/project-background

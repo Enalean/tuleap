@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/autocomplete-for-select2": "link:../../lib/frontend/autocomplete-for-select2",
+    "@tuleap/core": "link:../../src/scripts/main",
     "@tuleap/filter-inline-table": "link:../../lib/frontend/filter-table",
     "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
     "@tuleap/project-background": "link:../../lib/frontend/project-background",

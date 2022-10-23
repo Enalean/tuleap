@@ -16,6 +16,7 @@ specifiers:
   '@types/sprintf-js': ^1.1.2
   '@vitejs/plugin-vue': ^2.0.0
   '@vue/test-utils': ^2.0.2
+  jquery: ^3.6.0
   neverthrow: ^5.0.0
   pinia: ^2.0.21
   sprintf-js: ^1.1.2
@@ -46,6 +47,7 @@ devDependencies:
   '@types/sprintf-js': 1.1.2
   '@vitejs/plugin-vue': 2.3.4_vue@3.2.37
   '@vue/test-utils': 2.0.2_vue@3.2.37
+  jquery: 3.6.1
   neverthrow: 5.0.0
 
 packages:
@@ -462,6 +464,10 @@ packages:
   /is-arrayish/0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}
     dev: false
+
+  /jquery/3.6.1:
+    resolution: {integrity: sha512-opJeO4nCucVnsjiXOE+/PcCgYw9Gwpvs/a6B1LL/lQhwWwpbVEVYDZ1FokFr8PRc7ghYlrFPuyHuiiDNTQxmcw==}
+    dev: true
 
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}

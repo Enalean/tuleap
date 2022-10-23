@@ -2,11 +2,13 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': link:../../lib/frontend/tlp-popovers
 
 dependencies:
+  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': link:../../lib/frontend/tlp-popovers

@@ -8,6 +8,7 @@
   "dependencies": {
     "@tuleap/chart-builder": "link:../../lib/frontend/chart-builder",
     "@tuleap/copy-to-clipboard": "link:../../lib/frontend/copy-to-clipboard",
+    "@tuleap/core": "link:../../src/scripts/main",
     "@tuleap/gettext": "link:../../lib/frontend/gettext",
     "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
     "@tuleap/list-picker": "link:../../lib/frontend/list-picker",

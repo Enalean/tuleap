@@ -1,15 +1,15 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/burningparrot-theme",
-  "description": "Tuleap BurningParrot theme framework",
+  "name": "@tuleap/common-theme",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
+  "description": "Tuleap common theme assets",
   "private": true,
+  "version": "0.0.0",
   "dependencies": {
-    "@tuleap/cross-ref-badges": "link:../../../lib/frontend/cross-ref-badges",
-    "@tuleap/list-picker": "link:../../../lib/frontend/list-picker",
     "@tuleap/project-background": "link:../../../lib/frontend/project-background",
+    "@tuleap/project-sidebar-internal": "link:../../../lib/frontend/project-sidebar-internal",
     "@tuleap/tlp-swatch-colors": "link:../../../lib/frontend/tlp-swatch-colors",
-    "dragula": "^3.7.2"
+    "prismjs": "^1.29.0"
   }
 }

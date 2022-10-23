@@ -18,7 +18,7 @@
  */
 
 @use "sass:color";
-@import "../../../themes/tlp/src/scss/variables/colors/common-colors";
+@import "@tuleap/tlp/src/scss/variables/colors/common-colors";
 @import "~@tuleap/list-picker";
 @import "~@tuleap/link-selector";
 
@@ -216,7 +216,7 @@ body {
     min-height: 100vh;
 
     &.orange {
-        @import "../../../themes/tlp/src/scss/variables/variables-orange";
+        @import "@tuleap/tlp/src/scss/variables/variables-orange";
         @include themable(
             $tlp-main-color,
             $tlp-background-color,
@@ -236,7 +236,7 @@ body {
     }
 
     &.blue {
-        @import "../../../themes/tlp/src/scss/variables/variables-blue";
+        @import "@tuleap/tlp/src/scss/variables/variables-blue";
         @include themable(
             $tlp-main-color,
             $tlp-background-color,
@@ -256,7 +256,7 @@ body {
     }
 
     &.green {
-        @import "../../../themes/tlp/src/scss/variables/variables-green";
+        @import "@tuleap/tlp/src/scss/variables/variables-green";
         @include themable(
             $tlp-main-color,
             $tlp-background-color,
@@ -276,7 +276,7 @@ body {
     }
 
     &.grey {
-        @import "../../../themes/tlp/src/scss/variables/variables-grey";
+        @import "@tuleap/tlp/src/scss/variables/variables-grey";
         @include themable(
             $tlp-main-color,
             $tlp-background-color,
@@ -296,7 +296,7 @@ body {
     }
 
     &.purple {
-        @import "../../../themes/tlp/src/scss/variables/variables-purple";
+        @import "@tuleap/tlp/src/scss/variables/variables-purple";
         @include themable(
             $tlp-main-color,
             $tlp-background-color,
@@ -316,7 +316,7 @@ body {
     }
 
     &.red {
-        @import "../../../themes/tlp/src/scss/variables/variables-red";
+        @import "@tuleap/tlp/src/scss/variables/variables-red";
         @include themable(
             $tlp-main-color,
             $tlp-background-color,

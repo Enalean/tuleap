@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/core': link:../../src
+  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
@@ -12,7 +12,7 @@ specifiers:
   vue-gettext: ^2.1.12
 
 dependencies:
-  '@tuleap/core': link:../../src
+  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   mustache: 4.2.0

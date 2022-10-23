@@ -23,7 +23,7 @@ import {
     addDataToAutocompleter,
     enableAutocompleter,
     loadUserAndUgroupAutocompleter,
-} from "../../../src/scripts/tuleap/user-and-ugroup-autocompleter";
+} from "@tuleap/core/src/tuleap/user-and-ugroup-autocompleter";
 
 (function ($) {
     document.addEventListener("DOMContentLoaded", function () {
