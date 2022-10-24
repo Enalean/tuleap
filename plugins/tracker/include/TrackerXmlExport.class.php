@@ -230,7 +230,8 @@ class TrackerXmlExport
         );
 
         if ($tracker !== null && $tracker->isActive()) {
-            $this->exportTrackerAndArtifacts($user, $archive, $xml_content, $tracker);
+            $xml_field_mapping = [];
+            $this->exportTracker($xml_content, $tracker, $xml_field_mapping);
         }
 
         $this->artifact_xml_export->exportBunchOfArtifactsForArchive($artifacts, $xml_content, $user, $archive);
