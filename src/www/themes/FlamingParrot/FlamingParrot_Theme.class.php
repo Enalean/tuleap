@@ -133,7 +133,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     {
         $this->addJavascriptAsset(new JavascriptViteAsset(
             new IncludeViteAssets(
-                __DIR__ . '/../../../frontend-assets/switch-to',
+                __DIR__ . '/../../../scripts/switch-to/frontend-assets',
                 '/assets/core/switch-to'
             ),
             'src/index-fp.ts'
@@ -223,6 +223,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         return [
             $include_assets->getFileURL('FlamingParrot/style.css'),
+            $include_assets->getFileURL('common-theme/project-sidebar.css'),
             $tlp_vars->getFileURL(new \Tuleap\Layout\ThemeVariation(ThemeVariantColor::buildFromVariant($variant_used), $current_user)),
         ];
     }

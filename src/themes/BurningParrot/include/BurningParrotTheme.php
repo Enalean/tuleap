@@ -124,7 +124,7 @@ class BurningParrotTheme extends BaseLayout
 
         $this->addJavascriptAsset(new JavascriptViteAsset(
             new IncludeViteAssets(
-                __DIR__ . '/../../../frontend-assets/switch-to',
+                __DIR__ . '/../../../scripts/switch-to/frontend-assets',
                 '/assets/core/switch-to'
             ),
             'src/index-bp.ts'

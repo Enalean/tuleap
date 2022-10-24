@@ -1,19 +1,23 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@fortawesome/fontawesome-free': ^6.1.1
   '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
   '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
+  '@tuleap/tlp-swatch-colors': link:../../../lib/frontend/tlp-swatch-colors
   '@types/jquery': ^3.5.5
   flatpickr: ^4.6.9
   jquery: ^3.6.0
   select2: ^4.0.13
 
 dependencies:
+  '@fortawesome/fontawesome-free': 6.1.1
   '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
+  '@tuleap/tlp-swatch-colors': link:../../../lib/frontend/tlp-swatch-colors
   flatpickr: 4.6.9
   jquery: 3.6.0
   select2: 4.0.13
@@ -23,6 +27,12 @@ devDependencies:
   '@types/jquery': 3.5.5
 
 packages:
+
+  /@fortawesome/fontawesome-free/6.1.1:
+    resolution: {integrity: sha512-J/3yg2AIXc9wznaVqpHVX3Wa5jwKovVF0AMYSnbmcXTiL3PpRPfF58pzWucCwEiCJBp+hCNRLWClTomD8SseKg==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dev: false
 
   /@types/jquery/3.5.5:
     resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}

@@ -6,9 +6,9 @@
   "private": true,
   "dependencies": {
     "@tuleap/angular-tlp": "link:../../lib/frontend/angular-tlp",
+    "@tuleap/burningparrot-theme": "link:../../src/themes/BurningParrot",
     "@tuleap/ckeditor-image-upload": "link:../../lib/frontend/ckeditor-image-upload",
     "@tuleap/concurrency-limit-pool": "link:../../lib/frontend/concurrency-limit-pool",
-    "@tuleap/core": "link:../../src",
     "@tuleap/filter-inline-table": "link:../../lib/frontend/filter-table",
     "@tuleap/gettext": "link:../../lib/frontend/gettext",
     "@tuleap/keyboard-shortcuts": "link:../../lib/frontend/keyboard-shortcuts",

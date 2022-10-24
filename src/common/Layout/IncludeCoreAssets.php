@@ -27,8 +27,8 @@ final class IncludeCoreAssets extends IncludeAssets
     public function __construct()
     {
         parent::__construct(
-            __DIR__ . '/../../frontend-assets',
-            '/assets/core'
+            __DIR__ . '/../../scripts/main/frontend-assets',
+            '/assets/core/main'
         );
     }
 }

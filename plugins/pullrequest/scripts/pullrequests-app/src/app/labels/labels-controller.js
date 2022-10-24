@@ -1,4 +1,4 @@
-import { create } from "../../../../../../../src/scripts/labels/labels-box.js";
+import { create } from "@tuleap/core/src/labels/labels-box.js";
 
 export default LabelsController;
 

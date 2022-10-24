@@ -119,7 +119,7 @@ describe("ProjectLink", () => {
     });
 
     it("should go to the project when I click on the container", async () => {
-        const location = { assign: jest.fn() };
+        const location = { ...window.location, assign: jest.fn() };
 
         const wrapper = shallowMount(ProjectLink, {
             props: {
@@ -144,7 +144,7 @@ describe("ProjectLink", () => {
     });
 
     it("should not manually assign the location when the real link is clicked", async () => {
-        const location = { assign: jest.fn() };
+        const location = { ...window.location, assign: jest.fn() };
 
         const wrapper = shallowMount(ProjectLink, {
             props: {

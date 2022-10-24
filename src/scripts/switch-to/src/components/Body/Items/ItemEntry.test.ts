@@ -240,6 +240,7 @@ describe("ItemEntry", () => {
                         label: "Guinea Pig",
                     },
                     badges: [] as ReadonlyArray<ItemBadge>,
+                    cropped_content: null,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
                 location: window.location,
@@ -275,6 +276,7 @@ describe("ItemEntry", () => {
                         label: "Guinea Pig",
                     },
                     badges: [] as ReadonlyArray<ItemBadge>,
+                    cropped_content: null,
                 } as ItemDefinition,
                 changeFocusCallback: jest.fn(),
                 location: window.location,
@@ -399,7 +401,7 @@ describe("ItemEntry", () => {
     });
 
     it("should go to the item when I click on the container", async () => {
-        const location = { assign: jest.fn() };
+        const location = { ...window.location, assign: jest.fn() };
 
         const wrapper = shallowMount(ItemEntry, {
             props: {
@@ -425,7 +427,7 @@ describe("ItemEntry", () => {
     });
 
     it("should not manually assign the location when the real link is clicked", async () => {
-        const location = { assign: jest.fn() };
+        const location = { ...window.location, assign: jest.fn() };
 
         const wrapper = shallowMount(ItemEntry, {
             props: {

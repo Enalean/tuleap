@@ -1,6 +1,6 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/switch-to",
+  "name": "@tuleap/core-switch-to",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
@@ -19,9 +19,6 @@
     "vue-word-highlighter": "^1.0.5",
     "vue3-gettext": "^2.2.1"
   },
-  "peerDependencies": {
-    "jquery": "^3.6.0"
-  },
   "devDependencies": {
     "@pinia/testing": "^0.0.14",
     "@testing-library/vue": "^6.6.1",
@@ -32,6 +29,7 @@
     "@types/sprintf-js": "^1.1.2",
     "@vitejs/plugin-vue": "^2.0.0",
     "@vue/test-utils": "^2.0.2",
+    "jquery": "^3.6.0",
     "neverthrow": "^5.0.0"
   },
   "scripts": {

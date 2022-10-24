@@ -3,9 +3,9 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/angular-tlp': link:../../lib/frontend/angular-tlp
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/ckeditor-image-upload': link:../../lib/frontend/ckeditor-image-upload
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
-  '@tuleap/core': link:../../src
   '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
@@ -60,9 +60,9 @@ specifiers:
 
 dependencies:
   '@tuleap/angular-tlp': link:../../lib/frontend/angular-tlp
+  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/ckeditor-image-upload': link:../../lib/frontend/ckeditor-image-upload
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
-  '@tuleap/core': link:../../src
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/keyboard-shortcuts': link:../../lib/frontend/keyboard-shortcuts

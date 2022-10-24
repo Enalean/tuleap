@@ -172,8 +172,8 @@ module.exports = {
                 "plugins/create_test_env/**/*.vue",
                 "plugins/crosstracker/**/*.vue",
                 "plugins/agiledashboard/scripts/permissions-per-group/**/*.vue",
-                "src/scripts/project/admin/services/**/*.vue",
-                "src/scripts/*/permissions-per-group/**/*.vue",
+                "src/scripts/main/src/project/admin/services/**/*.vue",
+                "src/scripts/main/src/*/permissions-per-group/**/*.vue",
             ],
             rules: {
                 "@typescript-eslint/explicit-function-return-type": "off",

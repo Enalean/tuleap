@@ -624,9 +624,6 @@ done
 %if %{with experimental}
 %else
 %endif
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/css
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/images
@@ -1068,7 +1065,7 @@ fi
 %{APP_DIR}/src/db
 %{APP_DIR}/src/etc
 %{APP_DIR}/src/forgeupgrade
-%{APP_DIR}/src/frontend-assets
+%{APP_DIR}/src/scripts
 %{APP_DIR}/src/templates
 %{APP_DIR}/src/tuleap-cfg
 %{APP_DIR}/src/utils

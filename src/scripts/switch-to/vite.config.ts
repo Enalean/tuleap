@@ -25,7 +25,8 @@ import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
 export default vite.defineAppConfig(
     {
-        plugin_name: "core-switch-to",
+        plugin_name: "core",
+        sub_app_name: "switch-to",
     },
     {
         plugins: [vue(), POGettextPlugin.vite(), viteExternalsPlugin({ jquery: "jQuery" })],

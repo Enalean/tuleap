@@ -36,8 +36,8 @@ let
           plugins/*/additional-packages
           tests/
           plugins/*/tests
-          !src/frontend-assets/
           /lib/
+          !src/scripts/*/frontend-assets/
           /plugins/*/scripts/lib/
           !plugins/*/backend-assets
           !plugins/*/*/backend-assets
@@ -66,6 +66,12 @@ let
           tools/utils/publish_js_libraries/
         '';
       };
+      # Clean files src/scripts/<name>/(not "frontend_assets" directory)
+      cleanCoreScriptsSubAppCode = path: type:
+              ! ( ( ( baseNameOf path ) != "frontend-assets" ) &&
+                  ( ( baseNameOf ( dirOf ( dirOf path ) ) ) == "scripts" ) &&
+                  ( ( baseNameOf ( dirOf ( dirOf ( dirOf path ) ) ) ) == "src" )
+                );
       # Clean files in plugins/<name>/scripts/
       cleanPluginScriptsFiles = path: type:
         ! ( ( type != "directory" ) &&
@@ -80,7 +86,7 @@ let
           );
     in
       path: type:
-        srcIgnored path type && cleanPluginScriptsSubAppCode path type && cleanPluginScriptsFiles path type;
+        srcIgnored path type && cleanCoreScriptsSubAppCode path type && cleanPluginScriptsSubAppCode path type && cleanPluginScriptsFiles path type;
   name = "tuleap-${tuleapVersion}.tar.gz";
   rootFolderSrc = ../..;
 in pkgs.stdenv.mkDerivation {

@@ -8,9 +8,11 @@
   "version": "0.0.0",
   "module": "./src/js/index.ts",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.1.1",
     "@tuleap/tlp-dropdown": "link:../../../lib/frontend/tlp-dropdown",
     "@tuleap/tlp-modal": "link:../../../lib/frontend/tlp-modal",
     "@tuleap/tlp-popovers": "link:../../../lib/frontend/tlp-popovers",
+    "@tuleap/tlp-swatch-colors": "link:../../../lib/frontend/tlp-swatch-colors",
     "flatpickr": "^4.6.9",
     "jquery": "^3.6.0",
     "select2": "^4.0.13"
@@ -20,6 +22,7 @@
     "@types/jquery": "^3.5.5"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "build": "echo 'I exist only to make pnpm build things that depend on me in the right order'"
   }
 }

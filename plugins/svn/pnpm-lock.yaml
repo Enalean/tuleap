@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
@@ -12,6 +13,7 @@ specifiers:
   vue-gettext: ^2.1.12
 
 dependencies:
+  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch

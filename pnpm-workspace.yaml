@@ -1,10 +1,10 @@
 packages:  # all packages in subdirs of packages/ and components/  - 'packages/**'
   - "lib/frontend/**/"
   - "lib/test-utils/**/"
-  - "src/scripts/tlp-doc"
-  - "src/"
-  - "src/scripts/**"
+  - "src/scripts/*/"
+  - "src/scripts/main/src/tlp-doc/"
   - "src/themes/tlp"
+  - "src/themes/common"
   - "src/themes/BurningParrot"
   - "src/themes/FlamingParrot"
   - "src/additional-packages/*/"
