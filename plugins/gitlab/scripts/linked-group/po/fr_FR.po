@@ -31,11 +31,22 @@ msgstr "Erreur pendant la suppression du lien : %(error)s"
 msgid "Error during the update of configuration: %(error)s"
 msgstr "Erreur pendant la modification de la configuration : %(error)s"
 
+msgid "Error during the update of the access token: %(error)s"
+msgstr "Erreur pendant la mise à jour du jeton d'accès : %(error)s"
+
 msgid "In error, just now"
 msgstr "En erreur, à l'instant"
 
 msgid "No"
 msgstr "Non"
+
+msgid "Unable to connect to the GitLab server, please check your credentials."
+msgstr ""
+"Impossible de se connecter au serveur GitLab, veuillez vérifier vos "
+"informations de connexion."
+
+msgid "Unable to reach the GitLab server: %(error)s"
+msgstr "Impossible d'atteindre le serveur GitLab : %(error)s"
 
 msgid "Yes"
 msgstr "Oui"

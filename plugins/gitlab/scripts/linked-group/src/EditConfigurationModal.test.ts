@@ -26,7 +26,6 @@ import {
     EDIT_CONFIRM_SELECTOR,
     EDIT_ICON_CLASSNAME,
     EditConfigurationModal,
-    FORM_ELEMENT_DISABLED_CLASSNAME,
     HAS_PREFIX_CHECKBOX_SELECTOR,
     HIDDEN_ICON_CLASSNAME,
     PREFIX_BOX_SELECTOR,
@@ -43,7 +42,12 @@ import { selectOrThrow } from "@tuleap/dom";
 import type { GetText } from "@tuleap/gettext";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import { SPIN_CLASSNAME, SPINNER_CLASSNAME, FEEDBACK_HIDDEN_CLASSNAME } from "./classnames";
+import {
+    SPIN_CLASSNAME,
+    SPINNER_CLASSNAME,
+    FEEDBACK_HIDDEN_CLASSNAME,
+    FORM_ELEMENT_DISABLED_CLASSNAME,
+} from "./classnames";
 
 const noop = (): void => {
     // Do nothing;

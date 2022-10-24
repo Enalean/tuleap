@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { selectOrThrow } from "@tuleap/dom";
-import { FEEDBACK_HIDDEN_CLASSNAME, SPIN_CLASSNAME, SPINNER_CLASSNAME } from "./classnames";
+import {
+    FEEDBACK_HIDDEN_CLASSNAME,
+    FORM_ELEMENT_DISABLED_CLASSNAME,
+    SPIN_CLASSNAME,
+    SPINNER_CLASSNAME,
+} from "./classnames";
 import { patchJSON } from "@tuleap/fetch-result";
 import type { GetText } from "@tuleap/gettext";
 import { createModal } from "@tuleap/tlp-modal";
@@ -41,7 +46,6 @@ export const FORM_ELEMENTS_SELECTOR = "[data-form-element]";
 export const INPUTS_SELECTOR = "input";
 
 export const HIDDEN_ICON_CLASSNAME = "gitlab-modal-icon-hidden";
-export const FORM_ELEMENT_DISABLED_CLASSNAME = "tlp-form-element-disabled";
 export const EDIT_ICON_CLASSNAME = "fa-pencil";
 
 type UpdatedGroup = {

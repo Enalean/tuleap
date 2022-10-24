@@ -62,6 +62,8 @@
                 class="tlp-pane-section tlp-pane-section-submit gitlab-linked-group-buttons"
                 id="buttons-section"
                 data-group-id="{{ group_id }}"
+                data-gitlab-group-id="{{ gitlab_group_id }}"
+                data-gitlab-uri="{{ gitlab_url }}"
             >
                 <button type="button" class="tlp-button-primary" id="synchronize-button">
                     <i class="fa-solid fa-rotate tlp-button-icon" aria-hidden="true" id="synchronize-icon"></i>
@@ -207,7 +209,7 @@
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{# dgettext }}tuleap-gitlab | Cancel{{/ dgettext }}
             </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action" id="token-modal-confirm" disabled>
+            <button type="submit" class="tlp-button-primary tlp-modal-action" id="token-modal-confirm">
                 {{# dgettext }}tuleap-gitlab | Save token{{/ dgettext }}
                 <i id="token-icon" class="fa-solid fa-long-arrow-alt-right tlp-button-icon-right" aria-hidden="true"></i>
             </button>

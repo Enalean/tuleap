@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const SPINNER_CLASSNAME = "fa-circle-notch";
-export const SPIN_CLASSNAME = "fa-spin";
-export const FEEDBACK_HIDDEN_CLASSNAME = "gitlab-modal-feedback-hidden";
-export const FEEDBACK_SUCCESS_CLASSNAME = "tlp-alert-success";
-export const FEEDBACK_ERROR_CLASSNAME = "tlp-alert-danger";
-export const BADGE_SUCCESS_CLASSNAME = "tlp-badge-success";
-export const BADGE_ERROR_CLASSNAME = "tlp-badge-danger";
-export const FORM_ELEMENT_DISABLED_CLASSNAME = "tlp-form-element-disabled";
+export type GroupInformation = {
+    readonly id: number;
+    readonly gitlab_group_id: number;
+    readonly gitlab_server_uri: string;
+};

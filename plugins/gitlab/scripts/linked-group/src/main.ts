@@ -24,6 +24,7 @@ import { EditConfigurationModal } from "./EditConfigurationModal";
 import { UnlinkModal } from "./UnlinkModal";
 import { SynchronizeButton } from "./SynchronizeButton";
 import { TokenModal } from "./TokenModal";
+import type { GroupInformation } from "./GroupInformation";
 import "../themes/main.scss";
 
 const UNLINK_SELECTOR = "#unlink-button";
@@ -39,11 +40,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const buttons_section = selectOrThrow(document.body, SECTION_SELECTOR);
     const group_id = Number.parseInt(getDatasetItemOrThrow(buttons_section, "groupId"), 10);
+    const gitlab_server_uri = getDatasetItemOrThrow(buttons_section, "gitlabUri");
+    const gitlab_group_id = Number.parseInt(
+        getDatasetItemOrThrow(buttons_section, "gitlabGroupId"),
+        10
+    );
+    const group: GroupInformation = { id: group_id, gitlab_server_uri, gitlab_group_id };
 
     openAllTargetModalsOnClick(document, UNLINK_SELECTOR);
 
     SynchronizeButton(document, gettext_provider, group_id).init();
     EditConfigurationModal(document, gettext_provider, group_id).init();
-    TokenModal(document).init();
+    TokenModal(document, gettext_provider, group).init();
     UnlinkModal(document.location, document, gettext_provider, group_id).init();
 });
