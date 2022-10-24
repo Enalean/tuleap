@@ -31,10 +31,19 @@ msgstr ""
 msgid "Error during the update of configuration: %(error)s"
 msgstr ""
 
+msgid "Error during the update of the access token: %(error)s"
+msgstr ""
+
 msgid "In error, just now"
 msgstr ""
 
 msgid "No"
+msgstr ""
+
+msgid "Unable to connect to the GitLab server, please check your credentials."
+msgstr ""
+
+msgid "Unable to reach the GitLab server: %(error)s"
 msgstr ""
 
 msgid "Yes"

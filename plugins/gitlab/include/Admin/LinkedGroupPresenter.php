@@ -42,6 +42,7 @@ final class LinkedGroupPresenter
     public string $branch_prefix;
     public bool $has_branch_prefix;
     public string $current_project_label;
+    public int $gitlab_group_id;
 
     public function __construct(
         public GitLabLinkGroupPanePresenter $administration_pane,
@@ -51,6 +52,7 @@ final class LinkedGroupPresenter
         public int $number_of_integrated_projects_in_last_sync,
     ) {
         $this->group_id                   = $group_link->id;
+        $this->gitlab_group_id            = $group_link->gitlab_group_id;
         $this->group_name                 = $group_link->name;
         $this->first_letter_of_group_name = mb_substr($group_link->name, 0, 1);
         $this->group_path                 = $group_link->full_path;
