@@ -1,8 +1,20 @@
+import { RelativeDateHelper } from "../../helpers/date-helpers";
+
 export default PullRequestSummaryController;
 
-PullRequestSummaryController.$inject = ["$state", "PullRequestService", "UserRestService"];
+PullRequestSummaryController.$inject = [
+    "$state",
+    "PullRequestService",
+    "UserRestService",
+    "SharedPropertiesService",
+];
 
-function PullRequestSummaryController($state, PullRequestService, UserRestService) {
+function PullRequestSummaryController(
+    $state,
+    PullRequestService,
+    UserRestService,
+    SharedPropertiesService
+) {
     const self = this;
 
     Object.assign(self, {
@@ -12,6 +24,11 @@ function PullRequestSummaryController($state, PullRequestService, UserRestServic
         goToOverview,
         isAbandoned,
         isMerged,
+        relative_date_helper: RelativeDateHelper(
+            SharedPropertiesService.getDateTimeFormat(),
+            SharedPropertiesService.getRelativeDateDisplay(),
+            SharedPropertiesService.getUserLocale()
+        ),
     });
 
     function init() {

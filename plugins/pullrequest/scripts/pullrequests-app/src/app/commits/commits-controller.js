@@ -1,4 +1,6 @@
 import { sprintf } from "sprintf-js";
+import moment from "moment";
+import { RelativeDateHelper } from "../helpers/date-helpers";
 
 export default CommitsController;
 
@@ -6,7 +8,6 @@ CommitsController.$inject = [
     "$state",
     "$window",
     "gettextCatalog",
-    "moment",
     "CommitsRestService",
     "SharedPropertiesService",
 ];
@@ -15,7 +16,6 @@ function CommitsController(
     $state,
     $window,
     gettextCatalog,
-    moment,
     CommitsRestService,
     SharedPropertiesService
 ) {
@@ -28,6 +28,11 @@ function CommitsController(
         is_loading_commits: true,
         shouldDisplayWarningMessage,
         shouldDisplayListOfCommits,
+        relative_date_helper: RelativeDateHelper(
+            SharedPropertiesService.getDateTimeFormat(),
+            SharedPropertiesService.getRelativeDateDisplay(),
+            SharedPropertiesService.getUserLocale()
+        ),
         $onInit: init,
     });
 

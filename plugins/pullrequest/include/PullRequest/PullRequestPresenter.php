@@ -21,6 +21,7 @@
 namespace Tuleap\PullRequest;
 
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\PullRequest\MergeSetting\MergeSetting;
 
 final class PullRequestPresenter
@@ -32,12 +33,18 @@ final class PullRequestPresenter
     public bool $is_there_at_least_one_pull_request;
     public bool $is_merge_commit_allowed;
     public bool $allow_pullrequest_v2;
+    public int $user_id;
+    public string $relative_date_display;
+    public string $language;
 
-    public function __construct(public int $repository_id, public int $user_id, public string $language, private PullRequestCount $nb_pull_requests, MergeSetting $merge_setting)
+    public function __construct(public int $repository_id, \PFUser $user, private PullRequestCount $nb_pull_requests, MergeSetting $merge_setting)
     {
         $this->is_there_at_least_one_pull_request = $nb_pull_requests->isThereAtLeastOnePullRequest();
         $this->is_merge_commit_allowed            = $merge_setting->isMergeCommitAllowed();
         $this->allow_pullrequest_v2               = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY);
+        $this->user_id                            = (int) $user->getId();
+        $this->language                           = $user->getShortLocale();
+        $this->relative_date_display              = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
     }
 
     public function getTemplateName(): string

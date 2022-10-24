@@ -22,6 +22,8 @@ import type { HostElement } from "./PullRequestComment";
 import { PullRequestComment } from "./PullRequestComment";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 import { setCatalog } from "../gettext-catalog";
+import "@tuleap/tlp-relative-date";
+import { RelativeDateHelperStub } from "../../../tests/stubs/RelativeDateHelperStub";
 
 describe("PullRequestComment", () => {
     let target: ShadowRoot;
@@ -38,9 +40,9 @@ describe("PullRequestComment", () => {
         it(`Given a not outdated inline comment, then it should have the right classes`, () => {
             const host = {
                 comment: PullRequestCommentPresenterStub.buildInlineComment(),
+                relativeDateHelper: RelativeDateHelperStub,
             } as unknown as HostElement;
             const update = PullRequestComment.content(host);
-
             update(host, target);
 
             const root = selectOrThrow(target, "[data-test=pullrequest-comment]");
@@ -53,6 +55,7 @@ describe("PullRequestComment", () => {
         it(`Given an outdated inline comment, then it should have the right classes`, () => {
             const host = {
                 comment: PullRequestCommentPresenterStub.buildInlineCommentOutdated(),
+                relativeDateHelper: RelativeDateHelperStub,
             } as unknown as HostElement;
             const update = PullRequestComment.content(host);
 
@@ -69,6 +72,7 @@ describe("PullRequestComment", () => {
         it(`Given a global comment, then it should have the right classes`, () => {
             const host = {
                 comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+                relativeDateHelper: RelativeDateHelperStub,
             } as unknown as HostElement;
             const update = PullRequestComment.content(host);
 
@@ -83,6 +87,7 @@ describe("PullRequestComment", () => {
         it(`Given a pull-request event comment, then it should have the right classes`, () => {
             const host = {
                 comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
+                relativeDateHelper: RelativeDateHelperStub,
             } as unknown as HostElement;
             const update = PullRequestComment.content(host);
 
@@ -98,6 +103,7 @@ describe("PullRequestComment", () => {
             const post_rendering_callback = jest.fn();
             const host = {
                 comment: PullRequestCommentPresenterStub.buildInlineComment(),
+                relativeDateHelper: RelativeDateHelperStub,
                 post_rendering_callback,
             } as unknown as HostElement;
 

@@ -25,8 +25,6 @@ import {
 } from "../gettext-catalog";
 import type { PullRequestUser, PullRequestCommentPresenter } from "./PullRequestComment";
 
-export type AngularMomentType = (date_string: string) => { fromNow: () => string };
-
 export interface State {
     href: (name: string, url_parameters: Record<string, unknown>) => string;
 }
@@ -36,9 +34,9 @@ export interface PullRequestData {
 }
 
 export interface FileDiffCommentPayload {
-    post_date: string;
     content: string;
     user: PullRequestUser;
+    post_date: string;
 }
 
 export interface TimelineEventPayload {
@@ -62,13 +60,11 @@ interface BuildPullRequestCommentPresenter {
 }
 
 export const PullRequestCommentPresenterBuilder = (
-    $state: State,
-    moment: AngularMomentType
+    $state: State
 ): BuildPullRequestCommentPresenter => ({
     fromFileDiffComment: (comment: FileDiffCommentPayload): PullRequestCommentPresenter => {
         return {
             ...comment,
-            post_date: moment(comment.post_date).fromNow(),
             content: replaceLineReturns(comment.content),
             type: "inline-comment",
             is_outdated: false,
@@ -96,7 +92,6 @@ export const PullRequestCommentPresenterBuilder = (
             ...event,
             ...file,
             is_inline_comment,
-            post_date: moment(event.post_date).fromNow(),
             content: getContentMessage(event),
         };
     },

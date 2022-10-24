@@ -18,7 +18,17 @@
             ></a>
             <span class="pull-request-summary-creation-date">
                 <i class="fas fa-calendar-alt"></i>
-                {{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
+                <tlp-relative-date
+                    date="{{ ::summary_controller.pull_request.creation_date }}"
+                    absolute-date="{{ ::summary_controller.relative_date_helper.getFormatDateUsingPreferredUserFormat(summary_controller.pull_request.creation_date) }}"
+                    preference="{{ ::summary_controller.relative_date_helper.getRelativeDatePreference() }}"
+                    locale="{{ ::summary_controller.relative_date_helper.getUserLocale() }}"
+                    placement="{{ ::summary_controller.relative_date_helper.getRelativeDatePlacement() }}"
+                >
+                    {{
+                        ::summary_controller.relative_date_helper.getFormatDateUsingPreferredUserFormat(summary_controller.pull_request.creation_date)
+                    }}
+                </tlp-relative-date>
             </span>
             <pull-request-refs
                 class="pull-request-summary-refs"

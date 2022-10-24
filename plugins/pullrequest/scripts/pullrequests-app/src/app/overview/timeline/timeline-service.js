@@ -18,12 +18,18 @@
  */
 
 import { PullRequestCommentPresenterBuilder } from "../../comments/pullrequest-comment-presenter-builder";
+import { RelativeDateHelper } from "../../helpers/date-helpers";
 
 export default TimelineService;
 
-TimelineService.$inject = ["TimelineRestService", "gettextCatalog", "moment", "$state"];
+TimelineService.$inject = [
+    "TimelineRestService",
+    "gettextCatalog",
+    "$state",
+    "SharedPropertiesService",
+];
 
-function TimelineService(TimelineRestService, gettextCatalog, moment, $state) {
+function TimelineService(TimelineRestService, gettextCatalog, $state, SharedPropertiesService) {
     const self = this;
 
     Object.assign(self, {
@@ -59,7 +65,11 @@ function TimelineService(TimelineRestService, gettextCatalog, moment, $state) {
         ) {
             const pull_request_comment_presenter_builder = PullRequestCommentPresenterBuilder(
                 $state,
-                moment
+                RelativeDateHelper(
+                    SharedPropertiesService.getDateTimeFormat(),
+                    SharedPropertiesService.getRelativeDateDisplay(),
+                    SharedPropertiesService.getUserLocale()
+                )
             );
             return timeline
                 .filter((event) => event.type !== "reviewer-change")
@@ -72,7 +82,7 @@ function TimelineService(TimelineRestService, gettextCatalog, moment, $state) {
     function addComment(pullRequest, timeline, newComment) {
         const pull_request_comment_presenter_builder = PullRequestCommentPresenterBuilder(
             $state,
-            moment
+            self.relative_date_helper
         );
         return TimelineRestService.addComment(pullRequest.id, newComment).then(function (event) {
             timeline.push(

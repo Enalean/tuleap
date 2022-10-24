@@ -21,6 +21,7 @@ import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import { getCommentBody } from "./PullRequestCommentBodyTemplate";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
+import type { IRelativeDateHelper } from "../helpers/date-helpers";
 
 export const TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestComment & HTMLElement;
@@ -45,18 +46,19 @@ export const TYPE_EVENT_COMMENT: CommentType = "timeline-event";
 
 export interface PullRequestCommentPresenter {
     readonly user: PullRequestUser;
-    readonly post_date: string;
     readonly content: string;
     readonly type: CommentType;
     readonly is_outdated: boolean;
     readonly file?: PullRequestCommentFile;
     readonly is_inline_comment: boolean;
+    readonly post_date: string;
 }
 
 export interface PullRequestComment {
     readonly comment: PullRequestCommentPresenter;
     readonly content: () => HTMLElement;
     readonly post_rendering_callback: () => void;
+    readonly relativeDateHelper: IRelativeDateHelper;
 }
 
 const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
@@ -87,6 +89,7 @@ export const PullRequestComment = define<PullRequestComment>({
     tag: TAG_NAME,
     comment: undefined,
     post_rendering_callback: undefined,
+    relativeDateHelper: undefined,
     content: renderFactory(
         (host) => html`
             <div class="${getCommentClasses(host)}" data-test="pullrequest-comment">

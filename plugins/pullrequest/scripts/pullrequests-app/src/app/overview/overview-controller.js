@@ -1,4 +1,5 @@
 import { createDropdown } from "tlp";
+import { RelativeDateHelper } from "../helpers/date-helpers.ts";
 
 export default OverviewController;
 
@@ -48,6 +49,11 @@ function OverviewController(
         isUnknownMerge,
         isSameReferencesMerge,
         showEditionForm,
+        relative_date_helper: RelativeDateHelper(
+            SharedPropertiesService.getDateTimeFormat(),
+            SharedPropertiesService.getRelativeDateDisplay(),
+            SharedPropertiesService.getUserLocale()
+        ),
         $onInit: init,
     });
 

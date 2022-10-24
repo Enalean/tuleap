@@ -28,9 +28,9 @@ export default {
     controller,
 };
 
-controller.$inject = ["$state", "SharedPropertiesService", "FileDiffRestService", "moment"];
+controller.$inject = ["$state", "SharedPropertiesService", "FileDiffRestService"];
 
-function controller($state, SharedPropertiesService, FileDiffRestService, moment) {
+function controller($state, SharedPropertiesService, FileDiffRestService) {
     const self = this;
     Object.assign(self, {
         is_loading: true,
@@ -48,7 +48,7 @@ function controller($state, SharedPropertiesService, FileDiffRestService, moment
     function init() {
         const pull_request_comment_presenter_builder = PullRequestCommentPresenterBuilder(
             $state,
-            moment
+            self.relative_date_helper
         );
 
         FileDiffRestService.getUnidiff(self.pull_request_id, self.file_path)
