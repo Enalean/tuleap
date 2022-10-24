@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open\Editor;
+namespace Tuleap\OnlyOffice\Save;
 
-/**
- * @psalm-immutable
- * @see https://api.onlyoffice.com/editors/config/editor
- */
-final class OnlyOfficeEditorConfig
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class PrefixOnlyOfficeDocumentSaveTest extends TestCase
 {
-    private function __construct(
-        public string $lang,
-        public string $region,
-        public OnlyOfficeEditorUserConfig $user,
-        public string $callbackUrl,
-    ) {
-    }
-
-    public static function fromUser(\PFUser $user, string $callback_url): self
+    public function testHasSpecificPrefix(): void
     {
-        return new self(
-            $user->getShortLocale(),
-            str_replace('_', '-', $user->getLocale()),
-            OnlyOfficeEditorUserConfig::fromUser($user),
-            $callback_url,
-        );
+        $prefix = new PrefixOnlyOfficeDocumentSave();
+        $this->assertStringContainsString('oo-docsave1', $prefix->getString());
     }
 }

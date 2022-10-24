@@ -18,5 +18,6 @@
  */
 
 DROP TABLE IF EXISTS plugin_onlyoffice_download_document_token;
+DROP TABLE IF EXISTS plugin_onlyoffice_save_document_token;
 DELETE FROM forgeconfig WHERE name = 'onlyoffice_document_server_url';
 DELETE FROM forgeconfig WHERE name = 'onlyoffice_document_server_secret';

@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open\Editor;
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
+use Tuleap\ServerHostname;
+
 /**
  * @psalm-immutable
  * @see https://api.onlyoffice.com/editors/config/document
@@ -30,13 +34,29 @@ final class OnlyOfficeDocumentConfig
 {
     public array $permissions;
 
-    public function __construct(
+    private function __construct(
         public string $fileType,
         public string $key,
         public string $title,
         public string $url,
-        bool $can_be_edited,
+        private OnlyOfficeDocument $document,
     ) {
-        $this->permissions = ['chat' => false, 'print' => false, 'edit' => $can_be_edited];
+        $this->permissions = ['chat' => false, 'print' => false, 'edit' => $this->document->can_be_edited];
+    }
+
+    public static function fromDocument(OnlyOfficeDocument $document, ConcealedString $download_token): self
+    {
+        return new self(
+            pathinfo($document->filename, PATHINFO_EXTENSION),
+            sprintf('tuleap_document_%d_%d', $document->item->getId(), $document->version_id),
+            $document->filename,
+            ServerHostname::HTTPSUrl() . '/onlyoffice/document_download?token=' . urlencode($download_token->getString()),
+            $document,
+        );
+    }
+
+    public function getAssociatedDocument(): OnlyOfficeDocument
+    {
+        return $this->document;
     }
 }

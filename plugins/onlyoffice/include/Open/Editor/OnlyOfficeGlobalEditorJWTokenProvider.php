@@ -31,11 +31,13 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
+use Tuleap\OnlyOffice\Save\OnlyOfficeSaveCallbackURLGenerator;
 
 final class OnlyOfficeGlobalEditorJWTokenProvider implements ProvideOnlyOfficeGlobalEditorJWToken
 {
     public function __construct(
         private ProvideOnlyOfficeConfigDocument $config_document_provider,
+        private OnlyOfficeSaveCallbackURLGenerator $office_save_callback_url_generator,
         private JwtFacade $jwt_facade,
         private Signer $signer,
     ) {
@@ -49,9 +51,10 @@ final class OnlyOfficeGlobalEditorJWTokenProvider implements ProvideOnlyOfficeGl
         return $this->config_document_provider->getDocumentConfig($user, $item_id, $now)
             ->andThen(
                 /** @psalm-return Ok<string> */
-                function (OnlyOfficeDocumentConfig $document_config) use ($user): Ok {
-                    $signing_key = \ForgeConfig::getSecretAsClearText(OnlyOfficeDocumentServerSettings::SECRET);
-                    $jwt         = $this->jwt_facade->issue(
+                function (OnlyOfficeDocumentConfig $document_config) use ($user, $now): Ok {
+                    $callback_url = $this->office_save_callback_url_generator->getCallbackURL($user, $document_config, $now);
+                    $signing_key  = \ForgeConfig::getSecretAsClearText(OnlyOfficeDocumentServerSettings::SECRET);
+                    $jwt          = $this->jwt_facade->issue(
                         $this->signer,
                         Signer\Key\InMemory::plainText($signing_key->getString()),
                         static fn (
@@ -60,7 +63,7 @@ final class OnlyOfficeGlobalEditorJWTokenProvider implements ProvideOnlyOfficeGl
                         ): Builder => $builder
                             ->expiresAt($issued_at->modify('+ 30 seconds'))
                             ->withClaim('document', $document_config)
-                            ->withClaim('editorConfig', OnlyOfficeEditorConfig::fromUser($user))
+                            ->withClaim('editorConfig', OnlyOfficeEditorConfig::fromUser($user, $callback_url))
                     );
 
                     return Result::ok($jwt->toString());

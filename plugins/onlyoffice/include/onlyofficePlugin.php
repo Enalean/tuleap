@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
@@ -48,12 +49,17 @@ use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
+use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenDAO;
+use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenGeneratorDBStore;
 use Tuleap\OnlyOffice\Download\PrefixOnlyOfficeDocumentDownload;
+use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenVerifier;
+use Tuleap\OnlyOffice\Save\PrefixOnlyOfficeDocumentSave;
 use Tuleap\OnlyOffice\Open\DocmanFileLastVersionProvider;
 use Tuleap\OnlyOffice\Open\DocmanFileLastVersionToOnlyOfficeDocumentTransformer;
 use Tuleap\OnlyOffice\Open\OnlyOfficeEditorController;
 use Tuleap\OnlyOffice\Open\OpenInOnlyOfficeController;
 use Tuleap\OnlyOffice\Open\ProvideDocmanFileLastVersion;
+use Tuleap\OnlyOffice\Save\OnlyOfficeSaveCallbackURLGenerator;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveController;
 use Tuleap\Request\CollectRoutesEvent;
 
@@ -63,7 +69,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 {
-    public const LOG_IDENTIFIER = 'onlyoffice_syslog';
+    private const LOG_IDENTIFIER = 'onlyoffice_syslog';
 
     public function __construct(?int $id)
     {
@@ -113,32 +119,42 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         $route_collector->addGroup(
             '/onlyoffice',
             function (FastRoute\RouteCollector $r): void {
-                $r->post('/document_save', $this->getRouteHandler('routeGetDocumentSave'));
                 $r->get('/document_download', $this->getRouteHandler('routeGetDocumentDownload'));
                 $r->get('/open/{id:\d+}', $this->getRouteHandler('routeGetOpenOnlyOffice'));
                 $r->get('/editor/{id:\d+}', $this->getRouteHandler('routeGetEditorOnlyOffice'));
             }
         );
+        $route_collector->post(OnlyOfficeSaveCallbackURLGenerator::CALLBACK_SAVE_URL, $this->getRouteHandler('routePostDocumentSave'));
         $route_collector->get(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routeGetAdminSettings'));
         $route_collector->post(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routePostAdminSettings'));
     }
 
-    public function routeGetDocumentSave(): OnlyOfficeSaveController
+    public function routePostDocumentSave(): OnlyOfficeSaveController
     {
+        $logger = self::getLogger();
+
         return new OnlyOfficeSaveController(
             new JSONResponseBuilder(
                 HTTPFactoryBuilder::responseFactory(),
                 HTTPFactoryBuilder::streamFactory(),
             ),
-            \BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER),
-            new SapiStreamEmitter(),
+            $logger,
+            new SapiEmitter(),
+            new \Tuleap\OnlyOffice\Save\SaveDocumentWithTokenMiddleware(
+                new PrefixedSplitTokenSerializer(new PrefixOnlyOfficeDocumentSave()),
+                new OnlyOfficeSaveDocumentTokenVerifier(
+                    new OnlyOfficeSaveDocumentTokenDAO(),
+                    new SplitTokenVerificationStringHasher(),
+                    $logger,
+                )
+            ),
             new SessionWriteCloseMiddleware(),
         );
     }
 
     public function routeGetDocumentDownload(): DocmanFileDownloadController
     {
-        $logger           = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
+        $logger           = self::getLogger();
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $token_middleware = new DownloadDocumentWithTokenMiddleware(
             new PrefixedSplitTokenSerializer(new PrefixOnlyOfficeDocumentDownload()),
@@ -167,7 +183,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     public function openItemHref(OpenItemHref $open_item_href): void
     {
         $transformer = new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-            new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, BackendLogger::getDefaultLogger()),
+            new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, self::getLogger()),
             ProjectManager::instance(),
         );
 
@@ -183,7 +199,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeGetOpenOnlyOffice(): OpenInOnlyOfficeController
     {
-        $logger = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
+        $logger = self::getLogger();
 
         return new OpenInOnlyOfficeController(
             UserManager::instance(),
@@ -204,14 +220,16 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeGetEditorOnlyOffice(): OnlyOfficeEditorController
     {
+        $logger = self::getLogger();
+
         return new OnlyOfficeEditorController(
-            BackendLogger::getDefaultLogger(),
+            $logger,
             new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeGlobalEditorJWTokenProvider(
                 new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeDocumentConfigProvider(
                     new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
                         new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory(), new FilenamePatternRetriever(new SettingsDAO())),
                         new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-                            new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, BackendLogger::getDefaultLogger()),
+                            new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger),
                             ProjectManager::instance(),
                         ),
                     ),
@@ -222,6 +240,14 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                         new DateInterval('PT30S')
                     )
                 ),
+                new \Tuleap\OnlyOffice\Save\OnlyOfficeSaveCallbackURLGenerator(
+                    new OnlyOfficeSaveDocumentTokenGeneratorDBStore(
+                        new OnlyOfficeSaveDocumentTokenDAO(),
+                        new SplitTokenVerificationStringHasher(),
+                        new PrefixedSplitTokenSerializer(new PrefixOnlyOfficeDocumentSave()),
+                        new DateInterval('PT15M'),
+                    ),
+                ),
                 new \Lcobucci\JWT\JwtFacade(),
                 new \Lcobucci\JWT\Signer\Hmac\Sha256(),
             ),
@@ -230,7 +256,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             self::getAssets(),
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter()
+            new SapiEmitter()
         );
     }
 
@@ -263,7 +289,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             \Tuleap\OnlyOffice\Administration\OnlyOfficeServerUrlValidator::buildSelf(),
             \Tuleap\OnlyOffice\Administration\OnlyOfficeSecretKeyValidator::buildSelf(),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
-            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new SapiEmitter(),
             new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
         );
     }
@@ -281,5 +307,10 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                 OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL
             )
         );
+    }
+
+    private static function getLogger(): \Psr\Log\LoggerInterface
+    {
+        return \BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
     }
 }
