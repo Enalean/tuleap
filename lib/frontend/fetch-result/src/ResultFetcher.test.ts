@@ -33,6 +33,7 @@ import {
     POST_METHOD,
     PUT_METHOD,
 } from "./constants";
+import { RestlerErrorHandler } from "./RestlerErrorHandler";
 
 type JSONResponsePayload = {
     readonly id: number;
@@ -72,7 +73,7 @@ describe(`ResultFetcher`, () => {
     });
 
     const getFetcher = (): FetchResult => {
-        const response_retriever = ResponseRetriever(fetcher);
+        const response_retriever = ResponseRetriever(fetcher, RestlerErrorHandler());
         return ResultFetcher(response_retriever);
     };
 

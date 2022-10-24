@@ -22,11 +22,14 @@ import type { Fault } from "@tuleap/fault";
 import { AllGetter } from "./AllGetter";
 import { ResponseRetriever } from "./ResponseRetriever";
 import { ResultFetcher } from "./ResultFetcher";
+import { RestlerErrorHandler } from "./RestlerErrorHandler";
 
 export type { GetAllOptions, GetAllCollectionCallback } from "./AllGetter";
 export type { OptionsWithAutoEncodedParameters } from "./ResultFetcher";
+export type { RetrieveResponse, ResponseRetrieverOptions } from "./ResponseRetriever";
+export type { ErrorResponseHandler } from "./ErrorResponseHandler";
 
-const response_retriever = ResponseRetriever(window);
+const response_retriever = ResponseRetriever(window, RestlerErrorHandler());
 const all_getter = AllGetter(response_retriever);
 const result_fetcher = ResultFetcher(response_retriever);
 
@@ -35,9 +38,8 @@ const result_fetcher = ResultFetcher(response_retriever);
 type _Unused = ResultAsync<never, Fault>;
 
 export { decodeJSON } from "./json-decoder";
-
 export { JSONParseFault } from "./JSONParseFault";
-export { NetworkFault } from "./NetworkFault";
+export { ResponseRetriever } from "./ResponseRetriever";
 
 /**
  * `getJSON` returns a `ResultAsync<TypeOfJSONPayload, Fault>` with `TypeOfJSONPayload` supplied as a generic type.

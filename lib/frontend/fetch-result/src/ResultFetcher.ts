@@ -72,22 +72,28 @@ export type FetchResult = {
 };
 
 const json_headers = new Headers({ "Content-Type": "application/json" });
+const credentials: RequestCredentials = "same-origin";
 
 export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult => ({
     getJSON: <TypeOfJSONPayload>(uri: string, options?: OptionsWithAutoEncodedParameters) =>
         response_retriever
-            .retrieveResponse(getURI(uri, options?.params), { method: GET_METHOD })
+            .retrieveResponse(getURI(uri, options?.params), { method: GET_METHOD, credentials })
             .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
 
     head: (uri, options) =>
-        response_retriever.retrieveResponse(getURI(uri, options?.params), { method: HEAD_METHOD }),
+        response_retriever.retrieveResponse(getURI(uri, options?.params), {
+            method: HEAD_METHOD,
+            credentials,
+        }),
 
-    options: (uri) => response_retriever.retrieveResponse(getURI(uri), { method: OPTIONS_METHOD }),
+    options: (uri) =>
+        response_retriever.retrieveResponse(getURI(uri), { method: OPTIONS_METHOD, credentials }),
 
     putJSON: <TypeOfJSONPayload>(uri: string, json_payload: unknown) =>
         response_retriever
             .retrieveResponse(getURI(uri), {
                 method: PUT_METHOD,
+                credentials,
                 headers: json_headers,
                 body: JSON.stringify(json_payload),
             })
@@ -97,6 +103,7 @@ export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult
         response_retriever
             .retrieveResponse(getURI(uri), {
                 method: PATCH_METHOD,
+                credentials,
                 headers: json_headers,
                 body: JSON.stringify(json_payload),
             })
@@ -106,6 +113,7 @@ export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult
         response_retriever
             .retrieveResponse(getURI(uri), {
                 method: POST_METHOD,
+                credentials,
                 headers: json_headers,
                 body: JSON.stringify(json_payload),
             })
@@ -114,9 +122,11 @@ export const ResultFetcher = (response_retriever: RetrieveResponse): FetchResult
     post: (uri: string, options: OptionsWithAutoEncodedParameters, json_payload: unknown) =>
         response_retriever.retrieveResponse(getURI(uri, options.params), {
             method: POST_METHOD,
+            credentials,
             headers: json_headers,
             body: JSON.stringify(json_payload),
         }),
 
-    del: (uri) => response_retriever.retrieveResponse(getURI(uri), { method: DELETE_METHOD }),
+    del: (uri) =>
+        response_retriever.retrieveResponse(getURI(uri), { method: DELETE_METHOD, credentials }),
 });

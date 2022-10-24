@@ -3,6 +3,10 @@
     "compilerOptions": {
         "module": "es2020"
     },
-    "include": ["scripts/**/*"],
-    "exclude": ["node_modules", "scripts/artifact-create-branch-action"]
+    "include": [
+        "scripts/permissions-per-group",
+        "scripts/repositories",
+        "scripts/repository",
+        "scripts/siteadmin"
+    ]
 }

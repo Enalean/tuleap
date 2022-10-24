@@ -17,21 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as gitlab_querier from "@tuleap/plugin-git-gitlab-api-querier";
+import { Fault } from "@tuleap/fault";
+import { okAsync, errAsync } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
 import { LINK_HEADER, createGitlabApiQuerier } from "./gitlab-api-querier";
 import type { GitlabGroup } from "../stores/types";
-import { FetchInterfaceStub } from "../tests/stubs/FetchInterfaceStub";
-import { isGitlabApiFault } from "./GitlabApiFault";
-import { isGitLabCredentialsFault } from "./GitLabCredentialsFault";
 
 function buildResponse<TypeOfJSONPayload>(
-    will_succeed: boolean,
-    status: number,
     payload: TypeOfJSONPayload,
     next_url: string | null
 ): Response {
     return {
-        ok: will_succeed,
-        status,
         headers: {
             get: (name: string): string | null => {
                 if (name !== LINK_HEADER) {
@@ -53,14 +50,6 @@ function buildResponse<TypeOfJSONPayload>(
     } as unknown as Response;
 }
 
-function getRequestInit(fetcher: FetchInterfaceStub, call: number): RequestInit {
-    const request_init = fetcher.getRequestInit(call);
-    if (request_init === undefined) {
-        throw new Error("Expected request init to be defined");
-    }
-    return request_init;
-}
-
 const credentials = {
     server_url: new URL("https://example.com"),
     token: "glpat-a1e2i3o4u5y6",
@@ -78,92 +67,73 @@ const group_2 = {
 
 describe("gitlab-api-querier", () => {
     describe("getGitlabGroups", () => {
+        const getGitlabGroups = (): ResultAsync<readonly GitlabGroup[], Fault> => {
+            const querier = createGitlabApiQuerier();
+            return querier.getGitlabGroups(credentials);
+        };
+
         it("should query all the groups user can see on GitLab by fetching next pages urls extracted from the link header", async () => {
-            const fetcher = FetchInterfaceStub.withSuccessiveResponses(
-                buildResponse<readonly GitlabGroup[]>(
-                    true,
-                    200,
-                    [group_1],
-                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2"
-                ),
-                buildResponse<readonly GitlabGroup[]>(true, 200, [group_2], null)
+            let number_of_calls = 0;
+            const getSpy = jest.spyOn(gitlab_querier, "get").mockImplementation(() => {
+                number_of_calls++;
+                if (number_of_calls === 1) {
+                    return okAsync(
+                        buildResponse<readonly GitlabGroup[]>(
+                            [group_1],
+                            "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2"
+                        )
+                    );
+                }
+                return okAsync(buildResponse<readonly GitlabGroup[]>([group_2], null));
+            });
+
+            const result = await getGitlabGroups();
+
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+
+            expect(getSpy.mock.calls).toHaveLength(2);
+            const [first_call, second_call] = getSpy.mock.calls;
+            expect(first_call[0]).toBe(
+                "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc"
             );
-
-            const expected_authentication_headers = new Headers();
-            expected_authentication_headers.append("Authorization", "Bearer glpat-a1e2i3o4u5y6");
-
-            const querier = createGitlabApiQuerier(fetcher);
-            const result = await querier.getGitlabGroups(credentials);
-
-            expect(fetcher.getCallsNumber()).toBe(2);
-
-            expect(getRequestInit(fetcher, 0).headers).toStrictEqual(
-                expected_authentication_headers
+            expect(first_call[1]).toBe(credentials);
+            expect(second_call[0]).toBe(
+                "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2"
             );
-            expect(fetcher.getRequestInfo(0)).toStrictEqual(
-                new URL("https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc")
-            );
+            expect(second_call[1]).toBe(credentials);
 
-            expect(getRequestInit(fetcher, 1).headers).toStrictEqual(
-                expected_authentication_headers
-            );
-            expect(fetcher.getRequestInfo(1)).toStrictEqual(
-                new URL(
-                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2"
-                )
-            );
-
-            expect(result._unsafeUnwrap()).toStrictEqual([group_1, group_2]);
+            expect(result.value).toStrictEqual([group_1, group_2]);
         });
 
         it("should stop querying if a fetch operation has failed", async () => {
-            const fetcher = FetchInterfaceStub.withSuccessiveResponses(
-                buildResponse<readonly GitlabGroup[]>(
-                    true,
-                    200,
-                    [group_1],
-                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc"
-                ),
-                buildResponse<readonly GitlabGroup[]>(
-                    false,
-                    500,
-                    [group_2],
-                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=2"
-                ),
-                buildResponse<readonly GitlabGroup[]>(
-                    true,
-                    200,
-                    [],
-                    "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=3"
-                )
-            );
+            let number_of_calls = 0;
+            const getSpy = jest.spyOn(gitlab_querier, "get").mockImplementation(() => {
+                number_of_calls++;
+                if (number_of_calls === 1) {
+                    return okAsync(
+                        buildResponse<readonly GitlabGroup[]>(
+                            [group_1],
+                            "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc"
+                        )
+                    );
+                }
+                if (number_of_calls === 2) {
+                    return errAsync(Fault.fromMessage("Internal Server Error"));
+                }
+                return okAsync(
+                    buildResponse<readonly GitlabGroup[]>(
+                        [],
+                        "https://example.com/api/v4/groups?pagination=keyset&order_by=id&sort=asc&page=3"
+                    )
+                );
+            });
 
-            const querier = createGitlabApiQuerier(fetcher);
-            const result = await querier.getGitlabGroups(credentials);
+            const result = await getGitlabGroups();
 
-            if (!result.isErr()) {
-                throw new Error("Expected an Err");
-            }
-
-            expect(fetcher.getCallsNumber()).toBe(2);
-            expect(isGitlabApiFault(result.error)).toBeTruthy();
-        });
-
-        it("should stop fetching groups when api sends a 401 error and should return a GitlabCredentialsFault", async () => {
-            const fetcher = FetchInterfaceStub.withSuccessiveResponses(
-                buildResponse<readonly GitlabGroup[]>(false, 401, [], null),
-                buildResponse<readonly GitlabGroup[]>(false, 401, [], null)
-            );
-
-            const querier = createGitlabApiQuerier(fetcher);
-            const result = await querier.getGitlabGroups(credentials);
-
-            if (!result.isErr()) {
-                throw new Error("Expected an Err");
-            }
-
-            expect(fetcher.getCallsNumber()).toBe(1);
-            expect(isGitLabCredentialsFault(result.error)).toBeTruthy();
+            expect(getSpy.mock.calls).toHaveLength(2);
+            expect(result.isErr()).toBe(true);
         });
     });
 });

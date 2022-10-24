@@ -18,13 +18,12 @@
  */
 
 import type { Fault } from "@tuleap/fault";
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
+import { okAsync } from "neverthrow";
+import { get } from "@tuleap/plugin-git-gitlab-api-querier";
 import type { GitlabGroup, GitlabCredentials } from "../stores/types";
 import { extractNextUrl } from "./link-header-helper";
-import { decodeJSON, NetworkFault } from "@tuleap/fetch-result";
-import { GitLabCredentialsFault } from "./GitLabCredentialsFault";
-import type { FetchInterface } from "./FetchInterface";
-import { GitlabApiFault } from "./GitlabApiFault";
+import { decodeJSON } from "@tuleap/fetch-result";
 
 export const LINK_HEADER = "link";
 
@@ -32,7 +31,7 @@ export interface GitlabApi {
     getGitlabGroups: (credentials: GitlabCredentials) => ResultAsync<readonly GitlabGroup[], Fault>;
 }
 
-export const createGitlabApiQuerier = (fetcher: FetchInterface): GitlabApi => {
+export const createGitlabApiQuerier = (): GitlabApi => {
     const continueFetching = (
         response: Response,
         credentials: GitlabCredentials
@@ -41,11 +40,10 @@ export const createGitlabApiQuerier = (fetcher: FetchInterface): GitlabApi => {
 
         return decodeJSON<readonly GitlabGroup[]>(response).andThen((groups) => {
             if (next_page_url !== null) {
-                return fetchWithCredentials(fetcher, credentials, new URL(next_page_url)).andThen(
-                    (response) =>
-                        continueFetching(response, credentials).map((new_groups) =>
-                            groups.concat(new_groups)
-                        )
+                return get(next_page_url, credentials).andThen((response) =>
+                    continueFetching(response, credentials).map((new_groups) =>
+                        groups.concat(new_groups)
+                    )
                 );
             }
             return okAsync(groups);
@@ -59,7 +57,7 @@ export const createGitlabApiQuerier = (fetcher: FetchInterface): GitlabApi => {
                 credentials.server_url
             );
 
-            return fetchWithCredentials(fetcher, credentials, next_page_url).andThen((response) =>
+            return get(String(next_page_url), credentials).andThen((response) =>
                 continueFetching(response, credentials)
             );
         },
@@ -72,37 +70,4 @@ function getLinkHeaderFromResponse(response: Response): string {
         throw Error(`Missing header link`);
     }
     return link_header;
-}
-
-function buildFaultFromResponse(response: Response): Fault {
-    if (response.status === 401) {
-        return GitLabCredentialsFault.fromMessage("invalid-credentials");
-    }
-
-    return GitlabApiFault.fromStatusAndReason(response.status, response.statusText);
-}
-
-function fetchWithCredentials(
-    fetcher: FetchInterface,
-    credentials: GitlabCredentials,
-    url: URL
-): ResultAsync<Response, Fault> {
-    const headers = new Headers();
-    headers.append("Authorization", "Bearer " + credentials.token);
-
-    const fetch_with_credentials = fetcher.fetch(url, {
-        headers,
-        method: "get",
-        mode: "cors",
-        cache: "default",
-    });
-
-    return ResultAsync.fromPromise(fetch_with_credentials, NetworkFault.fromError).andThen(
-        (response): ResultAsync<Response, Fault> => {
-            if (!response.ok) {
-                return errAsync(buildFaultFromResponse(response));
-            }
-            return okAsync(response);
-        }
-    );
 }

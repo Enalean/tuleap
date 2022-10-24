@@ -129,12 +129,11 @@ import { STEP_GITLAB_SERVER, STEP_GITLAB_GROUP, NO_GROUP_LINKED_EMPTY_STATE } fr
 import GitlabGroupLinkWizard from "./GitlabGroupLinkWizard.vue";
 import { createGitlabApiQuerier } from "../api/gitlab-api-querier";
 import type { GitlabGroup } from "../stores/types";
-import { isGitLabCredentialsFault } from "../api/GitLabCredentialsFault";
 import { useGitLabGroupsStore } from "../stores/groups";
 import { useCredentialsStore } from "../stores/credentials";
 
 const { $gettext, interpolate } = useGettext();
-const gitlab_api_querier = createGitlabApiQuerier(window);
+const gitlab_api_querier = createGitlabApiQuerier();
 const credentials_store = useCredentialsStore();
 const groups_store = useGitLabGroupsStore();
 const router = useRouter();
@@ -151,6 +150,8 @@ const is_fetching_gitlab_groups_disabled = computed(
 
 const isNetworkFault = (fault: Fault): boolean =>
     "isNetworkFault" in fault && fault.isNetworkFault() === true;
+const isGitLabCredentialsFault = (fault: Fault): boolean =>
+    "isUnauthenticated" in fault && fault.isUnauthenticated() === true;
 
 function onClickFetchGitLabGroups(event: Event): void {
     event.preventDefault();

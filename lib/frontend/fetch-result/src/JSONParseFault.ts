@@ -26,9 +26,6 @@ export const JSONParseFault = {
                 ? Fault.fromError(error)
                 : Fault.fromMessage("Could not parse response as JSON");
 
-        return {
-            isJSONParseFault: () => true,
-            ...fault,
-        };
+        return { isJSONParseFault: () => true, ...fault };
     },
 };

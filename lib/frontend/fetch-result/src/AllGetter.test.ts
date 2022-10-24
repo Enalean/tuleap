@@ -22,6 +22,7 @@ import type { GetAll } from "./AllGetter";
 import { PAGINATION_SIZE_HEADER, AllGetter } from "./AllGetter";
 import { FetchInterfaceStub } from "../tests/stubs/FetchInterfaceStub";
 import { ResponseRetriever } from "./ResponseRetriever";
+import { RestlerErrorHandler } from "./RestlerErrorHandler";
 
 function buildResponse<TypeOfJSONPayload>(payload: TypeOfJSONPayload, total: number): Response {
     return {
@@ -42,7 +43,7 @@ describe(`AllGetter`, () => {
     let fetcher: FetchInterfaceStub, json_payload: ReadonlyArray<ArrayItem>;
     const uri = "https://example.com/all-getter-test";
 
-    const buildGetter = (): GetAll => AllGetter(ResponseRetriever(fetcher));
+    const buildGetter = (): GetAll => AllGetter(ResponseRetriever(fetcher, RestlerErrorHandler()));
 
     beforeEach(() => {
         json_payload = [{ id: "terrifyingly" }, { id: "mannite" }];
@@ -63,6 +64,7 @@ describe(`AllGetter`, () => {
             throw new Error("Fetch should have received init parameters");
         }
         expect(init.method).toBe("GET");
+        expect(init.credentials).toBe("same-origin");
         expect(fetcher.getRequestInfo(0)).toContain("limit=50");
         expect(fetcher.getRequestInfo(0)).toContain("offset=50");
     });
@@ -172,8 +174,10 @@ describe(`AllGetter`, () => {
             expect(result.value).toStrictEqual(expected_results_in_order);
             expect(fetcher.getRequestInfo(1)).toContain("limit=2");
             expect(fetcher.getRequestInfo(1)).toContain("offset=2");
+            expect(fetcher.getRequestInit(1)?.credentials).toBe("same-origin");
             expect(fetcher.getRequestInfo(2)).toContain("limit=2");
             expect(fetcher.getRequestInfo(2)).toContain("offset=4");
+            expect(fetcher.getRequestInit(2)?.credentials).toBe("same-origin");
         });
 
         it(`will call getCollectionCallback for each batch`, async () => {

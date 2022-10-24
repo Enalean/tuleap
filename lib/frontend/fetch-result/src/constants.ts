@@ -25,14 +25,7 @@ export type PatchMethod = "PATCH";
 export type PostMethod = "POST";
 export type DeleteMethod = "DELETE";
 
-export type SupportedHTTPMethod =
-    | GetMethod
-    | HeadMethod
-    | OptionsMethod
-    | PutMethod
-    | PatchMethod
-    | PostMethod
-    | DeleteMethod;
+export type SupportedHTTPMethod = "GET" | "HEAD" | "OPTIONS" | "PUT" | "PATCH" | "POST" | "DELETE";
 
 export const GET_METHOD: GetMethod = "GET";
 export const HEAD_METHOD: HeadMethod = "HEAD";
