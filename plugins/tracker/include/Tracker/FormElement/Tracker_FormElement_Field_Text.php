@@ -19,9 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -155,6 +158,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
         if ($format == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
             $changeset_value = $hp->purify($value, CODENDI_PURIFIER_FULL, $project_id);
+        } elseif ($format === Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT) {
+            $common_mark_interpreter = CommonMarkInterpreter::build(
+                $hp,
+                new EnhancedCodeBlockExtension(CodeBlockFeaturesOnArtifact::getInstance())
+            );
+
+            $changeset_value = $common_mark_interpreter->getInterpretedContentWithReferences($value, (int) $project_id);
         } else {
             $changeset_value = $hp->purify($value, CODENDI_PURIFIER_BASIC, $project_id);
         }

@@ -493,9 +493,6 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return new StepDefinitionChangesetValue($value_id, $changeset, $this, $has_changed, $steps);
     }
 
-    /**
-     * @param null $from_aid
-     */
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null)
     {
         return '';

@@ -44,7 +44,8 @@ interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_Fo
      * @param int $artifact_id the corresponding artifact id
      * @param int $changeset_id the corresponding changeset
      * @param mixed $value the value of the field
-     * @param int $report_id the id of the calling report
+     * @param int|null $report_id the id of the calling report
+     * @param int|null $from_aid the id of the base artifact (optional)
      * @return string
      */
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null);
