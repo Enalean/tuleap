@@ -5,10 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "link:../../src/scripts/main",
     "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
     "@tuleap/tlp-modal": "link:../../lib/frontend/tlp-modal",
-    "@tuleap/tlp-popovers": "link:../../lib/frontend/tlp-popovers"
+    "@tuleap/tlp-popovers": "link:../../lib/frontend/tlp-popovers",
+    "@tuleap/user-and-ugroup-autocompleter": "link:../../lib/frontend/user-and-ugroup-autocompleter"
   },
   "config": {
     "bin": "../../node_modules/.bin"
