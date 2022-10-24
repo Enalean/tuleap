@@ -29,7 +29,6 @@ use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\API\GitlabResponseAPIFault;
 use Tuleap\Gitlab\Core\ProjectRetriever;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
-use Tuleap\Gitlab\REST\v1\Group\GitlabGroupLinkSynchronizedRepresentation;
 use Tuleap\Gitlab\Test\Builder\GitlabProjectBuilder;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Stubs\BuildGitlabProjectsStub;
@@ -67,7 +66,7 @@ final class GroupLinkSynchronizerTest extends TestCase
     }
 
     /**
-     * @return Ok<GitlabGroupLinkSynchronizedRepresentation>|Err<Fault>
+     * @return Ok<GroupLinkSynchronized>|Err<Fault>
      *
      */
     private function synchronizeGroupLink(): Ok|Err
@@ -105,7 +104,7 @@ final class GroupLinkSynchronizerTest extends TestCase
         $result = $this->synchronizeGroupLink();
 
         self::assertTrue(Result::isOk($result));
-        self::assertSame(self::GROUP_LINK_ID, $result->value->id);
+        self::assertSame(self::GROUP_LINK_ID, $result->value->group_link_id);
         self::assertSame(2, $result->value->number_of_integrations);
         self::assertSame(1, $this->date_updater->getCallCount());
     }
@@ -130,7 +129,6 @@ final class GroupLinkSynchronizerTest extends TestCase
         $this->project_builder = BuildGitlabProjectsStub::buildWithException(
             new GitlabResponseAPIException("fail")
         );
-
 
         $result = $this->synchronizeGroupLink();
         self::assertTrue(Result::isErr($result));

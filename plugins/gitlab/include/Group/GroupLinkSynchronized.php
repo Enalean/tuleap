@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,26 +15,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\REST\v1\Group;
-
-use Tuleap\Gitlab\Group\GroupLinkSynchronized;
+namespace Tuleap\Gitlab\Group;
 
 /**
  * @psalm-immutable
  */
-final class GitlabGroupLinkSynchronizedRepresentation
+final class GroupLinkSynchronized
 {
-    private function __construct(public int $id, public int $number_of_integrations)
+    public function __construct(public int $group_link_id, public int $number_of_integrations)
     {
-    }
-
-    public static function fromGroupLinkSynchronized(GroupLinkSynchronized $group): self
-    {
-        return new self($group->group_link_id, $group->number_of_integrations);
     }
 }

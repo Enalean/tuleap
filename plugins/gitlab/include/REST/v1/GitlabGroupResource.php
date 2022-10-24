@@ -444,7 +444,7 @@ final class GitlabGroupResource
         );
 
         return $synchronizer->synchronizeGroupLink(new SynchronizeGroupLinkCommand($id, $current_user))->match(
-            fn(GitlabGroupLinkSynchronizedRepresentation $representation) => $representation,
+            [GitlabGroupLinkSynchronizedRepresentation::class, 'fromGroupLinkSynchronized'],
             [FaultMapper::class, 'mapToRestException']
         );
     }

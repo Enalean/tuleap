@@ -33,7 +33,6 @@ use Tuleap\Gitlab\Core\ProjectRetriever;
 use Tuleap\Gitlab\Group\Token\RetrieveGroupLinksCredentials;
 use Tuleap\Gitlab\Permission\GitAdministratorChecker;
 use Tuleap\Gitlab\Repository\IntegrateGitlabProject;
-use Tuleap\Gitlab\REST\v1\Group\GitlabGroupLinkSynchronizedRepresentation;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -54,7 +53,7 @@ final class GroupLinkSynchronizer
     }
 
     /**
-     * @return Ok<GitlabGroupLinkSynchronizedRepresentation>|Err<Fault>
+     * @return Ok<GroupLinkSynchronized>|Err<Fault>
      */
     public function synchronizeGroupLink(SynchronizeGroupLinkCommand $group_link_command): Ok|Err
     {
@@ -84,16 +83,13 @@ final class GroupLinkSynchronizer
     }
 
     /**
-     * @return Ok<GitlabGroupLinkSynchronizedRepresentation>|Err<Fault>
+     * @return Ok<GroupLinkSynchronized>|Err<Fault>
      */
     private function integrateProjects(IntegrateRepositoriesInGroupLinkCommand $command): Ok|Err
     {
         return $this->repository_integrator->integrateSeveralProjects($command)->map(function () use ($command) {
             $this->update_synchronization_date->updateSynchronizationDate($command->group_link, new \DateTimeImmutable());
-            return new GitlabGroupLinkSynchronizedRepresentation(
-                $command->group_link->id,
-                count($command->gitlab_projects)
-            );
+            return new GroupLinkSynchronized($command->group_link->id, count($command->gitlab_projects));
         });
     }
 }
