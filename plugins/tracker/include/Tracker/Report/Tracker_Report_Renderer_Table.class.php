@@ -1697,12 +1697,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         //Add group by aggregates
         if ($aggregates) {
+            $queries_aggregates_group_by = [];
             foreach ($columns as $column) {
                 if ($column['field']->isUsed()) {
                     if (isset($aggregates[$column['field']->getId()])) {
                         if ($a = $column['field']->getQuerySelectAggregate($aggregates[$column['field']->getId()])) {
                             foreach ($a['separate_queries'] as $sel) {
-                                $queries['aggregates_group_by'][$column['field']->getPrefixedName() . '_' . $sel['function']] = "SELECT " .
+                                $queries_aggregates_group_by[$column['field']->getName() . '_' . $sel['function']] = "SELECT " .
                                     $sel['select'] .
                                     $from . ' ' . $column['field']->getQueryFromAggregate() .
                                     $where .
@@ -1711,6 +1712,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         }
                     }
                 }
+            }
+
+            if (count($queries_aggregates_group_by) > 0) {
+                $queries['aggregates_group_by'] = $queries_aggregates_group_by;
             }
         }
 
