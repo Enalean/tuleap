@@ -66,6 +66,6 @@ class PullRequestInlineCommentRepresentation
     private static function getPurifiedContent(string $content, int $project_id): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
+        return $purifier->purify($content, Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
     }
 }
