@@ -45,13 +45,19 @@ final class GroupTest extends TestBase
         );
     }
 
+    public function testOptionsGitLabGroupsIdSynchronize(): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('OPTIONS', 'gitlab_groups/' . urlencode($this->gitlab_group_id) . '/synchronize')
+        );
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertEqualsCanonicalizing(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
     public function testPatchGitlabGroupLinkToUpdateCreateBranchPrefix(): void
     {
-        $patch_body = json_encode(
-            [
-                'create_branch_prefix' => "dev-",
-            ]
-        );
+        $patch_body = json_encode(['create_branch_prefix' => "dev-"]);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'gitlab_groups/' . urlencode($this->gitlab_group_id))
@@ -65,11 +71,7 @@ final class GroupTest extends TestBase
 
     public function testPatchGitlabGroupLinkToUpdateArtifactClosure(): void
     {
-        $patch_body = json_encode(
-            [
-                'allow_artifact_closure' => false,
-            ]
-        );
+        $patch_body = json_encode(['allow_artifact_closure' => false]);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'gitlab_groups/' . urlencode($this->gitlab_group_id))
@@ -78,17 +80,27 @@ final class GroupTest extends TestBase
         self::assertSame(200, $response->getStatusCode());
 
         $gitlab_group_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        self::assertSame(false, $gitlab_group_after_patch["allow_artifact_closure"]);
+        self::assertFalse($gitlab_group_after_patch['allow_artifact_closure']);
     }
 
-    public function testPatchGitlabGroupLinkToUpdateBothCreateBranchPrefixAndArtifactClosure(): void
+    public function testPatchGitlabGroupLinkToUpdateAccessToken(): void
     {
-        $patch_body = json_encode(
-            [
-                'create_branch_prefix'   => "dev2/",
-                'allow_artifact_closure' => true,
-            ]
+        $patch_body = json_encode(['gitlab_token' => '85c205d88a07']);
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', 'gitlab_groups/' . urlencode($this->gitlab_group_id))
+                ->withBody($this->stream_factory->createStream($patch_body))
         );
+        self::assertSame(200, $response->getStatusCode());
+    }
+
+    public function testPatchGitlabGroupLinkToUpdateEverything(): void
+    {
+        $patch_body = json_encode([
+            'create_branch_prefix'   => 'dev2/',
+            'allow_artifact_closure' => true,
+            'gitlab_token'           => '58e02dbca834',
+        ]);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'gitlab_groups/' . urlencode($this->gitlab_group_id))
@@ -97,14 +109,15 @@ final class GroupTest extends TestBase
         self::assertSame(200, $response->getStatusCode());
 
         $gitlab_group_after_patch = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        self::assertSame("dev2/", $gitlab_group_after_patch["create_branch_prefix"]);
-        self::assertSame(true, $gitlab_group_after_patch["allow_artifact_closure"]);
+        self::assertSame('dev2/', $gitlab_group_after_patch['create_branch_prefix']);
+        self::assertTrue($gitlab_group_after_patch['allow_artifact_closure']);
     }
 
     /**
-     * @depends testPatchGitlabGroupLinkToUpdateBothCreateBranchPrefixAndArtifactClosure
+     * @depends testPatchGitlabGroupLinkToUpdateEverything
      * @depends testPatchGitlabGroupLinkToUpdateCreateBranchPrefix
      * @depends testPatchGitlabGroupLinkToUpdateArtifactClosure
+     * @depends testPatchGitlabGroupLinkToUpdateAccessToken
      */
     public function testDelete(): void
     {
