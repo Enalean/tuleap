@@ -21,32 +21,19 @@ declare(strict_types=1);
 namespace Tuleap\RealTimeMercure;
 
 use BackendLogger;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\Signer\Key;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\JWT\generators\MercureJWTGenerator;
-use UserManager;
+use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
 
 class ClientBuilder
 {
     public const  DEFAULTPATH = '/etc/tuleap/conf/mercure.env';
     public static function build(string $path): Client
     {
-        $mercure_file_content = @file_get_contents($path);
-        if ($mercure_file_content === false || ! str_starts_with($mercure_file_content, "MERCURE_KEY=")) {
+        $mercure_jwt_generator = MercureJWTGeneratorBuilder::build($path);
+        if (! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
             return new NullClient();
         }
-        /** @var non-empty-string $mercure_key */
-        $mercure_key = str_replace("\n", '', substr($mercure_file_content, 12));
-        if (strlen($mercure_key) <= 100) {
-            return new NullClient();
-        }
-        $mercure_jwt_generator = new MercureJWTGenerator(
-            Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText($mercure_key)),
-            UserManager::instance(),
-        );
         return new MercureClient(
             HttpClientFactory::createClientForInternalTuleapUse(),
             HTTPFactoryBuilder::requestFactory(),

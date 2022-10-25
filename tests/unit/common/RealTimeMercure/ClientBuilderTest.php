@@ -21,12 +21,16 @@ declare(strict_types=1);
 namespace Tuleap\RealTimeMercure;
 
 use org\bovigo\vfs\vfsStream;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class ClientBuilderTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     public function testnoError()
     {
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KEY, true);
         $structure = [
             'env' => [
                 'mercure.env' => 'MERCURE_KEY=' . str_repeat('a', 160),
@@ -38,34 +42,11 @@ class ClientBuilderTest extends TestCase
         $this->assertInstanceOf(MercureClient::class, $mercure_client);
     }
 
-    public function testNoFileError()
+    public function testNoFeatureFlag()
     {
+        \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KEY, false);
         $root           = vfsStream::setup('root2');
         $mercure_client = ClientBuilder::build($root->url() . '/mercure.env');
-        $this->assertInstanceOf(NullClient::class, $mercure_client);
-    }
-
-    public function testMalformedFileError()
-    {
-        $structure      = [
-            'env' => [
-                'mercure.env' => 'testtes' . str_repeat('a', 3),
-            ],
-        ];
-        $root           = vfsStream::setup('root3', null, $structure);
-        $mercure_client = ClientBuilder::build($root->url() . '/env/mercure.env');
-        $this->assertInstanceOf(NullClient::class, $mercure_client);
-    }
-
-    public function testInvalidKeyError()
-    {
-        $structure      = [
-            'env' => [
-                'mercure.env' => 'MERCURE_KEY=' . str_repeat('a', 3),
-            ],
-        ];
-        $root           = vfsStream::setup('root4', null, $structure);
-        $mercure_client = ClientBuilder::build($root->url() . '/env/mercure.env');
         $this->assertInstanceOf(NullClient::class, $mercure_client);
     }
 }
