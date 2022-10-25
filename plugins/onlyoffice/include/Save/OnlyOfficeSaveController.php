@@ -43,16 +43,32 @@ class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Compatib
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $error = 0;
+        $save_token_information = $request->getAttribute(SaveDocumentTokenData::class);
+        if (! $save_token_information instanceof SaveDocumentTokenData) {
+            $this->logger->debug('ONLYOFFICE callback called without any "save token data", nothing to do');
+            return $this->buildSuccessResponse();
+        }
+
+        $this->logger->debug(var_export($save_token_information, true));
 
         try {
             $data = json_decode($request->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
             $this->logger->debug(var_export($data, true));
         } catch (\JsonException $exception) {
             $this->logger->error("Unable to parse data", ['exception' => $exception]);
-            $error = 1;
+            return $this->buildErrorResponse();
         }
 
-        return $this->json_response_builder->fromData(["error" => $error]);
+        return $this->buildSuccessResponse();
+    }
+
+    private function buildSuccessResponse(): ResponseInterface
+    {
+        return $this->json_response_builder->fromData(["error" => 0]);
+    }
+
+    private function buildErrorResponse(): ResponseInterface
+    {
+        return $this->json_response_builder->fromData(["error" => 1]);
     }
 }

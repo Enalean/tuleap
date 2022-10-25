@@ -29,7 +29,6 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenGenerator;
 use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\OnlyOffice\Open\ProvideOnlyOfficeDocument;
-use Tuleap\ServerHostname;
 
 final class OnlyOfficeDocumentConfigProvider implements ProvideOnlyOfficeConfigDocument
 {
@@ -52,13 +51,7 @@ final class OnlyOfficeDocumentConfigProvider implements ProvideOnlyOfficeConfigD
                     $token = $this->token_generator->generateDownloadToken($user, $document, $now);
 
                     return Result::ok(
-                        new OnlyOfficeDocumentConfig(
-                            pathinfo($document->filename, PATHINFO_EXTENSION),
-                            sprintf('tuleap_document_%d_%d', $document->item->getId(), $document->version_id),
-                            $document->filename,
-                            ServerHostname::HTTPSUrl() . '/onlyoffice/document_download?token=' . urlencode($token->getString()),
-                            $document->can_be_edited,
-                        )
+                        OnlyOfficeDocumentConfig::fromDocument($document, $token),
                     );
                 }
             );

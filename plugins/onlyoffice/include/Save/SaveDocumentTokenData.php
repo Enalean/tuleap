@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open\Editor;
+namespace Tuleap\OnlyOffice\Save;
 
 /**
  * @psalm-immutable
- * @see https://api.onlyoffice.com/editors/config/editor
  */
-final class OnlyOfficeEditorConfig
+final class SaveDocumentTokenData
 {
-    private function __construct(
-        public string $lang,
-        public string $region,
-        public OnlyOfficeEditorUserConfig $user,
-        public string $callbackUrl,
-    ) {
-    }
-
-    public static function fromUser(\PFUser $user, string $callback_url): self
+    public function __construct(public int $user_id, public int $document_id, public int $version_id)
     {
-        return new self(
-            $user->getShortLocale(),
-            str_replace('_', '-', $user->getLocale()),
-            OnlyOfficeEditorUserConfig::fromUser($user),
-            $callback_url,
-        );
     }
 }

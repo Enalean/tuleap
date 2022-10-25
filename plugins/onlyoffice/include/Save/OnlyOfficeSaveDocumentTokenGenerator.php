@@ -20,29 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open\Editor;
+namespace Tuleap\OnlyOffice\Save;
 
-/**
- * @psalm-immutable
- * @see https://api.onlyoffice.com/editors/config/editor
- */
-final class OnlyOfficeEditorConfig
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
+
+interface OnlyOfficeSaveDocumentTokenGenerator
 {
-    private function __construct(
-        public string $lang,
-        public string $region,
-        public OnlyOfficeEditorUserConfig $user,
-        public string $callbackUrl,
-    ) {
-    }
-
-    public static function fromUser(\PFUser $user, string $callback_url): self
-    {
-        return new self(
-            $user->getShortLocale(),
-            str_replace('_', '-', $user->getLocale()),
-            OnlyOfficeEditorUserConfig::fromUser($user),
-            $callback_url,
-        );
-    }
+    public function generateSaveToken(\PFUser $user, OnlyOfficeDocument $document, \DateTimeImmutable $now): ?ConcealedString;
 }

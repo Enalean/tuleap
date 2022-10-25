@@ -45,24 +45,25 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
      */
     public function testProvidesDocumentConfig(bool $can_be_edited): void
     {
-        $provider = self::buildProvider(
-            Result::ok(
-                new OnlyOfficeDocument(
-                    ProjectTestBuilder::aProject()->build(),
-                    new \Docman_Item(['item_id' => 123]),
-                    963,
-                    'something.docx',
-                    $can_be_edited,
-                )
-            )
+        \ForgeConfig::set('sys_default_domain', 'example.com');
+
+        $document = new OnlyOfficeDocument(
+            ProjectTestBuilder::aProject()->build(),
+            new \Docman_Item(['item_id' => 123]),
+            963,
+            'something.docx',
+            $can_be_edited,
         );
+        $provider = self::buildProvider(Result::ok($document));
 
         $result = $provider->getDocumentConfig(UserTestBuilder::buildWithDefaults(), 123, new \DateTimeImmutable('@10'));
 
-        \ForgeConfig::set('sys_default_domain', 'example.com');
-
+        $expected_document_config = OnlyOfficeDocumentConfig::fromDocument(
+            $document,
+            new ConcealedString('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
+        );
         self::assertEquals(
-            new OnlyOfficeDocumentConfig('docx', 'tuleap_document_123_963', 'something.docx', 'https:///onlyoffice/document_download?token=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', $can_be_edited),
+            $expected_document_config,
             $result->unwrapOr(null)
         );
     }
