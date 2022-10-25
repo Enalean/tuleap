@@ -46,7 +46,6 @@ let
           !plugins/*/resources/templates/*
           plugins/*/themes
           tools/distlp/
-          tools/docker/
           tools/publish_js_library/
           tools/rpm/
           !tools/utils/setup_templates/*/*_template.xml
