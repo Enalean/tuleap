@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { loadUserAndUgroupAutocompleter } from "@tuleap/user-and-ugroup-autocompleter";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-document.addEventListener("DOMContentLoaded", function () {
-    var input = document.querySelector("#listeners_to_add");
-
-    if (!input) {
-        return;
-    }
-
-    loadUserAndUgroupAutocompleter(input);
+export default vite.defineLibConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.js"),
+            name: "TuleapUserAndUGroupAutocompleter",
+        },
+        rollupOptions: {
+            external: ["jquery", "@tuleap/html-escaper"],
+            output: {
+                globals: {
+                    jquery: "jquery",
+                    "@tuleap/html-escaper": "tuleap.escaper",
+                },
+            },
+        },
+    },
 });

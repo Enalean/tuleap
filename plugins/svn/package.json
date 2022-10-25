@@ -5,10 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "link:../../src/scripts/main",
     "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
     "@tuleap/project-background": "link:../../lib/frontend/project-background",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
+    "@tuleap/user-and-ugroup-autocompleter": "link:../../lib/frontend/user-and-ugroup-autocompleter",
     "vue": "^2.7.8",
     "vue-gettext": "^2.1.12"
   },

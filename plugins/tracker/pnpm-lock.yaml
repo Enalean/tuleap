@@ -4,7 +4,6 @@ specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
   '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
-  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/gettext': link:../../lib/frontend/gettext
@@ -22,6 +21,7 @@ specifiers:
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip': link:../../lib/frontend/tooltip
+  '@tuleap/user-and-ugroup-autocompleter': link:../../lib/frontend/user-and-ugroup-autocompleter
   '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants
   '@tuleap/vue-permissions-per-group-badge': link:../../lib/frontend/vue-permissions-per-group-badge
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
@@ -55,7 +55,6 @@ specifiers:
 dependencies:
   '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
   '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
-  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
@@ -70,6 +69,7 @@ dependencies:
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip': link:../../lib/frontend/tooltip
+  '@tuleap/user-and-ugroup-autocompleter': link:../../lib/frontend/user-and-ugroup-autocompleter
   '@tuleap/vue-permissions-per-group-badge': link:../../lib/frontend/vue-permissions-per-group-badge
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   d3-array: 3.0.1

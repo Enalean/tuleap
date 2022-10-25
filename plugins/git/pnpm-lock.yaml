@@ -3,7 +3,6 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
@@ -13,6 +12,7 @@ specifiers:
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/user-and-ugroup-autocompleter': link:../../lib/frontend/user-and-ugroup-autocompleter
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue-permissions-per-group-badge': link:../../lib/frontend/vue-permissions-per-group-badge
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
@@ -33,12 +33,12 @@ specifiers:
 
 dependencies:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
-  '@tuleap/core': link:../../src/scripts/main
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/user-and-ugroup-autocompleter': link:../../lib/frontend/user-and-ugroup-autocompleter
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue-permissions-per-group-badge': link:../../lib/frontend/vue-permissions-per-group-badge
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
