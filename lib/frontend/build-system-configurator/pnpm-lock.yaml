@@ -2,12 +2,12 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/webpack': ^5.28.0
-  autoprefixer: ^10.4.0
+  autoprefixer: ^10.4.12
   browserslist: ^4.21.4
   postcss: ^8.4.5
 
 dependencies:
-  autoprefixer: 10.4.4_postcss@8.4.12
+  autoprefixer: 10.4.12_postcss@8.4.12
   browserslist: 4.21.4
   postcss: 8.4.12
 
@@ -200,15 +200,15 @@ packages:
       uri-js: 4.4.1
     dev: true
 
-  /autoprefixer/10.4.4_postcss@8.4.12:
-    resolution: {integrity: sha512-Tm8JxsB286VweiZ5F0anmbyGiNI3v3wGv3mz9W+cxEDYB/6jbnj6GM9H9mK3wIL8ftgl+C07Lcwb8PG5PCCPzA==}
+  /autoprefixer/10.4.12_postcss@8.4.12:
+    resolution: {integrity: sha512-WrCGV9/b97Pa+jtwf5UGaRjgQIg7OK3D06GnoYoZNcG1Xb8Gt3EfuKjlhh9i/VtT16g6PYjZ69jdJ2g8FxSC4Q==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
     peerDependencies:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.4
-      caniuse-lite: 1.0.30001327
+      caniuse-lite: 1.0.30001425
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -230,12 +230,12 @@ packages:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
     dev: true
 
-  /caniuse-lite/1.0.30001327:
-    resolution: {integrity: sha512-1/Cg4jlD9qjZzhbzkzEaAC2JHsP0WrOc8Rd/3a3LuajGzGWR/hD7TVyvq99VqmTy99eVh8Zkmdq213OgvgXx7w==}
-    dev: false
-
   /caniuse-lite/1.0.30001416:
     resolution: {integrity: sha512-06wzzdAkCPZO+Qm4e/eNghZBDfVNDsCgw33T27OwBH9unE9S478OYw//Q2L7Npf/zBzs7rjZOszIFQkwQKAEqA==}
+
+  /caniuse-lite/1.0.30001425:
+    resolution: {integrity: sha512-/pzFv0OmNG6W0ym80P3NtapU0QEiDS3VuYAZMGoLLqiC7f6FJFe1MjpQDREGApeenD9wloeytmVDj+JLXPC6qw==}
+    dev: false
 
   /chrome-trace-event/1.0.3:
     resolution: {integrity: sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==}
