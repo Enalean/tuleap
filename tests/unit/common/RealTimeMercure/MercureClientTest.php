@@ -22,13 +22,46 @@ declare(strict_types=1);
 namespace Tuleap\RealTimeMercure;
 
 use Exception;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key;
 use Psr\Log\Test\TestLogger;
 use Psr\Http\Client\ClientExceptionInterface;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\JWT\generators\MercureJWTGenerator;
 use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
 
 final class MercureClientTest extends TestCase
 {
+    use GlobalLanguageMock;
+
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var UGroupLiteralizer */
+
+    /** @var  MercureJWTGenerator */
+    private $mercure_jwt_generator;
+
+    /**
+     * @var Configuration
+     */
+    private $jwt_configuration;
+
+    protected function setup(): void
+    {
+        parent::setup();
+        $user = new \PFUser();
+
+        $this->user_manager = $this->createStub(UserManager::class);
+        $this->user_manager->method('getCurrentUser')->willReturn($user);
+
+
+        $this->jwt_configuration     = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
+        $this->mercure_jwt_generator = new MercureJWTGenerator($this->jwt_configuration, $this->user_manager);
+    }
     public function testMessageIsTransmittedToRealTimeMercureServer(): void
     {
         $http_client    = new \Http\Mock\Client();
@@ -37,7 +70,8 @@ final class MercureClientTest extends TestCase
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            $logger
+            $logger,
+            $this->mercure_jwt_generator
         );
 
         $mercure_client->sendMessage(
@@ -63,7 +97,8 @@ final class MercureClientTest extends TestCase
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            $logger
+            $logger,
+            $this->mercure_jwt_generator
         );
         $exception      = new class extends Exception implements ClientExceptionInterface{
         };
@@ -85,7 +120,8 @@ final class MercureClientTest extends TestCase
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            $logger
+            $logger,
+            $this->mercure_jwt_generator
         );
         $http_response  = HTTPFactoryBuilder::responseFactory()->createResponse(403);
         $http_client->addResponse($http_response);
