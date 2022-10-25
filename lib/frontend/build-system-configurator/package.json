@@ -7,7 +7,7 @@
   "version": "0.0.0",
   "main": "dist/main.js",
   "dependencies": {
-    "autoprefixer": "^10.4.0",
+    "autoprefixer": "^10.4.12",
     "browserslist": "^4.21.4",
     "postcss": "^8.4.5"
   },
