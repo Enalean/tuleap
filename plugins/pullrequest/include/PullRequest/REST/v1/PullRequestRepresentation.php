@@ -137,7 +137,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
 
         $project_id        = $repository->getProjectId();
         $purifier          = Codendi_HTMLPurifier::instance();
-        $this->description = $purifier->purify($pull_request->getDescription(), CODENDI_PURIFIER_BASIC, $project_id);
+        $this->description = $purifier->purify($pull_request->getDescription(), Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
 
         $this->reference_src  = $pull_request->getSha1Src();
         $this->reference_dest = $pull_request->getSha1Dest();

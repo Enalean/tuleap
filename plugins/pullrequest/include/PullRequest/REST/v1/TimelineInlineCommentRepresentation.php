@@ -81,6 +81,6 @@ class TimelineInlineCommentRepresentation
     private static function getPurifiedContent(int $project_id, string $content): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
+        return $purifier->purify($content, Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
     }
 }

@@ -102,7 +102,7 @@ class PullRequestMinimalRepresentation
 
         $project_id  = $repository->getProjectId();
         $purifier    = Codendi_HTMLPurifier::instance();
-        $this->title = $purifier->purify($pull_request->getTitle(), CODENDI_PURIFIER_BASIC, $project_id);
+        $this->title = $purifier->purify($pull_request->getTitle(), Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
 
         $this->uri = self::ROUTE . '/' . $this->id;
 
