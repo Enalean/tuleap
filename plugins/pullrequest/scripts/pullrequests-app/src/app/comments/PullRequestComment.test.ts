@@ -74,7 +74,7 @@ describe("PullRequestComment", () => {
             );
             const link_to_file = selectOrThrow(displayed_file, "a", HTMLAnchorElement);
 
-            expect(root.classList).toContain("pull-request-event");
+            expect(root.classList).toContain("pull-request-comment");
             expect(root.classList).toContain("is-inline-comment");
             expect(root.classList).toContain("inline-comment");
 
@@ -95,7 +95,7 @@ describe("PullRequestComment", () => {
                 "[data-test=pullrequest-comment-only-file-name]"
             );
 
-            expect(root.classList).toContain("pull-request-event");
+            expect(root.classList).toContain("pull-request-comment");
             expect(root.classList).toContain("is-inline-comment");
             expect(root.classList).toContain("inline-comment");
             expect(root.classList).toContain("is-outdated");
@@ -112,7 +112,7 @@ describe("PullRequestComment", () => {
 
             const root = selectOrThrow(target, "[data-test=pullrequest-comment]");
 
-            expect(root.classList).toContain("pull-request-event");
+            expect(root.classList).toContain("pull-request-comment");
             expect(root.classList).toContain("comment");
 
             expect(

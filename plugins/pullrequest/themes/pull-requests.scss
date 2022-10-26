@@ -28,4 +28,5 @@
 @use "./includes/tuleap-username";
 @use "./includes/pull-request-refs";
 @use "./includes/codemirror-overrides";
+@use "./includes/tuleap-pullrequest-comment";
 @use "../../../src/themes/BurningParrot/css/includes/labels/labels-box";

@@ -1,0 +1,109 @@
+/*
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.pull-request-comment {
+    $arrow-width: 6px;
+
+    display: flex;
+    width: 85%;
+
+    > .tlp-avatar {
+        margin: var(--tlp-medium-spacing) calc(var(--tlp-small-spacing) + #{$arrow-width}) 0 0;
+    }
+
+    > .pull-request-comment-content {
+        position: relative;
+        flex: 1;
+        padding: var(--tlp-large-spacing) var(--tlp-medium-spacing);
+        border: 1px solid var(--tlp-neutral-normal-color);
+        border-radius: var(--tlp-medium-radius);
+        background: var(--tlp-white-color);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: calc(var(--tlp-medium-spacing) * 2);
+            left: 0;
+            width: 0;
+            height: 0;
+            transform: translate(-100%, -50%);
+            border-width: 7px $arrow-width 7px 0;
+            border-style: solid;
+            border-color: transparent var(--tlp-main-color) transparent transparent;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -1px;
+            width: 4px;
+            height: 100%;
+            border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
+            background: var(--tlp-main-color);
+        }
+
+        > .pull-request-comment-content-info {
+            margin: 0 0 var(--tlp-small-spacing);
+            font-size: 14px;
+        }
+
+        .pull-request-comment-file-path {
+            display: inline-block;
+            margin: 0 0 5px;
+            font-size: 14px;
+
+            .fa-file-text-o {
+                margin: 0 3px 0 0;
+            }
+        }
+    }
+
+    &.is-outdated > .pull-request-comment-content {
+        background: transparent;
+    }
+
+    &.is-outdated,
+    &.timeline-event {
+        > .pull-request-comment-content {
+            &::before {
+                z-index: 2;
+                border-color: transparent var(--tlp-white-color) transparent transparent;
+            }
+
+            &::after {
+                z-index: 1;
+                top: calc(var(--tlp-medium-spacing) * 2);
+                left: -1.5px;
+                width: 0;
+                height: 0;
+                transform: translate(-100%, -50%);
+                border-width: 7px $arrow-width 7px 0;
+                border-style: solid;
+                border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
+                background: none;
+            }
+
+            p {
+                color: var(--tlp-dimmed-color);
+                font-style: italic;
+            }
+        }
+    }
+}

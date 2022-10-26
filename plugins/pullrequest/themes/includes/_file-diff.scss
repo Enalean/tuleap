@@ -185,3 +185,15 @@
     border-style: solid;
     border-color: transparent var(--tlp-main-color) transparent transparent;
 }
+
+.inline-comment-element {
+    display: block;
+    width: 100%;
+
+    > .pull-request-comment {
+        $horizontal-padding: 12px;
+
+        width: 100%;
+        padding: var(--tlp-medium-spacing) $horizontal-padding;
+    }
+}
