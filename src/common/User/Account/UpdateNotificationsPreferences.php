@@ -27,6 +27,7 @@ use Codendi_Mail_Interface;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -34,19 +35,8 @@ use UserManager;
 
 class UpdateNotificationsPreferences implements DispatchableWithRequest
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
-
-    public function __construct(CSRFSynchronizerToken $csrf_token, UserManager $user_manager)
+    public function __construct(private CSRFSynchronizerToken $csrf_token, private UserManager $user_manager, private EventDispatcherInterface $dispatcher)
     {
-        $this->csrf_token   = $csrf_token;
-        $this->user_manager = $user_manager;
     }
 
     /**
@@ -61,8 +51,8 @@ class UpdateNotificationsPreferences implements DispatchableWithRequest
 
         $this->csrf_token->check(DisplayNotificationsController::URL);
 
-        $user_need_update     = false;
-        $email_format_changed = false;
+        $user_need_update  = false;
+        $something_changed = false;
 
         $site_email_updates = $request->get('site_email_updates') === '1' ? 1 : 0;
         if ($site_email_updates !== (int) $user->getMailSiteUpdates()) {
@@ -81,9 +71,11 @@ class UpdateNotificationsPreferences implements DispatchableWithRequest
             if ($format_email !== $user->getPreference(Codendi_Mail_Interface::PREF_FORMAT)) {
                 $user->setPreference(Codendi_Mail_Interface::PREF_FORMAT, $format_email);
                 $layout->addFeedback(Feedback::INFO, _('Email format preference successfully updated'));
-                $email_format_changed = true;
+                $something_changed = true;
             }
         }
+
+        $notificationsOnOwnActionsUpdate = $this->dispatcher->dispatch(new NotificationsOnOwnActionsUpdate($user, $request));
 
         if ($user_need_update) {
             if (! $this->user_manager->updateDb($user)) {
@@ -91,7 +83,7 @@ class UpdateNotificationsPreferences implements DispatchableWithRequest
             } else {
                 $layout->addFeedback(Feedback::INFO, _('User preferences successfully updated'));
             }
-        } elseif (! $email_format_changed) {
+        } elseif (! $something_changed && ! $notificationsOnOwnActionsUpdate->something_has_changed) {
             $layout->addFeedback(Feedback::INFO, _('Nothing changed'));
         }
 

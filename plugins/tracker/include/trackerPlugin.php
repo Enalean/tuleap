@@ -132,6 +132,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
@@ -231,7 +232,6 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Search\IndexAllArtifactsProcessor;
-use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -240,6 +240,7 @@ use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\ServiceActivator;
+use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
 use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
@@ -263,6 +264,8 @@ use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
+use Tuleap\User\Account\NotificationsOnOwnActionsCollection;
+use Tuleap\User\Account\NotificationsOnOwnActionsUpdate;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
@@ -402,6 +405,9 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
         $this->addHook(DefineIssueTemplateEvent::NAME);
         $this->addHook(IssuesTemplateDashboardDefinition::NAME);
+
+        $this->addHook(NotificationsOnOwnActionsCollection::NAME);
+        $this->addHook(NotificationsOnOwnActionsUpdate::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -2685,5 +2691,20 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function identifyAllItemsToIndex(): void
     {
         (new \Tuleap\Tracker\Search\IndexArtifactDAO())->markExistingArtifactsAsPending();
+    }
+
+    public function notificationsOnOwnActionsCollection(NotificationsOnOwnActionsCollection $notifications_on_own_actions_collection): void
+    {
+        $notifications_on_own_actions_collection->add(
+            NotificationOnOwnActionPreference::getPresenter($notifications_on_own_actions_collection->user)
+        );
+    }
+
+    public function notificationsOnOwnActionsUpdate(NotificationsOnOwnActionsUpdate $event): void
+    {
+        $something_changed = NotificationOnOwnActionPreference::updatePreference($event->request, $event->user);
+        if ($something_changed) {
+            $event->something_has_changed = true;
+        }
     }
 }

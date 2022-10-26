@@ -21,7 +21,9 @@
 
 declare(strict_types=1);
 
-class UserPreferencesDao extends \Tuleap\DB\DataAccessObject
+use Tuleap\User\StoreUserPreference;
+
+class UserPreferencesDao extends \Tuleap\DB\DataAccessObject implements StoreUserPreference
 {
     /**
      * Search user preferences by user id and preference name

@@ -163,7 +163,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * The dao used to retrieve preferences
      */
-    public $preferencesdao;
+    public ?\Tuleap\User\StoreUserPreference $preferencesdao = null;
 
     /**
      * The dao used to retrieve user-group info
