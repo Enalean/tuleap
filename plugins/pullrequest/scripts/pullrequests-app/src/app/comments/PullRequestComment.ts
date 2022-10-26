@@ -55,7 +55,7 @@ interface PullRequestComment {
 
 const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
     const classes: MapOfClasses = {
-        "pull-request-event": true,
+        "pull-request-comment": true,
         "is-outdated": host.comment.is_outdated,
         "is-inline-comment": host.comment.is_inline_comment,
     };
@@ -73,19 +73,19 @@ const displayFileNameIfNeeded = (host: PullRequestComment): UpdateFunction<PullR
     if (!host.comment.is_outdated) {
         return html`
             <span
-                class="pull-request-event-file-path"
+                class="pull-request-comment-file-path"
                 data-test="pullrequest-comment-with-link-to-file"
             >
                 <a href="${host.comment.file.file_url}">
-                    <i class="fa-regular fa-file-alt" aria-hidden="true"></i> ${host.comment.file
-                        .file_path}
+                    <i class="fa-regular fa-file-alt" aria-hidden="true"></i>
+                    ${host.comment.file.file_path}
                 </a>
             </span>
         `;
     }
 
     return html`
-        <span class="pull-request-event-file-path" data-test="pullrequest-comment-only-file-name">
+        <span class="pull-request-comment-file-path" data-test="pullrequest-comment-only-file-name">
             <i class="fa-regular fa-file-alt" aria-hidden="true"></i> ${host.comment.file.file_path}
         </span>
     `;
@@ -118,8 +118,8 @@ export const PullRequestComment = define<PullRequestComment>({
                     />
                 </div>
 
-                <div class="pull-request-event-content">
-                    <div class="pull-request-event-content-info">
+                <div class="pull-request-comment-content">
+                    <div class="pull-request-comment-content-info">
                         <a href="${host.comment.user.user_url}">${host.comment.user.display_name}</a
                         >,
                         <span class="tlp-text-muted">${host.comment.post_date}</span>

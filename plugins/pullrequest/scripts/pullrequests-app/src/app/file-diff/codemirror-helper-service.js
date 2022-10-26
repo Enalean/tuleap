@@ -58,6 +58,7 @@ function CodeMirrorHelperService(
     function displayInlineComment(code_mirror, comment, line_number) {
         const inline_comment_element = document.createElement("tuleap-pullrequest-comment");
         inline_comment_element.comment = comment;
+        inline_comment_element.setAttribute("class", "inline-comment-element");
 
         const options = getWidgetPlacementOptions(code_mirror, line_number);
 
