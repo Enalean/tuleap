@@ -190,6 +190,9 @@ msgstr ""
 "Le statut d’intégration de cette pull request est indéterminé. Essayez de "
 "l’intégrer en ligne de commande et poussez vers la destination."
 
+msgid "Reply"
+msgstr "Répondre"
+
 msgctxt "field-label"
 msgid "Reviewers"
 msgstr "Relecteurs"

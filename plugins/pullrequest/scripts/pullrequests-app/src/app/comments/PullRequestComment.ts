@@ -19,7 +19,8 @@
 
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import { sanitize } from "dompurify";
+import { getCommentBody } from "./PullRequestCommentBodyTemplate";
+import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
 
 export const TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestComment & HTMLElement;
@@ -37,17 +38,22 @@ interface PullRequestCommentFile {
     readonly file_url: string;
 }
 
+export type CommentType = "inline-comment" | "comment" | "timeline-event";
+export const TYPE_INLINE_COMMENT: CommentType = "inline-comment";
+export const TYPE_GLOBAL_COMMENT: CommentType = "comment";
+export const TYPE_EVENT_COMMENT: CommentType = "timeline-event";
+
 export interface PullRequestCommentPresenter {
     readonly user: PullRequestUser;
     readonly post_date: string;
     readonly content: string;
-    readonly type: "inline-comment" | "comment" | "timeline-event";
+    readonly type: CommentType;
     readonly is_outdated: boolean;
     readonly file?: PullRequestCommentFile;
     readonly is_inline_comment: boolean;
 }
 
-interface PullRequestComment {
+export interface PullRequestComment {
     readonly comment: PullRequestCommentPresenter;
     readonly content: () => HTMLElement;
     readonly post_rendering_callback: () => void;
@@ -63,32 +69,6 @@ const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
     classes[host.comment.type] = true;
 
     return classes;
-};
-
-const displayFileNameIfNeeded = (host: PullRequestComment): UpdateFunction<PullRequestComment> => {
-    if (!host.comment.file) {
-        return html``;
-    }
-
-    if (!host.comment.is_outdated) {
-        return html`
-            <span
-                class="pull-request-comment-file-path"
-                data-test="pullrequest-comment-with-link-to-file"
-            >
-                <a href="${host.comment.file.file_url}">
-                    <i class="fa-regular fa-file-alt" aria-hidden="true"></i>
-                    ${host.comment.file.file_path}
-                </a>
-            </span>
-        `;
-    }
-
-    return html`
-        <span class="pull-request-comment-file-path" data-test="pullrequest-comment-only-file-name">
-            <i class="fa-regular fa-file-alt" aria-hidden="true"></i> ${host.comment.file.file_path}
-        </span>
-    `;
 };
 
 function renderFactory(fn: (host: HostElement) => UpdateFunction<PullRequestComment>) {
@@ -119,15 +99,7 @@ export const PullRequestComment = define<PullRequestComment>({
                 </div>
 
                 <div class="pull-request-comment-content">
-                    <div class="pull-request-comment-content-info">
-                        <a href="${host.comment.user.user_url}">${host.comment.user.display_name}</a
-                        >,
-                        <span class="tlp-text-muted">${host.comment.post_date}</span>
-                    </div>
-
-                    ${displayFileNameIfNeeded(host)}
-
-                    <p innerHTML="${sanitize(host.comment.content)}"></p>
+                    ${getCommentBody(host)} ${getCommentFooter(host)}
                 </div>
             </div>
         `

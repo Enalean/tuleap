@@ -186,14 +186,8 @@
     border-color: transparent var(--tlp-main-color) transparent transparent;
 }
 
-.inline-comment-element {
-    display: block;
-    width: 100%;
+.inline-comment-element > .pull-request-comment {
+    $horizontal-padding: 12px;
 
-    > .pull-request-comment {
-        $horizontal-padding: 12px;
-
-        width: 100%;
-        padding: var(--tlp-medium-spacing) $horizontal-padding;
-    }
+    padding: var(--tlp-medium-spacing) $horizontal-padding;
 }

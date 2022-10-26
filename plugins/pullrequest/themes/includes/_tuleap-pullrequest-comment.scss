@@ -17,62 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pull-request-comment {
-    $arrow-width: 6px;
+$arrow-width: 6px;
 
+.pull-request-comment {
     display: flex;
-    width: 85%;
 
     > .tlp-avatar {
         margin: var(--tlp-medium-spacing) calc(var(--tlp-small-spacing) + #{$arrow-width}) 0 0;
-    }
-
-    > .pull-request-comment-content {
-        position: relative;
-        flex: 1;
-        padding: var(--tlp-large-spacing) var(--tlp-medium-spacing);
-        border: 1px solid var(--tlp-neutral-normal-color);
-        border-radius: var(--tlp-medium-radius);
-        background: var(--tlp-white-color);
-
-        &::before {
-            content: "";
-            position: absolute;
-            top: calc(var(--tlp-medium-spacing) * 2);
-            left: 0;
-            width: 0;
-            height: 0;
-            transform: translate(-100%, -50%);
-            border-width: 7px $arrow-width 7px 0;
-            border-style: solid;
-            border-color: transparent var(--tlp-main-color) transparent transparent;
-        }
-
-        &::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -1px;
-            width: 4px;
-            height: 100%;
-            border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
-            background: var(--tlp-main-color);
-        }
-
-        > .pull-request-comment-content-info {
-            margin: 0 0 var(--tlp-small-spacing);
-            font-size: 14px;
-        }
-
-        .pull-request-comment-file-path {
-            display: inline-block;
-            margin: 0 0 5px;
-            font-size: 14px;
-
-            .fa-file-text-o {
-                margin: 0 3px 0 0;
-            }
-        }
     }
 
     &.is-outdated > .pull-request-comment-content {
@@ -106,4 +57,68 @@
             }
         }
     }
+}
+
+.pull-request-comment-content {
+    position: relative;
+    flex: 1;
+    border: 1px solid var(--tlp-neutral-normal-color);
+    border-radius: var(--tlp-medium-radius);
+    background: var(--tlp-white-color);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: calc(var(--tlp-medium-spacing) * 2);
+        left: 0;
+        width: 0;
+        height: 0;
+        transform: translate(-100%, -50%);
+        border-width: 7px $arrow-width 7px 0;
+        border-style: solid;
+        border-color: transparent var(--tlp-main-color) transparent transparent;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -1px;
+        width: 4px;
+        height: 100%;
+        border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
+        background: var(--tlp-main-color);
+    }
+}
+
+.pull-request-comment-content-info {
+    padding: var(--tlp-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing)
+        var(--tlp-medium-spacing);
+    font-size: 14px;
+}
+
+.pull-request-comment-text {
+    padding: var(--tlp-medium-spacing);
+}
+
+.pull-request-comment-file-path,
+.pull-request-comment-footer {
+    background: linear-gradient(0deg, rgb(255 255 255 / 50%), rgb(255 255 255 / 50%)),
+        var(--tlp-background-color);
+}
+
+.pull-request-comment-file-path {
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+    font-size: 14px;
+}
+
+.pull-request-comment-file-path-icon {
+    margin: 0 5px 0 0;
+}
+
+.pull-request-comment-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--tlp-small-spacing);
+    border-top: 1px solid var(--tlp-neutral-light-color);
 }
