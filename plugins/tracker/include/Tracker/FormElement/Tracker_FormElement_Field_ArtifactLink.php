@@ -1112,8 +1112,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $prefill_new_values = $this->getDefaultValue();
         }
         $prefill_parent = '';
-        if (isset($submitted_values[$this->getId()]['parent'])) {
-            $prefill_parent = $submitted_values[$this->getId()]['parent'];
+        if (isset($submitted_values[$this->getId()]['parent'][0]) && is_numeric($submitted_values[$this->getId()]['parent'][0])) {
+            $prefill_parent = $submitted_values[$this->getId()]['parent'][0];
         }
         $prefill_type = '';
         if (isset($submitted_values[$this->getId()]['type'])) {
