@@ -28,11 +28,11 @@ import {
     FORM_ELEMENT_DISABLED_CLASSNAME,
     SPIN_CLASSNAME,
     SPINNER_CLASSNAME,
+    HIDDEN_ICON_CLASSNAME,
 } from "./classnames";
 import {
     EDIT_CONFIRM_ICON_SELECTOR,
     EDIT_CONFIRM_SELECTOR,
-    EDIT_ICON_CLASSNAME,
     EDIT_TOKEN_BUTTON_SELECTOR,
     FORM_ELEMENTS_SELECTOR,
     INPUTS_SELECTOR,
@@ -73,7 +73,7 @@ describe(`TokenModal`, () => {
                 <input type="password" id="token-modal-token-input">
               </div>
               <button type="submit" id="token-modal-confirm">
-                <i id="token-icon" class="${EDIT_ICON_CLASSNAME}"></i>
+                <i id="token-icon" class="${HIDDEN_ICON_CLASSNAME}"></i>
               </button>
             </form>
           </div>`
@@ -116,7 +116,7 @@ describe(`TokenModal`, () => {
             const icon_classes = button_icon.classList;
             expect(icon_classes.contains(SPINNER_CLASSNAME)).toBe(is_loading);
             expect(icon_classes.contains(SPIN_CLASSNAME)).toBe(is_loading);
-            expect(icon_classes.contains(EDIT_ICON_CLASSNAME)).toBe(!is_loading);
+            expect(icon_classes.contains(HIDDEN_ICON_CLASSNAME)).toBe(!is_loading);
             expect(confirm_button.disabled).toBe(is_loading);
             token_modal.querySelectorAll(FORM_ELEMENTS_SELECTOR).forEach((form_element) => {
                 expect(form_element.classList.contains(FORM_ELEMENT_DISABLED_CLASSNAME)).toBe(

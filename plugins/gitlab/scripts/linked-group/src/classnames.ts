@@ -25,3 +25,4 @@ export const FEEDBACK_ERROR_CLASSNAME = "tlp-alert-danger";
 export const BADGE_SUCCESS_CLASSNAME = "tlp-badge-success";
 export const BADGE_ERROR_CLASSNAME = "tlp-badge-danger";
 export const FORM_ELEMENT_DISABLED_CLASSNAME = "tlp-form-element-disabled";
+export const HIDDEN_ICON_CLASSNAME = "gitlab-modal-icon-hidden";

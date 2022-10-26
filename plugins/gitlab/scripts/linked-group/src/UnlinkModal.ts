@@ -21,7 +21,12 @@ import { del } from "@tuleap/fetch-result";
 import { selectOrThrow } from "@tuleap/dom";
 import type { GetText } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
-import { FEEDBACK_HIDDEN_CLASSNAME, SPIN_CLASSNAME, SPINNER_CLASSNAME } from "./classnames";
+import {
+    FEEDBACK_HIDDEN_CLASSNAME,
+    SPIN_CLASSNAME,
+    SPINNER_CLASSNAME,
+    HIDDEN_ICON_CLASSNAME,
+} from "./classnames";
 
 const UNLINK_MODAL_SELECTOR = "#unlink-modal";
 export const UNLINK_MODAL_FEEDBACK_SELECTOR = "#unlink-modal-feedback";
@@ -50,7 +55,7 @@ export const UnlinkModal = (
     const confirm_unlink_icon = selectOrThrow(confirm_unlink_button, UNLINK_CONFIRM_ICON_SELECTOR);
 
     const toggleLoadingState = (is_loading: boolean): void => {
-        confirm_unlink_icon.classList.toggle(UNLINK_ICON_CLASSNAME, !is_loading);
+        confirm_unlink_icon.classList.toggle(HIDDEN_ICON_CLASSNAME, !is_loading);
         confirm_unlink_icon.classList.toggle(SPINNER_CLASSNAME, is_loading);
         confirm_unlink_icon.classList.toggle(SPIN_CLASSNAME, is_loading);
         confirm_unlink_button.disabled = is_loading;

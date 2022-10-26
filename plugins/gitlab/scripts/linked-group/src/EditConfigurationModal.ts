@@ -22,6 +22,7 @@ import {
     FORM_ELEMENT_DISABLED_CLASSNAME,
     SPIN_CLASSNAME,
     SPINNER_CLASSNAME,
+    HIDDEN_ICON_CLASSNAME,
 } from "./classnames";
 import { patchJSON } from "@tuleap/fetch-result";
 import type { GetText } from "@tuleap/gettext";
@@ -44,9 +45,6 @@ export const ALLOW_ARTIFACT_CLOSURE_DISPLAY_SELECTOR = "#group-information-allow
 export const PREFIX_DISPLAY_SELECTOR = "#group-information-branch-prefix";
 export const FORM_ELEMENTS_SELECTOR = "[data-form-element]";
 export const INPUTS_SELECTOR = "input";
-
-export const HIDDEN_ICON_CLASSNAME = "gitlab-modal-icon-hidden";
-export const EDIT_ICON_CLASSNAME = "fa-pencil";
 
 type UpdatedGroup = {
     readonly create_branch_prefix: string;
@@ -98,7 +96,7 @@ export const EditConfigurationModal = (
     };
 
     const toggleLoadingState = (is_loading: boolean): void => {
-        confirm_edit_icon.classList.toggle(EDIT_ICON_CLASSNAME, !is_loading);
+        confirm_edit_icon.classList.toggle(HIDDEN_ICON_CLASSNAME, !is_loading);
         confirm_edit_icon.classList.toggle(SPINNER_CLASSNAME, is_loading);
         confirm_edit_icon.classList.toggle(SPIN_CLASSNAME, is_loading);
         confirm_edit_button.disabled = is_loading;

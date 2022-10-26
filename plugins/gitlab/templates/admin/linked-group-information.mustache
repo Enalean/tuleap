@@ -116,7 +116,6 @@
                     {{# dgettext }}tuleap-gitlab | Allow artifact closure{{/ dgettext }}
                 </label>
                 <p class="tlp-text-info">
-                    <i class="fa-regular fa-life-ring" aria-hidden="true"></i>
                     {{# dgettext }}tuleap-gitlab | If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository.{{/ dgettext }}
                 </p>
             </div>
@@ -126,7 +125,6 @@
                     {{# dgettext }}tuleap-gitlab | Prefix the branch name{{/ dgettext }}
                 </label>
                 <p class="tlp-text-info">
-                    <i class="fa-regular fa-life-ring" aria-hidden="true"></i>
                     {{# dgettext }}tuleap-gitlab | If set, this prefix will be automatically added to the branch name in the create GitLab branch action.{{/ dgettext }}
                 </p>
             </div>
@@ -149,7 +147,7 @@
                 {{# dgettext }}tuleap-gitlab | Cancel{{/ dgettext }}
             </button>
             <button type="submit" class="tlp-button-primary tlp-modal-action" id="edit-config-confirm">
-                <i id="edit-icon" class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
+                <i id="edit-icon" class="fa-solid tlp-button-icon gitlab-modal-icon-hidden" aria-hidden="true"></i>
                 {{# dgettext }}tuleap-gitlab | Update configuration{{/ dgettext }}
             </button>
         </div>
@@ -210,8 +208,8 @@
                 {{# dgettext }}tuleap-gitlab | Cancel{{/ dgettext }}
             </button>
             <button type="submit" class="tlp-button-primary tlp-modal-action" id="token-modal-confirm">
+                <i id="token-icon" class="fa-solid tlp-button-icon gitlab-modal-icon-hidden" aria-hidden="true"></i>
                 {{# dgettext }}tuleap-gitlab | Save token{{/ dgettext }}
-                <i id="token-icon" class="fa-solid fa-long-arrow-alt-right tlp-button-icon-right" aria-hidden="true"></i>
             </button>
         </div>
     </form>
@@ -236,7 +234,7 @@
             | <b>{{ current_project_label }}</b>
             | <b>{{ group_name }}</b>
         {{/dgettext}}</p>
-        <p class="tlp-text-info">
+        <p>
             {{# dgettext }}tuleap-gitlab | This will not delete the Group on GitLab side. It removes the link between the Tuleap Project
             and the GitLab group. All GitLab projects part of the group will stay integrated with Tuleap, their configuration will not change. If you wish to remove
             the integrations of the GitLab projects part of this group, you must remove each one manually.{{/ dgettext }}
@@ -247,7 +245,7 @@
             {{# dgettext }}tuleap-gitlab | Cancel {{/ dgettext }}
         </button>
         <button type="button" class="tlp-button-danger tlp-modal-action" id="unlink-confirm">
-            <i id="unlink-icon" class="fa-solid fa-link-slash tlp-button-icon" aria-hidden="true"></i>
+            <i id="unlink-icon" class="fa-solid tlp-button-icon gitlab-modal-icon-hidden" aria-hidden="true"></i>
             {{# dgettext }}tuleap-gitlab | Unlink {{/ dgettext }}
         </button>
     </div>

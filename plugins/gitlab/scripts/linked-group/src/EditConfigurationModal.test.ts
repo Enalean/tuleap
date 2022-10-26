@@ -24,10 +24,8 @@ import {
     EDIT_CONFIGURATION_MODAL_SELECTOR,
     EDIT_CONFIRM_ICON_SELECTOR,
     EDIT_CONFIRM_SELECTOR,
-    EDIT_ICON_CLASSNAME,
     EditConfigurationModal,
     HAS_PREFIX_CHECKBOX_SELECTOR,
-    HIDDEN_ICON_CLASSNAME,
     PREFIX_BOX_SELECTOR,
     PREFIX_ICON_SELECTOR,
     PREFIX_INPUT_SELECTOR,
@@ -47,6 +45,7 @@ import {
     SPINNER_CLASSNAME,
     FEEDBACK_HIDDEN_CLASSNAME,
     FORM_ELEMENT_DISABLED_CLASSNAME,
+    HIDDEN_ICON_CLASSNAME,
 } from "./classnames";
 
 const noop = (): void => {
@@ -91,7 +90,7 @@ describe(`EditConfigurationModal`, () => {
                   <input type="text" id="edit-config-branch-prefix">
                 </div>
                 <button type="submit" id="edit-config-confirm">
-                  <i id="edit-icon" class="${EDIT_ICON_CLASSNAME}"></i>
+                  <i id="edit-icon" class="${HIDDEN_ICON_CLASSNAME}"></i>
                 </button>
               </form>
             </div>`
@@ -179,7 +178,7 @@ describe(`EditConfigurationModal`, () => {
             const icon_classes = button_icon.classList;
             expect(icon_classes.contains(SPINNER_CLASSNAME)).toBe(is_loading);
             expect(icon_classes.contains(SPIN_CLASSNAME)).toBe(is_loading);
-            expect(icon_classes.contains(EDIT_ICON_CLASSNAME)).toBe(!is_loading);
+            expect(icon_classes.contains(HIDDEN_ICON_CLASSNAME)).toBe(!is_loading);
             expect(confirm_button.disabled).toBe(is_loading);
             edit_modal.querySelectorAll(FORM_ELEMENTS_SELECTOR).forEach((form_element) => {
                 expect(form_element.classList.contains(FORM_ELEMENT_DISABLED_CLASSNAME)).toBe(
