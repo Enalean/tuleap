@@ -67,7 +67,7 @@ export interface ItemDefinition extends ElementWithQuickLinks {
     readonly color_name: string;
     readonly icon_name: string;
     readonly project: ProjectReference;
-    readonly cropped_content: string | null;
+    readonly cropped_content?: string | null;
     readonly badges: ReadonlyArray<ItemBadge>;
 }
 
