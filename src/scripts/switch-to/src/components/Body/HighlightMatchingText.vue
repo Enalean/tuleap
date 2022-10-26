@@ -26,9 +26,7 @@
         v-bind:text-to-highlight="text"
         class="switch-to-recent-items-entry-label"
         v-on:matches="(words) => $emit('matches', words)"
-    >
-        <slot></slot>
-    </word-highlighter>
+    />
 </template>
 
 <script setup lang="ts">
