@@ -21,15 +21,16 @@ import "./file-diff.tpl.html";
 import { isUnifiedMode, isSideBySideMode } from "./diff-mode-state.js";
 import { initComments } from "./comments-state.js";
 import { doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText } from "./diff-bidirectional-unicode-text";
+import { PullRequestCommentPresenterBuilder } from "../comments/pullrequest-comment-presenter-builder";
 
 export default {
     templateUrl: "file-diff.tpl.html",
     controller,
 };
 
-controller.$inject = ["$state", "SharedPropertiesService", "FileDiffRestService"];
+controller.$inject = ["$state", "SharedPropertiesService", "FileDiffRestService", "moment"];
 
-function controller($state, SharedPropertiesService, FileDiffRestService) {
+function controller($state, SharedPropertiesService, FileDiffRestService, moment) {
     const self = this;
     Object.assign(self, {
         is_loading: true,
@@ -45,6 +46,11 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
     });
 
     function init() {
+        const pull_request_comment_presenter_builder = PullRequestCommentPresenterBuilder(
+            $state,
+            moment
+        );
+
         FileDiffRestService.getUnidiff(self.pull_request_id, self.file_path)
             .then((diff) => {
                 self.diff = diff;
@@ -52,7 +58,12 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
                 self.special_format = diff.special_format;
                 self.has_potentially_dangerous_bidirectional_unicode_text =
                     doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText(diff);
-                initComments(diff.inline_comments);
+
+                const comments = diff.inline_comments.map(
+                    pull_request_comment_presenter_builder.fromFileDiffComment
+                );
+
+                initComments(comments);
             })
             .finally(() => {
                 self.is_loading = false;

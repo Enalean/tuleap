@@ -23,20 +23,19 @@ import tuleap_pullrequest_module from "../../app.js";
 import "angular-mocks";
 
 describe("TimelineService", function () {
-    var $httpBackend, $sce, TimelineService;
+    var $httpBackend, TimelineService;
 
     beforeEach(function () {
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function (_$httpBackend_, _$sce_, _TimelineService_) {
+        angular.mock.inject(function (_$httpBackend_, _TimelineService_) {
             $httpBackend = _$httpBackend_;
-            $sce = _$sce_;
             TimelineService = _TimelineService_;
         });
     });
 
     describe("#getTimeline", function () {
-        var backendData, pullRequest;
+        var pullRequest;
         var limit = 50,
             offset = 0;
 
@@ -44,106 +43,6 @@ describe("TimelineService", function () {
             pullRequest = {
                 id: "1",
                 user_id: 102,
-            };
-
-            backendData = {
-                collection: [
-                    {
-                        id: "6",
-                        user: {
-                            id: 102,
-                            display_name: "Site User (userX)",
-                            avatar_url: "/themes/common/images/avatar_default.png",
-                        },
-                        post_date: "1970-01-01T00:00:00+00:00",
-                        content: "Hello world",
-                        type: "comment",
-                    },
-                    {
-                        id: "8",
-                        user: {
-                            id: 101,
-                            display_name: "Site Administrator (admin)",
-                            avatar_url: "/themes/common/images/avatar_default.png",
-                        },
-                        post_date: "1970-01-01T00:00:00+00:00",
-                        content: "Hello\nSite User\n",
-                        type: "inline-comment",
-                        file_path: "Readme.md",
-                        is_outdated: false,
-                    },
-                    {
-                        id: "9",
-                        user: {
-                            id: 101,
-                            display_name: "Site Administrator (admin)",
-                            avatar_url: "/themes/common/images/avatar_default.png",
-                        },
-                        post_date: "1970-01-01T00:00:00+00:00",
-                        content: "Obsolete inline comment",
-                        type: "inline-comment",
-                        file_path: "Readme.md",
-                        is_outdated: true,
-                    },
-                    {
-                        user: {
-                            id: 102,
-                            display_name: "Site User (userX)",
-                            avatar_url: "/themes/common/images/avatar_default.png",
-                        },
-                        post_date: "1970-01-01T00:00:00+00:00",
-                        type: "timeline-event",
-                        event_type: "update",
-                    },
-                    {
-                        user: {
-                            id: 101,
-                            display_name: "Site Administrator (admin)",
-                            avatar_url: "/themes/common/images/avatar_default.png",
-                        },
-                        post_date: "1970-01-01T00:00:00+00:00",
-                        type: "timeline-event",
-                        event_type: "rebase",
-                    },
-                    {
-                        user: {
-                            id: 102,
-                            display_name: "Site User (userX)",
-                            avatar_url: "/themes/common/images/avatar_default.png",
-                        },
-                        post_date: "1970-01-01T00:00:00+00:00",
-                        type: "timeline-event",
-                        event_type: "merge",
-                    },
-                    {
-                        user: {
-                            id: 101,
-                            display_name: "Site Administrator (admin)",
-                            avatar_url: "/themes/common/images/avatar_default.png",
-                        },
-                        post_date: "1970-01-01T00:00:00+00:00",
-                        type: "timeline-event",
-                        event_type: "abandon",
-                    },
-                    {
-                        user: {
-                            id: 102,
-                            display_name: "Site User (userX)",
-                            avatar_url: "/themes/common/images/avatar_default.png",
-                        },
-                        post_date: "2020-01-01T00:00:00+00:00",
-                        type: "reviewer-change",
-                        event_type: "reviewer-change",
-                        added_reviewers: [
-                            {
-                                id: 101,
-                                display_name: "Site Administrator (admin)",
-                                avatar_url: "/themes/common/images/avatar_default.png",
-                            },
-                        ],
-                        removed_reviewers: [],
-                    },
-                ],
             };
         });
 
@@ -160,56 +59,6 @@ describe("TimelineService", function () {
             TimelineService.getTimeline(pullRequest, limit, offset);
 
             $httpBackend.verifyNoOutstandingExpectation();
-        });
-
-        it("formats the content of each timeline event", function () {
-            $httpBackend.whenGET().respond(backendData);
-
-            var timeline;
-            TimelineService.getTimeline(pullRequest, limit, offset).then(function (tl) {
-                timeline = tl;
-            });
-            $httpBackend.flush();
-
-            expect(timeline).toHaveLength(7);
-            expect($sce.getTrustedHtml(timeline[0].content)).toBe("Hello world");
-            expect($sce.getTrustedHtml(timeline[1].content)).toBe("Hello<br/>Site User<br/>");
-
-            expect($sce.getTrustedHtml(timeline[3].content)).toBe("Has updated the pull request.");
-            expect($sce.getTrustedHtml(timeline[4].content)).toBe("Has rebased the pull request.");
-            expect($sce.getTrustedHtml(timeline[5].content)).toBe("Has merged the pull request.");
-            expect($sce.getTrustedHtml(timeline[6].content)).toBe(
-                "Has abandoned the pull request."
-            );
-        });
-
-        it("sets author flag for each timeline event", function () {
-            $httpBackend.whenGET().respond(backendData);
-
-            var timeline;
-            TimelineService.getTimeline(pullRequest, limit, offset).then(function (tl) {
-                timeline = tl;
-            });
-            $httpBackend.flush();
-
-            expect(timeline[0].isFromPRAuthor).toBe(true);
-            expect(timeline[1].isFromPRAuthor).toBe(false);
-            expect(timeline[3].isFromPRAuthor).toBe(true);
-            expect(timeline[4].isFromPRAuthor).toBe(false);
-        });
-
-        it("sets flags for inline comments, both outdated or not", function () {
-            $httpBackend.whenGET().respond(backendData);
-
-            var timeline;
-            TimelineService.getTimeline(pullRequest, limit, offset).then(function (tl) {
-                timeline = tl;
-            });
-            $httpBackend.flush();
-
-            expect(timeline[0].isInlineComment).toBe(false);
-            expect(timeline[1].isInlineComment).toBe(true);
-            expect(timeline[2].isInlineComment).toBe(true);
         });
     });
 

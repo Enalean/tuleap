@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NAME as INLINE_COMMENT_NAME } from "../inline-comment-component";
+import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment.ts";
 import { NAME as NEW_INLINE_COMMENT_NAME } from "../new-inline-comment-component";
 import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
 import { getCommentPlaceholderWidget } from "./side-by-side-widget-finder.js";
@@ -68,7 +68,15 @@ function getNumberOfCommentsWidgets(handle) {
 }
 
 function getSumOfWidgetsHeights(widgets) {
-    return widgets.map((widget) => widget.height).reduce((sum, value) => sum + value, 0);
+    return widgets
+        .map((widget) => {
+            if (isCommentWidget(widget)) {
+                return widget.node.getBoundingClientRect().height;
+            }
+
+            return widget.height;
+        })
+        .reduce((sum, value) => sum + value, 0);
 }
 
 function hasNoWidgets(handle) {

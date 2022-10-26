@@ -31,7 +31,6 @@ import angular_tlp from "@tuleap/angular-tlp";
 import MainController from "./app-controller.js";
 
 import NewInlineCommentComponent from "./file-diff/new-inline-comment-component.js";
-import InlineCommentComponent from "./file-diff/inline-comment-component.js";
 import FileDiffComponent from "./file-diff/file-diff-component.js";
 import UnidiffComponent from "./file-diff/diff-modes/unidiff-component.js";
 import SideBySideDiffComponent from "./file-diff/diff-modes/side-by-side-diff-component.js";
@@ -82,11 +81,15 @@ import OverviewConfig from "./overview/overview-config.js";
 import CommitsConfig from "./commits/commits-config.js";
 import PullRequestConfig from "./pull-request/pull-request-config.js";
 
+import angular_custom_elements_module from "angular-custom-elements";
+import "./comments/PullRequestComment.ts";
+
 export default angular
     .module("tuleap.pull-request", [
         angular_moment,
         "gettext",
         angular_tlp,
+        angular_custom_elements_module,
         ui_router,
         ng_sanitize,
         SharedProperties,
@@ -95,7 +98,6 @@ export default angular
     .controller("MainController", MainController)
 
     .component("newInlineComment", NewInlineCommentComponent)
-    .component("inlineComment", InlineCommentComponent)
     .component("fileDiff", FileDiffComponent)
     .component("fileUnidiff", UnidiffComponent)
     .component("sideBySideDiff", SideBySideDiffComponent)

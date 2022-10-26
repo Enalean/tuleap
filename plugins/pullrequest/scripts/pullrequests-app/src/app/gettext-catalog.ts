@@ -29,3 +29,11 @@ export function setCatalog(catalog: GettextCatalog): void {
 
 export const getUIIsUnderConstructionText = (): string =>
     gettextCatalog.getString("Under construction, please come back later.");
+export const getUserUpdatePullRequest = (): string =>
+    gettextCatalog.getString("Has updated the pull request.");
+export const getUserRebasePullRequest = (): string =>
+    gettextCatalog.getString("Has rebased the pull request.");
+export const getUserMergePullRequest = (): string =>
+    gettextCatalog.getString("Has merged the pull request.");
+export const getUserAbandonedPullRequest = (): string =>
+    gettextCatalog.getString("Has abandoned the pull request.");

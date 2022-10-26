@@ -19,6 +19,7 @@
 
 import CodeMirror from "codemirror";
 import { addComment } from "./comments-state.js";
+import { PullRequestCommentPresenterBuilder } from "../comments/pullrequest-comment-presenter-builder";
 
 export default CodeMirrorHelperService;
 
@@ -27,9 +28,11 @@ CodeMirrorHelperService.$inject = [
     "$compile",
     "$document",
     "$timeout",
+    "$state",
     "FileDiffRestService",
     "TooltipService",
     "gettextCatalog",
+    "moment",
 ];
 
 function CodeMirrorHelperService(
@@ -37,9 +40,11 @@ function CodeMirrorHelperService(
     $compile,
     $document,
     $timeout,
+    $state,
     FileDiffRestService,
     TooltipService,
-    gettextCatalog
+    gettextCatalog,
+    moment
 ) {
     const self = this;
     Object.assign(self, {
@@ -51,18 +56,12 @@ function CodeMirrorHelperService(
     });
 
     function displayInlineComment(code_mirror, comment, line_number) {
-        const child_scope = $rootScope.$new(true);
-        child_scope.comment = comment;
-        const inline_comment_element = $compile(
-            '<inline-comment comment="comment"></inline-comment>'
-        )(child_scope)[0];
+        const inline_comment_element = document.createElement("tuleap-pullrequest-comment");
+        inline_comment_element.comment = comment;
 
         const options = getWidgetPlacementOptions(code_mirror, line_number);
 
-        // Wait for angular to actually render the component so that it has a height
-        return $timeout(() => {
-            return code_mirror.addLineWidget(line_number, inline_comment_element, options);
-        });
+        return code_mirror.addLineWidget(line_number, inline_comment_element, options);
     }
 
     function showCommentForm(
@@ -71,14 +70,27 @@ function CodeMirrorHelperService(
         display_line_number,
         file_path,
         pull_request_id,
-        position
+        position,
+        post_submit_callback
     ) {
         const child_scope = $rootScope.$new(true);
         child_scope.submitCallback = (comment_text) => {
             return postComment(unidiff_offset, comment_text, file_path, pull_request_id, position)
                 .then((comment) => {
-                    addComment(comment);
-                    return self.displayInlineComment(code_mirror, comment, display_line_number);
+                    const comment_presenter = PullRequestCommentPresenterBuilder(
+                        $state,
+                        moment
+                    ).fromFileDiffComment(comment);
+                    addComment(comment_presenter);
+                    const comment_widget = self.displayInlineComment(
+                        code_mirror,
+                        comment_presenter,
+                        display_line_number
+                    );
+
+                    comment_widget.node.post_rendering_callback = post_submit_callback;
+
+                    return comment_widget;
                 })
                 .then(() => {
                     TooltipService.setupTooltips();
