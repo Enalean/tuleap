@@ -41,7 +41,6 @@ use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
-use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenter;
@@ -49,9 +48,12 @@ use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
+use Tuleap\OnlyOffice\Save\CallbackURLSaveTokenIdentifierExtractor;
+use Tuleap\OnlyOffice\Save\OnlyOfficeRefreshCallbackURLTokenController;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenDAO;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenGeneratorDBStore;
 use Tuleap\OnlyOffice\Download\PrefixOnlyOfficeDocumentDownload;
+use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenRefresherDBStore;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenVerifier;
 use Tuleap\OnlyOffice\Save\PrefixOnlyOfficeDocumentSave;
 use Tuleap\OnlyOffice\Open\DocmanFileLastVersionProvider;
@@ -69,7 +71,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 {
-    private const LOG_IDENTIFIER = 'onlyoffice_syslog';
+    private const LOG_IDENTIFIER              = 'onlyoffice_syslog';
+    private const DELAY_SAVE_TOKEN_EXPIRATION = 'PT15M';
 
     public function __construct(?int $id)
     {
@@ -120,6 +123,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             '/onlyoffice',
             function (FastRoute\RouteCollector $r): void {
                 $r->get('/document_download', $this->getRouteHandler('routeGetDocumentDownload'));
+                $r->post('/document_save_refresh_token', $this->getRouteHandler('routePostRefreshCallbackURLToken'));
                 $r->get('/open/{id:\d+}', $this->getRouteHandler('routeGetOpenOnlyOffice'));
                 $r->get('/editor/{id:\d+}', $this->getRouteHandler('routeGetEditorOnlyOffice'));
             }
@@ -148,6 +152,30 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                     $logger,
                 )
             ),
+            new SessionWriteCloseMiddleware(),
+        );
+    }
+
+    public function routePostRefreshCallbackURLToken(): OnlyOfficeRefreshCallbackURLTokenController
+    {
+        $logger         = self::getLogger();
+        $save_token_dao = new OnlyOfficeSaveDocumentTokenDAO();
+
+        return new OnlyOfficeRefreshCallbackURLTokenController(
+            new OnlyOfficeSaveDocumentTokenRefresherDBStore(
+                new PrefixedSplitTokenSerializer(new PrefixOnlyOfficeDocumentSave()),
+                new OnlyOfficeSaveDocumentTokenVerifier(
+                    $save_token_dao,
+                    new SplitTokenVerificationStringHasher(),
+                    $logger,
+                ),
+                new DateInterval(self::DELAY_SAVE_TOKEN_EXPIRATION),
+                $save_token_dao,
+            ),
+            new CallbackURLSaveTokenIdentifierExtractor(),
+            HTTPFactoryBuilder::responseFactory(),
+            $logger,
+            new SapiEmitter(),
             new SessionWriteCloseMiddleware(),
         );
     }
@@ -212,7 +240,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
             $logger,
-            CssViteAsset::fromFileName(self::getAssets(), 'themes/style.scss'),
+            new \Tuleap\Layout\JavascriptViteAsset(self::getAssets(), 'scripts/open-in-onlyoffice.ts'),
             Prometheus::instance(),
             \Tuleap\ServerHostname::HTTPSUrl(),
         );
@@ -245,7 +273,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                         new OnlyOfficeSaveDocumentTokenDAO(),
                         new SplitTokenVerificationStringHasher(),
                         new PrefixedSplitTokenSerializer(new PrefixOnlyOfficeDocumentSave()),
-                        new DateInterval('PT15M'),
+                        new DateInterval(self::DELAY_SAVE_TOKEN_EXPIRATION),
                     ),
                 ),
                 new \Lcobucci\JWT\JwtFacade(),

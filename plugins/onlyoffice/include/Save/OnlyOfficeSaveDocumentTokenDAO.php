@@ -58,4 +58,18 @@ class OnlyOfficeSaveDocumentTokenDAO extends DataAccessObject
     {
         $this->getDB()->run('DELETE FROM plugin_onlyoffice_save_document_token WHERE expiration_date <= ?', $current_timestamp);
     }
+
+    public function updateTokenExpirationDate(int $key_id, int $current_timestamp, int $expiration_date_timestamp): void
+    {
+        $this->getDB()->tryFlatTransaction(
+            function () use ($key_id, $current_timestamp, $expiration_date_timestamp): void {
+                $this->getDB()->run(
+                    'UPDATE plugin_onlyoffice_save_document_token SET expiration_date = ? WHERE id = ?',
+                    $expiration_date_timestamp,
+                    $key_id,
+                );
+                $this->deleteExpiredTokens($current_timestamp);
+            }
+        );
+    }
 }

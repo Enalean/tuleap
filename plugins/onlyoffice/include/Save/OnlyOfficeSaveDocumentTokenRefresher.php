@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+declare(strict_types=1);
 
-export default vite.defineAppConfig(
-    { plugin_name: "onlyoffice" },
-    {
-        build: {
-            rollupOptions: {
-                input: {
-                    "onlyoffice-editor": path.resolve(__dirname, "scripts/onlyoffice-editor.ts"),
-                    "open-in-onlyoffice": path.resolve(__dirname, "scripts/open-in-onlyoffice.ts"),
-                },
-            },
-        },
-    }
-);
+namespace Tuleap\OnlyOffice\Save;
+
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+
+interface OnlyOfficeSaveDocumentTokenRefresher
+{
+    /**
+     * @psalm-return Ok<null>|Err<Fault>
+     */
+    public function refreshToken(ConcealedString $raw_save_token, \DateTimeImmutable $now): Ok|Err;
+}
