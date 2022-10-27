@@ -175,6 +175,9 @@ msgstr "Statut"
 msgid "Synchronize"
 msgstr "Synchroniser"
 
+msgid "The GitLab group has been successfully unlinked."
+msgstr "Le groupe GitLab a été délié avec succès."
+
 msgid "The GitLab repository integration cannot be found."
 msgstr "L'intégration du dépôt GitLab n'a pas été trouvée."
 

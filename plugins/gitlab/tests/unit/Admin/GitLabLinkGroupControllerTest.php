@@ -20,6 +20,7 @@
 
 namespace Tuleap\Gitlab\Admin;
 
+use Feedback;
 use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPlugin;
@@ -37,13 +38,15 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ProjectByUnixUnixNameFactory;
 use Tuleap\Test\Stubs\TemplateRendererStub;
 
-final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitLabLinkGroupControllerTest extends TestCase
 {
     use GlobalLanguageMock;
 
@@ -63,6 +66,8 @@ final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Project $project;
     private ProjectByUnixNameFactory $project_factory;
     private RetrieveGroupLinkedToProjectStub $group_retriever;
+    private \HTTPRequest $request;
+    private LayoutInspector $inspector;
 
     protected function setUp(): void
     {
@@ -71,13 +76,16 @@ final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->template_renderer      = new TemplateRendererStub();
 
         $this->project = ProjectTestBuilder::aProject()
-            ->withId(self::PROJECT_ID)
-            ->withUnixName(self::PROJECT_UNIX_NAME)
-            ->withUsedService(GitPlugin::SERVICE_SHORTNAME)
-            ->build();
+                                           ->withId(self::PROJECT_ID)
+                                           ->withUnixName(self::PROJECT_UNIX_NAME)
+                                           ->withUsedService(GitPlugin::SERVICE_SHORTNAME)
+                                           ->build();
 
         $this->project_factory = ProjectByUnixUnixNameFactory::buildWith($this->project);
         $this->group_retriever = RetrieveGroupLinkedToProjectStub::withNoGroupLink();
+
+        $this->request   = new \HTTPRequest();
+        $this->inspector = new LayoutInspector();
     }
 
     private function process(): void
@@ -114,12 +122,11 @@ final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $current_user = UserTestBuilder::buildWithDefaults();
 
-        $request = new \HTTPRequest();
-        $request->setCurrentUser($current_user);
+        $this->request->setCurrentUser($current_user);
 
         $controller->process(
-            $request,
-            LayoutBuilder::build(),
+            $this->request,
+            LayoutBuilder::buildWithInspector($this->inspector),
             ['project_name' => self::PROJECT_UNIX_NAME]
         );
     }
@@ -175,5 +182,25 @@ final class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process();
 
         self::assertTrue($this->template_renderer->has_rendered_something);
+    }
+
+    public function testItDisplaysTheFeedback(): void
+    {
+        $this->request->set('unlink_group', '1');
+
+        $this->git_permission_manager->method('userIsGitAdmin')->willReturn(true);
+        $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
+
+        $this->process();
+
+        self::assertEquals(
+            [
+                [
+                    'level'   => Feedback::SUCCESS,
+                    'message' => 'The GitLab group has been successfully unlinked.',
+                ],
+            ],
+            $this->inspector->getFeedback()
+        );
     }
 }
