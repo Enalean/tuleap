@@ -22,7 +22,7 @@
         <gitlab-group-link-wizard v-bind:active_step_id="STEP_GITLAB_CONFIGURATION" />
 
         <div class="tlp-framed-vertically">
-            <h1>{{ $gettext("Associated group configuration") }}</h1>
+            <h2>{{ $gettext("Associated group configuration") }}</h2>
             <div
                 v-if="error_message"
                 class="tlp-alert-danger"
@@ -32,14 +32,14 @@
             </div>
             <section class="tlp-pane">
                 <form class="tlp-pane-container">
-                    <div class="tlp-pane-header">
-                        {{
-                            $gettext(
-                                "Please note that the following settings will be applied to all linked repositories and may be changed by each repository afterwards."
-                            )
-                        }}
-                    </div>
                     <section class="tlp-pane-section">
+                        <p>
+                            {{
+                                $gettext(
+                                    "Please note that the following settings will be applied to all linked repositories and may be changed by each repository afterwards."
+                                )
+                            }}
+                        </p>
                         <div class="tlp-form-element" v-bind:class="disabled_checkbox_class">
                             <label class="tlp-label tlp-checkbox">
                                 <input
@@ -50,7 +50,6 @@
                                 {{ $gettext("Allow artifact closure") }}
                             </label>
                             <p class="tlp-text-info">
-                                <i class="far fa-life-ring" aria-hidden="true"></i>
                                 {{
                                     $gettext(
                                         "If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository."
@@ -69,7 +68,6 @@
                                 {{ $gettext("Prefix the branch name") }}
                             </label>
                             <p class="tlp-text-info">
-                                <i class="far fa-life-ring" aria-hidden="true"></i>
                                 {{
                                     $gettext(
                                         "If set, this prefix will be automatically added to the branch name in the create GitLab branch action."

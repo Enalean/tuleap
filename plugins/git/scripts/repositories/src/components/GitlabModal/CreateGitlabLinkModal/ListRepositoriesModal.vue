@@ -130,7 +130,6 @@
                     <translate>Allow artifact closure</translate>
                 </label>
                 <p class="tlp-text-info">
-                    <i class="far fa-life-ring" aria-hidden="true"></i>
                     <translate>
                         If selected, artifacts of this project can be closed with GitLab commit
                         messages from the selected repository.

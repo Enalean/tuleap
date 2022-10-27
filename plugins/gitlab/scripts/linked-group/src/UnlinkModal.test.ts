@@ -20,7 +20,6 @@
 import {
     UNLINK_CONFIRM_ICON_SELECTOR,
     UNLINK_CONFIRM_SELECTOR,
-    UNLINK_ICON_CLASSNAME,
     UNLINK_MODAL_FEEDBACK_SELECTOR,
     UnlinkModal,
 } from "./UnlinkModal";
@@ -29,7 +28,12 @@ import * as fetch_result from "@tuleap/fetch-result";
 import { selectOrThrow } from "@tuleap/dom";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import { FEEDBACK_HIDDEN_CLASSNAME, SPIN_CLASSNAME, SPINNER_CLASSNAME } from "./classnames";
+import {
+    FEEDBACK_HIDDEN_CLASSNAME,
+    SPIN_CLASSNAME,
+    SPINNER_CLASSNAME,
+    HIDDEN_ICON_CLASSNAME,
+} from "./classnames";
 
 const GROUP_LINK_ID = 77;
 
@@ -57,7 +61,7 @@ describe(`UnlinkModal`, () => {
                           <div id="unlink-modal-alert" class="${FEEDBACK_HIDDEN_CLASSNAME}"></div>
                         </div>
                         <button type="button" id="unlink-confirm">
-                            <i id="unlink-icon" class="fa-solid fa-link-slash"></i>
+                            <i id="unlink-icon" class="fa-solid ${HIDDEN_ICON_CLASSNAME}"></i>
                         </button>
                     </div>`
             );
@@ -73,7 +77,7 @@ describe(`UnlinkModal`, () => {
         function assertLoadingState(is_loading: boolean): void {
             expect(icon.classList.contains(SPINNER_CLASSNAME)).toBe(is_loading);
             expect(icon.classList.contains(SPIN_CLASSNAME)).toBe(is_loading);
-            expect(icon.classList.contains(UNLINK_ICON_CLASSNAME)).toBe(!is_loading);
+            expect(icon.classList.contains(HIDDEN_ICON_CLASSNAME)).toBe(!is_loading);
             expect(button.disabled).toBe(is_loading);
         }
 

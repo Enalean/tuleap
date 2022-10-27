@@ -29,6 +29,7 @@ import {
     FORM_ELEMENT_DISABLED_CLASSNAME,
     SPIN_CLASSNAME,
     SPINNER_CLASSNAME,
+    HIDDEN_ICON_CLASSNAME,
 } from "./classnames";
 import type { GroupInformation } from "./GroupInformation";
 
@@ -42,8 +43,6 @@ export const EDIT_CONFIRM_SELECTOR = "#token-modal-confirm";
 export const EDIT_CONFIRM_ICON_SELECTOR = "#token-icon";
 export const FORM_ELEMENTS_SELECTOR = "[data-form-element]";
 export const INPUTS_SELECTOR = "input";
-
-export const EDIT_ICON_CLASSNAME = "fa-long-arrow-alt-right";
 
 type TokenModalType = {
     init(): void;
@@ -72,7 +71,7 @@ export const TokenModal = (
     const modal_instance = createModal(token_modal);
 
     const toggleLoadingState = (is_loading: boolean): void => {
-        confirm_icon.classList.toggle(EDIT_ICON_CLASSNAME, !is_loading);
+        confirm_icon.classList.toggle(HIDDEN_ICON_CLASSNAME, !is_loading);
         confirm_icon.classList.toggle(SPINNER_CLASSNAME, is_loading);
         confirm_icon.classList.toggle(SPIN_CLASSNAME, is_loading);
         confirm_button.disabled = is_loading;

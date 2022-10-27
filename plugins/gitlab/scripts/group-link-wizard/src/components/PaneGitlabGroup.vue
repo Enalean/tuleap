@@ -22,7 +22,7 @@
         <gitlab-group-link-wizard v-bind:active_step_id="STEP_GITLAB_GROUP" />
 
         <div class="tlp-framed-vertically">
-            <h1>{{ $gettext("GitLab group selection") }}</h1>
+            <h2>{{ $gettext("GitLab group selection") }}</h2>
             <section class="tlp-pane">
                 <form class="tlp-pane-container">
                     <section class="tlp-pane-section">
@@ -174,10 +174,11 @@ function onClickConfigureSelectedGroup(): void {
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 .tlp-table > tbody > tr > td.gitlab-group-avatar-container {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.25rem;
     padding: 0;
-    line-height: 1.2rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1.25rem;
     vertical-align: middle;
 }
 

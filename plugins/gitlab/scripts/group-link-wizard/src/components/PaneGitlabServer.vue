@@ -22,7 +22,7 @@
         <gitlab-group-link-wizard v-bind:active_step_id="STEP_GITLAB_SERVER" />
 
         <div class="tlp-framed-vertically">
-            <h1>{{ $gettext("GitLab server") }}</h1>
+            <h2>{{ $gettext("GitLab server") }}</h2>
             <div
                 v-if="error_message"
                 class="tlp-alert-danger"
