@@ -29,10 +29,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\NeverThrow\Fault;
 
-class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Compatible implements \Tuleap\Request\DispatchableWithRequestNoAuthz
+final class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Compatible implements \Tuleap\Request\DispatchableWithRequestNoAuthz
 {
     public function __construct(
+        private OnlyOfficeCallbackResponseParser $callback_response_parser,
         private JSONResponseBuilder $json_response_builder,
         private LoggerInterface $logger,
         EmitterInterface $emitter,
@@ -51,15 +53,26 @@ class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Compatib
 
         $this->logger->debug(var_export($save_token_information, true));
 
-        try {
-            $data = json_decode($request->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-            $this->logger->debug(var_export($data, true));
-        } catch (\JsonException $exception) {
-            $this->logger->error("Unable to parse data", ['exception' => $exception]);
-            return $this->buildErrorResponse();
-        }
+        $response_content = $request->getBody()->getContents();
+        $this->logger->debug($response_content);
 
-        return $this->buildSuccessResponse();
+        return $this->callback_response_parser
+            ->parseCallbackResponseContent($response_content)
+            ->match(
+                /**
+                 * @psalm-param OptionalValue<OnlyOfficeCallbackSaveResponseData> $save_response_data
+                 */
+                function (OptionalValue $save_response_data): ResponseInterface {
+                    $save_response_data->apply(
+                        fn (OnlyOfficeCallbackSaveResponseData $data) => $this->logger->debug(var_export($data, true))
+                    );
+                    return $this->buildSuccessResponse();
+                },
+                function (Fault $fault): ResponseInterface {
+                    Fault::writeToLogger($fault, $this->logger);
+                    return $this->buildErrorResponse();
+                }
+            );
     }
 
     private function buildSuccessResponse(): ResponseInterface
