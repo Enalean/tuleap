@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const SPINNER_CLASSNAME = "fa-circle-notch";
 export const SPIN_CLASSNAME = "fa-spin";
 export const FEEDBACK_HIDDEN_CLASSNAME = "gitlab-modal-feedback-hidden";
 export const FEEDBACK_SUCCESS_CLASSNAME = "tlp-alert-success";

@@ -20,8 +20,6 @@ import { selectOrThrow } from "@tuleap/dom";
 import {
     FEEDBACK_HIDDEN_CLASSNAME,
     FORM_ELEMENT_DISABLED_CLASSNAME,
-    SPIN_CLASSNAME,
-    SPINNER_CLASSNAME,
     HIDDEN_ICON_CLASSNAME,
 } from "./classnames";
 import { patchJSON } from "@tuleap/fetch-result";
@@ -97,8 +95,6 @@ export const EditConfigurationModal = (
 
     const toggleLoadingState = (is_loading: boolean): void => {
         confirm_edit_icon.classList.toggle(HIDDEN_ICON_CLASSNAME, !is_loading);
-        confirm_edit_icon.classList.toggle(SPINNER_CLASSNAME, is_loading);
-        confirm_edit_icon.classList.toggle(SPIN_CLASSNAME, is_loading);
         confirm_edit_button.disabled = is_loading;
         form_inputs.forEach((input) => {
             input.disabled = is_loading;
