@@ -18,7 +18,6 @@
  */
 
 $tlp-paragraph-line-height: 1.5rem;
-$tlp-h1-color: var(--tlp-dark-color);
 
 body {
     color: var(--tlp-typo-default-text-color);
@@ -42,7 +41,7 @@ h6 {
 
 h1 {
     margin: 0 0 var(--tlp-title-spacing);
-    color: $tlp-h1-color;
+    color: var(--tlp-dark-color);
     font-size: 36px;
     font-weight: 600;
     line-height: 40px;
@@ -53,7 +52,7 @@ h1 {
 }
 
 h2 {
-    color: var(--tlp-main-color);
+    color: var(--tlp-dark-color);
     font-size: 28px;
     font-weight: 400;
     line-height: 36px;
