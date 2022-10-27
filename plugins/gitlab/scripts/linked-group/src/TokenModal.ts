@@ -27,8 +27,6 @@ import { patchJSON } from "@tuleap/fetch-result";
 import {
     FEEDBACK_HIDDEN_CLASSNAME,
     FORM_ELEMENT_DISABLED_CLASSNAME,
-    SPIN_CLASSNAME,
-    SPINNER_CLASSNAME,
     HIDDEN_ICON_CLASSNAME,
 } from "./classnames";
 import type { GroupInformation } from "./GroupInformation";
@@ -72,8 +70,6 @@ export const TokenModal = (
 
     const toggleLoadingState = (is_loading: boolean): void => {
         confirm_icon.classList.toggle(HIDDEN_ICON_CLASSNAME, !is_loading);
-        confirm_icon.classList.toggle(SPINNER_CLASSNAME, is_loading);
-        confirm_icon.classList.toggle(SPIN_CLASSNAME, is_loading);
         confirm_button.disabled = is_loading;
         form_inputs.forEach((input) => {
             input.disabled = is_loading;

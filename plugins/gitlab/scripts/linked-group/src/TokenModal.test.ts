@@ -26,8 +26,6 @@ import type { GetText } from "@tuleap/gettext";
 import {
     FEEDBACK_HIDDEN_CLASSNAME,
     FORM_ELEMENT_DISABLED_CLASSNAME,
-    SPIN_CLASSNAME,
-    SPINNER_CLASSNAME,
     HIDDEN_ICON_CLASSNAME,
 } from "./classnames";
 import {
@@ -114,8 +112,6 @@ describe(`TokenModal`, () => {
 
         function assertLoadingState(is_loading: boolean): void {
             const icon_classes = button_icon.classList;
-            expect(icon_classes.contains(SPINNER_CLASSNAME)).toBe(is_loading);
-            expect(icon_classes.contains(SPIN_CLASSNAME)).toBe(is_loading);
             expect(icon_classes.contains(HIDDEN_ICON_CLASSNAME)).toBe(!is_loading);
             expect(confirm_button.disabled).toBe(is_loading);
             token_modal.querySelectorAll(FORM_ELEMENTS_SELECTOR).forEach((form_element) => {

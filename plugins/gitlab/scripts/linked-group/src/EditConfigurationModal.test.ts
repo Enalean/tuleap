@@ -41,8 +41,6 @@ import type { GetText } from "@tuleap/gettext";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import {
-    SPIN_CLASSNAME,
-    SPINNER_CLASSNAME,
     FEEDBACK_HIDDEN_CLASSNAME,
     FORM_ELEMENT_DISABLED_CLASSNAME,
     HIDDEN_ICON_CLASSNAME,
@@ -176,8 +174,6 @@ describe(`EditConfigurationModal`, () => {
 
         function assertLoadingState(is_loading: boolean): void {
             const icon_classes = button_icon.classList;
-            expect(icon_classes.contains(SPINNER_CLASSNAME)).toBe(is_loading);
-            expect(icon_classes.contains(SPIN_CLASSNAME)).toBe(is_loading);
             expect(icon_classes.contains(HIDDEN_ICON_CLASSNAME)).toBe(!is_loading);
             expect(confirm_button.disabled).toBe(is_loading);
             edit_modal.querySelectorAll(FORM_ELEMENTS_SELECTOR).forEach((form_element) => {
