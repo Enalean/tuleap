@@ -41,6 +41,7 @@ function MainController($element, $document, $state, gettextCatalog, SharedPrope
 
         SharedPropertiesService.setDateTimeFormat(document.body.dataset.dateTimeFormat);
         SharedPropertiesService.setUserLocale(document.body.dataset.userLocale);
+        SharedPropertiesService.setUserAvatarUrl(pullrequest_init_data.userAvatarUrl);
 
         useUiRouterInPullRequestTabLink();
     }

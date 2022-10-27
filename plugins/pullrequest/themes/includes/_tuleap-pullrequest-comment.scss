@@ -19,6 +19,11 @@
 
 $arrow-width: 6px;
 
+.pull-request-comment-component {
+    display: flex;
+    flex-direction: column;
+}
+
 .pull-request-comment {
     display: flex;
 
@@ -121,4 +126,28 @@ $arrow-width: 6px;
     justify-content: flex-end;
     padding: var(--tlp-small-spacing);
     border-top: 1px solid var(--tlp-neutral-light-color);
+}
+
+.pull-request-comment-footer-action-button:not(:first-child) {
+    margin: 0 0 0 var(--tlp-small-spacing);
+}
+
+.pull-request-comment-follow-ups {
+    display: flex;
+    flex-direction: column;
+}
+
+.pull-request-comment-follow-up {
+    margin: 0 0 0 60px;
+}
+
+.pull-request-comment-follow-up-content {
+    margin: var(--tlp-small-spacing) 0 0;
+}
+
+.pull-request-comment-reply-textarea {
+    width: 100%;
+    padding: var(--tlp-medium-spacing);
+    border: unset;
+    resize: none;
 }

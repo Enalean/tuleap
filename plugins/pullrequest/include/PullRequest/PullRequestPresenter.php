@@ -34,6 +34,7 @@ final class PullRequestPresenter
     public bool $is_merge_commit_allowed;
     public bool $allow_pullrequest_v2;
     public int $user_id;
+    public string $user_avatar_url;
     public string $relative_date_display;
     public string $language;
 
@@ -43,6 +44,7 @@ final class PullRequestPresenter
         $this->is_merge_commit_allowed            = $merge_setting->isMergeCommitAllowed();
         $this->allow_pullrequest_v2               = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY);
         $this->user_id                            = (int) $user->getId();
+        $this->user_avatar_url                    = $user->getAvatarUrl();
         $this->language                           = $user->getShortLocale();
         $this->relative_date_display              = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue();
     }

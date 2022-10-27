@@ -1,4 +1,5 @@
 import { RelativeDateHelper } from "../../helpers/date-helpers";
+import { PullRequestCurrentUserPresenterBuilder } from "../../comments/pullrequest-current-user-presenter-builder";
 
 export default TimelineController;
 
@@ -19,6 +20,9 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
             SharedPropertiesService.getDateTimeFormat(),
             SharedPropertiesService.getRelativeDateDisplay(),
             SharedPropertiesService.getUserLocale()
+        ),
+        current_user: PullRequestCurrentUserPresenterBuilder.build(
+            SharedPropertiesService.getUserAvatarUrl()
         ),
         addComment,
         $onInit: init,

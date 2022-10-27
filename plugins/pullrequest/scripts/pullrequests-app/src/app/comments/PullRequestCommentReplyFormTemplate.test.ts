@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { setCatalog } from "../gettext-catalog";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 import type { HostElement } from "./PullRequestComment";
-import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
+import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
 import { selectOrThrow } from "@tuleap/dom";
-import { setCatalog } from "../gettext-catalog";
 import { PullRequestCommentControllerStub } from "../../../tests/stubs/PullRequestCommentControllerStub";
+import { BuildCurrentPullRequestUserPresenterStub } from "../../../tests/stubs/BuildCurrentPullRequestUserPresenterStub";
 
-describe("PullRequestCommentFooterTemplate", () => {
+describe("PullRequestCommentReplyFormTemplate", () => {
     let target: ShadowRoot;
 
     beforeEach(() => {
@@ -35,46 +36,45 @@ describe("PullRequestCommentFooterTemplate", () => {
             .createElement("div") as unknown as ShadowRoot;
     });
 
-    it.each([
-        ["an inline comment", PullRequestCommentPresenterStub.buildInlineCommentOutdated()],
-        ["a global comment", PullRequestCommentPresenterStub.buildGlobalComment()],
-    ])(`Given %s, Then it should display a footer`, (expectation, comment) => {
-        const host = { comment } as unknown as HostElement;
-        const render = getCommentFooter(host);
-
-        render(host, target);
-
-        const footer = selectOrThrow(target, "[data-test=pull-request-comment-footer]");
-
-        expect(footer).not.toBeNull();
-    });
-
-    it(`Given a pull-request event comment, Then it should not display a footer`, () => {
+    it(`Should render the comment reply form when it is toggled`, () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
+            currentUser: BuildCurrentPullRequestUserPresenterStub.withDefault(),
+            is_reply_form_displayed: true,
         } as unknown as HostElement;
-        const render = getCommentFooter(host);
-
+        const render = getReplyFormTemplate(host);
         render(host, target);
 
-        const footer = target.querySelector("[data-test=pullrequest-comment-footer]");
-
-        expect(footer).toBeNull();
+        expect(target.querySelector("[data-test=pull-request-comment-reply-form]")).not.toBeNull();
     });
 
-    it("When the [Reply] button is clicked, then it should show the reply form", () => {
+    it(`Should NOT render the comment reply form when it is NOT toggled`, () => {
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
+            currentUser: BuildCurrentPullRequestUserPresenterStub.withDefault(),
+            is_reply_form_displayed: false,
+        } as unknown as HostElement;
+        const render = getReplyFormTemplate(host);
+        render(host, target);
+
+        expect(target.querySelector("[data-test=pull-request-comment-reply-form]")).toBeNull();
+    });
+
+    it("Should hide the form when the [Cancel] button is clicked", () => {
         const controller = PullRequestCommentControllerStub();
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            currentUser: BuildCurrentPullRequestUserPresenterStub.withDefault(),
+            is_reply_form_displayed: true,
             controller,
         } as unknown as HostElement;
 
-        const render = getCommentFooter(host);
+        const render = getReplyFormTemplate(host);
 
         render(host, target);
 
-        selectOrThrow(target, "[data-test=button-reply-to-comment]").click();
+        selectOrThrow(target, "[data-test=button-cancel-reply]").click();
 
-        expect(controller.showReplyForm).toHaveBeenCalledTimes(1);
+        expect(controller.hideReplyForm).toHaveBeenCalledTimes(1);
     });
 });
