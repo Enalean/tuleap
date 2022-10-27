@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const REFRESH_CALLBACK_URL_TOKEN_IN_MN = 5;
 const ONLYOFFICE_API_SCRIPT_PATH = "web-apps/apps/api/documents/api.js";
 
 type OnlyOfficeDocumentType = "word" | "cell" | "slide";
@@ -105,6 +106,10 @@ function getDocumentType(token_payload: {
     return "word";
 }
 
+function refreshCallbackURLToken(window: Window, callback_url: string): void {
+    window.parent.postMessage(callback_url, window.origin);
+}
+
 export async function main(document: Document, window: Window): Promise<void> {
     const document_server_base_url = document.body.dataset.documentServerUrl;
     if (!document_server_base_url) {
@@ -128,6 +133,14 @@ export async function main(document: Document, window: Window): Promise<void> {
             documentType: getDocumentType(token_payload),
             token: config_token,
         });
+
+        const refresh_interval_in_ms = (REFRESH_CALLBACK_URL_TOKEN_IN_MN * 60 - 2) * 1000;
+        setInterval(
+            refreshCallbackURLToken,
+            refresh_interval_in_ms,
+            window,
+            token_payload.editorConfig.callbackUrl
+        );
     } catch (e) {
         document.body.innerText = "Error while loading ONLYOFFICE editor content";
         throw e;

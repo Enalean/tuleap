@@ -35,19 +35,20 @@ class OnlyOfficeSaveDocumentTokenVerifier
     ) {
     }
 
-    public function getDocumentSaveTokenData(SplitToken $download_token, \DateTimeImmutable $current_time): ?SaveDocumentTokenData
+    public function getDocumentSaveTokenData(SplitToken $save_token, \DateTimeImmutable $current_time): ?SaveDocumentTokenData
     {
-        $row = $this->dao->searchTokenVerificationAndAssociatedData($download_token->getID(), $current_time->getTimestamp());
+        $row           = $this->dao->searchTokenVerificationAndAssociatedData($save_token->getID(), $current_time->getTimestamp());
+        $save_token_id = $save_token->getID();
         if ($row === null) {
-            $this->logger->debug(sprintf('Download document token #%d not found (possibly expired)', $download_token->getID()));
+            $this->logger->debug(sprintf('Save document token #%d not found (possibly expired)', $save_token_id));
             return null;
         }
 
-        if (! $this->hasher->verifyHash($download_token->getVerificationString(), $row['verifier'])) {
-            $this->logger->debug(sprintf('Save document token #%d invalid', $download_token->getID()));
+        if (! $this->hasher->verifyHash($save_token->getVerificationString(), $row['verifier'])) {
+            $this->logger->debug(sprintf('Save document token #%d invalid', $save_token_id));
             return null;
         }
 
-        return new SaveDocumentTokenData($row['user_id'], $row['document_id'], $row['version_id']);
+        return new SaveDocumentTokenData($save_token_id, $row['user_id'], $row['document_id'], $row['version_id']);
     }
 }

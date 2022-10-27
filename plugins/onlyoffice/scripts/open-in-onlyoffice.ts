@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import "./style.scss";
 
-export default vite.defineAppConfig(
-    { plugin_name: "onlyoffice" },
-    {
-        build: {
-            rollupOptions: {
-                input: {
-                    "onlyoffice-editor": path.resolve(__dirname, "scripts/onlyoffice-editor.ts"),
-                    "open-in-onlyoffice": path.resolve(__dirname, "scripts/open-in-onlyoffice.ts"),
-                },
-            },
-        },
+function processRefreshTokenMessage(event: MessageEvent): void {
+    if (event.origin !== window.origin || event.source === event.target) {
+        return;
     }
-);
+    fetch("/onlyoffice/document_save_refresh_token", { method: "POST", body: event.data });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("message", processRefreshTokenMessage);
+});

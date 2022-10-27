@@ -58,7 +58,7 @@ final class OnlyOfficeSaveDocumentTokenVerifierTest extends TestCase
 
         $token_data = $this->token_verifier->getDocumentSaveTokenData($save_token, new \DateTimeImmutable('@20'));
 
-        self::assertEquals(new SaveDocumentTokenData(102, 11, 2), $token_data);
+        self::assertEquals(new SaveDocumentTokenData(1, 102, 11, 2), $token_data);
     }
 
     public function testDoesNotRetrieveDataWhenTokenIsNotFound(): void

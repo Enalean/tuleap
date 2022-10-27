@@ -61,4 +61,24 @@ final class OnlyOfficeSaveDocumentTokenDAOTest extends TestCase
 
         self::assertNull($this->dao->searchTokenVerificationAndAssociatedData($key_id, $current_time));
     }
+
+    public function testCanUpdateExpirationTimeOfAToken(): void
+    {
+        $key_id = $this->dao->create(102, 11, 96, 'verification_string', 10);
+        self::assertEquals(10, $this->getExpirationDateOfAToken($key_id));
+
+        $this->dao->updateTokenExpirationDate($key_id, 1, 20);
+        self::assertEquals(20, $this->getExpirationDateOfAToken($key_id));
+
+        $this->dao->updateTokenExpirationDate($key_id, 15, 10);
+        self::assertFalse($this->getExpirationDateOfAToken($key_id));
+    }
+
+    private function getExpirationDateOfAToken(int $key_id): int|false
+    {
+        return DBFactory::getMainTuleapDBConnection()->getDB()->cell(
+            'SELECT expiration_date FROM plugin_onlyoffice_save_document_token WHERE id=?',
+            $key_id
+        );
+    }
 }

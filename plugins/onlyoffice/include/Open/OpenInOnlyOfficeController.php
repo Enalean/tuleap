@@ -28,10 +28,10 @@ use Psr\Log\LogLevel;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetGeneric;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresenter;
 use Tuleap\Layout\HeaderConfigurationBuilder;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Request\NotFoundException;
@@ -44,7 +44,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
         private ProvideOnlyOfficeDocument $only_office_document_provider,
         private \TemplateRenderer $template_renderer,
         private LoggerInterface $logger,
-        private CssAssetGeneric $css_asset,
+        private JavascriptAssetGeneric $js_asset,
         private Prometheus $prometheus,
         private string $base_url,
     ) {
@@ -68,7 +68,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
                         $document->project->getIconUnicodeCodepoint()
                     ) . ' ' . $document->project->getPublicName();
 
-                    $layout->addCssAsset($this->css_asset);
+                    $layout->addJavascriptAsset($this->js_asset);
                     $layout->header(
                         HeaderConfigurationBuilder::get(dgettext('tuleap-onlyoffice', 'ONLYOFFICE'))
                             ->inProjectWithoutSidebar(
