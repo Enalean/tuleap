@@ -9,6 +9,10 @@ let
       sha256 = "sha256-v4IvrIsSmMI0Bf1i5uAGw87gq2w+1n+CtaDGYrADIXo=";
     };
 
+    patches = [
+      ./mediawiki/drop-myisam.patch
+    ];
+
     dontPatchShebangs = true;
 
     installPhase = ''
