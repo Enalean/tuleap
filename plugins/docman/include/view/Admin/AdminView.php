@@ -122,9 +122,9 @@ abstract class AdminView
         $template = $this->isBurningParrotCompatiblePage() ? 'admin-header-bp' : 'admin-header-fp';
 
         $renderer->renderToPage($template, [
-            'title'      => dgettext('tuleap-docman', 'Administration'),
-            'tabs'       => $this->getTabs($project, $default_url),
-            'extra_tabs' => $this->getExtraTabs($default_url, $project),
+            'title' => dgettext('tuleap-docman', 'Administration'),
+            'tabs' => $this->getTabs($project, $default_url),
+            'extra_tabs' => $this->getExtraTabs($default_url),
         ]);
 
         echo '<div class="docman-content">';
@@ -199,6 +199,7 @@ abstract class AdminView
                 SearchView::getTabDescription(),
                 SearchView::getUrl($project),
                 $this->getIdentifier() === SearchView::IDENTIFIER,
+                SearchView::IDENTIFIER
             ),
             new AdminTabPresenter(
                 \Docman_View_Admin_Permissions::getTabTitle(),
@@ -209,6 +210,7 @@ abstract class AdminView
                     false,
                 ),
                 $this->getIdentifier() === \Docman_View_Admin_Permissions::IDENTIFIER,
+                \Docman_View_Admin_Permissions::IDENTIFIER
             ),
             new AdminTabPresenter(
                 \Docman_View_Admin_Metadata::getTabTitle(),
@@ -226,8 +228,9 @@ abstract class AdminView
                         \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
                         \Docman_View_Admin_MetadataImport::IDENTIFIER,
                     ],
-                    true
+                    true,
                 ),
+                \Docman_View_Admin_Metadata::IDENTIFIER
             ),
             new AdminTabPresenter(
                 \Docman_View_Admin_Obsolete::getTabTitle(),
@@ -238,6 +241,7 @@ abstract class AdminView
                     false,
                 ),
                 $this->getIdentifier() === \Docman_View_Admin_Obsolete::IDENTIFIER,
+                \Docman_View_Admin_Obsolete::IDENTIFIER
             ),
             new AdminTabPresenter(
                 \Docman_View_Admin_LockInfos::getTabTitle(),
@@ -248,6 +252,7 @@ abstract class AdminView
                     false,
                 ),
                 $this->getIdentifier() === \Docman_View_Admin_LockInfos::IDENTIFIER,
+                \Docman_View_Admin_LockInfos::IDENTIFIER
             ),
         ];
     }
@@ -255,7 +260,7 @@ abstract class AdminView
     /**
      * @return array{is_active: bool, tabs: array{array{description: string, title: string, url: string}}}
      */
-    private function getExtraTabs(string $default_url, \Project $project): array
+    private function getExtraTabs(string $default_url): array
     {
         $tab = [
             [

@@ -197,6 +197,26 @@ Cypress.Commands.add("switchProjectVisibility", (visibility: string): void => {
     cy.get("[data-test=project-details-submit-button]").click();
 });
 
+Cypress.Commands.add(
+    "createNewIssueProject",
+    (project_short_name: string, project_public_name: string): void => {
+        cy.visit("/project/new");
+        cy.get(
+            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
+        ).click();
+        cy.get("[data-test=project-registration-next-button]").click();
+
+        cy.get("[data-test=new-project-name]").type(project_public_name);
+        cy.get("[data-test=project-shortname-slugified-section]").click();
+        cy.get("[data-test=new-project-shortname]").type("{selectall}" + project_short_name);
+        cy.get("[data-test=approve_tos]").click();
+        cy.get("[data-test=project-registration-next-button]").click();
+        cy.get("[data-test=start-working]").click({
+            timeout: 20000,
+        });
+    }
+);
+
 const MAX_ATTEMPTS = 10;
 
 Cypress.Commands.add(
