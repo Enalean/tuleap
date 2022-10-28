@@ -138,6 +138,15 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         $logger = self::getLogger();
 
         return new OnlyOfficeSaveController(
+            new \Tuleap\OnlyOffice\Save\OnlyOfficeCallbackResponseJWTParser(
+                new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder()),
+                new \Lcobucci\JWT\Validation\Validator(),
+                new \Lcobucci\JWT\Validation\Constraint\LooseValidAt(
+                    \Lcobucci\Clock\SystemClock::fromSystemTimezone(),
+                    new DateInterval('PT2M'),
+                ),
+                new \Lcobucci\JWT\Signer\Hmac\Sha256(),
+            ),
             new JSONResponseBuilder(
                 HTTPFactoryBuilder::responseFactory(),
                 HTTPFactoryBuilder::streamFactory(),
