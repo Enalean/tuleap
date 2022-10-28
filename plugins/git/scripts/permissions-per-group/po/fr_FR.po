@@ -12,8 +12,8 @@ msgstr ""
 "X-Generator: Poedit 2.1.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "%s has no permission for any repository in this project"
-msgstr "%s n'a de permission pour aucun dépôt de ce projet"
+msgid "%{ user_group } has no permission for any repository in this project"
+msgstr "%{ user_group } n'a de permission pour aucun dépôt de ce projet"
 
 msgid "Branch"
 msgstr "Branche"

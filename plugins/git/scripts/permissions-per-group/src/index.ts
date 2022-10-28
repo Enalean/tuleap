@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import GitPermissions from "./src/GitPermissions.vue";
+import GitPermissions from "./GitPermissions.vue";
 import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -32,8 +32,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         Vue,
         (locale: string) =>
             import(
-                /* webpackChunkName: "permission-per-group-po-" */ "./po/" +
-                    getPOFileFromLocale(locale)
+                /* webpackChunkName: "permission-per-group-po-" */ `../po/${getPOFileFromLocale(
+                    locale
+                )}`
             )
     );
 

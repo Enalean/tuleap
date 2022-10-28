@@ -810,10 +810,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
-    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $script = $this->getScriptAssetByName('permission-per-group.js');
-        $event->addJavascript($script->getFileURL());
+        $event->addJavascript($this->getScriptAssetByName('permission-per-group.js'));
     }
 
     /**

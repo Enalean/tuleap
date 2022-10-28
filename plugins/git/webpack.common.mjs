@@ -32,7 +32,6 @@ const output = webpack_configurator.configureOutput(
 
 const webpack_config_for_vue = {
     entry: {
-        "permission-per-group": "./scripts/permissions-per-group/index.ts",
         "repositories-list": "./scripts/repositories/index.ts",
         repository: "./scripts/repository/src/index.ts",
         "line-highlight": "./scripts/repository/file/line-highlight.ts",

@@ -19,7 +19,7 @@
 
 export interface RepositoryFineGrainedPermissions {
     name: string;
-    has_fined_grained_permissions: boolean;
+    has_fined_grained_permissions: true;
     fine_grained_permission: FineGrainedPermission[];
     url: string;
     repository_id: number;
@@ -28,7 +28,7 @@ export interface RepositoryFineGrainedPermissions {
 
 export interface RepositorySimplePermissions {
     name: string;
-    has_fined_grained_permissions: boolean;
+    has_fined_grained_permissions: false;
     url: string;
     repository_id: number;
     readers: PermissionGroup[];

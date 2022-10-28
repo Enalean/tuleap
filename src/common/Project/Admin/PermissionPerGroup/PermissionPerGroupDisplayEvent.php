@@ -22,24 +22,19 @@
 namespace Tuleap\Project\Admin\PermissionsPerGroup;
 
 use Tuleap\Event\Dispatchable;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
-class PermissionPerGroupDisplayEvent implements Dispatchable
+final class PermissionPerGroupDisplayEvent implements Dispatchable
 {
     public const NAME = 'permissionPerGroupDisplayEvent';
 
-    /**
-     * @var BurningParrotTheme
-     */
-    private $theme;
-
-    public function __construct(BurningParrotTheme $theme)
+    public function __construct(private BurningParrotTheme $theme)
     {
-        $this->theme = $theme;
     }
 
-    public function addJavascript($path)
+    public function addJavascript(JavascriptAssetGeneric $asset): void
     {
-        $this->theme->includeFooterJavascriptFile($path);
+        $this->theme->addJavascriptAsset($asset);
     }
 }

@@ -17,13 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineJestConfiguration } from "@tuleap/build-system-configurator";
-import { env } from "process";
+import common from "./webpack.common.mjs";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 
-env.DISABLE_TS_TYPECHECK = "true";
-
-const jest_base_config = defineJestConfiguration();
-export default {
-    ...jest_base_config,
-    displayName: "git-permissions-per-group",
-};
+export default webpack_configurator.extendProdConfiguration(common);

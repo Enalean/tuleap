@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GitPermissions from "./GitPermissions.vue";
@@ -28,12 +27,8 @@ import localVueForTest from "./helper/local-vue-for-test";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("GitPermissions", () => {
-    const store_options = {};
-
     function instantiateComponent(): Wrapper<GitPermissions> {
-        const store = createStoreMock(store_options);
         return shallowMount(GitPermissions, {
-            mocks: { $store: store },
             localVue: localVueForTest,
         });
     }

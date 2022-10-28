@@ -4,7 +4,6 @@
         "module": "es2020"
     },
     "include": [
-        "scripts/permissions-per-group",
         "scripts/repositories",
         "scripts/repository",
         "scripts/siteadmin"

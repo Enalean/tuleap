@@ -566,9 +566,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         }
     }
 
-    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $event->addJavascript($this->getAssets()->getFileURL('tracker-permissions-per-group.js'));
+        $event->addJavascript(
+            new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'tracker-permissions-per-group.js')
+        );
     }
 
     /**
