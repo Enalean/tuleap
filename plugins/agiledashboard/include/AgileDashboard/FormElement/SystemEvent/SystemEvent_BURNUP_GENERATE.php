@@ -124,17 +124,25 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
             return false;
         }
 
-        if (! isset($burnup_information['duration'])) {
+        $burnup_period = null;
+        if (isset($burnup_information['end_date'])) {
             $burnup_period = TimePeriodWithoutWeekEnd::buildFromEndDate(
                 $burnup_information['start_date'],
                 $burnup_information['end_date'],
                 $this->logger
             );
-        } else {
+        } elseif (isset($burnup_information['duration'])) {
             $burnup_period = TimePeriodWithoutWeekEnd::buildFromDuration(
                 $burnup_information['start_date'],
                 $burnup_information['duration']
             );
+        }
+
+        if ($burnup_period === null) {
+            $warning = "Skipped cache for artifact #" . $artifact_id . ". Not able to compute burnup period.";
+            $this->warning($warning);
+            $this->logger->debug($warning);
+            return false;
         }
 
         $yesterday = new DateTime();
@@ -146,7 +154,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
 
         $planning_infos = $this->planning_dao->searchByMilestoneTrackerId($artifact->getTrackerId());
         if (! $planning_infos) {
-            $warning = "Artifact artifact #" . $artifact_id . "does not belong to a planning";
+            $warning = "Artifact artifact #" . $artifact_id . " does not belong to a planning";
             $this->warning($warning);
             $this->logger->debug($warning);
             return false;
@@ -180,7 +188,7 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
 
             $this->logger->debug("Caching subelements value $closed_subelements/$total_subelements for artifact #" . $burnup_information['id']);
             $this->count_elements_cache_dao->saveCachedFieldValueAtTimestampForSubelements(
-                (int) $burnup_information['id'],
+                $burnup_information['id'],
                 (int) $worked_day,
                 (int) $total_subelements,
                 (int) $closed_subelements
