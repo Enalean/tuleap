@@ -46,7 +46,11 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $pull_request->shouldReceive('getId')->andReturn(12);
         $user = \Mockery::mock(PFUser::class);
         $user->shouldReceive('getId')->andReturn(102);
-        $representation = new PullRequestInlineCommentPOSTRepresentation();
+        $representation                 = new PullRequestInlineCommentPOSTRepresentation();
+        $representation->file_path      = "/tmp";
+        $representation->content        = "stuff";
+        $representation->position       = 2;
+        $representation->unidiff_offset = 10;
 
         $dao->shouldReceive('insert')->once()->andReturn(47);
         $reference_manager->shouldReceive('extractCrossRef')->once();

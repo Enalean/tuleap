@@ -70,7 +70,8 @@ class InlineCommentCreator
             $post_date,
             $comment_data->unidiff_offset,
             $comment_data->content,
-            $comment_data->position
+            $comment_data->position,
+            (int) $comment_data->parent_id
         );
 
         $this->reference_manager->extractCrossRef(
@@ -78,7 +79,7 @@ class InlineCommentCreator
             $pull_request_id,
             pullrequestPlugin::REFERENCE_NATURE,
             $project_id,
-            $user->getId(),
+            (int) $user->getId(),
             pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
 

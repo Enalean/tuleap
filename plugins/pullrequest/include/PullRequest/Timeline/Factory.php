@@ -86,14 +86,15 @@ class Factory
         return new PaginatedTimeline($timeline, $total_events);
     }
 
-    private function buildComment($row)
+    private function buildComment(array $row): Comment
     {
         return new Comment(
             $row['id'],
             $row['pull_request_id'],
             $row['user_id'],
             $row['post_date'],
-            $row['content']
+            $row['content'],
+            $row['parent_id']
         );
     }
 }

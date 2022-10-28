@@ -72,7 +72,8 @@ final class PullRequestNewInlineCommentNotificationTest extends \Tuleap\Test\PHP
                 'path/to/file',
                 2,
                 'Foo comment',
-                false
+                false,
+                0
             ),
             $code_context_extractor
         );

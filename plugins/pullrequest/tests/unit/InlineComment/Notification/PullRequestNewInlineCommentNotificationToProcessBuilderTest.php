@@ -196,7 +196,8 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
             'file_/path',
             2,
             'My comment',
-            false
+            false,
+            0
         );
     }
 }

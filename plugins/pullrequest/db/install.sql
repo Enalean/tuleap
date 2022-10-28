@@ -24,17 +24,20 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_git_reference (
     UNIQUE (repository_dest_id, reference_id)
 );
 
-CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments (
-    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments
+(
+    id              INT(11) PRIMARY KEY AUTO_INCREMENT,
     pull_request_id INT(11) NOT NULL,
-    user_id INT(11) NOT NULL,
-    post_date INT(11) NOT NULL,
-    content TEXT,
-    INDEX idx_pr_pull_request_id(pull_request_id)
+    user_id         INT(11) NOT NULL,
+    post_date       INT(11) NOT NULL,
+    content         TEXT,
+    parent_id       INT(11) NOT NULL,
+    INDEX idx_pr_pull_request_id (pull_request_id)
 );
 
-CREATE TABLE IF NOT EXISTS plugin_pullrequest_inline_comments (
-    id              INT(11)     PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS plugin_pullrequest_inline_comments
+(
+    id              INT(11) PRIMARY KEY AUTO_INCREMENT,
     pull_request_id INT(11)     NOT NULL,
     user_id         INT(11)     NOT NULL,
     post_date       INT(11)     NOT NULL,
@@ -42,7 +45,8 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_inline_comments (
     unidiff_offset  INT(6)      NOT NULL,
     content         TEXT        NOT NULL,
     is_outdated     BOOL        NOT NULL DEFAULT false,
-    position        VARCHAR(10) NOT NULL DEFAULT 'right'
+    position        VARCHAR(10) NOT NULL DEFAULT 'right',
+    parent_id       INT(11)     NOT NULL
 );
 CREATE TABLE IF NOT EXISTS plugin_pullrequest_timeline_event (
     id INT(11) PRIMARY KEY AUTO_INCREMENT,

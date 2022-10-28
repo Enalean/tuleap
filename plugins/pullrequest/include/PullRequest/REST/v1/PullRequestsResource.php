@@ -88,6 +88,7 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
+use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
@@ -99,6 +100,8 @@ use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestCreatorChecker;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForComment;
+use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
@@ -142,8 +145,7 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var Tuleap\PullRequest\Timeline\Factory */
     private $timeline_factory;
 
-    /** @var Tuleap\PullRequest\Comment\Factory */
-    private $comment_factory;
+    private CommentFactory $comment_factory;
 
     /** @var PaginatedCommentsRepresentationsBuilder */
     private $paginated_timeline_representation_builder;
@@ -763,6 +765,9 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(400, 'Please provide a valid position, either left or right');
         }
 
+        $parent_id_validator = new ParentIdValidatorForInlineComment(new InlineCommentRetriever(new InlineCommentDao()));
+        $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
+
         $post_date = time();
 
         $this->inline_comment_creator->insert(
@@ -1157,8 +1162,11 @@ class PullRequestsResource extends AuthenticatedResource
             $git_repository->getProject()
         );
 
-        $current_time   = time();
-        $comment        = new Comment(0, $id, $user->getId(), $current_time, $comment_data->content);
+        $parent_id_validator = new ParentIdValidatorForComment($this->comment_factory);
+        $current_time        = time();
+        $comment             = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id);
+
+        $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
         $new_comment_id = $this->comment_factory->save($comment, $user, $project_id);
 
         $user_representation = MinimalUserRepresentation::build($user);
