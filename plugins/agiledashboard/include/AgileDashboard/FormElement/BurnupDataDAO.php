@@ -91,7 +91,10 @@ class BurnupDataDAO extends DataAccessObject
         return $this->getDB()->run($sql);
     }
 
-    public function getBurnupInformationBasedOnDuration(int $artifact_id, int $start_date_field_id, int $duration_field_id): array
+    /**
+     * @psalm-return array{id:int, start_date:int, duration:int}|null
+     */
+    public function getBurnupInformationBasedOnDuration(int $artifact_id, int $start_date_field_id, int $duration_field_id): ?array
     {
         $sql = "SELECT
                   tracker_artifact.id,
@@ -129,7 +132,10 @@ class BurnupDataDAO extends DataAccessObject
         return $this->getDB()->row($sql, $start_date_field_id, $duration_field_id, $artifact_id);
     }
 
-    public function getBurnupInformationBasedOnEndDate(int $artifact_id, int $start_date_field_id, int $end_date_field_id): array
+    /**
+     * @psalm-return array{id:int, start_date:int, end_date:int}|null
+     */
+    public function getBurnupInformationBasedOnEndDate(int $artifact_id, int $start_date_field_id, int $end_date_field_id): ?array
     {
         $sql = "SELECT
                   tracker_artifact.id,
