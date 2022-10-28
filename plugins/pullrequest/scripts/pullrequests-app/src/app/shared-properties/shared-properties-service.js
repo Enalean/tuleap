@@ -8,6 +8,7 @@ function SharedPropertiesService() {
         repository_id: null,
         pull_request: null,
         user_id: null,
+        user_avatar_url: "",
         nb_pull_request_badge: null,
         is_there_at_least_one_pull_request: null,
         is_merge_commit_allowed: null,
@@ -26,6 +27,8 @@ function SharedPropertiesService() {
         setPullRequest,
         getUserId,
         setUserId,
+        getUserAvatarUrl,
+        setUserAvatarUrl,
         getNbPullRequestBadge,
         getDateTimeFormat,
         getUserLocale,
@@ -128,5 +131,13 @@ function SharedPropertiesService() {
 
     function setRelativeDateDisplay(relative_date_display) {
         property.relative_date_display = relative_date_display;
+    }
+
+    function getUserAvatarUrl() {
+        return property.user_avatar_url;
+    }
+
+    function setUserAvatarUrl(user_avatar_url) {
+        property.user_avatar_url = user_avatar_url;
     }
 }

@@ -186,7 +186,7 @@
     border-color: transparent var(--tlp-main-color) transparent transparent;
 }
 
-.inline-comment-element > .pull-request-comment {
+.inline-comment-element > .pull-request-comment-component {
     $horizontal-padding: 12px;
 
     padding: var(--tlp-medium-spacing) $horizontal-padding;

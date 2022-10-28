@@ -10,9 +10,10 @@
 <div class="pullrequest-timeline-comment-container" ng-repeat="comment in timeline_controller.timeline track by $index">
     <tuleap-pullrequest-comment
         ce-one-way
-        comment="comment"
         class="timeline-comment-element"
+        comment="comment"
         relative-date-helper="timeline_controller.relative_date_helper"
+        current-user="timeline_controller.current_user"
     ></tuleap-pullrequest-comment>
 </div>
 

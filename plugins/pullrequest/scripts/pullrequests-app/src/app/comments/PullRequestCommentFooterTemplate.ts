@@ -27,11 +27,17 @@ export const getCommentFooter = (host: PullRequestComment): UpdateFunction<PullR
         return html``;
     }
 
+    const onClickToggleReplyForm = (host: PullRequestComment): void => {
+        host.controller.showReplyForm(host);
+    };
+
     return html`
         <div class="pull-request-comment-footer" data-test="pull-request-comment-footer">
             <button
                 type="button"
-                class="tlp-button-small tlp-button-primary tlp-button-large tlp-button-outline disabled"
+                class="pull-request-comment-footer-action-button tlp-button-small tlp-button-primary tlp-button-outline"
+                onclick="${onClickToggleReplyForm}"
+                data-test="button-reply-to-comment"
             >
                 ${getReplyToCommentButtonText()}
             </button>
