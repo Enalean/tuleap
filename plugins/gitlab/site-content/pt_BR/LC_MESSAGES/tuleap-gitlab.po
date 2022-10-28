@@ -157,6 +157,9 @@ msgstr ""
 msgid "Synchronize"
 msgstr ""
 
+msgid "The GitLab group has been successfully unlinked."
+msgstr ""
+
 msgid "The GitLab repository integration cannot be found."
 msgstr ""
 

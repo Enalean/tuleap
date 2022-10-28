@@ -58,7 +58,11 @@ export const UnlinkModal = (
 
         toggleLoadingState(true);
         del(`/api/gitlab_groups/${group_id}`).match(
-            () => loc.reload(),
+            () => {
+                const redirect = new URL(loc.href);
+                redirect.searchParams.append("unlink_group", "1");
+                loc.replace(redirect);
+            },
             (fault) => {
                 const alert_block = selectOrThrow(modal_feedback, UNLINK_MODAL_ALERT_SELECTOR);
                 modal_feedback.classList.remove(FEEDBACK_HIDDEN_CLASSNAME);

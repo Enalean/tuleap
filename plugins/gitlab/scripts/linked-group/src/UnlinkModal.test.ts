@@ -37,7 +37,8 @@ describe(`UnlinkModal`, () => {
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         loc = {
-            reload: jest.fn(),
+            replace: jest.fn(),
+            href: "https://gitlab.example.com/plugins/git/project_101/administration/gitlab/",
         } as unknown as Location;
     });
 
@@ -77,7 +78,7 @@ describe(`UnlinkModal`, () => {
         it(`will call the REST route, reload the page
             and will keep the button disabled with a spinner
             to prevent user from triggering delete again while the page is reloading`, async () => {
-            const reload = jest.spyOn(loc, "reload");
+            const replace = jest.spyOn(loc, "replace");
             const result = okAsync({} as Response);
             const delSpy = jest.spyOn(fetch_result, "del").mockReturnValue(result);
 
@@ -89,13 +90,19 @@ describe(`UnlinkModal`, () => {
 
             expect(delSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_LINK_ID}`);
             assertLoadingState(true);
-            expect(reload).toHaveBeenCalled();
+
+            const expected_url = new URL(
+                "https://gitlab.example.com/plugins/git/project_101/administration/gitlab/"
+            );
+            expected_url.searchParams.append("unlink_group", "1");
+
+            expect(replace).toHaveBeenCalledWith(expected_url);
         });
 
         it(`and there is a REST error,
             it will show an error message in the modal feedback`, async () => {
             const error_message = "Forbidden";
-            const reload = jest.spyOn(loc, "reload");
+            const replace = jest.spyOn(loc, "replace");
             const result = errAsync(Fault.fromMessage(error_message));
             jest.spyOn(fetch_result, "del").mockReturnValue(result);
 
@@ -105,7 +112,7 @@ describe(`UnlinkModal`, () => {
 
             await result;
 
-            expect(reload).not.toHaveBeenCalled();
+            expect(replace).not.toHaveBeenCalled();
             assertLoadingState(false);
             expect(feedback.classList.contains(FEEDBACK_HIDDEN_CLASSNAME)).toBe(false);
             expect(feedback.textContent).toContain(error_message);

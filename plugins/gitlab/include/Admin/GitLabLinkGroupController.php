@@ -95,6 +95,14 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
             $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);
             $this->renderer->renderToPage('linked-group-information', $presenter);
         } else {
+            $is_a_group_has_been_unlinked = $request->get('unlink_group');
+            if ($is_a_group_has_been_unlinked === "1") {
+                $layout->addFeedback(
+                    \Feedback::SUCCESS,
+                    dgettext('tuleap-gitlab', 'The GitLab group has been successfully unlinked.')
+                );
+            }
+
             $layout->addJavascriptAsset($this->wizard_assets);
             $this->header_renderer->renderServiceAdministrationHeader($request, $user, $project);
             $this->renderer->renderToPage(
