@@ -31,39 +31,6 @@ sub ldap_connect {
     #
     #############################
 
-    # Store the map between ldap id and ldap login
-    my %ldap_id_array;
-
-    sub ldap_get_ldap_id_from_login {
-        my ($ldapLogin) = @_;
-
-        if ( !$ldap_id_array{$ldapLogin} ) {
-
-            #print "LDAP lookup\n";
-            my $result = $ldap->search(
-                filter => "$sys_ldap_uid=$ldapLogin",
-                base   => "$sys_ldap_dn",
-                attrs  => [$sys_ldap_uid, $sys_ldap_cn, $sys_ldap_mail, $sys_ldap_eduid]
-            );
-            if ( $result->count() == 1 ) {
-                my @entries = $result->entries;
-                $ldap_id_array{$ldapLogin} =
-                  $entries[0]->get_value("$sys_ldap_eduid");
-            }
-            elsif ( $result->count() > 1 ) {
-                print STDERR
-"There cannot be more than one user with the same ldap login ($ldapLogin).\n";
-            }
-            else {
-
-                # User not found
-                $ldap_id_array{$ldapLogin} = -1;
-            }
-        }
-
-        return $ldap_id_array{$ldapLogin};
-    }
-
     sub ldap_account_create_auto {
         my ($ldapId) = @_;
 
