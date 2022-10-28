@@ -23,6 +23,7 @@ import { initGettextSync } from "@tuleap/gettext";
 import { UploadEnabledDetector } from "./UploadEnabledDetector";
 import { Initializer } from "./Initializer";
 import { HelpBlockFactory } from "./HelpBlockFactory";
+import { disablePasteOfImages } from "./paste-image-disabler";
 
 export class UploadImageFormFactory {
     constructor(doc, locale) {
@@ -34,6 +35,10 @@ export class UploadImageFormFactory {
         const detector = new UploadEnabledDetector(this.doc, textarea);
         const initializer = new Initializer(this.doc, this.gettext_provider, detector);
         initializer.init(ckeditor_instance, textarea);
+    }
+
+    forbidImageUpload(ckeditor_instance) {
+        disablePasteOfImages(ckeditor_instance, this.gettext_provider);
     }
 
     createHelpBlock(textarea) {

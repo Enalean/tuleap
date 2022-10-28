@@ -21,12 +21,12 @@ import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import {
     buildFileUploadHandler,
-    isThereAnImageWithDataURI,
     MaxSizeUploadExceededError,
     UploadError,
 } from "@tuleap/ckeditor-image-upload";
 import { disableFormSubmit, enableFormSubmit } from "./form-adapter";
 import { addInstance } from "./consistent-uploaded-files-before-submit-checker";
+import { disablePasteOfImages } from "./paste-image-disabler";
 
 export class Initializer {
     constructor(doc, gettext_provider, detector) {
@@ -37,7 +37,7 @@ export class Initializer {
 
     init(ckeditor_instance, textarea) {
         if (!this.detector.isUploadEnabled()) {
-            this.disablePasteOfImages(ckeditor_instance);
+            disablePasteOfImages(ckeditor_instance, this.gettext_provider);
             return;
         }
 
@@ -81,18 +81,5 @@ export class Initializer {
 
         ckeditor_instance.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
         addInstance(form, ckeditor_instance, field_name);
-    }
-
-    disablePasteOfImages(ckeditor_instance) {
-        ckeditor_instance.on("paste", (event) => {
-            if (isThereAnImageWithDataURI(event.data.dataValue)) {
-                event.data.dataValue = "";
-                event.cancel();
-                ckeditor_instance.showNotification(
-                    this.gettext_provider.gettext("You are not allowed to paste images here"),
-                    "warning"
-                );
-            }
-        });
     }
 }

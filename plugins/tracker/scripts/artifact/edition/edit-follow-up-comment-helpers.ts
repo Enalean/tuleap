@@ -23,15 +23,10 @@ import {
     TEXT_FORMAT_COMMONMARK,
 } from "@tuleap/plugin-tracker-constants";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
-import type {
-    RichTextEditorFactory,
-    RichTextEditorOptions,
-} from "@tuleap/plugin-tracker-rich-text-editor";
 
 const DEFAULT_LOCALE = "en_US";
 const FORMAT_HIDDEN_INPUT_ID_PREFIX = "tracker_artifact_followup_comment_body_format_";
 const COMMENT_BODY_SELECTOR = ".tracker_artifact_followup_comment_body";
-const EDIT_FOLLOWUP_NAME_PREFIX = "comment_format";
 
 export function getFormatOrDefault(doc: Document, changeset_id: string): TextFieldFormat {
     const input_id = FORMAT_HIDDEN_INPUT_ID_PREFIX + changeset_id;
@@ -67,23 +62,6 @@ export function getProjectId(followup_body: HTMLElement): string {
         throw new Error("Could not find the data-project-id attribute from the followup content");
     }
     return project_id;
-}
-
-export function createEditFollowupEditor(
-    editor_factory: RichTextEditorFactory,
-    textarea: HTMLElement,
-    changeset_id: string,
-    format: TextFieldFormat
-): void {
-    if (!(textarea instanceof HTMLTextAreaElement)) {
-        return;
-    }
-    const options: RichTextEditorOptions = {
-        format_selectbox_id: changeset_id,
-        format_selectbox_name: EDIT_FOLLOWUP_NAME_PREFIX + changeset_id,
-        format_selectbox_value: format,
-    };
-    editor_factory.createRichTextEditor(textarea, options);
 }
 
 export function getLocaleFromBody(doc: Document): string {
