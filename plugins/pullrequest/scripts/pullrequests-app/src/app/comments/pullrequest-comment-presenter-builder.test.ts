@@ -23,25 +23,21 @@ import type {
     PullRequestData,
     TimelineEventPayload,
     State,
-    AngularMomentType,
 } from "./pullrequest-comment-presenter-builder";
 import type { PullRequestUser } from "./PullRequestComment";
 import { setCatalog } from "../gettext-catalog";
 
 describe("pullRequestCommentPresenterBuilder", () => {
-    const $state: State = { href: jest.fn() },
-        moment: AngularMomentType = () => ({
-            fromNow: () => "1 second ago",
-        });
+    const $state: State = { href: jest.fn() };
 
     beforeEach(() => {
         setCatalog({ getString: (msgid: string) => msgid });
     });
 
     it("Builds a presenter from timeline payload for comment", () => {
-        const builder = PullRequestCommentPresenterBuilder($state, moment);
+        const builder = PullRequestCommentPresenterBuilder($state);
         const event: TimelineEventPayload = {
-            post_date: "2022-10-21 11:59:00",
+            post_date: "2020/07/13 16:16",
             file_url: "my_url",
             content: "my comment\nwith line return",
             file_path: "",
@@ -54,13 +50,13 @@ describe("pullRequestCommentPresenterBuilder", () => {
 
         expect(result.content).toBe("my comment<br/>with line return");
         expect(result.is_inline_comment).toBe(false);
-        expect(result.post_date).toBe("1 second ago");
+        expect(result.post_date).toBe("2020/07/13 16:16");
     });
 
     it("Builds a presenter from timeline payload for inline comments", () => {
-        const builder = PullRequestCommentPresenterBuilder($state, moment);
+        const builder = PullRequestCommentPresenterBuilder($state);
         const event: TimelineEventPayload = {
-            post_date: "2022-10-21 11:59:00",
+            post_date: "2020/07/13 16:16",
             file_url: "my_url",
             content: "my comment\nwith line return",
             file_path: "",
@@ -73,13 +69,13 @@ describe("pullRequestCommentPresenterBuilder", () => {
 
         expect(result.content).toBe("my comment<br/>with line return");
         expect(result.is_inline_comment).toBe(true);
-        expect(result.post_date).toBe("1 second ago");
+        expect(result.post_date).toBe("2020/07/13 16:16");
     });
 
     it("Builds a presenter from timeline payload for timeline events", () => {
-        const builder = PullRequestCommentPresenterBuilder($state, moment);
+        const builder = PullRequestCommentPresenterBuilder($state);
         const event: TimelineEventPayload = {
-            post_date: "2022-10-21 11:59:00",
+            post_date: "2020/07/13 16:16",
             file_url: "my_url",
             content: "",
             file_path: "",
@@ -93,14 +89,14 @@ describe("pullRequestCommentPresenterBuilder", () => {
 
         expect(result.content).toBe("Has updated the pull request.");
         expect(result.is_inline_comment).toBe(false);
-        expect(result.post_date).toBe("1 second ago");
+        expect(result.post_date).toBe("2020/07/13 16:16");
     });
 
     it("Builds a presenter from comment payload", () => {
-        const builder = PullRequestCommentPresenterBuilder($state, moment);
+        const builder = PullRequestCommentPresenterBuilder($state);
 
         const event: FileDiffCommentPayload = {
-            post_date: "2022-10-21 11:59:00",
+            post_date: "2020/07/13 16:16",
             content: "my comment",
             user: {} as PullRequestUser,
         };

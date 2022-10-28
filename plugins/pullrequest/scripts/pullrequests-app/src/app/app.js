@@ -20,7 +20,6 @@
 import angular from "angular";
 import ui_router from "@uirouter/angularjs";
 import ng_sanitize from "angular-sanitize";
-import angular_moment from "angular-moment";
 
 import "angular-gettext";
 import translations from "../../po/fr_FR.po";
@@ -86,7 +85,6 @@ import "./comments/PullRequestComment.ts";
 
 export default angular
     .module("tuleap.pull-request", [
-        angular_moment,
         "gettext",
         angular_tlp,
         angular_custom_elements_module,

@@ -1,3 +1,5 @@
+import { RelativeDateHelper } from "../../helpers/date-helpers";
+
 export default TimelineController;
 
 TimelineController.$inject = ["SharedPropertiesService", "TimelineService", "TooltipService"];
@@ -13,6 +15,11 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
             content: "",
             user_id: SharedPropertiesService.getUserId(),
         },
+        relative_date_helper: RelativeDateHelper(
+            SharedPropertiesService.getDateTimeFormat(),
+            SharedPropertiesService.getRelativeDateDisplay(),
+            SharedPropertiesService.getUserLocale()
+        ),
         addComment,
         $onInit: init,
     });

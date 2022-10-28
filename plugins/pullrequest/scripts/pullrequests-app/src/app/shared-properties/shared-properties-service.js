@@ -12,6 +12,9 @@ function SharedPropertiesService() {
         is_there_at_least_one_pull_request: null,
         is_merge_commit_allowed: null,
         is_vue_overview_shown: false,
+        date_time_format: "",
+        user_locale: "",
+        relative_date_display: "",
     };
 
     return {
@@ -24,6 +27,9 @@ function SharedPropertiesService() {
         getUserId,
         setUserId,
         getNbPullRequestBadge,
+        getDateTimeFormat,
+        getUserLocale,
+        getRelativeDateDisplay,
         setNbPullRequestBadge,
         isThereAtLeastOnePullRequest,
         setIsThereAtLeastOnePullRequest,
@@ -31,6 +37,9 @@ function SharedPropertiesService() {
         setIsMergeCommitAllowed,
         isVueOverviewShown,
         setIsVueOverviewShown,
+        setDateTimeFormat,
+        setUserLocale,
+        setRelativeDateDisplay,
     };
 
     function whenReady() {
@@ -69,6 +78,18 @@ function SharedPropertiesService() {
         return property.nb_pull_request_badge;
     }
 
+    function getDateTimeFormat() {
+        return property.date_time_format;
+    }
+
+    function getUserLocale() {
+        return property.user_locale;
+    }
+
+    function getRelativeDateDisplay() {
+        return property.relative_date_display;
+    }
+
     function setNbPullRequestBadge(nb_pull_request_badge) {
         property.nb_pull_request_badge = nb_pull_request_badge;
     }
@@ -95,5 +116,17 @@ function SharedPropertiesService() {
 
     function setIsVueOverviewShown(is_vue_overview_shown) {
         property.is_vue_overview_shown = is_vue_overview_shown;
+    }
+
+    function setDateTimeFormat(date_time_format) {
+        property.date_time_format = date_time_format;
+    }
+
+    function setUserLocale(user_locale) {
+        property.user_locale = user_locale;
+    }
+
+    function setRelativeDateDisplay(relative_date_display) {
+        property.relative_date_display = relative_date_display;
     }
 }

@@ -20,6 +20,7 @@
 import CodeMirror from "codemirror";
 import { addComment } from "./comments-state.js";
 import { PullRequestCommentPresenterBuilder } from "../comments/pullrequest-comment-presenter-builder";
+import { RelativeDateHelper } from "../helpers/date-helpers";
 
 export default CodeMirrorHelperService;
 
@@ -32,7 +33,7 @@ CodeMirrorHelperService.$inject = [
     "FileDiffRestService",
     "TooltipService",
     "gettextCatalog",
-    "moment",
+    "SharedPropertiesService",
 ];
 
 function CodeMirrorHelperService(
@@ -44,7 +45,7 @@ function CodeMirrorHelperService(
     FileDiffRestService,
     TooltipService,
     gettextCatalog,
-    moment
+    SharedPropertiesService
 ) {
     const self = this;
     Object.assign(self, {
@@ -59,6 +60,11 @@ function CodeMirrorHelperService(
         const inline_comment_element = document.createElement("tuleap-pullrequest-comment");
         inline_comment_element.comment = comment;
         inline_comment_element.setAttribute("class", "inline-comment-element");
+        inline_comment_element.relativeDateHelper = RelativeDateHelper(
+            SharedPropertiesService.getDateTimeFormat(),
+            SharedPropertiesService.getRelativeDateDisplay(),
+            SharedPropertiesService.getUserLocale()
+        );
 
         const options = getWidgetPlacementOptions(code_mirror, line_number);
 
@@ -78,10 +84,8 @@ function CodeMirrorHelperService(
         child_scope.submitCallback = (comment_text) => {
             return postComment(unidiff_offset, comment_text, file_path, pull_request_id, position)
                 .then((comment) => {
-                    const comment_presenter = PullRequestCommentPresenterBuilder(
-                        $state,
-                        moment
-                    ).fromFileDiffComment(comment);
+                    const comment_presenter =
+                        PullRequestCommentPresenterBuilder($state).fromFileDiffComment(comment);
                     addComment(comment_presenter);
                     const comment_widget = self.displayInlineComment(
                         code_mirror,

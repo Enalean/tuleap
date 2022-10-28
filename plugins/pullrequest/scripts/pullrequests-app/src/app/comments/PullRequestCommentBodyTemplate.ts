@@ -61,7 +61,19 @@ export const getCommentBody = (
     <div class="pull-request-comment-body">
         <div class="pull-request-comment-content-info">
             <a href="${host.comment.user.user_url}">${host.comment.user.display_name}</a>,
-            <span class="tlp-text-muted">${host.comment.post_date}</span>
+            <tlp-relative-date
+                date="${host.comment.post_date}"
+                absolute-date="${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(
+                    host.comment.post_date
+                )}"
+                preference="${host.relativeDateHelper.getRelativeDatePreference()}"
+                locale="${host.relativeDateHelper.getUserLocale()}"
+                placement="${host.relativeDateHelper.getRelativeDatePlacement()}"
+            >
+                ${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(
+                    host.comment.post_date
+                )}
+            </tlp-relative-date>
         </div>
 
         ${displayFileNameIfNeeded(host)}

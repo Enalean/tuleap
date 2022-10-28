@@ -22,6 +22,8 @@ import { getCommentBody } from "./PullRequestCommentBodyTemplate";
 import type { HostElement } from "./PullRequestComment";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 import { setCatalog } from "../gettext-catalog";
+import "@tuleap/tlp-relative-date";
+import { RelativeDateHelperStub } from "../../../tests/stubs/RelativeDateHelperStub";
 
 describe("PullRequestCommentBodyTemplate", () => {
     let target: ShadowRoot;
@@ -38,6 +40,7 @@ describe("PullRequestCommentBodyTemplate", () => {
         Then it should display the file name on which the comment has been written with a link to it.`, () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildInlineComment(),
+            relativeDateHelper: RelativeDateHelperStub,
         } as unknown as HostElement;
         const render = getCommentBody(host);
 
@@ -57,6 +60,7 @@ describe("PullRequestCommentBodyTemplate", () => {
         Then it should display only the file name on which the comment has been written with no link to it.`, () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildInlineCommentOutdated(),
+            relativeDateHelper: RelativeDateHelperStub,
         } as unknown as HostElement;
         const render = getCommentBody(host);
 
@@ -78,7 +82,10 @@ describe("PullRequestCommentBodyTemplate", () => {
             PullRequestCommentPresenterStub.buildPullRequestEventComment(),
         ],
     ])(`Given %s, Then it should not display a file name`, (expectation, comment) => {
-        const host = { comment } as unknown as HostElement;
+        const host = {
+            comment,
+            relativeDateHelper: RelativeDateHelperStub,
+        } as unknown as HostElement;
         const render = getCommentBody(host);
 
         render(host, target);

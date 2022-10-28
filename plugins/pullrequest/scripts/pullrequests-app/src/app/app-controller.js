@@ -5,18 +5,10 @@ MainController.$inject = [
     "$document",
     "$state",
     "gettextCatalog",
-    "amMoment",
     "SharedPropertiesService",
 ];
 
-function MainController(
-    $element,
-    $document,
-    $state,
-    gettextCatalog,
-    amMoment,
-    SharedPropertiesService
-) {
+function MainController($element, $document, $state, gettextCatalog, SharedPropertiesService) {
     this.$onInit = init;
 
     function init() {
@@ -44,12 +36,17 @@ function MainController(
         const is_pullrequest_v2_enabled = pullrequest_init_data.allowPullrequestV2;
         SharedPropertiesService.setIsVueOverviewShown(is_pullrequest_v2_enabled);
 
+        const relative_date_display = pullrequest_init_data.relativeDateDisplay;
+        SharedPropertiesService.setRelativeDateDisplay(relative_date_display);
+
+        SharedPropertiesService.setDateTimeFormat(document.body.dataset.dateTimeFormat);
+        SharedPropertiesService.setUserLocale(document.body.dataset.userLocale);
+
         useUiRouterInPullRequestTabLink();
     }
 
     function initLocale(language) {
         gettextCatalog.setCurrentLanguage(language);
-        amMoment.changeLocale(language);
     }
 
     function useUiRouterInPullRequestTabLink() {

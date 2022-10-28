@@ -31,7 +31,17 @@
                     </span>
                     <span class="pull-request-commits-list-commit-metadata-authored-date">
                         <i class="fas fa-calendar-alt pull-request-commits-list-commit-metadata-authored-icon"></i>
-                        {{ ::commit.committed_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
+                        <tlp-relative-date
+                            date="{{ commit.committed_date }}"
+                            absolute-date="{{ commits.relative_date_helper.getFormatDateUsingPreferredUserFormat(commit.committed_date) }}"
+                            preference="{{ commits.relative_date_helper.getRelativeDatePreference() }}"
+                            locale="{{ commits.relative_date_helper.getUserLocale() }}"
+                            placement="{{ commits.relative_date_helper.getRelativeDatePlacement() }}"
+                        >
+                            {{
+                                commits.relative_date_helper.getFormatDateUsingPreferredUserFormat(commit.committed_date)
+                            }}
+                        </tlp-relative-date>
                     </span>
                 </div>
             </div>
