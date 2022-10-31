@@ -65,11 +65,15 @@ function TimelineService(TimelineRestService, gettextCatalog, $state) {
         });
     }
 
-    function addComment(pullRequest, timeline, newComment) {
+    function addComment(pullRequest, timeline, comment_replies_store, newComment) {
         return TimelineRestService.addComment(pullRequest.id, newComment).then(function (event) {
-            timeline.push(
-                PullRequestCommentPresenter.fromTimelineEvent($state, event, pullRequest)
+            const comment_presenter = PullRequestCommentPresenter.fromTimelineEvent(
+                $state,
+                event,
+                pullRequest
             );
+            timeline.push(comment_presenter);
+            comment_replies_store.addRootComment(comment_presenter);
         });
     }
 }

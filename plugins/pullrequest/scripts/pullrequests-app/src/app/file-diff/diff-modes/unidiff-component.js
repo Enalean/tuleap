@@ -18,7 +18,7 @@
  */
 
 import CodeMirror from "codemirror";
-import { getComments } from "../comments-state.js";
+import { getStore } from "../comments-store.ts";
 import { getCollapsibleCodeSections } from "../../code-collapse/code-collapse-service.js";
 
 import "./modes.js";
@@ -73,20 +73,25 @@ function controller(
         $scope.$broadcast("code_mirror_initialized");
         displayUnidiff(unidiff_codemirror, self.diff.lines);
 
-        const collapsible_sections = getCollapsibleCodeSections(self.diff.lines, getComments());
+        const collapsible_sections = getCollapsibleCodeSections(
+            self.diff.lines,
+            getStore().getAllRootComments()
+        );
 
         CodeMirrorHelperService.collapseCommonSectionsUnidiff(
             unidiff_codemirror,
             collapsible_sections
         );
 
-        getComments().forEach((comment) => {
-            CodeMirrorHelperService.displayInlineComment(
-                unidiff_codemirror,
-                comment,
-                comment.unidiff_offset - 1
-            );
-        });
+        getStore()
+            .getAllRootComments()
+            .forEach((comment) => {
+                CodeMirrorHelperService.displayInlineComment(
+                    unidiff_codemirror,
+                    comment,
+                    comment.unidiff_offset - 1
+                );
+            });
 
         unidiff_codemirror.on("gutterClick", addNewComment);
 

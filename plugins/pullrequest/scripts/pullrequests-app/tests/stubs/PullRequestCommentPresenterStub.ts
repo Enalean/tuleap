@@ -35,6 +35,8 @@ const comment_presenter_base = {
     content: "Please rebase",
     is_inline_comment: true,
     is_outdated: false,
+    parent_id: 0,
+    type: TYPE_GLOBAL_COMMENT,
 };
 
 export const PullRequestCommentPresenterStub = {
@@ -67,5 +69,10 @@ export const PullRequestCommentPresenterStub = {
         ...comment_presenter_base,
         is_inline_comment: false,
         type: TYPE_EVENT_COMMENT,
+    }),
+
+    buildWithData: (data: Partial<PullRequestCommentPresenter>): PullRequestCommentPresenter => ({
+        ...comment_presenter_base,
+        ...data,
     }),
 };

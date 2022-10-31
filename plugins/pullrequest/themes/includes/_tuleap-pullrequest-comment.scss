@@ -18,6 +18,7 @@
  */
 
 $arrow-width: 6px;
+$follow-up-base-margin-left: 60px;
 
 .pull-request-comment-component {
     display: flex;
@@ -137,8 +138,8 @@ $arrow-width: 6px;
     flex-direction: column;
 }
 
-.pull-request-comment-follow-up {
-    margin: 0 0 0 60px;
+.pull-request-comment-reply-form {
+    margin: 0 0 0 $follow-up-base-margin-left;
 }
 
 .pull-request-comment-follow-up-content {
@@ -150,4 +151,17 @@ $arrow-width: 6px;
     padding: var(--tlp-medium-spacing);
     border: unset;
     resize: none;
+}
+
+.pull-request-comment-follow-up {
+    $tlp-avatar-width: 20px;
+
+    margin: 0 0 0 calc($follow-up-base-margin-left + $tlp-avatar-width);
+    border-left: 2px solid var(--tlp-main-color);
+
+    > .pull-request-comment-follow-up-content {
+        position: relative;
+        left: -$tlp-avatar-width;
+        width: calc(100% + $tlp-avatar-width);
+    }
 }

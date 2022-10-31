@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ControlPullRequestComment } from "../../src/app/comments/PullRequestCommentController";
+import type { StorePullRequestCommentReplies } from "../comments/PullRequestCommentRepliesStore";
+import { PullRequestCommentRepliesStore } from "../comments/PullRequestCommentRepliesStore";
+import type { PullRequestCommentPresenter } from "../comments/PullRequestCommentPresenter";
 
-export const PullRequestCommentControllerStub = (): ControlPullRequestComment => ({
-    hideReplyForm: jest.fn(),
-    showReplyForm: jest.fn(),
-    displayReplies: jest.fn(),
-});
+let state_comments: StorePullRequestCommentReplies;
+
+export function initCommentsStore(comments: readonly PullRequestCommentPresenter[]): void {
+    state_comments = PullRequestCommentRepliesStore(comments);
+}
+
+export function getStore(): StorePullRequestCommentReplies {
+    return state_comments;
+}

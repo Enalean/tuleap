@@ -20,10 +20,14 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { PullRequestComment } from "./PullRequestComment";
+import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { getReplyToCommentButtonText } from "../gettext-catalog";
 
-export const getCommentFooter = (host: PullRequestComment): UpdateFunction<PullRequestComment> => {
-    if (host.comment.type === "timeline-event") {
+export const buildFooterForComment = (
+    host: PullRequestComment,
+    comment: PullRequestCommentPresenter
+): UpdateFunction<PullRequestComment> => {
+    if (comment.type === "timeline-event") {
         return html``;
     }
 
@@ -44,3 +48,6 @@ export const getCommentFooter = (host: PullRequestComment): UpdateFunction<PullR
         </div>
     `;
 };
+
+export const getCommentFooter = (host: PullRequestComment): UpdateFunction<PullRequestComment> =>
+    buildFooterForComment(host, host.comment);

@@ -50,6 +50,7 @@ export interface FileDiffCommentPayload {
     readonly post_date: string;
     readonly unidiff_offset: number;
     readonly position: "left" | "right";
+    readonly parent_id: number;
 }
 
 export interface TimelineEventPayload {
@@ -63,6 +64,7 @@ export interface TimelineEventPayload {
     readonly event_type?: string;
     readonly is_outdated: boolean;
     readonly user: PullRequestUser;
+    readonly parent_id: number;
 }
 
 interface PullRequestCommentFile {
@@ -79,6 +81,7 @@ export interface PullRequestCommentPresenter {
     readonly is_inline_comment: boolean;
     readonly post_date: string;
     readonly file?: PullRequestCommentFile;
+    readonly parent_id: number;
 }
 
 interface PullRequestInlineCommentPresenter extends PullRequestCommentPresenter {
@@ -97,6 +100,7 @@ export const PullRequestCommentPresenter = {
         is_inline_comment: true,
         unidiff_offset: comment.unidiff_offset,
         position: comment.position,
+        parent_id: comment.parent_id,
     }),
     fromTimelineEvent: (
         $state: State,
@@ -124,6 +128,7 @@ export const PullRequestCommentPresenter = {
             is_outdated: event.is_outdated,
             is_inline_comment,
             post_date: event.post_date,
+            parent_id: event.parent_id,
             ...file,
         };
     },

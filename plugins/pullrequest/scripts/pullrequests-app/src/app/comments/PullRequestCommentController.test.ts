@@ -22,14 +22,17 @@ import { PullRequestCommentController } from "./PullRequestCommentController";
 import { setCatalog } from "../gettext-catalog";
 import { FocusTextReplyToCommentAreaStub } from "../../../tests/stubs/FocusTextReplyToCommentAreaStub";
 import type { FocusReplyToCommentTextArea } from "./PullRequestCommentReplyFormFocusHelper";
+import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
+import { StorePullRequestCommentRepliesStub } from "../../../tests/stubs/StorePullRequestCommentRepliesStub";
 
 describe("PullRequestCommentController", () => {
-    let focus_helper: FocusReplyToCommentTextArea;
+    let focus_helper: FocusReplyToCommentTextArea, replies_store: StorePullRequestCommentReplies;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
 
         focus_helper = FocusTextReplyToCommentAreaStub();
+        replies_store = StorePullRequestCommentRepliesStub.withNoReplies();
     });
 
     it("should show the reply to comment form and sets the focus on the textarea", () => {
@@ -37,7 +40,7 @@ describe("PullRequestCommentController", () => {
             is_reply_form_displayed: false,
         } as unknown as HostElement;
 
-        PullRequestCommentController(focus_helper).showReplyForm(host);
+        PullRequestCommentController(focus_helper, replies_store).showReplyForm(host);
 
         expect(host.is_reply_form_displayed).toBe(true);
         expect(focus_helper.focusFormReplyToCommentTextArea).toHaveBeenCalledTimes(1);
@@ -48,8 +51,21 @@ describe("PullRequestCommentController", () => {
             is_reply_form_displayed: true,
         } as unknown as PullRequestComment;
 
-        PullRequestCommentController(focus_helper).hideReplyForm(host);
+        PullRequestCommentController(focus_helper, replies_store).hideReplyForm(host);
 
         expect(host.is_reply_form_displayed).toBe(false);
+    });
+
+    it("should display the replies associated to the comment", () => {
+        const host = {
+            replies: [],
+        } as unknown as PullRequestComment;
+
+        PullRequestCommentController(
+            focus_helper,
+            StorePullRequestCommentRepliesStub.withReplies()
+        ).displayReplies(host);
+
+        expect(host.replies).toHaveLength(3);
     });
 });

@@ -19,14 +19,17 @@
 
 import type { PullRequestComment } from "./PullRequestComment";
 import type { FocusReplyToCommentTextArea } from "./PullRequestCommentReplyFormFocusHelper";
+import type { StorePullRequestCommentReplies } from "./PullRequestCommentRepliesStore";
 
 export interface ControlPullRequestComment {
     showReplyForm: (host: PullRequestComment) => void;
     hideReplyForm: (host: PullRequestComment) => void;
+    displayReplies: (host: PullRequestComment) => void;
 }
 
 export const PullRequestCommentController = (
-    focus_helper: FocusReplyToCommentTextArea
+    focus_helper: FocusReplyToCommentTextArea,
+    replies_store: StorePullRequestCommentReplies
 ): ControlPullRequestComment => ({
     showReplyForm: (host: PullRequestComment): void => {
         host.is_reply_form_displayed = true;
@@ -35,5 +38,8 @@ export const PullRequestCommentController = (
     },
     hideReplyForm: (host: PullRequestComment): void => {
         host.is_reply_form_displayed = false;
+    },
+    displayReplies: (host: PullRequestComment): void => {
+        host.replies = replies_store.getCommentReplies(host.comment);
     },
 });
