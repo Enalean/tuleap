@@ -19,7 +19,15 @@
   -->
 
 <template>
-    <tbody>
+    <tbody v-if="is_embedded">
+        <history-versions-content-row-for-embedded-file
+            v-for="version in versions"
+            v-bind:key="version.id"
+            v-bind:item="item"
+            v-bind:version="version"
+        />
+    </tbody>
+    <tbody v-else>
         <history-versions-content-row
             v-for="version in versions"
             v-bind:key="version.id"
@@ -32,11 +40,14 @@
 </template>
 
 <script setup lang="ts">
-import type { FileHistory, Item } from "../../type";
+import type { Embedded, FileHistory, ItemFile } from "../../type";
 import HistoryVersionsContentRow from "./HistoryVersionsContentRow.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { isEmbedded } from "../../helpers/type-check-helper";
+import HistoryVersionsContentRowForEmbeddedFile from "./HistoryVersionsContentRowForEmbeddedFile.vue";
 
-defineProps<{ item: Item; versions: readonly FileHistory[] }>();
+const props = defineProps<{ item: ItemFile | Embedded; versions: readonly FileHistory[] }>();
 
+const is_embedded = computed((): boolean => isEmbedded(props.item));
 const location = ref(window.location);
 </script>

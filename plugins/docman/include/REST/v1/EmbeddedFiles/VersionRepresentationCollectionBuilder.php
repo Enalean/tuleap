@@ -1,0 +1,101 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
+
+use Tuleap\Docman\ApprovalTable\TableFactoryForFileBuilder;
+use Tuleap\Docman\Version\VersionDao;
+use Tuleap\Docman\View\DocmanViewURLBuilder;
+use Tuleap\User\RetrieveUserById;
+
+final class VersionRepresentationCollectionBuilder
+{
+    public function __construct(
+        private VersionDao $dao,
+        private RetrieveUserById $user_retriever,
+        private TableFactoryForFileBuilder $table_factory_builder,
+    ) {
+    }
+
+    public function buildVersionsCollection(
+        \Docman_EmbeddedFile $item,
+        int $limit,
+        int $offset,
+    ): PaginatedEmbeddedFileVersionRepresentationCollection {
+        $table_factory = $this->table_factory_builder->getTableFactoryForFile($item);
+
+        $dar      = $this->dao->searchByItemId($item->getId(), $offset, $limit);
+        $versions = [];
+        foreach ($dar as $row) {
+            $version = new \Docman_Version($row);
+
+            $table         = $table_factory->getTableFromVersion($version);
+            $approval_href = $table
+                ? DocmanViewURLBuilder::buildActionUrl(
+                    $item,
+                    ['default_url' => '/plugins/docman/?'],
+                    [
+                        'group_id' => $item->getGroupId(),
+                        'action'   => 'details',
+                        'section'  => 'approval',
+                        'id'       => $item->getId(),
+                        'version'  => $version->getNumber(),
+                    ],
+                    true,
+                )
+                : null;
+
+            $open_href = '/plugins/docman/?'
+                . http_build_query(
+                    [
+                        'group_id'       => $item->getGroupId(),
+                        'action'         => 'show',
+                        'id'             => $item->getId(),
+                        'version_number' => $version->getNumber(),
+                    ]
+                );
+
+            $author = $this->user_retriever->getUserById((int) $version->getAuthorId());
+            if (! $author) {
+                continue;
+            }
+
+            $versions[] = EmbeddedFileVersionRepresentation::build(
+                (int) $version->getId(),
+                (int) $version->getNumber(),
+                $version->getLabel(),
+                (int) $item->getGroupId(),
+                (int) $item->getId(),
+                $approval_href,
+                $open_href,
+                $author,
+                (new \DateTimeImmutable())->setTimestamp((int) $version->getDate()),
+                (string) $version->getChangelog(),
+            );
+        }
+
+        return new PaginatedEmbeddedFileVersionRepresentationCollection(
+            $versions,
+            $this->dao->countByItemId($item->getId())
+        );
+    }
+}
