@@ -490,6 +490,17 @@ export interface LinkVersion {
     readonly link_href: string;
 }
 
+export interface EmbeddedFileVersion {
+    readonly id: number;
+    readonly number: number;
+    readonly name: string;
+    readonly changelog: string;
+    readonly open_href: string;
+    readonly approval_href: string | null;
+    readonly date: string;
+    readonly author: RestUser;
+}
+
 export interface DocumentJsonError {
     error: JsonError;
 }

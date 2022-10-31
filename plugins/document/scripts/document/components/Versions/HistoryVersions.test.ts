@@ -17,9 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 const getAllFileVersionHistory = jest.fn();
+const getAllLinkVersionHistory = jest.fn();
+const getAllEmbeddedFileVersionHistory = jest.fn();
 jest.mock("../../api/version-rest-querier", () => {
     return {
         getAllFileVersionHistory,
+        getAllLinkVersionHistory,
+        getAllEmbeddedFileVersionHistory,
     };
 });
 
@@ -29,9 +33,17 @@ import HistoryVersionsLoadingState from "./HistoryVersionsLoadingState.vue";
 import HistoryVersionsErrorState from "./HistoryVersionsErrorState.vue";
 import HistoryVersionsEmptyState from "./HistoryVersionsEmptyState.vue";
 import HistoryVersionsContent from "./HistoryVersionsContent.vue";
+import HistoryVersionsContentForLink from "./HistoryVersionsContentForLink.vue";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
-import type { FileHistory, ItemFile } from "../../type";
+import type {
+    Embedded,
+    EmbeddedFileVersion,
+    FileHistory,
+    ItemFile,
+    Link,
+    LinkVersion,
+} from "../../type";
 
 describe("HistoryVersions", () => {
     it("should display a loading state", () => {
@@ -92,7 +104,43 @@ describe("HistoryVersions", () => {
         const wrapper = shallowMount(HistoryVersions, {
             localVue,
             propsData: {
-                item: { id: 42 } as ItemFile,
+                item: { id: 42, type: "file" } as ItemFile,
+            },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
+        expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);
+        expect(wrapper.findComponent(HistoryVersionsEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(HistoryVersionsContent).exists()).toBe(true);
+    });
+
+    it("should display content for a Link", async () => {
+        getAllLinkVersionHistory.mockReturnValue(okAsync([{} as LinkVersion]));
+
+        const wrapper = shallowMount(HistoryVersions, {
+            localVue,
+            propsData: {
+                item: { id: 42, type: "link" } as Link,
+            },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
+        expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);
+        expect(wrapper.findComponent(HistoryVersionsEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(HistoryVersionsContentForLink).exists()).toBe(true);
+    });
+
+    it("should display content for an embedded file", async () => {
+        getAllEmbeddedFileVersionHistory.mockReturnValue(okAsync([{} as EmbeddedFileVersion]));
+
+        const wrapper = shallowMount(HistoryVersions, {
+            localVue,
+            propsData: {
+                item: { id: 42, type: "embedded" } as Embedded,
             },
         });
 

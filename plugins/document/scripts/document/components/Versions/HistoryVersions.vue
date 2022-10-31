@@ -51,9 +51,13 @@ import HistoryVersionsLoadingState from "./HistoryVersionsLoadingState.vue";
 import HistoryVersionsErrorState from "./HistoryVersionsErrorState.vue";
 import HistoryVersionsEmptyState from "./HistoryVersionsEmptyState.vue";
 import HistoryVersionsContent from "./HistoryVersionsContent.vue";
-import type { FileHistory, Item, LinkVersion } from "../../type";
+import type { EmbeddedFileVersion, FileHistory, Item, LinkVersion } from "../../type";
 import { computed, onMounted, ref } from "vue";
-import { getAllFileVersionHistory, getAllLinkVersionHistory } from "../../api/version-rest-querier";
+import {
+    getAllEmbeddedFileVersionHistory,
+    getAllFileVersionHistory,
+    getAllLinkVersionHistory,
+} from "../../api/version-rest-querier";
 import { isEmbedded, isLink } from "../../helpers/type-check-helper";
 import HistoryVersionsContentForLink from "./HistoryVersionsContentForLink.vue";
 
@@ -61,24 +65,35 @@ const props = defineProps<{ item: Item }>();
 
 const is_loading = ref(true);
 const is_in_error = ref(false);
-const file_versions = ref<readonly FileHistory[]>([]);
+const file_versions = ref<readonly FileHistory[] | readonly EmbeddedFileVersion[]>([]);
 const link_versions = ref<readonly LinkVersion[]>([]);
 const is_empty = computed(
     (): boolean => file_versions.value.length === 0 && link_versions.value.length === 0
 );
 
 const is_link = computed((): boolean => isLink(props.item));
+const is_embedded = computed((): boolean => isEmbedded(props.item));
 const colspan = computed((): number => (is_link.value ? 5 : 7));
 
 onMounted(() => {
-    if (isEmbedded(props.item)) {
-        return;
-    }
-
     if (is_link.value) {
         getAllLinkVersionHistory(props.item.id).match(
             (versions: readonly LinkVersion[]): void => {
                 link_versions.value = versions;
+                is_loading.value = false;
+            },
+            (): void => {
+                is_in_error.value = true;
+                is_loading.value = false;
+            }
+        );
+        return;
+    }
+
+    if (is_embedded.value) {
+        getAllEmbeddedFileVersionHistory(props.item.id).match(
+            (versions: readonly EmbeddedFileVersion[]): void => {
+                file_versions.value = versions;
                 is_loading.value = false;
             },
             (): void => {
