@@ -119,4 +119,32 @@ describe("PullRequestCommentRepliesStore", () => {
 
         expect(store.getCommentReplies(new_comment)).toStrictEqual([]);
     });
+
+    it("should add a reply to a global comment", () => {
+        const store = PullRequestCommentRepliesStore(comments);
+        const new_comment = PullRequestCommentPresenterStub.buildWithData({
+            id: 1,
+            parent_id: comment_2.id,
+            post_date: "2022-11-03T14:00:57+01:00",
+            type: TYPE_GLOBAL_COMMENT,
+        });
+
+        store.addReplyToComment(comment_2, new_comment);
+
+        expect(store.getCommentReplies(comment_2)).toContain(new_comment);
+    });
+
+    it("should add a reply to an inline-comment", () => {
+        const store = PullRequestCommentRepliesStore(comments);
+        const new_comment = PullRequestCommentPresenterStub.buildWithData({
+            id: 1,
+            parent_id: comment_3.id,
+            post_date: "2022-11-03T14:00:57+01:00",
+            type: TYPE_INLINE_COMMENT,
+        });
+
+        store.addReplyToComment(comment_3, new_comment);
+
+        expect(store.getCommentReplies(comment_3)).toContain(new_comment);
+    });
 });

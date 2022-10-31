@@ -76,7 +76,8 @@ class PaginatedTimelineRepresentationBuilder
                     $event->isOutdated(),
                     $project_id,
                     $event->getParentId(),
-                    $event->getId()
+                    $event->getId(),
+                    $event->getPosition()
                 );
             case TimelineGlobalEvent::class:
                 assert($event instanceof TimelineGlobalEvent);

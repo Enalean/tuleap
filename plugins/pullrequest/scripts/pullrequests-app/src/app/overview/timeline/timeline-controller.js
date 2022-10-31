@@ -1,8 +1,10 @@
 import { RelativeDateHelper } from "../../helpers/date-helpers";
-import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
 import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
 import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
 import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
+import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
+import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
+import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
 
 export default TimelineController;
 
@@ -13,6 +15,7 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
 
     Object.assign(self, {
         pull_request: {},
+        pull_request_presenter: {},
         timeline: [],
         loading_timeline: true,
         new_comment: {
@@ -25,6 +28,7 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
             SharedPropertiesService.getUserLocale()
         ),
         current_user: PullRequestCurrentUserPresenter.fromUserInfo(
+            SharedPropertiesService.getUserId(),
             SharedPropertiesService.getUserAvatarUrl()
         ),
         comment_controller: {},
@@ -36,6 +40,7 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
     function init() {
         SharedPropertiesService.whenReady().then(function () {
             self.pull_request = SharedPropertiesService.getPullRequest();
+            self.pull_request_presenter = PullRequestPresenter.fromPullRequest(self.pull_request);
             TimelineService.getTimeline(
                 self.pull_request,
                 TimelineService.timeline_pagination.limit,
@@ -46,7 +51,8 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
                     self.timeline = self.comment_replies_store.getAllRootComments();
                     self.comment_controller = PullRequestCommentController(
                         PullRequestCommentReplyFormFocusHelper(),
-                        self.comment_replies_store
+                        self.comment_replies_store,
+                        PullRequestCommentNewReplySaver()
                     );
                     TooltipService.setupTooltips();
                 })

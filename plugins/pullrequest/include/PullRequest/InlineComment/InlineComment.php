@@ -34,6 +34,7 @@ final class InlineComment implements TimelineEvent
         private string $content,
         private bool $is_outdated,
         private int $parent_id,
+        private string $position,
     ) {
     }
 
@@ -48,7 +49,8 @@ final class InlineComment implements TimelineEvent
             (int) $row['unidiff_offset'],
             $row['content'],
             (bool) $row['is_outdated'],
-            (int) $row['parent_id']
+            (int) $row['parent_id'],
+            $row['position'],
         );
     }
 
@@ -105,5 +107,10 @@ final class InlineComment implements TimelineEvent
     public function getParentId(): int
     {
         return $this->parent_id;
+    }
+
+    public function getPosition(): string
+    {
+        return $this->position;
     }
 }

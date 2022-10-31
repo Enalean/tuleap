@@ -21,6 +21,7 @@ import type { CurrentPullRequestUserPresenter } from "../../src/app/comments/Pul
 
 export const CurrentPullRequestUserPresenterStub = {
     withDefault: (): CurrentPullRequestUserPresenter => ({
+        user_id: 104,
         avatar_url: "url/to/current/user/avatar.png",
     }),
 };

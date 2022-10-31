@@ -24,6 +24,7 @@ import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
 import { selectOrThrow } from "@tuleap/dom";
 import { PullRequestCommentControllerStub } from "../../../tests/stubs/PullRequestCommentControllerStub";
 import { CurrentPullRequestUserPresenterStub } from "../../../tests/stubs/CurrentPullRequestUserPresenterStub";
+import { ReplyCommentFormPresenterStub } from "../../../tests/stubs/ReplyCommentFormPresenterStub";
 
 describe("PullRequestCommentReplyFormTemplate", () => {
     let target: ShadowRoot;
@@ -40,7 +41,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
             currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
-            is_reply_form_displayed: true,
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
         } as unknown as HostElement;
         const render = getReplyFormTemplate(host);
         render(host, target);
@@ -52,7 +53,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
             currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
-            is_reply_form_displayed: false,
+            reply_comment_presenter: null,
         } as unknown as HostElement;
         const render = getReplyFormTemplate(host);
         render(host, target);
@@ -65,7 +66,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
             currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
-            is_reply_form_displayed: true,
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
             controller,
         } as unknown as HostElement;
 
@@ -76,5 +77,85 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         selectOrThrow(target, "[data-test=button-cancel-reply]").click();
 
         expect(controller.hideReplyForm).toHaveBeenCalledTimes(1);
+    });
+
+    it("Should disable the buttons and add a spinner on the [Reply] one when the comment has been submitted", () => {
+        const controller = PullRequestCommentControllerStub();
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
+            reply_comment_presenter:
+                ReplyCommentFormPresenterStub.buildBeingSubmitted("Some comment"),
+            controller,
+        } as unknown as HostElement;
+
+        const render = getReplyFormTemplate(host);
+
+        render(host, target);
+
+        const reply_button = selectOrThrow(target, "[data-test=button-save-reply]");
+        const spinner = target.querySelector("[data-test=reply-being-saved-spinner]");
+
+        expect(reply_button.hasAttribute("disabled")).toBe(true);
+        expect(spinner).not.toBeNull();
+        expect(
+            selectOrThrow(target, "[data-test=button-cancel-reply]").hasAttribute("disabled")
+        ).toBe(true);
+    });
+
+    it("Should disable the [Reply] button when the comment is not submittable yet (empty comment)", () => {
+        const controller = PullRequestCommentControllerStub();
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
+            controller,
+        } as unknown as HostElement;
+
+        const render = getReplyFormTemplate(host);
+
+        render(host, target);
+
+        expect(
+            selectOrThrow(target, "[data-test=button-save-reply]").hasAttribute("disabled")
+        ).toBe(true);
+    });
+
+    it("Should update the new comment presenter when user types something in the textArea", () => {
+        const controller = PullRequestCommentControllerStub();
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
+            controller,
+        } as unknown as HostElement;
+
+        const render = getReplyFormTemplate(host);
+
+        render(host, target);
+
+        const textarea = selectOrThrow(target, "[data-test=reply-text-area]", HTMLTextAreaElement);
+        textarea.value = "Some comment";
+        textarea.dispatchEvent(new Event("input"));
+
+        expect(controller.updateCurrentReply).toHaveBeenCalledTimes(1);
+    });
+
+    it("Should save the new comment presenter when user clicks on [Reply]", () => {
+        const controller = PullRequestCommentControllerStub();
+        const host = {
+            comment: PullRequestCommentPresenterStub.buildGlobalComment(),
+            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Some content"),
+            controller,
+        } as unknown as HostElement;
+
+        const render = getReplyFormTemplate(host);
+
+        render(host, target);
+
+        selectOrThrow(target, "[data-test=button-save-reply]").click();
+
+        expect(controller.saveReply).toHaveBeenCalledTimes(1);
     });
 });

@@ -18,9 +18,13 @@
  */
 
 export interface CurrentPullRequestUserPresenter {
+    readonly user_id: number;
     readonly avatar_url: string;
 }
 
 export const PullRequestCurrentUserPresenter = {
-    fromUserInfo: (avatar_url: string): CurrentPullRequestUserPresenter => ({ avatar_url }),
+    fromUserInfo: (user_id: number, avatar_url: string): CurrentPullRequestUserPresenter => ({
+        user_id,
+        avatar_url,
+    }),
 };

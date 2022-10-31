@@ -17,14 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PullRequestCurrentUserPresenter } from "./PullRequestCurrentUserPresenter";
+import { PullRequestPresenter } from "./PullRequestPresenter";
 
-describe("PullRequestCurrentUserPresenter", () => {
-    it("should build the current user presenter", () => {
-        const user_id = 104;
-        const avatar_url = "url/to/current/user/avatar.png";
-        const presenter = PullRequestCurrentUserPresenter.fromUserInfo(user_id, avatar_url);
+describe("PullRequestPresenter", () => {
+    it("should build from a pull request representation", () => {
+        const pull_request = {
+            id: 144,
+            title: "Add feature flag",
+        };
 
-        expect(presenter).toStrictEqual({ user_id, avatar_url });
+        expect(PullRequestPresenter.fromPullRequest(pull_request)).toStrictEqual({
+            pull_request_id: 144,
+        });
     });
 });

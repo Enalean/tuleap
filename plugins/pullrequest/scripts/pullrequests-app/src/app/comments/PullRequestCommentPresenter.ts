@@ -29,6 +29,9 @@ export const TYPE_INLINE_COMMENT: CommentType = "inline-comment";
 export const TYPE_GLOBAL_COMMENT: CommentType = "comment";
 export const TYPE_EVENT_COMMENT: CommentType = "timeline-event";
 
+type InlineCommentPosition = "left" | "right";
+export const INLINE_COMMENT_POSITION_RIGHT: InlineCommentPosition = "right";
+
 export interface State {
     readonly href: (name: string, url_parameters: Record<string, unknown>) => string;
 }
@@ -49,7 +52,8 @@ export interface FileDiffCommentPayload {
     readonly user: PullRequestUser;
     readonly post_date: string;
     readonly unidiff_offset: number;
-    readonly position: "left" | "right";
+    readonly position: InlineCommentPosition;
+    readonly file_path: string;
     readonly parent_id: number;
 }
 
@@ -57,22 +61,33 @@ export interface TimelineEventPayload {
     readonly id: number;
     readonly is_inline_comment: boolean;
     readonly post_date: string;
-    readonly file_url: string;
     readonly content: string;
-    readonly file_path: string;
     readonly type: CommentType;
     readonly event_type?: string;
     readonly is_outdated: boolean;
     readonly user: PullRequestUser;
+    readonly parent_id: number;
+    readonly file_path?: string;
+    readonly position?: InlineCommentPosition;
+    readonly unidiff_offset?: number;
+}
+
+export interface CommentReplyPayload {
+    readonly id: number;
+    readonly content: string;
+    readonly user: PullRequestUser;
+    readonly post_date: string;
     readonly parent_id: number;
 }
 
 interface PullRequestCommentFile {
     readonly file_path: string;
     readonly file_url: string;
+    readonly position: InlineCommentPosition;
+    readonly unidiff_offset: number;
 }
 
-export interface PullRequestCommentPresenter {
+interface CommonComment {
     readonly id: number;
     readonly user: PullRequestUser;
     readonly content: string;
@@ -84,10 +99,20 @@ export interface PullRequestCommentPresenter {
     readonly parent_id: number;
 }
 
-interface PullRequestInlineCommentPresenter extends PullRequestCommentPresenter {
-    readonly unidiff_offset: number;
-    readonly position: "left" | "right";
+export interface PullRequestGlobalCommentPresenter extends CommonComment {
+    readonly is_file_diff_comment: false;
 }
+
+export interface PullRequestInlineCommentPresenter extends CommonComment {
+    readonly unidiff_offset: number;
+    readonly position: InlineCommentPosition;
+    readonly file_path: string;
+    readonly is_file_diff_comment: true;
+}
+
+export type PullRequestCommentPresenter =
+    | PullRequestGlobalCommentPresenter
+    | PullRequestInlineCommentPresenter;
 
 export const PullRequestCommentPresenter = {
     fromFileDiffComment: (comment: FileDiffCommentPayload): PullRequestInlineCommentPresenter => ({
@@ -100,7 +125,9 @@ export const PullRequestCommentPresenter = {
         is_inline_comment: true,
         unidiff_offset: comment.unidiff_offset,
         position: comment.position,
+        file_path: comment.file_path,
         parent_id: comment.parent_id,
+        is_file_diff_comment: true,
     }),
     fromTimelineEvent: (
         $state: State,
@@ -108,17 +135,20 @@ export const PullRequestCommentPresenter = {
         pull_request: PullRequestData
     ): PullRequestCommentPresenter => {
         const is_inline_comment = event.type === TYPE_INLINE_COMMENT;
-        const file = is_inline_comment
-            ? {
-                  file: {
-                      file_url: $state.href("diff", {
-                          id: pull_request.id,
+        const file =
+            is_inline_comment && event.file_path && event.position && event.unidiff_offset
+                ? {
+                      file: {
+                          file_url: $state.href("diff", {
+                              id: pull_request.id,
+                              file_path: event.file_path,
+                          }),
                           file_path: event.file_path,
-                      }),
-                      file_path: event.file_path,
-                  },
-              }
-            : {};
+                          unidiff_offset: event.unidiff_offset,
+                          position: event.position,
+                      },
+                  }
+                : {};
 
         return {
             id: event.id,
@@ -130,8 +160,23 @@ export const PullRequestCommentPresenter = {
             post_date: event.post_date,
             parent_id: event.parent_id,
             ...file,
+            is_file_diff_comment: false,
         };
     },
+    fromCommentReply: (
+        parent_comment: PullRequestCommentPresenter,
+        reply: CommentReplyPayload
+    ): PullRequestCommentPresenter => ({
+        id: reply.id,
+        user: reply.user,
+        post_date: reply.post_date,
+        content: replaceLineReturns(reply.content),
+        type: parent_comment.type,
+        is_outdated: false,
+        is_inline_comment: parent_comment.is_inline_comment,
+        parent_id: reply.parent_id,
+        is_file_diff_comment: false,
+    }),
 };
 
 function replaceLineReturns(content: string): string {

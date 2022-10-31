@@ -21,9 +21,11 @@ import CodeMirror from "codemirror";
 import { getStore } from "./comments-store.ts";
 import { PullRequestCommentPresenter } from "../comments/PullRequestCommentPresenter";
 import { RelativeDateHelper } from "../helpers/date-helpers";
-import { PullRequestCurrentUserPresenter } from "../comments/PullRequestCurrentUserPresenter";
 import { PullRequestCommentController } from "../comments/PullRequestCommentController";
 import { PullRequestCommentReplyFormFocusHelper } from "../comments/PullRequestCommentReplyFormFocusHelper";
+import { PullRequestPresenter } from "../comments/PullRequestPresenter";
+import { PullRequestCommentNewReplySaver } from "../comments/PullRequestCommentReplySaver";
+import { PullRequestCurrentUserPresenter } from "../comments/PullRequestCurrentUserPresenter";
 
 export default CodeMirrorHelperService;
 
@@ -57,7 +59,6 @@ function CodeMirrorHelperService(
         displayInlineComment,
         showCommentForm,
         displayPlaceholderWidget,
-        comment_replies_store: getStore(),
     });
 
     function displayInlineComment(code_mirror, comment, line_number) {
@@ -69,12 +70,17 @@ function CodeMirrorHelperService(
             SharedPropertiesService.getRelativeDateDisplay(),
             SharedPropertiesService.getUserLocale()
         );
-        inline_comment_element.currentUser = PullRequestCurrentUserPresenter.fromUserInfo(
-            SharedPropertiesService.getUserAvatarUrl()
-        );
         inline_comment_element.controller = PullRequestCommentController(
             PullRequestCommentReplyFormFocusHelper(),
-            self.comment_replies_store
+            getStore(),
+            PullRequestCommentNewReplySaver()
+        );
+        inline_comment_element.currentUser = PullRequestCurrentUserPresenter.fromUserInfo(
+            SharedPropertiesService.getUserId(),
+            SharedPropertiesService.getUserAvatarUrl()
+        );
+        inline_comment_element.currentPullRequest = PullRequestPresenter.fromPullRequest(
+            SharedPropertiesService.getPullRequest()
         );
 
         const options = getWidgetPlacementOptions(code_mirror, line_number);

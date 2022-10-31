@@ -91,6 +91,8 @@ describe("PullRequestCommentBodyTemplate", () => {
                 file: {
                     file_url: "an/url/to/README.md",
                     file_path: "README.md",
+                    unidiff_offset: 8,
+                    position: "right",
                 },
             }),
         ],
