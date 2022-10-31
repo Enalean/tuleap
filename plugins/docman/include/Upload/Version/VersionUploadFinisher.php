@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
-use Docman_File;
-use Docman_Item;
 use Docman_LockFactory;
 use ProjectManager;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
@@ -107,31 +107,26 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         UploadPathAllocator $document_upload_path_allocator,
         \Docman_ItemFactory $docman_item_factory,
         \Docman_VersionFactory $version_factory,
-        \EventManager $event_manager,
         DocumentOnGoingVersionToUploadDAO $version_to_upload_dao,
         DBTransactionExecutor $transaction_executor,
         \Docman_FileStorage $docman_file_storage,
         \Docman_MIMETypeDetector $docman_mime_type_detector,
         \UserManager $user_manager,
-        DocmanItemsEventAdder $items_event_adder,
-        ProjectManager $project_manager,
         Docman_LockFactory $lock_factory,
         ApprovalTableUpdater $approval_table_updater,
         ApprovalTableRetriever $approval_table_retriever,
         ApprovalTableUpdateActionChecker $approval_table_action_checker,
+        private PostUpdateFileHandler $post_update_file_handler,
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
         $this->docman_item_factory            = $docman_item_factory;
         $this->version_factory                = $version_factory;
-        $this->event_manager                  = $event_manager;
         $this->version_to_upload_dao          = $version_to_upload_dao;
         $this->transaction_executor           = $transaction_executor;
         $this->docman_file_storage            = $docman_file_storage;
         $this->docman_mime_type_detector      = $docman_mime_type_detector;
         $this->user_manager                   = $user_manager;
-        $this->items_event_adder              = $items_event_adder;
-        $this->project_manager                = $project_manager;
         $this->lock_factory                   = $lock_factory;
         $this->approval_table_updater         = $approval_table_updater;
         $this->approval_table_retriever       = $approval_table_retriever;
@@ -168,6 +163,13 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     $this->logger->info('Item #' . $upload_row['item_id'] . ' could not found in the DB to add a new version');
                     return;
                 }
+                if (
+                    ! $item->accept(new DoesItemHasExpectedTypeVisitor(\Docman_File::class)) &&
+                    ! $item->accept(new DoesItemHasExpectedTypeVisitor(\Docman_Empty::class))
+                ) {
+                    throw new \LogicException(sprintf('Item #%d does not have the expected type %s or %s', $upload_row['item_id'], \Docman_File::class, \Docman_Empty::class));
+                }
+                assert($item instanceof \Docman_File || $item instanceof \Docman_Empty);
 
                 $next_version_id = (int) $this->version_factory->getNextVersionNumber($item);
                 $item_id         = (int) $item->getId();
@@ -243,11 +245,10 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     && $this->approval_table_action_checker->checkAvailableUpdateAction($approval_table_action)
                 ) {
                     $item_current_version = $this->version_factory->getCurrentVersionForItem($item);
-                    assert($item instanceof Docman_File);
                     $item->setCurrentVersion($item_current_version);
                     $this->approval_table_updater->updateApprovalTable($item, $current_user, $approval_table_action);
                 }
-                $this->triggerPostUpdateEvents($item, $current_user);
+                $this->post_update_file_handler->triggerPostUpdateEvents($item, $current_user);
             }
         );
 
@@ -261,21 +262,5 @@ final class VersionUploadFinisher implements TusFinisherDataStore
             return $mime_type;
         }
         return mime_content_type($path);
-    }
-
-    private function triggerPostUpdateEvents(Docman_Item $item, \PFUser $user): void
-    {
-        $params = [
-            'item'     => $item,
-            'user'     => $user,
-            'group_id' => $item->getGroupId(),
-            'version'  => $this->version_factory->getCurrentVersionForItem($item),
-        ];
-
-        $this->items_event_adder->addNotificationEvents($this->project_manager->getProject($item->getGroupId()));
-        $this->items_event_adder->addLogEvents();
-
-        $this->event_manager->processEvent('plugin_docman_event_new_version', $params);
-        $this->event_manager->processEvent('send_notifications', []);
     }
 }

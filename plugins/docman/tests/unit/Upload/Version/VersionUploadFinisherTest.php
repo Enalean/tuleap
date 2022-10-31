@@ -29,13 +29,14 @@ use org\bovigo\vfs\vfsStream;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
+use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
 
-class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -81,18 +82,16 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
             $path_allocator,
             $this->item_factory,
             $this->version_factory,
-            $this->event_manager,
             $this->on_going_upload_dao,
             new DBTransactionExecutorPassthrough(),
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
             $this->user_manager,
-            $this->adder,
-            $this->project_manager,
             $this->lock_factory,
             $this->approval_table_updater,
             $this->approval_table_retriever,
-            $this->approval_table_update_checker
+            $this->approval_table_update_checker,
+            new PostUpdateFileHandler($this->version_factory, $this->adder, $this->project_manager, $this->event_manager),
         );
 
         $item_id_being_created    = 12;
@@ -133,6 +132,7 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getId')->andReturn(20);
         $item->shouldReceive('getParentId')->andReturn(3);
         $item->shouldReceive('setCurrentVersion')->once();
+        $item->shouldReceive('accept')->andReturn(true);
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item);
         $this->version_factory->shouldReceive('getNextVersionNumber')->andReturn(2);
@@ -150,7 +150,7 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger->shouldReceive('debug');
         $this->version_factory->shouldReceive('getCurrentVersionForItem');
 
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->shouldReceive('getProjectById')->andReturn(Mockery::mock(\Project::class));
 
         $this->adder->shouldReceive('addNotificationEvents');
         $this->adder->shouldReceive('addLogEvents');
@@ -186,18 +186,16 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
             $path_allocator,
             $this->item_factory,
             $this->version_factory,
-            $this->event_manager,
             $this->on_going_upload_dao,
             new DBTransactionExecutorPassthrough(),
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
             $this->user_manager,
-            $this->adder,
-            $this->project_manager,
             $this->lock_factory,
             $this->approval_table_updater,
             $this->approval_table_retriever,
-            $this->approval_table_update_checker
+            $this->approval_table_update_checker,
+            new PostUpdateFileHandler($this->version_factory, $this->adder, $this->project_manager, $this->event_manager),
         );
 
         $item_id_being_created    = 12;
@@ -238,6 +236,7 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getId')->andReturn(20);
         $item->shouldReceive('getParentId')->andReturn(3);
         $item->shouldReceive('setCurrentVersion')->never();
+        $item->shouldReceive('accept')->andReturn(true);
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item);
         $this->version_factory->shouldReceive('getNextVersionNumber')->andReturn(2);
@@ -255,7 +254,7 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger->shouldReceive('debug');
         $this->version_factory->shouldReceive('getCurrentVersionForItem');
 
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->shouldReceive('getProjectById')->andReturn(Mockery::mock(\Project::class));
 
         $this->adder->shouldReceive('addNotificationEvents');
         $this->adder->shouldReceive('addLogEvents');
@@ -291,18 +290,16 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
             $path_allocator,
             $this->item_factory,
             $this->version_factory,
-            $this->event_manager,
             $this->on_going_upload_dao,
             new DBTransactionExecutorPassthrough(),
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
             $this->user_manager,
-            $this->adder,
-            $this->project_manager,
             $this->lock_factory,
             $this->approval_table_updater,
             $this->approval_table_retriever,
-            $this->approval_table_update_checker
+            $this->approval_table_update_checker,
+            new PostUpdateFileHandler($this->version_factory, $this->adder, $this->project_manager, $this->event_manager)
         );
 
         $item_id_being_created    = 12;
@@ -343,6 +340,7 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getId')->andReturn(20);
         $item->shouldReceive('getParentId')->andReturn(3);
         $item->shouldReceive('setCurrentVersion')->never();
+        $item->shouldReceive('accept')->andReturn(true);
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item);
         $this->version_factory->shouldReceive('getNextVersionNumber')->andReturn(2);
@@ -360,7 +358,7 @@ class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger->shouldReceive('debug');
         $this->version_factory->shouldReceive('getCurrentVersionForItem');
 
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->shouldReceive('getProjectById')->andReturn(Mockery::mock(\Project::class));
 
         $this->adder->shouldReceive('addNotificationEvents');
         $this->adder->shouldReceive('addLogEvents');

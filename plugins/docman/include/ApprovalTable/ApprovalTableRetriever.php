@@ -56,6 +56,9 @@ class ApprovalTableRetriever
         return $approval_table;
     }
 
+    /**
+     * @psalm-assert-if-true !\Docman_Empty $item
+     */
     public function hasApprovalTable(Docman_Item $item): bool
     {
         $approval_table = $this->getLastApprovalTable($item);

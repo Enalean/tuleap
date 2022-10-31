@@ -69,6 +69,7 @@ use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder;
+use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\Reference\CrossReferenceDocmanOrganizer;
 use Tuleap\Docman\Reference\DocumentFromReferenceValueFinder;
 use Tuleap\Docman\Reference\DocumentIconPresenterBuilder;
@@ -1387,6 +1388,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $user_manager                = UserManager::instance();
         $event_manager               = EventManager::instance();
         $current_user_provider       = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
+        $version_factory             = new Docman_VersionFactory();
 
         return FileUploadController::build(
             new DocumentDataStore(
@@ -1407,7 +1409,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                     BackendLogger::getDefaultLogger(),
                     $path_allocator,
                     $this->getItemFactory(),
-                    new Docman_VersionFactory(),
+                    $version_factory,
                     $event_manager,
                     $document_ongoing_upload_dao,
                     $this->getItemDao(),
@@ -1415,8 +1417,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                     new Docman_MIMETypeDetector(),
                     $user_manager,
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                    new DocmanItemsEventAdder($event_manager),
-                    ProjectManager::instance()
+                    new PostUpdateFileHandler($version_factory, new DocmanItemsEventAdder($event_manager), ProjectManager::instance(), $event_manager),
                 ),
                 new DocumentUploadCanceler(
                     $path_allocator,
@@ -1438,6 +1439,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             new Docman_VersionFactory()
         );
         $current_user_provider    = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
+        $version_factory          = new Docman_VersionFactory();
         return FileUploadController::build(
             new VersionDataStore(
                 new VersionBeingUploadedInformationProvider(
@@ -1454,19 +1456,17 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                     BackendLogger::getDefaultLogger(),
                     $path_allocator,
                     $this->getItemFactory(),
-                    new Docman_VersionFactory(),
-                    $event_manager,
+                    $version_factory,
                     $version_to_upload_dao,
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                     new Docman_FileStorage($root_path),
                     new Docman_MIMETypeDetector(),
                     UserManager::instance(),
-                    new DocmanItemsEventAdder($event_manager),
-                    ProjectManager::instance(),
                     $this->getDocmanLockFactory(),
                     new ApprovalTableUpdater($approval_table_retriever, new Docman_ApprovalTableFactoriesFactory()),
                     $approval_table_retriever,
-                    new ApprovalTableUpdateActionChecker($approval_table_retriever)
+                    new ApprovalTableUpdateActionChecker($approval_table_retriever),
+                    new PostUpdateFileHandler($version_factory, new DocmanItemsEventAdder($event_manager), ProjectManager::instance(), $event_manager),
                 ),
                 new VersionUploadCanceler($path_allocator, $version_to_upload_dao),
                 new FileBeingUploadedLocker($path_allocator)
