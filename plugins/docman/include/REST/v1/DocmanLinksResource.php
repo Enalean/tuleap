@@ -249,6 +249,32 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/version
+     */
+    public function optionsNewVersion(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * @url    POST {id}/version
+     * @access protected
+     *
+     * @param DocmanLinkVersionPOSTRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @hide Only exist for backward compatibility
+     */
+
+    public function postVersion(
+        int $id,
+        DocmanLinkVersionPOSTRepresentation $representation,
+    ): void {
+        $this->postVersions($id, $representation);
+    }
+
+
+    /**
      * Create a version of a link
      *
      * <pre>
@@ -259,8 +285,8 @@ class DocmanLinksResource extends AuthenticatedResource
      *  * empty: No approbation needed for the new version of this document<br>
      * </pre>
      *
-     * @url    POST {id}/version
-     * @access hybrid
+     * @url    POST {id}/versions
+     * @access protected
      *
      * @param int                                 $id             Id of the file
      * @param DocmanLinkVersionPOSTRepresentation $representation {@from body}
@@ -272,13 +298,11 @@ class DocmanLinksResource extends AuthenticatedResource
      * @throws RestException 409
      * @throws RestException 501
      */
-
-    public function postVersion(
+    public function postVersions(
         int $id,
         DocmanLinkVersionPOSTRepresentation $representation,
-    ) {
+    ): void {
         $this->checkAccess();
-        $this->setVersionHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $this->addAllEvent($item_request->getProject());
@@ -300,7 +324,7 @@ class DocmanLinksResource extends AuthenticatedResource
      *
      * Versions are sorted from newest to oldest.
      *
-     * @url    GET {id}/version
+     * @url    GET {id}/versions
      * @access hybrid
      *
      * @param int $id Id of the item
@@ -318,7 +342,6 @@ class DocmanLinksResource extends AuthenticatedResource
     public function getVersions(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
         $this->checkAccess();
-        $this->setVersionHeaders();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $item          = $items_request->getItem();
@@ -460,14 +483,9 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
-     * @url OPTIONS {id}/version
+     * @url OPTIONS {id}/versions
      */
-    public function optionsNewVersion(int $id): void
-    {
-        $this->setVersionHeaders();
-    }
-
-    private function setVersionHeaders(): void
+    public function optionsVersions(int $id): void
     {
         Header::allowOptionsGetPost();
     }

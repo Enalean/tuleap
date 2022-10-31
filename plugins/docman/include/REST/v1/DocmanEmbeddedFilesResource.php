@@ -254,6 +254,38 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/version
+     */
+    public function optionsVersion(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * @url    POST {id}/version
+     * @access protected
+     *
+     * @param DocmanEmbeddedFileVersionPOSTRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @hide Only exist for backward compatibility
+     */
+    public function postVersion(
+        int $id,
+        DocmanEmbeddedFileVersionPOSTRepresentation $representation,
+    ): void {
+        $this->postVersions($id, $representation);
+    }
+
+    /**
+     * @url OPTIONS {id}/versions
+     */
+    public function optionsVersions(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
      * Create a version of an embedded file document
      *
      * <pre>
@@ -264,8 +296,8 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
      *  * empty: No approbation needed for the new version of this document<br>
      * </pre>
      *
-     * @url    POST {id}/version
-     * @access hybrid
+     * @url    POST {id}/versions
+     * @access protected
      *
      * @param int                                         $id             Id of the file
      * @param DocmanEmbeddedFileVersionPOSTRepresentation $representation {@from body}
@@ -278,12 +310,11 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
      * @throws RestException 501
      */
 
-    public function postVersion(
+    public function postVersions(
         int $id,
         DocmanEmbeddedFileVersionPOSTRepresentation $representation,
-    ) {
+    ): void {
         $this->checkAccess();
-        $this->setVersionHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $this->addAllEvent($item_request->getProject());
@@ -365,19 +396,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     private function setHeadersForLock(): void
     {
         Header::allowOptionsPostDelete();
-    }
-
-    /**
-     * @url OPTIONS {id}/version
-     */
-    public function optionsNewVersion(int $id): void
-    {
-        $this->setVersionHeaders();
-    }
-
-    private function setVersionHeaders(): void
-    {
-        Header::allowOptionsPost();
     }
 
     /**

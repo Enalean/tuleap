@@ -258,7 +258,7 @@ async function createNewVersion(
     should_lock_file: boolean,
     approval_table_action: ApprovalTable | null
 ): Promise<CreatedItemFileProperties> {
-    const response = await post(`/api/docman_files/${encodeURIComponent(item.id)}/version`, {
+    const response = await post(`/api/docman_files/${encodeURIComponent(item.id)}/versions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -316,7 +316,7 @@ function postEmbeddedFile(
     should_lock_file: boolean,
     approval_table_action: ApprovalTable | null
 ): Promise<Response> {
-    return post(`/api/docman_embedded_files/${encodeURIComponent(item.id)}/version`, {
+    return post(`/api/docman_embedded_files/${encodeURIComponent(item.id)}/versions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -339,7 +339,7 @@ function postWiki(
     change_log: string,
     should_lock_file: boolean
 ): Promise<Response> {
-    return post(`/api/docman_wikis/${encodeURIComponent(item.id)}/version`, {
+    return post(`/api/docman_wikis/${encodeURIComponent(item.id)}/versions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -360,7 +360,7 @@ function postLinkVersion(
     should_lock_file: boolean,
     approval_table_action: ApprovalTable | null
 ): Promise<Response> {
-    return post(`/api/docman_links/${encodeURIComponent(item.id)}/version`, {
+    return post(`/api/docman_links/${encodeURIComponent(item.id)}/versions`, {
         headers: {
             "Content-Type": "application/json",
         },

@@ -54,4 +54,14 @@ final class SwaggerJsonDemoResource extends AuthenticatedResource
     protected function put(int $id, SwaggerJsonDemoRepresentation $representation): void
     {
     }
+
+    /**
+     * @url POST {id}/backward_compat
+     *
+     *
+     * @hide Only exist for backward compat
+     */
+    public function postBackwardCompat(int $id): void
+    {
+    }
 }

@@ -42,7 +42,7 @@ function getAllFileVersionHistory(id: number): ResultAsync<readonly FileHistory[
 }
 
 function getAllLinkVersionHistory(id: number): ResultAsync<readonly LinkVersion[], Fault> {
-    return getAllJSON<readonly LinkVersion[], LinkVersion>(`/api/docman_links/${id}/version`, {
+    return getAllJSON<readonly LinkVersion[], LinkVersion>(`/api/docman_links/${id}/versions`, {
         params: { limit: 50 },
     });
 }
