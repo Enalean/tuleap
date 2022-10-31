@@ -153,46 +153,6 @@ const config_for_burning_parrot = {
     },
 };
 
-const config_for_legacy_scripts = {
-    entry: {},
-    context,
-    output,
-    externals: {
-        tuleap: "tuleap",
-    },
-    plugins: [
-        ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
-            "tracker.js": [
-                "./scripts/legacy/TrackerReports.js",
-                "./scripts/legacy/TrackerReportsSaveAsModal.js",
-                "./scripts/legacy/TrackerBinds.js",
-                "./scripts/legacy/ReorderColumns.js",
-                "./scripts/legacy/TrackerTextboxLists.js",
-                "./scripts/legacy/TrackerAdminFieldWorkflow.js",
-                "./scripts/legacy/TrackerArtifact.js",
-                "./scripts/legacy/TrackerArtifactEmailActions.js",
-                "./scripts/legacy/TrackerArtifactLink.js",
-                "./scripts/legacy/LoadTrackerArtifactLink.js",
-                "./scripts/legacy/TrackerCreate.js",
-                "./scripts/legacy/TrackerFormElementFieldPermissions.js",
-                "./scripts/legacy/TrackerDateReminderForms.js",
-                "./scripts/legacy/TrackerTriggers.js",
-                "./scripts/legacy/SubmissionKeeper.js",
-                "./scripts/legacy/TrackerFieldDependencies.js",
-                "./scripts/legacy/artifactChildren.js",
-                "./scripts/legacy/load-artifactChildren.js",
-                "./scripts/legacy/FixAggregatesHeaderHeight.js",
-                "./scripts/legacy/TrackerSettings.js",
-                "./scripts/legacy/TrackerCollapseFieldset.js",
-                "./scripts/legacy/CopyArtifact.js",
-                "./scripts/legacy/tracker-report-type-column.js",
-                "./scripts/legacy/tracker-webhooks.js",
-            ],
-        }),
-        manifest_plugin,
-    ],
-};
-
 let entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     print: "./themes/default/css/print.scss",
@@ -219,6 +179,5 @@ module.exports = [
     config_for_flaming_parrot,
     config_for_vue_flaming_parrot,
     config_for_burning_parrot,
-    config_for_legacy_scripts,
     config_for_themes,
 ];

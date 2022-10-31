@@ -550,12 +550,17 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         }
     }
 
-    public function javascript_file($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function javascript_file($params): void//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->currentRequestIsForPlugin()) {
             $layout = $params['layout'];
             assert($layout instanceof \Layout);
-            $layout->includeJavascriptFile($this->getAssets()->getFileURL('tracker.js'));
+            $layout->addJavascriptAsset(
+                new \Tuleap\Layout\JavascriptAsset(
+                    new IncludeAssets(__DIR__ . '/../scripts/legacy/frontend-assets', '/assets/trackers/legacy'),
+                    'tracker.js',
+                )
+            );
             $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'modal-v2.js'));
         }
     }
