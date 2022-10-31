@@ -20,6 +20,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0014](0014-js-unit-test-runner.md) - JS unit test runner
 * [ADR-0015](0015-mercure-realtime.md) - Replacing NodeJs realtime server with Mercure
 * [ADR-0016](0016-frontend-libraries.md) - Independent libraries for shared frontend code
+* [ADR-0017](0017-multiple-apps-per-context.md) - Multiple independent apps per context
 
 <!-- adrlogstop -->
 
