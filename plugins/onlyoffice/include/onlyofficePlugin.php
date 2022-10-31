@@ -31,6 +31,7 @@ use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\Download\DocmanFileDownloadController;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
@@ -241,7 +242,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         return new OpenInOnlyOfficeController(
             UserManager::instance(),
             new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
-                new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory(), new FilenamePatternRetriever(new SettingsDAO())),
+                self::getDocmanFileLastVersionProvider(),
                 new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
                     new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger),
                     ProjectManager::instance(),
@@ -264,7 +265,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeGlobalEditorJWTokenProvider(
                 new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeDocumentConfigProvider(
                     new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
-                        new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory(), new FilenamePatternRetriever(new SettingsDAO())),
+                        self::getDocmanFileLastVersionProvider(),
                         new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
                             new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger),
                             ProjectManager::instance(),
@@ -294,6 +295,17 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             new SapiEmitter()
+        );
+    }
+
+    private static function getDocmanFileLastVersionProvider(): ProvideDocmanFileLastVersion
+    {
+        $version_factory = new Docman_VersionFactory();
+        return new DocmanFileLastVersionProvider(
+            new \Docman_ItemFactory(),
+            $version_factory,
+            new FilenamePatternRetriever(new SettingsDAO()),
+            new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory(), $version_factory),
         );
     }
 

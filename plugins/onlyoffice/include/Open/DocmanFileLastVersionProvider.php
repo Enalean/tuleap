@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
+use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\FilenamePattern\RetrieveFilenamePattern;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\NeverThrow\Err;
@@ -35,6 +36,7 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
         private \Docman_ItemFactory $item_factory,
         private \Docman_VersionFactory $version_factory,
         private RetrieveFilenamePattern $filename_pattern_retriever,
+        private ApprovalTableRetriever $approval_table_retriever,
     ) {
     }
 
@@ -67,7 +69,9 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
 
         $can_write = false;
         if (\ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_EDITION) === '1') {
-            $can_write = (! $this->filename_pattern_retriever->getPattern($project_id)->isEnforced()) && $docman_permissions_manager->userCanWrite($user, $item_id);
+            $can_write = (! $this->filename_pattern_retriever->getPattern($project_id)->isEnforced()) &&
+                         $docman_permissions_manager->userCanWrite($user, $item_id) &&
+                         (! $this->approval_table_retriever->hasApprovalTable($item));
         }
 
         return Result::ok(

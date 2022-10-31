@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
+use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\FilenamePattern\RetrieveFilenamePattern;
 use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
 use Tuleap\ForgeConfigSandbox;
@@ -47,6 +48,10 @@ final class DocmanFileLastVersionProviderTest extends TestCase
      * @var \Docman_PermissionsManager&\PHPUnit\Framework\MockObject\Stub
      */
     private $permissions_manager;
+    /**
+     * @var ApprovalTableRetriever&\PHPUnit\Framework\MockObject\Stub
+     */
+    private $approval_table_retriever;
 
     protected function setUp(): void
     {
@@ -55,6 +60,7 @@ final class DocmanFileLastVersionProviderTest extends TestCase
 
         $this->permissions_manager = $this->createStub(\Docman_PermissionsManager::class);
         \Docman_PermissionsManager::setInstance(self::PROJECT_ID, $this->permissions_manager);
+        $this->approval_table_retriever = $this->createStub(ApprovalTableRetriever::class);
     }
 
     protected function tearDown(): void
@@ -69,6 +75,7 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         bool $user_can_write,
         RetrieveFilenamePattern $filename_pattern_retriever,
         bool $feature_flag_edition_is_enabled,
+        bool $has_approval_table,
         bool $expected_can_be_edited,
     ): void {
         $item = new \Docman_File(['group_id' => self::PROJECT_ID]);
@@ -77,6 +84,7 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         $this->permissions_manager->method('userCanWrite')->willReturn($user_can_write);
         $expected_version = new \Docman_Version();
         $this->version_factory->method('getCurrentVersionForItem')->willReturn($expected_version);
+        $this->approval_table_retriever->method('hasApprovalTable')->willReturn($has_approval_table);
 
         if ($feature_flag_edition_is_enabled) {
             \ForgeConfig::setFeatureFlag('onlyoffice_edit_document', '1');
@@ -95,10 +103,11 @@ final class DocmanFileLastVersionProviderTest extends TestCase
     public function dataProviderLastVersionFileEdit(): array
     {
         return [
-            'Document can be edited in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), true, true],
-            'Feature flag to allow edition is disabled' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), false, false],
-            'User cannot edit the document' => [false, FilenamePatternRetrieverStub::buildWithNoPattern(), true, false],
-            'Filename pattern prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithPattern('something'), true, false],
+            'Document can be edited in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), true, false, true],
+            'Feature flag to allow edition is disabled' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), false, false, false],
+            'User cannot edit the document' => [false, FilenamePatternRetrieverStub::buildWithNoPattern(), true, false, false],
+            'Filename pattern prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithPattern('something'), true, false, false],
+            'Approval table prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), true, true, false],
         ];
     }
 
@@ -157,6 +166,7 @@ final class DocmanFileLastVersionProviderTest extends TestCase
             $this->item_factory,
             $this->version_factory,
             $filename_pattern_retriever,
+            $this->approval_table_retriever,
         );
     }
 }
