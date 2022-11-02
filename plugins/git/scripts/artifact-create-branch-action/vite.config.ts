@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,16 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import vue from "@vitejs/plugin-vue";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-process.env.DISABLE_TS_TYPECHECK = "true";
-
-const jest_base_config = defineJestConfiguration();
-export default {
-    ...jest_base_config,
-    displayName: "git-artifact-create-branch-action",
-    transform: {
-        ...jest_base_config.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
     },
-};
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "artifact-create-branch-action": path.resolve(__dirname, "src/index.ts"),
+                },
+            },
+        },
+        resolve: {
+            dedupe: ["neverthrow"],
+        },
+    }
+);

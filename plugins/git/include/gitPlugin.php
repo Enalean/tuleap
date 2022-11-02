@@ -2923,9 +2923,12 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
             new BranchNameCreatorFromArtifact(
                 new Slugify()
             ),
-            new \Tuleap\Layout\JavascriptAsset(
-                $this->getAssets(),
-                'git-artifact-create-branch.js'
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../scripts/artifact-create-branch-action/frontend-assets/',
+                    '/assets/git/artifact-create-branch-action'
+                ),
+                'src/index.ts'
             ),
             new \Tuleap\Git\PullRequestEndpointsAvailableChecker(EventManager::instance()),
         );

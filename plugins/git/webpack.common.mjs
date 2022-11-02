@@ -30,11 +30,6 @@ const output = webpack_configurator.configureOutput(
     "/assets/git/"
 );
 
-import artifact_create_branch_action from "./scripts/artifact-create-branch-action/webpack.common.mjs";
-const webpack_config_for_vue3 = artifact_create_branch_action;
-webpack_config_for_vue3.output = output;
-webpack_config_for_vue3.plugins.push(manifest_plugin);
-
 const webpack_config_for_vue = {
     entry: {
         "permission-per-group": "./scripts/permissions-per-group/index.ts",
@@ -140,5 +135,4 @@ export default [
     webpack_config_for_vanilla,
     webpack_config_for_legacy_scripts,
     webpack_config_for_themes,
-    webpack_config_for_vue3,
 ];
