@@ -23,7 +23,7 @@ namespace Tuleap\Docman\Version;
 
 use Tuleap\DB\DataAccessObject;
 
-class VersionDao extends DataAccessObject
+class VersionDao extends DataAccessObject implements ICountVersions
 {
     /**
      * @psalm-return list<array{id: int, number: int, label: string, filename: string, user_id: int, date: int, changelog: string|null}>

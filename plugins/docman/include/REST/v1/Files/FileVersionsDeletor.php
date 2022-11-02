@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Files;
 
 use Luracast\Restler\RestException;
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Docman\Version\ICountVersions;
 use Tuleap\Docman\Version\IDeleteVersion;
 use Tuleap\Docman\Version\IRetrieveVersion;
 use Tuleap\Docman\Version\VersionNotFoundException;
@@ -32,7 +34,9 @@ final class FileVersionsDeletor
     public function __construct(
         private IRetrieveVersion $version_retriever,
         private IDeleteVersion $version_deletor,
+        private ICountVersions $versions_counter,
         private \Docman_ItemFactory $item_factory,
+        private DBTransactionExecutor $transaction,
     ) {
     }
 
@@ -54,8 +58,14 @@ final class FileVersionsDeletor
             throw new RestException(404, "Version to delete not found");
         }
 
-        if (! $this->version_deletor->deleteSpecificVersion($item, (int) $version->getNumber())) {
-            throw new UnableToDeleteVersionException();
-        }
+        $this->transaction->execute(function () use ($item, $version) {
+            if ($this->versions_counter->countByItemId((int) $item->getId()) <= 1) {
+                throw new RestException(403, "Cannot delete the last version of an item");
+            }
+
+            if (! $this->version_deletor->deleteSpecificVersion($item, (int) $version->getNumber())) {
+                throw new UnableToDeleteVersionException();
+            }
+        });
     }
 }

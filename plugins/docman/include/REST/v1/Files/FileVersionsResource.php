@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Files;
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Docman\Version\VersionRetriever;
 use Tuleap\REST\AuthenticatedResource;
@@ -46,7 +48,7 @@ final class FileVersionsResource extends AuthenticatedResource
      *
      * @url    DELETE {id}
      * @access hybrid
-     * @status 200
+     * @status 204
      */
     public function deleteId(int $id): void
     {
@@ -56,7 +58,9 @@ final class FileVersionsResource extends AuthenticatedResource
         (new FileVersionsDeletor(
             new VersionRetriever(new VersionDao()),
             new \Docman_VersionFactory(),
-            new \Docman_ItemFactory()
+            new VersionDao(),
+            new \Docman_ItemFactory(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
         ))->delete(
             $id,
             \UserManager::instance()->getCurrentUser()
