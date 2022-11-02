@@ -37,11 +37,11 @@
 
     .area {
         transition: fill-opacity 250ms linear, stroke-opacity 250ms linear;
-        fill-opacity: 70%;
-        stroke-opacity: 0%;
+        fill-opacity: 0.7;
+        stroke-opacity: 0;
 
         &.hover {
-            fill-opacity: 90%;
+            fill-opacity: 0.9;
         }
     }
 
