@@ -1795,7 +1795,7 @@ class Artifact
     public function getDependencies()
     {
         $sql = "SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, afvl.value as status, ag.group_artifact_id, ag.name, g.group_id, g.group_name " .
-            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a, artifact_field_value_list afvl, artifact_field f " .
+            "FROM artifact_dependencies d, artifact_group_list ag, `groups` g, artifact a, artifact_field_value_list afvl, artifact_field f " .
             "WHERE d.is_dependent_on_artifact_id = a.artifact_id AND " .
             "afvl.field_id = f.field_id AND " .
             "f.group_artifact_id = a.group_artifact_id AND " .
@@ -1817,7 +1817,7 @@ class Artifact
     public function getInverseDependencies()
     {
         $sql = "SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, afvl.value as status, ag.group_artifact_id, ag.name, g.group_id, g.group_name " .
-            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a, artifact_field_value_list afvl, artifact_field f " .
+            "FROM artifact_dependencies d, artifact_group_list ag, `groups` g, artifact a, artifact_field_value_list afvl, artifact_field f " .
             "WHERE d.artifact_id = a.artifact_id AND " .
             "afvl.field_id = f.field_id AND " .
             "f.group_artifact_id = a.group_artifact_id AND " .

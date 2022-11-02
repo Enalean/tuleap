@@ -412,7 +412,7 @@ class ArtifactTypeFactory
         $sql = 'SELECT agl.group_artifact_id,agl.name,agl.group_id,g.group_name,a.summary, a.artifact_id, a.severity,' .
                '(a.submitted_by=' . db_ei($user_id) . ') as submitter,' .
                'MAX(afv.valueInt=' . db_ei($user_id) . ') as assignee' .
-               ' FROM artifact a,artifact_group_list agl,artifact_field af,artifact_field_value afv,groups g' .
+               ' FROM artifact a,artifact_group_list agl,artifact_field af,artifact_field_value afv,`groups` g' .
                ' WHERE agl.group_id = g.group_id' .
                ' AND af.group_artifact_id = agl.group_artifact_id' .
                ' AND agl.status = "A"' .
