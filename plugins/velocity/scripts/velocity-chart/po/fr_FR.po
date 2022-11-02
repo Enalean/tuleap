@@ -15,6 +15,5 @@ msgstr ""
 msgid "MM/DD"
 msgstr "DD/MM"
 
-#, javascript-format
 msgid "Velocity: %s"
 msgstr "Vélocité : %s"

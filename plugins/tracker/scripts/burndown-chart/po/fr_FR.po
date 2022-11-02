@@ -13,7 +13,6 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#, javascript-format
 msgid "%s - Remaining effort"
 msgstr "%s - Effort restant"
 
@@ -26,7 +25,6 @@ msgstr "DD/MM"
 msgid "Remaining effort"
 msgstr "Effort restant"
 
-#, javascript-format
 msgid "Remaining effort: %s"
 msgstr "Effort  restant : %s"
 
