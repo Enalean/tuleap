@@ -24,6 +24,7 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\ThemeVariation;
 
 /**
@@ -89,6 +90,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $this->imgroot = $root . '/images/';
 
         $this->javascript = [];
+        $this->includeJavascriptFile((new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'))->getFileURL());
 
         /*
             Set up the priority color array one time only

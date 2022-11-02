@@ -132,8 +132,6 @@ abstract class BaseLayout extends Response
         $this->css_assets = new CssAssetCollection([]);
 
         $this->csp_nonce = sodium_bin2base64(random_bytes(32), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
-
-        $this->addJavascriptAsset(new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'));
     }
 
     abstract public function header(HeaderConfiguration|array $params): void;

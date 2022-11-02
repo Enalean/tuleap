@@ -117,6 +117,7 @@ class BurningParrotTheme extends BaseLayout
         $this->theme_variant_color = ThemeVariantColor::buildFromVariant((new ThemeVariant())->getVariantForUser($this->current_user->user));
         $this->theme_variation     = new ThemeVariation($this->theme_variant_color, $this->current_user->user);
 
+        $this->includeFooterJavascriptFile((new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'))->getFileURL());
         $this->includeFooterJavascriptFile(
             $this->include_asset->getFileURLWithFallback('tlp-' . $this->current_user->user->getLocale() . '.js', 'tlp-en_US.js')
         );
