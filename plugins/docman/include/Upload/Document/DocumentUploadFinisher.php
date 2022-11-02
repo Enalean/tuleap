@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Upload\Document;
 
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
 use Tuleap\Upload\UploadPathAllocator;
@@ -74,14 +75,6 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
-    /**
-     * @var DocmanItemsEventAdder
-     */
-    private $event_adder;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
@@ -95,8 +88,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         \Docman_MIMETypeDetector $docman_mime_type_detector,
         \UserManager $user_manager,
         DBTransactionExecutor $transaction_executor,
-        DocmanItemsEventAdder $event_adder,
-        \ProjectManager $project_manager,
+        private PostUpdateFileHandler $post_update_file_handler,
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
@@ -109,8 +101,6 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->docman_mime_type_detector      = $docman_mime_type_detector;
         $this->user_manager                   = $user_manager;
         $this->transaction_executor           = $transaction_executor;
-        $this->event_adder                    = $event_adder;
-        $this->project_manager                = $project_manager;
     }
 
     public function finishUpload(TusFileInformation $file_information): void
@@ -218,15 +208,16 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         if ($item === null) {
             throw new \LogicException('Document manager item should have been created');
         }
-        $item_version = $this->version_factory->getSpecificVersion($item, 1);
-        if ($item_version === null) {
-            throw new \LogicException('Version #1 of item #' . $item->getId() . ' should have been created');
+        if (! $item->accept(new DoesItemHasExpectedTypeVisitor(\Docman_File::class))) {
+            throw new \LogicException(sprintf('Item #%d does not have the expected type %s', $item_id, \Docman_File::class));
         }
+        assert($item instanceof \Docman_File);
 
-        $user = $this->user_manager->getUserById($item->getOwnerId());
-
-        $project = $this->project_manager->getProject($item->getGroupId());
-        $this->event_adder->addNotificationEvents($project);
+        $user_id = $item->getOwnerId();
+        $user    = $this->user_manager->getUserById($user_id);
+        if ($user === null) {
+            throw new \LogicException('Cannot find user #' . $user_id . ' which is the owner of the new document');
+        }
 
         $this->event_manager->processEvent(
             'plugin_docman_event_add',
@@ -237,15 +228,6 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 'user' => $user,
             ]
         );
-        $this->event_manager->processEvent('send_notifications', []);
-        $this->event_manager->processEvent(
-            'plugin_docman_event_new_version',
-            [
-                'group_id' => $item->getGroupId(),
-                'item' => $item,
-                'version' => $item_version,
-                'user' => $user,
-            ]
-        );
+        $this->post_update_file_handler->triggerPostUpdateEvents($item, $user);
     }
 }
