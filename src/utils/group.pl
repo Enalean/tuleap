@@ -37,7 +37,7 @@ sub set_group_info_from_name {
   }
 
   return $$GROUP_INFO{'group_id'};
-    
+
 }
 
 sub isGroupCvsTracked {
@@ -58,14 +58,6 @@ sub isGroupSvnTracked {
 
 sub svnGroup_mail_header {
   return $$GROUP_INFO{'svn_events_mailing_header'};
-}
-
-sub svnGroup_mailto {
-  return $$GROUP_INFO{'svn_events_mailing_list'};
-}
-
-sub isGroupPublic {
-  return ($$GROUP_INFO{'access'} != 'private');
 }
 
 sub isGroupUsingTruncatedMails {
@@ -122,11 +114,11 @@ sub get_email_from_login {
 
     if ($username ne '') {
         $query = "SELECT email FROM user WHERE user_name=? AND (status='A' OR status='R') ";
-        
+
         $c = $dbh->prepare($query);
         $c->bind_param(1, $username, SQL_VARCHAR);
         $res = $c->execute();
-    
+
         if (!$res || ($c->rows < 1)) {
             return 0;
         } else {
@@ -225,11 +217,11 @@ sub is_valid_email {
 
     if ($email ne '') {
         $query = "SELECT * FROM user WHERE email=? ";
-        
+
         $c = $dbh->prepare($query);
         $c->bind_param(1, $email, SQL_VARCHAR);
         $res = $c->execute();
-        
+
         if (!$res || ($c->rows < 1)) {
             # if the email is unknow, we add it (it is an external email address for instance)
             return 1;
