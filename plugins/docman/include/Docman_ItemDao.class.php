@@ -833,7 +833,7 @@ class Docman_ItemDao extends DataAccessObject
     {
         $sql = sprintf(
             'SELECT i.*' .
-                       ' FROM plugin_docman_item i, groups g' .
+                       ' FROM plugin_docman_item i, `groups` g' .
                        ' WHERE delete_date IS NULL' .
                        ' AND (i.obsolescence_date >= %d' .
                        '   AND i.obsolescence_date <= %d)' .
