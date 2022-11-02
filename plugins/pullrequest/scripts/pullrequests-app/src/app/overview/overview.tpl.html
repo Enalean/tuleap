@@ -71,7 +71,9 @@
             <div class="tlp-property pull-request-ci">
                 <label class="tlp-label">{{ 'Last CI Status' | translate }}</label>
                 <p class="tlp-text-success" ng-if="overview.buildStatusIs('success')">
-                    <i class="fa fa-check"></i> <span translate>Success on </span>
+                    <i class="fa fa-check"></i>
+                    <span ng-if="overview.is_preference_set_to_absolute" translate>Success on </span>
+                    <span ng-if="overview.is_preference_set_to_relative" translate>Success </span>
                     <tlp-relative-date
                         date="{{ ::overview.pull_request.last_build_date }}"
                         absolute-date="{{ overview.relative_date_helper.getFormatDateUsingPreferredUserFormat(overview.pull_request.last_build_date) }}"
@@ -85,7 +87,9 @@
                     </tlp-relative-date>
                 </p>
                 <p class="tlp-text-danger" ng-if="overview.buildStatusIs('fail')">
-                    <i class="fas fa-times"></i> <span translate>Failure on </span>
+                    <i class="fas fa-times"></i>
+                    <span ng-if="overview.is_preference_set_to_absolute" translate>Failure on </span>
+                    <span ng-if="overview.is_preference_set_to_relative" translate>Failure </span>
                     <tlp-relative-date
                         date="{{ ::overview.pull_request.last_build_date }}"
                         absolute-date="{{ ::overview.relative_date_helper.getFormatDateUsingPreferredUserFormat(overview.pull_request.last_build_date) }}"

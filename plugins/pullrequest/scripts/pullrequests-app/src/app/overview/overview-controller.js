@@ -54,6 +54,12 @@ function OverviewController(
             SharedPropertiesService.getRelativeDateDisplay(),
             SharedPropertiesService.getUserLocale()
         ),
+        is_preference_set_to_absolute:
+            SharedPropertiesService.getRelativeDateDisplay() === "absolute_first-relative_shown" ||
+            SharedPropertiesService.getRelativeDateDisplay() === "absolute_first-relative_tooltip",
+        is_preference_set_to_relative:
+            SharedPropertiesService.getRelativeDateDisplay() === "relative_first-absolute_shown" ||
+            SharedPropertiesService.getRelativeDateDisplay() === "relative_first-absolute_tooltip",
         $onInit: init,
     });
 

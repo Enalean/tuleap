@@ -91,6 +91,9 @@ msgstr "Éditer les relecteurs"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+msgid "Failure"
+msgstr "Échec"
+
 msgid "Failure on"
 msgstr "Échec le"
 
@@ -206,6 +209,9 @@ msgstr "Voir les détails"
 
 msgid "Side by side diff"
 msgstr "Diff côte à côte"
+
+msgid "Success"
+msgstr "Succès"
 
 msgid "Success on"
 msgstr "Succès le"
