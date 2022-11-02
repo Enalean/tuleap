@@ -23,14 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Upload\Version;
 
 use Docman_LockFactory;
-use ProjectManager;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
-use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
 use Tuleap\Upload\UploadPathAllocator;
@@ -41,10 +39,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      * @var Docman_LockFactory
      */
     private $lock_factory;
-    /**
-     * @var DocmanItemsEventAdder
-     */
-    private $items_event_adder;
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -61,10 +55,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      * @var \Docman_VersionFactory
      */
     private $version_factory;
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
     /**
      * @var DocumentOnGoingVersionToUploadDAO
      */
@@ -85,10 +75,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      * @var \UserManager
      */
     private $user_manager;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
     /**
      * @var ApprovalTableUpdater
      */
