@@ -38,10 +38,12 @@ final class AlwaysThereColumnRetriever
     {
         $useStatus = $this->docman_settings->getMetadataUsage('status');
 
+        $always_there_metadata = ['title', 'description', 'location', 'owner', 'update_date', 'id', 'create_date'];
+
         if ($useStatus) {
-            return ['status', 'title', 'description', 'location', 'owner', 'update_date', 'id'];
-        } else {
-            return ['title', 'description', 'location', 'owner', 'update_date', 'id'];
+            $always_there_metadata[] = 'status';
         }
+
+        return $always_there_metadata;
     }
 }

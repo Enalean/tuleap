@@ -138,7 +138,7 @@ final class SearchReportBuilderTest extends TestCase
         $this->custom_properties->add(SearchColumn::buildForSingleValueCustomProperty("field_2", "Comments"));
 
         $report = $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
-        self::assertCount(8, $report->getColumnIterator());
+        self::assertCount(9, $report->getColumnIterator());
     }
 
     public function testItBuildsAReportWithAGlobalSearchFilter(): void
