@@ -209,31 +209,47 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
     margin: 0 0 0 calc(var(--tlp-medium-spacing) / 2);
 }
 
-.tlp-pane-section .tlp-table {
-    width: calc(100% + 2 * var(--tlp-medium-spacing));
-    margin: 0 calc((-1) * var(--tlp-medium-spacing));
-
-    &:last-child {
-        margin: 0 calc((-1) * var(--tlp-medium-spacing)) calc((-1) * var(--tlp-medium-spacing));
+.tlp-pane-section {
+    &:only-child .tlp-table:last-child {
+        margin-top: calc((-1) * var(--tlp-medium-spacing));
     }
 
-    > thead > tr > th:first-child,
-    > tbody > tr > td:first-child {
-        padding-left: var(--tlp-medium-spacing);
-    }
+    .tlp-table {
+        width: calc(100% + 2 * var(--tlp-medium-spacing));
+        margin: 0 calc((-1) * var(--tlp-medium-spacing));
 
-    > thead > tr > th:last-child,
-    > tbody > tr > td:last-child {
-        padding-right: var(--tlp-medium-spacing);
-    }
-
-    > tbody > tr:last-child {
-        > td:first-child {
-            border-bottom-left-radius: var(--tlp-large-radius);
+        &:last-child {
+            margin: 0 calc((-1) * var(--tlp-medium-spacing)) calc((-1) * var(--tlp-medium-spacing));
         }
 
-        > td:last-child {
-            border-bottom-right-radius: var(--tlp-large-radius);
+        > thead > tr > th:first-child,
+        > tbody > tr > td:first-child {
+            padding-left: var(--tlp-medium-spacing);
+        }
+
+        > thead > tr > th:last-child,
+        > tbody > tr > td:last-child {
+            padding-right: var(--tlp-medium-spacing);
+        }
+
+        > thead > tr {
+            > th:first-child {
+                border-top-left-radius: var(--tlp-large-radius);
+            }
+
+            > th:last-child {
+                border-top-right-radius: var(--tlp-large-radius);
+            }
+        }
+
+        > tbody > tr:last-child {
+            > td:first-child {
+                border-bottom-left-radius: var(--tlp-large-radius);
+            }
+
+            > td:last-child {
+                border-bottom-right-radius: var(--tlp-large-radius);
+            }
         }
     }
 }

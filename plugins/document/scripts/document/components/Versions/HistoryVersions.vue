@@ -21,29 +21,47 @@
 <template>
     <div class="document-history-versions">
         <h2 class="document-history-section-title">{{ $gettext("Versions") }}</h2>
-        <table class="tlp-table">
-            <thead>
-                <tr>
-                    <th class="tlp-table-cell-numeric">{{ $gettext("Version") }}</th>
-                    <th>{{ $gettext("Date") }}</th>
-                    <th>{{ $gettext("Author") }}</th>
-                    <th>{{ $gettext("Version name") }}</th>
-                    <th>{{ $gettext("Change Log") }}</th>
-                    <th v-if="!is_link">{{ $gettext("Approval") }}</th>
-                    <th v-if="should_display_source_column">{{ $gettext("Source") }}</th>
-                    <th v-if="!is_link"></th>
-                </tr>
-            </thead>
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <section class="tlp-pane-section">
+                    <table class="tlp-table">
+                        <thead>
+                            <tr>
+                                <th class="tlp-table-cell-numeric">{{ $gettext("Version") }}</th>
+                                <th>{{ $gettext("Date") }}</th>
+                                <th>{{ $gettext("Author") }}</th>
+                                <th>{{ $gettext("Version name") }}</th>
+                                <th>{{ $gettext("Change Log") }}</th>
+                                <th v-if="!is_link">{{ $gettext("Approval") }}</th>
+                                <th v-if="should_display_source_column">
+                                    {{ $gettext("Source") }}
+                                </th>
+                                <th v-if="!is_link"></th>
+                            </tr>
+                        </thead>
 
-            <history-versions-loading-state v-if="is_loading" v-bind:item="item" />
-            <history-versions-error-state v-else-if="is_in_error" v-bind:colspan="colspan" />
-            <history-versions-empty-state v-else-if="is_empty" v-bind:colspan="colspan" />
-            <history-versions-content-for-link
-                v-else-if="is_link"
-                v-bind:versions="link_versions"
-            />
-            <history-versions-content v-else v-bind:item="item" v-bind:versions="file_versions" />
-        </table>
+                        <history-versions-loading-state v-if="is_loading" v-bind:item="item" />
+                        <history-versions-error-state
+                            v-else-if="is_in_error"
+                            v-bind:colspan="colspan"
+                        />
+                        <history-versions-empty-state
+                            v-else-if="is_empty"
+                            v-bind:colspan="colspan"
+                        />
+                        <history-versions-content-for-link
+                            v-else-if="is_link"
+                            v-bind:versions="link_versions"
+                        />
+                        <history-versions-content
+                            v-else
+                            v-bind:item="item"
+                            v-bind:versions="file_versions"
+                        />
+                    </table>
+                </section>
+            </div>
+        </section>
     </div>
 </template>
 
