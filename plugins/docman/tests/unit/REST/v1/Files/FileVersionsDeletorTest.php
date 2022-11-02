@@ -23,9 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Files;
 
 use Luracast\Restler\RestException;
+use Tuleap\Docman\Tests\Stub\ICountVersionsStub;
 use Tuleap\Docman\Tests\Stub\IDeleteVersionStub;
 use Tuleap\Docman\Tests\Stub\IRetrieveVersionStub;
+use Tuleap\Docman\Version\ICountVersions;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class FileVersionsDeletorTest extends TestCase
@@ -44,7 +47,9 @@ class FileVersionsDeletorTest extends TestCase
         $deletor = new FileVersionsDeletor(
             IRetrieveVersionStub::withoutVersion(),
             IDeleteVersionStub::willSucceed(),
+            $this->createMock(ICountVersions::class),
             $this->createMock(\Docman_ItemFactory::class),
+            new DBTransactionExecutorPassthrough(),
         );
 
         $this->expectException(RestException::class);
@@ -67,7 +72,9 @@ class FileVersionsDeletorTest extends TestCase
         $deletor = new FileVersionsDeletor(
             IRetrieveVersionStub::withVersion($version),
             IDeleteVersionStub::willSucceed(),
+            $this->createMock(ICountVersions::class),
             $item_factory,
+            new DBTransactionExecutorPassthrough(),
         );
 
         $this->expectException(RestException::class);
@@ -97,7 +104,9 @@ class FileVersionsDeletorTest extends TestCase
         $deletor = new FileVersionsDeletor(
             IRetrieveVersionStub::withVersion($version),
             IDeleteVersionStub::willSucceed(),
+            $this->createMock(ICountVersions::class),
             $item_factory,
+            new DBTransactionExecutorPassthrough(),
         );
 
         $this->expectException(RestException::class);
@@ -127,12 +136,50 @@ class FileVersionsDeletorTest extends TestCase
         $deletor = new FileVersionsDeletor(
             IRetrieveVersionStub::withVersion($version),
             IDeleteVersionStub::willFail(),
+            ICountVersionsStub::buildTwoVersions(),
             $item_factory,
+            new DBTransactionExecutorPassthrough(),
         );
 
         $this->expectException(UnableToDeleteVersionException::class);
 
         $deletor->delete(123, $user);
+    }
+
+    public function testExceptionWhenItemHasOnlyOneVersionLeft(): void
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $item    = new \Docman_File(['group_id' => self::PROJECT_ID]);
+        $version = new \Docman_Version();
+
+        $item_factory = $this->createMock(\Docman_ItemFactory::class);
+        $item_factory
+            ->method('getItemFromDb')
+            ->willReturn($item);
+
+        $permissions = $this->createMock(\Docman_PermissionsManager::class);
+        $permissions
+            ->method('userCanDelete')
+            ->willReturn(true);
+        \Docman_PermissionsManager::setInstance(self::PROJECT_ID, $permissions);
+
+        $version_deletor = IDeleteVersionStub::willSucceed();
+
+        $deletor = new FileVersionsDeletor(
+            IRetrieveVersionStub::withVersion($version),
+            $version_deletor,
+            ICountVersionsStub::buildOneVersion(),
+            $item_factory,
+            new DBTransactionExecutorPassthrough(),
+        );
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+
+        $deletor->delete(123, $user);
+
+        self::assertFalse($version_deletor->hasBeenCalled());
     }
 
     public function testHappyPath(): void
@@ -158,7 +205,9 @@ class FileVersionsDeletorTest extends TestCase
         $deletor = new FileVersionsDeletor(
             IRetrieveVersionStub::withVersion($version),
             $version_deletor,
+            ICountVersionsStub::buildTwoVersions(),
             $item_factory,
+            new DBTransactionExecutorPassthrough(),
         );
 
         $deletor->delete(123, $user);
