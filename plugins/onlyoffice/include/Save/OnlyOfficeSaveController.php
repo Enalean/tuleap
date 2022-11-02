@@ -29,12 +29,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
 final class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Compatible implements \Tuleap\Request\DispatchableWithRequestNoAuthz
 {
     public function __construct(
         private OnlyOfficeCallbackResponseParser $callback_response_parser,
+        private SaveOnlyOfficeCallbackDocument $only_office_callback_document_saver,
         private JSONResponseBuilder $json_response_builder,
         private LoggerInterface $logger,
         EmitterInterface $emitter,
@@ -58,14 +61,17 @@ final class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Co
 
         return $this->callback_response_parser
             ->parseCallbackResponseContent($response_content)
-            ->match(
+            ->andThen(
                 /**
                  * @psalm-param OptionalValue<OnlyOfficeCallbackSaveResponseData> $save_response_data
+                 * @psalm-return Ok<null>|Err<Fault>
                  */
-                function (OptionalValue $save_response_data): ResponseInterface {
-                    $save_response_data->apply(
-                        fn (OnlyOfficeCallbackSaveResponseData $data) => $this->logger->debug(var_export($data, true))
-                    );
+                function (OptionalValue $save_response_data) use ($save_token_information): Ok|Err {
+                    return $this->only_office_callback_document_saver->saveDocument($save_token_information, $save_response_data);
+                }
+            )
+            ->match(
+                function (): ResponseInterface {
                     return $this->buildSuccessResponse();
                 },
                 function (Fault $fault): ResponseInterface {

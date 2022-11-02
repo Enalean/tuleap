@@ -30,11 +30,13 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\Download\DocmanFileDownloadController;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
+use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\OpenItemHref;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Document\Tree\ShouldDisplaySourceColumnForFileVersions;
@@ -143,7 +145,12 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 
     public function routePostDocumentSave(): OnlyOfficeSaveController
     {
-        $logger = self::getLogger();
+        $logger           = self::getLogger();
+        $versions_factory = new Docman_VersionFactory();
+        $event_manager    = EventManager::instance();
+        $docman_plugin    = PluginManager::instance()->getPluginByName('docman');
+        assert($docman_plugin instanceof DocmanPlugin);
+        $docman_root_path = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
 
         return new OnlyOfficeSaveController(
             new \Tuleap\OnlyOffice\Save\OnlyOfficeCallbackResponseJWTParser(
@@ -154,6 +161,21 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                     new DateInterval('PT2M'),
                 ),
                 new \Lcobucci\JWT\Signer\Hmac\Sha256(),
+            ),
+            new \Tuleap\OnlyOffice\Save\OnlyOfficeCallbackDocumentSaver(
+                UserManager::instance(),
+                new Docman_ItemFactory(),
+                $versions_factory,
+                new Docman_FileStorage($docman_root_path),
+                new PostUpdateFileHandler(
+                    $versions_factory,
+                    new \Tuleap\Docman\REST\v1\DocmanItemsEventAdder($event_manager),
+                    ProjectManager::instance(),
+                    $event_manager,
+                ),
+                \Tuleap\Http\HttpClientFactory::createAsyncClient(),
+                HTTPFactoryBuilder::requestFactory(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
             new JSONResponseBuilder(
                 HTTPFactoryBuilder::responseFactory(),

@@ -41,7 +41,8 @@ final class OnlyOfficeSaveControllerTest extends TestCase
         $controller = self::buildController(
             Result::ok(
                 OptionalValue::nothing(OnlyOfficeCallbackSaveResponseData::class)
-            )
+            ),
+            true,
         );
 
         $response = $controller->handle(new NullServerRequest());
@@ -55,7 +56,8 @@ final class OnlyOfficeSaveControllerTest extends TestCase
         $controller = self::buildController(
             Result::ok(
                 OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download'))
-            )
+            ),
+            true,
         );
 
         $response = $controller->handle(self::buildCallbackRequestWithSaveToken());
@@ -67,7 +69,23 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     public function testReturnsErrorResponseWhenCannotParseCallbackContent(): void
     {
         $controller = self::buildController(
-            Result::err(Fault::fromMessage('Something bad happened'))
+            Result::err(Fault::fromMessage('Something bad happened')),
+            true,
+        );
+
+        $response = $controller->handle(self::buildCallbackRequestWithSaveToken());
+
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertJsonStringEqualsJsonString('{"error":1}', $response->getBody()->getContents());
+    }
+
+    public function testReturnsErrorResponseWhenCannotSaveTheDocument(): void
+    {
+        $controller = self::buildController(
+            Result::ok(
+                OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download'))
+            ),
+            false,
         );
 
         $response = $controller->handle(self::buildCallbackRequestWithSaveToken());
@@ -79,7 +97,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     /**
      * @psalm-param Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault> $parser_response
      */
-    private static function buildController(Ok|Err $parser_response): OnlyOfficeSaveController
+    private static function buildController(Ok|Err $parser_response, bool $save_document_success): OnlyOfficeSaveController
     {
         return new OnlyOfficeSaveController(
             new class ($parser_response) implements OnlyOfficeCallbackResponseParser
@@ -95,6 +113,21 @@ final class OnlyOfficeSaveControllerTest extends TestCase
                 public function parseCallbackResponseContent(string $response_content): Ok|Err
                 {
                     return $this->result;
+                }
+            },
+            new class ($save_document_success) implements SaveOnlyOfficeCallbackDocument {
+                public function __construct(private bool $is_success)
+                {
+                }
+
+                public function saveDocument(
+                    SaveDocumentTokenData $save_token_information,
+                    OptionalValue $optional_response_data,
+                ): Ok|Err {
+                    if ($this->is_success) {
+                        return Result::ok(null);
+                    }
+                    return Result::err(Fault::fromMessage('Could not save document'));
                 }
             },
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
