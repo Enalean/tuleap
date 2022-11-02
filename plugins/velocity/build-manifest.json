@@ -1,6 +1,6 @@
 {
     "name": "velocity",
-    "gettext-js": {
+    "gettext-ts": {
         "velocity-chart": {
             "src": "scripts/velocity-chart/src",
             "po": "scripts/velocity-chart/po"

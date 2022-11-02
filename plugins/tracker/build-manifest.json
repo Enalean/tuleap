@@ -1,6 +1,10 @@
 {
     "name": "tracker",
-    "gettext-js": {
+    "gettext-ts": {
+        "artifact": {
+            "src": "scripts/artifact",
+            "po": "scripts/artifact/po"
+        },
         "burndown-chart": {
             "src": "scripts/burndown-chart/src",
             "po": "scripts/burndown-chart/po"
@@ -8,16 +12,10 @@
         "ckeditor-image-upload-form": {
             "src": "scripts/lib/artifact-ckeditor-image-upload/src",
             "po": "scripts/lib/artifact-ckeditor-image-upload/po"
-        }
-    },
-    "gettext-ts": {
+        },
         "rich-text-editor": {
             "src": "scripts/lib/rich-text-editor/src",
             "po": "scripts/lib/rich-text-editor/po"
-        },
-        "artifact": {
-            "src": "scripts/artifact",
-            "po": "scripts/artifact/po"
         }
     },
     "gettext-vue": {

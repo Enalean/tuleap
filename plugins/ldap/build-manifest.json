@@ -1,6 +1,6 @@
 {
     "name": "ldap",
-    "gettext-js": {
+    "gettext-ts": {
         "ldap-bindings": {
             "src": "scripts/project-admin",
             "po": "scripts/project-admin/po"

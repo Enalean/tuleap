@@ -1,12 +1,10 @@
 {
     "name": "core",
-    "gettext-js": {
+    "gettext-ts": {
         "chart-builder": {
             "src": "lib/frontend/chart-builder/src",
             "po": "lib/frontend/chart-builder/po"
-        }
-    },
-    "gettext-ts": {
+        },
         "list-picker": {
             "src": "lib/frontend/list-picker/src",
             "po": "lib/frontend/list-picker/po"

@@ -9,7 +9,6 @@ msgstr ""
 msgid "MMM YYYY"
 msgstr ""
 
-#, javascript-format
 msgid "W%s"
 msgstr ""
 

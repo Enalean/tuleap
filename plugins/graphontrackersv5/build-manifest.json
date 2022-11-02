@@ -1,6 +1,6 @@
 {
     "name": "graphontrackersv5",
-    "gettext-js": {
+    "gettext-ts": {
         "graphontrackersv5": {
             "src": "scripts/src",
             "po" : "scripts/po"
