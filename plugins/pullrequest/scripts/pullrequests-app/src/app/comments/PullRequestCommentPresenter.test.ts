@@ -17,17 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PullRequestCommentPresenterBuilder } from "./pullrequest-comment-presenter-builder";
+import {
+    PullRequestCommentPresenter,
+    TYPE_EVENT_COMMENT,
+    TYPE_GLOBAL_COMMENT,
+    TYPE_INLINE_COMMENT,
+} from "./PullRequestCommentPresenter";
 import type {
     FileDiffCommentPayload,
     PullRequestData,
     TimelineEventPayload,
     State,
-} from "./pullrequest-comment-presenter-builder";
-import type { PullRequestUser } from "./PullRequestComment";
+} from "./PullRequestCommentPresenter";
+import type { PullRequestUser } from "./PullRequestCommentPresenter";
 import { setCatalog } from "../gettext-catalog";
 
-describe("pullRequestCommentPresenterBuilder", () => {
+describe("PullRequestCommentPresenterBuilder", () => {
     const $state: State = { href: jest.fn() };
 
     beforeEach(() => {
@@ -35,18 +40,17 @@ describe("pullRequestCommentPresenterBuilder", () => {
     });
 
     it("Builds a presenter from timeline payload for comment", () => {
-        const builder = PullRequestCommentPresenterBuilder($state);
         const event: TimelineEventPayload = {
             post_date: "2020/07/13 16:16",
             file_url: "my_url",
             content: "my comment\nwith line return",
             file_path: "",
-            type: "comment",
+            type: TYPE_GLOBAL_COMMENT,
             is_outdated: false,
             user: {} as PullRequestUser,
         } as TimelineEventPayload;
         const pullRequest: PullRequestData = { id: 1 };
-        const result = builder.fromTimelineEvent(event, pullRequest);
+        const result = PullRequestCommentPresenter.fromTimelineEvent($state, event, pullRequest);
 
         expect(result.content).toBe("my comment<br/>with line return");
         expect(result.is_inline_comment).toBe(false);
@@ -54,18 +58,17 @@ describe("pullRequestCommentPresenterBuilder", () => {
     });
 
     it("Builds a presenter from timeline payload for inline comments", () => {
-        const builder = PullRequestCommentPresenterBuilder($state);
         const event: TimelineEventPayload = {
             post_date: "2020/07/13 16:16",
             file_url: "my_url",
             content: "my comment\nwith line return",
             file_path: "",
-            type: "inline-comment",
+            type: TYPE_INLINE_COMMENT,
             is_outdated: false,
             user: {} as PullRequestUser,
         } as TimelineEventPayload;
         const pullRequest: PullRequestData = { id: 1 };
-        const result = builder.fromTimelineEvent(event, pullRequest);
+        const result = PullRequestCommentPresenter.fromTimelineEvent($state, event, pullRequest);
 
         expect(result.content).toBe("my comment<br/>with line return");
         expect(result.is_inline_comment).toBe(true);
@@ -73,19 +76,18 @@ describe("pullRequestCommentPresenterBuilder", () => {
     });
 
     it("Builds a presenter from timeline payload for timeline events", () => {
-        const builder = PullRequestCommentPresenterBuilder($state);
         const event: TimelineEventPayload = {
             post_date: "2020/07/13 16:16",
             file_url: "my_url",
             content: "",
             file_path: "",
-            type: "timeline-event",
+            type: TYPE_EVENT_COMMENT,
             is_outdated: false,
             event_type: "update",
             user: {} as PullRequestUser,
         } as TimelineEventPayload;
         const pullRequest: PullRequestData = { id: 1 };
-        const result = builder.fromTimelineEvent(event, pullRequest);
+        const result = PullRequestCommentPresenter.fromTimelineEvent($state, event, pullRequest);
 
         expect(result.content).toBe("Has updated the pull request.");
         expect(result.is_inline_comment).toBe(false);
@@ -93,16 +95,19 @@ describe("pullRequestCommentPresenterBuilder", () => {
     });
 
     it("Builds a presenter from comment payload", () => {
-        const builder = PullRequestCommentPresenterBuilder($state);
-
         const event: FileDiffCommentPayload = {
+            id: 12,
             post_date: "2020/07/13 16:16",
             content: "my comment",
             user: {} as PullRequestUser,
+            unidiff_offset: 8,
+            position: "right",
         };
-        const result = builder.fromFileDiffComment(event);
+        const result = PullRequestCommentPresenter.fromFileDiffComment(event);
         expect(result.type).toBe("inline-comment");
         expect(result.is_outdated).toBe(false);
         expect(result.is_inline_comment).toBe(true);
+        expect(result.unidiff_offset).toBe(8);
+        expect(result.position).toBe("right");
     });
 });

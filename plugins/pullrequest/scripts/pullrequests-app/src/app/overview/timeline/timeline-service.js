@@ -17,19 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PullRequestCommentPresenterBuilder } from "../../comments/pullrequest-comment-presenter-builder";
-import { RelativeDateHelper } from "../../helpers/date-helpers";
+import { PullRequestCommentPresenter } from "../../comments/PullRequestCommentPresenter";
 
 export default TimelineService;
 
-TimelineService.$inject = [
-    "TimelineRestService",
-    "gettextCatalog",
-    "$state",
-    "SharedPropertiesService",
-];
+TimelineService.$inject = ["TimelineRestService", "gettextCatalog", "$state"];
 
-function TimelineService(TimelineRestService, gettextCatalog, $state, SharedPropertiesService) {
+function TimelineService(TimelineRestService, gettextCatalog, $state) {
     const self = this;
 
     Object.assign(self, {
@@ -63,30 +57,18 @@ function TimelineService(TimelineRestService, gettextCatalog, $state, SharedProp
         return getPaginatedTimeline(pull_request, initialTimeline, limit, offset).then(function (
             timeline
         ) {
-            const pull_request_comment_presenter_builder = PullRequestCommentPresenterBuilder(
-                $state,
-                RelativeDateHelper(
-                    SharedPropertiesService.getDateTimeFormat(),
-                    SharedPropertiesService.getRelativeDateDisplay(),
-                    SharedPropertiesService.getUserLocale()
-                )
-            );
             return timeline
                 .filter((event) => event.type !== "reviewer-change")
                 .map((event) =>
-                    pull_request_comment_presenter_builder.fromTimelineEvent(event, pull_request)
+                    PullRequestCommentPresenter.fromTimelineEvent($state, event, pull_request)
                 );
         });
     }
 
     function addComment(pullRequest, timeline, newComment) {
-        const pull_request_comment_presenter_builder = PullRequestCommentPresenterBuilder(
-            $state,
-            self.relative_date_helper
-        );
         return TimelineRestService.addComment(pullRequest.id, newComment).then(function (event) {
             timeline.push(
-                pull_request_comment_presenter_builder.fromTimelineEvent(event, pullRequest)
+                PullRequestCommentPresenter.fromTimelineEvent($state, event, pullRequest)
             );
         });
     }
