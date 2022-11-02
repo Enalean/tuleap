@@ -54,13 +54,26 @@ describe("UpdateFolderPropertiesModal", () => {
                             type: "text",
                             is_required: false,
                         },
+                        {
+                            short_name: "status",
+                            list_value: [
+                                {
+                                    id: 103,
+                                },
+                            ],
+                        },
                     ],
                 },
-                configuration: { project_id: 102 },
+                configuration: {
+                    project_id: 102,
+                },
             },
         };
 
-        store = createStoreMock(general_store, { error: { has_modal_error: false } });
+        store = createStoreMock(general_store, {
+            error: { has_modal_error: false },
+            configuration: { is_status_property_used: true },
+        });
 
         factory = (props = {}) => {
             return shallowMount(UpdateFolderPropertiesModal, {
@@ -99,7 +112,7 @@ describe("UpdateFolderPropertiesModal", () => {
                 detail: { property_list: ["field_1"] },
             });
 
-            expect(wrapper.vm.properties_to_update).toEqual(["field_1"]);
+            expect(wrapper.vm.properties_to_update).toStrictEqual(["field_1"]);
         });
         it(`Receives the properties-recursion-option event,
        Then the properties_to_update  data is updated`, () => {
@@ -124,6 +137,58 @@ describe("UpdateFolderPropertiesModal", () => {
             });
 
             expect(wrapper.vm.recursion_option).toBe("all_items");
+        });
+        it(`Receives the update-status-recursion event because status is unchecked,
+       Then the status recursion value is updated to none`, () => {
+            const item = {
+                id: 7,
+                type: "folder",
+                properties: [
+                    {
+                        short_name: "status",
+                        list_value: [
+                            {
+                                id: 103,
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            const wrapper = factory({ item });
+            emitter.emit("properties-recursion-option", {
+                recursion_option: "all_items",
+            });
+
+            emitter.emit("update-status-recursion", false);
+
+            expect(wrapper.vm.item_to_update.status.recursion).toBe("none");
+        });
+        it(`Receives the update-status-recursion event because status is checked,
+       Then the status recursion value is updated to the recurse option value`, () => {
+            const item = {
+                id: 7,
+                type: "folder",
+                properties: [
+                    {
+                        short_name: "status",
+                        list_value: [
+                            {
+                                id: 103,
+                            },
+                        ],
+                    },
+                ],
+            };
+
+            const wrapper = factory({ item });
+            emitter.emit("properties-recursion-option", {
+                recursion_option: "all_items",
+            });
+
+            emitter.emit("update-status-recursion", true);
+
+            expect(wrapper.vm.item_to_update.status.recursion).toBe("all_items");
         });
     });
     it("Transform item property rest representation", () => {
@@ -161,7 +226,7 @@ describe("UpdateFolderPropertiesModal", () => {
 
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.formatted_item_properties).toEqual([properties_to_update]);
+        expect(wrapper.vm.formatted_item_properties).toStrictEqual([properties_to_update]);
     });
 
     it("Updates status", () => {
@@ -182,10 +247,16 @@ describe("UpdateFolderPropertiesModal", () => {
 
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.item_to_update.status).toEqual({ recursion: "none", value: "rejected" });
+        expect(wrapper.vm.item_to_update.status).toStrictEqual({
+            recursion: "none",
+            value: "rejected",
+        });
 
         emitter.emit("update-status-property", "draft");
-        expect(wrapper.vm.item_to_update.status).toEqual({ recursion: "none", value: "draft" });
+        expect(wrapper.vm.item_to_update.status).toStrictEqual({
+            recursion: "none",
+            value: "draft",
+        });
     });
 
     it("Updates title", () => {

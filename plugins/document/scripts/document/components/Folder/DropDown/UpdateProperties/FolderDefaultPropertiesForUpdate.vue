@@ -45,6 +45,8 @@
                             class="document-recursion-checkbox"
                             value="status"
                             ref="status_input"
+                            v-on:change="updateStatusRecursion"
+                            data-test="document-status-property-recursion-input"
                         />
                     </div>
                     <status-property-with-custom-binding-for-folder-update
@@ -132,6 +134,19 @@ function updatePropertiesWithRecursion(): void {
     emitter.emit("properties-recursion-list", {
         detail: { property_list: properties_to_update.value },
     });
+}
+
+function updateStatusRecursion(): void {
+    if (!is_status_property_used.value) {
+        return;
+    }
+
+    let must_use_recursion = false;
+    if (status_input.value && status_input.value.checked) {
+        must_use_recursion = true;
+    }
+
+    emitter.emit("update-status-recursion", must_use_recursion);
 }
 
 function updateRecursionOption(event: string): void {

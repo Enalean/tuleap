@@ -50,8 +50,39 @@ describe("transformFolderPropertiesForRecursionAtUpdate", () => {
                 recursion: "none",
             },
         };
+        const is_status_property_used = true;
+        expect(
+            transformFolderPropertiesForRecursionAtUpdate(item, is_status_property_used)
+        ).toStrictEqual(item_to_update);
+    });
+    it("Given an existing folder, then we add 'none' status update key for update if status is not used", () => {
+        const list_value: Array<ListValue> = [
+            {
+                id: 103,
+                name: "Open",
+            } as ListValue,
+        ];
+        const property: Property = {
+            short_name: "status",
+            list_value: list_value,
+        } as Property;
+        const item: Folder = {
+            id: 7,
+            type: "folder",
+            properties: [property],
+        } as Folder;
 
-        expect(transformFolderPropertiesForRecursionAtUpdate(item)).toEqual(item_to_update);
+        const item_to_update: Folder = {
+            ...item,
+            status: {
+                value: "none",
+                recursion: "none",
+            },
+        };
+        const is_status_property_used = false;
+        expect(
+            transformFolderPropertiesForRecursionAtUpdate(item, is_status_property_used)
+        ).toStrictEqual(item_to_update);
     });
 });
 
@@ -134,7 +165,7 @@ describe("transformCustomPropertiesForItemUpdate", () => {
 
         transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(parent_properties).toEqual(parent_properties);
+        expect(parent_properties).toStrictEqual(parent_properties);
     });
 
     it(`Given parent has a string value,
@@ -152,7 +183,7 @@ describe("transformCustomPropertiesForItemUpdate", () => {
 
         transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(parent_properties).toEqual(parent_properties);
+        expect(parent_properties).toStrictEqual(parent_properties);
     });
 
     it(`Given parent has a single list value,
@@ -188,7 +219,7 @@ describe("transformCustomPropertiesForItemUpdate", () => {
 
         transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_properties);
+        expect(expected_list).toStrictEqual(parent_properties);
     });
 
     it(`Given parent has a list with single value, and given list value is null,
@@ -218,7 +249,7 @@ describe("transformCustomPropertiesForItemUpdate", () => {
 
         transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_properties);
+        expect(expected_list).toStrictEqual(parent_properties);
     });
 
     it(`Given parent has a multiple list
@@ -259,7 +290,7 @@ describe("transformCustomPropertiesForItemUpdate", () => {
 
         transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_properties);
+        expect(expected_list).toStrictEqual(parent_properties);
     });
 
     it(`Given parent has a multiple list without any value
@@ -290,7 +321,7 @@ describe("transformCustomPropertiesForItemUpdate", () => {
 
         transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_properties);
+        expect(expected_list).toStrictEqual(parent_properties);
     });
     it(`Given parent has a date value,
         then the formatted date property is bound to value with the formatted date`, () => {
@@ -318,7 +349,7 @@ describe("transformCustomPropertiesForItemUpdate", () => {
 
         transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_properties);
+        expect(expected_list).toStrictEqual(parent_properties);
     });
     it(`Given parent does not have a date value,
         then the formatted date property is bound to value with empty string`, () => {
@@ -346,7 +377,7 @@ describe("transformCustomPropertiesForItemUpdate", () => {
 
         transformCustomPropertiesForItemUpdate(parent_properties);
 
-        expect(expected_list).toEqual(parent_properties);
+        expect(expected_list).toStrictEqual(parent_properties);
     });
 });
 
@@ -383,6 +414,6 @@ describe("formatCustomPropertiesForFolderUpdate", () => {
             recursion_option
         );
 
-        expect(item_to_update).toEqual(expected_item_to_update);
+        expect(item_to_update).toStrictEqual(expected_item_to_update);
     });
 });
