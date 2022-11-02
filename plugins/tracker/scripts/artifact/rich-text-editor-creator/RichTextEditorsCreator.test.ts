@@ -44,6 +44,7 @@ describe(`RichTextEditorsCreator`, () => {
         image_upload_factory = {
             createHelpBlock: jest.fn(),
             initiateImageUpload: jest.fn(),
+            forbidImageUpload: jest.fn(),
         };
         editor_factory = {
             createRichTextEditor: jest.fn(),
@@ -94,6 +95,54 @@ describe(`RichTextEditorsCreator`, () => {
                 options.onEditorInit(fake_ckeditor, textarea);
 
                 expect(initiateImageUpload).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe(`createEditFollowupEditor()`, () => {
+        it(`when there is no "edit followup" textarea in the document, it does nothing`, () => {
+            creator.createEditFollowupEditor(1, "text");
+
+            expect(editor_factory.createRichTextEditor).not.toHaveBeenCalled();
+        });
+
+        describe(`when there is an "edit followup" textarea in the document`, () => {
+            let textarea: HTMLTextAreaElement;
+            beforeEach(() => {
+                textarea = doc.createElement("textarea");
+                textarea.id = "tracker_followup_comment_edit_1";
+                doc.body.append(textarea);
+            });
+
+            it(`disables image upload and creates a rich text editor on it`, () => {
+                const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+
+                creator.createEditFollowupEditor(1, "html");
+
+                expect(image_upload_factory.createHelpBlock).not.toHaveBeenCalled();
+                expect(createRichTextEditor).toHaveBeenCalled();
+                const options = createRichTextEditor.mock.calls[0][1];
+
+                expect(options.format_selectbox_id).toBe("1");
+                expect(options.format_selectbox_value).toBe("html");
+            });
+
+            it(`sets up the onEditorInit callback`, () => {
+                const forbidImageUpload = jest.spyOn(image_upload_factory, "forbidImageUpload");
+                const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
+
+                creator.createEditFollowupEditor(1, "text");
+
+                const options = createRichTextEditor.mock.calls[0][1];
+                if (options.onEditorInit === undefined) {
+                    throw new Error(
+                        "Expected an onEditorInit callback to be passed to rich text editor factory, but none was passed"
+                    );
+                }
+                const fake_ckeditor = {} as CKEDITOR.editor;
+                options.onEditorInit(fake_ckeditor, textarea);
+
+                expect(forbidImageUpload).toHaveBeenCalled();
             });
         });
     });
@@ -163,7 +212,7 @@ describe(`RichTextEditorsCreator`, () => {
 
                 expect(options.format_selectbox_id).toBe("field_1234");
                 expect(options.format_selectbox_name).toBe("artifact[1234][format]");
-                expect(options.format_selectbox_value).toEqual(TEXT_FORMAT_COMMONMARK);
+                expect(options.format_selectbox_value).toStrictEqual(TEXT_FORMAT_COMMONMARK);
             });
 
             it(`and matching hidden input fields,
@@ -190,13 +239,13 @@ describe(`RichTextEditorsCreator`, () => {
 
                 expect(first_options.format_selectbox_id).toBe("field_1234");
                 expect(first_options.format_selectbox_name).toBe("artifact[1234][format]");
-                expect(first_options.format_selectbox_value).toEqual(TEXT_FORMAT_HTML);
+                expect(first_options.format_selectbox_value).toStrictEqual(TEXT_FORMAT_HTML);
 
                 const second_options = createRichTextEditor.mock.calls[1][1];
 
                 expect(second_options.format_selectbox_id).toBe("field_4567");
                 expect(second_options.format_selectbox_name).toBe("artifact[4567][format]");
-                expect(second_options.format_selectbox_value).toEqual(TEXT_FORMAT_TEXT);
+                expect(second_options.format_selectbox_value).toStrictEqual(TEXT_FORMAT_TEXT);
             });
         });
     });

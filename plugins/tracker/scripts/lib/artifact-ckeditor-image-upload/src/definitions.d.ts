@@ -30,6 +30,8 @@ declare module "@tuleap/plugin-tracker-artifact-ckeditor-image-upload" {
             textarea: HTMLTextAreaElement
         ): void;
 
+        forbidImageUpload(ckeditor_instance: CKEDITOR.editor): void;
+
         createHelpBlock(textarea: HTMLTextAreaElement): HelpBlock | null;
     }
 
