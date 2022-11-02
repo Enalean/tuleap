@@ -33,6 +33,7 @@ use Tuleap\Docman\REST\v1\DocmanFoldersResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
 use Tuleap\Docman\REST\v1\DocmanLinksResource;
 use Tuleap\Docman\REST\v1\DocmanWikiResource;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionsResource;
 use Tuleap\Docman\REST\v1\Files\FileVersionsResource;
 use Tuleap\Docman\REST\v1\ProjectMetadataResource;
 use Tuleap\Docman\REST\v1\SearchResource;
@@ -103,6 +104,7 @@ class ResourcesInjector
         );
 
         $restler->addAPIClass(FileVersionsResource::class, FileVersionsResource::NAME);
+        $restler->addAPIClass(EmbeddedFileVersionsResource::class, EmbeddedFileVersionsResource::NAME);
     }
 
     public static function declareProjectResources(array &$resources, Project $project): void

@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const deleteFileVersion = jest.fn();
+const deleteEmbeddedFileVersion = jest.fn();
 jest.mock("../../api/version-rest-querier", () => {
     return {
-        deleteFileVersion,
+        deleteEmbeddedFileVersion,
     };
 });
 
@@ -27,18 +27,18 @@ import { okAsync } from "neverthrow";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
-import HistoryVersionsContentRow from "./HistoryVersionsContentRow.vue";
+import HistoryVersionsContentRowForEmbeddedFile from "./HistoryVersionsContentRowForEmbeddedFile.vue";
 import type { RestUser } from "../../api/rest-querier";
-import type { FileHistory, User } from "../../type";
+import type { EmbeddedFileVersion, User } from "../../type";
 
-describe("HistoryVersionsContentRow", () => {
+describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     let location: Pick<Location, "reload">;
 
     function getWrapper(
         item: User,
         has_more_than_one_version: boolean
-    ): Wrapper<HistoryVersionsContentRow> {
-        return shallowMount(HistoryVersionsContentRow, {
+    ): Wrapper<HistoryVersionsContentRowForEmbeddedFile> {
+        return shallowMount(HistoryVersionsContentRowForEmbeddedFile, {
             localVue,
             propsData: {
                 item,
@@ -47,12 +47,11 @@ describe("HistoryVersionsContentRow", () => {
                     number: 1,
                     name: "Plop",
                     changelog: "The changelog",
-                    filename: "duck.png",
-                    download_href: "/path/to/dl",
+                    open_href: "/path/to/dl",
                     approval_href: "/path/to/table",
                     date: "2021-10-06",
                     author: { id: 102 } as unknown as RestUser,
-                } as FileHistory,
+                } as EmbeddedFileVersion,
                 location,
             },
         });
@@ -97,13 +96,13 @@ describe("HistoryVersionsContentRow", () => {
     });
 
     it("should delete the version if user confirm the deletion and refresh the page to display latest data", async () => {
-        deleteFileVersion.mockReturnValue(okAsync(null));
+        deleteEmbeddedFileVersion.mockReturnValue(okAsync(null));
 
         const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
 
         await wrapper.find("[data-test=confirm-button]").trigger("click");
 
-        expect(deleteFileVersion).toHaveBeenCalled();
+        expect(deleteEmbeddedFileVersion).toHaveBeenCalled();
         expect(location.reload).toHaveBeenCalled();
     });
 });

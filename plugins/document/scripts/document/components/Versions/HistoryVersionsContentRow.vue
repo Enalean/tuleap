@@ -125,7 +125,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import type { FileHistory, Item } from "../../type";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import { deleteVersion } from "../../api/version-rest-querier";
+import { deleteFileVersion } from "../../api/version-rest-querier";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
 
 const props = defineProps<{
@@ -149,7 +149,7 @@ function showConfirmationModal(): void {
 
 function onConfirmDeletion(): void {
     is_deleting.value = true;
-    deleteVersion(props.version.id).then(() => {
+    deleteFileVersion(props.version.id).then(() => {
         props.location.reload();
     });
 }

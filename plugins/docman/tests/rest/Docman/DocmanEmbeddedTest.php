@@ -801,7 +801,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testGetVersionsOfEmbeddedFile(int $root_id): void
+    public function testGetVersionsOfEmbeddedFileAndDeleteOneOfThem(int $root_id): void
     {
         $embedded_doc_id = $this->createEmbeddedFileAndReturnItsId(
             $root_id,
@@ -841,6 +841,21 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         self::assertEquals('My new version', $versions[0]['name']);
         self::assertEquals(1, $versions[1]['number']);
         self::assertEquals('', $versions[1]['name']);
+
+        $delete_version_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('DELETE', 'docman_embedded_file_versions/' . $versions[0]['id']),
+        );
+
+        self::assertEquals(204, $delete_version_response->getStatusCode());
+
+        $get_versions_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('GET', $versions_uri),
+        );
+        self::assertEquals(200, $get_versions_response->getStatusCode());
+        $versions = json_decode($get_versions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $versions);
     }
 
     /**

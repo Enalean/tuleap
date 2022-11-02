@@ -20,19 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\REST\v1\Files;
+namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\REST\v1\Files\FileVersionsDeletor;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Docman\Version\VersionRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 
-final class FileVersionsResource extends AuthenticatedResource
+final class EmbeddedFileVersionsResource extends AuthenticatedResource
 {
-    public const NAME = 'docman_file_versions';
+    public const NAME = 'docman_embedded_file_versions';
 
     /**
      * @url OPTIONS {id}
@@ -45,7 +46,7 @@ final class FileVersionsResource extends AuthenticatedResource
     /**
      * Delete version
      *
-     * Delete a version of a file. Please note that the last version of a file cannot be deleted.
+     * Delete a version of an embedded file. Please note that the last version of an embedded file cannot be deleted.
      *
      * @url    DELETE {id}
      * @access protected
@@ -56,7 +57,7 @@ final class FileVersionsResource extends AuthenticatedResource
         $this->checkAccess();
 
         (new FileVersionsDeletor(
-            new DoesItemHasExpectedTypeVisitor(\Docman_File::class),
+            new DoesItemHasExpectedTypeVisitor(\Docman_EmbeddedFile::class),
             new VersionRetriever(new VersionDao()),
             new \Docman_VersionFactory(),
             new VersionDao(),

@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1\Files;
 
 use Luracast\Restler\RestException;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Version\ICountVersions;
 use Tuleap\Docman\Version\IDeleteVersion;
 use Tuleap\Docman\Version\IRetrieveVersion;
@@ -32,6 +33,7 @@ use Tuleap\Docman\Version\VersionNotFoundException;
 final class FileVersionsDeletor
 {
     public function __construct(
+        private DoesItemHasExpectedTypeVisitor $expected_type_visitor,
         private IRetrieveVersion $version_retriever,
         private IDeleteVersion $version_deletor,
         private ICountVersions $versions_counter,
@@ -45,17 +47,24 @@ final class FileVersionsDeletor
         try {
             $version = $this->version_retriever->getVersion($id);
         } catch (VersionNotFoundException $exception) {
-            throw new RestException(404, "Version to delete not found");
+            throw new RestException(404, 'Version to delete not found');
         }
 
         $item = $this->item_factory->getItemFromDb((int) $version->getItemId());
         if (! $item) {
-            throw new RestException(404, "Version to delete not found");
+            throw new RestException(404, 'Version to delete not found');
+        }
+
+        if (! $item->accept($this->expected_type_visitor)) {
+            throw new RestException(
+                400,
+                'Item has not the expected type ' . $this->expected_type_visitor->getExpectedItemClass()
+            );
         }
 
         $permissions_manager = \Docman_PermissionsManager::instance((int) $item->getGroupId());
         if (! $permissions_manager->userCanDelete($user, $item)) {
-            throw new RestException(404, "Version to delete not found");
+            throw new RestException(404, 'Version to delete not found');
         }
 
         $this->transaction->execute(function () use ($item, $version) {

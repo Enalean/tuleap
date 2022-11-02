@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Files;
 
 use Luracast\Restler\RestException;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Tests\Stub\ICountVersionsStub;
 use Tuleap\Docman\Tests\Stub\IDeleteVersionStub;
 use Tuleap\Docman\Tests\Stub\IRetrieveVersionStub;
@@ -45,6 +46,7 @@ class FileVersionsDeletorTest extends TestCase
         $user = UserTestBuilder::buildWithDefaults();
 
         $deletor = new FileVersionsDeletor(
+            new DoesItemHasExpectedTypeVisitor(\Docman_File::class),
             IRetrieveVersionStub::withoutVersion(),
             IDeleteVersionStub::willSucceed(),
             $this->createMock(ICountVersions::class),
@@ -70,6 +72,7 @@ class FileVersionsDeletorTest extends TestCase
             ->willReturn(null);
 
         $deletor = new FileVersionsDeletor(
+            new DoesItemHasExpectedTypeVisitor(\Docman_File::class),
             IRetrieveVersionStub::withVersion($version),
             IDeleteVersionStub::willSucceed(),
             $this->createMock(ICountVersions::class),
@@ -102,6 +105,7 @@ class FileVersionsDeletorTest extends TestCase
         \Docman_PermissionsManager::setInstance(self::PROJECT_ID, $permissions);
 
         $deletor = new FileVersionsDeletor(
+            new DoesItemHasExpectedTypeVisitor(\Docman_File::class),
             IRetrieveVersionStub::withVersion($version),
             IDeleteVersionStub::willSucceed(),
             $this->createMock(ICountVersions::class),
@@ -111,6 +115,33 @@ class FileVersionsDeletorTest extends TestCase
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
+
+        $deletor->delete(123, $user);
+    }
+
+    public function testExceptionWhenItemIsNotExpectedType(): void
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $item    = new \Docman_EmbeddedFile(['group_id' => self::PROJECT_ID]);
+        $version = new \Docman_Version();
+
+        $item_factory = $this->createMock(\Docman_ItemFactory::class);
+        $item_factory
+            ->method('getItemFromDb')
+            ->willReturn($item);
+
+        $deletor = new FileVersionsDeletor(
+            new DoesItemHasExpectedTypeVisitor(\Docman_File::class),
+            IRetrieveVersionStub::withVersion($version),
+            IDeleteVersionStub::willSucceed(),
+            $this->createMock(ICountVersions::class),
+            $item_factory,
+            new DBTransactionExecutorPassthrough(),
+        );
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $deletor->delete(123, $user);
     }
@@ -134,6 +165,7 @@ class FileVersionsDeletorTest extends TestCase
         \Docman_PermissionsManager::setInstance(self::PROJECT_ID, $permissions);
 
         $deletor = new FileVersionsDeletor(
+            new DoesItemHasExpectedTypeVisitor(\Docman_File::class),
             IRetrieveVersionStub::withVersion($version),
             IDeleteVersionStub::willFail(),
             ICountVersionsStub::buildTwoVersions(),
@@ -167,6 +199,7 @@ class FileVersionsDeletorTest extends TestCase
         $version_deletor = IDeleteVersionStub::willSucceed();
 
         $deletor = new FileVersionsDeletor(
+            new DoesItemHasExpectedTypeVisitor(\Docman_File::class),
             IRetrieveVersionStub::withVersion($version),
             $version_deletor,
             ICountVersionsStub::buildOneVersion(),
@@ -203,6 +236,7 @@ class FileVersionsDeletorTest extends TestCase
         $version_deletor = IDeleteVersionStub::willSucceed();
 
         $deletor = new FileVersionsDeletor(
+            new DoesItemHasExpectedTypeVisitor(\Docman_File::class),
             IRetrieveVersionStub::withVersion($version),
             $version_deletor,
             ICountVersionsStub::buildTwoVersions(),
