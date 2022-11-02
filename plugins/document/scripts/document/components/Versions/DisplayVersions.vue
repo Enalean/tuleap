@@ -26,12 +26,12 @@
             <h1 class="document-header-title">{{ item.title }}</h1>
         </div>
         <nav class="tlp-tabs">
+            <span class="tlp-tab tlp-tab-active">{{ $gettext("Versions") }}</span>
             <router-link
                 class="tlp-tab"
                 v-bind:to="{ name: 'history', params: { item_id: item.id } }"
-                >{{ $gettext("History") }}</router-link
+                >{{ $gettext("Logs") }}</router-link
             >
-            <span class="tlp-tab tlp-tab-active">{{ $gettext("Versions") }}</span>
         </nav>
         <div class="tlp-framed-horizontally">
             <history-versions v-if="item_type_has_versions" v-bind:item="item" />
