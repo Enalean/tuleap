@@ -65,6 +65,10 @@ final class FileVersionRepresentation
      * @var string Description of the changes
      */
     public string $changelog;
+    /**
+     * @var string Authoring tool used for this version. Empty if unknown.
+     */
+    public string $authoring_tool;
 
     private function __construct(
         int $id,
@@ -77,6 +81,7 @@ final class FileVersionRepresentation
         UserRepresentation $author,
         string $date,
         string $changelog,
+        string $authoring_tool,
     ) {
         $this->id            = $id;
         $this->number        = $number;
@@ -95,6 +100,8 @@ final class FileVersionRepresentation
                     'version_number' => $number,
                 ]
             );
+
+        $this->authoring_tool = $authoring_tool;
     }
 
     public static function build(
@@ -108,6 +115,7 @@ final class FileVersionRepresentation
         \PFUser $author,
         \DateTimeInterface $date,
         string $changelog,
+        string $authoring_tool,
     ): self {
         return new self(
             $version_id,
@@ -120,6 +128,7 @@ final class FileVersionRepresentation
             UserRepresentation::build($author),
             JsonCast::fromNotNullDateTimeToDate($date),
             $changelog,
+            $authoring_tool,
         );
     }
 }

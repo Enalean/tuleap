@@ -83,6 +83,7 @@ final class VersionRepresentationCollectionBuilder
                 $author,
                 (new \DateTimeImmutable())->setTimestamp((int) $version->getDate()),
                 (string) $version->getChangelog(),
+                $version->getAuthoringTool(),
             );
         }
 

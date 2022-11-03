@@ -26,12 +26,12 @@ use Tuleap\DB\DataAccessObject;
 class VersionDao extends DataAccessObject implements ICountVersions
 {
     /**
-     * @psalm-return list<array{id: int, number: int, label: string, filename: string, user_id: int, date: int, changelog: string|null}>
+     * @psalm-return list<array{id: int, number: int, label: string, filename: string, user_id: int, date: int, changelog: string|null, authoring_tool: string}>
      */
     public function searchByItemId(int $id, int $offset, int $limit): array
     {
         $sql =
-            "SELECT id, number, label, filename, user_id, date, changelog
+            "SELECT id, number, label, filename, user_id, date, changelog, authoring_tool
                 FROM plugin_docman_version WHERE item_id = ? ORDER BY number DESC LIMIT ?, ?";
 
         return $this->getDB()->run($sql, $id, $offset, $limit);
@@ -46,7 +46,7 @@ class VersionDao extends DataAccessObject implements ICountVersions
     }
 
     /**
-     * @psalm-return null|array{id: int, number: int, label: string, filename: string, user_id: int, date: int, changelog: string|null}
+     * @psalm-return null|array{id: int, number: int, label: string, filename: string, user_id: int, date: int, changelog: string|null, authoring_tool: string}
      */
     public function searchById(int $id): ?array
     {

@@ -36,7 +36,8 @@ describe("HistoryVersionsContentRow", () => {
 
     function getWrapper(
         item: User,
-        has_more_than_one_version: boolean
+        has_more_than_one_version: boolean,
+        authoring_tool = ""
     ): Wrapper<HistoryVersionsContentRow> {
         return shallowMount(HistoryVersionsContentRow, {
             localVue,
@@ -52,8 +53,12 @@ describe("HistoryVersionsContentRow", () => {
                     approval_href: "/path/to/table",
                     date: "2021-10-06",
                     author: { id: 102 } as unknown as RestUser,
+                    authoring_tool,
                 } as FileHistory,
                 location,
+            },
+            provide: {
+                should_display_source_column_for_versions: true,
             },
         });
     }
@@ -66,6 +71,30 @@ describe("HistoryVersionsContentRow", () => {
         const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
 
         expect(wrapper.find("[data-test=approval-link]").exists()).toBe(true);
+    });
+
+    it("should display authoring tool as source", () => {
+        const authoring_tool = "Awesome Office Editor";
+
+        const wrapper = getWrapper(
+            { user_can_delete: true } as unknown as User,
+            true,
+            authoring_tool
+        );
+
+        expect(wrapper.find("[data-test=source]").text()).toBe(authoring_tool);
+    });
+
+    it("should display a 'Uploaded' as source if version has no identified authoring tool", () => {
+        const authoring_tool = "";
+
+        const wrapper = getWrapper(
+            { user_can_delete: true } as unknown as User,
+            true,
+            authoring_tool
+        );
+
+        expect(wrapper.find("[data-test=source]").text()).toBe("Uploaded");
     });
 
     it("should not display a delete button if user cannot delete", () => {

@@ -39,8 +39,8 @@
                 >{{ $gettext("Show") }}</a
             >
         </td>
-        <td v-if="should_display_source_column_for_versions">
-            {{ $gettext("Uploaded") }}
+        <td v-if="should_display_source_column_for_versions" data-test="source">
+            {{ source_text }}
         </td>
         <td class="tlp-table-cell-actions">
             <button
@@ -124,12 +124,13 @@
 
 <script setup lang="ts">
 import UserBadge from "../User/UserBadge.vue";
-import { inject, onMounted, onUnmounted, ref } from "vue";
+import { computed, inject, onMounted, onUnmounted, ref } from "vue";
 import type { FileHistory, Item } from "../../type";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { deleteFileVersion } from "../../api/version-rest-querier";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const props = defineProps<{
     item: Item;
@@ -145,6 +146,13 @@ const is_deleting = ref(false);
 const should_display_source_column_for_versions = inject(
     "should_display_source_column_for_versions",
     false
+);
+
+const gettext_provider = useGettext();
+const source_text = computed((): string =>
+    props.version.authoring_tool.length > 0
+        ? props.version.authoring_tool
+        : gettext_provider.$gettext("Uploaded")
 );
 
 let modal: Modal | null = null;
