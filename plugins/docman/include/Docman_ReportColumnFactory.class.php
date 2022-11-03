@@ -21,6 +21,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Search\FilenameColumnReport;
 use Tuleap\Docman\Search\IdColumnReport;
 
 class Docman_ReportColumnFactory
@@ -47,6 +48,10 @@ class Docman_ReportColumnFactory
 
             case 'id':
                 $col = new IdColumnReport();
+                break;
+
+            case 'filename':
+                $col = new FilenameColumnReport();
                 break;
 
             default:
