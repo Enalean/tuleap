@@ -140,7 +140,6 @@ describe("Artifact link usage", () => {
 
             cy.log("Reverse link display fixed in nature");
             cy.visit("/plugins/tracker/?&aid=" + fixed_by_artifact);
-            cy.get("[data-test=display-reverse-links]").click();
             cy.get("[data-test=reverse-link-section").contains(fixed_in_artifact);
         });
 
@@ -157,7 +156,6 @@ describe("Artifact link usage", () => {
             cy.get("[data-test=artifact-link-section]").contains(parent_artifact);
 
             cy.visit("https://tuleap/plugins/tracker/?&aid=" + parent_artifact);
-            cy.get("[data-test=display-reverse-links]").click();
             cy.get("[data-test=reverse-link-section").contains(child_artifact);
         });
     });
