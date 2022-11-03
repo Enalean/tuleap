@@ -106,6 +106,6 @@
     }
 
     > [class*="tlp-button"] {
-        margin: 0 var(--tlp-small-spacing) / 2;
+        margin: 0 calc(var(--tlp-small-spacing) / 2);
     }
 }

@@ -4833,6 +4833,3 @@ msgid ""
 msgstr ""
 "{{ jira_display_name }} identifié en tant que {{ tuleap_user_real_name }} "
 "(@{{ tuleap_user_username }})"
-
-msgid "« Go back to semantic overview"
-msgstr "« Retour à l'administration de la sémantique"
