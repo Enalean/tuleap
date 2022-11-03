@@ -28,7 +28,8 @@ export {
     getAllFileVersionHistory,
     getAllLinkVersionHistory,
     getAllEmbeddedFileVersionHistory,
-    deleteVersion,
+    deleteFileVersion,
+    deleteEmbeddedFileVersion,
 };
 
 async function getFileVersionHistory(id: number): Promise<ReadonlyArray<FileHistory>> {
@@ -64,6 +65,10 @@ function getAllLinkVersionHistory(id: number): ResultAsync<readonly LinkVersion[
     });
 }
 
-function deleteVersion(id: number): ResultAsync<Response, Fault> {
+function deleteFileVersion(id: number): ResultAsync<Response, Fault> {
     return del(`/api/docman_file_versions/${id}`);
+}
+
+function deleteEmbeddedFileVersion(id: number): ResultAsync<Response, Fault> {
+    return del(`/api/docman_embedded_file_versions/${id}`);
 }

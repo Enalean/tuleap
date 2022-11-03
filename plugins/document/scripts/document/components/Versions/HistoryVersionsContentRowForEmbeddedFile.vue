@@ -39,17 +39,141 @@
                 >{{ $gettext("Show") }}</a
             >
         </td>
-        <td class="tlp-table-cell-actions"></td>
+        <td class="tlp-table-cell-actions">
+            <button
+                type="button"
+                class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                v-if="item.user_can_delete"
+                ref="delete_button"
+                v-bind:disabled="!has_more_than_one_version"
+                v-bind:title="
+                    has_more_than_one_version
+                        ? ''
+                        : $gettext('The last version of an item cannot be deleted')
+                "
+                data-test="delete-button"
+            >
+                <i class="fa-solid fa-trash-can tlp-button-icon" aria-hidden="true"></i>
+                {{ $gettext("Delete") }}
+            </button>
+            <div
+                v-if="has_more_than_one_version"
+                ref="confirm_deletion"
+                class="tlp-modal tlp-modal-danger"
+                role="dialog"
+                v-bind:aria-labelledby="'confirmation-modal-title-' + version.id"
+            >
+                <div class="tlp-modal-header">
+                    <h1
+                        class="tlp-modal-title"
+                        v-bind:id="'confirmation-modal-title-' + version.id"
+                    >
+                        {{ $gettext("Hold on a second!") }}
+                    </h1>
+                    <button
+                        class="tlp-modal-close"
+                        type="button"
+                        data-dismiss="modal"
+                        v-bind:aria-label="$gettext('Close')"
+                    >
+                        <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="tlp-modal-body">
+                    <p>
+                        {{
+                            $gettext(
+                                "You are about to delete a version permanently. Please confirm your action."
+                            )
+                        }}
+                    </p>
+                </div>
+                <div class="tlp-modal-footer">
+                    <button
+                        type="button"
+                        class="tlp-button-danger tlp-button-outline tlp-modal-action"
+                        data-dismiss="modal"
+                    >
+                        {{ $gettext("Cancel") }}
+                    </button>
+                    <button
+                        type="button"
+                        class="tlp-button-danger tlp-modal-action"
+                        v-on:click="onConfirmDeletion"
+                        data-test="confirm-button"
+                        v-bind:disabled="is_deleting"
+                    >
+                        <i
+                            class="tlp-button-icon"
+                            aria-hidden="true"
+                            v-bind:class="{
+                                'fa-regular fa-trash-can': !is_deleting,
+                                'fa-solid fa-circle-notch fa-spin': is_deleting,
+                            }"
+                        ></i>
+                        {{ $gettext("Delete") }}
+                    </button>
+                </div>
+            </div>
+        </td>
     </tr>
 </template>
 
 <script setup lang="ts">
 import UserBadge from "../User/UserBadge.vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import type { Embedded, EmbeddedFileVersion } from "../../type";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
+import { deleteEmbeddedFileVersion } from "../../api/version-rest-querier";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
 
-defineProps<{
+const props = defineProps<{
     item: Embedded;
     version: EmbeddedFileVersion;
+    has_more_than_one_version: boolean;
+    location: Location;
 }>();
+
+const confirm_deletion = ref<HTMLElement | null>(null);
+const delete_button = ref<HTMLButtonElement | null>(null);
+const is_deleting = ref(false);
+
+let modal: Modal | null = null;
+
+function showConfirmationModal(): void {
+    if (modal) {
+        modal.show();
+    }
+}
+
+function onConfirmDeletion(): void {
+    is_deleting.value = true;
+    deleteEmbeddedFileVersion(props.version.id).then(() => {
+        props.location.reload();
+    });
+}
+
+onMounted(() => {
+    if (!confirm_deletion.value) {
+        return;
+    }
+
+    if (!delete_button.value) {
+        return;
+    }
+
+    modal = createModal(confirm_deletion.value);
+    delete_button.value.addEventListener("click", showConfirmationModal);
+});
+
+onUnmounted(() => {
+    if (delete_button.value && modal) {
+        delete_button.value.removeEventListener("click", showConfirmationModal);
+    }
+
+    if (modal) {
+        modal.destroy();
+    }
+});
 </script>

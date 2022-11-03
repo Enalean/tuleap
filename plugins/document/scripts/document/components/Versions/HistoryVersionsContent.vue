@@ -25,6 +25,8 @@
             v-bind:key="version.id"
             v-bind:item="item"
             v-bind:version="version"
+            v-bind:has_more_than_one_version="versions.length > 1"
+            v-bind:location="location"
         />
     </tbody>
     <tbody v-else>
