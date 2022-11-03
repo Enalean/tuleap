@@ -47,6 +47,7 @@ class Factory
 
     /**
      * @return PullRequest
+     * @throws PullRequestNotFoundException
      */
     public function getPullRequestById($id)
     {

@@ -121,6 +121,12 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
      */
     public $raw_description;
 
+    /**
+     * @var int {@type int} {@required false}
+     */
+    public $parent_id;
+
+
     public function build(
         PullRequest $pull_request,
         GitRepository $repository,

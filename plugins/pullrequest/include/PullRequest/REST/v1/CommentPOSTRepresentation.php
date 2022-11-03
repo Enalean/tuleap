@@ -23,10 +23,15 @@ namespace Tuleap\PullRequest\REST\v1;
 /**
  * @psalm-immutable
  */
-class CommentPOSTRepresentation
+final class CommentPOSTRepresentation
 {
     /**
      * @var string {@type string}
      */
-    public $content;
+    public string $content;
+
+    /**
+     * @var int | null {@type int} {@required false}
+     */
+    public $parent_id = 0;
 }

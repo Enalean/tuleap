@@ -164,7 +164,8 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
             $pr_id,
             $user_id,
             10,
-            'My comment'
+            'My comment',
+            0
         );
     }
 }

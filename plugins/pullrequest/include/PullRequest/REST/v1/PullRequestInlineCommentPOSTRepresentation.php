@@ -44,4 +44,8 @@ class PullRequestInlineCommentPOSTRepresentation
      * @var string {@type string}
      */
     public $position;
+    /**
+     * @var int | null {@type int} {@required false}
+     */
+    public int|null $parent_id = 0;
 }

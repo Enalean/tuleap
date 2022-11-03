@@ -22,38 +22,22 @@ namespace Tuleap\PullRequest\InlineComment;
 
 use Tuleap\PullRequest\Timeline\TimelineEvent;
 
-class InlineComment implements TimelineEvent
+final class InlineComment implements TimelineEvent
 {
-    private $id;
-    private $pull_request_id;
-    private $user_id;
-    private $post_date;
-    private $file_path;
-    private $unidiff_offset;
-    private $content;
-    private $is_outdated;
-
     public function __construct(
-        $id,
-        $pull_request_id,
-        $user_id,
-        $post_date,
-        $file_path,
-        $unidiff_offset,
-        $content,
-        $is_outdated,
+        private int $id,
+        private int $pull_request_id,
+        private int $user_id,
+        private int $post_date,
+        private string $file_path,
+        private int $unidiff_offset,
+        private string $content,
+        private bool $is_outdated,
+        private int $parent_id,
     ) {
-        $this->id              = $id;
-        $this->pull_request_id = $pull_request_id;
-        $this->user_id         = $user_id;
-        $this->post_date       = $post_date;
-        $this->file_path       = $file_path;
-        $this->unidiff_offset  = $unidiff_offset;
-        $this->content         = $content;
-        $this->is_outdated     = $is_outdated;
     }
 
-    public static function buildFromRow($row)
+    public static function buildFromRow($row): InlineComment
     {
         return new InlineComment(
             (int) $row['id'],
@@ -63,21 +47,22 @@ class InlineComment implements TimelineEvent
             $row['file_path'],
             (int) $row['unidiff_offset'],
             $row['content'],
-            (bool) $row['is_outdated']
+            (bool) $row['is_outdated'],
+            (int) $row['parent_id']
         );
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getPullRequestId()
+    public function getPullRequestId(): int
     {
         return $this->pull_request_id;
     }
 
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
@@ -87,33 +72,38 @@ class InlineComment implements TimelineEvent
         return $this->post_date;
     }
 
-    public function getFilePath()
+    public function getFilePath(): string
     {
         return $this->file_path;
     }
 
-    public function getUnidiffOffset()
+    public function getUnidiffOffset(): int
     {
         return $this->unidiff_offset;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    public function isOutdated()
+    public function isOutdated(): bool
     {
         return $this->is_outdated;
     }
 
-    public function markAsOutdated()
+    public function markAsOutdated(): void
     {
         $this->is_outdated = true;
     }
 
-    public function setUnidiffOffset($unidiff_offset)
+    public function setUnidiffOffset($unidiff_offset): void
     {
         $this->unidiff_offset = $unidiff_offset;
+    }
+
+    public function getParentId(): int
+    {
+        return $this->parent_id;
     }
 }

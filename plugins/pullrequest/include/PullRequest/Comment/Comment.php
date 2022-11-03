@@ -22,44 +22,26 @@ namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\PullRequest\Timeline\TimelineEvent;
 
-class Comment implements TimelineEvent
+/**
+ * @psalm-immutable
+ */
+final class Comment implements TimelineEvent
 {
-    /** @var int */
-    private $id;
-
-    /** @var int */
-    private $pull_request_id;
-
-    /** @var int */
-    private $user_id;
-
-    /** @var int */
-    private $post_date;
-
-    /** @var string */
-    private $content;
-
-
-    public function __construct($id, $pull_request_id, $user_id, $post_date, $content)
+    public function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private string $content, private int $parent_id)
     {
-        $this->id              = $id;
-        $this->pull_request_id = $pull_request_id;
-        $this->user_id         = $user_id;
-        $this->post_date       = $post_date;
-        $this->content         = $content;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getPullRequestId()
+    public function getPullRequestId(): int
     {
         return $this->pull_request_id;
     }
 
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
@@ -69,8 +51,13 @@ class Comment implements TimelineEvent
         return $this->post_date;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
+    }
+
+    public function getParentId(): int
+    {
+        return $this->parent_id;
     }
 }
