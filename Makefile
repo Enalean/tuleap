@@ -12,11 +12,11 @@ else
 DOCKER_COMPOSE_FILE=-f docker-compose.yml
 endif
 
-get_ip_addr = `$(DOCKER_COMPOSE) ps -q $(1) | xargs docker inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}'`
+get_ip_addr = `$(DOCKER_COMPOSE) ps -q $(1) | xargs $(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}'`
 
 SUDO=
 DOCKER=$(SUDO) docker
-DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
+DOCKER_COMPOSE=$(SUDO) "$(shell which docker-compose)" $(DOCKER_COMPOSE_FILE)
 
 
 ifeq ($(MODE),Prod)
@@ -218,12 +218,12 @@ phpunit-ci:
 	$(eval COVERAGE_ENABLED ?= 1)
 	$(eval PHP_VERSION ?= 80)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION)
-	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
+	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
 
 .PHONY: tests-unit-php
 tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (80). FILES to run specific tests.
 	$(eval PHP_VERSION ?= 80)
-	@docker run --rm -v $(CURDIR):/tuleap:ro --network none ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
+	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
 
 ifneq ($(origin SEED),undefined)
     RANDOM_ORDER_SEED_ARGUMENT=--random-order-seed=$(SEED)
@@ -292,7 +292,7 @@ stylelint: ## Execute stylelint. Use FILES parameter to execute on specific file
 	@pnpm run stylelint -- $(FILES)
 
 bash-web: ## Give a bash on web container
-	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
+	@$(DOCKER) exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `$(DOCKER_COMPOSE) ps -q web` bash
 
 .PHONY:pull-docker-images
 pull-docker-images: ## Pull all docker images used for development
@@ -340,8 +340,8 @@ show-passwords: ## Display passwords generated for Docker Compose environment
 
 show-ips: ## Display ips of all running services
 	@$(DOCKER_COMPOSE) ps -q | while read cid; do\
-		name=`docker inspect -f '{{.Name}}' $$cid | sed -e 's/^\/tuleap_\(.*\)_1$$/\1/'`;\
-		ip=`docker inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' $$cid`;\
+		name=`$(DOCKER) inspect -f '{{.Name}}' $$cid | sed -e 's/^\/tuleap_\(.*\)_1$$/\1/'`;\
+		ip=`$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' $$cid`;\
 		echo "$$ip $$name";\
 	done
 
@@ -362,7 +362,7 @@ start-rp:
 
 start-ldap-admin: ## Start ldap administration ui
 	@echo "Start ldap administration ui"
-	@docker-compose up -d ldap-admin
+	@$(DOCKER_COMPOSE) up -d ldap-admin
 	@echo "Open your browser at https://localhost:6443"
 
 start-mailhog: ## Start mailhog to catch emails sent by your Tuleap dev platform
