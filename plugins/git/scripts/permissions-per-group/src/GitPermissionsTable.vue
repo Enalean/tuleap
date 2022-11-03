@@ -50,7 +50,6 @@
 
 <script lang="ts">
 import GitPermissionsTableRepository from "./GitPermissionsTableRepository.vue";
-import { sprintf } from "sprintf-js";
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import type { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
@@ -75,9 +74,9 @@ export default class GitPermissionsTable extends Vue {
         return this.$gettext("There isn't any matching repository");
     }
     get ugroup_empty_state(): string {
-        return sprintf(
-            this.$gettext("%s has no permission for any repository in this project"),
-            this.selectedUgroupName
+        return this.$gettextInterpolate(
+            this.$gettext("%{ user_group } has no permission for any repository in this project"),
+            { user_group: this.selectedUgroupName }
         );
     }
     get is_empty(): boolean {

@@ -6,8 +6,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "%s has no permission for any repository in this project"
-msgstr "O %s não tem permissão para qualquer repositório neste projeto"
+msgid "%{ user_group } has no permission for any repository in this project"
+msgstr ""
+"O %{ user_group } não tem permissão para qualquer repositório neste projeto"
 
 msgid "Branch"
 msgstr "Branch"

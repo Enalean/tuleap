@@ -17,19 +17,14 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import localVueForTest from "./helper/local-vue-for-test";
 
 describe("GitInlineFilter", () => {
-    const store_options = {};
-
     function instantiateComponent(): Wrapper<GitInlineFilter> {
-        const store = createStoreMock(store_options);
         return shallowMount(GitInlineFilter, {
-            mocks: { $store: store },
             localVue: localVueForTest,
         });
     }

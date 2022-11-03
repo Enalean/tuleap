@@ -1269,9 +1269,9 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return array_keys($output) === ['group_id'];
     }
 
-    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $event->addJavascript($this->getIncludeAssets()->getFileURL('permission-per-group.js'));
+        $event->addJavascript(new \Tuleap\Layout\JavascriptAsset($this->getIncludeAssets(), 'permission-per-group.js'));
     }
 
     private function getIncludeAssets(): IncludeAssets

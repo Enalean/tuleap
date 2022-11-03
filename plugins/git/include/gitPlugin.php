@@ -506,9 +506,17 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         }
     }
 
-    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $event->addJavascript($this->getIncludeAssets()->getFileURL('permission-per-group.js'));
+        $event->addJavascript(
+            new \Tuleap\Layout\JavascriptAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../scripts/permissions-per-group/frontend-assets',
+                    '/assets/git/permissions-per-group'
+                ),
+                'permission-per-group.js'
+            )
+        );
     }
 
     public function javascript($params)
