@@ -17,8 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CurrentPullRequestUserPresenter } from "./PullRequestComment";
+import { PullRequestCurrentUserPresenter } from "./PullRequestCurrentUserPresenter";
 
-export const PullRequestCurrentUserPresenterBuilder = {
-    build: (avatar_url: string): CurrentPullRequestUserPresenter => ({ avatar_url }),
-};
+describe("PullRequestCurrentUserPresenter", () => {
+    it("should build the current user presenter", () => {
+        const avatar_url = "url/to/current/user/avatar.png";
+        const presenter = PullRequestCurrentUserPresenter.fromUserInfo(avatar_url);
+
+        expect(presenter).toStrictEqual({ avatar_url });
+    });
+});
