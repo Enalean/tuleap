@@ -21,22 +21,28 @@
 <template>
     <div class="document-history-logs">
         <h2 class="document-history-section-title">{{ $gettext("Logs") }}</h2>
-        <table class="tlp-table">
-            <thead>
-                <tr>
-                    <th>{{ $gettext("When") }}</th>
-                    <th>{{ $gettext("Who") }}</th>
-                    <th>{{ $gettext("What") }}</th>
-                    <th>{{ $gettext("Old value") }}</th>
-                    <th>{{ $gettext("New value") }}</th>
-                </tr>
-            </thead>
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <section class="tlp-pane-section">
+                    <table class="tlp-table">
+                        <thead>
+                            <tr>
+                                <th>{{ $gettext("When") }}</th>
+                                <th>{{ $gettext("Who") }}</th>
+                                <th>{{ $gettext("What") }}</th>
+                                <th>{{ $gettext("Old value") }}</th>
+                                <th>{{ $gettext("New value") }}</th>
+                            </tr>
+                        </thead>
 
-            <history-logs-loading-state v-if="is_loading" />
-            <history-logs-error-state v-else-if="is_in_error" v-bind:colspan="5" />
-            <history-logs-empty-state v-else-if="is_empty" v-bind:colspan="5" />
-            <history-logs-content v-else v-bind:log_entries="log_entries" />
-        </table>
+                        <history-logs-loading-state v-if="is_loading" />
+                        <history-logs-error-state v-else-if="is_in_error" v-bind:colspan="5" />
+                        <history-logs-empty-state v-else-if="is_empty" v-bind:colspan="5" />
+                        <history-logs-content v-else v-bind:log_entries="log_entries" />
+                    </table>
+                </section>
+            </div>
+        </section>
     </div>
 </template>
 
