@@ -26,40 +26,15 @@ import { PullRequestCommentController } from "./PullRequestCommentController";
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
 import { PullRequestCommentReplyFormFocusHelper } from "./PullRequestCommentReplyFormFocusHelper";
+import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 
 export const TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestComment & HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;
 
-export interface PullRequestUser {
-    readonly avatar_url: string;
-    readonly display_name: string;
-    readonly user_url: string;
-}
-
 export interface CurrentPullRequestUserPresenter {
     readonly avatar_url: string;
-}
-
-interface PullRequestCommentFile {
-    readonly file_path: string;
-    readonly file_url: string;
-}
-
-export type CommentType = "inline-comment" | "comment" | "timeline-event";
-export const TYPE_INLINE_COMMENT: CommentType = "inline-comment";
-export const TYPE_GLOBAL_COMMENT: CommentType = "comment";
-export const TYPE_EVENT_COMMENT: CommentType = "timeline-event";
-
-export interface PullRequestCommentPresenter {
-    readonly user: PullRequestUser;
-    readonly content: string;
-    readonly type: CommentType;
-    readonly is_outdated: boolean;
-    readonly file?: PullRequestCommentFile;
-    readonly is_inline_comment: boolean;
-    readonly post_date: string;
 }
 
 export interface PullRequestComment {

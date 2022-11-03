@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PullRequestCommentPresenter } from "../../src/app/comments/PullRequestComment";
+import type { PullRequestCommentPresenter } from "../../src/app/comments/PullRequestCommentPresenter";
 import {
     TYPE_EVENT_COMMENT,
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
-} from "../../src/app/comments/PullRequestComment";
+} from "../../src/app/comments/PullRequestCommentPresenter";
 
 const comment_presenter_base = {
+    id: 12,
     user: {
         avatar_url: "https://example.com/John/Doe/avatar.png",
         display_name: "John Doe",

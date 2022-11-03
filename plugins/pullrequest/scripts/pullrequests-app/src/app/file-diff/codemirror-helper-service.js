@@ -19,7 +19,7 @@
 
 import CodeMirror from "codemirror";
 import { addComment } from "./comments-state.js";
-import { PullRequestCommentPresenterBuilder } from "../comments/pullrequest-comment-presenter-builder";
+import { PullRequestCommentPresenter } from "../comments/PullRequestCommentPresenter";
 import { RelativeDateHelper } from "../helpers/date-helpers";
 import { PullRequestCurrentUserPresenterBuilder } from "../comments/pullrequest-current-user-presenter-builder";
 
@@ -89,7 +89,7 @@ function CodeMirrorHelperService(
             return postComment(unidiff_offset, comment_text, file_path, pull_request_id, position)
                 .then((comment) => {
                     const comment_presenter =
-                        PullRequestCommentPresenterBuilder($state).fromFileDiffComment(comment);
+                        PullRequestCommentPresenter.fromFileDiffComment(comment);
                     addComment(comment_presenter);
                     const comment_widget = self.displayInlineComment(
                         code_mirror,
