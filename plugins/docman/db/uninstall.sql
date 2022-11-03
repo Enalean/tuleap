@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS plugin_docman_item;
 DROP TABLE IF EXISTS plugin_docman_version;
+DROP TABLE IF EXISTS plugin_docman_version_coauthor;
 DROP TABLE IF EXISTS plugin_docman_link_version;
 DROP TABLE IF EXISTS plugin_docman_log;
 DROP TABLE IF EXISTS plugin_docman_project_settings;

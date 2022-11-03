@@ -24,6 +24,7 @@ jest.mock("../../api/version-rest-querier", () => {
 });
 
 import { okAsync } from "neverthrow";
+import UserBadge from "../User/UserBadge.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
@@ -53,6 +54,10 @@ describe("HistoryVersionsContentRow", () => {
                     approval_href: "/path/to/table",
                     date: "2021-10-06",
                     author: { id: 102 } as unknown as RestUser,
+                    coauthors: [
+                        { id: 103 } as unknown as RestUser,
+                        { id: 104 } as unknown as RestUser,
+                    ],
                     authoring_tool,
                 } as FileHistory,
                 location,
@@ -65,6 +70,12 @@ describe("HistoryVersionsContentRow", () => {
 
     beforeEach(() => {
         location = { reload: jest.fn() };
+    });
+
+    it("should display a user badge for each author and two coauthors", () => {
+        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+
+        expect(wrapper.findAllComponents(UserBadge)).toHaveLength(3);
     });
 
     it("should display a link to the approval table", () => {

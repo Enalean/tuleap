@@ -75,6 +75,13 @@ CREATE TABLE plugin_docman_version (
   FULLTEXT fltxt_filename (filename)
 );
 
+DROP TABLE IF EXISTS plugin_docman_version_coauthor;
+CREATE TABLE plugin_docman_version_coauthor (
+  version_id INT(11) UNSIGNED NOT NULL,
+  user_id INT(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (version_id, user_id)
+);
+
 DROP TABLE IF EXISTS plugin_docman_link_version;
 CREATE TABLE plugin_docman_link_version (
   id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,

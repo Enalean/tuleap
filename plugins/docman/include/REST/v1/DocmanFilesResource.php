@@ -59,6 +59,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
+use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
@@ -579,6 +580,7 @@ final class DocmanFilesResource extends AuthenticatedResource
 
         $item_representation_builder = new VersionRepresentationCollectionBuilder(
             new VersionDao(),
+            new CoAuthorDao(),
             UserManager::instance(),
             new \Docman_ApprovalTableFactoriesFactory()
         );
