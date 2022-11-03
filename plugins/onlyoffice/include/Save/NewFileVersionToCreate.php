@@ -30,7 +30,6 @@ final class NewFileVersionToCreate
     public function __construct(
         public \PFUser $user,
         public \Docman_File $item,
-        public \Docman_Version $version,
     ) {
     }
 }

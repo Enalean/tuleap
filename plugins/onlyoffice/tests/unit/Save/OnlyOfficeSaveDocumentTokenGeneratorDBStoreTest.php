@@ -55,7 +55,7 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
         $item                 = new \Docman_Item(['item_id' => 258]);
         $only_office_document = new OnlyOfficeDocument(ProjectTestBuilder::aProject()->build(), $item, 123, 'document.docx', true);
 
-        $this->dao->expects(self::once())->method('create')->with($user->getId(), $item->getId(), $only_office_document->version_id, self::anything(), 70)->willReturn(147);
+        $this->dao->expects(self::once())->method('create')->with($user->getId(), $item->getId(), self::anything(), 70)->willReturn(147);
 
         $token = $this->token_generator->generateSaveToken(
             $user,

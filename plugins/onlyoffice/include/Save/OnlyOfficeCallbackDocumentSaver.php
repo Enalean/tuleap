@@ -100,18 +100,6 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
         }
         assert($document instanceof Docman_File);
 
-        $current_version    = $document->getCurrentVersion();
-        $current_version_id = (int) $current_version->getId();
-        if ($current_version_id !== $save_token_information->version_id) {
-            return Result::err(Fault::fromMessage(
-                sprintf(
-                    'The current version (#%d) of the document is different of the expected one (#%d)',
-                    $current_version_id,
-                    $save_token_information->version_id
-                )
-            ));
-        }
-
         $permissions_manager = Docman_PermissionsManager::instance($document->getGroupId());
         if (! $permissions_manager->userCanWrite($user, $save_token_information->document_id)) {
             return Result::err(Fault::fromMessage(
@@ -124,7 +112,7 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
             ));
         }
 
-        return Result::ok(new NewFileVersionToCreate($user, $document, $current_version));
+        return Result::ok(new NewFileVersionToCreate($user, $document));
     }
 
     private function saveDownloadedDocument(
@@ -170,15 +158,17 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
             return Result::err(Fault::fromMessage(sprintf('Cannot save file for document #%d updated via ONLYOFFICE', $item_id)));
         }
 
+        $version = $new_file_version_to_create->item->getCurrentVersion();
+
         $has_version_been_created = $this->version_factory->create(
             [
                 'item_id'   => $item_id,
                 'number'    => $next_version_id,
                 'user_id'   => $new_file_version_to_create->user->getId(),
                 'changelog' => 'ONLYOFFICE',
-                'filename'  => $new_file_version_to_create->version->getFilename(),
+                'filename'  => $version->getFilename(),
                 'filesize'  => strlen($response_content),
-                'filetype'  => $new_file_version_to_create->version->getFiletype(),
+                'filetype'  => $version->getFiletype(),
                 'path'      => $file_path,
             ]
         );

@@ -82,7 +82,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::nothing(OnlyOfficeCallbackSaveResponseData::class),
         );
 
@@ -109,7 +109,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
         );
 
@@ -136,7 +136,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
         );
 
@@ -161,7 +161,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
         );
 
@@ -183,7 +183,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
         );
 
@@ -205,7 +205,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
         );
 
@@ -226,26 +226,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
-        );
-
-        self::assertTrue(Result::isErr($result));
-    }
-
-    public function testReturnsAnErrorWhenTheCurrentVersionIsNotTheExpectedOne(): void
-    {
-        $docman_file = new \Docman_File();
-        $docman_file->setCurrentVersion(new \Docman_Version(['id' => 12]));
-        $docman_file->setGroupId(self::PROJECT_ID);
-        $this->item_factory->method('getItemFromDb')->willReturn($docman_file);
-
-        $saver = $this->buildSaver(
-            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
-        );
-
-        $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
         );
 
@@ -264,7 +245,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
         );
 
@@ -280,7 +261,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
         );
 
@@ -294,7 +275,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1),
             OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
         );
 

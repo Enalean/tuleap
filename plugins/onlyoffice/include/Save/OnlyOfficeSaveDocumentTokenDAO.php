@@ -27,14 +27,13 @@ use Tuleap\DB\DataAccessObject;
 
 class OnlyOfficeSaveDocumentTokenDAO extends DataAccessObject
 {
-    public function create(int $user_id, int $document_id, int $version_id, string $hashed_verification_string, int $expiration_date_timestamp): int
+    public function create(int $user_id, int $document_id, string $hashed_verification_string, int $expiration_date_timestamp): int
     {
         return (int) $this->getDB()->insertReturnId(
             'plugin_onlyoffice_save_document_token',
             [
                 'user_id'         => $user_id,
-                'document_id' => $document_id,
-                'version_id' => $version_id,
+                'document_id'     => $document_id,
                 'verifier'        => $hashed_verification_string,
                 'expiration_date' => $expiration_date_timestamp,
             ]
@@ -42,14 +41,14 @@ class OnlyOfficeSaveDocumentTokenDAO extends DataAccessObject
     }
 
     /**
-     * @return array{verifier: string, user_id: int, document_id: int, version_id: int}|null
+     * @return array{verifier: string, user_id: int, document_id: int}|null
      */
     public function searchTokenVerificationAndAssociatedData(int $key_id, int $current_timestamp): ?array
     {
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($current_timestamp, $key_id): ?array {
                 $this->deleteExpiredTokens($current_timestamp);
-                return $db->row('SELECT verifier, user_id, document_id, version_id FROM plugin_onlyoffice_save_document_token WHERE id = ?', $key_id);
+                return $db->row('SELECT verifier, user_id, document_id FROM plugin_onlyoffice_save_document_token WHERE id = ?', $key_id);
             }
         );
     }
