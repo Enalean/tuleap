@@ -68,6 +68,7 @@ CREATE TABLE plugin_docman_version (
   filesize INT(11) UNSIGNED NULL,
   filetype TEXT NULL,
   path TEXT NULL,
+  authoring_tool VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY(id),
   KEY item_id (item_id),
   FULLTEXT fltxt (label, changelog, filename),

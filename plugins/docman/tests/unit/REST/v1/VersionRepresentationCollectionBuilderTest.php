@@ -79,6 +79,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             'changelog' => '',
             'user_id' => 101,
             'date' => 1542099693,
+            'authoring_tool' => 'Awesome Office Editor',
         ];
         $this->docman_version_dao->method('searchByItemId')->willReturn([$dar]);
         $this->docman_version_dao->method('countByItemId')->willReturn(1);
@@ -95,6 +96,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         self::assertEquals("a_file.txt", $representation->filename);
         self::assertEquals('', $representation->changelog);
         self::assertNull($representation->approval_href);
+        self::assertEquals('Awesome Office Editor', $representation->authoring_tool);
     }
 
     public function testItBuildAVersionsRepresentationWithApprovalTable(): void
