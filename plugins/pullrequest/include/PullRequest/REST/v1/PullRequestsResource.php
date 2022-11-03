@@ -321,10 +321,6 @@ class PullRequestsResource extends AuthenticatedResource
      * Retrieve a given pull request. <br/>
      * User is not able to see a pull request in a git repository where he is not able to READ
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url GET {id}
      *
      * @access protected
@@ -372,10 +368,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * Retrieve all commits of a given pull request. <br/>
      * User is not able to see a pull request in a git repository where he is not able to READ
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      *
      * @url    GET {id}/commits
      *
@@ -452,10 +444,6 @@ class PullRequestsResource extends AuthenticatedResource
      * Get labels
      *
      * Get the labels that are defined for this pull request
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      *
      * @url GET {id}/labels
      *
@@ -543,10 +531,6 @@ class PullRequestsResource extends AuthenticatedResource
      * and add it to the current pull request. Please note that you must use the id to remove labels from the
      * pull request.</p>
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url PATCH {id}/labels
      *
      * @access protected
@@ -588,10 +572,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * Get the impacted files for a pull request.<br/>
      * User is not able to see a pull request in a git repository where he is not able to READ
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      *
      * @url GET {id}/files
      *
@@ -635,10 +615,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * Get the diff of a given file between the source branch and the dest branch for a pull request.<br/>
      * User is not able to see a pull request in a git repository where he is not able to READ
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      *
      * @url GET {id}/file_diff
      *
@@ -722,10 +698,6 @@ class PullRequestsResource extends AuthenticatedResource
      * Post a new inline comment for a given pull request file and a position (left | right)<br>
      * Format: { "content": "My new comment" , "unidiff_offset": 1, "file_path": "dir/myfile.txt" , position: "left" }
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url POST {id}/inline-comments
      *
      * @access protected
@@ -799,9 +771,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * Create a new pullrequest.<br/>
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      * <br/>
      * Here is an example of a valid POST content:
      * <pre>
@@ -884,9 +853,6 @@ class PullRequestsResource extends AuthenticatedResource
      * <br/>
      * Update title and description of pull request.
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      * <br/>
      *
      * Here is an example of a valid PATCH content to merge a pull request:
@@ -1029,10 +995,6 @@ class PullRequestsResource extends AuthenticatedResource
     /**
      * Get pull request's timeline
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url GET {id}/timeline
      *
      * @access protected
@@ -1084,10 +1046,6 @@ class PullRequestsResource extends AuthenticatedResource
     /**
      * Get pull request's comments
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url GET {id}/comments
      *
      * @access protected
@@ -1135,10 +1093,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * Post a new comment for a given pull request <br>
      * Format: { "content": "My new comment" }
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      *
      * @url POST {id}/comments
      *
