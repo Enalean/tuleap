@@ -2472,6 +2472,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ListPickerIncluder::class);
+        $event->addConfigClass(Tracker_FormElement_Field_ArtifactLink::class);
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
     }
 
