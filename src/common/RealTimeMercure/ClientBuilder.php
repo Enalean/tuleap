@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 namespace Tuleap\RealTimeMercure;
 
 use BackendLogger;
@@ -33,12 +34,8 @@ class ClientBuilder
     public const  DEFAULTPATH = '/etc/tuleap/conf/mercure.env';
     public static function build(string $path): Client
     {
-        $mercure_file = fopen($path, 'r');
-        if (! $mercure_file) {
-            return new NullClient();
-        }
-        $mercure_file_content = fgets($mercure_file);
-        if (! str_contains($mercure_file_content, 'MERCURE_KEY=')) {
+        $mercure_file_content = @file_get_contents($path);
+        if ($mercure_file_content === false || ! str_starts_with($mercure_file_content, "MERCURE_KEY=")) {
             return new NullClient();
         }
         /** @var non-empty-string $mercure_key */

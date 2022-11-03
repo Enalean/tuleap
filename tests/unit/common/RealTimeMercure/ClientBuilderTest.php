@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 namespace Tuleap\RealTimeMercure;
 
 use org\bovigo\vfs\vfsStream;
@@ -39,8 +40,7 @@ class ClientBuilderTest extends TestCase
 
     public function testNoFileError()
     {
-        $root = vfsStream::setup('root2');
-        $this->expectError();
+        $root           = vfsStream::setup('root2');
         $mercure_client = ClientBuilder::build($root->url() . '/mercure.env');
         $this->assertInstanceOf(NullClient::class, $mercure_client);
     }
@@ -55,7 +55,7 @@ class ClientBuilderTest extends TestCase
         $mercure_client = ClientBuilder::build($root->url() . '/env/mercure.env');
         $this->assertInstanceOf(NullClient::class, $mercure_client);
     }
-    public function invalidKeyError()
+    public function testInvalidKeyError()
     {
         $structure      = [
             'env' => [
