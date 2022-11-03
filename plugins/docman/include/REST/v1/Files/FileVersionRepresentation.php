@@ -58,6 +58,10 @@ final class FileVersionRepresentation
      */
     public UserRepresentation $author;
     /**
+     * @var UserRepresentation[] Other users who contributed to the change
+     */
+    public array $coauthors;
+    /**
      * @var string Date of the change
      */
     public string $date;
@@ -70,6 +74,9 @@ final class FileVersionRepresentation
      */
     public string $authoring_tool;
 
+    /**
+     * @param UserRepresentation[] $coauthors
+     */
     private function __construct(
         int $id,
         int $number,
@@ -79,6 +86,7 @@ final class FileVersionRepresentation
         int $item_id,
         ?string $approval_href,
         UserRepresentation $author,
+        array $coauthors,
         string $date,
         string $changelog,
         string $authoring_tool,
@@ -88,6 +96,7 @@ final class FileVersionRepresentation
         $this->name          = ($label) ?: "";
         $this->filename      = $filename;
         $this->author        = $author;
+        $this->coauthors     = $coauthors;
         $this->date          = $date;
         $this->changelog     = $changelog;
         $this->approval_href = $approval_href;
@@ -104,6 +113,9 @@ final class FileVersionRepresentation
         $this->authoring_tool = $authoring_tool;
     }
 
+    /**
+     * @param \PFUser[] $coauthors
+     */
     public static function build(
         int $version_id,
         int $number,
@@ -113,6 +125,7 @@ final class FileVersionRepresentation
         int $item_id,
         ?string $approval_href,
         \PFUser $author,
+        array $coauthors,
         \DateTimeInterface $date,
         string $changelog,
         string $authoring_tool,
@@ -126,6 +139,10 @@ final class FileVersionRepresentation
             $item_id,
             $approval_href,
             UserRepresentation::build($author),
+            array_map(
+                static fn (\PFUser $coauthor): UserRepresentation => UserRepresentation::build($coauthor),
+                $coauthors
+            ),
             JsonCast::fromNotNullDateTimeToDate($date),
             $changelog,
             $authoring_tool,

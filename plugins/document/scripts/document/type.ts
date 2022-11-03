@@ -478,6 +478,7 @@ export interface FileHistory {
     readonly approval_href: string | null;
     readonly date: string;
     readonly author: RestUser;
+    readonly coauthors: RestUser[];
     readonly authoring_tool: string;
 }
 

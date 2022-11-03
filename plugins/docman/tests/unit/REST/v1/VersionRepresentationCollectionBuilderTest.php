@@ -22,6 +22,7 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Tuleap\Docman\Tests\Stub\TableFactoryForFileBuilderStub;
+use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -30,17 +31,20 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 final class VersionRepresentationCollectionBuilderTest extends TestCase
 {
     private VersionDao|\PHPUnit\Framework\MockObject\MockObject $docman_version_dao;
+    private CoAuthorDao|\PHPUnit\Framework\MockObject\MockObject $co_author_dao;
     private VersionRepresentationCollectionBuilder $builder;
     private \PHPUnit\Framework\MockObject\MockObject|\Docman_ApprovalTableFileFactory $factory;
 
     protected function setUp(): void
     {
         $this->docman_version_dao = $this->createMock(VersionDao::class);
+        $this->co_author_dao      = $this->createMock(CoAuthorDao::class);
 
         $this->factory = $this->createMock(\Docman_ApprovalTableFileFactory::class);
 
         $this->builder = new VersionRepresentationCollectionBuilder(
             $this->docman_version_dao,
+            $this->co_author_dao,
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
             TableFactoryForFileBuilderStub::buildWithFactory($this->factory)
         );
@@ -84,6 +88,11 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         $this->docman_version_dao->method('searchByItemId')->willReturn([$dar]);
         $this->docman_version_dao->method('countByItemId')->willReturn(1);
 
+        $this->co_author_dao->method('searchByVersionId')->willReturn([
+            ['version_id' => 234, 'user_id' => 102],
+            ['version_id' => 234, 'user_id' => 103],
+        ]);
+
         $this->factory->method('getTableFromVersion')->willReturn(null);
 
         $collection = $this->builder->buildVersionsCollection($item, 50, 0);
@@ -97,6 +106,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         self::assertEquals('', $representation->changelog);
         self::assertNull($representation->approval_href);
         self::assertEquals('Awesome Office Editor', $representation->authoring_tool);
+        self::assertCount(2, $representation->coauthors);
     }
 
     public function testItBuildAVersionsRepresentationWithApprovalTable(): void
@@ -126,6 +136,8 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         ];
         $this->docman_version_dao->method('searchByItemId')->willReturn([$dar]);
         $this->docman_version_dao->method('countByItemId')->willReturn(1);
+
+        $this->co_author_dao->method('searchByVersionId')->willReturn([]);
 
         $this->factory->method('getTableFromVersion')->willReturn($this->createMock(\Docman_ApprovalTable::class));
 

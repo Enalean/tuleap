@@ -28,6 +28,11 @@
         </td>
         <td>
             <user-badge v-bind:user="version.author" />
+            <user-badge
+                v-for="coauthor in version.coauthors"
+                v-bind:key="coauthor.id"
+                v-bind:user="coauthor"
+            />
         </td>
         <td>{{ version.name }}</td>
         <td>{{ version.changelog }}</td>

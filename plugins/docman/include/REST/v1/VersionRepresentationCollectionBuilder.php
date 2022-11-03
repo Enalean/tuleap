@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1;
 use Tuleap\Docman\ApprovalTable\TableFactoryForFileBuilder;
 use Tuleap\Docman\Item\PaginatedFileVersionRepresentationCollection;
 use Tuleap\Docman\REST\v1\Files\FileVersionRepresentation;
+use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 use Tuleap\User\RetrieveUserById;
@@ -33,6 +34,7 @@ final class VersionRepresentationCollectionBuilder
 {
     public function __construct(
         private VersionDao $docman_version_dao,
+        private CoAuthorDao $co_author_dao,
         private RetrieveUserById $user_retriever,
         private TableFactoryForFileBuilder $table_factory_builder,
     ) {
@@ -72,6 +74,15 @@ final class VersionRepresentationCollectionBuilder
                 continue;
             }
 
+            $coauthors = array_values(
+                array_filter(
+                    array_map(
+                        fn (array $row): ?\PFUser => $this->user_retriever->getUserById($row['user_id']),
+                        $this->co_author_dao->searchByVersionId((int) $version->getId()),
+                    )
+                )
+            );
+
             $versions[] = FileVersionRepresentation::build(
                 (int) $version->getId(),
                 $row["number"],
@@ -81,6 +92,7 @@ final class VersionRepresentationCollectionBuilder
                 (int) $item->getId(),
                 $approval_href,
                 $author,
+                $coauthors,
                 (new \DateTimeImmutable())->setTimestamp((int) $version->getDate()),
                 (string) $version->getChangelog(),
                 $version->getAuthoringTool(),
