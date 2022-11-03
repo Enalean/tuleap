@@ -113,12 +113,12 @@ describe("Document new UI", () => {
                     force: true,
                 });
 
-                cy.intercept("/api/docman_embedded_files/*/version").as("postVersion");
+                cy.intercept("/api/docman_embedded_files/*/versions").as("postVersions");
 
                 cy.get("[data-test=document-update-version-title]").type("new version");
                 cy.get("[data-test=document-modal-submit-button-create-embedded-version]").click();
 
-                cy.wait("@postVersion", { timeout: 60000 });
+                cy.wait("@postVersions", { timeout: 60000 });
 
                 cy.log("delete a given version of a document");
                 // need to force due to drop down
