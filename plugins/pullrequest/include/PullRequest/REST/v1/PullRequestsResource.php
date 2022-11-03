@@ -235,7 +235,8 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $this->paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
-            $this->timeline_factory
+            $this->timeline_factory,
+            $this->user_manager
         );
 
         $this->paginated_comments_representations_builder = new PaginatedCommentsRepresentationsBuilder(
@@ -770,7 +771,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $post_date = time();
 
-        $this->inline_comment_creator->insert(
+        $id = $this->inline_comment_creator->insert(
             $pull_request,
             $user,
             $comment_data,
@@ -786,7 +787,10 @@ class PullRequestsResource extends AuthenticatedResource
             $post_date,
             $comment_data->content,
             $git_repository_source->getProjectId(),
-            $comment_data->position
+            $comment_data->position,
+            (int) $comment_data->parent_id,
+            $id,
+            $comment_data->file_path
         );
     }
 
@@ -1171,7 +1175,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $user_representation = MinimalUserRepresentation::build($user);
 
-        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent());
+        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId());
     }
 
     /**

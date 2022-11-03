@@ -54,13 +54,29 @@ class PullRequestInlineCommentRepresentation
      */
     public $position;
 
-    public function __construct($unidiff_offset, $user, $post_date, $content, $project_id, $position)
+    /**
+     * @var int {@type int}
+     */
+    public int $parent_id;
+    /**
+     * @var int {@type int}
+     */
+    public int $id;
+    /**
+     * @var string {@type string}
+     */
+    public string $file_path;
+
+    public function __construct($unidiff_offset, $user, $post_date, $content, $project_id, $position, int $parent_id, int $id, string $file_path)
     {
         $this->unidiff_offset = $unidiff_offset;
         $this->user           = $user;
         $this->post_date      = JsonCast::toDate($post_date);
         $this->content        = self::getPurifiedContent($content, $project_id);
         $this->position       = $position;
+        $this->parent_id      = $parent_id;
+        $this->id             = $id;
+        $this->file_path      = $file_path;
     }
 
     private static function getPurifiedContent(string $content, int $project_id): string
