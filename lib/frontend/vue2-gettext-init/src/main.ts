@@ -19,39 +19,86 @@
 
 import type { VueConstructor } from "vue/types/vue";
 import VueGettext from "vue-gettext";
+import type { GettextTranslation, VueGettextTranslationsFormat } from "./formatter";
+import { sanitizePoData } from "./formatter";
 
-export { getPOFileFromLocale } from "@tuleap/gettext";
+export { getPOFileFromLocale, getPOFileFromLocaleWithoutExtension } from "@tuleap/gettext";
 export type { GetText } from "@tuleap/gettext";
-
-interface TranslatedStrings {
-    readonly [key: string]: string;
-}
+export { sanitizePoData as formatPOFileToVueGettext } from "./formatter";
 
 interface GettextTranslationsMap {
-    [locale: string]: TranslatedStrings;
+    [locale: string]: VueGettextTranslationsFormat;
 }
 
 export interface VueGettextPOFile {
-    readonly messages: TranslatedStrings;
+    readonly messages: VueGettextTranslationsFormat;
 }
+
+const loadTranslations = (
+    locale: string | undefined,
+    load_translations_callback: (locale: string) => PromiseLike<VueGettextPOFile>
+): PromiseLike<GettextTranslationsMap> => {
+    if (!locale) {
+        return Promise.resolve({});
+    }
+    return load_translations_callback(locale).then(
+        (po_file) => {
+            const translations: GettextTranslationsMap = {};
+            translations[locale] = po_file.messages;
+            return translations;
+        },
+        () => {
+            // default to en_US
+            return {};
+        }
+    );
+};
 
 export async function initVueGettext(
     vue_instance: VueConstructor,
-    load_translations_callback: (locale: string) => Promise<VueGettextPOFile>
+    load_translations_callback: (locale: string) => PromiseLike<VueGettextPOFile>
 ): Promise<void> {
-    const translations: GettextTranslationsMap = {};
     const locale = document.body.dataset.userLocale;
+    const translations = await loadTranslations(locale, load_translations_callback);
+    vue_instance.use(VueGettext, { translations, silent: true });
     if (locale) {
-        try {
-            translations[locale] = (await load_translations_callback(locale)).messages;
-        } catch (exception) {
-            // default to en_US
-        }
+        vue_instance.config.language = locale;
     }
-    vue_instance.use(VueGettext, {
-        translations,
-        silent: true,
-    });
+}
+
+type POGettextTranslation = {
+    readonly msgid: string;
+    readonly msgstr: string[];
+};
+
+export type POGettextPluginPOFile = {
+    readonly translations: {
+        readonly "": {
+            readonly [msgid: string]: POGettextTranslation;
+        };
+    };
+};
+
+export async function initVueGettextFromPoGettextPlugin(
+    vue_instance: VueConstructor,
+    load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>
+): Promise<void> {
+    const locale = document.body.dataset.userLocale;
+    const translations = await loadTranslations(locale, (locale) =>
+        load_translations_callback(locale).then((po_file) => {
+            const mapped = Object.values(po_file.translations[""]).map(
+                (translation: POGettextTranslation): GettextTranslation => ({
+                    ...translation,
+                    msgid_plural: null,
+                    msgctxt: null,
+                    flags: {},
+                    obsolete: false,
+                })
+            );
+            return { messages: sanitizePoData(mapped) };
+        })
+    );
+    vue_instance.use(VueGettext, { translations, silent: true });
     if (locale) {
         vue_instance.config.language = locale;
     }

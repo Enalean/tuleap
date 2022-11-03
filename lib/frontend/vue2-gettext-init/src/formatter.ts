@@ -19,7 +19,32 @@
 
 /* From https://github.com/Polyconseil/easygettext/ */
 
-const Pofile = require("pofile");
+export type GettextTranslation = {
+    readonly msgid: string;
+    readonly msgid_plural: string | null;
+    readonly msgstr: string[];
+    readonly msgctxt: string | null;
+    readonly flags: { readonly fuzzy?: true };
+    readonly obsolete: boolean;
+};
+
+export type VueGettextTranslationsFormat = {
+    readonly [msgid: string]: SingularOrPlural | ContextualizedTranslation;
+};
+
+type SingularOrPlural = string | string[];
+
+type ContextualizedTranslation = {
+    readonly [context: string]: SingularOrPlural;
+};
+
+type InternalMutableMap = {
+    [msgid: string]: { [context: string]: SingularOrPlural };
+};
+
+type InternalMutableMapWithoutEmptyContext = {
+    [msgid: string]: { [context: string]: SingularOrPlural } | SingularOrPlural;
+};
 
 /**
  * sanitizePoData
@@ -40,10 +65,12 @@ const Pofile = require("pofile");
  *   }
  * }
  */
-function sanitizePoData(poItems) {
-    const messages = {};
+export function sanitizePoData(
+    poItems: readonly GettextTranslation[]
+): VueGettextTranslationsFormat {
+    const messages: InternalMutableMap = {};
 
-    for (let item of poItems) {
+    for (const item of poItems) {
         const ctx = item.msgctxt || "";
         if (item.msgstr[0] && item.msgstr[0].length > 0 && !item.flags.fuzzy && !item.obsolete) {
             if (!messages[item.msgid]) {
@@ -54,27 +81,14 @@ function sanitizePoData(poItems) {
         }
     }
 
+    const empty_context_stripped: InternalMutableMapWithoutEmptyContext = {};
     // Strip context from messages that have no context.
-    for (let key in messages) {
+    for (const key in messages) {
         if (Object.keys(messages[key]).length === 1 && messages[key][""]) {
-            messages[key] = messages[key][""];
+            empty_context_stripped[key] = messages[key][""];
+        } else {
+            empty_context_stripped[key] = messages[key];
         }
     }
-    return messages;
+    return empty_context_stripped;
 }
-
-function po2json(poContent) {
-    const catalog = Pofile.parse(poContent);
-    if (!catalog.headers.Language) {
-        throw new Error("No Language headers found!");
-    }
-    return {
-        headers: catalog.headers,
-        messages: sanitizePoData(catalog.items),
-    };
-}
-
-module.exports = {
-    sanitizePoData,
-    po2json,
-};

@@ -17,12 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const easygettextCompile = require("./gettext/compile.js");
+const { formatPOFileToVueGettext } = require("@tuleap/vue2-gettext-init");
+const Pofile = require("pofile");
+
+function po2json(poContent) {
+    const catalog = Pofile.parse(poContent);
+    if (!catalog.headers.Language) {
+        throw new Error("No Language headers found!");
+    }
+    return {
+        headers: catalog.headers,
+        messages: formatPOFileToVueGettext(catalog.items),
+    };
+}
 
 /**
  * "Compiles" po files to easygettext json format
  */
 module.exports = function (content) {
-    const json = easygettextCompile.po2json(content);
+    const json = po2json(content);
     return JSON.stringify(json);
 };

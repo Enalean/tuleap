@@ -19,6 +19,8 @@
 
 import type { createGettext } from "vue3-gettext";
 
+export { getPOFileFromLocale, getPOFileFromLocaleWithoutExtension } from "@tuleap/gettext";
+
 type VueGettext = ReturnType<typeof createGettext>;
 
 interface Vue3GettextTranslationData {
@@ -29,45 +31,54 @@ interface Vue3GettextTranslationMap {
     [language: string]: Vue3GettextTranslationData;
 }
 
-interface TranslatedStrings {
-    readonly [key: string]: {
-        readonly msgid: string;
-        readonly msgstr: string[];
-    };
-}
+const loadTranslations = (
+    locale: string | undefined,
+    load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>
+): PromiseLike<Vue3GettextTranslationMap> => {
+    if (!locale) {
+        return Promise.resolve({});
+    }
+    return load_translations_callback(locale).then(
+        (po_file) => {
+            const translations: Vue3GettextTranslationMap = {};
+            translations[locale] = transformTranslationToVue3GettextFormat(po_file);
+            return translations;
+        },
+        () => {
+            // default to en_US
+            return {};
+        }
+    );
+};
 
-export interface POFile {
+type POGettextTranslation = {
+    readonly msgid: string;
+    readonly msgstr: string[];
+};
+
+export type POGettextPluginPOFile = {
     readonly translations: {
-        "": TranslatedStrings;
+        readonly "": {
+            readonly [msgid: string]: POGettextTranslation;
+        };
     };
-}
-
-export { getPOFileFromLocale, getPOFileFromLocaleWithoutExtension } from "@tuleap/gettext";
+};
 
 export async function initVueGettext(
     create_gettext: typeof createGettext,
-    load_translations_callback: (locale: string) => Promise<POFile>
+    load_translations_callback: (locale: string) => PromiseLike<POGettextPluginPOFile>
 ): Promise<VueGettext> {
-    const translations: Vue3GettextTranslationMap = {};
     const locale = document.body.dataset.userLocale;
-    if (locale) {
-        try {
-            translations[locale] = transformTranslationToVue3GettextFormat(
-                await load_translations_callback(locale)
-            );
-        } catch (exception) {
-            // default to en_US
-        }
-    }
-
     return create_gettext({
         defaultLanguage: locale ?? "",
-        translations,
+        translations: await loadTranslations(locale, load_translations_callback),
         silent: true,
     });
 }
 
-function transformTranslationToVue3GettextFormat(po_file: POFile): Vue3GettextTranslationData {
+function transformTranslationToVue3GettextFormat(
+    po_file: POGettextPluginPOFile
+): Vue3GettextTranslationData {
     const vue3_gettext_data: Vue3GettextTranslationData = {};
     for (const [, value] of Object.entries(po_file.translations[""])) {
         if (value.msgstr.every((msgstr) => msgstr.length !== 0)) {

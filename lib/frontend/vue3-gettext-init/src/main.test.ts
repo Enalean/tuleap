@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { POFile } from "./main";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { POGettextPluginPOFile } from "./main";
 import { initVueGettext } from "./main";
 import { createGettext } from "vue3-gettext";
 
@@ -28,7 +28,7 @@ describe("vue3-gettext-init", () => {
     });
 
     describe("when a locale is defined on the document's body", () => {
-        const callback = (): Promise<POFile> =>
+        const callback = (): Promise<POGettextPluginPOFile> =>
             Promise.resolve({
                 translations: {
                     "": {
@@ -64,10 +64,23 @@ describe("vue3-gettext-init", () => {
             );
             expect(Object.keys(gettext).length).toBeGreaterThan(0);
         });
+
+        it(`when it fails to load the translations,
+                it will give an empty translations object to vue-gettext`, async () => {
+            const create_gettext_spy = vi.fn(createGettext);
+            const gettext = await initVueGettext(create_gettext_spy, () =>
+                Promise.reject("404 Not found")
+            );
+
+            expect(create_gettext_spy).toHaveBeenCalledWith(
+                expect.objectContaining({ translations: {} })
+            );
+            expect(Object.keys(gettext).length).toBeGreaterThan(0);
+        });
     });
 
     describe("when a locale is NOT defined on the document's body", () => {
-        const callback = vi.fn(() => Promise.resolve({ translations: { "": {} } }));
+        const callback = vi.fn(() => Promise.reject("Should not have been called"));
 
         it("does not call the callback", async () => {
             await initVueGettext(vi.fn(), callback);
@@ -79,9 +92,7 @@ describe("vue3-gettext-init", () => {
 
             const gettext = await initVueGettext(create_gettext_spy, callback);
             expect(create_gettext_spy).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    translations: {},
-                })
+                expect.objectContaining({ translations: {} })
             );
             expect(Object.keys(gettext).length).toBeGreaterThan(0);
         });

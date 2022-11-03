@@ -5,6 +5,7 @@ specifiers:
   '@babel/preset-env': ^7.19.1
   '@tuleap/build-system-configurator': link:lib/frontend/build-system-configurator
   '@tuleap/cypress-configurator': link:lib/test-utils/cypress-configurator
+  '@tuleap/vue2-gettext-init': link:lib/frontend/vue2-gettext-init
   '@types/jest': ^29.0.3
   '@typescript-eslint/eslint-plugin': ^5.28.0
   '@typescript-eslint/parser': ^5.28.0
@@ -90,6 +91,7 @@ devDependencies:
   '@babel/preset-env': 7.19.1_@babel+core@7.19.1
   '@tuleap/build-system-configurator': link:lib/frontend/build-system-configurator
   '@tuleap/cypress-configurator': link:lib/test-utils/cypress-configurator
+  '@tuleap/vue2-gettext-init': link:lib/frontend/vue2-gettext-init
   '@types/jest': 29.0.3
   '@typescript-eslint/eslint-plugin': 5.28.0_utwt3vylrqni7letn6o6ph7mda
   '@typescript-eslint/parser': 5.28.0_f662wmtjhhyn6wvwljgximehn4

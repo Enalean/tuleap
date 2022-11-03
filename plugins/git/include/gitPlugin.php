@@ -517,12 +517,12 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
         $event->addJavascript(
-            new \Tuleap\Layout\JavascriptAsset(
-                new IncludeAssets(
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
                     __DIR__ . '/../scripts/permissions-per-group/frontend-assets',
                     '/assets/git/permissions-per-group'
                 ),
-                'permission-per-group.js'
+                'src/index.ts'
             )
         );
     }
