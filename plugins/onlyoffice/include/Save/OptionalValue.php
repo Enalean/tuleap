@@ -69,4 +69,19 @@ final class OptionalValue
 
         $fn($this->value);
     }
+
+    /**
+     * @template T
+     * @psalm-param callable(Value): T $fn
+     * @psalm-param T $default
+     * @psalm-return T
+     */
+    public function mapOr(callable $fn, mixed $default): mixed
+    {
+        if (! $this->has_value) {
+            return $default;
+        }
+
+        return $fn($this->value);
+    }
 }

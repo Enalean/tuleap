@@ -51,4 +51,12 @@ final class OptionalValueTest extends TestCase
 
         self::assertFalse($has_called_apply_function);
     }
+
+    public function testCanMapOptionalValueWithADefault(): void
+    {
+        $fn = fn(): string => 'callback';
+
+        self::assertEquals('callback', OptionalValue::fromValue('expected')->mapOr($fn, 'default'));
+        self::assertEquals('default', OptionalValue::nothing(\stdClass::class)->mapOr($fn, 'default'));
+    }
 }
