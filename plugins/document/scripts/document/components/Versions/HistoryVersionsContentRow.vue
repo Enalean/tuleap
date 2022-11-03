@@ -141,7 +141,7 @@ const props = defineProps<{
     item: Item;
     version: FileHistory;
     has_more_than_one_version: boolean;
-    location: Location;
+    loadVersions: () => void;
 }>();
 
 const confirm_deletion = ref<HTMLElement | null>(null);
@@ -171,7 +171,7 @@ function showConfirmationModal(): void {
 function onConfirmDeletion(): void {
     is_deleting.value = true;
     deleteFileVersion(props.version.id).then(() => {
-        props.location.reload();
+        props.loadVersions();
     });
 }
 

@@ -34,6 +34,7 @@ import type { FileHistory, User } from "../../type";
 
 describe("HistoryVersionsContentRow", () => {
     let location: Pick<Location, "reload">;
+    let loadVersions: () => void;
 
     function getWrapper(
         item: User,
@@ -61,6 +62,7 @@ describe("HistoryVersionsContentRow", () => {
                     authoring_tool,
                 } as FileHistory,
                 location,
+                loadVersions,
             },
             provide: {
                 should_display_source_column_for_versions: true,
@@ -70,6 +72,11 @@ describe("HistoryVersionsContentRow", () => {
 
     beforeEach(() => {
         location = { reload: jest.fn() };
+        loadVersions = jest.fn();
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     it("should display a user badge for each author and two coauthors", () => {
@@ -136,7 +143,7 @@ describe("HistoryVersionsContentRow", () => {
         expect(button.disabled).toBe(false);
     });
 
-    it("should delete the version if user confirm the deletion and refresh the page to display latest data", async () => {
+    it("should delete the version if user confirm the deletion and reload the versions to display latest data", async () => {
         deleteFileVersion.mockReturnValue(okAsync(null));
 
         const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
@@ -144,6 +151,6 @@ describe("HistoryVersionsContentRow", () => {
         await wrapper.find("[data-test=confirm-button]").trigger("click");
 
         expect(deleteFileVersion).toHaveBeenCalled();
-        expect(location.reload).toHaveBeenCalled();
+        expect(loadVersions).toHaveBeenCalled();
     });
 });
