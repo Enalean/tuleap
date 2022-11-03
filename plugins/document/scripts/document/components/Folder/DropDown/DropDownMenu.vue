@@ -42,6 +42,20 @@
             <i class="far fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
             <span v-translate>Notifications</span>
         </a>
+        <router-link
+            v-if="should_display_versions_link"
+            v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
+            class="tlp-dropdown-menu-item"
+            role="menuitem"
+            data-shortcut-history
+            data-test="document-versions"
+        >
+            <i
+                class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"
+                aria-hidden="true"
+            ></i>
+            <span v-translate>Versions</span>
+        </router-link>
         <a
             v-if="!should_display_history_in_document"
             v-bind:href="getUrlForPane(HISTORY_PANE_NAME)"
@@ -61,25 +75,8 @@
             data-shortcut-history
             data-test="document-history"
         >
-            <i
-                class="fa-solid fa-clock-rotate-left tlp-dropdown-menu-item-icon"
-                aria-hidden="true"
-            ></i>
-            <span v-translate>History</span>
-        </router-link>
-        <router-link
-            v-if="should_display_versions_link"
-            v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
-            class="tlp-dropdown-menu-item"
-            role="menuitem"
-            data-shortcut-history
-            data-test="document-versions"
-        >
-            <i
-                class="fa-solid fa-fw fa-timeline tlp-dropdown-menu-item-icon"
-                aria-hidden="true"
-            ></i>
-            <span v-translate>Versions</span>
+            <i class="fa-solid fa-fw fa-list tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+            <span v-translate>Logs</span>
         </router-link>
 
         <slot name="update-permissions" />
