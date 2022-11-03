@@ -498,7 +498,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     $query_string['semantic'] !== "description" &&
                     $query_string['semantic'] !== "status" &&
                     $query_string['semantic'] !== "done" &&
-                    $query_string['semantic'] !== "contributor"
+                    $query_string['semantic'] !== "contributor" &&
+                    $query_string['semantic'] !== "timeframe"
                 )
             ) {
                 return false;

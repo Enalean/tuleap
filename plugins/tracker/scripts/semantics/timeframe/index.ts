@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             has_artifact_link_field: Boolean(mount_point.dataset.hasArtifactLinkField),
             current_tracker_id:
                 Number.parseInt(mount_point.dataset.currentTrackerId || "0", 10) || 0,
+            semantic_presentation: mount_point.dataset.semanticPresentation,
         },
     }).$mount(mount_point);
 });

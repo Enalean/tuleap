@@ -18,24 +18,22 @@
   -->
 
 <template>
-    <div class="tracker-administration-semantic-timeframe-action-buttons">
-        <button class="btn btn-primary" type="submit" name="update-semantic-timeframe" v-translate>
-            Save your modifications
+    <div class="tlp-pane-section-submit">
+        <button class="tlp-button-primary" type="submit" name="update-semantic-timeframe">
+            {{ $gettext("Save your modifications") }}
         </button>
 
         <template v-if="is_semantic_configured">
-            <translate>or</translate>
-
             <button
-                class="btn btn-danger"
+                class="tlp-button-danger tlp-button-outline reset-semantic-timeframe"
                 type="submit"
                 name="reset-semantic-timeframe"
+                id="reset-semantic-timeframe"
                 data-test="reset-button"
                 v-bind:title="cannot_reset_message"
                 v-bind:disabled="is_reset_disabled"
-                v-translate
             >
-                Reset this semantic
+                {{ $gettext("Reset this semantic") }}
             </button>
         </template>
     </div>

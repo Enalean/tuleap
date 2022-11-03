@@ -24,6 +24,7 @@ specifiers:
   '@tuleap/user-and-ugroup-autocompleter': link:../../lib/frontend/user-and-ugroup-autocompleter
   '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants
   '@tuleap/vue-permissions-per-group-badge': link:../../lib/frontend/vue-permissions-per-group-badge
+  '@tuleap/vue2-gettext-composition-helper': link:../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': ^4.5.1
@@ -93,6 +94,7 @@ devDependencies:
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants
+  '@tuleap/vue2-gettext-composition-helper': link:../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': 4.5.1
   '@types/ckeditor': 4.9.10

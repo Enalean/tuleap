@@ -88,7 +88,6 @@ const config_for_vue_flaming_parrot = {
     entry: {
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
-        "tracker-semantic-timeframe-option-selector": "./scripts/semantics/timeframe/index.ts",
     },
     context,
     output,
@@ -126,6 +125,7 @@ const config_for_burning_parrot = {
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
         "tracker-permissions-per-group": "./scripts/permissions-per-group/src/index.js",
         "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
+        "tracker-semantic-timeframe-option-selector": "./scripts/semantics/timeframe/index.ts",
     },
     context,
     output,
@@ -141,12 +141,14 @@ const config_for_burning_parrot = {
             ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
+            webpack_configurator.rule_scss_loader,
         ],
     },
     plugins: [
         manifest_plugin,
         webpack_configurator.getVueLoaderPlugin(),
         webpack_configurator.getTypescriptCheckerPlugin(true),
+        ...webpack_configurator.getCSSExtractionPlugins(),
     ],
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias,

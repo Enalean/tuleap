@@ -56,6 +56,7 @@ class SemanticTimeframeAdministrationPresenter
         IComputeTimeframes $timeframe,
         SemanticTimeframeCurrentConfigurationPresenter $configuration_presenter,
         array $suitable_trackers,
+        public string $semantic_presentation,
     ) {
         $start_date_field     = $timeframe->getStartDateField();
         $end_date_field       = $timeframe->getEndDateField();
