@@ -47,6 +47,7 @@ final class ChangesetCommentIndexerTest extends TestCase
                         'plugin_artifact_changeset_comment',
                         (int) $artifact->getTracker()->getGroupId(),
                         'Some comment',
+                        'plaintext',
                         [
                             'changeset_id' => '888',
                             'artifact_id'  => (string) $artifact->getId(),
@@ -82,6 +83,7 @@ final class ChangesetCommentIndexerTest extends TestCase
                         'plugin_artifact_changeset_comment',
                         (int) $artifact->getTracker()->getGroupId(),
                         '',
+                        'commonmark',
                         [
                             'changeset_id' => '889',
                             'artifact_id'  => (string) $artifact->getId(),

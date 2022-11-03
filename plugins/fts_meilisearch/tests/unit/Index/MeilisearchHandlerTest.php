@@ -24,10 +24,10 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Search\SearchResult;
+use Tuleap\FullTextSearchCommon\Index\PlaintextItemToIndex;
 use Tuleap\FullTextSearchCommon\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
-use Tuleap\Search\ItemToIndex;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class MeilisearchHandlerTest extends TestCase
@@ -52,8 +52,8 @@ final class MeilisearchHandlerTest extends TestCase
 
     public function testIndexesItems(): void
     {
-        $item_1 = new ItemToIndex('type_1', 102, 'content', ['A' => 'A']);
-        $item_2 = new ItemToIndex('type_2', 102, 'content', ['A' => 'A']);
+        $item_1 = new PlaintextItemToIndex('type_1', 102, 'content', ['A' => 'A']);
+        $item_2 = new PlaintextItemToIndex('type_2', 102, 'content', ['A' => 'A']);
 
         $this->metadata_dao->expects(self::exactly(2))->method('saveItemMetadata')->willReturn(1, 2);
         $this->client_index->expects(self::once())->method('addDocuments');
@@ -63,8 +63,8 @@ final class MeilisearchHandlerTest extends TestCase
 
     public function testDoesNotIndexItemsWithEmptyContent(): void
     {
-        $item_1 = new ItemToIndex('type_1', 102, '', ['A' => 'A']);
-        $item_2 = new ItemToIndex('type_2', 102, '', ['A' => 'B']);
+        $item_1 = new PlaintextItemToIndex('type_1', 102, '', ['A' => 'A']);
+        $item_2 = new PlaintextItemToIndex('type_2', 102, '', ['A' => 'B']);
 
         $this->metadata_dao->expects(self::exactly(2))->method('searchMatchingEntries')->willReturnOnConsecutiveCalls([], [2]);
         $this->metadata_dao->expects(self::once())->method('deleteIndexedItemsFromIDs')->with([2]);

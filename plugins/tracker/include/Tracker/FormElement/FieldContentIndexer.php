@@ -37,13 +37,17 @@ class FieldContentIndexer
     ) {
     }
 
-    public function indexFieldContent(Artifact $artifact, Tracker_FormElement_Field $field, string $value): void
+    /**
+     * @psalm-param \Tuleap\Search\ItemToIndex::CONTENT_TYPE_* $content_type
+     */
+    public function indexFieldContent(Artifact $artifact, Tracker_FormElement_Field $field, string $value, string $content_type): void
     {
         $this->index_queue->addItemToQueue(
             new \Tuleap\Search\ItemToIndex(
                 self::INDEX_TYPE_FIELD_CONTENT,
                 (int) $field->getTracker()->getGroupId(),
                 $value,
+                $content_type,
                 [
                     'field_id'    => (string) $field->getId(),
                     'artifact_id' => (string) $artifact->getId(),

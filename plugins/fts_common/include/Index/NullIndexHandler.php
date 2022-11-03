@@ -25,7 +25,7 @@ namespace Tuleap\FullTextSearchCommon\Index;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 
-final class NullIndexHandler implements SearchIndexedItem, InsertItemsIntoIndex, DeleteIndexedItems
+final class NullIndexHandler implements SearchIndexedItem, InsertItemsIntoIndex, InsertPlaintextItemsIntoIndex, DeleteIndexedItems
 {
     public function deleteIndexedItems(IndexedItemsToRemove $items_to_remove): void
     {
@@ -35,7 +35,7 @@ final class NullIndexHandler implements SearchIndexedItem, InsertItemsIntoIndex,
     {
     }
 
-    public function indexItems(ItemToIndex ...$items): void
+    public function indexItems(ItemToIndex|PlaintextItemToIndex ...$items): void
     {
     }
 

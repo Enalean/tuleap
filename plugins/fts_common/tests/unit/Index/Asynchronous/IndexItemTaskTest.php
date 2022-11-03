@@ -31,12 +31,12 @@ final class IndexItemTaskTest extends TestCase
 {
     public function testInstantiatesTaskToQueueFromItemToIndex(): void
     {
-        $item_to_index = new ItemToIndex('type', 102, 'content', ['A' => 'A']);
+        $item_to_index = new ItemToIndex('type', 102, 'content', 'plaintext', ['A' => 'A']);
 
         $task = IndexItemTask::fromItemToIndex($item_to_index);
 
         self::assertEquals(
-            ['type' => 'type', 'project_id' => 102, 'content' => 'content', 'metadata' => ['A' => 'A']],
+            ['type' => 'type', 'project_id' => 102, 'content' => 'content', 'content_type' => 'plaintext', 'metadata' => ['A' => 'A']],
             $task->getPayload()
         );
     }
@@ -47,12 +47,12 @@ final class IndexItemTaskTest extends TestCase
             new NullLogger(),
             [
                 'event_name' => 'tuleap.fts.index-item',
-                'payload' => ['type' => 'type', 'project_id' => 102, 'content' => 'content', 'metadata' => ['A' => 'A']],
+                'payload' => ['type' => 'type', 'project_id' => 102, 'content' => 'content', 'content_type' => 'plaintext', 'metadata' => ['A' => 'A']],
             ]
         );
 
         self::assertEquals(
-            new ItemToIndex('type', 102, 'content', ['A' => 'A']),
+            new ItemToIndex('type', 102, 'content', 'plaintext', ['A' => 'A']),
             IndexItemTask::parseWorkerEventIntoItemToIndexWhenPossible($worker_event)
         );
     }

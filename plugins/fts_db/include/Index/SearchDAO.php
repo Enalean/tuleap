@@ -26,18 +26,18 @@ use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems;
-use Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex;
+use Tuleap\FullTextSearchCommon\Index\InsertPlaintextItemsIntoIndex;
+use Tuleap\FullTextSearchCommon\Index\PlaintextItemToIndex;
 use Tuleap\FullTextSearchCommon\Index\SearchIndexedItem;
 use Tuleap\FullTextSearchCommon\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
-use Tuleap\Search\ItemToIndex;
 
-final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, SearchIndexedItem, DeleteIndexedItems
+final class SearchDAO extends DataAccessObject implements InsertPlaintextItemsIntoIndex, SearchIndexedItem, DeleteIndexedItems
 {
     private const DEFAULT_MIN_LENGTH_FOR_FTS = 3;
 
-    public function indexItems(ItemToIndex ...$items): void
+    public function indexItems(PlaintextItemToIndex ...$items): void
     {
         $this->getDB()->tryFlatTransaction(
             function () use ($items): void {
@@ -48,7 +48,7 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
         );
     }
 
-    private function indexItem(ItemToIndex $item): void
+    private function indexItem(PlaintextItemToIndex $item): void
     {
         $existing_entries = $this->searchMatchingEntries($item);
         if (mb_strlen(trim($item->content)) < self::DEFAULT_MIN_LENGTH_FOR_FTS) {
@@ -77,7 +77,7 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
     /**
      * @psalm-return int[]
      */
-    private function searchMatchingEntries(ItemToIndex|IndexedItemsToRemove $item): array
+    private function searchMatchingEntries(PlaintextItemToIndex|IndexedItemsToRemove $item): array
     {
         $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($item->metadata);
 
@@ -87,7 +87,7 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
         );
     }
 
-    private function createNewEntry(ItemToIndex $item): void
+    private function createNewEntry(PlaintextItemToIndex $item): void
     {
         $id                 = $this->getDB()->insertReturnId(
             'plugin_fts_db_search',
