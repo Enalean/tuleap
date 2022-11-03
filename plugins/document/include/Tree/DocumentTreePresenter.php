@@ -169,6 +169,7 @@ class DocumentTreePresenter
         array $criteria,
         array $columns,
         FilenamePattern $filename_pattern,
+        public bool $should_display_source_column,
     ) {
         $this->project_id                         = $project->getID();
         $this->root_id                            = $root_id;

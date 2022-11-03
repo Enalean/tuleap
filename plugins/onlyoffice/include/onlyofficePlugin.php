@@ -37,6 +37,7 @@ use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\REST\v1\OpenItemHref;
 use Tuleap\Docman\Settings\SettingsDAO;
+use Tuleap\Document\Tree\ShouldDisplaySourceColumnForFileVersions;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
@@ -108,7 +109,13 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(OpenItemHref::NAME);
         $this->addHook(SiteAdministrationAddOption::NAME);
+        $this->addHook(ShouldDisplaySourceColumnForFileVersions::NAME);
         return parent::getHooksAndCallbacks();
+    }
+
+    public function shouldDisplaySourceColumnForFileVersions(ShouldDisplaySourceColumnForFileVersions $event): void
+    {
+        $event->enableDisplayOfSourceColumn();
     }
 
     public function getConfigKeys(ConfigClassProvider $event): void

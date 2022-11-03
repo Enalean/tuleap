@@ -646,6 +646,9 @@ msgstr ""
 "Des fichiers sont en cours de téléversement, cliquez ici pour voir la liste "
 "complète."
 
+msgid "Source"
+msgstr "Source"
+
 msgid "Start over with a completely new approval table."
 msgstr "Commencer avec une nouvelle table d'approbation."
 
@@ -769,6 +772,9 @@ msgstr "Mettre à jour les propriétés"
 
 msgid "Upload error"
 msgstr "Erreur de téléversement"
+
+msgid "Uploaded"
+msgstr "Téléversé"
 
 msgid "Uploading documents"
 msgstr "Documents en cours de téléversement"

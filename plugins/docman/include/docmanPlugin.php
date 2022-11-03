@@ -1538,7 +1538,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                 new SearchColumnCollectionBuilder(),
                 new SearchColumnsDao(),
             ),
-            new ForbidWritersSettings($settings_DAO)
+            new ForbidWritersSettings($settings_DAO),
+            EventManager::instance(),
         );
     }
     public function routeDownloadFolderAsZip(): DocumentFolderZipStreamer

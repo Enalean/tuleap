@@ -25,6 +25,7 @@ namespace Tuleap\Document\Tree;
 use CSRFSynchronizerToken;
 use HTTPRequest;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
@@ -56,6 +57,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         private ListOfSearchCriterionPresenterBuilder $criteria_builder,
         private ListOfSearchColumnDefinitionPresenterBuilder $column_builder,
         private ITellIfWritersAreAllowedToUpdatePropertiesOrDelete $forbid_writers_settings,
+        private EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -104,7 +106,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                     $project
                 ),
                 $this->column_builder->getColumns($project, $metadata_factory),
-                $this->filename_pattern_retriever->getPattern((int) $project->getID())
+                $this->filename_pattern_retriever->getPattern((int) $project->getID()),
+                $this->dispatcher->dispatch(new ShouldDisplaySourceColumnForFileVersions())->shouldDisplaySourceColumn()
             )
         );
 

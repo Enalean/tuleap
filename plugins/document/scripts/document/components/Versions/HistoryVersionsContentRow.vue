@@ -39,6 +39,9 @@
                 >{{ $gettext("Show") }}</a
             >
         </td>
+        <td v-if="should_display_source_column_for_versions">
+            {{ $gettext("Uploaded") }}
+        </td>
         <td class="tlp-table-cell-actions">
             <button
                 type="button"
@@ -121,7 +124,7 @@
 
 <script setup lang="ts">
 import UserBadge from "../User/UserBadge.vue";
-import { onMounted, onUnmounted, ref } from "vue";
+import { inject, onMounted, onUnmounted, ref } from "vue";
 import type { FileHistory, Item } from "../../type";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
@@ -138,6 +141,11 @@ const props = defineProps<{
 const confirm_deletion = ref<HTMLElement | null>(null);
 const delete_button = ref<HTMLButtonElement | null>(null);
 const is_deleting = ref(false);
+
+const should_display_source_column_for_versions = inject(
+    "should_display_source_column_for_versions",
+    false
+);
 
 let modal: Modal | null = null;
 

@@ -605,6 +605,9 @@ msgstr ""
 msgid "Some files are being uploaded, click here to see the whole list."
 msgstr ""
 
+msgid "Source"
+msgstr ""
+
 msgid "Start over with a completely new approval table."
 msgstr ""
 
@@ -711,6 +714,9 @@ msgid "Update properties"
 msgstr ""
 
 msgid "Upload error"
+msgstr ""
+
+msgid "Uploaded"
 msgstr ""
 
 msgid "Uploading documents"

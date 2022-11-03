@@ -80,6 +80,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const should_display_history_in_document = Boolean(
         vue_mount_point.dataset.shouldDisplayHistoryInDocument
     );
+    const should_display_source_column_for_versions = Boolean(
+        vue_mount_point.dataset.shouldDisplaySourceColumn
+    );
 
     const consider_string_criteria_as_text = (criterion) => ({
         ...criterion,
@@ -143,6 +146,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         provide: {
             should_display_history_in_document,
+            should_display_source_column_for_versions,
         },
     }).$mount(vue_mount_point);
 

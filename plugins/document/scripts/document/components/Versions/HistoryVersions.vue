@@ -30,6 +30,7 @@
                     <th>{{ $gettext("Version name") }}</th>
                     <th>{{ $gettext("Change Log") }}</th>
                     <th v-if="!is_link">{{ $gettext("Approval") }}</th>
+                    <th v-if="should_display_source_column">{{ $gettext("Source") }}</th>
                     <th v-if="!is_link"></th>
                 </tr>
             </thead>
@@ -52,7 +53,7 @@ import HistoryVersionsErrorState from "./HistoryVersionsErrorState.vue";
 import HistoryVersionsEmptyState from "./HistoryVersionsEmptyState.vue";
 import HistoryVersionsContent from "./HistoryVersionsContent.vue";
 import type { EmbeddedFileVersion, FileHistory, Item, LinkVersion } from "../../type";
-import { computed, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref } from "vue";
 import {
     getAllEmbeddedFileVersionHistory,
     getAllFileVersionHistory,
@@ -71,9 +72,28 @@ const is_empty = computed(
     (): boolean => file_versions.value.length === 0 && link_versions.value.length === 0
 );
 
+const should_display_source_column_for_versions = inject(
+    "should_display_source_column_for_versions",
+    false
+);
+
 const is_link = computed((): boolean => isLink(props.item));
 const is_embedded = computed((): boolean => isEmbedded(props.item));
-const colspan = computed((): number => (is_link.value ? 5 : 7));
+
+const should_display_source_column = computed(
+    (): boolean => should_display_source_column_for_versions && !is_embedded.value
+);
+const colspan = computed((): number => {
+    if (is_link.value) {
+        return 5;
+    }
+
+    if (should_display_source_column.value) {
+        return 8;
+    }
+
+    return 7;
+});
 
 onMounted(() => {
     if (is_link.value) {
