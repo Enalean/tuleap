@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CurrentPullRequestUserPresenter } from "../../src/app/comments/PullRequestComment";
+import type { CurrentPullRequestUserPresenter } from "../../src/app/comments/PullRequestCurrentUserPresenter";
 
-export const BuildCurrentPullRequestUserPresenterStub = {
+export const CurrentPullRequestUserPresenterStub = {
     withDefault: (): CurrentPullRequestUserPresenter => ({
         avatar_url: "url/to/current/user/avatar.png",
     }),

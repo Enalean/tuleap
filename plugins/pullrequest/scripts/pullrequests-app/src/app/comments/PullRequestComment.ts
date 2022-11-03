@@ -27,15 +27,12 @@ import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
 import { PullRequestCommentReplyFormFocusHelper } from "./PullRequestCommentReplyFormFocusHelper";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
+import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPresenter";
 
 export const TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestComment & HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;
-
-export interface CurrentPullRequestUserPresenter {
-    readonly avatar_url: string;
-}
 
 export interface PullRequestComment {
     readonly comment: PullRequestCommentPresenter;

@@ -21,7 +21,7 @@ import CodeMirror from "codemirror";
 import { addComment } from "./comments-state.js";
 import { PullRequestCommentPresenter } from "../comments/PullRequestCommentPresenter";
 import { RelativeDateHelper } from "../helpers/date-helpers";
-import { PullRequestCurrentUserPresenterBuilder } from "../comments/pullrequest-current-user-presenter-builder";
+import { PullRequestCurrentUserPresenter } from "../comments/PullRequestCurrentUserPresenter";
 
 export default CodeMirrorHelperService;
 
@@ -66,7 +66,7 @@ function CodeMirrorHelperService(
             SharedPropertiesService.getRelativeDateDisplay(),
             SharedPropertiesService.getUserLocale()
         );
-        inline_comment_element.currentUser = PullRequestCurrentUserPresenterBuilder.build(
+        inline_comment_element.currentUser = PullRequestCurrentUserPresenter.fromUserInfo(
             SharedPropertiesService.getUserAvatarUrl()
         );
 

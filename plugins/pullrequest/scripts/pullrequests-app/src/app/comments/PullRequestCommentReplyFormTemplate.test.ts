@@ -23,7 +23,7 @@ import type { HostElement } from "./PullRequestComment";
 import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
 import { selectOrThrow } from "@tuleap/dom";
 import { PullRequestCommentControllerStub } from "../../../tests/stubs/PullRequestCommentControllerStub";
-import { BuildCurrentPullRequestUserPresenterStub } from "../../../tests/stubs/BuildCurrentPullRequestUserPresenterStub";
+import { CurrentPullRequestUserPresenterStub } from "../../../tests/stubs/CurrentPullRequestUserPresenterStub";
 
 describe("PullRequestCommentReplyFormTemplate", () => {
     let target: ShadowRoot;
@@ -39,7 +39,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
     it(`Should render the comment reply form when it is toggled`, () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
-            currentUser: BuildCurrentPullRequestUserPresenterStub.withDefault(),
+            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
             is_reply_form_displayed: true,
         } as unknown as HostElement;
         const render = getReplyFormTemplate(host);
@@ -51,7 +51,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
     it(`Should NOT render the comment reply form when it is NOT toggled`, () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
-            currentUser: BuildCurrentPullRequestUserPresenterStub.withDefault(),
+            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
             is_reply_form_displayed: false,
         } as unknown as HostElement;
         const render = getReplyFormTemplate(host);
@@ -64,7 +64,7 @@ describe("PullRequestCommentReplyFormTemplate", () => {
         const controller = PullRequestCommentControllerStub();
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
-            currentUser: BuildCurrentPullRequestUserPresenterStub.withDefault(),
+            currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
             is_reply_form_displayed: true,
             controller,
         } as unknown as HostElement;
