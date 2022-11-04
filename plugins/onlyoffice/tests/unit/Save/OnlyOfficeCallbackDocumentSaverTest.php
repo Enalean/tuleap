@@ -201,6 +201,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $saver = $this->buildSaver(
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
+            false,
             500,
         );
 
@@ -223,6 +224,28 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $saver = $this->buildSaver(
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
+        );
+
+        $result = $saver->saveDocument(
+            new SaveDocumentTokenData(1, 1, 1),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download')),
+        );
+
+        self::assertTrue(Result::isErr($result));
+    }
+
+    public function testReturnsAnErrorWhenDocumentIsLocked(): void
+    {
+        $docman_file = new \Docman_File();
+        $docman_file->setCurrentVersion(new \Docman_Version(['id' => 1]));
+        $docman_file->setGroupId(self::PROJECT_ID);
+        $this->item_factory->method('getItemFromDb')->willReturn($docman_file);
+
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
+
+        $saver = $this->buildSaver(
+            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
+            true
         );
 
         $result = $saver->saveDocument(
@@ -284,8 +307,12 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
     private function buildSaver(
         RetrieveUserById $user_retriever,
+        bool $edited_document_is_locked = false,
         int $download_http_status_code = 200,
     ): OnlyOfficeCallbackDocumentSaver {
+        $lock_factory = $this->createStub(\Docman_LockFactory::class);
+        $lock_factory->method('itemIsLocked')->willReturn($edited_document_is_locked);
+
         $post_update_handler = $this->createStub(PostUpdateFileHandler::class);
         $post_update_handler->method('triggerPostUpdateEvents');
 
@@ -293,6 +320,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
             $user_retriever,
             $this->item_factory,
             $this->version_factory,
+            $lock_factory,
             $this->file_storage,
             $post_update_handler,
             new class ($download_http_status_code) implements HttpAsyncClient {
