@@ -138,6 +138,6 @@ final class OnlyOfficeSaveControllerTest extends TestCase
 
     private static function buildCallbackRequestWithSaveToken(): ServerRequestInterface
     {
-        return (new NullServerRequest())->withAttribute(SaveDocumentTokenData::class, new SaveDocumentTokenData(1, 1, 1, 1));
+        return (new NullServerRequest())->withAttribute(SaveDocumentTokenData::class, new SaveDocumentTokenData(1, 1, 1));
     }
 }

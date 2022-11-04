@@ -53,12 +53,12 @@ final class OnlyOfficeSaveDocumentTokenVerifierTest extends TestCase
         $save_token = new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString());
 
         $this->dao->method('searchTokenVerificationAndAssociatedData')->willReturn(
-            ['verifier' => $this->hasher->computeHash($save_token->getVerificationString()), 'user_id' => 102, 'document_id' => 11, 'version_id' => 2]
+            ['verifier' => $this->hasher->computeHash($save_token->getVerificationString()), 'user_id' => 102, 'document_id' => 11]
         );
 
         $token_data = $this->token_verifier->getDocumentSaveTokenData($save_token, new \DateTimeImmutable('@20'));
 
-        self::assertEquals(new SaveDocumentTokenData(1, 102, 11, 2), $token_data);
+        self::assertEquals(new SaveDocumentTokenData(1, 102, 11), $token_data);
     }
 
     public function testDoesNotRetrieveDataWhenTokenIsNotFound(): void
@@ -75,7 +75,7 @@ final class OnlyOfficeSaveDocumentTokenVerifierTest extends TestCase
         $save_token = new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString());
 
         $this->dao->method('searchTokenVerificationAndAssociatedData')->willReturn(
-            ['verifier' => $this->hasher->computeHash(SplitTokenVerificationString::generateNewSplitTokenVerificationString()), 'user_id' => 102, 'document_id' => 11, 'version_id' => 3]
+            ['verifier' => $this->hasher->computeHash(SplitTokenVerificationString::generateNewSplitTokenVerificationString()), 'user_id' => 102, 'document_id' => 11]
         );
 
         self::assertNull($this->token_verifier->getDocumentSaveTokenData($save_token, new \DateTimeImmutable('@20')));

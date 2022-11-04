@@ -49,6 +49,6 @@ class OnlyOfficeSaveDocumentTokenVerifier
             return null;
         }
 
-        return new SaveDocumentTokenData($save_token_id, $row['user_id'], $row['document_id'], $row['version_id']);
+        return new SaveDocumentTokenData($save_token_id, $row['user_id'], $row['document_id']);
     }
 }
