@@ -234,7 +234,7 @@ class Docman_VersionDao extends DataAccessObject
         $arg    = [];
         $values = [];
         $params = ['force_string' => false];
-        $cols   = ['item_id', 'number', 'user_id', 'label', 'changelog', 'date', 'filename', 'filesize', 'filetype', 'path'];
+        $cols   = ['item_id', 'number', 'user_id', 'label', 'changelog', 'date', 'filename', 'filesize', 'filetype', 'path', 'authoring_tool'];
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]                  = $key;

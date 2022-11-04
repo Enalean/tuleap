@@ -67,12 +67,12 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
                 );
                 return $this->db_transaction_executor->execute(
                     /** @psalm-return Ok<null>|Err<Fault> */
-                    function () use ($save_token_information, $async_http_response): Ok|Err {
+                    function () use ($save_token_information, $response_data, $async_http_response): Ok|Err {
                         return $this->makeSureNewVersionCanBeSaved($save_token_information)
                             ->andThen(
                             /** @psalm-return Ok<null>|Err<Fault> */
-                                function (NewFileVersionToCreate $new_file_version_to_create) use ($async_http_response): Ok|Err {
-                                    return $this->saveDownloadedDocument($async_http_response, $new_file_version_to_create);
+                                function (NewFileVersionToCreate $new_file_version_to_create) use ($response_data, $async_http_response): Ok|Err {
+                                    return $this->saveDownloadedDocument($async_http_response, $new_file_version_to_create, $response_data->onlyoffice_server_version);
                                 }
                             );
                     }
@@ -129,6 +129,7 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
     private function saveDownloadedDocument(
         \Http\Promise\Promise $async_http_response,
         NewFileVersionToCreate $new_file_version_to_create,
+        string $onlyoffice_version,
     ): Ok|Err {
         $item = $new_file_version_to_create->item;
 
@@ -173,14 +174,15 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
 
         $has_version_been_created = $this->version_factory->create(
             [
-                'item_id'   => $item_id,
-                'number'    => $next_version_id,
-                'user_id'   => $new_file_version_to_create->user->getId(),
-                'changelog' => 'ONLYOFFICE',
-                'filename'  => $version->getFilename(),
-                'filesize'  => strlen($response_content),
-                'filetype'  => $version->getFiletype(),
-                'path'      => $file_path,
+                'item_id'        => $item_id,
+                'number'         => $next_version_id,
+                'user_id'        => $new_file_version_to_create->user->getId(),
+                'changelog'      => '',
+                'authoring_tool' => sprintf("ONLYOFFICE %s", $onlyoffice_version),
+                'filename'       => $version->getFilename(),
+                'filesize'       => strlen($response_content),
+                'filetype'       => $version->getFiletype(),
+                'path'           => $file_path,
             ]
         );
 

@@ -147,9 +147,17 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
                 )
             );
         }
+        $history = $claims->get('history');
+        if (! is_array($history) || ! isset($history['serverVersion']) || ! is_string($history['serverVersion'])) {
+            return Result::err(
+                Fault::fromMessage(
+                    sprintf('Invalid or missing `history` key (got "%s") in the ONLYOFFICE JWT callback claims', var_export($history, true))
+                )
+            );
+        }
 
         return Result::ok(
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData($download_url))
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData($download_url, $history['serverVersion']))
         );
     }
 }

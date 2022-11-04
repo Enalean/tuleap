@@ -58,12 +58,12 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     public function testParsesSaveCallbackContent(): void
     {
         $res = self::buildParser(true)->parseCallbackResponseContent(
-            json_encode(['token' => self::buildJWT(['status' => 2, 'url' => 'https://example.com/download'])], JSON_THROW_ON_ERROR)
+            json_encode(['token' => self::buildJWT(['status' => 2, 'url' => 'https://example.com/download', 'history' => ['serverVersion' => '7.2.0']])], JSON_THROW_ON_ERROR)
         );
 
         self::assertEquals(
             OptionalValue::fromValue(
-                new OnlyOfficeCallbackSaveResponseData('https://example.com/download')
+                new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')
             ),
             $res->unwrapOr(null)
         );
@@ -123,26 +123,31 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
         );
     }
 
-    public function testRejectsWhenCallbackContentJWTDoesNotHaveAStatus(): void
+    /**
+     * @dataProvider dataProviderJWtWithUnexpectedClaims
+     */
+    public function testRejectsWhenCallbackContentJWTDoesNotTheExpectedClaims(string $jwt): void
     {
         self::assertTrue(
             Result::isErr(
                 self::buildParser(true)->parseCallbackResponseContent(
-                    json_encode(['token' => self::buildJWT([])], JSON_THROW_ON_ERROR)
+                    json_encode(['token' => $jwt], JSON_THROW_ON_ERROR)
                 )
             )
         );
     }
 
-    public function testRejectsWhenSaveCallbackContentJWTDoesNotHaveADownloadURL(): void
+    public function dataProviderJWtWithUnexpectedClaims(): array
     {
-        self::assertTrue(
-            Result::isErr(
-                self::buildParser(true)->parseCallbackResponseContent(
-                    json_encode(['token' => self::buildJWT(['status' => 2])], JSON_THROW_ON_ERROR)
-                )
-            )
-        );
+        return [
+            'Missing status' => [self::buildJWT([])],
+            'Missing download URL' => [self::buildJWT(['status' => 2])],
+            'Malformed download URL' => [self::buildJWT(['status' => 2, 'url' => true])],
+            'Missing history key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example'])],
+            'Malformed history key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => 'foo'])],
+            'Missing history.serverVersion key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => []])],
+            'Malformed history.serverVersion key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => ['serverVersion' => true]])],
+        ];
     }
 
     private static function buildParser(bool $pass_jwt_validation): OnlyOfficeCallbackResponseJWTParser
