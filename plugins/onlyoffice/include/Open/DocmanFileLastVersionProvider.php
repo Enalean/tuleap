@@ -37,6 +37,7 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
         private \Docman_VersionFactory $version_factory,
         private RetrieveFilenamePattern $filename_pattern_retriever,
         private ApprovalTableRetriever $approval_table_retriever,
+        private \Docman_LockFactory $lock_factory,
     ) {
     }
 
@@ -71,6 +72,7 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
         if (\ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_EDITION) === '1') {
             $can_write = (! $this->filename_pattern_retriever->getPattern($project_id)->isEnforced()) &&
                          $docman_permissions_manager->userCanWrite($user, $item_id) &&
+                         (! $this->lock_factory->itemIsLocked($item)) &&
                          (! $this->approval_table_retriever->hasApprovalTable($item));
         }
 

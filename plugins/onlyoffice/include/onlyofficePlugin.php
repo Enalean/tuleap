@@ -166,6 +166,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                 UserManager::instance(),
                 new Docman_ItemFactory(),
                 $versions_factory,
+                new Docman_LockFactory(new Docman_LockDao(), new Docman_Log()),
                 new Docman_FileStorage($docman_root_path),
                 new PostUpdateFileHandler(
                     $versions_factory,
@@ -335,6 +336,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             $version_factory,
             new FilenamePatternRetriever(new SettingsDAO()),
             new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory(), $version_factory),
+            new Docman_LockFactory(new Docman_LockDao(), new Docman_Log()),
         );
     }
 

@@ -25,6 +25,7 @@ namespace Tuleap\OnlyOffice\Save;
 use Docman_File;
 use Docman_FileStorage;
 use Docman_ItemFactory;
+use Docman_LockFactory;
 use Docman_PermissionsManager;
 use Docman_VersionFactory;
 use DocmanPlugin;
@@ -45,6 +46,7 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
         private RetrieveUserById $user_retriever,
         private Docman_ItemFactory $item_factory,
         private Docman_VersionFactory $version_factory,
+        private Docman_LockFactory $lock_factory,
         private Docman_FileStorage $docman_file_storage,
         private PostUpdateFileHandler $post_update_file_handler,
         private \Http\Client\HttpAsyncClient $http_client,
@@ -107,6 +109,15 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
                     'User %s (#%d) cannot write document #%d',
                     $user->getUserName(),
                     $user->getId(),
+                    $save_token_information->document_id,
+                )
+            ));
+        }
+
+        if ($this->lock_factory->itemIsLocked($document)) {
+            return Result::err(Fault::fromMessage(
+                sprintf(
+                    'Item #%d is currently locked, saving a possibly collaboratively edited document is not supported in this situation',
                     $save_token_information->document_id,
                 )
             ));
