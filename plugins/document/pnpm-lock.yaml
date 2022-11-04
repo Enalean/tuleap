@@ -35,7 +35,7 @@ specifiers:
   vue: ^2.7.8
   vue-class-component: ^7.2.6
   vue-dompurify-html: ^2.5.1
-  vue-frag: ^1.4.0
+  vue-frag: ^1.4.1
   vue-gettext: ^2.1.12
   vue-property-decorator: ^9.1.2
   vue-router: ^3.5.3
@@ -88,7 +88,7 @@ devDependencies:
   moment-timezone-data-webpack-plugin: 1.5.1_moment-timezone@0.5.34
   neverthrow: 5.0.0
   vue-class-component: 7.2.6_vue@2.7.8
-  vue-frag: 1.4.0_vue@2.7.8
+  vue-frag: 1.4.1_vue@2.7.8
   vue-property-decorator: 9.1.2_chk7q7rgeabwy64hfqmb36krqe
   vuex-class: 0.3.2_sk4yiuanjyyynvfsfpq7vngibm
 
@@ -600,8 +600,8 @@ packages:
       vue: 2.7.8
     dev: false
 
-  /vue-frag/1.4.0_vue@2.7.8:
-    resolution: {integrity: sha512-S3LfATqRwSMR6O8mf92wKF3y2E/Gs/3MFJXW4CozMOLUeOopNUlkcYuhVLagw7fkNmn/Pyb1zfRY5UCwU+X6Gw==}
+  /vue-frag/1.4.1_vue@2.7.8:
+    resolution: {integrity: sha512-1EAPTI/F6huKp8U7lgjCDT119mrJgjrsNJY0j4MD+mNAVqE9LyIBXuWlMpPTFiTH45XDEhiKa4UZoUoW8V72Jg==}
     peerDependencies:
       vue: ^2.6.0
     dependencies:
