@@ -26,7 +26,7 @@
             v-bind:item="item"
             v-bind:version="version"
             v-bind:has_more_than_one_version="versions.length > 1"
-            v-bind:location="location"
+            v-bind:load-versions="loadVersions"
         />
     </tbody>
     <tbody v-else>
@@ -36,7 +36,7 @@
             v-bind:item="item"
             v-bind:version="version"
             v-bind:has_more_than_one_version="versions.length > 1"
-            v-bind:location="location"
+            v-bind:load-versions="loadVersions"
         />
     </tbody>
 </template>
@@ -44,12 +44,15 @@
 <script setup lang="ts">
 import type { Embedded, FileHistory, ItemFile } from "../../type";
 import HistoryVersionsContentRow from "./HistoryVersionsContentRow.vue";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { isEmbedded } from "../../helpers/type-check-helper";
 import HistoryVersionsContentRowForEmbeddedFile from "./HistoryVersionsContentRowForEmbeddedFile.vue";
 
-const props = defineProps<{ item: ItemFile | Embedded; versions: readonly FileHistory[] }>();
+const props = defineProps<{
+    item: ItemFile | Embedded;
+    versions: readonly FileHistory[];
+    loadVersions: () => void;
+}>();
 
 const is_embedded = computed((): boolean => isEmbedded(props.item));
-const location = ref(window.location);
 </script>

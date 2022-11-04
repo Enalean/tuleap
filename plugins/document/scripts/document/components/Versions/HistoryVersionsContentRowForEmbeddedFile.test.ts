@@ -33,6 +33,7 @@ import type { EmbeddedFileVersion, User } from "../../type";
 
 describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     let location: Pick<Location, "reload">;
+    let loadVersions: () => void;
 
     function getWrapper(
         item: User,
@@ -53,12 +54,18 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
                     author: { id: 102 } as unknown as RestUser,
                 } as EmbeddedFileVersion,
                 location,
+                loadVersions,
             },
         });
     }
 
     beforeEach(() => {
         location = { reload: jest.fn() };
+        loadVersions = jest.fn();
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     it("should display a link to the approval table", () => {
@@ -95,7 +102,7 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
         expect(button.disabled).toBe(false);
     });
 
-    it("should delete the version if user confirm the deletion and refresh the page to display latest data", async () => {
+    it("should delete the version if user confirm the deletion and reload the versions to display latest data", async () => {
         deleteEmbeddedFileVersion.mockReturnValue(okAsync(null));
 
         const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
@@ -103,6 +110,6 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
         await wrapper.find("[data-test=confirm-button]").trigger("click");
 
         expect(deleteEmbeddedFileVersion).toHaveBeenCalled();
-        expect(location.reload).toHaveBeenCalled();
+        expect(loadVersions).toHaveBeenCalled();
     });
 });

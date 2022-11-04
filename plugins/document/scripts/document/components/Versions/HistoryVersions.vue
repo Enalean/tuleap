@@ -57,6 +57,7 @@
                             v-else
                             v-bind:item="item"
                             v-bind:versions="file_versions"
+                            v-bind:load-versions="loadVersions"
                         />
                     </table>
                 </section>
@@ -114,6 +115,12 @@ const colspan = computed((): number => {
 });
 
 onMounted(() => {
+    loadVersions();
+});
+
+function loadVersions(): void {
+    is_loading.value = true;
+
     if (is_link.value) {
         getAllLinkVersionHistory(props.item.id).match(
             (versions: readonly LinkVersion[]): void => {
@@ -152,5 +159,5 @@ onMounted(() => {
             is_loading.value = false;
         }
     );
-});
+}
 </script>
