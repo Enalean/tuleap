@@ -318,6 +318,90 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         });
     });
 
+    it(`Given "all_items" recursion option
+    then the status properties is in the update list if the status is enabled for the project`, () => {
+        const properties = [
+            {
+                short_name: "field_1",
+                list_value: [
+                    {
+                        id: 103,
+                    } as ListValue,
+                ],
+            } as unknown as Property,
+        ];
+        const item = {
+            id: 123,
+            title: "My title",
+            description: "My description",
+            properties,
+            status: {
+                value: "rejected",
+                recursion: "none",
+            },
+        } as Folder;
+
+        const item_property = [
+            {
+                short_name: "field_1",
+                list_value: [103],
+            } as unknown as Property,
+        ];
+
+        const wrapper = createWrapper(true, true, item, item_property);
+
+        wrapper
+            .find("[data-test=document-custom-property-recursion-option]")
+            .vm.$emit("input", "all_items");
+
+        expect(emitMock).toHaveBeenCalledWith("properties-recursion-list", {
+            detail: {
+                property_list: ["field_1", "status"],
+            },
+        });
+    });
+
+    it(`Given "all_items" recursion option
+    then the status recursion checkbox must emit a status recursion update`, () => {
+        const properties = [
+            {
+                short_name: "field_1",
+                list_value: [
+                    {
+                        id: 103,
+                    } as ListValue,
+                ],
+            } as unknown as Property,
+        ];
+        const item = {
+            id: 123,
+            title: "My title",
+            description: "My description",
+            properties,
+            status: {
+                value: "rejected",
+                recursion: "none",
+            },
+        } as Folder;
+
+        const item_property = [
+            {
+                short_name: "field_1",
+                list_value: [103],
+            } as unknown as Property,
+        ];
+
+        const wrapper = createWrapper(true, true, item, item_property);
+
+        wrapper
+            .find("[data-test=document-custom-property-recursion-option]")
+            .vm.$emit("input", "all_items");
+
+        wrapper.find("[data-test=document-status-property-recursion-input]").setChecked(false);
+
+        expect(emitMock).toHaveBeenCalledWith("update-status-recursion", false);
+    });
+
     it(`Given "none" recursion option
         then the status properties is not in the update list is empty, all the checkbox are unchecked`, () => {
         const properties = [

@@ -437,7 +437,7 @@ describe("Properties actions", () => {
             });
 
             it("should update folder properties", async () => {
-                jest.spyOn(properties_rest_querier, "putEmptyDocumentProperties").mockReturnValue(
+                jest.spyOn(properties_rest_querier, "putFolderDocumentProperties").mockReturnValue(
                     Promise.resolve({} as unknown as Response)
                 );
                 const item = {
@@ -470,7 +470,7 @@ describe("Properties actions", () => {
                     properties,
                     status: {
                         value: "rejected",
-                        recursion: "none",
+                        recursion: "all_item",
                     },
                 } as Folder;
 
@@ -486,7 +486,7 @@ describe("Properties actions", () => {
                     item_to_update,
                     current_folder,
                     properties_to_update,
-                    recursion_option: "none",
+                    recursion_option: "all_item",
                 });
 
                 expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
@@ -506,6 +506,156 @@ describe("Properties actions", () => {
                     { root: true }
                 );
             });
+
+            it("should update folder properties with status recursion", async () => {
+                context = {
+                    rootState: {
+                        configuration: {
+                            is_status_property_used: true,
+                        },
+                    },
+                    commit: jest.fn(),
+                    dispatch: jest.fn(),
+                } as unknown as ActionContext<PropertiesState, RootState>;
+
+                const put_rest_mock = jest
+                    .spyOn(properties_rest_querier, "putFolderDocumentProperties")
+                    .mockReturnValue(Promise.resolve({} as unknown as Response));
+                const item = {
+                    id: 123,
+                    title: "My folder",
+                    type: TYPE_FOLDER,
+                    description: "on",
+                    owner: {
+                        id: 102,
+                    },
+                } as Folder;
+
+                const list_values: Array<ListValue> = [
+                    {
+                        id: 103,
+                    } as ListValue,
+                ];
+                const folder_properties: FolderProperty = {
+                    short_name: "status",
+                    list_value: list_values,
+                } as FolderProperty;
+                const properties: Array<Property> = [folder_properties];
+                const item_to_update = {
+                    id: 123,
+                    title: "My new empty title",
+                    description: "My empty description",
+                    type: TYPE_FOLDER,
+                    owner: {
+                        id: 102,
+                    },
+                    properties,
+                    status: {
+                        value: "rejected",
+                        recursion: "all_item",
+                    },
+                } as Folder;
+
+                const current_folder = {
+                    id: 456,
+                } as Folder;
+
+                getItem.mockReturnValue(Promise.resolve(item_to_update));
+
+                await updateProperties(context, {
+                    item,
+                    item_to_update,
+                    current_folder,
+                });
+
+                expect(put_rest_mock).toHaveBeenCalledWith(
+                    123,
+                    "My new empty title",
+                    "My empty description",
+                    102,
+                    {
+                        value: "rejected",
+                        recursion: "all_item",
+                    },
+                    null,
+                    expect.anything()
+                );
+            });
+        });
+
+        it("should update folder properties without status recursion", async () => {
+            context = {
+                rootState: {
+                    configuration: {
+                        is_status_property_used: false,
+                    },
+                },
+                commit: jest.fn(),
+                dispatch: jest.fn(),
+            } as unknown as ActionContext<PropertiesState, RootState>;
+
+            const put_rest_mock = jest
+                .spyOn(properties_rest_querier, "putFolderDocumentProperties")
+                .mockReturnValue(Promise.resolve({} as unknown as Response));
+            const item = {
+                id: 123,
+                title: "My folder",
+                type: TYPE_FOLDER,
+                description: "on",
+                owner: {
+                    id: 102,
+                },
+            } as Folder;
+
+            const list_values: Array<ListValue> = [
+                {
+                    id: 103,
+                } as ListValue,
+            ];
+            const folder_properties: FolderProperty = {
+                short_name: "status",
+                list_value: list_values,
+            } as FolderProperty;
+            const properties: Array<Property> = [folder_properties];
+            const item_to_update = {
+                id: 123,
+                title: "My new empty title",
+                description: "My empty description",
+                type: TYPE_FOLDER,
+                owner: {
+                    id: 102,
+                },
+                properties,
+                status: {
+                    value: "rejected",
+                    recursion: "all_item",
+                },
+            } as Folder;
+
+            const current_folder = {
+                id: 456,
+            } as Folder;
+
+            getItem.mockReturnValue(Promise.resolve(item_to_update));
+
+            await updateProperties(context, {
+                item,
+                item_to_update,
+                current_folder,
+            });
+
+            expect(put_rest_mock).toHaveBeenCalledWith(
+                123,
+                "My new empty title",
+                "My empty description",
+                102,
+                {
+                    value: "rejected",
+                    recursion: "none",
+                },
+                null,
+                expect.anything()
+            );
         });
 
         describe("Given I'm updating current folder -", () => {
@@ -579,7 +729,7 @@ describe("Properties actions", () => {
             } as Folder);
 
             expect(getItemWithSize).toHaveBeenCalled();
-            expect(properties).toEqual({
+            expect(properties).toStrictEqual({
                 total_size: 102546950,
                 nb_files: 27,
             });

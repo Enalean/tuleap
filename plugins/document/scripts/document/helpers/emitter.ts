@@ -56,6 +56,7 @@ export interface UpdateCustomEvent {
 
 export type Events = {
     "update-status-property": string;
+    "update-status-recursion": boolean;
     "update-title-property": string;
     "update-version-title": string;
     "update-description-property": string;
