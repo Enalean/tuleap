@@ -19,7 +19,7 @@
 
 import CodeMirror from "codemirror";
 import "codemirror/addon/scroll/simplescrollbars.js";
-import { getComments } from "../comments-state.js";
+import { getStore } from "../comments-store.ts";
 import {
     initDataAndCodeMirrors,
     isFirstLineOfGroup,
@@ -81,7 +81,10 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
 
         synchronize(left_code_mirror, right_code_mirror);
 
-        const collapsible_sections = getCollapsibleSectionsSideBySide(file_lines, getComments());
+        const collapsible_sections = getCollapsibleSectionsSideBySide(
+            file_lines,
+            getStore().getAllRootComments()
+        );
         CodeMirrorHelperService.collapseCommonSectionsSideBySide(
             left_code_mirror,
             right_code_mirror,
@@ -108,9 +111,11 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             addCommentsPlaceholder(line, left_code_mirror, right_code_mirror);
         });
 
-        getComments().forEach((comment) => {
-            displayInlineComment(comment, left_code_mirror, right_code_mirror);
-        });
+        getStore()
+            .getAllRootComments()
+            .forEach((comment) => {
+                displayInlineComment(comment, left_code_mirror, right_code_mirror);
+            });
 
         TooltipService.setupTooltips();
 

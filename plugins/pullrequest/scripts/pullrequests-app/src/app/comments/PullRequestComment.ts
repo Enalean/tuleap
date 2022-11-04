@@ -19,15 +19,15 @@
 
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
+import type { IRelativeDateHelper } from "../helpers/date-helpers";
+import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getCommentBody } from "./PullRequestCommentBodyTemplate";
 import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
-import type { IRelativeDateHelper } from "../helpers/date-helpers";
-import { PullRequestCommentController } from "./PullRequestCommentController";
-import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
-import { PullRequestCommentReplyFormFocusHelper } from "./PullRequestCommentReplyFormFocusHelper";
+import { getCommentReplyTemplate } from "./PullRequestCommentReplyTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPresenter";
+import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 
 export const TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestComment & HTMLElement;
@@ -42,6 +42,7 @@ export interface PullRequestComment {
     readonly currentUser: CurrentPullRequestUserPresenter;
     readonly controller: ControlPullRequestComment;
     is_reply_form_displayed: boolean;
+    replies: PullRequestCommentRepliesCollectionPresenter;
 }
 
 const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
@@ -54,6 +55,17 @@ const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
     classes[host.comment.type] = true;
 
     return classes;
+};
+
+export const setReplies = (
+    host: PullRequestComment,
+    presenter: PullRequestCommentRepliesCollectionPresenter | undefined
+): PullRequestCommentRepliesCollectionPresenter => {
+    if (!presenter) {
+        return PullRequestCommentRepliesCollectionPresenter.buildEmpty();
+    }
+
+    return presenter;
 };
 
 function renderFactory(fn: (host: HostElement) => UpdateFunction<PullRequestComment>) {
@@ -75,11 +87,18 @@ export const PullRequestComment = define<PullRequestComment>({
     relativeDateHelper: undefined,
     currentUser: undefined,
     controller: {
-        get: (host, value) =>
-            value ?? PullRequestCommentController(PullRequestCommentReplyFormFocusHelper()),
-        set: (host, value) => value,
+        set: (host, controller) => {
+            if (host.comment) {
+                controller.displayReplies(host);
+            }
+
+            return controller;
+        },
     },
     is_reply_form_displayed: false,
+    replies: {
+        set: setReplies,
+    },
     content: renderFactory(
         (host) => html`
             <div class="pull-request-comment-component">
@@ -97,7 +116,12 @@ export const PullRequestComment = define<PullRequestComment>({
                     </div>
                 </div>
 
-                <div class="pull-request-comment-follow-ups">${getReplyFormTemplate(host)}</div>
+                <div class="pull-request-comment-follow-ups">
+                    ${host.replies.map((reply: PullRequestCommentPresenter) =>
+                        getCommentReplyTemplate(host, reply)
+                    )}
+                    ${getReplyFormTemplate(host)}
+                </div>
             </div>
         `
     ),

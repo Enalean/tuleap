@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-let state_comments = [];
+import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 
-function initComments(comments) {
-    state_comments = comments;
-}
+export type PullRequestCommentRepliesCollectionPresenter = readonly PullRequestCommentPresenter[];
 
-function addComment(comment) {
-    state_comments.push(comment);
-}
-
-function getComments() {
-    return state_comments;
-}
-
-export { initComments, addComment, getComments };
+export const PullRequestCommentRepliesCollectionPresenter = {
+    buildEmpty: (): PullRequestCommentRepliesCollectionPresenter => [],
+    fromReplies: (
+        replies: readonly PullRequestCommentPresenter[]
+    ): PullRequestCommentRepliesCollectionPresenter => replies,
+};

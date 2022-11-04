@@ -21,24 +21,27 @@ import { sanitize } from "dompurify";
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { PullRequestComment } from "./PullRequestComment";
+import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 
-const displayFileNameIfNeeded = (host: PullRequestComment): UpdateFunction<PullRequestComment> => {
-    if (!host.comment.file) {
+const displayFileNameIfNeeded = (
+    comment: PullRequestCommentPresenter
+): UpdateFunction<PullRequestComment> => {
+    if (!comment.file || comment.parent_id !== 0) {
         return html``;
     }
 
-    if (!host.comment.is_outdated) {
+    if (!comment.is_outdated) {
         return html`
             <div
                 class="pull-request-comment-file-path"
                 data-test="pullrequest-comment-with-link-to-file"
             >
-                <a href="${host.comment.file.file_url}">
+                <a href="${comment.file.file_url}">
                     <i
                         class="pull-request-comment-file-path-icon fa-regular fa-file-alt"
                         aria-hidden="true"
                     ></i>
-                    ${host.comment.file.file_path}
+                    ${comment.file.file_path}
                 </a>
             </div>
         `;
@@ -50,34 +53,36 @@ const displayFileNameIfNeeded = (host: PullRequestComment): UpdateFunction<PullR
                 class="pull-request-comment-file-path-icon fa-regular fa-file-alt"
                 aria-hidden="true"
             ></i>
-            ${host.comment.file.file_path}
+            ${comment.file.file_path}
         </div>
     `;
 };
 
-export const getCommentBody = (
-    host: PullRequestComment
+export const buildBodyForComment = (
+    host: PullRequestComment,
+    comment: PullRequestCommentPresenter
 ): UpdateFunction<PullRequestComment> => html`
     <div class="pull-request-comment-body">
         <div class="pull-request-comment-content-info">
-            <a href="${host.comment.user.user_url}">${host.comment.user.display_name}</a>,
+            <a href="${comment.user.user_url}">${comment.user.display_name}</a>,
             <tlp-relative-date
-                date="${host.comment.post_date}"
+                date="${comment.post_date}"
                 absolute-date="${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(
-                    host.comment.post_date
+                    comment.post_date
                 )}"
                 preference="${host.relativeDateHelper.getRelativeDatePreference()}"
                 locale="${host.relativeDateHelper.getUserLocale()}"
                 placement="${host.relativeDateHelper.getRelativeDatePlacement()}"
             >
-                ${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(
-                    host.comment.post_date
-                )}
+                ${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(comment.post_date)}
             </tlp-relative-date>
         </div>
 
-        ${displayFileNameIfNeeded(host)}
+        ${displayFileNameIfNeeded(comment)}
 
-        <p class="pull-request-comment-text" innerHTML="${sanitize(host.comment.content)}"></p>
+        <p class="pull-request-comment-text" innerHTML="${sanitize(comment.content)}"></p>
     </div>
 `;
+
+export const getCommentBody = (host: PullRequestComment): UpdateFunction<PullRequestComment> =>
+    buildBodyForComment(host, host.comment);

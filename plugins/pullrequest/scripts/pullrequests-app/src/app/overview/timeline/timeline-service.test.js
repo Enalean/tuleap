@@ -21,6 +21,7 @@ import angular from "angular";
 import tuleap_pullrequest_module from "../../app.js";
 
 import "angular-mocks";
+import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
 
 describe("TimelineService", function () {
     var $httpBackend, TimelineService;
@@ -63,19 +64,24 @@ describe("TimelineService", function () {
     });
 
     describe("#addComment", function () {
-        var pullRequest = {
+        let comments_store;
+        const pull_request = {
             id: "1",
         };
+
+        beforeEach(() => {
+            comments_store = PullRequestCommentRepliesStore([]);
+        });
 
         it("sends a request to post a new comment", function () {
             var newComment = {
                 content: "hello",
                 user_id: 100,
             };
-            var expectedUrl = "/api/v1/pull_requests/" + pullRequest.id + "/comments";
+            var expectedUrl = "/api/v1/pull_requests/" + pull_request.id + "/comments";
             $httpBackend.expectPOST(expectedUrl, newComment).respond(newComment);
 
-            TimelineService.addComment(pullRequest, [], newComment);
+            TimelineService.addComment(pull_request, [], comments_store, newComment);
 
             $httpBackend.verifyNoOutstandingExpectation();
         });
@@ -94,13 +100,14 @@ describe("TimelineService", function () {
                 content: "hello",
                 type: "comment",
             };
-            var expectedUrl = "/api/v1/pull_requests/" + pullRequest.id + "/comments";
+            var expectedUrl = "/api/v1/pull_requests/" + pull_request.id + "/comments";
             $httpBackend.expectPOST(expectedUrl, newComment).respond(expectedComment);
 
-            TimelineService.addComment(pullRequest, timeline, newComment);
+            TimelineService.addComment(pull_request, timeline, comments_store, newComment);
             $httpBackend.flush();
 
-            expect(timeline.map(({ id }) => id)).toEqual([expectedComment.id]);
+            expect(comments_store.getCommentReplies(expectedComment)).toStrictEqual([]);
+            expect(timeline.map(({ id }) => id)).toStrictEqual([expectedComment.id]);
         });
     });
 });

@@ -18,10 +18,12 @@
  */
 
 import CodeMirror from "codemirror";
-import { addComment } from "./comments-state.js";
+import { getStore } from "./comments-store.ts";
 import { PullRequestCommentPresenter } from "../comments/PullRequestCommentPresenter";
 import { RelativeDateHelper } from "../helpers/date-helpers";
 import { PullRequestCurrentUserPresenter } from "../comments/PullRequestCurrentUserPresenter";
+import { PullRequestCommentController } from "../comments/PullRequestCommentController";
+import { PullRequestCommentReplyFormFocusHelper } from "../comments/PullRequestCommentReplyFormFocusHelper";
 
 export default CodeMirrorHelperService;
 
@@ -55,6 +57,7 @@ function CodeMirrorHelperService(
         displayInlineComment,
         showCommentForm,
         displayPlaceholderWidget,
+        comment_replies_store: getStore(),
     });
 
     function displayInlineComment(code_mirror, comment, line_number) {
@@ -68,6 +71,10 @@ function CodeMirrorHelperService(
         );
         inline_comment_element.currentUser = PullRequestCurrentUserPresenter.fromUserInfo(
             SharedPropertiesService.getUserAvatarUrl()
+        );
+        inline_comment_element.controller = PullRequestCommentController(
+            PullRequestCommentReplyFormFocusHelper(),
+            self.comment_replies_store
         );
 
         const options = getWidgetPlacementOptions(code_mirror, line_number);
@@ -90,7 +97,7 @@ function CodeMirrorHelperService(
                 .then((comment) => {
                     const comment_presenter =
                         PullRequestCommentPresenter.fromFileDiffComment(comment);
-                    addComment(comment_presenter);
+                    getStore().addRootComment(comment_presenter);
                     const comment_widget = self.displayInlineComment(
                         code_mirror,
                         comment_presenter,

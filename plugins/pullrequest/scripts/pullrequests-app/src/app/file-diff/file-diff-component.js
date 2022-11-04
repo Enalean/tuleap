@@ -19,7 +19,7 @@
 
 import "./file-diff.tpl.html";
 import { isUnifiedMode, isSideBySideMode } from "./diff-mode-state.js";
-import { initComments } from "./comments-state.js";
+import { initCommentsStore } from "./comments-store.ts";
 import { doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText } from "./diff-bidirectional-unicode-text";
 import { PullRequestCommentPresenter } from "../comments/PullRequestCommentPresenter";
 
@@ -54,7 +54,7 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
                 self.has_potentially_dangerous_bidirectional_unicode_text =
                     doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText(diff);
 
-                initComments(
+                initCommentsStore(
                     diff.inline_comments.map(PullRequestCommentPresenter.fromFileDiffComment)
                 );
             })

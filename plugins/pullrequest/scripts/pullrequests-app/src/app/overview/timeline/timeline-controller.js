@@ -1,5 +1,8 @@
 import { RelativeDateHelper } from "../../helpers/date-helpers";
 import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
+import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
+import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
+import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
 
 export default TimelineController;
 
@@ -24,6 +27,8 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
         current_user: PullRequestCurrentUserPresenter.fromUserInfo(
             SharedPropertiesService.getUserAvatarUrl()
         ),
+        comment_controller: {},
+        comment_replies_store: {},
         addComment,
         $onInit: init,
     });
@@ -37,7 +42,12 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
                 TimelineService.timeline_pagination.offset
             )
                 .then(function (timeline) {
-                    self.timeline = timeline;
+                    self.comment_replies_store = PullRequestCommentRepliesStore(timeline);
+                    self.timeline = self.comment_replies_store.getAllRootComments();
+                    self.comment_controller = PullRequestCommentController(
+                        PullRequestCommentReplyFormFocusHelper(),
+                        self.comment_replies_store
+                    );
                     TooltipService.setupTooltips();
                 })
                 .finally(function () {
@@ -47,11 +57,14 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
     }
 
     function addComment() {
-        TimelineService.addComment(self.pull_request, self.timeline, self.new_comment).then(
-            function () {
-                self.new_comment.content = "";
-                TooltipService.setupTooltips();
-            }
-        );
+        TimelineService.addComment(
+            self.pull_request,
+            self.timeline,
+            self.comment_replies_store,
+            self.new_comment
+        ).then(function () {
+            self.new_comment.content = "";
+            TooltipService.setupTooltips();
+        });
     }
 }

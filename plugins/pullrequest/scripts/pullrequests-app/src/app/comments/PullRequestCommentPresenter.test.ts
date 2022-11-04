@@ -102,6 +102,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
             user: {} as PullRequestUser,
             unidiff_offset: 8,
             position: "right",
+            parent_id: 0,
         };
         const result = PullRequestCommentPresenter.fromFileDiffComment(event);
         expect(result.type).toBe("inline-comment");

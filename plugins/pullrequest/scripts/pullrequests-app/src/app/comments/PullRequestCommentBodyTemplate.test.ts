@@ -24,6 +24,7 @@ import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullReques
 import { setCatalog } from "../gettext-catalog";
 import "@tuleap/tlp-relative-date";
 import { RelativeDateHelperStub } from "../../../tests/stubs/RelativeDateHelperStub";
+import { TYPE_INLINE_COMMENT } from "./PullRequestCommentPresenter";
 
 describe("PullRequestCommentBodyTemplate", () => {
     let target: ShadowRoot;
@@ -80,6 +81,18 @@ describe("PullRequestCommentBodyTemplate", () => {
         [
             "a pull-request event comment",
             PullRequestCommentPresenterStub.buildPullRequestEventComment(),
+        ],
+        [
+            "an inline-comment which is a reply to another inline-comment",
+            PullRequestCommentPresenterStub.buildWithData({
+                parent_id: 12,
+                is_inline_comment: true,
+                type: TYPE_INLINE_COMMENT,
+                file: {
+                    file_url: "an/url/to/README.md",
+                    file_path: "README.md",
+                },
+            }),
         ],
     ])(`Given %s, Then it should not display a file name`, (expectation, comment) => {
         const host = {
