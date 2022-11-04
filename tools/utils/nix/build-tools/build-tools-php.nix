@@ -2,6 +2,7 @@
 
 let
     php = phpBase.withExtensions ({ enabled, all }: with all; enabled ++ [
+        ffi
         bcmath
         curl
         ctype

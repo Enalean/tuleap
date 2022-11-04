@@ -43,7 +43,18 @@ final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRepoDoesNotExist(): void
     {
-        $action = new PreReceiveAnalyzeAction($this->git_repository_factory);
+        $ffi = new class implements WASMCaller {
+            public bool $has_been_called = false;
+            public string $output        = "testoutput";
+
+            public function call(string $json_input): string
+            {
+                $this->has_been_called = true;
+                return $this->output;
+            }
+        };
+
+        $action = new PreReceiveAnalyzeAction($this->git_repository_factory, $ffi);
 
         $this->git_repository_factory->method('getRepositoryById')->with(666)->willReturn(null);
 
@@ -53,7 +64,18 @@ final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReferenceDoesNotExist(): void
     {
-        $action = new PreReceiveAnalyzeAction($this->git_repository_factory);
+        $ffi = new class implements WASMCaller {
+            public bool $has_been_called = false;
+            public string $output        = "testoutput";
+
+            public function call(string $json_input): string
+            {
+                $this->has_been_called = true;
+                return $this->output;
+            }
+        };
+
+        $action = new PreReceiveAnalyzeAction($this->git_repository_factory, $ffi);
 
         $remote_repo = $this->getTmpDir() . '/some_git_repo.git';
         mkdir($remote_repo);
@@ -78,7 +100,18 @@ final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNormalBehavior(): void
     {
-        $action = new PreReceiveAnalyzeAction($this->git_repository_factory);
+        $ffi = new class implements WASMCaller {
+            public bool $has_been_called = false;
+            public string $output        = "testoutput";
+
+            public function call(string $json_input): string
+            {
+                $this->has_been_called = true;
+                return $this->output;
+            }
+        };
+
+        $action = new PreReceiveAnalyzeAction($this->git_repository_factory, $ffi);
 
         $remote_repo = $this->getTmpDir() . '/some_git_repo.git';
         mkdir($remote_repo);
@@ -98,8 +131,9 @@ final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $git_repository->method('getFullPath')->willReturn($remote_repo);
         $this->git_repository_factory->method('getRepositoryById')->with(42)->willReturn($git_repository);
 
-        $returnCode = $action->preReceiveAnalyse('42', trim($sha1));
+        $output = $action->preReceiveAnalyse('42', trim($sha1));
 
-        $this->assertEquals(0, $returnCode);
+        self::assertTrue($ffi->has_been_called);
+        self::assertEquals($output, $ffi->output);
     }
 }

@@ -27,13 +27,18 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Tuleap\Config\FeatureFlagConfigKey;
 
 final class PreReceiveAnalyzeCommand extends Command
 {
+    #[FeatureFlagConfigKey("Feature flag to enable the git:pre-receive-analyze command")]
+    public const FEATURE_FLAG_KEY = 'enable_pre_receive_analyze_command';
+
     public const NAME = 'git:pre-receive-analyze';
 
-    public function __construct(private PreReceiveAnalyzeAction $action)
-    {
+    public function __construct(
+        private PreReceiveAnalyzeAction $action,
+    ) {
         parent::__construct(self::NAME);
     }
 
@@ -56,7 +61,8 @@ final class PreReceiveAnalyzeCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            return $this->action->preReceiveAnalyse($input->getArgument('repository_id'), $input->getArgument('git_reference'));
+            $output->writeln(OutputFormatter::escape($this->action->preReceiveAnalyse($input->getArgument('repository_id'), $input->getArgument('git_reference'))));
+            return self::SUCCESS;
         } catch (PreReceiveRepositoryNotFoundException $e) {
             $output->writeln(sprintf('<error>The ID "%s" does not correspond to any repository.</error>', OutputFormatter::escape($input->getArgument('repository_id'))));
             return self::FAILURE;

@@ -27,7 +27,7 @@ use GitRepositoryFactory;
 
 final class PreReceiveAnalyzeAction
 {
-    public function __construct(private GitRepositoryFactory $git_repository_factory)
+    public function __construct(private GitRepositoryFactory $git_repository_factory, private WASMCaller $wasm_caller)
     {
     }
 
@@ -37,7 +37,7 @@ final class PreReceiveAnalyzeAction
      * @throws PreReceiveRepositoryNotFoundException
      * @throws PreReceiveCannotRetrieveReferenceException
      */
-    public function preReceiveAnalyse(string $repository_id, string $git_reference): int
+    public function preReceiveAnalyse(string $repository_id, string $git_reference): string
     {
         $repository = $this->git_repository_factory->getRepositoryById((int) $repository_id);
         if ($repository === null) {
@@ -47,14 +47,13 @@ final class PreReceiveAnalyzeAction
         $git_exec = Git_Exec::buildFromRepository($repository);
 
         try {
-            $rows = [
-                'type'    => $git_exec->getObjectType($git_reference),
-                'content' => $git_exec->catFile($git_reference),
-            ];
+            $arr      = ["obj_type" => $git_exec->getObjectType($git_reference), "content" => $git_exec->catFile($git_reference)];
+            $json_in  = json_encode($arr, JSON_THROW_ON_ERROR);
+            $json_out = $this->wasm_caller->call($json_in);
         } catch (\Git_Command_Exception $e) {
             throw new PreReceiveCannotRetrieveReferenceException();
         }
 
-        return 0;
+        return $json_out;
     }
 }
