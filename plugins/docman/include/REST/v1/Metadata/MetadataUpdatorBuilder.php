@@ -74,7 +74,8 @@ class MetadataUpdatorBuilder
                 new MetadataValueObjectFactory(new DocmanMetadataTypeValueFactory()),
                 $metadata_value_dao,
                 new MetadataValueStore($metadata_value_dao, \ReferenceManager::instance())
-            )
+            ),
+            new Docman_SettingsBo($project->getID())
         );
     }
 }

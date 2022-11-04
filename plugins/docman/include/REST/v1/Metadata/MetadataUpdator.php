@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
+use Docman_SettingsBo;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
@@ -93,6 +94,7 @@ class MetadataUpdator
         DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
         CustomMetadataRepresentationRetriever $custom_metadata_representation_retriever,
         MetadataValueUpdator $metadata_value_updator,
+        private Docman_SettingsBo $docman_settings_bo,
     ) {
         $this->item_factory                             = $item_factory;
         $this->status_mapper                            = $status_mapper;
@@ -181,10 +183,13 @@ class MetadataUpdator
             'id'                => $item_id,
             'title'             => $representation->title,
             'description'       => $representation->description,
-            'status'            => $status,
             'obsolescence_date' => $obsolescence_date,
             'user_id'           => $representation->owner_id,
         ];
+
+        if ($this->isStatusMetadataUsed()) {
+            $row['status'] = $status;
+        }
 
         if ($representation->owner_id !== $item->getOwnerId()) {
             $this->event_processor->raiseUpdateEvent(
@@ -196,7 +201,9 @@ class MetadataUpdator
             );
         }
 
-        $this->sendStatusUpdateEvent($item, $current_user, $status);
+        if ($this->isStatusMetadataUsed()) {
+            $this->sendStatusUpdateEvent($item, $current_user, $status);
+        }
 
         $this->item_factory->update($row);
     }
@@ -233,10 +240,16 @@ class MetadataUpdator
             'id'          => $item_id,
             'title'       => $representation->title,
             'description' => $representation->description,
-            'status'      => $status,
         ];
+
+        if ($this->isStatusMetadataUsed()) {
+            $row['status'] = $status;
+        }
+
         $this->item_factory->update($row);
-        $this->sendStatusUpdateEvent($item, $user, $status);
+        if ($this->isStatusMetadataUsed()) {
+            $this->sendStatusUpdateEvent($item, $user, $status);
+        }
 
         try {
             $metadata_to_update_collection = $this->custom_metadata_representation_retriever->checkAndBuildFolderMetadataToUpdate(
@@ -331,5 +344,11 @@ class MetadataUpdator
                 )
             );
         }
+    }
+
+    private function isStatusMetadataUsed(): bool
+    {
+        $metadata_usage = $this->docman_settings_bo->getMetadataUsage('status');
+        return $metadata_usage === '1';
     }
 }
