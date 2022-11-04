@@ -27,19 +27,14 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 class PullRequestInlineCommentRepresentationBuilder
 {
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var \Tuleap\PullRequest\InlineComment\Dao */
-    private $dao;
-
-    public function __construct(Dao $dao, UserManager $user_manager)
+    public function __construct(private Dao $dao, private UserManager $user_manager)
     {
-        $this->dao          = $dao;
-        $this->user_manager = $user_manager;
     }
 
-    public function getForFile(PullRequest $pull_request, $file_path, $project_id)
+    /**
+     * @return PullRequestInlineCommentRepresentation[]
+     */
+    public function getForFile(PullRequest $pull_request, $file_path, $project_id): array
     {
         $res = $this->dao->searchUpToDateByFilePath($pull_request->getId(), $file_path);
 
@@ -54,7 +49,10 @@ class PullRequestInlineCommentRepresentationBuilder
                 $row['post_date'],
                 $row['content'],
                 $project_id,
-                $row['position']
+                $row['position'],
+                $row['parent_id'],
+                $row['id'],
+                $row['file_path']
             );
         }
 
