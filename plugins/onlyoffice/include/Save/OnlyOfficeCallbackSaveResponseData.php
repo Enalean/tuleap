@@ -29,6 +29,7 @@ final class OnlyOfficeCallbackSaveResponseData
 {
     public function __construct(
         public string $download_url,
+        public string $onlyoffice_server_version,
     ) {
     }
 }
