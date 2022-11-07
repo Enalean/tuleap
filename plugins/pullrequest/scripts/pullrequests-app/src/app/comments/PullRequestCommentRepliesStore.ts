@@ -27,6 +27,10 @@ export interface StorePullRequestCommentReplies {
     ) => PullRequestCommentRepliesCollectionPresenter;
     getAllRootComments: () => PullRequestCommentPresenter[];
     addRootComment: (comment: PullRequestCommentPresenter) => void;
+    addReplyToComment: (
+        comment: PullRequestCommentPresenter,
+        reply: PullRequestCommentPresenter
+    ) => void;
 }
 
 function getOnlyGlobalCommentReplies(comment: PullRequestCommentPresenter): boolean {
@@ -39,6 +43,13 @@ function getOnlyInlineCommentReplies(comment: PullRequestCommentPresenter): bool
 
 function getOnlyRootComments(comment: PullRequestCommentPresenter): boolean {
     return comment.parent_id === 0;
+}
+
+function sortRepliesByDate(replies: PullRequestCommentPresenter[]): PullRequestCommentPresenter[] {
+    return replies.sort(
+        (a: PullRequestCommentPresenter, b: PullRequestCommentPresenter) =>
+            Date.parse(a.post_date) - Date.parse(b.post_date)
+    );
 }
 
 function buildMapFromComments(
@@ -64,15 +75,24 @@ function buildMapFromComments(
     );
 
     map.forEach((replies: PullRequestCommentPresenter[], parent_id: number, map) => {
-        const sorted_replies = replies.sort(
-            (a: PullRequestCommentPresenter, b: PullRequestCommentPresenter) =>
-                Date.parse(a.post_date) - Date.parse(b.post_date)
-        );
-
-        map.set(parent_id, sorted_replies);
+        map.set(parent_id, sortRepliesByDate(replies));
     });
 
     return map;
+}
+
+function addCommentReply(
+    map: Map<number, PullRequestCommentPresenter[]>,
+    comment: PullRequestCommentPresenter,
+    reply: PullRequestCommentPresenter
+): void {
+    const replies = map.get(comment.id);
+    if (!replies) {
+        map.set(comment.id, [reply]);
+        return;
+    }
+
+    map.set(comment.id, sortRepliesByDate([...replies, reply]));
 }
 
 export const PullRequestCommentRepliesStore = (
@@ -111,6 +131,19 @@ export const PullRequestCommentRepliesStore = (
 
             if (comment.type === TYPE_GLOBAL_COMMENT) {
                 global_comments_replies_map.set(comment.id, []);
+            }
+        },
+        addReplyToComment: (
+            comment: PullRequestCommentPresenter,
+            reply: PullRequestCommentPresenter
+        ): void => {
+            if (comment.type === TYPE_INLINE_COMMENT) {
+                addCommentReply(inline_comments_replies_map, comment, reply);
+                return;
+            }
+
+            if (comment.type === TYPE_GLOBAL_COMMENT) {
+                addCommentReply(global_comments_replies_map, comment, reply);
             }
         },
     };

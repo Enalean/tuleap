@@ -26,14 +26,16 @@ import {
 import type {
     FileDiffCommentPayload,
     PullRequestData,
-    TimelineEventPayload,
     State,
+    CommentReplyPayload,
+    TimelineEventPayload,
 } from "./PullRequestCommentPresenter";
 import type { PullRequestUser } from "./PullRequestCommentPresenter";
 import { setCatalog } from "../gettext-catalog";
+import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 
 describe("PullRequestCommentPresenterBuilder", () => {
-    const $state: State = { href: jest.fn() };
+    const $state: State = { href: jest.fn().mockReturnValue("url/to/file") };
 
     beforeEach(() => {
         setCatalog({ getString: (msgid: string) => msgid });
@@ -41,8 +43,8 @@ describe("PullRequestCommentPresenterBuilder", () => {
 
     it("Builds a presenter from timeline payload for comment", () => {
         const event: TimelineEventPayload = {
+            id: 12,
             post_date: "2020/07/13 16:16",
-            file_url: "my_url",
             content: "my comment\nwith line return",
             file_path: "",
             type: TYPE_GLOBAL_COMMENT,
@@ -55,14 +57,16 @@ describe("PullRequestCommentPresenterBuilder", () => {
         expect(result.content).toBe("my comment<br/>with line return");
         expect(result.is_inline_comment).toBe(false);
         expect(result.post_date).toBe("2020/07/13 16:16");
+        expect(result.file).toBeUndefined();
     });
 
     it("Builds a presenter from timeline payload for inline comments", () => {
         const event: TimelineEventPayload = {
             post_date: "2020/07/13 16:16",
-            file_url: "my_url",
             content: "my comment\nwith line return",
-            file_path: "",
+            file_path: "README.md",
+            unidiff_offset: 8,
+            position: "right",
             type: TYPE_INLINE_COMMENT,
             is_outdated: false,
             user: {} as PullRequestUser,
@@ -73,12 +77,17 @@ describe("PullRequestCommentPresenterBuilder", () => {
         expect(result.content).toBe("my comment<br/>with line return");
         expect(result.is_inline_comment).toBe(true);
         expect(result.post_date).toBe("2020/07/13 16:16");
+        expect(result.file).toStrictEqual({
+            file_url: "url/to/file",
+            file_path: "README.md",
+            unidiff_offset: 8,
+            position: "right",
+        });
     });
 
     it("Builds a presenter from timeline payload for timeline events", () => {
         const event: TimelineEventPayload = {
             post_date: "2020/07/13 16:16",
-            file_url: "my_url",
             content: "",
             file_path: "",
             type: TYPE_EVENT_COMMENT,
@@ -92,6 +101,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
         expect(result.content).toBe("Has updated the pull request.");
         expect(result.is_inline_comment).toBe(false);
         expect(result.post_date).toBe("2020/07/13 16:16");
+        expect(result.file).toBeUndefined();
     });
 
     it("Builds a presenter from comment payload", () => {
@@ -100,6 +110,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
             post_date: "2020/07/13 16:16",
             content: "my comment",
             user: {} as PullRequestUser,
+            file_path: "README.md",
             unidiff_offset: 8,
             position: "right",
             parent_id: 0,
@@ -110,5 +121,27 @@ describe("PullRequestCommentPresenterBuilder", () => {
         expect(result.is_inline_comment).toBe(true);
         expect(result.unidiff_offset).toBe(8);
         expect(result.position).toBe("right");
+        expect(result.file_path).toBe("README.md");
+    });
+
+    it("should build a CommentReplyPresenter from a new comment payload", () => {
+        const parent_comment = PullRequestCommentPresenterStub.buildGlobalComment();
+        const new_comment_payload: CommentReplyPayload = {
+            id: 13,
+            post_date: "2020/07/13 16:16",
+            content: "",
+            user: {} as PullRequestUser,
+            parent_id: 12,
+        };
+
+        const presenter = PullRequestCommentPresenter.fromCommentReply(
+            parent_comment,
+            new_comment_payload
+        );
+
+        expect(presenter.type).toBe("comment");
+        expect(presenter.is_outdated).toBe(false);
+        expect(presenter.is_inline_comment).toBe(false);
+        expect(presenter.parent_id).toBe(12);
     });
 });

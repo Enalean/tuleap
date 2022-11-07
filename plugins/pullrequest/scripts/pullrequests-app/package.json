@@ -8,6 +8,8 @@
     "@tuleap/angular-tlp": "link:../../../../lib/frontend/angular-tlp",
     "@tuleap/core": "link:../../../../src/scripts/main",
     "@tuleap/date-helper": "link:../../../../lib/frontend/date-helper",
+    "@tuleap/fault": "link:../../../../lib/frontend/fault",
+    "@tuleap/fetch-result": "link:../../../../lib/frontend/fetch-result",
     "@tuleap/potentially-dangerous-bidirectional-characters": "link:../../../../lib/frontend/potentially-dangerous-bidirectional-characters",
     "@tuleap/tlp-fetch": "link:../../../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-relative-date": "link:../../../../lib/frontend/tlp-relative-date",
@@ -21,6 +23,7 @@
     "dompurify": "^2.3.6",
     "hybrids": "^8.0.2",
     "moment": "^2.29.4",
+    "neverthrow": "5.0.0",
     "sprintf-js": "^1.1.2",
     "vue": "^3.2.41"
   },

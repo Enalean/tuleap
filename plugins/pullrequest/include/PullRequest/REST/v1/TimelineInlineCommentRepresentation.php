@@ -74,10 +74,23 @@ class TimelineInlineCommentRepresentation
      * @var int {@type int}
      */
     public int $id;
+    /**
+     * @var string {@type string}
+     */
+    public string $position;
 
-
-    public function __construct(string $file_path, int $unidiff_offset, MinimalUserRepresentation $user, int $post_date, string $content, bool $is_outdated, int $project_id, int $parent_id, int $id)
-    {
+    public function __construct(
+        string $file_path,
+        int $unidiff_offset,
+        MinimalUserRepresentation $user,
+        int $post_date,
+        string $content,
+        bool $is_outdated,
+        int $project_id,
+        int $parent_id,
+        int $id,
+        string $position,
+    ) {
         $this->file_path      = $file_path;
         $this->unidiff_offset = $unidiff_offset;
         $this->user           = $user;
@@ -87,6 +100,7 @@ class TimelineInlineCommentRepresentation
         $this->type           = self::TYPE;
         $this->parent_id      = $parent_id;
         $this->id             = $id;
+        $this->position       = $position;
     }
 
     private static function getPurifiedContent(int $project_id, string $content): string

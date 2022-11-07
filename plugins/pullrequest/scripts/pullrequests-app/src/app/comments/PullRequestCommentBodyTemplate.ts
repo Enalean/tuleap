@@ -20,8 +20,8 @@
 import { sanitize } from "dompurify";
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { PullRequestComment } from "./PullRequestComment";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
+import type { PullRequestComment } from "./PullRequestComment";
 
 const displayFileNameIfNeeded = (
     comment: PullRequestCommentPresenter

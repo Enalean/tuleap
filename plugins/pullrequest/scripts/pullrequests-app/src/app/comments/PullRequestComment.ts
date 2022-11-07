@@ -28,6 +28,8 @@ import { getCommentReplyTemplate } from "./PullRequestCommentReplyTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPresenter";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
+import type { PullRequestPresenter } from "./PullRequestPresenter";
+import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 
 export const TAG_NAME = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestComment & HTMLElement;
@@ -40,9 +42,10 @@ export interface PullRequestComment {
     readonly post_rendering_callback: () => void;
     readonly relativeDateHelper: IRelativeDateHelper;
     readonly currentUser: CurrentPullRequestUserPresenter;
+    readonly currentPullRequest: PullRequestPresenter;
     readonly controller: ControlPullRequestComment;
-    is_reply_form_displayed: boolean;
     replies: PullRequestCommentRepliesCollectionPresenter;
+    reply_comment_presenter: ReplyCommentFormPresenter | null;
 }
 
 const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
@@ -68,6 +71,17 @@ export const setReplies = (
     return presenter;
 };
 
+export const setNewCommentState = (
+    host: PullRequestComment,
+    presenter: ReplyCommentFormPresenter | undefined
+): ReplyCommentFormPresenter | null => {
+    if (!presenter) {
+        return null;
+    }
+
+    return presenter;
+};
+
 function renderFactory(fn: (host: HostElement) => UpdateFunction<PullRequestComment>) {
     return (host: HostElement): UpdateFunction<PullRequestComment> => {
         const component = fn(host);
@@ -86,6 +100,7 @@ export const PullRequestComment = define<PullRequestComment>({
     post_rendering_callback: undefined,
     relativeDateHelper: undefined,
     currentUser: undefined,
+    currentPullRequest: undefined,
     controller: {
         set: (host, controller) => {
             if (host.comment) {
@@ -95,9 +110,11 @@ export const PullRequestComment = define<PullRequestComment>({
             return controller;
         },
     },
-    is_reply_form_displayed: false,
     replies: {
         set: setReplies,
+    },
+    reply_comment_presenter: {
+        set: setNewCommentState,
     },
     content: renderFactory(
         (host) => html`

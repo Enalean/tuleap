@@ -23,4 +23,6 @@ export const PullRequestCommentControllerStub = (): ControlPullRequestComment =>
     hideReplyForm: jest.fn(),
     showReplyForm: jest.fn(),
     displayReplies: jest.fn(),
+    updateCurrentReply: jest.fn(),
+    saveReply: jest.fn(),
 });

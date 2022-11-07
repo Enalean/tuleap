@@ -19,15 +19,16 @@
 
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
+import { getReplyToCommentButtonText } from "../gettext-catalog";
 import type { PullRequestComment } from "./PullRequestComment";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import { getReplyToCommentButtonText } from "../gettext-catalog";
+import { TYPE_EVENT_COMMENT } from "./PullRequestCommentPresenter";
 
 export const buildFooterForComment = (
     host: PullRequestComment,
     comment: PullRequestCommentPresenter
 ): UpdateFunction<PullRequestComment> => {
-    if (comment.type === "timeline-event") {
+    if (comment.type === TYPE_EVENT_COMMENT) {
         return html``;
     }
 
