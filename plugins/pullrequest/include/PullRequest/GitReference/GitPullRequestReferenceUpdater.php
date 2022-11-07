@@ -74,8 +74,8 @@ class GitPullRequestReferenceUpdater
                     $reference
                 );
             }
-            $executor_repository_source->push(
-                '--force ' . escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
+            $executor_repository_source->pushForce(
+                escapeshellarg('gitolite@gl-adm:' . $repository_destination->getPath()) . ' ' .
                 escapeshellarg($pull_request->getSha1Src()) . ':' . escapeshellarg($reference->getGitHeadReference())
             );
         } catch (\Git_Command_Exception $ex) {

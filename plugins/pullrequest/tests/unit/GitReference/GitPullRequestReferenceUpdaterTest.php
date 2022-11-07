@@ -51,7 +51,7 @@ class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ['pr_id' => 1, 'reference_id' => 1, 'repository_dest_id' => 1, 'status' => GitPullRequestReference::STATUS_OK]
         );
         $dao->shouldReceive('updateStatusByPullRequestId')->once();
-        $executor_source->shouldReceive('push')->once();
+        $executor_source->shouldReceive('pushForce')->once();
 
         $reference_updater->updatePullRequestReference(
             $pull_request,
@@ -168,7 +168,7 @@ class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $namespace_checker->shouldReceive('isAvailable')->andReturns(true);
         $dao->shouldReceive('updateStatusByPullRequestId')->with($pull_request->getId(), GitPullRequestReference::STATUS_BROKEN)->once();
-        $executor_source->shouldReceive('push')->once()->andThrow(\Mockery::mock(\Git_Command_Exception::class));
+        $executor_source->shouldReceive('pushForce')->once()->andThrow(\Mockery::mock(\Git_Command_Exception::class));
 
         $this->expectException(\Git_Command_Exception::class);
 
@@ -203,7 +203,7 @@ class GitPullRequestReferenceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $namespace_checker->shouldReceive('isAvailable')->andReturns(false, true);
         $dao->shouldReceive('updateGitReferenceToNextAvailableOne')->once();
         $dao->shouldReceive('updateStatusByPullRequestId')->with($pull_request->getId(), GitPullRequestReference::STATUS_OK)->once();
-        $executor_source->shouldReceive('push')->once();
+        $executor_source->shouldReceive('pushForce')->once();
 
         $reference_updater->updatePullRequestReference(
             $pull_request,
