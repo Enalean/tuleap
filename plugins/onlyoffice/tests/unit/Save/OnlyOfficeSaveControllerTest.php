@@ -55,7 +55,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     {
         $controller = self::buildController(
             Result::ok(
-                OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0'))
+                OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102]))
             ),
             true,
         );
@@ -83,7 +83,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     {
         $controller = self::buildController(
             Result::ok(
-                OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0'))
+                OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102]))
             ),
             false,
         );

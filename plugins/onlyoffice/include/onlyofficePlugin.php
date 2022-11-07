@@ -39,6 +39,7 @@ use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\OpenItemHref;
 use Tuleap\Docman\Settings\SettingsDAO;
+use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Document\Tree\ShouldDisplaySourceColumnForFileVersions;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
@@ -168,6 +169,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                 $versions_factory,
                 new Docman_LockFactory(new Docman_LockDao(), new Docman_Log()),
                 new Docman_FileStorage($docman_root_path),
+                new CoAuthorDao(),
                 new PostUpdateFileHandler(
                     $versions_factory,
                     new \Tuleap\Docman\REST\v1\DocmanItemsEventAdder($event_manager),

@@ -30,8 +30,25 @@ class CoAuthorDao extends DataAccessObject
      */
     public function searchByVersionId(int $id): array
     {
-        $sql = "SELECT * FROM plugin_docman_version_coauthor WHERE version_id = ?";
+        $sql = "SELECT version_id, user_id FROM plugin_docman_version_coauthor WHERE version_id = ?";
 
         return $this->getDB()->run($sql, $id);
+    }
+
+    /**
+     * @param non-empty-list<int> $co_author_ids
+     */
+    public function saveVersionCoAuthors(int $id, array $co_author_ids): void
+    {
+        $rows = [];
+
+        foreach ($co_author_ids as $co_author_id) {
+            $rows[] = ['version_id' => $id, 'user_id' => $co_author_id];
+        }
+
+        $this->getDB()->insertMany(
+            'plugin_docman_version_coauthor',
+            $rows
+        );
     }
 }

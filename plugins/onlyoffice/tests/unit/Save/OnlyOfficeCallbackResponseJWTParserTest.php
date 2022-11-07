@@ -58,12 +58,12 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     public function testParsesSaveCallbackContent(): void
     {
         $res = self::buildParser(true)->parseCallbackResponseContent(
-            json_encode(['token' => self::buildJWT(['status' => 2, 'url' => 'https://example.com/download', 'history' => ['serverVersion' => '7.2.0']])], JSON_THROW_ON_ERROR)
+            json_encode(['token' => self::buildJWT(['status' => 2, 'url' => 'https://example.com/download', 'history' => ['serverVersion' => '7.2.0', 'changes' => [['user' => ['id' => '102']]]]])], JSON_THROW_ON_ERROR)
         );
 
         self::assertEquals(
             OptionalValue::fromValue(
-                new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')
+                new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])
             ),
             $res->unwrapOr(null)
         );
@@ -147,6 +147,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             'Malformed history key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => 'foo'])],
             'Missing history.serverVersion key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => []])],
             'Malformed history.serverVersion key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => ['serverVersion' => true]])],
+            'Malformed history.changes.user key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => ['serverVersion' => '7.2.0', 'changes' => [['user' => ['id' => 'wrong']]]]])],
         ];
     }
 

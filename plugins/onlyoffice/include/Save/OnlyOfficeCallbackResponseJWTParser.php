@@ -155,9 +155,22 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
                 )
             );
         }
+        $author_identifiers = [];
+        if (isset($history['changes']) && is_array($history['changes'])) {
+            foreach ($history['changes'] as $change) {
+                if (! isset($change['user']['id']) || ! ctype_digit($change['user']['id'])) {
+                    return Result::err(
+                        Fault::fromMessage(
+                            sprintf('Invalid `history.changes` key (got "%s") in the ONLYOFFICE JWT callback claims', var_export($history['changes'], true))
+                        )
+                    );
+                }
+                $author_identifiers[] = (int) $change['user']['id'];
+            }
+        }
 
         return Result::ok(
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData($download_url, $history['serverVersion']))
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData($download_url, $history['serverVersion'], $author_identifiers))
         );
     }
 }
