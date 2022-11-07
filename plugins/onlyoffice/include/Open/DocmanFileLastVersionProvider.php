@@ -68,13 +68,10 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
             return Result::err(Fault::fromMessage(sprintf('Cannot find current version of file #%d', $item_id)));
         }
 
-        $can_write = false;
-        if (\ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_EDITION) === '1') {
-            $can_write = (! $this->filename_pattern_retriever->getPattern($project_id)->isEnforced()) &&
-                         $docman_permissions_manager->userCanWrite($user, $item_id) &&
-                         (! $this->lock_factory->itemIsLocked($item)) &&
-                         (! $this->approval_table_retriever->hasApprovalTable($item));
-        }
+        $can_write = (! $this->filename_pattern_retriever->getPattern($project_id)->isEnforced()) &&
+                     $docman_permissions_manager->userCanWrite($user, $item_id) &&
+                     (! $this->lock_factory->itemIsLocked($item)) &&
+                     (! $this->approval_table_retriever->hasApprovalTable($item));
 
         return Result::ok(
             new DocmanFileLastVersion($item, $version, $can_write)
