@@ -87,6 +87,11 @@
                         <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
                     </button>
                 </div>
+                <div class="tlp-modal-feedback" v-if="got_error_while_trying_to_delete">
+                    <div class="tlp-alert-danger">
+                        {{ $gettext("An error occurred while deleting the version") }}
+                    </div>
+                </div>
                 <div class="tlp-modal-body">
                     <p>
                         {{
@@ -109,7 +114,7 @@
                         class="tlp-button-danger tlp-modal-action"
                         v-on:click="onConfirmDeletion"
                         data-test="confirm-button"
-                        v-bind:disabled="is_deleting"
+                        v-bind:disabled="is_deleting || got_error_while_trying_to_delete"
                     >
                         <i
                             class="tlp-button-icon"
@@ -132,10 +137,12 @@ import UserBadge from "../User/UserBadge.vue";
 import { computed, inject, onMounted, onUnmounted, ref } from "vue";
 import type { FileHistory, Item } from "../../type";
 import type { Modal } from "@tuleap/tlp-modal";
-import { createModal } from "@tuleap/tlp-modal";
+import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { deleteFileVersion } from "../../api/version-rest-querier";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { FEEDBACK } from "../../injection-keys";
+import { noop_feedack_handler } from "../../helpers/noop-feedback-handler";
 
 const props = defineProps<{
     item: Item;
@@ -147,6 +154,7 @@ const props = defineProps<{
 const confirm_deletion = ref<HTMLElement | null>(null);
 const delete_button = ref<HTMLButtonElement | null>(null);
 const is_deleting = ref(false);
+const got_error_while_trying_to_delete = ref(false);
 
 const should_display_source_column_for_versions = inject(
     "should_display_source_column_for_versions",
@@ -168,11 +176,29 @@ function showConfirmationModal(): void {
     }
 }
 
+const { success } = inject(FEEDBACK, noop_feedack_handler);
+
 function onConfirmDeletion(): void {
     is_deleting.value = true;
-    deleteFileVersion(props.version.id).then(() => {
-        props.loadVersions();
-    });
+    deleteFileVersion(props.version.id).match(
+        () => {
+            success(
+                gettext_provider.interpolate(
+                    gettext_provider.$gettext("Version %{ number } has been successfully deleted"),
+                    { number: props.version.number }
+                )
+            );
+            props.loadVersions();
+        },
+        () => {
+            got_error_while_trying_to_delete.value = true;
+            is_deleting.value = false;
+        }
+    );
+}
+
+function resetErrorMessageStatus(): void {
+    got_error_while_trying_to_delete.value = false;
 }
 
 onMounted(() => {
@@ -186,6 +212,7 @@ onMounted(() => {
 
     modal = createModal(confirm_deletion.value);
     delete_button.value.addEventListener("click", showConfirmationModal);
+    modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, resetErrorMessageStatus);
 });
 
 onUnmounted(() => {
@@ -194,6 +221,7 @@ onUnmounted(() => {
     }
 
     if (modal) {
+        modal.removeEventListener(EVENT_TLP_MODAL_HIDDEN, resetErrorMessageStatus);
         modal.destroy();
     }
 });

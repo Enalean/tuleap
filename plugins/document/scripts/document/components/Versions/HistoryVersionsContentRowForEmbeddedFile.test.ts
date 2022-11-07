@@ -23,17 +23,20 @@ jest.mock("../../api/version-rest-querier", () => {
     };
 });
 
-import { okAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
 import HistoryVersionsContentRowForEmbeddedFile from "./HistoryVersionsContentRowForEmbeddedFile.vue";
 import type { RestUser } from "../../api/rest-querier";
 import type { EmbeddedFileVersion, User } from "../../type";
+import { FEEDBACK } from "../../injection-keys";
 
 describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     let location: Pick<Location, "reload">;
     let loadVersions: () => void;
+    let success: () => void;
 
     function getWrapper(
         item: User,
@@ -56,12 +59,16 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
                 location,
                 loadVersions,
             },
+            provide: {
+                [FEEDBACK as symbol]: { success },
+            },
         });
     }
 
     beforeEach(() => {
         location = { reload: jest.fn() };
         loadVersions = jest.fn();
+        success = jest.fn();
     });
 
     afterEach(() => {
@@ -110,6 +117,19 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
         await wrapper.find("[data-test=confirm-button]").trigger("click");
 
         expect(deleteEmbeddedFileVersion).toHaveBeenCalled();
+        expect(success).toHaveBeenCalled();
         expect(loadVersions).toHaveBeenCalled();
+    });
+
+    it("should not reload anything if deletion of version failed", async () => {
+        deleteEmbeddedFileVersion.mockReturnValue(errAsync(Fault.fromMessage("Oops!")));
+
+        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+
+        await wrapper.find("[data-test=confirm-button]").trigger("click");
+
+        expect(deleteEmbeddedFileVersion).toHaveBeenCalled();
+        expect(success).not.toHaveBeenCalled();
+        expect(loadVersions).not.toHaveBeenCalled();
     });
 });

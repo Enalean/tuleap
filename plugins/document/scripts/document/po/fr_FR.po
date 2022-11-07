@@ -89,6 +89,9 @@ msgstr ""
 msgid "An error has occurred, please contact your administrator"
 msgstr "Une erreur est servenue, merci de contacter votre administrateur"
 
+msgid "An error occurred while deleting the version"
+msgstr "Une erreur est survenue lors de la suppression de la version"
+
 msgid "An error occurred while loading logs"
 msgstr "Une erreur est survenue lors du chargement des logs"
 
@@ -787,6 +790,9 @@ msgstr "Validité"
 
 msgid "Version"
 msgstr "Version"
+
+msgid "Version %{ number } has been successfully deleted"
+msgstr "La version %{ number } a été supprimée"
 
 msgid "Version name"
 msgstr "Nom de version"

@@ -34,6 +34,9 @@
             >
         </nav>
         <div class="tlp-framed-horizontally">
+            <div class="tlp-alert-success" v-if="success_feedback">
+                {{ success_feedback }}
+            </div>
             <history-versions v-if="item_type_has_versions" v-bind:item="item" />
             <div class="tlp-alert-danger" v-else>
                 {{ $gettext("This item is not versionable") }}
@@ -46,10 +49,19 @@
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
 import { useRoute } from "../../helpers/use-router";
 import { useActions } from "vuex-composition-helpers";
-import { inject, onBeforeMount, ref } from "vue";
+import { inject, onBeforeMount, provide, ref } from "vue";
 import type { Item } from "../../type";
 import HistoryVersions from "./HistoryVersions.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
+import { FEEDBACK } from "../../injection-keys";
+
+const success_feedback = ref<string | null>(null);
+
+provide(FEEDBACK, {
+    success: (feedback: string | null) => {
+        success_feedback.value = feedback;
+    },
+});
 
 const should_display_history_in_document = inject("should_display_history_in_document", false);
 

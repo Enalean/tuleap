@@ -517,3 +517,7 @@ export interface Reason {
     lock_owner?: User;
     filename?: string;
 }
+
+export interface FeedbackHandler {
+    success: (feedback: string | null) => void;
+}
