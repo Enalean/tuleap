@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
@@ -17,18 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use std::{error::Error, io::stdin};
+use wire::{JsonData, JsonResult};
 
-declare(strict_types=1);
+mod wire;
 
-namespace Tuleap\Git\Hook\PreReceive;
+fn main() -> Result<(), Box<dyn Error>> {
+    let json: JsonData = serde_json::from_reader(stdin()).map_err(|e| {
+        eprintln!("ser: {e}");
+        e
+    })?;
 
-abstract class WASMFFICallerStub
-{
-    final private function __construct()
-    {
+    let content = json.content;
+
+    if content.contains("Tuleap") {
+        let res = JsonResult {
+            result: Some("the git object content contains the string Tuleap".to_owned()),
+        };
+        print!("{}", serde_json::to_string(&res).unwrap());
+    } else {
+        let res = JsonResult {
+            result: None,
+        };
+        print!("{}", serde_json::to_string(&res).unwrap());
     }
 
-    abstract public function callWasmModule(string $filename, string $json): \FFI\CData;
-
-    abstract public function freeCallWasmModuleOutput(\FFI\CData $json_ptr): void;
+    Ok(())
 }

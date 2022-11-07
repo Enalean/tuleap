@@ -8,5 +8,5 @@ fn main() {
 
     cbindgen::generate_with_config(&crate_dir, config)
         .expect("Unable to generate C bindings.")
-        .write_to_file("prereceiveanalyze.h");
+        .write_to_file("wasmtimewrapper.h");
 }

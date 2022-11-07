@@ -28,7 +28,8 @@ final class PreReceiveAnalyzeFFI implements WASMCaller
      * @var \FFI&WASMFFICallerStub $ffi
      */
     private \FFI $ffi;
-    private const HEADER_PATH = __DIR__ . '/../../../additional-packages/pre-receive-rs/prereceiveanalyze.h';
+    private const HEADER_PATH = __DIR__ . '/../../../additional-packages/wasmtime-wrapper-lib/wasmtimewrapper.h';
+    private const MODULE_PATH = __DIR__ . '/../../../additional-packages/pre-receive-hook-example/target/wasm32-wasi/release/pre-receive-hook-example.wasm';
 
     public function __construct()
     {
@@ -44,9 +45,9 @@ final class PreReceiveAnalyzeFFI implements WASMCaller
 
     public function call(string $json_input): string
     {
-        $json_output     = $this->ffi->analyze($json_input);
+        $json_output     = $this->ffi->callWasmModule(self::MODULE_PATH, $json_input);
         $json_output_php = \FFI::string($json_output);
-        $this->ffi->freeAnalyzeOutput($json_output);
+        $this->ffi->freeCallWasmModuleOutput($json_output);
 
         return $json_output_php;
     }
