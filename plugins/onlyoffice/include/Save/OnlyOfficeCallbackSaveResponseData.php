@@ -27,9 +27,13 @@ namespace Tuleap\OnlyOffice\Save;
  */
 final class OnlyOfficeCallbackSaveResponseData
 {
+    /**
+     * @psalm-param list<int> $author_ids
+     */
     public function __construct(
         public string $download_url,
         public string $onlyoffice_server_version,
+        public array $author_ids,
     ) {
     }
 }

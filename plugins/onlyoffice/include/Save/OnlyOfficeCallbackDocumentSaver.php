@@ -34,6 +34,7 @@ use Psr\Http\Message\ResponseInterface;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
+use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -48,6 +49,7 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
         private Docman_VersionFactory $version_factory,
         private Docman_LockFactory $lock_factory,
         private Docman_FileStorage $docman_file_storage,
+        private CoAuthorDao $co_author_dao,
         private PostUpdateFileHandler $post_update_file_handler,
         private \Http\Client\HttpAsyncClient $http_client,
         private RequestFactoryInterface $http_request_factory,
@@ -72,7 +74,12 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
                             ->andThen(
                             /** @psalm-return Ok<null>|Err<Fault> */
                                 function (NewFileVersionToCreate $new_file_version_to_create) use ($response_data, $async_http_response): Ok|Err {
-                                    return $this->saveDownloadedDocument($async_http_response, $new_file_version_to_create, $response_data->onlyoffice_server_version);
+                                    return $this->saveDownloadedDocument(
+                                        $async_http_response,
+                                        $new_file_version_to_create,
+                                        $response_data->onlyoffice_server_version,
+                                        $response_data->author_ids,
+                                    );
                                 }
                             );
                     }
@@ -126,10 +133,14 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
         return Result::ok(new NewFileVersionToCreate($user, $document));
     }
 
+    /**
+     * @psalm-param list<int> $user_editor_ids
+     */
     private function saveDownloadedDocument(
         \Http\Promise\Promise $async_http_response,
         NewFileVersionToCreate $new_file_version_to_create,
         string $onlyoffice_version,
+        array $user_editor_ids,
     ): Ok|Err {
         $item = $new_file_version_to_create->item;
 
@@ -170,13 +181,14 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
             return Result::err(Fault::fromMessage(sprintf('Cannot save file for document #%d updated via ONLYOFFICE', $item_id)));
         }
 
-        $version = $new_file_version_to_create->item->getCurrentVersion();
+        $primary_user = $new_file_version_to_create->user;
+        $version      = $new_file_version_to_create->item->getCurrentVersion();
 
-        $has_version_been_created = $this->version_factory->create(
+        $id_version = $this->version_factory->create(
             [
                 'item_id'        => $item_id,
                 'number'         => $next_version_id,
-                'user_id'        => $new_file_version_to_create->user->getId(),
+                'user_id'        => $primary_user->getId(),
                 'changelog'      => '',
                 'authoring_tool' => sprintf("ONLYOFFICE %s", $onlyoffice_version),
                 'filename'       => $version->getFilename(),
@@ -186,15 +198,41 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
             ]
         );
 
-        if (! $has_version_been_created) {
+        if (! $id_version) {
             $this->docman_file_storage->delete($file_path);
             return Result::err(Fault::fromMessage(sprintf('Cannot create a new version for document #%d updated via ONLYOFFICE', $item_id)));
         }
 
+        $co_authors = $this->determineCoAuthors($primary_user, $user_editor_ids);
+        if (count($co_authors) > 0) {
+            $this->co_author_dao->saveVersionCoAuthors((int) $id_version, $co_authors);
+        }
+
         $this->item_factory->update(['id' => $item_id]);
 
-        $this->post_update_file_handler->triggerPostUpdateEvents($item, $new_file_version_to_create->user);
+        $this->post_update_file_handler->triggerPostUpdateEvents($item, $primary_user);
 
         return Result::ok(null);
+    }
+
+
+    /**
+     * @psalm-param list<int> $author_ids
+     */
+    private function determineCoAuthors(\PFUser $primary_user, array $author_ids): array
+    {
+        $primary_user_id = (int) $primary_user->getId();
+        $co_author_ids   = [];
+        foreach ($author_ids as $author_id) {
+            if ($primary_user_id === $author_id) {
+                continue;
+            }
+            $editor = $this->user_retriever->getUserById($author_id);
+            if ($editor !== null) {
+                $co_author_ids[] = $author_id;
+            }
+        }
+
+        return $co_author_ids;
     }
 }

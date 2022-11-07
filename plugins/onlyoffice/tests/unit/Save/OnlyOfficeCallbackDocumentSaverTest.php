@@ -29,6 +29,7 @@ use Http\Client\HttpAsyncClient;
 use Http\Client\Promise\HttpFulfilledPromise;
 use Psr\Http\Message\RequestInterface;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
+use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\NeverThrow\Result;
@@ -59,6 +60,10 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
      * @var Docman_FileStorage&\PHPUnit\Framework\MockObject\Stub
      */
     private $file_storage;
+    /**
+     * @var CoAuthorDao&\PHPUnit\Framework\MockObject\Stub
+     */
+    private $co_author_dao;
 
     protected function setUp(): void
     {
@@ -69,6 +74,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->item_factory    = $this->createStub(Docman_ItemFactory::class);
         $this->version_factory = $this->createStub(Docman_VersionFactory::class);
         $this->file_storage    = $this->createStub(Docman_FileStorage::class);
+        $this->co_author_dao   = $this->createStub(CoAuthorDao::class);
     }
 
     protected function tearDown(): void
@@ -104,13 +110,15 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $this->file_storage->method('store')->willReturn('/path');
 
+        $this->co_author_dao->method('saveVersionCoAuthors');
+
         $saver = $this->buildSaver(
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
         );
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [105, 106])),
         );
 
         self::assertTrue(Result::isOk($result));
@@ -137,7 +145,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
         self::assertTrue(Result::isErr($result));
@@ -162,7 +170,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
         self::assertTrue(Result::isErr($result));
@@ -184,7 +192,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
         self::assertTrue(Result::isErr($result));
@@ -207,7 +215,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
         self::assertTrue(Result::isErr($result));
@@ -228,7 +236,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
         self::assertTrue(Result::isErr($result));
@@ -250,7 +258,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
         self::assertTrue(Result::isErr($result));
@@ -269,7 +277,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
         self::assertTrue(Result::isErr($result));
@@ -285,7 +293,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
         self::assertTrue(Result::isErr($result));
@@ -299,7 +307,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
 
         $result = $saver->saveDocument(
             new SaveDocumentTokenData(1, 1, 1),
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0')),
+            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
         self::assertTrue(Result::isErr($result));
@@ -322,6 +330,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
             $this->version_factory,
             $lock_factory,
             $this->file_storage,
+            $this->co_author_dao,
             $post_update_handler,
             new class ($download_http_status_code) implements HttpAsyncClient {
                 public function __construct(private int $http_status_code)
