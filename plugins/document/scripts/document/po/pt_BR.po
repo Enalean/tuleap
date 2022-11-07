@@ -306,6 +306,9 @@ msgstr ""
 msgid "Go to parent folder"
 msgstr ""
 
+msgid "Go to the last version (%{ version_number })."
+msgstr ""
+
 msgid "Go to the wiki page"
 msgstr ""
 
@@ -819,6 +822,9 @@ msgid "You are not allowed to upload files bigger than %s."
 msgstr "Você não está autorizado a carregar arquivos maiores que %s."
 
 msgid "You are not allowed to write in this folder"
+msgstr ""
+
+msgid "You are viewing an old version (%{ version_number }) of this document."
 msgstr ""
 
 msgid "You don't have read permission for this item"

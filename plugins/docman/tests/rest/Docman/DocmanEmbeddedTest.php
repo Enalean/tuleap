@@ -842,6 +842,16 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         self::assertEquals(1, $versions[1]['number']);
         self::assertEquals('', $versions[1]['name']);
 
+        $get_version_content_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('GET', 'docman_embedded_file_versions/' . $versions[1]['id'] . '/content'),
+        );
+        self::assertEquals(200, $get_version_content_response->getStatusCode());
+        self::assertEquals(
+            'initial content',
+            json_decode($get_version_content_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['content']
+        );
+
         $delete_version_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'docman_embedded_file_versions/' . $versions[0]['id']),

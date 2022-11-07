@@ -328,6 +328,7 @@ export interface LinkProperties {
 }
 
 export interface EmbeddedProperties {
+    readonly version_number: number;
     readonly content?: string;
     file_type: string;
 }
@@ -501,6 +502,11 @@ export interface EmbeddedFileVersion {
     readonly approval_href: string | null;
     readonly date: string;
     readonly author: RestUser;
+}
+
+export interface EmbeddedFileSpecificVersionContent {
+    readonly version_number: number;
+    readonly content: string;
 }
 
 export interface DocumentJsonError {

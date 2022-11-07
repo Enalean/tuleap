@@ -46,14 +46,19 @@ export function createRouter(store, project_name) {
                 component: ChildFolder,
             },
             {
+                path: "/folder/:folder_id/:item_id/:version_id",
+                name: "item_version",
+                component: DisplayEmbedded,
+                props: (route) => ({
+                    item_id: Number(route.params.item_id),
+                    version_id: Number(route.params.version_id),
+                }),
+            },
+            {
                 path: "/folder/:folder_id/:item_id",
                 name: "item",
                 component: DisplayEmbedded,
-            },
-            {
-                path: "/preview/:preview_item_id",
-                name: "preview",
-                component: ChildFolder,
+                props: (route) => ({ item_id: Number(route.params.item_id) }),
             },
             {
                 path: "/history/:item_id",

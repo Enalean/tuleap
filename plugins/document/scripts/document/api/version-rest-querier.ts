@@ -21,7 +21,8 @@ import { get } from "@tuleap/tlp-fetch";
 import type { EmbeddedFileVersion, FileHistory, LinkVersion } from "../type";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { getAllJSON, del } from "@tuleap/fetch-result";
+import { getAllJSON, del, getJSON } from "@tuleap/fetch-result";
+import type { EmbeddedFileSpecificVersionContent } from "../type";
 
 export {
     getFileVersionHistory,
@@ -30,6 +31,7 @@ export {
     getAllEmbeddedFileVersionHistory,
     deleteFileVersion,
     deleteEmbeddedFileVersion,
+    getEmbeddedFileVersionContent,
 };
 
 async function getFileVersionHistory(id: number): Promise<ReadonlyArray<FileHistory>> {
@@ -71,4 +73,10 @@ function deleteFileVersion(id: number): ResultAsync<Response, Fault> {
 
 function deleteEmbeddedFileVersion(id: number): ResultAsync<Response, Fault> {
     return del(`/api/docman_embedded_file_versions/${id}`);
+}
+
+function getEmbeddedFileVersionContent(
+    id: number
+): ResultAsync<EmbeddedFileSpecificVersionContent, Fault> {
+    return getJSON(`/api/docman_embedded_file_versions/${id}/content`);
 }

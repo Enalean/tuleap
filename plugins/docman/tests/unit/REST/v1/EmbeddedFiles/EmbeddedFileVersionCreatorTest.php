@@ -105,6 +105,7 @@ class EmbeddedFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $file_version = Mockery::mock(Docman_Version::class);
         $file_version->shouldReceive('getFiletype')->andReturn('file');
+        $file_version->shouldReceive('getNumber')->andReturn(123);
 
         $representation                        = new DocmanEmbeddedFilesPATCHRepresentation();
         $representation->change_log            = 'changelog';

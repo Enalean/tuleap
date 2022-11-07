@@ -23,12 +23,16 @@ namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
 use Tuleap\Docman\Tests\Stub\TableFactoryForFileBuilderStub;
 use Tuleap\Docman\Version\VersionDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
 final class VersionRepresentationCollectionBuilderTest extends TestCase
 {
+    private const PROJECT_ID = 10;
+
     private VersionDao|\PHPUnit\Framework\MockObject\MockObject $docman_version_dao;
     private VersionRepresentationCollectionBuilder $builder;
     private \PHPUnit\Framework\MockObject\MockObject|\Docman_ApprovalTableFileFactory $factory;
@@ -42,7 +46,8 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
         $this->builder = new VersionRepresentationCollectionBuilder(
             $this->docman_version_dao,
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
-            TableFactoryForFileBuilderStub::buildWithFactory($this->factory)
+            TableFactoryForFileBuilderStub::buildWithFactory($this->factory),
+            ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build())
         );
         $user_helper   = $this->createStub(\UserHelper::class);
         $user_helper->method('getUserUrl')->willReturn('/path/to/user');

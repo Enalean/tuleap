@@ -22,20 +22,34 @@
     <div class="embedded-document-container">
         <div class="document-header tlp-framed-horizontally">
             <document-title-lock-info
-                v-bind:item="currently_previewed_item"
+                v-bind:item="embedded_file"
                 v-bind:is-displaying-in-header="true"
             />
 
-            <h1 class="document-header-title">{{ currently_previewed_item.title }}</h1>
+            <h1 class="document-header-title">{{ embedded_file.title }}</h1>
 
-            <actions-header v-bind:item="currently_previewed_item" />
+            <actions-header v-bind:item="embedded_file" />
 
-            <approval-badge
-                v-bind:item="currently_previewed_item"
-                v-bind:is-in-folder-content-row="false"
-            />
+            <approval-badge v-bind:item="embedded_file" v-bind:is-in-folder-content-row="false" />
 
             <embedded-file-edition-switcher v-bind:is-in-large-view="is_embedded_in_large_view" />
+        </div>
+
+        <div
+            class="embedded-document-container-warning"
+            v-if="should_display_old_version_warning"
+            data-test="warning"
+        >
+            <div class="tlp-alert-warning">
+                {{ specific_version_warning }}
+                <router-link
+                    v-bind:to="{
+                        name: 'item',
+                        params: { folder_id: embedded_file.parent_id, item_id: embedded_file.id },
+                    }"
+                    >{{ go_to_last_version }}</router-link
+                >
+            </div>
         </div>
 
         <section
@@ -44,30 +58,34 @@
             data-test="display-embedded-content"
         >
             <div class="tlp-pane-container">
-                <section class="tlp-pane-section" v-dompurify-html="embedded_content"></section>
+                <section
+                    class="tlp-pane-section"
+                    v-dompurify-html="content_to_display"
+                    data-test="content"
+                ></section>
             </div>
         </section>
 
         <create-new-embedded-file-version-modal
             v-if="is_modal_shown"
-            v-bind:item="currently_previewed_item"
+            v-bind:item="embedded_file"
             v-on:hidden="hideModal()"
         />
         <confirm-deletion-modal
             v-if="show_confirm_deletion_modal"
-            v-bind:item="currently_previewed_item"
+            v-bind:item="embedded_file"
             v-bind:should-redirect-to-parent-after-deletion="true"
             v-on:delete-modal-closed="hideDeleteItemModal"
         />
 
         <update-properties-modal
             v-if="show_update_properties_modal"
-            v-bind:item="currently_previewed_item"
+            v-bind:item="embedded_file"
             v-on:update-properties-modal-closed="hideUpdatePropertiesModal"
         />
         <permissions-update-modal
             v-if="show_update_permissions_modal"
-            v-bind:item="currently_previewed_item"
+            v-bind:item="embedded_file"
         />
     </div>
 </template>
@@ -76,43 +94,60 @@
 import emitter from "../../helpers/emitter";
 import { computed, onBeforeMount, onUnmounted, ref } from "vue";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
-import { useNamespacedState, useState } from "vuex-composition-helpers";
-import type { Embedded, Item, RootState } from "../../type";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { Embedded } from "../../type";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const is_modal_shown = ref(false);
 const show_confirm_deletion_modal = ref(false);
 const show_update_properties_modal = ref(false);
 const show_update_permissions_modal = ref(false);
 
-const { currently_previewed_item } = useState<RootState>(["currently_previewed_item"]);
+const props = withDefaults(
+    defineProps<{
+        embedded_file: Embedded;
+        content_to_display: string;
+        specific_version_number?: number | null;
+    }>(),
+    { specific_version_number: null }
+);
+
 const { is_embedded_in_large_view } = useNamespacedState<PreferenciesState>("preferencies", [
     "is_embedded_in_large_view",
 ]);
 
-const embedded_content = computed((): string => {
-    const item = currently_previewed_item.value;
-    if (!item) {
-        return "";
+const { interpolate, $gettext } = useGettext();
+
+const should_display_old_version_warning = computed((): boolean => {
+    if (!props.specific_version_number) {
+        return false;
     }
 
-    if (!isEmbedded(item)) {
-        return "";
-    }
-
-    if (!item.embedded_file_properties) {
-        return "";
-    }
-
-    if (!item.embedded_file_properties.content) {
-        return "";
-    }
-
-    return item.embedded_file_properties.content;
+    return (
+        props.specific_version_number !==
+        props.embedded_file.embedded_file_properties?.version_number
+    );
 });
 
-function isEmbedded(item: Item): item is Embedded {
-    return "embedded_file_properties" in item;
-}
+const specific_version_warning = computed((): string => {
+    if (!props.specific_version_number) {
+        return "";
+    }
+
+    return interpolate(
+        $gettext("You are viewing an old version (%{ version_number }) of this document."),
+        { version_number: props.specific_version_number }
+    );
+});
+const go_to_last_version = computed((): string => {
+    if (!props.specific_version_number) {
+        return "";
+    }
+
+    return interpolate($gettext("Go to the last version (%{ version_number })."), {
+        version_number: props.embedded_file.embedded_file_properties?.version_number,
+    });
+});
 
 onBeforeMount(() => {
     emitter.on("deleteItem", showDeleteItemModal);
