@@ -31,9 +31,8 @@ export function equalizeSides(left_code_mirror, right_code_mirror, handles) {
     const { left_handle, right_handle } = handles;
     const left_line_height = getTotalHeight(left_handle);
     const right_line_height = getTotalHeight(right_handle);
-    const one_size_is_empty = left_handle.text === "" || right_handle.text === "";
 
-    if (left_line_height === right_line_height || one_size_is_empty) {
+    if (left_line_height === right_line_height) {
         // nothing to do, all is already perfect
         return null;
     }
@@ -57,14 +56,6 @@ export function equalizeSides(left_code_mirror, right_code_mirror, handles) {
         left_line_height,
         left_code_mirror
     );
-}
-
-function getNumberOfCommentsWidgets(handle) {
-    if (hasNoWidgets(handle)) {
-        return 0;
-    }
-
-    return handle.widgets.filter((widget) => isCommentWidget(widget)).length;
 }
 
 function getSumOfWidgetsHeights(widgets) {
@@ -159,38 +150,10 @@ function adjustHeights(
             };
         }
 
-        if (haveSameNumberOfCommentWidgets(handle, opposite_handle)) {
-            return minimizePlaceholders(handle, opposite_handle);
-        }
-
         optimum_height = line_height - getCommentsHeight(opposite_handle);
 
         return adjustPlaceholderHeight(opposite_placeholder, optimum_height);
     }
 
-    if (haveSameNumberOfCommentWidgets(handle, opposite_handle)) {
-        return minimizePlaceholders(handle, opposite_handle);
-    }
-
     return adjustPlaceholderHeight(placeholder, optimum_height);
-}
-
-function haveSameNumberOfCommentWidgets(handle, opposite_handle) {
-    const nb_comments = getNumberOfCommentsWidgets(handle);
-    const nb_opposite_comments = getNumberOfCommentsWidgets(opposite_handle);
-
-    return nb_comments === nb_opposite_comments;
-}
-
-function minimizePlaceholders(handle, opposite_handle) {
-    const left_placeholder = getCommentPlaceholderWidget(handle);
-    const right_placeholder = getCommentPlaceholderWidget(opposite_handle);
-
-    if (left_placeholder) {
-        adjustPlaceholderHeight(left_placeholder, 0);
-    }
-
-    if (right_placeholder) {
-        adjustPlaceholderHeight(right_placeholder, 0);
-    }
 }
