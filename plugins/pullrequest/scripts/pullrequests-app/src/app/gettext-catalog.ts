@@ -41,3 +41,4 @@ export const getReplyToCommentButtonText = (): string => gettextCatalog.getStrin
 export const getCancelButtonText = (): string => gettextCatalog.getString("Cancel");
 export const getCommentTextAreaPlaceholderText = (): string =>
     gettextCatalog.getString("Say something…");
+export const getOutdatedCommentBadgeText = (): string => gettextCatalog.getString("Outdated");

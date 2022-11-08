@@ -22,6 +22,9 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import type { PullRequestComment } from "./PullRequestComment";
+import { getOutdatedCommentBadgeText } from "../gettext-catalog";
+
+type MapOfClasses = Record<string, boolean>;
 
 const displayFileNameIfNeeded = (
     comment: PullRequestCommentPresenter
@@ -58,24 +61,56 @@ const displayFileNameIfNeeded = (
     `;
 };
 
+const displayOutdatedBadgeIfNeeded = (
+    host: PullRequestComment,
+    comment: PullRequestCommentPresenter
+): UpdateFunction<PullRequestComment> => {
+    if (host.comment.id !== comment.id || !comment.is_outdated) {
+        return html``;
+    }
+
+    return html`
+        <span
+            class="tlp-badge-firemist-silver tlp-badge-outline"
+            data-test="comment-outdated-badge"
+        >
+            <i class="fa-solid fa-hourglass-end tlp-badge-icon" aria-hidden="true"></i>
+            ${getOutdatedCommentBadgeText()}
+        </span>
+    `;
+};
+
+const getBodyClasses = (host: PullRequestComment): MapOfClasses => ({
+    "pull-request-comment-body": true,
+    "pull-request-comment-outdated": host.comment.is_outdated,
+});
+
 export const buildBodyForComment = (
     host: PullRequestComment,
     comment: PullRequestCommentPresenter
 ): UpdateFunction<PullRequestComment> => html`
-    <div class="pull-request-comment-body">
+    <div class="${getBodyClasses(host)}" data-test="pull-request-comment-body">
         <div class="pull-request-comment-content-info">
-            <a href="${comment.user.user_url}">${comment.user.display_name}</a>,
-            <tlp-relative-date
-                date="${comment.post_date}"
-                absolute-date="${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(
-                    comment.post_date
-                )}"
-                preference="${host.relativeDateHelper.getRelativeDatePreference()}"
-                locale="${host.relativeDateHelper.getUserLocale()}"
-                placement="${host.relativeDateHelper.getRelativeDatePlacement()}"
-            >
-                ${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(comment.post_date)}
-            </tlp-relative-date>
+            <div class="pull-request-comment-author-and-date">
+                <a class="pull-request-comment-author-name" href="${comment.user.user_url}"
+                    >${comment.user.display_name}</a
+                >,
+                <tlp-relative-date
+                    class="pull-request-comment-date"
+                    date="${comment.post_date}"
+                    absolute-date="${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(
+                        comment.post_date
+                    )}"
+                    preference="${host.relativeDateHelper.getRelativeDatePreference()}"
+                    locale="${host.relativeDateHelper.getUserLocale()}"
+                    placement="${host.relativeDateHelper.getRelativeDatePlacement()}"
+                >
+                    ${host.relativeDateHelper.getFormatDateUsingPreferredUserFormat(
+                        comment.post_date
+                    )}
+                </tlp-relative-date>
+            </div>
+            ${displayOutdatedBadgeIfNeeded(host, comment)}
         </div>
 
         ${displayFileNameIfNeeded(comment)}

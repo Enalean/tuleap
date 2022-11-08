@@ -31,36 +31,31 @@ $follow-up-base-margin-left: 60px;
     > .tlp-avatar {
         margin: var(--tlp-medium-spacing) calc(var(--tlp-small-spacing) + #{$arrow-width}) 0 0;
     }
+}
 
-    &.is-outdated > .pull-request-comment-content {
-        background: transparent;
-    }
+.timeline-event {
+    > .pull-request-comment-content {
+        &::before {
+            z-index: 2;
+            border-color: transparent var(--tlp-white-color) transparent transparent;
+        }
 
-    &.is-outdated,
-    &.timeline-event {
-        > .pull-request-comment-content {
-            &::before {
-                z-index: 2;
-                border-color: transparent var(--tlp-white-color) transparent transparent;
-            }
+        &::after {
+            z-index: 1;
+            top: calc(var(--tlp-medium-spacing) * 2);
+            left: -1.5px;
+            width: 0;
+            height: 0;
+            transform: translate(-100%, -50%);
+            border-width: 7px $arrow-width 7px 0;
+            border-style: solid;
+            border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
+            background: none;
+        }
 
-            &::after {
-                z-index: 1;
-                top: calc(var(--tlp-medium-spacing) * 2);
-                left: -1.5px;
-                width: 0;
-                height: 0;
-                transform: translate(-100%, -50%);
-                border-width: 7px $arrow-width 7px 0;
-                border-style: solid;
-                border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
-                background: none;
-            }
-
-            p {
-                color: var(--tlp-dimmed-color);
-                font-style: italic;
-            }
+        p {
+            color: var(--tlp-dimmed-color);
+            font-style: italic;
         }
     }
 }
@@ -82,7 +77,7 @@ $follow-up-base-margin-left: 60px;
         transform: translate(-100%, -50%);
         border-width: 7px $arrow-width 7px 0;
         border-style: solid;
-        border-color: transparent var(--tlp-main-color) transparent transparent;
+        border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
     }
 
     &::after {
@@ -93,14 +88,34 @@ $follow-up-base-margin-left: 60px;
         width: 4px;
         height: 100%;
         border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
-        background: var(--tlp-main-color);
+        background: var(--tlp-neutral-normal-color);
+    }
+}
+
+.pull-request-comment-outdated {
+    background: var(--tlp-background-color-lighter-50);
+    color: var(--tlp-dimmed-color);
+
+    > .pull-request-comment-file-path {
+        background: var(--tlp-neutral-light-color-lighter-50);
     }
 }
 
 .pull-request-comment-content-info {
-    padding: var(--tlp-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing)
+    display: flex;
+    align-items: center;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing)
         var(--tlp-medium-spacing);
     font-size: 14px;
+}
+
+.pull-request-comment-author-and-date {
+    flex: 1;
+}
+
+.pull-request-comment-author-name,
+.pull-request-comment-date {
+    color: var(--tlp-dimmed-color);
 }
 
 .pull-request-comment-text {
@@ -109,8 +124,7 @@ $follow-up-base-margin-left: 60px;
 
 .pull-request-comment-file-path,
 .pull-request-comment-footer {
-    background: linear-gradient(0deg, rgb(255 255 255 / 50%), rgb(255 255 255 / 50%)),
-        var(--tlp-background-color);
+    background: var(--tlp-background-color-lighter-50);
 }
 
 .pull-request-comment-file-path {
@@ -151,13 +165,18 @@ $follow-up-base-margin-left: 60px;
     padding: var(--tlp-medium-spacing);
     border: unset;
     resize: none;
+
+    &:focus {
+        border-color: unset;
+        box-shadow: unset;
+    }
 }
 
 .pull-request-comment-follow-up {
     $tlp-avatar-width: 20px;
 
     margin: 0 0 0 calc($follow-up-base-margin-left + $tlp-avatar-width);
-    border-left: 2px solid var(--tlp-main-color);
+    border-left: 2px solid var(--tlp-neutral-normal-color);
 
     > .pull-request-comment-follow-up-content {
         position: relative;

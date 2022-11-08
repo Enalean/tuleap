@@ -144,6 +144,9 @@ msgstr "OK"
 msgid "Oh snap!"
 msgstr "Oh mince !"
 
+msgid "Outdated"
+msgstr "Obsolète"
+
 msgid "Overview"
 msgstr "Résumé"
 
