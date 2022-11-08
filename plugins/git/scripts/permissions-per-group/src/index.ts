@@ -19,7 +19,10 @@
 
 import Vue from "vue";
 import GitPermissions from "./GitPermissions.vue";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
+import {
+    initVueGettextFromPoGettextPlugin,
+    getPOFileFromLocaleWithoutExtension,
+} from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("git-permission-per-group");
@@ -27,15 +30,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!vue_mount_point) {
         return;
     }
-
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "permission-per-group-po-" */ `../po/${getPOFileFromLocale(
-                    locale
-                )}`
-            )
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
 
     const RootComponent = Vue.extend(GitPermissions);
