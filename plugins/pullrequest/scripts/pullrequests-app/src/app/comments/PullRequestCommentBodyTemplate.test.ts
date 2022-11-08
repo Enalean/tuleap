@@ -58,7 +58,8 @@ describe("PullRequestCommentBodyTemplate", () => {
     });
 
     it(`Given an outdated inline comment,
-        Then it should display only the file name on which the comment has been written with no link to it.`, () => {
+        Then it should display only the file name on which the comment has been written with no link to it
+        And a badge flagging it as outdated`, () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildInlineCommentOutdated(),
             relativeDateHelper: RelativeDateHelperStub,
@@ -72,8 +73,13 @@ describe("PullRequestCommentBodyTemplate", () => {
             "[data-test=pullrequest-comment-only-file-name]"
         );
 
+        const body = selectOrThrow(target, "[data-test=pull-request-comment-body]");
+        const outdated_badge = selectOrThrow(target, "[data-test=comment-outdated-badge]");
+
         expect(displayed_file.querySelector("a")).toBeNull();
         expect(displayed_file.textContent?.trim()).toBe("README.md");
+        expect(body.classList).toContain("pull-request-comment-outdated");
+        expect(outdated_badge).not.toBeNull();
     });
 
     it.each([

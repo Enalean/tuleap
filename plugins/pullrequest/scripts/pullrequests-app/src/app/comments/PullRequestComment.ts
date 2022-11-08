@@ -51,8 +51,6 @@ export interface PullRequestComment {
 const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
     const classes: MapOfClasses = {
         "pull-request-comment": true,
-        "is-outdated": host.comment.is_outdated,
-        "is-inline-comment": host.comment.is_inline_comment,
     };
 
     classes[host.comment.type] = true;

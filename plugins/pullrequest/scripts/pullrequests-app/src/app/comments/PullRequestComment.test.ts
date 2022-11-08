@@ -50,7 +50,6 @@ describe("PullRequestComment", () => {
             const root = selectOrThrow(target, "[data-test=pullrequest-comment]");
 
             expect(root.classList).toContain("pull-request-comment");
-            expect(root.classList).toContain("is-inline-comment");
             expect(root.classList).toContain("inline-comment");
         });
 
@@ -67,9 +66,7 @@ describe("PullRequestComment", () => {
             const root = selectOrThrow(target, "[data-test=pullrequest-comment]");
 
             expect(root.classList).toContain("pull-request-comment");
-            expect(root.classList).toContain("is-inline-comment");
             expect(root.classList).toContain("inline-comment");
-            expect(root.classList).toContain("is-outdated");
         });
 
         it(`Given a global comment, then it should have the right classes`, () => {
