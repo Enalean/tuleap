@@ -61,6 +61,13 @@
     height: 40px;
 }
 
+.tlp-avatar-medium {
+    @extend %tlp-avatar;
+
+    width: 32px;
+    height: 32px;
+}
+
 .tlp-avatar-small {
     @extend %tlp-avatar;
 

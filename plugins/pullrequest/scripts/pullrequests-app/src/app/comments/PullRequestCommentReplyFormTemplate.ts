@@ -53,7 +53,7 @@ export const getReplyFormTemplate = (
     return html`
         <div class="pull-request-comment-reply-form" data-test="pull-request-comment-reply-form">
             <div class="pull-request-comment pull-request-comment-follow-up-content">
-                <div class="tlp-avatar">
+                <div class="tlp-avatar-medium">
                     <img
                         src="${host.reply_comment_presenter.comment_author.avatar_url}"
                         class="media-object"
