@@ -56,6 +56,10 @@ module.exports = [
         ],
         resolve: {
             extensions: [".ts", ".js", ".vue"],
+            alias: {
+                // deduplicate angular that is also used by angular-async
+                angular$: path.resolve(__dirname, "./node_modules/angular"),
+            },
         },
     },
 ];
