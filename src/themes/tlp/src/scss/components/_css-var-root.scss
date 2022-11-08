@@ -249,11 +249,6 @@ $fade-background-color: color.mix($tlp-background-color, $tlp-white-color, 50);
             $tlp-white-color,
             60%
         )};
-    --tlp-neutral-light-color-lighter-50: #{color.mix(
-            $tlp-neutral-light-color,
-            $tlp-white-color,
-            50%
-        )};
     --tlp-neutral-light-color-transparent-40: #{color.adjust(
             $tlp-neutral-light-color,
             $alpha: - 0.4
