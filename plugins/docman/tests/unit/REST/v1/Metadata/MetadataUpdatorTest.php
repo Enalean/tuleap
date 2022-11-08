@@ -159,7 +159,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
-        $this->mockStatusMetadataIsUsed();
+        $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 
         $this->updator->updateDocumentMetadata($representation, $item, $current_user);
     }
@@ -218,7 +218,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->metadata_value_updator->shouldReceive('updateMetadata')
             ->withArgs([$metadata_to_update_representation->getMetadata(), 10, $metadata_to_update_representation->getValue()])->once();
 
-        $this->mockStatusMetadataIsUsed();
+        $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 
         $this->updator->updateDocumentMetadata($representation, $item, $current_user);
     }
@@ -278,7 +278,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->metadata_value_updator->shouldReceive('updateMetadata')
             ->withArgs([$metadata_to_update_representation->getMetadata(), 10, $metadata_to_update_representation->getValue()])->once();
 
-        $this->mockStatusMetadataIsUsed();
+        $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 
         $this->updator->updateDocumentMetadata($representation, $item, $current_user);
     }
@@ -400,7 +400,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
-        $this->mockStatusMetadataIsUsed();
+        $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 
         $this->updator->updateDocumentMetadata($representation, $item, $current_user);
     }
@@ -447,7 +447,62 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
-        $this->mockStatusMetadataIsUnused();
+        $this->mockStatusAndObsolescenceDateMetadataAreUnused();
+
+        $this->updator->updateDocumentMetadata($representation, $item, $current_user);
+    }
+
+    public function testDocumentObsolescenceDateIsNotUpdatedIfStatusMetadataNotUsed(): void
+    {
+        $date = new \DateTimeImmutable();
+        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+        $this->obsolescence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn($date->getTimestamp());
+
+        $old_user_id = 101;
+        $item        = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
+        $item->shouldReceive('getId')->andReturn(10);
+        $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
+
+        $old_user = \Mockery::mock(\PFUser::class);
+        $old_user->shouldReceive('getUserName')->andReturn('owner name');
+        $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($old_user);
+        $this->user_manager->shouldReceive('getUserById')->andReturn($old_user);
+        $old_user->shouldReceive('getUserName')->andReturn('user name');
+
+        $representation                    = new PUTMetadataRepresentation();
+        $representation->title             = "title";
+        $representation->description       = "";
+        $representation->owner_id          = $old_user_id;
+        $representation->status            = ItemStatusMapper::ITEM_STATUS_NONE;
+        $representation->obsolescence_date = $date->format("Y-m-d");
+
+        $current_user = \Mockery::mock(\PFUser::class);
+
+        $this->event_processor->shouldReceive('raiseUpdateEvent')
+            ->withArgs([$item, $current_user, \Mockery::any(), \Mockery::any(), 'status'])
+            ->never();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory
+            ->shouldReceive('update')
+            ->with([
+                'id'                => 10,
+                'title'             => "title",
+                'description'       => "",
+                'user_id'           => $old_user_id,
+            ])
+            ->once();
+
+        $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->once(
+        )->andReturn([]);
+
+        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
+        $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
+
+        $this->mockStatusAndObsolescenceDateMetadataAreUnused();
 
         $this->updator->updateDocumentMetadata($representation, $item, $current_user);
     }
@@ -612,7 +667,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->representation_retriever->shouldReceive('checkAndBuildFolderMetadataToUpdate')->once()->andReturn([]);
 
-        $this->mockStatusMetadataIsUsed();
+        $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 
         $this->updator->updateFolderMetadata($representation, $item, $project, $user);
     }
@@ -651,7 +706,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->representation_retriever->shouldReceive('checkAndBuildFolderMetadataToUpdate')->once()->andReturn([]);
 
-        $this->mockStatusMetadataIsUnused();
+        $this->mockStatusAndObsolescenceDateMetadataAreUnused();
 
         $this->updator->updateFolderMetadata($representation, $item, $project, $user);
     }
@@ -690,7 +745,7 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->representation_retriever->shouldReceive('checkAndBuildFolderMetadataToUpdate')->once()->andReturn([]);
 
-        $this->mockStatusMetadataIsUsed();
+        $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 
         $this->updator->updateFolderMetadata($representation, $item, $project, $user);
     }
@@ -728,18 +783,24 @@ final class MetadataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->representation_retriever->shouldReceive('checkAndBuildFolderMetadataToUpdate')->once()->andReturn([]);
 
-        $this->mockStatusMetadataIsUsed();
+        $this->mockStatusAndObsolescenceDateMetadataAreUsed();
 
         $this->updator->updateFolderMetadata($representation, $item, $project, $user);
     }
 
-    private function mockStatusMetadataIsUsed(): void
+    private function mockStatusAndObsolescenceDateMetadataAreUsed(): void
     {
-        $this->docman_settings_bo->method('getMetadataUsage')->with("status")->willReturn("1");
+        $this->docman_settings_bo->method('getMetadataUsage')->willReturnMap([
+            ["status", "1"],
+            ["obsolescence_date", "1"],
+        ]);
     }
 
-    private function mockStatusMetadataIsUnused(): void
+    private function mockStatusAndObsolescenceDateMetadataAreUnused(): void
     {
-        $this->docman_settings_bo->method('getMetadataUsage')->with("status")->willReturn(false);
+        $this->docman_settings_bo->method('getMetadataUsage')->willReturnMap([
+            ["status", false],
+            ["obsolescence_date", false],
+        ]);
     }
 }

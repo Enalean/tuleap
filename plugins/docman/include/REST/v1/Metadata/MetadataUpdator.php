@@ -183,12 +183,15 @@ class MetadataUpdator
             'id'                => $item_id,
             'title'             => $representation->title,
             'description'       => $representation->description,
-            'obsolescence_date' => $obsolescence_date,
             'user_id'           => $representation->owner_id,
         ];
 
         if ($this->isStatusMetadataUsed()) {
             $row['status'] = $status;
+        }
+
+        if ($this->isObsolescenceDateMetadataUsed()) {
+            $row['obsolescence_date'] = $obsolescence_date;
         }
 
         if ($representation->owner_id !== $item->getOwnerId()) {
@@ -349,6 +352,12 @@ class MetadataUpdator
     private function isStatusMetadataUsed(): bool
     {
         $metadata_usage = $this->docman_settings_bo->getMetadataUsage('status');
+        return $metadata_usage === '1';
+    }
+
+    private function isObsolescenceDateMetadataUsed(): bool
+    {
+        $metadata_usage = $this->docman_settings_bo->getMetadataUsage('obsolescence_date');
         return $metadata_usage === '1';
     }
 }
