@@ -122,46 +122,26 @@ describe("Store getters", () => {
 
             const result = getters.getFilteredRepositoriesGroupedByPath(state);
 
-            expect(result).toEqual({
-                is_folder: true,
-                label: "root",
-                children: expect.any(Array),
-            });
-
-            if (!(result.children instanceof Array)) {
-                throw new Error("result does not have any children");
-            }
+            expect(result.is_folder).toBe(true);
+            expect(result.label).toBe("root");
             expect(result.children).toHaveLength(2);
             const [first_folder, root_repo] = result.children;
-            expect(first_folder).toEqual({
-                is_folder: true,
-                label: "sardanapalus",
-                children: expect.any(Array),
-            });
-            expect(root_repo).toEqual(project_repository_at_root);
-
-            if (!("children" in first_folder) || !(first_folder.children instanceof Array)) {
-                throw new Error("first folder does not have any children");
+            if (!("is_folder" in first_folder)) {
+                throw Error("Expected a folder");
             }
-
+            expect(first_folder.label).toBe("sardanapalus");
+            expect(root_repo).toBe(project_repository_at_root);
             expect(first_folder.children).toHaveLength(2);
             const [project_path_folder, other_leaf_repo] = first_folder.children;
-            expect(project_path_folder).toEqual({
-                is_folder: true,
-                label: "goatish",
-                children: expect.any(Array),
-            });
-            expect(other_leaf_repo).toEqual(other_repo_with_path);
-
-            if (
-                !("children" in project_path_folder) ||
-                !(project_path_folder.children instanceof Array)
-            ) {
-                throw new Error("project_path_folder does not have any children");
+            if (!("is_folder" in project_path_folder)) {
+                throw Error("Expected a folder");
             }
+            expect(project_path_folder.label).toBe("goatish");
+            expect(other_leaf_repo).toBe(other_repo_with_path);
+
             expect(project_path_folder.children).toHaveLength(1);
             const leaf_repo = project_path_folder.children[0];
-            expect(leaf_repo).toEqual(project_repository_with_path);
+            expect(leaf_repo).toBe(project_repository_with_path);
         });
 
         it("Given forked repositories are loaded, then it will return a tree structure sorted by path", () => {

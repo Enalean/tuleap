@@ -89,15 +89,8 @@ export const isFolderDisplayMode = (state: State): boolean =>
 
 export const isThereAResultInCurrentFilteredList = (state: State): boolean => {
     if (isFolderDisplayMode(state)) {
-        let reprository_children = getFilteredRepositoriesGroupedByPath(state).children;
-        if (reprository_children.constructor === Map) {
-            reprository_children = Array.from(reprository_children.values());
-            return reprository_children.length > 0;
-        } else if (reprository_children instanceof Array) {
-            return reprository_children.length > 0;
-        }
-
-        return false;
+        const repository_children = getFilteredRepositoriesGroupedByPath(state).children;
+        return repository_children.length > 0;
     }
 
     return getFilteredRepositoriesByLastUpdateDate(state).length > 0;

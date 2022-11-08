@@ -22,31 +22,14 @@ function isFolder(item: Folder | Repository | FormattedGitLabRepository): item i
     return "is_folder" in item;
 }
 
-export function createHierarchy(
-    hierarchy: Folder | Repository | FormattedGitLabRepository,
-    path_part: string
-): Folder | Repository | FormattedGitLabRepository {
-    if (!isFolder(hierarchy)) {
-        throw new Error(path_part + " not found in children");
+function createHierarchy(hierarchy: Folder, path_part: string): Folder {
+    let child_folder = hierarchy.children.find((child) => child.label === path_part);
+    if (child_folder && isFolder(child_folder)) {
+        return child_folder;
     }
-
-    if (hierarchy.children instanceof Array) {
-        throw new Error("hierarchy is not a map");
-    }
-
-    if (!hierarchy.children.has(path_part)) {
-        hierarchy.children.set(path_part, {
-            is_folder: true,
-            label: path_part,
-            children: new Map(),
-        });
-    }
-
-    const child = hierarchy.children.get(path_part);
-    if (!child) {
-        throw new Error(path_part + " not found in children");
-    }
-    return child;
+    child_folder = { is_folder: true, label: path_part, children: [] };
+    hierarchy.children.push(child_folder);
+    return child_folder;
 }
 
 export function sortByLabelAlphabetically(
@@ -107,21 +90,17 @@ export function groupRepositoriesByPath(
             if (repository.path_without_project) {
                 const split_path = repository.path_without_project.split("/");
                 const end_of_path = split_path.reduce(createHierarchy, accumulator);
-                if (isFolder(end_of_path) && end_of_path.children instanceof Map) {
-                    end_of_path.children.set(repository.label, repository);
-                }
+                end_of_path.children.push(repository);
                 return accumulator;
             }
 
-            if (isFolder(accumulator) && accumulator.children instanceof Map) {
-                accumulator.children.set(repository.label, repository);
-            }
+            accumulator.children.push(repository);
             return accumulator;
         },
         {
             is_folder: true,
             label: "root",
-            children: new Map(),
+            children: [],
         }
     );
 
@@ -129,9 +108,6 @@ export function groupRepositoriesByPath(
 }
 
 export function filterAFolder(folder: Folder, query: string): Folder {
-    if (folder.children instanceof Map) {
-        throw new Error("Folder children should be an Array");
-    }
     const filtered_children = folder.children.reduce(
         (
             accumulator: Array<Folder | Repository | FormattedGitLabRepository>,
@@ -158,9 +134,6 @@ export function filterAChild(
 ): Folder | Repository | FormattedGitLabRepository | null {
     if (isFolder(child)) {
         const filtered_folder = filterAFolder(child, query);
-        if (filtered_folder.children instanceof Map) {
-            throw new Error("Children should be an Array");
-        }
         if (filtered_folder.children.length === 0) {
             return null;
         }
