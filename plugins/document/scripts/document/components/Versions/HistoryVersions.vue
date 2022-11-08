@@ -100,7 +100,7 @@ const is_link = computed((): boolean => isLink(props.item));
 const is_embedded = computed((): boolean => isEmbedded(props.item));
 
 const should_display_source_column = computed(
-    (): boolean => should_display_source_column_for_versions && !is_embedded.value
+    (): boolean => should_display_source_column_for_versions && !is_embedded.value && !is_link.value
 );
 const colspan = computed((): number => {
     if (is_link.value) {
