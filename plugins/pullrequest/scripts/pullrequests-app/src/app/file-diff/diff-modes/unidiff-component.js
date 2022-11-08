@@ -35,21 +35,9 @@ export default {
     },
 };
 
-controller.$inject = [
-    "$element",
-    "$scope",
-    "FileDiffRestService",
-    "TooltipService",
-    "CodeMirrorHelperService",
-];
+controller.$inject = ["$element", "$scope", "FileDiffRestService", "CodeMirrorHelperService"];
 
-function controller(
-    $element,
-    $scope,
-    FileDiffRestService,
-    TooltipService,
-    CodeMirrorHelperService
-) {
+function controller($element, $scope, FileDiffRestService, CodeMirrorHelperService) {
     const self = this;
 
     const GUTTER_NEWLINES = "gutter-newlines";
@@ -94,8 +82,6 @@ function controller(
             });
 
         unidiff_codemirror.on("gutterClick", addNewComment);
-
-        TooltipService.setupTooltips();
     }
 
     function getCommentPosition(line_number, gutter) {
