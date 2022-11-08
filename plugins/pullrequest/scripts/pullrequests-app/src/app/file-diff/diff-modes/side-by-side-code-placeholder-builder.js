@@ -18,17 +18,9 @@
  */
 
 import { ADDED_GROUP, DELETED_GROUP } from "./side-by-side-line-grouper.js";
-import {
-    getGroupLines,
-    getGroupOfLine,
-    getLineHandles,
-    getNextLine,
-    hasNextLine,
-} from "./side-by-side-lines-state.js";
+import { getGroupLines, getGroupOfLine, getLineHandles } from "./side-by-side-lines-state.js";
 
-export { buildCodePlaceholderWidget };
-
-function buildCodePlaceholderWidget(line, left_code_mirror, right_code_mirror) {
+export function buildCodePlaceholderWidget(line, left_code_mirror, right_code_mirror) {
     const line_group = getGroupOfLine(line);
     const handle = getOppositeHandle(line, line_group);
     const code_mirror = getCodeMirror(line_group, left_code_mirror, right_code_mirror);
@@ -70,27 +62,11 @@ function sumGroupLinesHeight(group) {
 }
 
 function adjustWidgetPlacementAndHeight(line, placeholder_line_handle, widget_height) {
-    if (isFirstLineModified(line)) {
-        return widget_height;
-    }
-
     if (line.new_offset === 1 || line.old_offset === 1) {
         return widget_height - placeholder_line_handle.height;
     }
 
     return widget_height;
-}
-
-function isFirstLineModified(line) {
-    if (line.unidiff_offset > 1 || !hasNextLine(line)) {
-        return false;
-    }
-
-    const next_line = getNextLine(line);
-    const next_line_group = getGroupOfLine(next_line);
-    const line_group = getGroupOfLine(line);
-
-    return line_group.type === DELETED_GROUP && next_line_group.type === ADDED_GROUP;
 }
 
 function getHandle(line, group) {

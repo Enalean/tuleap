@@ -19,8 +19,37 @@
 
 import { ADDED_GROUP, DELETED_GROUP } from "./side-by-side-line-grouper.js";
 
-function buildLineToLineHandlesMap(lines, line_to_group_map, left_code_mirror, right_code_mirror) {
-    return lines.reduce((accumulator, line, index, array) => {
+export function buildLineToLineHandlesMap(
+    lines,
+    line_to_group_map,
+    left_code_mirror,
+    right_code_mirror
+) {
+    function getDeletedGroupOppositeLineIndex(group) {
+        const group_last_line_unidiff_offset =
+            group.unidiff_offsets[group.unidiff_offsets.length - 1];
+        const group_next_line = lines[group_last_line_unidiff_offset];
+        if (group_next_line) {
+            return group_next_line.new_offset - 1;
+        }
+        const group_first_line_unidiff_offset = group.unidiff_offsets[0];
+        const group_previous_line = lines[group_first_line_unidiff_offset - 2];
+        if (group_previous_line) {
+            return group_previous_line.new_offset - 1;
+        }
+        return 0;
+    }
+
+    function getPreviousGroupLineIndex(group) {
+        const group_first_line_unidiff_offset = group.unidiff_offsets[0];
+        const group_previous_line = lines[group_first_line_unidiff_offset - 2];
+        if (group_previous_line) {
+            return group_previous_line.old_offset - 1;
+        }
+        return 0;
+    }
+
+    return lines.reduce((accumulator, line) => {
         if (lineIsUnmoved(line)) {
             const left_handle = left_code_mirror.getLineHandle(line.old_offset - 1);
             const right_handle = right_code_mirror.getLineHandle(line.new_offset - 1);
@@ -29,23 +58,16 @@ function buildLineToLineHandlesMap(lines, line_to_group_map, left_code_mirror, r
         }
 
         const group = line_to_group_map.get(line.unidiff_offset);
-        const group_first_line_unidiff_offset = group.unidiff_offsets[0];
-        const group_last_line_unidiff_offset =
-            group.unidiff_offsets[group.unidiff_offsets.length - 1];
         if (group.type === DELETED_GROUP) {
-            const group_next_line = array[group_last_line_unidiff_offset];
-            const placeholder_line_number = group_next_line ? group_next_line.new_offset - 1 : 0;
+            const placeholder_line_index = getDeletedGroupOppositeLineIndex(group);
             const left_handle = left_code_mirror.getLineHandle(line.old_offset - 1);
-            const right_handle = right_code_mirror.getLineHandle(placeholder_line_number);
+            const right_handle = right_code_mirror.getLineHandle(placeholder_line_index);
             accumulator.set(line, { left_handle, right_handle });
             return accumulator;
         }
         if (group.type === ADDED_GROUP) {
-            const group_previous_line = array[group_first_line_unidiff_offset - 2];
-            const placeholder_line_number = group_previous_line
-                ? group_previous_line.old_offset - 1
-                : 0;
-            const left_handle = left_code_mirror.getLineHandle(placeholder_line_number);
+            const placeholder_line_index = getPreviousGroupLineIndex(group);
+            const left_handle = left_code_mirror.getLineHandle(placeholder_line_index);
             const right_handle = right_code_mirror.getLineHandle(line.new_offset - 1);
             accumulator.set(line, { left_handle, right_handle });
             return accumulator;
@@ -57,5 +79,3 @@ function buildLineToLineHandlesMap(lines, line_to_group_map, left_code_mirror, r
 function lineIsUnmoved(line) {
     return line.new_offset !== null && line.old_offset !== null;
 }
-
-export { buildLineToLineHandlesMap };

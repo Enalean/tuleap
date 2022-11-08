@@ -32,7 +32,8 @@ describe("side-by-side line mapper", () => {
         });
 
         describe("Unmoved lines -", () => {
-            it("Given diff lines, a map from line to group and the left and right code mirrors, then it will return a map from line to left-side LineHandle and right-side LineHandle for unmoved lines", () => {
+            it(`Given diff lines, a map from line to group and the left and right code mirrors,
+                then it will return a map from line to left-side LineHandle and right-side LineHandle for unmoved lines`, () => {
                 const first_unmoved_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
                 const second_unmoved_line = { unidiff_offset: 2, old_offset: 2, new_offset: 2 };
                 const lines = [first_unmoved_line, second_unmoved_line];
@@ -67,19 +68,18 @@ describe("side-by-side line mapper", () => {
                     right_code_mirror
                 );
 
-                expect(map.get(first_unmoved_line)).toEqual({
-                    left_handle: first_line_left_handle,
-                    right_handle: first_line_right_handle,
-                });
-                expect(map.get(second_unmoved_line)).toEqual({
-                    left_handle: second_line_left_handle,
-                    right_handle: second_line_right_handle,
-                });
+                const first_actual = map.get(first_unmoved_line);
+                expect(first_actual.left_handle).toBe(first_line_left_handle);
+                expect(first_actual.right_handle).toBe(first_line_right_handle);
+                const second_actual = map.get(second_unmoved_line);
+                expect(second_actual.left_handle).toBe(second_line_left_handle);
+                expect(second_actual.right_handle).toBe(second_line_right_handle);
             });
         });
 
         describe("Added lines -", () => {
-            it("will return a map from line to right-side LineHandle and on the left-side to the first line before the added group so that I can place a line widget there", () => {
+            it(`will return a map from line to right-side LineHandle and on the left-side to the first line before the added group
+                so that I can place a line widget there`, () => {
                 const first_line = {
                     unidiff_offset: 1,
                     old_offset: 1,
@@ -127,17 +127,16 @@ describe("side-by-side line mapper", () => {
                     right_code_mirror
                 );
 
-                expect(map.get(first_added_line)).toEqual({
-                    left_handle: first_line_before_group_left_handle,
-                    right_handle: first_added_line_right_handle,
-                });
-                expect(map.get(second_added_line)).toEqual({
-                    left_handle: first_line_before_group_left_handle,
-                    right_handle: second_added_line_right_handle,
-                });
+                const first_actual = map.get(first_added_line);
+                expect(first_actual.left_handle).toBe(first_line_before_group_left_handle);
+                expect(first_actual.right_handle).toBe(first_added_line_right_handle);
+                const second_actual = map.get(second_added_line);
+                expect(second_actual.left_handle).toBe(first_line_before_group_left_handle);
+                expect(second_actual.right_handle).toBe(second_added_line_right_handle);
             });
 
-            it("Given the added group starts at the beginning of the file, then the left-side LineHandle will be at the start of the file (line 0)", () => {
+            it(`Given the added group starts at the beginning of the file,
+                then the left-side LineHandle will be at the start of the file (line 0)`, () => {
                 const first_added_line = { unidiff_offset: 1, old_offset: null, new_offset: 1 };
                 const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 2 };
                 const lines = [first_added_line, second_added_line];
@@ -177,19 +176,18 @@ describe("side-by-side line mapper", () => {
                     right_code_mirror
                 );
 
-                expect(map.get(first_added_line)).toEqual({
-                    left_handle: first_line_left_handle,
-                    right_handle: first_line_right_handle,
-                });
-                expect(map.get(second_added_line)).toEqual({
-                    left_handle: first_line_left_handle,
-                    right_handle: second_line_right_handle,
-                });
+                const first_actual = map.get(first_added_line);
+                expect(first_actual.left_handle).toBe(first_line_left_handle);
+                expect(first_actual.right_handle).toBe(first_line_right_handle);
+                const second_actual = map.get(second_added_line);
+                expect(second_actual.left_handle).toBe(first_line_left_handle);
+                expect(second_actual.right_handle).toBe(second_line_right_handle);
             });
         });
 
         describe("Deleted lines -", () => {
-            it("will return a map from line to left-side LineHandle and on the right-side to the first line after the deleted group so that I can place a line widget there", () => {
+            it(`will return a map from line to left-side LineHandle and on the right-side to the first line after the deleted group
+                so that I can place a line widget there`, () => {
                 const first_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
                 const second_deleted_line = { unidiff_offset: 2, old_offset: 2, new_offset: null };
                 const third_deleted_line = { unidiff_offset: 3, old_offset: 3, new_offset: null };
@@ -242,51 +240,59 @@ describe("side-by-side line mapper", () => {
                     right_code_mirror
                 );
 
-                expect(map.get(second_deleted_line)).toEqual({
-                    left_handle: second_deleted_line_left_handle,
-                    right_handle: first_line_after_group_right_handle,
-                });
-                expect(map.get(third_deleted_line)).toEqual({
-                    left_handle: third_deleted_line_left_handle,
-                    right_handle: first_line_after_group_right_handle,
-                });
+                const first_actual = map.get(second_deleted_line);
+                expect(first_actual.left_handle).toBe(second_deleted_line_left_handle);
+                expect(first_actual.right_handle).toBe(first_line_after_group_right_handle);
+                const second_actual = map.get(third_deleted_line);
+                expect(second_actual.left_handle).toBe(third_deleted_line_left_handle);
+                expect(second_actual.right_handle).toBe(first_line_after_group_right_handle);
             });
 
-            it("Given the deleted group is at the end of the file, then the right-side LineHandle will be at the last line of the previous group", () => {
-                const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
-                const second_deleted_line = { unidiff_offset: 2, old_offset: 2, new_offset: null };
-                const third_unmoved_line = { unidiff_offset: 3, old_offset: 3, new_offset: 1 };
-                const lines = [first_deleted_line, second_deleted_line, third_unmoved_line];
+            it(`Given the deleted group is at the end of the file,
+                then the right-side LineHandle will be at the last line of the previous group`, () => {
+                const first_unmoved_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
+                const second_unmoved_line = { unidiff_offset: 2, old_offset: 2, new_offset: 2 };
+                const third_deleted_line = { unidiff_offset: 3, old_offset: 3, new_offset: null };
+                const fourth_deleted_line = { unidiff_offset: 4, old_offset: 4, new_offset: null };
+                const lines = [
+                    first_unmoved_line,
+                    second_unmoved_line,
+                    third_deleted_line,
+                    fourth_deleted_line,
+                ];
 
-                const first_line_left_handle = {};
-                const second_line_left_handle = {};
-                const third_line_right_handle = {};
-                left_code_mirror.getLineHandle.mockImplementation((value) => {
-                    if (value === 0) {
-                        return first_line_left_handle;
-                    }
-                    if (value === 1) {
-                        return second_line_left_handle;
-                    }
-                    if (value === 2) {
+                const second_line_right_handle = {};
+                const third_line_left_handle = {};
+                const fourth_line_left_handle = {};
+                left_code_mirror.getLineHandle.mockImplementation((index) => {
+                    if (index === 0 || index === 1) {
                         return {};
                     }
-                    throw new Error(value);
-                });
-                right_code_mirror.getLineHandle.mockImplementation((value) => {
-                    if (value === 0) {
-                        return third_line_right_handle;
+                    if (index === 2) {
+                        return third_line_left_handle;
                     }
-                    throw new Error(value);
+                    if (index === 3) {
+                        return fourth_line_left_handle;
+                    }
+                    throw new Error(index);
+                });
+                right_code_mirror.getLineHandle.mockImplementation((index) => {
+                    if (index === 0) {
+                        return {};
+                    }
+                    if (index === 1) {
+                        return second_line_right_handle;
+                    }
+                    throw new Error(index);
                 });
 
                 const deleted_group = {
-                    unidiff_offsets: [1, 2],
+                    unidiff_offsets: [3, 4],
                     type: DELETED_GROUP,
                 };
                 const line_to_group_map = new Map([
-                    [1, deleted_group],
-                    [2, deleted_group],
+                    [3, deleted_group],
+                    [4, deleted_group],
                 ]);
 
                 const map = buildLineToLineHandlesMap(
@@ -296,17 +302,15 @@ describe("side-by-side line mapper", () => {
                     right_code_mirror
                 );
 
-                expect(map.get(first_deleted_line)).toEqual({
-                    left_handle: first_line_left_handle,
-                    right_handle: third_line_right_handle,
-                });
-                expect(map.get(second_deleted_line)).toEqual({
-                    left_handle: second_line_left_handle,
-                    right_handle: third_line_right_handle,
-                });
+                const first_actual = map.get(third_deleted_line);
+                expect(first_actual.left_handle).toBe(third_line_left_handle);
+                expect(first_actual.right_handle).toBe(second_line_right_handle);
+                const second_actual = map.get(fourth_deleted_line);
+                expect(second_actual.left_handle).toBe(fourth_line_left_handle);
+                expect(second_actual.right_handle).toBe(second_line_right_handle);
             });
 
-            it("Given we're dealing with a deleted file, then the right-side LineHandle will be at the start of the file (line 0)", () => {
+            it(`Given we're dealing with a deleted file, then the right-side LineHandle will be at the start of the file (line 0)`, () => {
                 const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
                 const second_deleted_line = { unidiff_offset: 2, old_offset: 2, new_offset: null };
                 const lines = [first_deleted_line, second_deleted_line];
@@ -346,14 +350,56 @@ describe("side-by-side line mapper", () => {
                     right_code_mirror
                 );
 
-                expect(map.get(first_deleted_line)).toEqual({
-                    left_handle: first_line_right_handle,
-                    right_handle: first_line_left_handle,
+                const first_actual = map.get(first_deleted_line);
+                expect(first_actual.left_handle).toBe(first_line_left_handle);
+                expect(first_actual.right_handle).toBe(first_line_right_handle);
+                const second_actual = map.get(second_deleted_line);
+                expect(second_actual.left_handle).toBe(second_line_left_handle);
+                expect(second_actual.right_handle).toBe(first_line_right_handle);
+            });
+        });
+
+        describe(`Modified lines -`, () => {
+            it(`Given the modified line is at the beginning of the file,
+                then the first deleted line will match the first added line and vice-versa`, () => {
+                const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
+                const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 1 };
+                const lines = [first_deleted_line, second_added_line];
+
+                const first_line_left_handle = {};
+                const second_line_right_handle = {};
+                left_code_mirror.getLineHandle.mockImplementation((index) => {
+                    if (index === 0) {
+                        return first_line_left_handle;
+                    }
+                    throw new Error(index);
                 });
-                expect(map.get(second_deleted_line)).toEqual({
-                    left_handle: second_line_left_handle,
-                    right_handle: first_line_left_handle,
+                right_code_mirror.getLineHandle.mockImplementation((index) => {
+                    if (index === 0) {
+                        return second_line_right_handle;
+                    }
+                    throw new Error(index);
                 });
+                const deleted_group = { unidiff_offsets: [1], type: DELETED_GROUP };
+                const added_group = { unidiff_offsets: [2], type: ADDED_GROUP };
+                const line_to_group_map = new Map([
+                    [1, deleted_group],
+                    [2, added_group],
+                ]);
+
+                const map = buildLineToLineHandlesMap(
+                    lines,
+                    line_to_group_map,
+                    left_code_mirror,
+                    right_code_mirror
+                );
+
+                const first_actual = map.get(first_deleted_line);
+                expect(first_actual.left_handle).toBe(first_line_left_handle);
+                expect(first_actual.right_handle).toBe(second_line_right_handle);
+                const second_actual = map.get(second_added_line);
+                expect(second_actual.left_handle).toBe(first_line_left_handle);
+                expect(second_actual.right_handle).toBe(second_line_right_handle);
             });
         });
     });

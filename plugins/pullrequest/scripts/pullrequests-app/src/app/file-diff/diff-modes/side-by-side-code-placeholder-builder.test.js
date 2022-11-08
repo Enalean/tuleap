@@ -24,14 +24,12 @@ import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 describe("side-by-side code placeholder builder", () => {
     const left_code_mirror = {};
     const right_code_mirror = {};
-    let getLineHandles, getGroupOfLine, getGroupLines, hasNextLine, getNextLine;
+    let getLineHandles, getGroupOfLine, getGroupLines;
 
     beforeEach(() => {
         getLineHandles = jest.spyOn(side_by_side_lines_state, "getLineHandles");
         getGroupOfLine = jest.spyOn(side_by_side_lines_state, "getGroupOfLine");
         getGroupLines = jest.spyOn(side_by_side_lines_state, "getGroupLines");
-        hasNextLine = jest.spyOn(side_by_side_lines_state, "hasNextLine");
-        getNextLine = jest.spyOn(side_by_side_lines_state, "getNextLine");
     });
 
     describe("buildCodePlaceholderWidget()", () => {
@@ -225,76 +223,6 @@ describe("side-by-side code placeholder builder", () => {
                     handle: first_left_handle,
                     widget_height: 57,
                     display_above_line: false,
-                    is_comment_placeholder: false,
-                });
-            });
-        });
-
-        describe("First line modified -", () => {
-            it("Given the first line is modified (it will appear as deleted and then added), then the height of the first line will not be subtracted from the height of the widget", () => {
-                const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
-                const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 1 };
-                hasNextLine.mockImplementation((value) => {
-                    if (value === first_deleted_line) {
-                        return true;
-                    }
-                    throw new Error(value);
-                });
-                getNextLine.mockImplementation((value) => {
-                    if (value === first_deleted_line) {
-                        return second_added_line;
-                    }
-                    throw new Error(value);
-                });
-                const left_handle = { height: 40 };
-                const right_handle = { height: 40 };
-                getLineHandles.mockImplementation((value) => {
-                    if (value === first_deleted_line || value === second_added_line) {
-                        return {
-                            left_handle,
-                            right_handle,
-                        };
-                    }
-                    throw new Error(value);
-                });
-                const deleted_group = {
-                    unidiff_offsets: [1],
-                    type: DELETED_GROUP,
-                };
-                const added_group = {
-                    unidiff_offsets: [2],
-                    type: ADDED_GROUP,
-                };
-                getGroupOfLine.mockImplementation((value) => {
-                    if (value === first_deleted_line) {
-                        return deleted_group;
-                    }
-                    if (value === second_added_line) {
-                        return added_group;
-                    }
-                    throw new Error(value);
-                });
-                getGroupLines.mockImplementation((value) => {
-                    if (value === deleted_group) {
-                        return [first_deleted_line];
-                    }
-                    if (value === added_group) {
-                        return [second_added_line];
-                    }
-                    throw new Error(value);
-                });
-
-                const widget_params = buildCodePlaceholderWidget(
-                    first_deleted_line,
-                    left_code_mirror,
-                    right_code_mirror
-                );
-
-                expect(widget_params).toEqual({
-                    code_mirror: right_code_mirror,
-                    handle: right_handle,
-                    widget_height: 40,
-                    display_above_line: true,
                     is_comment_placeholder: false,
                 });
             });
