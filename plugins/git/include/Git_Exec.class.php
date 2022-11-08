@@ -419,6 +419,14 @@ class Git_Exec
     }
 
     /**
+     * @throw Git_Command_Exception
+     */
+    public function pushForce(string $origin = 'origin master'): bool
+    {
+        return $this->gitCmd('push --force --porcelain -- ' . $origin);
+    }
+
+    /**
      * @throws Git_Command_Exception
      */
     public function exportBranchesAndTags($destination_url)
