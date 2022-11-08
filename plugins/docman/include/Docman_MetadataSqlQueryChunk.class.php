@@ -59,7 +59,7 @@ class Docman_MetadataSqlQueryChunk
                     $this->field = 'i.user_id';
                     break;
                 case 'filename':
-                    $this->field = 'i.item_type, v.filename'; // i.item_type is needed due to embedded file which have the name "file" at document creation.
+                    $this->field = '(i.item_type = 2) DESC, v.filename'; // 2 = file type
                     break;
                 default:
                     $this->field = 'i.' . $md->getLabel();

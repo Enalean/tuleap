@@ -86,7 +86,7 @@ final class Docman_MetadataSqlQueryChunkTest extends TestCase
 
         $metadata_sql_query_chunk = new Docman_MetadataSqlQueryChunk($metadata);
 
-        self::assertSame('i.item_type, v.filename', $metadata_sql_query_chunk->field);
+        self::assertSame('(i.item_type = 2) DESC, v.filename', $metadata_sql_query_chunk->field);
     }
 
     public function testItBuildsTheSqlFieldNamePartForHardcodedMetadata(): void
