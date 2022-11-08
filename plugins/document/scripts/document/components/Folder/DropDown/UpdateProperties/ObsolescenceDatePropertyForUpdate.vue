@@ -65,12 +65,15 @@
 </template>
 
 <script setup lang="ts">
-import { getObsolescenceDateValueInput } from "../../../../helpers/properties-helpers/obsolescence-date-value";
+import {
+    formatObsolescenceDateValue,
+    getObsolescenceDateValueInput,
+} from "../../../../helpers/properties-helpers/obsolescence-date-value";
 import DateFlatPicker from "../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
 import emitter from "../../../../helpers/emitter";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
-import { onMounted, ref } from "vue";
+import { onMounted, onBeforeMount, ref } from "vue";
 
 const props = defineProps<{
     value: string;
@@ -84,6 +87,11 @@ let uses_helper_validity = ref(false);
 const { is_obsolescence_date_property_used } = useNamespacedState<
     Pick<ConfigurationState, "is_obsolescence_date_property_used">
 >("configuration", ["is_obsolescence_date_property_used"]);
+
+onBeforeMount((): void => {
+    date_value.value = formatObsolescenceDateValue(date_value.value);
+    emitter.emit("update-obsolescence-date-property", date_value.value);
+});
 
 onMounted((): void => {
     if (props.value !== "") {

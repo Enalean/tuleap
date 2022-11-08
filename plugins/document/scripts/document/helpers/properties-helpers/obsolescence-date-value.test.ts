@@ -18,7 +18,10 @@
  *
  */
 
-import { getObsolescenceDateValueInput } from "./obsolescence-date-value";
+import {
+    getObsolescenceDateValueInput,
+    formatObsolescenceDateValue,
+} from "./obsolescence-date-value";
 import moment from "moment/moment";
 
 describe("getObsolescenceDateValueInput", () => {
@@ -38,5 +41,23 @@ describe("getObsolescenceDateValueInput", () => {
         const expected_date = moment().add(6, "M").format("YYYY-MM-DD");
         const date_result = getObsolescenceDateValueInput("6");
         expect(expected_date).toStrictEqual(date_result);
+    });
+});
+
+describe("formatObsolescenceDateValue", () => {
+    it(`Given an empty date value
+    Then the returned date should be empty`, () => {
+        const date_result = formatObsolescenceDateValue("");
+        expect(date_result).toBe("");
+    });
+    it(`Given a string datetime value
+    Then the returned date should be the date formatted to YYYY-MM-DD`, () => {
+        const date_result = formatObsolescenceDateValue("2022-12-09T10:30:28+01:00");
+        expect(date_result).toBe("2022-12-09");
+    });
+    it(`Given a string date value
+    Then the returned date should be the date formatted to YYYY-MM-DD`, () => {
+        const date_result = formatObsolescenceDateValue("2022-12-09");
+        expect(date_result).toBe("2022-12-09");
     });
 });
