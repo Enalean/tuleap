@@ -24,11 +24,23 @@ import type { PullRequestComment } from "./PullRequestComment";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { TYPE_EVENT_COMMENT } from "./PullRequestCommentPresenter";
 
+const isLastReply = (host: PullRequestComment, comment: PullRequestCommentPresenter): boolean => {
+    if (host.replies.length === 0) {
+        return host.comment.id !== comment.id;
+    }
+
+    return host.replies[host.replies.length - 1].id !== comment.id;
+};
+
 export const buildFooterForComment = (
     host: PullRequestComment,
     comment: PullRequestCommentPresenter
 ): UpdateFunction<PullRequestComment> => {
     if (comment.type === TYPE_EVENT_COMMENT) {
+        return html``;
+    }
+
+    if (isLastReply(host, comment)) {
         return html``;
     }
 

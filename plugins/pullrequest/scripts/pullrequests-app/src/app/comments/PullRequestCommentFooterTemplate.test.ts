@@ -36,10 +36,18 @@ describe("PullRequestCommentFooterTemplate", () => {
     });
 
     it.each([
-        ["an inline comment", PullRequestCommentPresenterStub.buildInlineCommentOutdated()],
-        ["a global comment", PullRequestCommentPresenterStub.buildGlobalComment()],
-    ])(`Given %s, Then it should display a footer`, (expectation, comment) => {
-        const host = { comment } as unknown as HostElement;
+        ["an inline comment", PullRequestCommentPresenterStub.buildInlineCommentOutdated(), []],
+        ["a global comment", PullRequestCommentPresenterStub.buildGlobalComment(), []],
+        [
+            "the latest reply of a comment",
+            PullRequestCommentPresenterStub.buildWithData({ id: 11 }),
+            [
+                PullRequestCommentPresenterStub.buildWithData({ id: 10 }),
+                PullRequestCommentPresenterStub.buildWithData({ id: 11 }),
+            ],
+        ],
+    ])(`Given %s, Then it should display a footer`, (expectation, comment, replies) => {
+        const host = { comment, replies } as unknown as HostElement;
         const render = getCommentFooter(host);
 
         render(host, target);
@@ -49,9 +57,29 @@ describe("PullRequestCommentFooterTemplate", () => {
         expect(footer).not.toBeNull();
     });
 
-    it(`Given a pull-request event comment, Then it should not display a footer`, () => {
+    it.each([
+        [
+            "a pull-request event comment",
+            PullRequestCommentPresenterStub.buildPullRequestEventComment(),
+            [],
+        ],
+        [
+            "that the current comment is the root comment and there are some replies",
+            PullRequestCommentPresenterStub.buildGlobalComment(),
+            [],
+        ],
+        [
+            "that the current comment is not the latest reply",
+            PullRequestCommentPresenterStub.buildWithData({ id: 10 }),
+            [
+                PullRequestCommentPresenterStub.buildWithData({ id: 10 }),
+                PullRequestCommentPresenterStub.buildWithData({ id: 11 }),
+            ],
+        ],
+    ])(`Given %s, Then it should not display a footer`, (expectation_string, comment, replies) => {
         const host = {
-            comment: PullRequestCommentPresenterStub.buildPullRequestEventComment(),
+            comment,
+            replies,
         } as unknown as HostElement;
         const render = getCommentFooter(host);
 
@@ -67,6 +95,7 @@ describe("PullRequestCommentFooterTemplate", () => {
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
             controller,
+            replies: [],
         } as unknown as HostElement;
 
         const render = getCommentFooter(host);
