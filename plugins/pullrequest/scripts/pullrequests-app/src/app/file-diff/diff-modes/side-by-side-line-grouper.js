@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const UNMOVED_GROUP = "unmoved";
-const DELETED_GROUP = "deleted";
-const ADDED_GROUP = "added";
+export const UNMOVED_GROUP = "unmoved";
+export const DELETED_GROUP = "deleted";
+export const ADDED_GROUP = "added";
 
-function buildLineGroups(lines) {
+export function buildLineGroups(lines) {
     const groups = groupLinesByChangeType(lines);
 
     const line_to_group_map = buildLinesToGroupMap(groups);
@@ -85,5 +85,3 @@ function getChangeType(line) {
     }
     return UNMOVED_GROUP;
 }
-
-export { buildLineGroups, UNMOVED_GROUP, DELETED_GROUP, ADDED_GROUP };

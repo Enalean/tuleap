@@ -28,7 +28,7 @@ let line_to_line_handles_map;
 let left_lines;
 let right_lines;
 
-function initDataAndCodeMirrors(file_lines, left_code_mirror, right_code_mirror) {
+export function initDataAndCodeMirrors(file_lines, left_code_mirror, right_code_mirror) {
     diff_lines = file_lines;
     left_lines = file_lines.filter((line) => line.old_offset !== null);
     right_lines = file_lines.filter((line) => line.new_offset !== null);
@@ -51,48 +51,37 @@ function initDataAndCodeMirrors(file_lines, left_code_mirror, right_code_mirror)
     );
 }
 
-function getGroupLines(group) {
+export function getGroupLines(group) {
     const begin = group.unidiff_offsets[0];
     const end = group.unidiff_offsets[group.unidiff_offsets.length - 1];
     return diff_lines.slice(begin - 1, end);
 }
 
-function getLineHandles(line) {
+export function getLineHandles(line) {
     return line_to_line_handles_map.get(line);
 }
 
-function getGroupOfLine(line) {
+export function getGroupOfLine(line) {
     return line_to_group_map.get(line.unidiff_offset);
 }
 
-function getCommentLine(comment) {
+export function getCommentLine(comment) {
     return diff_lines[comment.unidiff_offset - 1];
 }
 
-function isFirstLineOfGroup(line) {
+export function isFirstLineOfGroup(line) {
     return first_line_to_group_map.has(line.unidiff_offset);
 }
 
-function hasNextLine(line) {
-    if (typeof diff_lines === "undefined") {
-        return null;
-    }
-    return line.unidiff_offset < diff_lines.length;
-}
-
-function getNextLine(line) {
-    return diff_lines[line.unidiff_offset];
-}
-
-function getRightLine(line_number) {
+export function getRightLine(line_number) {
     return right_lines[line_number];
 }
 
-function getLeftLine(line_number) {
+export function getLeftLine(line_number) {
     return left_lines[line_number];
 }
 
-function getLineOfHandle(handle) {
+export function getLineOfHandle(handle) {
     if (typeof line_to_line_handles_map === "undefined") {
         return null;
     }
@@ -114,17 +103,3 @@ function getLineOfHandle(handle) {
     }
     return null;
 }
-
-export {
-    initDataAndCodeMirrors,
-    isFirstLineOfGroup,
-    getGroupLines,
-    getLineHandles,
-    getCommentLine,
-    getGroupOfLine,
-    hasNextLine,
-    getNextLine,
-    getRightLine,
-    getLeftLine,
-    getLineOfHandle,
-};
