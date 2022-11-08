@@ -19,6 +19,7 @@
 
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
+import { loadTooltips } from "@tuleap/tooltip";
 import type { IRelativeDateHelper } from "../helpers/date-helpers";
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { getCommentBody } from "./PullRequestCommentBodyTemplate";
@@ -46,6 +47,7 @@ export interface PullRequestComment {
     readonly controller: ControlPullRequestComment;
     replies: PullRequestCommentRepliesCollectionPresenter;
     reply_comment_presenter: ReplyCommentFormPresenter | null;
+    have_tooltips_been_loaded: boolean;
 }
 
 const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
@@ -90,6 +92,11 @@ function renderFactory(fn: (host: HostElement) => UpdateFunction<PullRequestComm
             setTimeout(() => host.post_rendering_callback());
         }
 
+        if (!host.have_tooltips_been_loaded) {
+            host.have_tooltips_been_loaded = true;
+            setTimeout(() => loadTooltips());
+        }
+
         return component;
     };
 }
@@ -101,6 +108,7 @@ export const PullRequestComment = define<PullRequestComment>({
     relativeDateHelper: undefined,
     currentUser: undefined,
     currentPullRequest: undefined,
+    have_tooltips_been_loaded: false,
     controller: {
         set: (host, controller) => {
             if (host.comment) {

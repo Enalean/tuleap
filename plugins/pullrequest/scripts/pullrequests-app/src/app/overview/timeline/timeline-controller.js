@@ -8,9 +8,9 @@ import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestComme
 
 export default TimelineController;
 
-TimelineController.$inject = ["SharedPropertiesService", "TimelineService", "TooltipService"];
+TimelineController.$inject = ["SharedPropertiesService", "TimelineService"];
 
-function TimelineController(SharedPropertiesService, TimelineService, TooltipService) {
+function TimelineController(SharedPropertiesService, TimelineService) {
     const self = this;
 
     Object.assign(self, {
@@ -54,7 +54,6 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
                         self.comment_replies_store,
                         PullRequestCommentNewReplySaver()
                     );
-                    TooltipService.setupTooltips();
                 })
                 .finally(function () {
                     self.loading_timeline = false;
@@ -70,7 +69,6 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
             self.new_comment
         ).then(function () {
             self.new_comment.content = "";
-            TooltipService.setupTooltips();
         });
     }
 }

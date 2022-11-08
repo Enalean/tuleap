@@ -18,6 +18,7 @@
  */
 
 import { selectOrThrow } from "@tuleap/dom";
+import * as tooltip from "@tuleap/tooltip";
 import type { HostElement } from "./PullRequestComment";
 import { PullRequestComment } from "./PullRequestComment";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
@@ -27,11 +28,12 @@ import { RelativeDateHelperStub } from "../../../tests/stubs/RelativeDateHelperS
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 
 describe("PullRequestComment", () => {
-    let target: ShadowRoot;
+    let target: ShadowRoot, loadTooltips: jest.SpyInstance;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
 
+        loadTooltips = jest.spyOn(tooltip, "loadTooltips").mockImplementation();
         target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
@@ -121,6 +123,40 @@ describe("PullRequestComment", () => {
             jest.advanceTimersByTime(1);
 
             expect(post_rendering_callback).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe("loadTooltips()", () => {
+        let host: HostElement;
+
+        beforeEach(() => {
+            jest.useFakeTimers();
+
+            host = {
+                comment: PullRequestCommentPresenterStub.buildInlineComment(),
+                relativeDateHelper: RelativeDateHelperStub,
+                replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
+            } as unknown as HostElement;
+        });
+
+        it("should load tooltips when the component has been rendered", () => {
+            const update = PullRequestComment.content(host);
+            update(host, target);
+
+            jest.advanceTimersByTime(1);
+
+            expect(loadTooltips).toHaveBeenCalledTimes(1);
+        });
+
+        it("should NOT load tooltips when they already have been loaded", () => {
+            host.have_tooltips_been_loaded = true;
+
+            const update = PullRequestComment.content(host);
+            update(host, target);
+
+            jest.advanceTimersByTime(1);
+
+            expect(loadTooltips).toHaveBeenCalledTimes(0);
         });
     });
 });

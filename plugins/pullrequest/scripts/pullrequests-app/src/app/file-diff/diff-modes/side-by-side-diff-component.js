@@ -53,9 +53,9 @@ export default {
     },
 };
 
-controller.$inject = ["$element", "$scope", "$q", "CodeMirrorHelperService", "TooltipService"];
+controller.$inject = ["$element", "$scope", "$q", "CodeMirrorHelperService"];
 
-function controller($element, $scope, $q, CodeMirrorHelperService, TooltipService) {
+function controller($element, $scope, $q, CodeMirrorHelperService) {
     const self = this;
     self.$onInit = init;
 
@@ -117,8 +117,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             .forEach((comment) => {
                 displayInlineComment(comment, left_code_mirror, right_code_mirror);
             });
-
-        TooltipService.setupTooltips();
 
         handleCodeMirrorEvents(left_code_mirror, right_code_mirror);
     }
