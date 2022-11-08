@@ -25,15 +25,12 @@ namespace Tuleap\OnlyOffice\Open;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\FilenamePattern\RetrieveFilenamePattern;
 use Tuleap\Docman\Tests\Stub\FilenamePatternRetrieverStub;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class DocmanFileLastVersionProviderTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     private const PROJECT_ID = 102;
 
     /**
@@ -79,7 +76,6 @@ final class DocmanFileLastVersionProviderTest extends TestCase
     public function testCanRetrieveTheLastVersionOfADocmanFile(
         bool $user_can_write,
         RetrieveFilenamePattern $filename_pattern_retriever,
-        bool $feature_flag_edition_is_enabled,
         bool $item_is_locked,
         bool $has_approval_table,
         bool $expected_can_be_edited,
@@ -92,10 +88,6 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         $this->version_factory->method('getCurrentVersionForItem')->willReturn($expected_version);
         $this->lock_factory->method('itemIsLocked')->willReturn($item_is_locked);
         $this->approval_table_retriever->method('hasApprovalTable')->willReturn($has_approval_table);
-
-        if ($feature_flag_edition_is_enabled) {
-            \ForgeConfig::setFeatureFlag('onlyoffice_edit_document', '1');
-        }
 
         $provider = $this->buildProvider($filename_pattern_retriever);
 
@@ -110,12 +102,11 @@ final class DocmanFileLastVersionProviderTest extends TestCase
     public function dataProviderLastVersionFileEdit(): array
     {
         return [
-            'Document can be edited in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), true, false, false, true],
-            'Feature flag to allow edition is disabled' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), false, false, false, false],
-            'User cannot edit the document' => [false, FilenamePatternRetrieverStub::buildWithNoPattern(), true, false, false, false],
-            'Filename pattern prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithPattern('something'), true, false, false, false],
-            'Locks prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), true, true, false, false],
-            'Approval table prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), true, false, true, false],
+            'Document can be edited in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), false, false, true],
+            'User cannot edit the document' => [false, FilenamePatternRetrieverStub::buildWithNoPattern(), false, false, false],
+            'Filename pattern prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithPattern('something'), false, false, false],
+            'Locks prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), true, false, false],
+            'Approval table prevent edition in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), false, true, false],
         ];
     }
 

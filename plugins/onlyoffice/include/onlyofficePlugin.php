@@ -124,7 +124,6 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(OnlyOfficeDocumentServerSettings::class);
-        $event->addConfigClass(ProvideDocmanFileLastVersion::class);
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $routes): void
