@@ -36,3 +36,12 @@ export function getObsolescenceDateValueInput(select_date_value: string): string
     }
     return date;
 }
+
+export function formatObsolescenceDateValue(date_value: string): string {
+    if (date_value === "") {
+        return "";
+    }
+
+    const date = new Date(date_value);
+    return date.toISOString().split("T")[0];
+}
