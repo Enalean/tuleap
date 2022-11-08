@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "112a137c0508718d04acd215bc421f10",
+    "content-hash": "43b5396e20ce2e558e50ea6a813ecd52",
     "packages": [
         {
             "name": "composer/installers",
@@ -286,11 +286,11 @@
         },
         {
             "name": "mediawiki/labeled-section-transclusion",
-            "version": "1.35.6",
+            "version": "1.35.8",
             "source": {
                 "type": "git",
                 "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion.git",
-                "reference": "6438b1ee59ee1ad3678454bae36824b95e0701f5"
+                "reference": "c86c3bbe4acf7053b1b51c474b4e6fa14d792281"
             },
             "require": {
                 "composer/installers": "^1.0"
@@ -299,11 +299,11 @@
         },
         {
             "name": "mediawiki/math",
-            "version": "1.35.6",
+            "version": "1.35.8",
             "source": {
                 "type": "git",
                 "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Math.git",
-                "reference": "f40ee5660a30adab6211eb8aaa00549a31042dc3"
+                "reference": "93da70c5ed033ea44a3c0381e4edc22231b097cc"
             },
             "require": {
                 "composer/installers": "^1.0"
@@ -325,16 +325,16 @@
         },
         {
             "name": "mediawiki/tuleap-integration",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "5fb4d50edc153d9cc9f30c1a783f364830043ee7"
+                "reference": "1e91d6f527ffb2ba83167182a0f704ff1cfa53fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/5fb4d50edc153d9cc9f30c1a783f364830043ee7",
-                "reference": "5fb4d50edc153d9cc9f30c1a783f364830043ee7",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/1e91d6f527ffb2ba83167182a0f704ff1cfa53fa",
+                "reference": "1e91d6f527ffb2ba83167182a0f704ff1cfa53fa",
                 "shasum": ""
             },
             "require": {
@@ -350,7 +350,6 @@
                 "php-parallel-lint/php-console-highlighter": "1.0.0",
                 "php-parallel-lint/php-parallel-lint": "1.3.2"
             },
-            "default-branch": true,
             "type": "mediawiki-extension",
             "extra": {
                 "installer-name": "TuleapIntegration"
@@ -375,22 +374,22 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/master"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.0"
             },
-            "time": "2022-09-06T06:33:37+00:00"
+            "time": "2022-11-08T14:36:41+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "495010c37a23e1e199dc4e99382d82d8849f21fe"
+                "reference": "6046e8f322a6afaf4c0c69504ce1ca103b04f194"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/495010c37a23e1e199dc4e99382d82d8849f21fe",
-                "reference": "495010c37a23e1e199dc4e99382d82d8849f21fe",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/6046e8f322a6afaf4c0c69504ce1ca103b04f194",
+                "reference": "6046e8f322a6afaf4c0c69504ce1ca103b04f194",
                 "shasum": ""
             },
             "require": {
@@ -398,12 +397,11 @@
                 "mwstake/mediawiki-component-thirdpartyresources": "~1.0"
             },
             "require-dev": {
-                "mediawiki/mediawiki-codesniffer": "39.0.0",
-                "mediawiki/minus-x": "1.1.1",
-                "php-parallel-lint/php-console-highlighter": "1.0.0",
-                "php-parallel-lint/php-parallel-lint": "1.3.2"
+                "mediawiki/mediawiki-codesniffer": "38.0.0",
+                "mediawiki/minus-x": "1.1.0",
+                "php-parallel-lint/php-console-highlighter": "0.5.0",
+                "php-parallel-lint/php-parallel-lint": "1.2.0"
             },
-            "default-branch": true,
             "type": "mediawiki-skin",
             "extra": {
                 "installer-name": "TuleapSkin"
@@ -426,22 +424,22 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/REL1_39"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.1"
             },
-            "time": "2022-08-29T07:18:49+00:00"
+            "time": "2022-11-08T14:35:06+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "a69cc31265d0797be82a635581b190604a3d5e75"
+                "reference": "b8417e2bc6e7b4cc27f210778d6a0b5f7fd1cfa7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/a69cc31265d0797be82a635581b190604a3d5e75",
-                "reference": "a69cc31265d0797be82a635581b190604a3d5e75",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/b8417e2bc6e7b4cc27f210778d6a0b5f7fd1cfa7",
+                "reference": "b8417e2bc6e7b4cc27f210778d6a0b5f7fd1cfa7",
                 "shasum": ""
             },
             "require": {
@@ -455,7 +453,6 @@
                 "php-parallel-lint/php-console-highlighter": "1.0.0",
                 "php-parallel-lint/php-parallel-lint": "1.3.2"
             },
-            "default-branch": true,
             "type": "mediawiki-extension",
             "extra": {
                 "installer-name": "TuleapWikiFarm"
@@ -480,9 +477,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/REL1_39"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.0.1"
             },
-            "time": "2022-08-25T06:27:16+00:00"
+            "time": "2022-11-08T14:36:04+00:00"
         },
         {
             "name": "mwstake/mediawiki-component-thirdpartyresources",
@@ -842,14 +839,16 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "mediawiki/tuleap-integration": 20,
-        "mediawiki/tuleap-skin": 20,
-        "mediawiki/tuleap-wiki-farm": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.4.12",
+        "ext-ldap": "7",
+        "ext-intl": "7",
+        "ext-pdo_sqlite": "7"
+    },
     "plugin-api-version": "2.3.0"
 }
