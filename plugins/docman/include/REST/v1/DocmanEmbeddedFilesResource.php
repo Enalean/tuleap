@@ -325,7 +325,8 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $version_representations_builder = new \Tuleap\Docman\REST\v1\EmbeddedFiles\VersionRepresentationCollectionBuilder(
             new VersionDao(),
             UserManager::instance(),
-            new \Docman_ApprovalTableFactoriesFactory()
+            new \Docman_ApprovalTableFactoriesFactory(),
+            ProjectManager::instance(),
         );
 
         $collection = $version_representations_builder->buildVersionsCollection($item, $limit, $offset);

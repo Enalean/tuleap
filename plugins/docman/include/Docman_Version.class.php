@@ -81,6 +81,10 @@ class Docman_Version implements Version
     }
 
     public $number;
+
+    /**
+     * @psalm-mutation-free
+     */
     public function getNumber()
     {
         return $this->number;

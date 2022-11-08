@@ -68,4 +68,35 @@ final class EmbeddedFileVersionsResource extends AuthenticatedResource
             \UserManager::instance()->getCurrentUser()
         );
     }
+
+    /**
+     * @url OPTIONS {id}/content
+     */
+    public function optionsContent(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get content
+     *
+     * Get the content of a specific version of an embedded file.
+     *
+     * @url    GET {id}/content
+     * @access hybrid
+     *
+     */
+    public function getContent(int $id): VersionContentRepresentation
+    {
+        $this->checkAccess();
+
+        return (new EmbeddedFileVersionContentRetriever(
+            new VersionRetriever(new VersionDao()),
+            new \Docman_ItemFactory(),
+            \EventManager::instance()
+        ))->getContent(
+            $id,
+            \UserManager::instance()->getCurrentUser()
+        );
+    }
 }

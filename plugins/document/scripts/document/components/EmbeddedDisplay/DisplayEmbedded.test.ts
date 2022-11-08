@@ -18,31 +18,26 @@
  *
  */
 
+import { okAsync } from "neverthrow";
+
+const getEmbeddedFileVersionContent = jest.fn();
+jest.mock("../../api/version-rest-querier", () => {
+    return {
+        getEmbeddedFileVersionContent,
+    };
+});
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
 import DisplayEmbedded from "./DisplayEmbedded.vue";
-import VueRouter from "vue-router";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
 import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 
 describe("DisplayEmbedded", () => {
-    let router: VueRouter;
     let store = {
         dispatch: jest.fn(),
         commit: jest.fn(),
     };
-
-    beforeEach(() => {
-        router = new VueRouter({
-            routes: [
-                {
-                    path: "/folder/3/42",
-                    name: "item",
-                },
-            ],
-        });
-    });
 
     it(`Given user display an embedded file content
         When backend throw a permission error
@@ -62,7 +57,9 @@ describe("DisplayEmbedded", () => {
 
         const wrapper = shallowMount(DisplayEmbedded, {
             localVue,
-            router,
+            propsData: {
+                item_id: 42,
+            },
             mocks: { $store: store },
         });
 
@@ -90,7 +87,9 @@ describe("DisplayEmbedded", () => {
 
         const wrapper = shallowMount(DisplayEmbedded, {
             localVue,
-            router,
+            propsData: {
+                item_id: 42,
+            },
             mocks: { $store: store },
         });
 
@@ -118,7 +117,8 @@ describe("DisplayEmbedded", () => {
             if (action_name === "loadDocumentWithAscendentHierarchy") {
                 return {
                     id: 10,
-                    embedded_properties: {
+                    type: "embedded",
+                    embedded_file_properties: {
                         content: "<p>my custom content </p>",
                     },
                 };
@@ -129,7 +129,9 @@ describe("DisplayEmbedded", () => {
 
         const wrapper = shallowMount(DisplayEmbedded, {
             localVue,
-            router,
+            propsData: {
+                item_id: 42,
+            },
             mocks: { $store: store },
         });
 
@@ -137,6 +139,66 @@ describe("DisplayEmbedded", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
+        expect(wrapper.findComponent(DisplayEmbeddedContent).props().content_to_display).toBe(
+            "<p>my custom content </p>"
+        );
+        expect(
+            wrapper.findComponent(DisplayEmbeddedContent).props().specific_version_number
+        ).toBeNull();
+        expect(wrapper.findComponent(DisplayEmbeddedSpinner).exists()).toBeFalsy();
+    });
+
+    it(`Given user display an embedded file content at a specific version
+        When component is rendered
+        Backend load the embedded file content and the specific version content`, async () => {
+        const store_options = {
+            state: {
+                error: {},
+            },
+            getters: {
+                "error/does_document_have_any_error": false,
+            },
+        };
+
+        store = createStoreMock(store_options);
+
+        store.dispatch.mockImplementation((action_name) => {
+            if (action_name === "loadDocumentWithAscendentHierarchy") {
+                return {
+                    id: 10,
+                    type: "embedded",
+                    embedded_file_properties: {
+                        content: "<p>my custom content </p>",
+                    },
+                };
+            }
+
+            return null;
+        });
+
+        getEmbeddedFileVersionContent.mockReturnValue(
+            okAsync({ version_number: 3, content: "<p>An old content</p>" })
+        );
+
+        const wrapper = shallowMount(DisplayEmbedded, {
+            localVue,
+            propsData: {
+                item_id: 42,
+                version_id: 123,
+            },
+            mocks: { $store: store },
+        });
+
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
+        expect(wrapper.findComponent(DisplayEmbeddedContent).props().content_to_display).toBe(
+            "<p>An old content</p>"
+        );
+        expect(wrapper.findComponent(DisplayEmbeddedContent).props().specific_version_number).toBe(
+            3
+        );
         expect(wrapper.findComponent(DisplayEmbeddedSpinner).exists()).toBeFalsy();
     });
 
@@ -155,7 +217,9 @@ describe("DisplayEmbedded", () => {
 
         const wrapper = shallowMount(DisplayEmbedded, {
             localVue,
-            router,
+            propsData: {
+                item_id: 42,
+            },
             mocks: { $store: store },
         });
 

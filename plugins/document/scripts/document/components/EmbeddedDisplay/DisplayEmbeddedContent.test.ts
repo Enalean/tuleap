@@ -23,13 +23,23 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
-import type { RootState } from "../../type";
+import type { Embedded, RootState } from "../../type";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
 
 describe("DisplayEmbeddedContent", () => {
-    function getWrapper(state: RootState): Wrapper<DisplayEmbeddedContent> {
+    function getWrapper(
+        embedded_file: Embedded,
+        content_to_display: string,
+        specific_version_number: number | null,
+        state: RootState
+    ): Wrapper<DisplayEmbeddedContent> {
         return shallowMount(DisplayEmbeddedContent, {
             localVue,
+            propsData: {
+                embedded_file,
+                content_to_display,
+                specific_version_number,
+            },
             mocks: {
                 $store: createStoreMock({
                     state,
@@ -39,53 +49,72 @@ describe("DisplayEmbeddedContent", () => {
     }
 
     it(`renders an embedded document in narrow view`, () => {
-        const wrapper = getWrapper({
-            currently_previewed_item: {
+        const wrapper = getWrapper(
+            {
                 id: 42,
                 title: "My embedded content",
                 embedded_file_properties: {
+                    version_number: 666,
                     content: "My content",
                 },
-            },
-            preferencies: {
-                is_embedded_in_large_view: false,
-            } as PreferenciesState,
-        } as unknown as RootState);
+            } as Embedded,
+            "My content",
+            null,
+            {
+                preferencies: {
+                    is_embedded_in_large_view: false,
+                } as PreferenciesState,
+            } as unknown as RootState
+        );
 
         const element = wrapper.get("[data-test=display-embedded-content]");
-        expect(element.classes()).toEqual(["tlp-pane", "embedded-document", "narrow"]);
+        expect(element.classes()).toStrictEqual(["tlp-pane", "embedded-document", "narrow"]);
+        expect(wrapper.find("[data-test=content]").text()).toBe("My content");
     });
 
     it(`renders an embedded document in large view`, () => {
-        const wrapper = getWrapper({
-            currently_previewed_item: {
+        const wrapper = getWrapper(
+            {
                 id: 42,
                 title: "My embedded content",
                 embedded_file_properties: {
+                    version_number: 666,
                     content: "My content",
                 },
-            },
-            preferencies: {
-                is_embedded_in_large_view: true,
-            } as PreferenciesState,
-        } as unknown as RootState);
+            } as Embedded,
+            "My content",
+            null,
+            {
+                preferencies: {
+                    is_embedded_in_large_view: true,
+                } as PreferenciesState,
+            } as unknown as RootState
+        );
 
         const element = wrapper.get("[data-test=display-embedded-content]");
-        expect(element.classes()).toEqual(["tlp-pane", "embedded-document"]);
+        expect(element.classes()).toStrictEqual(["tlp-pane", "embedded-document"]);
     });
 
-    it(`does not throw error if embedded_file_properties key is missing`, () => {
-        const wrapper = getWrapper({
-            currently_previewed_item: {
+    it("should be able to display an old version", () => {
+        const wrapper = getWrapper(
+            {
                 id: 42,
                 title: "My embedded content",
-            },
-            preferencies: {
-                is_embedded_in_large_view: true,
-            } as PreferenciesState,
-        } as unknown as RootState);
+                embedded_file_properties: {
+                    version_number: 666,
+                    content: "Latest content",
+                },
+            } as Embedded,
+            "A very old content",
+            42,
+            {
+                preferencies: {
+                    is_embedded_in_large_view: true,
+                } as PreferenciesState,
+            } as unknown as RootState
+        );
 
-        const element = wrapper.get("[data-test=display-embedded-content]");
-        expect(element.classes()).toEqual(["tlp-pane", "embedded-document"]);
+        expect(wrapper.find("[data-test=warning]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=content]").text()).toBe("A very old content");
     });
 });

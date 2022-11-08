@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -26,29 +25,21 @@ namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 /**
  * @psalm-immutable
  */
-class EmbeddedFilePropertiesFullRepresentation implements IEmbeddedFilePropertiesRepresentation
+final class VersionContentRepresentation
 {
     /**
-     * @var string
+     * @var int The number of the version
      */
-    public $file_type;
-
-    /**
-     * @var string
-     */
-    public $content;
-
     public int $version_number;
 
-    private function __construct(\Docman_Version $docman_version, $content)
-    {
-        $this->version_number = (int) $docman_version->getNumber();
-        $this->file_type      = $docman_version->getFiletype();
-        $this->content        = $content;
-    }
+    /**
+     * @var string The content
+     */
+    public string $content;
 
-    public static function build(\Docman_Version $docman_version, $content): self
+    public function __construct(int $version_number, string $content)
     {
-        return new self($docman_version, $content);
+        $this->version_number = $version_number;
+        $this->content        = $content;
     }
 }
