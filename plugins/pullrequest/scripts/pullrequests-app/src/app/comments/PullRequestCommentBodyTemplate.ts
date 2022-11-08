@@ -43,8 +43,8 @@ const displayFileNameIfNeeded = (
                     <i
                         class="pull-request-comment-file-path-icon fa-regular fa-file-alt"
                         aria-hidden="true"
-                    ></i>
-                    ${comment.file.file_path}
+                    ></i
+                    >${comment.file.file_path}
                 </a>
             </div>
         `;
@@ -55,8 +55,8 @@ const displayFileNameIfNeeded = (
             <i
                 class="pull-request-comment-file-path-icon fa-regular fa-file-alt"
                 aria-hidden="true"
-            ></i>
-            ${comment.file.file_path}
+            ></i
+            >${comment.file.file_path}
         </div>
     `;
 };
@@ -70,10 +70,7 @@ const displayOutdatedBadgeIfNeeded = (
     }
 
     return html`
-        <span
-            class="tlp-badge-firemist-silver tlp-badge-outline"
-            data-test="comment-outdated-badge"
-        >
+        <span class="tlp-badge-secondary tlp-badge-outline" data-test="comment-outdated-badge">
             <i class="fa-solid fa-hourglass-end tlp-badge-icon" aria-hidden="true"></i>
             ${getOutdatedCommentBadgeText()}
         </span>

@@ -126,7 +126,7 @@ export const PullRequestComment = define<PullRequestComment>({
         (host) => html`
             <div class="pull-request-comment-component">
                 <div class="${getCommentClasses(host)}" data-test="pullrequest-comment">
-                    <div class="tlp-avatar">
+                    <div class="tlp-avatar-medium">
                         <img
                             src="${host.comment.user.avatar_url}"
                             class="media-object"

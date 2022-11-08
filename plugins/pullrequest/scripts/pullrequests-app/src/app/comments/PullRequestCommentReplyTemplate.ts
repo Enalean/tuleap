@@ -30,7 +30,7 @@ export const getCommentReplyTemplate = (
 ): UpdateFunction<PullRequestComment> => html`
     <div class="pull-request-comment-follow-up">
         <div class="pull-request-comment pull-request-comment-follow-up-content">
-            <div class="tlp-avatar">
+            <div class="tlp-avatar-medium">
                 <img src="${reply.user.avatar_url}" class="media-object" aria-hidden="true" />
             </div>
             <div class="pull-request-comment-content">
