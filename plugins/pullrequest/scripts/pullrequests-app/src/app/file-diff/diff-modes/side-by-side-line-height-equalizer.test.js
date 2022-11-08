@@ -226,51 +226,6 @@ describe("line-height-equalizer", () => {
             expect(placeholder_to_create).toBeUndefined();
             expect(placeholder.node.style.height).toBe("0px");
         });
-
-        it("Given one side without content, then there is no need to resize it.", () => {
-            const placeholder = {
-                height: 20,
-                node: {
-                    localName: "placeholder",
-                    style: { height: "20px" },
-                    className: "pull-request-file-diff-comment-placeholder-block",
-                },
-                changed: () => {},
-            };
-
-            const handles = {
-                left_handle: {
-                    text: "",
-                    widgets: [
-                        {
-                            node: {
-                                localName: PULLREQUEST_COMMENT_TAG_NAME,
-                                className: "",
-                                getBoundingClientRect: () => ({ height: 20 }),
-                            },
-                        },
-                    ],
-                },
-                right_handle: {
-                    text: "Ceci est un text",
-                    widgets: [
-                        placeholder,
-                        {
-                            node: {
-                                localName: "new-inline-comment",
-                                className: "",
-                                getBoundingClientRect: () => ({ height: 45 }),
-                            },
-                        },
-                    ],
-                },
-            };
-
-            const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
-
-            expect(placeholder_to_create).toBeNull();
-            expect(placeholder.node.style.height).toBe("20px");
-        });
     });
 
     it("Given a line with a code placeholder (added/deleted line), when a new inline comment is added, a comment placeholder will be added and the code placeholder will remain untouched.", () => {

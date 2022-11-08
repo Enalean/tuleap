@@ -38,6 +38,7 @@ import { POSITION_LEFT, POSITION_RIGHT } from "../inline-comment-positions.js";
 
 import "./modes.js";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
+import { NAME as INLINE_COMMENT_NAME } from "../new-inline-comment-component";
 
 export default {
     template: `
@@ -195,6 +196,10 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
 
     function handleCodeMirrorEvents(left_code_mirror, right_code_mirror) {
         left_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
+            if (line_widget.node.localName !== INLINE_COMMENT_NAME) {
+                return;
+            }
+
             recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
@@ -202,6 +207,10 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             );
         });
         right_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
+            if (line_widget.node.localName !== INLINE_COMMENT_NAME) {
+                return;
+            }
+
             recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
