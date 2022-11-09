@@ -78,7 +78,6 @@ const displayOutdatedBadgeIfNeeded = (
 };
 
 const getBodyClasses = (host: PullRequestComment): MapOfClasses => ({
-    "pull-request-comment-body": true,
     "pull-request-comment-outdated": host.comment.is_outdated,
 });
 
