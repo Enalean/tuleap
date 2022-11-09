@@ -19,6 +19,8 @@
 
 $arrow-width: 6px;
 $follow-up-base-margin-left: 40px;
+$tlp-avatar-width: 32px;
+$thread-border-width: 2px;
 
 .pull-request-comment-component {
     display: flex;
@@ -161,7 +163,10 @@ $follow-up-base-margin-left: 40px;
 }
 
 .pull-request-comment-reply-form {
-    margin: 0 0 0 $follow-up-base-margin-left;
+    $half-avatar-width: calc($tlp-avatar-width / 2);
+    $half-thread-border-width: calc($thread-border-width / 2);
+
+    margin: 0 0 0 calc($follow-up-base-margin-left + $half-avatar-width + $half-thread-border-width);
 }
 
 .pull-request-comment-follow-up-content {
@@ -181,13 +186,11 @@ $follow-up-base-margin-left: 40px;
 }
 
 .pull-request-comment-follow-up {
-    $tlp-avatar-width: 32px;
-
     margin: 0 0 0 calc($follow-up-base-margin-left + $tlp-avatar-width);
-    border-left: 2px solid var(--tlp-neutral-normal-color);
+    border-left: $thread-border-width solid var(--tlp-neutral-normal-color);
 
     > .pull-request-comment-follow-up-content {
-        $left-offset: ($tlp-avatar-width / 2) + 1;
+        $left-offset: calc($tlp-avatar-width / 2) + calc($thread-border-width / 2);
 
         position: relative;
         left: -$left-offset;
