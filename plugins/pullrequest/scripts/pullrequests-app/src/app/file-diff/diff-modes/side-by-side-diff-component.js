@@ -39,6 +39,7 @@ import { POSITION_LEFT, POSITION_RIGHT } from "../inline-comment-positions.js";
 import "./modes.js";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
 import { NAME as INLINE_COMMENT_NAME } from "../new-inline-comment-component";
+import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
 
 export default {
     template: `
@@ -94,7 +95,12 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
     }
 
     function displaySideBySideDiff(file_lines, left_code_mirror, right_code_mirror) {
-        initDataAndCodeMirrors(file_lines, left_code_mirror, right_code_mirror);
+        initDataAndCodeMirrors(
+            file_lines,
+            left_code_mirror,
+            right_code_mirror,
+            SideBySideLineGrouper(file_lines)
+        );
 
         const code_placeholders = file_lines.map((line) => {
             displayLine(line, left_code_mirror, right_code_mirror);

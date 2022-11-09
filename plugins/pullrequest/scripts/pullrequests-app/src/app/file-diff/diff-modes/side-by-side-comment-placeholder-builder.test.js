@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "./side-by-side-line-grouper.js";
+import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "./types.ts";
 import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment.ts";
 import { buildCommentsPlaceholderWidget } from "./side-by-side-comment-placeholder-builder.js";
 

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ADDED_GROUP, DELETED_GROUP } from "./side-by-side-line-grouper.js";
+import { ADDED_GROUP, DELETED_GROUP } from "./types.ts";
 
 export function buildLineToLineHandlesMap(
     lines,
