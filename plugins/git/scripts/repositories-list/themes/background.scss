@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,33 +18,24 @@
  */
 
 @use "@tuleap/project-background";
-@use "../../src/themes/BurningParrot/css/includes/global-variables";
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
 
 .project-with-background {
-    .git-repository-name {
+    .git-repository-list-header > h1,
+    .git-repository-list-header-badge,
+    .git-repository-actions-select-owners > .tlp-label {
         @include project-background.title-header-typography;
-    }
-
-    .git-repository-parent {
-        color: var(--tlp-white-color);
-
-        > a {
-            color: var(--tlp-white-color);
-            text-decoration: underline;
-
-            &:focus,
-            &:hover,
-            &:active {
-                color: var(--tlp-white-color-darker-10);
-            }
-        }
     }
 }
 
 body {
-    @include project-background.apply-background(
-        ".git-repository-header",
-        global-variables.$sidebar-expanded-width,
-        global-variables.$sidebar-collapsed-width
-    );
+    $elements-with-project-background: ".git-repository-list-header", ".git-repository-list-actions";
+
+    @each $element-with-project-background in $elements-with-project-background {
+        @include project-background.apply-background(
+            $element-with-project-background,
+            global-variables.$sidebar-expanded-width,
+            global-variables.$sidebar-collapsed-width
+        );
+    }
 }

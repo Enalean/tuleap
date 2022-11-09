@@ -2660,7 +2660,13 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 EventManager::instance(),
                 new ProjectFlagsBuilder(new ProjectFlagsDao()),
             ),
-            $this->getIncludeAssets(),
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../scripts/repositories-list/frontend-assets/',
+                    '/assets/git/repositories-list'
+                ),
+                'src/index.ts'
+            ),
             EventManager::instance(),
         );
     }

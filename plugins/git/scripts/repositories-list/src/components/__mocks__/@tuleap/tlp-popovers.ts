@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "repository/repository";
-@use "widget/last-pushes-widget";
-@use "project-background-header";
+export const createPopover = (): void => {
+    //Do nothing
+};
