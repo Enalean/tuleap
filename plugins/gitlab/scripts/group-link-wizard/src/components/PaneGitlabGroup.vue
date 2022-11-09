@@ -45,15 +45,13 @@
                                     data-test="gitlab-group-row"
                                 >
                                     <td class="gitlab-select-group-radio-button-container">
-                                        <label class="tlp-radio">
-                                            <input
-                                                type="radio"
-                                                v-bind:value="group"
-                                                class="gitlab-select-group-radio-button"
-                                                v-model="selected_group"
-                                                data-test="gitlab-select-group-radio-button"
-                                            />
-                                        </label>
+                                        <input
+                                            type="radio"
+                                            v-bind:id="'gitlab_group_' + group.id"
+                                            v-bind:value="group"
+                                            v-model="selected_group"
+                                            data-test="gitlab-select-group-radio-button"
+                                        />
                                     </td>
                                     <td class="gitlab-group-avatar-container">
                                         <img
@@ -72,15 +70,15 @@
                                         </div>
                                     </td>
                                     <td class="gitlab-group">
-                                        <span
+                                        <label
+                                            v-bind:for="'gitlab_group_' + group.id"
                                             class="gitlab-group-name"
                                             data-test="gitlab-group-name"
-                                        >
-                                            {{ group.name }}
+                                            >{{ group.name }}
                                             <span class="gitlab-group-full-path">
                                                 ({{ group.full_path }})
                                             </span>
-                                        </span>
+                                        </label>
                                     </td>
                                 </tr>
                                 <tr v-if="!groups_store.groups.length">
@@ -166,10 +164,6 @@ function onClickConfigureSelectedGroup(): void {
 
 .gitlab-select-group-radio-button-container {
     width: 0;
-}
-
-.tlp-radio > .gitlab-select-group-radio-button {
-    vertical-align: middle;
 }
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
