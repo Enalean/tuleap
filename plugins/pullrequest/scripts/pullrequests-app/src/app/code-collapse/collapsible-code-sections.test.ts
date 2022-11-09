@@ -1,34 +1,34 @@
-import file_modifications from "./code-collapse-test-fixture.js";
+import file_modifications from "./collapsible-code-sections-test-fixture";
 
 import {
     isThereACommentOnThisLine,
     getUnchangedSections,
     getPaddedCollapsibleSections,
     getCollapsibleSectionsSideBySide,
-} from "./code-collapse-service.js";
+} from "./collaspible-code-sections-builder";
+import type { PullRequestInlineCommentPresenter } from "../comments/PullRequestCommentPresenter";
+import type { FileLine } from "../file-diff/diff-modes/types";
 
 describe("code-collapse-service", () => {
     describe("isThereACommentOnThisLine", () => {
-        it("Given a line number and a collection of comments, Then it should return true if a comment is on the given line, false otherwise.", () => {
-            const commented_line_number = 666;
-            const not_commented_line_number = 111;
+        it("Given a line and a collection of comments, Then it should return true if a comment is on the given line, false otherwise.", () => {
+            const commented_line = { unidiff_offset: 666 } as FileLine;
+            const not_commented_line = { unidiff_offset: 111 } as FileLine;
 
             const inline_comments = [
                 {
                     unidiff_offset: 666,
-                    comment: "Hail to the lord of darkness!",
-                },
+                    content: "Hail to the lord of darkness!",
+                } as PullRequestInlineCommentPresenter,
                 {
                     unidiff_offset: 777,
-                    comment: "Wow, much luck!",
-                },
+                    content: "Wow, much luck!",
+                } as PullRequestInlineCommentPresenter,
             ];
 
-            expect(isThereACommentOnThisLine(commented_line_number, inline_comments)).toBe(true);
+            expect(isThereACommentOnThisLine(commented_line, inline_comments)).toBe(true);
 
-            expect(isThereACommentOnThisLine(not_commented_line_number, inline_comments)).toBe(
-                false
-            );
+            expect(isThereACommentOnThisLine(not_commented_line, inline_comments)).toBe(false);
         });
     });
 
@@ -36,7 +36,7 @@ describe("code-collapse-service", () => {
         it("Given a file of 24 lines having a deleted line on l.12, then it should return 2 sections wrapping around the deleted line.", () => {
             const unchanged_sections = getUnchangedSections(file_modifications, []);
 
-            expect(unchanged_sections).toEqual([
+            expect(unchanged_sections).toStrictEqual([
                 {
                     start: 0,
                     end: 10,
@@ -53,17 +53,17 @@ describe("code-collapse-service", () => {
                 {
                     content: "A wild inline commment",
                     unidiff_offset: 20,
-                },
+                } as PullRequestInlineCommentPresenter,
             ]);
 
-            expect(unchanged_sections).toEqual([
+            expect(unchanged_sections).toStrictEqual([
                 {
                     start: 0,
                     end: 10,
                 },
                 {
                     start: 12,
-                    end: 19,
+                    end: 20,
                 },
             ]);
         });
@@ -73,10 +73,10 @@ describe("code-collapse-service", () => {
                 {
                     content: "A wild inline commment",
                     unidiff_offset: 23,
-                },
+                } as PullRequestInlineCommentPresenter,
             ]);
 
-            expect(unchanged_sections).toEqual([
+            expect(unchanged_sections).toStrictEqual([
                 {
                     start: 0,
                     end: 10,
@@ -108,7 +108,7 @@ describe("code-collapse-service", () => {
                 file_length
             );
 
-            expect(sections_to_collapse).toEqual([
+            expect(sections_to_collapse).toStrictEqual([
                 {
                     start: 22,
                     end: 23,
@@ -124,7 +124,7 @@ describe("code-collapse-service", () => {
                 []
             );
 
-            expect(side_by_side_collapsible_sections).toEqual([
+            expect(side_by_side_collapsible_sections).toStrictEqual([
                 {
                     left: {
                         start: 22,
