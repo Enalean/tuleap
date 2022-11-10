@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function setInterval(...args) {
-    return window.setInterval(...args);
+export function setInterval(callback: () => void, time_in_ms: number): number {
+    return window.setInterval(callback, time_in_ms);
 }
 
-export function clearInterval(...args) {
-    return window.clearInterval(...args);
+export function clearInterval(timer: number): void {
+    window.clearInterval(timer);
 }

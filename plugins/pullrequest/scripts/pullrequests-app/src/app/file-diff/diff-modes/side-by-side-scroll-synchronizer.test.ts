@@ -17,20 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as window_helper from "../../window-helper.js";
-import { synchronize } from "./side-by-side-scroll-synchronizer.js";
+import type { Editor } from "codemirror";
+import * as window_helper from "../../window-helper";
+import { synchronize } from "./side-by-side-scroll-synchronizer";
+
+type ProgrammaticallyScrollableEditor = Editor & {
+    on: jest.SpyInstance;
+    scrollTo: jest.SpyInstance;
+    getScrollInfo: jest.SpyInstance;
+    triggerScroll: () => void;
+};
 
 describe("scroll synchronizer", () => {
     describe("synchronize()", () => {
-        let left_code_mirror, right_code_mirror, clearInterval, setInterval, timerHandler;
+        let left_code_mirror: ProgrammaticallyScrollableEditor,
+            right_code_mirror: ProgrammaticallyScrollableEditor,
+            clearInterval: jest.SpyInstance,
+            setInterval: jest.SpyInstance,
+            timerHandler: () => void;
         beforeEach(() => {
-            left_code_mirror = buildCodeMirrorSpy();
-            right_code_mirror = buildCodeMirrorSpy();
+            left_code_mirror = buildProgrammaticallyScrollableCodeMirror();
+            right_code_mirror = buildProgrammaticallyScrollableCodeMirror();
             clearInterval = jest.spyOn(window_helper, "clearInterval");
             setInterval = jest
                 .spyOn(window_helper, "setInterval")
-                .mockImplementation((callback) => {
+                .mockImplementation((callback: () => void, time: number): number => {
                     timerHandler = callback;
+
+                    return time;
                 });
         });
 
@@ -96,15 +110,19 @@ describe("scroll synchronizer", () => {
     });
 });
 
-function buildCodeMirrorSpy() {
+function buildProgrammaticallyScrollableCodeMirror(): ProgrammaticallyScrollableEditor {
     const fake_code_mirror = {
         on: jest.fn(),
         scrollTo: jest.fn(),
         getScrollInfo: jest.fn(),
+        triggerScroll: (): void => {
+            // No trigger defined yet
+        },
     };
+
     fake_code_mirror.on.mockImplementation((event_name, callback) => {
         fake_code_mirror.triggerScroll = callback;
     });
 
-    return fake_code_mirror;
+    return fake_code_mirror as unknown as ProgrammaticallyScrollableEditor;
 }

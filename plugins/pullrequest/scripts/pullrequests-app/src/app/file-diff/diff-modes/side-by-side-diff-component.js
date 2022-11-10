@@ -30,7 +30,7 @@ import {
 } from "./side-by-side-lines-state.js";
 import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-builder.js";
 import { buildCommentsPlaceholderWidget } from "./side-by-side-comment-placeholder-builder.js";
-import { synchronize } from "./side-by-side-scroll-synchronizer.js";
+import { synchronize } from "./side-by-side-scroll-synchronizer.ts";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/collaspible-code-sections-builder.ts";
 import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
 

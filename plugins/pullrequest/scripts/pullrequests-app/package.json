@@ -30,7 +30,7 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator",
     "@tuleap/dom": "link:../../../../lib/frontend/dom",
-    "@types/codemirror": "^5.60.1",
+    "@types/codemirror": "^5.60.5",
     "@types/dompurify": "^2.3.4",
     "angular-mocks": "^1.8.2",
     "jquery": "^3.6.0",

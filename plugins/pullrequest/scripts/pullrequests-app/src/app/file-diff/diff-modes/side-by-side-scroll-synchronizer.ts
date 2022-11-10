@@ -17,17 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setInterval, clearInterval } from "../../window-helper.js";
+import type { Editor } from "codemirror";
+import { setInterval, clearInterval } from "../../window-helper";
 
 const DELAY_IN_MILLISECONDS = 20;
 
-export function synchronize(left_code_mirror, right_code_mirror) {
-    let active_handler = null;
-    let state;
+export function synchronize(left_code_mirror: Editor, right_code_mirror: Editor): void {
+    let active_handler: Editor | null = null;
+    let state: 0 | 1 | 2;
 
-    function scrollHandler(source_code_mirror, destination_code_mirror) {
-        let timer;
-        const timerHandler = () => {
+    function scrollHandler(source_code_mirror: Editor, destination_code_mirror: Editor): void {
+        let timer: number;
+        const timerHandler = (): void => {
             if (active_handler === source_code_mirror) {
                 fixup();
             }
@@ -43,7 +44,7 @@ export function synchronize(left_code_mirror, right_code_mirror) {
             state = 0;
         }
 
-        function fixup() {
+        function fixup(): void {
             switch (state) {
                 default:
                 case 0:

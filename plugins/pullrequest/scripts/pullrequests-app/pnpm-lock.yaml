@@ -12,7 +12,7 @@ specifiers:
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-relative-date': link:../../../../lib/frontend/tlp-relative-date
   '@tuleap/tooltip': link:../../../../lib/frontend/tooltip
-  '@types/codemirror': ^5.60.1
+  '@types/codemirror': ^5.60.5
   '@types/dompurify': ^2.3.4
   '@uirouter/angularjs': ^1.0.29
   angular: ^1.8.2
