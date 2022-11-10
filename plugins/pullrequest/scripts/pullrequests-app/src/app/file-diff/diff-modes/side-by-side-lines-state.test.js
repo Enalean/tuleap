@@ -23,20 +23,18 @@ import {
     getGroupLines,
     getLineOfHandle,
 } from "./side-by-side-lines-state.js";
-import * as side_by_side_line_mapper from "./side-by-side-line-mapper.js";
+
 import { GroupSideBySideLinesStub } from "../../../../tests/stubs/GroupSideBySideLinesStub";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
+import { MapSideBySideLinesStub } from "../../../../tests/stubs/MapSideBySideLinesStub";
 
 describe("side-by-side lines state", () => {
-    let side_by_side_line_grouper, buildLineToLineHandlesMap, left_code_mirror, right_code_mirror;
+    let side_by_side_line_grouper, side_by_side_line_mapper, left_code_mirror, right_code_mirror;
 
     beforeEach(() => {
         side_by_side_line_grouper = GroupSideBySideLinesStub();
-        buildLineToLineHandlesMap = jest.spyOn(
-            side_by_side_line_mapper,
-            "buildLineToLineHandlesMap"
-        );
+        side_by_side_line_mapper = MapSideBySideLinesStub();
 
         left_code_mirror = buildCodeMirrorSpy();
         right_code_mirror = buildCodeMirrorSpy();
@@ -44,7 +42,6 @@ describe("side-by-side lines state", () => {
 
     describe("initDataAndCodeMirrors()", () => {
         it("Given diff lines, the left and right code mirrors, then it will store the lines, set the left and right code mirror content and build line maps", () => {
-            buildLineToLineHandlesMap.mockImplementation(() => {});
             const lines = [
                 FileLineStub.buildUnMovedFileLine(1, 1),
                 FileLineStub.buildRemovedLine(2, 2),
@@ -55,14 +52,15 @@ describe("side-by-side lines state", () => {
                 lines,
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withEmptyLineToGroupMap()
+                side_by_side_line_grouper.withEmptyLineToGroupMap(),
+                side_by_side_line_mapper.withSideBySideLineMap(new Map())
             );
 
             expect(side_by_side_line_grouper.hasBuiltLineToGroupMap()).toBe(true);
             expect(side_by_side_line_grouper.hasBuildFirstLineToGroupMap()).toBe(true);
             expect(left_code_mirror.setValue).toHaveBeenCalled();
             expect(right_code_mirror.setValue).toHaveBeenCalled();
-            expect(buildLineToLineHandlesMap).toHaveBeenCalled();
+            expect(side_by_side_line_mapper.getNbCalls()).toBe(1);
         });
     });
 
@@ -78,7 +76,8 @@ describe("side-by-side lines state", () => {
                 lines,
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withEmptyLineToGroupMap()
+                side_by_side_line_grouper.withEmptyLineToGroupMap(),
+                side_by_side_line_mapper.withSideBySideLineMap(new Map())
             );
 
             expect(getCommentLine(comment)).toBe(second_line);
@@ -101,7 +100,8 @@ describe("side-by-side lines state", () => {
                 [first_line, second_line, third_line],
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withGroupsOfLines([unmoved_lines, removed_lines])
+                side_by_side_line_grouper.withGroupsOfLines([unmoved_lines, removed_lines]),
+                side_by_side_line_mapper.withSideBySideLineMap(new Map())
             );
 
             expect(getGroupLines(unmoved_lines)).toStrictEqual([first_line, second_line]);
@@ -116,22 +116,22 @@ describe("side-by-side lines state", () => {
             const right_handle = {};
             const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([unmoved_line]);
 
-            buildLineToLineHandlesMap.mockReturnValue(
-                new Map([
-                    [
-                        unmoved_line,
-                        {
-                            left_handle,
-                            right_handle,
-                        },
-                    ],
-                ])
-            );
             initDataAndCodeMirrors(
                 [unmoved_line],
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withGroupsOfLines([unmoved_group])
+                side_by_side_line_grouper.withGroupsOfLines([unmoved_group]),
+                side_by_side_line_mapper.withSideBySideLineMap(
+                    new Map([
+                        [
+                            unmoved_line,
+                            {
+                                left_handle,
+                                right_handle,
+                            },
+                        ],
+                    ])
+                )
             );
 
             expect(getLineOfHandle(left_handle)).toBe(unmoved_line);
@@ -147,29 +147,29 @@ describe("side-by-side lines state", () => {
             const added_group = GroupOfLinesStub.buildGroupOfAddedLines([added_line]);
             const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([opposite_line]);
 
-            buildLineToLineHandlesMap.mockReturnValue(
-                new Map([
-                    [
-                        added_line,
-                        {
-                            left_handle: opposite_left_handle,
-                            right_handle: added_handle,
-                        },
-                    ],
-                    [
-                        opposite_line,
-                        {
-                            left_handle: opposite_left_handle,
-                            right_handle: opposite_right_handle,
-                        },
-                    ],
-                ])
-            );
             initDataAndCodeMirrors(
                 [added_line, opposite_line],
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withGroupsOfLines([added_group, unmoved_group])
+                side_by_side_line_grouper.withGroupsOfLines([added_group, unmoved_group]),
+                side_by_side_line_mapper.withSideBySideLineMap(
+                    new Map([
+                        [
+                            added_line,
+                            {
+                                left_handle: opposite_left_handle,
+                                right_handle: added_handle,
+                            },
+                        ],
+                        [
+                            opposite_line,
+                            {
+                                left_handle: opposite_left_handle,
+                                right_handle: opposite_right_handle,
+                            },
+                        ],
+                    ])
+                )
             );
 
             expect(getLineOfHandle(added_handle)).toBe(added_line);
@@ -185,29 +185,29 @@ describe("side-by-side lines state", () => {
             const added_group = GroupOfLinesStub.buildGroupOfAddedLines([opposite_line]);
             const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines([deleted_line]);
 
-            buildLineToLineHandlesMap.mockReturnValue(
-                new Map([
-                    [
-                        opposite_line,
-                        {
-                            left_handle: opposite_left_handle,
-                            right_handle: opposite_right_handle,
-                        },
-                    ],
-                    [
-                        deleted_line,
-                        {
-                            left_handle: deleted_handle,
-                            right_handle: opposite_right_handle,
-                        },
-                    ],
-                ])
-            );
             initDataAndCodeMirrors(
                 [opposite_line, deleted_line],
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withGroupsOfLines([added_group, deleted_group])
+                side_by_side_line_grouper.withGroupsOfLines([added_group, deleted_group]),
+                side_by_side_line_mapper.withSideBySideLineMap(
+                    new Map([
+                        [
+                            opposite_line,
+                            {
+                                left_handle: opposite_left_handle,
+                                right_handle: opposite_right_handle,
+                            },
+                        ],
+                        [
+                            deleted_line,
+                            {
+                                left_handle: deleted_handle,
+                                right_handle: opposite_right_handle,
+                            },
+                        ],
+                    ])
+                )
             );
 
             expect(getLineOfHandle(deleted_handle)).toBe(deleted_line);

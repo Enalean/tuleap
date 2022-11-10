@@ -43,6 +43,8 @@ import "./modes.js";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
 import { NAME as INLINE_COMMENT_NAME } from "../new-inline-comment-component";
 import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
+import { isAnUnmovedLine } from "./file-line-helper";
+import { SideBySideLineMapper } from "./side-by-side-line-mapper";
 
 export default {
     template: `
@@ -102,7 +104,8 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             file_lines,
             left_code_mirror,
             right_code_mirror,
-            SideBySideLineGrouper(file_lines)
+            SideBySideLineGrouper(file_lines),
+            SideBySideLineMapper(file_lines, left_code_mirror, right_code_mirror)
         );
 
         const code_placeholders = file_lines.map((line) => {
@@ -284,14 +287,14 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
     }
 
     function addCodePlaceholder(line, left_code_mirror, right_code_mirror) {
-        if (lineIsUnmoved(line) || !isFirstLineOfGroup(line)) {
+        if (isAnUnmovedLine(line) || !isFirstLineOfGroup(line)) {
             return null;
         }
         return buildCodePlaceholderWidget(line, left_code_mirror, right_code_mirror);
     }
 
     function addCommentsPlaceholder(line, left_code_mirror, right_code_mirror) {
-        if (!lineIsUnmoved(line) && !isFirstLineOfGroup(line)) {
+        if (!isAnUnmovedLine(line) && !isFirstLineOfGroup(line)) {
             return;
         }
         const widget_params = buildCommentsPlaceholderWidget(
@@ -304,10 +307,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
         }
 
         CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
-    }
-
-    function lineIsUnmoved(line) {
-        return line.new_offset !== null && line.old_offset !== null;
     }
 
     function displayLine(line, left_code_mirror, right_code_mirror) {
