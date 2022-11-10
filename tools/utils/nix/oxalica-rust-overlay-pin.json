@@ -1,9 +1,9 @@
 {
   "url": "https://github.com/oxalica/rust-overlay.git",
-  "rev": "ae87512a3e8ee5bfffd42dadce041e7bdcd05a38",
-  "date": "2022-10-17T03:05:00+00:00",
-  "path": "/nix/store/rfbjd3rgzkd895zw8plrm4lg8dsnr42c-rust-overlay",
-  "sha256": "0glrq2v9giccfaampmh1g5lz4v0nyxkj9jszcc75jfax7ygygiaz",
+  "rev": "68ab029c93f8f8eed4cf3ce9a89a9fd4504b2d6e",
+  "date": "2022-11-21T02:40:22+00:00",
+  "path": "/nix/store/nchdx7nhx3jl4xibqjygxgixz89k3jnq-rust-overlay",
+  "sha256": "1x6vqvc9ycaw398qjcpdhms160man6k6s6ijg127c235iaa69w0v",
   "fetchLFS": false,
   "fetchSubmodules": false,
   "deepClone": false,

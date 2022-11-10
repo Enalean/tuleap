@@ -104,7 +104,7 @@ describe("create-traceability-matrix", () => {
             {
                 requirement: "Requirement title",
                 result: "passed",
-                executed_on: "6/30/2021 10:00:00 PM",
+                executed_on: "6/30/2021 10:00:00 PM",
                 executed_by: "Realname (username)",
                 test: {
                     id: 10,
@@ -115,7 +115,7 @@ describe("create-traceability-matrix", () => {
             {
                 requirement: "Another requirement title",
                 result: "passed",
-                executed_on: "6/30/2021 10:00:00 PM",
+                executed_on: "6/30/2021 10:00:00 PM",
                 executed_by: "Realname (username)",
                 test: {
                     id: 10,
@@ -385,7 +385,7 @@ describe("create-traceability-matrix", () => {
             {
                 requirement: "Requirement title",
                 result: "passed",
-                executed_on: "6/30/2021 10:00:00 PM",
+                executed_on: "6/30/2021 10:00:00 PM",
                 executed_by: "Realname (username)",
                 test: {
                     id: 10,

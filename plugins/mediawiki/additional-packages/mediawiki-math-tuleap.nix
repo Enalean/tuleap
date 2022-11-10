@@ -1,6 +1,11 @@
 { pkgs ? (import ../../../tools/utils/nix/pinned-nixpkgs.nix) {}, nixpkgsPinEpoch ? (import ../../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; } }:
 
-pkgs.stdenv.mkDerivation {
+let
+  pkgsPinForOCaml = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/ab6176ac5b0ee4f18e9cb380a41a6e1816c7bc89.tar.gz";
+    sha256 = "14d5xrm6vywqg8gkyvqsaf93x9kqmdfqcsfdj9a5xxl1qds5naiz";
+  }) { };
+in pkgs.stdenv.mkDerivation {
   name = "mediawiki-math-tuleap";
   src = pkgs.fetchgit {
     url = "https://tuleap.net/plugins/git/tuleap/deps/tuleap/mediawiki-math-tuleap.git";
@@ -9,7 +14,7 @@ pkgs.stdenv.mkDerivation {
   };
 
   buildInputs = [ pkgs.glibc.static ];
-  nativeBuildInputs = [ pkgs.rpm pkgs.file pkgs.ocaml ];
+  nativeBuildInputs = [ pkgs.rpm pkgs.file pkgsPinForOCaml.ocaml ];
 
   dontConfigure = true;
 

@@ -4,13 +4,9 @@
 }:
 
 let
-  pkgsWithOpenSSL307 = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/1f3ebb2bd1a353a42e8f833895c26d8415c7b791.tar.gz";
-    sha256 = "03y1a3lv44b4fdnykyms5nd24v2mqn8acz1xa4jkbmryc29rsgcw";
-  }) { };
   tuleapVersion = builtins.readFile ../../../VERSION;
   tuleapGitBinBasePath = "/usr/lib/tuleap/git";
-  gitStatic = ((pkgs.pkgsStatic.gitMinimal.override { openssl = pkgsWithOpenSSL307.openssl; }).overrideAttrs (oldAttrs: rec {
+  gitStatic = (pkgs.pkgsStatic.gitMinimal.overrideAttrs (oldAttrs: rec {
     version = "2.38.1";
     src = pkgs.fetchurl {
       url = "https://www.kernel.org/pub/software/scm/git/git-${version}.tar.xz";
