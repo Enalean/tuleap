@@ -25,18 +25,6 @@
         margin: 5px 0 0;
     }
 
-    &.gu-transit {
-        margin: 10px;
-        border-radius: var(--tlp-medium-radius);
-        opacity: 0.5;
-    }
-
-    &.gu-mirror {
-        position: absolute;
-        border-radius: var(--tlp-medium-radius);
-        box-shadow: var(--tlp-flyover-shadow);
-    }
-
     &:hover {
         .btn,
         .ttm-definition-step-add-bar {
@@ -57,6 +45,36 @@
     .button-commonmark-syntax-helper {
         margin: 0 0 0 5px;
         opacity: 1;
+    }
+}
+
+.ttm-definition-step-draggable-drop-before,
+.ttm-definition-step-draggable-drop-after {
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: var(--tlp-large-spacing);
+        border-radius: var(--tlp-small-radius);
+        background: var(--tlp-main-color-transparent-90);
+    }
+}
+
+.ttm-definition-step-draggable-drop-before {
+    padding-top: var(--tlp-large-spacing);
+
+    &::before {
+        top: 0;
+    }
+}
+
+.ttm-definition-step-draggable-drop-after {
+    padding-bottom: var(--tlp-large-spacing);
+
+    &::before {
+        bottom: 0;
     }
 }
 

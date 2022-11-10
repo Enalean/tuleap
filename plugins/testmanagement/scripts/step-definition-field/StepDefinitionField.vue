@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div v-on:keyup.27="cancelDrag()">
+    <div>
         <div v-if="isThereAtLeastOneStep">
             <button
                 v-if="areThereAtLeastTwoSteps"
@@ -61,7 +61,7 @@ export default {
         upload_max_size: String,
     },
     computed: {
-        ...mapState(["drake", "steps", "field_id", "is_dragging"]),
+        ...mapState(["steps", "field_id", "is_dragging"]),
         isThereAtLeastOneStep() {
             return this.steps.length !== 0;
         },
@@ -81,15 +81,9 @@ export default {
     },
     destroyed() {
         window.removeEventListener("mousemove", this.replaceMirror);
-        this.drake.destroy();
     },
     methods: {
         ...mapMutations(["toggleIsDragging"]),
-        cancelDrag() {
-            if (this.drake !== null) {
-                this.drake.cancel(true);
-            }
-        },
         addStep(index) {
             this.$store.commit("addStep", index);
         },
