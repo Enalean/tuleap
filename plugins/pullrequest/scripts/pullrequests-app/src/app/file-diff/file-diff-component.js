@@ -18,7 +18,7 @@
  */
 
 import "./file-diff.tpl.html";
-import { isUnifiedMode, isSideBySideMode } from "./diff-mode-state.js";
+import { isUnifiedMode, isSideBySideMode } from "./diff-mode-state.ts";
 import { initCommentsStore } from "./comments-store.ts";
 import { doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeText } from "./diff-bidirectional-unicode-text";
 import { PullRequestCommentPresenter } from "../comments/PullRequestCommentPresenter";

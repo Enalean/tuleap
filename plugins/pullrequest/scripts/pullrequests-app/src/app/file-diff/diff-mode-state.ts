@@ -17,5 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const POSITION_LEFT = "left";
-export const POSITION_RIGHT = "right";
+type PullRequestDiffMode = "side_by_side" | "unified";
+
+export const SIDE_BY_SIDE_DIFF: PullRequestDiffMode = "side_by_side";
+export const UNIFIED_DIFF: PullRequestDiffMode = "unified";
+
+let current_diff_mode: PullRequestDiffMode = UNIFIED_DIFF;
+
+export function setMode(current_mode: PullRequestDiffMode): void {
+    current_diff_mode = current_mode;
+}
+
+export function isUnifiedMode(): boolean {
+    return current_diff_mode === UNIFIED_DIFF;
+}
+
+export function isSideBySideMode(): boolean {
+    return current_diff_mode === SIDE_BY_SIDE_DIFF;
+}
