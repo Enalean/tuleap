@@ -7,8 +7,8 @@
 //
 //
 
-$body = "Você agora é um usuário registrado em".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
-.". Como um usuário registrado, você pode participar das atividades do Web Site de ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME).". "
+$body = "You are now a registered user on ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
+.". As a registered user, you can now fully participate in the activities of the ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." Web Site. "
 ."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own "
 ."project.\n\n\n We highly recommend that you browse through the site, read "
 ."the Site Documentation (<". $base_url ."/help/>) and finalize the setup of your User Profile (<". $base_url ."/account/>) "
