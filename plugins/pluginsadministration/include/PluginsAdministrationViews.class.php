@@ -279,7 +279,8 @@ class PluginsAdministrationViews extends Views
                     'is_enabled'    => $is_enabled,
                     'scope'         => $plugin->getScope(),
                     'dont_touch'    => $dont_touch,
-                    'dont_restrict' => $dont_restrict];
+                    'dont_restrict' => $dont_restrict,
+                ];
             }
         }
     }

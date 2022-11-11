@@ -21,8 +21,10 @@
 namespace Tuleap\User\REST\v1;
 
 use Tuleap\Project\REST\MinimalProjectRepresentation;
+use Tuleap\QuickLink\REST\v1\SwitchToQuickLinkRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\History\HistoryEntry;
+use Tuleap\User\History\HistoryEntryBadge;
 
 /**
  * @psalm-immutable
@@ -64,16 +66,20 @@ class UserHistoryEntryRepresentation
      */
     public $project;
     /**
-     * @var UserHistoryQuickLinkRepresentation[] Quick links to related information {@required true}
+     * @var SwitchToQuickLinkRepresentation[] Quick links to related information {@required true}
      */
     public $quick_links;
     /**
      * @var string The name of the icon {@required true}
      */
     public $icon_name;
+    /**
+     * @var HistoryEntryBadge[] The badges for the item {@required true}
+     */
+    public $badges;
 
     /**
-     * @param UserHistoryQuickLinkRepresentation[] $quick_links
+     * @param SwitchToQuickLinkRepresentation[] $quick_links
      */
     private function __construct(
         string $visit_time,
@@ -86,6 +92,7 @@ class UserHistoryEntryRepresentation
         ?string $icon,
         MinimalProjectRepresentation $project,
         array $quick_links,
+        array $badges,
     ) {
         $this->visit_time  = $visit_time;
         $this->xref        = $xref;
@@ -97,6 +104,7 @@ class UserHistoryEntryRepresentation
         $this->icon        = $icon;
         $this->project     = $project;
         $this->quick_links = $quick_links;
+        $this->badges      = $badges;
     }
 
     public static function build(HistoryEntry $entry): self
@@ -114,7 +122,7 @@ class UserHistoryEntryRepresentation
 
         $quick_links = [];
         foreach ($entry->getQuickLinks() as $quick_link) {
-            $quick_link_representation = UserHistoryQuickLinkRepresentation::build($quick_link);
+            $quick_link_representation = SwitchToQuickLinkRepresentation::build($quick_link);
             $quick_links[]             = $quick_link_representation;
         }
 
@@ -128,7 +136,8 @@ class UserHistoryEntryRepresentation
             $small_icon,
             $icon,
             new MinimalProjectRepresentation($entry->getProject()),
-            $quick_links
+            $quick_links,
+            $entry->getBadges(),
         );
     }
 }

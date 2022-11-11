@@ -36,10 +36,10 @@ class DiskUsagePurgerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->disk_data_purger = new Statistics_DiskUsagePurger(new Statistics_DiskUsageDao(), new \Psr\Log\NullLogger());
     }
 
-    public function testItReturnsFirstDayOfEachMonthsBetweenTwoDates()
+    public function testItReturnsFirstDayOfEachMonthsBetweenTwoDates(): void
     {
         $dates = $this->disk_data_purger->getFirstDayOfEachMonthsBetweenTwoDates('2014-01-01 00:00:00', '2014-12-31 00:00:00');
-        $this->assertEquals(
+        self::assertEquals(
             [
                 '2014-01-01 00:00:00',
                 '2014-02-01 00:00:00',
@@ -58,7 +58,7 @@ class DiskUsagePurgerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $dates = $this->disk_data_purger->getFirstDayOfEachMonthsBetweenTwoDates('2014-01-08 00:00:00', '2014-11-22 00:00:00');
-        $this->assertEquals(
+        self::assertEquals(
             [
                 '2014-01-01 00:00:00',
                 '2014-02-01 00:00:00',
@@ -76,25 +76,25 @@ class DiskUsagePurgerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsFalseIfDateMinIsGreaterThanEqualDateMax()
+    public function testItReturnsFalseIfDateMinIsGreaterThanEqualDateMax(): void
     {
         $dates = $this->disk_data_purger->getFirstDayOfEachMonthsBetweenTwoDates('2015-01-01 00:00:00', '2015-01-01 00:00:00');
-        $this->assertFalse($dates);
+        self::assertFalse($dates);
 
         $dates = $this->disk_data_purger->getFirstDayOfEachMonthsBetweenTwoDates('2015-01-01 00:00:00', '2014-12-01 00:00:00');
-        $this->assertFalse($dates);
+        self::assertFalse($dates);
 
         $dates = $this->disk_data_purger->getFirstDayOfEachWeeksBetweenTwoDates('2015-01-01 00:00:00', '2014-12-01 00:00:00');
-        $this->assertFalse($dates);
+        self::assertFalse($dates);
 
         $dates = $this->disk_data_purger->getFirstDayOfEachWeeksBetweenTwoDates('2015-01-01 00:00:00', '2014-12-01 00:00:00');
-        $this->assertFalse($dates);
+        self::assertFalse($dates);
     }
 
-    public function testItReturnsFirstDayOfEachWeeksBetweenTwoDates()
+    public function testItReturnsFirstDayOfEachWeeksBetweenTwoDates(): void
     {
         $dates = $this->disk_data_purger->getFirstDayOfEachWeeksBetweenTwoDates('2015-02-02 00:00:00', '2015-03-01 00:00:00');
-        $this->assertEquals(
+        self::assertEquals(
             [
                 '2015-02-02 00:00:00',
                 '2015-02-09 00:00:00',
@@ -105,7 +105,7 @@ class DiskUsagePurgerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $dates = $this->disk_data_purger->getFirstDayOfEachWeeksBetweenTwoDates('2015-02-03 00:00:00', '2015-02-04 00:00:00');
-        $this->assertEquals(
+        self::assertEquals(
             [
                 '2015-02-02 00:00:00',
             ],

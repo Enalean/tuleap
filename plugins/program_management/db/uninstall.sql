@@ -23,5 +23,6 @@ DROP TABLE IF EXISTS plugin_program_management_can_prioritize_features;
 DROP TABLE IF EXISTS plugin_program_management_explicit_top_backlog;
 DROP TABLE IF EXISTS plugin_program_management_workflow_action_add_top_backlog;
 DROP TABLE IF EXISTS plugin_program_management_program;
+DROP TABLE IF EXISTS plugin_program_management_team_synchronizations_pending;
 
 DELETE FROM service WHERE short_name = 'plugin_program_management';

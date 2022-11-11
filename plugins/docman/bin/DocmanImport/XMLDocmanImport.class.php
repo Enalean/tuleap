@@ -738,13 +738,13 @@ class XMLDocmanImport
     protected function getItemInformation(SimpleXMLElement $node)
     {
         $information = [
-                          (string) $node->properties->title,
-                          (string) $node->properties->description,
-                          (string) $node->properties->status,
-                          $this->parseDate((string) (string) $node->properties->obsolescence_date),
-                          $this->userNodeToUsername($node->properties->owner),
-                          $this->parseDate((string) $node->properties->create_date),
-                          $this->parseDate((string) $node->properties->update_date),
+            (string) $node->properties->title,
+            (string) $node->properties->description,
+            (string) $node->properties->status,
+            $this->parseDate((string) (string) $node->properties->obsolescence_date),
+            $this->userNodeToUsername($node->properties->owner),
+            $this->parseDate((string) $node->properties->create_date),
+            $this->parseDate((string) $node->properties->update_date),
         ];
 
         // Dynamic metadata
@@ -770,11 +770,11 @@ class XMLDocmanImport
     protected function getVersionInformation(SimpleXMLElement $node)
     {
         $version = [
-                       (string) $node->content,
-                       (string) $node->label,
-                       (string) $node->changelog,
-                       $this->userNodeToUsername($node->author),
-                       $this->parseDate((string) $node->date),
+            (string) $node->content,
+            (string) $node->label,
+            (string) $node->changelog,
+            $this->userNodeToUsername($node->author),
+            $this->parseDate((string) $node->date),
         ];
 
         return $version;
@@ -789,15 +789,15 @@ class XMLDocmanImport
     protected function recurseOnNode(SimpleXMLElement $node, $parentId)
     {
         [
-             $title,
-             $description,
-             $status,
-             $obsolescenceDate,
-             $owner,
-             $createDate,
-             $updateDate,
-             $metadata,
-             $permissions,
+            $title,
+            $description,
+            $status,
+            $obsolescenceDate,
+            $owner,
+            $createDate,
+            $updateDate,
+            $metadata,
+            $permissions,
         ] = $this->getItemInformation($node);
 
         $ordering = 'end';

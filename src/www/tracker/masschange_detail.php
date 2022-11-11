@@ -29,10 +29,11 @@ if ($request->exist('advsrch')) {
 }
 
 $params = ['title' => $group->getPublicName() . ' ' . $ath->getName() . ' ' . $Language->getText('tracker_index', 'mass_change'),
-              'pagename' => 'tracker',
-              'atid' => $ath->getID(),
-              'pv' => $pv,
-              'help' => 'tracker-v3.html#artifact-mass-change'];
+    'pagename' => 'tracker',
+    'atid' => $ath->getID(),
+    'pv' => $pv,
+    'help' => 'tracker-v3.html#artifact-mass-change',
+];
 
 $ath->header($params);
 echo '<div id="tracker_toolbar_clear"></div>';

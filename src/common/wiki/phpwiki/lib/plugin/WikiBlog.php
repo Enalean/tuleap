@@ -114,10 +114,10 @@ class WikiPlugin_WikiBlog extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['pagename'   => '[pagename]',
-                     'order'      => 'normal',
-                     'mode'       => 'show,add',
-                     'noheader'   => false,
-                    ];
+            'order'      => 'normal',
+            'mode'       => 'show,add',
+            'noheader'   => false,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -187,20 +187,20 @@ class WikiPlugin_WikiBlog extends WikiPlugin
          */
 
         $blog_meta = ['ctime'      => $now,
-                           'creator'    => $user->getId(),
-                           'creator_id' => $user->getAuthenticatedId(),
-                           ];
+            'creator'    => $user->getId(),
+            'creator_id' => $user->getAuthenticatedId(),
+        ];
 
         // Version meta-data
         $summary      = trim($blog['summary']);
         $version_meta = ['author'    => $blog_meta['creator'],
-                              'author_id' => $blog_meta['creator_id'],
-                              'markup'    => 2.0,   // assume new markup
-                              'summary'   => $summary ? $summary : _("New comment."),
-                              'mtime'     => $now,
-                              'pagetype'  => $type,
-                              $type       => $blog_meta,
-                              ];
+            'author_id' => $blog_meta['creator_id'],
+            'markup'    => 2.0,   // assume new markup
+            'summary'   => $summary ? $summary : _("New comment."),
+            'mtime'     => $now,
+            'pagetype'  => $type,
+            $type       => $blog_meta,
+        ];
         if ($type == 'comment') {
             unset($version_meta['summary']);
         }
@@ -230,20 +230,20 @@ class WikiPlugin_WikiBlog extends WikiPlugin
             if (! $dbi->isWikiPage($redirected)) {
                 require_once('lib/loadsave.php');
                 $pageinfo = ['pagename' => $redirected,
-                                  'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
-                                  'pagedata' => [],
-                                  'versiondata' => ['author' => $blog_meta['creator']],
-                                  ];
+                    'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
+                    'pagedata' => [],
+                    'versiondata' => ['author' => $blog_meta['creator']],
+                ];
                 SavePage($request, $pageinfo, '', '');
             }
             $redirected = $prefix . $pagename . SUBPAGE_SEPARATOR . preg_replace("/T.*/", "", "$time");
             if (! $dbi->isWikiPage($redirected)) {
                 require_once('lib/loadsave.php');
                 $pageinfo = ['pagename' => $redirected,
-                                  'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
-                                  'pagedata' => [],
-                                  'versiondata' => ['author' => $blog_meta['creator']],
-                                  ];
+                    'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
+                    'pagedata' => [],
+                    'versiondata' => ['author' => $blog_meta['creator']],
+                ];
                 SavePage($request, $pageinfo, '', '');
             }
 
@@ -296,7 +296,8 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         if ($blogs) {
             // First reorder
             usort($blogs, ["WikiPlugin_WikiBlog",
-                                "cmp"]);
+                "cmp",
+            ]);
             if ($args['order'] == 'reverse') {
                 $blogs = array_reverse($blogs);
             }
@@ -403,10 +404,11 @@ class WikiPlugin_WikiBlog extends WikiPlugin
                      // page (list pages per month) or revision (list months)?
                      //'title' => isa($rev_or_page,'WikiDB_PageRevision') ? $rev_or_page->get('summary') : '',
                      //'monthtitle' => $this->_monthTitle($month),
-                     'month'   => $month,
-                     'day'     => $day,
-                     'time'    => $time,
-                     'prefix'  => $prefix];
+            'month'   => $month,
+            'day'     => $day,
+            'time'    => $time,
+            'prefix'  => $prefix,
+        ];
     }
 
     public function _nonDefaultArgs($args)

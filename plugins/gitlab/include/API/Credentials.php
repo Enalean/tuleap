@@ -21,24 +21,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\API;
 
-use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
-
 class Credentials
 {
-    /**
-     * @var string
-     */
-    private $gitlab_server_url;
-
-    /**
-     * @var IntegrationApiToken
-     */
-    private $bot_api_token;
-
-    public function __construct(string $gitlab_server_url, IntegrationApiToken $bot_api_token)
+    public function __construct(private string $gitlab_server_url, private ApiToken $api_token)
     {
-        $this->gitlab_server_url = $gitlab_server_url;
-        $this->bot_api_token     = $bot_api_token;
     }
 
     public function getGitlabServerUrl(): string
@@ -46,8 +32,8 @@ class Credentials
         return $this->gitlab_server_url;
     }
 
-    public function getBotApiToken(): IntegrationApiToken
+    public function getApiToken(): ApiToken
     {
-        return $this->bot_api_token;
+        return $this->api_token;
     }
 }

@@ -68,8 +68,8 @@ class DynamicCredentialsTest extends \RestBase
     public function testDELETEAccount()
     {
         $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME) . '?' . http_build_query([
-                'signature'  => $this->getSignatureForDeleteAction(self::USERNAME),
-            ]);
+            'signature'  => $this->getSignatureForDeleteAction(self::USERNAME),
+        ]);
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('DELETE', $uri));
         $this->assertSame(200, $response->getStatusCode());
     }
@@ -77,8 +77,8 @@ class DynamicCredentialsTest extends \RestBase
     public function testDELETEInvalidSignatureRejected()
     {
         $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME . 'reject_me') . '?'  . http_build_query([
-                'signature' => $this->getSignatureForDeleteAction('wrong_username'),
-            ]);
+            'signature' => $this->getSignatureForDeleteAction('wrong_username'),
+        ]);
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('DELETE', $uri));
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -87,8 +87,8 @@ class DynamicCredentialsTest extends \RestBase
     public function testDELETENonExistingAccount()
     {
         $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME . 'donotexist') . '?' . http_build_query([
-                'signature'  => $this->getSignatureForDeleteAction(self::USERNAME . 'donotexist'),
-            ]);
+            'signature'  => $this->getSignatureForDeleteAction(self::USERNAME . 'donotexist'),
+        ]);
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('DELETE', $uri));
 
         $this->assertEquals(404, $response->getStatusCode());

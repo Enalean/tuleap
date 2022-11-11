@@ -29,7 +29,7 @@ use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PFUser;
+use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\BaselineArtifact;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\BaselineService;
@@ -39,13 +39,12 @@ use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Domain\NotAuthorizedException;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
-use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-    use CurrentUserContext;
 
     /**
      * @var BaselineController
@@ -66,12 +65,15 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var BaselineService|MockInterface
      */
     private $baseline_service;
+    private UserProxy $current_user;
 
     /**
      * @before
      */
     public function createInstance()
     {
+        $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());
+
         $this->current_user_provider = Mockery::mock(CurrentUserProvider::class);
         $this->current_user_provider
             ->allows(['getUser' => $this->current_user])
@@ -104,7 +106,8 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->baseline_service
             ->shouldReceive('create')
-            ->andReturn(BaselineFactory::one()->build());
+            ->andReturn(BaselineFactory::one()->build())
+            ->atLeast()->once();
 
         $this->controller->post('new baseline', 3, null);
     }
@@ -127,7 +130,7 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     ->id(11)
                     ->name('first baseline')
                     ->artifact($artifact)
-                    ->author(new PFUser(['user_id' => 99]))
+                    ->author(UserProxy::fromUser(UserTestBuilder::aUser()->withId(99)->build()))
                     ->build()
             );
 
@@ -141,7 +144,12 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testPostReturnsRepresentationOfBaselineSnapshotDateWithUserTimeZone()
     {
-        $current_user = new PFUser(['user_id' => 99, 'timezone' => 'GMT+2']);
+        $current_user = UserProxy::fromUser(
+            UserTestBuilder::aUser()
+                ->withId(99)
+                ->withTimezone('GMT+2')
+                ->build()
+        );
         $this->current_user_provider
             ->shouldReceive('getUser')
             ->andReturn($current_user);
@@ -197,7 +205,7 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->id(1)
             ->name('found baseline')
             ->artifact(BaselineArtifactFactory::one()->id(3)->build())
-            ->author(new PFUser(['user_id' => 99]))
+            ->author(UserProxy::fromUser(UserTestBuilder::aUser()->withId(99)->build()))
             ->build();
         $this->baseline_service
             ->shouldReceive('findById')
@@ -235,7 +243,8 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->baseline_service
             ->shouldReceive('delete')
-            ->with($this->current_user, $baseline);
+            ->with($this->current_user, $baseline)
+            ->atLeast()->once();
 
         $this->controller->delete(2);
     }

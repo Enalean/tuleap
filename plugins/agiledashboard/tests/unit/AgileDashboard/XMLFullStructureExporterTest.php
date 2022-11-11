@@ -64,7 +64,7 @@ class XMLFullStructureExporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs
                         return $params['project']->getID() === $this->project->getID() && isset($params['into_xml']);
                     }
                 )
-            );
+            )->atLeast()->once();
 
         $this->xml_exporter->export($this->project);
     }

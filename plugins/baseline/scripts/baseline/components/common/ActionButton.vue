@@ -35,18 +35,13 @@
     </button>
 </template>
 
-<script>
-export default {
-    name: "ActionButton",
-    props: {
-        icon: { required: true, type: String },
-        loading: { type: Boolean, default: false },
-        disabled: { type: Boolean, default: false },
-    },
-    computed: {
-        icon_class() {
-            return `fa-${this.icon}`;
-        },
-    },
-};
+<script setup lang="ts">
+import { computed } from "vue";
+
+const props = withDefaults(defineProps<{ icon: string; loading?: boolean; disabled?: boolean }>(), {
+    loading: false,
+    disabled: false,
+});
+
+const icon_class = computed(() => `fa-${props.icon}`);
 </script>

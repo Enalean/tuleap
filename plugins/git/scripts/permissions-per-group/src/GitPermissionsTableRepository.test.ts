@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import localVueForTest from "./helper/local-vue-for-test";
 import GitPermissionsTableRepository from "./GitPermissionsTableRepository.vue";
 import GitRepositoryTableSimplePermissions from "./GitRepositoryTableSimplePermissions.vue";
 import type {
@@ -31,14 +31,12 @@ import GitRepositoryTableFineGrainedPermissionsRepository from "./GitRepositoryT
 import GitRepositoryTableFineGrainedPermission from "./GitRepositoryTableFineGrainedPermission.vue";
 
 describe("GitPermissionsTableRepository", () => {
-    const store_options = {};
     let propsData = {};
 
     function instantiateComponent(): Wrapper<GitPermissionsTableRepository> {
-        const store = createStoreMock(store_options);
         return shallowMount(GitPermissionsTableRepository, {
             propsData,
-            mocks: { $store: store },
+            localVue: localVueForTest,
         });
     }
 

@@ -25,12 +25,10 @@ namespace Tuleap\Baseline\Factory;
 
 class BaselineArtifactFactory
 {
-    private static $id_offset = 1;
-
     public static function one(): BaselineArtifactBuilder
     {
         return (new BaselineArtifactBuilder())
-            ->id(self::$id_offset++)
+            ->id(88)
             ->title("artifact title")
             ->description("artifact comment")
             ->initialEffort(2)

@@ -62,10 +62,11 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         $dbh->setFetchMode(DB_FETCHMODE_ASSOC);
 
         $this->_table_names       = ['page_tbl'     => self::DATABASE_TABLE_PREFIX . 'page',
-                    'version_tbl'  => self::DATABASE_TABLE_PREFIX . 'version',
-                    'link_tbl'     => self::DATABASE_TABLE_PREFIX . 'link',
-                    'recent_tbl'   => self::DATABASE_TABLE_PREFIX . 'recent',
-                    'nonempty_tbl' => self::DATABASE_TABLE_PREFIX . 'nonempty'];
+            'version_tbl'  => self::DATABASE_TABLE_PREFIX . 'version',
+            'link_tbl'     => self::DATABASE_TABLE_PREFIX . 'link',
+            'recent_tbl'   => self::DATABASE_TABLE_PREFIX . 'recent',
+            'nonempty_tbl' => self::DATABASE_TABLE_PREFIX . 'nonempty',
+        ];
         $page_tbl                 = $this->_table_names['page_tbl'];
         $version_tbl              = $this->_table_names['version_tbl'];
         $this->page_tbl_fields    = "$page_tbl.id AS id, $page_tbl.pagename AS pagename, $page_tbl.hits AS hits, $page_tbl.group_id AS group_id";
@@ -74,10 +75,11 @@ class WikiDB_backend_PearDB extends WikiDB_backend
 
         $this->_expressions
             = ['maxmajor'     => "MAX(CASE WHEN minor_edit=0 THEN version END)",
-                    'maxminor'     => "MAX(CASE WHEN minor_edit<>0 THEN version END)",
-                    'maxversion'   => "MAX(version)",
-                    'notempty'     => "<>''",
-                    'iscontent'    => "content<>''"];
+                'maxminor'     => "MAX(CASE WHEN minor_edit<>0 THEN version END)",
+                'maxversion'   => "MAX(version)",
+                'notempty'     => "<>''",
+                'iscontent'    => "content<>''",
+            ];
     }
 
     /**
@@ -476,7 +478,8 @@ class WikiDB_backend_PearDB extends WikiDB_backend
                     . " (id,version,mtime,minor_edit,content,versiondata)"
                     . " VALUES(?, ?, ?, ?, ?, ?)",
             [$id, $version, $mtime, $minor_edit, $content,
-            $this->_serialize($data)]
+                $this->_serialize($data),
+            ]
         );
 
         $this->_update_recent_table($id);
@@ -1322,7 +1325,8 @@ class WikiDB_backend_PearDB_iter extends WikiDB_backend_PearDB_generic_iter
 
         $pagedata = $backend->_extract_page_data($record);
         $rec      = ['pagename' => $record['pagename'],
-                     'pagedata' => $pagedata];
+            'pagedata' => $pagedata,
+        ];
 
         if (! empty($record['version'])) {
             $rec['versiondata'] = $backend->_extract_version_data($record);

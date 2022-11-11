@@ -61,18 +61,18 @@ describe("FileVersionHistory", () => {
         const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
         const versions = [
             {
-                id: 10,
+                number: 10,
                 name: "Version 1",
                 filename: "huhuhoho.pdf",
                 download_href: "https://example.com/huhuhoho.pdf",
             },
             {
-                id: 35,
+                number: 35,
                 name: "wololo",
                 filename: "convert.pdf",
                 download_href: "https://example.com/convert.pdf",
             },
-        ];
+        ] as FileHistory[];
         version_history_spy.mockResolvedValue(versions);
 
         const wrapper = createWrapper();
@@ -89,36 +89,36 @@ describe("FileVersionHistory", () => {
         const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
         const versions = [
             {
-                id: 10,
+                number: 10,
                 name: "Version 1",
                 filename: "huhuhoho.pdf",
                 download_href: "https://example.com/huhuhoho.pdf",
             },
             {
-                id: 35,
+                number: 35,
                 name: "wololo",
                 filename: "convert.pdf",
                 download_href: "https://example.com/convert.pdf",
             },
             {
-                id: 45,
+                number: 45,
                 name: "hearts",
                 filename: "coeurs.pdf",
                 download_href: "https://example.com/coeurs.pdf",
             },
             {
-                id: 18,
+                number: 18,
                 name: "naha",
                 filename: "city.pdf",
                 download_href: "https://example.com/convert.pdf",
             },
             {
-                id: 19,
+                number: 19,
                 name: "Supra",
                 filename: "2jz.pdf",
                 download_href: "https://example.com/convert.pdf",
             },
-        ];
+        ] as FileHistory[];
         version_history_spy.mockResolvedValue(versions);
 
         const wrapper = createWrapper();

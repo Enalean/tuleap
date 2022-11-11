@@ -254,9 +254,9 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $dao = \Mockery::spy(\Tracker_Rule_Date_Dao::class);
-        $dao->shouldReceive('searchByTrackerId')->andReturns([$db_data1, $db_data2]);
-        $dao->shouldReceive('insert')->with($to_tracker_id, 555, 666, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered();
-        $dao->shouldReceive('insert')->with($to_tracker_id, 777, 888, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered();
+        $dao->shouldReceive('searchByTrackerId')->andReturns([$db_data1, $db_data2])->atLeast()->once();
+        $dao->shouldReceive('insert')->with($to_tracker_id, 555, 666, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered()->atLeast()->once();
+        $dao->shouldReceive('insert')->with($to_tracker_id, 777, 888, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered()->atLeast()->once();
         $form_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
         $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
@@ -282,10 +282,10 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = ['F25' => 102,
-                                   'F28' => 103,
-                                   'F29' => 801,
-                                   'F22' => 806,
-                                   ];
+            'F28' => 103,
+            'F29' => 801,
+            'F22' => 806,
+        ];
 
         $r1 = new Tracker_Rule_Date();
         $r1->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS)

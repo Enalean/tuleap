@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuickLookItemIsLockedMessage renders locked message for document 1`] = `
+<div
+  class="tlp-alert-info document-preview-item-is-locked-icon"
+>
+  <translate-stub
+    tag="span"
+  >
+    This document is currently locked by
+  </translate-stub>
+   
+  <user-name-stub />
+</div>
+`;

@@ -134,8 +134,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     public function trackerEventFetchAdminButtons($params)
     {
         $url = TIMETRACKING_BASE_URL . '/?' . http_build_query([
-                'tracker' => $params['tracker_id'],
-                'action'  => 'admin-timetracking',
+            'tracker' => $params['tracker_id'],
+            'action'  => 'admin-timetracking',
         ]);
 
         $params['items']['timetracking'] = [

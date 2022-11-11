@@ -22,41 +22,38 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon()"></i>
+        <i class="fa fa-fw document-folder-content-icon" v-bind:class="ICON_WIKI"></i>
         <a
-            v-bind:href="wiki_url()"
+            v-bind:href="wiki_url"
             class="document-folder-subitem-link"
             draggable="false"
             data-test="wiki-document-link"
         >
-            {{ item.title }}
+            {{ item.title
+            }}<i
+                class="fas document-action-icon"
+                v-bind:class="ACTION_ICON_WIKI"
+                aria-hidden="true"
+            ></i>
         </a>
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
-import { ICON_WIKI } from "../../../constants";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import type { Wiki } from "../../../type";
-import { namespace } from "vuex-class";
+import { ICON_WIKI, ACTION_ICON_WIKI } from "../../../constants";
+import type { Item } from "../../../type";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { computed } from "vue";
 
-const configuration = namespace("configuration");
+const props = defineProps<{ item: Item }>();
 
-@Component({ components: { FakeCaret } })
-export default class WikiCellTitle extends Vue {
-    @Prop({ required: true })
-    readonly item!: Wiki;
+const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
+    "project_id",
+]);
 
-    @configuration.State
-    readonly project_id!: number;
-
-    wiki_url(): string {
-        return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
-    }
-
-    icon(): string {
-        return ICON_WIKI;
-    }
-}
+const wiki_url = computed((): string => {
+    return `/plugins/docman/?group_id=${project_id.value}&action=show&id=${props.item.id}`;
+});
 </script>

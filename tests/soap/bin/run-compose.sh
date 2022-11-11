@@ -38,7 +38,8 @@ case "${2:-}" in
     exit 1
 esac
 
-DOCKERCOMPOSE="docker-compose --project-name soap-${PHP_VERSION}-${DB_HOST}-${BUILD_TAG:-$RANDOM} -f tests/soap/docker-compose.yml"
+project_name="$(echo -n "soap-${PHP_VERSION}-${DB_HOST}-${BUILD_TAG:-$RANDOM}" | tr '.' '_' | tr '[A-Z]' '[a-z]')"
+DOCKERCOMPOSE="docker-compose --project-name $project_name -f tests/soap/docker-compose.yml"
 
 function cleanup {
     if [ -n "${TESTS_RESULT:-}" ]; then

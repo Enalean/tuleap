@@ -37,7 +37,7 @@ final class PermissionDeniedRestrictedMemberMailSender extends PermissionDeniedM
             'mail_content_restricted_user',
             [
                 $user->getRealName(),
-                $user->getName(),
+                $user->getUserName(),
                 $link,
                 $project->getPublicName(),
                 $href_approval,

@@ -25,7 +25,7 @@ namespace Tuleap\Git\Branch;
 
 use Throwable;
 
-final class InvalidBranchNameException extends \RuntimeException
+final class InvalidBranchNameException extends \Exception
 {
     public function __construct(string $branch_name, ?Throwable $previous = null)
     {

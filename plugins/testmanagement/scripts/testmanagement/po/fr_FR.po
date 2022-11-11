@@ -66,8 +66,8 @@ msgstr ""
 "Une erreur s'est produite pendant le chargement des campagnes. Veuillez "
 "rafraîchir cette page. {{ message }}"
 
-msgid "An error occurred while loading the tests. {{ error }}"
-msgstr "Une erreur est survenue pendant le chargement des tests. {{ error }}"
+msgid "An error occurred while loading the tests."
+msgstr "Une erreur est survenue pendant le chargement des tests."
 
 msgid "Artifact ID"
 msgstr "Artéfact ID"

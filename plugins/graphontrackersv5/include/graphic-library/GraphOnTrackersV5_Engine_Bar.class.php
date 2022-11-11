@@ -192,9 +192,9 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
     private function getBarChartData(array $info)
     {
         return $info + [
-                'type'   => 'bar',
-                'data'   => array_values($this->data),
-                'colors' => $this->toArrayColors(),
-            ];
+            'type'   => 'bar',
+            'data'   => array_values($this->data),
+            'colors' => $this->toArrayColors(),
+        ];
     }
 }

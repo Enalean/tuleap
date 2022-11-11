@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ConditionPredicate, ReloadCallback } from "./commands-type-definitions";
+
 Cypress.Commands.add("clearSessionCookie", () => {
     cy.clearCookie("__Host-TULEAP_session_hash");
 });
@@ -194,5 +196,57 @@ Cypress.Commands.add("switchProjectVisibility", (visibility: string): void => {
 
     cy.get("[data-test=project-details-submit-button]").click();
 });
+
+Cypress.Commands.add(
+    "createNewIssueProject",
+    (project_short_name: string, project_public_name: string): void => {
+        cy.visit("/project/new");
+        cy.get(
+            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
+        ).click();
+        cy.get("[data-test=project-registration-next-button]").click();
+
+        cy.get("[data-test=new-project-name]").type(project_public_name);
+        cy.get("[data-test=project-shortname-slugified-section]").click();
+        cy.get("[data-test=new-project-shortname]").type("{selectall}" + project_short_name);
+        cy.get("[data-test=approve_tos]").click();
+        cy.get("[data-test=project-registration-next-button]").click();
+        cy.get("[data-test=start-working]").click({
+            timeout: 20000,
+        });
+    }
+);
+
+const MAX_ATTEMPTS = 10;
+
+Cypress.Commands.add(
+    "reloadUntilCondition",
+    (
+        reloadCallback: ReloadCallback,
+        conditionCallback: ConditionPredicate,
+        max_attempts_reached_message: string,
+        number_of_attempts = 0
+    ): PromiseLike<void> => {
+        if (number_of_attempts > MAX_ATTEMPTS) {
+            throw new Error(max_attempts_reached_message);
+        }
+        return conditionCallback(number_of_attempts, MAX_ATTEMPTS).then(
+            (is_condition_fulfilled) => {
+                if (is_condition_fulfilled) {
+                    return Promise.resolve();
+                }
+
+                cy.wait(100);
+                reloadCallback();
+                return cy.reloadUntilCondition(
+                    reloadCallback,
+                    conditionCallback,
+                    max_attempts_reached_message,
+                    number_of_attempts + 1
+                );
+            }
+        );
+    }
+);
 
 export {};

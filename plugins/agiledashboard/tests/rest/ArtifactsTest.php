@@ -22,17 +22,16 @@ namespace Tuleap\AgileDashboard\REST;
 
 require_once dirname(__FILE__) . '/bootstrap.php';
 
-class ArtifactsTest extends ArtifactBase
+final class ArtifactsTest extends ArtifactBase
 {
-    public function testGETReleaseBurnup()
+    public function testGETReleaseBurnup(): void
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', "artifacts/" . $this->burnup_artifact_ids[1])
         );
 
-        $burnup = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
         $this->assertEquals(200, $response->getStatusCode());
+        $burnup = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $expected_burnup_chart = [
             ["date" => '2017-12-11T23:59:59+01:00', "team_effort" => 0, "total_effort" => 0],

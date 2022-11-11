@@ -27,10 +27,13 @@ import {
 } from "./value-transformer/list-value-helper";
 import type { Folder, Item, Property } from "../../type";
 
-export function transformFolderPropertiesForRecursionAtUpdate(item: Folder): Folder {
+export function transformFolderPropertiesForRecursionAtUpdate(
+    item: Folder,
+    is_status_property_used: boolean
+): Folder {
     const folder_to_update = JSON.parse(JSON.stringify(item));
 
-    if (!folder_to_update.properties) {
+    if (!folder_to_update.properties || !is_status_property_used) {
         folder_to_update.status = {
             value: "none",
             recursion: "none",

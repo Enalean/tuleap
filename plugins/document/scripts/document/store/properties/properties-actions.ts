@@ -44,6 +44,13 @@ import {
 } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 
+export interface PropertiesActions {
+    readonly loadProjectProperties: typeof loadProjectProperties;
+    readonly updateProperties: typeof updateProperties;
+    readonly updateFolderProperties: typeof updateFolderProperties;
+    readonly getFolderProperties: typeof getFolderProperties;
+}
+
 export const loadProjectProperties = async (
     context: ActionContext<PropertiesState, RootState>
 ): Promise<void> => {
@@ -127,10 +134,18 @@ export const updateProperties = async (
                 custom_properties
             );
         } else if (isFolder(item_to_update)) {
+            const is_status_property_used: boolean =
+                context.rootState.configuration.is_status_property_used;
+
+            let recursion = "none";
+            if (is_status_property_used) {
+                recursion = item_to_update.status.recursion;
+            }
             const status: FolderStatus = {
                 value: item_to_update.status.value,
-                recursion: item_to_update.status.recursion,
+                recursion: recursion,
             };
+
             await putFolderDocumentProperties(
                 item_to_update.id,
                 item_to_update.title,
@@ -157,6 +172,7 @@ export const updateProperties = async (
         }
     } catch (exception) {
         await context.dispatch("error/handleGlobalModalError", exception, { root: true });
+        throw exception;
     }
 };
 

@@ -31,10 +31,12 @@ class EmbeddedFilePropertiesMinimalRepresentation implements IEmbeddedFileProper
      * @var string
      */
     public $file_type;
+    public int $version_number;
 
     private function __construct(\Docman_Version $docman_version)
     {
-        $this->file_type = $docman_version->getFiletype();
+        $this->version_number = (int) $docman_version->getNumber();
+        $this->file_type      = $docman_version->getFiletype();
     }
 
     public static function build(\Docman_Version $docman_version): self

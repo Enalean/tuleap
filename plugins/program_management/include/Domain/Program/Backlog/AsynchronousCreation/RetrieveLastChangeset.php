@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 
 interface RetrieveLastChangeset
 {
-    public function retrieveLastChangesetId(IterationIdentifier $iteration_identifier): ?int;
+    public function retrieveLastChangesetId(TimeboxIdentifier $timebox_identifier): ?int;
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\SVNCore\AccessControl;
 
-use ForgeConfig;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -31,7 +30,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -66,9 +64,6 @@ use Tuleap\SVNCore\Cache\ParameterRetriever as CacheParameterRetriever;
  */
 final class SVNProjectAccessController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    #[FeatureFlagConfigKey("Feature flag to disable the PHP based Subversion authentication/authorization and fallback to mod_perl based one.")]
-    public const FEATURE_FLAG_DISABLE = 'disable_php_based_svn_auth';
-
     /**
      * @param SVNAuthenticationMethod[] $svn_authentication_methods
      */
@@ -88,12 +83,6 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible imple
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if (ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_DISABLE) === '1') {
-            // Build an access allowed response with a small cache max-age value when the feature is disabled
-            // This will limit issues if administrators do not purge the cache when they switch back to it
-            return $this->buildAccessAllowedResponse()->withHeader('Cache-Control', 'max-age=10');
-        }
-
         $credentials_set = $this->basic_auth_login_extractor->extract($request);
         if ($credentials_set === null) {
             $this->logger->debug('Received SVN access request is incorrectly formatted, no credentials found');

@@ -22,6 +22,8 @@ import VueRouter from "vue-router";
 import RootFolder from "../components/Folder/RootFolder.vue";
 import ChildFolder from "../components/Folder/ChildFolder.vue";
 import DisplayEmbedded from "../components/EmbeddedDisplay/DisplayEmbedded.vue";
+import DisplayHistory from "../components/History/DisplayHistory.vue";
+import DisplayVersions from "../components/Versions/DisplayVersions.vue";
 import SearchContainer from "../components/AdvancedSearch/SearchContainer.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads";
 import { getSearchPropsFromRoute } from "./get-search-props-from-route";
@@ -44,14 +46,34 @@ export function createRouter(store, project_name) {
                 component: ChildFolder,
             },
             {
+                path: "/folder/:folder_id/:item_id/:version_id",
+                name: "item_version",
+                component: DisplayEmbedded,
+                props: (route) => ({
+                    item_id: Number(route.params.item_id),
+                    version_id: Number(route.params.version_id),
+                }),
+            },
+            {
                 path: "/folder/:folder_id/:item_id",
                 name: "item",
                 component: DisplayEmbedded,
+                props: (route) => ({ item_id: Number(route.params.item_id) }),
             },
             {
                 path: "/preview/:preview_item_id",
                 name: "preview",
                 component: ChildFolder,
+            },
+            {
+                path: "/history/:item_id",
+                name: "history",
+                component: DisplayHistory,
+            },
+            {
+                path: "/versions/:item_id",
+                name: "versions",
+                component: DisplayVersions,
             },
             {
                 path: "/search/:folder_id?",

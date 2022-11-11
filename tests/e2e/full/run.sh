@@ -48,4 +48,7 @@ for project in $(find /tuleap/plugins/*/tests/e2e/ -maxdepth 1 -mindepth 1 -type
     su -c "CYPRESS_RUN_BINARY=/Cypress/Cypress /tuleap/node_modules/.bin/cypress run --project $project" -l runner || has_failed=1
 done
 
+# Merge all xml files into a single one to ease report readability
+su -c 'jrm /output/merged-e2e-results.xml "/output/e2e-result*.xml" && rm /output/e2e-result*.xml' -l runner || has_failed=1
+
 exit $has_failed

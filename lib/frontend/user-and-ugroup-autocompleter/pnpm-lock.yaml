@@ -1,0 +1,11 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/html-escaper': link:../html-escaper
+
+dependencies:
+  '@tuleap/html-escaper': link:../html-escaper
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../build-system-configurator

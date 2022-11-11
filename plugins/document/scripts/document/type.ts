@@ -22,6 +22,7 @@ import type { ErrorState } from "./store/error/module";
 import type { PermissionsState } from "./store/permissions/permissions-default-state";
 import type { PropertiesState } from "./store/properties/module";
 import type { Upload } from "tus-js-client";
+import type { RestUser } from "./api/rest-querier";
 
 export interface State {
     is_loading_folder: boolean;
@@ -29,6 +30,7 @@ export interface State {
     folder_content: Array<Item | FakeItem>;
     current_folder_ascendant_hierarchy: Array<Folder>;
     is_loading_ascendant_hierarchy: boolean;
+    is_loading_currently_previewed_item: boolean;
     root_title: string;
     currently_previewed_item: Item | null;
     files_uploads_list: Array<ItemFile | FakeItem>;
@@ -116,6 +118,7 @@ export interface Item extends MinimalItem {
     last_update_date: Date | string | number;
     creation_date: string;
     user_can_write: boolean;
+    user_can_delete: boolean;
     can_user_manage: boolean;
     lock_info: LockInfo | null;
     type: string;
@@ -145,6 +148,7 @@ export interface Property {
     list_value: Array<number> | Array<ListValue> | null | [];
     value: number | string | null;
     allowed_list_values: Array<ListValue> | null;
+    post_processed_value?: string | null;
 }
 
 export interface FolderProperty extends Property {
@@ -153,7 +157,7 @@ export interface FolderProperty extends Property {
 
 export interface ListValue {
     id: number;
-    value: string | number;
+    name: string | number;
 }
 
 export interface FolderStatus {
@@ -195,9 +199,14 @@ export interface Uploadable {
 export interface FakeItem extends MinimalItem, Uploadable {
     last_update_date?: Date;
     file_type?: string;
+    has_approval_table: boolean;
+    is_approval_table_enabled: boolean;
+    approval_table: ApprovalTable | null;
+    upload_error: string | null;
+    is_uploading_new_version: boolean;
 }
 
-export interface Folder extends Item {
+export interface Folder extends Item, Uploadable {
     is_expanded: boolean;
     permissions_for_groups: Permissions;
     folder_properties: FolderProperties;
@@ -230,7 +239,7 @@ export interface Link extends Item, ApprovableDocument {
 
 export interface Embedded extends Item, ApprovableDocument {
     parent_id: number;
-    embedded_file_properties: EmbeddedProperties;
+    embedded_file_properties: EmbeddedProperties | null;
     type: "embedded";
     status: string;
 }
@@ -259,6 +268,7 @@ export interface User {
     display_name: string;
     has_avatar: boolean;
     avatar_url: string;
+    user_url: string;
 }
 
 export interface Permissions {
@@ -299,6 +309,7 @@ export interface FileProperties {
     file_name: string;
     file_size: number;
     download_href: string;
+    open_href: string | null;
     level?: number;
 }
 
@@ -317,6 +328,7 @@ export interface LinkProperties {
 }
 
 export interface EmbeddedProperties {
+    readonly version_number: number;
     readonly content?: string;
     file_type: string;
 }
@@ -459,9 +471,42 @@ export type ListOfSearchResultColumnDefinition = ReadonlyArray<SearchResultColum
 
 export interface FileHistory {
     readonly id: number;
+    readonly number: number;
     readonly name: string;
+    readonly changelog: string;
     readonly filename: string;
     readonly download_href: string;
+    readonly approval_href: string | null;
+    readonly date: string;
+    readonly author: RestUser;
+    readonly coauthors: RestUser[];
+    readonly authoring_tool: string;
+}
+
+export interface LinkVersion {
+    readonly id: number;
+    readonly number: number;
+    readonly name: string;
+    readonly changelog: string;
+    readonly date: string;
+    readonly author: RestUser;
+    readonly link_href: string;
+}
+
+export interface EmbeddedFileVersion {
+    readonly id: number;
+    readonly number: number;
+    readonly name: string;
+    readonly changelog: string;
+    readonly open_href: string;
+    readonly approval_href: string | null;
+    readonly date: string;
+    readonly author: RestUser;
+}
+
+export interface EmbeddedFileSpecificVersionContent {
+    readonly version_number: number;
+    readonly content: string;
 }
 
 export interface DocumentJsonError {
@@ -471,4 +516,14 @@ export interface DocumentJsonError {
 export interface JsonError {
     message: string;
     i18n_error_message: string;
+}
+
+export interface Reason {
+    nb_dropped_files?: number;
+    lock_owner?: User;
+    filename?: string;
+}
+
+export interface FeedbackHandler {
+    success: (feedback: string | null) => void;
 }

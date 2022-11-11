@@ -19,64 +19,64 @@
   -->
 
 <template>
-    <div class="switch-to-projects-container">
+    <div class="switch-to-projects-container" v-if="should_be_displayed">
         <template v-if="has_projects">
-            <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>My projects</h2>
-            <nav class="switch-to-projects" v-if="has_filtered_projects">
+            <h2
+                class="tlp-modal-subtitle switch-to-modal-body-title"
+                id="switch-to-modal-projects-title"
+                v-translate
+            >
+                My projects
+            </h2>
+            <nav
+                class="switch-to-projects"
+                aria-labelledby="switch-to-modal-projects-title"
+                v-if="has_filtered_projects"
+            >
                 <project-link
                     v-for="project of filtered_projects"
                     v-bind:key="project.project_uri"
                     v-bind:project="project"
-                    v-bind:has_programmatically_focus="hasProgrammaticallyFocus(project)"
+                    v-bind:location="location"
                 />
             </nav>
-            <p class="switch-to-modal-no-matching-projects" v-else>
-                <translate>You don't belong to any projects matching your query.</translate>
-            </p>
-            <trove-cat-link class="switch-to-projects-softwaremap">
-                {{ trove_cat_label }}
+            <trove-cat-link
+                class="switch-to-projects-softwaremap"
+                v-if="should_softwaremap_link_be_displayed"
+            >
+                {{ $gettext("Browse all…") }}
             </trove-cat-link>
         </template>
         <projects-empty-state v-else />
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import ProjectLink from "./ProjectLink.vue";
-import { Getter, State } from "vuex-class";
-import type { Project, UserHistoryEntry } from "../../../type";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { useRootStore } from "../../../stores/root";
+import { storeToRefs } from "pinia";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
+import ProjectLink from "./ProjectLink.vue";
 import TroveCatLink from "../TroveCatLink.vue";
 
-@Component({
-    components: { TroveCatLink, ProjectLink, ProjectsEmptyState },
-})
-export default class ListOfProjects extends Vue {
-    @State
-    private readonly projects!: Project[];
+const store = useRootStore();
+const { projects, filtered_projects, is_in_search_mode } = storeToRefs(store);
 
-    @Getter
-    private readonly filtered_projects!: Project[];
+const has_projects = computed((): boolean => {
+    return projects.value.length > 0;
+});
 
-    @State
-    private readonly programmatically_focused_element!: Project | UserHistoryEntry | null;
+const has_filtered_projects = computed((): boolean => {
+    return filtered_projects.value.length > 0;
+});
 
-    hasProgrammaticallyFocus(project: Project): boolean {
-        return project === this.programmatically_focused_element;
-    }
+const should_be_displayed = computed((): boolean => {
+    return is_in_search_mode.value === false || has_filtered_projects.value;
+});
 
-    get trove_cat_label(): string {
-        return this.$gettext("Browse all…");
-    }
+const should_softwaremap_link_be_displayed = computed((): boolean => {
+    return is_in_search_mode.value === false;
+});
 
-    get has_projects(): boolean {
-        return this.projects.length > 0;
-    }
-
-    get has_filtered_projects(): boolean {
-        return this.filtered_projects.length > 0;
-    }
-}
+const location = ref(window.location);
 </script>

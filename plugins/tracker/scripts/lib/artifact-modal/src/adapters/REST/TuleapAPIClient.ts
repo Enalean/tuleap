@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, getAllJSON } from "@tuleap/fetch-result";
+import { getJSON, getAllJSON, postJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
+import type { PostFileResponse } from "@tuleap/plugin-tracker-rest-api-types";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field/RetrieveMatchingArtifact";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field/RetrieveLinkTypes";
@@ -37,6 +38,8 @@ import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
 import type { LinkType } from "../../domain/fields/link-field/LinkType";
 import type { RetrievePossibleParents } from "../../domain/fields/link-field/RetrievePossibleParents";
 import { PossibleParentsRetrievalFault } from "../../domain/fields/link-field/PossibleParentsRetrievalFault";
+import type { CreateFileUpload } from "../../domain/fields/file-field/CreateFileUpload";
+import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -46,7 +49,8 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveMatchingArtifact &
     RetrieveLinkTypes &
     RetrieveLinkedArtifactsByType &
-    RetrievePossibleParents;
+    RetrievePossibleParents &
+    CreateFileUpload;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -100,5 +104,19 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
         )
             .map((artifacts) => artifacts.map(LinkableArtifactProxy.fromAPIArtifact))
             .mapErr(PossibleParentsRetrievalFault);
+    },
+
+    createFileUpload(file): ResultAsync<FileUploadCreated, Fault> {
+        return postJSON<PostFileResponse>(`/api/v1/tracker_fields/${file.file_field_id}/files`, {
+            name: file.file_handle.name,
+            file_size: file.file_handle.size,
+            file_type: file.file_type,
+            description: file.description,
+        }).map(
+            (response): FileUploadCreated => ({
+                file_id: response.id,
+                upload_href: response.upload_href,
+            })
+        );
     },
 });

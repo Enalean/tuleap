@@ -58,9 +58,6 @@ final class ForceRegenerationDefaultAvatarCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $user_with_default_avatar_rows = $this->user_dao->searchUsersWithDefaultAvatar();
-        if ($user_with_default_avatar_rows === false) {
-            throw new \RuntimeException('Cannot search users with default avatar');
-        }
 
         $progress_bar = new ProgressBar($output);
 

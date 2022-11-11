@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
-import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import GlobalUploadProgressBar from "../Folder/ProgressBar/GlobalUploadProgressBar.vue";
 import { useState } from "vuex-composition-helpers";
 import type { RootState } from "../../type";
@@ -162,10 +162,4 @@ onMounted(() => {
 onBeforeUnmount(() => {
     modal.removeEventListener(EVENT_TLP_MODAL_HIDDEN, close);
 });
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

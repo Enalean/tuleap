@@ -19,7 +19,7 @@ msgstr "Historique des builds %1$s"
 
 #, php-format
 msgid "%1$s Last Artifacts"
-msgstr "Derniers artefacts %1$s"
+msgstr "Derniers artéfacts %1$s"
 
 #, php-format
 msgid "%1$s Last Builds"
@@ -290,8 +290,8 @@ msgid ""
 "Show the last successfully published artifacts of one job. To display "
 "something, your job needs to publish artifacts."
 msgstr ""
-"Affiche les derniers artefacts publiés du job sélectionné. Il faut que votre "
-"job dispose d'artefacts et qu'il les publie pour que ce widget affiche "
+"Affiche les derniers artéfacts publiés du job sélectionné. Il faut que votre "
+"job dispose d'artéfacts et qu'il les publie pour que ce widget affiche "
 "quelque chose."
 
 msgid ""

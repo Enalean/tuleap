@@ -35,7 +35,3 @@ const { modal_error, has_modal_error } = useNamespacedState<
     Pick<ErrorState, "modal_error" | "has_modal_error">
 >("error", ["modal_error", "has_modal_error"]);
 </script>
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
-</script>

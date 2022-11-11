@@ -26,14 +26,8 @@ namespace Tuleap\Git\REST\v1;
  */
 final class GitBranchPOSTRepresentation
 {
-    /**
-     * @var string
-     */
     public string $branch_name;
 
-    /**
-     * @var string
-     */
     public string $reference;
 
     public static function build(string $branch_name, string $reference): self

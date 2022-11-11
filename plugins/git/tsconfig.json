@@ -1,9 +1,11 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "module": "esnext" //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
+        "module": "es2020"
     },
     "include": [
-        "scripts/**/*"
+        "scripts/repositories",
+        "scripts/repository",
+        "scripts/siteadmin"
     ]
 }

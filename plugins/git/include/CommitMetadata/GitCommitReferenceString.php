@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\CommitMetadata;
 
-use Tuleap\Git\Hook\CommitHash;
+use Tuleap\Git\Hook\DefaultBranchPush\CommitHash;
 
 /**
  * @psalm-immutable

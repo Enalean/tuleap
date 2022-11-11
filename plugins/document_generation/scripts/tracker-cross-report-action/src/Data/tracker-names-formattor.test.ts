@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as report_field_label_extractor from "./report-fields-labels-extractor";
 import { formatTrackerNames } from "./tracker-names-formattor";
 import type { OrganizedReportsData, ArtifactForCrossReportDocGen } from "../type";
@@ -24,7 +25,7 @@ import { TextCellWithMerges } from "../type";
 
 describe("tracker-names-formattor", () => {
     it("Formats tracker names", (): void => {
-        const spy_extract_field_labels = jest.spyOn(
+        const spy_extract_field_labels = vi.spyOn(
             report_field_label_extractor,
             "extractFieldsLabels"
         );

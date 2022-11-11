@@ -1,0 +1,23 @@
+[Unit]
+Description=Meilisearch server for Tuleap
+Documentation=https://docs.tuleap.org
+After=tuleap.service
+PartOf=tuleap.service
+
+[Service]
+Type=simple
+User=codendiadm
+Group=codendiadm
+WorkingDirectory=/var/lib/tuleap/fts_meilisearch_server
+EnvironmentFile=/var/lib/tuleap/fts_meilisearch_server/meilisearch-master-key.env
+ExecStart=/usr/bin/tuleap-meilisearch --env=production
+Restart=on-failure
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+ProtectSystem=full
+ProtectHome=yes
+RestrictAddressFamilies=AF_INET AF_INET6
+
+[Install]
+WantedBy=tuleap.service

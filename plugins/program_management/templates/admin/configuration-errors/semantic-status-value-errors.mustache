@@ -1,18 +1,12 @@
 {{# has_status_field_not_defined }}
     <li>
-        {{# dgettext }}
-            tuleap-program_management |
-            Status semantic is not linked to a field in program tracker <a href='%s'>#%s</a>: |
-            {{ semantic_url }} |
-            {{ tracker_id }}
-        {{/ dgettext }}
         {{# semantic_status_no_field }}
-            <a href='/plugins/tracker/?tracker={{ getId }}&func=admin-semantic&semantic=status'>
+            <a href='{{ semantic_url }}'>
               {{# dgettext }}
-                tuleap-program_management |
-                %s of project %s |
-                {{ getLabel }} |
-                {{ getProjectLabel }}
+                  tuleap-program_management |
+                  Status semantic is not linked to a field in program tracker <a href='%s'>#%s</a>: |
+                  {{ semantic_url }} |
+                  {{ tracker_id }}
               {{/ dgettext }}
             </a>
         {{/ semantic_status_no_field }}

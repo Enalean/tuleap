@@ -27,6 +27,8 @@ use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 
 class AdministrationPaneBuilder
 {
+    public const PANE_NAME = "hudson";
+
     public static function buildPane(Project $project): AdminExternalPanePresenter
     {
         return new AdminExternalPanePresenter(

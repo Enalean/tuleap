@@ -41,7 +41,7 @@
     </tr>
 </template>
 <script lang="ts">
-import GitPermissionsBadge from "../../../../../src/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
+import GitPermissionsBadge from "@tuleap/vue-permissions-per-group-badge";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { RepositoryFineGrainedPermissions } from "./type";

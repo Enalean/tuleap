@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import VueRouter from "vue-router";
-import localVue from "../support/local-vue.js";
+import localVue from "../support/local-vue.ts";
 import App from "./App.vue";
 import { createStoreMock } from "../support/store-wrapper.test-helper";
 import store_options from "../store/store_options";
@@ -45,6 +45,8 @@ describe("App", () => {
                 project_icon: "🌷",
                 privacy: {},
                 project_flags: [],
+                is_admin: false,
+                admin_url: "/admin/url",
             },
         });
     });

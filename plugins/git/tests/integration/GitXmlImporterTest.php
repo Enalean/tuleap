@@ -468,7 +468,7 @@ XML;
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_READ, \Mockery::any(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WRITE, \Mockery::any(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WPLUS, \Mockery::any(), 4)->ordered();
-        $this->import(new SimpleXMLElement($xml));
+        self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
     public function testItShouldImportLegacyPermissions(): void
@@ -499,7 +499,7 @@ XML;
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_READ, \Mockery::any(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WRITE, \Mockery::any(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WPLUS, \Mockery::any(), 4)->ordered();
-        $this->import(new SimpleXMLElement($xml));
+        self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
     public function testItShouldUpdateConfViaSystemEvents(): void
@@ -551,7 +551,7 @@ XML;
             </project>
 XML;
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 4);
-        $this->import(new SimpleXMLElement($xml));
+        self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
     public function testItShouldImportGitAdmins(): void
@@ -572,7 +572,7 @@ XML;
 
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 4)->ordered();
-        $this->import(new SimpleXMLElement($xml));
+        self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
     public function testItShouldImportReferences(): void

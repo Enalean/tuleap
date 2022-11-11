@@ -104,22 +104,22 @@ class ListFieldCheckerWithBindStaticTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotThrowWhenEmptyValueIsAllowed(): void
     {
+        $this->expectNotToPerformAssertions();
         $value_wrapper = new SimpleValueWrapper('');
 
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->doesNotPerformAssertions();
     }
 
     public function testItDoesNotThrowWhenValueExists(): void
     {
+        $this->expectNotToPerformAssertions();
         $value_wrapper = new SimpleValueWrapper('a');
 
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->doesNotPerformAssertions();
     }
 
     public function testItThrowsWhenValueDoNotExist(): void

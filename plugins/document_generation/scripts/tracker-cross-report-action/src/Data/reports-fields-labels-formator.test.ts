@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import type { OrganizedReportsData } from "../type";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import { formatReportsFieldsLabels } from "./reports-fields-labels-formator";

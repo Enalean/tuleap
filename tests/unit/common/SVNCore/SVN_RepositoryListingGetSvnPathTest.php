@@ -44,7 +44,8 @@ class SVN_RepositoryListingGetSvnPathTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $content = ["/my/Project/tags",
             "/my/Project/tags/1.0/",
-            "/my/Project/tags/2.0/"];
+            "/my/Project/tags/2.0/",
+        ];
         $this->svnlook->shouldReceive('getDirectoryListing')->with($project, '/my/Project/tags')->andReturns($content);
 
         $tags = $this->svn_repo_listing->getSvnPaths($user, $project, $svn_path);
@@ -61,7 +62,8 @@ class SVN_RepositoryListingGetSvnPathTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $content = ["/my/Project/tags/",
             "/my/Project/tags/1.0/",
-            "/my/Project/tags/2.0/"];
+            "/my/Project/tags/2.0/",
+        ];
         $this->svnlook->shouldReceive('getDirectoryListing')->andReturns($content);
 
         $tags = $this->svn_repo_listing->getSvnPaths($user, $project, $svn_path);

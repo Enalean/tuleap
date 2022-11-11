@@ -52,13 +52,13 @@ class WikiPlugin_IncludePage extends WikiPlugin
     public function getDefaultArguments()
     {
         return [ 'page'    => false, // the page to include
-                      'rev'     => false, // the revision (defaults to most recent)
-                      'quiet'   => false, // if set, inclusion appears as normal content
-                      'words'   => false, // maximum number of words to include
-                      'lines'   => false, // maximum number of lines to include
-                      'section' => false, // include a named section
-                      'sectionhead' => false, // when including a named section show the heading
-                      ];
+            'rev'     => false, // the revision (defaults to most recent)
+            'quiet'   => false, // if set, inclusion appears as normal content
+            'words'   => false, // maximum number of words to include
+            'lines'   => false, // maximum number of lines to include
+            'section' => false, // include a named section
+            'sectionhead' => false, // when including a named section show the heading
+        ];
     }
 
     public function getWikiPageLinks($argstr, $basepage)

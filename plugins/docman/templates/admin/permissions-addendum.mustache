@@ -7,6 +7,7 @@
         <input type="hidden" name="forbid_writers_to_update" value="0">
         <input type="checkbox"
                name="forbid_writers_to_update"
+               data-test="forbid-writers-to-update"
                value="1"
                {{# forbid_writers_to_update }}checked{{/ forbid_writers_to_update }}
         >
@@ -22,6 +23,7 @@
         <input type="hidden" name="forbid_writers_to_delete" value="0">
         <input type="checkbox"
                name="forbid_writers_to_delete"
+               data-test="forbid-writers-to-delete"
                value="1"
                {{# forbid_writers_to_delete }}checked{{/ forbid_writers_to_delete }}
         >
@@ -32,6 +34,6 @@
     </p>
 </div>
 
-<button type="submit" class="tlp-button-primary">
+<button type="submit" class="tlp-button-primary" data-test="save-permissions-button">
     {{# dgettext }}tuleap-docman | Submit permissions{{/ dgettext }}
 </button>

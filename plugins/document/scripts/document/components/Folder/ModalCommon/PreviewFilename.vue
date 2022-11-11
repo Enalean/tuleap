@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import type { DefaultFileItem } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { addOriginalFilenameExtension } from "../../../helpers/add-original-filename-extension";
@@ -50,10 +50,4 @@ const preview = computed((): string => {
         props.item.file_properties.file
     );
 });
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

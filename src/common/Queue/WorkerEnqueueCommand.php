@@ -50,8 +50,8 @@ final class WorkerEnqueueCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $topic = $input->getArgument('topic');
-        if (! $topic || ! is_string($topic)) {
-            $output->writeln('Topic is missing or not valid string');
+        if (! is_string($topic) || $topic === '') {
+            $output->writeln('Topic is missing, not valid string or empty');
             return self::INVALID;
         }
         $message = $input->getArgument('message');

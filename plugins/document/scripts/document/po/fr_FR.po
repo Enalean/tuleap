@@ -66,9 +66,6 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr "Un dossier existe déjà avec le même titre."
 
-msgid "Accepted input is the user id or its username."
-msgstr "Les entrées acceptées sont l'id ou son nom d'utilisateur."
-
 msgid "Actions in Documents service"
 msgstr "Actions dans le service Documents"
 
@@ -92,6 +89,12 @@ msgstr ""
 msgid "An error has occurred, please contact your administrator"
 msgstr "Une erreur est servenue, merci de contacter votre administrateur"
 
+msgid "An error occurred while deleting the version"
+msgstr "Une erreur est survenue lors de la suppression de la version"
+
+msgid "An error occurred while loading logs"
+msgstr "Une erreur est survenue lors du chargement des logs"
+
 msgid "An error occurred while searching for results."
 msgstr "Une erreur est survenue lors de la recherche."
 
@@ -111,6 +114,9 @@ msgid "Apply same permissions to all sub-items of this folder"
 msgstr ""
 "Appliquer les mêmes permissions pour tous les sous-éléments de ce dossier"
 
+msgid "Approval"
+msgstr "Approbation"
+
 msgid "Approval table"
 msgstr "Table d'approbation"
 
@@ -129,6 +135,9 @@ msgstr "Seuil d'avertissement de taille d'archive atteint"
 msgid "Ascending sort on %{label}."
 msgstr "Tri ascendant sur %{label}."
 
+msgid "Author"
+msgstr "Auteur"
+
 msgid "Before"
 msgstr "Avant"
 
@@ -140,6 +149,9 @@ msgstr "Annuler"
 
 msgid "Cancel upload"
 msgstr "Annuler le téléversement"
+
+msgid "Change Log"
+msgstr "Description des changements"
 
 msgid "Changelog"
 msgstr "Description des changements"
@@ -197,6 +209,9 @@ msgstr "Création"
 
 msgid "Cut"
 msgstr "Couper"
+
+msgid "Date"
+msgstr "Date"
 
 msgid "Default properties"
 msgstr "Propriétés par défaut"
@@ -318,6 +333,9 @@ msgstr "Aller à la page d'accueil"
 msgid "Go to parent folder"
 msgstr "Aller au dossier parent"
 
+msgid "Go to the last version (%{ version_number })."
+msgstr "Aller à la dernière version (%{ version_number })."
+
 msgid "Go to the wiki page"
 msgstr "Aller à la page wiki"
 
@@ -370,6 +388,9 @@ msgstr "Verrouiller et déverrouiller le document"
 msgid "Lock new version"
 msgstr "Verrouiller la nouvelle version"
 
+msgid "Logs"
+msgstr "Logs"
+
 msgid "Mail content is required"
 msgstr "Le contenu du mail est requis"
 
@@ -415,6 +436,9 @@ msgstr "Nouveau document"
 msgid "New folder"
 msgstr "Nouveau dossier"
 
+msgid "New value"
+msgstr "Nouvelle valeur"
+
 msgid "New version for \"%s\""
 msgstr "Nouvelle version de \"%s\""
 
@@ -441,6 +465,9 @@ msgstr "Date d'obsolescence"
 
 msgid "Obsolete today"
 msgstr "Obsolète aujourd'hui"
+
+msgid "Old value"
+msgstr "Ancienne valeur"
 
 msgid "On"
 msgstr "Le"
@@ -469,6 +496,9 @@ msgid "Oops… Unable to upload file"
 msgid_plural "Oops… Unable to upload files"
 msgstr[0] "Oups… Impossible de téléverser un fichier"
 msgstr[1] "Oups… Impossible de téléverser des fichiers"
+
+msgid "Open"
+msgstr "Ouvrir"
 
 msgid "Open approval tables"
 msgstr "Ouvrir les tables d'approbation"
@@ -608,6 +638,9 @@ msgstr ""
 "Les raccourcis s'appliquent au document ou dossier sélectionné. S'il n'y a "
 "pas d'élément sélectionné, ils s'appliqueront au dossier courant."
 
+msgid "Show"
+msgstr "Afficher"
+
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
@@ -618,6 +651,9 @@ msgid "Some files are being uploaded, click here to see the whole list."
 msgstr ""
 "Des fichiers sont en cours de téléversement, cliquez ici pour voir la liste "
 "complète."
+
+msgid "Source"
+msgstr "Source"
 
 msgid "Start over with a completely new approval table."
 msgstr "Commencer avec une nouvelle table d'approbation."
@@ -671,6 +707,9 @@ msgstr[1] ""
 "fichier. Si vous voulez téléverser un dossier, nous vous conseillons de "
 "d'abord créer un nouveau dossier, puis d'y téléverser son contenu."
 
+msgid "The last version of an item cannot be deleted"
+msgstr "La dernière version d'un élément ne peut pas être supprimée"
+
 msgid ""
 "The size of the zip file you are attempting to download is exceeding the "
 "threshold\n"
@@ -683,6 +722,12 @@ msgid "There are no items here or you don't have permissions to see them."
 msgstr ""
 "Il n’y a aucun élément ou alors vous n'avez pas le droit de le(s) voir."
 
+msgid "There are no logs yet"
+msgstr "Il n'y a pas encore de logs"
+
+msgid "There are no versions yet"
+msgstr "Il n'y a pas encore de versions"
+
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
 
@@ -694,6 +739,9 @@ msgstr "Ce dossier est vide"
 
 msgid "This is a private folder"
 msgstr "Ce dossier est privé"
+
+msgid "This item is not versionable"
+msgstr "Cet élément n'est pas versionnable"
 
 msgid ""
 "This page is asking you to confirm that you want to leave - data you have "
@@ -731,6 +779,9 @@ msgstr "Mettre à jour les propriétés"
 msgid "Upload error"
 msgstr "Erreur de téléversement"
 
+msgid "Uploaded"
+msgstr "Téléversé"
+
 msgid "Uploading documents"
 msgstr "Documents en cours de téléversement"
 
@@ -743,14 +794,26 @@ msgstr "Validité"
 msgid "Version"
 msgstr "Version"
 
+msgid "Version %{ number } has been successfully deleted"
+msgstr "La version %{ number } a été supprimée"
+
 msgid "Version name"
 msgstr "Nom de version"
+
+msgid "Versions"
+msgstr "Versions"
 
 msgid "View all versions"
 msgstr "Voir toutes les versions"
 
 msgid "We detect you are using OSX"
 msgstr "Nous détectons que vous utilisez OSX"
+
+msgid "What"
+msgstr "Quoi"
+
+msgid "When"
+msgstr "Quand"
 
 msgid ""
 "When a filename pattern is set, you are not allowed to drag 'n drop more "
@@ -774,6 +837,9 @@ msgstr ""
 "Lorsque vous supprimez un dossier, tout son contenu est également supprimé. "
 "Réfléchissez bien !"
 
+msgid "Who"
+msgstr "Qui"
+
 msgid "Wiki page"
 msgstr "Page wiki"
 
@@ -790,6 +856,12 @@ msgstr "Rédacteur"
 msgid "You are about to delete \"%s\" permanently. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer \"%s\" de manière définitive. Veuillez "
+"confirmer cette action."
+
+msgid ""
+"You are about to delete a version permanently. Please confirm your action."
+msgstr ""
+"Vous êtes sur le point de supprimer définitivement une version. Veuillez "
 "confirmer cette action."
 
 msgid ""
@@ -834,8 +906,9 @@ msgstr ""
 msgid "You are not allowed to write in this folder"
 msgstr "Vous n'êtes pas autorisé à écrire dans ce dossier"
 
-msgid "You can search documents owned by a user."
-msgstr "Vous pouvez rechercher des documents possédés par un utilisateur."
+msgid "You are viewing an old version (%{ version_number }) of this document."
+msgstr ""
+"Vous visualisez une ancienne version (%{ version_number }) de ce document."
 
 msgid "You don't have read permission for this item"
 msgstr "Vous n'avez pas le droit de lecture sur cet élément"
@@ -853,6 +926,9 @@ msgstr ""
 "Vous devez également être conscient que les documents wiki suivants "
 "référençant la page \"%s\" ne seront plus valides si vous choisissez de "
 "propager la suppression au service wiki :"
+
+msgid "diff"
+msgstr "diff"
 
 msgid "lorem => exactly \"lorem\""
 msgstr "lorem => exactement \"lorem\""

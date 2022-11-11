@@ -354,7 +354,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPostVersionItCreatesAnEmbeddedFile(array $items): void
+    public function testPostVersionItCreatesALink(array $items): void
     {
         $title             = 'POST L V';
         $item_to_update    = $this->findItemByTitle($items, $title);
@@ -383,6 +383,15 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
         $this->checkItemHasADisabledApprovalTable($items, $title);
+
+        $versions_response = $this->getResponseByName(
+            \TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest('GET', 'docman_links/' . $item_to_update_id . "/versions")
+        );
+        $this->assertEquals(200, $versions_response->getStatusCode());
+        $this->assertIsArray(
+            json_decode($versions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)
+        );
     }
 
     /**
@@ -714,12 +723,12 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
     public function testOptionsVersion(int $id): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'docman_links/' . $id . '/version'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_links/' . $id . '/versions'),
             \TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**
@@ -752,11 +761,11 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'docman_links/' . $id . '/version'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_links/' . $id . '/versions'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
     }
 

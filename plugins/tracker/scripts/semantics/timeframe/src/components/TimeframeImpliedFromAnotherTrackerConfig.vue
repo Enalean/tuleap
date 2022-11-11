@@ -18,41 +18,41 @@
   -->
 
 <template>
-    <div id="timeframe-admin-section-implied-from-another-tracker" class="control-group">
-        <template v-if="can_semantic_be_implied">
-            <label class="control-label" for="timeframe-tracker-selector">
+    <div id="timeframe-admin-section-implied-from-another-tracker">
+        <div v-if="can_semantic_be_implied" class="tlp-form-element">
+            <label class="tlp-label" for="timeframe-tracker-selector">
                 <translate>Tracker</translate>
-                <span class="highlight">*</span>
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             </label>
-            <div class="controls">
-                <select
-                    id="timeframe-tracker-selector"
-                    name="implied-from-tracker-id"
-                    data-test="implied-from-tracker-select-box"
-                    v-model="user_select_implied_from_tracker_id"
-                    required
+            <select
+                id="timeframe-tracker-selector"
+                name="implied-from-tracker-id"
+                data-test="implied-from-tracker-select-box"
+                v-model="user_select_implied_from_tracker_id"
+                class="tlp-select tlp-select-adjusted"
+                required
+            >
+                <option value="" disabled v-translate>Choose a tracker...</option>
+                <option
+                    v-for="tracker in suitable_trackers"
+                    v-bind:value="tracker.id"
+                    v-bind:key="tracker.id"
                 >
-                    <option value="" disabled v-translate>Choose a tracker...</option>
-                    <option
-                        v-for="tracker in suitable_trackers"
-                        v-bind:value="tracker.id"
-                        v-bind:key="tracker.id"
-                    >
-                        {{ tracker.name }}
-                    </option>
-                </select>
-                <p class="text-info">
-                    <i class="fas fa-life-ring"></i>
-                    <translate>
-                        You can't find the tracker you are looking for? Make sure it has an artifact
-                        link field, and that its semantic is not inherited from another tracker.
-                    </translate>
-                </p>
-            </div>
-        </template>
+                    {{ tracker.name }}
+                </option>
+            </select>
+            <p class="tlp-text-info">
+                <i class="fa-solid fa-life-ring"></i>
+                {{
+                    $gettext(
+                        "You can't find the tracker you are looking for? Make sure it has an artifact link field, and that its semantic is not inherited from another tracker."
+                    )
+                }}
+            </p>
+        </div>
         <div
             v-else-if="has_other_trackers_implying_their_timeframes"
-            class="alert alert-error"
+            class="tlp-alert-danger"
             data-test="error-message-other-trackers-implying-their-timeframe"
             v-translate
         >
@@ -61,7 +61,7 @@
         </div>
         <div
             v-else
-            class="alert alert-error"
+            class="tlp-alert-danger"
             data-test="error-message-no-art-link-field"
             v-dompurify-html="missing_artifact_link_field_error_message"
         ></div>

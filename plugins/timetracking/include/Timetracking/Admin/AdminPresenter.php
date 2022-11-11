@@ -54,8 +54,8 @@ class AdminPresenter
     ) {
         $this->is_timetracking_enabled = $is_timetracking_enabled;
         $this->form_url                = TIMETRACKING_BASE_URL . '/?' . http_build_query([
-                'tracker' => $tracker->getId(),
-                'action'  => 'edit-timetracking',
+            'tracker' => $tracker->getId(),
+            'action'  => 'edit-timetracking',
         ]);
 
         $this->csrf_token = $csrf_token;

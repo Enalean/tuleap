@@ -477,7 +477,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 ['i18n_error_message' => dgettext(
                     "tuleap-tracker",
                     "The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue."
-                )]
+                ),
+                ]
             );
         } catch (SearchablesDoNotExistException $exception) {
             throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);

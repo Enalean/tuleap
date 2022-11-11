@@ -1,4 +1,27 @@
-export {};
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+export type ReloadCallback = () => void;
+export type ConditionPredicate = (
+    number_of_attempts: number,
+    max_attempts: number
+) => PromiseLike<boolean>;
 
 declare global {
     // Be consistent with Cypress declaration
@@ -17,20 +40,42 @@ declare global {
             restrictedMemberLogin(): void;
             restrictedRegularUserLogin(): void;
             regularUserLogin(): void;
+
             heisenbergLogin(): void;
+
             userLogout(): void;
+
             switchProjectVisibility(visibility: string): void;
+
             updatePlatformVisibilityAndAllowRestricted(): void;
+
             updatePlatformVisibilityForAnonymous(): void;
+
             getProjectId(project_shortname: string): Chainable<number>;
+
             visitProjectService(project_unixname: string, service_label: string): void;
+
             visitProjectAdministration(project_unixname: string): void;
+
             visitProjectAdministrationInCurrentProject(): void;
+
             visitServiceInCurrentProject(service_label: string): void;
+
+            createNewIssueProject(project_short_name: string, project_public_name: string): void;
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getFromTuleapAPI(url: string): Chainable<Response<any>>;
+
             postFromTuleapApi(url: string, payload: Record<string, unknown>): void;
+
             putFromTuleapApi(url: string, payload: Record<string, unknown>): void;
+
+            reloadUntilCondition(
+                reloadCallback: ReloadCallback,
+                conditionCallback: ConditionPredicate,
+                max_attempts_reached_message: string,
+                number_of_attempts?: number
+            ): PromiseLike<void>;
         }
     }
 }

@@ -54,8 +54,9 @@ function StartLoadDump(&$request, $title, $html = '')
         $html->pushContent('%BODY%');
     }
     $tmpl = Template('html', ['TITLE' => $title,
-                                   'HEADER' => $title,
-                                   'CONTENT' => $html ? $html : '%BODY%']);
+        'HEADER' => $title,
+        'CONTENT' => $html ? $html : '%BODY%',
+    ]);
     echo preg_replace('/%BODY%.*/D', '', $tmpl->getExpansion($html));
     $request->chunkOutput();
 
@@ -277,7 +278,8 @@ function MakeWikiZip(&$request)
         }
 
         $attrib = ['mtime'    => $current->get('mtime'),
-                        'is_ascii' => 1];
+            'is_ascii' => 1,
+        ];
         if ($page->get('locked')) {
             $attrib['write_protected'] = 1;
         }
@@ -372,7 +374,8 @@ function MakeWikiZipHtml(&$request)
         }
 
         $attrib = ['mtime'    => $current->get('mtime'),
-                        'is_ascii' => 1];
+            'is_ascii' => 1,
+        ];
         if ($page->get('locked')) {
             $attrib['write_protected'] = 1;
         }
@@ -387,7 +390,8 @@ function MakeWikiZipHtml(&$request)
             'browse',
             $request,
             ['revision' => $revision,
-            'CONTENT' => $transformedContent]
+                'CONTENT' => $transformedContent,
+            ]
         );
 
         $data = GeneratePageasXML($template, $pagename);
@@ -595,16 +599,18 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
             global $WikiTheme;
             $meb = Button(
                 ['action' => 'loadfile',
-                                'merge' => true,
-                                'source' => $f],
+                    'merge' => true,
+                    'source' => $f,
+                ],
                 _("Merge Edit"),
                 _("PhpWikiAdministration"),
                 'wikiadmin'
             );
             $owb = Button(
                 ['action' => 'loadfile',
-                                'overwrite' => true,
-                                'source' => $f],
+                    'overwrite' => true,
+                    'source' => $f,
+                ],
                 _("Restore Anyway"),
                 _("PhpWikiAdministration"),
                 'wikiunsafe'
@@ -738,7 +744,8 @@ function ParseSerializedPage($text, $default_pagename, $user)
         define('FLAG_PAGE_LOCKED', 1);
     }
     $pageinfo = ['pagedata'    => [],
-                      'versiondata' => []];
+        'versiondata' => [],
+    ];
 
     $pagedata    = &$pageinfo['pagedata'];
     $versiondata = &$pageinfo['versiondata'];
@@ -852,15 +859,15 @@ function LoadFile(&$request, $filename, $text = false, $mtime = false)
 
         // Assume plain text file.
         $pageinfo = ['pagename' => $default_pagename,
-                          'pagedata' => [],
-                          'versiondata'
+            'pagedata' => [],
+            'versiondata'
                           => ['author' => $user->getId()],
-                          'content'  => preg_replace(
-                              '/[ \t\r]*\n/',
-                              "\n",
-                              chop($text)
-                          ),
-                          ];
+            'content'  => preg_replace(
+                '/[ \t\r]*\n/',
+                "\n",
+                chop($text)
+            ),
+        ];
         SavePage(
             $request,
             $pageinfo,
@@ -1123,8 +1130,9 @@ function SetupWiki(&$request)
 
        //WARNING  CODENDI CODE : give permissions to the administration pages of the wiki
         $pages = ["AdministrationDePhpWiki", "AdministrationDePhpWiki/Supprimer", "AdministrationDePhpWiki/Remplacer",
-           "AdministrationDePhpWiki/Renommer", "PhpWikiAdministration", "PhpWikiAdministration/Replace",
-           "PhpWikiAdministration/Remove", "PhpWikiAdministration/Rename"];
+            "AdministrationDePhpWiki/Renommer", "PhpWikiAdministration", "PhpWikiAdministration/Replace",
+            "PhpWikiAdministration/Remove", "PhpWikiAdministration/Rename",
+        ];
 
         if (in_array($page, $pages)) {
             $group_id = $request->getArg('group_id');

@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\GraphOnTrackersV5\Async;
 
-use ForgeConfig;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tracker_Report;
 use Tuleap\GraphOnTrackersV5\DataTransformation\ChartFieldNotFoundException;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
@@ -73,10 +71,6 @@ final class ChartDataController extends DispatchablePSR15Compatible
         $chart_id     = $request->getAttribute('chart_id');
         $params       = $request->getQueryParams();
         $in_dashboard = $params['in_dashboard'] ?? false;
-
-        if (ForgeConfig::getFeatureFlag(Tracker_Report::FEATURE_FLAG_KEY)) {
-            $in_dashboard = false;
-        }
 
         $current_user = $this->user_manager->getCurrentUser();
 

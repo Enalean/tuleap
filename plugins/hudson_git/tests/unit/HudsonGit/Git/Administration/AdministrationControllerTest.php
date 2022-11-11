@@ -32,6 +32,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use ProjectManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\GlobalLanguageMock;
@@ -128,7 +129,13 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->log_factory,
             $this->header_renderer,
             $this->renderer,
-            $this->include_assets
+            $this->include_assets,
+            new class implements EventDispatcherInterface {
+                public function dispatch(object $event)
+                {
+                    return $event;
+                }
+            }
         );
 
         $this->layout  = Mockery::mock(BaseLayout::class);
@@ -239,7 +246,7 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mirror_data_mapper->shouldReceive('fetchAllForProject')->andReturn([]);
 
-        $jenkins_server = new JenkinsServer(1, 'url', $this->project);
+        $jenkins_server = new JenkinsServer(1, 'url', 'encrypted_token', $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')
             ->once()
             ->with($this->project)

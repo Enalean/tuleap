@@ -19,9 +19,8 @@
 
 import { shallowMount } from "@vue/test-utils";
 import AppBurningParrot from "./AppBurningParrot.vue";
-import { createSwitchToLocalVue } from "../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../store/type";
+import { getGlobalTestOptions } from "../helpers/global-options-for-test";
+import { useRootStore } from "../stores/root";
 
 describe("AppBurningParrot", () => {
     beforeEach(() => {
@@ -40,12 +39,7 @@ describe("AppBurningParrot", () => {
         document.body.appendChild(button);
 
         const wrapper = await shallowMount(AppBurningParrot, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {} as State,
-                }),
-            },
+            global: getGlobalTestOptions(),
             attachTo: div,
         });
 
@@ -65,18 +59,15 @@ describe("AppBurningParrot", () => {
         button.id = "switch-to-button";
         document.body.appendChild(button);
 
-        const wrapper = await shallowMount(AppBurningParrot, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {} as State,
-                }),
-            },
+        await shallowMount(AppBurningParrot, {
+            global: getGlobalTestOptions(),
             attachTo: div,
         });
 
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith("loadHistory");
+        const store = useRootStore();
+
+        expect(store.loadHistory).not.toHaveBeenCalled();
         button.click();
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadHistory");
+        expect(store.loadHistory).toHaveBeenCalled();
     });
 });

@@ -47,9 +47,9 @@ class PlanningV2PaneInfo extends PaneInfo
         return sprintf(dgettext('tuleap-agiledashboard', '%1$s Planning'), $this->submilestone_tracker->getName());
     }
 
-    public function getIconName()
+    public function getIconName(): string
     {
-        return 'fa-sign-in';
+        return 'fa-solid fa-right-to-bracket';
     }
 
     public function getUri(): string

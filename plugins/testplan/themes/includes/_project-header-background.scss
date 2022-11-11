@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../src/themes/common/css/project-background/background";
+@use "@tuleap/project-background";
 @import "../../src/themes/BurningParrot/css/includes/global-variables";
 
 .project-with-background {
     .testplan-root-title,
     .testplan-root-title small {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
 
         .tlp-dropdown-menu-item {
             text-shadow: initial;
@@ -32,7 +32,7 @@
 }
 
 body {
-    @include background.apply-background(
+    @include project-background.apply-background(
         ".testplan-root-title",
         $sidebar-expanded-width,
         $sidebar-collapsed-width

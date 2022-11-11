@@ -53,8 +53,8 @@ final class RESTCurrentUserMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
         $request_handler   = Mockery::mock(RequestHandlerInterface::class);
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
         $request_handler->shouldReceive('handle')->with(Mockery::on(
-            static function (ServerRequestInterface $request) use ($expected_user): bool {
-                return $request->getAttribute(RESTCurrentUserMiddleware::class) === $expected_user;
+            static function (ServerRequestInterface $request) use ($rest_current_user_middleware, $expected_user): bool {
+                return $rest_current_user_middleware->getCurrentRequestUser($request) === $expected_user;
             }
         ))->andReturn($expected_response);
 
@@ -63,7 +63,7 @@ final class RESTCurrentUserMiddlewareTest extends \Tuleap\Test\PHPUnit\TestCase
             $server_request,
             $request_handler
         );
-        $this->assertSame($expected_response, $response);
+        self::assertSame($expected_response, $response);
     }
 
     /**

@@ -58,7 +58,8 @@ class Docman_View_NewDocument extends Docman_View_New
                 'label'   => dgettext('tuleap-docman', 'Link'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK) ? $params['force_item'] : new Docman_Link(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK),
-                ]];
+            ],
+        ];
         $wikiAvailable = true;
         if (isset($params['group_id'])) {
             $pm            = ProjectManager::instance();
@@ -71,15 +72,15 @@ class Docman_View_NewDocument extends Docman_View_New
                 'label'   => dgettext('tuleap-docman', 'Wiki Page'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) ? $params['force_item'] : new Docman_Wiki(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI),
-                ];
+            ];
         }
 
         $specifics[] = [
-                'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_FILE,
-                'label'   => dgettext('tuleap-docman', 'File'),
-                'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) ? $params['force_item'] : new Docman_File(),
-                'checked' => ($currentItemType !== null) ? ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) : true,
-                ];
+            'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_FILE,
+            'label'   => dgettext('tuleap-docman', 'File'),
+            'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) ? $params['force_item'] : new Docman_File(),
+            'checked' => ($currentItemType !== null) ? ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) : true,
+        ];
 
         if ($this->_controller->getProperty('embedded_are_allowed')) {
             $specifics[] = [

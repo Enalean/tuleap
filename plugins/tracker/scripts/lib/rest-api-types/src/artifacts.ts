@@ -44,27 +44,19 @@ import type {
     TextFormat,
 } from "@tuleap/plugin-tracker-constants";
 import type { TrackerResponseWithColor } from "./trackers";
+import type { UserWithEmailAndStatus } from "./users";
 
-interface StaticValueRepresentation {
-    readonly id: number;
+type RedGreenBlueColor = {
+    readonly r: number;
+    readonly g: number;
+    readonly b: number;
+};
+
+export interface StaticValueRepresentation {
+    readonly id: string;
     readonly label: string;
-    readonly color: string | null;
+    readonly color: RedGreenBlueColor | null;
     readonly tlp_color: string | null;
-}
-
-export interface UserRepresentation {
-    readonly email: string;
-    readonly status: string;
-    readonly id: number | null;
-    readonly uri: string;
-    readonly user_url: string;
-    readonly real_name: string;
-    readonly display_name: string;
-    readonly username: string;
-    readonly ldap_id: string;
-    readonly avatar_url: string;
-    readonly is_anonymous: boolean;
-    readonly has_avatar: boolean;
 }
 
 export interface UserGroupRepresentation {
@@ -153,12 +145,12 @@ export interface FileChangesetValue extends BaseChangesetValue {
 
 export interface SubmittedByChangesetValue extends BaseChangesetValue {
     readonly type: SubmittedByFieldIdentifier;
-    readonly value: UserRepresentation;
+    readonly value: UserWithEmailAndStatus;
 }
 
 export interface LastUpdateByChangesetValue extends BaseChangesetValue {
     readonly type: LastUpdateByFieldIdentifier;
-    readonly value: UserRepresentation;
+    readonly value: UserWithEmailAndStatus;
 }
 
 export interface SimpleListChangesetValue extends BaseChangesetValue {
@@ -168,20 +160,20 @@ export interface SimpleListChangesetValue extends BaseChangesetValue {
         | MultiSelectBoxFieldIdentifier
         | CheckBoxFieldIdentifier;
     readonly values:
-        | ReadonlyArray<UserRepresentation>
+        | ReadonlyArray<UserWithEmailAndStatus>
         | ReadonlyArray<StaticValueRepresentation>
         | ReadonlyArray<UserGroupRepresentation>;
 }
 
-interface OpenListValueRepresentation {
-    readonly id: number;
+export interface OpenListValueRepresentation {
+    readonly id: string;
     readonly label: string;
 }
 
 export interface OpenListChangesetValue extends BaseChangesetValue {
     readonly type: OpenListFieldIdentifier;
     readonly bind_value_objects:
-        | ReadonlyArray<UserRepresentation>
+        | ReadonlyArray<UserWithEmailAndStatus>
         | ReadonlyArray<OpenListValueRepresentation | StaticValueRepresentation>
         | ReadonlyArray<UserGroupRepresentation>;
 }

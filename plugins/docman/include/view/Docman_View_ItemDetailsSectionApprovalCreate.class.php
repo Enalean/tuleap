@@ -141,9 +141,11 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $html .= '<tr>';
         $html .= '<td>' . dgettext('tuleap-docman', 'Table status:') . '</td>';
         $vals  = [0 => PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED,
-                      1 => PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED];
+            1 => PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED,
+        ];
         $txts  = [0 => dgettext('tuleap-docman', 'Closed'),
-                      1 => dgettext('tuleap-docman', 'Deleted')];
+            1 => dgettext('tuleap-docman', 'Deleted'),
+        ];
         if ($this->table->isCustomizable()) {
             $vals[2] = PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED;
             $vals[3] = PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED;
@@ -182,11 +184,13 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $html .= '<tr>';
         $html .= '<td>' . dgettext('tuleap-docman', 'Notification Type:') . '</td>';
         $vals  = [PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED,
-                      PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE,
-                      PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL];
+            PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE,
+            PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL,
+        ];
         $txts  = [dgettext('tuleap-docman', 'Disabled'),
-                      dgettext('tuleap-docman', 'All at once'),
-                      dgettext('tuleap-docman', 'Sequential')];
+            dgettext('tuleap-docman', 'All at once'),
+            dgettext('tuleap-docman', 'Sequential'),
+        ];
         $html .= '<td>';
         if (! $this->table->isClosed()) {
             $html .= html_build_select_box_from_arrays($vals, $txts, 'notification', $this->table->getNotification(), false);
@@ -212,9 +216,11 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                     $html .= '<tr>';
                     $html .= '<td>' . dgettext('tuleap-docman', 'Relaunch notification:') . '</td>';
                     $vals  = ['no',
-                                  'yes'];
+                        'yes',
+                    ];
                     $txts  = [$GLOBALS['Language']->getText('global', 'no'),
-                                  $GLOBALS['Language']->getText('global', 'yes')];
+                        $GLOBALS['Language']->getText('global', 'yes'),
+                    ];
                     $html .= '<td>' . html_build_select_box_from_arrays($vals, $txts, 'resend_notif', 'no', false) . '</td>';
                     $html .= '</tr>';
                 }
@@ -279,9 +285,10 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
 
             $html       .= html_build_list_table_top(
                 [dgettext('tuleap-docman', 'Select'),
-                                                     dgettext('tuleap-docman', 'Name'),
-                                                     dgettext('tuleap-docman', 'Review'),
-                                                     dgettext('tuleap-docman', 'Rank')],
+                    dgettext('tuleap-docman', 'Name'),
+                    dgettext('tuleap-docman', 'Review'),
+                    dgettext('tuleap-docman', 'Rank'),
+                ],
                 false,
                 false,
                 false
@@ -352,9 +359,11 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                 $html .= '<p>';
                 $html .= dgettext('tuleap-docman', '<strong>Actions</strong> with selected reviewers:');
                 $vals  = ['del',
-                              'mail'];
+                    'mail',
+                ];
                 $txts  = [dgettext('tuleap-docman', 'Remove from table'),
-                              dgettext('tuleap-docman', 'Force notification')];
+                    dgettext('tuleap-docman', 'Force notification'),
+                ];
                 $html .= html_build_select_box_from_arrays($vals, $txts, 'sel_user_act', 100, true);
                 $html .= '</p>';
             }

@@ -41,7 +41,9 @@ use Tuleap\MediawikiStandalone\Configuration\GenerateLocalSettingsCommand;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsFactory;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
+use Tuleap\MediawikiStandalone\Configuration\LocalSettingsRepresentation;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiAsyncUpdateProcessor;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameter;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandProcessFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
@@ -59,6 +61,7 @@ use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
 use Tuleap\MediawikiStandalone\REST\OAuth2\OAuth2MediawikiStandaloneReadScope;
+use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageDao;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\MediawikiStandalone\Service\ServiceActivationEvent;
 use Tuleap\MediawikiStandalone\Service\ServiceActivationHandler;
@@ -147,10 +150,13 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(PluginExecuteUpdateHookEvent::NAME);
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
+        $this->addHook('project_admin_remove_user', 'projectUserMemberRemoved');
         $this->addHook(Event::SITE_ACCESS_CHANGE);
         $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(Event::PROJECT_RENAME);
+        $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
+        $this->addHook(Event::USER_MANAGER_UPDATE_DB);
 
         return parent::getHooksAndCallbacks();
     }
@@ -198,12 +204,12 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
-        (new ServiceAvailabilityHandler())->handle(new ServiceAvailabilityProjectServiceBeforeAvailabilityEvent($event));
+        (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(new ServiceAvailabilityProjectServiceBeforeAvailabilityEvent($event));
     }
 
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
-        (new ServiceAvailabilityHandler())->handle(new ServiceAvailabilityServiceDisabledCollectorEvent($event));
+        (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(new ServiceAvailabilityServiceDisabledCollectorEvent($event));
     }
 
     /**
@@ -223,12 +229,44 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     }
 
     /**
-     * @see Event::SITE_ACCESS_CHANGE
+     * @param array{group_id: int|string, user_id: int|string} $params
      */
-    public function siteAccessChange(): void
+    public function projectUserMemberRemoved(array $params): void
+    {
+        $task = LogUsersOutInstanceTask::logsSpecificUserOutOfAProjectFromItsID(
+            (int) $params['group_id'],
+            ProjectManager::instance(),
+            (int) $params['user_id']
+        );
+
+        if ($task !== null) {
+            (new EnqueueTask())->enqueue($task);
+        }
+    }
+
+    /**
+     * @see Event::USER_MANAGER_UPDATE_DB
+     *
+     * @psalm-param array{old_user: PFUser, new_user: PFUser} $params
+     */
+    public function userManagerUpdateDb(array $params): void
+    {
+        $task = LogUsersOutInstanceTask::logsSpecificUserOutOfAllProjects(
+            (int) $params['new_user']->getId(),
+        );
+
+        if ($task !== null) {
+            (new EnqueueTask())->enqueue($task);
+        }
+    }
+
+    /**
+     * @see Event::SITE_ACCESS_CHANGE
+     * @param array{old_value: \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED, new_value: \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED} $params
+     */
+    public function siteAccessChange(array $params): void
     {
         (new \Tuleap\MediawikiStandalone\Instance\SiteAccessHandler(
-            $this->buildLocalSettingsInstantiator(),
             new EnqueueTask()
         ))->process();
     }
@@ -247,6 +285,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             ProjectManager::instance(),
+            new MediaWikiCentralDatabaseParameter($this->_getPluginManager())
         ))->process($event);
         (new MediaWikiAsyncUpdateProcessor($this->buildUpdateScriptCaller($logger)))->process($event);
     }
@@ -254,6 +293,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(MediawikiHTTPClientFactory::class);
+        $event->addConfigClass(LocalSettingsRepresentation::class);
     }
 
     /**
@@ -278,6 +318,16 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     {
         $injector = new MediawikiStandaloneResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED
+     *
+     * @psalm-param array{allowed_services: string[]} $params
+     */
+    public function getServicesAllowedForRestricted(array &$params): void
+    {
+        $params['allowed_services'][] = $this->getServiceShortname();
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $event): void
@@ -414,7 +464,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                     $hasher,
                     new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret())
                 ),
-                new MediaWikiSharedSecretGeneratorForgeConfigStore(new ConfigDao())
+                new MediaWikiSharedSecretGeneratorForgeConfigStore(new ConfigDao()),
+                new MediaWikiCentralDatabaseParameter(PluginManager::instance()),
             ),
             new LocalSettingsPersistToPHPFile(
                 $this->buildSettingDirectoryPath(),

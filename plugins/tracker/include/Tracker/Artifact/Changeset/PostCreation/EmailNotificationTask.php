@@ -106,7 +106,7 @@ final class EmailNotificationTask implements PostCreationTask
         $is_update = ! $changeset->getArtifact()->isFirstChangeset($changeset);
 
         // 1. Get the recipients list
-        $recipients = $this->recipients_manager->getRecipients($changeset, $is_update);
+        $recipients = $this->recipients_manager->getRecipients($changeset, $is_update, $this->logger);
         $this->logger->debug('Recipients ' . implode(', ', array_keys($recipients)));
 
         // 2. Compute the body of the message + headers

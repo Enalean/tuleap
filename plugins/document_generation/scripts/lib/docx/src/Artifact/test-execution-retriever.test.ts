@@ -17,15 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
 import type { ArtifactReportResponseUserRepresentation, TestExecutionResponse } from "../type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getTestManagementExecution } from "./test-execution-retriever";
 
+vi.mock("@tuleap/tlp-fetch");
+
 describe("getTestManagementExecution", () => {
     it("Given an artifact id, Then it will get the testmanagement execution", async () => {
         const artifact_id = 101;
-        const tlpGet = jest.spyOn(tlp, "get");
+        const tlpGet = vi.spyOn(tlp, "get");
 
         const testmanagement_execution_response: TestExecutionResponse = {
             definition: {

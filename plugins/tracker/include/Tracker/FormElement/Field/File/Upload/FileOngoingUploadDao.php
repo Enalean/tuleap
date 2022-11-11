@@ -42,39 +42,25 @@ class FileOngoingUploadDao extends DataAccessObject
         return $this->getDB()->run($sql, $field_id, $name, $current_time);
     }
 
-    public function saveFileOngoingUpload(
-        int $expiration_date,
-        int $field_id,
-        string $filename,
-        int $filesize,
-        string $filetype,
-        int $user_id,
-    ): int {
-        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use (
-            $expiration_date,
-            $field_id,
-            $filename,
-            $filesize,
-            $filetype,
-            $user_id,
-            &$id
-        ): void {
+    public function saveFileOngoingUpload(NewFileUpload $new_upload): int
+    {
+        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($new_upload, &$id): void {
             $id = (int) $db->insertReturnId(
                 'tracker_fileinfo',
                 [
-                    'submitted_by' => $user_id,
-                    'description'  => '',
-                    'filename'     => $filename,
-                    'filesize'     => $filesize,
-                    'filetype'     => $filetype,
+                    'submitted_by' => $new_upload->uploading_user_id,
+                    'description'  => $new_upload->description,
+                    'filename'     => $new_upload->file_name,
+                    'filesize'     => $new_upload->file_size,
+                    'filetype'     => $new_upload->file_type,
                 ]
             );
             $db->insert(
                 'plugin_tracker_file_upload',
                 [
                     'fileinfo_id' => $id,
-                    'expiration_date' => $expiration_date,
-                    'field_id'        => $field_id,
+                    'expiration_date' => $new_upload->expiration_date->getTimestamp(),
+                    'field_id' => $new_upload->file_field_id,
                 ]
             );
         });

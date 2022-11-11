@@ -17,19 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const { defineAngularMocksJestConfiguration } = require("@tuleap/build-system-configurator");
+
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
-
+const jest_base_config = defineAngularMocksJestConfiguration();
 module.exports = {
     ...jest_base_config,
     displayName: "testmanagement",
-    setupFiles: ["./scripts/testmanagement/tests/jest.setup.js"],
+    setupFiles: [...jest_base_config.setupFiles, "./scripts/testmanagement/tests/jest.setup.js"],
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",
         // The artifact modal module causes lots of WARNING: Tried to load AngularJS more than once.
         "^angular$": "<rootDir>/node_modules/angular/index.js",
     },
-    testRunner: "jest-jasmine2",
 };

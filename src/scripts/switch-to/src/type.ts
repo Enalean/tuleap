@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Project {
+export interface ElementWithQuickLinks {
+    readonly quick_links: QuickLink[];
+}
+
+export interface ProjectBaseDefinition {
     readonly project_uri: string;
     readonly project_name: string;
     readonly project_config_uri: string;
@@ -28,6 +32,8 @@ export interface Project {
     readonly is_current_user_admin: boolean;
     readonly icon: string;
 }
+
+export type Project = ProjectBaseDefinition & ElementWithQuickLinks;
 
 export interface HiddenField {
     readonly name: string;
@@ -45,15 +51,26 @@ export interface QuickLink {
     readonly icon_name: string;
 }
 
-export interface UserHistoryEntry {
+interface ProjectReference {
+    readonly label: string;
+}
+
+export interface ItemBadge {
+    readonly color: string | null;
+    readonly label: string;
+}
+
+export interface ItemDefinition extends ElementWithQuickLinks {
     readonly xref: string | null;
     readonly html_url: string;
     readonly title: string | null;
     readonly color_name: string;
-    readonly icon_name: string | null;
-    readonly quick_links: QuickLink[];
+    readonly icon_name: string;
+    readonly project: ProjectReference;
+    readonly cropped_content?: string | null;
+    readonly badges: ReadonlyArray<ItemBadge>;
 }
 
 export interface UserHistory {
-    readonly entries: UserHistoryEntry[];
+    readonly entries: ItemDefinition[];
 }

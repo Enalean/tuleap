@@ -34,6 +34,8 @@ import { okAsync } from "neverthrow";
 import type { GetAllOptions } from "@tuleap/fetch-result";
 import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTrackerIdentifierStub";
+import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
+import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -222,6 +224,54 @@ describe(`TuleapAPIClient`, () => {
                 `/api/v1/trackers/${TRACKER_ID}/parent_artifacts`,
                 { params: { limit: 1000 } }
             );
+        });
+    });
+
+    describe(`createFileUpload()`, () => {
+        const FILE_FIELD_ID = 380;
+        const FILE_ID = 886;
+        const UPLOAD_HREF = `/uploads/tracker/file/${FILE_ID}`;
+        const FILE_NAME = "edestan_bretelle.zip";
+        const FILE_SIZE = 1579343;
+        const FILE_TYPE = "application/zip";
+        const DESCRIPTION = "protestive visceration";
+
+        const createFileUpload = (): ResultAsync<FileUploadCreated, Fault> => {
+            const new_file_upload: NewFileUpload = {
+                file_field_id: FILE_FIELD_ID,
+                file_type: FILE_TYPE,
+                description: DESCRIPTION,
+                file_handle: { name: FILE_NAME, size: FILE_SIZE } as File,
+            };
+
+            const client = TuleapAPIClient();
+            return client.createFileUpload(new_file_upload);
+        };
+
+        it(`will create a new file upload to be completed with TUS`, async () => {
+            const postJSON = jest.spyOn(fetch_result, "postJSON");
+            postJSON.mockReturnValue(
+                okAsync({
+                    id: FILE_ID,
+                    upload_href: UPLOAD_HREF,
+                })
+            );
+
+            const result = await createFileUpload();
+
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+            expect(result.value.file_id).toBe(FILE_ID);
+            expect(result.value.upload_href).toBe(UPLOAD_HREF);
+            const first_call_arguments = postJSON.mock.calls[0];
+            expect(first_call_arguments[0]).toBe(`/api/v1/tracker_fields/${FILE_FIELD_ID}/files`);
+            expect(first_call_arguments[1]).toStrictEqual({
+                name: FILE_NAME,
+                file_size: FILE_SIZE,
+                file_type: FILE_TYPE,
+                description: DESCRIPTION,
+            });
         });
     });
 });

@@ -113,7 +113,10 @@ final class SwaggerJsonPathsAndDefinitions
         $paths = [];
         foreach ($map as $path => $data) {
             foreach ($data as $item) {
-                $route                                            = $item['route'];
+                $route = $item['route'];
+                if (isset($route['metadata']['hide'])) {
+                    continue;
+                }
                 $url                                              = $route['url'];
                 $paths["/$url"][strtolower($route['httpMethod'])] = $this->operation($route);
             }
@@ -200,11 +203,11 @@ final class SwaggerJsonPathsAndDefinitions
                 $r[]  = $this->parameter(
                     new ValidationInfo(
                         [
-                           'name'     => $name,
-                           'type'     => $name,
-                           'from'     => 'body',
-                           'required' => $required,
-                           'children' => $children,
+                            'name'     => $name,
+                            'type'     => $name,
+                            'from'     => 'body',
+                            'required' => $required,
+                            'children' => $children,
                         ]
                     ),
                     $description

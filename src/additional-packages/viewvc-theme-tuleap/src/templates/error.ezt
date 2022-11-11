@@ -1,0 +1,9 @@
+<link rel="stylesheet" href="/viewvc-theme-tuleap/style.css" />
+<div class="tuleap-viewvc-header">
+    <h3>An Exception Has Occurred</h3>
+
+[if-any msg]
+  <p>[msg]</p>
+[end]
+
+</div>

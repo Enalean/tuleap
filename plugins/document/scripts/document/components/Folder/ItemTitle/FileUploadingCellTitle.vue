@@ -28,22 +28,20 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
 import UploadProgressBar from "../ProgressBar/UploadProgressBar.vue";
+import { computed } from "vue";
+import { ICON_EMPTY } from "../../../constants";
+import type { FakeItem } from "../../../type";
 
-export default {
-    components: { FakeCaret, UploadProgressBar },
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState(["current_folder"]),
-        icon_class() {
-            return iconForMimeType(this.item.file_type);
-        },
-    },
-};
+const props = defineProps<{ item: FakeItem }>();
+
+const icon_class = computed((): string => {
+    if (!props.item.file_type) {
+        return ICON_EMPTY;
+    }
+    return iconForMimeType(props.item.file_type);
+});
 </script>

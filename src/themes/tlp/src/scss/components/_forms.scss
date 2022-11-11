@@ -346,8 +346,8 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
     display: flex;
     align-items: center;
 
-    > .tlp-prepend:not([class*="tlp-button"]):not([class*="tlp-dropdown"]),
-    > .tlp-append:not([class*="tlp-button"]):not([class*="tlp-dropdown"]) {
+    > .tlp-prepend:not([class*="tlp-button"], [class*="tlp-dropdown"]),
+    > .tlp-append:not([class*="tlp-button"], [class*="tlp-dropdown"]) {
         display: flex;
         align-items: center;
         height: var(--tlp-form-element-height);
@@ -413,7 +413,7 @@ $tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-ma
             0;
     }
 
-    > .tlp-input:not(:first-child):not(:last-child) {
+    > .tlp-input:not(:first-child, :last-child) {
         border-radius: 0;
     }
 }

@@ -1,6 +1,5 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "baseBranch": "origin/master",
   "globalDependencies": [
     "tsconfig.json",
     "tools/utils/scripts/**",
@@ -39,12 +38,13 @@
         "src/**",
         "themes/**",
         "css/**",
-        "images/**"
+        "images/**",
+        "po/**"
       ],
       "outputs": ["dist/**", "frontend-assets/**", "backend-assets/**"]
     },
     "test": {
-      "dependsOn": ["typecheck", "$CI_MODE", "$COLLECT_COVERAGE"],
+      "dependsOn": ["typecheck"],
       "inputs": [
         "package.json",
         "tsconfig*.json",
@@ -54,6 +54,7 @@
         "scripts/**",
         "src/**"
       ],
+      "env": ["CI_MODE", "COLLECT_COVERAGE"],
       "outputs": ["js-test-results/**"]
     }
   }

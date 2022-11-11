@@ -37,19 +37,19 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'item_id' => ['name' => 'item_id', 'type' => 'xsd:int'],
-        'parent_id' => ['name' => 'parent', 'type' => 'xsd:int'],
-        'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
-        'title' => ['name' => 'title', 'type' => 'xsd:string'],
-        'description' => ['name' => 'description', 'type' => 'xsd:string'],
-        'create_date' => ['name' => 'create_date', 'type' => 'xsd:int'],
-        'update_date' => ['name' => 'update_date', 'type' => 'xsd:int'],
-        'delete_date' => ['name' => 'delete_date', 'type' => 'xsd:int'],
-        'user_id' => ['name' => 'user_id', 'type' => 'xsd:int'],
-        'status' => ['name' => 'status', 'type' => 'xsd:int'],
-        'obsolescence_date' => ['name' => 'obsolescence_date', 'type' => 'xsd:int'],
-        'rank' => ['name' => 'rank', 'type' => 'xsd:int'],
-        'item_type' => ['name' => 'item_type', 'type' => 'xsd:int'],
+            'item_id' => ['name' => 'item_id', 'type' => 'xsd:int'],
+            'parent_id' => ['name' => 'parent', 'type' => 'xsd:int'],
+            'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
+            'title' => ['name' => 'title', 'type' => 'xsd:string'],
+            'description' => ['name' => 'description', 'type' => 'xsd:string'],
+            'create_date' => ['name' => 'create_date', 'type' => 'xsd:int'],
+            'update_date' => ['name' => 'update_date', 'type' => 'xsd:int'],
+            'delete_date' => ['name' => 'delete_date', 'type' => 'xsd:int'],
+            'user_id' => ['name' => 'user_id', 'type' => 'xsd:int'],
+            'status' => ['name' => 'status', 'type' => 'xsd:int'],
+            'obsolescence_date' => ['name' => 'obsolescence_date', 'type' => 'xsd:int'],
+            'rank' => ['name' => 'rank', 'type' => 'xsd:int'],
+            'item_type' => ['name' => 'item_type', 'type' => 'xsd:int'],
         ]
     );
 
@@ -71,8 +71,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'type' => ['name' => 'type', 'type' => 'xsd:string'],
-        'ugroup_id' => ['name' => 'ugroup_id', 'type' => 'xsd:int'],
+            'type' => ['name' => 'type', 'type' => 'xsd:string'],
+            'ugroup_id' => ['name' => 'ugroup_id', 'type' => 'xsd:int'],
         ]
     );
 
@@ -94,8 +94,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'label' => ['name' => 'label', 'type' => 'xsd:string'],
-        'value' => ['name' => 'value', 'type' => 'xsd:string'],
+            'label' => ['name' => 'label', 'type' => 'xsd:string'],
+            'value' => ['name' => 'value', 'type' => 'xsd:string'],
         ]
     );
 
@@ -117,8 +117,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'id' => ['name' => 'id', 'type' => 'xsd:int'],
-        'name'     => ['name' => 'name', 'type' => 'xsd:string'],
+            'id' => ['name' => 'id', 'type' => 'xsd:int'],
+            'name'     => ['name' => 'name', 'type' => 'xsd:string'],
         ]
     );
 
@@ -140,12 +140,12 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'label' => ['name' => 'label', 'type' => 'xsd:string'],
-        'name' => ['name' => 'name', 'type' => 'xsd:string'],
-        'type' => ['name' => 'type', 'type' => 'xsd:string'],
-        'isMultipleValuesAllowed' => ['name' => 'isMultipleValuesAllowed', 'type' => 'xsd:int'],
-        'isEmptyAllowed' => ['name' => 'isEmptyAllowed', 'type' => 'xsd:int'],
-        'listOfValues' => ['name' => 'listOfValues', 'type' => 'tns:ArrayOfMetadataListValue'],
+            'label' => ['name' => 'label', 'type' => 'xsd:string'],
+            'name' => ['name' => 'name', 'type' => 'xsd:string'],
+            'type' => ['name' => 'type', 'type' => 'xsd:string'],
+            'isMultipleValuesAllowed' => ['name' => 'isMultipleValuesAllowed', 'type' => 'xsd:int'],
+            'isEmptyAllowed' => ['name' => 'isEmptyAllowed', 'type' => 'xsd:int'],
+            'listOfValues' => ['name' => 'listOfValues', 'type' => 'tns:ArrayOfMetadataListValue'],
         ]
     );
 
@@ -167,12 +167,12 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'id' => ['name' => 'id', 'type' => 'xsd:int'],
-        'parent_id' => ['name' => 'parent_id', 'type' => 'xsd:int'],
-        'title' => ['name' => 'title', 'type' => 'xsd:string'],
-        'filename' => ['name' => 'filename', 'type' => 'xsd:string'],
-        'type' => ['name' => 'type', 'type' => 'xsd:string'],
-        'nb_versions' => ['name' => 'nb_versions', 'type' => 'xsd:int'],
+            'id' => ['name' => 'id', 'type' => 'xsd:int'],
+            'parent_id' => ['name' => 'parent_id', 'type' => 'xsd:int'],
+            'title' => ['name' => 'title', 'type' => 'xsd:string'],
+            'filename' => ['name' => 'filename', 'type' => 'xsd:string'],
+            'type' => ['name' => 'type', 'type' => 'xsd:string'],
+            'nb_versions' => ['name' => 'nb_versions', 'type' => 'xsd:int'],
         ]
     );
 
@@ -816,10 +816,10 @@ $soapFunctions[] = ['moveDocmanItem', 'Moves an item in a new folder', 'xsd:bool
 function getDocmanFileChunk($sessionKey, $group_id, $item_id, $version_number, $chunk_offset, $chunk_size)
 {
         $params = [
-        'item_id'        => $item_id,
-        'version_number' => $version_number,
-        'chunk_offset'   => $chunk_offset,
-        'chunk_size'     => $chunk_size,
+            'item_id'        => $item_id,
+            'version_number' => $version_number,
+            'chunk_offset'   => $chunk_offset,
+            'chunk_size'     => $chunk_size,
         ];
 
         return _makeDocmanRequest($sessionKey, $group_id, 'getFileChunk', $params);
@@ -828,7 +828,8 @@ $soapFunctions[] = ['getDocmanFileChunk', 'Returns a part (chunk) of the content
                                                'of the file/embedded file which id item_id of a given version version_number, ' .
                                                'if the version is not specified it will be the current one, in the project group_id.' .
                                                'Returns an error if the group ID does not match with a valid project, or if the item ID ' .
-                                               'does not match with the right group ID, or if the version number does not match with the item ID.', 'xsd:string'];
+                                               'does not match with the right group ID, or if the version number does not match with the item ID.', 'xsd:string',
+];
 
 /**
  * Deletes a docman item
@@ -920,34 +921,34 @@ $soapFunctions[] = ['updateDocmanEmptyDocument', 'Updates a docman empty documen
 if (defined('NUSOAP')) {
     // Soap parameters definition
     $GLOBALS['soapParameters'] = [
-                      'sessionKey'        => ['xsd:string', 'Session key'],
-                      'group_id'          => ['xsd:int', 'Group ID'],
-                      'parent_id'         => ['xsd:int', 'Parent ID'],
-                      'item_id'           => ['xsd:int', 'item ID'],
-                      'title'             => ['xsd:string', 'Title'],
-                      'description'       => ['xsd:string', 'Description'],
-                      'ordering'          => ['xsd:string', 'Ordering (begin, end)'],
-                      'status'            => ['xsd:string', 'Status (none, draft, approved, rejected)'],
-                      'obsolescence_date' => ['xsd:string', 'Obsolescence date (timestamp)'],
-                      'content'           => ['xsd:string', 'Content'],
-                      'permissions'       => ['tns:ArrayOfPermission', 'Permissions'],
-                      'metadata'          => ['tns:ArrayOfMetadataValue', 'Metadata values'],
-                      'owner'             => ['xsd:string', 'Owner of the item'],
-                      'create_date'       => ['xsd:string', 'Item creation date (timestamp)'],
-                      'update_date'       => ['xsd:string', 'Item update date (timestamp)'],
-                      'author'            => ['xsd:string', 'Version author'],
-                      'date'              => ['xsd:string', 'Version date (timestamp)'],
-                      'label'             => ['xsd:string', 'version label'],
-                      'changelog'         => ['xsd:string', 'Version changelog'],
-                      'file_size'         => ['xsd:int', 'File size'],
-                      'file_name'         => ['xsd:string', 'File name'],
-                      'mime_type'         => ['xsd:string', 'Mime type'],
-                      'chunk_offset'      => ['xsd:int', 'Chunk offset'],
-                      'chunk_size'        => ['xsd:int', 'Chunk size'],
-                      'new_parent'        => ['xsd:int', 'New parent ID'],
-                      'criterias'         => ['tns:ArrayOfCriteria', 'Criteria'],
-                      'version_number'    => ['xsd:int', 'Version number'],
-                  ];
+        'sessionKey'        => ['xsd:string', 'Session key'],
+        'group_id'          => ['xsd:int', 'Group ID'],
+        'parent_id'         => ['xsd:int', 'Parent ID'],
+        'item_id'           => ['xsd:int', 'item ID'],
+        'title'             => ['xsd:string', 'Title'],
+        'description'       => ['xsd:string', 'Description'],
+        'ordering'          => ['xsd:string', 'Ordering (begin, end)'],
+        'status'            => ['xsd:string', 'Status (none, draft, approved, rejected)'],
+        'obsolescence_date' => ['xsd:string', 'Obsolescence date (timestamp)'],
+        'content'           => ['xsd:string', 'Content'],
+        'permissions'       => ['tns:ArrayOfPermission', 'Permissions'],
+        'metadata'          => ['tns:ArrayOfMetadataValue', 'Metadata values'],
+        'owner'             => ['xsd:string', 'Owner of the item'],
+        'create_date'       => ['xsd:string', 'Item creation date (timestamp)'],
+        'update_date'       => ['xsd:string', 'Item update date (timestamp)'],
+        'author'            => ['xsd:string', 'Version author'],
+        'date'              => ['xsd:string', 'Version date (timestamp)'],
+        'label'             => ['xsd:string', 'version label'],
+        'changelog'         => ['xsd:string', 'Version changelog'],
+        'file_size'         => ['xsd:int', 'File size'],
+        'file_name'         => ['xsd:string', 'File name'],
+        'mime_type'         => ['xsd:string', 'Mime type'],
+        'chunk_offset'      => ['xsd:int', 'Chunk offset'],
+        'chunk_size'        => ['xsd:int', 'Chunk size'],
+        'new_parent'        => ['xsd:int', 'New parent ID'],
+        'criterias'         => ['tns:ArrayOfCriteria', 'Criteria'],
+        'version_number'    => ['xsd:int', 'Version number'],
+    ];
 }
 /**
  * Registers a function on the soap server. The parameters of the function are retrieved by reflexion.

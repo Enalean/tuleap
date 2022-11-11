@@ -26,11 +26,13 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\User\Account\AccountCreated;
 use Tuleap\User\Account\DisplaySecurityController;
+use Tuleap\User\FindUserByEmailEvent;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\InvalidSessionException;
 use Tuleap\User\ProvideAnonymousUser;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
+use Tuleap\User\ProvideUserFromRow;
 use Tuleap\User\RetrieveUserById;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
@@ -38,7 +40,7 @@ use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, ProvideUserFromRow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
@@ -142,9 +144,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
 
     private function getUserByIdWithoutCache($id)
     {
-        $dar = $this->getDao()->searchByUserId($id);
-        if (count($dar)) {
-            return $this->getUserInstanceFromRow($dar->getRow());
+        $row = $this->getDao()->searchByUserId($id);
+        if ($row !== null) {
+            return $this->getUserInstanceFromRow($row);
         }
         return null;
     }
@@ -179,8 +181,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     public function getUserByUserName($user_name)
     {
         if (! isset($this->_userid_bynames[$user_name])) {
-            $dar = $this->getDao()->searchByUserName($user_name);
-            if ($row = $dar->getRow()) {
+            $row = $this->getDao()->searchByUserName($user_name);
+            if ($row !== null) {
                 $u                                 = $this->getUserInstanceFromRow($row);
                 $this->_users[$u->getId()]         = $u;
                 $this->_userid_bynames[$user_name] = $u->getId();
@@ -201,7 +203,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         return $this->getUserInstanceFromRow($row);
     }
 
-    public function getUserInstanceFromRow($row)
+    public function getUserInstanceFromRow($row): PFUser
     {
         if (isset($row['user_id']) && $row['user_id'] < self::SPECIAL_USERS_LIMIT) {
             $user = null;
@@ -223,8 +225,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             return null;
         }
         if (! isset($this->_userid_byldapid[$ldapId])) {
-            $dar = $this->getDao()->searchByLdapId($ldapId);
-            if ($row = $dar->getRow()) {
+            $rows = $this->getDao()->searchByLdapId($ldapId);
+            $row  = array_shift($rows);
+            if ($row !== null) {
                 $u                               = $this->getUserInstanceFromRow($row);
                 $this->_users[$u->getId()]       = $u;
                 $this->_userid_byldapid[$ldapId] = $u->getId();
@@ -254,7 +257,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             return $user;
         }
         $eParams = ['ident' => $ident,
-                         'user'  => &$user];
+            'user'  => &$user,
+        ];
         $this->_getEventManager()->processEvent('user_manager_find_user', $eParams);
 
         if (! $user && preg_match("/^\d+$/", $ident)) {
@@ -350,6 +354,22 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     /**
      * @return PFUser[]
      */
+    public function getAndEventuallyCreateUserByEmail(string $email): array
+    {
+        $users = [];
+        foreach ($this->getDao()->searchByEmail($email) as $user) {
+            $users[] = $this->getUserInstanceFromRow($user);
+        }
+        if (count($users) > 0) {
+            return $users;
+        }
+
+        return EventManager::instance()->dispatch(new FindUserByEmailEvent($email))->getUsers();
+    }
+
+    /**
+     * @return PFUser[]
+     */
     public function getAllUsersByLdapID(string $ldap_id): array
     {
         $users = [];
@@ -391,8 +411,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         $em                  = $this->_getEventManager();
         $tokenFoundInPlugins = false;
         $params              = ['identifier' => $identifier,
-                        'user'       => &$user,
-                        'tokenFound' => &$tokenFoundInPlugins];
+            'user'       => &$user,
+            'tokenFound' => &$tokenFoundInPlugins,
+        ];
         $em->processEvent('user_manager_get_user_by_identifier', $params);
 
         if (! $tokenFoundInPlugins) {
@@ -431,12 +452,11 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
      */
     public function getUserByConfirmHash($hash)
     {
-        $dar = $this->getDao()->searchByConfirmHash($hash);
-        if ($dar->rowCount() !== 1) {
+        $row = $this->getDao()->searchByConfirmHash($hash);
+        if ($row === null) {
             return null;
-        } else {
-            return $this->_getUserInstanceFromRow($dar->getRow());
         }
+        return $this->_getUserInstanceFromRow($row);
     }
 
     public function setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user): void
@@ -500,11 +520,15 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     }
 
     /**
-     * @return Array of User
+     * @return PFUser[]
      */
-    public function getUsersWithSshKey()
+    public function getUsersWithSshKey(): array
     {
-        return $this->getDao()->searchSSHKeys()->instanciateWith([$this, 'getUserInstanceFromRow']);
+        $users = [];
+        foreach ($this->getDao()->searchSSHKeys() as $user_row) {
+            $users[] = $this->getUserInstanceFromRow($user_row);
+        }
+        return $users;
     }
 
     /**
@@ -777,7 +801,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         }
 
         //If nobody answer success, look for the user into the db
-        if ($row = $this->getDao()->searchByUserName($name)->getRow()) {
+        if ($row = $this->getDao()->searchByUserName($name)) {
             $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->getUserInstanceFromRow($row)));
         } else {
             $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromAnonymous($this));
@@ -954,11 +978,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     public function assignNextUnixUid($user)
     {
         $newUid = $this->getDao()->assignNextUnixUid($user->getId());
-        if ($newUid !== false) {
-            $user->setUnixUid($newUid);
-            return true;
-        }
-        return false;
+        $user->setUnixUid($newUid);
+        return true;
     }
 
     /**

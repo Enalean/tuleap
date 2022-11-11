@@ -31,7 +31,8 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $target           = 234;
         $permission_types = ['STUFF_READ'];
         $ugroup_mapping   = [110 => 210,
-                                  120 => 220];
+            120 => 220,
+        ];
         $duplicate_type   = PermissionsDao::DUPLICATE_SAME_PROJECT;
 
         $dao = Mockery::mock(PermissionsDao::class);
@@ -62,7 +63,8 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $target           = 234;
         $permission_types = ['STUFF_READ'];
         $ugroup_mapping   = [110 => 210,
-                                  120 => 220];
+            120 => 220,
+        ];
 
         $dao = Mockery::mock(PermissionsDao::class);
         $dao->shouldReceive('duplicatePermissions')->with($source, $target, $permission_types, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping)->once();

@@ -19,9 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
@@ -555,11 +557,21 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 );
 
                 $params = ['group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
-                                'artifact'     => $this->getArtifact(),
-                                'changeset_id' => $this->getId(),
-                                'text'         => $body];
+                    'artifact'     => $this->getArtifact(),
+                    'changeset_id' => $this->getId(),
+                    'text'         => $body,
+                ];
 
-                EventManager::instance()->processEvent('tracker_followup_event_update', $params);
+                $event_manager = EventManager::instance();
+                $event_manager->processEvent('tracker_followup_event_update', $params);
+
+                $changeset_comment_indexer = new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                );
+                $changeset_comment_indexer->indexChangesetCommentFromChangeset($this);
 
                 return true;
             }

@@ -25,6 +25,16 @@ namespace Tuleap\Project;
 use PFUser;
 use Project;
 
+/**
+ * /!\ Warning /!\
+ *
+ * You will come here and think that the implementation bellow is incorrect because of
+ * Public inc. Restricted permission.
+ *
+ * The default implementation is correct here because this status only apply on Git,
+ * MediaWiki and Dashboard access. Therefore, unless you are dealing with code in those
+ * plugins, you should rely on this implementation.
+ */
 class RestrictedUserCanAccessProjectVerifier implements RestrictedUserCanAccessVerifier
 {
     public function isRestrictedUserAllowedToAccess(PFUser $user, ?Project $project = null): bool

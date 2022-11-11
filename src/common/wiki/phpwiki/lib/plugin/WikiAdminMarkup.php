@@ -57,10 +57,10 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
         return array_merge(
             PageList::supportedArgs(),
             [
-                   's'         => false,
-                   'markup'     => 2,
+                's'         => false,
+                'markup'     => 2,
                    /* Columns to include in listing */
-                   'info'     => 'pagename,markup,mtime',
+                'info'     => 'pagename,markup,mtime',
             ]
         );
     }
@@ -203,7 +203,8 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
 
         return HTML::form(
             ['action' => $request->getPostURL(),
-                                'method' => 'post'],
+                'method' => 'post',
+            ],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
@@ -224,7 +225,8 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
         $header->pushContent(_("Change markup") . " ");
         $header->pushContent(' ' . _("to") . ': ');
         $header->pushContent(HTML::input(['name' => 'admin_markup[markup]',
-                                               'value' => $post_args['markup']]));
+            'value' => $post_args['markup'],
+        ]));
         $header->pushContent(HTML::p());
         return $header;
     }

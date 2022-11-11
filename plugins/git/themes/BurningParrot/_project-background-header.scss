@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../src/themes/common/css/project-background/background";
+@use "@tuleap/project-background";
 @use "../../src/themes/BurningParrot/css/includes/global-variables";
 
 .project-with-background {
@@ -25,7 +25,7 @@
     .git-repository-list-header-badge,
     .git-repository-actions-select-owners > .tlp-label,
     .git-repository-name {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
     }
 
     .git-repository-parent {
@@ -49,7 +49,7 @@ body {
         ".git-repository-header";
 
     @each $element-with-project-background in $elements-with-project-background {
-        @include background.apply-background(
+        @include project-background.apply-background(
             $element-with-project-background,
             global-variables.$sidebar-expanded-width,
             global-variables.$sidebar-collapsed-width

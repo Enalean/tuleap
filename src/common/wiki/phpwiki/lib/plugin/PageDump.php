@@ -53,12 +53,13 @@ class WikiPlugin_PageDump extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['s'    => false,
-                     'page' => '[pagename]',
+            'page' => '[pagename]',
                      //'encoding' => 'binary', // 'binary', 'quoted-printable'
-                     'format' => false, // 'normal', 'forcvs', 'backup'
+            'format' => false, // 'normal', 'forcvs', 'backup'
                      // display within WikiPage or give a downloadable
                      // raw pgsrc?
-                     'download' => false];
+            'download' => false,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -138,24 +139,27 @@ class WikiPlugin_PageDump extends WikiPlugin
 
         $dlcvs = Button(
             [//'page' => $page,
-                              'action' => $this->getName(),
-                              'format' => 'forcvs',
-                              'download' => true],
+                'action' => $this->getName(),
+                'format' => 'forcvs',
+                'download' => true,
+            ],
             _("Download for CVS"),
             $page
         );
         $dl    = Button(
             [//'page' => $page,
-                           'action' => $this->getName(),
-                           'download' => true],
+                'action' => $this->getName(),
+                'download' => true,
+            ],
             _("Download for backup"),
             $page
         );
         $dlall = Button(
             [//'page' => $page,
-                           'action' => $this->getName(),
-                           'format' => 'backup',
-                           'download' => true],
+                'action' => $this->getName(),
+                'format' => 'backup',
+                'download' => true,
+            ],
             _("Download all revisions for backup"),
             $page
         );
@@ -180,8 +184,9 @@ class WikiPlugin_PageDump extends WikiPlugin
                 $Sep,
                 Button(
                     [
-                                                   'action' => $this->getName(),
-                                                   'format' => 'backup'],
+                        'action' => $this->getName(),
+                        'format' => 'backup',
+                    ],
                     _("Preview as backup format"),
                     $page
                 )
@@ -191,15 +196,17 @@ class WikiPlugin_PageDump extends WikiPlugin
             $altpreviewbuttons = HTML(
                 Button(
                     ['action' => $this->getName(),
-                                                   'format' => 'forcvs'],
+                        'format' => 'forcvs',
+                    ],
                     _("Preview as developer format"),
                     $page
                 ),
                 $Sep,
                 Button(
                     [
-                                                   'action' => $this->getName(),
-                                                   'format' => ''],
+                        'action' => $this->getName(),
+                        'format' => '',
+                    ],
                     _("Preview as normal format"),
                     $page
                 )
@@ -209,15 +216,17 @@ class WikiPlugin_PageDump extends WikiPlugin
             $altpreviewbuttons = HTML(
                 Button(
                     ['action' => $this->getName(),
-                                                   'format' => 'forcvs'],
+                        'format' => 'forcvs',
+                    ],
                     _("Preview as developer format"),
                     $page
                 ),
                 $Sep,
                 Button(
                     [
-                                                   'action' => $this->getName(),
-                                                   'format' => 'backup'],
+                        'action' => $this->getName(),
+                        'format' => 'backup',
+                    ],
                     _("Preview as backup format"),
                     $page
                 )
@@ -335,7 +344,8 @@ class WikiPlugin_PageDump extends WikiPlugin
             hits=146;
         */
         $killme = ["author", "version", "lastmodified",
-                        "author_id", "hits", "owner", "acl"];
+            "author_id", "hits", "owner", "acl",
+        ];
         // UltraNasty, fixme:
         foreach ($killme as $pattern) {
             $array = preg_replace(

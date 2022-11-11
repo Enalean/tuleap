@@ -268,6 +268,34 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testLog(int $root_id): void
+    {
+        $uri = 'docman_items/' . $root_id . '/logs';
+
+        $options_response = $this->getResponse(
+            $this->request_factory->createRequest('OPTIONS', $uri),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(
+            ['OPTIONS', 'GET'],
+            explode(', ', $options_response->getHeaderLine('Allow'))
+        );
+
+
+        $get_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', $uri),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertIsArray(
+            json_decode($get_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)
+        );
+    }
+
+    /**
      * @param array $items
      * @param array|null $folder
      * @param array|null $empty

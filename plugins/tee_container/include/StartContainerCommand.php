@@ -65,17 +65,6 @@ final class StartContainerCommand extends Command
         '/var/lib/tuleap',
     ];
 
-    private const SUPERVISORD_UNITS = [
-        Supervisord::UNIT_CROND,
-        Supervisord::UNIT_SSHD,
-        Supervisord::UNIT_RSYSLOG,
-        Supervisord::UNIT_NGINX,
-        Supervisord::UNIT_POSTFIX,
-        Supervisord::UNIT_HTTPD,
-        Supervisord::UNIT_FPM,
-        Supervisord::UNIT_BACKEND_WORKERS,
-    ];
-
     private const OPTION_NO_SUPERVISORD = 'no-supervisord';
     private const OPTION_EXEC           = 'exec';
     private const OPTION_DEBUG          = 'debug';
@@ -126,7 +115,7 @@ final class StartContainerCommand extends Command
             $log_to_syslog = new LogToSyslog($console_logger);
             $log_to_syslog->configure();
 
-            $supervisord = new Supervisord(...self::SUPERVISORD_UNITS);
+            $supervisord = new Supervisord();
             $supervisord->configure($output);
 
             $option_exec = $input->getOption(self::OPTION_EXEC);

@@ -165,8 +165,6 @@ export class ListItemMapBuilder {
     }
 
     public static buildDefaultTemplateForItem(value: string): HTMLTemplateResult {
-        return html`
-            ${value}
-        `;
+        return html`${value}`;
     }
 }

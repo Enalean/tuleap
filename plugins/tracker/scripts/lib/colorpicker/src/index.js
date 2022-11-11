@@ -26,7 +26,7 @@ import ColorPicker from "./ColorPicker.vue";
 const ColorPickerComponent = Vue.extend(ColorPicker);
 
 export function createColorPicker(mount_point) {
-    Vue.use(GetTextPlugin, {
+    Vue.use(GetTextPlugin.default, {
         translations: {
             fr: french_translations.messages,
         },

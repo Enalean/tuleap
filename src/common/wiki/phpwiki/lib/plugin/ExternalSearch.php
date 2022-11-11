@@ -73,14 +73,14 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['s'        => false,
-                     'formsize' => 30,
-                     'url'      => false,
-                     'name'     => '',
-                     'useimage' => false,
-                     'width'    => false,
-                     'height'   => false,
-                     'debug'    => false,
-                     ];
+            'formsize' => 30,
+            'url'      => false,
+            'name'     => '',
+            'useimage' => false,
+            'width'    => false,
+            'height'   => false,
+            'debug'    => false,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -117,15 +117,17 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
         $this->_getInterWikiUrl($request);
         $form = HTML::form(
             ['action' => $request->getPostURL(),
-                                 'method' => 'post',
+                'method' => 'post',
                                  //'class'  => 'class', //fixme
-                                 'accept-charset' => $GLOBALS['charset']],
+                'accept-charset' => $GLOBALS['charset'],
+            ],
             HiddenInputs(['pagename' => $basepage])
         );
 
         $form->pushContent(HTML::input(['type' => 'hidden',
-                                             'name'  => 'url',
-                                             'value' => $this->_url]));
+            'name'  => 'url',
+            'value' => $this->_url,
+        ]));
         if (! empty($args["useimage"])) {
             //FIXME: This does not work with Gecko
             $button = HTML::img(['src' => $useimage, 'alt' => 'imagebutton']);
@@ -137,19 +139,21 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
             }
             $form->pushContent(HTML::button(
                 ['type' => 'button',
-                                                  'class' => 'button',
-                                                  'value' => $this->_name,
-                                                  ],
+                    'class' => 'button',
+                    'value' => $this->_name,
+                ],
                 $button
             ));
         } else {
             $form->pushContent(HTML::input(['type' => 'submit',
-                                                 'class' => 'button',
-                                                 'value' => $this->_name]));
+                'class' => 'button',
+                'value' => $this->_name,
+            ]));
             $form->pushContent(HTML::input(['type' => 'text',
-                                                 'value' => $this->_s,
-                                                 'name'  => 's',
-                                                 'size'  => $formsize]));
+                'value' => $this->_s,
+                'name'  => 's',
+                'size'  => $formsize,
+            ]));
         }
         return $form;
     }

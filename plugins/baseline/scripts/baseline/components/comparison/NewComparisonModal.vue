@@ -126,8 +126,6 @@
 </template>
 
 <script>
-import ArrayUtils from "../../support/array-utils";
-
 export default {
     name: "NewComparisonModal",
     props: {
@@ -163,7 +161,7 @@ export default {
 
     methods: {
         findBaselineById(id) {
-            let found_baseline = ArrayUtils.find(this.baselines, (baseline) => baseline.id === id);
+            let found_baseline = this.baselines.find((baseline) => baseline.id === id);
             return found_baseline || null;
         },
         openComparison() {

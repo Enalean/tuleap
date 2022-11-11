@@ -21,34 +21,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\API;
 
+use GuzzleHttp\Psr7\Header;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
 
-class ClientWrapper
+class ClientWrapper implements WrapGitlabClient
 {
-    /**
-     * @var RequestFactoryInterface
-     */
-    private $factory;
-    /**
-     * @var StreamFactoryInterface
-     */
-    private $stream_factory;
-    /**
-     * @var GitlabHTTPClientFactory
-     */
-    private $gitlab_client_factory;
-
     public function __construct(
-        RequestFactoryInterface $factory,
-        StreamFactoryInterface $stream_factory,
-        GitlabHTTPClientFactory $gitlab_client_factory,
+        private RequestFactoryInterface $factory,
+        private StreamFactoryInterface $stream_factory,
+        private BuildGitlabHttpClient $gitlab_client_factory,
     ) {
-        $this->factory               = $factory;
-        $this->stream_factory        = $stream_factory;
-        $this->gitlab_client_factory = $gitlab_client_factory;
     }
 
     /**
@@ -73,8 +60,96 @@ class ClientWrapper
                 $exception
             );
         }
+        return $this->decodeContent($response);
+    }
 
-        $json =  json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY);
+    /**
+     * @throws GitlabRequestException
+     * @throws GitlabResponseAPIException
+     */
+    public function getPaginatedUrl(Credentials $gitlab_credentials, string $url, int $row_per_page = self::DEFAULT_NUMBER_OF_ROW_PER_PAGE): ?array
+    {
+        $client = $this->gitlab_client_factory->buildHTTPClient($gitlab_credentials);
+
+        $uri            = HTTPFactoryBuilder::URIFactory()->createUri($gitlab_credentials->getGitlabServerUrl() . "/api/v4" . $url);
+        $uri_with_query = Uri::withQueryValue($uri, "per_page", (string) $row_per_page);
+        $request        = $this->factory->createRequest('GET', $uri_with_query);
+
+        try {
+            $response = $client->sendRequest($request);
+            if ((int) $response->getStatusCode() !== 200) {
+                self::handleInvalidResponse($response);
+            }
+        } catch (ClientExceptionInterface $exception) {
+            throw new GitlabRequestException(
+                500,
+                $exception->getMessage(),
+                $exception
+            );
+        }
+
+        $json = $this->decodeContent($response);
+        if (! isset($json)) {
+            return null;
+        }
+
+        // We should rely on the link sent in the 'link' header. https://docs.gitlab.com/ee/api/#pagination-link-header
+        $next_link = $this->getNextLinkURI($response);
+        while ($next_link) {
+            $new_request = $this->factory->createRequest('GET', $next_link);
+            try {
+                $response = $client->sendRequest($new_request);
+                if ($response->getStatusCode() !== 200) {
+                    self::handleInvalidResponse($response);
+                }
+            } catch (ClientExceptionInterface $exception) {
+                throw new GitlabRequestException(
+                    500,
+                    $exception->getMessage(),
+                    $exception
+                );
+            }
+
+            $json_response = $this->decodeContent($response);
+            if (! isset($json_response)) {
+                $json_response = [];
+            }
+            $json      = array_merge($json, $json_response);
+            $next_link = $this->getNextLinkURI($response);
+        }
+
+        return $json;
+    }
+
+    /**
+     * @throws GitlabResponseAPIException
+     */
+    private function getNextLinkURI(ResponseInterface $response): ?string
+    {
+        $link_header = Header::parse($response->getHeader("link"));
+        if (! $link_header) {
+            throw new GitlabResponseAPIException("The query is not in error but we cannot retrieve the link header");
+        }
+        $next_link_entity = array_filter(
+            $link_header,
+            function ($link) {
+                return $link['rel'] === "next";
+            }
+        );
+
+        if ($next_link_entity === []) {
+            return null;
+        }
+
+        return preg_replace("/[<>]/", "", $next_link_entity[0][0]);
+    }
+
+    /**
+     * @throws GitlabResponseAPIException
+     */
+    private function decodeContent(ResponseInterface $response): ?array
+    {
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY);
 
         if ($json !== null && ! is_array($json)) {
             throw new GitlabResponseAPIException("The query is not in error but the json content is not an array. This is not expected.");
@@ -101,7 +176,7 @@ class ClientWrapper
 
         try {
             $response = $client->sendRequest($request);
-            if ((int) $response->getStatusCode() !== 201) {
+            if ($response->getStatusCode() !== 201) {
                 self::handleInvalidResponse($response);
             }
         } catch (ClientExceptionInterface $exception) {

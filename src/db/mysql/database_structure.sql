@@ -489,27 +489,28 @@ CREATE TABLE `groups` (
   rand_hash text,
   type int(11) NOT NULL default '1',
   built_from_template int(11) NOT NULL default '100',
-  cvs_tracker int(11)   NOT NULL default '1',
-  cvs_watch_mode int(11)   NOT NULL default '0',
-  cvs_events_mailing_list text NOT NULL,
+  cvs_tracker               int(11)    NOT NULL default '1',
+  cvs_watch_mode            int(11)    NOT NULL default '0',
+  cvs_events_mailing_list   text       NOT NULL,
   cvs_events_mailing_header varchar(64) binary DEFAULT NULL,
-  cvs_preamble text NOT NULL,
-  cvs_is_private TINYINT(1) NOT NULL DEFAULT 0,
-  svn_tracker int(11)   NOT NULL default '1',
-  svn_mandatory_ref TINYINT NOT NULL default '0',
-  svn_can_change_log TINYINT(1) NOT NULL default '0',
+  cvs_preamble              text       NOT NULL,
+  cvs_is_private            TINYINT(1) NOT NULL DEFAULT 0,
+  svn_tracker               int(11)    NOT NULL default '1',
+  svn_mandatory_ref         TINYINT    NOT NULL default '0',
+  svn_can_change_log        TINYINT(1) NOT NULL default '0',
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
-  svn_preamble text NOT NULL,
-  svn_accessfile_version_id INT(11) NULL,
-  svn_commit_to_tag_denied TINYINT(1) NOT NULL DEFAULT '0',
-  truncated_emails TINYINT(1) NOT NULL DEFAULT 0,
-  icon_codepoint VARCHAR(255) DEFAULT NULL,
-  PRIMARY KEY  (group_id),
+  svn_preamble              text       NOT NULL,
+  svn_accessfile_version_id INT(11)    NULL,
+  svn_commit_to_tag_denied  TINYINT(1) NOT NULL DEFAULT '0',
+  truncated_emails          TINYINT(1) NOT NULL DEFAULT 0,
+  icon_codepoint            VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_access (access),
   KEY idx_groups_unix (unix_group_name),
   KEY idx_groups_type (type),
-  KEY idx_groups_register_time (register_time)
+  KEY idx_groups_register_time (register_time),
+  UNIQUE project_shortname (unix_group_name)
 );
 
 CREATE TABLE project_webhook_url (
@@ -692,108 +693,6 @@ CREATE TABLE session (
   KEY idx_session_user_id (user_id),
   KEY idx_session_time (time)
 ) ENGINE=InnoDB;
-
-#
-# Table structure for table 'stats_project'
-#
-
-CREATE TABLE stats_project (
-  month int(11) NOT NULL default '0',
-  week int(11) NOT NULL default '0',
-  day int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  group_ranking int(11) NOT NULL default '0',
-  group_metric float(8,5) NOT NULL default '0.00000',
-  developers smallint(6) NOT NULL default '0',
-  file_releases smallint(6) NOT NULL default '0',
-  downloads int(11) NOT NULL default '0',
-  site_views int(11) NOT NULL default '0',
-  subdomain_views int(11) NOT NULL default '0',
-  msg_posted smallint(6) NOT NULL default '0',
-  msg_uniq_auth smallint(6) NOT NULL default '0',
-  cvs_checkouts smallint(6) NOT NULL default '0',
-  cvs_commits smallint(6) NOT NULL default '0',
-  cvs_adds smallint(6) NOT NULL default '0',
-  svn_commits smallint(6) DEFAULT '0' NOT NULL,
-  svn_adds smallint(6) DEFAULT '0' NOT NULL,
-  svn_deletes smallint(6) DEFAULT '0' NOT NULL,
-  svn_checkouts smallint(6) DEFAULT '0' NOT NULL,
-  svn_access_count smallint(6) DEFAULT '0' NOT NULL,
-  artifacts_opened smallint(6) NOT NULL default '0',
-  artifacts_closed smallint(6) NOT NULL default '0',
-  KEY idx_project_log_group (group_id),
-  KEY idx_archive_project_month (month),
-  KEY idx_archive_project_week (week),
-  KEY idx_archive_project_day (day),
-  KEY idx_archive_project_monthday (month,day)
-);
-
-#
-# Table structure for table 'stats_project_tmp'
-#
-
-CREATE TABLE stats_project_tmp (
-  month int(11) NOT NULL default '0',
-  week int(11) NOT NULL default '0',
-  day int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  group_ranking int(11) NOT NULL default '0',
-  group_metric float(8,5) NOT NULL default '0.00000',
-  developers smallint(6) NOT NULL default '0',
-  file_releases smallint(6) NOT NULL default '0',
-  downloads int(11) NOT NULL default '0',
-  site_views int(11) NOT NULL default '0',
-  subdomain_views int(11) NOT NULL default '0',
-  msg_posted smallint(6) NOT NULL default '0',
-  msg_uniq_auth smallint(6) NOT NULL default '0',
-  bugs_opened smallint(6) NOT NULL default '0',
-  bugs_closed smallint(6) NOT NULL default '0',
-  support_opened smallint(6) NOT NULL default '0',
-  support_closed smallint(6) NOT NULL default '0',
-  patches_opened smallint(6) NOT NULL default '0',
-  patches_closed smallint(6) NOT NULL default '0',
-  tasks_opened smallint(6) NOT NULL default '0',
-  tasks_closed smallint(6) NOT NULL default '0',
-  cvs_checkouts smallint(6) NOT NULL default '0',
-  cvs_commits smallint(6) NOT NULL default '0',
-  cvs_adds smallint(6) NOT NULL default '0',
-  svn_commits  smallint(6) DEFAULT '0' NOT NULL,
-  svn_adds smallint(6) DEFAULT '0' NOT NULL,
-  svn_deletes smallint(6) DEFAULT '0' NOT NULL,
-  svn_checkouts smallint(6) DEFAULT '0' NOT NULL,
-  svn_access_count smallint(6) DEFAULT '0' NOT NULL,
-  artifacts_opened smallint(6) NOT NULL default '0',
-  artifacts_closed smallint(6) NOT NULL default '0',
-  KEY idx_project_log_group (group_id),
-  KEY idx_project_stats_day (day),
-  KEY idx_project_stats_week (week),
-  KEY idx_project_stats_month (month)
-);
-
-#
-# Table structure for table 'top_group'
-#
-
-CREATE TABLE top_group (
-  group_id int(11) NOT NULL default '0',
-  group_name varchar(40) default NULL,
-  downloads_all int(11) NOT NULL default '0',
-  rank_downloads_all int(11) NOT NULL default '0',
-  rank_downloads_all_old int(11) NOT NULL default '0',
-  downloads_week int(11) NOT NULL default '0',
-  rank_downloads_week int(11) NOT NULL default '0',
-  rank_downloads_week_old int(11) NOT NULL default '0',
-  userrank int(11) NOT NULL default '0',
-  rank_userrank int(11) NOT NULL default '0',
-  rank_userrank_old int(11) NOT NULL default '0',
-  forumposts_week int(11) NOT NULL default '0',
-  rank_forumposts_week int(11) NOT NULL default '0',
-  rank_forumposts_week_old int(11) NOT NULL default '0',
-  KEY rank_downloads_all_idx (rank_downloads_all),
-  KEY rank_downloads_week_idx (rank_downloads_week),
-  KEY rank_userrank_idx (rank_userrank),
-  KEY rank_forumposts_week_idx (rank_forumposts_week)
-);
 
 #
 # Table structure for table 'trove_cat'

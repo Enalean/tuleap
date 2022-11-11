@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import type { Item } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const { interpolate, $gettext } = useGettext();
@@ -59,8 +59,4 @@ const get_icon_additional_classes = computed((): string => {
         ? "document-display-lock-icon"
         : "document-tree-item-toggle-quicklook-lock-icon";
 });
-</script>
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
 </script>

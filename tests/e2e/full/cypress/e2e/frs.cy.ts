@@ -19,7 +19,7 @@
 
 describe("Frs", function () {
     let project_id: string;
-    const now: number = Date.now();
+    let now: number;
 
     context("Project administrators", function () {
         before(() => {
@@ -31,6 +31,7 @@ describe("Frs", function () {
         beforeEach(() => {
             cy.preserveSessionCookies();
             cy.visitProjectService("frs-project", "Files");
+            now = Date.now();
         });
 
         it("can access to admin section", function () {
@@ -88,8 +89,18 @@ describe("Frs", function () {
                 });
                 cy.wait("@createRelease", { timeout: 60000 });
 
-                cy.visitProjectService("frs-project", "Files");
-                cy.get('[data-test="release-name"]').contains(`My release${now}`);
+                cy.reloadUntilCondition(
+                    () => cy.visitProjectService("frs-project", "Files"),
+                    (number_of_attempts, max_attempts) => {
+                        cy.log(
+                            `Check that My release${now} has been created (attempt ${number_of_attempts}/${max_attempts})`
+                        );
+                        return cy
+                            .get('[data-test="release-name"]')
+                            .then((releases) => releases.text().includes(`My release${now}`));
+                    },
+                    `Timed out while checking if My release${now} has been created`
+                );
 
                 cy.visitProjectService("frs-project", "Files");
 

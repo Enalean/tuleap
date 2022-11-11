@@ -21,11 +21,12 @@
 
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\VerifyUserIsGitAdministrator;
 
 /**
  * This class manages permissions for the Git service
  */
-class GitPermissionsManager
+class GitPermissionsManager implements VerifyUserIsGitAdministrator
 {
     /**
      * @var FineGrainedRetriever
@@ -65,7 +66,7 @@ class GitPermissionsManager
         $this->fine_grained_retriever   = $fine_grained_retriever;
     }
 
-    public function userIsGitAdmin(PFUser $user, Project $project)
+    public function userIsGitAdmin(PFUser $user, Project $project): bool
     {
         $database_result = $this->getCurrentGitAdminPermissionsForProject($project);
 

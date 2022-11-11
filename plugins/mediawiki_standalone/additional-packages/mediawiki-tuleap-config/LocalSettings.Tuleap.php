@@ -34,16 +34,16 @@ $GLOBALS['wgEmailAuthentication'] = false;
 // Third Party Extensions - START ###
 // ERM27085 - Extensions that were enabled in MediaWiki 1.23
 wfLoadExtensions([
-                     'CategoryTree',
-                     'Cite',
-                     'ImageMap',
-                     'InputBox',
-                     'LabeledSectionTransclusion',
-                     'ParserFunctions',
-                     'SyntaxHighlight_GeSHi',
-                     'WikiEditor',
-                     'PdfBook',
-                 ]);
+    'CategoryTree',
+    'Cite',
+    'ImageMap',
+    'InputBox',
+    'LabeledSectionTransclusion',
+    'ParserFunctions',
+    'SyntaxHighlight_GeSHi',
+    'WikiEditor',
+    'PdfBook',
+]);
 $GLOBALS['wgPFEnableStringFunctions'] = true;
 $GLOBALS['wgPdfBookTab']              = true;
 
@@ -54,17 +54,17 @@ $GLOBALS['wgDefaultUserOptions']['wikieditor-publish'] = 1;
 
 // Additional extensions
 wfLoadExtensions([
-                     'CodeEditor',
-                     'Gadgets',
-                     'MultimediaViewer',
-                     'PageImages',
-                     'PdfHandler',
-                     'ReplaceText',
-                     'Scribunto',
-                     'TemplateData',
-                     'TextExtracts',
-                     'VisualEditor',
-                 ]);
+    'CodeEditor',
+    'Gadgets',
+    'MultimediaViewer',
+    'PageImages',
+    'PdfHandler',
+    'ReplaceText',
+    'Scribunto',
+    'TemplateData',
+    'TextExtracts',
+    'VisualEditor',
+]);
 // Third Party Extensions - END ###
 
 wfLoadExtension('Math');
@@ -106,27 +106,10 @@ $GLOBALS['wgSkipSkins'] = ['timeless', 'monobook', 'vector'];
 $GLOBALS['wgHiddenPrefs'][] = 'variant';
 $GLOBALS['wgHiddenPrefs'][] = 'noconvertlink';
 
-$GLOBALS['wgTuleapEnableAnonAccess'] = false;
-// Add explicit "reader" group (maps to 'is_reader' key in permission data coming from Tuleap)
-$GLOBALS['wgAdditionalGroups']['reader'] = ['read' => true];
-
-// Platform access type (https://tuleap.net/plugins/tracker/?aid=25738)
-switch ($GLOBALS['wgTuleapAccessPreset']) {
-    case 'anonymous':
-        // Accessible by anonymous
-        $GLOBALS['wgGroupPermissions']['*']['read'] = true;
-        $GLOBALS['wgTuleapEnableAnonAccess']        = true;
-        break;
-    case 'regular':
-        // Login is required
-        $GLOBALS['wgGroupPermissions']['user']['read'] = true;
-        break;
-    case 'restricted':
-    default:
-        // Login is required + explicit `is_reader` assignments
-        $GLOBALS['wgGroupPermissions']['user']['read'] = false;
-        break;
-}
+// This is needed to prevent MW from doing "can user read" checked.
+// We allow all to read, and then integration will block access if needed.
+// Follow-up preset removal https://tuleap.net/plugins/tracker/?aid=27186
+$GLOBALS['wgGroupPermissions']['*']['read'] = true;
 
 $GLOBALS['wgDebugLogGroups'] = [
     'exception' => '/var/log/tuleap/mediawiki_log',

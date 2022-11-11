@@ -122,7 +122,8 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                 } elseif ($delete and ! $request->getArg('verify')) {
                     return HTML::form(
                         ['action' => $request->getPostURL(),
-                                            'method' => 'post'],
+                            'method' => 'post',
+                        ],
                         HiddenInputs(['verify' => 1]),
                         HiddenInputs($request->getArgs()),
                         HTML::p(_("Do you really want to delete all your UserPreferences?")),

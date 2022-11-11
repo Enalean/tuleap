@@ -22,6 +22,6 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../build-system-configurator",
-    "@vue/composition-api": "^1.4.4"
+    "vue": "^2.7"
   }
 }

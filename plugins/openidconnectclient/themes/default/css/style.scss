@@ -339,8 +339,8 @@ body.openid-connect-link {
         display: none;
     }
 
+    // stylelint-disable-next-line selector-no-qualifying-type
     > ul.select2-results {
-        // stylelint-disable-line selector-no-qualifying-type
         text-align: center;
 
         > li:first-child {

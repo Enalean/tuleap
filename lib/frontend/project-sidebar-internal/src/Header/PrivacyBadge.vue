@@ -24,7 +24,7 @@
     <div ref="popover_anchor" class="sidebar-popover-anchor">
         <span ref="badge" class="project-sidebar-privacy-badge">
             <i
-                class="sidebar-dashboard-privacy-icon fas"
+                class="sidebar-dashboard-privacy-icon fa-solid"
                 v-bind:class="project_privacy_icon"
                 data-test="project-icon"
                 aria-hidden="true"

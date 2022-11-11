@@ -119,9 +119,7 @@ export const PermissionField = define<PermissionField>({
             <label for="tracker_field_${host.field_presenter.field_id}" class="tlp-label">
                 ${host.field_presenter.label}
                 ${host.field_presenter.is_field_required &&
-                html`
-                    <i class="fas fa-asterisk" aria-hidden="true"></i>
-                `}
+                html`<i class="fas fa-asterisk" aria-hidden="true"></i>`}
             </label>
 
             ${getGrantedGroupsSelectLabelWithCheckboxIfNeeded(host)} ${getGrantedGroupsSelect(host)}

@@ -192,14 +192,8 @@ final class Tuleap
         );
         $forge_upgrade->runUpdate();
 
-        if (file_exists('/extra_ca.pem')) {
-            $output->writeln('<info>Extra CA file detected, update system trust</info>');
-            if (! copy('/extra_ca.pem', '/etc/pki/ca-trust/source/anchors/extra_ca.pem')) {
-                $output->writeln('<error>Cannot copy `/extra_ca.pem` to `/etc/pki/ca-trust/source/anchors`</error>');
-            }
-
-            $this->process_factory->getProcessWithoutTimeout(['/usr/bin/update-ca-trust'])->mustRun();
-        }
+        $ca_trust = new CATrust($this->process_factory, $logger);
+        $ca_trust->update();
 
         return $server_name;
     }

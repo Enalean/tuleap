@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import type { GetText } from "@tuleap/gettext";
 import * as document_export_creator from "./DocumentBuilder/create-export-document";
 import { startDownloadExportDocument } from "./export-document";
@@ -24,8 +25,8 @@ import type { GlobalExportProperties } from "./type";
 
 describe("export-document", () => {
     it("generates the export document, transforms it and then trigger the download", async (): Promise<void> => {
-        const document_exporter = jest.fn();
-        const export_creator = jest.spyOn(document_export_creator, "createExportDocument");
+        const document_exporter = vi.fn();
+        const export_creator = vi.spyOn(document_export_creator, "createExportDocument");
         export_creator.mockResolvedValue({
             name: "name",
             artifacts: [

@@ -31,42 +31,16 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullrequestDisplayer
 {
-    /**
-     * @var Factory
-     */
-    private $factory;
-    /**
-     * @var TemplateRenderer
-     */
-    private $template_renderer;
-    /**
-     * @var MergeSettingRetriever
-     */
-    private $merge_setting_retriever;
-    /**
-     * @var GitRepositoryHeaderDisplayer
-     */
-    private $header_displayer;
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $repository_factory;
-
     public function __construct(
-        Factory $factory,
-        TemplateRenderer $template_renderer,
-        MergeSettingRetriever $merge_setting_retriever,
-        GitRepositoryHeaderDisplayer $header_displayer,
-        GitRepositoryFactory $repository_factory,
+        private Factory $factory,
+        private TemplateRenderer $template_renderer,
+        private MergeSettingRetriever $merge_setting_retriever,
+        private GitRepositoryHeaderDisplayer $header_displayer,
+        private GitRepositoryFactory $repository_factory,
     ) {
-        $this->factory                 = $factory;
-        $this->template_renderer       = $template_renderer;
-        $this->merge_setting_retriever = $merge_setting_retriever;
-        $this->header_displayer        = $header_displayer;
-        $this->repository_factory      = $repository_factory;
     }
 
-    public function display(\HTTPRequest $request, BaseLayout $layout)
+    public function display(\HTTPRequest $request, BaseLayout $layout): void
     {
         $repository = $this->repository_factory->getRepositoryById($request->getValidated('repo_id', 'uint', 0));
         if ($repository) {
@@ -76,8 +50,8 @@ class PullrequestDisplayer
             $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
 
             $assets = new IncludeAssets(
-                __DIR__ . '/../frontend-assets',
-                '/assets/pullrequest'
+                __DIR__ . '/../scripts/pullrequests-app/frontend-assets',
+                '/assets/pullrequest/pullrequests-app'
             );
 
             $layout->addCssAsset(
@@ -101,8 +75,7 @@ class PullrequestDisplayer
 
             $presenter = new PullRequestPresenter(
                 $repository->getId(),
-                $user->getId(),
-                $user->getShortLocale(),
+                $user,
                 $nb_pull_requests,
                 $this->merge_setting_retriever->getMergeSettingForRepository($repository)
             );

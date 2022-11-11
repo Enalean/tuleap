@@ -18,9 +18,21 @@
  */
 
 import { get } from "@tuleap/tlp-fetch";
-import type { FileHistory } from "../type";
+import type { EmbeddedFileVersion, FileHistory, LinkVersion } from "../type";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { getAllJSON, del, getJSON } from "@tuleap/fetch-result";
+import type { EmbeddedFileSpecificVersionContent } from "../type";
 
-export { getFileVersionHistory };
+export {
+    getFileVersionHistory,
+    getAllFileVersionHistory,
+    getAllLinkVersionHistory,
+    getAllEmbeddedFileVersionHistory,
+    deleteFileVersion,
+    deleteEmbeddedFileVersion,
+    getEmbeddedFileVersionContent,
+};
 
 async function getFileVersionHistory(id: number): Promise<ReadonlyArray<FileHistory>> {
     const escaped_file_id = encodeURIComponent(id);
@@ -32,4 +44,39 @@ async function getFileVersionHistory(id: number): Promise<ReadonlyArray<FileHist
     });
 
     return versions.json();
+}
+
+function getAllFileVersionHistory(id: number): ResultAsync<readonly FileHistory[], Fault> {
+    return getAllJSON<readonly FileHistory[], FileHistory>(`/api/docman_files/${id}/versions`);
+}
+
+function getAllEmbeddedFileVersionHistory(
+    id: number
+): ResultAsync<readonly EmbeddedFileVersion[], Fault> {
+    return getAllJSON<readonly EmbeddedFileVersion[], EmbeddedFileVersion>(
+        `/api/docman_embedded_files/${id}/versions`,
+        {
+            params: { limit: 50 },
+        }
+    );
+}
+
+function getAllLinkVersionHistory(id: number): ResultAsync<readonly LinkVersion[], Fault> {
+    return getAllJSON<readonly LinkVersion[], LinkVersion>(`/api/docman_links/${id}/versions`, {
+        params: { limit: 50 },
+    });
+}
+
+function deleteFileVersion(id: number): ResultAsync<Response, Fault> {
+    return del(`/api/docman_file_versions/${id}`);
+}
+
+function deleteEmbeddedFileVersion(id: number): ResultAsync<Response, Fault> {
+    return del(`/api/docman_embedded_file_versions/${id}`);
+}
+
+function getEmbeddedFileVersionContent(
+    id: number
+): ResultAsync<EmbeddedFileSpecificVersionContent, Fault> {
+    return getJSON(`/api/docman_embedded_file_versions/${id}/content`);
 }

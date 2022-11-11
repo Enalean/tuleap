@@ -210,18 +210,19 @@ function guessing_lang($languages = false)
 function guessing_setlocale($category, $locale)
 {
     $alt = ['en' => ['C', 'en_US', 'en_GB', 'en_AU', 'en_CA', 'english'],
-                 'de' => ['de_DE', 'de_DE', 'de_DE@euro',
-                               'de_AT@euro', 'de_AT', 'German_Austria.1252', 'deutsch',
-                               'german', 'ge'],
-                 'es' => ['es_ES', 'es_MX', 'es_AR', 'spanish'],
-                 'nl' => ['nl_NL', 'dutch'],
-                 'fr' => ['fr_FR', 'fran�ais', 'french'],
-                 'it' => ['it_IT'],
-                 'sv' => ['sv_SE'],
-                 'ja.utf-8'  => ['ja_JP','ja_JP.utf-8','japanese'],
-                 'ja.euc-jp' => ['ja_JP','ja_JP.eucJP','japanese.euc'],
-                 'zh' => ['zh_TW', 'zh_CN'],
-                 ];
+        'de' => ['de_DE', 'de_DE', 'de_DE@euro',
+            'de_AT@euro', 'de_AT', 'German_Austria.1252', 'deutsch',
+            'german', 'ge',
+        ],
+        'es' => ['es_ES', 'es_MX', 'es_AR', 'spanish'],
+        'nl' => ['nl_NL', 'dutch'],
+        'fr' => ['fr_FR', 'fran�ais', 'french'],
+        'it' => ['it_IT'],
+        'sv' => ['sv_SE'],
+        'ja.utf-8'  => ['ja_JP','ja_JP.utf-8','japanese'],
+        'ja.euc-jp' => ['ja_JP','ja_JP.eucJP','japanese.euc'],
+        'zh' => ['zh_TW', 'zh_CN'],
+    ];
     if (! $locale or $locale == 'C') {
         // do the reverse: return the detected locale collapsed to our LANG
         $locale = setlocale($category, '');

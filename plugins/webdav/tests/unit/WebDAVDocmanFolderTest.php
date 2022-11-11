@@ -25,7 +25,6 @@ namespace Tuleap\Webdav;
 
 use DocmanPlugin;
 use ForgeConfig;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 use Sabre\DAV\Exception\BadRequest;
 use Sabre\DAV\Exception\Conflict;
@@ -40,7 +39,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
@@ -64,17 +62,17 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildListNoChildrens(): void
     {
-        $utils                   = \Mockery::spy(\WebDAVUtils::class);
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([]);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
+        $utils                   = $this->createMock(\WebDAVUtils::class);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([]);
+        $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $this->assertSame([], $webDAVDocmanFolder->getChildList());
+        self::assertSame([], $webDAVDocmanFolder->getChildList());
     }
 
     /**
@@ -82,19 +80,21 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildListUserCanNotAccess(): void
     {
-        $item              = \Mockery::spy(\Docman_Item::class);
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item]);
+        $item = $this->createMock(\Docman_Item::class);
+        $item->method('getId')->willReturn(1);
 
-        $utils                   = \Mockery::spy(\WebDAVUtils::class);
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(false);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([$item]);
+
+        $utils                   = $this->createMock(\WebDAVUtils::class);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(false);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
+        $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $this->assertEquals([], $webDAVDocmanFolder->getChildList());
+        self::assertEquals([], $webDAVDocmanFolder->getChildList());
     }
 
     /**
@@ -102,26 +102,30 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildListDuplicateName(): void
     {
-        $item1 = \Mockery::spy(\Docman_Folder::class);
-        $item1->shouldReceive('getTitle')->andReturns('SameName');
-        $item2 = \Mockery::spy(\Docman_Folder::class);
-        $item2->shouldReceive('getTitle')->andReturns('SameName');
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
+        $item1 = $this->createMock(\Docman_Folder::class);
+        $item1->method('getTitle')->willReturn('SameName');
+        $item1->method('getId')->willReturn(1);
 
-        $utils                   = \Mockery::spy(\WebDAVUtils::class);
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
+        $item2 = $this->createMock(\Docman_Folder::class);
+        $item2->method('getTitle')->willReturn('SameName');
+        $item2->method('getId')->willReturn(2);
+
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([$item1, $item2]);
+
+        $utils                   = $this->createMock(\WebDAVUtils::class);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
+        $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $children = $webDAVDocmanFolder->getChildList();
 
-        $this->assertTrue(isset($children['SameName']));
-        $this->assertSame(1, sizeof($children));
-        $this->assertSame('duplicate', $children['SameName']);
+        self::assertTrue(isset($children['SameName']));
+        self::assertSame(1, sizeof($children));
+        self::assertSame('duplicate', $children['SameName']);
     }
 
     /**
@@ -129,36 +133,41 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildListFilled(): void
     {
-        $item1 = \Mockery::spy(\Docman_Folder::class);
-        $item1->shouldReceive('getTitle')->andReturns('SameName');
-        $item2 = \Mockery::spy(\Docman_Folder::class);
-        $item2->shouldReceive('getTitle')->andReturns('AnotherName');
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
+        $item1 = $this->createMock(\Docman_Folder::class);
+        $item1->method('getTitle')->willReturn('SameName');
+        $item1->method('getId')->willReturn(1);
 
-        $utils                   = \Mockery::spy(\WebDAVUtils::class);
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
+        $item2 = $this->createMock(\Docman_Folder::class);
+        $item2->method('getTitle')->willReturn('AnotherName');
+        $item2->method('getId')->willReturn(2);
+
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([$item1, $item2]);
+
+        $utils                   = $this->createMock(\WebDAVUtils::class);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
+        $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $children = $webDAVDocmanFolder->getChildList();
 
-        $this->assertTrue(isset($children['SameName']));
-        $this->assertTrue(isset($children['AnotherName']));
-        $this->assertSame(2, sizeof($children));
+        self::assertTrue(isset($children['SameName']));
+        self::assertTrue(isset($children['AnotherName']));
+        self::assertSame(2, sizeof($children));
     }
 
     public function testGetChildrenDoesntListLinksWiki(): void
     {
         $item1             = new \Docman_Folder(['title' => 'leFolder', 'parent_id' => '115']);
         $item2             = new \Docman_Link(['title' => 'leLink', 'link_url' => 'https://example.com']);
-        $docmanItemFactory = \Mockery::mock(\Docman_ItemFactory::class, ['getChildrenFromParent' => [$item1, $item2]]);
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([$item1, $item2]);
 
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
 
         $utils = new \WebDAVUtils();
         $utils->setDocmanPermissionsManager($this->project, $docmanPermissionManager);
@@ -177,11 +186,14 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenNoChildrens(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVDocmanFolder = $this->getMockBuilder(\WebDAVDocmanFolder::class)
+            ->setConstructorArgs([$this->user, $this->project, new \Docman_Folder(), $this->createMock(\WebDAVUtils::class)])
+            ->onlyMethods(['getChildList'])
+            ->getMock();
 
-        $webDAVDocmanFolder->shouldReceive('getChildList')->andReturns([]);
+        $webDAVDocmanFolder->method('getChildList')->willReturn([]);
 
-        $this->assertSame([], $webDAVDocmanFolder->getChildren());
+        self::assertSame([], $webDAVDocmanFolder->getChildren());
     }
 
     /**
@@ -189,11 +201,14 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenDuplicateName(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVDocmanFolder = $this->getMockBuilder(\WebDAVDocmanFolder::class)
+            ->setConstructorArgs([$this->user, $this->project, new \Docman_Folder(), $this->createMock(\WebDAVUtils::class)])
+            ->onlyMethods(['getChildList'])
+            ->getMock();
 
-        $webDAVDocmanFolder->shouldReceive('getChildList')->andReturns(['SomeName' => 'duplicate']);
+        $webDAVDocmanFolder->method('getChildList')->willReturn(['SomeName' => 'duplicate']);
 
-        $this->assertSame([], $webDAVDocmanFolder->getChildren());
+        self::assertSame([], $webDAVDocmanFolder->getChildren());
     }
 
     /**
@@ -201,26 +216,30 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenFilled(): void
     {
-        $item1 = \Mockery::spy(\Docman_Folder::class);
-        $item1->shouldReceive('getTitle')->andReturns('SameName');
-        $item2 = \Mockery::spy(\Docman_Folder::class);
-        $item2->shouldReceive('getTitle')->andReturns('AnotherName');
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
+        $item1 = $this->createMock(\Docman_Folder::class);
+        $item1->method('getTitle')->willReturn('SameName');
+        $item1->method('getId')->willReturn(1);
 
-        $utils                   = \Mockery::spy(\WebDAVUtils::class);
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
+        $item2 = $this->createMock(\Docman_Folder::class);
+        $item2->method('getTitle')->willReturn('AnotherName');
+        $item2->method('getId')->willReturn(2);
+
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([$item1, $item2]);
+
+        $utils                   = $this->createMock(\WebDAVUtils::class);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
+        $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $children = $webDAVDocmanFolder->getChildren();
 
-        $this->assertTrue(isset($children['SameName']));
-        $this->assertTrue(isset($children['AnotherName']));
-        $this->assertSame(2, sizeof($children));
+        self::assertTrue(isset($children['SameName']));
+        self::assertTrue(isset($children['AnotherName']));
+        self::assertSame(2, sizeof($children));
     }
 
     /**
@@ -228,13 +247,14 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildNotFound(): void
     {
-        $utils                   = \Mockery::spy(\WebDAVUtils::class);
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([]);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
+        $utils                   = $this->createMock(\WebDAVUtils::class);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([]);
+        $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
+        $utils->method('retrieveName')->willReturn('whatever');
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -247,19 +267,23 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildDuplicatedSameCase(): void
     {
-        $item1 = \Mockery::spy(\Docman_Folder::class);
-        $item1->shouldReceive('getTitle')->andReturns('SameName');
-        $item2 = \Mockery::spy(\Docman_Folder::class);
-        $item2->shouldReceive('getTitle')->andReturns('SameName');
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
+        $item1 = $this->createMock(\Docman_Folder::class);
+        $item1->method('getTitle')->willReturn('SameName');
+        $item1->method('getId')->willReturn(1);
 
-        $utils                   = \Mockery::spy(\WebDAVUtils::class);
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $utils->shouldReceive('retrieveName')->andReturns('SameName');
+        $item2 = $this->createMock(\Docman_Folder::class);
+        $item2->method('getTitle')->willReturn('SameName');
+        $item2->method('getId')->willReturn(2);
+
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([$item1, $item2]);
+
+        $utils                   = $this->createMock(\WebDAVUtils::class);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
+        $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
+        $utils->method('retrieveName')->willReturn('SameName');
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -272,19 +296,23 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildDuplicatedDifferentCase(): void
     {
-        $item1 = \Mockery::spy(\Docman_Folder::class);
-        $item1->shouldReceive('getTitle')->andReturns('SameName');
-        $item2 = \Mockery::spy(\Docman_Folder::class);
-        $item2->shouldReceive('getTitle')->andReturns('samename');
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
+        $item1 = $this->createMock(\Docman_Folder::class);
+        $item1->method('getTitle')->willReturn('SameName');
+        $item1->method('getId')->willReturn(1);
 
-        $utils                   = \Mockery::spy(\WebDAVUtils::class);
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $utils->shouldReceive('retrieveName')->andReturns('SameName');
+        $item2 = $this->createMock(\Docman_Folder::class);
+        $item2->method('getTitle')->willReturn('samename');
+        $item2->method('getId')->willReturn(2);
+
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([$item1, $item2]);
+
+        $utils                   = $this->createMock(\WebDAVUtils::class);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
+        $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
+        $utils->method('retrieveName')->willReturn('SameName');
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -294,16 +322,16 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetChildIsWiki(): void
     {
-        $utils                   = \Mockery::spy(\WebDAVUtils::class);
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
+        $utils                   = $this->createMock(\WebDAVUtils::class);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
 
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([new \Docman_Wiki(['title' => 'leWiki', 'wiki_page' => 'HomePage'])]);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([new \Docman_Wiki(['title' => 'leWiki', 'wiki_page' => 'HomePage'])]);
+        $utils->method('getDocmanItemFactory')->willReturn($docmanItemFactory);
 
-        $utils->shouldReceive("retrieveName")->andReturnArg(0);
+        $utils->method("retrieveName")->willReturn('leWiki');
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder(
             UserTestBuilder::aUser()->build(),
@@ -323,14 +351,15 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $base_folder = new \Docman_Folder(['title' => 'leFolder', 'parent_id' => 121]);
 
-        $item = \Mockery::spy(\Docman_Folder::class);
-        $item->shouldReceive('getTitle')->andReturns('SomeName');
+        $item = $this->createMock(\Docman_Folder::class);
+        $item->method('getTitle')->willReturn('SomeName');
+        $item->method('getId')->willReturn(1);
 
-        $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item]);
+        $docmanItemFactory = $this->createMock(\Docman_ItemFactory::class);
+        $docmanItemFactory->method('getChildrenFromParent')->willReturn([$item]);
 
-        $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
 
         $utils = new \WebDAVUtils();
         $utils->setDocmanPermissionsManager($this->project, $docmanPermissionManager);
@@ -344,8 +373,8 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateDirectoryNoWriteEnabled(): void
     {
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(false);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(false);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -355,9 +384,9 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateDirectorySuccess(): void
     {
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $utils->shouldReceive('processDocmanRequest')->once();
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->expects(self::once())->method('processDocmanRequest');
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -366,8 +395,8 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeleteDirectoryNoWriteEnabled(): void
     {
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(false);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(false);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -377,8 +406,8 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSetNameNoWriteEnabled(): void
     {
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(false);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(false);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -388,9 +417,9 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSetNameSuccess(): void
     {
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $utils->shouldReceive('processDocmanRequest')->once();
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->expects(self::once())->method('processDocmanRequest');
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -399,8 +428,8 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateFileNoWriteEnabled(): void
     {
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(false);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(false);
 
         $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
@@ -411,13 +440,17 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateFileBigFile(): void
     {
-        $docman_item_factory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docman_item_factory->shouldReceive('getChildrenFromParent')->andReturns([]);
+        $docman_item_factory = $this->createMock(\Docman_ItemFactory::class);
+        $docman_item_factory->method('getChildrenFromParent')->willReturn([]);
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturn($docman_item_factory);
-        $utils->shouldReceive('processDocmanRequest')->never();
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->method('getDocmanItemFactory')->willReturn($docman_item_factory);
+        $utils->method('retrieveName')->willReturn('name');
+        $utils->expects(self::never())->method('processDocmanRequest');
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 23);
 
@@ -431,12 +464,16 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateFileSucceed(): void
     {
-        $docman_item_factory = \Mockery::spy(\Docman_ItemFactory::class);
-        $docman_item_factory->shouldReceive('getChildrenFromParent')->andReturns([]);
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $utils->shouldReceive('processDocmanRequest')->once();
-        $utils->shouldReceive('getDocmanItemFactory')->andReturn($docman_item_factory);
+        $docman_item_factory = $this->createMock(\Docman_ItemFactory::class);
+        $docman_item_factory->method('getChildrenFromParent')->willReturn([]);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->expects(self::once())->method('processDocmanRequest');
+        $utils->method('getDocmanItemFactory')->willReturn($docman_item_factory);
+        $utils->method('retrieveName')->willReturn('name');
+        $docmanPermissionManager = $this->createMock(\Docman_PermissionsManager::class);
+        $docmanPermissionManager->method('userCanAccess')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($docmanPermissionManager);
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 2000);
 

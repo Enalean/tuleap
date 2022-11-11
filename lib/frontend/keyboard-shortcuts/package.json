@@ -16,6 +16,7 @@
     }
   },
   "dependencies": {
+    "@tuleap/dom": "link:../dom",
     "hotkeys-js": "^3.8.3"
   },
   "devDependencies": {

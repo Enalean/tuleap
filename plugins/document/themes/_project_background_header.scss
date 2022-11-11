@@ -18,7 +18,7 @@
  */
 
 @use "../../../src/themes/BurningParrot/css/includes/global-variables";
-@use "../../src/themes/common/css/project-background/background";
+@use "@tuleap/project-background";
 
 .project-with-background {
     .document-header {
@@ -26,16 +26,20 @@
     }
 
     .document-header-title {
-        @include background.project-background-title-header-typography;
+        @include project-background.title-header-typography;
     }
 
     .document-header-search {
         margin: 0 0 var(--tlp-medium-spacing);
     }
+
+    .embedded-document-container-warning {
+        margin: var(--tlp-medium-spacing);
+    }
 }
 
 body {
-    @include background.apply-background(
+    @include project-background.apply-background(
         ".document-header",
         global-variables.$sidebar-expanded-width,
         global-variables.$sidebar-collapsed-width

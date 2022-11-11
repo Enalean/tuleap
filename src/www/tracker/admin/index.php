@@ -262,7 +262,8 @@ if ($group_id && ! $atid) {
         // Display the UI Form
             if ($request->getValidated('update_canned') && ! $request->getValidated('post_changes')) {
                       $ath->adminHeader(['title' => $Language->getText('tracker_admin_index', 'modify_cannedresponse'),
-                'help' => 'tracker-v3.html#canned-responses']);
+                          'help' => 'tracker-v3.html#canned-responses',
+                      ]);
                 $aci = $ach->fetchData($artifact_canned_id);
                 if (! $aci) {
                               exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_found_canneditem', (int) $artifact_canned_id));
@@ -270,7 +271,8 @@ if ($group_id && ! $atid) {
                 $ach->displayUpdateForm();
             } else {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_index', 'create_modify_cannedresponse'),
-                'help' => 'tracker-v3.html#canned-responses']);
+                    'help' => 'tracker-v3.html#canned-responses',
+                ]);
                 $ach->displayCannedResponses();
 
                 $ach->displayCreateForm();
@@ -400,7 +402,8 @@ if ($group_id && ! $atid) {
             }
             $ath->adminHeader(
                 ['title' => $Language->getText('tracker_admin_index', 'art_admin'),
-                'help' => 'tracker-v3.html#email-notification-settings']
+                    'help' => 'tracker-v3.html#email-notification-settings',
+                ]
             );
             $ath->displayNotificationForm($user_id);
             $ath->footer([]);
@@ -444,8 +447,9 @@ if ($group_id && ! $atid) {
             }
 
             $ath->adminHeader([
-                    'title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') . $Language->getText('tracker_admin_index', 'options'),
-                    'help' => 'tracker-v3.html#general-configuration-settings']);
+                'title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') . $Language->getText('tracker_admin_index', 'options'),
+                'help' => 'tracker-v3.html#general-configuration-settings',
+            ]);
             $ath->displayOptions($group_id, $atid);
             $ath->footer([]);
             break;
@@ -550,7 +554,8 @@ if ($group_id && ! $atid) {
             if ($field) {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') .
                 $Language->getText('tracker_admin_field_values_details', 'values_admin'),
-                'help' => 'tracker-v3.html#field-values-management']);
+                    'help' => 'tracker-v3.html#field-values-management',
+                ]);
                 echo "<H2>" . $Language->getText('tracker_import_admin', 'tracker') .
                 ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . "&atid=" . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>'" .
                 $Language->getText('tracker_admin_field_values_details', 'manage_for', $hp->purify($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . "'</H2>";
@@ -822,7 +827,8 @@ if ($group_id && ! $atid) {
             $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') . $Language->getText('tracker_admin_index', 'modify_usage'),
-                'help' => 'tracker-v3.html#creation-and-modification-of-a-tracker-field-set']);
+                    'help' => 'tracker-v3.html#creation-and-modification-of-a-tracker-field-set',
+                ]);
                 echo "<H2>" . $Language->getText('tracker_import_admin', 'tracker') .
                 ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . "&atid=" . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>' " .
                 $Language->getText('tracker_admin_index', 'modify_usage_for', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML)) . "</H2>";
@@ -860,7 +866,8 @@ if ($group_id && ! $atid) {
             }
 
             $ath->adminTrackersHeader(['title' => $ath->getName() . ' ' . $Language->getText('tracker_admin_field_usage', 'tracker_admin'),
-                    'help' => 'tracker-v3.html#tracker-administration']);
+                'help' => 'tracker-v3.html#tracker-administration',
+            ]);
             if (! $ath->preDelete()) {
                       $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index', 'deletion_failed', $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML)));
             } else {
@@ -950,7 +957,8 @@ if ($group_id && ! $atid) {
 
             if ($fieldset) {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_fieldset', 'tracker_admin') . $Language->getText('tracker_admin_index', 'modify_fieldset'),
-                'help' => 'tracker-v3.html#creation-and-modification-of-a-tracker-field-set']);
+                    'help' => 'tracker-v3.html#creation-and-modification-of-a-tracker-field-set',
+                ]);
                 echo "<H2>" . $Language->getText('tracker_import_admin', 'tracker') .
                 ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . "&atid=" . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . "</a>' " .
                 $Language->getText('tracker_admin_index', 'modify_fieldset_for', $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML)) . "</H2>";

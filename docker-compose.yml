@@ -7,12 +7,18 @@ services:
   reverse-proxy:
     build:
       context: tools/docker/reverse-proxy
+      platforms:
+        - linux/amd64
     volumes:
       - ./tools/docker/reverse-proxy/nginx.conf:/etc/nginx/nginx.conf:ro,cached
       - reverse-proxy-cert:/etc/pki/tls
     depends_on:
     - web
     - realtime
+    networks:
+      default:
+        aliases:
+          - tuleap-web.tuleap-aio-dev.docker # Same as the default sys_default_domain setting in a dev setup
 
   web:
     image: ghcr.io/enalean/tuleap-aio-dev:c7-php80-nginx
@@ -20,7 +26,8 @@ services:
     volumes:
       - .:/usr/share/tuleap:cached
       - tuleap-data:/data
-      - realtime-cert:/etc/pki/ca-trust/source/anchors
+      - realtime-cert:/realtime-cert:ro
+      - reverse-proxy-cert:/front-cert:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - .env:/root/.tuleap_env:ro
     tmpfs: /run
@@ -32,14 +39,12 @@ services:
     - ldap
     - db
     - realtime
-    networks:
-      default:
-        aliases:
-          - tuleap-web.tuleap-aio-dev.docker # Same as the default sys_default_domain setting in a dev setup
 
   realtime:
     build:
       context: tools/docker/realtime
+      platforms:
+        - linux/amd64
     command: /tuleap/tools/docker/realtime/run.sh
     volumes:
       - .:/tuleap:ro,cached
@@ -61,6 +66,8 @@ services:
   gerrit:
     build:
       context: tools/docker/gerrit
+      platforms:
+        - linux/amd64
     env_file:
       - .env
     environment:
@@ -73,6 +80,8 @@ services:
   jenkins:
     build:
       context: tools/docker/jenkins
+      platforms:
+        - linux/amd64
     environment:
       - JENKINS_OPTS="--prefix=/jenkins"
     volumes:
@@ -82,6 +91,8 @@ services:
   gitlab:
     build:
       context: tools/docker/gitlab
+      platforms:
+        - linux/amd64
     hostname: 'gitlab.local'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
@@ -95,6 +106,13 @@ services:
         aliases:
           - gitlab.local
 
+  onlyoffice:
+    image: onlyoffice/documentserver:7.2.0.204
+    environment:
+      - JWT_ENABLED=true
+      - JWT_SECRET=TULEAP_DO_NOT_USE_THIS_IN_PRODUCTION
+      - USE_UNAUTHORIZED_STORAGE=true
+
   db55:
     image: mysql:5.5
     env_file:
@@ -102,13 +120,22 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
-  db:
+  db57:
     image: mysql:5.7
     env_file:
       - .env
     volumes:
       - ./src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/conf.d/tuleap.cnf:ro,cached
       - db57-data:/var/lib/mysql
+
+  db:
+    image: mysql:8.0
+    env_file:
+      - .env
+    command: --upgrade=FORCE
+    volumes:
+      - ./src/etc/tuleap-mysql80-dev.cnf:/etc/mysql/conf.d/tuleap.cnf:ro,cached
+      - db80-data:/var/lib/mysql
 
   db-maria-10.3:
      image: mariadb:10.3
@@ -131,6 +158,15 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prom-data:/prometheus
 
+  meilisearch:
+    image: getmeili/meilisearch:v0.29.0
+    volumes:
+      - meilisearch-data:/meili_data
+    environment:
+      - MEILI_ENV=development
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_MASTER_KEY=MEILI_MASTER_KEY_DO_NOT_USE_IN_PRODUCTION
+
   ldap-admin:
     image: osixia/phpldapadmin:0.7.1
     volumes:
@@ -148,6 +184,7 @@ volumes:
   gitlab-data:
   db-data:
   db57-data:
+  db80-data:
   mariadb103-data:
   redis-data:
   realtime-conf:
@@ -155,3 +192,4 @@ volumes:
   reverse-proxy-cert:
   prom-data:
   jenkins-data:
+  meilisearch-data:

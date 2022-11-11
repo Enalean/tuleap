@@ -79,7 +79,8 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
                 '144' => $this->buildArtifactLinkInfo(144, "_is_child", $tracker, true),
                 '145' => $this->buildArtifactLinkInfo(145, "_is_child", $tracker, true),
                 '146' => $this->buildArtifactLinkInfo(146, "_is_child", $tracker, true),
-            ]]
+            ],
+            ]
         );
 
         $artifact = \Mockery::mock(

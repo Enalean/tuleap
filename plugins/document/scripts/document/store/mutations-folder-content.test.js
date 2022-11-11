@@ -922,5 +922,29 @@ describe("Store mutations", () => {
                 42: [43, 44, 45, folder.id, sub_item_1.id, sub_item_2.id, sub_item_3.id],
             });
         });
+
+        it(`When the parent folder is no longer defined (user quit loading before end of execution)
+            Then the mutation must not be executed.`, () => {
+            const state = {
+                folder_content: [],
+                folded_items_ids: [43, 44, 45, folder.id],
+                folded_by_map: {
+                    42: [43, 44, 45, folder.id],
+                },
+            };
+
+            mutations.appendSubFolderContent(state, [
+                folder.id,
+                [sub_item_1, sub_item_2, sub_item_3],
+            ]);
+
+            expect(state.folder_content).toStrictEqual([]);
+
+            expect(state.folded_items_ids).toStrictEqual([43, 44, 45, folder.id]);
+
+            expect(state.folded_by_map).toStrictEqual({
+                42: [43, 44, 45, folder.id],
+            });
+        });
     });
 });

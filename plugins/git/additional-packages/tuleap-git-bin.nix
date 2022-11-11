@@ -4,13 +4,17 @@
 }:
 
 let
+  pkgsWithOpenSSL307 = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/1f3ebb2bd1a353a42e8f833895c26d8415c7b791.tar.gz";
+    sha256 = "03y1a3lv44b4fdnykyms5nd24v2mqn8acz1xa4jkbmryc29rsgcw";
+  }) { };
   tuleapVersion = builtins.readFile ../../../VERSION;
   tuleapGitBinBasePath = "/usr/lib/tuleap/git";
-  gitStatic = (pkgs.pkgsStatic.gitMinimal.overrideAttrs (oldAttrs: rec {
-    version = "2.37.1";
+  gitStatic = ((pkgs.pkgsStatic.gitMinimal.override { openssl = pkgsWithOpenSSL307.openssl; }).overrideAttrs (oldAttrs: rec {
+    version = "2.38.1";
     src = pkgs.fetchurl {
       url = "https://www.kernel.org/pub/software/scm/git/git-${version}.tar.xz";
-      sha256 = "sha256-yBYsa4uPHF23BqsBtO4p4xBhGCE13CfEhgIkquwbNQA=";
+      sha256 = "sha256-l9346liiueD7wlCOJFAoynWRG9ONFVFhaxSMGqV0Ctk=";
     };
 
     dontPatchShebangs = true;
@@ -26,6 +30,8 @@ let
     # deploy additional helpers like shell completions files. It is not something we need for our context and it cannot
     # work without modification because it expects to find files under $out and not under $out/$tuleapGitBinBasePath.
     postInstall = "";
+
+    doInstallCheck = false;
   }));
 in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-git-bin";

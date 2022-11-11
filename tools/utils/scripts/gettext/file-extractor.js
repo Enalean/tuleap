@@ -67,7 +67,12 @@ function createParser(gettext_extractor) {
             }
         ),
         JsExtractors.callExpression(
-            ["[this].$ngettext", "$ngettext", "gettext_provider.$ngettext"],
+            [
+                "[this].$ngettext",
+                "$ngettext",
+                "gettext_provider.$ngettext",
+                "gettext_provider.ngettext",
+            ],
             {
                 arguments: { text: 0, textPlural: 1 },
             }
@@ -115,10 +120,10 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser, 
             compiled.errors.forEach((error) => log(error));
             throw new Error(`Error during Vue template compilation for file: ${file_path}`);
         }
+        const scriptKind = ts.ScriptKind.JS;
         // vue3-gettext deprecates the usage of the translate component and the v-translate directive
         // so when parsing Vue 3 code we skip the parsing the template AST and just look at the generated JS code
         if (compiled.code !== undefined) {
-            const scriptKind = ts.ScriptKind.JS;
             gettext_parser.parseString(
                 compiled.code.replaceAll("_ctx.", "gettext_provider."),
                 undefined,
@@ -127,6 +132,9 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser, 
                 }
             );
         } else {
+            gettext_parser.parseString(compiled.render, undefined, {
+                scriptKind,
+            });
             parseNode(compiled.ast);
         }
     }

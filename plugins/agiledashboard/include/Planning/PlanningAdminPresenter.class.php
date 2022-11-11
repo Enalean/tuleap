@@ -38,10 +38,10 @@ class Planning_PlanningAdminPresenter
     {
         return AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             [
-                    'group_id' => $this->planning->getGroupId(),
-                    'planning_id' => $this->planning->getId(),
-                    'action' => 'edit',
-                ]
+                'group_id' => $this->planning->getGroupId(),
+                'planning_id' => $this->planning->getId(),
+                'action' => 'edit',
+            ]
         );
     }
 

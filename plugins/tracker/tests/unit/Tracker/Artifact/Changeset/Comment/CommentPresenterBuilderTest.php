@@ -25,10 +25,11 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_Artifact_Changeset_Comment;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 
-class CommentPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommentPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
@@ -105,7 +106,7 @@ class CommentPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(110);
-        $tracker->shouldReceive('getProject')->andReturn(\Project::buildForTest());
+        $tracker->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
         $artifact = \Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);

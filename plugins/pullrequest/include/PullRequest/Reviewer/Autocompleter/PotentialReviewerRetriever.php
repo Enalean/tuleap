@@ -70,13 +70,9 @@ class PotentialReviewerRetriever
         $offset = 0;
 
         while (count($potential_reviewers) < $max_number_reviewers) {
-            $dar = $this->dao->searchUserNameLike($username_to_search->toString(), $max_number_reviewers, $offset);
+            $rows = $this->dao->searchUserNameLike($username_to_search->toString(), $max_number_reviewers, $offset);
 
-            if ($dar === false) {
-                throw new \DataAccessQueryException('Cannot access data while searching for users');
-            }
-
-            foreach ($dar as $row) {
+            foreach ($rows as $row) {
                 $user = $this->user_manager->getUserInstanceFromRow($row);
 
                 try {
@@ -93,7 +89,7 @@ class PotentialReviewerRetriever
             }
 
             $offset    += $max_number_reviewers;
-            $found_rows = (int) $this->dao->foundRows();
+            $found_rows = $this->dao->foundRows();
 
             if ($offset >= $found_rows) {
                 return $potential_reviewers;

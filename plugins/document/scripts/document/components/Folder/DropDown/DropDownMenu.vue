@@ -19,6 +19,7 @@
 
 <template>
     <fragment>
+        <slot name="download" />
         <slot name="new-folder-secondary-action" />
 
         <slot name="new-item-version" />
@@ -41,7 +42,22 @@
             <i class="far fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
             <span v-translate>Notifications</span>
         </a>
+        <router-link
+            v-if="should_display_versions_link"
+            v-bind:to="{ name: 'versions', params: { item_id: item.id } }"
+            class="tlp-dropdown-menu-item"
+            role="menuitem"
+            data-shortcut-history
+            data-test="document-versions"
+        >
+            <i
+                class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"
+                aria-hidden="true"
+            ></i>
+            <span v-translate>Versions</span>
+        </router-link>
         <a
+            v-if="!should_display_history_in_document"
             v-bind:href="getUrlForPane(HISTORY_PANE_NAME)"
             class="tlp-dropdown-menu-item"
             role="menuitem"
@@ -51,9 +67,21 @@
             <i class="fa fa-fw fa-history tlp-dropdown-menu-item-icon"></i>
             <span v-translate>History</span>
         </a>
+        <router-link
+            v-else
+            v-bind:to="{ name: 'history', params: { item_id: item.id } }"
+            class="tlp-dropdown-menu-item"
+            role="menuitem"
+            data-shortcut-history
+            data-test="document-history"
+        >
+            <i class="fa-solid fa-fw fa-list tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+            <span v-translate>Logs</span>
+        </router-link>
+
         <slot name="update-permissions" />
         <a
-            v-if="!is_item_an_empty_document(item)"
+            v-if="!is_item_an_empty_document"
             v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
             class="tlp-dropdown-menu-item"
             role="menuitem"
@@ -70,7 +98,7 @@
         <copy-item v-bind:item="item" />
         <paste-item v-bind:destination="item" />
 
-        <template v-if="is_item_a_folder(item)">
+        <template v-if="is_item_a_folder">
             <drop-down-separator />
             <download-folder-as-zip
                 data-test="document-dropdown-download-folder-as-zip"
@@ -82,52 +110,42 @@
         <slot name="delete-item" />
     </fragment>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { Fragment } from "vue-frag";
 import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DownloadFolderAsZip from "./DownloadFolderAsZip/DownloadFolderAsZip.vue";
-import { isFolder, isEmpty } from "../../../helpers/type-check-helper";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { isFolder, isEmpty, isFile, isLink, isEmbedded } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
-import { namespace } from "vuex-class";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { computed, inject } from "vue";
 
-const configuration = namespace("configuration");
+const props = defineProps<{ item: Item }>();
 
-@Component({
-    components: {
-        Fragment,
-        DropDownSeparator,
-        CutItem,
-        CopyItem,
-        PasteItem,
-        DownloadFolderAsZip,
-    },
-})
-export default class DropDownMenu extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const { project_id, is_deletion_allowed } = useState<
+    Pick<ConfigurationState, "project_id" | "is_deletion_allowed">
+>("configuration", ["project_id", "is_deletion_allowed"]);
 
-    @configuration.State
-    readonly project_id!: number;
+const NOTIFS_PANE_NAME = "notifications";
+const HISTORY_PANE_NAME = "history";
+const APPROVAL_TABLES_PANE_NAME = "approval";
 
-    @configuration.State
-    readonly is_deletion_allowed!: boolean;
+const is_item_a_folder = computed((): boolean => isFolder(props.item));
 
-    private NOTIFS_PANE_NAME = "notifications";
-    private HISTORY_PANE_NAME = "history";
-    private APPROVAL_TABLES_PANE_NAME = "approval";
+const is_item_an_empty_document = computed((): boolean => isEmpty(props.item));
 
-    getUrlForPane(pane_name: string): string {
-        return `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=${pane_name}`;
-    }
-    is_item_a_folder(item: Item): boolean {
-        return isFolder(item);
-    }
-    is_item_an_empty_document(item: Item): boolean {
-        return isEmpty(item);
-    }
+const should_display_history_in_document = inject("should_display_history_in_document", false);
+
+const should_display_versions_link = computed(
+    (): boolean =>
+        should_display_history_in_document &&
+        (isFile(props.item) || isLink(props.item) || isEmbedded(props.item))
+);
+
+function getUrlForPane(pane_name: string): string {
+    return `/plugins/docman/?group_id=${project_id.value}&id=${props.item.id}&action=details&section=${pane_name}`;
 }
 </script>

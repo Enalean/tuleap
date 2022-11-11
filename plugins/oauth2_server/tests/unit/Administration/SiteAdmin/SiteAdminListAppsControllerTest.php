@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Administration\SiteAdmin;
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenter;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
 use Tuleap\Request\ForbiddenException;
@@ -46,10 +46,6 @@ final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $presenter_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets
-     */
-    private $include_assets;
-    /**
      * @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
     private $csrf_token;
@@ -63,13 +59,13 @@ final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->admin_page_renderer = $this->createMock(AdminPageRenderer::class);
         $this->user_manager        = $this->createMock(UserManager::class);
         $this->presenter_builder   = $this->createMock(AdminOAuth2AppsPresenterBuilder::class);
-        $this->include_assets      = $this->createMock(IncludeAssets::class);
+        $include_assets            = new IncludeViteAssets(__DIR__, 'tests');
         $this->csrf_token          = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller          = new SiteAdminListAppsController(
             $this->admin_page_renderer,
             $this->user_manager,
             $this->presenter_builder,
-            $this->include_assets,
+            $include_assets,
             $this->csrf_token
         );
     }
@@ -81,11 +77,6 @@ final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $user = $this->createMock(\PFUser::class);
         $user->method('isSuperUser')->willReturn(true);
         $this->user_manager->method('getCurrentUser')->willReturn($user);
-
-        $this->include_assets->expects(self::once())->method('getFileURL')
-            ->with('administration.js');
-        $this->include_assets->method('getPath')
-            ->with('administration-style');
 
         $this->presenter_builder->expects(self::once())->method('buildSiteAdministration')
             ->with($this->csrf_token)

@@ -109,7 +109,7 @@ export class Dropdown {
                 offset(({ rects, placement }) => {
                     return (placement.indexOf("top") === 0 ? rects.reference.height / 2 : 0) + 4;
                 }),
-                flip(),
+                flip({ fallbackStrategy: "initialPlacement" }),
                 shift({ padding: 16 }),
             ],
         });

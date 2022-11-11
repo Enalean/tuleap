@@ -19,7 +19,9 @@
 
 const path = require("path");
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
+const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+
+const jest_base_config = defineJestConfiguration();
 module.exports = {
     ...jest_base_config,
     transform: {
@@ -28,7 +30,7 @@ module.exports = {
     },
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,
-        "^@vue/composition-api$": path.resolve(__dirname, "./node_modules/@vue/composition-api/"),
+        "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
     },
     displayName: "document",
 };

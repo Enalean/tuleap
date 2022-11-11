@@ -27,7 +27,7 @@ use ForgeConfig;
 use PFUser;
 use TemplateRenderer;
 use TemplateRendererFactory;
-use Tuleap\mail\TemplateWithoutFooter;
+use Tuleap\Mail\TemplateWithoutFooter;
 use Tuleap\ServerHostname;
 
 class InvitationEmailNotifier

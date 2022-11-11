@@ -19,12 +19,15 @@
  */
 
 use Test\Rest\Tracker\ArtifactsTestExecutionHelper;
+use Tuleap\REST\ForgeAccessSandbox;
 
 /**
  * @group ArtifactsTest
  */
 class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgnoreLine
 {
+    use ForgeAccessSandbox;
+
     public function testOptionsArtifactId()
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artifacts/9'));
@@ -671,6 +674,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
     public function testAnonymousGETArtifact()
     {
+        $this->setForgeToAnonymous();
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('GET', 'artifacts/' . $this->story_artifact_ids[1]));
         $this->assertEquals(403, $response->getStatusCode());
     }

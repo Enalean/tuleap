@@ -117,6 +117,10 @@ msgstr ""
 msgid "You must specify the mailing-list id."
 msgstr ""
 
+msgid ""
+"Your current mail transport configuration is not compatible with this plugin."
+msgstr ""
+
 #, php-format
 msgid "on %1$s"
 msgstr ""

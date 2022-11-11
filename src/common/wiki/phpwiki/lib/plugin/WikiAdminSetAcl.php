@@ -59,10 +59,10 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         return array_merge(
             PageList::supportedArgs(),
             [
-                     'p'        => "[]",  // list of pages
-                     's'     => false, /* select by pagename */
+                'p'        => "[]",  // list of pages
+                's'     => false, /* select by pagename */
                      /* Columns to include in listing */
-                     'info'     => 'pagename,perm,mtime,owner,author',
+                'info'     => 'pagename,perm,mtime,owner,author',
             ]
         );
     }
@@ -195,10 +195,12 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
             $args['info'],
             $args['exclude'],
             ['types' => [
-                                                  'perm'
+                'perm'
                                                   => new _PageList_Column_perm('perm', _("Permission")),
-                                                  'acl'
-            => new _PageList_Column_acl('acl', _("ACL"))]]
+                'acl'
+            => new _PageList_Column_acl('acl', _("ACL")),
+            ],
+            ]
         );
 
         $pagelist->addPageList($pages);
@@ -223,7 +225,8 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
 
         return HTML::form(
             ['action' => $request->getPostURL(),
-                                'method' => 'post'],
+                'method' => 'post',
+            ],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
@@ -287,8 +290,9 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         $header->pushContent(HTML::br());
         if (! empty($pages) and DEBUG) {
             $checkbox = HTML::input(['type' => 'checkbox',
-                                        'name' => 'admin_setacl[updatechildren]',
-                                        'value' => 1]);
+                'name' => 'admin_setacl[updatechildren]',
+                'value' => 1,
+            ]);
             if (! empty($post_args['updatechildren'])) {
                 $checkbox->setAttr('checked', 'checked');
             }

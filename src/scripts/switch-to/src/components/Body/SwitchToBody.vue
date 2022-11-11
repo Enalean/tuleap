@@ -19,60 +19,52 @@
   -->
 
 <template>
-    <div tabindex="-1" class="switch-to-modal-body">
+    <div
+        tabindex="-1"
+        class="switch-to-modal-body"
+        v-bind:class="{ 'switch-to-modal-body-search-results': keywords }"
+    >
         <global-loading-state v-if="should_global_loading_state_be_displayed" />
         <global-empty-state v-else-if="should_global_empty_state_be_displayed" />
         <template v-else>
             <list-of-projects />
             <list-of-recent-items />
+            <search-results v-if="is_in_search_mode" />
         </template>
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import ListOfProjects from "./Projects/ListOfProjects.vue";
-import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
+import ListOfRecentItems from "./Items/RecentItems/ListOfRecentItems.vue";
 import GlobalEmptyState from "./GlobalEmptyState.vue";
-import { State } from "vuex-class";
-import type { Project, UserHistory } from "../../type";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
+import SearchResults from "./Items/SearchResults/SearchResults.vue";
+import { useRootStore } from "../../stores/root";
+import { storeToRefs } from "pinia";
 
-@Component({
-    components: { GlobalLoadingState, GlobalEmptyState, ListOfProjects, ListOfRecentItems },
-})
-export default class SwitchToBody extends Vue {
-    @State
-    readonly is_loading_history!: boolean;
+const store = useRootStore();
+const { is_loading_history, is_history_loaded, history, projects, keywords, is_in_search_mode } =
+    storeToRefs(store);
 
-    @State
-    private readonly is_history_loaded!: boolean;
-
-    @State
-    private readonly history!: UserHistory;
-
-    @State
-    private readonly projects!: Project[];
-
-    get should_global_empty_state_be_displayed(): boolean {
-        if (!this.is_history_loaded) {
-            return false;
-        }
-
-        if (this.projects.length > 0) {
-            return false;
-        }
-
-        return this.history.entries.length === 0;
+const should_global_empty_state_be_displayed = computed((): boolean => {
+    if (!is_history_loaded.value) {
+        return false;
     }
 
-    get should_global_loading_state_be_displayed(): boolean {
-        if (this.projects.length > 0) {
-            return false;
-        }
-
-        return this.is_loading_history;
+    if (projects.value.length > 0) {
+        return false;
     }
-}
+
+    return history.value.entries.length === 0;
+});
+
+const should_global_loading_state_be_displayed = computed((): boolean => {
+    if (projects.value.length > 0) {
+        return false;
+    }
+
+    return is_loading_history.value;
+});
 </script>

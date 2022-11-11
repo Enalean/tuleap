@@ -56,14 +56,6 @@ class PullRequestCreator
         string $branch_dest,
         \PFUser $creator,
     ): PullRequest {
-        $this->creator_checker->checkIfPullRequestCanBeCreated(
-            $creator,
-            $repository_src,
-            $branch_src,
-            $repository_dest,
-            $branch_dest
-        );
-
         $executor_repository_source      = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
         $executor_repository_destination = GitExec::buildFromRepository($repository_dest);
         $sha1_src                        = $executor_repository_source->getBranchSha1("refs/heads/$branch_src");
@@ -71,9 +63,19 @@ class PullRequestCreator
         $repo_dest_id                    = $repository_dest->getId();
         $repo_src_id                     = $repository_src->getId();
 
+        $this->creator_checker->checkIfPullRequestCanBeCreated(
+            $creator,
+            $repository_src,
+            $branch_src,
+            $sha1_src,
+            $repository_dest,
+            $branch_dest,
+        );
+
         $commit_message = $executor_repository_source->getCommitMessage($sha1_src);
-        $first_line     = array_shift($commit_message);
-        $other_lines    = implode("\n", $commit_message);
+        $split_commit   = explode("\n", $commit_message, 2);
+        $first_line     = $split_commit[0];
+        $other_lines    = ltrim($split_commit[1] ?? '');
 
         $pull_request = new PullRequest(
             0,

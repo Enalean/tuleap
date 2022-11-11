@@ -23,6 +23,11 @@ namespace Test\Rest;
 
 use PDO;
 
+/**
+ * This class exists as a proxy to manipulate the internal state of Tuleap configuration
+ *
+ * In the future, it should be replaced by a REST call to an API to do this kind of configuration
+ */
 class TuleapConfig
 {
     public const FORGE_ACCESS = 'access_mode';
@@ -30,16 +35,13 @@ class TuleapConfig
     public const REGULAR      = 'regular';
     public const RESTRICTED   = 'restricted';
 
-    /**
-     * @var PDO
-     */
-    private $dbh;
+    private PDO $dbh;
 
-    private static $instance;
+    private static self $instance;
 
-    public static function instance()
+    public static function instance(): self
     {
-        if (! self::$instance) {
+        if (! isset(self::$instance)) {
             self::$instance = new TuleapConfig();
             self::$instance->connect();
         }
@@ -52,6 +54,13 @@ class TuleapConfig
         $statment->bindParam(':name', $name);
         $statment->bindParam(':value', $value);
         $statment->execute();
+    }
+
+    public function getAccess(): string
+    {
+        $statement = $this->dbh->prepare('SELECT value FROM forgeconfig WHERE name = :name');
+        $statement->execute([':name' => self::FORGE_ACCESS]);
+        return $statement->fetchAll()[0]['value'];
     }
 
     public function setForgeToRestricted()

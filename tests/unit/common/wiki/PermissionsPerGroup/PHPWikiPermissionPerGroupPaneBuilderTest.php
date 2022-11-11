@@ -51,7 +51,7 @@ class PHPWikiPermissionPerGroupPaneBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $template_factory
         );
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => false, 'getUserName' => false, 'isPublic' => false]);
     }
 
     public function testItDoesNotBuildPaneIfServiceNotUsed(): void

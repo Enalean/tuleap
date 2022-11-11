@@ -55,9 +55,9 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['s'        => false,
-                     'case_exact' => false,  //not yet supported
-                     'regex'    => false,    //not yet supported
-                     ];
+            'case_exact' => false,  //not yet supported
+            'regex'    => false,    //not yet supported
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

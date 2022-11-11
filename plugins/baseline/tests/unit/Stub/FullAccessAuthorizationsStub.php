@@ -23,52 +23,57 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
-use PFUser;
-use Project;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\Comparison;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\TransientBaseline;
 use Tuleap\Baseline\Domain\TransientComparison;
+use Tuleap\Baseline\Domain\UserIdentifier;
 
 class FullAccessAuthorizationsStub implements Authorizations
 {
-    public function canCreateBaseline(PFUser $current_user, TransientBaseline $baseline): bool
+    public function canCreateBaseline(UserIdentifier $current_user, TransientBaseline $baseline): bool
     {
         return true;
     }
 
-    public function canDeleteBaseline(PFUser $current_user, Baseline $baseline): bool
+    public function canDeleteBaseline(UserIdentifier $current_user, Baseline $baseline): bool
     {
         return true;
     }
 
-    public function canReadBaseline(PFUser $current_user, Baseline $baseline): bool
+    public function canReadBaseline(UserIdentifier $current_user, Baseline $baseline): bool
     {
         return true;
     }
 
-    public function canReadBaselinesOnProject(PFUser $current_user, Project $project): bool
+    public function canReadBaselinesOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
         return true;
     }
 
-    public function canCreateComparison(PFUser $current_user, TransientComparison $comparison): bool
+    public function canCreateComparison(UserIdentifier $current_user, TransientComparison $comparison): bool
     {
         return true;
     }
 
-    public function canReadComparison(PFUser $current_user, Comparison $comparison): bool
+    public function canReadComparison(UserIdentifier $current_user, Comparison $comparison): bool
     {
         return true;
     }
 
-    public function canReadComparisonsOnProject(PFUser $current_user, Project $project): bool
+    public function canReadComparisonsOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
         return true;
     }
 
-    public function canDeleteComparison(PFUser $current_user, Comparison $comparison)
+    public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison)
+    {
+        return true;
+    }
+
+    public function canUserAdministrateBaselineOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
         return true;
     }

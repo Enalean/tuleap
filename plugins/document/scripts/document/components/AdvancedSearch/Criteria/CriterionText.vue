@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import type { SearchCriterionText } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
@@ -54,9 +54,4 @@ const popover_description = computed((): string => {
 const id = computed((): string => {
     return "document-criterion-text-" + props.criterion.name;
 });
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
 </script>

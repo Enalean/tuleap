@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
-    "test": "jest"
+    "test": "vitest"
   },
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "link:../../../../../lib/frontend/concurrency-limit-pool",

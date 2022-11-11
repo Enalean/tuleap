@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DocumentGlobalPropertyForCreate renders component 1`] = `
+<div
+  class="document-properties"
+>
+  <div
+    class="document-properties-title-and-status-container"
+  >
+    <title-property-stub
+      currentlyupdateditem="[object Object]"
+      parent="[object Object]"
+      value="My document"
+    />
+     
+    <status-property-with-custom-binding-for-document-create-stub
+      parent="[object Object]"
+      status_value="Draft"
+    />
+  </div>
+   
+  <preview-filename-stub
+    item="[object Object]"
+  />
+   
+  <description-property-stub
+    value="A custom description"
+  />
+   
+</div>
+`;

@@ -62,6 +62,8 @@ const config_for_flaming_parrot = {
         "tracker-semantic-progress-options-selector":
             "./scripts/semantics/progress/admin-selectors.ts",
         "tracker-admin-fields-permissions": "./scripts/tracker-admin/admin-fields-permissions",
+        "tracker-semantic-status": "./scripts/semantics/status/status-picker.ts",
+        "tracker-semantic-done": "./scripts/semantics/status/done-picker.ts",
     },
     context,
     output,
@@ -86,7 +88,6 @@ const config_for_vue_flaming_parrot = {
     entry: {
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
-        "tracker-semantic-timeframe-option-selector": "./scripts/semantics/timeframe/index.ts",
     },
     context,
     output,
@@ -124,6 +125,7 @@ const config_for_burning_parrot = {
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
         "tracker-permissions-per-group": "./scripts/permissions-per-group/src/index.js",
         "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
+        "tracker-semantic-timeframe-option-selector": "./scripts/semantics/timeframe/index.ts",
     },
     context,
     output,
@@ -139,56 +141,18 @@ const config_for_burning_parrot = {
             ...webpack_configurator.configureTypescriptRules(),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
+            webpack_configurator.rule_scss_loader,
         ],
     },
     plugins: [
         manifest_plugin,
         webpack_configurator.getVueLoaderPlugin(),
         webpack_configurator.getTypescriptCheckerPlugin(true),
+        ...webpack_configurator.getCSSExtractionPlugins(),
     ],
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias,
     },
-};
-
-const config_for_legacy_scripts = {
-    entry: {},
-    context,
-    output,
-    externals: {
-        tuleap: "tuleap",
-    },
-    plugins: [
-        ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
-            "tracker.js": [
-                "./scripts/legacy/TrackerReports.js",
-                "./scripts/legacy/TrackerReportsSaveAsModal.js",
-                "./scripts/legacy/TrackerBinds.js",
-                "./scripts/legacy/ReorderColumns.js",
-                "./scripts/legacy/TrackerTextboxLists.js",
-                "./scripts/legacy/TrackerAdminFieldWorkflow.js",
-                "./scripts/legacy/TrackerArtifact.js",
-                "./scripts/legacy/TrackerArtifactEmailActions.js",
-                "./scripts/legacy/TrackerArtifactLink.js",
-                "./scripts/legacy/LoadTrackerArtifactLink.js",
-                "./scripts/legacy/TrackerCreate.js",
-                "./scripts/legacy/TrackerFormElementFieldPermissions.js",
-                "./scripts/legacy/TrackerDateReminderForms.js",
-                "./scripts/legacy/TrackerTriggers.js",
-                "./scripts/legacy/SubmissionKeeper.js",
-                "./scripts/legacy/TrackerFieldDependencies.js",
-                "./scripts/legacy/artifactChildren.js",
-                "./scripts/legacy/load-artifactChildren.js",
-                "./scripts/legacy/FixAggregatesHeaderHeight.js",
-                "./scripts/legacy/TrackerSettings.js",
-                "./scripts/legacy/TrackerCollapseFieldset.js",
-                "./scripts/legacy/CopyArtifact.js",
-                "./scripts/legacy/tracker-report-type-column.js",
-                "./scripts/legacy/tracker-webhooks.js",
-            ],
-        }),
-        manifest_plugin,
-    ],
 };
 
 let entry_points = {
@@ -217,6 +181,5 @@ module.exports = [
     config_for_flaming_parrot,
     config_for_vue_flaming_parrot,
     config_for_burning_parrot,
-    config_for_legacy_scripts,
     config_for_themes,
 ];

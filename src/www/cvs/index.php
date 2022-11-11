@@ -68,8 +68,8 @@ switch ($func) {
            //Raise an event if needed
             if ($initial_settings['cvs_is_private'] != $private) {
                 EventManager::instance()->processEvent('cvs_is_private', [
-                  'group_id'       => $group_id,
-                  'cvs_is_private' => $private,
+                    'group_id'       => $group_id,
+                    'cvs_is_private' => $private,
                 ]);
             }
         }

@@ -1,4 +1,4 @@
 {
   "label": "Font Awesome icons",
-  "shortcode": ".fas .fa-[icon]"
+  "shortcode": ".fa-solid .fa-[icon]"
 }

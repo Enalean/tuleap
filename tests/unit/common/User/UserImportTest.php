@@ -59,7 +59,7 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
 
         $this->user_helper         = \Mockery::spy(\UserHelper::class);
-        $this->project             = \Mockery::spy(\Project::class, ['getID' => 110, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project             = \Mockery::spy(\Project::class, ['getID' => 110, 'getUserName' => false, 'isPublic' => false]);
         $this->user_manager        = \Mockery::spy(\UserManager::class);
         $this->user_filename       = __DIR__ . '/_fixtures/user_import.txt';
         $this->user_email_filename = __DIR__ . '/_fixtures/user_email_import.txt';
@@ -160,6 +160,7 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->shouldReceive('isMember')->with($this->project->getID())->andReturns(false);
         $user->shouldReceive('getEmail')->andReturns('zurg@example.com');
         $user->shouldReceive('getUserName')->andReturns('zurg');
+        $user->shouldReceive('getRealname')->andReturns('zorg');
         $user->shouldReceive('hasAvatar')->andReturns('false');
         $user->shouldReceive('getId')->andReturns($id);
         $this->user_helper->shouldReceive('getDisplayName')->andReturns('getDisplayName');

@@ -23,13 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use Project;
-use Tuleap\Baseline\Adapter\RoleAssignment;
-
 interface RoleAssignmentRepository
 {
     /**
      * @return RoleAssignment[]
      */
-    public function findByProjectAndRole(Project $project, string $role): array;
+    public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array;
+
+    public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void;
 }

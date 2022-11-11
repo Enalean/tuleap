@@ -29,6 +29,26 @@ use Tuleap\Git\REST\TestBase;
  */
 final class RepositoryTest extends TestBase
 {
+    private string $artifact_reference;
+    private string $artifact_url;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $artifact_ids_by_title    = $this->getArtifactIdsIndexedByTitle(
+            "test-git",
+            "tracker_1",
+        );
+        $this->artifact_reference = "tracker_1 #" . $artifact_ids_by_title["test_artifact_1"];
+        $this->artifact_url       = "https://localhost/goto?" . http_build_query(
+            [
+                "key" => "tracker_1",
+                "val" => $artifact_ids_by_title["test_artifact_1"],
+                "group_id" => $this->getProjectId("test-git"),
+            ]
+        );
+    }
+
     protected function getResponseForNonMember($request)
     {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
@@ -119,9 +139,9 @@ final class RepositoryTest extends TestBase
     public function testOPTIONSFilesWithReadOnlyAdmin(): void
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
-                'path_to_file' => 'file01',
-                'ref'          => 'master',
-            ]);
+            'path_to_file' => 'file01',
+            'ref'          => 'master',
+        ]);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', $url),
@@ -134,9 +154,9 @@ final class RepositoryTest extends TestBase
     public function testGETFiles(): void
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
-                'path_to_file' => 'file01',
-                'ref' => 'master',
-            ]);
+            'path_to_file' => 'file01',
+            'ref' => 'master',
+        ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
 
@@ -146,9 +166,9 @@ final class RepositoryTest extends TestBase
     public function testGETFilesWithReadOnlyAdmin(): void
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
-                'path_to_file' => 'file01',
-                'ref' => 'master',
-            ]);
+            'path_to_file' => 'file01',
+            'ref' => 'master',
+        ]);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
@@ -242,7 +262,6 @@ final class RepositoryTest extends TestBase
     private function assertGETBranches(\Psr\Http\Message\ResponseInterface $response): void
     {
         $branches = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
         $this->assertCount(2, $branches);
         $this->assertEqualsCanonicalizing(
             $branches,
@@ -272,6 +291,13 @@ final class RepositoryTest extends TestBase
                         ],
                         'commit_status' => null,
                         'verification'  => ['signature' => null],
+                        "cross_references" => [
+                            [
+                                "ref" => $this->artifact_reference,
+                                "url" => $this->artifact_url,
+                                "direction" => "in",
+                            ],
+                        ],
                     ],
                     "html_url" => '/plugins/git/test-git/repo01?a=tree&hb=master',
                 ],
@@ -300,6 +326,7 @@ final class RepositoryTest extends TestBase
                         ],
                         'commit_status' => null,
                         'verification'  => ['signature' => null],
+                        "cross_references" => [],
                     ],
                     "html_url" => '/plugins/git/test-git/repo01?a=tree&hb=branch_file_02',
                 ],
@@ -353,6 +380,7 @@ final class RepositoryTest extends TestBase
                     ],
                     'commit_status' => null,
                     'verification'  => ['signature' => null],
+                    "cross_references" => [],
                 ],
             ],
         );
@@ -554,6 +582,7 @@ final class RepositoryTest extends TestBase
                         ],
                         'commit_status' => null,
                         'verification'  => ['signature' => null],
+                        "cross_references" => [],
                     ],
                 ],
             ]
@@ -604,10 +633,16 @@ final class RepositoryTest extends TestBase
         $this->assertGETCommits($response);
     }
 
+    public function testGETCommitsWithAnInvalidReference(): void
+    {
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/commits/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'));
+
+        self::assertEquals(404, $response->getStatusCode());
+    }
+
     private function assertGetCommits(\Psr\Http\Message\ResponseInterface $response): void
     {
         $commit = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
         $this->assertEqualsCanonicalizing(
             $commit,
             [
@@ -633,6 +668,13 @@ final class RepositoryTest extends TestBase
                 ],
                 'commit_status' => null,
                 'verification'  => ['signature' => null],
+                "cross_references" => [
+                    [
+                        "ref" => $this->artifact_reference,
+                        "url" => $this->artifact_url,
+                        "direction" => "in",
+                    ],
+                ],
             ]
         );
     }
@@ -652,8 +694,8 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
             [
-             'path' => '',
-             'ref'  => 'master',
+                'path' => '',
+                'ref'  => 'master',
             ]
         );
 
@@ -666,8 +708,8 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
             [
-             'path' => 'file01',
-             'ref'  => 'master',
+                'path' => 'file01',
+                'ref'  => 'master',
             ]
         );
 
@@ -683,20 +725,20 @@ final class RepositoryTest extends TestBase
         self::assertEqualsCanonicalizing(
             $commit,
             [
-            [
-                'id'   => '459385229609d3c5f847e75ae61b3859cf90f159',
-                'name' => 'README.mkd',
-                'path' => 'README.mkd',
-                'type' => 'blob',
-                'mode' => '100644',
-            ],
-            [
-                'id'   => '8e72e5b6f640d6df27c219b039c6430d4ed96a1a',
-                'name' => 'file01',
-                'path' => 'file01',
-                'type' => 'blob',
-                'mode' => '100644',
-            ],
+                [
+                    'id'   => '459385229609d3c5f847e75ae61b3859cf90f159',
+                    'name' => 'README.mkd',
+                    'path' => 'README.mkd',
+                    'type' => 'blob',
+                    'mode' => '100644',
+                ],
+                [
+                    'id'   => '8e72e5b6f640d6df27c219b039c6430d4ed96a1a',
+                    'name' => 'file01',
+                    'path' => 'file01',
+                    'type' => 'blob',
+                    'mode' => '100644',
+                ],
             ]
         );
     }

@@ -460,15 +460,6 @@ Object.extend(Function.prototype, (function() {
     }
   }
 
-  function curry() {
-    if (!arguments.length) return this;
-    var __method = this, args = slice.call(arguments, 0);
-    return function() {
-      var a = merge(args, arguments);
-      return __method.apply(this, a);
-    }
-  }
-
   function delay(timeout) {
     var __method = this, args = slice.call(arguments, 1);
     timeout = timeout * 1000;
@@ -502,7 +493,6 @@ Object.extend(Function.prototype, (function() {
   var extensions = {
     argumentNames:       argumentNames,
     bindAsEventListener: bindAsEventListener,
-    curry:               curry,
     delay:               delay,
     defer:               defer,
     wrap:                wrap,
@@ -738,14 +728,6 @@ Object.extend(String.prototype, (function() {
     return this.charAt(0).toUpperCase() + this.substring(1).toLowerCase();
   }
 
-  function underscore() {
-    return this.replace(/::/g, '/')
-               .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
-               .replace(/([a-z\d])([A-Z])/g, '$1_$2')
-               .replace(/-/g, '_')
-               .toLowerCase();
-  }
-
   function dasherize() {
     return this.replace(/_/g, '-');
   }
@@ -842,7 +824,6 @@ Object.extend(String.prototype, (function() {
     times:          times,
     camelize:       camelize,
     capitalize:     capitalize,
-    underscore:     underscore,
     dasherize:      dasherize,
     inspect:        inspect,
     unfilterJSON:   unfilterJSON,
@@ -903,14 +884,6 @@ var Enumerable = (function() {
       if (e != $break) throw e;
     }
     return this;
-  }
-
-  function eachSlice(number, iterator, context) {
-    var index = -number, slices = [], array = this.toArray();
-    if (number < 1) return array;
-    while ((index += number) < array.length)
-      slices.push(array.slice(index, index+number));
-    return slices.collect(iterator, context);
   }
 
   function all(iterator, context) {
@@ -988,14 +961,6 @@ var Enumerable = (function() {
       }
     });
     return found;
-  }
-
-  function inGroupsOf(number, fillWith) {
-    fillWith = Object.isUndefined(fillWith) ? null : fillWith;
-    return this.eachSlice(number, function(slice) {
-      while(slice.length < number) slice.push(fillWith);
-      return slice;
-    });
   }
 
   function inject(memo, iterator, context) {
@@ -1077,17 +1042,6 @@ var Enumerable = (function() {
     return this.map();
   }
 
-  function zip() {
-    var iterator = Prototype.K, args = $A(arguments);
-    if (Object.isFunction(args.last()))
-      iterator = args.pop();
-
-    var collections = [this].concat(args).map($A);
-    return this.map(function(value, index) {
-      return iterator(collections.pluck(index));
-    });
-  }
-
   function size() {
     return this.toArray().length;
   }
@@ -1106,7 +1060,6 @@ var Enumerable = (function() {
 
   return {
     each:       each,
-    eachSlice:  eachSlice,
     all:        all,
     every:      all,
     any:        any,
@@ -1120,7 +1073,6 @@ var Enumerable = (function() {
     grep:       grep,
     include:    include,
     member:     include,
-    inGroupsOf: inGroupsOf,
     inject:     inject,
     invoke:     invoke,
     max:        max,
@@ -1131,7 +1083,6 @@ var Enumerable = (function() {
     sortBy:     sortBy,
     toArray:    toArray,
     entries:    toArray,
-    zip:        zip,
     size:       size,
     inspect:    inspect,
     find:       detect
@@ -1945,12 +1896,6 @@ Ajax.Response = Class.create({
 
   getHeader: Ajax.Request.prototype.getHeader,
 
-  getAllHeaders: function() {
-    try {
-      return this.getAllResponseHeaders();
-    } catch (e) { return null }
-  },
-
   getResponseHeader: function(name) {
     return this.transport.getResponseHeader(name);
   },
@@ -2024,47 +1969,6 @@ Ajax.Updater = Class.create(Ajax.Request, {
       }
       else receiver.update(responseText);
     }
-  }
-});
-
-Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
-  initialize: function($super, container, url, options) {
-    $super(options);
-    this.onComplete = this.options.onComplete;
-
-    this.frequency = (this.options.frequency || 2);
-    this.decay = (this.options.decay || 1);
-
-    this.updater = { };
-    this.container = container;
-    this.url = url;
-
-    this.start();
-  },
-
-  start: function() {
-    this.options.onComplete = this.updateComplete.bind(this);
-    this.onTimerEvent();
-  },
-
-  stop: function() {
-    this.updater.options.onComplete = undefined;
-    clearTimeout(this.timer);
-    (this.onComplete || Prototype.emptyFunction).apply(this, arguments);
-  },
-
-  updateComplete: function(response) {
-    if (this.options.decay) {
-      this.decay = (response.responseText == this.lastText ?
-        this.decay * this.options.decay : 1);
-
-      this.lastText = response.responseText;
-    }
-    this.timer = this.onTimerEvent.bind(this).delay(this.decay * this.frequency);
-  },
-
-  onTimerEvent: function() {
-    this.updater = new Ajax.Updater(this.container, this.url, this.options);
   }
 });
 
@@ -2775,43 +2679,6 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
   function readAttribute(element, name) {
     return $(element).getAttribute(name);
   }
-
-  function readAttribute_IE(element, name) {
-    element = $(element);
-
-    var table = ATTRIBUTE_TRANSLATIONS.read;
-    if (table.values[name])
-      return table.values[name](element, name);
-
-    if (table.names[name]) name = table.names[name];
-
-    if (name.include(':')) {
-      if (!element.attributes || !element.attributes[name]) return null;
-      return element.attributes[name].value;
-    }
-
-    return element.getAttribute(name);
-  }
-
-  function readAttribute_Opera(element, name) {
-    if (name === 'title') return element.title;
-    return element.getAttribute(name);
-  }
-
-  var PROBLEMATIC_ATTRIBUTE_READING = (function() {
-    DIV.setAttribute('onclick', []);
-    var value = DIV.getAttribute('onclick');
-    var isFunction = Object.isArray(value);
-    DIV.removeAttribute('onclick');
-    return isFunction;
-  })();
-
-  if (PROBLEMATIC_ATTRIBUTE_READING) {
-    readAttribute = readAttribute_IE;
-  } else if (Prototype.Browser.Opera) {
-    readAttribute = readAttribute_Opera;
-  }
-
 
   function writeAttribute(element, name, value) {
     element = $(element);
@@ -6405,22 +6272,6 @@ Form.Methods = {
     return results;
   },
 
-  getInputs: function(form, typeName, name) {
-    form = $(form);
-    var inputs = form.getElementsByTagName('input');
-
-    if (!typeName && !name) return $A(inputs).map(Element.extend);
-
-    for (var i = 0, matchingInputs = [], length = inputs.length; i < length; i++) {
-      var input = inputs[i];
-      if ((typeName && input.type != typeName) || (name && input.name != name))
-        continue;
-      matchingInputs.push(Element.extend(input));
-    }
-
-    return matchingInputs;
-  },
-
   disable: function(form) {
     form = $(form);
     Form.getElements(form).invoke('disable');
@@ -6432,44 +6283,6 @@ Form.Methods = {
     Form.getElements(form).invoke('enable');
     return form;
   },
-
-  findFirstElement: function(form) {
-    var elements = $(form).getElements().findAll(function(element) {
-      return 'hidden' != element.type && !element.disabled;
-    });
-    var firstByIndex = elements.findAll(function(element) {
-      return element.hasAttribute('tabIndex') && element.tabIndex >= 0;
-    }).sortBy(function(element) { return element.tabIndex }).first();
-
-    return firstByIndex ? firstByIndex : elements.find(function(element) {
-      return /^(?:input|select|textarea)$/i.test(element.tagName);
-    });
-  },
-
-  focusFirstElement: function(form) {
-    form = $(form);
-    var element = form.findFirstElement();
-    if (element) element.activate();
-    return form;
-  },
-
-  request: function(form, options) {
-    form = $(form), options = Object.clone(options || { });
-
-    var params = options.parameters, action = form.readAttribute('action') || '';
-    if (action.blank()) action = window.location.href;
-    options.parameters = form.serialize(true);
-
-    if (params) {
-      if (Object.isString(params)) params = params.toQueryParams();
-      Object.extend(options.parameters, params);
-    }
-
-    if (form.hasAttribute('method') && !options.method)
-      options.method = form.method;
-
-    return new Ajax.Request(action, options);
-  }
 };
 
 /*--------------------------------------------------------------------------*/
@@ -6785,10 +6598,6 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
 
   function isLeftClick(event)   { return _isButton(event, 0) }
 
-  function isMiddleClick(event) { return _isButton(event, 1) }
-
-  function isRightClick(event)  { return _isButton(event, 2) }
-
   function element(event) {
     return Element.extend(_element(event));
   }
@@ -6852,9 +6661,7 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
 
 
   Event.Methods = {
-    isLeftClick:   isLeftClick,
-    isMiddleClick: isMiddleClick,
-    isRightClick:  isRightClick,
+    isLeftClick: isLeftClick,
 
     element:     element,
     findElement: findElement,
@@ -7493,41 +7300,6 @@ var Position = {
 
 /*--------------------------------------------------------------------------*/
 
-if (!document.getElementsByClassName) document.getElementsByClassName = function(instanceMethods){
-  function iter(name) {
-    return name.blank() ? null : "[contains(concat(' ', @class, ' '), ' " + name + " ')]";
-  }
-
-  instanceMethods.getElementsByClassName = Prototype.BrowserFeatures.XPath ?
-  function(element, className) {
-    className = className.toString().strip();
-    var cond = /\s/.test(className) ? $w(className).map(iter).join('') : iter(className);
-    return cond ? document._getElementsByXPath('.//*' + cond, element) : [];
-  } : function(element, className) {
-    className = className.toString().strip();
-    var elements = [], classNames = (/\s/.test(className) ? $w(className) : null);
-    if (!classNames && !className) return elements;
-
-    var nodes = $(element).getElementsByTagName('*');
-    className = ' ' + className + ' ';
-
-    for (var i = 0, child, cn; child = nodes[i]; i++) {
-      if (child.className && (cn = ' ' + child.className + ' ') && (cn.include(className) ||
-          (classNames && classNames.all(function(name) {
-            return !name.toString().blank() && cn.include(' ' + name + ' ');
-          }))))
-        elements.push(Element.extend(child));
-    }
-    return elements;
-  };
-
-  return function(className, parentElement) {
-    return $(parentElement || document.body).getElementsByClassName(className);
-  };
-}(Element.Methods);
-
-/*--------------------------------------------------------------------------*/
-
 Element.ClassNames = Class.create();
 Element.ClassNames.prototype = {
   initialize: function(element) {
@@ -7587,19 +7359,6 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
   });
 
   Object.extend(Selector, {
-    matchElements: function(elements, expression) {
-      var match = Prototype.Selector.match,
-          results = [];
-
-      for (var i = 0, length = elements.length; i < length; i++) {
-        var element = elements[i];
-        if (match(element, expression)) {
-          results.push(Element.extend(element));
-        }
-      }
-      return results;
-    },
-
     findElement: function(elements, expression, index) {
       index = index || 0;
       var matchIndex = 0, element;
@@ -7610,10 +7369,5 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
         }
       }
     },
-
-    findChildElements: function(element, expressions) {
-      var selector = expressions.toArray().join(', ');
-      return Prototype.Selector.select(selector, element || document);
-    }
   });
 })();

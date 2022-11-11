@@ -1,0 +1,165 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ItemEntry Displays a link with a cross ref 1`] = `
+<div
+  class="switch-to-item-entry"
+  data-target-id="switch-to-item-entry-undefined"
+  data-test="switch-to-item-entry"
+>
+  <div
+    class="switch-to-item-entry-with-links switch-to-item-entry-with-links-with-badge"
+  >
+    <div
+      class="switch-to-item-entry-links"
+    >
+      <a
+        class="lake-placid-blue switch-to-item-entry-link"
+        data-test="entry-link"
+      >
+        <i
+          aria-hidden="true"
+          class="fa fa-fw switch-to-item-entry-icon fa-columns"
+        />
+        <span
+          class="switch-to-item-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
+          data-test="item-xref"
+        >
+          <highlight-matching-text-stub
+            text="art #123"
+          />
+        </span>
+        <highlight-matching-text-stub
+          class="switch-to-item-entry-label"
+          data-test="item-title"
+          text="Lorem ipsum"
+        />
+      </a>
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+  </div>
+  <div
+    class="switch-to-item-metadata"
+  >
+    <span
+      class="switch-to-item-project"
+    >
+      Guinea Pig
+    </span>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+</div>
+`;
+
+exports[`ItemEntry Displays a link with a quick links 1`] = `
+<div
+  class="switch-to-item-entry"
+  data-target-id="switch-to-item-entry-undefined"
+  data-test="switch-to-item-entry"
+>
+  <div
+    class="switch-to-item-entry-with-links switch-to-item-entry-with-links-with-badge"
+  >
+    <div
+      class="switch-to-item-entry-links"
+    >
+      <a
+        class="lake-placid-blue switch-to-item-entry-link"
+        data-test="entry-link"
+      >
+        <i
+          aria-hidden="true"
+          class="fa fa-fw switch-to-item-entry-icon fa-columns"
+        />
+        <span
+          class="switch-to-item-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
+          data-test="item-xref"
+        >
+          <highlight-matching-text-stub
+            text="art #123"
+          />
+        </span>
+        <highlight-matching-text-stub
+          class="switch-to-item-entry-label"
+          data-test="item-title"
+          text="Lorem ipsum"
+        />
+      </a>
+      <div
+        class="switch-to-item-entry-quick-links"
+      >
+        
+        <quick-link-stub
+          class="switch-to-item-entry-quick-links-link"
+          item="[object Object]"
+          link="[object Object]"
+        />
+        <quick-link-stub
+          class="switch-to-item-entry-quick-links-link"
+          item="[object Object]"
+          link="[object Object]"
+        />
+        
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  <div
+    class="switch-to-item-metadata"
+  >
+    <span
+      class="switch-to-item-project"
+    >
+      Guinea Pig
+    </span>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+</div>
+`;
+
+exports[`ItemEntry Displays a link with an icon 1`] = `
+<div
+  class="switch-to-item-entry"
+  data-target-id="switch-to-item-entry-undefined"
+  data-test="switch-to-item-entry"
+>
+  <div
+    class="switch-to-item-entry-with-links"
+  >
+    <div
+      class="switch-to-item-entry-links"
+    >
+      <a
+        class="lake-placid-blue switch-to-item-entry-link"
+        data-test="entry-link"
+      >
+        <i
+          aria-hidden="true"
+          class="fa fa-fw switch-to-item-entry-icon fa-columns"
+        />
+        <!--v-if-->
+        <highlight-matching-text-stub
+          class="switch-to-item-entry-label"
+          data-test="item-title"
+          text="Kanban"
+        />
+      </a>
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+  </div>
+  <div
+    class="switch-to-item-metadata"
+  >
+    <span
+      class="switch-to-item-project"
+    >
+      Guinea Pig
+    </span>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+</div>
+`;

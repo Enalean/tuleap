@@ -269,11 +269,11 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         ];
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->text_field->isValid($artifact, $value_1);
-        $this->text_field->isValid($artifact, $value_2);
-        $this->text_field->isValid($artifact, $value_3);
-        $this->text_field->isValid($artifact, $value_4);
-        $this->text_field->isValid($artifact, $value_5);
+        self::assertTrue($this->text_field->isValid($artifact, $value_1));
+        self::assertTrue($this->text_field->isValid($artifact, $value_2));
+        self::assertFalse($this->text_field->isValid($artifact, $value_3));
+        self::assertTrue($this->text_field->isValid($artifact, $value_4));
+        self::assertFalse($this->text_field->isValid($artifact, $value_5));
     }
 
     public function testGetFieldData(): void

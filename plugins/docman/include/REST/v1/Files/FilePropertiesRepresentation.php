@@ -25,39 +25,21 @@ namespace Tuleap\Docman\REST\v1\Files;
  */
 class FilePropertiesRepresentation
 {
-    /**
-     * @var string
-     */
-    public $file_type;
-
-    /**
-     * @var string
-     */
-    public $download_href;
-
-    /**
-     * @var int
-     */
-    public $file_size;
-
-    /**
-     * @var string
-     */
-    public $file_name;
-
-    private function __construct(string $file_type, string $download_href, int $file_size, string $file_name)
-    {
-        $this->file_type     = $file_type;
-        $this->download_href = $download_href;
-        $this->file_size     = $file_size;
-        $this->file_name     = $file_name;
+    private function __construct(
+        public string $file_type,
+        public string $download_href,
+        public ?string $open_href,
+        public int $file_size,
+        public string $file_name,
+    ) {
     }
 
-    public static function build(\Docman_Version $docman_version, string $download_href): self
+    public static function build(\Docman_Version $docman_version, string $download_href, ?string $open_href): self
     {
         return new self(
             $docman_version->getFiletype(),
             $download_href,
+            $open_href,
             $docman_version->getFilesize(),
             $docman_version->getFilename(),
         );

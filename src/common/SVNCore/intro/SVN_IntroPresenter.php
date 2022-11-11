@@ -52,7 +52,7 @@ class SVN_IntroPresenter
     public function svn_user_username()
     {
         if ($this->current_user->is_logged_in && ! $this->uses_ldap_info) {
-            return $this->current_user->user->getName();
+            return $this->current_user->user->getUserName();
         } elseif ($this->current_user->is_logged_in && $this->uses_ldap_info && $this->ldap_row) {
             return strtolower($this->ldap_row->getLogin());
         } else {
@@ -87,7 +87,7 @@ class SVN_IntroPresenter
 
     public function username_is_in_lowercase()
     {
-        return strtolower($this->current_user->user->getName()) === $this->current_user->user->getName();
+        return strtolower($this->current_user->user->getUserName()) === $this->current_user->user->getUserName();
     }
 
     public function command_intro()

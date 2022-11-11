@@ -24,13 +24,13 @@ exports[`FieldFromJira Displays a card for bug tracker 1`] = `
   <input
     name="jira_project"
     type="hidden"
-    value="{\\"id\\":\\"AB\\",\\"label\\":\\"A beautifull porject\\"}"
+    value="{"id":"AB","label":"A beautifull porject"}"
   />
    
   <input
     name="jira_tracker_name"
     type="hidden"
-    value="{\\"id\\":\\"bug\\",\\"name\\":\\"Bugs\\"}"
+    value="{"id":"bug","name":"Bugs"}"
   />
 </div>
 `;

@@ -1,0 +1,41 @@
+<h1>{{# dgettext }} tuleap-onlyoffice | ONLYOFFICE {{/ dgettext }}</h1>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa-solid fa-file tlp-pane-title-icon" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-onlyoffice | ONLYOFFICE document server settings {{/ dgettext }}
+            </h1>
+        </div>
+        <form method="post">
+            <section class="tlp-pane-section">
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="server-url">{{# dgettext }} tuleap-onlyoffice | Document server URL {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+                    <input type="url" pattern="https://.*" size="50" class="tlp-input" id="server-url" name="server_url" placeholder="https://…" required value="{{ server_url }}">
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="server-key">{{# dgettext }} tuleap-onlyoffice | JWT secret {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+                    <input
+                        type="password"
+                        size="50"
+                        class="tlp-input"
+                        id="server-key"
+                        name="server_key"
+                        minlength="32"
+                        required
+                        {{# has_existing_secret }}placeholder="{{# dgettext }} tuleap-onlyoffice | Current secret not displayed {{/ dgettext }}"{{/ has_existing_secret }}
+                    >
+                </div>
+                <section class="tlp-pane-section-submit">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/csrf_token}}
+                    <button class="tlp-button-primary" type="submit">
+                        <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }} tuleap-onlyoffice | Save {{/ dgettext }}
+                    </button>
+                </section>
+            </section>
+        </form>
+    </div>
+</section>

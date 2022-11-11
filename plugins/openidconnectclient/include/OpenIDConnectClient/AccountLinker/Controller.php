@@ -27,6 +27,7 @@ use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Layout\FooterConfiguration;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
@@ -120,7 +121,7 @@ class Controller
             ]
         );
         $renderer->renderToPage('linker', $presenter);
-        $GLOBALS['HTML']->footer(['without_content' => true]);
+        $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());
     }
 
     private function generateLinkToRegisterPage(HTTPRequest $request)

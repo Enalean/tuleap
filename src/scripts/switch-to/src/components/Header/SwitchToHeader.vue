@@ -43,48 +43,44 @@
                 data-test="legacy-search-button"
             >
                 <translate>Legacy search</translate>
-                <i class="fas fa-long-arrow-alt-right" aria-hidden="true"></i>
+                <i
+                    class="fas fa-long-arrow-alt-right switch-to-modal-header-legacy-search-button-icon"
+                    aria-hidden="true"
+                ></i>
             </button>
         </template>
     </form>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import SwitchToFilter from "./SwitchToFilter.vue";
-import { State } from "vuex-class";
-import type { SearchForm } from "../../type";
 import type { Modal } from "tlp";
+import { useRootStore } from "../../stores/root";
+import { computed, inject } from "vue";
+import type { SearchForm } from "../../type";
+import { IS_SEARCH_AVAILABLE, SEARCH_FORM } from "../../injection-keys";
 
-@Component({
-    components: { SwitchToFilter },
-})
-export default class SwitchToHeader extends Vue {
-    @Prop({ required: true })
-    private readonly modal!: Modal | null;
+defineProps<{ modal: Modal | null }>();
+const store = useRootStore();
 
-    @State
-    private readonly filter_value!: string;
+const search_form = inject<SearchForm>(SEARCH_FORM, {
+    type_of_search: "",
+    hidden_fields: [],
+});
 
-    @State
-    private readonly is_search_available!: boolean;
+const is_search_available = inject<boolean>(IS_SEARCH_AVAILABLE, false);
 
-    @State
-    private readonly search_form!: SearchForm;
+const should_button_be_displayed = computed((): boolean => {
+    return is_search_available && store.is_in_search_mode;
+});
 
-    submit(event: Event): void {
-        if (!this.should_button_be_displayed) {
-            event.preventDefault();
-        }
-    }
+const is_special_search = computed((): boolean => {
+    return search_form.type_of_search !== "soft";
+});
 
-    get should_button_be_displayed(): boolean {
-        return this.filter_value.length > 0 && this.is_search_available;
-    }
-
-    get is_special_search(): boolean {
-        return this.search_form.type_of_search !== "soft";
+function submit(event: Event): void {
+    if (!should_button_be_displayed.value) {
+        event.preventDefault();
     }
 }
 </script>

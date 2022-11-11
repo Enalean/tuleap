@@ -83,7 +83,11 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
                     toggleField(field);
                 }
 
-                if (field.find(".highlight").size() > 0 && field.find(".empty_value").size() > 0) {
+                if (
+                    field.find(".highlight").size() > 0 &&
+                    field.find(".empty_value").size() > 0 &&
+                    field.find(".has-reverse-links").size() === 0
+                ) {
                     toggleField(field);
                 }
 
@@ -160,8 +164,6 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
             if (fieldIsEditable(element)) {
                 bindEditionSwitch(element);
             }
-
-            return;
         };
 
         var bindClickOnAutocomputeInMassChange = function () {
@@ -310,7 +312,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
         var toggleDependencyIfAny = function (element) {
             var field_id = $(element).find(".tracker_hidden_edition_field").attr("data-field-id");
 
-            if (!tuleap.tracker.rules_definitions || typeof field_id == "undefined") {
+            if (!tuleap.tracker.rules_definitions || typeof field_id === "undefined") {
                 return;
             }
 

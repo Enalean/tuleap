@@ -168,8 +168,9 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $git->shouldReceive('addInfo')->with('mail_existing john.smith@acme.com')->ordered();
 
         $mails = ['john.doe@acme.com',
-                       'jane.doe@acme.com',
-                       'john.smith@acme.com'];
+            'jane.doe@acme.com',
+            'john.smith@acme.com',
+        ];
         $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
@@ -190,8 +191,9 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $git->shouldReceive('addInfo')->never();
 
         $mails = ['john.doe@acme.com',
-                       'jane.doe@acme.com',
-                       'john.smith@acme.com'];
+            'jane.doe@acme.com',
+            'john.smith@acme.com',
+        ];
         $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
@@ -210,8 +212,9 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $git->shouldReceive('addInfo')->with('Mail added')->once();
 
         $mails = ['john.doe@acme.com',
-                       'jane.doe@acme.com',
-                       'john.smith@acme.com'];
+            'jane.doe@acme.com',
+            'john.smith@acme.com',
+        ];
         $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
@@ -439,8 +442,8 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('getProjectRepositoriesOwners')->with($projectId)->andReturns($repo_owners);
 
         $controller = \Mockery::spy(\Git::class);
-        $controller->shouldReceive('addData')->with(['repository_list' => $project_repos, 'repositories_owners' => $repo_owners])->ordered();
-        $controller->shouldReceive('addData')->with(['repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners])->ordered();
+        $controller->shouldReceive('addData')->with(['repository_list' => $project_repos, 'repositories_owners' => $repo_owners])->ordered()->atLeast()->once();
+        $controller->shouldReceive('addData')->with(['repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners])->ordered()->atLeast()->once();
 
         $action = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $action->setController($controller);

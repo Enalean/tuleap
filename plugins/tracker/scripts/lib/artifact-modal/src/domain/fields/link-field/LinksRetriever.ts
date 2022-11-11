@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { errAsync, combine } from "neverthrow";
-import type { ResultAsync } from "neverthrow";
+import { errAsync } from "neverthrow";
+import { ResultAsync } from "neverthrow";
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact } from "./LinkedArtifact";
@@ -49,7 +49,7 @@ export const LinksRetriever = (
                         type
                     )
                 );
-                return combine(promises).map((collections) => {
+                return ResultAsync.combine(promises).map((collections) => {
                     const all_links = collections.flat();
                     links_adder.addLinkedArtifacts(all_links);
                     return all_links;

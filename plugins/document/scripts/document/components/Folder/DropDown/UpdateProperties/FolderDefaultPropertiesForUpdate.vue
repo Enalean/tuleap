@@ -45,6 +45,8 @@
                             class="document-recursion-checkbox"
                             value="status"
                             ref="status_input"
+                            v-on:change="updateStatusRecursion"
+                            data-test="document-status-property-recursion-input"
                         />
                     </div>
                     <status-property-with-custom-binding-for-folder-update
@@ -83,67 +85,88 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import StatusPropertyWithCustomBindingForFolderUpdate from "./StatusPropertyWithCustomBindingForFolderUpdate.vue";
 import CustomPropertyComponentTypeRenderer from "../PropertiesForCreateOrUpdate/CustomProperties/CustomPropertyComponentTypeRenderer.vue";
 import RecursionOptions from "../PropertiesForCreateOrUpdate/RecursionOptions.vue";
 import emitter from "../../../../helpers/emitter";
+import type { Item, Property } from "../../../../type";
+import { computed, onMounted, ref } from "vue";
+import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
+import type { PropertiesState } from "../../../../store/properties/module";
+import type { PropertiesActions } from "../../../../store/properties/properties-actions";
 
-export default {
-    name: "FolderDefaultPropertiesForUpdate",
-    components: {
-        RecursionOptions,
-        CustomPropertyComponentTypeRenderer,
-        StatusPropertyWithCustomBindingForFolderUpdate,
-    },
-    props: {
-        currentlyUpdatedItem: Object,
-        itemProperty: Array,
-        status_value: String,
-        recursion_option: String,
-    },
-    data() {
-        return {
-            properties_to_update: [],
-        };
-    },
-    computed: {
-        ...mapState("configuration", ["is_status_property_used"]),
-        ...mapState("properties", ["has_loaded_properties"]),
-        has_recursion_property() {
-            return this.is_status_property_used || this.itemProperty.length > 0;
-        },
-    },
-    mounted() {
-        if (!this.has_loaded_properties) {
-            this.$store.dispatch("properties/loadProjectProperties");
+const props = defineProps<{
+    itemProperty: Array<Property>;
+    currentlyUpdatedItem: Item;
+    status_value: string;
+    recursion_option: string;
+}>();
+
+let list_of_properties_to_update: Array<string> = [];
+let properties_to_update = ref(list_of_properties_to_update);
+let status_input = ref<InstanceType<typeof HTMLInputElement>>();
+
+const { is_status_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_status_property_used">
+>("configuration", ["is_status_property_used"]);
+
+const { has_loaded_properties } = useNamespacedState<
+    Pick<PropertiesState, "has_loaded_properties">
+>("properties", ["has_loaded_properties"]);
+
+const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("properties", [
+    "loadProjectProperties",
+]);
+
+const has_recursion_property = computed((): boolean => {
+    return is_status_property_used.value || props.itemProperty.length > 0;
+});
+
+onMounted((): void => {
+    if (!has_loaded_properties.value) {
+        loadProjectProperties();
+    }
+});
+
+function updatePropertiesWithRecursion(): void {
+    emitter.emit("properties-recursion-list", {
+        detail: { property_list: properties_to_update.value },
+    });
+}
+
+function updateStatusRecursion(): void {
+    if (!is_status_property_used.value) {
+        return;
+    }
+
+    let must_use_recursion = false;
+    if (status_input.value && status_input.value.checked) {
+        must_use_recursion = true;
+    }
+
+    emitter.emit("update-status-recursion", must_use_recursion);
+}
+
+function updateRecursionOption(event: string): void {
+    if (event !== "none") {
+        props.itemProperty.forEach((property) => {
+            return properties_to_update.value.push(property.short_name);
+        });
+        if (is_status_property_used.value && status_input.value) {
+            properties_to_update.value.push("status");
+            status_input.value.checked = true;
         }
-    },
-    methods: {
-        updatePropertiesWithRecursion() {
-            emitter.emit("properties-recursion-list", {
-                detail: { property_list: this.properties_to_update },
-            });
-        },
-        updateRecursionOption(event) {
-            this.properties_to_update = [];
-            if (event !== "none") {
-                this.itemProperty.forEach((property) => {
-                    this.properties_to_update.push(property.short_name);
-                });
-                if (this.is_status_property_used) {
-                    this.properties_to_update.push("status");
-                    this.$refs.status_input.checked = true;
-                }
-            } else {
-                this.$refs.status_input.checked = false;
-            }
-            this.updatePropertiesWithRecursion();
-            emitter.emit("properties-recursion-option", {
-                recursion_option: event,
-            });
-        },
-    },
-};
+    } else if (status_input.value) {
+        status_input.value.checked = false;
+        properties_to_update.value = [];
+    } else {
+        properties_to_update.value = [];
+    }
+    updatePropertiesWithRecursion();
+    emitter.emit("properties-recursion-option", {
+        recursion_option: event,
+    });
+}
 </script>

@@ -21,7 +21,7 @@
 import { synchronizeTeamOfProgram } from "../api/synchronize-team";
 import type { DocumentAdapter } from "../dom/DocumentAdapter";
 
-export function synchronizeTeam(doc: DocumentAdapter): void {
+export function initSynchronizeTeamButtons(doc: DocumentAdapter, location: Location): void {
     const buttons_to_synchronize = doc.getElementsByClassName(
         "program-management-admin-action-synchronize-button"
     );
@@ -31,19 +31,26 @@ export function synchronizeTeam(doc: DocumentAdapter): void {
             throw new Error("Button to synchronize team does not exist");
         }
 
-        button_to_synchronize.addEventListener("click", (event) => {
-            if (
-                !button_to_synchronize.dataset.projectLabel ||
-                !button_to_synchronize.dataset.teamId
-            ) {
-                return;
-            }
-
+        button_to_synchronize.addEventListener("click", async (event) => {
             event.preventDefault();
-            synchronizeTeamOfProgram(
-                button_to_synchronize.dataset.projectLabel,
-                parseInt(button_to_synchronize.dataset.teamId, 10)
-            );
+
+            await triggerTeamSynchronization(button_to_synchronize, location);
         });
     });
+}
+
+export async function triggerTeamSynchronization(
+    button_to_synchronize: HTMLButtonElement,
+    location: Location
+): Promise<void> {
+    if (!button_to_synchronize.dataset.projectLabel || !button_to_synchronize.dataset.teamId) {
+        return;
+    }
+
+    await synchronizeTeamOfProgram(
+        button_to_synchronize.dataset.projectLabel,
+        parseInt(button_to_synchronize.dataset.teamId, 10)
+    );
+
+    location.reload();
 }

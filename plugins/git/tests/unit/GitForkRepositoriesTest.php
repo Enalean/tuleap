@@ -97,12 +97,13 @@ final class GitForkRepositoriesTest extends \Tuleap\Test\PHPUnit\TestCase
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git->setProject($project);
         $git->setProjectManager($projectManager);
-        $git->shouldReceive('addAction')->with('getProjectRepositoryList', [$groupId])->ordered();
-        $git->shouldReceive('addAction')->with('fork', [$repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions])->ordered();
+        $git->shouldReceive('addAction')->with('getProjectRepositoryList', [$groupId])->ordered()->atLeast()->once();
+        $git->shouldReceive('addAction')->with('fork', [$repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions])->ordered()->atLeast()->once();
         $request = new Codendi_Request([
             'repos' => '1001',
             'path'  => 'toto',
-            'repo_access' => $forkPermissions]);
+            'repo_access' => $forkPermissions,
+        ]);
         $git->setFactory($factory);
         $git->_doDispatchForkRepositories($request, $user);
     }

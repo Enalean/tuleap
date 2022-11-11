@@ -90,12 +90,12 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
     public function getDefaultArguments()
     {
         return [
-                     'syntax' => null, // required argument
-                     'style'  => null, // optional argument ["ansi", "gnu", "kr", "java", "linux"]
-                     'color'  => null, // optional, see highlight/themes
-                     'number' => 0,
-                     'wrap'   => 0,
-                     ];
+            'syntax' => null, // required argument
+            'style'  => null, // optional argument ["ansi", "gnu", "kr", "java", "linux"]
+            'color'  => null, // optional, see highlight/themes
+            'number' => 0,
+            'wrap'   => 0,
+        ];
     }
     public function handle_plugin_args_cruft($argstr, $args)
     {
@@ -105,9 +105,9 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
     private function filterThroughCmd($input, $commandLine)
     {
         $descriptorspec = [
-               0 => ["pipe", "r"],  // stdin is a pipe that the child will read from
-               1 => ["pipe", "w"],  // stdout is a pipe that the child will write to
-               2 => ["pipe", "w"],  // stdout is a pipe that the child will write to
+            0 => ["pipe", "r"],  // stdin is a pipe that the child will read from
+            1 => ["pipe", "w"],  // stdout is a pipe that the child will write to
+            2 => ["pipe", "w"],  // stdout is a pipe that the child will write to
         ];
 
         $process = proc_open("$commandLine", $descriptorspec, $pipes);

@@ -269,6 +269,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('ldapId:ldap_01')->andReturns($user);
 
         //No exception must be raised --> nothing to assert
+        $this->expectNotToPerformAssertions();
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path_with_members);
     }

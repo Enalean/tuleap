@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&WebhookDao
@@ -71,7 +71,7 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -101,7 +101,7 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -135,7 +135,7 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -173,7 +173,7 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -217,7 +217,7 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -274,7 +274,7 @@ class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

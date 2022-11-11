@@ -4,10 +4,9 @@
   "license": "MIT",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "types": "dist/index.d.ts",
-  "module": "dist/project-sidebar-internal.js",
-  "main": "dist/project-sidebar-internal.umd.cjs",
+  "module": "dist/project-sidebar-internal.mjs",
+  "main": "dist/project-sidebar-internal.umd.js",
   "style": "dist/style.css",
   "files": [
     "dist/",
@@ -20,7 +19,7 @@
     "@tuleap/tlp": "link:../../../src/themes/tlp",
     "@tuleap/tlp-popovers": "link:../tlp-popovers",
     "@vueuse/core": "^8.7.3",
-    "vue": "^3.2.26",
+    "vue": "^3.2.37",
     "vue-dompurify-html": "^3.0.0-beta.3"
   },
   "devDependencies": {
@@ -31,6 +30,6 @@
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
     "dev": "vite",
-    "test": "vitest"
+    "test": "jest"
   }
 }

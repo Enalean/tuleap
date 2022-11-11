@@ -12,7 +12,6 @@ msgstr "Impossível carregar o arquivo"
 msgid "You are not allowed to paste images here"
 msgstr "Você não está autorizado a colar imagens aqui"
 
-#, javascript-format
 msgid "You are not allowed to upload files bigger than %s."
 msgstr "Você não está autorizado a carregar arquivos maiores que %s."
 

@@ -165,7 +165,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 $this->callback(
                     function (Credentials $credentials) use ($token) {
-                        return $credentials->getBotApiToken()->getToken()->isIdenticalTo($token)
+                        return $credentials->getApiToken()->getToken()->isIdenticalTo($token)
                             && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
                     }
                 ),
@@ -215,7 +215,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(
                 $this->callback(
                     function (Credentials $credentials) use ($token) {
-                        return $credentials->getBotApiToken()->getToken()->isIdenticalTo($token)
+                        return $credentials->getApiToken()->getToken()->isIdenticalTo($token)
                             && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
                     }
                 ),
@@ -262,7 +262,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_credentials = $this->callback(
             function (Credentials $credentials) use ($token) {
-                return $credentials->getBotApiToken()->getToken()->isIdenticalTo($token)
+                return $credentials->getApiToken()->getToken()->isIdenticalTo($token)
                     && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
             }
         );
@@ -320,7 +320,7 @@ class BotApiTokenUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_credentials = $this->callback(
             function (Credentials $credentials) use ($token) {
-                return $credentials->getBotApiToken()->getToken()->isIdenticalTo($token)
+                return $credentials->getApiToken()->getToken()->isIdenticalTo($token)
                     && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
             }
         );

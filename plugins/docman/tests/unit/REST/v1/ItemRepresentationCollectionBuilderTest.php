@@ -176,6 +176,7 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
             $html_purifier,
             $user_representation,
             true,
+            true,
             ItemRepresentation::TYPE_FOLDER,
             false,
             true,
@@ -220,13 +221,19 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
         $docman_version_item3 = new \Docman_Version($version_data_item3);
         $file_properties      = FilePropertiesRepresentation::build(
             $docman_version_item3,
-            '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&action=show&id=' . urlencode($docman_version_item3->getItemId())
+            '/plugins/docman/?group_id=' . urlencode((string) $item->getGroupId()) . '&action=show&id=' . urlencode((string) $docman_version_item3->getItemId()),
+            'open/href'
         );
+
+        $this->event_manager
+            ->shouldReceive('dispatch')
+            ->andReturnArg(0);
 
         $representation2 = ItemRepresentation::build(
             $docman_item3,
             $html_purifier,
             $user_representation,
+            true,
             true,
             ItemRepresentation::TYPE_FILE,
             false,
@@ -323,6 +330,7 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
             $html_purifier,
             $user_representation,
             true,
+            true,
             ItemRepresentation::TYPE_FOLDER,
             false,
             false,
@@ -353,6 +361,7 @@ final class ItemRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit
             $docman_folder2,
             $html_purifier,
             $user_representation,
+            true,
             true,
             ItemRepresentation::TYPE_FOLDER,
             false,

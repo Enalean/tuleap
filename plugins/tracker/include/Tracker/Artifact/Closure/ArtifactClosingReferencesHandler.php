@@ -27,17 +27,22 @@ use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Reference\ExtractReferences;
 use Tuleap\Reference\ReferenceInstance;
+use Tuleap\Reference\ReferenceString;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\User\RetrieveUserById;
+use Tuleap\User\UserName;
 
 final class ArtifactClosingReferencesHandler
 {
+    private const REFERENCE_HANDLING_LIMIT = 50;
+
     public function __construct(
         private LoggerInterface $logger,
         private ExtractReferences $reference_extractor,
-        private RetrieveViewableArtifact $artifact_retriever,
+        private RetrieveArtifact $artifact_retriever,
         private RetrieveUserById $user_retriever,
+        private ArtifactWasClosedCache $closed_cache,
         private ArtifactCloser $artifact_closer,
     ) {
     }
@@ -51,19 +56,40 @@ final class ArtifactClosingReferencesHandler
         if (! $workflow_user) {
             throw new \UserNotExistException('Tracker Workflow Manager does not exist, unable to close artifacts');
         }
-        $reference_instances = $this->reference_extractor->extractReferences(
-            $event->text_with_potential_references,
-            (int) $event->project->getID()
-        );
-        foreach ($reference_instances as $instance) {
-            $this->handleSingleReference($event, $workflow_user, $instance);
+        $counter = 0;
+        foreach ($event->text_with_potential_references as $text_with_potential_reference) {
+            $reference_instances = $this->reference_extractor->extractReferences(
+                $text_with_potential_reference->text,
+                (int) $event->project->getID()
+            );
+            foreach ($reference_instances as $instance) {
+                if ($counter >= self::REFERENCE_HANDLING_LIMIT) {
+                    $this->logger->info(
+                        sprintf(
+                            'Found more than %d references, the rest will be skipped.',
+                            self::REFERENCE_HANDLING_LIMIT
+                        )
+                    );
+                    return;
+                }
+                $this->handleSingleReference(
+                    $event,
+                    $text_with_potential_reference->back_reference,
+                    $workflow_user,
+                    $instance,
+                    $text_with_potential_reference->user_name
+                );
+                $counter++;
+            }
         }
     }
 
     private function handleSingleReference(
         PotentialReferencesReceived $event,
+        ReferenceString $back_reference,
         \PFUser $workflow_user,
         ReferenceInstance $reference_instance,
+        UserName $user_closing_the_artifact,
     ): void {
         if ($reference_instance->getReference()->getNature() !== Artifact::REFERENCE_NATURE) {
             return;
@@ -75,25 +101,31 @@ final class ArtifactClosingReferencesHandler
         if (! $closing_keyword) {
             return;
         }
-        $artifact = $this->artifact_retriever->getArtifactByIdUserCanView($event->user, (int) $reference_instance->getValue());
+        $artifact = $this->artifact_retriever->getArtifactById(
+            (int) $reference_instance->getValue()
+        );
         if (! $artifact) {
+            return;
+        }
+        if ($this->closed_cache->isClosed($artifact)) {
             return;
         }
 
         $closing_comment = ArtifactClosingCommentInCommonMarkFormat::fromParts(
-            '@' . $event->user->getUserName(),
+            $user_closing_the_artifact->getName(),
             $closing_keyword,
             $artifact->getTracker(),
-            $event->back_reference
+            $back_reference
         );
 
         $this->artifact_closer->closeArtifact(
             $artifact,
             $workflow_user,
             $closing_comment,
-            BadSemanticComment::fromUser($event->user)
+            BadSemanticComment::fromUser($user_closing_the_artifact)
         )->match(function () use ($artifact) {
             $this->logger->debug(sprintf('Closed artifact #%d', $artifact->getId()));
+            $this->closed_cache->addClosedArtifact($artifact);
         }, function (Fault $fault) use ($artifact) {
             $this->logger->error(sprintf('Could not close artifact #%d: %s', $artifact->getId(), (string) $fault));
         });

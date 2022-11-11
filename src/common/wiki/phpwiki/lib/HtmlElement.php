@@ -566,8 +566,9 @@ function HiddenInputs($query_args, $pfx = false, $exclude = [])
             $inputs->pushContent(HiddenInputs($val, $name));
         } else {
             $inputs->pushContent(HTML::input(['type' => 'hidden',
-                                                   'name' => $name,
-                                                   'value' => $val]));
+                'name' => $name,
+                'value' => $val,
+            ]));
         }
     }
     return $inputs;
@@ -584,7 +585,8 @@ function HiddenInputs($query_args, $pfx = false, $exclude = [])
 function JavaScript($js, $script_args = false)
 {
     $default_script_args = [//'version' => 'JavaScript', // not xhtml conformant
-                                 'type' => 'text/javascript'];
+        'type' => 'text/javascript',
+    ];
     $script_args         = $script_args ? array_merge($default_script_args, $script_args)
                                 : $default_script_args;
     if (empty($js)) {

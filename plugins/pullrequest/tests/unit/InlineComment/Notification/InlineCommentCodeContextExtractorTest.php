@@ -166,7 +166,9 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
             'file/path',
             $unidiff_offset,
             'Comment',
-            false
+            false,
+            0,
+            'right'
         );
     }
 

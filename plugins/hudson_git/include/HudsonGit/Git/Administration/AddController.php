@@ -30,6 +30,7 @@ use HTTPRequest;
 use Project;
 use ProjectManager;
 use RuntimeException;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -69,7 +70,7 @@ class AddController implements DispatchableWithRequest
         $this->csrf_token              = $csrf_token;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProjectFromRequest($request);
         $this->csrf_token->check(
@@ -89,11 +90,24 @@ class AddController implements DispatchableWithRequest
         if ($provided_url === false) {
             throw new RuntimeException(dgettext("tuleap-hudson_git", "Expected Jenkins server URL not found"));
         }
+        $cleartext_token = (string) $request->get('token');
+        if ($cleartext_token === '') {
+            $layout->addFeedback(
+                Feedback::ERROR,
+                dgettext("tuleap-hudson_git", "Jenkins token is missing.")
+            );
+            $layout->redirect(
+                URLBuilder::buildUrl($project)
+            );
+        }
+        $token = new ConcealedString($cleartext_token);
+        sodium_memzero($cleartext_token);
 
         try {
             $this->jenkins_server_adder->addServerInProject(
                 $project,
-                trim($provided_url)
+                trim($provided_url),
+                $token
             );
 
             $layout->addFeedback(

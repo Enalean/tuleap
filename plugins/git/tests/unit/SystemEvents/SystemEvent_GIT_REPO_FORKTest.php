@@ -51,6 +51,7 @@ class SystemEvent_GIT_REPO_FORKTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGetsTheRepositoryIdsFromTheFactory(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->repository_factory->shouldReceive('getRepositoryById')->with($this->old_repository_id)->andReturns($this->old_repository);
         $this->repository_factory->shouldReceive('getRepositoryById')->with($this->new_repository_id)->andReturns($this->new_repository);
         $this->event->process();

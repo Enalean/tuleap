@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\FRS;
 
 use FRSFileFactory;
-use PFUser;
 use Project_AccessException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -33,7 +32,7 @@ use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
-use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\User\ProvideCurrentRequestUser;
 use URLVerification;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
@@ -57,6 +56,7 @@ final class FRSFileDownloadController extends DispatchablePSR15Compatible implem
         FRSFileFactory $file_factory,
         BinaryFileResponseBuilder $response_builder,
         EmitterInterface $emitter,
+        private ProvideCurrentRequestUser $current_request_user_provider,
         MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
@@ -79,8 +79,10 @@ final class FRSFileDownloadController extends DispatchablePSR15Compatible implem
             throw new NotFoundException(_('The file cannot be found'));
         }
 
-        $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
-        \assert($current_user instanceof PFUser);
+        $current_user = $this->current_request_user_provider->getCurrentRequestUser($request);
+        if ($current_user === null) {
+            throw new NotFoundException();
+        }
 
         try {
             $this->url_verification->userCanAccessProject($current_user, $file->getGroup());

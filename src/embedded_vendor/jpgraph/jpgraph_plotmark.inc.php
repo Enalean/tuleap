@@ -558,10 +558,10 @@ class ImgData
 
 // Keep a global flag cache to reduce memory usage
 $_gFlagCache = [
-1 => null,
-2 => null,
-3 => null,
-4 => null,
+    1 => null,
+    2 => null,
+    3 => null,
+    4 => null,
 ];
 // Only supposed to b called as statics
 class FlagCache

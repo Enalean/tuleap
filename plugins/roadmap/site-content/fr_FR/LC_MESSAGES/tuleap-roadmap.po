@@ -23,6 +23,9 @@ msgstr ""
 msgid "Roadmap"
 msgstr "Feuille de route"
 
+msgid "Roadmap widget"
+msgstr "widget Feuille de route"
+
 msgid "The roadmap cannot be found."
 msgstr "La feuille de route est introuvable."
 

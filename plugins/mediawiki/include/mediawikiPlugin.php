@@ -525,7 +525,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $projects = ProjectManager::instance()->getAllProjectsButDeleted();
         foreach ($projects as $project) {
             if ($project->usesService(self::SERVICE_SHORTNAME) && $this->getDao()->hasDatabase($project)) {
-                $this->getDao()->renameUser($project, $params['old_user_name'], $user->getUnixName());
+                $this->getDao()->renameUser($project, $params['old_user_name'], $user->getUserName());
             }
         }
     }

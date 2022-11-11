@@ -37,8 +37,8 @@ if ($group_id && $mode == "admin") {
 
     project_admin_header(
         [
-          'title' => $pg_title,
-          'help' => 'tracker.html#tracker-artifact-import',
+            'title' => $pg_title,
+            'help' => 'tracker.html#tracker-artifact-import',
         ],
         \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
     );

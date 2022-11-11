@@ -63,7 +63,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             $dao,
             \Mockery::spy(\Git_GitRepositoryUrlManager::class),
             \Mockery::spy(\UserManager::class),
-            \Mockery::spy(\UserHelper::class)
         );
     }
 

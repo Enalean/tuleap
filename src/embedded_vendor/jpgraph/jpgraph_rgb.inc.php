@@ -467,7 +467,8 @@ class RGB
             'darkred' => [139,0,0],
             'silver' => [192, 192, 192],
             'eggplant' => [144,176,168],
-            'lightgreen' => [144,238,144]];
+            'lightgreen' => [144,238,144],
+        ];
     }
 
 

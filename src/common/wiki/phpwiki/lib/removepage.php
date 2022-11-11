@@ -49,10 +49,12 @@ function RemovePage(&$request)
             HTML::h2(fmt("You are about to remove '%s'!", $pagelink)),
             HTML::form(
                 ['method' => 'post',
-                                      'action' => $request->getPostURL()],
+                    'action' => $request->getPostURL(),
+                ],
                 HiddenInputs(['currentversion' => $version,
-                                                   'pagename' => $page->getName(),
-                                                   'action' => 'remove']),
+                    'pagename' => $page->getName(),
+                    'action' => 'remove',
+                ]),
                 HTML::div(
                     ['class' => 'toolbar'],
                     $removeB,

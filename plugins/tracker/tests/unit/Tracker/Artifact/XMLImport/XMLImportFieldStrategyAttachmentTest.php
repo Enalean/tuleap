@@ -175,10 +175,10 @@ class XMLImportFieldStrategyAttachmentTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsEmtpyArrayIfFieldChangeDoesNotHaveRefAttribute(): void
+    public function testItReturnsEmptyArrayIfFieldChangeDoesNotHaveRefAttribute(): void
     {
         $this->logger
-            ->shouldReceive('warning')
+            ->shouldReceive('info')
             ->with('Skipped attachment field Attachments: field value is empty.')
             ->once();
 

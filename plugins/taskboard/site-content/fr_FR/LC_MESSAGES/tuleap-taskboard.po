@@ -48,7 +48,7 @@ msgid "Taskboard not found."
 msgstr "Le tableau de tâches n'a pas été trouvé."
 
 msgid "The artifact does not have a remaining effort numeric field"
-msgstr "L'artéfact n'a pas de champs numérique pour l'effort restant"
+msgstr "L'artéfact n'a pas de champ numérique pour l'effort restant"
 
 #, php-format
 msgid ""

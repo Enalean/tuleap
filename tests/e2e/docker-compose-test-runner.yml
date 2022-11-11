@@ -6,6 +6,8 @@ services:
     build:
       context: ./tests/e2e/docker # This is resolved from the rout of the sources
       dockerfile: run-tests.dockerfile
+      platforms:
+        - linux/amd64
       args:
         DOCKER_REGISTRY: ${DOCKER_REGISTRY:-docker.io}
         CYPRESS_VERSION: $CYPRESS_VERSION

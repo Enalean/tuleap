@@ -51,6 +51,7 @@ class SetIntValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateDoesNotThrowWhenValid()
     {
+        $this->expectNotToPerformAssertions();
         $integer_field   = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
             ->shouldReceive('getId')
             ->andReturn(1)

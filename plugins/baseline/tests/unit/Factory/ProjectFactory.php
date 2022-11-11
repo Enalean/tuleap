@@ -23,23 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use Mockery;
 use Mockery\MockInterface;
 use Project;
+use Tuleap\Baseline\Adapter\ProjectProxy;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class ProjectFactory
 {
     /**
      * @return Project|MockInterface
      */
-    public static function one(): Project
+    public static function one(): ProjectIdentifier
     {
         return self::oneWithId(103);
     }
 
-    public static function oneWithId(int $id): Project
+    public static function oneWithId(int $id): ProjectIdentifier
     {
-        return Mockery::mock(Project::class)
-            ->allows(['getID' => $id]);
+        return ProjectProxy::buildFromProject(
+            ProjectTestBuilder::aProject()->withId($id)->build()
+        );
     }
 }

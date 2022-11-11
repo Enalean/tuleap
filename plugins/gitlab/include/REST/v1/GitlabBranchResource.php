@@ -87,6 +87,7 @@ class GitlabBranchResource
      *
      * @throws RestException 400
      * @throws RestException 404
+     * @throws RestException 500
      */
     protected function createGitlabBranch(GitlabBranchPOSTRepresentation $gitlab_branch): GitlabBranchRepresentation
     {

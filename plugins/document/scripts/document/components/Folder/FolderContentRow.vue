@@ -91,15 +91,7 @@
                 <user-badge v-bind:user="item.owner" />
             </td>
             <td class="document-tree-cell-updatedate">
-                <tlp-relative-date
-                    v-bind:date="item.last_update_date"
-                    v-bind:absolute-date="formatted_full_date"
-                    v-bind:placement="relative_date_placement"
-                    v-bind:preference="relative_date_preference"
-                    v-bind:locale="user_locale"
-                >
-                    {{ formatted_full_date }}
-                </tlp-relative-date>
+                <document-relative-date v-bind:date="item.last_update_date" />
             </td>
         </template>
     </tr>
@@ -108,7 +100,6 @@
 <script>
 import { mapState } from "vuex";
 import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI, TYPE_EMBEDDED } from "../../constants";
-import { formatDateUsingPreferredUserFormat } from "../../helpers/date-formatter";
 import {
     hasNoUploadingContent,
     isItemUploadingInQuickLookMode,
@@ -122,13 +113,14 @@ import DropDownButton from "./DropDown/DropDownButton.vue";
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalBadge from "./ApprovalTables/ApprovalBadge.vue";
 import DropDownMenuTreeView from "./DropDown/DropDownMenuTreeView.vue";
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { isFile, isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
+import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
 
 export default {
     name: "FolderContentRow",
     components: {
+        DocumentRelativeDate,
         DropDownMenuTreeView,
         ApprovalBadge,
         DocumentTitleLockInfo,
@@ -146,13 +138,6 @@ export default {
     },
     computed: {
         ...mapState(["folded_items_ids"]),
-        ...mapState("configuration", ["date_time_format", "relative_dates_display", "user_locale"]),
-        formatted_full_date() {
-            return formatDateUsingPreferredUserFormat(
-                this.item.last_update_date,
-                this.date_time_format
-            );
-        },
         is_folded() {
             return this.folded_items_ids.includes(this.item.id);
         },
@@ -231,12 +216,6 @@ export default {
         },
         is_not_uploading_and_is_not_in_quicklook() {
             return isItemInTreeViewWithoutUpload(this.item, this.isQuickLookDisplayed);
-        },
-        relative_date_preference() {
-            return relativeDatePreference(this.relative_dates_display);
-        },
-        relative_date_placement() {
-            return relativeDatePlacement(this.relative_dates_display, "top");
         },
     },
     mounted() {

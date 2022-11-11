@@ -142,7 +142,8 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->queue_factory
             ->shouldReceive('getPersistentQueue')
             ->with('app_user_events', 'redis')
-            ->andReturn($persistent_queue);
+            ->andReturn($persistent_queue)
+            ->atLeast()->once();
 
         $persistent_queue
             ->shouldReceive('pushSinglePersistentMessage')
@@ -151,7 +152,8 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'pending_jira_import_id' => 123,
                 ]
-            );
+            )
+            ->atLeast()->once();
 
         $this->runner->queueJiraImportEvent(123);
     }
@@ -193,8 +195,7 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = Mockery::mock(\Project::class);
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive(['getName' => 'Whalter White', 'isAlive' => true]);
+        $user = UserTestBuilder::anActiveUser()->withUserName('Whalter White')->build();
 
         $import          = Mockery::mock(PendingJiraImport::class);
         $encrypted_token = SymmetricCrypto::encrypt(
@@ -271,8 +272,7 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCannotProcessIfItCannotImpersonateTheUser(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive(['getName' => 'Whalter White']);
+        $user = UserTestBuilder::aUser()->withUserName('Whalter White')->build();
 
         $import = Mockery::mock(PendingJiraImport::class);
         $import->shouldReceive(
@@ -306,8 +306,7 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCannotProcessIfItCannotRetrieveTheEncryptionKey(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive(['getName' => 'Whalter White', 'isAlive' => true]);
+        $user = UserTestBuilder::anActiveUser()->withUserName('Whalter White')->build();
 
         $import = Mockery::mock(PendingJiraImport::class);
         $import->shouldReceive(
@@ -356,8 +355,7 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
         );
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive(['getName' => 'Whalter White', 'isAlive' => true]);
+        $user = UserTestBuilder::anActiveUser()->withUserName('Whalter White')->build();
 
         $import          = Mockery::mock(PendingJiraImport::class);
         $encrypted_token = SymmetricCrypto::encrypt(

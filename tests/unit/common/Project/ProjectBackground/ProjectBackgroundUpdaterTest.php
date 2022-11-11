@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\ProjectBackground;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -62,6 +63,6 @@ final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildPermission(): UserCanModifyProjectBackgroundPermission
     {
-        return new UserCanModifyProjectBackgroundPermission(\Project::buildForTest());
+        return new UserCanModifyProjectBackgroundPermission(ProjectTestBuilder::aProject()->build());
     }
 }

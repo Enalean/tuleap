@@ -50,7 +50,7 @@ class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->service_creator = \Mockery::spy(\Tuleap\Service\ServiceCreator::class);
         $this->activator       = new ServiceActivator($this->service_manager, $this->tracker_v3, $this->service_creator);
 
-        $this->template              = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->template              = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
         $this->project_creation_data = \Mockery::spy(\ProjectCreationData::class);
 
         $this->params = [
@@ -139,7 +139,7 @@ class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesThePluginServiceIfNotAvailableInTemplate(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => 106, 'getUnixName' => false, 'isPublic' => false]);
+        $project = \Mockery::spy(\Project::class, ['getID' => 106, 'getUserName' => false, 'isPublic' => false]);
         $legacy  = [Service::TRACKERV3 => false];
 
         $this->tracker_core_service->shouldReceive('isUsed')->andReturn(false);
@@ -157,7 +157,7 @@ class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCreateServiceIfPreviouslyCreated(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => 106, 'getUnixName' => false, 'isPublic' => false]);
+        $project = \Mockery::spy(\Project::class, ['getID' => 106, 'getUserName' => false, 'isPublic' => false]);
         $legacy  = [Service::TRACKERV3 => false];
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);
@@ -170,7 +170,7 @@ class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCreateServiceIfLegacyMustBeUsed(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => 106, 'getUnixName' => false, 'isPublic' => false]);
+        $project = \Mockery::spy(\Project::class, ['getID' => 106, 'getUserName' => false, 'isPublic' => false]);
         $legacy  = [Service::TRACKERV3 => true];
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($this->template)->andReturns([$this->tracker_core_service, $this->tracker_plugin_service]);

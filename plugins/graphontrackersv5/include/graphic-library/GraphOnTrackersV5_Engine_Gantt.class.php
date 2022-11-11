@@ -241,29 +241,35 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
                 $this->addBar($i, $this->data[$i], true, [
                     'start' => 'start',
                     'end' => 'due',
-                    'caption' => ""]);
+                    'caption' => "",
+                ]);
                 $bar = $this->addLateBar($i, $this->data[$i], false, [
                     'start' => date($format, ( strtotime($this->data[$i]['due']) + $one_day)),
                     'end' => 'finish',
-                    'label' => ""]);
+                    'label' => "",
+                ]);
             } elseif ($start_date && $due_date && $due_date < $start_date && (! $finish_date || $start_date === $finish_date)) { //Late bar, due to start
                 $bar = $this->addLateBar($i, $this->data[$i], true, [
                     'start' => 'due',
-                    'end' => 'start']);
+                    'end' => 'start',
+                ]);
             } elseif ($start_date && $due_date && $finish_date && $due_date < $start_date && $start_date < $finish_date) { //Late bar, due to finish
                 $bar = $this->addLateBar($i, $this->data[$i], true, [
                     'start' => 'due',
-                    'end' => 'finish']);
+                    'end' => 'finish',
+                ]);
             } elseif ($start_date && $due_date && $finish_date && $start_date <= $finish_date && $finish_date < $due_date) { //Early bar
                 $this->addBar($i, $this->data[$i], true, [
                     'start' => 'start',
                     'end' => 'finish',
-                    'caption' => ""]);
+                    'caption' => "",
+                ]);
                 $this->addBar($i, $this->data[$i], false, [
                     'start' => date($format, ( strtotime($this->data[$i]['finish']) + $one_day)),
                     'end' => 'due',
                     'label' => "",
-                    'height' => 0.2]);
+                    'height' => 0.2,
+                ]);
             } else { //Error
                 $this->addErrorBar($i, $this->data[$i]);
             }

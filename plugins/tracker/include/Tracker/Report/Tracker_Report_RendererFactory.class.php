@@ -210,8 +210,9 @@ class Tracker_Report_RendererFactory
                                     ->processEvent(
                                         'tracker_report_create_renderer',
                                         ['renderer_id' => $renderer_id,
-                                                         'type'        => $type,
-                                                         'report'      => $report]
+                                            'type'        => $type,
+                                            'report'      => $report,
+                                        ]
                                     );
                         break;
                 }
@@ -297,8 +298,9 @@ class Tracker_Report_RendererFactory
                                 ->processEvent(
                                     'tracker_report_create_renderer_in_session',
                                     ['renderer_id' => $renderer_id,
-                                                     'type'        => $type,
-                                                     'report'      => $report]
+                                        'type'        => $type,
+                                        'report'      => $report,
+                                    ]
                                 );
                     break;
             }

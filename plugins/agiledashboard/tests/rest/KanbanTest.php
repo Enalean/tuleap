@@ -837,9 +837,9 @@ final class KanbanTest extends TestBase
     {
         $url = 'kanban/' . DataBuilder::KANBAN_CUMULATIVE_FLOW_ID . '/cumulative_flow?' . http_build_query(
             [
-                    'start_date'             => '2016-09-29',
-                    'end_date'               => '2016-09-28',
-                    'interval_between_point' => 1,
+                'start_date'             => '2016-09-29',
+                'end_date'               => '2016-09-28',
+                'interval_between_point' => 1,
             ]
         );
 
@@ -852,9 +852,9 @@ final class KanbanTest extends TestBase
     {
         $url = 'kanban/' . DataBuilder::KANBAN_CUMULATIVE_FLOW_ID . '/cumulative_flow?' . http_build_query(
             [
-                    'start_date'             => '2011-04-19',
-                    'end_date'               => '2016-09-29',
-                    'interval_between_point' => 1,
+                'start_date'             => '2011-04-19',
+                'end_date'               => '2016-09-29',
+                'interval_between_point' => 1,
             ]
         );
 
@@ -867,9 +867,9 @@ final class KanbanTest extends TestBase
     {
         $url = 'kanban/' . DataBuilder::KANBAN_CUMULATIVE_FLOW_ID . '/cumulative_flow?' . http_build_query(
             [
-                    'start_date'             => '2016-09-22',
-                    'end_date'               => '2016-09-28',
-                    'interval_between_point' => 1,
+                'start_date'             => '2016-09-22',
+                'end_date'               => '2016-09-28',
+                'interval_between_point' => 1,
             ]
         );
 
@@ -882,9 +882,9 @@ final class KanbanTest extends TestBase
     {
         $url = 'kanban/' . DataBuilder::KANBAN_CUMULATIVE_FLOW_ID . '/cumulative_flow?' . http_build_query(
             [
-                    'start_date' => '2016-09-22',
-                    'end_date' => '2016-09-28',
-                    'interval_between_point' => 1,
+                'start_date' => '2016-09-22',
+                'end_date' => '2016-09-28',
+                'interval_between_point' => 1,
             ]
         );
 

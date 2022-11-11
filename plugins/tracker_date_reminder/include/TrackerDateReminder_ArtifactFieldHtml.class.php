@@ -97,9 +97,10 @@ class TrackerDateReminder_ArtifactFieldHtml
                 '<INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="' . $recurse . '"> ' . dgettext('tuleap-tracker_date_reminder', 'e-mail(s) to');
 
         $artRoleNames = [['value' => '1', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_SUBMITTER_short_desc')],
-                              ['value' => '2', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_ASSIGNEE_short_desc')],
-                              ['value' => '3', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_CC_short_desc')],
-                              ['value' => '4', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_COMMENTER_short_desc')]];
+            ['value' => '2', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_ASSIGNEE_short_desc')],
+            ['value' => '3', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_CC_short_desc')],
+            ['value' => '4', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_COMMENTER_short_desc')],
+        ];
         $out         .= html_build_multiple_select_box_from_array($artRoleNames, 'notified_users[]', $notified_users, 4, true, '', false, '', false, '', false);
 
         $GLOBALS['Language']->getText('global', 'and');

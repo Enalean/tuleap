@@ -229,11 +229,11 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $header = ['summary', 'details'];
         $lines  = [
-                    ['summary 1', 'details 1'],
-                    ['summary 2', 'details 2'],
-                    ['summary 3', 'details 3'],
-                    ['summary 4', 'details 4'],
-                 ];
+            ['summary 1', 'details 1'],
+            ['summary 2', 'details 2'],
+            ['summary 3', 'details 3'],
+            ['summary 4', 'details 4'],
+        ];
 
         $this->assertFalse($this->tracker->hasUnknownAid($header, $lines));
     }
@@ -242,11 +242,11 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $header = ['aid', 'summary', 'details'];
         $lines  = [
-                    ['1','summary 1', 'details 1'],
-                    ['2','summary 2', 'details 2'],
-                    ['3','summary 3', 'details 3'],
-                    ['4','summary 4', 'details 4'],
-                 ];
+            ['1','summary 1', 'details 1'],
+            ['2','summary 2', 'details 2'],
+            ['3','summary 3', 'details 3'],
+            ['4','summary 4', 'details 4'],
+        ];
 
         $artifact1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact1->shouldReceive('getId')->andReturns('1');
@@ -272,11 +272,11 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $header = ['aid', 'summary', 'details'];
         $lines  = [
-                    ['1','summary 1', 'details 1'],
-                    ['2','summary 2', 'details 2'],
-                    ['3','summary 3', 'details 3'],
-                    ['4','summary 4', 'details 4'],
-                 ];
+            ['1','summary 1', 'details 1'],
+            ['2','summary 2', 'details 2'],
+            ['3','summary 3', 'details 3'],
+            ['4','summary 4', 'details 4'],
+        ];
 
         $artifact1 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact1->shouldReceive('getId')->andReturns('1');
@@ -303,12 +303,12 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIsValidCSVWrongSeparator(): void
     {
         $lines     = [
-                    ['aid;summary;details'],
-                    ['1;summary 1;details 1'],
-                    ['2;summary 2;details 2'],
-                    ['3;summary 3;details 3'],
-                    ['4;summary 4;details 4'],
-                 ];
+            ['aid;summary;details'],
+            ['1;summary 1;details 1'],
+            ['2;summary 2;details 2'],
+            ['3;summary 3;details 3'],
+            ['4;summary 4;details 4'],
+        ];
         $separator = ',';
 
         $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -321,12 +321,12 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIsValidCSVGoodSeparator(): void
     {
         $lines     = [
-                    ['aid', 'summary', 'details'],
-                    ['1', 'summary 1', 'details 1'],
-                    ['2', 'summary 2', 'details 2'],
-                    ['3', 'summary 3', 'details 3'],
-                    ['4', 'summary 4', 'details 4'],
-                 ];
+            ['aid', 'summary', 'details'],
+            ['1', 'summary 1', 'details 1'],
+            ['2', 'summary 2', 'details 2'],
+            ['3', 'summary 3', 'details 3'],
+            ['4', 'summary 4', 'details 4'],
+        ];
         $separator = ',';
 
         $this->workflow_factory->shouldReceive('getGlobalRulesManager')->andReturns(\Mockery::spy(\Tracker_RulesManager::class));

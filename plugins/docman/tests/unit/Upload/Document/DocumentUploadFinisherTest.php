@@ -24,6 +24,7 @@ use Docman_ItemFactory;
 use Docman_VersionFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
@@ -83,8 +84,7 @@ final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
             new \Docman_MIMETypeDetector(),
             $this->user_manager,
             new DBTransactionExecutorPassthrough(),
-            $this->event_adder,
-            $this->project_manager
+            new PostUpdateFileHandler($this->version_factory, $this->event_adder, $this->project_manager, $this->event_manager),
         );
 
         $item_id_being_created    = 12;
@@ -92,7 +92,12 @@ final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
-        $this->item_factory->shouldReceive('getItemFromDB')->andReturns(null, \Mockery::spy(\Docman_Item::class));
+        $item = $this->createStub(\Docman_File::class);
+        $item->method('getOwnerId')->willReturn(333);
+        $item->method('getGroupId')->willReturn(102);
+        $item->method('getParentId')->willReturn(3);
+        $item->method('accept')->willReturn(true);
+        $this->item_factory->shouldReceive('getItemFromDB')->andReturns(null, $item);
         $this->on_going_upload_dao->shouldReceive('searchDocumentOngoingUploadByItemID')->andReturns(
             [
                 'item_id'           => $item_id_being_created,
@@ -114,13 +119,14 @@ final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         touch($created_docman_file);
         $this->file_storage->shouldReceive('copy')->once()->andReturns($created_docman_file);
         $this->version_factory->shouldReceive('create')->once()->andReturns(true);
-        $this->version_factory->shouldReceive('getSpecificVersion')->andReturns(\Mockery::mock(\Docman_Version::class));
+        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturns(\Mockery::mock(\Docman_Version::class));
         $this->event_manager->shouldReceive('processEvent');
         $this->user_manager->shouldReceive('getUserByID')->andReturns(\Mockery::mock(\PFUser::class));
         $this->logger->shouldReceive('debug');
         $project = \Mockery::mock(\Project::class);
-        $this->project_manager->shouldReceive('getProject')->andReturn($project);
+        $this->project_manager->shouldReceive('getProjectById')->andReturn($project);
         $this->event_adder->shouldReceive('addNotificationEvents')->withArgs([$project])->once();
+        $this->event_adder->shouldReceive('addLogEvents');
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
 

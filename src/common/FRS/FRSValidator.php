@@ -26,19 +26,19 @@ use FRSReleaseFactory;
 
 class FRSValidator
 {
-    private $_errors = [];
+    private array $errors = [];
 
     public function addError($error)
     {
-        if (! $this->_errors) {
-            $this->_errors =  [];
+        if (! $this->errors) {
+            $this->errors = [];
         }
-        $this->_errors[] = $error;
+        $this->errors[] = $error;
     }
 
     public function getErrors()
     {
-        return $this->_errors;
+        return $this->errors;
     }
 
     public function isValidForCreation($release, $group_id)
@@ -57,7 +57,7 @@ class FRSValidator
                 } else {
                     //check if release name exists already
                     $release_exists = $frsrf->getReleaseIdByName($release['name'], $release['package_id']);
-                    if (! $release_exists || count($release_exists) < 1) {
+                    if (! $release_exists) {
                         //now check the date
                         if (! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $release['date'])) {
                             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'data_not_parsed'));
@@ -71,7 +71,7 @@ class FRSValidator
             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'create_p_before_rel_status'));
         }
 
-        return count($this->_errors) === 0;
+        return count($this->errors) === 0;
     }
 
     public function isValidForUpdate($release, $group_id)
@@ -99,7 +99,7 @@ class FRSValidator
                     if (($res1->getPackageID() != $release['package_id']) || ($res1->getPackageID() == $release['package_id'] && $res1->getName() != $release['name'])) {
                         $release_exists = $frsrf->getReleaseIdByName($release['name'], $release['package_id']);
                     }
-                    if (! isset($release_exists) || count($release_exists) < 1) {
+                    if (! isset($release_exists)) {
                         //now check the date
                         if (! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $release['date'])) {
                             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'data_not_parsed'));
@@ -112,6 +112,6 @@ class FRSValidator
         } else {
             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'create_p_before_rel_status'));
         }
-        return count($this->_errors) === 0;
+        return count($this->errors) === 0;
     }
 }

@@ -140,6 +140,9 @@ function addJustCreatedItemToFolderContent(state, new_item) {
 function appendSubFolderContent(state, [folder_id, sub_items]) {
     const folder_index = state.folder_content.findIndex((folder) => folder.id === folder_id);
     const parent_folder = state.folder_content[folder_index];
+    if (!parent_folder) {
+        return;
+    }
 
     if (!parent_folder.level) {
         parent_folder.level = 0;

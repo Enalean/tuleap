@@ -45,6 +45,7 @@ class ApprovalTableUpdateActionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesnOtThrowAnExceptionWhenItemHasApprovalTableAndOptionIsCorrect()
     {
+        $this->expectNotToPerformAssertions();
         $approval_checker                      = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
         $item                                  = Mockery::mock(\Docman_Item::class);
         $representation                        = new DocmanFilesPATCHRepresentation();

@@ -179,6 +179,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withRow(array $row): self
+    {
+        $this->params = array_merge($this->params, $row);
+        return $this;
+    }
+
     public function build(): \PFUser
     {
         $user = new \PFUser($this->params);

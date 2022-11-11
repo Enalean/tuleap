@@ -48,10 +48,11 @@ class WikiPlugin_WikiForm extends WikiPlugin
     {
         return ['action' => 'upload', // 'upload', 'loadfile', or
                                            // 'dumpserial'
-                     'default' => false,
-                     'buttontext' => false,
-                     'overwrite' => false,
-                     'size' => 50];
+            'default' => false,
+            'buttontext' => false,
+            'overwrite' => false,
+            'size' => 50,
+        ];
     }
 
 
@@ -60,15 +61,18 @@ class WikiPlugin_WikiForm extends WikiPlugin
         extract($this->getArgs($argstr, $request));
         $form  = HTML::form(
             ['action' => $request->getPostURL(),
-                                 'method' => 'post',
-                                 'class'  => 'wikiadmin',
-                                 'accept-charset' => $GLOBALS['charset']],
+                'method' => 'post',
+                'class'  => 'wikiadmin',
+                'accept-charset' => $GLOBALS['charset'],
+            ],
             HiddenInputs(['action' => $action,
-            'pagename' => $basepage])
+                'pagename' => $basepage,
+            ])
         );
         $input = ['type' => 'text',
-                       'value' => $default,
-                       'size' => $size];
+            'value' => $default,
+            'size' => $size,
+        ];
 
         switch ($action) {
             case 'loadfile':
@@ -91,8 +95,9 @@ class WikiPlugin_WikiForm extends WikiPlugin
             case 'upload':
                 $form->setAttr('enctype', 'multipart/form-data');
                 $form->pushContent(HTML::input(['name' => 'MAX_FILE_SIZE',
-                                                 'value' =>  MAX_UPLOAD_SIZE,
-                                                 'type'  => 'hidden']));
+                    'value' =>  MAX_UPLOAD_SIZE,
+                    'type'  => 'hidden',
+                ]));
                 $input['name'] = 'file';
                 $input['type'] = 'file';
                 if (! $buttontext) {
@@ -109,8 +114,9 @@ class WikiPlugin_WikiForm extends WikiPlugin
         $button = Button('submit:', $buttontext, $class);
         if ($request->getArg('start_debug')) {
             $form->pushContent(HTML::input(['name' => 'start_debug',
-                                                 'value' =>  $request->getArg('start_debug'),
-                                                 'type'  => 'hidden']));
+                'value' =>  $request->getArg('start_debug'),
+                'type'  => 'hidden',
+            ]));
         }
         $form->pushContent(HTML::span(
             ['class' => $class],

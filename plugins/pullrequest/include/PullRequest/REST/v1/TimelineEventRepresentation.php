@@ -53,14 +53,19 @@ class TimelineEventRepresentation
      * @var string {@type string}
      */
     public $type;
+    /**
+     * @var int {@type int}
+     */
+    public int $parent_id;
 
 
-    public function __construct(MinimalUserRepresentation $user, int $post_date, int $event_type)
+    public function __construct(MinimalUserRepresentation $user, int $post_date, int $event_type, int $parent_id)
     {
         $this->user       = $user;
         $this->post_date  = JsonCast::toDate($post_date);
         $this->event_type = self::expandType($event_type);
         $this->type       = 'timeline-event';
+        $this->parent_id  = $parent_id;
     }
 
     private static function expandType(int $type_acronym): string

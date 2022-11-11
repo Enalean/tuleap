@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2016 - Present. All rights reserved
+ * Copyright (c) Enalean 2011 - Present. All rights reserved
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -28,7 +28,7 @@ use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
  * VersionFactory is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_VersionFactory
+class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
 {
     public function __construct()
     {
@@ -136,15 +136,7 @@ class Docman_VersionFactory
         return $dao->searchNextVersionNumber($item->getId());
     }
 
-    /**
-     * Delete given version of document
-     *
-     * @param Docman_Item $item
-     * @param int $number
-     *
-     * @return bool
-     */
-    public function deleteSpecificVersion($item, $number)
+    public function deleteSpecificVersion(Docman_Item $item, int $number): bool
     {
         // The event must be processed before the version is deleted
         $version = $this->getSpecificVersion($item, $number);
@@ -240,10 +232,11 @@ class Docman_VersionFactory
                         $value .= ' (' . $row['label'] . ')';
                     }
                     $this->_getEventManager()->processEvent('plugin_docman_event_restore_version', [
-                          'group_id'   => $item->getGroupId(),
-                          'item'       => $item,
-                          'old_value'  => $value,
-                          'user'       => $user]);
+                        'group_id'   => $item->getGroupId(),
+                        'item'       => $item,
+                        'old_value'  => $value,
+                        'user'       => $user,
+                    ]);
                     return true;
                 }
             }

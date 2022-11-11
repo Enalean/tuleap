@@ -25,12 +25,12 @@ use Tuleap\DB\DataAccessObject;
 class Dao extends DataAccessObject
 {
     /**
-     * @psalm-return array{id:int,pull_request_id:int,user_id:int,post_date:int,file_path:string,unidiff_offset:int,content:string,is_outdated:0|1}|null
+     * @psalm-return array{id:int,pull_request_id:int,user_id:int,post_date:int,file_path:string,unidiff_offset:int,content:string,is_outdated:0|1,parent_id:int,position:string}|null
      */
     public function searchByID(int $inline_comment_id): ?array
     {
         return $this->getDB()->row(
-            'SELECT id, pull_request_id, user_id, post_date, file_path, unidiff_offset, content, is_outdated
+            'SELECT id, pull_request_id, user_id, post_date, file_path, unidiff_offset, content, is_outdated, parent_id, position
             FROM plugin_pullrequest_inline_comments
             WHERE id = ?',
             $inline_comment_id
@@ -63,18 +63,19 @@ class Dao extends DataAccessObject
         return $this->getDB()->run($sql, $pull_request_id);
     }
 
-    public function insert($pull_request_id, $user_id, $file_path, $post_date, $unidiff_offset, $content, $position): int
+    public function insert(int $pull_request_id, int $user_id, string $file_path, int $post_date, int $unidiff_offset, string $content, string $position, int $parent_id): int
     {
         $this->getDB()->insert(
             'plugin_pullrequest_inline_comments',
             [
                 'pull_request_id' => $pull_request_id,
-                'user_id'         => $user_id,
-                'file_path'       => $file_path,
-                'post_date'       => $post_date,
-                'unidiff_offset'  => $unidiff_offset,
-                'content'         => $content,
-                'position'        => $position,
+                'user_id' => $user_id,
+                'file_path' => $file_path,
+                'post_date' => $post_date,
+                'unidiff_offset' => $unidiff_offset,
+                'content' => $content,
+                'position' => $position,
+                'parent_id' => $parent_id,
             ]
         );
 

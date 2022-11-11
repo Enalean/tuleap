@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use Project;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
@@ -30,8 +29,9 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&TuleapReferenceRetriever
@@ -68,7 +68,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             '',
             'https://example.com/root/repo01',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -104,7 +104,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             '',
             'https://example.com/root/repo01',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -146,7 +146,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             '',
             'https://example.com/root/repo01',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -194,7 +194,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             '',
             'https://example.com/root/repo01',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -242,7 +242,7 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             '',
             'https://example.com/root/repo01',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

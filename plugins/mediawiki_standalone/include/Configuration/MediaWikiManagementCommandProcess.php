@@ -49,7 +49,7 @@ final class MediaWikiManagementCommandProcess implements MediaWikiManagementComm
     public function wait(): Ok|Err
     {
         $exit_code      = $this->process->wait();
-        $process_output = $this->process->getOutput();
+        $process_output = $this->process->getOutput() . $this->process->getErrorOutput();
         $this->logger->debug($process_output);
         if ($exit_code <= 0) {
             return Result::ok(null);

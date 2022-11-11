@@ -66,16 +66,16 @@ class WikiPlugin_CreateToc extends WikiPlugin
     {
         return [ 'pagename'  => '[pagename]', // TOC of another page here?
                       // or headers=1,2,3 is also possible.
-                      'headers'   => "!!!,!!,!",   // "!!!"=>h1, "!!"=>h2, "!"=>h3
-                      'noheader'  => 0,            // omit <h1>Table of Contents</h1>
-                      'position'  => 'right',      // or left
-                      'with_toclink' => 0,         // link back to TOC
-                      'jshide'    => 0,            // collapsed TOC as DHTML button
-              'extracollapse' => 1,        // provide an entry +/- link to collapse
-                      'liststyle' => 'dl',         // 'dl' or 'ul' or 'ol'
-                      'indentstr' => '&nbsp;&nbsp;&nbsp;&nbsp;',
-              'with_counter' => 1,
-                      ];
+            'headers'   => "!!!,!!,!",   // "!!!"=>h1, "!!"=>h2, "!"=>h3
+            'noheader'  => 0,            // omit <h1>Table of Contents</h1>
+            'position'  => 'right',      // or left
+            'with_toclink' => 0,         // link back to TOC
+            'jshide'    => 0,            // collapsed TOC as DHTML button
+            'extracollapse' => 1,        // provide an entry +/- link to collapse
+            'liststyle' => 'dl',         // 'dl' or 'ul' or 'ol'
+            'indentstr' => '&nbsp;&nbsp;&nbsp;&nbsp;',
+            'with_counter' => 1,
+        ];
     }
     // Initialisation of toc counter
     public function _initTocCounter()
@@ -278,8 +278,9 @@ class WikiPlugin_CreateToc extends WikiPlugin
                             $texts = $this->_getCounter($tocCounter, $level) . ' - ' . $s;
                         }
                         $headers[] = ['text' => $texts,
-                                           'anchor' => $anchor,
-                                           'level' => $level];
+                            'anchor' => $anchor,
+                            'level' => $level,
+                        ];
                         // Change original wikitext, but that is useless art...
                         $content[$i] = $match[1] . " #[|$manchor][$s|#TOC]";
                         // And now change the to be printed markup (XmlTree):
@@ -494,25 +495,28 @@ function toggletoc(a) {
                 " ",
                 HTML::a(['name' => 'TOC']),
                 HTML::img([
-                                            'id' => 'toctoggle',
-                                            'class' => 'wikiaction',
-                                            'title' => _("Click to display to TOC"),
-                                            'onClick' => "toggletoc(this)",
-                                            'height' => 15,
-                                            'width' => 15,
-                                            'border' => 0,
-                'src' => $jshide ? $close : $open ])
+                    'id' => 'toctoggle',
+                    'class' => 'wikiaction',
+                    'title' => _("Click to display to TOC"),
+                    'onClick' => "toggletoc(this)",
+                    'height' => 15,
+                    'width' => 15,
+                    'border' => 0,
+                    'src' => $jshide ? $close : $open,
+                ])
             );
         } else {
             $toclink = HTML::a(
                 ['name' => 'TOC',
-                     'class' => 'wikiaction',
-                     'title' => _("Click to display"),
-                     'onclick' => "toggletoc(this)"],
+                    'class' => 'wikiaction',
+                    'title' => _("Click to display"),
+                    'onclick' => "toggletoc(this)",
+                ],
                 _("Table Of Contents"),
                 HTML::span(
                     ['style' => 'display:none',
-                    'id' => 'toctoggle'],
+                        'id' => 'toctoggle',
+                    ],
                     " "
                 )
             );

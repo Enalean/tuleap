@@ -69,7 +69,7 @@ function getMilestones<T>(
             limit,
             query: JSON.stringify({ status }),
             fields: "slim",
-            order: "desc",
+            order: "asc",
         },
         getCollectionCallback: callback,
     });

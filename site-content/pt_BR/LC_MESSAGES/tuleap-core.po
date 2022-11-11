@@ -16,7 +16,7 @@ msgid ""
 "       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-"
 "MM-DD format."
 msgstr ""
-"       Desculpe - A Data de Validade está no formato incorreto. Deve estar "
+"       Desculpe - A data de validade está no formato incorreto. Deve estar "
 "no formato AAAA-MM-DD."
 
 msgid " New user"
@@ -30,15 +30,15 @@ msgid ""
 "\"%s\" label already exists. If you save your modifications, both labels "
 "will be merged."
 msgstr ""
-"O rótulo \"%s\" já existe. Se você salvar suas modificações, ambas os "
-"rótulos serão fundidos."
+"O rótulo \"%s\" já existe. Se você salvar suas modificações, os "
+"rótulos serão unidos."
 
 #, php-format
 msgid "\"%s\" label already exists. Please choose another one."
 msgstr "O rótulo \"%s\" já existe. Por favor, escolha outro."
 
 msgid "## Some notes"
-msgstr "##Algumas notas"
+msgstr "## Algumas notas"
 
 #, php-format
 msgid "%1$s Password Verification"
@@ -61,12 +61,12 @@ msgstr[1] "%d Projetos agregados"
 #, php-format
 msgid "%d Parent project"
 msgid_plural "%d Parent projects"
-msgstr[0] "%d Projeto pai"
-msgstr[1] "%d Projetos pai"
+msgstr[0] "%d Projeto Pai"
+msgstr[1] "%d Projetos Pai"
 
 #, php-format
 msgid "%d does not belong to %s (%d) category hierarchy"
-msgstr "%d não pertence à hierarquia das categorias de %s (%d)"
+msgstr "%d não pertence à %s (%d) hierarquia de categorias"
 
 #, php-format
 msgid "%d member"
@@ -102,7 +102,7 @@ msgstr "%s atrás"
 
 #, php-format
 msgid "%s full project listing"
-msgstr "%s listagem completa de projetos"
+msgstr "%s lista completa de projetos"
 
 #, php-format
 msgid "%s has multiple corresponding users."
@@ -124,7 +124,7 @@ msgstr "%s novidades"
 
 #, php-format
 msgid "%s project news highlights"
-msgstr "novidades em destaque no projeto %s "
+msgstr "destaques nas %s novidades do projeto"
 
 msgid "%s with email %s created an account on %s."
 msgstr "%s com o email %s criou uma conta em %s."
@@ -150,7 +150,7 @@ msgstr ""
 
 #, php-format
 msgid "- The team at %1$s."
-msgstr "- A equipe em %1$s."
+msgstr "- A equipe %1$s."
 
 msgid "-- None --"
 msgstr "-- Nenhum --"
@@ -243,7 +243,7 @@ msgid "<strong>Monitor this thread</strong>"
 msgstr "<forte>Monitore esta discussão</strong>"
 
 msgid "A deleted project can not be restored."
-msgstr "Um projeto apagado não pode ser restaurado."
+msgstr "Um projeto excluído não pode ser restaurado."
 
 #, php-format
 msgid ""
@@ -293,14 +293,14 @@ msgid ""
 "A non available service cannot be enabled. To enable this service, switch it "
 "to available before."
 msgstr ""
-"Um serviço não disponível não pode ser ativado. Para ativar este serviço, "
+"Um serviço não disponibilizado não pode ser ativado. Para ativar este serviço, "
 "mude-o para Disponível antes."
 
 msgid ""
 "A parameter is missing, please press the \"Back\" button and complete the "
 "form"
 msgstr ""
-"Falta um parâmetro, por favor pressione o botão \"Voltar\" e preencha o "
+"Falta um parâmetro, por favor pressione o botão \"Voltar\" e complete o "
 "formulário"
 
 #, php-format
@@ -389,10 +389,10 @@ msgid "Access key expiration date"
 msgstr "Data de expiração da chave de acesso"
 
 msgid "Access key scopes"
-msgstr "Escopos da chave de acesso"
+msgstr "Âmbitos da chave de acesso"
 
 msgid "Access key scopes are not well formed."
-msgstr "Os âescopos da chave de acesso não estão bem definidos."
+msgstr "Os âmbitos da chave de acesso não estão bem definidos."
 
 msgid "Access keys have been successfully deleted."
 msgstr "As chaves de acesso foram excluídas com sucesso."
@@ -437,7 +437,7 @@ msgid "Account must be active to change password"
 msgstr "A conta deve estar ativa para alterar a senha"
 
 msgid "Account status"
-msgstr "Conta"
+msgstr "Situação da conta"
 
 msgid "Actions"
 msgstr "Ações"
@@ -452,7 +452,7 @@ msgid "Active"
 msgstr "Ativo"
 
 msgid "Active sessions browser statistics"
-msgstr "Estatísticas das sessões ativas do navegador"
+msgstr "Estatísticas das sessões ativas de navegador"
 
 msgid "Add"
 msgstr "Adicionar"
@@ -561,13 +561,13 @@ msgstr ""
 "Todos os usuários, independentemente das suas preferências (%1$s usuários)"
 
 msgid "Allow for all projects"
-msgstr "Permitir em todos os projetos"
+msgstr "Permitir para todos os projetos"
 
 msgid ""
 "Allow the app to access resources on your behalf for an extended period of "
 "time even while you are disconnected"
 msgstr ""
-"Permitir ao app acessar recursos em seu nome por um período estendido de "
+"Permitir o app acessar recursos em seu nome por um período estendido de "
 "tempo, mesmo enquanto você estiver desconectado"
 
 msgid "Allow to connect to apps and services using your account"
@@ -1276,7 +1276,7 @@ msgid "Display platform statistics on home page."
 msgstr "Apresentar as estatísticas da plataforma na página inicial."
 
 msgid "Display site news on home page."
-msgstr "Apresentar novidades do site na página inicial."
+msgstr "Apresentar notícias do site na página inicial."
 
 msgid "Displays the 30 last updated or created items in the project."
 msgstr "Exibe os 30 últimos itens atualizados ou criados no projeto."
@@ -1423,7 +1423,7 @@ msgid "Enter comma separated list of emails"
 msgstr "Entre uma lista de emails, separados por vírgulas"
 
 msgid "Enter meaningful headline..."
-msgstr "Insira um título significativo..."
+msgstr "Insira um cabeçalho significativo..."
 
 msgid ""
 "Enter people to invite to %s. We will send an invitation email on your "
@@ -1439,10 +1439,10 @@ msgid "Error"
 msgstr "Erro"
 
 msgid "Error - choose a forum first"
-msgstr "Erro - escolha primeiro um fórum"
+msgstr "Erro - escolha primeiro um Fórum"
 
 msgid "Error - this news item was not found"
-msgstr "Erro - este item de novidade não foi encontrado"
+msgstr "Erro - esta notícia não foi encontrada"
 
 #, php-format
 msgid "Error Adding Forum '%1$s'."
@@ -1659,7 +1659,7 @@ msgid "Headline"
 msgstr "Cabeçalho"
 
 msgid "Heartbeat"
-msgstr "Ritmo do projeto"
+msgstr "Cadência do projeto"
 
 msgid "Hello,"
 msgstr "Olá,"
@@ -2252,13 +2252,13 @@ msgid "New user"
 msgstr "Novo usuário"
 
 msgid "News"
-msgstr "Novidades"
+msgstr "Notícias"
 
 msgid "News approval"
-msgstr "Aprovação das novidades"
+msgstr "Aprovação de notícias"
 
 msgid "News {{ user_group_name }} can see"
-msgstr "Novidades que  {{ user_group_name }} pode ver"
+msgstr "Notícias que  {{ user_group_name }} pode ver"
 
 msgid "Next Messages"
 msgstr "Mensagens seguintes"
@@ -2659,7 +2659,7 @@ msgid "Project (read only)"
 msgstr "Projeto (somente leitura)"
 
 msgid "Project Latest News"
-msgstr "Últimas novidades do Projeto"
+msgstr "Últimas Notícias do Projeto"
 
 msgid "Project Name"
 msgstr "Nome do Projeto"
@@ -2800,7 +2800,7 @@ msgstr "Configurações do projeto"
 
 #, php-format
 msgid "Project shortname is invalid. The reason is: %s"
-msgstr "O nome curto do projeto é inválido. A razão é: %s"
+msgstr "O nome curto do projeto é inválido. O motivo é: %s"
 
 msgid "Project templates"
 msgstr "Modelos de projetos"
@@ -2831,7 +2831,7 @@ msgid "Projects in category"
 msgstr "Projetos na categoria"
 
 msgid "Projects statistics"
-msgstr "Estatísticas de projetos"
+msgstr "Estatísticas dos projetos"
 
 msgid "Projects visibility"
 msgstr "Visibilidade dos projetos"
@@ -2857,7 +2857,7 @@ msgid "Public incl. restricted"
 msgstr "Público incl. restrito"
 
 msgid "Public including restricted"
-msgstr "Público, incluindo restrito"
+msgstr "Público, incluindo restritos"
 
 msgid "Public information"
 msgstr "Informação pública"
@@ -2870,7 +2870,7 @@ msgstr ""
 "arquivos são públicos"
 
 msgid "Public project categories"
-msgstr "Categorias de projeto públicos"
+msgstr "Categorias públicas de projeto"
 
 msgid "Public?"
 msgstr "Público?"
@@ -2885,7 +2885,7 @@ msgid "REST"
 msgstr "REST"
 
 msgid "REST Read only administrator"
-msgstr "REST Apenas Leitura - Administração"
+msgstr "REST Administrador do modo apenas leitura"
 
 msgid "REST projects management"
 msgstr "Gestão de projetos REST"
@@ -3147,7 +3147,7 @@ msgid "Scope"
 msgstr "Escopo"
 
 msgid "Scope of the reference pattern: project only or system-wide"
-msgstr "Escopo do padrão de referência: apenas projeto ou em todo o sistema"
+msgstr "Âmbito do padrão de referência: apenas projeto ou em todo o sistema"
 
 msgid "Scopes"
 msgstr "Escopos"
@@ -3203,7 +3203,7 @@ msgid "Service is not allowed in project."
 msgstr "O serviço não é permitido no projeto."
 
 msgid "Service news is disabled for this project."
-msgstr "O serviço de novidades está desabilitado para este projeto."
+msgstr "O serviço de notícias está desabilitado para este projeto."
 
 msgid "Service not found in database"
 msgstr "Serviço não encontrado na base de dados"
@@ -3231,6 +3231,9 @@ msgstr "Descrição resumida"
 
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "A descrição resumida não deve exceder 255 caracteres."
+
+msgid "Short name must start with an alphanumeric character."
+msgstr ""
 
 msgid "Shortcut"
 msgstr "Atalho"
@@ -3283,10 +3286,10 @@ msgid "Site homepage"
 msgstr "Página inicial do site"
 
 msgid "Site news"
-msgstr "Novidades do site"
+msgstr "Notícias do site"
 
 msgid "Site news approval"
-msgstr "Aprovação de novidades do site"
+msgstr "Aprovação de notícias do site"
 
 #, php-format
 msgid "Skip invalid key %1$s"
@@ -4036,7 +4039,7 @@ msgid "Tracker email format"
 msgstr "Formato de email do tracker"
 
 msgid "Trackers"
-msgstr "Rastreadores"
+msgstr "Trackers"
 
 msgid "Trackers v3 import"
 msgstr "Importação de Tracker v3"
@@ -4058,7 +4061,7 @@ msgid ""
 "easier.\n"
 "Here you plan, track, code, and collaborate on software projects."
 msgstr ""
-"Tuleap ajuda às equipes produzirem aplicações fantásticas, melhores, mais "
+"Tuleap ajuda as equipes produzirem aplicações fantásticas, melhores e mais "
 "rápidas com facilidade.\n"
 "Aqui você pode planejar, acompanhar, programar e colaborar em projetos de "
 "software."
@@ -4814,8 +4817,8 @@ msgid ""
 "You should remove user from news administrators before being able to remove "
 "him from writers."
 msgstr ""
-"Você precisa remover o usuário do grupo de administradores das novidades antes de "
-"removê-lo do grupo de redatores."
+"Você precisa remover o usuário dos administradores de notícias antes de "
+"removê-lo dos redatores."
 
 msgid "You should send a png image"
 msgstr "Você deve enviar uma imagem png"

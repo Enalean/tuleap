@@ -51,10 +51,10 @@ class WikiPlugin_MostPopular extends WikiPlugin
             PageList::supportedArgs(),
             ['pagename' => '[pagename]', // hackish
                    //'exclude'  => '',
-                   'limit'    => 20, // limit <0 returns least popular pages
-                   'noheader' => 0,
-                   'sortby'   => '-hits',
-                   'info'     => false,
+                'limit'    => 20, // limit <0 returns least popular pages
+                'noheader' => 0,
+                'sortby'   => '-hits',
+                'info'     => false,
                    //'paging'   => 'auto'
             ]
         );

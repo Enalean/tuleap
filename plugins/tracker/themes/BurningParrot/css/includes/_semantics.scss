@@ -40,13 +40,22 @@
     scroll-margin-top: var(--tlp-medium-spacing);
 }
 
-#tracker-admin-set-semantic-button {
-    margin: 0 var(--tlp-small-spacing) 0 0;
-}
-
 .back-to-semantics {
     color: var(--tlp-dimmed-color);
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.375rem;
+}
+
+.tlp-pane-section .end-date-field-id,
+.tlp-pane-section .duration-field-id {
+    margin: 0 0 0 var(--tlp-large-spacing);
+}
+
+.semantic-progress-computation-method-config {
+    display: none;
+
+    &.selected-computation-method-config {
+        display: block;
+    }
 }

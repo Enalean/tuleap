@@ -29,6 +29,7 @@ use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_Null;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -136,6 +137,9 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_initializator = Mockery::mock(Tracker_Artifact_Changeset_ChangesetDataInitializator::class);
         $field_initializator->shouldReceive('process')->andReturn([]);
 
+        $changeset_comment_indexer = $this->createStub(ChangesetCommentIndexer::class);
+        $changeset_comment_indexer->method('indexNewChangesetComment');
+
         $creator = new NewChangesetCreator(
             $fields_validator,
             $field_retriever,
@@ -151,7 +155,8 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new CommentCreator(
                 $this->comment_dao,
                 \Mockery::spy(\ReferenceManager::class),
-                $this->ugroup_private_comment_inserter
+                $this->ugroup_private_comment_inserter,
+                $changeset_comment_indexer,
             )
         );
         $creator->create($new_changeset, PostCreationContext::withNoConfig(false));

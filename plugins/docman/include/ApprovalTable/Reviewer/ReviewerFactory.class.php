@@ -123,7 +123,8 @@ class Docman_ApprovalTableReviewerFactory
     {
         /** @psalm-suppress DeprecatedFunction */
         $res     = ugroup_db_get_existing_ugroups($groupId, [$GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                                                              $GLOBALS['UGROUP_PROJECT_ADMIN']]);
+            $GLOBALS['UGROUP_PROJECT_ADMIN'],
+        ]);
         $ugroups = [];
         while ($row = db_fetch_array($res)) {
             $r          = [];
@@ -367,10 +368,11 @@ class Docman_ApprovalTableReviewerFactory
             $baseUrl        = $docmanUrl . '/?group_id=' . $row['group_id'];
             $url            = $baseUrl . '&action=details&section=approval&id=' . $row['item_id'] . '&review=1';
             $reviewsArray[] = ['group' => $row['group_name'],
-                                    'group_id' => $row['group_id'],
-                                    'title' => $row['title'],
-                                    'date'  => $row['date'],
-                                    'url'   => $url];
+                'group_id' => $row['group_id'],
+                'title' => $row['title'],
+                'date'  => $row['date'],
+                'url'   => $url,
+            ];
             $dar->next();
         }
         return $reviewsArray;
@@ -435,11 +437,12 @@ class Docman_ApprovalTableReviewerFactory
             }
 
             $reviewsArray[] = ['group' => $row['group_name'],
-                                    'group_id' => $row['group_id'],
-                                    'title' => $row['title'],
-                                    'date'  => $row['date'],
-                                    'url'   => $url,
-                                    'status' => $status];
+                'group_id' => $row['group_id'],
+                'title' => $row['title'],
+                'date'  => $row['date'],
+                'url'   => $url,
+                'status' => $status,
+            ];
             $dar->next();
         }
         return $reviewsArray;

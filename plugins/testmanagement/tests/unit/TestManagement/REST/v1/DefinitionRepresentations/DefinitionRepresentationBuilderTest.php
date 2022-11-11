@@ -111,7 +111,7 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertInstanceOf(DefinitionTextOrHTMLRepresentation::class, $definition_representation);
     }
 
-    public function testItThrowsExceptionIfTheDescriptionFieldIsNull(): void
+    public function testItGetsDefaultEmptyTextRepresentationIfTheDescriptionFieldIsNull(): void
     {
         $user       = Mockery::mock(PFUser::class);
         $changeset  = Mockery::mock(Tracker_Artifact_Changeset::class);
@@ -130,13 +130,15 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                                                $user
                                            )
                                            ->andReturnNull();
+        $this->tracker_form_element_factory->shouldReceive('getSelectboxFieldByNameForUser')->andReturnNull();
 
-        $this->expectException(DescriptionTextFieldNotFoundException::class);
-        $this->definition_representation_builder->getDefinitionRepresentation(
+        $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation(
             $user,
             $definition_artifact,
             null
         );
+
+        $this->assertInstanceOf(DefinitionTextOrHTMLRepresentation::class, $definition_representation);
     }
 
     public function testItGetsTheHTMLDefinitionRepresentation(): void

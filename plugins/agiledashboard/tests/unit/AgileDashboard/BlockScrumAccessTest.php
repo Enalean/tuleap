@@ -22,12 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class BlockScrumAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testScrumAccessIsEnabledByDefault(): void
     {
-        $project = \Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
         $access  = new BlockScrumAccess($project);
         self::assertTrue($access->isScrumAccessEnabled());
         self::assertSame($project, $access->getProject());
@@ -35,7 +36,7 @@ final class BlockScrumAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testScrumAccessCanBeDisabled(): void
     {
-        $access = new BlockScrumAccess(\Project::buildForTest());
+        $access = new BlockScrumAccess(ProjectTestBuilder::aProject()->build());
         $access->disableScrumAccess();
         self::assertFalse($access->isScrumAccessEnabled());
     }

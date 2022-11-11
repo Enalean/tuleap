@@ -72,9 +72,10 @@ class WikiPlugin_RichTable extends WikiPlugin
             foreach ($attrs as $key => $value) {
                 if (
                     in_array($key, ["id", "class", "title", "style",
-                                          "bgcolor", "frame", "rules", "border",
-                                          "cellspacing", "cellpadding",
-                                          "summary", "align", "width"])
+                        "bgcolor", "frame", "rules", "border",
+                        "cellspacing", "cellpadding",
+                        "summary", "align", "width",
+                    ])
                 ) {
                     $table->setAttr($key, $value);
                 }
@@ -99,7 +100,8 @@ class WikiPlugin_RichTable extends WikiPlugin
                 foreach ($attrs as $key => $value) {
                     if (
                         in_array($key, ["id", "class", "title", "style",
-                                              "bgcolor", "align", "valign"])
+                            "bgcolor", "align", "valign",
+                        ])
                     ) {
                         $row->setAttr($key, $value);
                     }
@@ -121,8 +123,9 @@ class WikiPlugin_RichTable extends WikiPlugin
                     foreach ($attrs as $key => $value) {
                         if (
                             in_array($key, ["id", "class", "title", "style",
-                                                  "colspan", "rowspan", "width", "height",
-                                                  "bgcolor", "align", "valign"])
+                                "colspan", "rowspan", "width", "height",
+                                "bgcolor", "align", "valign",
+                            ])
                         ) {
                             $cell->setAttr($key, $value);
                         }

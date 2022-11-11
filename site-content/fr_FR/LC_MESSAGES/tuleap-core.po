@@ -1853,7 +1853,7 @@ msgid "Invited by"
 msgstr "Invitation envoyée par"
 
 msgid "Is Public?"
-msgstr "Publique ?"
+msgstr "Est public ?"
 
 msgid "Is default?"
 msgstr "Par défaut ?"
@@ -3249,6 +3249,10 @@ msgstr "Description courte"
 
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "La description courte ne doit pas dépasser 255 caractères."
+
+msgid "Short name must start with an alphanumeric character."
+msgstr ""
+"Le nom court doit obligatoirement commencer par un caractère alphanumérique. "
 
 msgid "Shortcut"
 msgstr "Raccourci"

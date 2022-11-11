@@ -39,6 +39,7 @@ class BackendSVN extends Backend
      * @var SvnCoreUsage
      */
     private $svn_core_usage;
+    private ?\Tuleap\Project\CachedProjectAccessChecker $project_access_checker = null;
 
     /**
      * For mocking (unit tests)
@@ -421,7 +422,8 @@ class BackendSVN extends Backend
     {
         $svn_access_file = $this->_getSVNAccessFile();
 
-        $contents     = $this->getCustomPermission($system_path, $svn_access_file, $project);
+        $contents = $this->getCustomPermission($system_path, $svn_access_file, $project);
+
         $custom_perms = $this->getCustomPermissionForRepository($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir);
 
         return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
@@ -472,13 +474,15 @@ class BackendSVN extends Backend
         return $contents;
     }
 
+    private array $project_default_blocks_cache = [];
+
     private function getDefaultBlock(Project $project)
     {
-        $default_block  = '';
-        $default_block .= $this->getSVNAccessGroups($project);
-        $default_block .= $this->getSVNAccessRootPathDef($project);
+        if (! isset($this->project_default_blocks_cache[$project->getID()])) {
+            $this->project_default_blocks_cache[$project->getID()] = $this->getSVNAccessGroups($project) . $this->getSVNAccessRootPathDef($project);
+        }
 
-        return $default_block;
+        return $this->project_default_blocks_cache[$project->getID()];
     }
 
     private function getCustomPermissionForProject(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name)
@@ -506,8 +510,6 @@ class BackendSVN extends Backend
             $this->log("Can't update SVN Access file: project SVN repo is missing: " . $system_path, Backend::LOG_ERROR);
             return false;
         }
-
-        $unix_group_name = $project->getUnixNameMixedCase();
 
         $svnaccess_file     = $this->getSvnAccessFile($system_path);
         $svnaccess_file_old = $this->getSvnAccessFile($system_path) . ".old";
@@ -637,12 +639,17 @@ class BackendSVN extends Backend
         return $conf;
     }
 
-    protected function getProjectAccessChecker()
+    protected function getProjectAccessChecker(): \Tuleap\Project\CheckProjectAccess
     {
-        return new \Tuleap\Project\ProjectAccessChecker(
-            new \Tuleap\Project\RestrictedUserCanAccessProjectVerifier(),
-            EventManager::instance()
-        );
+        if ($this->project_access_checker === null) {
+            $this->project_access_checker = new \Tuleap\Project\CachedProjectAccessChecker(
+                new \Tuleap\Project\ProjectAccessChecker(
+                    new \Tuleap\Project\RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                )
+            );
+        }
+        return $this->project_access_checker;
     }
 
     /**
@@ -765,19 +772,10 @@ class BackendSVN extends Backend
             )
         );
         assert($get_all_repositories instanceof GetAllRepositories);
-        $factory = $this->getSVNApacheAuthFactory();
 
-        $conf = new SVN_Apache_SvnrootConf($factory, $get_all_repositories->getRepositories());
+        $conf = new SVN_Apache_SvnrootConf(new SVN_Apache(), $get_all_repositories->getRepositories());
 
         return $conf->getFullConf();
-    }
-
-    protected function getSVNApacheAuthFactory()
-    {
-        return new SVN_Apache_Auth_Factory(
-            EventManager::instance(),
-            $this->getSVNCacheParameters()
-        );
     }
 
     /**

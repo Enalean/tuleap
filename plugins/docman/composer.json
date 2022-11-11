@@ -11,6 +11,7 @@
   },
   "autoload-dev": {
     "psr-4": {
+      "Tuleap\\Docman\\": "tests/unit/",
       "Tuleap\\Docman\\Tests\\Stub\\": "tests/unit/Stubs",
       "Tuleap\\Docman\\Test\\rest\\": ["./tests/rest/"]
     }

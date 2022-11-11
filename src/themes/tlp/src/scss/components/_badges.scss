@@ -162,20 +162,8 @@ $tlp-badge-color: var(--tlp-white-color);
             color: map.get($colors, "text");
 
             &.tlp-badge-on-dark-background {
-                background: color.adjust(map.get($colors, "primary"), $alpha: - 0.85);
-                color: color.mix(map.get($colors, "border"), #ffffff, 90%);
-
-                @if $color-name ==
-                    "teddy-brown" or
-                    $color-name ==
-                    "plum-crazy" or
-                    $color-name ==
-                    "red-wine" or
-                    $color-name ==
-                    "army-green"
-                {
-                    color: color.mix(map.get($colors, "border"), #ffffff, 70%);
-                }
+                background: map.get($colors, "badge-background-on-dark");
+                color: map.get($colors, "badge-color-on-dark");
             }
         }
     }

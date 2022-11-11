@@ -23,20 +23,32 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\Docker;
 
+use ForgeConfig;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Config\ConfigurationVariables;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use TuleapCfg\Command\ProcessFactory;
 
 final class Postfix
 {
-    private const ENV_RELAYHOST = 'TULEAP_EMAIL_RELAYHOST';
-
     public function __construct(private ProcessFactory $process_factory)
     {
     }
 
     public function setup(OutputInterface $output, string $tuleap_fqdn): void
     {
+        $configuration = MailTransportBuilder::getPlatformMailConfiguration();
+
+        if (! $configuration->mustGeneratesSelfHostedConfigurationAndFeatures()) {
+            $output->writeln(
+                sprintf(
+                    "The mail relay platform is not configured to %s. No Postfix configuration needed.",
+                    MailTransportBuilder::EMAIL_TRANSPORT_SENDMAIL_VALUE,
+                )
+            );
+            return;
+        }
+
         $output->writeln('Setup Postfix');
 
         touch('/etc/aliases.codendi');
@@ -50,14 +62,14 @@ final class Postfix
             'alias_database = hash:/etc/aliases,hash:/etc/aliases.codendi',
         ])->mustRun();
 
-        $relayhost = getenv(self::ENV_RELAYHOST);
-        if ($relayhost !== false) {
+        $relayhost = ForgeConfig::get(MailTransportBuilder::RELAYHOST_CONFIG_KEY, '');
+        if ($relayhost !== '') {
             $this->process_factory->getProcessWithoutTimeout(['/usr/sbin/postconf', '-e', sprintf('relayhost = %s', $relayhost)])->mustRun();
         }
 
         $aliases_content = file_get_contents('/etc/aliases');
         if (! str_contains($aliases_content, \BackendAliases::ADMIN_ALIAS)) {
-            $admin_email = \ForgeConfig::get(ConfigurationVariables::EMAIL_ADMIN);
+            $admin_email = ForgeConfig::get(ConfigurationVariables::EMAIL_ADMIN);
             if ($admin_email !== false) {
                 $fd = fopen('/etc/aliases', 'ab+');
                 fwrite($fd, sprintf("\n%s: %s\n", \BackendAliases::ADMIN_ALIAS, $admin_email));

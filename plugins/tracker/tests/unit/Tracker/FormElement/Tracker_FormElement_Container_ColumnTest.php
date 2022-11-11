@@ -73,8 +73,8 @@ class Tracker_FormElement_Container_ColumnTest extends TestCase //phpcs:ignore
 
         $container_column->shouldReceive('getAllFormElements')->andReturn(
             [
-            $field_01,
-            $field_02,
+                $field_01,
+                $field_02,
                 $field_03,
             ]
         );

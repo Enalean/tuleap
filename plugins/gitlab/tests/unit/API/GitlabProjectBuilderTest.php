@@ -24,185 +24,155 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\API;
 
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Gitlab\Test\Stubs\GitlabClientWrapperStub;
 
 final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var GitlabProjectBuilder
-     */
-    private $project_builder;
-    /**
      * @var Credentials
      */
     private $credentials;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
-     */
-    private $gitlab_api_client;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->gitlab_api_client = $this->createMock(ClientWrapper::class);
-
         $this->credentials = CredentialsTestBuilder::get()->build();
-
-        $this->project_builder = new GitlabProjectBuilder(
-            $this->gitlab_api_client
-        );
     }
 
     public function testItThrowsAnExceptionIfRequestBodyIsEmpty(): void
     {
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method("getUrl")
-            ->with($this->credentials, "/projects/1")
-            ->willReturn([]);
+        $gitlab_client   = GitlabClientWrapperStub::buildWithJson([]);
+        $project_builder = new GitlabProjectBuilder(
+            $gitlab_client
+        );
+        self::expectException(GitlabResponseAPIException::class);
 
-        $this->expectException(GitlabResponseAPIException::class);
-
-        $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+        $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveIdKey(): void
     {
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method("getUrl")
-            ->with($this->credentials, "/projects/1")
-            ->willReturn([
-                'description' => 'My GitLab project',
-                'web_url' => 'https://example.com/root/project01',
-                'name' => 'Project 01',
-                'path_with_namespace' => 'root/project01',
-                'last_activity_at' => '2020-11-12',
-                'default_branch' => "main",
-            ]);
+        $gitlab_client = GitlabClientWrapperStub::buildWithJson([
+            'description' => 'My GitLab project',
+            'web_url' => 'https://example.com/root/project01',
+            'name' => 'Project 01',
+            'path_with_namespace' => 'root/project01',
+            'last_activity_at' => '2020-11-12',
+            'default_branch' => "main",
+        ]);
+
+        $project_builder = new GitlabProjectBuilder(
+            $gitlab_client
+        );
 
         $this->expectException(GitlabResponseAPIException::class);
 
-        $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+        $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveDescriptionKey(): void
     {
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method("getUrl")
-            ->with($this->credentials, "/projects/1")
-            ->willReturn([
-                'id' => 1,
-                'web_url' => 'https://example.com/root/project01',
-                'name' => 'Project 01',
-                'path_with_namespace' => 'root/project01',
-                'last_activity_at' => '2020-11-12',
-                'default_branch' => "main",
-            ]);
+        $gitlab_client = GitlabClientWrapperStub::buildWithJson(['id' => 1,
+            'web_url' => 'https://example.com/root/project01',
+            'name' => 'Project 01',
+            'path_with_namespace' => 'root/project01',
+            'last_activity_at' => '2020-11-12',
+            'default_branch' => "main",
+        ]);
+
+        $project_builder = new GitlabProjectBuilder($gitlab_client);
 
         $this->expectException(GitlabResponseAPIException::class);
 
-        $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+        $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveWebURLKey(): void
     {
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method("getUrl")
-            ->with($this->credentials, "/projects/1")
-            ->willReturn([
-                'id' => 1,
-                'description' => 'My GitLab project',
-                'name' => 'Project 01',
-                'path_with_namespace' => 'root/project01',
-                'last_activity_at' => '2020-11-12',
-                'default_branch' => "main",
-            ]);
+        $gitlab_client = GitlabClientWrapperStub::buildWithJson([
+            'id' => 1,
+            'description' => 'My GitLab project',
+            'name' => 'Project 01',
+            'path_with_namespace' => 'root/project01',
+            'last_activity_at' => '2020-11-12',
+            'default_branch' => "main",
+        ]);
+
+        $project_builder = new GitlabProjectBuilder($gitlab_client);
 
         $this->expectException(GitlabResponseAPIException::class);
 
-        $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+        $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHavePathKey(): void
     {
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method("getUrl")
-            ->with($this->credentials, "/projects/1")
-            ->willReturn([
-                'id' => 1,
-                'description' => 'My GitLab project',
-                'web_url' => 'https://example.com/root/project01',
-                'name' => 'Project 01',
-                'last_activity_at' => '2020-11-12',
-                'default_branch' => "main",
-            ]);
+        $gitlab_client = GitlabClientWrapperStub::buildWithJson([
+            'id' => 1,
+            'description' => 'My GitLab project',
+            'web_url' => 'https://example.com/root/project01',
+            'name' => 'Project 01',
+            'last_activity_at' => '2020-11-12',
+            'default_branch' => "main",
+        ]);
+
+        $project_builder = new GitlabProjectBuilder($gitlab_client);
 
         $this->expectException(GitlabResponseAPIException::class);
 
-        $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+        $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveLastActivityKey(): void
     {
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method("getUrl")
-            ->with($this->credentials, "/projects/1")
-            ->willReturn([
-                'id' => 1,
-                'description' => 'My GitLab project',
-                'web_url' => 'https://example.com/root/project01',
-                'name' => 'Project 01',
-                'path_with_namespace' => 'root/project01',
-                'default_branch' => "main",
-            ]);
+        $gitlab_client   = GitlabClientWrapperStub::buildWithJson([
+            'id' => 1,
+            'description' => 'My GitLab project',
+            'web_url' => 'https://example.com/root/project01',
+            'name' => 'Project 01',
+            'path_with_namespace' => 'root/project01',
+            'default_branch' => "main",
+        ]);
+        $project_builder = new GitlabProjectBuilder($gitlab_client);
 
         $this->expectException(GitlabResponseAPIException::class);
 
-        $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+        $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
 
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveDefaultBranchKey(): void
     {
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method("getUrl")
-            ->with($this->credentials, "/projects/1")
-            ->willReturn([
-                'id' => 1,
-                'description' => 'My GitLab project',
-                'web_url' => 'https://example.com/root/project01',
-                'name' => 'Project 01',
-                'path_with_namespace' => 'root/project01',
-                'last_activity_at' => '2020-11-12',
-            ]);
+        $gitlab_client   = GitlabClientWrapperStub::buildWithJson([
+            'id' => 1,
+            'description' => 'My GitLab project',
+            'web_url' => 'https://example.com/root/project01',
+            'name' => 'Project 01',
+            'path_with_namespace' => 'root/project01',
+            'last_activity_at' => '2020-11-12',
+        ]);
+        $project_builder = new GitlabProjectBuilder($gitlab_client);
 
         $this->expectException(GitlabResponseAPIException::class);
 
-        $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+        $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
 
     public function testItBuildsAGitlabProjectObject(): void
     {
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method("getUrl")
-            ->with($this->credentials, "/projects/1")
-            ->willReturn([
-                'id' => 1,
-                'description' => 'My GitLab project',
-                'web_url' => 'https://example.com/root/project01',
-                'name' => 'Project 01',
-                'path_with_namespace' => 'root/project01',
-                'last_activity_at' => '2020-11-12',
-                'default_branch' => "main",
-            ]);
+        $gitlab_client = GitlabClientWrapperStub::buildWithJson([
+            'id' => 1,
+            'description' => 'My GitLab project',
+            'web_url' => 'https://example.com/root/project01',
+            'name' => 'Project 01',
+            'path_with_namespace' => 'root/project01',
+            'last_activity_at' => '2020-11-12',
+            'default_branch' => "main",
+        ]);
 
-        $gitlab_project = $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+        $project_builder = new GitlabProjectBuilder($gitlab_client);
+
+        $gitlab_project = $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
 
         self::assertSame(1, $gitlab_project->getId());
         self::assertSame("My GitLab project", $gitlab_project->getDescription());
@@ -214,21 +184,19 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAGitlabProjectObjectWithNullDescription(): void
     {
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method("getUrl")
-            ->with($this->credentials, "/projects/1")
-            ->willReturn([
-                'id' => 1,
-                'description' => null,
-                'web_url' => 'https://example.com/root/project01',
-                'name' => 'Project 01',
-                'path_with_namespace' => 'root/project01',
-                'last_activity_at' => '2020-11-12',
-                'default_branch' => "main",
-            ]);
+        $gitlab_client = GitlabClientWrapperStub::buildWithJson([
+            'id' => 1,
+            'description' => null,
+            'web_url' => 'https://example.com/root/project01',
+            'name' => 'Project 01',
+            'path_with_namespace' => 'root/project01',
+            'last_activity_at' => '2020-11-12',
+            'default_branch' => "main",
+        ]);
 
-        $gitlab_project = $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+        $project_builder = new GitlabProjectBuilder($gitlab_client);
+
+        $gitlab_project = $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
 
         self::assertSame(1, $gitlab_project->getId());
         self::assertSame("", $gitlab_project->getDescription());
@@ -236,5 +204,58 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame("https://example.com/root/project01", $gitlab_project->getWebUrl());
         self::assertSame(1605135600, $gitlab_project->getLastActivityAt()->getTimestamp());
         self::assertSame("main", $gitlab_project->getDefaultBranch());
+    }
+
+    public function testItThrowsAnExceptionIfTheResponseIsEmpty(): void
+    {
+        $gitlab_client   = GitlabClientWrapperStub::buildWithNullResponse();
+        $project_builder = new GitlabProjectBuilder(
+            $gitlab_client
+        );
+        self::expectException(GitlabResponseAPIException::class);
+
+        $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
+    }
+
+    public function testItBuildsSeveralGitlabProjectObject(): void
+    {
+        $gitlab_client = GitlabClientWrapperStub::buildWithJson([
+            [
+                'id' => 1,
+                'description' => 'My GitLab project',
+                'web_url' => 'https://example.com/root/project01',
+                'name' => 'Project 01',
+                'path_with_namespace' => 'root/project01',
+                'last_activity_at' => '2020-11-12',
+                'default_branch' => "main",
+            ],
+            [
+                'id' => 2,
+                'description' => 'My GitLab project number 2',
+                'web_url' => 'https://example.com/root/project02',
+                'name' => 'Project 02',
+                'path_with_namespace' => 'root/project02',
+                'last_activity_at' => '2020-11-12',
+                'default_branch' => "main",
+            ],
+        ]);
+
+        $project_builder = new GitlabProjectBuilder($gitlab_client);
+
+        $gitlab_project = $project_builder->getGroupProjectsFromGitlabAPI($this->credentials, 1);
+
+        self::assertSame(1, $gitlab_project[0]->getId());
+        self::assertSame("My GitLab project", $gitlab_project[0]->getDescription());
+        self::assertSame("root/project01", $gitlab_project[0]->getPathWithNamespace());
+        self::assertSame("https://example.com/root/project01", $gitlab_project[0]->getWebUrl());
+        self::assertSame(1605135600, $gitlab_project[0]->getLastActivityAt()->getTimestamp());
+        self::assertSame("main", $gitlab_project[0]->getDefaultBranch());
+
+        self::assertSame(2, $gitlab_project[1]->getId());
+        self::assertSame("My GitLab project number 2", $gitlab_project[1]->getDescription());
+        self::assertSame("root/project02", $gitlab_project[1]->getPathWithNamespace());
+        self::assertSame("https://example.com/root/project02", $gitlab_project[1]->getWebUrl());
+        self::assertSame(1605135600, $gitlab_project[1]->getLastActivityAt()->getTimestamp());
+        self::assertSame("main", $gitlab_project[1]->getDefaultBranch());
     }
 }

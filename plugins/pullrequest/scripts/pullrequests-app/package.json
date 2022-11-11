@@ -1,0 +1,45 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-pullrequest-app",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/angular-tlp": "link:../../../../lib/frontend/angular-tlp",
+    "@tuleap/core": "link:../../../../src/scripts/main",
+    "@tuleap/date-helper": "link:../../../../lib/frontend/date-helper",
+    "@tuleap/fault": "link:../../../../lib/frontend/fault",
+    "@tuleap/fetch-result": "link:../../../../lib/frontend/fetch-result",
+    "@tuleap/potentially-dangerous-bidirectional-characters": "link:../../../../lib/frontend/potentially-dangerous-bidirectional-characters",
+    "@tuleap/tlp-fetch": "link:../../../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-relative-date": "link:../../../../lib/frontend/tlp-relative-date",
+    "@tuleap/tooltip": "link:../../../../lib/frontend/tooltip",
+    "@uirouter/angularjs": "^1.0.29",
+    "angular": "^1.8.2",
+    "angular-custom-elements": "^2.1.0",
+    "angular-gettext": "^2.4.2",
+    "angular-sanitize": "^1.8.2",
+    "codemirror": "^5.62.0",
+    "dompurify": "^2.3.6",
+    "hybrids": "^8.0.2",
+    "moment": "^2.29.4",
+    "neverthrow": "5.0.0",
+    "sprintf-js": "^1.1.2",
+    "vue": "^3.2.41"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator",
+    "@tuleap/dom": "link:../../../../lib/frontend/dom",
+    "@types/codemirror": "^5.60.1",
+    "@types/dompurify": "^2.3.4",
+    "angular-mocks": "^1.8.2",
+    "jquery": "^3.6.0",
+    "vue-loader": "^17.0.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch",
+    "test": "jest"
+  }
+}

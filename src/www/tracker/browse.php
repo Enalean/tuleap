@@ -363,11 +363,12 @@ if ($pv != 2) {
 }
 
 $params = ['title' => $_title,
-              'titlevals' => [$ath->getName()],
-              'pagename' => 'tracker_browse',
-              'atid' => $ath->getID(),
-              'pv' => $pv,
-              'help' => $_help];
+    'titlevals' => [$ath->getName()],
+    'pagename' => 'tracker_browse',
+    'atid' => $ath->getID(),
+    'pv' => $pv,
+    'help' => $_help,
+];
 
 
 // Display the menus
@@ -376,15 +377,15 @@ echo '<div id="tracker_toolbar_clear"></div>';
 
 $em          = EventManager::instance();
 $pref_params = ['group_id'   => $group_id,
-                     'atid'       => $atid,
-                     'report_id'  => $report_id,
-                     'prefs'      => $prefs,
-                     'morder'     => $morder,
-                     'chunksz'    => $chunksz,
-                     'advsrch'    => $advsrch,
-                     'msort'      => $msort,
-                     'offset'     => $offset,
-                     'set'        => $set,
+    'atid'       => $atid,
+    'report_id'  => $report_id,
+    'prefs'      => $prefs,
+    'morder'     => $morder,
+    'chunksz'    => $chunksz,
+    'advsrch'    => $advsrch,
+    'msort'      => $msort,
+    'offset'     => $offset,
+    'set'        => $set,
 ];
 $em->processEvent('tracker_user_pref', $pref_params);
 

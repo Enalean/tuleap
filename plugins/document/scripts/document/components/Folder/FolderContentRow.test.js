@@ -34,9 +34,6 @@ function getFolderContentRowInstance(store, props, data = {}) {
         data() {
             return { ...data };
         },
-        stubs: {
-            "tlp-relative-date": true,
-        },
     });
 }
 
@@ -51,12 +48,13 @@ describe("FolderContentRow", () => {
             is_uploading_in_collapsed_folder: false,
             type: TYPE_FILE,
             file_type: "text",
+            last_update_date: "2021-06-23",
         };
 
         store_options = {
             state: {
                 folded_items_ids: [],
-                configuration: { date_time_format: "Y-m-d", project_id: 101 },
+                configuration: { project_id: 101 },
                 current_folder: {},
                 folder_content: [],
             },

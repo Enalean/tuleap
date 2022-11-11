@@ -46,7 +46,7 @@ class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
         $iterator = JiraCollectionBuilder::iterateUntilIsLast(
             $this->client,
             $this->logger,
-            $this->getBoardUrl($jira_project_key),
+            $this->getFirstBoardUrl($jira_project_key),
             'values',
         );
         foreach ($iterator as $json_board) {
@@ -56,7 +56,7 @@ class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
         return null;
     }
 
-    public function getBoardUrl(string $jira_project_key): string
+    private function getFirstBoardUrl(string $jira_project_key): string
     {
         return self::BOARD_URL . '?' . http_build_query([self::TYPE_PARAM => self::SCRUM_TYPE, 'projectKeyOrId' => $jira_project_key, 'maxResults' => 1]);
     }
@@ -69,5 +69,48 @@ class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
         if (! isset($json['id'], $json['self'])) {
             throw new \RuntimeException(sprintf('%s route did not return the expected format for `values`: `id` or `self` are missing', self::BOARD_URL));
         }
+    }
+
+    public function getScrumBoardByIdForProject(string $jira_project_key, int $jira_board_id): ?JiraBoard
+    {
+        $url = $this->getBoardByIdUrl($jira_board_id);
+        $this->logger->info('GET ' . $url);
+
+        $json_board = $this->client->getUrl($url);
+        if ($json_board === null) {
+            $this->logger->warning('Jira board #' . $jira_board_id . " not found.");
+            return null;
+        }
+
+        $this->assertBoardValuesResponseStructure($json_board);
+        $this->assertBoardIsInProject($json_board, $jira_project_key);
+        return new JiraBoard($json_board['id'], $json_board['self']);
+    }
+
+    /**
+     * @psalm-assert array{id: int, self: string, type: string, location: array{projectKey: string}} $json
+     */
+    private function assertBoardIsInProject(array $json, string $jira_project_key): void
+    {
+        if (! isset($json['location'], $json['type'])) {
+            throw new \RuntimeException(sprintf('%s route did not return the expected format: `location` or `type` are missing', self::BOARD_URL));
+        }
+
+        if (! isset($json['location']['projectKey'])) {
+            throw new \RuntimeException(sprintf('%s route did not return the expected format for `location`: `projectKey` is missing', self::BOARD_URL));
+        }
+
+        if ($jira_project_key !== $json['location']['projectKey']) {
+            throw new \RuntimeException('The provided board is no located into selected project.');
+        }
+
+        if ($json['type'] !== self::SCRUM_TYPE) {
+            throw new \RuntimeException('The provided board is no a scrum board');
+        }
+    }
+
+    private function getBoardByIdUrl(int $jira_board_id): string
+    {
+        return self::BOARD_URL . '/' . urlencode((string) $jira_board_id);
     }
 }

@@ -28,9 +28,10 @@ use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var GitlabRepositoryCreator
@@ -93,11 +94,18 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             "main"
         );
 
-        $this->project = Project::buildForTest();
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     public function testItThrowsAnExceptionIfARepositoryWithSameNameAlreadyIntegratedInProject(): void
     {
+        $this->repository_integration_dao
+            ->expects(self::once())
+            ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
+            ->with(101, 12569, 'https://example.com/root/project01')
+            ->willReturn(false);
+
+
         $this->repository_integration_dao
             ->expects(self::once())
             ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
@@ -119,11 +127,6 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRepositoryIsAlreadyIntegratedInProject(): void
     {
-        $this->repository_integration_dao
-            ->expects(self::once())
-            ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
-            ->willReturn(false);
-
         $this->repository_integration_dao
             ->expects(self::once())
             ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
@@ -174,7 +177,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->token_inserter
             ->expects(self::once())
             ->method('insertToken')
-            ->with($integration, $this->credentials->getBotApiToken()->getToken());
+            ->with($integration, $this->credentials->getApiToken()->getToken());
 
         $result = $this->creator->integrateGitlabRepositoryInProject(
             $this->credentials,
@@ -195,7 +198,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Desc',
             'https://example.com/root/project01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
     }

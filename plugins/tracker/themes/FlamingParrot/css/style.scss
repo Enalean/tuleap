@@ -42,8 +42,8 @@
 .tracker_artifact_fieldset legend {
     color: var(--tlp-main-color);
 
+    /* stylelint-disable-next-line selector-no-qualifying-type */
     &.toggler-noajax {
-        /* stylelint-disable-line selector-no-qualifying-type */
         border-bottom: 2px solid var(--tlp-main-color);
     }
 }
@@ -73,8 +73,8 @@
         border-color: var(--tlp-background-color-darker-05) !important;
     }
 
+    /* stylelint-disable-next-line selector-no-qualifying-type */
     > thead > tr > th.drop-over {
-        /* stylelint-disable-line selector-no-qualifying-type */
         background: var(--tlp-background-color);
     }
 

@@ -68,10 +68,18 @@ CREATE TABLE plugin_docman_version (
   filesize INT(11) UNSIGNED NULL,
   filetype TEXT NULL,
   path TEXT NULL,
+  authoring_tool VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY(id),
   KEY item_id (item_id),
   FULLTEXT fltxt (label, changelog, filename),
   FULLTEXT fltxt_filename (filename)
+);
+
+DROP TABLE IF EXISTS plugin_docman_version_coauthor;
+CREATE TABLE plugin_docman_version_coauthor (
+  version_id INT(11) UNSIGNED NOT NULL,
+  user_id INT(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (version_id, user_id)
 );
 
 DROP TABLE IF EXISTS plugin_docman_link_version;

@@ -19,57 +19,92 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ListOfProjects from "./ListOfProjects.vue";
-import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../../store/type";
+import { createTestingPinia } from "@pinia/testing";
 import type { Project } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import ProjectLink from "./ProjectLink.vue";
-import TroveCatLink from "../TroveCatLink.vue";
+import type { State } from "../../../stores/type";
+import { defineStore } from "pinia";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ListOfProjects", () => {
-    it("Displays empty state if no projects", async () => {
-        const wrapper = shallowMount(ListOfProjects, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        projects: [] as Project[],
-                    } as State,
-                    getters: {
-                        filtered_projects: [] as Project[],
-                    },
-                }),
+    it("Displays empty state if no projects", () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    projects: [] as Project[],
+                } as State),
+            getters: {
+                filtered_projects: (): Project[] => [],
+                is_in_search_mode: (): boolean => false,
             },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
+        const wrapper = shallowMount(ListOfProjects, {
+            global: getGlobalTestOptions(pinia),
         });
 
         expect(wrapper.findComponent(ProjectsEmptyState).exists()).toBe(true);
     });
 
-    it("Display list of filtered projects", async () => {
-        const wrapper = shallowMount(ListOfProjects, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        projects: [
-                            { project_uri: "/a" } as Project,
-                            { project_uri: "/b" } as Project,
-                            { project_uri: "/c" } as Project,
-                        ],
-                    } as State,
-                    getters: {
-                        filtered_projects: [
-                            { project_uri: "/a" } as Project,
-                            { project_uri: "/b" } as Project,
-                        ],
-                    },
-                }),
+    it("Display list of filtered projects", () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    projects: [
+                        { project_uri: "/a" } as Project,
+                        { project_uri: "/b" } as Project,
+                        { project_uri: "/c" } as Project,
+                    ],
+                } as State),
+            getters: {
+                filtered_projects: (): Project[] => [
+                    { project_uri: "/a" } as Project,
+                    { project_uri: "/b" } as Project,
+                ],
+                is_in_search_mode: (): boolean => true,
             },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
+        const wrapper = shallowMount(ListOfProjects, {
+            global: getGlobalTestOptions(pinia),
         });
 
         expect(wrapper.findAllComponents(ProjectLink)).toHaveLength(2);
         expect(wrapper.findComponent(ProjectsEmptyState).exists()).toBe(false);
-        expect(wrapper.findComponent(TroveCatLink).exists()).toBe(true);
+    });
+
+    it(`Given user is searching for a term
+        When there is no matching projects
+        Then we should not display anything`, () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    projects: [
+                        { project_uri: "/a" } as Project,
+                        { project_uri: "/b" } as Project,
+                        { project_uri: "/c" } as Project,
+                    ],
+                } as State),
+            getters: {
+                filtered_projects: (): Project[] => [],
+                is_in_search_mode: (): boolean => true,
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
+        const wrapper = shallowMount(ListOfProjects, {
+            global: getGlobalTestOptions(pinia),
+        });
+
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 });

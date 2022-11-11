@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -25,6 +25,7 @@ namespace TuleapCfg\Command\SetupTuleap;
 
 use Tuleap\Config\ConfigSerializer;
 use Tuleap\Config\ConfigurationVariables;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\ServerHostname;
 
 final class SetupTuleap
@@ -41,7 +42,8 @@ final class SetupTuleap
             'root',
             'codendiadm',
             ServerHostname::class,
-            ConfigurationVariables::class
+            ConfigurationVariables::class,
+            MailTransportBuilder::class
         );
     }
 }

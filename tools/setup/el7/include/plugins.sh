@@ -171,26 +171,6 @@ _pluginSVN() {
     local plugin_svn_configured="false"
     local server_name=$(/usr/bin/tuleap config-get sys_default_domain)
 
-    if ! $(/usr/bin/tuleap config-get sys_dbauth_passwd 2>/dev/null); then
-        if [ ${mysql_user:-NULL} != "NULL" ] && \
-           [ ${mysql_password:-NULL} != "NULL" ]; then
-            dbauthuser_password="$(_setupRandomPassword)"
-
-            ${tuleapcfg} setup:mysql-init \
-                --tuleap-fqdn="${server_name}" \
-                --host="${mysql_server}" \
-                --admin-user="${mysql_user}" \
-                --admin-password="${mysql_password}" \
-                --db-name="${sys_db_name}" \
-                --nss-password="${dbauthuser_password}"
-
-            plugin_svn_configured="true"
-        else
-            _errorMessage "You must enter your MySQL user and password"
-            exit 1
-        fi
-    fi
-
     if [ ! -f ${httpd_vhost} ]; then
         ${awk} '{ gsub("%sys_default_domain%", "'"${server_name}"'");
                   gsub("*:80$", "127.0.0.1:8080");

@@ -26,6 +26,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\DB\DBConnection;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
+use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 final class ArchiveAndDeleteArtifactTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,13 +36,15 @@ final class ArchiveAndDeleteArtifactTaskTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testDBReconnection(): void
     {
-        $artifact_exporter = \Mockery::mock(ArtifactWithTrackerStructureExporter::class);
-        $artifact_deletor  = \Mockery::mock(ArtifactDependenciesDeletor::class);
-        $event_manager     = \Mockery::mock(\EventManager::class);
-        $db_connection     = \Mockery::mock(DBConnection::class);
-        $logger            = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $artifact_exporter     = \Mockery::mock(ArtifactWithTrackerStructureExporter::class);
+        $artifact_deletor      = \Mockery::mock(ArtifactDependenciesDeletor::class);
+        $field_content_indexer = $this->createStub(FieldContentIndexer::class);
+        $comments_indexer      = $this->createStub(ChangesetCommentIndexer::class);
+        $event_manager         = \Mockery::mock(\EventManager::class);
+        $db_connection         = \Mockery::mock(DBConnection::class);
+        $logger                = \Mockery::mock(\Psr\Log\LoggerInterface::class);
 
-        $task = new ArchiveAndDeleteArtifactTask($artifact_exporter, $artifact_deletor, $event_manager, $db_connection, $logger);
+        $task = new ArchiveAndDeleteArtifactTask($artifact_exporter, $artifact_deletor, $field_content_indexer, $comments_indexer, $event_manager, $db_connection, $logger);
 
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(10);
@@ -49,6 +53,8 @@ final class ArchiveAndDeleteArtifactTaskTest extends \Tuleap\Test\PHPUnit\TestCa
         $artifact_exporter->shouldReceive('exportArtifactAndTrackerStructureToXML');
         $event_manager->shouldReceive('processEvent');
         $artifact_deletor->shouldReceive('cleanDependencies');
+        $field_content_indexer->method('askForDeletionOfIndexedFieldsFromArtifact');
+        $comments_indexer->method('askForDeletionOfIndexedCommentsFromArtifact');
 
         $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->once();
 

@@ -20,46 +20,12 @@
 
 <template>
     <td>
-        <tlp-relative-date
-            v-bind:date="date"
-            v-bind:absolute-date="formatted_full_date"
-            v-bind:placement="relative_date_placement"
-            v-bind:preference="relative_date_preference"
-            v-bind:locale="user_locale"
-        >
-            {{ formatted_full_date }}
-        </tlp-relative-date>
+        <document-relative-date v-bind:date="date" />
     </td>
 </template>
 
 <script setup lang="ts">
-import { useState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
-import { computed } from "@vue/composition-api";
-import { formatDateUsingPreferredUserFormat } from "../../../../helpers/date-formatter";
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
+import DocumentRelativeDate from "../../../Date/DocumentRelativeDate.vue";
 
-const props = defineProps<{ date: string }>();
-
-const { date_time_format, relative_dates_display, user_locale } = useState<
-    Pick<ConfigurationState, "date_time_format" | "relative_dates_display" | "user_locale">
->("configuration", ["date_time_format", "relative_dates_display", "user_locale"]);
-
-const formatted_full_date = computed((): string => {
-    return formatDateUsingPreferredUserFormat(props.date, date_time_format.value);
-});
-
-const relative_date_preference = computed((): string => {
-    return relativeDatePreference(relative_dates_display.value);
-});
-
-const relative_date_placement = computed((): string => {
-    return relativeDatePlacement(relative_dates_display.value, "top");
-});
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
+defineProps<{ date: string }>();
 </script>

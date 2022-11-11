@@ -157,9 +157,9 @@ describe("PlannerView", () => {
                 expect(getTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
                 expect(PlanningController.milestones.loading).toBeFalsy();
                 expect(PlanningController.milestones.content).toEqual([
-                    { id: 184, start_date: null },
-                    { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
                     { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                    { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                    { id: 184, start_date: null },
                 ]);
             });
         });
@@ -197,9 +197,9 @@ describe("PlannerView", () => {
                 expect(getSubMilestones).toHaveBeenCalledWith(592, expect.any(Function));
                 expect(PlanningController.milestones.loading).toBeFalsy();
                 expect(PlanningController.milestones.content).toEqual([
-                    { id: 184, start_date: null },
-                    { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
                     { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                    { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                    { id: 184, start_date: null },
                 ]);
             });
         });
@@ -266,10 +266,10 @@ describe("PlannerView", () => {
             expect(getClosedTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
             expect(PlanningController.milestones.loading).toBeFalsy();
             expect(PlanningController.milestones.content).toEqual([
-                { id: 184, start_date: null },
-                { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
-                { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
                 { id: 747, start_date: "2016-08-14T01:00:00+01:00" },
+                { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                { id: 184, start_date: null },
             ]);
         });
 
@@ -295,10 +295,10 @@ describe("PlannerView", () => {
             expect(getClosedSubMilestones).toHaveBeenCalledWith(592, expect.any(Function));
             expect(PlanningController.milestones.loading).toBeFalsy();
             expect(PlanningController.milestones.content).toEqual([
-                { id: 184, start_date: null },
-                { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
-                { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
                 { id: 747, start_date: "2016-08-14T01:00:00+01:00" },
+                { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
+                { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
+                { id: 184, start_date: null },
             ]);
         });
     });

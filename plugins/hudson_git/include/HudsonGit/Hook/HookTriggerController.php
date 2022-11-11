@@ -88,27 +88,32 @@ class HookTriggerController
         array &$already_called_jenkins_server_urls,
     ): void {
         $date_job = $date_time->getTimestamp();
-        $dar      = $this->dao->searchById($repository->getId());
-        foreach ($dar as $row) {
-            $jenkins_server_url = $row['jenkins_server_url'];
-            $this->logger->debug('Trigger repository jenkins server: ' . $jenkins_server_url);
-            $commit_reference_to_send             = $row['is_commit_reference_needed'] ? $commit_reference : null;
-            $polling_urls                         = [];
-            $status_code                          = $this->pushGitNotifications(
-                $repository,
-                $jenkins_server_url,
-                $commit_reference_to_send,
-                $polling_urls
-            );
-            $already_called_jenkins_server_urls[] = $jenkins_server_url;
+        $row      = $this->dao->searchById($repository->getId());
 
-            $this->addHudsonGitLog(
-                $repository,
-                implode(',', $polling_urls),
-                $status_code,
-                $date_job
-            );
+        if ($row === null) {
+            return;
         }
+
+        $jenkins_server_url      = $row['jenkins_server_url'];
+        $jenkins_encrypted_token = $row['encrypted_token'];
+        $this->logger->debug('Trigger repository jenkins server: ' . $jenkins_server_url);
+        $commit_reference_to_send             = $row['is_commit_reference_needed'] ? $commit_reference : null;
+        $polling_urls                         = [];
+        $status_code                          = $this->pushGitNotifications(
+            $repository,
+            $jenkins_server_url,
+            $jenkins_encrypted_token,
+            $commit_reference_to_send,
+            $polling_urls
+        );
+        $already_called_jenkins_server_urls[] = $jenkins_server_url;
+
+        $this->addHudsonGitLog(
+            $repository,
+            implode(',', $polling_urls),
+            $status_code,
+            $date_job
+        );
     }
 
     private function addHudsonGitLog(GitRepository $repository, string $job_name, ?int $status_code, int $date_job): void
@@ -144,6 +149,7 @@ class HookTriggerController
             $status_code              = $this->pushGitNotifications(
                 $repository,
                 $jenkins_server_url,
+                $jenkins_server->getEncryptedToken(),
                 $commit_reference_to_send,
                 $polling_urls
             );
@@ -176,13 +182,14 @@ class HookTriggerController
     private function pushGitNotifications(
         GitRepository $repository,
         string $jenkins_server_url,
+        ?string $encrypted_token,
         ?string $commit_reference,
         array &$polling_urls,
     ): ?int {
         $transports = $repository->getAccessURL();
         foreach ($transports as $protocol => $url) {
             try {
-                $response = $this->jenkins_client->pushGitNotifications($jenkins_server_url, $url, $commit_reference);
+                $response = $this->jenkins_client->pushGitNotifications($jenkins_server_url, $url, $encrypted_token, $commit_reference);
 
                 $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
                 if (count($response->getJobPaths()) > 0) {

@@ -113,11 +113,12 @@ class Docman_Actions extends Actions
     private function _raiseMetadataChangeEvent(&$user, &$item, $group_id, $old, $new, $field)
     {
         $logEventParam = ['group_id' => $group_id,
-                               'item'     => &$item,
-                               'user'     => &$user,
-                               'old_value' => $old,
-                               'new_value' => $new,
-                               'field'     => $field];
+            'item'     => &$item,
+            'user'     => &$user,
+            'old_value' => $old,
+            'new_value' => $new,
+            'field'     => $field,
+        ];
 
         $this->event_manager->processEvent(
             'plugin_docman_event_metadata_update',
@@ -251,7 +252,7 @@ class Docman_Actions extends Actions
                     $eArray        = [
                         'group_id'  => $item->getGroupId(),
                         'item'      => &$item,
-                        'new_value' => $author->getName(),
+                        'new_value' => $author->getUserName(),
                         'user'      => &$user,
                     ];
                     $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
@@ -265,25 +266,27 @@ class Docman_Actions extends Actions
                 if (is_int($possible_date)) {
                     $date   = $possible_date;
                     $eArray = ['group_id'  => $item->getGroupId(),
-                               'item'      => &$item,
-                               'old_value' => null,
-                               'new_value' => $date,
-                               'user'      => &$user];
+                        'item'      => &$item,
+                        'old_value' => null,
+                        'new_value' => $date,
+                        'user'      => &$user,
+                    ];
 
                     $this->event_manager->processEvent('plugin_docman_event_set_version_date', $eArray);
                 }
             }
 
             $vArray = ['item_id'   => $item->getId(),
-                            'number'    => $number,
-                            'user_id'   => $versionAuthor,
-                            'label'     => $_label,
-                            'changelog' => $_changelog,
-                            'filename'  => $final_filename,
-                            'filesize'  => $_filesize ?? 0,
-                            'filetype'  => $_filetype ?? '',
-                            'path'      => $path ?? '',
-                            'date'      => $date];
+                'number'    => $number,
+                'user_id'   => $versionAuthor,
+                'label'     => $_label,
+                'changelog' => $_changelog,
+                'filename'  => $final_filename,
+                'filesize'  => $_filesize ?? 0,
+                'filetype'  => $_filetype ?? '',
+                'path'      => $path ?? '',
+                'date'      => $date,
+            ];
             $vId    = $vFactory->create($vArray);
 
             // Create a new version object
@@ -292,9 +295,10 @@ class Docman_Actions extends Actions
             $newVersion     = new Docman_Version($vArray);
 
             $eArray = ['group_id' => $item->getGroupId(),
-                            'item'     => &$item,
-                            'version'  => $newVersion,
-                            'user'     => &$user];
+                'item'     => &$item,
+                'version'  => $newVersion,
+                'user'     => &$user,
+            ];
             $this->event_manager->processEvent('plugin_docman_event_new_version', $eArray);
             if ($_action_type === 'newversion') {
                 $this->_controler->feedback->log(
@@ -597,8 +601,8 @@ class Docman_Actions extends Actions
                 if ($_owner_id != $item->getOwnerId()) {
                     $ownerChanged    = true;
                     $um              = $this->_getUserManagerInstance();
-                    $_oldowner       = $um->getUserById($item->getOwnerId())->getName();
-                    $_newowner       = $um->getUserById($_owner_id)->getName();
+                    $_oldowner       = $um->getUserById($item->getOwnerId())->getUserName();
+                    $_newowner       = $um->getUserById($_owner_id)->getUserName();
                     $data['user_id'] = $_owner_id;
                 }
                 unset($data['owner']);
@@ -670,7 +674,8 @@ class Docman_Actions extends Actions
                     'group_id' => $request->get('group_id'),
                     'item'     => $item,
                     'new'      => $data,
-                    'user'     => $user]);
+                    'user'     => $user,
+                ]);
             }
 
             // Log the 'edit' event if link_url or wiki_page are set
@@ -678,7 +683,8 @@ class Docman_Actions extends Actions
                 $this->event_manager->processEvent('plugin_docman_event_edit', [
                     'group_id' => $request->get('group_id'),
                     'item'     => &$item,
-                    'user'     => &$user]);
+                    'user'     => &$user,
+                ]);
             }
 
             if ($ownerChanged && isset($_oldowner, $_newowner)) {
@@ -1494,14 +1500,16 @@ class Docman_Actions extends Actions
 
             $this->_controler->view                              = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
-                                                                          'md'     => $md->getLabel()];
+                'md'     => $md->getLabel(),
+            ];
         } else {
             $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Unable to update element.'));
 
             $this->_controler->view                              = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
-                                                                          'md'     => $md->getLabel(),
-                                                                          'loveid' => $love->getId()];
+                'md'     => $md->getLabel(),
+                'loveid' => $love->getId(),
+            ];
         }
     }
 
@@ -1587,9 +1595,10 @@ class Docman_Actions extends Actions
     public function _raiseMonitoringListEvent($item, $subscribers, $eventType)
     {
         $p = ['group_id' => $item->getGroupId(),
-                                       'item'     => $item,
-                                       'listeners' => $subscribers,
-                                       'event'    => $eventType];
+            'item'     => $item,
+            'listeners' => $subscribers,
+            'event'    => $eventType,
+        ];
         $this->event_manager->processEvent('plugin_docman_event_subcribers', $p);
     }
 
@@ -2135,6 +2144,9 @@ class Docman_Actions extends Actions
         $updater_feedback->getFilenamePatternUpdateFeedback($project_id, $filename_pattern);
     }
 
+    /**
+     * @param PFUser[] $users_to_delete
+     */
     private function removeNotificationUsersByItem(Docman_Item $item, array $users_to_delete)
     {
         $users = [];
@@ -2154,7 +2166,7 @@ class Docman_Actions extends Actions
                         Feedback::ERROR,
                         sprintf(
                             dgettext('tuleap-docman', 'Unable to remove monitoring for user "%s"'),
-                            $user->getName()
+                            $user->getUserName()
                         )
                     );
                 }
@@ -2163,7 +2175,7 @@ class Docman_Actions extends Actions
                     Feedback::WARN,
                     sprintf(
                         dgettext('tuleap-docman', 'Monitoring was not active for user "%s"'),
-                        $user->getName()
+                        $user->getUserName()
                     )
                 );
             }
@@ -2172,7 +2184,7 @@ class Docman_Actions extends Actions
         if (! empty($users)) {
             $removed_users = [];
             foreach ($users as $user) {
-                $removed_users[] = $user->getName();
+                $removed_users[] = $user->getUserName();
             }
             $this->_controler->feedback->log(
                 Feedback::INFO,
@@ -2213,6 +2225,9 @@ class Docman_Actions extends Actions
         }
     }
 
+    /**
+     * @param PFUser[] $users_to_add
+     */
     private function addMonitoringUsers($cascade, Docman_Item $item, array $users_to_add)
     {
         $users = [];
@@ -2221,14 +2236,14 @@ class Docman_Actions extends Actions
             if ($this->_controler->notificationsManager->userExists($user->getId(), $item->getId())) {
                 $this->_controler->feedback->log(
                     Feedback::WARN,
-                    sprintf(dgettext('tuleap-docman', 'Monitoring for user(s) "%s" already exists'), $user->getName())
+                    sprintf(dgettext('tuleap-docman', 'Monitoring for user(s) "%s" already exists'), $user->getUserName())
                 );
                 continue;
             }
             if (! $dpm->userCanRead($user, $item->getId())) {
                 $this->_controler->feedback->log(
                     Feedback::WARN,
-                    sprintf(dgettext('tuleap-docman', 'Insufficient permissions for user(s) "%s"'), $user->getName())
+                    sprintf(dgettext('tuleap-docman', 'Insufficient permissions for user(s) "%s"'), $user->getUserName())
                 );
                 continue;
             }
@@ -2237,7 +2252,7 @@ class Docman_Actions extends Actions
                     Feedback::ERROR,
                     sprintf(
                         dgettext('tuleap-docman', 'Monitoring for user(s) "%s" has not been added'),
-                        $user->getName()
+                        $user->getUserName()
                     )
                 );
                 continue;
@@ -2251,10 +2266,10 @@ class Docman_Actions extends Actions
             ) {
                 $this->_controler->feedback->log(
                     'error',
-                    sprintf(dgettext('tuleap-docman', 'Monitoring for the whole sub-hierarchy for user(s) \'%1$s\' has not been added'), $user->getName())
+                    sprintf(dgettext('tuleap-docman', 'Monitoring for the whole sub-hierarchy for user(s) \'%1$s\' has not been added'), $user->getUserName())
                 );
             }
-            $users[] = $user->getName();
+            $users[] = $user->getUserName();
         }
 
         if (! empty($users)) {

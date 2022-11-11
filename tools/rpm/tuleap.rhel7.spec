@@ -3,7 +3,6 @@
 %define _bindir /usr/bin
 %define _unitdir /usr/lib/systemd/system
 %define _tmpfilesdir /usr/lib/tmpfiles.d
-%define perl_vendorlib /usr/share/perl5/vendor_perl
 
 %define _buildhost tuleap-builder
 %define _source_payload w9.xzdio
@@ -105,7 +104,6 @@ Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.8
 Requires: python
-Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-DBD-MySQL, perl(Crypt::Eksblowfish::Bcrypt), perl(Redis)
 Requires: perl-libwww-perl, perl-LWP-Protocol-https
 Requires: tuleap-theme-flamingparrot
 Requires: sha1collisiondetector
@@ -162,7 +160,7 @@ Group: Development/Tools
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
-Requires: php80-php-ldap, perl-LDAP
+Requires: php80-php-ldap
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
@@ -255,6 +253,13 @@ Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 Requires: mediawiki-%{name}-flavor = @@VERSION@@, tuleap-plugin-mediawiki
 %description plugin-mediawiki-standalone
+%{summary}.
+
+%package plugin-onlyoffice
+Summary: Integration with ONLYOFFICE
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-document
+%description plugin-onlyoffice
 %{summary}.
 
 %package plugin-openidconnectclient
@@ -418,6 +423,27 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
 %description plugin-roadmap
 %{summary}.
 
+%package plugin-fts-common
+Summary: Common parts of full-Text search backends
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-fts-common
+%{summary}.
+
+%package plugin-fts-db
+Summary: Full-Text search DB backend
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
+%description plugin-fts-db
+%{summary}.
+
+%package plugin-fts-meilisearch
+Summary: Full-Text search Meilisearch backend
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
+%description plugin-fts-meilisearch
+%{summary}.
+
 %package plugin-oauth2-server
 Summary: OAuth2 Server
 Group: Development/Tools
@@ -539,7 +565,7 @@ BurningParrot, default theme starting Tuleap 10
 #
 # Package setup
 %prep
-%setup -q
+%setup -q -c tuleap-src
 
 #
 # Build
@@ -569,7 +595,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/onlyoffice
 %if %{with enterprise}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
@@ -586,6 +611,9 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tee_container
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testmanagement
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testplan
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_common
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_db
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_meilisearch
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
@@ -594,12 +622,6 @@ done
 %if %{with experimental}
 %else
 %endif
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/tsconfig.tsbuildinfo
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/composer.lock
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/css
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/images
@@ -612,30 +634,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/common
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/tlp
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/tlp-doc
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/jetbrains
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/nix
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/signing-keys
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/version_numbers
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload.sh
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-mo.sh
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-po.php
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/run_dev/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/publish_js_libraries/
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/scripts" -type d -execdir %{__rm} -rf "{}" \;
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/themes" -type d -execdir %{__rm} -rf "{}" \;
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/tests" -type d -execdir %{__rm} -rf "{}" \;
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/additional-packages
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/additional-packages" -type d -execdir %{__rm} -rf "{}" \;
-find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
-    -name 'composer.json' -o -name 'composer.lock' -o -name 'package.json' -o -name 'pnpm-lock.yaml' -o \
-    -name 'tsconfig.json' -o -name 'tsconfig.tsbuildinfo' -o \
-    -name 'vite.config.ts' -o \
-    -name 'webpack.common.js' -o -name 'webpack.dev.js' -o -name 'webpack.prod.js' -o \
-    -name 'Makefile' -o -name 'jest.config.js' -o -name 'build-manifest.json' \
-    \) -a -delete
 
 # Configuration
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}
@@ -724,10 +722,6 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 
 # Run dir
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/tuleap
-
-# Core subversion mod_perl
-%{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
-%{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 
 # Sudoers directory
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
@@ -823,6 +817,11 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 %{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 
+## Plugin onlyoffice
+%{__install} plugins/onlyoffice/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_onlyoffice
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_onlyoffice
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_onlyoffice
+
 #
 ## Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
@@ -859,6 +858,9 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
 
 %if %{with enterprise}
+
+# Plugin FTS Meilisearch
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/fts_meilisearch
 
 # Plugin program_management
 %{__install} plugins/program_management/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_program_management
@@ -1061,7 +1063,7 @@ fi
 %{APP_DIR}/src/db
 %{APP_DIR}/src/etc
 %{APP_DIR}/src/forgeupgrade
-%{APP_DIR}/src/frontend-assets
+%{APP_DIR}/src/scripts
 %{APP_DIR}/src/templates
 %{APP_DIR}/src/tuleap-cfg
 %{APP_DIR}/src/utils
@@ -1189,7 +1191,6 @@ fi
 
 %files core-subversion
 %defattr(-,root,root,-)
-%{perl_vendorlib}/Apache/Tuleap.pm
 %attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
 
 %files core-cvs
@@ -1326,6 +1327,12 @@ fi
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 
+%files plugin-onlyoffice
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/onlyoffice
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_onlyoffice
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_onlyoffice
+
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/openidconnectclient
@@ -1424,6 +1431,18 @@ fi
 %files plugin-roadmap
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/roadmap
+
+%files plugin-fts-common
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/fts_common
+
+%files plugin-fts-db
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/fts_db
+
+%files plugin-fts-meilisearch
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/fts_meilisearch
 
 %files plugin-oauth2-server
 %defattr(-,root,root,-)

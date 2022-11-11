@@ -44,7 +44,7 @@ import EmptyFolderForReadersSvg from "../../svg/folder/EmptyFolderForReadersSvg.
 import type { Item } from "../../../type";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { RootState } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 
 interface RouterPayload {
     name: string;
@@ -79,8 +79,4 @@ const route_to = computed((): RouterPayload => {
 const can_go_to_parent = (): boolean => {
     return index_of_parent.value >= -1;
 };
-</script>
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
 </script>

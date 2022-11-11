@@ -23,16 +23,10 @@
         <slot />
     </a>
 </template>
-<script>
-export default {
-    name: "ArtifactLink",
-    props: {
-        artifact: { required: true, type: Object },
-    },
-    computed: {
-        url() {
-            return `/plugins/tracker/?aid=${this.artifact.id}`;
-        },
-    },
-};
+<script setup lang="ts">
+import type { Artifact } from "../../type";
+import { computed } from "vue";
+
+const props = defineProps<{ artifact: Artifact }>();
+const url = computed((): string => `/plugins/tracker/?aid=${props.artifact.id}`);
 </script>

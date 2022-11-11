@@ -214,7 +214,8 @@ if ($request->isPost()) {
                                 $em->processEvent(Event::USER_RENAME, [
                                     'user_id'  => $user->getId(),
                                     'new_name' => $request->get('form_user_login_name'),
-                                    'old_user' => $user]);
+                                    'old_user' => $user,
+                                ]);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup', 'rename_user_msg', [$user->getUserName(), $request->get('form_user_login_name')]));
                                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_usergroup', 'rename_user_warn'));
                         }

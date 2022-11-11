@@ -30,6 +30,8 @@ class CrossTrackerPermissionGateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotBlockLegitimateUser()
     {
+        $this->expectNotToPerformAssertions();
+
         $user    = \Mockery::spy(\PFUser::class);
         $tracker = \Mockery::spy(\Tracker::class);
         $project = \Mockery::spy(\Project::class);

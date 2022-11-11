@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { transformLargeContentIntoParagraphs } from "./transform-large-content-into-paragraphs";
 import { Paragraph, TextRun, HeadingLevel } from "docx";
 import * as html_transformer from "./transform-html-into-paragraphs";
@@ -45,7 +46,7 @@ describe("transform-large-content-into-paragraph", () => {
 
     it("transforms large HTML content", async () => {
         const expected_value = new Paragraph("Some HTML");
-        jest.spyOn(html_transformer, "transformHTMLIntoParagraphs").mockResolvedValue([
+        vi.spyOn(html_transformer, "transformHTMLIntoParagraphs").mockResolvedValue([
             expected_value,
         ]);
 

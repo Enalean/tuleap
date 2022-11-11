@@ -27,7 +27,12 @@
 
     > .document-header {
         flex: 0 0 auto;
+        padding: var(--tlp-large-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
     }
+}
+
+.embedded-document-container-warning {
+    margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
 }
 
 .embedded-document {

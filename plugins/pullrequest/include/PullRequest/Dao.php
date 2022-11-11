@@ -35,16 +35,22 @@ class Dao extends DataAccessObject
         return $this->getDB()->row($sql, $pull_request_id);
     }
 
-    public function isPullRequestAlreadyExisting(int $repo_src_id, string $branch_src, int $repo_dest_id, string $branch_dest): bool
-    {
+    public function isPullRequestWithSameBranchesAndSourceReferenceAlreadyExisting(
+        int $repo_src_id,
+        string $branch_src,
+        string $sha1_src,
+        int $repo_dest_id,
+        string $branch_dest,
+    ): bool {
         $sql = 'SELECT NULL
                 FROM plugin_pullrequest_review
                 WHERE repository_id = ?
                   AND branch_src = ?
                   AND repo_dest_id = ?
-                  AND branch_dest = ?';
+                  AND branch_dest = ?
+                  AND sha1_src = ?';
 
-        $rows = $this->getDB()->run($sql, $repo_src_id, $branch_src, $repo_dest_id, $branch_dest);
+        $rows = $this->getDB()->run($sql, $repo_src_id, $branch_src, $repo_dest_id, $branch_dest, $sha1_src);
 
         return count($rows) > 0;
     }

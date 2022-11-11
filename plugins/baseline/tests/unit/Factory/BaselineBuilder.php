@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Factory;
 
 use DateTimeInterface;
-use PFUser;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\BaselineArtifact;
+use Tuleap\Baseline\Domain\UserIdentifier;
 
 class BaselineBuilder
 {
@@ -42,7 +42,7 @@ class BaselineBuilder
     /** @var DateTimeInterface */
     private $snapshot_date;
 
-    /** @var PFUser */
+    /** @var UserIdentifier */
     private $author;
 
     public function id(int $id): self
@@ -69,7 +69,7 @@ class BaselineBuilder
         return $this;
     }
 
-    public function author(PFUser $author): self
+    public function author(UserIdentifier $author): self
     {
         $this->author = $author;
         return $this;

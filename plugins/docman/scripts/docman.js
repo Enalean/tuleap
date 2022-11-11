@@ -5,7 +5,6 @@
     $F:readonly
     Ajax:readonly
     Builder:readonly
-    Form:readonly
     Prototype:readonly
     Insertion:readonly
     Effect:readonly
@@ -94,10 +93,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             document.observe("dom:loaded", this.initTableReportEvent);
         }
 
-        //Focus
-        this.focusEvent = this.focus.bindAsEventListener(this);
-        document.observe("dom:loaded", this.focusEvent, true);
-
         // Metadata multiple value checkbox toggling
         this.toggleMultipleValuesChoiceEvent =
             this.toggleMultipleValuesChoice.bindAsEventListener(this);
@@ -135,13 +130,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         // Metadata multiple value checkbox toggling
         document.stopObserving("dom:loaded", this.toggleMultipleValuesChoiceEvent);
     },
-    //{{{------------------------------ Focus
-    focus: function () {
-        if ($("docman_new_form")) {
-            Form.focusFirstElement("docman_new_form");
-        }
-    },
-    //}}}
     //{{{------------------------------ Actions
     addActionForItem: function (item_id, action) {
         this.actionsForItem[item_id] = action;

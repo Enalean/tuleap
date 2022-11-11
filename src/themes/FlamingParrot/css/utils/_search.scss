@@ -32,10 +32,9 @@
             }
         }
 
+        /* stylelint-disable-next-line selector-no-qualifying-type */
         &.active {
-            /* stylelint-disable selector-no-qualifying-type */
             > a {
-                // stylelint-enable
                 box-shadow: inset 0 -2px 0 var(--tlp-main-color);
                 color: var(--tlp-main-color);
             }

@@ -24,7 +24,9 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator",
     "@tuleap/po-gettext-plugin": "link:../../../../../lib/frontend/po-gettext-plugin",
-    "css.escape": "^1.5.1"
+    "css.escape": "^1.5.1",
+    "@types/ckeditor": "4.9.10",
+    "@types/jest": "^29.0.3"
   },
   "scripts": {
     "build": "vite build",

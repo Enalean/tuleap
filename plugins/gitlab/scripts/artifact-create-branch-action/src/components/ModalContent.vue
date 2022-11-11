@@ -57,6 +57,7 @@
                     required
                     aria-required="true"
                     v-model="selected_integration"
+                    data-test="integrations-select"
                 >
                     <option
                         v-for="integration in integrations"
@@ -84,6 +85,7 @@
                     required
                     aria-required="true"
                     v-model="reference"
+                    data-test="branch-reference-input"
                 />
                 <p class="text-info">
                     {{ $gettext("Must be an existing git commit SHA-1 or a branch name") }}
@@ -99,7 +101,11 @@
             </div>
             <div class="artifact-create-gitlab-merge-request">
                 <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" v-model="must_create_gitlab_mr" />
+                    <input
+                        type="checkbox"
+                        v-model="must_create_gitlab_mr"
+                        data-test="create-merge-request-checkbox"
+                    />
                     {{
                         $gettext(
                             "Create a merge request based on this new branch to the default branch"
@@ -121,6 +127,7 @@
                 class="tlp-button-primary tlp-modal-action"
                 v-bind:disabled="is_creating_branch"
                 v-on:click="onClickCreateBranch"
+                data-test="create-branch-submit-button"
             >
                 <i
                     aria-hidden="true"

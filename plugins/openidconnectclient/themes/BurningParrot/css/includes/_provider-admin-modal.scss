@@ -28,7 +28,7 @@
             border-color: map.get($colors, "primary");
             background: map.get($colors, "primary");
 
-            &:hover:not(:disabled):not(.disabled):not(:active) {
+            &:hover:not(:disabled, .disabled, :active) {
                 border-color: color.adjust(map.get($colors, "primary"), $lightness: - 5%);
                 background: color.adjust(map.get($colors, "primary"), $lightness: - 5%);
             }

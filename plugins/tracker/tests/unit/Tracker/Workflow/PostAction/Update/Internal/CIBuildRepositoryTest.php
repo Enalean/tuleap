@@ -58,7 +58,8 @@ class CIBuildRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->ci_build_dao->shouldReceive('create')
             ->with(1, 'http://added-ci-url.test')
-            ->andReturn(9);
+            ->andReturn(9)
+            ->atLeast()->once();
 
         $transition = TransitionFactory::buildATransitionWithId(1);
         $ci_build   = new CIBuildValue('http://added-ci-url.test');
@@ -84,7 +85,8 @@ class CIBuildRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ci_build_dao
             ->shouldReceive('deletePostActionByTransition')
             ->with(1)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->atLeast()->once();
         $transition = TransitionFactory::buildATransitionWithId(1);
         $this->ci_build_repository->deleteAllByTransition($transition);
     }

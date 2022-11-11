@@ -9,5 +9,33 @@ msgstr ""
 msgid "Allow to open documents into ONLYOFFICE"
 msgstr ""
 
+#, php-format
+msgid "Back to %s documents"
+msgstr ""
+
+msgid "Current secret not displayed"
+msgstr ""
+
+msgid "Document server URL"
+msgstr ""
+
+msgid "Document server settings have been saved"
+msgstr ""
+
+msgid "JWT secret"
+msgstr ""
+
+msgid "ONLYOFFICE"
+msgstr ""
+
+msgid "ONLYOFFICE document server settings"
+msgstr ""
+
 msgid "ONLYOFFICE integration"
+msgstr ""
+
+msgid "ONLYOFFICE settings"
+msgstr ""
+
+msgid "Save"
 msgstr ""

@@ -28,6 +28,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Git\GitService;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\ServerHostname;
 
@@ -60,7 +61,9 @@ class InvalidCredentialsNotifier
         GitlabRepositoryIntegration $repository_integration,
         Credentials $credentials,
     ): void {
-        if ($credentials->getBotApiToken()->isEmailAlreadySendForInvalidToken()) {
+        $bot_api_token = $credentials->getApiToken();
+        assert($bot_api_token instanceof IntegrationApiToken);
+        if ($bot_api_token->isEmailAlreadySendForInvalidToken()) {
             return;
         }
 

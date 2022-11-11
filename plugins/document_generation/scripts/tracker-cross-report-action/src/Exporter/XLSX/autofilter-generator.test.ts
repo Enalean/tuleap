@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import { generateAutofilterRange } from "./autofilter-generator";
 import type { ReportSection } from "../../Data/data-formator";
 import { EmptyCell, TextCell } from "@tuleap/plugin-docgen-xlsx";

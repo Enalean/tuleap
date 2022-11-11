@@ -37,51 +37,48 @@
         <template v-if="has_loaded_properties">
             <obsolescence-date-property-for-update
                 v-if="is_obsolescence_date_property_used"
-                v-model="date_value"
+                v-bind:value="value"
             />
             <custom-property v-bind:item-property="propertyToUpdate" />
         </template>
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import ObsolescenceDatePropertyForUpdate from "./ObsolescenceDatePropertyForUpdate.vue";
 import CustomProperty from "../PropertiesForCreateOrUpdate/CustomProperties/CustomProperty.vue";
+import type { Item, Property } from "../../../../type";
+import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
+import type { PropertiesState } from "../../../../store/properties/module";
+import { computed, onMounted } from "vue";
+import type { PropertiesActions } from "../../../../store/properties/properties-actions";
 
-export default {
-    name: "OtherInformationPropertiesForUpdate",
-    components: {
-        CustomProperty,
-        ObsolescenceDatePropertyForUpdate,
-    },
-    props: {
-        currentlyUpdatedItem: Object,
-        propertyToUpdate: Array,
-        value: {
-            type: String,
-            required: true,
-        },
-    },
-    computed: {
-        ...mapState("configuration", ["is_obsolescence_date_property_used"]),
-        ...mapState("properties", ["has_loaded_properties"]),
-        should_display_other_information() {
-            return this.is_obsolescence_date_property_used || this.propertyToUpdate.length > 0;
-        },
-        date_value: {
-            get() {
-                return this.value;
-            },
-            set(value) {
-                this.$emit("input", value);
-            },
-        },
-    },
-    mounted() {
-        if (!this.has_loaded_properties) {
-            this.$store.dispatch("properties/loadProjectProperties");
-        }
-    },
-};
+const props = defineProps<{
+    currentlyUpdatedItem: Item;
+    propertyToUpdate: Array<Property>;
+    value: string;
+}>();
+
+const { is_obsolescence_date_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_obsolescence_date_property_used">
+>("configuration", ["is_obsolescence_date_property_used"]);
+
+const { has_loaded_properties } = useNamespacedState<
+    Pick<PropertiesState, "has_loaded_properties">
+>("properties", ["has_loaded_properties"]);
+
+const should_display_other_information = computed((): boolean => {
+    return is_obsolescence_date_property_used.value || props.propertyToUpdate.length > 0;
+});
+
+const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("properties", [
+    "loadProjectProperties",
+]);
+
+onMounted((): void => {
+    if (!has_loaded_properties.value) {
+        loadProjectProperties();
+    }
+});
 </script>

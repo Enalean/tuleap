@@ -1,0 +1,252 @@
+{{# administration_pane }}
+    {{> git-administration-panes }}
+{{/ administration_pane }}
+<div id="linked-group-alert" class="gitlab-linked-group-feedback gitlab-linked-group-alert-hidden"></div>
+<section class="tlp-pane-section">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }}tuleap-gitlab | Linked group information {{/ dgettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | Status {{/ dgettext }}</label>
+                    <span class="tlp-badge-success">
+                        <i class="fa-solid fa-link tlp-badge-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-gitlab | Linked {{/ dgettext }}
+                    </span>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | Last Synchronization {{/ dgettext }}</label>
+                    <span class="tlp-badge-success tlp-badge-outline" id="last-sync-badge">
+                        <i class="fa-solid fa-check tlp-badge-icon" aria-hidden="true"></i>
+                        {{# dngettext }}
+                            tuleap-gitlab |
+                            %1$s repository integrated %2$s |
+                            %1$s repositories integrated %2$s |
+                            {{ number_of_integrated_projects_in_last_sync }} |
+                            {{ number_of_integrated_projects_in_last_sync }} |
+                            {{ last_sync_time }}
+                        {{/ dngettext }}
+                    </span>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | GitLab server URL {{/ dgettext }}</label>
+                    <p>{{ gitlab_url }}</p>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | GitLab group {{/ dgettext }}</label>
+                    <p>
+                        <span class="gitlab-group-avatar-container">
+                            {{# avatar_url }}
+                                <img src="{{ avatar_url }}" alt="{{ group_path }}" class="gitlab-group-avatar"/>
+                            {{/ avatar_url }}
+                            {{^ avatar_url }}
+                                <span class="default-gitlab-group-avatar gitlab-group-avatar">{{ first_letter_of_group_name }}</span>
+                            {{/ avatar_url }}
+                        </span>{{ group_name }}<span class="tlp-text-muted gitlab-group-full-path">({{ group_path }})</span>
+                    </p>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }} tuleap-gitlab | Allow artifact closure {{/ dgettext }}</label>
+                    <p id="group-information-allow-artifact-closure">{{ allow_closure_string }}</p>
+                </div>
+                <div class="tlp-property">
+                    <label class="tlp-label">{{# dgettext }}tuleap-gitlab | Prefix the branch name {{/ dgettext }}</label>
+                    <p id="group-information-branch-prefix">{{ branch_prefix }}</p>
+                </div>
+            </section>
+            <section
+                class="tlp-pane-section tlp-pane-section-submit gitlab-linked-group-buttons"
+                id="buttons-section"
+                data-group-id="{{ group_id }}"
+                data-gitlab-group-id="{{ gitlab_group_id }}"
+                data-gitlab-uri="{{ gitlab_url }}"
+            >
+                <button type="button" class="tlp-button-primary" id="synchronize-button">
+                    <i class="fa-solid fa-rotate tlp-button-icon" aria-hidden="true" id="synchronize-icon"></i>
+                    {{# dgettext }}tuleap-gitlab | Synchronize {{/ dgettext }}
+                </button>
+
+                <button type="button" class="tlp-button-primary tlp-button-outline" id="edit-token-button">
+                    <i class="fa-solid fa-key tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | Update token {{/ dgettext }}
+                </button>
+
+                <button type="button" class="tlp-button-primary tlp-button-outline" id="edit-config-button">
+                    <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | Update configuration {{/ dgettext }}
+                </button>
+
+                <button type="button" class="tlp-button-danger tlp-button-outline" id="unlink-button" data-target-modal-id="unlink-modal">
+                    <i class="fa-solid fa-link-slash tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | Unlink {{/ dgettext }}
+                </button>
+            </section>
+        </div>
+    </section>
+</section>
+
+<div id="edit-config-modal" class="tlp-modal" role="dialog" aria-labelledby="edit-config-modal-title">
+    <form id="edit-config-modal-form">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="edit-config-modal-title">
+                {{# dgettext }}tuleap-gitlab | Edit configuration{{/ dgettext }}
+            </h1>
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-gitlab | Close {{/ dgettext }}">
+                <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-feedback gitlab-modal-feedback-hidden" id="edit-config-modal-feedback">
+            <div class="tlp-alert-danger" id="edit-config-modal-alert"></div>
+        </div>
+        <div class="tlp-modal-body">
+            <p>{{# dgettext }}tuleap-gitlab | Please note that the following settings will be applied for all new synchronized
+                repositories and may be overridden by each repository once linked.{{/ dgettext }}
+            </p>
+            <div class="tlp-form-element" data-form-element>
+                <label class="tlp-label tlp-checkbox">
+                    <input
+                        type="checkbox"
+                        id="edit-config-modal-allow-artifact-closure"
+                        {{# allow_artifact_closure }}checked{{/ allow_artifact_closure }}
+                    >
+                    {{# dgettext }}tuleap-gitlab | Allow artifact closure{{/ dgettext }}
+                </label>
+                <p class="tlp-text-info">
+                    {{# dgettext }}tuleap-gitlab | If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository.{{/ dgettext }}
+                </p>
+            </div>
+            <div class="tlp-form-element" data-form-element>
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" id="edit-config-modal-has-prefix" {{# has_branch_prefix }}checked{{/ has_branch_prefix }}>
+                    {{# dgettext }}tuleap-gitlab | Prefix the branch name{{/ dgettext }}
+                </label>
+                <p class="tlp-text-info">
+                    {{# dgettext }}tuleap-gitlab | If set, this prefix will be automatically added to the branch name in the create GitLab branch action.{{/ dgettext }}
+                </p>
+            </div>
+            <div class="tlp-form-element" id="edit-config-branch-prefix-box" data-form-element>
+                <label for="edit-config-branch-prefix" class="tlp-label">
+                    {{# dgettext }}tuleap-gitlab | Prefix{{/dgettext}}
+                    <i id="edit-config-branch-prefix-icon" class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <input
+                    type="text"
+                    id="edit-config-branch-prefix"
+                    class="tlp-input"
+                    size="40"
+                    value="{{ branch_prefix }}"
+                >
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# dgettext }}tuleap-gitlab | Cancel{{/ dgettext }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action" id="edit-config-confirm">
+                <i id="edit-icon" class="fa-solid fa-circle-notch fa-spin tlp-button-icon gitlab-modal-icon-hidden" aria-hidden="true"></i>
+                {{# dgettext }}tuleap-gitlab | Update configuration{{/ dgettext }}
+            </button>
+        </div>
+    </form>
+</div>
+
+<div id="token-modal" class="tlp-modal" role="dialog" aria-labelledby="token-modal-title">
+    <form action="" id="token-modal-form">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="token-modal-title">
+                {{# dgettext }}tuleap-gitlab | Edit access token{{/ dgettext }}
+            </h1>
+            <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-gitlab | Close{{/ dgettext }}">
+                <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-feedback gitlab-modal-feedback-hidden" id="token-modal-feedback">
+            <div class="tlp-alert-danger" id="token-modal-alert"></div>
+        </div>
+        <div class="tlp-modal-body">
+            <div class="tlp-property">
+                <label class="tlp-label">{{# dgettext }}tuleap-gitlab | GitLab server URL{{/ dgettext }}</label>
+                <p>{{ gitlab_url }}</p>
+            </div>
+            <div class="tlp-property">
+                <label class="tlp-label">{{# dgettext }}tuleap-gitlab | GitLab group {{/ dgettext }}</label>
+                <p>
+                    <span class="gitlab-group-avatar-container">
+                        {{# avatar_url }}
+                            <img src="{{ avatar_url }}" alt="{{ group_path }}" class="gitlab-group-avatar"/>
+                        {{/ avatar_url }}
+                        {{^ avatar_url }}
+                            <span class="default-gitlab-group-avatar gitlab-group-avatar">{{ first_letter_of_group_name }}</span>
+                        {{/ avatar_url }}
+                    </span>{{ group_name }}<span class="tlp-text-muted gitlab-group-full-path">({{ group_path }})</span>
+                </p>
+            </div>
+            <div class="tlp-form-element" data-form-element>
+                <label for="token-modal-token-input" class="tlp-label">
+                    {{# dgettext }}tuleap-gitlab | GitLab access token{{/ dgettext }}
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <input
+                    type="password"
+                    class="tlp-input"
+                    id="token-modal-token-input"
+                    required
+                    autocomplete="off"
+                >
+                <p class="tlp-text-info">
+                    <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-gitlab | GitLab access token scope must contain at least: api.{{/ dgettext }}
+                </p>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# dgettext }}tuleap-gitlab | Cancel{{/ dgettext }}
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action" id="token-modal-confirm">
+                <i id="token-icon" class="fa-solid fa-circle-notch fa-spin tlp-button-icon gitlab-modal-icon-hidden" aria-hidden="true"></i>
+                {{# dgettext }}tuleap-gitlab | Save token{{/ dgettext }}
+            </button>
+        </div>
+    </form>
+</div>
+
+<div id="unlink-modal" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="unlink-modal-title">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="unlink-modal-title">
+            {{# dgettext }}tuleap-gitlab | Unlink the project from the GitLab group {{/ dgettext }}
+        </h1>
+        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-gitlab | Close {{/ dgettext }}">
+            <i class="fa-solid fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="tlp-modal-feedback gitlab-modal-feedback-hidden" id="unlink-modal-feedback">
+        <div class="tlp-alert-danger" id="unlink-modal-alert"></div>
+    </div>
+    <div class="tlp-modal-body">
+        <p>{{# dgettext }}
+            tuleap-gitlab
+            | You are about to unlink %1$s from %2$s GitLab group. Please confirm your action.
+            | <b>{{ current_project_label }}</b>
+            | <b>{{ group_name }}</b>
+        {{/dgettext}}</p>
+        <p>
+            {{# dgettext }}tuleap-gitlab | This will not delete the Group on GitLab side. It removes the link between the Tuleap Project
+            and the GitLab group. All GitLab projects part of the group will stay integrated with Tuleap, their configuration will not change. If you wish to remove
+            the integrations of the GitLab projects part of this group, you must remove each one manually.{{/ dgettext }}
+        </p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# dgettext }}tuleap-gitlab | Cancel {{/ dgettext }}
+        </button>
+        <button type="button" class="tlp-button-danger tlp-modal-action" id="unlink-confirm">
+            <i id="unlink-icon" class="fa-solid fa-circle-notch fa-spin tlp-button-icon gitlab-modal-icon-hidden" aria-hidden="true"></i>
+            {{# dgettext }}tuleap-gitlab | Unlink {{/ dgettext }}
+        </button>
+    </div>
+</div>

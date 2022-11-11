@@ -297,8 +297,9 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         if ($this->isAgileDashboardOrTrackerUrl() && $this->canUseStandardJavsacript()) {
             $agiledashboard_plugin = PluginManager::instance()->getEnabledPluginByName('agiledashboard');
             if ($agiledashboard_plugin && $agiledashboard_plugin->currentRequestIsForPlugin()) {
+                $tracker_legacy_assets = new IncludeAssets(__DIR__ . '/../../tracker/scripts/legacy/frontend-assets', '/assets/trackers/legacy');
+                $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($tracker_legacy_assets, 'tracker.js'));
                 $assets = new IncludeAssets(__DIR__ . '/../../tracker/frontend-assets', '/assets/trackers');
-                $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'tracker.js'));
                 $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'modal-v2.js'));
             }
             $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'cardwall.js'));

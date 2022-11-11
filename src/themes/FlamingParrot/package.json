@@ -6,7 +6,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.1.1",
     "@tuleap/cross-ref-badges": "link:../../../lib/frontend/cross-ref-badges",
-    "@tuleap/fp-feedback": "link:../../../lib/frontend/fp-feedback"
+    "@tuleap/fp-feedback": "link:../../../lib/frontend/fp-feedback",
+    "@tuleap/list-picker": "link:../../../lib/frontend/list-picker",
+    "@tuleap/project-background": "link:../../../lib/frontend/project-background",
+    "@tuleap/project-sidebar-internal": "link:../../../lib/frontend/project-sidebar-internal",
+    "@tuleap/tlp-dropdown": "link:../../../lib/frontend/tlp-dropdown",
+    "@tuleap/tlp-popovers": "link:../../../lib/frontend/tlp-popovers",
+    "@tuleap/tlp-swatch-colors": "link:../../../lib/frontend/tlp-swatch-colors"
   }
 }

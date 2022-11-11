@@ -25,9 +25,15 @@ namespace Tuleap\Queue;
 
 interface QueueTask
 {
+    /**
+     * @psalm-return non-empty-string
+     */
     public function getTopic(): string;
 
     public function getPayload(): array;
 
+    /**
+     * @psalm-return non-empty-string
+     */
     public function getPreEnqueueMessage(): string;
 }

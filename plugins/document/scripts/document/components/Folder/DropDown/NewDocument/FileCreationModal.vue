@@ -63,7 +63,7 @@ import {
     useState,
 } from "vuex-composition-helpers";
 import type { ErrorState } from "../../../../store/error/module";
-import { onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { transformStatusPropertyForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import type { ConfigurationState } from "../../../../store/configuration";
 
@@ -156,8 +156,4 @@ function updateTitleValue(title: string): void {
 function updateDescriptionValue(description: string): void {
     item.value.description = description;
 }
-</script>
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
 </script>

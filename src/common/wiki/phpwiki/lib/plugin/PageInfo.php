@@ -53,7 +53,8 @@ class WikiPlugin_PageInfo extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['page' => '[pagename]',
-                     'version' => '[version]'];
+            'version' => '[version]',
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

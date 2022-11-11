@@ -20,7 +20,6 @@
 import { define, html } from "hybrids";
 import { createPopover } from "tlp";
 import example_image from "../assets/image_example_commonmark.png";
-import type { DisconnectFunction } from "../types";
 import {
     getCommonMarkSyntaxHelperPopoverTitle as for_your_information,
     getSyntaxHelperTitle as help,
@@ -34,6 +33,8 @@ export interface CommonmarkSyntaxHelper {
     button: HTMLButtonElement | null;
     content: () => HTMLElement;
 }
+
+type DisconnectFunction = () => void;
 
 export const connect = (host: CommonmarkSyntaxHelper): DisconnectFunction | void => {
     if (!host.section || !host.button) {

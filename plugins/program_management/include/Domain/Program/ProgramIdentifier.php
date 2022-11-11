@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsAProgramOrUsedInPlanChecker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -60,6 +61,21 @@ final class ProgramIdentifier
         ?PermissionBypass $bypass,
     ): self {
         $build_program->ensureProgramIsAProject($id, $user, $bypass);
+
+        return new self($id);
+    }
+
+    /**
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
+     */
+    public static function fromIdForAdministration(
+        ProjectIsAProgramOrUsedInPlanChecker $build_program,
+        int $id,
+        UserIdentifier $user,
+        ?PermissionBypass $bypass,
+    ): self {
+        $build_program->ensureProjectIsAProgramOrIsPartOfPlan($id, $user, $bypass);
 
         return new self($id);
     }

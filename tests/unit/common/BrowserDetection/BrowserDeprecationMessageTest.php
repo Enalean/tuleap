@@ -22,13 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\BrowserDetection;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class BrowserDeprecationMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testNoDeprecationMessageForModernBrowsers(): void
@@ -58,24 +56,22 @@ final class BrowserDeprecationMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeprecationMessageForOutdatedVersionsOfSupportedBrowsersCanBeDisabledWithASpecialForNonSiteAdminUsers(): void
     {
-        \ForgeConfig::set('disable_old_browsers_warning', 'I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present');
+        \ForgeConfig::set('disable_old_browsers_warning', 'W41_I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present');
 
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::VERY_OLD_FIREFOX_USER_AGENT_STRING);
-        $user             = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(false);
-        $message = BrowserDeprecationMessage::fromDetectedBrowser($user, $detected_browser);
+        $user             = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
+        $message          = BrowserDeprecationMessage::fromDetectedBrowser($user, $detected_browser);
 
         self::assertNull($message);
     }
 
     public function testDeprecationMessageForOutdatedVersionsOfSupportedBrowsersCannotBeDisabledWithASpecialForSiteAdminUsers(): void
     {
-        \ForgeConfig::set('disable_old_browsers_warning', 'I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present');
+        \ForgeConfig::set('disable_old_browsers_warning', 'W41_I_understand_this_only_hides_the_message_for_non_siteadmin_users_and_that_issues_related_to_old_browsers_will_still_be_present');
 
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::VERY_OLD_FIREFOX_USER_AGENT_STRING);
-        $user             = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
-        $message = BrowserDeprecationMessage::fromDetectedBrowser($user, $detected_browser);
+        $user             = UserTestBuilder::buildSiteAdministrator();
+        $message          = BrowserDeprecationMessage::fromDetectedBrowser($user, $detected_browser);
 
         self::assertNotNull($message);
         self::assertTrue($message->can_be_dismiss);
@@ -83,8 +79,8 @@ final class BrowserDeprecationMessageTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildDetectedBrowserFromUserAgent(string $user_agent): DetectedBrowser
     {
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getFromServer')->with('HTTP_USER_AGENT')->andReturn($user_agent);
+        $request = $this->createStub(\HTTPRequest::class);
+        $request->method('getFromServer')->with('HTTP_USER_AGENT')->willReturn($user_agent);
 
         return DetectedBrowser::detectFromTuleapHTTPRequest($request);
     }

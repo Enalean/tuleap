@@ -50,6 +50,11 @@ final class TeamIdentifierCollection
         return new self($teams);
     }
 
+    public static function fromSingleTeam(TeamIdentifier $team_identifier): self
+    {
+        return new self([$team_identifier]);
+    }
+
     /**
      * @return TeamIdentifier[]
      */

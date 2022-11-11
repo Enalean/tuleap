@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 interface SearchIterations
 {
     /**
-     * @return int[]
+     * @return array{id: int, changeset_id: int}[]
      */
     public function searchIterations(ProgramIncrementIdentifier $program_increment): array;
 }

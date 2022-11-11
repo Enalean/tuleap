@@ -32,6 +32,7 @@
                 v-for="ugroup in project_ugroups"
                 v-bind:value="ugroup.id"
                 v-bind:key="`permissions-${label}-${ugroup.id}`"
+                v-bind:title="ugroup.label"
             >
                 {{ ugroup.label }}
             </option>

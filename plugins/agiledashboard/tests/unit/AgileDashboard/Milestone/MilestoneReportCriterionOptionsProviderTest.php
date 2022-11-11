@@ -160,7 +160,8 @@ final class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest
 
         $this->dao->shouldReceive('getAllMilestoneByTrackers')
             ->with([$this->sprint_tracker_id])
-            ->andReturns($this->getDarResults());
+            ->andReturns($this->getDarResults())
+            ->atLeast()->once();
 
         $this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user);
     }

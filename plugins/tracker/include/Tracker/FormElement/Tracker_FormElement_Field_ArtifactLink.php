@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
@@ -33,6 +34,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\PossibleParentSelectorRenderer
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\PostSaveNewChangesetLinkParentArtifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RequestDataAugmentor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueEmptyChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactInTypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\CSVOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\HTMLOutputStrategy;
@@ -45,6 +47,9 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 {
+    #[FeatureFlagConfigKey("Feature flag to hide by default reverse links in artifact view (legacy behaviour)")]
+    public const HIDE_REVERSE_LINKS_KEY = 'hide_reverse_links_by_default';
+
     public const TYPE                    = 'art_link';
     public const CREATE_NEW_PARENT_VALUE = -1;
     public const NEW_VALUES_KEY          = 'new_values';
@@ -495,8 +500,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         if ($reverse_artifact_links) {
             $html .= '<div class="artifact-link-value-reverse">';
-            $html .= '<a href="" class="btn" id="display-tracker-form-element-artifactlink-reverse" data-test="display-reverse-links">' . dgettext('tuleap-tracker', 'Display reverse artifact links') . '</a>';
-            $html .= '<div id="tracker-form-element-artifactlink-reverse" data-test="reverse-link-section" style="display: none">';
+            if (ForgeConfig::getFeatureFlag(self::HIDE_REVERSE_LINKS_KEY)) {
+                $html .= '<a href="" class="btn" id="display-tracker-form-element-artifactlink-reverse" data-test="display-reverse-links">' . dgettext('tuleap-tracker', 'Display reverse artifact links') . '</a>';
+                $html .= '<div id="tracker-form-element-artifactlink-reverse" data-test="reverse-link-section" style="display: none">';
+            } else {
+                $html .= '<div id="tracker-form-element-artifactlink-reverse" data-test="reverse-link-section">';
+            }
         } else {
             $html .= '<div class="artifact-link-value">';
         }
@@ -607,7 +616,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
             $html .= $this->fetchTypeTables($artifact_links_to_render, $reverse_artifact_links);
         } else {
-            $html .= $this->getNoValueLabel();
+            $html .= $this->getNoValueLabelForLinks($artifact);
         }
         $html .= '</div>';
 
@@ -620,6 +629,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         }
 
         return $html;
+    }
+
+    protected function getNoValueLabelForLinks(Artifact $artifact): string
+    {
+        if (count($this->getReverseLinks($artifact->getId())) > 0) {
+            return "<span class='empty_value has-reverse-links'>" . dgettext('tuleap-tracker', 'Empty') . "</span>";
+        }
+
+        return $this->getNoValueLabel();
     }
 
     private function fetchRendererAsArtifactLink(
@@ -1112,8 +1130,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $prefill_new_values = $this->getDefaultValue();
         }
         $prefill_parent = '';
-        if (isset($submitted_values[$this->getId()]['parent'])) {
-            $prefill_parent = $submitted_values[$this->getId()]['parent'];
+        if (isset($submitted_values[$this->getId()]['parent'][0]) && is_numeric($submitted_values[$this->getId()]['parent'][0])) {
+            $prefill_parent = $submitted_values[$this->getId()]['parent'][0];
         }
         $prefill_type = '';
         if (isset($submitted_values[$this->getId()]['type'])) {
@@ -1289,7 +1307,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         );
     }
 
-    private function getReverseLinks($artifact_id)
+    /**
+     * @return Tracker_ArtifactLinkInfo[]
+     */
+    public function getReverseLinks($artifact_id): array
     {
         $links_data = $this->getValueDao()->searchReverseLinksById($artifact_id);
 
@@ -1446,53 +1467,29 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * Say if the submitted value is empty
-     * if no last changeset values and empty submitted values : empty
-     * if not empty last changeset values and empty submitted values : not empty
-     * if empty new values and not empty last changeset values and not empty removed values have the same size: empty
-     *
-     * @param array            $submitted_value
+     * @param array|null $submitted_value
      *
      * @return bool true if the submitted value is empty
      */
     public function isEmpty($submitted_value, Artifact $artifact)
     {
-        $hasNoNewValues           = empty($submitted_value['new_values']);
-        $hasNoLastChangesetValues = true;
-        $last_changeset_values    = [];
-        $last_changeset_value     = $this->getLastChangesetValue($artifact);
-
-        if ($last_changeset_value) {
-            $last_changeset_values    = $last_changeset_value->getArtifactIds();
-            $hasNoLastChangesetValues = empty($last_changeset_values);
+        if ($submitted_value === null) {
+            $submitted_value = [];
         }
 
-        $hasLastChangesetValues = ! $hasNoLastChangesetValues;
-
-        if (
-            ($hasNoLastChangesetValues &&
-            $hasNoNewValues) ||
-             ($hasLastChangesetValues &&
-             $hasNoNewValues &&
-                $this->allLastChangesetValuesRemoved($last_changeset_values, $submitted_value))
-        ) {
-            return true;
-        }
-        return false;
+        return $this->getSubmittedValueEmptyChecker()->isSubmittedValueEmpty(
+            $submitted_value,
+            $this,
+            $artifact,
+        );
     }
 
     /**
-     * Say if all values of the changeset have been removed
-     *
-     * @param array $last_changeset_values
-     * @param array $submitted_value
-     *
-     * @return bool true if all values have been removed
+     * For legacy testing purpose
      */
-    private function allLastChangesetValuesRemoved($last_changeset_values, $submitted_value)
+    protected function getSubmittedValueEmptyChecker(): SubmittedValueEmptyChecker
     {
-        return ! empty($submitted_value['removed_values'])
-            && count($last_changeset_values) == count($submitted_value['removed_values']);
+        return new SubmittedValueEmptyChecker();
     }
 
     /**

@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Closure;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\Test\TestLogger;
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\ReferenceInstance;
+use Tuleap\Reference\TextWithPotentialReferences;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ExtractReferencesStub;
@@ -38,8 +40,9 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
+use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveStatusFieldStub;
-use Tuleap\Tracker\Test\Stub\RetrieveViewableArtifactStub;
+use Tuleap\User\UserName;
 
 final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,82 +54,85 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
     private TestLogger $logger;
     private ExtractReferencesStub $reference_extractor;
     private \Project $project;
-    private RetrieveViewableArtifactStub $artifact_retriever;
+    private RetrieveArtifactStub $artifact_retriever;
     private RetrieveUserByIdStub $user_retriever;
     private CreateNewChangesetStub $changeset_creator;
+    private RetrieveStatusFieldStub $status_retriever;
+    /**
+     * @var DoneValueRetriever&Stub
+     */
+    private $done_value_retriever;
 
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId(151)->build();
 
         $this->logger              = new TestLogger();
-        $this->reference_extractor = ExtractReferencesStub::withReferenceInstances(
-            $this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $this->project),
-            $this->getArtifactReferenceInstance('implements', 'story', self::SECOND_ARTIFACT_ID, $this->project),
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+            [$this->getArtifactReferenceInstance('implements', 'story', self::SECOND_ARTIFACT_ID, $this->project)]
         );
 
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
+        $this->artifact_retriever   = RetrieveArtifactStub::withArtifacts(
             $this->mockArtifact('bug', self::FIRST_ARTIFACT_ID),
             $this->mockArtifact('story', self::SECOND_ARTIFACT_ID),
         );
-        $this->user_retriever     = RetrieveUserByIdStub::withUser(
+        $this->user_retriever       = RetrieveUserByIdStub::withUser(
             new \Tracker_Workflow_WorkflowUser([
                 'user_id'     => \Tracker_Workflow_WorkflowUser::ID,
                 'language_id' => 'en',
             ])
         );
-        $this->changeset_creator  = CreateNewChangesetStub::withReturnChangeset(
+        $this->changeset_creator    = CreateNewChangesetStub::withReturnChangeset(
             ChangesetTestBuilder::aChangeset('9667')->build()
         );
+        $this->status_retriever     = RetrieveStatusFieldStub::withNoField();
+        $this->done_value_retriever = $this->createStub(DoneValueRetriever::class);
     }
 
     public function handlePotentialReferencesReceived(): void
     {
-        $text_with_potential_references = sprintf(
-            "closes art#%d\nimplements art#%d",
-            self::FIRST_ARTIFACT_ID,
-            self::SECOND_ARTIFACT_ID,
-        );
-
-        $first_done_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(402, 'Closed', 'Irrelevant', 1, false);
-        $second_done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(940, 'Done', 'Irrelevant', 1, false);
-
         $status_value_retriever = $this->createStub(StatusValueRetriever::class);
-        $done_value_retriever   = $this->createStub(DoneValueRetriever::class);
-        $done_value_retriever->method('getFirstDoneValueUserCanRead')->willReturnOnConsecutiveCalls(
-            $first_done_value,
-            $second_done_value
-        );
 
         $handler = new ArtifactClosingReferencesHandler(
             $this->logger,
             $this->reference_extractor,
             $this->artifact_retriever,
             $this->user_retriever,
+            new ArtifactWasClosedCache(),
             new ArtifactCloser(
-                RetrieveStatusFieldStub::withSuccessiveFields(
-                    $this->getStatusField(564, $first_done_value),
-                    $this->getStatusField(618, $second_done_value)
-                ),
+                $this->status_retriever,
                 $status_value_retriever,
-                $done_value_retriever,
+                $this->done_value_retriever,
                 $this->logger,
                 CreateCommentOnlyChangesetStub::withChangeset(ChangesetTestBuilder::aChangeset('4706')->build()),
                 $this->changeset_creator
             )
         );
+        $user    = UserTestBuilder::aUser()->withUserName('meisinger')->build();
         $handler->handlePotentialReferencesReceived(
             new PotentialReferencesReceived(
-                $text_with_potential_references,
+                [
+                    new TextWithPotentialReferences(
+                        sprintf('closes art #%d', self::FIRST_ARTIFACT_ID),
+                        ReferenceStringStub::fromString('git #linkable/b9ead7cb'),
+                        UserName::fromUser($user)
+                    ),
+                    new TextWithPotentialReferences(
+                        sprintf('implements art #%d', self::SECOND_ARTIFACT_ID),
+                        ReferenceStringStub::fromString('git #linkable/e43c62bb'),
+                        UserName::fromUser($user)
+                    ),
+                ],
                 $this->project,
-                UserTestBuilder::aUser()->withUserName('meisinger')->build(),
-                ReferenceStringStub::fromString('git #linkable/b9ead7cb')
             )
         );
     }
 
     public function testItClosesReferencedArtifacts(): void
     {
+        $this->mockDoneValuesAreFound();
+
         $this->handlePotentialReferencesReceived();
 
         self::assertTrue($this->logger->hasDebugThatContains('Closed artifact #' . self::FIRST_ARTIFACT_ID));
@@ -151,9 +157,9 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItSkipsNonArtifactReferences(): void
     {
-        $this->reference_extractor = ExtractReferencesStub::withReferenceInstances(
-            $this->getNonArtifactReferenceInstance('doc', 309),
-            $this->getNonArtifactReferenceInstance('custom', 95)
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getNonArtifactReferenceInstance('doc', 309)],
+            [$this->getNonArtifactReferenceInstance('custom', 95)]
         );
 
         $this->handlePotentialReferencesReceived();
@@ -162,9 +168,9 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItSkipsReferencesWhoseContextKeywordIsNotAClosingKeyword(): void
     {
-        $this->reference_extractor = ExtractReferencesStub::withReferenceInstances(
-            $this->getArtifactReferenceInstance('not_closing', 'art', self::FIRST_ARTIFACT_ID, $this->project),
-            $this->getArtifactReferenceInstance('not_closing', 'story', self::SECOND_ARTIFACT_ID, $this->project)
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('not_closing', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+            [$this->getArtifactReferenceInstance('not_closing', 'story', self::SECOND_ARTIFACT_ID, $this->project)]
         );
 
         $this->handlePotentialReferencesReceived();
@@ -174,9 +180,9 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
     public function testItSkipsReferencesToArtifactsFromADifferentProjectThanTheEvent(): void
     {
         $other_project             = ProjectTestBuilder::aProject()->withId(113)->build();
-        $this->reference_extractor = ExtractReferencesStub::withReferenceInstances(
-            $this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $other_project),
-            $this->getArtifactReferenceInstance('implements', 'story', self::SECOND_ARTIFACT_ID, $other_project),
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $other_project)],
+            [$this->getArtifactReferenceInstance('implements', 'story', self::SECOND_ARTIFACT_ID, $other_project)]
         );
 
         $this->handlePotentialReferencesReceived();
@@ -185,7 +191,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItSkipsArtifactsUserCannotSee(): void
     {
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withNoArtifact();
+        $this->artifact_retriever = RetrieveArtifactStub::withNoArtifact();
 
         $this->handlePotentialReferencesReceived();
         self::assertFalse($this->logger->hasDebugRecords());
@@ -193,10 +199,55 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItLogsErrorsAtArtifactClosure(): void
     {
+        $this->mockDoneValuesAreFound();
         $this->changeset_creator = CreateNewChangesetStub::withException(new \Tracker_ChangesetNotCreatedException());
 
         $this->handlePotentialReferencesReceived();
         self::assertTrue($this->logger->hasErrorRecords());
+    }
+
+    public function testItSkipsArtifactsThatItHasAlreadyClosedBefore(): void
+    {
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('close', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+            [$this->getArtifactReferenceInstance('fix', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+        );
+
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts(
+            $this->mockArtifact('bug', self::FIRST_ARTIFACT_ID),
+            $this->mockArtifact('bug', self::FIRST_ARTIFACT_ID),
+        );
+
+        $this->mockDoneValuesAreFound();
+
+        $this->handlePotentialReferencesReceived();
+
+        self::assertSame(1, $this->changeset_creator->getCallsCount());
+    }
+
+    public function testItSkipsAfter50ReferencesAtOnceToLimitResourceUsage(): void
+    {
+        $reference_instances = [];
+        $artifacts           = [];
+        for ($i = 1; $i <= 51; $i++) {
+            $reference_instances[] = $this->getArtifactReferenceInstance('close', 'art', $i, $this->project);
+            $artifacts[]           = $this->mockArtifact('story', $i);
+        }
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances($reference_instances, []);
+        $this->artifact_retriever  = RetrieveArtifactStub::withArtifacts(...$artifacts);
+
+        $done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(7682, 'Closed', 'Irrelevant', 1, false);
+
+        $status_field           = $this->getStatusField(718, $done_value);
+        $this->status_retriever = RetrieveStatusFieldStub::withField($status_field);
+        $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willReturn($done_value);
+
+        $this->handlePotentialReferencesReceived();
+
+        self::assertSame(50, $this->changeset_creator->getCallsCount());
+        self::assertTrue(
+            $this->logger->hasInfoThatContains('Found more than 50 references, the rest will be skipped.')
+        );
     }
 
     private function getArtifactReferenceInstance(
@@ -262,5 +313,21 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         $artifact->method('getTracker')->willReturn($tracker);
         $artifact->method('isOpen')->willReturn(true);
         return $artifact;
+    }
+
+    private function mockDoneValuesAreFound(): void
+    {
+        $first_done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(402, 'Closed', 'Irrelevant', 1, false);
+
+        $second_done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(940, 'Done', 'Irrelevant', 1, false);
+
+        $this->status_retriever = RetrieveStatusFieldStub::withSuccessiveFields(
+            $this->getStatusField(564, $first_done_value),
+            $this->getStatusField(618, $second_done_value),
+        );
+        $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willReturnOnConsecutiveCalls(
+            $first_done_value,
+            $second_done_value
+        );
     }
 }

@@ -18,7 +18,6 @@
  *
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\SVNCore\CoreApacheConfRepository;
@@ -27,23 +26,14 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class SVN_Apache_SvnrootConfTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     protected function setUp(): void
     {
-        ForgeConfig::setFeatureFlag('disable_php_based_svn_auth', '1');
         ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Platform');
-        ForgeConfig::set('sys_dbhost', 'db_server');
-        ForgeConfig::set('sys_dbname', 'db');
         ForgeConfig::set('svn_prefix', '/bla');
-        ForgeConfig::set('sys_dbauth_user', 'dbauth_user');
 
         ForgeConfig::set('sys_custom_dir', vfsStream::setup('root', null, ['conf' => []])->url());
-        ForgeConfig::set(
-            \Tuleap\DB\DBAuthUserConfig::PASSWORD,
-            ForgeConfig::encryptValue(new \Tuleap\Cryptography\ConcealedString('dbauth_passwd')),
-        );
     }
 
     private function givenSvnrootForTwoGroups(): SVN_Apache_SvnrootConf
@@ -57,43 +47,19 @@ final class SVN_Apache_SvnrootConfTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        $event_manager = new class extends EventManager
-        {
-            public function processEvent($event_name, $params = [])
-            {
-                $params['svn_apache_auth'] = null;
-            }
-        };
-
-        $cache_parameters = \Mockery::spy(\Tuleap\SVNCore\Cache\Parameters::class);
-
-        $factory = new SVN_Apache_Auth_Factory($event_manager, $cache_parameters);
-
-        return new SVN_Apache_SvnrootConf($factory, $repositories);
+        return new SVN_Apache_SvnrootConf(new SVN_Apache(), $repositories);
     }
 
-    private function givenAFullApacheConfWithModPerl()
+    private function givenAFullApacheConf(): string
     {
         $svnroot = $this->givenSvnrootForTwoGroups();
         return $svnroot->getFullConf();
     }
 
-    public function testFullConfShouldWrapEveryThing()
+    public function testConfGeneration(): void
     {
-        $conf = $this->givenAFullApacheConfWithModPerl();
+        $conf = $this->givenAFullApacheConf();
 
-        $this->assertMatchesRegularExpression('/PerlLoadModule Apache::Tuleap/', $conf);
-        $this->thenThereAreTwoLocationDefinedGpigAndGarden($conf);
-        $this->thenThereAreOnlyOneCustomLogStatement($conf);
-    }
-
-    public function testFullConfDoesNotLoadPerlWhenApacheSVNAuthIsNotEnabled(): void
-    {
-        ForgeConfig::setFeatureFlag('disable_php_based_svn_auth', '0');
-        $conf = $this->givenAFullApacheConfWithModPerl();
-
-        $this->assertDoesNotMatchRegularExpression('/PerlLoadModule Apache::Tuleap/', $conf);
-        $this->assertStringNotContainsString('PerlLoadModule Apache::Tuleap', $conf);
         $this->assertStringContainsString('AuthBasicProvider anon', $conf);
         $this->thenThereAreTwoLocationDefinedGpigAndGarden($conf);
         $this->thenThereAreOnlyOneCustomLogStatement($conf);
@@ -117,7 +83,7 @@ final class SVN_Apache_SvnrootConfTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_LOG_PATH, '${APACHE_LOG_DIR}/tuleap_svn.log');
 
-        $conf = $this->givenAFullApacheConfWithModPerl();
+        $conf = $this->givenAFullApacheConf();
         $this->assertMatchesRegularExpression('%\${APACHE_LOG_DIR}/tuleap_svn\.log%', $conf);
     }
 }

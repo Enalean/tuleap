@@ -483,7 +483,7 @@ msgid "Cascade deletion to wiki service"
 msgstr ""
 
 #, php-format
-msgid "Change <em>%1$s</em>"
+msgid "Change \"%1$s\""
 msgstr ""
 
 msgid "Change Log"
@@ -920,9 +920,6 @@ msgid "Error while creating news. Check that you have right permissions."
 msgstr ""
 
 msgid "Error while getting file checksum."
-msgstr ""
-
-msgid "Error while searching document history!"
 msgstr ""
 
 msgid "Error while searching for old versions"
@@ -2157,6 +2154,9 @@ msgid "Version date"
 msgstr ""
 
 msgid "Version label"
+msgstr ""
+
+msgid "Version name"
 msgstr ""
 
 msgid "Version name:"

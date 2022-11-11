@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Notifications;
 
 use Mockery;
 use PFUser;
+use Psr\Log\NullLogger;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Selectbox;
@@ -31,6 +32,9 @@ use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use UserManager;
 
+/**
+ * @covers \Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode
+ */
 final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -128,7 +132,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient1' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -152,7 +156,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient2' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -182,7 +186,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -210,7 +214,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             [],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -238,7 +242,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             [],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -273,7 +277,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient1' => true, 'recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -303,7 +307,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -333,7 +337,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -363,7 +367,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, false)
+            $this->recipients_manager->getRecipients($changeset, false, new NullLogger())
         );
     }
 
@@ -394,7 +398,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -425,7 +429,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -465,7 +469,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             [],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -496,7 +500,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -529,7 +533,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -562,7 +566,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient2' => true, 'recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 
@@ -595,7 +599,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
         );
     }
 

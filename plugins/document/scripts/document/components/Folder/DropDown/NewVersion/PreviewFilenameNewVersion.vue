@@ -19,19 +19,20 @@
   -->
 
 <template>
-    <preview-filename-property v-bind:item="item">
+    <preview-filename-property v-if="is_file" v-bind:item="item">
         {{ preview }}
     </preview-filename-property>
 </template>
 
 <script setup lang="ts">
 import type { NewVersion } from "../../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { addOriginalFilenameExtension } from "../../../../helpers/add-original-filename-extension";
 import type { DefaultFileNewVersionItem } from "../../../../type";
 import PreviewFilenameProperty from "../../ModalCommon/PreviewFilenameProperty.vue";
+import { isFile } from "../../../../helpers/type-check-helper";
 
 const props = defineProps<{ version: NewVersion; item: DefaultFileNewVersionItem }>();
 
@@ -39,7 +40,14 @@ const { filename_pattern } = useNamespacedState<ConfigurationState>("configurati
     "filename_pattern",
 ]);
 
+const is_file = computed((): boolean => {
+    return isFile(props.item);
+});
+
 const preview = computed((): string => {
+    if (!isFile(props.item)) {
+        return "";
+    }
     return addOriginalFilenameExtension(
         filename_pattern.value
             // eslint-disable-next-line no-template-curly-in-string
@@ -53,10 +61,4 @@ const preview = computed((): string => {
         props.item.file_properties.file
     );
 });
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

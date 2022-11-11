@@ -26,8 +26,12 @@ namespace Tuleap\Baseline;
 use HTTPRequest;
 use Project;
 use TemplateRenderer;
+use Tuleap\Baseline\Adapter\ProjectProxy;
+use Tuleap\Baseline\Adapter\UserProxy;
+use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
@@ -42,33 +46,13 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
 {
     public const PROJECT_NAME_VARIABLE_NAME = 'project_name';
 
-    /**
-     * @var TemplateRenderer
-     */
-    private $template_renderer;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \baselinePlugin
-     */
-    private $plugin;
-    /**
-     * @var ProjectFlagsBuilder
-     */
-    private $project_flags_builder;
-
     public function __construct(
-        \ProjectManager $project_manager,
-        TemplateRenderer $template_renderer,
-        \baselinePlugin $plugin,
-        ProjectFlagsBuilder $project_flags_builder,
+        private \ProjectManager $project_manager,
+        private TemplateRenderer $template_renderer,
+        private \baselinePlugin $plugin,
+        private ProjectFlagsBuilder $project_flags_builder,
+        private Authorizations $authorizations,
     ) {
-        $this->project_manager       = $project_manager;
-        $this->template_renderer     = $template_renderer;
-        $this->plugin                = $plugin;
-        $this->project_flags_builder = $project_flags_builder;
     }
 
 
@@ -119,6 +103,21 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
             $layout->redirect('/projects/' . $project_name);
         }
 
+        $user_proxy    = UserProxy::fromUser($request->getCurrentUser());
+        $project_proxy = ProjectProxy::buildFromProject($project);
+
+        $can_read_baselines_on_project = $this->authorizations->canReadBaselinesOnProject(
+            $user_proxy,
+            $project_proxy
+        );
+        if (! $can_read_baselines_on_project) {
+            $layout->addFeedback(
+                \Feedback::ERROR,
+                dgettext('tuleap-baseline', 'You are not allowed to access baseline service'),
+            );
+            $layout->redirect('/projects/' . $project_name);
+        }
+
         $this->includeCssFiles($layout);
         $this->includeJavascriptFiles($layout);
 
@@ -139,9 +138,14 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
                 'privacy'             => json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR),
                 'project_flags'       => json_encode($this->project_flags_builder->buildProjectFlags($project), JSON_THROW_ON_ERROR),
                 'project_icon'        => EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()),
+                'is_admin'            => $this->authorizations->canUserAdministrateBaselineOnProject(
+                    $user_proxy,
+                    $project_proxy
+                ),
+                'admin_url' => ServiceAdministrationController::getAdminUrl($project),
             ]
         );
-        $layout->footer(["without_content" => true]);
+        $layout->footer(FooterConfiguration::withoutContent());
     }
 
     /**

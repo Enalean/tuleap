@@ -3,19 +3,19 @@
 exports[`SyntaxHelpButton will create a custom element with the button and the popover content 1`] = `
 "
         <fp-popover-button>
-            <button type=\\"button\\" class=\\"btn btn-small rte-button\\" data-button=\\"\\" data-test=\\"help-button\\">
-                <i class=\\"fas fa-question-circle\\" aria-hidden=\\"true\\"></i>
+            <button type="button" class="btn btn-small rte-button" data-button="" data-test="help-button">
+                <i class="fas fa-question-circle" aria-hidden="true"></i>
                 Help
             </button>
             
-        <template data-popover-content=\\"\\">
-            <section data-popover-root=\\"\\">
-                <div class=\\"tlp-popover-header\\">
-                    <h1 class=\\"tlp-popover-title helper-popover-title\\">
+        <template data-popover-content="">
+            <section data-popover-root="">
+                <div class="tlp-popover-header">
+                    <h1 class="tlp-popover-title helper-popover-title">
                         For your information...
                     </h1>
                 </div>
-                <table class=\\"tlp-table\\">
+                <table class="tlp-table">
                     <thead>
                         <tr>
                             <th>Type...</th>
@@ -33,26 +33,26 @@ exports[`SyntaxHelpButton will create a custom element with the button and the p
                         </tr>
                         <tr>
                             <td># Heading 1</td>
-                            <td><h1 class=\\"popover-h1-indentation\\">Heading 1</h1></td>
+                            <td><h1 class="popover-h1-indentation">Heading 1</h1></td>
                         </tr>
                         <tr>
                             <td>## Heading 2</td>
-                            <td><h2 class=\\"popover-h2-indentation\\">Heading 2</h2></td>
+                            <td><h2 class="popover-h2-indentation">Heading 2</h2></td>
                         </tr>
                         <tr>
-                            <td class=\\"popover-link-indentation\\">[Link](https://example.com)</td>
-                            <td><a href=\\"https://example.com\\">Link</a></td>
+                            <td class="popover-link-indentation">[Link](https://example.com)</td>
+                            <td><a href="https://example.com">Link</a></td>
                         </tr>
                         <tr>
                             <td>![Image](/path/image.png)</td>
                             <td>
-                                <div class=\\"popover-image-indentation\\"></div>
+                                <div class="popover-image-indentation"></div>
                             </td>
                         </tr>
                         <tr>
                             <td>&gt; Blockquote</td>
                             <td>
-                                <blockquote class=\\"popover-blockquote-indentation\\">
+                                <blockquote class="popover-blockquote-indentation">
                                     Blockquote
                                 </blockquote>
                             </td>

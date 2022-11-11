@@ -138,10 +138,10 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = new \Project(['group_id' => $this->an_active_project_id, 'access' => \Project::ACCESS_PUBLIC]);
         $user    = new \PFUser(['user_id' => $this->an_active_user_id, 'status' => \PFUser::STATUS_RESTRICTED, 'language_id' => \BaseLanguage::DEFAULT_LANG]);
 
-        $this->user_permissions_dao->shouldReceive('addUserAsProjectMember');
-        $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', M::any());
-        $this->history_dao->shouldReceive('groupAddHistory');
-        $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject');
+        $this->user_permissions_dao->shouldReceive('addUserAsProjectMember')->atLeast()->once();
+        $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', M::any())->atLeast()->once();
+        $this->history_dao->shouldReceive('groupAddHistory')->atLeast()->once();
+        $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject')->atLeast()->once();
 
         $this->add_project_member->addProjectMember($user, $project);
     }
@@ -152,10 +152,10 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = new \Project(['group_id' => $this->an_active_project_id, 'access' => \Project::ACCESS_PUBLIC_UNRESTRICTED]);
         $user    = new \PFUser(['user_id' => $this->an_active_user_id, 'status' => \PFUser::STATUS_RESTRICTED, 'language_id' => \BaseLanguage::DEFAULT_LANG]);
 
-        $this->user_permissions_dao->shouldReceive('addUserAsProjectMember');
-        $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', M::any());
-        $this->history_dao->shouldReceive('groupAddHistory');
-        $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject');
+        $this->user_permissions_dao->shouldReceive('addUserAsProjectMember')->atLeast()->once();
+        $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', M::any())->atLeast()->once();
+        $this->history_dao->shouldReceive('groupAddHistory')->atLeast()->once();
+        $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject')->atLeast()->once();
 
         $this->add_project_member->addProjectMember($user, $project);
     }
@@ -166,10 +166,10 @@ class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = new \Project(['group_id' => $this->an_active_project_id, 'access' => \Project::ACCESS_PRIVATE]);
         $user    = new \PFUser(['user_id' => $this->an_active_user_id, 'status' => \PFUser::STATUS_RESTRICTED, 'language_id' => \BaseLanguage::DEFAULT_LANG]);
 
-        $this->user_permissions_dao->shouldReceive('addUserAsProjectMember');
-        $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', M::any());
-        $this->history_dao->shouldReceive('groupAddHistory');
-        $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject');
+        $this->user_permissions_dao->shouldReceive('addUserAsProjectMember')->atLeast()->once();
+        $this->event_manager->shouldReceive('processEvent')->with('project_admin_add_user', M::any())->atLeast()->once();
+        $this->history_dao->shouldReceive('groupAddHistory')->atLeast()->once();
+        $this->ugroup_binding->shouldReceive('reloadUgroupBindingInProject')->atLeast()->once();
 
         $this->add_project_member->addProjectMember($user, $project);
     }

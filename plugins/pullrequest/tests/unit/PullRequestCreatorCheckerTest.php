@@ -54,15 +54,16 @@ final class PullRequestCreatorCheckerTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->build();
 
         $this->dao->expects(self::once())
-            ->method('isPullRequestAlreadyExisting')
+            ->method('isPullRequestWithSameBranchesAndSourceReferenceAlreadyExisting')
             ->willReturn(false);
 
         $this->creator_checker->checkIfPullRequestCanBeCreated(
             $user,
             $this->buildRepository(),
             'dev',
+            'abc123',
             $this->buildRepository(),
-            'main'
+            'main',
         );
     }
 
@@ -71,15 +72,16 @@ final class PullRequestCreatorCheckerTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->build();
 
         $this->dao->expects(self::once())
-            ->method('isPullRequestAlreadyExisting')
+            ->method('isPullRequestWithSameBranchesAndSourceReferenceAlreadyExisting')
             ->willReturn(false);
 
         $this->creator_checker->checkIfPullRequestCanBeCreated(
             $user,
             $this->buildForkedRepository(),
             'dev',
+            'abc123',
             $this->buildRepository(),
-            'main'
+            'main',
         );
     }
 
@@ -93,8 +95,9 @@ final class PullRequestCreatorCheckerTest extends TestCase
             $user,
             $this->buildRepository(),
             'dev',
+            'abc123',
             $this->buildRepository(),
-            'main'
+            'main',
         );
     }
 
@@ -108,8 +111,9 @@ final class PullRequestCreatorCheckerTest extends TestCase
             $user,
             $this->buildAnotherRepositoryNotAFork(),
             'dev',
+            'abc123',
             $this->buildRepository(),
-            'main'
+            'main',
         );
     }
 
@@ -123,8 +127,9 @@ final class PullRequestCreatorCheckerTest extends TestCase
             $user,
             $this->buildRepository(),
             'dev',
+            'abc123',
             $this->buildRepositoryMigratedOnGerrit(),
-            'main'
+            'main',
         );
     }
 
@@ -138,17 +143,18 @@ final class PullRequestCreatorCheckerTest extends TestCase
             $user,
             $this->buildRepository(),
             'dev',
+            'abc123',
             $this->buildRepository(),
-            'dev'
+            'dev',
         );
     }
 
-    public function testItThrowsAnExceptionIfTheSamePullRequestAlreadyExists(): void
+    public function testItThrowsAnExceptionIfTheSamePullRequestWithSameBranchesAndSourceReferenceAlreadyExists(): void
     {
         $user = UserTestBuilder::anActiveUser()->build();
 
         $this->dao->expects(self::once())
-            ->method('isPullRequestAlreadyExisting')
+            ->method('isPullRequestWithSameBranchesAndSourceReferenceAlreadyExisting')
             ->willReturn(true);
 
         $this->expectException(PullRequestAlreadyExistsException::class);
@@ -157,8 +163,9 @@ final class PullRequestCreatorCheckerTest extends TestCase
             $user,
             $this->buildRepository(),
             'dev',
+            'abc123',
             $this->buildRepository(),
-            'main'
+            'main',
         );
     }
 

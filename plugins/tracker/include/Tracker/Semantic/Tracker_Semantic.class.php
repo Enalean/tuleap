@@ -141,10 +141,10 @@ abstract class Tracker_Semantic
     public function getUrl()
     {
         $query = http_build_query([
-                'tracker'  => $this->tracker->getId(),
-                'func'     => 'admin-semantic',
-                'semantic' => $this->getShortName(),
-            ]);
+            'tracker'  => $this->tracker->getId(),
+            'func'     => 'admin-semantic',
+            'semantic' => $this->getShortName(),
+        ]);
         return TRACKER_BASE_URL . '/?' . $query;
     }
 

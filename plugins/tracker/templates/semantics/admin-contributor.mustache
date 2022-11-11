@@ -1,0 +1,65 @@
+<div class="tlp-framed">
+    <p>
+         <a href="{{ tracker_admin_semantic_url }}" class="back-to-semantics">
+            <i class="fas fa-long-arrow-alt-left" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-tracker | Back to semantics {{/ dgettext }}
+         </a>
+    </p>
+
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-contributor">{{ label }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                {{^ has_possible_contributor }}
+                    {{# dgettext }}
+                        tuleap-tracker | You cannot define the contributor/assignee semantic since there isn't any user list field in the tracker
+                    {{/ dgettext }}
+                {{/ has_possible_contributor }}
+                {{# has_possible_contributor }}
+                    <form method="POST" action="{{ semantic_contributor_url }}">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+                        <div class="tlp-form-element">
+                            <p>{{# dgettext }} tuleap-tracker | The contributor(s)/assignee(s) are the person(s) who are responsible for the work needed to complete the artifact. {{/ dgettext }}</p>
+                            <label class="tlp-label" for="semantic-contributor">
+                                 {{# dgettext }} tuleap-tracker | Field used by semantic {{/ dgettext }}
+                             </label>
+                            <select name="list_field_id" id="semantic-contributor" class="tlp-select tlp-select-adjusted">
+                                {{^ has_selected_contributor }}
+                                    <option value="-1" selected="selected">
+                                        {{# dgettext }}
+                                            tuleap-tracker | Choose a field...
+                                        {{/ dgettext }}
+                                     </option>
+                                {{/ has_selected_contributor }}
+                                {{# possible_contributors }}
+                                     <option value="{{ id }}" {{# selected }} selected{{/ selected }}>{{ title }}</option>
+                                {{/ possible_contributors }}
+                            </select>
+                        </div>
+
+                        <div class="tlp-pane-section-submit">
+                            {{^ has_selected_contributor }}
+                                <button type="submit" class="tlp-button-primary" name="update">
+                                    {{# dgettext }} tuleap-tracker | Save semantic {{/ dgettext }}
+                                </button>
+                            {{/ has_selected_contributor }}
+                            {{# has_selected_contributor }}
+                                <button type="submit" class="tlp-button-primary" name="update">
+                                    {{# dgettext }} tuleap-tracker | Update semantic {{/ dgettext }}
+                                </button>
+                                <button type="submit" class="tlp-button-danger tlp-button-outline" name="delete">
+                                    {{# dgettext }} tuleap-tracker | Unset this semantic {{/ dgettext }}
+                                </button>
+                            {{/ has_selected_contributor }}
+                        </div>
+                    </form>
+                {{/ has_possible_contributor }}
+            </section>
+        </div>
+    </section>
+</div>

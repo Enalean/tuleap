@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use CrossReference;
 use DateTimeImmutable;
-use Project;
 use Psr\Log\NullLogger;
 use Reference;
 use ReferenceManager;
@@ -39,8 +38,9 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
@@ -97,7 +97,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             "https://example.com/root/repo01",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -180,7 +180,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             "https://example.com/root/repo01",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -217,7 +217,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             "https://example.com/root/repo01",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -271,7 +271,7 @@ class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             "https://example.com/root/repo01",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

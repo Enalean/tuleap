@@ -576,7 +576,7 @@ INSERT INTO email_gateway_salt (salt)
 --
 -- SVN default cache parameters
 --
-INSERT INTO svn_cache_parameter VALUES ('maximum_credentials' , '10'), ('lifetime', '5');
+INSERT INTO svn_cache_parameter VALUES ('lifetime', '5');
 
 --
 -- Default dashboards

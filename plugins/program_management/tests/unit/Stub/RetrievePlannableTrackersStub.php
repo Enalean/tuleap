@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,32 +23,36 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 
+/**
+ * @psalm-immutable
+ */
 final class RetrievePlannableTrackersStub implements RetrievePlannableTrackers
 {
     /**
-     * @var int[]
+     * @var TrackerReference[]
      */
-    private array $ids;
+    private array $tracker_references;
 
     /**
-     * @param int[] $ids
+     * @param TrackerReference[] $tracker_references
      */
-    public function __construct(array $ids)
+    public function __construct(array $tracker_references)
     {
-        $this->ids = $ids;
+        $this->tracker_references = $tracker_references;
     }
 
     /**
-     * @return int[]
+     * @return TrackerReference[]
      */
     public function getPlannableTrackersOfProgram(int $program_id): array
     {
-        return $this->ids;
+        return $this->tracker_references;
     }
 
-    public static function buildIds(int ...$ids): self
+    public static function build(TrackerReference ...$tracker_references): self
     {
-        return new self($ids);
+        return new self($tracker_references);
     }
 }

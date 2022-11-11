@@ -1,0 +1,110 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%{ current_project_name } is currently not linked to a GitLab group"
+msgstr ""
+
+msgid "Allow artifact closure"
+msgstr ""
+
+msgid ""
+"An error occurred while linking the selected group and synchronizing its "
+"repositories: %{ error }"
+msgstr ""
+
+msgid "Associated group configuration"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Configuration"
+msgstr ""
+
+msgid "Configure selected group"
+msgstr ""
+
+msgid "Fetch GitLab groups"
+msgstr ""
+
+msgid "GitLab access token (personal or group)"
+msgstr ""
+
+msgid "GitLab access token scope must contain at least: api."
+msgstr ""
+
+msgid "GitLab group selection"
+msgstr ""
+
+msgid "GitLab server"
+msgstr ""
+
+msgid "GitLab server URL"
+msgstr ""
+
+msgid "Group"
+msgstr ""
+
+msgid ""
+"If selected, artifacts of this project can be closed with GitLab commit "
+"messages from the selected repository."
+msgstr ""
+
+msgid ""
+"If set, this prefix will be automatically added to the branch name in the "
+"create GitLab branch action."
+msgstr ""
+
+msgid "Link a GitLab group to import the GitLab projects of the group."
+msgstr ""
+
+msgid "Link a GitLab group to this project"
+msgstr ""
+
+msgid "Link group and synchronize"
+msgstr ""
+
+msgid "Linking and synchronizing..."
+msgstr ""
+
+msgid ""
+"Network error while fetching the GitLab groups. Please verify your GitLab "
+"server url validity."
+msgstr ""
+
+msgid ""
+"Please note that the following settings will be applied to all linked "
+"repositories and may be changed by each repository afterwards."
+msgstr ""
+
+msgid "Prefix"
+msgstr ""
+
+msgid "Prefix the branch name"
+msgstr ""
+
+msgid "Server"
+msgstr ""
+
+msgid ""
+"The access token will be used to fetch repositories, configure project hooks "
+"and automatically write comments on GitLab commit and merge requests. It "
+"will also be used to extract references to Tuleap from GitLab tags."
+msgstr ""
+
+msgid "There isn't any group, please verify the permissions on GitLab's side"
+msgstr ""
+
+msgid "Unable to connect to the GitLab server, please check your credentials."
+msgstr ""
+
+msgid "Unable to reach the GitLab server: %{ error }"
+msgstr ""

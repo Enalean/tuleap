@@ -45,13 +45,11 @@ class TransitionListValidator
             $from = null;
             $to   = $value;
         } else {
-            /**
-             * @var $last_changeset_value Tracker_Artifact_ChangesetValue_List|Tracker_FormElement_Field_List_BindValue
-             */
             $last_changeset_value = $last_changeset->getValue($field);
-            $list_values          = $last_changeset_value->getListValues();
-            $from                 = reset($list_values);
-            $to                   = $this->extractValueSwitchFieldType($value);
+            \assert($last_changeset_value instanceof Tracker_Artifact_ChangesetValue_List);
+            $list_values = $last_changeset_value->getListValues();
+            $from        = reset($list_values);
+            $to          = $this->extractValueSwitchFieldType($value);
         }
         $transition_id = $this->transition_factory->getTransitionId($field->getTracker(), $from, $to);
 

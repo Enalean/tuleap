@@ -146,11 +146,12 @@ class BaselineController
      */
     private function throw404Exception($id): void
     {
+        $message = sprintf(
+            dgettext('tuleap-baseline', 'No baseline found with id %u'),
+            $id
+        );
         throw new NotFoundRestException(
-            sprintf(
-                dgettext('tuleap-baseline', 'No baseline found with id %u'),
-                $id
-            )
+            $message
         );
     }
 

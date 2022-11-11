@@ -318,14 +318,15 @@ class Request
         } else {
             $status = (int) $status;
             $reason = ['200' => 'OK',
-                            '302' => 'Found',
-                            '303' => 'See Other',
-                            '304' => 'Not Modified',
-                            '400' => 'Bad Request',
-                            '401' => 'Unauthorized',
-                            '403' => 'Forbidden',
-                            '404' => 'Not Found',
-                            '412' => 'Precondition Failed'];
+                '302' => 'Found',
+                '303' => 'See Other',
+                '304' => 'Not Modified',
+                '400' => 'Bad Request',
+                '401' => 'Unauthorized',
+                '403' => 'Forbidden',
+                '404' => 'Not Found',
+                '412' => 'Precondition Failed',
+            ];
             // FIXME: is it always okay to send HTTP/1.1 here, even for older clients?
             header(sprintf("HTTP/1.1 %d %s", $status, $reason[$status]));
         }

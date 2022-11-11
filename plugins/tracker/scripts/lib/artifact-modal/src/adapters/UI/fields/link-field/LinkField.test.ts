@@ -38,7 +38,7 @@ import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
-import type { LinkSelector } from "@tuleap/link-selector";
+import type { LinkSelector, GroupCollection } from "@tuleap/link-selector";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
@@ -46,6 +46,9 @@ import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
+import { selectOrThrow } from "@tuleap/dom";
+import { PossibleParentsGroup } from "./PossibleParentsGroup";
+import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -150,11 +153,7 @@ describe("LinkField", () => {
 
                 renderNote(host, target);
 
-                const badge = target.querySelector("[data-test=artifact-cross-ref-badge]");
-                if (!badge) {
-                    throw new Error("The note should have a cross reference badge, none found.");
-                }
-
+                const badge = selectOrThrow(target, "[data-test=artifact-cross-ref-badge]");
                 expect(badge.textContent?.trim()).toBe("story #123");
                 expect(badge.classList).toContain("tlp-swatch-red-wine");
             });
@@ -162,74 +161,65 @@ describe("LinkField", () => {
     });
 
     describe(`setters`, () => {
-        describe(`current_link_type`, () => {
-            let link_selector: LinkSelectorStub;
+        describe(`setCurrentLinkType()`, () => {
+            let link_selector: LinkSelectorStub, host: LinkField;
 
             beforeEach(() => {
-                link_selector = LinkSelectorStub.withResetSelectionCallCount();
+                link_selector = LinkSelectorStub.build();
+
+                const initial_dropdown_content: GroupCollection = [];
+                host = {
+                    controller: {
+                        retrievePossibleParentsGroups(): PromiseLike<GroupCollection> {
+                            return Promise.resolve([PossibleParentsGroup.buildEmpty()]);
+                        },
+                    } as LinkFieldControllerType,
+                    link_selector: link_selector as LinkSelector,
+                    current_link_type: LinkTypeStub.buildUntyped(),
+                    dropdown_content: initial_dropdown_content,
+                } as LinkField;
             });
 
-            const setType = (
-                current_link_type: LinkType | undefined,
-                new_link_type: LinkType | undefined
-            ): LinkType => {
-                const host = {
-                    link_selector: link_selector as LinkSelector,
-                    current_link_type,
-                } as LinkField;
+            const setType = (new_link_type: LinkType | undefined): LinkType => {
                 return setCurrentLinkType(host, new_link_type);
             };
 
             it(`defaults to Untyped link`, () => {
-                const link_type = setType(undefined, undefined);
+                const link_type = setType(undefined);
 
                 expect(link_type.shortname).toBe(UNTYPED_LINK);
             });
 
-            it(`Given that the current link type is a custom type,
-                When the type is changed to reverse _is_child (Parent),
-                Then the selection is reset`, () => {
-                const current_link_type = LinkTypeStub.buildReverseCustom();
+            it(`when the type is changed to reverse _is_child (Parent),
+                it will retrieve the possible parents and set the dropdown content with them`, async () => {
+                host.current_link_type = LinkTypeStub.buildReverseCustom();
+
                 const link_type = LinkTypeStub.buildParentLinkType();
-                const result = setType(current_link_type, link_type);
+                const result = setType(link_type);
                 expect(result).toBe(link_type);
-                expect(link_selector.getResetCallCount()).toBe(1);
+                expect(host.dropdown_content).toHaveLength(1);
+                expect(host.dropdown_content[0].is_loading).toBe(true);
+
+                await result; // wait for the promise
+                expect(host.dropdown_content).toHaveLength(1);
+                expect(host.dropdown_content[0].is_loading).toBe(false);
             });
 
-            it(`Given that the current link type is reverse _is_child (Parent),
-                When the type is changed to another type,
-                Then the selection is reset`, () => {
-                const current_link_type = LinkTypeStub.buildParentLinkType();
-                const link_type = LinkTypeStub.buildReverseCustom();
-                const result = setType(current_link_type, link_type);
+            it(`when the type is changed to another type,
+                it will clear the dropdown content`, () => {
+                const link_type = setType(LinkTypeStub.buildUntyped());
+                const result = setType(link_type);
                 expect(result).toBe(link_type);
-                expect(link_selector.getResetCallCount()).toBe(1);
-            });
-
-            it(`Given that the current link type is NOT reverse _is_child (Parent),
-                When the new type is NOT reverse _is_child (Parent),
-                Then the selection will not be reset`, () => {
-                const current_link_type = LinkTypeStub.buildUntyped();
-                const link_type = LinkTypeStub.buildReverseCustom();
-                const result = setType(current_link_type, link_type);
-                expect(result).toBe(link_type);
-                expect(link_selector.getResetCallCount()).toBe(0);
+                expect(host.dropdown_content).toHaveLength(0);
             });
         });
 
-        describe(`allowed_link_types`, () => {
+        describe(`setAllowedTypes()`, () => {
             let host: LinkField;
 
             beforeEach(() => {
                 host = {
-                    controller: {
-                        setSelectedLinkType: (
-                            link_selector: LinkSelector,
-                            type: LinkType
-                        ): LinkType => {
-                            return type;
-                        },
-                    } as LinkFieldControllerType,
+                    current_link_type: LinkTypeStub.buildUntyped(),
                 } as LinkField;
             });
 
@@ -245,18 +235,19 @@ describe("LinkField", () => {
                 expect(allowed_types.is_parent_type_disabled).toBe(false);
             });
 
-            it("When the current link is a reverse child and the parent link type is disabled, then it should default to Untyped link", () => {
+            it(`When the current link is a reverse child and the parent link type is disabled,
+                then it should default to Untyped link`, () => {
                 host.current_link_type = LinkTypeStub.buildParentLinkType();
                 setTypes(
                     CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                         VerifyHasParentLinkStub.withParentLink(),
-                        [
+                        AllowedLinksTypesCollection.buildFromTypesRepresentations([
                             {
                                 shortname: IS_CHILD_LINK_TYPE,
                                 forward_label: "Child",
                                 reverse_label: "Parent",
                             },
-                        ]
+                        ])
                     )
                 );
 
@@ -265,26 +256,24 @@ describe("LinkField", () => {
         });
 
         describe("-", () => {
-            let host: LinkField, link_selector: LinkSelectorStub;
+            let host: LinkField;
 
             beforeEach(() => {
-                link_selector = LinkSelectorStub.withResetSelectionCallCount();
                 host = {
                     artifact_link_select: document.implementation
                         .createHTMLDocument()
                         .createElement("select"),
-                    link_selector: link_selector as LinkSelector,
                     controller: {
                         displayAllowedTypes: (): CollectionOfAllowedLinksTypesPresenters => {
                             return CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
                                 VerifyHasParentLinkStub.withNoParentLink(),
-                                [
+                                AllowedLinksTypesCollection.buildFromTypesRepresentations([
                                     {
                                         shortname: IS_CHILD_LINK_TYPE,
                                         forward_label: "Child",
                                         reverse_label: "Parent",
                                     },
-                                ]
+                                ])
                             );
                         },
                     } as LinkFieldControllerType,
@@ -315,16 +304,14 @@ describe("LinkField", () => {
                 });
 
                 it(`should display allowed types when new links have been edited,
-                    clear the link-selector selection,
                     and focus the <select> element once done`, () => {
-                    jest.spyOn(host.artifact_link_select, "focus");
+                    const focus = jest.spyOn(host.artifact_link_select, "focus");
 
                     setNewLinks(host, NewLinkCollectionPresenter.fromLinks([]));
 
                     expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
                     expect(host.allowed_link_types.types).not.toHaveLength(0);
-                    expect(link_selector.getResetCallCount()).toBe(1);
-                    expect(host.artifact_link_select.focus).toHaveBeenCalledTimes(1);
+                    expect(focus).toHaveBeenCalledTimes(1);
                 });
             });
         });

@@ -45,7 +45,7 @@ class TypeTablePresenter
     public function __construct(
         TypePresenter $type,
         array $artifact_links,
-        $is_reverse_artifact_links,
+        public bool $is_reverse_artifact_links,
         Tracker_FormElement_Field_ArtifactLink $field,
     ) {
         $this->table_id   = self::TABLE_ID_PREFIX . $type->shortname;
@@ -53,7 +53,6 @@ class TypeTablePresenter
         $this->type_label = $this->fetchTabLabel($type, $is_reverse_artifact_links);
         $this->tracker_id = $field->getTracker()->getId();
 
-        $language                 = $GLOBALS['Language'];
         $this->id_label           = dgettext('tuleap-tracker', 'Artifact ID');
         $this->project_label      = dgettext('tuleap-tracker', 'Project');
         $this->tracker_label      = dgettext('tuleap-tracker', 'Tracker');
@@ -84,7 +83,7 @@ class TypeTablePresenter
         );
     }
 
-    private function fetchTabLabel($type, $is_reverse_artifact_links)
+    private function fetchTabLabel($type, bool $is_reverse_artifact_links): string
     {
         $type_label = '';
         if ($is_reverse_artifact_links) {

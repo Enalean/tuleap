@@ -37,7 +37,7 @@ class WorkflowManager
                 [
                     'tracker' => (int) $this->tracker->id,
                     'func'    => Workflow::FUNC_ADMIN_RULES,
-                    ]
+                ]
             ));
             $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance());
             $action            = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $rule_date_factory, $token);
@@ -46,7 +46,7 @@ class WorkflowManager
                 [
                     'tracker' => (int) $this->tracker->id,
                     'func'    => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
-                    ]
+                ]
             ));
 
             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR . '/../templates');

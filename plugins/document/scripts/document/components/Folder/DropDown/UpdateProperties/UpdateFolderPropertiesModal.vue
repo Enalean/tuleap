@@ -84,7 +84,7 @@ export default {
     },
     computed: {
         ...mapState(["current_folder"]),
-        ...mapState("configuration", ["project_id"]),
+        ...mapState("configuration", ["project_id", "is_status_property_used"]),
         ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
             return this.$gettext("Update properties");
@@ -97,7 +97,10 @@ export default {
         },
     },
     beforeMount() {
-        this.item_to_update = transformFolderPropertiesForRecursionAtUpdate(this.item);
+        this.item_to_update = transformFolderPropertiesForRecursionAtUpdate(
+            this.item,
+            this.is_status_property_used
+        );
     },
     mounted() {
         this.modal = createModal(this.$el);
@@ -112,7 +115,10 @@ export default {
         emitter.on("properties-recursion-list", this.setPropertiesListUpdate);
         emitter.on("properties-recursion-option", this.setRecursionOption);
         emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
-        emitter.on("update-status-property", this.updateStatusValue);
+        if (this.is_status_property_used) {
+            emitter.on("update-status-property", this.updateStatusValue);
+            emitter.on("update-status-recursion", this.updateStatusRecursion);
+        }
         emitter.on("update-title-property", this.updateTitleValue);
         emitter.on("update-description-property", this.updateDescriptionValue);
         emitter.on("update-custom-property", this.updateCustomProperty);
@@ -124,7 +130,10 @@ export default {
             "update-multiple-properties-list-value",
             this.updateMultiplePropertiesListValue
         );
-        emitter.off("update-status-property", this.updateStatusValue);
+        if (this.is_status_property_used) {
+            emitter.off("update-status-property", this.updateStatusValue);
+            emitter.off("update-status-recursion", this.updateStatusRecursion);
+        }
         emitter.off("update-title-property", this.updateTitleValue);
         emitter.off("update-description-property", this.updateDescriptionValue);
         emitter.off("update-custom-property", this.updateCustomProperty);
@@ -155,7 +164,9 @@ export default {
         },
         setRecursionOption(event) {
             this.recursion_option = event.recursion_option;
-            this.item_to_update.status.recursion = event.recursion_option;
+            if (this.is_status_property_used) {
+                this.item_to_update.status.recursion = event.recursion_option;
+            }
         },
         updateMultiplePropertiesListValue(event) {
             if (!this.formatted_item_properties) {
@@ -168,6 +179,14 @@ export default {
         },
         updateStatusValue(status) {
             this.item_to_update.status.value = status;
+        },
+        updateStatusRecursion(must_use_recursion) {
+            let status_recursion = "none";
+            if (must_use_recursion) {
+                status_recursion = this.recursion_option;
+            }
+
+            this.item_to_update.status.recursion = status_recursion;
         },
         updateTitleValue(title) {
             this.item_to_update.title = title;

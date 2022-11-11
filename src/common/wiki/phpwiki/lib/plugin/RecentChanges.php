@@ -138,7 +138,8 @@ class _RecentChanges_Formatter
         $rev        = $most_recent_rev;
         $validators = ['RecentChanges-top' =>
                             [$rev->getPageName(), $rev->getVersion()],
-                            '%mtime' => $rev->get('mtime')];
+            '%mtime' => $rev->get('mtime'),
+        ];
         global $request;
         $request->appendValidators($validators);
     }
@@ -339,9 +340,10 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
     {
         extract($this->_args);
         return [$show_minor ? _("RecentEdits") : _("RecentChanges"),
-                     ' ',
-                     $this->rss_icon(), HTML::raw('&nbsp;'), $this->rss2_icon(),
-                     $this->sidebar_link()];
+            ' ',
+            $this->rss_icon(), HTML::raw('&nbsp;'), $this->rss2_icon(),
+            $this->sidebar_link(),
+        ];
     }
 
     public function empty_message()
@@ -485,10 +487,10 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
         //logo click opens the HomePage in the main browser frame
         global $WikiTheme;
         $img     = HTML::img(['src' => $WikiTheme->getImageURL('logo'),
-                               'border' => 0,
-                               'align' => 'right',
-                               'style' => 'height:2.5ex',
-                               ]);
+            'border' => 0,
+            'align' => 'right',
+            'style' => 'height:2.5ex',
+        ]);
         $linkurl = WikiLink(HOME_PAGE, false, $img);
         $linkurl->setAttr('target', '_content');
         return $linkurl;
@@ -704,16 +706,18 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
         }
 
         return ['title' => WIKI_NAME,
-                     'link' => WikiURL(HOME_PAGE, false, 'absurl'),
-                     'url' => $img_url];
+            'link' => WikiURL(HOME_PAGE, false, 'absurl'),
+            'url' => $img_url,
+        ];
     }
 
     public function textinput_properties()
     {
         return ['title' => _("Search"),
-                     'description' => _("Title Search"),
-                     'name' => 's',
-                     'link' => WikiURL(_("TitleSearch"), false, 'absurl')];
+            'description' => _("Title Search"),
+            'name' => 's',
+            'link' => WikiURL(_("TitleSearch"), false, 'absurl'),
+        ];
     }
 
     public function channel_properties()
@@ -722,10 +726,11 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
 
         $rc_url = WikiURL($request->getArg('pagename'), false, 'absurl');
         return ['title' => WIKI_NAME,
-                     'link' => $rc_url,
-                     'description' => _("RecentChanges"),
-                     'dc:date' => Iso8601DateTime(time()),
-                     'dc:language' => $GLOBALS['LANG']];
+            'link' => $rc_url,
+            'description' => _("RecentChanges"),
+            'dc:date' => Iso8601DateTime(time()),
+            'dc:language' => $GLOBALS['LANG'],
+        ];
 
         /* FIXME: other things one might like in <channel>:
          * sy:updateFrequency
@@ -749,16 +754,16 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
         $pagename = $page->getName();
 
         return [ 'title'           => SplitPagename($pagename),
-                      'description'     => $this->summary($rev),
-                      'link'            => $this->pageURL($rev),
-                      'dc:date'         => $this->time($rev),
-                      'dc:contributor'  => $rev->get('author'),
-                      'wiki:version'    => $rev->getVersion(),
-                      'wiki:importance' => $this->importance($rev),
-                      'wiki:status'     => $this->status($rev),
-                      'wiki:diff'       => $this->diffURL($rev),
-                      'wiki:history'    => $this->historyURL($rev),
-                      ];
+            'description'     => $this->summary($rev),
+            'link'            => $this->pageURL($rev),
+            'dc:date'         => $this->time($rev),
+            'dc:contributor'  => $rev->get('author'),
+            'wiki:version'    => $rev->getVersion(),
+            'wiki:importance' => $this->importance($rev),
+            'wiki:status'     => $this->status($rev),
+            'wiki:diff'       => $this->diffURL($rev),
+            'wiki:history'    => $this->historyURL($rev),
+        ];
     }
 }
 
@@ -820,7 +825,7 @@ class _RecentChanges_Rss2Formatter extends _RecentChanges_RssFormatter
                                  //<pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
                                  //<lastBuildDate>Tue, 10 Jun 2003 09:41:01 GMT</lastBuildDate>
                                  //<docs>http://blogs.law.harvard.edu/tech/rss</docs>
-                                 'copyright' => COPYRIGHTPAGE_URL,
+                'copyright' => COPYRIGHTPAGE_URL,
             ]
         );
     }
@@ -899,17 +904,17 @@ class WikiPlugin_RecentChanges extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['days'         => 2,
-                     'show_minor'   => false,
-                     'show_major'   => true,
-                     'show_all'     => false,
-                     'show_deleted' => 'sometimes',
-                     'limit'        => false,
-                     'format'       => false,
-                     'daylist'      => false,
-                     'difflinks'    => true,
-                     'historylinks' => false,
-                     'caption'      => '',
-                     ];
+            'show_minor'   => false,
+            'show_major'   => true,
+            'show_all'     => false,
+            'show_deleted' => 'sometimes',
+            'limit'        => false,
+            'format'       => false,
+            'daylist'      => false,
+            'difflinks'    => true,
+            'historylinks' => false,
+            'caption'      => '',
+        ];
     }
 
     public function getArgs($argstr, $request = false, $defaults = false)
@@ -943,8 +948,9 @@ class WikiPlugin_RecentChanges extends WikiPlugin
         extract($args);
 
         $params = ['include_minor_revisions' => $show_minor,
-                        'exclude_major_revisions' => ! $show_major,
-                        'include_all_revisions' => ! empty($show_all)];
+            'exclude_major_revisions' => ! $show_major,
+            'include_all_revisions' => ! empty($show_all),
+        ];
         if ($limit != 0) {
             $params['limit'] = $limit;
         }

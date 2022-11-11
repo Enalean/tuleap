@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use PFUser;
-use Project;
+use Tuleap\Baseline\Adapter\UserProxy;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Support\DateTimeFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 /**
  * ObjectMother pattern applied to baselines
@@ -38,11 +39,11 @@ class BaselineFactory
             ->id(1)
             ->name('Milestone #1')
             ->artifact(BaselineArtifactFactory::one()->build())
-            ->author(new PFUser())
+            ->author(UserProxy::fromUser(UserTestBuilder::aUser()->build()))
             ->snapshotDate(DateTimeFactory::one());
     }
 
-    public static function fromProject(Project $project): BaselineBuilder
+    public static function fromProject(ProjectIdentifier $project): BaselineBuilder
     {
         return self::one()
             ->artifact(

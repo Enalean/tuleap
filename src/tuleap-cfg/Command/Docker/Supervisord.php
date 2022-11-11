@@ -30,43 +30,40 @@ final class Supervisord
     public const UNIT_CROND           = 'crond';
     public const UNIT_FPM             = 'fpm';
     public const UNIT_HTTPD           = 'httpd';
-    public const UNIT_MYSQLD          = 'mysqld';
     public const UNIT_NGINX           = 'nginx';
     public const UNIT_POSTFIX         = 'postfix';
     public const UNIT_RSYSLOG         = 'rsyslog';
     public const UNIT_SSHD            = 'sshd';
     public const UNIT_BACKEND_WORKERS = 'backend_workers';
+    public const UNIT_MEDIAWIKI_FPM   = 'mediawiki_fpm';
 
     private const BASE_DIR = __DIR__ . '/../../../../tools/docker/tuleap-aio-c7/supervisor.d';
 
-    public const UNITS = [
+    private const UNITS = [
         self::UNIT_CROND,
         self::UNIT_FPM,
         self::UNIT_HTTPD,
-        self::UNIT_MYSQLD,
         self::UNIT_NGINX,
         self::UNIT_POSTFIX,
         self::UNIT_RSYSLOG,
         self::UNIT_SSHD,
         self::UNIT_BACKEND_WORKERS,
+        self::UNIT_MEDIAWIKI_FPM,
     ];
 
     /**
      * @var string[]
      */
-    private $units;
+    private array $units = [];
 
-    public function __construct(string ...$units)
+    public function __construct()
     {
-        array_walk(
-            $units,
-            static function (string $unit) {
-                if (! in_array($unit, self::UNITS, true)) {
-                    throw new \RuntimeException(sprintf('%s unit is not known', $unit));
-                }
+        foreach (self::UNITS as $unit) {
+            if ($unit === self::UNIT_MEDIAWIKI_FPM && ! is_dir(__DIR__ . '/../../../../plugins/mediawiki_standalone')) {
+                break;
             }
-        );
-        $this->units = $units;
+            $this->units[] = $unit;
+        }
     }
 
     public function configure(OutputInterface $output): void

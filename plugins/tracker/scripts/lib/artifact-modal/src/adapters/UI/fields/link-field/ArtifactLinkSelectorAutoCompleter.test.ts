@@ -24,12 +24,9 @@ import { Fault } from "@tuleap/fault";
 import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field/RetrieveMatchingArtifact";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
-import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
-import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field/RetrieveSelectedLinkType";
-import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
@@ -37,6 +34,7 @@ import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/Current
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import type { GroupCollection } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
+import type { LinkField } from "./LinkField";
 
 const ARTIFACT_ID = 1621;
 const TRACKER_ID = 978;
@@ -60,11 +58,10 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         artifact_retriever: RetrieveMatchingArtifact,
         fault_notifier: NotifyFaultStub,
         notification_clearer: ClearFaultNotificationStub,
-        link_selector: LinkSelectorStub,
-        type_retriever: RetrieveSelectedLinkType,
         parents_retriever: RetrievePossibleParents,
         current_artifact_identifier: CurrentArtifactIdentifier | null,
-        current_tracker_identifier: CurrentTrackerIdentifier;
+        current_tracker_identifier: CurrentTrackerIdentifier,
+        host: LinkField;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
@@ -78,33 +75,28 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         artifact_retriever = RetrieveMatchingArtifactStub.withMatchingArtifact(artifact);
         fault_notifier = NotifyFaultStub.withCount();
         notification_clearer = ClearFaultNotificationStub.withCount();
-        link_selector = LinkSelectorStub.withDropdownContentRecord();
-        type_retriever = RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped());
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
         current_artifact_identifier = null;
         current_tracker_identifier = CurrentTrackerIdentifierStub.withId(TRACKER_ID);
-    });
 
-    const getGroupCollection = (): GroupCollection => {
-        const groups = link_selector.getGroupCollection();
-        if (groups === undefined) {
-            throw new Error("Expected a group collection to be set");
-        }
-        return groups;
-    };
+        const initial_dropdown_content: GroupCollection = [];
+        host = {
+            current_link_type: LinkTypeStub.buildUntyped(),
+            dropdown_content: initial_dropdown_content,
+        } as LinkField;
+    });
 
     const autocomplete = async (query: string): Promise<void> => {
         const autocompleter = ArtifactLinkSelectorAutoCompleter(
             artifact_retriever,
             fault_notifier,
             notification_clearer,
-            type_retriever,
             parents_retriever,
             VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
             current_artifact_identifier,
             current_tracker_identifier
         );
-        await autocompleter.autoComplete(link_selector, query);
+        await autocompleter.autoComplete(host, query);
     };
 
     describe(`given the selected type is NOT reverse _is_child`, () => {
@@ -118,8 +110,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 await autocomplete(query);
 
                 expect(notification_clearer.getCallCount()).toBe(1);
-                const groups = getGroupCollection();
-                expect(groups).toHaveLength(0);
+                expect(host.dropdown_content).toHaveLength(0);
             }
         );
 
@@ -129,13 +120,13 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             const promise = autocomplete(String(ARTIFACT_ID));
 
             expect(notification_clearer.getCallCount()).toBe(1);
-            const loading_groups = getGroupCollection();
+            const loading_groups = host.dropdown_content;
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
             await promise;
 
-            const groups = getGroupCollection();
+            const groups = host.dropdown_content;
             expect(groups).toHaveLength(1);
             expect(groups[0].is_loading).toBe(false);
             expect(groups[0].items).toHaveLength(1);
@@ -154,7 +145,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
             expect(notification_clearer.getCallCount()).toBe(1);
             expect(fault_notifier.getCallCount()).toBe(1);
-            const groups = getGroupCollection();
+            const groups = host.dropdown_content;
             expect(groups).toHaveLength(1);
             expect(groups[0].items).toHaveLength(0);
             expect(groups[0].empty_message).not.toBe("");
@@ -175,7 +166,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
                 expect(notification_clearer.getCallCount()).toBe(1);
                 expect(fault_notifier.getCallCount()).toBe(0);
-                const groups = getGroupCollection();
+                const groups = host.dropdown_content;
                 expect(groups).toHaveLength(1);
                 expect(groups[0].items).toHaveLength(0);
                 expect(groups[0].empty_message).not.toBe("");
@@ -185,9 +176,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
     describe(`given the selected type is reverse _is_child`, () => {
         beforeEach(() => {
-            type_retriever = RetrieveSelectedLinkTypeStub.withType(
-                LinkTypeStub.buildParentLinkType()
-            );
+            host.current_link_type = LinkTypeStub.buildParentLinkType();
             parents_retriever = RetrievePossibleParentsStub.withParents(
                 LinkableArtifactStub.withDefaults({ id: FIRST_PARENT_ID, title: FIRST_TITLE }),
                 LinkableArtifactStub.withDefaults({ id: SECOND_PARENT_ID, title: SECOND_TITLE })
@@ -199,13 +188,13 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             const promise = autocomplete("");
 
             expect(notification_clearer.getCallCount()).toBe(1);
-            const loading_groups = getGroupCollection();
+            const loading_groups = host.dropdown_content;
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
             await promise;
 
-            const groups = getGroupCollection();
+            const groups = host.dropdown_content;
             expect(groups).toHaveLength(1);
             expect(groups[0].is_loading).toBe(false);
             const parent_ids = groups[0].items.map((item) => {
@@ -225,7 +214,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             await autocomplete("irrelevant");
 
             expect(fault_notifier.getCallCount()).toBe(1);
-            const groups = getGroupCollection();
+            const groups = host.dropdown_content;
             expect(groups).toHaveLength(1);
             expect(groups[0].is_loading).toBe(false);
             expect(groups[0].items).toHaveLength(0);
@@ -241,7 +230,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             async (_type_of_query, query, expected_number_of_matching_parents) => {
                 await autocomplete(query);
 
-                const groups = getGroupCollection();
+                const groups = host.dropdown_content;
                 expect(groups).toHaveLength(1);
                 expect(groups[0].items).toHaveLength(expected_number_of_matching_parents);
             }
@@ -257,7 +246,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             async (_type_of_query, query, expected_number_of_matching_parents) => {
                 await autocomplete(query);
 
-                const groups = getGroupCollection();
+                const groups = host.dropdown_content;
                 expect(groups).toHaveLength(2);
                 expect(groups[1].items).toHaveLength(expected_number_of_matching_parents);
             }
@@ -268,13 +257,13 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             and it will set two groups holding each`, async () => {
             const promise = autocomplete(String(ARTIFACT_ID));
 
-            const loading_groups = getGroupCollection();
+            const loading_groups = host.dropdown_content;
             expect(loading_groups).toHaveLength(2);
             expect(loading_groups.every((group) => group.is_loading)).toBe(true);
 
             await promise;
 
-            const groups = getGroupCollection();
+            const groups = host.dropdown_content;
             expect(groups).toHaveLength(2);
             expect(groups.every((group) => group.is_loading)).toBe(false);
         });

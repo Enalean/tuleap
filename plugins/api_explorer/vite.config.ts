@@ -20,12 +20,21 @@
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 
-export default vite.defineAppConfig("api-explorer", {
-    build: {
-        rollupOptions: {
-            input: {
-                "api-explorer": path.resolve(__dirname, "scripts/index.tsx"),
+export default vite.defineAppConfig(
+    { plugin_name: "api-explorer" },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    "api-explorer": path.resolve(__dirname, "scripts/index.tsx"),
+                },
+            },
+            commonjsOptions: {
+                include: [],
             },
         },
-    },
-});
+        optimizeDeps: {
+            disabled: false,
+        },
+    }
+);

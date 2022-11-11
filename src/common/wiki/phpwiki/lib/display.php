@@ -38,7 +38,8 @@ function RedirectorLink($pagename)
     $url = WikiURL($pagename, ['redirectfrom' => '']);
     return HTML::a(
         ['class' => 'redirectfrom wiki',
-                         'href' => $url],
+            'href' => $url,
+        ],
         $pagename
     );
 }
@@ -65,12 +66,15 @@ function actionPage(&$request, $action)
     ));
 
     $validators = new HTTP_ValidatorSet(['pageversion' => $revision->getVersion(),
-                                              '%mtime' => $revision->get('mtime')]);
+        '%mtime' => $revision->get('mtime'),
+    ]);
 
     $request->appendValidators(['pagerev' => $revision->getVersion(),
-                                     '%mtime' => $revision->get('mtime')]);
+        '%mtime' => $revision->get('mtime'),
+    ]);
     $request->appendValidators(['actionpagerev' => $actionrev->getVersion(),
-                                     '%mtime' => $actionrev->get('mtime')]);
+        '%mtime' => $actionrev->get('mtime'),
+    ]);
 
     $transformedContent = $actionrev->getTransformedContent();
     $template           = Template('browse', ['CONTENT' => $transformedContent]);
@@ -111,8 +115,8 @@ function displayPage(&$request, $template = false)
         $last_page   = array_pop($pages); // deletes last element from array as side-effect
         $pageheader  = HTML::span(HTML::a(
             ['href' => WikiURL($pages[0]),
-                                              'class' => 'pagetitle',
-                                              ],
+                'class' => 'pagetitle',
+            ],
             $WikiTheme->maybeSplitWikiWord($pages[0] . SUBPAGE_SEPARATOR)
         ));
         $first_pages = $pages[0] . SUBPAGE_SEPARATOR;
@@ -121,7 +125,8 @@ function displayPage(&$request, $template = false)
             if ($pv != 2) {    //Add the Backlink in page title
                    $pageheader->pushContent(HTML::a(
                        ['href' => WikiURL($first_pages . $p),
-                                                  'class' => 'backlinks'],
+                           'class' => 'backlinks',
+                       ],
                        $WikiTheme->maybeSplitWikiWord($p . SUBPAGE_SEPARATOR)
                    ));
             } else {    // Remove Backlinks
@@ -135,7 +140,8 @@ function displayPage(&$request, $template = false)
                     $pagename,
                     ['action' => _("BackLinks")]
                 ),
-                      'class' => 'backlinks'],
+                    'class' => 'backlinks',
+                ],
                 $WikiTheme->maybeSplitWikiWord($last_page)
             );
             $backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
@@ -150,7 +156,8 @@ function displayPage(&$request, $template = false)
                     $pagename,
                     ['action' => _("BackLinks")]
                 ),
-                       'class' => 'backlinks'],
+                    'class' => 'backlinks',
+                ],
                 $WikiTheme->maybeSplitWikiWord($pagename)
             );
             $pageheader->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
@@ -175,10 +182,10 @@ function displayPage(&$request, $template = false)
 
     $additional_html = false;
     $eM->processEvent('wiki_before_content', [
-                    'html' => &$additional_html,
-                    'group_id' => GROUP_ID,
-                    'wiki_page' => $pagename,
-        ]);
+        'html' => &$additional_html,
+        'group_id' => GROUP_ID,
+        'wiki_page' => $pagename,
+    ]);
     if ($additional_html) {
         $beforeHeader = HTML();
         $beforeHeader->pushContent($additional_html);
@@ -207,7 +214,8 @@ function displayPage(&$request, $template = false)
     }
 
     $request->appendValidators(['pagerev' => $revision->getVersion(),
-                                     '%mtime' => $revision->get('mtime')]);
+        '%mtime' => $revision->get('mtime'),
+    ]);
 
     $page_content = $revision->getTransformedContent();
 

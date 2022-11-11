@@ -49,20 +49,20 @@ final class ArtifactClosingCommentInCommonMarkFormatTest extends \Tuleap\Test\PH
             'empty comment when keyword is null' => [null, ''],
             'comment with resolves'              => [
                 ClosingKeyword::buildResolves(),
-                sprintf('solved by %s with %s', self::USERNAME_CLOSING_THE_ARTIFACT, self::ORIGIN_REFERENCE),
+                sprintf('Solved by %s with %s.', self::USERNAME_CLOSING_THE_ARTIFACT, self::ORIGIN_REFERENCE),
             ],
             'comment with closes'                => [
                 ClosingKeyword::buildCloses(),
-                sprintf('closed by %s with %s', self::USERNAME_CLOSING_THE_ARTIFACT, self::ORIGIN_REFERENCE),
+                sprintf('Closed by %s with %s.', self::USERNAME_CLOSING_THE_ARTIFACT, self::ORIGIN_REFERENCE),
             ],
             'comment with implements'            => [
                 ClosingKeyword::buildImplements(),
-                sprintf('implemented by %s with %s', self::USERNAME_CLOSING_THE_ARTIFACT, self::ORIGIN_REFERENCE),
+                sprintf('Implemented by %s with %s.', self::USERNAME_CLOSING_THE_ARTIFACT, self::ORIGIN_REFERENCE),
             ],
             'comments with fixes'                => [
                 ClosingKeyword::buildFixes(),
                 sprintf(
-                    '%s fixed by %s with %s',
+                    '%s fixed by %s with %s.',
                     self::TRACKER_SHORTNAME,
                     self::USERNAME_CLOSING_THE_ARTIFACT,
                     self::ORIGIN_REFERENCE

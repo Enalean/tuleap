@@ -223,7 +223,7 @@ class DocmanV1_XMLExportData
             $creator_name = $admin_user->getUserName();
             $creator      = $this->user_manager->getUserById($row['created_by']);
             if ($creator !== null && ($creator->isActive() || $creator->isRestricted())) {
-                $creator_name = $creator->getUnixName();
+                $creator_name = $creator->getUserName();
             }
 
             $document = $this->createDocument($row['title'], $row['description'], $row['createdate'], $row['updatedate'], $creator_name);

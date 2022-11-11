@@ -283,17 +283,17 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
     {
         $this->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type', 'manage_permissions_title'));
         $permissions = [
-                             [
-                                   'link' => '/tracker/admin/?group_id=' . (int) $this->getGroupID() . '&atid=' . (int) $this->getID() . '&func=permissions&perm_type=tracker',
-                                   'name' => $GLOBALS['Language']->getText('tracker_include_type', 'manage_tracker_permissions'),
-                                   'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_tracker_permissions'),
-                                   ],
-                             [
-                                   'link' => '/tracker/admin/?group_id=' . (int) $this->getGroupID() . '&atid=' . (int) $this->getID() . '&func=permissions&perm_type=fields',
-                                   'name' => $GLOBALS['Language']->getText('tracker_include_type', 'manage_fields_tracker_permissions'),
-                                   'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_fields_tracker_permissions'),
-                                   ],
-                             ];
+            [
+                'link' => '/tracker/admin/?group_id=' . (int) $this->getGroupID() . '&atid=' . (int) $this->getID() . '&func=permissions&perm_type=tracker',
+                'name' => $GLOBALS['Language']->getText('tracker_include_type', 'manage_tracker_permissions'),
+                'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_tracker_permissions'),
+            ],
+            [
+                'link' => '/tracker/admin/?group_id=' . (int) $this->getGroupID() . '&atid=' . (int) $this->getID() . '&func=permissions&perm_type=fields',
+                'name' => $GLOBALS['Language']->getText('tracker_include_type', 'manage_fields_tracker_permissions'),
+                'desc' => $GLOBALS['Language']->getText('tracker_include_type', 'define_manage_fields_tracker_permissions'),
+            ],
+        ];
         $this->_displayAdminMenu($permissions);
     }
 
@@ -412,23 +412,24 @@ EOS;
                 foreach ($value_field['ugroups'] as $key_ugroup => $value_ugroup) {
                     if (! isset($ugroups_permissions[$key_ugroup])) {
                         $ugroups_permissions[$key_ugroup] = [
-                                                                  'values'              => $value_ugroup['ugroup'],
-                                                                  'related_parts'       => [],
-                                                                  'tracker_permissions' => $value_ugroup['tracker_permissions'],
-                                                                  ];
+                            'values'              => $value_ugroup['ugroup'],
+                            'related_parts'       => [],
+                            'tracker_permissions' => $value_ugroup['tracker_permissions'],
+                        ];
                     }
                     $ugroups_permissions[$key_ugroup]['related_parts'][$key_field] = [
-                                                                                    'values'       => $value_field['field'],
-                                                                                    'permissions' => $value_ugroup['permissions'],
-                                                                                    ];
+                        'values'       => $value_field['field'],
+                        'permissions' => $value_ugroup['permissions'],
+                    ];
                 }
             }
             ksort($ugroups_permissions);
             $header = [
-                            $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
-                            $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
-                            $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_FIELD_SUBMIT'),
-                            $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')];
+                $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
+                $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
+                $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_FIELD_SUBMIT'),
+                $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions'),
+            ];
         } else {
             foreach ($ugroups_permissions as $key_field => $value_field) {
                 $ugroups_permissions[$key_field]['values']        = $ugroups_permissions[$key_field]['field'];
@@ -440,10 +441,11 @@ EOS;
                 reset($ugroups_permissions[$key_field]['related_parts']);
             }
             $header = [
-                           $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
-                           $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
-                           $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_FIELD_SUBMIT'),
-                           $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')];
+                $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
+                $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
+                $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_FIELD_SUBMIT'),
+                $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions'),
+            ];
         }
         reset($ugroups_permissions);
         $key = key($ugroups_permissions);
@@ -634,8 +636,9 @@ EOS;
 
         //header
         $html .= html_build_list_table_top([
-                                                 $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
-                                                 $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')]);
+            $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
+            $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions'),
+        ]);
 
         //body
         ksort($ugroups_permissions);

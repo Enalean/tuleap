@@ -45,4 +45,12 @@ class ForgeAccess
 
         return true;
     }
+
+    /**
+     * @return \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED
+     */
+    public static function getAccessMode(): string
+    {
+        return \ForgeConfig::get(self::CONFIG, self::RESTRICTED);
+    }
 }

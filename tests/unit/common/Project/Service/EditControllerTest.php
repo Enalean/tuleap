@@ -37,13 +37,13 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
 
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|ServicePOSTDataBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject&ServicePOSTDataBuilder
      */
     private mixed $data_builder;
     /**
-     * @var \CSRFSynchronizerToken|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject
      */
-    private mixed $csrf_token;
+    private $csrf_token;
 
     protected function setUp(): void
     {

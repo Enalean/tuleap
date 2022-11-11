@@ -68,12 +68,14 @@ class ServiceUpdator
             $service_data->getShortName(),
             $service_data->getUrl(),
             $service_data->isActive(),
-            true,
+            false,
             $service_data->getScope(),
             $service_data->getRank(),
             $service_data->isOpenedInNewTab(),
         );
 
         $this->project_manager->clear($project->getID());
+
+        $this->service_manager->toggleServiceUsage($project, $service_data->getShortName(), true);
     }
 }

@@ -1,0 +1,20 @@
+{
+    "name": "tuleap/plugin-fts_meilisearch",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\FullTextSearchMeilisearch\\": "include/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tuleap\\FullTextSearchMeilisearch\\": "tests/unit/"
+        }
+    },
+    "require": {
+        "meilisearch/meilisearch-php": "^0.25.0"
+    },
+    "replace": {
+        "php-http/httplug": "^2.1",
+        "php-http/client-common": "^2.0"
+    }
+}

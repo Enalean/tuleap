@@ -49,11 +49,12 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['noheader' => false,
-                     'exclude'  => _("PgsrcTranslation"),
-                     'page'     => '[pagename]',
-                     'sortby'   => false,
-                     'limit'    => 50,
-                     'paging'   => 'auto'];
+            'exclude'  => _("PgsrcTranslation"),
+            'page'     => '[pagename]',
+            'sortby'   => false,
+            'limit'    => 50,
+            'paging'   => 'auto',
+        ];
     }
 
     // info arg allows multiple columns
@@ -186,9 +187,10 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
     {
         if (count($this->pagelist) > 0) {
             $table = HTML::table(['cellpadding' => 0,
-                                       'cellspacing' => 1,
-                                       'border'      => 0,
-                                       'class'       => 'pagelist']);
+                'cellspacing' => 1,
+                'border'      => 0,
+                'class'       => 'pagelist',
+            ]);
             if ($caption) {
                 $table->pushContent(HTML::caption(
                     ['align' => 'top'],

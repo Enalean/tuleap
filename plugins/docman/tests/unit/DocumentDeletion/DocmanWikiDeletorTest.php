@@ -130,7 +130,7 @@ class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
 
-        $this->item_factory->shouldReceive("delete")->with($wiki_to_delete);
+        $this->item_factory->shouldReceive("delete")->with($wiki_to_delete)->atLeast()->once();
         $this->item_factory->shouldReceive("getIdInWikiOfWikiPageItem");
 
         $this->item_dao->shouldReceive("isWikiPageReferenced");
@@ -138,7 +138,7 @@ class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager->shouldReceive("processEvent")->with(
             "wiki_page_updated",
             \Mockery::any()
-        );
+        )->atLeast()->once();
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
@@ -167,8 +167,8 @@ class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
 
-        $this->item_factory->shouldReceive("delete")->with($wiki_to_delete);
-        $this->item_factory->shouldReceive("deleteWikiPage")->with("My kinky wiki", 104)->andReturns(true);
+        $this->item_factory->shouldReceive("delete")->with($wiki_to_delete)->atLeast()->once();
+        $this->item_factory->shouldReceive("deleteWikiPage")->with("My kinky wiki", 104)->andReturns(true)->atLeast()->once();
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,

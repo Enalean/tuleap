@@ -85,7 +85,7 @@ final class ChangesetFromXmlDisplayerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao->shouldReceive('searchChangeset')->andReturn(["user_id" => 101, "timestamp" => 123456789]);
         $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getName')->andReturn("user");
+        $user->shouldReceive('getUserName')->andReturn("user");
         $user->shouldReceive('getPublicProfileUrl')->andReturn("user");
         $this->user_manager->shouldReceive('getUserById')->once()->andReturn($user);
         $this->renderer->shouldReceive('renderToString')->once()->andReturn("Imported by user on 2020-04-20");

@@ -28,24 +28,12 @@ use Tuleap\Project\ProjectPresenter;
 /**
  * @psalm-immutable
  */
-class SwitchToPresenter
+final class SwitchToPresenter
 {
-    /**
-     * @var bool
-     */
-    public $is_trove_cat_enabled;
-    /**
-     * @var bool
-     */
-    public $are_restricted_users_allowed;
     /**
      * @var false|string
      */
     public $projects;
-    /**
-     * @var bool
-     */
-    public $is_search_available;
     /**
      * @var false|string
      */
@@ -56,9 +44,9 @@ class SwitchToPresenter
      */
     public function __construct(
         array $projects,
-        bool $are_restricted_users_allowed,
-        bool $is_trove_cat_enabled,
-        bool $is_search_available,
+        public bool $are_restricted_users_allowed,
+        public bool $is_trove_cat_enabled,
+        public bool $is_search_available,
         SearchFormPresenter $search_form,
     ) {
         $this->projects                     = json_encode($projects, JSON_THROW_ON_ERROR);

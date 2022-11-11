@@ -28,7 +28,14 @@ namespace Tuleap\Config;
  */
 final class ConfigKeyMetadata
 {
-    public function __construct(public string $description, public bool $can_be_modified, public bool $is_secret, public ?string $category)
-    {
+    public function __construct(
+        public string $description,
+        public bool $can_be_modified,
+        public bool $is_secret,
+        public bool $is_hidden,
+        public ?SecretValidator $secret_validator,
+        public ?ValueValidator $value_validator,
+        public ?string $category,
+    ) {
     }
 }

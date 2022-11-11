@@ -23,7 +23,9 @@ use FastRoute\RouteCollector;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\ForumML;
 use Tuleap\ForumML\CurrentListBreadcrumbCollectionBuilder;
+use Tuleap\ForumML\Plugin\MailTransportConfigurationPluginInstallRequirement;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\MailingList\MailingListPresenterBuilder;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
@@ -327,5 +329,10 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $event->getLogger()->error('ForumML root_daily_start ' . $exception::class . ': ' . $exception->getMessage(), ['exception' => $exception]);
             $event->addWarning($exception->getMessage());
         }
+    }
+
+    public function getInstallRequirements(): array
+    {
+        return [new MailTransportConfigurationPluginInstallRequirement(MailTransportBuilder::getPlatformMailConfiguration())];
     }
 }

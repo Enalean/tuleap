@@ -56,6 +56,7 @@ export interface UpdateCustomEvent {
 
 export type Events = {
     "update-status-property": string;
+    "update-status-recursion": boolean;
     "update-title-property": string;
     "update-version-title": string;
     "update-description-property": string;
@@ -84,6 +85,8 @@ export type Events = {
     "update-lock": boolean;
     "update-custom-property": UpdateCustomEvent;
     "properties-recursion-option": { recursion_option: string };
+    "update-obsolescence-date-property": string;
+    "properties-recursion-list": { detail: { property_list: Array<string> } };
 };
 
 export default mitt<Events>();

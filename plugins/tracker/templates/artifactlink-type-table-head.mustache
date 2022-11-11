@@ -2,6 +2,7 @@
 <h2 class="tracker-form-element-artifactlink-type_{{ tracker_id }}">{{ type_label }}</h2>
 <table class="tracker_report_table table" id="{{ table_id }}">
 <thead>
+    {{^ is_reverse_artifact_links }}
     <th class="tracker_report_table_unlink">
         <input
             type="checkbox"
@@ -10,6 +11,7 @@
             disabled
         >
     </th>
+    {{/ is_reverse_artifact_links }}
     <th>{{ id_label }}</th>
     <th>{{ project_label }}</th>
     <th>{{ tracker_label }}</th>

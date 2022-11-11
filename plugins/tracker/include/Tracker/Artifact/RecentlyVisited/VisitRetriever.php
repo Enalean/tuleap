@@ -21,32 +21,19 @@
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\User\History\HistoryEntry;
+use Tuleap\User\History\HistoryEntryBadge;
 use Tuleap\User\History\HistoryEntryCollection;
 
 class VisitRetriever
 {
-    /**
-     * @var RecentlyVisitedDao
-     */
-    private $dao;
-    /**
-     * @var \Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var GlyphFinder
-     */
-    private $glyph_finder;
-
     public function __construct(
-        RecentlyVisitedDao $dao,
-        \Tracker_ArtifactFactory $artifact_factory,
-        GlyphFinder $glyph_finder,
+        private RecentlyVisitedDao $dao,
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private GlyphFinder $glyph_finder,
+        private StatusBadgeBuilder $status_badge_builder,
     ) {
-        $this->dao              = $dao;
-        $this->artifact_factory = $artifact_factory;
-        $this->glyph_finder     = $glyph_finder;
     }
 
     /**
@@ -71,7 +58,7 @@ class VisitRetriever
     /**
      * @throws \DataAccessException
      */
-    public function getVisitHistory(HistoryEntryCollection $entry_collection, int $max_length_history): void
+    public function getVisitHistory(HistoryEntryCollection $entry_collection, int $max_length_history, \PFUser $user): void
     {
         $user_id               = $entry_collection->getUser()->getId();
         $recently_visited_rows = $this->dao->searchVisitByUserId(
@@ -88,22 +75,27 @@ class VisitRetriever
                 continue;
             }
 
-            $collection = new HistoryQuickLinkCollection($artifact, $entry_collection->getUser());
+            $collection = new SwitchToLinksCollection($artifact, $entry_collection->getUser());
             \EventManager::instance()->processEvent($collection);
             $tracker = $artifact->getTracker();
 
             $entry_collection->addEntry(
                 new HistoryEntry(
                     $recently_visited_row['created_on'],
-                    $artifact->getXRef(),
-                    $artifact->getUri(),
-                    $artifact->getTitle(),
+                    $collection->getXRef(),
+                    $collection->getMainUri(),
+                    $artifact->getTitle() ?? '',
                     $tracker->getColor()->getName(),
                     $this->glyph_finder->get('tuleap-tracker-small'),
                     $this->glyph_finder->get('tuleap-tracker'),
-                    '',
+                    $collection->getIconName(),
                     $tracker->getProject(),
-                    $collection->getLinks()
+                    $collection->getQuickLinks(),
+                    $this->status_badge_builder->buildBadgesFromArtifactStatus(
+                        $artifact,
+                        $user,
+                        static fn (string $label, ?string $color) => new HistoryEntryBadge($label, $color),
+                    ),
                 )
             );
         }

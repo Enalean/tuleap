@@ -33,12 +33,8 @@ use UserManager;
 
 class PaginatedTimelineRepresentationBuilder
 {
-    /** @var UserManager */
-    private $user_manager;
-
-    public function __construct(private Factory $timeline_factory)
+    public function __construct(private Factory $timeline_factory, private UserManager $user_manager)
     {
-        $this->user_manager = UserManager::instance();
     }
 
     public function getPaginatedTimelineRepresentation(PullRequest $pull_request, $project_id, $limit, $offset)
@@ -66,7 +62,8 @@ class PaginatedTimelineRepresentationBuilder
                     $project_id,
                     $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
-                    $event->getContent()
+                    $event->getContent(),
+                    $event->getParentId()
                 );
             case InlineComment::class:
                 assert($event instanceof InlineComment);
@@ -77,14 +74,18 @@ class PaginatedTimelineRepresentationBuilder
                     $event->getPostDate(),
                     $event->getContent(),
                     $event->isOutdated(),
-                    $project_id
+                    $project_id,
+                    $event->getParentId(),
+                    $event->getId(),
+                    $event->getPosition()
                 );
             case TimelineGlobalEvent::class:
                 assert($event instanceof TimelineGlobalEvent);
                 return new TimelineEventRepresentation(
                     $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
-                    $event->getType()
+                    $event->getType(),
+                    0
                 );
             case ReviewerChange::class:
                 assert($event instanceof ReviewerChange);

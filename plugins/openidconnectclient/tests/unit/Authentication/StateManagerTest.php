@@ -31,7 +31,9 @@ final class StateManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItValidatesValidState(): void
     {
-        $key                = 'Tuleap_key';
+        $this->expectNotToPerformAssertions();
+
+        $key                = str_repeat('a', 32);
         $return_to          = '/return_to';
         $nonce              = 'random_string';
         $pkce_code_verifier = new ConcealedString('code_verifier');
@@ -53,9 +55,9 @@ final class StateManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $pkce_code_verifier = new ConcealedString('code_verifier');
         $state_factory      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
         $state_storage      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
-        $state              = new State(1234, $return_to, 'key1', $nonce, $pkce_code_verifier);
+        $state              = new State(1234, $return_to, str_repeat('a', 32), $nonce, $pkce_code_verifier);
         $signed_state       = $state->getSignedState();
-        $stored_state       = new SessionState('key2', $return_to, $nonce, $pkce_code_verifier);
+        $stored_state       = new SessionState(str_repeat('b', 32), $return_to, $nonce, $pkce_code_verifier);
         $state_storage->shouldReceive('loadState')->andReturns($stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);

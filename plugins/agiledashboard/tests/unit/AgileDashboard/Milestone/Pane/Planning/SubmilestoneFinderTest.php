@@ -156,7 +156,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends \Tul
             $this->mono_milestone_checker
         );
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
     }
 
     /**

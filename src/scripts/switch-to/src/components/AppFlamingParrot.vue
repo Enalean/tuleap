@@ -24,53 +24,43 @@
         id="switch-to-modal"
         data-test="switch-to-modal"
         role="dialog"
-        v-bind:aria-label="aria_label"
+        v-bind:aria-label="$gettext('Switch to…')"
+        ref="modal"
     >
         <switch-to-header class="modal-header" v-bind:modal="null" />
         <switch-to-body class="modal-body" />
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import $ from "jquery";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import jQuery from "jquery";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
-import { Action, Mutation } from "vuex-class";
+import { useRootStore } from "../stores/root";
 
-@Component({
-    components: { SwitchToHeader, SwitchToBody },
-})
-export default class AppFlamingParrot extends Vue {
-    @Action
-    private readonly loadHistory!: () => void;
+const modal = ref<HTMLElement | null>(null);
 
-    @Mutation
-    private readonly updateFilterValue!: (value: string) => void;
+onMounted((): void => {
+    if (!(modal.value instanceof HTMLElement)) {
+        return;
+    }
+    const store = useRootStore();
 
-    mounted(): void {
-        const modal = this.$el;
-        if (!(modal instanceof HTMLElement)) {
-            return;
-        }
-
-        $(modal)
-            // Force autofocus for bootstrap modal
-            .on("shown", () => {
-                this.loadHistory();
-                const input = modal.querySelector("input");
+    jQuery(modal.value)
+        // Force autofocus for bootstrap modal
+        .on("shown", () => {
+            store.loadHistory();
+            if (modal.value) {
+                const input = modal.value.querySelector("input");
                 if (input) {
                     input.focus();
                 }
-            })
-            // Clear filter for bootstrap modal
-            .on("hidden", () => {
-                this.updateFilterValue("");
-            });
-    }
-    get aria_label(): string {
-        return this.$gettext("Switch to…");
-    }
-}
+            }
+        })
+        // Clear filter for bootstrap modal
+        .on("hidden", () => {
+            store.updateFilterValue("");
+        });
+});
 </script>

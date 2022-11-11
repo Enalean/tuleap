@@ -188,12 +188,13 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     public function getStrokeUrl($store_in_session = true)
     {
         return TRACKER_BASE_URL . '/?' . http_build_query([
-                     '_jpg_csimd' => '1',
-                     'report'     => $this->renderer->report->id,
-                     'renderer'   => $this->renderer->id,
-                     'func'       => 'renderer',
-                     'store_in_session' => $store_in_session,
-                     'renderer_plugin_graphontrackersv5[stroke]' => $this->getId()]);
+            '_jpg_csimd' => '1',
+            'report'     => $this->renderer->report->id,
+            'renderer'   => $this->renderer->id,
+            'func'       => 'renderer',
+            'store_in_session' => $store_in_session,
+            'renderer_plugin_graphontrackersv5[stroke]' => $this->getId(),
+        ]);
     }
 
     public function fetch(bool $store_in_session = true)

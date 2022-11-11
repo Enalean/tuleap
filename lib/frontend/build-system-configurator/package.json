@@ -6,17 +6,18 @@
   "private": true,
   "version": "0.0.0",
   "main": "dist/main.js",
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rm -rf dist/ && tsc --project tsconfig-build.json",
-    "watch": "rm -rf dist/ && tsc --watch --project tsconfig-build.json"
-  },
   "dependencies": {
-    "autoprefixer": "^10.4.0",
-    "browserslist": "^4.20.2",
+    "autoprefixer": "^10.4.12",
+    "browserslist": "^4.21.4",
     "postcss": "^8.4.5"
   },
   "devDependencies": {
     "@types/webpack": "^5.28.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist/ && tsc --project tsconfig-build.json",
+    "watch": "rm -rf dist/ && tsc --watch --project tsconfig-build.json",
+    "test": "vitest run"
   }
 }

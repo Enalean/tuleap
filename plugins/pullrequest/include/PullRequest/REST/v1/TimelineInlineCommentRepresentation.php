@@ -66,9 +66,31 @@ class TimelineInlineCommentRepresentation
      */
     public $type;
 
+    /**
+     * @var int {@type int}
+     */
+    public $parent_id;
+    /**
+     * @var int {@type int}
+     */
+    public int $id;
+    /**
+     * @var string {@type string}
+     */
+    public string $position;
 
-    public function __construct(string $file_path, int $unidiff_offset, MinimalUserRepresentation $user, int $post_date, string $content, bool $is_outdated, int $project_id)
-    {
+    public function __construct(
+        string $file_path,
+        int $unidiff_offset,
+        MinimalUserRepresentation $user,
+        int $post_date,
+        string $content,
+        bool $is_outdated,
+        int $project_id,
+        int $parent_id,
+        int $id,
+        string $position,
+    ) {
         $this->file_path      = $file_path;
         $this->unidiff_offset = $unidiff_offset;
         $this->user           = $user;
@@ -76,11 +98,14 @@ class TimelineInlineCommentRepresentation
         $this->content        = self::getPurifiedContent($project_id, $content);
         $this->is_outdated    = $is_outdated;
         $this->type           = self::TYPE;
+        $this->parent_id      = $parent_id;
+        $this->id             = $id;
+        $this->position       = $position;
     }
 
     private static function getPurifiedContent(int $project_id, string $content): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
+        return $purifier->purify($content, Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
     }
 }

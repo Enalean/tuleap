@@ -26,19 +26,10 @@ namespace Tuleap\Gitlab\REST\v1;
  */
 class GitlabBranchPOSTRepresentation
 {
-    /**
-     * @var int
-     */
     public int $gitlab_integration_id;
 
-    /**
-     * @var int
-     */
     public int $artifact_id;
 
-    /**
-     * @var string
-     */
     public string $reference;
 
     public static function build(

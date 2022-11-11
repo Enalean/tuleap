@@ -334,6 +334,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function getQueryOrderby(): string
     {
+        if (! $this->getField()->isUsed()) {
+            return '';
+        }
         $R2 = 'R2_' . $this->field->id;
         return $this->is_rank_alpha ? "$R2.label" : "$R2.rank";
     }
@@ -343,6 +346,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function getQueryGroupby(): string
     {
+        if (! $this->getField()->isUsed()) {
+            return '';
+        }
         $R2 = 'R2_' . $this->field->id;
         return "$R2.id";
     }

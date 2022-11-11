@@ -24,14 +24,9 @@
     </a>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
+<script setup lang="ts">
+import { inject } from "vue";
+import { IS_TROVE_CAT_ENABLED } from "../../injection-keys";
 
-@Component
-export default class TroveCatLink extends Vue {
-    @State
-    private readonly is_trove_cat_enabled!: boolean;
-}
+const is_trove_cat_enabled = inject(IS_TROVE_CAT_ENABLED, false);
 </script>

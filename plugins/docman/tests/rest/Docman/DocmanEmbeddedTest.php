@@ -373,7 +373,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             ]
         );
         $new_version_response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource)),
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -401,7 +401,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -432,7 +432,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -464,7 +464,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -498,7 +498,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -534,7 +534,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(400, $new_version_response->getStatusCode());
@@ -566,7 +566,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $new_version_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -603,7 +603,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $new_version_response = $this->getResponseByName(
             \TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
@@ -642,7 +642,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $new_version_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/version")->withBody($this->stream_factory->createStream($new_version_resource))
+            $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . "/versions")->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(403, $new_version_response->getStatusCode());
@@ -751,11 +751,11 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     public function testOptionsVersion(int $id): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/version'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/versions'),
             \TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -789,12 +789,83 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/version'),
+            $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/versions'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
+    }
+
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testGetVersionsOfEmbeddedFileAndDeleteOneOfThem(int $root_id): void
+    {
+        $embedded_doc_id = $this->createEmbeddedFileAndReturnItsId(
+            $root_id,
+            json_encode(
+                ['title' => 'Embedded file with versions', 'embedded_properties' => ['content' => 'initial content']],
+                JSON_THROW_ON_ERROR
+            ),
+        );
+
+        $versions_uri = 'docman_embedded_files/' . $embedded_doc_id . "/versions";
+
+        $new_version_resource = json_encode([
+            'version_title'       => 'My new version',
+            'description'         => 'whatever',
+            "embedded_properties" => [
+                "content" => "my new content",
+            ],
+            "should_lock_file"    => false,
+        ], JSON_THROW_ON_ERROR);
+
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('POST', $versions_uri)->withBody($this->stream_factory->createStream($new_version_resource))
+        );
+
+        self::assertEquals(200, $new_version_response->getStatusCode());
+
+        $get_versions_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('GET', $versions_uri),
+        );
+        self::assertEquals(200, $get_versions_response->getStatusCode());
+
+        $versions = json_decode($get_versions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(2, $versions);
+        self::assertEquals(2, $versions[0]['number']);
+        self::assertEquals('My new version', $versions[0]['name']);
+        self::assertEquals(1, $versions[1]['number']);
+        self::assertEquals('', $versions[1]['name']);
+
+        $get_version_content_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('GET', 'docman_embedded_file_versions/' . $versions[1]['id'] . '/content'),
+        );
+        self::assertEquals(200, $get_version_content_response->getStatusCode());
+        self::assertEquals(
+            'initial content',
+            json_decode($get_version_content_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['content']
+        );
+
+        $delete_version_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('DELETE', 'docman_embedded_file_versions/' . $versions[0]['id']),
+        );
+
+        self::assertEquals(204, $delete_version_response->getStatusCode());
+
+        $get_versions_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->request_factory->createRequest('GET', $versions_uri),
+        );
+        self::assertEquals(200, $get_versions_response->getStatusCode());
+        $versions = json_decode($get_versions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $versions);
     }
 
     /**

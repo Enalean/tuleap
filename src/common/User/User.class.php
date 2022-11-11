@@ -592,7 +592,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     // Getter
     public function getPublicProfileUrl()
     {
-        return '/users/' . urlencode($this->getUnixName());
+        return '/users/' . urlencode($this->getUserName());
     }
 
     /**
@@ -603,36 +603,16 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->id;
     }
     /**
-     * alias of getUserName()
-     * @return string the name of the user (aka login)
-     */
-    public function getName()
-    {
-        return $this->getUserName();
-    }
-    /**
-     * @return string the name of the user (aka login)
-     *
      * @psalm-taint-escape file
      */
-    public function getUserName()
+    public function getUserName(): string
     {
-        return $this->user_name;
+        return $this->user_name ?? '';
     }
-    /**
-     * alias of getUserName()
-     * @return string the name of the user (aka login)
-     */
-    public function getUnixName()
+
+    public function getRealName(): string
     {
-        return $this->getUserName();
-    }
-    /**
-     * @return string the real name of the user
-     */
-    public function getRealName()
-    {
-        return $this->realname;
+        return $this->realname ?? 'User #' . $this->getId();
     }
     /**
      * @return string the email adress of the user
@@ -1087,10 +1067,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function setStatus($status)
     {
         $allowedStatus = ['A' => true,
-                               'R' => true,
-                               'D' => true,
-                               'S' => true,
-                               'P' => true];
+            'R' => true,
+            'D' => true,
+            'S' => true,
+            'P' => true,
+        ];
         if (isset($allowedStatus[$status])) {
             $this->status = $status;
         }
@@ -1148,11 +1129,12 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function setUnixStatus($unixStatus)
     {
         $allowedStatus = [0 => true,
-                               '0' => true,
-                               'N' => true,
-                               'A' => true,
-                               'S' => true,
-                               'D' => true];
+            '0' => true,
+            'N' => true,
+            'A' => true,
+            'S' => true,
+            'D' => true,
+        ];
         if (isset($allowedStatus[$unixStatus])) {
             $this->unix_status = $unixStatus;
         }

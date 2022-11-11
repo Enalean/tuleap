@@ -28,20 +28,23 @@ use Tuleap\Docman\Version\Version;
  */
 class Docman_Version implements Version
 {
+    private string $authoring_tool;
+
     public function __construct($data = null)
     {
-        $this->id        = null;
-        $this->authorId  = null;
-        $this->itemId    = null;
-        $this->number    = null;
-        $this->label     = null;
-        $this->changeLog = null;
-        $this->date      = null;
-        $this->filename  = null;
-        $this->filesize  = 0;
-        $this->filetype  = null;
-        $this->path      = null;
-        $this->_content  = null;
+        $this->id             = null;
+        $this->authorId       = null;
+        $this->itemId         = null;
+        $this->number         = null;
+        $this->label          = null;
+        $this->changeLog      = null;
+        $this->date           = null;
+        $this->filename       = null;
+        $this->filesize       = 0;
+        $this->filetype       = null;
+        $this->path           = null;
+        $this->_content       = null;
+        $this->authoring_tool = '';
         if ($data) {
             $this->initFromRow($data);
         }
@@ -78,6 +81,10 @@ class Docman_Version implements Version
     }
 
     public $number;
+
+    /**
+     * @psalm-mutation-free
+     */
     public function getNumber()
     {
         return $this->number;
@@ -232,6 +239,9 @@ class Docman_Version implements Version
         if (isset($row['path'])) {
             $this->setPath($row['path']);
         }
+        if (isset($row['authoring_tool'])) {
+            $this->authoring_tool = $row['authoring_tool'];
+        }
     }
 
     /**
@@ -250,11 +260,11 @@ class Docman_Version implements Version
         $event_adder->addLogEvents();
 
         $event_manager->processEvent('plugin_docman_event_access', [
-                    'group_id' => $item->getGroupId(),
-                    'item'     => $item,
-                    'version'  => $this->getNumber(),
-                    'user'     => $user,
-                ]);
+            'group_id' => $item->getGroupId(),
+            'item'     => $item,
+            'version'  => $this->getNumber(),
+            'user'     => $user,
+        ]);
     }
 
     /**
@@ -272,9 +282,15 @@ class Docman_Version implements Version
             $value .= ' (' . $this->getLabel() . ')';
         }
         $params = ['group_id'   => $item->getGroupId(),
-                        'item'       => $item,
-                        'old_value'  => $value,
-                        'user'       => $user];
+            'item'       => $item,
+            'old_value'  => $value,
+            'user'       => $user,
+        ];
         EventManager::instance()->processEvent('plugin_docman_event_del_version', $params);
+    }
+
+    public function getAuthoringTool(): string
+    {
+        return $this->authoring_tool;
     }
 }

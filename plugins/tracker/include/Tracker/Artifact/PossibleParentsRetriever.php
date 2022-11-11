@@ -42,6 +42,10 @@ class PossibleParentsRetriever
     ): PossibleParentSelector {
         $possible_parents = $this->event_dispatcher->dispatch(new PossibleParentSelector($user, $tracker, $offset, $limit));
 
+        if (! $possible_parents->isSelectorDisplayed()) {
+            return $possible_parents;
+        }
+
         $parent_tracker = $tracker->getParentUserCanView($user);
 
         if (! $parent_tracker && ! $possible_parents->getPossibleParents()) {

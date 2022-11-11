@@ -44,4 +44,16 @@ final class ProgramIncrementCreatorCheckerBuilder
             MessageLog::buildFromLogger(new NullLogger())
         );
     }
+
+    public static function buildInvalid(): ProgramIncrementCreatorChecker
+    {
+        $tracker_reference = TrackerReferenceStub::withDefaults();
+        return new ProgramIncrementCreatorChecker(
+            TimeboxCreatorCheckerBuilder::buildInvalid(),
+            VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
+            RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers($tracker_reference),
+            RetrieveVisibleProgramIncrementTrackerStub::withValidTracker(TrackerReferenceStub::withId(2)),
+            MessageLog::buildFromLogger(new NullLogger())
+        );
+    }
 }

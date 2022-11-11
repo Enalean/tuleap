@@ -32,7 +32,7 @@
         class="sidebar-collapse-button"
         v-on:click="changeSidebarCollapse()"
     >
-        <i class="fas sidebar-collapser-icon" aria-hidden="true"></i>
+        <i class="fa-solid sidebar-collapser-icon" aria-hidden="true"></i>
     </button>
 </template>
 <script setup lang="ts">

@@ -63,6 +63,10 @@ class WebhookSecretGenerator
         $this->webhook_creator                = $webhook_creator;
     }
 
+    /**
+     * @throws I18NRestException
+     * @throws RestException
+     */
     public function regenerate(
         int $id,
         \PFUser $current_user,
@@ -73,7 +77,7 @@ class WebhookSecretGenerator
         }
 
         if (! $this->isUserAllowedToUpdateBotApiToken($current_user, $repository)) {
-            throw new RestException(404);
+            throw new RestException(403);
         }
 
         $credentials = $this->credentials_retriever->getCredentials($repository);

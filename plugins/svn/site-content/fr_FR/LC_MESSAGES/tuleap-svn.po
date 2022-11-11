@@ -202,9 +202,6 @@ msgstr "Taille max de fichier"
 msgid "Maximum individual file size (in Megabytes)"
 msgstr "Taille maximum de fichier individuel (en mégaoctets)"
 
-msgid "Maximum number of credentials cached by repository"
-msgstr "Nombre maximum de credentials mis en cache par dépôt"
-
 msgid "Migrate from core"
 msgstr "Migrer Subversion \"Core\""
 

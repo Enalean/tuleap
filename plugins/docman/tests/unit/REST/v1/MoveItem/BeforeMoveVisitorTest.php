@@ -45,6 +45,8 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testAllExpectedDocumentTypesCanBeProcessed(string $processed_document_class): void
     {
+        $this->expectNotToPerformAssertions();
+
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $item_factory->shouldReceive('isMoveable')->andReturn(true);

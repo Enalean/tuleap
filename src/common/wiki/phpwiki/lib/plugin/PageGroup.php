@@ -62,12 +62,12 @@ class WikiPlugin_PageGroup extends WikiPlugin
     public function getDefaultArguments()
     {
         return [
-                     'parent'  => '',
-                     'rev'     => false,
-                     'section' => _("Contents"),
-                     'label'   => '',
-                     'loop'    => false,
-                     ];
+            'parent'  => '',
+            'rev'     => false,
+            'section' => _("Contents"),
+            'label'   => '',
+            'loop'    => false,
+        ];
     }
 
     // Stolen from IncludePage.php
@@ -122,11 +122,11 @@ class WikiPlugin_PageGroup extends WikiPlugin
             return $html;
         }
         $directions =  ['next'     => _("Next"),
-                             'previous' => _("Previous"),
-                             'contents' => _("Contents"),
-                             'first'    => _("First"),
-                             'last'     => _("Last"),
-                             ];
+            'previous' => _("Previous"),
+            'contents' => _("Contents"),
+            'first'    => _("First"),
+            'last'     => _("Last"),
+        ];
 
         global $WikiTheme;
         $sep = $WikiTheme->getButtonSeparator();

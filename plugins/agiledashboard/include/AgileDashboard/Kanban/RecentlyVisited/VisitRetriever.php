@@ -91,7 +91,8 @@ class VisitRetriever
                     null,
                     'fa-columns',
                     $tracker->getProject(),
-                    []
+                    [],
+                    [],
                 )
             );
         }

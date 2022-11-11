@@ -47,9 +47,9 @@ class CardwallPaneInfo extends PaneInfo
         return 'Card Wall';
     }
 
-    public function getIconName()
+    public function getIconName(): string
     {
-        return 'fa-table';
+        return 'fa-solid fa-table';
     }
 
     public function getUri(): string

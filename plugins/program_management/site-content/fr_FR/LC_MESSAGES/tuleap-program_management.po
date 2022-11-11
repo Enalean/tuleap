@@ -142,7 +142,7 @@ msgid ""
 "Expected tracker with id #%d to have a %s field associated to its TimeFrame "
 "semantic, but this field was not found"
 msgstr ""
-"L'outils de suivi avec l'identifiant #%d devrait avoir un champ de type %s "
+"L'outil de suivi avec l'identifiant #%d devrait avoir un champ de type %s "
 "associé à sa sémantique plage de temps, mais le champ n'a pas été trouvé"
 
 #, php-format
@@ -150,7 +150,7 @@ msgid ""
 "Expected tracker with id %d to have a field associated to its %s semantic, "
 "but this field was not found"
 msgstr ""
-"L'outils de suivi %d devrait avoir un champ associé à sa sémantique %s, mais "
+"L'outil de suivi %d devrait avoir un champ associé à sa sémantique %s, mais "
 "le champ n'a pas été trouvé"
 
 #, php-format
@@ -272,7 +272,7 @@ msgid "Permission"
 msgstr "Permission"
 
 msgid "Plannable tracker id cannot be empty"
-msgstr "L'id de l'outils de suivi panifiable ne doit pas être vide"
+msgstr "L'id de l'outil de suivi panifiable ne doit pas être vide"
 
 msgid "Please confirm your action."
 msgstr "Merci de confirmer votre action."
@@ -308,7 +308,7 @@ msgstr "Le Programme %d ne peut pas être à la fois un Programme et une Équipe
 
 #, php-format
 msgid "Program Increment artifact #%d could not be found"
-msgstr "L'artefact Incrément de Programme #%d n'a pas été trouvé"
+msgstr "L'artéfact Incrément de Programme #%d n'a pas été trouvé"
 
 msgid ""
 "Program Increment tracker id must not be contained into plannable tracker ids"
@@ -467,6 +467,16 @@ msgstr "Sync %s ouverts"
 msgid "Sync open Program Increments"
 msgstr "Sync Incréments de Programme ouverts"
 
+msgid "Synchronization error"
+msgstr "Erreur de synchronisation"
+
+msgid ""
+"Synchronization has failed, an error has occurred, please contact your "
+"platform administrator"
+msgstr ""
+"La synchronisation a échoué, une erreur est survenue, veuillez contacter "
+"l'administrateur de votre plateforme"
+
 msgid ""
 "Team project <a href='/plugins/agiledashboard/?group_id=%s&action=admin'>%s</"
 "a> has no root planning or you can't access it"
@@ -504,6 +514,9 @@ msgstr ""
 msgid "The user group %s does not exist in the Program"
 msgstr "Le groupe  utilisateur %s  n'existe pas dans le Programme"
 
+msgid "This team is being synchronized"
+msgstr "Cette équipe est en cours de synchronisation"
+
 msgid "Timeframe"
 msgstr "Plage de temps"
 
@@ -528,16 +541,16 @@ msgstr "Actions liées à la planification générale"
 
 #, php-format
 msgid "Tracker #%d does not belong to project #%d"
-msgstr "L'outils de suivi #%d n'existe pas dans le projet #%d"
+msgstr "L'outil de suivi #%d n'existe pas dans le projet #%d"
 
 #, php-format
 msgid "Tracker #%d is not found"
-msgstr "L'outils de suivi %d n'a pas été trouvé"
+msgstr "L'outil de suivi %d n'a pas été trouvé"
 
 #, php-format
 msgid "Tracker id #%d is not a plannable tracker"
 msgstr ""
-"L'outils de suivi avec l'id #%d n'est pas un outils de suivi planifiable"
+"L'outil de suivi avec l'id #%d n'est pas un outils de suivi planifiable"
 
 #, php-format
 msgid "Tracker with id #%d has no artifact link field"

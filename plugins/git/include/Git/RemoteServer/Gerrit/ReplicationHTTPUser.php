@@ -40,7 +40,7 @@ class ReplicationHTTPUser implements PFO_User
         return [];
     }
 
-    public function getUnixName()
+    public function getUserName(): string
     {
         return $this->gerrit_server->getGenericUserName();
     }

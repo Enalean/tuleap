@@ -74,10 +74,12 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      */
     public function getProject(array $variables): Project
     {
-        $this->project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
-        if (! $this->project || $this->project->isError()) {
+        $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
+        if (! $project || $project->isError()) {
             throw new Request\NotFoundException(dgettext("tuleap-git", "Project not found."));
         }
+
+        $this->project = $project;
 
         return $this->project;
     }

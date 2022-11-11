@@ -34,6 +34,7 @@ use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
+use Tuleap\Layout\FooterConfiguration;
 
 class UserDashboardController
 {
@@ -146,7 +147,7 @@ class UserDashboardController
                 $user_dashboards_presenter
             )
         );
-        $GLOBALS['Response']->footer(['without_content' => true]);
+        $GLOBALS['Response']->footer(FooterConfiguration::withoutContent());
     }
 
     /**
@@ -431,7 +432,7 @@ class UserDashboardController
         $title .= $GLOBALS['Language']->getText(
             'my_index',
             'title',
-            $current_user->getRealName() . ' (' . $current_user->getUnixName() . ')'
+            $current_user->getRealName() . ' (' . $current_user->getUserName() . ')'
         );
 
         return $title;

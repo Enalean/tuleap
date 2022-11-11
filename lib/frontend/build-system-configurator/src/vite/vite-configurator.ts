@@ -19,11 +19,17 @@
 
 import path from "path";
 import type { UserConfigExport } from "vitest/config";
+import { configDefaults as config_defaults_vitest } from "vitest/config";
 import type { BuildOptions, CSSOptions, ServerOptions, UserConfig } from "vite";
 import { defineConfig as viteDefineConfig } from "vitest/config";
-import type { C8Options } from "vitest";
+import type { CoverageOptions } from "vitest";
 import { browserlist_config, esbuild_target } from "../browserslist_config";
 import autoprefixer from "autoprefixer";
+
+export type TuleapSpecificConfiguration = {
+    plugin_name: string;
+    sub_app_name?: string;
+};
 
 type OverloadedBuildOptions = Omit<BuildOptions, "reportCompressedSize" | "minify" | "target">;
 type OverloadedServerOptions = Omit<ServerOptions, "fs">;
@@ -49,17 +55,30 @@ type OverloadedAppUserConfig = Omit<UserConfigWithoutBuildAndServerAndTest, "bas
     server?: OverloadedServerOptions;
 };
 
+const getBaseDir = (tuleap_config: TuleapSpecificConfiguration): { base: string } => {
+    if (tuleap_config.sub_app_name !== undefined) {
+        return {
+            base: `/assets/${tuleap_config.plugin_name}/${tuleap_config.sub_app_name}/`,
+        };
+    }
+    return {
+        base: `/assets/${tuleap_config.plugin_name}/`,
+    };
+};
+
 export function defineAppConfig(
-    app_name: string,
+    tuleap_config: TuleapSpecificConfiguration,
     config: OverloadedAppUserConfig
 ): UserConfigExport {
+    const { base } = getBaseDir(tuleap_config);
+
     const overridable_build_default: BuildOptions = {
         chunkSizeWarningLimit: 3000,
     };
 
     return defineBaseConfig({
         ...config,
-        base: `/assets/${app_name}/`,
+        base,
         build: {
             ...overridable_build_default,
             ...config.build,
@@ -78,7 +97,7 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
     if (process.env.CI_MODE === "true") {
         test_reporters.push("junit");
     }
-    let test_coverage: C8Options = {
+    let test_coverage: CoverageOptions = {
         reportsDirectory: TEST_OUTPUT_DIRECTORY,
     };
     if (process.env.COLLECT_COVERAGE === "true") {
@@ -112,17 +131,17 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
         test: {
             watch: false,
             restoreMocks: true,
+            css: true,
             environment: "jsdom",
             include: ["**/?(*.)+(test).{js,ts}"],
             exclude: [
-                "**/node_modules/**",
+                ...config_defaults_vitest.exclude,
                 "**/vendor/**",
                 "**/assets/**",
                 "**/frontend-assets/**",
-                "**/dist/**",
                 "**/tests/**",
                 "**/*.d.ts",
-                "**/scripts/lib/**",
+                "./scripts/lib/**",
                 "**/js-test-results/**",
             ],
             setupFiles: [

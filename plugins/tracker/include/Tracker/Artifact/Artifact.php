@@ -73,6 +73,7 @@ use Tracker_FormElement;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Burndown;
+use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
@@ -92,6 +93,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupLiteralizer;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
@@ -106,6 +108,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
@@ -566,7 +569,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('MoveArtifactModal.js'));
         foreach ($action_buttons_fetcher->getAdditionalActions() as $additional_action) {
-            $GLOBALS['HTML']->includeFooterJavascriptFile($additional_action->getAssetLink());
+            $GLOBALS['HTML']->addJavascriptAsset($additional_action->asset);
         }
 
         return $renderer->renderToString(
@@ -829,11 +832,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             case 'preview-attachment': // deprecated urls: /plugins/tracker/?aid=193&field=94&func=preview-attachment&attachment=39
             case 'show-attachment':    //                  /plugins/tracker/?aid=193&field=94&func=show-attachment&attachment=39
                 if ((int) $request->get('field') && (int) $request->get('attachment')) {
-                    $ff = Tracker_FormElementFactory::instance();
-                    /**
-                     * @var $field Tracker_FormElement_Field_File
-                     */
+                    $ff    = Tracker_FormElementFactory::instance();
                     $field = $ff->getFormElementById($request->get('field'));
+                    \assert($field instanceof Tracker_FormElement_Field_File);
                     if ($field === null || ! $field->userCanRead($current_user)) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
@@ -1089,8 +1090,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return TRACKER_BASE_URL . '/?' . http_build_query(
             array_merge(
                 [
-                        'aid' => $this->getId(),
-                    ],
+                    'aid' => $this->getId(),
+                ],
                 $parameters
             )
         );
@@ -1113,10 +1114,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         return '<a class="cross-reference" href="/goto?' . http_build_query(
             [
-                    'key'      => $this->getTracker()->getItemName(),
-                    'val'      => $this->getId(),
-                    'group_id' => $this->getTracker()->getGroupId(),
-                ]
+                'key'      => $this->getTracker()->getItemName(),
+                'val'      => $this->getId(),
+                'group_id' => $this->getTracker()->getGroupId(),
+            ]
         ) . '">' . Codendi_HTMLPurifier::instance()->purify($this->getXRef()) . '</a>';
     }
 
@@ -2186,6 +2187,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         $tracker_artifact_factory = $this->getArtifactFactory();
         $form_element_factory     = $this->getFormElementFactory();
+        $event_dispatcher         = EventManager::instance();
         $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         return new NewChangesetCreator(
             $fields_validator,
@@ -2205,6 +2207,12 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $this->getChangesetCommentDao(),
                 $this->getReferenceManager(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
+                    Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             )
         );
     }

@@ -5,6 +5,8 @@ services:
     image: tuleap-run-tests-v2
     build:
       context: tests/e2e/distlp/DockerImage
+      platforms:
+        - linux/amd64
     command: /tuleap/tests/e2e/distlp/run.sh
     volumes:
       - .:/tuleap
@@ -19,6 +21,8 @@ services:
     build:
       context: ./tests/e2e/docker
       dockerfile: run-tests.dockerfile
+      platforms:
+        - linux/amd64
       args:
         DOCKER_REGISTRY: ${DOCKER_REGISTRY:-docker.io}
         CYPRESS_VERSION: $CYPRESS_VERSION
@@ -36,6 +40,8 @@ services:
     build:
       context: ./tests/e2e/docker
       dockerfile: reverse-proxy.dockerfile
+      platforms:
+        - linux/amd64
       args:
         DOCKER_REGISTRY: ${DOCKER_REGISTRY:-docker.io}
     command: /tuleap/tools/distlp/reverse-proxy/run.sh
@@ -55,6 +61,8 @@ services:
       - tests-tuleap-data:/data
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - ./tests/e2e/distlp/environment-backend-web:/root/.tuleap_env:ro
+    environment:
+      TULEAP_DISTLP_TEST: true
     tmpfs: /run
     depends_on:
       - ldap
@@ -73,6 +81,7 @@ services:
     tmpfs: /run
     environment:
       MYSQL_ROOT_PASSWORD: welcome0
+      TULEAP_DISTLP_TEST: true
     depends_on:
       - ldap
       - ${DB_HOST}

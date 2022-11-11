@@ -1,6 +1,7 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  *
@@ -56,6 +57,9 @@ class Docman_MetadataSqlQueryChunk
             switch ($md->getLabel()) {
                 case 'owner':
                     $this->field = 'i.user_id';
+                    break;
+                case 'filename':
+                    $this->field = '(i.item_type = 2) DESC, v.filename'; // 2 = file type
                     break;
                 default:
                     $this->field = 'i.' . $md->getLabel();

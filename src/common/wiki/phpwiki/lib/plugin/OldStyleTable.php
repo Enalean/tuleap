@@ -65,12 +65,12 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
     public function getDefaultArguments()
     {
         return [
-                     'caption'     => '',
-                     'cellpadding' => '1',
-                     'cellspacing' => '1',
-                     'border'      => '1',
-                     'summary'     => '',
-                     ];
+            'caption'     => '',
+            'cellpadding' => '1',
+            'cellspacing' => '1',
+            'border'      => '1',
+            'summary'     => '',
+        ];
     }
 
     public function handle_plugin_args_cruft($argstr, $args)

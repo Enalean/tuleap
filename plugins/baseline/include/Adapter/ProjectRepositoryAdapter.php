@@ -23,36 +23,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use PFUser;
-use Project;
 use Project_AccessException;
 use ProjectManager;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\ProjectRepository;
+use Tuleap\Baseline\Domain\UserIdentifier;
 use URLVerification;
 
 class ProjectRepositoryAdapter implements ProjectRepository
 {
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var URLVerification */
-    private $url_verification;
-
-    public function __construct(ProjectManager $project_manager, URLVerification $url_verification)
-    {
-        $this->project_manager  = $project_manager;
-        $this->url_verification = $url_verification;
+    public function __construct(
+        private ProjectManager $project_manager,
+        private URLVerification $url_verification,
+        private \UserManager $user_manager,
+    ) {
     }
 
-    public function findById(PFUser $current_user, int $id): ?Project
+    public function findById(UserIdentifier $current_user, int $id): ?ProjectIdentifier
     {
         $project = $this->project_manager->getProject($id);
         if ($project === null) {
             return null;
         }
+
+        $user = $this->user_manager->getUserById($current_user->getId());
+        if ($user === null) {
+            return null;
+        }
+
         try {
-            $this->url_verification->userCanAccessProject($current_user, $project);
-            return $project;
+            $this->url_verification->userCanAccessProject($user, $project);
+
+            return ProjectProxy::buildFromProject($project);
         } catch (Project_AccessException $e) {
             return null;
         }

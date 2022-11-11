@@ -19,7 +19,14 @@
   -->
 
 <template>
-    <action-button icon="trash-o" v-on:click="showConfirmation()" class="tlp-button-danger">
+    <action-button
+        icon="trash-o"
+        v-on:click="showConfirmation"
+        class="tlp-button-danger"
+        v-if="is_admin"
+        v-bind:disabled="is_disabled"
+        v-bind:title="title"
+    >
         <span v-translate>Delete</span>
     </action-button>
 </template>
@@ -27,13 +34,40 @@
 <script>
 import ActionButton from "../common/ActionButton.vue";
 import DeleteBaselineConfirmationModal from "./DeleteBaselineConfirmationModal.vue";
+import { mapState } from "vuex";
 
 export default {
     name: "DeleteBaselineButton",
     components: { ActionButton },
 
+    inject: ["is_admin"],
+
     props: {
         baseline: { required: true, type: Object },
+    },
+
+    computed: {
+        ...mapState("comparisons", ["comparisons", "is_loading"]),
+        is_disabled() {
+            if (this.is_loading) {
+                return true;
+            }
+
+            const is_part_of_comparisons = this.comparisons.some(
+                (comparison) =>
+                    comparison.base_baseline_id === this.baseline.id ||
+                    comparison.compared_to_baseline_id === this.baseline.id
+            );
+
+            return is_part_of_comparisons;
+        },
+        title() {
+            return this.is_disabled
+                ? this.$gettext(
+                      "The baseline cannot be deleted because it is associated to a comparison."
+                  )
+                : "";
+        },
     },
 
     methods: {

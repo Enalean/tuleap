@@ -170,7 +170,7 @@ class AdditionalArtifactActionBuilder
 
         return new AdditionalButtonAction(
             $link,
-            $this->include_assets->getFileURL()
+            $this->include_assets
         );
     }
 }

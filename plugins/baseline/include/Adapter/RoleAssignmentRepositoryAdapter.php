@@ -24,41 +24,58 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use ParagonIE\EasyDB\EasyDB;
-use Project;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
+use Tuleap\Baseline\Domain\RetrieveBaselineUserGroup;
+use Tuleap\Baseline\Domain\Role;
+use Tuleap\Baseline\Domain\RoleAssignment;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleAssignmentsUpdate;
 
 class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
 {
-    /** @var EasyDB */
-    private $db;
-
-    public function __construct(EasyDB $db)
+    public function __construct(private EasyDB $db, private RetrieveBaselineUserGroup $ugroup_retriever)
     {
-        $this->db = $db;
     }
 
     /**
      * @return RoleAssignment[]
      */
-    public function findByProjectAndRole(Project $project, string $role): array
+    public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
     {
-        $rows = $this->db->safeQuery(
-            "SELECT user_group_id, role, project_id
+        $user_groups_ids = $this->db->column(
+            "SELECT user_group_id
                     FROM plugin_baseline_role_assignment
                     WHERE project_id = ?
                     AND role = ?",
-            [$project->getID(), $role]
+            [$project->getID(), $role->getName()]
         );
 
-        $assignments = [];
-        foreach ($rows as $row) {
-            $assignments[] = new RoleAssignment(
-                $project,
-                $row['user_group_id'],
-                $row['role']
-            );
+        return RoleAssignment::fromRoleAssignmentsIds(
+            $this->ugroup_retriever,
+            $project,
+            $role,
+            ...$user_groups_ids
+        );
+    }
+
+    public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void
+    {
+        $insertions = [];
+        foreach ($role_assignments_update->getAssignments() as $assignment) {
+            $insertions[] = [
+                'user_group_id' => $assignment->getUserGroupId(),
+                'role'          => $assignment->getRoleName(),
+                'project_id'    => $assignment->getProject()->getID(),
+            ];
         }
 
-        return $assignments;
+        $this->db->tryFlatTransaction(
+            function () use ($role_assignments_update, $insertions): void {
+                $this->db->delete('plugin_baseline_role_assignment', ['project_id' => $role_assignments_update->getProject()->getID()]);
+                if (! empty($insertions)) {
+                    $this->db->insertMany('plugin_baseline_role_assignment', $insertions);
+                }
+            }
+        );
     }
 }

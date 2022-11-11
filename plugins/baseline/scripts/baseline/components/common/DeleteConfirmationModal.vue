@@ -64,38 +64,30 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { getMessageFromException } from "../../support/rest-utils";
-export default {
-    name: "DeleteConfirmationModal",
+import { ref } from "vue";
 
-    props: {
-        submit_label: { required: true, type: String },
-        default_failed_message: { required: true, type: String },
-        on_submit: { required: true, type: Function },
-    },
+const props = defineProps<{
+    submit_label: string;
+    default_failed_message: string;
+    on_submit: () => void;
+}>();
 
-    data() {
-        return {
-            is_deleting: false,
-            is_deleting_failed: false,
-            failed_message: null,
-        };
-    },
+const is_deleting = ref(false);
+const is_deleting_failed = ref(false);
+const failed_message = ref<string | null>(null);
 
-    methods: {
-        async confirm() {
-            this.is_deleting = true;
-            this.is_deleting_failed = false;
-            try {
-                await this.on_submit();
-            } catch (exception) {
-                this.is_deleting_failed = true;
-                this.failed_message = await getMessageFromException(exception);
-            } finally {
-                this.is_deleting = false;
-            }
-        },
-    },
-};
+async function confirm(): Promise<void> {
+    is_deleting.value = true;
+    is_deleting_failed.value = false;
+    try {
+        await props.on_submit();
+    } catch (exception) {
+        is_deleting_failed.value = true;
+        failed_message.value = await getMessageFromException(exception);
+    } finally {
+        is_deleting.value = false;
+    }
+}
 </script>

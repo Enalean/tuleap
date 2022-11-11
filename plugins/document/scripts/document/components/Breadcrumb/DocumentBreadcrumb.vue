@@ -106,7 +106,7 @@ import DocumentBreadcrumbDocument from "./DocumentBreadcrumbDocument.vue";
 import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 import { useNamespacedState, useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
-import { ref } from "@vue/composition-api";
+import { ref } from "vue";
 
 const {
     current_folder_ascendant_hierarchy,
@@ -187,9 +187,4 @@ function currentFolderAscendantHierarchyToDisplay(): Array<Item> {
 function isCurrentDocumentDisplayed(): boolean {
     return currently_previewed_item.value !== null && current_folder.value !== null;
 }
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
 </script>

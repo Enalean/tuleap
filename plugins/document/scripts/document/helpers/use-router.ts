@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { Route } from "vue-router";
-import { getCurrentInstance } from "@vue/composition-api";
+import { getCurrentInstance } from "vue";
 import type VueRouter from "vue-router";
 
 export function useRoute(): Route {

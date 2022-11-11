@@ -19,12 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Markdown\EnhancedCodeBlockExtension;
+use Tuleap\Search\ItemToIndexQueue;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
+use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
@@ -152,6 +158,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
         if ($format == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
             $changeset_value = $hp->purify($value, CODENDI_PURIFIER_FULL, $project_id);
+        } elseif ($format === Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT) {
+            $common_mark_interpreter = CommonMarkInterpreter::build(
+                $hp,
+                new EnhancedCodeBlockExtension(CodeBlockFeaturesOnArtifact::getInstance())
+            );
+
+            $changeset_value = $common_mark_interpreter->getInterpretedContentWithReferences($value, (int) $project_id);
         } else {
             $changeset_value = $hp->purify($value, CODENDI_PURIFIER_BASIC, $project_id);
         }
@@ -603,8 +616,14 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $content     = $substitutor->substituteURLsInHTML($content, $url_mapping);
         }
 
-        return $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format) &&
+        $res = $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format) &&
                $this->extractCrossRefs($artifact, $content);
+
+        if ($res) {
+            $this->addRawValueToSearchIndex(new ItemToIndexQueueEventBased(EventManager::instance()), $artifact, $content, $body_format);
+        }
+
+        return $res;
     }
 
     private function getRightContent($value)
@@ -618,6 +637,30 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         assert($last_changeset_value === null || $last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
         $old_format = $last_changeset_value ? $last_changeset_value->getFormat() : null;
         return is_array($value) ? $value['format'] : $old_format;
+    }
+
+    public function addChangesetValueToSearchIndex(ItemToIndexQueue $index_queue, Tracker_Artifact_ChangesetValue $changeset_value): void
+    {
+        assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
+        $this->addRawValueToSearchIndex(
+            $index_queue,
+            $changeset_value->getChangeset()->getArtifact(),
+            $changeset_value->getText(),
+            $changeset_value->getFormat(),
+        );
+    }
+
+    private function addRawValueToSearchIndex(ItemToIndexQueue $index_queue, Artifact $artifact, string $content, ?string $body_format): void
+    {
+        $event_dispatcher = EventManager::instance();
+        (new FieldContentIndexer($index_queue, $event_dispatcher))->indexFieldContent(
+            $artifact,
+            $this,
+            Tracker_Artifact_ChangesetValue_Text::getContentHasTextFromRawInfo(
+                $content,
+                $body_format ?? Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+            ),
+        );
     }
 
     /**

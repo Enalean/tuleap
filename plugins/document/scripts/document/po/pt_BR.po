@@ -54,9 +54,6 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr ""
 
-msgid "Accepted input is the user id or its username."
-msgstr ""
-
 msgid "Actions in Documents service"
 msgstr ""
 
@@ -78,6 +75,12 @@ msgstr ""
 msgid "An error has occurred, please contact your administrator"
 msgstr ""
 
+msgid "An error occurred while deleting the version"
+msgstr ""
+
+msgid "An error occurred while loading logs"
+msgstr ""
+
 msgid "An error occurred while searching for results."
 msgstr ""
 
@@ -94,6 +97,9 @@ msgid "Apply new values on this folder and its subfolders only"
 msgstr ""
 
 msgid "Apply same permissions to all sub-items of this folder"
+msgstr ""
+
+msgid "Approval"
 msgstr ""
 
 msgid "Approval table"
@@ -114,6 +120,9 @@ msgstr ""
 msgid "Ascending sort on %{label}."
 msgstr ""
 
+msgid "Author"
+msgstr ""
+
 msgid "Before"
 msgstr ""
 
@@ -124,6 +133,9 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 msgid "Cancel upload"
+msgstr ""
+
+msgid "Change Log"
 msgstr ""
 
 msgid "Changelog"
@@ -179,6 +191,9 @@ msgid "Creation"
 msgstr ""
 
 msgid "Cut"
+msgstr ""
+
+msgid "Date"
 msgstr ""
 
 msgid "Default properties"
@@ -291,6 +306,9 @@ msgstr ""
 msgid "Go to parent folder"
 msgstr ""
 
+msgid "Go to the last version (%{ version_number })."
+msgstr ""
+
 msgid "Go to the wiki page"
 msgstr ""
 
@@ -342,6 +360,9 @@ msgstr ""
 msgid "Lock new version"
 msgstr ""
 
+msgid "Logs"
+msgstr ""
+
 msgid "Mail content is required"
 msgstr ""
 
@@ -387,6 +408,9 @@ msgstr ""
 msgid "New folder"
 msgstr ""
 
+msgid "New value"
+msgstr ""
+
 msgid "New version for \"%s\""
 msgstr ""
 
@@ -414,6 +438,9 @@ msgstr ""
 msgid "Obsolete today"
 msgstr ""
 
+msgid "Old value"
+msgstr ""
+
 msgid "On"
 msgstr ""
 
@@ -439,6 +466,9 @@ msgid "Oops… Unable to upload file"
 msgid_plural "Oops… Unable to upload files"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Open"
+msgstr ""
 
 msgid "Open approval tables"
 msgstr ""
@@ -569,6 +599,9 @@ msgid ""
 "selected item they will apply to the current folder."
 msgstr ""
 
+msgid "Show"
+msgstr ""
+
 msgid "Show error details"
 msgstr ""
 
@@ -576,6 +609,9 @@ msgid "Size of the archive to be downloaded: %{ size_in_MB } MB"
 msgstr ""
 
 msgid "Some files are being uploaded, click here to see the whole list."
+msgstr ""
+
+msgid "Source"
 msgstr ""
 
 msgid "Start over with a completely new approval table."
@@ -621,6 +657,9 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "The last version of an item cannot be deleted"
+msgstr ""
+
 msgid ""
 "The size of the zip file you are attempting to download is exceeding the "
 "threshold\n"
@@ -628,6 +667,12 @@ msgid ""
 msgstr ""
 
 msgid "There are no items here or you don't have permissions to see them."
+msgstr ""
+
+msgid "There are no logs yet"
+msgstr ""
+
+msgid "There are no versions yet"
 msgstr ""
 
 msgid "There is no upload in progress"
@@ -640,6 +685,9 @@ msgid "This folder is empty"
 msgstr ""
 
 msgid "This is a private folder"
+msgstr ""
+
+msgid "This item is not versionable"
 msgstr ""
 
 msgid ""
@@ -674,6 +722,9 @@ msgstr ""
 msgid "Upload error"
 msgstr ""
 
+msgid "Uploaded"
+msgstr ""
+
 msgid "Uploading documents"
 msgstr ""
 
@@ -686,13 +737,25 @@ msgstr ""
 msgid "Version"
 msgstr "Versão"
 
+msgid "Version %{ number } has been successfully deleted"
+msgstr ""
+
 msgid "Version name"
+msgstr ""
+
+msgid "Versions"
 msgstr ""
 
 msgid "View all versions"
 msgstr ""
 
 msgid "We detect you are using OSX"
+msgstr ""
+
+msgid "What"
+msgstr ""
+
+msgid "When"
 msgstr ""
 
 msgid ""
@@ -711,6 +774,9 @@ msgid ""
 "wisely!"
 msgstr ""
 
+msgid "Who"
+msgstr ""
+
 msgid "Wiki page"
 msgstr ""
 
@@ -723,6 +789,10 @@ msgid "Writer"
 msgstr ""
 
 msgid "You are about to delete \"%s\" permanently. Please confirm your action."
+msgstr ""
+
+msgid ""
+"You are about to delete a version permanently. Please confirm your action."
 msgstr ""
 
 msgid ""
@@ -754,7 +824,7 @@ msgstr "Você não está autorizado a carregar arquivos maiores que %s."
 msgid "You are not allowed to write in this folder"
 msgstr ""
 
-msgid "You can search documents owned by a user."
+msgid "You are viewing an old version (%{ version_number }) of this document."
 msgstr ""
 
 msgid "You don't have read permission for this item"
@@ -767,6 +837,9 @@ msgid ""
 "You should also be aware that the following wiki documents referencing page "
 "\"%s\" will no longer be valid if you choose to propagate the deletion to "
 "the wiki service:"
+msgstr ""
+
+msgid "diff"
 msgstr ""
 
 msgid "lorem => exactly \"lorem\""

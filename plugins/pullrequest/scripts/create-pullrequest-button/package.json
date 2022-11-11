@@ -1,0 +1,21 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-pullrequest-button",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/tlp-fetch": "link:../../../../lib/frontend/tlp-fetch",
+    "vue": "^2.7.8",
+    "vue-gettext": "^2.1.12",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch",
+    "test": "jest"
+  }
+}

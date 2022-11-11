@@ -44,6 +44,9 @@ import {
     convertArrayOfItems,
     convertRestItemToItem,
 } from "../helpers/properties-helpers/metadata-to-properties";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { getJSON } from "@tuleap/fetch-result";
 
 export {
     getDocumentManagerServiceInformation,
@@ -74,6 +77,7 @@ export {
     postNewFileVersionFromEmpty,
     getItemWithSize,
     searchInFolder,
+    getUserByName,
 };
 
 export interface RestItem extends Omit<Item, "properties"> {
@@ -122,6 +126,22 @@ interface DeleteWikiPageOptions {
     delete_associated_wiki_page: boolean;
 }
 
+export interface RestUser {
+    readonly id: string;
+    readonly display_name: string;
+    readonly username: string;
+    readonly realname: string;
+}
+
+function getUserByName(username: string): ResultAsync<RestUser[], Fault> {
+    return getJSON<RestUser[]>(`/api/v1/users`, {
+        params: {
+            query: JSON.stringify({ username }),
+            limit: 1,
+            offset: 0,
+        },
+    });
+}
 async function getDocumentManagerServiceInformation(project_id: number): Promise<ProjectService> {
     const response = await get(
         "/api/projects/" + encodeURIComponent(project_id) + "/docman_service"
@@ -238,7 +258,7 @@ async function createNewVersion(
     should_lock_file: boolean,
     approval_table_action: ApprovalTable | null
 ): Promise<CreatedItemFileProperties> {
-    const response = await post(`/api/docman_files/${encodeURIComponent(item.id)}/version`, {
+    const response = await post(`/api/docman_files/${encodeURIComponent(item.id)}/versions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -296,7 +316,7 @@ function postEmbeddedFile(
     should_lock_file: boolean,
     approval_table_action: ApprovalTable | null
 ): Promise<Response> {
-    return post(`/api/docman_embedded_files/${encodeURIComponent(item.id)}/version`, {
+    return post(`/api/docman_embedded_files/${encodeURIComponent(item.id)}/versions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -319,7 +339,7 @@ function postWiki(
     change_log: string,
     should_lock_file: boolean
 ): Promise<Response> {
-    return post(`/api/docman_wikis/${encodeURIComponent(item.id)}/version`, {
+    return post(`/api/docman_wikis/${encodeURIComponent(item.id)}/versions`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -340,7 +360,7 @@ function postLinkVersion(
     should_lock_file: boolean,
     approval_table_action: ApprovalTable | null
 ): Promise<Response> {
-    return post(`/api/docman_links/${encodeURIComponent(item.id)}/version`, {
+    return post(`/api/docman_links/${encodeURIComponent(item.id)}/versions`, {
         headers: {
             "Content-Type": "application/json",
         },

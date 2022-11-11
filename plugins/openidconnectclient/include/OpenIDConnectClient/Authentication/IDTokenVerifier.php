@@ -137,6 +137,9 @@ class IDTokenVerifier
         }
 
         foreach ($keys_pem_format as $key_pem_format) {
+            if ($key_pem_format === '') {
+                continue;
+            }
             if ($this->jwt_validator->validate($id_token, new SignedWith($this->signer, InMemory::plainText($key_pem_format)))) {
                 return true;
             }

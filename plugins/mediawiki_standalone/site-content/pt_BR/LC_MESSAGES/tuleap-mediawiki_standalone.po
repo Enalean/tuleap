@@ -24,6 +24,16 @@ msgid ""
 msgstr ""
 
 msgid ""
+"The MediaWiki standalone service cannot activated when there are still "
+"legacy MediaWiki data"
+msgstr ""
+
+msgid ""
 "The Mediawiki service cannot activated when the MediaWiki standalone service "
 "is active"
+msgstr ""
+
+msgid ""
+"The Mediawiki service cannot activated when there are still MediaWiki "
+"standalone data"
 msgstr ""

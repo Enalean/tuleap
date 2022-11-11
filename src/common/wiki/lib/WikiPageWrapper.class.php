@@ -122,10 +122,10 @@ class WikiPageWrapper
             $event_manager->processEvent(
                 "wiki_page_created",
                 [
-                'group_id'         => $this->gid,
-                'wiki_page'        => $pagename,
-                'user'             => $user,
-                'version'          => $version,
+                    'group_id'         => $this->gid,
+                    'wiki_page'        => $pagename,
+                    'user'             => $user,
+                    'version'          => $version,
                 ]
             );
         }

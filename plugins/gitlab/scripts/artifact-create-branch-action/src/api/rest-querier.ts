@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, postJSON, decodeJSON } from "@tuleap/fetch-result";
+import { getJSON, postJSON, post } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 
@@ -26,22 +26,22 @@ export const postGitlabBranch = (
     artifact_id: number,
     reference: string
 ): ResultAsync<GitLabIntegrationCreatedBranchInformation, Fault> =>
-    postJSON("/api/v1/gitlab_branch", {
+    postJSON<GitLabIntegrationCreatedBranchInformation>("/api/v1/gitlab_branch", {
         gitlab_integration_id: gitlab_integration_id,
         artifact_id: artifact_id,
         reference: reference,
-    }).andThen((response) => decodeJSON<GitLabIntegrationCreatedBranchInformation>(response));
+    });
 
 export const postGitlabMergeRequest = (
     gitlab_integration_id: number,
     artifact_id: number,
     source_branch: string
 ): ResultAsync<void, Fault> =>
-    postJSON("/api/v1/gitlab_merge_request", {
-        gitlab_integration_id,
-        artifact_id,
-        source_branch,
-    }).map(() => {
+    post(
+        "/api/v1/gitlab_merge_request",
+        {},
+        { gitlab_integration_id, artifact_id, source_branch }
+    ).map(() => {
         // ignore response
     });
 

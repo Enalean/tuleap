@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import type { FileHistory, ItemFile } from "../../../../../type";
-import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import FileVersionHistoryContent from "./FileVersionHistoryContent.vue";
 import { Fragment } from "vue-frag";
 import { getVersionHistory } from "../../../../../helpers/version-history-retriever";
@@ -111,9 +111,4 @@ const history_url = computed((): string => {
 const display_latest_version_text = computed((): boolean => {
     return versions.value.length >= 5;
 });
-</script>
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

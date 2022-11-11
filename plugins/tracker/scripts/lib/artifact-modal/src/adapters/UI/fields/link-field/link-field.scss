@@ -58,7 +58,6 @@ $link-table-cell-background: transparent;
 }
 
 .link-field-table-footer-input,
-.link-field-table-footer-add-link,
 .link-field-table-footer-type {
     padding: $link-table-cell-padding;
     border-bottom: $link-table-cell-border-bottom;
@@ -68,12 +67,6 @@ $link-table-cell-background: transparent;
 .link-field-table-footer-input {
     position: relative;
     width: 100%;
-
-    > .link-field-selector-wrapper {
-        position: absolute;
-        right: 0;
-        left: $link-table-cell-padding;
-    }
 
     > .link-field-selector-wrapper
         > .link-selector-component-wrapper
@@ -86,10 +79,6 @@ $link-table-cell-background: transparent;
 .link-field-table-footer-type {
     min-width: 150px;
     padding: $link-table-cell-padding 0 $link-table-cell-padding $link-table-cell-padding;
-    vertical-align: middle;
-}
-
-.link-field-table-footer-add-link {
     vertical-align: middle;
 }
 

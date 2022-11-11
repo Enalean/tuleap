@@ -109,25 +109,25 @@ class PermissionsManagerSavePermissionsPlatformForRestrictedProjectPublicTest ex
 
     public function testItSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup(): void
     {
-        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_MEMBERS)->ordered()->andReturnTrue();
-        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, 104)->ordered()->andReturnTrue();
+        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_MEMBERS)->ordered()->andReturnTrue()->atLeast()->once();
+        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, 104)->ordered()->andReturnTrue()->atLeast()->once();
 
         $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup(): void
     {
-        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_ADMIN)->ordered()->andReturnTrue();
-        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, 104)->ordered()->andReturnTrue();
+        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_ADMIN)->ordered()->andReturnTrue()->atLeast()->once();
+        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, 104)->ordered()->andReturnTrue()->atLeast()->once();
 
         $this->savePermissions([ProjectUGroup::PROJECT_ADMIN, 104]);
     }
 
     public function testItSavesSVNAdminWikiAdminAndStatic(): void
     {
-        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::SVN_ADMIN)->ordered()->andReturnTrue();
-        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::WIKI_ADMIN)->ordered()->andReturnTrue();
-        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, 104)->ordered()->andReturnTrue();
+        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::SVN_ADMIN)->ordered()->andReturnTrue()->atLeast()->once();
+        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, ProjectUGroup::WIKI_ADMIN)->ordered()->andReturnTrue()->atLeast()->once();
+        $this->permissions_dao->shouldReceive('addPermission')->with($this->permission_type, $this->object_id, 104)->ordered()->andReturnTrue()->atLeast()->once();
 
         $this->savePermissions([ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104]);
     }

@@ -1,0 +1,199 @@
+/*
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$arrow-width: 6px;
+$follow-up-base-margin-left: 40px;
+$tlp-avatar-width: 32px;
+$thread-border-width: 2px;
+
+.pull-request-comment-component {
+    display: flex;
+    flex-direction: column;
+}
+
+.pull-request-comment {
+    display: flex;
+
+    > .tlp-avatar-medium {
+        margin: var(--tlp-medium-spacing) calc(var(--tlp-small-spacing) * 1.5) 0 0;
+    }
+}
+
+.timeline-event {
+    > .pull-request-comment-content {
+        &::before {
+            z-index: 2;
+            border-color: transparent var(--tlp-white-color) transparent transparent;
+        }
+
+        &::after {
+            z-index: 1;
+            top: calc(var(--tlp-medium-spacing) * 2);
+            left: -1.5px;
+            width: 0;
+            height: 0;
+            transform: translate(-100%, -50%);
+            border-width: 7px $arrow-width 7px 0;
+            border-style: solid;
+            border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
+            background: none;
+        }
+
+        p {
+            color: var(--tlp-dimmed-color);
+            font-style: italic;
+        }
+    }
+}
+
+.pull-request-comment-content {
+    position: relative;
+    flex: 1;
+    border: 1px solid var(--tlp-neutral-normal-color);
+    border-radius: var(--tlp-medium-radius);
+    background: var(--tlp-white-color);
+    box-shadow: var(--tlp-pane-shadow);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: calc(var(--tlp-medium-spacing) * 2);
+        left: 0;
+        width: 0;
+        height: 0;
+        transform: translate(-100%, -50%);
+        border-width: 7px $arrow-width 7px 0;
+        border-style: solid;
+        border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -1px;
+        width: 4px;
+        height: 100%;
+        border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
+        background: var(--tlp-neutral-normal-color);
+    }
+}
+
+.pull-request-comment-outdated {
+    border-top-right-radius: var(--tlp-medium-radius);
+    border-bottom-right-radius: var(--tlp-medium-radius);
+    background: var(--tlp-fade-background-color);
+    color: var(--tlp-dimmed-color);
+
+    > .pull-request-comment-file-path {
+        background: var(--tlp-neutral-light-color-transparent-40);
+    }
+}
+
+.pull-request-comment-content-info {
+    display: flex;
+    align-items: center;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+    font-size: 0.875rem;
+}
+
+.pull-request-comment-author-and-date {
+    flex: 1;
+    color: var(--tlp-dimmed-color);
+}
+
+.pull-request-comment-author-name,
+.pull-request-comment-date {
+    color: var(--tlp-dimmed-color);
+}
+
+.pull-request-comment-text {
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+}
+
+.pull-request-comment-file-path,
+.pull-request-comment-footer {
+    background: var(--tlp-fade-background-color);
+}
+
+.pull-request-comment-file-path {
+    margin: var(--tlp-small-spacing) 0 0;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+    font-family: var(--tlp-font-family-mono);
+    font-size: 0.8125rem;
+}
+
+.pull-request-comment-file-path-icon {
+    margin: 0 var(--tlp-small-spacing) 0 0;
+}
+
+.pull-request-comment-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--tlp-small-spacing);
+    border-top: 1px solid var(--tlp-neutral-light-color);
+    border-bottom-right-radius: var(--tlp-medium-radius);
+}
+
+.pull-request-comment-footer-action-button:not(:first-child) {
+    margin: 0 0 0 var(--tlp-small-spacing);
+}
+
+.pull-request-comment-follow-ups {
+    display: flex;
+    flex-direction: column;
+}
+
+.pull-request-comment-reply-form {
+    $half-avatar-width: calc($tlp-avatar-width / 2);
+    $half-thread-border-width: calc($thread-border-width / 2);
+
+    margin: 0 0 0 calc($follow-up-base-margin-left + $half-avatar-width + $half-thread-border-width);
+}
+
+.pull-request-comment-follow-up-content {
+    margin: var(--tlp-small-spacing) 0 0;
+}
+
+.pull-request-comment-reply-textarea {
+    width: 100%;
+    padding: var(--tlp-medium-spacing);
+    border: unset;
+    resize: none;
+
+    &:focus {
+        border-color: unset;
+        box-shadow: unset;
+    }
+}
+
+.pull-request-comment-follow-up {
+    margin: 0 0 0 calc($follow-up-base-margin-left + $tlp-avatar-width);
+    border-left: $thread-border-width solid var(--tlp-neutral-normal-color);
+
+    > .pull-request-comment-follow-up-content {
+        $left-offset: calc($tlp-avatar-width / 2) + calc($thread-border-width / 2);
+
+        position: relative;
+        left: -$left-offset;
+        width: calc(100% + $left-offset);
+    }
+}

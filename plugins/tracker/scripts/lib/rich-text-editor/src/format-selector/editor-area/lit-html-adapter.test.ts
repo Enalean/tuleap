@@ -35,24 +35,12 @@ describe(`lit-html-adapter`, () => {
     describe(`renderMarkdownEditor()`, () => {
         it(`will wrap the controls in a div with .rte_format classname before the textarea
             and will show the additional buttons / elements for Markdown`, () => {
-            const selectbox = html`
-                <select></select>
-            `;
-            const preview_button = html`
-                <button>Preview</button>
-            `;
-            const help_button = html`
-                <button>Help</button>
-            `;
-            const textarea = html`
-                <textarea></textarea>
-            `;
-            const preview_area = html`
-                <div>Preview Area</div>
-            `;
-            const hidden_format_input = html`
-                <input type="hidden" />
-            `;
+            const selectbox = html`<select></select>`;
+            const preview_button = html`<button>Preview</button>`;
+            const help_button = html`<button>Help</button>`;
+            const textarea = html`<textarea></textarea>`;
+            const preview_area = html`<div>Preview Area</div>`;
+            const hidden_format_input = html`<input type="hidden" />`;
             renderMarkdownEditor(
                 {
                     mount_point,
@@ -67,22 +55,10 @@ describe(`lit-html-adapter`, () => {
             );
             expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
                 "
-                            <div class=\\"rte_format\\">
-                                Format:
-                                <select></select>
-                            
-                                <input type=\\"hidden\\">
-                            
-                                <button>Preview</button>
-                            
-                                <button>Help</button>
-                            
+                            <div class="rte_format">
+                                Format:<select></select><input type="hidden"><button>Preview</button><button>Help</button>
                             </div>
-                            
-                                <textarea></textarea>
-                            
-                                <div>Preview Area</div>
-                            
+                            <textarea></textarea><div>Preview Area</div>
                         "
             `);
         });
@@ -90,12 +66,8 @@ describe(`lit-html-adapter`, () => {
 
     describe(`renderHTMLOrTextEditor()`, () => {
         it(`will wrap the controls in a div with .rte_format classname, before the textarea`, () => {
-            const selectbox = html`
-                <select></select>
-            `;
-            const textarea = html`
-                <textarea></textarea>
-            `;
+            const selectbox = html`<select></select>`;
+            const textarea = html`<textarea></textarea>`;
 
             renderHTMLOrTextEditor(
                 {
@@ -107,14 +79,10 @@ describe(`lit-html-adapter`, () => {
             );
             expect(stripLitExpressionComments(mount_point.innerHTML)).toMatchInlineSnapshot(`
                 "
-                            <div class=\\"rte_format\\">
-                                Format:
-                                <select></select>
-                            
+                            <div class="rte_format">
+                                Format:<select></select>
                             </div>
-                            
-                                <textarea></textarea>
-                            
+                            <textarea></textarea>
                         "
             `);
         });

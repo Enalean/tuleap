@@ -52,12 +52,12 @@ class FormElementListValueAdminViewPresenterBuilder
 
         $delete_url = TRACKER_BASE_URL . '/?' . http_build_query(
             [
-                    'tracker'      => $field->getTrackerId(),
-                    'func'         => 'admin-formElement-update',
-                    'formElement'  => $field->getId(),
-                    'bind-update'  => 1,
-                    'bind[delete]' => $value->getId(),
-                ]
+                'tracker'      => $field->getTrackerId(),
+                'func'         => 'admin-formElement-update',
+                'formElement'  => $field->getId(),
+                'bind-update'  => 1,
+                'bind[delete]' => $value->getId(),
+            ]
         );
 
         $image_title = $value_can_be_hidden ? dgettext(

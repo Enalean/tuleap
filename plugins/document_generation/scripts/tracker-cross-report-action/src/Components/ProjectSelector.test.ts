@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { describe, it, expect, vi } from "vitest";
+import { flushPromises, shallowMount } from "@vue/test-utils";
 import ProjectSelector from "./ProjectSelector.vue";
 import { getGlobalTestOptions } from "./global-options-for-test";
 import * as rest_querier from "../rest-querier";
-import { nextTick } from "vue";
 import type { ProjectResponse } from "../rest-querier";
 
 const projects: ProjectResponse[] = [
@@ -39,7 +39,7 @@ const projects: ProjectResponse[] = [
 
 describe("ProjectSelector", () => {
     it("displays possible projects", async () => {
-        jest.spyOn(rest_querier, "getProjects").mockResolvedValue(projects);
+        vi.spyOn(rest_querier, "getProjects").mockResolvedValue(projects);
 
         const wrapper = shallowMount(ProjectSelector, {
             global: getGlobalTestOptions(),
@@ -48,7 +48,7 @@ describe("ProjectSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const selector = wrapper.get("select");
 
@@ -56,7 +56,7 @@ describe("ProjectSelector", () => {
     });
 
     it("returns selected project", async () => {
-        jest.spyOn(rest_querier, "getProjects").mockResolvedValue(projects);
+        vi.spyOn(rest_querier, "getProjects").mockResolvedValue(projects);
 
         const wrapper = shallowMount(ProjectSelector, {
             global: getGlobalTestOptions(),
@@ -65,7 +65,7 @@ describe("ProjectSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const selector = wrapper.get("select");
 

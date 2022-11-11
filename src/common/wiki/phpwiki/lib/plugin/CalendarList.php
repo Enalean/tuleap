@@ -65,21 +65,22 @@ class WikiPlugin_CalendarList extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['prefix'       => '[pagename]',
-                     'date_format'  => '%Y-%m-%d',
-                     'order'         => PLUGIN_CALENDARLIST_ORDER, // normal or reverse (report sequence)
-                     'year'         => '',
-                     'month'        => '',
-                     'month_offset' => 0,
+            'date_format'  => '%Y-%m-%d',
+            'order'         => PLUGIN_CALENDARLIST_ORDER, // normal or reverse (report sequence)
+            'year'         => '',
+            'month'        => '',
+            'month_offset' => 0,
                      //support ranges: next n days/events
-                     'next_n_days'  => PLUGIN_CALENDARLIST_NEXT_N_DAYS,    // one or the other, not both
-                     'next_n'        => PLUGIN_CALENDARLIST_NEXT_N,
+            'next_n_days'  => PLUGIN_CALENDARLIST_NEXT_N_DAYS,    // one or the other, not both
+            'next_n'        => PLUGIN_CALENDARLIST_NEXT_N,
                      // last n days/entries:
-                     'last_n_days'  => PLUGIN_CALENDARLIST_LAST_N_DAYS,    // one or the other, not both
-                     'last_n'        => PLUGIN_CALENDARLIST_LAST_N,
+            'last_n_days'  => PLUGIN_CALENDARLIST_LAST_N_DAYS,    // one or the other, not both
+            'last_n'        => PLUGIN_CALENDARLIST_LAST_N,
 
-                     'month_format' => '%B, %Y',
-                     'wday_format'  => '%a',
-                     'start_wday'   => '0'];
+            'month_format' => '%B, %Y',
+            'wday_format'  => '%a',
+            'start_wday'   => '0',
+        ];
     }
 
     /**

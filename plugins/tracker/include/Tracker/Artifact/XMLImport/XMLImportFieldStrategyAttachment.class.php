@@ -59,7 +59,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         $files_infos = [];
 
         if ($this->isFieldChangeEmpty($values)) {
-            $this->logger->warning(
+            $this->logger->info(
                 'Skipped attachment field ' . $field->getLabel() . ': field value is empty.'
             );
 

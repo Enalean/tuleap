@@ -19,6 +19,11 @@
 
 @import "milestone";
 
+.milestones {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
 .milestones-load-closed {
     display: flex;
     flex: 1 1 auto;

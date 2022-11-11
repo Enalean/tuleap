@@ -71,12 +71,12 @@ class WikiPlugin_AddComment extends WikiPlugin_WikiBlog
     public function getDefaultArguments()
     {
         return ['pagename'   => '[pagename]',
-                     'order'      => 'normal',
-                     'mode'       => 'add,show',
-                     'jshide'     => '0',
-                     'noheader'   => false,
+            'order'      => 'normal',
+            'mode'       => 'add,show',
+            'jshide'     => '0',
+            'noheader'   => false,
                      //'sortby'     => '-pagename' // oldest first. reverse by order=reverse
-                    ];
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -117,9 +117,10 @@ function togglecomments(a) {
 }"));
             $html->pushContent(HTML::h4(HTML::a(
                 ['name' => 'comment-header',
-                                                      'class' => 'wikiaction',
-                                                      'title' => _("Click to display"),
-                                                      'onclick' => "togglecomments(this)"],
+                    'class' => 'wikiaction',
+                    'title' => _("Click to display"),
+                    'onclick' => "togglecomments(this)",
+                ],
                 _("Comments")
             )));
         } else {

@@ -60,7 +60,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         return array_merge(
             PageList::supportedArgs(),
             [
-                   's'     => false,
+                's'     => false,
                      /*
                       * Show only pages which have been 'deleted' this
                       * long (in days).  (negative or non-numeric
@@ -68,7 +68,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
                       *
                       * FIXME: could use a better name.
                       */
-                     'min_age' => 0,
+                'min_age' => 0,
 
                      /*
                       * Automatically check the checkboxes for files
@@ -76,9 +76,9 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
                       *
                       * FIXME: could use a better name.
                       */
-                     'max_age' => 31,
+                'max_age' => 31,
                      /* Columns to include in listing */
-                     'info'     => 'most',
+                'info'     => 'most',
             ]
         );
     }
@@ -204,7 +204,9 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
             $args['exclude'],
             ['types' =>
                                                   ['remove'
-            => new _PageList_Column_remove('remove', _("Remove"))]]
+            => new _PageList_Column_remove('remove', _("Remove")),
+                                                  ],
+            ]
         );
         $pagelist->addPageList($pages);
 
@@ -247,7 +249,8 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         // TODO: quick select by regex javascript?
         return HTML::form(
             ['action' => $request->getPostURL(),
-                                'method' => 'post'],
+                'method' => 'post',
+            ],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
@@ -256,7 +259,8 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
                 ['admin_remove']
             ),
             HiddenInputs(['admin_remove[action]' => $next_action,
-                                             'require_authority_for_post' => WIKIAUTH_ADMIN]),
+                'require_authority_for_post' => WIKIAUTH_ADMIN,
+            ]),
             $buttons
         );
     }

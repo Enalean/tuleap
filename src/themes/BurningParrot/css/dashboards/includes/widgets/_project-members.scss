@@ -35,7 +35,8 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
+    align-items: center;
+    margin: 0;
 }
 
 .widget-project-members-members {
@@ -47,14 +48,14 @@
 }
 
 .widget-project-members-members-count {
-    margin: 0 0 5px;
+    margin: 0 0 calc(var(--tlp-small-spacing) / 2);
     color: var(--tlp-main-color);
     font-size: 60px;
 }
 
 .widget-project-members-members-label {
     color: var(--tlp-dimmed-color);
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
 }
@@ -62,28 +63,30 @@
 .dashboard-widget-container.widget-project-members-administrators {
     flex: 5 1 auto;
     width: auto;
+    max-width: 100%;
 }
 
 .widget-project-members-administrators-title {
-    margin: 0;
-    line-height: 22px;
+    margin: 0 0 var(--tlp-small-spacing);
 }
 
 .widget-project-members-administrators-card {
     display: flex;
     align-items: center;
+    gap: var(--tlp-small-spacing);
     padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
 }
 
 .widget-project-members-avatar {
     flex: 0 0 auto;
-    margin: 0 5px 0 0;
 }
 
-.widget-project-members-spacer {
+.widget-project-members-username {
     flex: 1 1 auto;
-}
-
-.widget-project-members-badge {
-    margin: 0 0 0 var(--tlp-medium-spacing);
+    width: 100%;
+    overflow: hidden;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

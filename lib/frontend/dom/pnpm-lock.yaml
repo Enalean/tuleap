@@ -1,0 +1,7 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@tuleap/build-system-configurator': link:../build-system-configurator
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../build-system-configurator

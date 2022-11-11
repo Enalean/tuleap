@@ -600,6 +600,7 @@ class RouteCollector
 
     public static function getFileDownload(): FRSFileDownloadController
     {
+        $current_user_provider = new RESTCurrentUserMiddleware(UserManager::build(), new BasicAuthentication());
         return new FRSFileDownloadController(
             new URLVerification(),
             new FRSFileFactory(),
@@ -608,8 +609,9 @@ class RouteCollector
                 HTTPFactoryBuilder::streamFactory()
             ),
             new SapiStreamEmitter(),
+            $current_user_provider,
             new SessionWriteCloseMiddleware(),
-            new RESTCurrentUserMiddleware(UserManager::build(), new BasicAuthentication()),
+            $current_user_provider,
             new TuleapRESTCORSMiddleware()
         );
     }

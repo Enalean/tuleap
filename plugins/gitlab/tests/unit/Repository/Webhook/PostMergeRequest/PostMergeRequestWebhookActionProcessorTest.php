@@ -21,7 +21,6 @@
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use DateTimeImmutable;
-use Project;
 use Psr\Log\Test\TestLogger;
 use Reference;
 use Tuleap\Gitlab\API\GitlabRequestException;
@@ -34,6 +33,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -113,7 +113,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -222,7 +222,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -350,7 +350,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -470,7 +470,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -560,7 +560,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -650,7 +650,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -699,7 +699,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

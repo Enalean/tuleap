@@ -191,7 +191,7 @@ class PostCommit
 
         $body  = "SVN Repository: " . $system_path;
         $body .= "\n";
-        $body .= "Changes by: " . $committer->getName() . " <" . $committer->getEmail() . "> on " . $commit_info->getDate() . "\n";
+        $body .= "Changes by: " . $committer->getUserName() . " <" . $committer->getEmail() . "> on " . $commit_info->getDate() . "\n";
         $body .= "New Revision:   $new_revision  $goto_link \n";
         $body .= "\nLog message: \n" . $commit_info->getCommitMessage() . "\n";
         $body .= $this->listFiles($commit_info->getUpdatedFiles(), "Updated");

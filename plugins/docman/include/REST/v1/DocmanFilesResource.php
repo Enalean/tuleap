@@ -59,6 +59,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
+use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
@@ -252,7 +253,23 @@ final class DocmanFilesResource extends AuthenticatedResource
      */
     public function optionsNewVersion(int $id): void
     {
-        $this->setVersionHeaders();
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * @url    POST {id}/version
+     * @access protected
+     *
+     * @param DocmanFileVersionPOSTRepresentation $representation {@from body}
+     *
+     * @status 201
+     * @hide Only exist for backward compatibility
+     */
+    public function postVersion(
+        int $id,
+        DocmanFileVersionPOSTRepresentation $representation,
+    ): CreatedItemFilePropertiesRepresentation {
+        return $this->postVersions($id, $representation);
     }
 
     /**
@@ -266,26 +283,25 @@ final class DocmanFilesResource extends AuthenticatedResource
      *  * empty: No approbation needed for the new version of this document<br>
      * </pre>
      *
-     * @url    POST {id}/version
-     * @access hybrid
+     * @url    POST {id}/versions
+     * @access protected
      *
      * @param int                                 $id             Id of the file
      * @param DocmanFileVersionPOSTRepresentation $representation {@from body}
      *
      *
-     * @status 201
+     * @status 200
      * @throws RestException 400
      * @throws RestException 403
      * @throws RestException 409
      * @throws RestException 501
      */
 
-    public function postVersion(
+    public function postVersions(
         int $id,
         DocmanFileVersionPOSTRepresentation $representation,
     ): CreatedItemFilePropertiesRepresentation {
         $this->checkAccess();
-        $this->setVersionHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $this->addAllEvent($item_request->getProject());
@@ -551,7 +567,7 @@ final class DocmanFilesResource extends AuthenticatedResource
     public function getVersions(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
         $this->checkAccess();
-        $this->sendAllowHeaders();
+        $this->optionsDocumentVersions($id);
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $item          = $items_request->getItem();
@@ -559,9 +575,17 @@ final class DocmanFilesResource extends AuthenticatedResource
         $project       = $items_request->getProject();
 
         $item->accept($this->getValidator($project, $user, $item), []);
+        // validator make sure that we have a File but we still need $item to have the correct type
+        assert($item instanceof Docman_File);
 
-        $item_representation_builder = new VersionRepresentationCollectionBuilder(new VersionDao());
-        $items_representation        = $item_representation_builder->buildVersionsCollection($item, $limit, $offset);
+        $item_representation_builder = new VersionRepresentationCollectionBuilder(
+            new VersionDao(),
+            new CoAuthorDao(),
+            UserManager::instance(),
+            new \Docman_ApprovalTableFactoriesFactory()
+        );
+
+        $items_representation = $item_representation_builder->buildVersionsCollection($item, $limit, $offset);
 
         Header::sendPaginationHeaders($limit, $offset, $items_representation->getTotalSize(), self::MAX_LIMIT);
 
@@ -573,11 +597,6 @@ final class DocmanFilesResource extends AuthenticatedResource
      */
     public function optionsDocumentVersions(int $id): void
     {
-        $this->sendAllowHeaders();
-    }
-
-    private function sendAllowHeaders(): void
-    {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPost();
     }
 }

@@ -78,6 +78,7 @@ final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testExpiredPasswordShouldAllowToBrowseChangePasswordPage(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->url_verification->assertValidUrl(
             [
                 'HTTPS'       => 'On',
@@ -90,6 +91,7 @@ final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testExpiredPasswordShouldAllowToAccessUpdatePasswordPage(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->url_verification->assertValidUrl(
             [
                 'HTTPS'       => 'On',

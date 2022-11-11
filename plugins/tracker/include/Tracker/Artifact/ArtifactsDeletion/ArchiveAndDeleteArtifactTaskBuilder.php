@@ -23,17 +23,15 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use CrossReferenceManager;
 use EventManager;
 use ForgeConfig;
-use Psr\Log\LoggerInterface;
 use PermissionsDao;
 use PermissionsManager;
+use Psr\Log\LoggerInterface;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLExport;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Trigger_RulesBuilderFactory;
 use Tracker_Workflow_Trigger_RulesDao;
@@ -43,11 +41,16 @@ use TrackerFactory;
 use TrackerXmlExport;
 use Tuleap\DB\DBFactory;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
+use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsDao;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
@@ -123,6 +126,13 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 new ComputedFieldDaoCache(new ComputedFieldDao()),
                 new RecentlyVisitedDao(),
                 new PendingArtifactRemovalDao()
+            ),
+            new FieldContentIndexer(new ItemToIndexQueueEventBased($event_manager), $event_manager),
+            new ChangesetCommentIndexer(
+                new ItemToIndexQueueEventBased($event_manager),
+                $event_manager,
+                \Codendi_HTMLPurifier::instance(),
+                new \Tracker_Artifact_Changeset_CommentDao(),
             ),
             $event_manager,
             DBFactory::getMainTuleapDBConnection(),

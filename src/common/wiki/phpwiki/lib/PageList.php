@@ -107,9 +107,11 @@ class _PageList_Column_base
             $s = HTML::a(
                 ['href' =>
                                $GLOBALS['request']->GetURLtoSelf(['sortby' => $sortby,
-                                                                       'nocache' => '1']),
-                               'class' => 'pagetitle',
-                               'title' => sprintf(_("Sort by %s"), $this->_field)],
+                                   'nocache' => '1',
+                               ]),
+                    'class' => 'pagetitle',
+                    'title' => sprintf(_("Sort by %s"), $this->_field),
+                ],
                 HTML::raw('&nbsp;'),
                 HTML::u($this->_heading),
                 HTML::raw('&nbsp;')
@@ -132,10 +134,11 @@ class _PageList_Column_base
             $noimg_src = $WikiTheme->getButtonURL('no_order');
             if ($noimg_src) {
                 $noimg = HTML::img(['src' => $noimg_src,
-                                         'width' => '7',
-                                         'height' => '7',
-                                         'border' => 0,
-                                         'alt'    => '.']);
+                    'width' => '7',
+                    'height' => '7',
+                    'border' => 0,
+                    'alt'    => '.',
+                ]);
             } else {
                 $noimg = HTML::raw('&nbsp;');
             }
@@ -156,19 +159,22 @@ class _PageList_Column_base
                 //$img->setAttr('alt', _("Click to sort"));
             } else {
                 $img = HTML::img(['src' => $src,
-                                       'width' => '7',
-                                       'height' => '7',
-                                       'border' => 0,
-                                       'alt' => _("Click to reverse sort order")]);
+                    'width' => '7',
+                    'height' => '7',
+                    'border' => 0,
+                    'alt' => _("Click to reverse sort order"),
+                ]);
             }
             $s = HTML::a(
                 ['href' =>
                                //Fixme: pass all also other GET args along. (limit is ok, p[])
                                //Fixme: convert to POST submit[sortby]
                                $request->GetURLtoSelf(['sortby' => $sortby,
-                                                            /*'nocache' => '1'*/]),
-                               'class' => 'gridbutton',
-                               'title' => sprintf(_("Click to sort by %s"), $this->_field)],
+                                                            /*'nocache' => '1'*/
+                               ]),
+                    'class' => 'gridbutton',
+                    'title' => sprintf(_("Click to sort by %s"), $this->_field),
+                ],
                 HTML::raw('&nbsp;'),
                 $noimg,
                 HTML::raw('&nbsp;'),
@@ -181,7 +187,8 @@ class _PageList_Column_base
             $s = HTML(HTML::raw('&nbsp;'), $this->_heading, HTML::raw('&nbsp;'));
         }
         return HTML::th(['align' => 'center', 'valign' => 'middle',
-                              'class' => 'gridbutton'], $s);
+            'class' => 'gridbutton',
+        ], $s);
     }
 
     /**
@@ -334,12 +341,12 @@ class _PageList_Column_checkbox extends _PageList_Column
     {
         $this->_name = $name;
         $heading     = HTML::input(['type'  => 'button',
-                                     'title' => _("Click to de-/select all pages"),
+            'title' => _("Click to de-/select all pages"),
                                      //'width' => '100%',
-                                     'name'  => $default_heading,
-                                     'value' => $default_heading,
-                                     'onclick' => "flipAll(this.form)",
-                                     ]);
+            'name'  => $default_heading,
+            'value' => $default_heading,
+            'onclick' => "flipAll(this.form)",
+        ]);
         parent::__construct($field, $heading, 'center');
     }
     public function _getValue($page_handle, &$revision_handle, $pagelist = [])
@@ -351,13 +358,15 @@ class _PageList_Column_checkbox extends _PageList_Column
         }
         if ($selected) {
             return HTML::input(['type' => 'checkbox',
-                                     'name' => $this->_name . "[$pagename]",
-                                     'value' => 1,
-                                     'checked' => 'CHECKED']);
+                'name' => $this->_name . "[$pagename]",
+                'value' => 1,
+                'checked' => 'CHECKED',
+            ]);
         } else {
             return HTML::input(['type' => 'checkbox',
-                                     'name' => $this->_name . "[$pagename]",
-                                     'value' => 1]);
+                'name' => $this->_name . "[$pagename]",
+                'value' => 1,
+            ]);
         }
     }
     public function format($pagelist, $page_handle, &$revision_handle)
@@ -374,7 +383,8 @@ class _PageList_Column_checkbox extends _PageList_Column
     {
         $s = HTML(HTML::raw('&nbsp;'), $this->_heading, HTML::raw('&nbsp;'));
         return HTML::th(['align' => 'center', 'valign' => 'middle',
-                              'class' => 'gridbutton'], $s);
+            'class' => 'gridbutton',
+        ], $s);
     }
 }
 
@@ -601,17 +611,18 @@ class PageList
         $this->_initAvailableColumns();
         $symbolic_columns =
             [
-                  'all' =>  array_diff(
-                      array_keys($this->_types), // all but...
-                      ['checkbox','remove','renamed_pagename',
-                      'content',
-                      'hi_content',
-                      'perm',
-                      'acl']
-                  ),
-                  'most' => ['pagename','mtime','author','hits'],
-                  'some' => ['pagename','mtime','author'],
-                  ];
+                'all' =>  array_diff(
+                    array_keys($this->_types), // all but...
+                    ['checkbox','remove','renamed_pagename',
+                        'content',
+                        'hi_content',
+                        'perm',
+                        'acl',
+                    ]
+                ),
+                'most' => ['pagename','mtime','author','hits'],
+                'some' => ['pagename','mtime','author'],
+            ];
         if ($columns) {
             if (! is_array($columns)) {
                 $columns = explode(',', $columns);
@@ -662,38 +673,38 @@ class PageList
     {
         return [// Currently supported options:
                      /* what columns, what pages */
-                     'info'     => 'pagename',
-                     'exclude'  => '',          // also wildcards, comma-seperated lists
+            'info'     => 'pagename',
+            'exclude'  => '',          // also wildcards, comma-seperated lists
                                      // and <!plugin-list !> arrays
                      /* select pages by meta-data: */
-                     'author'   => false, // current user by []
-                     'owner'    => false, // current user by []
-                     'creator'  => false, // current user by []
+            'author'   => false, // current user by []
+            'owner'    => false, // current user by []
+            'creator'  => false, // current user by []
 
                      /* for the sort buttons in <th> */
-                     'sortby'   => '', // same as for WikiDB::getAllPages
+            'sortby'   => '', // same as for WikiDB::getAllPages
                                     // (unsorted is faster)
 
                      /* PageList pager options:
                       * These options may also be given to _generate(List|Table) later
                       * But limit and offset might help the query WikiDB::getAllPages()
                       */
-                     'limit'    => 0,       // number of rows (pagesize)
-                     'paging'   => 'auto',  // 'auto'   top + bottom rows if applicable
+            'limit'    => 0,       // number of rows (pagesize)
+            'paging'   => 'auto',  // 'auto'   top + bottom rows if applicable
                      //                // 'top'    top only if applicable
                      //                // 'bottom' bottom only if applicable
                      //                     // 'none'   don't page at all
                      // (TODO: clarify what if $paging==false ?)
 
                      /* list-style options (with single pagename column only so far) */
-                     'cols'     => 1,       // side-by-side display of list (1-3)
-                     'azhead'   => 0,       // 1: group by initials
+            'cols'     => 1,       // side-by-side display of list (1-3)
+            'azhead'   => 0,       // 1: group by initials
                                             // 2: provide shortcut links to initials also
-                     'comma'    => 0,       // condensed comma-seperated list,
+            'comma'    => 0,       // condensed comma-seperated list,
                                      // 1 if without links, 2 if with
-                     'commasep' => false,   // Default: ', '
-                     'ordered'  => false,   // OL or just UL lists (ignored for comma)
-                     ];
+            'commasep' => false,   // Default: ', '
+            'ordered'  => false,   // OL or just UL lists (ignored for comma)
+        ];
     }
 
     public function setCaption($caption_string)
@@ -1108,7 +1119,7 @@ class PageList
         global $customPageListColumns;
         $standard_types =
             [
-                  'content'
+                'content'
                   => new _PageList_Column_content('rev:content', _("Content")),
                   // new: plugin specific column types initialised by the relevant plugins
                   /*
@@ -1124,55 +1135,55 @@ class PageList
                   'acl'
                   => new _PageList_Column_acl('acl', _("ACL")),
                   */
-                  'checkbox'
+                'checkbox'
                   => new _PageList_Column_checkbox('p', _("Select")),
-                  'pagename'
+                'pagename'
                   => new _PageList_Column_pagename(),
-                  'mtime'
+                'mtime'
                   => new _PageList_Column_time('rev:mtime', _("Last Modified")),
-                  'hits'
+                'hits'
                   => new _PageList_Column('hits', _("Hits"), 'right'),
-                  'size'
+                'size'
                   => new _PageList_Column_size('rev:size', _("Size"), 'right'),
                                               /*array('align' => 'char', 'char' => ' ')*/
-                  'summary'
+                'summary'
                   => new _PageList_Column('rev:summary', _("Last Summary")),
-                  'version'
+                'version'
                   => new _PageList_Column_version(
                       'rev:version',
                       _("Version"),
                       'right'
                   ),
-                  'author'
+                'author'
                   => new _PageList_Column_author('rev:author', _("Last Author")),
-                  'owner'
+                'owner'
                   => new _PageList_Column_owner('author_id', _("Owner")),
-                  'creator'
+                'creator'
                   => new _PageList_Column_creator('author_id', _("Creator")),
                   /*
                   'group'
                   => new _PageList_Column_author('group', _("Group")),
                   */
-                  'locked'
+                'locked'
                   => new _PageList_Column_bool(
                       'locked',
                       _("Locked"),
                       _("locked")
                   ),
-                  'minor'
+                'minor'
                   => new _PageList_Column_bool(
                       'rev:is_minor_edit',
                       _("Minor Edit"),
                       _("minor")
                   ),
-                  'markup'
+                'markup'
                   => new _PageList_Column('rev:markup', _("Markup")),
                   // 'rating' initialised by the wikilens theme hook: addPageListColumn
                   /*
                   'rating'
                   => new _PageList_Column_rating('rating', _("Rate")),
                   */
-                  ];
+            ];
         if (empty($this->_types)) {
             $this->_types = [];
         }
@@ -1233,10 +1244,11 @@ class PageList
         // Omitting this warning should be overridable by the extension
         if (! isset($this->_types[$column])) {
             $silently_ignore = ['numbacklinks',
-                                     'rating',/*'ratingwidget',*/
-                                     'coagreement', 'minmisery',
+                'rating',/*'ratingwidget',*/
+                'coagreement', 'minmisery',
                                      /*'prediction',*/
-                                     'averagerating', 'top3recs'];
+                'averagerating', 'top3recs',
+            ];
             if (! in_array($column, $silently_ignore)) {
                 trigger_error(sprintf("%s: Bad column", $column), E_USER_NOTICE);
             }
@@ -1425,9 +1437,10 @@ class PageList
         }
 
         $table = HTML::table(['cellpadding' => 0,
-                                   'cellspacing' => 1,
-                                   'border'      => 0,
-                                   'class'       => 'pagelist']);
+            'cellspacing' => 1,
+            'border'      => 0,
+            'class'       => 'pagelist',
+        ]);
         if ($caption) {
             $table->pushContent(HTML::caption(['align' => 'top'], $caption));
         }
@@ -1569,7 +1582,8 @@ function flipAll(formObj) {
             // speed up table rendering by defining colgroups
             $out->pushContent(HTML::table(
                 HTML::colgroup(['span' => $this->_options['cols'],
-                                           'width' => $width]),
+                    'width' => $width,
+                ]),
                 $cols
             ));
             return $out;

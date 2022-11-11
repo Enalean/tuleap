@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "@vue/composition-api";
+import { ref } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { useNamespacedActions, useState, useNamespacedState } from "vuex-composition-helpers";
 import type { PreferenciesActions } from "../../store/preferencies/preferencies-actions";
@@ -93,10 +93,4 @@ function switchToNarrowView() {
         displayEmbeddedInNarrowMode(currently_previewed_item.value);
     }
 }
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

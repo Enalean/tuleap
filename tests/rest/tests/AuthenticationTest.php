@@ -22,8 +22,10 @@
 /**
  * @group TokenTests
  */
-class AuthenticationTest extends RestBase
+class AuthenticationTest extends RestBase // phpcs:ignore
 {
+    use \Tuleap\REST\ForgeAccessSandbox;
+
     public function testOPTIONSIsReadableByAnonymous()
     {
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('OPTIONS', 'projects'));
@@ -33,6 +35,8 @@ class AuthenticationTest extends RestBase
 
     public function testPublicGETResourceIsReadableByAnonymous()
     {
+        $this->setForgeToAnonymous();
+
         $response = $this->getResponseWithoutAuth($this->request_factory->createRequest('GET', 'projects'));
 
         $this->assertEquals(200, $response->getStatusCode());

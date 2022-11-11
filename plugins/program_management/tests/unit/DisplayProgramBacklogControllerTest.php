@@ -136,7 +136,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $user->method('getPreference')->willReturn(false);
         $user->method('isAdmin')->willReturn(true);
         $user->method('getId')->willReturn(101);
-        $user->method('getName')->willReturn('John');
+        $user->method('getUserName')->willReturn('John');
 
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];
@@ -163,7 +163,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $user->method('getPreference')->willReturn(false);
         $user->method('isAdmin')->willReturn(true);
         $user->method('getId')->willReturn(101);
-        $user->method('getName')->willReturn('John');
+        $user->method('getUserName')->willReturn('John');
 
         $request   = HTTPRequestBuilder::get()->withUser($user)->build();
         $variables = ['project_name' => 'test_project'];

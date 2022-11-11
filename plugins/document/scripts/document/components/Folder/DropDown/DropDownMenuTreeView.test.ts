@@ -90,6 +90,41 @@ describe("DropDownMenuTreeView", () => {
         ).toBeTruthy();
         expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
     });
+
+    it(`Given item is a file
+        Then it can be downloaded`, () => {
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: true,
+            } as ItemFile,
+            false,
+            false
+        );
+        expect(
+            wrapper.find("[data-test=document-dropdown-menu-download-file]").exists()
+        ).toBeTruthy();
+    });
+
+    it(`Given item is not a file
+        Then it cannot be downloaded`, () => {
+        const wrapper = createWrapper(
+            {
+                id: 1,
+                title: "my item title",
+                type: "folder",
+                user_can_write: true,
+            } as Folder,
+            false,
+            false
+        );
+        expect(
+            wrapper.find("[data-test=document-dropdown-menu-download-file]").exists()
+        ).toBeFalsy();
+    });
+
     it(`Given item is not a folder and user can write
         Then user can create new version of document`, () => {
         const wrapper = createWrapper(

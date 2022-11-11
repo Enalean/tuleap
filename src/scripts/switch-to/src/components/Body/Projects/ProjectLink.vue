@@ -21,13 +21,15 @@
 <template>
     <div
         class="switch-to-projects-project"
-        v-on:keydown="changeFocus"
         data-test="switch-to-projects-project"
+        v-on:click="onClick"
+        v-bind:data-target-id="target_id"
     >
         <a
             v-bind:href="project.project_uri"
             class="switch-to-projects-project-link"
             ref="project_link"
+            v-on:keydown="changeFocus"
             data-test="project-link"
         >
             <i
@@ -38,95 +40,92 @@
                 <span v-if="project.icon" class="switch-to-projects-project-label-icon">
                     {{ project.icon }}
                 </span>
-                {{ project.project_name }}
+                <highlight-matching-text v-bind:text="project.project_name" />
             </span>
         </a>
-        <a
-            v-if="project.is_current_user_admin"
-            v-bind:href="project.project_config_uri"
+        <quick-link
+            v-for="link of project.quick_links"
+            v-bind:key="link.html_url"
+            v-bind:link="link"
+            v-bind:project="project"
+            v-bind:item="null"
             class="switch-to-projects-project-admin-icon"
-            v-bind:title="admin_title"
             data-test="switch-to-projects-project-admin-icon"
-        >
-            <i class="fa fa-cog" aria-hidden="true"></i>
-        </a>
+        />
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, inject, ref, watch } from "vue";
 import type { Project } from "../../../type";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
-import { Action, State } from "vuex-class";
-import { sprintf } from "sprintf-js";
-import type { FocusFromProjectPayload } from "../../../store/type";
+import HighlightMatchingText from "../HighlightMatchingText.vue";
+import QuickLink from "../QuickLink.vue";
+import { storeToRefs } from "pinia";
+import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation";
+import { ARE_RESTRICTED_USERS_ALLOWED } from "../../../injection-keys";
 
-@Component
-export default class ProjectLink extends Vue {
-    @Prop({ required: true })
-    private readonly project!: Project;
+const props = defineProps<{ project: Project; location: Location }>();
 
-    @Prop({ required: true })
-    private readonly has_programmatically_focus!: boolean;
+const project_link = ref<HTMLAnchorElement | undefined>(undefined);
 
-    @State
-    private readonly are_restricted_users_allowed!: boolean;
+const navigation_store = useKeyboardNavigationStore();
 
-    @Action
-    private readonly changeFocusFromProject!: (payload: FocusFromProjectPayload) => void;
-
-    @Watch("has_programmatically_focus")
-    forceFocus(): void {
-        if (!this.has_programmatically_focus) {
-            return;
-        }
-
-        const link = this.$refs.project_link;
-        if (link instanceof HTMLAnchorElement) {
-            link.focus();
-        }
+const { programmatically_focused_element } = storeToRefs(navigation_store);
+watch(programmatically_focused_element, () => {
+    if (programmatically_focused_element.value !== props.project) {
+        return;
     }
 
-    changeFocus(event: KeyboardEvent): void {
-        switch (event.key) {
-            case "ArrowUp":
-            case "ArrowRight":
-            case "ArrowDown":
-            case "ArrowLeft":
-                event.preventDefault();
-                this.changeFocusFromProject({ project: this.project, key: event.key });
-                break;
-            default:
-        }
+    if (project_link.value instanceof HTMLAnchorElement) {
+        project_link.value.focus();
+    }
+});
+
+function changeFocus(event: KeyboardEvent): void {
+    switch (event.key) {
+        case "ArrowUp":
+        case "ArrowRight":
+        case "ArrowDown":
+        case "ArrowLeft":
+            event.preventDefault();
+            navigation_store.changeFocusFromProject({
+                project: props.project,
+                key: event.key,
+            });
+            break;
+        default:
+    }
+}
+
+const are_restricted_users_allowed = inject<boolean>(ARE_RESTRICTED_USERS_ALLOWED, false);
+
+const project_privacy_icon = computed((): string => {
+    const privacy: ProjectPrivacy = {
+        project_is_public: props.project.is_public,
+        project_is_private: props.project.is_private,
+        project_is_private_incl_restricted: props.project.is_private_incl_restricted,
+        project_is_public_incl_restricted: props.project.is_public_incl_restricted,
+        are_restricted_users_allowed,
+        explanation_text: "",
+        privacy_title: "",
+    };
+
+    return getProjectPrivacyIcon(privacy);
+});
+
+const target_id = computed(
+    (): string => "switch-to-project-" + encodeURI(props.project.project_uri)
+);
+function onClick(event: MouseEvent): void {
+    if (!(event.target instanceof HTMLElement)) {
+        return;
     }
 
-    goToAdmin(event: Event): void {
-        event.preventDefault();
-
-        window.location.href = this.project.project_config_uri;
-    }
-
-    get project_privacy_icon(): string {
-        const privacy: ProjectPrivacy = {
-            project_is_public: this.project.is_public,
-            project_is_private: this.project.is_private,
-            project_is_private_incl_restricted: this.project.is_private_incl_restricted,
-            project_is_public_incl_restricted: this.project.is_public_incl_restricted,
-            are_restricted_users_allowed: this.are_restricted_users_allowed,
-            explanation_text: "",
-            privacy_title: "",
-        };
-
-        return getProjectPrivacyIcon(privacy);
-    }
-
-    get admin_title(): string {
-        return sprintf(
-            this.$gettext("Go to project administration of %s"),
-            this.project.project_name
-        );
+    const closest = event.target.closest(`a, [data-target-id="${target_id.value}"]`);
+    if (closest instanceof HTMLElement && closest.dataset.targetId === target_id.value) {
+        props.location.assign(props.project.project_uri);
     }
 }
 </script>

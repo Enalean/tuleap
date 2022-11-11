@@ -70,7 +70,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
         $this->factory->shouldReceive('instanciateFromRow')->with($db_row_for_repo_12)->andReturns(\Mockery::spy(\GitRepository::class));
         $this->factory->shouldReceive('instanciateFromRow')->with($db_row_for_repo_23)->andReturns(\Mockery::spy(\GitRepository::class));
 
-        $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
+        self::assertCount(2, $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user));
     }
 
     public function testItReturnsOneRepositoryWithOnePermission(): void

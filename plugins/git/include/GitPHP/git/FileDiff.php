@@ -720,7 +720,8 @@ class FileDiff
             $diffLines = explode("\n", $exe->Execute(
                 GitExe::DIFF,
                 ["-U0", escapeshellarg($this->fromHash),
-                    escapeshellarg($this->toHash)]
+                    escapeshellarg($this->toHash),
+                ]
             ));
         }
 
@@ -745,7 +746,8 @@ class FileDiff
                     $comma       = strpos($d, ",");
                     $line        = -intval(substr($d, 2, $comma - 2));
                     $currentDiff = ["line" => $line,
-                        "left" => [], "right" => []];
+                        "left" => [], "right" => [],
+                    ];
                     break;
                 case '+':
                     if ($currentDiff) {

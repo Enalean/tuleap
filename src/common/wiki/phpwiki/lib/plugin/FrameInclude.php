@@ -70,18 +70,18 @@ class WikiPlugin_FrameInclude extends WikiPlugin
     public function getDefaultArguments()
     {
         return [ 'src'         => false,       // the src url to include
-                      'page'        => false,
-                      'name'        => 'content',   // name of our frame
-                      'title'       => false,
-                      'rows'        => '18%,*,15%', // names: top, $name, bottom
-                      'cols'        => '20%,*',     // names: left, $name
+            'page'        => false,
+            'name'        => 'content',   // name of our frame
+            'title'       => false,
+            'rows'        => '18%,*,15%', // names: top, $name, bottom
+            'cols'        => '20%,*',     // names: left, $name
                                                     // only useful on Theme "Sidebar"
-                      'frameborder' => 1,
-                      'marginwidth'  => false,
-                      'marginheight' => false,
-                      'noresize'    => false,
-                      'scrolling'   => 'auto',  // '[ yes | no | auto ]'
-                    ];
+            'frameborder' => 1,
+            'marginwidth'  => false,
+            'marginheight' => false,
+            'noresize'    => false,
+            'scrolling'   => 'auto',  // '[ yes | no | auto ]'
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -135,12 +135,12 @@ class WikiPlugin_FrameInclude extends WikiPlugin
 
         // Generate the outer frameset
         $frame = HTML::frame(['name' => $name,
-                                   'src' => $sanitized_src,
-                                   'title' => $title,
-                                   'frameborder' => (int) $frameborder,
-                                   'scrolling' => (string) $scrolling,
-                                   'noresize' => (bool) $noresize,
-                                   ]);
+            'src' => $sanitized_src,
+            'title' => $title,
+            'frameborder' => (int) $frameborder,
+            'scrolling' => (string) $scrolling,
+            'noresize' => (bool) $noresize,
+        ]);
 
         if ($marginwidth) {
             $frame->setArg('marginwidth', $marginwidth);
@@ -150,10 +150,10 @@ class WikiPlugin_FrameInclude extends WikiPlugin
         }
 
         $tokens = ['CONTENT_FRAME' => $frame,
-                        'ROWS' => $rows,
-                        'COLS' => $cols,
-                        'FRAMEARGS' => sprintf('frameborder="%d"', $frameborder),
-                        ];
+            'ROWS' => $rows,
+            'COLS' => $cols,
+            'FRAMEARGS' => sprintf('frameborder="%d"', $frameborder),
+        ];
 
         // Produce the frameset.
         $request->discardOutput();

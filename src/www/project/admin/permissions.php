@@ -121,7 +121,8 @@ function permission_get_object_type($permission_type, $object_id)
         $em->processEvent('permission_get_object_type', [
             'permission_type' => $permission_type,
             'object_id'       => $object_id,
-            'object_type'     => &$object_type]);
+            'object_type'     => &$object_type,
+        ]);
         return $object_type ? $object_type : 'object';
     }
 }
@@ -197,7 +198,8 @@ function permission_get_object_name($permission_type, $object_id)
         $em->processEvent('permission_get_object_name', [
             'permission_type' => $permission_type,
             'object_id'       => $object_id,
-            'object_name'     => &$object_name]);
+            'object_name'     => &$object_name,
+        ]);
         return $object_name ? $object_name : $object_id;
     }
 }
@@ -263,7 +265,8 @@ function permission_user_allowed_to_change($project_id, $permission_type, $objec
             'group_id'        => $project_id,
             'permission_type' => $permission_type,
             'object_id'       => $object_id,
-            'allowed'         => &$allowed]);
+            'allowed'         => &$allowed,
+        ]);
         return $allowed;
     }
 }
@@ -430,13 +433,13 @@ function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fie
 
         //We store permission for the current field
         $ugroups_permissions[$field->getID()] = [
-                                                      'field' => [
-                                                                       'shortname'  => $field->getName(),
-                                                                       'name'       => $field->getLabel(),
-                                                                       'id'         => $field->getID(),
-                                                                       'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID(),
-                                                                       ],
-                                                      'ugroups' => $ugroups,
+            'field' => [
+                'shortname'  => $field->getName(),
+                'name'       => $field->getLabel(),
+                'id'         => $field->getID(),
+                'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID(),
+            ],
+            'ugroups' => $ugroups,
         ];
 
         //{{{ We store tracker permissions
@@ -616,8 +619,8 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
         'project_admin_permissions',
         'admins_create_modify_ug',
         [
-                "/project/admin/ugroup.php?group_id=" . urlencode($group_id),
-            ]
+            "/project/admin/ugroup.php?group_id=" . urlencode($group_id),
+        ]
     );
 
     return $html;

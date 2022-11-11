@@ -20,21 +20,14 @@
 
 namespace Tuleap\ReferenceAliasTracker;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Reference;
 
-class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private OriginalReferencesBuilder $builder;
 
     /**
-     * @var OriginalReferencesBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Dao
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
 
@@ -42,7 +35,7 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->dao = Mockery::mock(Dao::class);
+        $this->dao = $this->createMock(Dao::class);
 
         $this->builder = new OriginalReferencesBuilder(
             $this->dao
@@ -51,10 +44,10 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesATrackerReference(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('tracker123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'target' => 'T2',
             ]);
@@ -64,18 +57,18 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             123
         );
 
-        $this->assertInstanceOf(Reference::class, $reference);
+        self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertSame('plugin_tracker', $reference->getServiceShortName());
-        $this->assertSame("/plugins/tracker/?tracker=T2", $reference->getLink());
+        self::assertSame('plugin_tracker', $reference->getServiceShortName());
+        self::assertSame("/plugins/tracker/?tracker=T2", $reference->getLink());
     }
 
     public function testItRetrievesAnArtfReference(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('artf123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'target' => '12',
             ]);
@@ -85,18 +78,18 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             123
         );
 
-        $this->assertInstanceOf(Reference::class, $reference);
+        self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertSame('plugin_tracker', $reference->getServiceShortName());
-        $this->assertSame("/plugins/tracker/?aid=12", $reference->getLink());
+        self::assertSame('plugin_tracker', $reference->getServiceShortName());
+        self::assertSame("/plugins/tracker/?aid=12", $reference->getLink());
     }
 
     public function testItRetrievesAPlanReference(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('plan123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'target' => '12',
             ]);
@@ -106,19 +99,19 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             123
         );
 
-        $this->assertInstanceOf(Reference::class, $reference);
+        self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertSame('plugin_tracker', $reference->getServiceShortName());
-        $this->assertSame("/plugins/tracker/?aid=12", $reference->getLink());
+        self::assertSame('plugin_tracker', $reference->getServiceShortName());
+        self::assertSame("/plugins/tracker/?aid=12", $reference->getLink());
     }
 
     public function testItReturnsNullIfNoEntryFoundInDB(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
-            ->andReturn([]);
+        $this->dao->expects(self::once())
+            ->method('getRef')
+            ->willReturn([]);
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
                 'tracker',
                 123
@@ -128,15 +121,15 @@ class OriginalReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfKeywordIsNotKnown(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('whatever123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'target' => '01',
             ]);
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
                 'whatever',
                 123

@@ -9,11 +9,20 @@ msgstr ""
 msgid "An error occurred while loading your recent items."
 msgstr ""
 
+msgid "An error occurred while searching for results."
+msgstr ""
+
 msgid "Browse all projects"
 msgstr "Ver todos os projetos"
 
 msgid "Browse all…"
 msgstr "Ver todos..."
+
+msgid "Content matches:"
+msgstr ""
+
+msgid "Fetch more results"
+msgstr ""
 
 msgid "Go to project administration of %s"
 msgstr "Ir para a administração do projeto de %s"
@@ -21,13 +30,28 @@ msgstr "Ir para a administração do projeto de %s"
 msgid "Legacy search"
 msgstr ""
 
+msgid "More…"
+msgstr ""
+
 msgid "My projects"
+msgstr ""
+
+msgid "No results"
+msgstr ""
+
+msgid "Please enter more than %{ n } characters."
 msgstr ""
 
 msgid "Project, recent item, …"
 msgstr "projeto, item recente, ..."
 
 msgid "Recent items"
+msgstr ""
+
+msgid "Search in artifacts only"
+msgstr ""
+
+msgid "Search results"
 msgstr ""
 
 msgid "Start exploring Tuleap"
@@ -40,9 +64,6 @@ msgid "You didn't visit recently any items matching your query."
 msgstr ""
 
 msgid "You don't belong to any projects"
-msgstr ""
-
-msgid "You don't belong to any projects matching your query."
 msgstr ""
 
 msgid "You don’t belong to any project or haven’t viewed anything yet"

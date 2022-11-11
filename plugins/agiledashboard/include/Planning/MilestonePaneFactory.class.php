@@ -134,7 +134,6 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $pane_info = $this->pane_info_factory->getDetailsPaneInfo($milestone);
         if ($this->request->get('pane') == DetailsPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
-            $this->active_pane[$milestone->getArtifactId() ?? 0] = $this->getDetailsPane($pane_info, $milestone);
         }
 
         return $pane_info;

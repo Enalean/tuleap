@@ -371,6 +371,8 @@ class ProjectResource extends AuthenticatedResource
                 TemplateRendererFactory::build()->getRenderer(
                     ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
                 ),
+                UserManager::instance(),
+                new LocaleSwitcher(),
                 "mail-project-register-admin"
             ),
             $this->getBackendLogger()

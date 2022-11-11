@@ -1,0 +1,11 @@
+{
+  "url": "https://github.com/hercules-ci/gitignore.nix.git",
+  "rev": "a20de23b925fd8264fd7fad6454652e142fd7f73",
+  "date": "2022-08-14T08:37:52+02:00",
+  "path": "/nix/store/qskiyl42g1aaa0zzgrlj3aljpb7mqdxb-gitignore.nix",
+  "sha256": "07vg2i9va38zbld9abs9lzqblz193vc5wvqd6h7amkmwf66ljcgh",
+  "fetchLFS": false,
+  "fetchSubmodules": false,
+  "deepClone": false,
+  "leaveDotGit": false
+}

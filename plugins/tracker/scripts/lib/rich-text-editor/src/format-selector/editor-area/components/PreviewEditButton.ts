@@ -58,7 +58,5 @@ export function createPreviewEditButton(
         () => enabled_button
     );
 
-    return html`
-        ${until(promise_of_button, loading_button)}
-    `;
+    return html`${until(promise_of_button, loading_button)}`;
 }

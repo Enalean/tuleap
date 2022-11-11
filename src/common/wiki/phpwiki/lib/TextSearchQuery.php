@@ -811,7 +811,8 @@ class TextSearchQuery_Parser
     {
         foreach (
             ["WORD","STARTS_WITH","ENDS_WITH","EXACT",
-                       "REGEX","REGEX_GLOB","REGEX_PCRE","ALL"] as $tok
+                "REGEX","REGEX_GLOB","REGEX_PCRE","ALL",
+            ] as $tok
         ) {
             $const = constant("TSQ_TOK_" . $tok);
             if ($accept & $const and ($word = $this->lexer->get($const))) {

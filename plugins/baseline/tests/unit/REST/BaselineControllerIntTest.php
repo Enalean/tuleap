@@ -56,7 +56,7 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
         $baseline = $this->baseline_repository->findAny();
         $this->assertEquals('My first baseline', $baseline->getName());
         $this->assertEquals($artifact, $baseline->getArtifact());
-        $this->assertEquals($this->current_user_provider->getUser(), $baseline->getAuthor());
+        $this->assertEquals($this->current_user_provider->getUser()->getId(), $baseline->getAuthor()->getId());
         $this->assertEquals($this->clock->now(), $baseline->getSnapshotDate());
     }
 

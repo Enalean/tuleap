@@ -31,10 +31,11 @@ if (! $request->exist('pv')) {
 }
 
 $params = ['title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $ah->getID() . ' - \'' . $ah->getSummary() . '\'',
-              'pagename' => 'tracker',
-              'atid' => $ath->getID(),
-              'pv' => $pv,
-              'help' => 'tracker-v3.html#artifact-update'];
+    'pagename' => 'tracker',
+    'atid' => $ath->getID(),
+    'pv' => $pv,
+    'help' => 'tracker-v3.html#artifact-update',
+];
 
 $ath->header($params);
 

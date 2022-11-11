@@ -20,36 +20,27 @@
 
 namespace Tuleap\ReferenceAliasSVN;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
 use Project_NotFoundException;
 use ProjectManager;
 use Reference;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private ReferencesBuilder $builder;
 
     /**
-     * @var ReferencesBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Dao
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var ProjectManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $project_manager;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RepositoryManager
+     * @var RepositoryManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $repository_manager;
 
@@ -57,9 +48,9 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->dao                = Mockery::mock(Dao::class);
-        $this->project_manager    = Mockery::mock(ProjectManager::class);
-        $this->repository_manager = Mockery::mock(RepositoryManager::class);
+        $this->dao                = $this->createMock(Dao::class);
+        $this->project_manager    = $this->createMock(ProjectManager::class);
+        $this->repository_manager = $this->createMock(RepositoryManager::class);
 
         $this->builder = new ReferencesBuilder(
             $this->dao,
@@ -70,44 +61,44 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesAReference(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('cmmt123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'source' => 'cmmt123',
                 'repository_id' => 1,
                 'revision_id' => 14,
             ]);
 
-        $project = Project::buildForTest();
-        $this->project_manager->shouldReceive('getValidProject')
-            ->once()
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->project_manager->expects(self::once())
+            ->method('getValidProject')
             ->with(101)
-            ->andReturn($project);
+            ->willReturn($project);
 
-        $repository = Mockery::mock(Repository::class);
-        $repository->shouldReceive('getFullName')->andReturn('RepoSVN01');
+        $repository = $this->createMock(Repository::class);
+        $repository->method('getFullName')->willReturn('RepoSVN01');
 
-        $this->repository_manager->shouldReceive('getByIdAndProject')
-            ->once()
+        $this->repository_manager->expects(self::once())
+            ->method('getByIdAndProject')
             ->with(1, $project)
-            ->andReturn($repository);
+            ->willReturn($repository);
 
         $reference = $this->builder->getReference(
             'cmmt',
             123
         );
 
-        $this->assertInstanceOf(Reference::class, $reference);
+        self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertSame('plugin_svn', $reference->getServiceShortName());
-        $this->assertSame("/plugins/svn?roottype=svn&view=rev&root=RepoSVN01&revision=14", $reference->getLink());
+        self::assertSame('plugin_svn', $reference->getServiceShortName());
+        self::assertSame("/plugins/svn?roottype=svn&view=rev&root=RepoSVN01&revision=14", $reference->getLink());
     }
 
     public function testItReturnsNullIfKeywordIsNotKnown(): void
     {
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
                 'whatever',
                 123
@@ -117,12 +108,12 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfNoEntryFoundInDB(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('cmmt123')
-            ->andReturn([]);
+            ->willReturn([]);
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
                 'cmmt',
                 123
@@ -132,24 +123,24 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfProjectNotFound(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('cmmt123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'source' => 'cmmt123',
                 'repository_id' => 1,
                 'revision_id' => 14,
             ]);
 
-        $this->project_manager->shouldReceive('getValidProject')
-            ->once()
+        $this->project_manager->expects(self::once())
+            ->method('getValidProject')
             ->with(101)
-            ->andThrow(
+            ->willThrowException(
                 new Project_NotFoundException()
             );
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
                 'cmmt',
                 123

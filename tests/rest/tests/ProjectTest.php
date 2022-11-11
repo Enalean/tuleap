@@ -28,6 +28,8 @@ use Test\Rest\TuleapConfig;
  */
 class ProjectTest extends ProjectBase
 {
+    use ForgeAccessSandbox;
+
     /**
      * @after
      */
@@ -152,6 +154,39 @@ class ProjectTest extends ProjectBase
         self::assertCount(1, $errors_response['error']['i18n_error_messages']);
     }
 
+    public function testPOSTDryRunForRegularUserWithInvalidShotname(): void
+    {
+        $post_resource = json_encode([
+            'label' => 'Test Request 9747 regular user',
+            'shortname'  => '_test9747-regular-user',
+            'description' => 'Test of Request 9747 for REST API Project Creation',
+            'is_public' => true,
+            'template_id' => $this->project_public_template_id,
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->request_factory->createRequest(
+                'POST',
+                'projects?dry_run=true'
+            )->withBody(
+                $this->stream_factory->createStream($post_resource)
+            )
+        );
+
+        self::assertEquals(400, $response->getStatusCode());
+
+        $errors_response = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertArrayHasKey('error', $errors_response);
+        self::assertArrayHasKey('i18n_error_messages', $errors_response['error']);
+        self::assertCount(1, $errors_response['error']['i18n_error_messages']);
+        self::assertSame(
+            "Project shortname is invalid. The reason is: Short name must start with an alphanumeric character.",
+            $errors_response['error']['i18n_error_messages'][0],
+        );
+    }
+
     public function testPOSTDryRunForRegularUser(): void
     {
         $post_resource = json_encode([
@@ -208,12 +243,12 @@ class ProjectTest extends ProjectBase
     public function testPOSTForRegularUserWithTemplateProjectUserCantAccess()
     {
         $post_resource = json_encode([
-                                         'label'       => 'Test from template without access',
-                                         'shortname'   => 'template-no-access-user',
-                                         'description' => 'Test project template for REST API Project Creation',
-                                         'is_public'   => true,
-                                         'template_id' => $this->project_private_template_id,
-                                     ]);
+            'label'       => 'Test from template without access',
+            'shortname'   => 'template-no-access-user',
+            'description' => 'Test project template for REST API Project Creation',
+            'is_public'   => true,
+            'template_id' => $this->project_private_template_id,
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
@@ -231,12 +266,12 @@ class ProjectTest extends ProjectBase
     public function testPOSTForRegularUserWithPrivateTemplateProjectUserCanAccess()
     {
         $post_resource = json_encode([
-                                         'label'       => 'Test from private template with access',
-                                         'shortname'   => 'template-private-user-access',
-                                         'description' => 'Test project template for REST API Project Creation',
-                                         'is_public'   => true,
-                                         'template_id' => $this->project_private_template_id,
-                                     ]);
+            'label'       => 'Test from private template with access',
+            'shortname'   => 'template-private-user-access',
+            'description' => 'Test project template for REST API Project Creation',
+            'is_public'   => true,
+            'template_id' => $this->project_private_template_id,
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_5_NAME,
@@ -1236,6 +1271,8 @@ class ProjectTest extends ProjectBase
 
     public function testGETUserGroupsWithSystemUserGroupsReturnsAnonymousAndRegisteredWhenAnonymousUsersCanAccessThePlatform()
     {
+        $this->setForgeToAnonymous();
+
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_public_member_id . '/user_groups?query=' . urlencode('{"with_system_user_groups":true}'))

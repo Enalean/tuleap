@@ -1,0 +1,50 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+msgid "%d repository has just been integrated."
+msgid_plural "%d repositories have just been integrated."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d repository integrated just now"
+msgid_plural "%d repositories integrated just now"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Error during last sync: %(error)s"
+msgstr ""
+
+msgid "Error during the removal of the link: %(error)s"
+msgstr ""
+
+msgid "Error during the update of configuration: %(error)s"
+msgstr ""
+
+msgid "Error during the update of the access token: %(error)s"
+msgstr ""
+
+msgid "In error, just now"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Unable to connect to the GitLab server, please check your credentials."
+msgstr ""
+
+msgid "Unable to reach the GitLab server: %(error)s"
+msgstr ""
+
+msgid "Yes"
+msgstr ""

@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use DateTimeImmutable;
-use Project;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&TagPushWebhookDeleteAction
@@ -63,7 +63,7 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             "https://example.com/root/repo01",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -101,7 +101,7 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             "https://example.com/root/repo01",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -139,7 +139,7 @@ class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             "https://example.com/root/repo01",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

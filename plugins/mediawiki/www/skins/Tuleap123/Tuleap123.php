@@ -186,8 +186,9 @@ class Tuleap123Template extends BaseTemplate
     <div class="portlet <?php echo $class_no_logo; ?>" id="p-logo" role="banner">
         <?php
         echo Html::element('a', [
-        'href' => $this->data['nav_urls']['mainpage']['href'],
-        'style' => "background-image: url({$this->data['logopath']});" ]
+            'href' => $this->data['nav_urls']['mainpage']['href'],
+            'style' => "background-image: url({$this->data['logopath']});",
+        ]
         + Linker::tooltipAndAccesskeyAttribs('p-logo')); ?>
 
     </div>
@@ -293,8 +294,8 @@ class Tuleap123Template extends BaseTemplate
         }
 
         $added_toolbox[] = [
-           'text' => sprintf(dgettext('tuleap-mediawiki', 'Go back to %1$s'), $forge_name),
-           'href' => '/projects/' . $GLOBALS['group']->getUnixName(),
+            'text' => sprintf(dgettext('tuleap-mediawiki', 'Go back to %1$s'), $forge_name),
+            'href' => '/projects/' . $GLOBALS['group']->getUnixName(),
         ];
 
         if ($this->IsUserAdmin()) {

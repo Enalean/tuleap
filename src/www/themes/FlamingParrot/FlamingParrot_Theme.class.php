@@ -35,8 +35,12 @@ use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
@@ -125,10 +129,24 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         return $array[$theme];
     }
 
-    public function header(array $params): void
+    public function header(HeaderConfiguration|array $params): void
     {
+        $this->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../scripts/switch-to/frontend-assets',
+                '/assets/core/switch-to'
+            ),
+            'src/index-fp.ts'
+        ));
+
         $this->header_has_been_written = true;
-        $title                         = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
+
+        if ($params instanceof HeaderConfiguration) {
+            $params = [
+                'title' => $params->title,
+            ];
+        }
+        $title = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
         if (! empty($params['title'])) {
             $title = $params['title'] . ' - ' . $title;
         }
@@ -205,6 +223,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         return [
             $include_assets->getFileURL('FlamingParrot/style.css'),
+            $include_assets->getFileURL('common-theme/project-sidebar.css'),
             $tlp_vars->getFileURL(new \Tuleap\Layout\ThemeVariation(ThemeVariantColor::buildFromVariant($variant_used), $current_user)),
         ];
     }
@@ -431,7 +450,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         ));
     }
 
-    public function footer(array $params)
+    public function footer(FooterConfiguration|array $params): void
     {
         $this->displayBrowserDeprecationMessage();
         if ($this->canShowFooter($params)) {
@@ -460,13 +479,12 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
      * Note: there is an ugly dependency on the page content being rendered first.
      * Although this is the case, it's worth bearing in mind when refactoring.
      *
-     * @param array $params
-     * @return bool
+     * @param FooterConfiguration|array $params
      */
-    private function canShowFooter($params)
+    private function canShowFooter($params): bool
     {
-        if (! empty($params['without_content'])) {
-            return false;
+        if ($params instanceof FooterConfiguration) {
+            return $params->without_content === false;
         }
 
         if (empty($params['group'])) {

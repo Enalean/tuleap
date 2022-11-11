@@ -53,11 +53,12 @@ class WikiPlugin_RandomPage extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(),
             ['numpages'     => 20,     // was pages
-                   'pages'        => false, // deprecated
-                   'redirect'     => false,
-                   'hidename'     => false, // only for numpages=1
-                   'exclude'      => $this->default_exclude(),
-            'info'         => '']
+                'pages'        => false, // deprecated
+                'redirect'     => false,
+                'hidename'     => false, // only for numpages=1
+                'exclude'      => $this->default_exclude(),
+                'info'         => '',
+            ]
         );
     }
 

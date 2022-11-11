@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import type { AllowedSearchDateOperator, SearchCriterionDate, SearchDate } from "../../../type";
 import DateFlatPicker from "../../Folder/DropDown/PropertiesForCreateOrUpdate/DateFlatPicker.vue";
-import { computed, ref, watch } from "@vue/composition-api";
+import { computed, ref, watch } from "vue";
 
 const props = defineProps<{ criterion: SearchCriterionDate; value: SearchDate | null }>();
 
@@ -79,9 +79,4 @@ function onChange(operator: AllowedSearchDateOperator, date: string): void {
 
     emit("input", new_value);
 }
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
 </script>

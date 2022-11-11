@@ -23,12 +23,13 @@
  */
 
 use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
+use Tuleap\Tracker\Artifact\Renderer\GetAdditionalAssetsForArtifactDisplay;
 use Tuleap\Tracker\Artifact\Renderer\ListFieldsIncluder;
 use Tuleap\Tracker\Artifact\View\TypeView;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
@@ -143,7 +144,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         );
         $breadcrumbs = [
             ['title' => $this->artifact->getXRef(),
-                  'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId()],
+                'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId(),
+            ],
         ];
         $params      = [
             'body_class' => ['widgetable', 'has-sidebar-with-pinned-header', 'tracker-artifact-view-body'],
@@ -157,10 +159,10 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
         ListFieldsIncluder::includeListFieldsAssets($this->tracker->getId());
 
-        $event = new GetAdditionalJavascriptFilesForArtifactDisplay();
+        $event = new GetAdditionalAssetsForArtifactDisplay();
         $this->event_manager->dispatch($event);
-        foreach ($event->getFileURLs() as $file_url) {
-            $GLOBALS['HTML']->includeFooterJavascriptFile($file_url);
+        foreach ($event->getAssets() as $asset) {
+            $GLOBALS['HTML']->addJavascriptAsset($asset);
         }
 
         $assets = new \Tuleap\Layout\IncludeCoreAssets();
@@ -171,7 +173,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
         $status = new Tracker_ArtifactByEmailStatus(
             new MailGatewayConfig(
-                new MailGatewayConfigDao()
+                new MailGatewayConfigDao(),
+                MailTransportBuilder::getPlatformMailConfiguration(),
             )
         );
         if ($status->canUpdateArtifactInInsecureMode($this->tracker)) {

@@ -26,10 +26,16 @@ use Tuleap\ProgramManagement\Domain\Events\PendingIterationCreation;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\JustLinkedIterationCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -116,6 +122,64 @@ final class IterationCreation implements TimeboxMirroringOrder
             ),
             $pending_iterations
         );
+    }
+
+    /**
+     * @return self[]
+     */
+    public static function fromProgramIncrementCreation(
+        RetrieveProgramOfProgramIncrement $program_retriever,
+        BuildProgram $program_builder,
+        RetrieveIterationTracker $iteration_tracker_retriever,
+        VerifyIsIteration $verify_is_iteration,
+        VerifyIsVisibleArtifact $verify_is_visible_artifact,
+        SearchIterations $search_iterations,
+        RetrieveLastChangeset $retrieve_last_changeset,
+        ProgramIncrementCreation $event,
+    ): array {
+        $program_increment_identifier = $event->getProgramIncrement();
+        $user_identifier              = $event->getUser();
+        $iteration_tracker            = IterationTrackerIdentifier::fromProgramIncrement(
+            $program_retriever,
+            $program_builder,
+            $iteration_tracker_retriever,
+            $program_increment_identifier,
+            $user_identifier
+        );
+
+        if (! $iteration_tracker) {
+            return [];
+        }
+
+        $iterations_to_update = [];
+        $iterations_to_create = $search_iterations->searchIterations($program_increment_identifier);
+
+        foreach ($iterations_to_create as $iteration) {
+            $iteration_identifier = IterationIdentifier::fromId(
+                $verify_is_iteration,
+                $verify_is_visible_artifact,
+                $iteration['id'],
+                $user_identifier,
+            );
+
+            if (! $iteration_identifier) {
+                continue;
+            }
+
+            $iteration_changeset_identifier = DomainChangeset::fromIterationLastChangeset($retrieve_last_changeset, $iteration_identifier);
+            if (! $iteration_changeset_identifier) {
+                continue;
+            }
+
+            $iterations_to_update[] = new self(
+                $iteration_identifier,
+                $iteration_tracker,
+                $program_increment_identifier,
+                $user_identifier,
+                $iteration_changeset_identifier
+            );
+        }
+        return $iterations_to_update;
     }
 
     public function getTimebox(): TimeboxIdentifier

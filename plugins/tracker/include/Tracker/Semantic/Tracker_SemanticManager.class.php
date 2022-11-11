@@ -204,8 +204,8 @@ class Tracker_SemanticManager
          EventManager::instance()->processEvent(
              TRACKER_EVENT_MANAGE_SEMANTICS,
              [
-                'semantics'   => $semantics,
-                'tracker'     => $this->tracker,
+                 'semantics'   => $semantics,
+                 'tracker'     => $this->tracker,
              ]
          );
     }

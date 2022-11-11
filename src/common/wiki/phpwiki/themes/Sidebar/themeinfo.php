@@ -95,7 +95,8 @@ class Theme_Sidebar extends PHPWikiTheme
             $this->addMoreHeaders(JavaScript(
                 '',
                 ['src' =>
-                $this->_findData('jscalendar/calendar-setup' . (DEBUG ? '' : '_stripped') . '.js')]
+                $this->_findData('jscalendar/calendar-setup' . (DEBUG ? '' : '_stripped') . '.js'),
+                ]
             ));
 
             // Get existing date entries for the current user

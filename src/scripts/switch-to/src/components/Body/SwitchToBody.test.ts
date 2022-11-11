@@ -19,46 +19,78 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SwitchToBody from "./SwitchToBody.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { createTestingPinia } from "@pinia/testing";
 import type { Project, UserHistory } from "../../type";
 import ListOfProjects from "./Projects/ListOfProjects.vue";
-import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
+import ListOfRecentItems from "./Items/RecentItems/ListOfRecentItems.vue";
 import GlobalEmptyState from "./GlobalEmptyState.vue";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
+import SearchResults from "./Items/SearchResults/SearchResults.vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("SwitchToBody", () => {
     it("Displays projects and recent items", () => {
         const wrapper = shallowMount(SwitchToBody, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        is_loading_history: false,
-                        is_history_loaded: true,
-                        history: { entries: [] } as UserHistory,
-                        projects: [{}] as Project[],
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            is_loading_history: false,
+                            is_history_loaded: true,
+                            history: { entries: [] } as UserHistory,
+                            projects: [{}] as Project[],
+                            filter_value: "",
+                        },
                     },
-                }),
-            },
+                })
+            ),
         });
 
         expect(wrapper.findComponent(GlobalLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(GlobalEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(ListOfProjects).exists()).toBe(true);
         expect(wrapper.findComponent(ListOfRecentItems).exists()).toBe(true);
+        expect(wrapper.findComponent(SearchResults).exists()).toBe(false);
+    });
+
+    it("Displays projects, recent items, and search results", () => {
+        const wrapper = shallowMount(SwitchToBody, {
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            is_loading_history: false,
+                            is_history_loaded: true,
+                            history: { entries: [] } as UserHistory,
+                            projects: [{}] as Project[],
+                            filter_value: "Lorem",
+                        },
+                    },
+                })
+            ),
+        });
+
+        expect(wrapper.findComponent(GlobalLoadingState).exists()).toBe(false);
+        expect(wrapper.findComponent(GlobalEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(ListOfProjects).exists()).toBe(true);
+        expect(wrapper.findComponent(ListOfRecentItems).exists()).toBe(true);
+        expect(wrapper.findComponent(SearchResults).exists()).toBe(true);
     });
 
     it("Displays loading state when there is no projects and the history is being loaded", () => {
         const wrapper = shallowMount(SwitchToBody, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        is_loading_history: true,
-                        is_history_loaded: false,
-                        history: { entries: [] } as UserHistory,
-                        projects: [] as Project[],
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            is_loading_history: true,
+                            is_history_loaded: false,
+                            history: { entries: [] } as UserHistory,
+                            projects: [] as Project[],
+                        },
                     },
-                }),
-            },
+                })
+            ),
         });
 
         expect(wrapper.findComponent(GlobalLoadingState).exists()).toBe(true);
@@ -69,16 +101,18 @@ describe("SwitchToBody", () => {
 
     it("Displays empty state when there is no projects and no history", () => {
         const wrapper = shallowMount(SwitchToBody, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        is_loading_history: false,
-                        is_history_loaded: true,
-                        history: { entries: [] } as UserHistory,
-                        projects: [] as Project[],
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            is_loading_history: false,
+                            is_history_loaded: true,
+                            history: { entries: [] } as UserHistory,
+                            projects: [] as Project[],
+                        },
                     },
-                }),
-            },
+                })
+            ),
         });
 
         expect(wrapper.findComponent(GlobalLoadingState).exists()).toBe(false);

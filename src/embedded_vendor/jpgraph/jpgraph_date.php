@@ -261,67 +261,80 @@ class DateScale extends LinearScale
         $scalePoints =
         [
         /* Intervall larger than 10 years */
-        SECPERYEAR * 10,[[SECPERYEAR * 5,SECPERYEAR * 2],
-        [SECPERYEAR],
-        [0,YEARADJ_1, 0,YEARADJ_1] ],
+            SECPERYEAR * 10,[[SECPERYEAR * 5,SECPERYEAR * 2],
+                [SECPERYEAR],
+                [0,YEARADJ_1, 0,YEARADJ_1],
+            ],
 
         /* Intervall larger than 2 years */
-        SECPERYEAR * 2,[[SECPERYEAR],[SECPERYEAR],
-        [0,YEARADJ_1] ],
+            SECPERYEAR * 2,[[SECPERYEAR],[SECPERYEAR],
+                [0,YEARADJ_1],
+            ],
 
         /* Intervall larger than 90 days (approx 3 month) */
-        SECPERDAY * 90,[[SECPERDAY * 30,SECPERDAY * 14,SECPERDAY * 7,SECPERDAY],
-        [SECPERDAY * 5,SECPERDAY * 7,SECPERDAY,SECPERDAY],
-        [0,MONTHADJ_1, 0,DAYADJ_WEEK, 0,DAYADJ_1, 0,DAYADJ_1]],
+            SECPERDAY * 90,[[SECPERDAY * 30,SECPERDAY * 14,SECPERDAY * 7,SECPERDAY],
+                [SECPERDAY * 5,SECPERDAY * 7,SECPERDAY,SECPERDAY],
+                [0,MONTHADJ_1, 0,DAYADJ_WEEK, 0,DAYADJ_1, 0,DAYADJ_1],
+            ],
 
         /* Intervall larger than 30 days (approx 1 month) */
-        SECPERDAY * 30,[[SECPERDAY * 14,SECPERDAY * 7,SECPERDAY * 2, SECPERDAY],
-        [SECPERDAY,SECPERDAY,SECPERDAY,SECPERDAY],
-        [0,DAYADJ_WEEK, 0,DAYADJ_1, 0,DAYADJ_1, 0,DAYADJ_1]],
+            SECPERDAY * 30,[[SECPERDAY * 14,SECPERDAY * 7,SECPERDAY * 2, SECPERDAY],
+                [SECPERDAY,SECPERDAY,SECPERDAY,SECPERDAY],
+                [0,DAYADJ_WEEK, 0,DAYADJ_1, 0,DAYADJ_1, 0,DAYADJ_1],
+            ],
 
         /* Intervall larger than 7 days */
-        SECPERDAY * 7,[[SECPERDAY,SECPERHOUR * 12,SECPERHOUR * 6,SECPERHOUR * 2],
-        [SECPERHOUR * 6,SECPERHOUR * 3,SECPERHOUR,SECPERHOUR],
-        [0,DAYADJ_1, 1,HOURADJ_12, 1,HOURADJ_6, 1,HOURADJ_1]],
+            SECPERDAY * 7,[[SECPERDAY,SECPERHOUR * 12,SECPERHOUR * 6,SECPERHOUR * 2],
+                [SECPERHOUR * 6,SECPERHOUR * 3,SECPERHOUR,SECPERHOUR],
+                [0,DAYADJ_1, 1,HOURADJ_12, 1,HOURADJ_6, 1,HOURADJ_1],
+            ],
 
         /* Intervall larger than 1 day */
-        SECPERDAY,[[SECPERDAY,SECPERHOUR * 12,SECPERHOUR * 6,SECPERHOUR * 2,SECPERHOUR],
-        [SECPERHOUR * 6,SECPERHOUR * 2,SECPERHOUR,SECPERHOUR,SECPERHOUR],
-        [1,HOURADJ_12, 1,HOURADJ_6, 1,HOURADJ_1, 1,HOURADJ_1]],
+            SECPERDAY,[[SECPERDAY,SECPERHOUR * 12,SECPERHOUR * 6,SECPERHOUR * 2,SECPERHOUR],
+                [SECPERHOUR * 6,SECPERHOUR * 2,SECPERHOUR,SECPERHOUR,SECPERHOUR],
+                [1,HOURADJ_12, 1,HOURADJ_6, 1,HOURADJ_1, 1,HOURADJ_1],
+            ],
 
         /* Intervall larger than 12 hours */
-        SECPERHOUR * 12,[[SECPERHOUR * 2,SECPERHOUR,SECPERMIN * 30,900,600],
-        [1800,1800,900,300,300],
-        [1,HOURADJ_1, 1,MINADJ_30, 1,MINADJ_15, 1,MINADJ_10, 1,MINADJ_5] ],
+            SECPERHOUR * 12,[[SECPERHOUR * 2,SECPERHOUR,SECPERMIN * 30,900,600],
+                [1800,1800,900,300,300],
+                [1,HOURADJ_1, 1,MINADJ_30, 1,MINADJ_15, 1,MINADJ_10, 1,MINADJ_5],
+            ],
 
         /* Intervall larger than 2 hours */
-        SECPERHOUR * 2,[[SECPERHOUR,SECPERMIN * 30,900,600,300],
-        [1800,900,300,120,60],
-        [1,HOURADJ_1, 1,MINADJ_30, 1,MINADJ_15, 1,MINADJ_10, 1,MINADJ_5] ],
+            SECPERHOUR * 2,[[SECPERHOUR,SECPERMIN * 30,900,600,300],
+                [1800,900,300,120,60],
+                [1,HOURADJ_1, 1,MINADJ_30, 1,MINADJ_15, 1,MINADJ_10, 1,MINADJ_5],
+            ],
 
         /* Intervall larger than 1 hours */
-        SECPERHOUR,[[SECPERMIN * 30,900,600,300],[900,300,120,60],
-        [1,MINADJ_30, 1,MINADJ_15, 1,MINADJ_10, 1,MINADJ_5] ],
+            SECPERHOUR,[[SECPERMIN * 30,900,600,300],[900,300,120,60],
+                [1,MINADJ_30, 1,MINADJ_15, 1,MINADJ_10, 1,MINADJ_5],
+            ],
 
         /* Intervall larger than 30 min */
-        SECPERMIN * 30,[[SECPERMIN * 15,SECPERMIN * 10,SECPERMIN * 5,SECPERMIN],
-        [300,300,60,10],
-        [1,MINADJ_15, 1,MINADJ_10, 1,MINADJ_5, 1,MINADJ_1]],
+            SECPERMIN * 30,[[SECPERMIN * 15,SECPERMIN * 10,SECPERMIN * 5,SECPERMIN],
+                [300,300,60,10],
+                [1,MINADJ_15, 1,MINADJ_10, 1,MINADJ_5, 1,MINADJ_1],
+            ],
 
         /* Intervall larger than 1 min */
-        SECPERMIN,[[SECPERMIN,15,10,5],
-        [15,5,2,1],
-        [1,MINADJ_1, 1,SECADJ_15, 1,SECADJ_10, 1,SECADJ_5]],
+            SECPERMIN,[[SECPERMIN,15,10,5],
+                [15,5,2,1],
+                [1,MINADJ_1, 1,SECADJ_15, 1,SECADJ_10, 1,SECADJ_5],
+            ],
 
         /* Intervall larger than 10 sec */
-        10,[[5,2],
-        [1,1],
-        [1,SECADJ_5, 1,SECADJ_1]],
+            10,[[5,2],
+                [1,1],
+                [1,SECADJ_5, 1,SECADJ_1],
+            ],
 
         /* Intervall larger than 1 sec */
-        1,[[1],
-        [1],
-        [1,SECADJ_1]],
+            1,[[1],
+                [1],
+                [1,SECADJ_1],
+            ],
         ];
 
         $ns = count($scalePoints);

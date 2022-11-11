@@ -36,11 +36,9 @@ final class LocalSettingsInstantiator
     public function instantiateLocalSettings(): void
     {
         $this->transaction_executor->execute(
-            function (): void {
-                $this->local_settings_persistor->persist(
-                    $this->representation_builder->generateTuleapLocalSettingsRepresentation()
-                );
-            }
+            fn () => $this->local_settings_persistor->persist(
+                $this->representation_builder->generateTuleapLocalSettingsRepresentation()
+            ),
         );
     }
 }

@@ -35,7 +35,6 @@ class LatestHeartbeatsCollector
     public function __construct(
         private ExecutionDao $dao,
         private Tracker_ArtifactFactory $factory,
-        private \UserHelper $user_helper,
         private \UserManager $user_manager,
     ) {
     }
@@ -45,7 +44,6 @@ class LatestHeartbeatsCollector
         return new self(
             new ExecutionDao(),
             Tracker_ArtifactFactory::instance(),
-            \UserHelper::instance(),
             \UserManager::instance()
         );
     }
@@ -73,38 +71,22 @@ class LatestHeartbeatsCollector
             $collection->add(
                 new HeartbeatsEntry(
                     $row['last_update_date'],
-                    $this->getHTMLMessage($artifact, $project, (int) $row['last_updated_by_id']),
-                    "fas fa-list"
+                    $this->getHTMLMessage($artifact, $project),
+                    "fas fa-check",
+                    $this->getUser((int) $row['last_updated_by_id'])
                 )
             );
         }
     }
 
-    private function getHTMLMessage(Artifact $artifact, Project $project, int $last_updated_by_id): string
-    {
-        $last_updated_by = $this->getLastModifiedBy($last_updated_by_id);
-
-        $title = $this->getTitle($artifact, $project);
-        if ($last_updated_by) {
-            $user_link = $this->user_helper->getLinkOnUser($last_updated_by);
-            $message   = sprintf(
-                dgettext('tuleap-testmanagement', '%s has been updated by %s'),
-                $title,
-                $user_link
-            );
-        } else {
-            $message = sprintf(
-                dgettext('tuleap-testmanagement', '%s has been updated'),
-                $title
-            );
-        }
-
-        return $message;
-    }
-
-    private function getLastModifiedBy(int $last_updated_by_id): ?PFUser
+    private function getUser(int $last_updated_by_id): ?PFUser
     {
         return $this->user_manager->getUserById($last_updated_by_id);
+    }
+
+    private function getHTMLMessage(Artifact $artifact, Project $project): string
+    {
+        return $this->getTitle($artifact, $project);
     }
 
     private function getTitle(Artifact $campaign, Project $project): string
@@ -115,11 +97,10 @@ class LatestHeartbeatsCollector
         $campaign_url    = "/plugins/testmanagement/?group_id=" .
             urlencode((string) $project->getId()) . "#!/campaigns/" . $campaign->getId();
         $title           = '
-            <a href="' . $purifier->purify($campaign_url) . '">
+            <a class="direct-link-to-artifact" href="' . $purifier->purify($campaign_url) . '">
                 <span class="cross-ref-badge ' . $tlp_badge_color . '">
                 ' . $purifier->purify($campaign->getXRef()) . '
-                </span>
-                ' . $purifier->purify($campaign->getTitle()) . '</a>';
+                </span>' . $purifier->purify($campaign->getTitle()) . '</a>';
 
         return $title;
     }

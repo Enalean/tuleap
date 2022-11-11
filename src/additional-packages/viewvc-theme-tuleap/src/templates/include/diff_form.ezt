@@ -1,0 +1,67 @@
+  <hr />
+  <p><a name="diff"></a>
+  This form allows you to request diffs between any two revisions of this file.
+  For each of the two "sides" of the diff,
+[if-any tags]
+  select a symbolic revision name using the selection box, or choose
+  'Use Text Field' and enter a numeric revision.
+[else]
+  enter a numeric revision.
+[end]
+  </p>
+  <form method="get" action="[diff_select_action]" id="diff_select">
+
+  <table cellpadding="2" cellspacing="0" class="auto">
+  <tr>
+  <td>&nbsp;</td>
+  <td>
+  [for diff_select_hidden_values]<input type="hidden" name="[diff_select_hidden_values.name]" value="[diff_select_hidden_values.value]"/>[end]
+  Diffs between
+[if-any tags]
+  <select name="r1">
+    <option value="text" selected="selected">Use Text Field</option>
+  [for tags]
+    <option value="[tags.rev]:[tags.name]">[tags.name]</option>
+  [end]
+  </select>
+  <input type="text" size="12" name="tr1" 
+         value="[if-any rev_selected][rev_selected][else][first_revision][end]"
+         onchange="document.getElementById('diff_select').r1.selectedIndex=0" />
+[else]
+  <input type="text" size="12" name="r1" class="input-mini"
+         value="[if-any rev_selected][rev_selected][else][first_revision][end]" />
+[end]
+
+  and
+[if-any tags]
+  <select name="r2">
+    <option value="text" selected="selected">Use Text Field</option>
+  [for tags]
+    <option value="[tags.rev]:[tags.name]">[tags.name]</option>
+  [end]
+  </select>
+  <input type="text" size="12" name="tr2" class="input-mini"
+         value="[last_revision]"
+         onchange="document.getElementById('diff_select').r2.selectedIndex=0" />
+[else]
+  <input type="text" size="12" name="r2" class="input-mini" value="[last_revision]" />
+[end]
+  </td>
+  </tr>
+  <tr>
+  <td>&nbsp;</td>
+  <td>
+  Type of Diff should be a
+  <select name="diff_format" onchange="submit()">
+    <option value="h" [is diff_format "h"]selected="selected"[end]>Colored Diff</option>
+    <option value="l" [is diff_format "l"]selected="selected"[end]>Long Colored Diff</option>
+    <option value="f" [is diff_format "f"]selected="selected"[end]>Full Colored Diff</option>
+    <option value="u" [is diff_format "u"]selected="selected"[end]>Unidiff</option>
+    <option value="c" [is diff_format "c"]selected="selected"[end]>Context Diff</option>
+    <option value="s" [is diff_format "s"]selected="selected"[end]>Side by Side</option>
+  </select>
+  <input type="submit" class="btn" value="Get Diffs" />
+  </td>
+  </tr>
+  </table>
+  </form>

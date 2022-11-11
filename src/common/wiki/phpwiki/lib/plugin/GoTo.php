@@ -52,14 +52,15 @@ class WikiPlugin_GoTo extends WikiPlugin
 
         $action = $request->getURLtoSelf();
         $form   = HTML::form(['action' => $action,
-                                 'method' => 'post',
-                          ]);
+            'method' => 'post',
+        ]);
 
         $form->pushContent(HiddenInputs($request->getArgs()));
 
         $textfield = HTML::input(['type' => 'text',
-                                       'size' => $size,
-                                       'name' => 'goto[target]']);
+            'size' => $size,
+            'name' => 'goto[target]',
+        ]);
 
         $button = Button('submit:goto[go]', _("Go"), false);
 

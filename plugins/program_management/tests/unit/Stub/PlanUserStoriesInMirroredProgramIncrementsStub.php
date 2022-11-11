@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIsNotVisibleException;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
 final class PlanUserStoriesInMirroredProgramIncrementsStub implements PlanUserStoriesInMirroredProgramIncrements
 {
@@ -58,5 +59,10 @@ final class PlanUserStoriesInMirroredProgramIncrementsStub implements PlanUserSt
             );
         }
         $this->call_count++;
+    }
+
+    public function planForATeam(ProgramIncrementChanged $program_increment_changed, TeamIdentifier $team_identifier): void
+    {
+        $this->plan($program_increment_changed);
     }
 }

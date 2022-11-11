@@ -51,11 +51,11 @@ class WikiPlugin_RssFeed extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['feed'         => "",
-                     'description'     => "",
-                     'url'         => "", //"http://phpwiki.org/RecentChanges?format=rss",
-                     'maxitem'         => 0,
-                     'debug'         => false,
-                     ];
+            'description'     => "",
+            'url'         => "", //"http://phpwiki.org/RecentChanges?format=rss",
+            'maxitem'         => 0,
+            'debug'         => false,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

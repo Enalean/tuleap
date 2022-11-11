@@ -124,6 +124,7 @@ class ListFieldCheckerWithBindUgroupsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotThrowWhenDynamicUgroupIsInValuesAndIsSupported(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->ugroup_label_converter_for_list_checker->shouldReceive('isASupportedDynamicUgroup')->andReturns(true);
         $this->ugroup_label_converter_for_list_checker->shouldReceive('convertLabelToTranslationKey')->andReturns('ugroup_project_members_name_key');
 
@@ -131,18 +132,17 @@ class ListFieldCheckerWithBindUgroupsTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->doesNotPerformAssertions();
     }
 
     public function testItDoesNotThrowWhenStaticUgroupIsInValues(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->ugroup_label_converter_for_list_checker->shouldReceive('isASupportedDynamicUgroup')->andReturns(false);
 
         $value_wrapper = new SimpleValueWrapper('MOUNTAINEERS');
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->doesNotPerformAssertions();
     }
 
     public function testItThrowsWhenStaticUgroupIsNotInValues(): void

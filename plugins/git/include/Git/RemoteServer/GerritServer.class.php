@@ -272,7 +272,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $this;
     }
 
-    public function getGenericUserName()
+    public function getGenericUserName(): string
     {
         return Rule_UserName::RESERVED_PREFIX . self::GENERIC_USER_PREFIX . $this->getId();
     }

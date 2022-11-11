@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Item, ItemSearchResult } from "../../../../type";
 import { useActions } from "vuex-composition-helpers";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
@@ -135,10 +135,4 @@ onBeforeUnmount(() => {
         dropdown_menu.value.remove();
     }
 });
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

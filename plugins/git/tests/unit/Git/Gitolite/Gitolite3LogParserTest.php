@@ -141,7 +141,7 @@ class Gitolite3LogParserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItParsesWronglyFormattedLogsWithoutErrors(): void
     {
-        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository)->atLeast()->once();
         $this->parser->parseLogs(__DIR__ . '/_fixtures/gitolite-2017-11-broken.log');
     }
 

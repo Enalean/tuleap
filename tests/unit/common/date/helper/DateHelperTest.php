@@ -42,76 +42,76 @@ final class DateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected = [
             0        => [ //'less than a minute', 'less than 5 seconds'),     // 0 second
-                               ['include_utils', 'less_1_minute'],
-                               ['include_utils', 'less_than_one_second', '*'],
+                ['include_utils', 'less_1_minute'],
+                ['include_utils', 'less_than_one_second', '*'],
             ],
             2        => [ //'less than a minute', 'less than 5 seconds'),     // 2 seconds
-                               ['include_utils', 'less_1_minute'],
-                               ['include_utils', 'less_than_X_seconds', '*'],
+                ['include_utils', 'less_1_minute'],
+                ['include_utils', 'less_than_X_seconds', '*'],
             ],
             7        => [ //'less than a minute', 'less than 10 seconds'),    // 7 seconds
-                               ['include_utils', 'less_1_minute'],
-                               ['include_utils', 'less_than_X_seconds', '*'],
+                ['include_utils', 'less_1_minute'],
+                ['include_utils', 'less_than_X_seconds', '*'],
             ],
             12       => [ //'less than a minute', 'less than 20 seconds'),    // 12 seconds
-                               ['include_utils', 'less_1_minute'],
-                               ['include_utils', 'less_than_X_seconds', '*'],
+                ['include_utils', 'less_1_minute'],
+                ['include_utils', 'less_than_X_seconds', '*'],
             ],
             21       => [ //'less than a minute', 'half a minute'),           // 21 seconds
-                               ['include_utils', 'less_1_minute'],
-                               ['include_utils', 'half_a_minute'],
+                ['include_utils', 'less_1_minute'],
+                ['include_utils', 'half_a_minute'],
             ],
             30       => [ //'1 minute',           'half a minute'),           // 30 seconds
-                               ['include_utils', '1_minute'],
-                               ['include_utils', 'half_a_minute'],
+                ['include_utils', '1_minute'],
+                ['include_utils', 'half_a_minute'],
             ],
             50       => [ //'1 minute',           'less than a minute'),      // 50 seconds
-                               ['include_utils', '1_minute'],
-                               ['include_utils', 'less_1_minute'],
+                ['include_utils', '1_minute'],
+                ['include_utils', 'less_1_minute'],
             ],
             60       => [ //'1 minute',           '1 minute'),                // 60 seconds
-                               ['include_utils', '1_minute'],
-                               ['include_utils', '1_minute'],
+                ['include_utils', '1_minute'],
+                ['include_utils', '1_minute'],
             ],
             90       => [ //'2 minutes',          '2 minutes'),               // 90 seconds
-                               ['include_utils', 'X_minutes', '*'],
-                               ['include_utils', 'X_minutes', '*'],
+                ['include_utils', 'X_minutes', '*'],
+                ['include_utils', 'X_minutes', '*'],
             ],
             130      => [ //'2 minutes',          '2 minutes'),               // 130 seconds
-                               ['include_utils', 'X_minutes', '*'],
-                               ['include_utils', 'X_minutes', '*'],
+                ['include_utils', 'X_minutes', '*'],
+                ['include_utils', 'X_minutes', '*'],
             ],
             3000     => [ //'about 1 hour',       'about 1 hour'),            // 50*60 seconds
-                               ['include_utils', 'about_1_hour'],
-                               ['include_utils', 'about_1_hour'],
+                ['include_utils', 'about_1_hour'],
+                ['include_utils', 'about_1_hour'],
             ],
             6000     => [ //'about 2 hours',      'about 2 hours'),           // 100*60 seconds
-                               ['include_utils', 'about_X_hours', '*'],
-                               ['include_utils', 'about_X_hours', '*'],
+                ['include_utils', 'about_X_hours', '*'],
+                ['include_utils', 'about_X_hours', '*'],
             ],
             87000    => [ //'1 day',              '1 day'),                   // 1450*60 seconds
-                               ['include_utils', 'about_1_day'],
-                               ['include_utils', 'about_1_day'],
+                ['include_utils', 'about_1_day'],
+                ['include_utils', 'about_1_day'],
             ],
             172860   => [ //'2 days',             '2 days'),                  // 2881*60 seconds
-                               ['include_utils', 'X_days', '*'],
-                               ['include_utils', 'X_days', '*'],
+                ['include_utils', 'X_days', '*'],
+                ['include_utils', 'X_days', '*'],
             ],
             2592060  => [ //'about 1 month',      'about 1 month'),           // 43201*60 seconds
-                               ['include_utils', 'about_1_month'],
-                               ['include_utils', 'about_1_month'],
+                ['include_utils', 'about_1_month'],
+                ['include_utils', 'about_1_month'],
             ],
             5184060  => [ //'2 months',           '2 months'),                // 86401*60 seconds
-                               ['include_utils', 'X_months', '*'],
-                               ['include_utils', 'X_months', '*'],
+                ['include_utils', 'X_months', '*'],
+                ['include_utils', 'X_months', '*'],
             ],
             31557660 => [ //'about 1 year',       'about 1 year'),            // 525961*60 seconds
-                               ['include_utils', 'about_1_year'],
-                               ['include_utils', 'about_1_year'],
+                ['include_utils', 'about_1_year'],
+                ['include_utils', 'about_1_year'],
             ],
             63115200 => [ //'over 2 years',       'over 2 years'),            // 1051920*60 seconds
-                               ['include_utils', 'over_X_years', '*'],
-                               ['include_utils', 'over_X_years', '*'],
+                ['include_utils', 'over_X_years', '*'],
+                ['include_utils', 'over_X_years', '*'],
             ],
         ];
         foreach ($expected as $distance => $e) {

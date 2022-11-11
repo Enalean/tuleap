@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\NeverThrow;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+
 /**
  * I hold a technical or business error that is not fatal and does not require the program to stop immediately.
  * The error must be recoverable, otherwise use Exceptions.
@@ -79,5 +82,17 @@ class Fault
     public function __toString(): string
     {
         return $this->message;
+    }
+
+    /**
+     * @psalm-param LogLevel::* $level
+     */
+    public static function writeToLogger(self $fault, LoggerInterface $logger, string $level = LogLevel::ERROR): void
+    {
+        if ($fault->exception instanceof \Exception) {
+            $logger->log($level, $fault->message, ['exception' => $fault->exception]);
+            return;
+        }
+        $logger->log($level, $fault->message);
     }
 }

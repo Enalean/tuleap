@@ -63,13 +63,13 @@ class WikiPlugin_TitleSearch extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(), // paging and more.
             ['s'             => false,
-                   'auto_redirect' => false,
-                   'noheader'      => false,
-                   'exclude'       => false,
-                   'info'          => false,
-                   'case_exact'    => false,
-                   'regex'            => 'auto',
-                   'format'           => false,
+                'auto_redirect' => false,
+                'noheader'      => false,
+                'exclude'       => false,
+                'info'          => false,
+                'case_exact'    => false,
+                'regex'            => 'auto',
+                'format'           => false,
             ]
         );
     }

@@ -27,29 +27,37 @@ use Tuleap\Reference\ReferenceInstance;
 final class ExtractReferencesStub implements \Tuleap\Reference\ExtractReferences
 {
     /**
-     * @param list<ReferenceInstance> $references
+     * @param ReferenceInstance[][] $return_values
      */
-    private function __construct(private array $references)
+    private function __construct(private bool $always_return, private array $return_values)
     {
     }
 
     /**
+     * @param ReferenceInstance[]   $return_values
+     * @param ReferenceInstance[][] $other_return_values
      * @no-named-arguments
      */
-    public static function withReferenceInstances(
-        ReferenceInstance $instance,
-        ReferenceInstance ...$other_instances,
+    public static function withSuccessiveReferenceInstances(
+        array $return_values,
+        array ...$other_return_values,
     ): self {
-        return new self([$instance, ...$other_instances]);
+        return new self(false, [$return_values, ...$other_return_values]);
     }
 
     public static function withNoReference(): self
     {
-        return new self([]);
+        return new self(true, [[]]);
     }
 
     public function extractReferences(string $html, int $group_id): array
     {
-        return $this->references;
+        if ($this->always_return) {
+            return $this->return_values[0];
+        }
+        if (count($this->return_values) > 0) {
+            return array_shift($this->return_values);
+        }
+        throw new \LogicException('No reference instance configured');
     }
 }

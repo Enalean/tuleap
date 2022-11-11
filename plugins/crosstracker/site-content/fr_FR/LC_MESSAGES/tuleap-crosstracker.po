@@ -216,7 +216,7 @@ msgid "Report with id %d not found"
 msgstr "Le rapport avec l'identifiant %d n'a pas été trouvé"
 
 msgid "Search artifacts that are in different trackers"
-msgstr "Permet la recherche d'artefacts à travers plusieurs outils de suivi"
+msgstr "Permet la recherche d'artéfacts à travers plusieurs outils de suivi"
 
 msgid "Search into multiple trackers and multiple projects."
 msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."

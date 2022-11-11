@@ -54,7 +54,8 @@ class WikiPlugin_IncludePages extends WikiPlugin_IncludePage
     {
         return array_merge(
             [ 'pages'   => false,  // the pages to include
-                                  'exclude' => false], // the pages to exclude
+                'exclude' => false,
+            ], // the pages to exclude
             WikiPlugin_IncludePage::getDefaultArguments()
         );
     }

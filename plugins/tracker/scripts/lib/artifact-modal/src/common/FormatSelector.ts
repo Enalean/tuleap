@@ -67,9 +67,7 @@ export const FormatSelector = define<FormatSelector>({
             <label for="${host.identifier}" class="tlp-label artifact-modal-text-label">
                 ${host.label}
                 ${host.required &&
-                html`
-                    <i class="fas fa-asterisk artifact-modal-text-asterisk"></i>
-                `}
+                html`<i class="fas fa-asterisk artifact-modal-text-asterisk"></i>`}
             </label>
             <div class="artifact-modal-text-label-with-format-and-helper-container">
                 <select

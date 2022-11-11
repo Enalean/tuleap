@@ -203,11 +203,11 @@ class Tracker_DateReminderManager
             $messages[$hash]['recipients'][] = $recipient;
         } else {
             $messages[$hash] = [
-                    'headers'    => $headers,
-                    'htmlBody'   => $htmlBody,
-                    'txtBody'    => $txtBody,
-                    'subject'    => $subject,
-                    'recipients' => [$recipient],
+                'headers'    => $headers,
+                'htmlBody'   => $htmlBody,
+                'txtBody'    => $txtBody,
+                'subject'    => $subject,
+                'recipients' => [$recipient],
             ];
         }
     }

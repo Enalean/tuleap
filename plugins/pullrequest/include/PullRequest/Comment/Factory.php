@@ -28,27 +28,11 @@ use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
 
 class Factory
 {
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
-
-    /** @var Dao */
-    private $dao;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
-
     public function __construct(
-        Dao $dao,
-        ReferenceManager $reference_manager,
-        EventDispatcherInterface $event_dispatcher,
+        private Dao $dao,
+        private ReferenceManager $reference_manager,
+        private EventDispatcherInterface $event_dispatcher,
     ) {
-        $this->dao               = $dao;
-        $this->reference_manager = $reference_manager;
-        $this->event_dispatcher  = $event_dispatcher;
     }
 
     public function save(Comment $comment, PFUser $user, $project_id)
@@ -57,7 +41,8 @@ class Factory
             $comment->getPullRequestId(),
             $comment->getUserId(),
             $comment->getPostDate(),
-            $comment->getContent()
+            $comment->getContent(),
+            $comment->getParentId()
         );
 
         $this->reference_manager->extractCrossRef(
@@ -96,14 +81,15 @@ class Factory
         return $this->instantiateFromRow($row);
     }
 
-    private function instantiateFromRow($row)
+    private function instantiateFromRow($row): Comment
     {
         return new Comment(
             $row['id'],
             $row['pull_request_id'],
             $row['user_id'],
             $row['post_date'],
-            $row['content']
+            $row['content'],
+            (int) $row['parent_id']
         );
     }
 }

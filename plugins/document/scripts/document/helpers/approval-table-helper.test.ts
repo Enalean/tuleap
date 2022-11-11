@@ -18,8 +18,9 @@
  */
 
 import type { ApprovalTableBadge } from "./approval-table-helper";
-import { extractApprovalTableData } from "./approval-table-helper";
+import { extractApprovalTableData, hasAnApprovalTable } from "./approval-table-helper";
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants";
+import type { Folder, ItemFile } from "../type";
 
 describe("extractApprovalTableData", () => {
     const translated_states = new Map();
@@ -35,7 +36,7 @@ describe("extractApprovalTableData", () => {
         };
 
         const badge = extractApprovalTableData(translated_states, APPROVAL_NOT_YET, false);
-        expect(expected_badge).toEqual(badge);
+        expect(expected_badge).toStrictEqual(badge);
     });
 
     it("Given approval status is approved it should returns the corresponding badge information", () => {
@@ -45,7 +46,7 @@ describe("extractApprovalTableData", () => {
             badge_class: `tlp-badge-success `,
         };
         const badge = extractApprovalTableData(translated_states, APPROVAL_APPROVED, false);
-        expect(expected_badge).toEqual(badge);
+        expect(expected_badge).toStrictEqual(badge);
     });
 
     it("Given approval status is rejected it should returns the corresponding badge information", () => {
@@ -55,7 +56,7 @@ describe("extractApprovalTableData", () => {
             badge_class: `tlp-badge-danger `,
         };
         const badge = extractApprovalTableData(translated_states, APPROVAL_REJECTED, false);
-        expect(expected_badge).toEqual(badge);
+        expect(expected_badge).toStrictEqual(badge);
     });
 
     it("Given additional classes should be added to the badge, the the badge have it", () => {
@@ -65,7 +66,7 @@ describe("extractApprovalTableData", () => {
             badge_class: `tlp-badge-success document-tree-item-toggle-quicklook-approval-badge`,
         };
         const badge = extractApprovalTableData(translated_states, APPROVAL_APPROVED, true);
-        expect(expected_badge).toEqual(badge);
+        expect(expected_badge).toStrictEqual(badge);
     });
 
     it("When the approval state is translated, Then it returns the right label", () => {
@@ -81,6 +82,23 @@ describe("extractApprovalTableData", () => {
         french_translations.set("Rejeté", APPROVAL_REJECTED);
 
         const badge = extractApprovalTableData(french_translations, "Approuvé", true);
-        expect(expected_badge).toEqual(badge);
+        expect(expected_badge).toStrictEqual(badge);
+    });
+});
+
+describe("hasAnApprovalTable", () => {
+    it("Folder does not have an approval table", () => {
+        const item = {} as Folder;
+        expect(hasAnApprovalTable(item)).toBe(false);
+    });
+
+    it("Does not have an approval table when document do not have approval table", () => {
+        const item = {} as ItemFile;
+        expect(hasAnApprovalTable(item)).toBe(false);
+    });
+
+    it("Has an approval table", () => {
+        const item = { has_approval_table: true } as ItemFile;
+        expect(hasAnApprovalTable(item)).toBe(true);
     });
 });

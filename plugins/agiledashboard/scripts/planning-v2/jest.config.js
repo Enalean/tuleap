@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const { defineAngularMocksJestConfiguration } = require("@tuleap/build-system-configurator");
+
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
+const jest_base_config = defineAngularMocksJestConfiguration();
 module.exports = {
     ...jest_base_config,
     displayName: "planning-v2",
@@ -30,5 +32,4 @@ module.exports = {
         "^angular$": "<rootDir>/node_modules/angular/index.js",
     },
     setupFilesAfterEnv: [...jest_base_config.setupFilesAfterEnv, "./test-load-jquery.js"],
-    testRunner: "jest-jasmine2",
 };

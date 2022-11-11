@@ -102,7 +102,7 @@ class SettingsRepresentationValidator
         $empty_notification = [];
         if ($settings && $settings->email_notifications) {
             foreach ($settings->email_notifications as $notification) {
-                if (count($notification->emails) === 0 && count($notification->users) === 0) {
+                if (count($notification->emails) === 0 && count($notification->users) === 0 && count($notification->user_groups) === 0) {
                     $empty_notification[] = $notification->path;
                 }
             }
@@ -110,7 +110,7 @@ class SettingsRepresentationValidator
 
         if (count($empty_notification) > 0) {
             throw new SettingsInvalidException(
-                "Notification should concern at least one email or one user for path: " .
+                "Notification should concern at least one email or one user or one user group for path: " .
                 implode(',', $empty_notification)
             );
         }

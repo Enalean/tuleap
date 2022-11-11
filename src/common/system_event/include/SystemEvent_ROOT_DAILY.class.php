@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Symfony\Component\Process\Process;
 use Tuleap\SystemEvent\RootDailyStartEvent;
 
 class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
@@ -64,9 +63,12 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         // Purge system_event table: we only keep one year history in db
         $this->purgeSystemEventsDataOlderThanOneYear();
 
-        $this->runComputeAllDailyStats($logger, $warnings);
+        $project_metric_dao = new \Tuleap\Project\ProjectMetricsDAO();
+        $this->runComputeAllDailyStats($project_metric_dao);
+        $current_time = new DateTimeImmutable();
+        $this->cleanupDB($current_time);
 
-        $this->runWeeklyStats($logger, $warnings);
+        $this->runWeeklyStats($logger, $project_metric_dao);
 
         try {
             $frs_directory_cleaner = new \Tuleap\FRS\FRSIncomingDirectoryCleaner();
@@ -94,13 +96,14 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
 
     private function userHomeSanityCheck(BackendSystem $backend_system, array &$warnings)
     {
-        $dao   = new UserDao();
-        $users = $dao
-            ->searchByStatus([PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED])
-            ->instanciateWith([UserManager::instance(), 'getUserInstanceFromRow']);
+        $dao       = new UserDao();
+        $user_rows = $dao
+            ->searchByStatus([PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED]);
 
-        foreach ($users as $user) {
-            $backend_system->userHomeSanityCheck($user, $warnings);
+        $user_manager = UserManager::instance();
+
+        foreach ($user_rows as $user_row) {
+            $backend_system->userHomeSanityCheck($user_manager->getUserInstanceFromRow($user_row), $warnings);
         }
     }
 
@@ -112,34 +115,27 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         return $system_event_purger->purgeSystemEventsDataOlderThanOneYear();
     }
 
-    private function runComputeAllDailyStats(\Psr\Log\LoggerInterface $logger, array &$warnings)
+    private function runComputeAllDailyStats(\Tuleap\Project\ProjectMetricsDAO $project_metrics_dao): void
     {
-        $process = new Process([__DIR__ . '/../../../utils/compute_all_daily_stats.sh']);
-        $this->runCommand($process, $logger, $warnings);
+        (new \Tuleap\FRS\FRSMetricsDAO())->executeDailyRun(new DateTimeImmutable());
+        $project_metrics_dao->executeDailyRun();
+    }
+
+    private function cleanupDB(DateTimeImmutable $current_time): void
+    {
+        (new SessionDao())->deleteExpiredSession($current_time->getTimestamp(), \ForgeConfig::getInt('sys_session_lifetime'));
+        (new UserDao())->updatePendingExpiredUsersToDeleted($current_time->getTimestamp(), 3600 * 24 * \ForgeConfig::getInt('sys_pending_account_lifetime'));
     }
 
     /**
      * run the weekly stats for projects. Run it on Monday morning so that
      * it computes the stats for the week before
      */
-    private function runWeeklyStats(\Psr\Log\LoggerInterface $logger, array &$warnings)
+    private function runWeeklyStats(\Psr\Log\LoggerInterface $logger, \Tuleap\Project\ProjectMetricsDAO $project_metrics_dao): void
     {
         $now = new DateTimeImmutable();
         if ($now->format('l') === self::DAY_OF_WEEKLY_STATS) {
-            $process = new Process(['./db_project_weekly_metric.pl'], __DIR__ . '/../../../utils/underworld-root');
-            $this->runCommand($process, $logger, $warnings);
-        }
-    }
-
-    private function runCommand(Process $process, \Psr\Log\LoggerInterface $logger, array &$warnings): void
-    {
-        $process->setTimeout(null);
-        $process->run();
-        if (! $process->isSuccessful()) {
-            $warnings[] = $process->getCommandLine() . ' ran with errors, check ' . ForgeConfig::get('codendi_log');
-            $logger->error(sprintf("%s %s errors. Stdout:\n%s\nStderr:\n%s", self::class, $process->getCommandLine(), $process->getOutput(), $process->getErrorOutput()));
-        } else {
-            $logger->debug(sprintf("%s %s Stdout:\n%s\nStderr:\n%s", self::class, $process->getCommandLine(), $process->getOutput(), $process->getErrorOutput()));
+            $project_metrics_dao->executeWeeklyRun($now);
         }
     }
 }

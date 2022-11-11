@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Closure;
 
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\UserName;
 
 final class BadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -32,7 +33,7 @@ final class BadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::aUser()->withUserName(self::USER_LOGIN)->build();
 
-        return BadSemanticComment::fromUser($user)->getBody();
+        return BadSemanticComment::fromUser(UserName::fromUser($user))->getBody();
     }
 
     public function testItBuildsFromUser(): void

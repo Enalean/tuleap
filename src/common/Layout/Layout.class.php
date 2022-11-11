@@ -24,6 +24,7 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\ThemeVariation;
 
 /**
@@ -45,8 +46,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     private $javascript;
 
-    private $version;
-
     //Define all the icons for this theme
     public $icons = ['Summary' => 'ic/anvil24.png',
         'Homepage' => 'ic/home.png',
@@ -61,7 +60,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         'CVS' => 'ic/convert.png',
         'Files' => 'ic/save.png',
         'Trackers' => 'ic/tracker20w.png',
-        ];
+    ];
 
     public const INCLUDE_FAT_COMBINED = 'include_fat_combined';
 
@@ -91,6 +90,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $this->imgroot = $root . '/images/';
 
         $this->javascript = [];
+        $this->includeJavascriptFile((new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'))->getFileURL());
 
         /*
             Set up the priority color array one time only
@@ -364,7 +364,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
         $this->includeJavascriptFile($this->include_asset->getFileURL('ckeditor.js'));
         $this->includeJavascriptFile($this->include_asset->getFileURL('rich-text-editor-including-prototypejs.js'));
-        $this->includeJavascriptFile($this->include_asset->getFileURL('switch-to-fp.js'));
 
         //Javascript i18n
         echo '<script type="text/javascript" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '">' . "\n";
@@ -665,21 +664,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         }
     }
 
-    public function generic_footer($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        global $Language;
-
-        $version = $this->getVersion();
-
-        echo '<footer class="footer">';
-        include($Language->getContent('layout/footer'));
-        echo '</footer>';
-
-        echo $this->displayFooterJavascriptElements();
-        echo '</body>';
-        echo '</html>';
-    }
-
     public function pv_header($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->generic_header($params);
@@ -755,31 +739,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
              </html>';
     }
 
-    public function footer(array $params)
-    {
-        if (! isset($params['showfeedback']) || $params['showfeedback']) {
-            echo $this->_getFeedback();
-        }
-        ?>
-        </div>
-        <!-- end content -->
-        </tr>
-<!-- New row added for the thin black line at the bottom of the array -->
-<tr><td background="<?php echo util_get_image_theme("black.png"); ?>" colspan="4" align="center"><img src="<?php echo util_get_image_theme("clear.png"); ?>" width="2" height="2" alt=" "></td> </tr>
-        </table>
-
-                </td>
-
-                <td background="<?php echo util_get_image_theme("right_border.png"); ?>" valign="bottom"><img src="<?php echo util_get_image_theme("bottom_right_corner.png"); ?>" width="16" height="16" alt=" "></td>
-        </tr>
-
-</table>
-</div>
-<!-- themed page footer -->
-        <?php
-        $this->generic_footer($params);
-    }
-
     /**
      * Return the background color (classname) for priority
      *
@@ -818,13 +777,5 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $this->includeFooterJavascriptSnippet(
             $js_variable_name . ' = ' . json_encode($object) . ';'
         );
-    }
-
-    protected function getVersion()
-    {
-        if ($this->version === null) {
-            $this->version = trim(file_get_contents(ForgeConfig::get('codendi_dir') . '/VERSION'));
-        }
-        return $this->version;
     }
 }

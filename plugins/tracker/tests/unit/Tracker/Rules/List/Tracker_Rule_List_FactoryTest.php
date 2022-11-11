@@ -230,17 +230,18 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = ['F25' => 102,
-                                   'F28' => 103,
-                                   'values' => [
-                                       'F25-V1' => 801,
-                                       'F25-V2' => 802,
-                                       'F25-V3' => 803,
-                                       'F25-V4' => 804,
-                                       'F28-V1' => 806,
-                                       'F28-V2' => 807,
-                                       'F28-V3' => 808,
-                                       'F28-V4' => 809,
-                                   ]];
+            'F28' => 103,
+            'values' => [
+                'F25-V1' => 801,
+                'F25-V2' => 802,
+                'F25-V3' => 803,
+                'F25-V4' => 804,
+                'F28-V1' => 806,
+                'F28-V2' => 807,
+                'F28-V3' => 808,
+                'F28-V4' => 809,
+            ],
+        ];
 
         $r1 = new Tracker_Rule_List(1, 101, 103, 806, 102, 803);
         $r2 = new Tracker_Rule_List(1, 101, 103, 806, 102, 804);

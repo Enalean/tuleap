@@ -1,0 +1,69 @@
+[# setup page definitions]
+  [define page_title_classname][end]
+  [define resource_name]
+    [for nav_path]
+        [if-index nav_path last]
+            [if-any lastrev]
+                [include "lastrev.ezt"]
+            [else]
+                [if-index nav_path first]
+                    /
+                [else]
+                    [nav_path.name]
+                [end]
+            [end]
+        [end]
+    [end]
+  [end]
+  [define page_title]<small>Log of</small> [resource_name][end]
+  [define help_href][docroot]/help_log.html[end]
+[# end]
+
+[include "header.ezt" "log"]
+
+<div id="tuleap-viewvc-header-actions">
+    [if-any default_branch]
+    <div class="tuleap-viewvc-header-actions-entry">
+      <span>Default branch:</span>
+      <span>
+          [for default_branch]<a href="[default_branch.href]">[default_branch.name]</a>[if-index default_branch last][else], [end]
+          [end]
+      </span>
+     </div>
+    [end]
+
+    [is pathtype "file"]
+        [if-any head_view_href]
+        <div class="tuleap-viewvc-header-actions-entry">
+          <span>Links to HEAD:</span>
+          <span>
+              <div class="btn-group">
+                <a href="[head_view_href]" class="btn"><i class="far fa-file"></i> View</a>
+                [if-any head_download_href]<a href="[head_download_href]" class="btn"><i class="fas fa-download"></i> Download</a>[end]
+                [if-any head_download_text_href]<a href="[head_download_text_href]" class="btn"><i class="far fa-file-alt"></i> As text</a>[end]
+                [if-any head_annotate_href]<a href="[head_annotate_href]" class="btn"><i class="fas fa-bullhorn"></i> Annotate</a>[end]
+              </div>
+          </span>
+        </div>
+        [end]
+
+        [if-any tag_view_href]
+        <div class="tuleap-viewvc-header-actions-entry">
+          <span>Links to [pathrev]:</span>
+          <span>
+              <div class="btn-group">
+                <a href="[tag_view_href]" class="btn"><i class="far fa-file"></i> View</a>
+                [if-any tag_download_href]<a href="[tag_download_href]" class="btn"><i class="fas fa-download"></i> Download</a>[end]
+                [if-any tag_download_text_href]<a href="[tag_download_text_href]" class="btn"><i class="far fa-file-alt"></i> As text</a>[end]
+                [if-any tag_annotate_href]<a href="[tag_annotate_href]" class="btn"><i class="fas fa-bullhorn"></i> Annotate</a>[end]
+             </div>
+          </span>
+        </div>
+        [end]
+    [end]
+
+    [include "pathrev_form.ezt"]
+</div>
+
+</div>
+<div class="tuleap-viewvc-body">

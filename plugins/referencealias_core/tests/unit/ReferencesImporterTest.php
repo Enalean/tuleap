@@ -20,25 +20,28 @@
 
 namespace Tuleap\ReferenceAliasCore;
 
-use DataAccessResult;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\NullLogger;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 include 'bootstrap.php';
 
-class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private ReferencesImporter $importer;
+    /**
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $dao;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->dao      = \Mockery::spy(\Tuleap\ReferenceAliasCore\Dao::class);
-        $this->logger   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->importer = new ReferencesImporter($this->dao, $this->logger);
+        $this->dao      = $this->createMock(\Tuleap\ReferenceAliasCore\Dao::class);
+        $this->importer = new ReferencesImporter($this->dao, new NullLogger());
     }
 
-    public function testItShouldAddPkgLinks()
+    public function testItShouldAddPkgLinks(): void
     {
         $xml                = <<<XML
             <references>
@@ -49,12 +52,13 @@ XML;
         $xml                = new \SimpleXMLElement($xml);
         $created_references = ['package' => ['1' => '1337', '2' => '42']];
 
-        $this->dao->shouldReceive('getRef')->andReturn([]);
-        $this->dao->shouldReceive('insertRef')->times(2);
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $xml, $created_references);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::exactly(2))->method('insertRef');
+
+        $this->importer->importCompatRefXML(new ImportConfig(), ProjectTestBuilder::aProject()->build(), $xml, $created_references);
     }
 
-    public function testItShouldAddRelLinks()
+    public function testItShouldAddRelLinks(): void
     {
         $xml                = <<<XML
             <references>
@@ -65,12 +69,13 @@ XML;
         $xml                = new \SimpleXMLElement($xml);
         $created_references = ['release' => ['3' => '6778', '4' => '6779']];
 
-        $this->dao->shouldReceive('getRef')->andReturn([]);
-        $this->dao->shouldReceive('insertRef')->times(2);
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $xml, $created_references);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::exactly(2))->method('insertRef');
+
+        $this->importer->importCompatRefXML(new ImportConfig(), ProjectTestBuilder::aProject()->build(), $xml, $created_references);
     }
 
-    public function testItShouldNotAddIfTargetIsUnknown()
+    public function testItShouldNotAddIfTargetIsUnknown(): void
     {
         $xml                = <<<XML
             <references>
@@ -80,15 +85,13 @@ XML;
         $xml                = new \SimpleXMLElement($xml);
         $created_references = ['package' => []];
 
-        $dar = \Mockery::spy(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturns([]);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::never())->method('insertRef');
 
-        $this->dao->shouldReceive('getRef')->andReturn($dar);
-        $this->dao->shouldReceive('insertRef')->never();
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $xml, $created_references);
+        $this->importer->importCompatRefXML(new ImportConfig(), ProjectTestBuilder::aProject()->build(), $xml, $created_references);
     }
 
-    public function testItShouldNotAddUnknownReferences()
+    public function testItShouldNotAddUnknownReferences(): void
     {
         $xml                = <<<XML
             <references>
@@ -98,11 +101,9 @@ XML;
         $xml                = new \SimpleXMLElement($xml);
         $created_references = ['package' => ['1' => '1337']];
 
-        $dar = \Mockery::spy(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturns([]);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::never())->method('insertRef');
 
-        $this->dao->shouldReceive('getRef')->andReturn($dar);
-        $this->dao->shouldReceive('insertRef')->never();
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $xml, $created_references);
+        $this->importer->importCompatRefXML(new ImportConfig(), ProjectTestBuilder::aProject()->build(), $xml, $created_references);
     }
 }

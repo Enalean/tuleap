@@ -60,14 +60,14 @@ final class SearchColumnFilterTest extends TestCase
         $this->metadata_factory
             ->method('getMetadataForGroup')
             ->willReturn([
-                             $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_ID_LABEL),
-                             $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
-                             $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
-                             $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
-                             $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
-                             $this->getCustomMetadata("field_1"),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_ID_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
+                $this->getCustomMetadata("field_1"),
 
-                         ]);
+            ]);
 
         $selected_columns = $this->search_column_filter->getColumns($project, $this->metadata_factory);
         $expected_columns = [

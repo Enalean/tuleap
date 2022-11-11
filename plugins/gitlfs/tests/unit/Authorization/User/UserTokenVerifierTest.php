@@ -100,8 +100,8 @@ class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'repository_id'   => 3,
             'user_id'         => 123,
             'operation_name'  => 'operation',
-        ]);
-        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
+        ])->atLeast()->once();
+        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true)->atLeast()->once();
 
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);

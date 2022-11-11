@@ -204,7 +204,7 @@ final class DisplayPlanIterationsControllerTest extends TestCase
         $user->method('getPreference')->willReturn(false);
         $user->method('isAdmin')->willReturn(true);
         $user->method('getId')->willReturn(101);
-        $user->method('getName')->willReturn('John');
+        $user->method('getUserName')->willReturn('John');
 
         return $user;
     }

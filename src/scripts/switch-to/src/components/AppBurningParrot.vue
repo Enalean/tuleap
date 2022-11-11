@@ -22,65 +22,58 @@
     <div
         class="tlp-modal"
         role="dialog"
-        v-bind:aria-label="aria_label"
+        v-bind:aria-label="$gettext('Switch to…')"
         id="switch-to-modal"
         data-test="switch-to-modal"
+        ref="root"
     >
         <switch-to-header class="tlp-modal-header" v-bind:modal="modal" />
         <switch-to-body class="tlp-modal-body" />
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import type { Modal } from "tlp";
-import { createModal } from "tlp";
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref } from "vue";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
-import { Action } from "vuex-class";
+import { useRootStore } from "../stores/root";
 
-@Component({
-    components: { SwitchToHeader, SwitchToBody },
-})
-export default class AppBurningParrot extends Vue {
-    @Action
-    private readonly loadHistory!: () => void;
+let modal: Modal | null = null;
+let trigger: HTMLElement | null = null;
+const root = ref<HTMLElement | null>(null);
 
-    private modal: Modal | null = null;
-    private trigger: HTMLElement | null = null;
+onMounted((): void => {
+    listenToTrigger();
+});
 
-    mounted(): void {
-        this.listenToTrigger();
+function listenToTrigger(): void {
+    trigger = document.getElementById("switch-to-button");
+    if (!(trigger instanceof HTMLElement)) {
+        return;
     }
 
-    listenToTrigger(): void {
-        this.trigger = document.getElementById("switch-to-button");
-        if (!(this.trigger instanceof HTMLElement)) {
-            return;
-        }
-
-        this.modal = createModal(this.$el);
-        this.trigger.addEventListener("click", this.toggleModal);
+    if (!root.value) {
+        return;
     }
 
-    beforeDestroy(): void {
-        if (!(this.trigger instanceof HTMLElement)) {
-            return;
-        }
+    modal = createModal(root.value);
+    trigger.addEventListener("click", toggleModal);
+}
 
-        this.trigger.removeEventListener("click", this.toggleModal);
+onUnmounted((): void => {
+    if (!(trigger instanceof HTMLElement)) {
+        return;
     }
 
-    toggleModal(): void {
-        this.loadHistory();
-        if (this.modal) {
-            this.modal.toggle();
-        }
-    }
+    trigger.removeEventListener("click", toggleModal);
+});
 
-    get aria_label(): string {
-        return this.$gettext("Switch to…");
+function toggleModal(): void {
+    useRootStore().loadHistory();
+    if (modal) {
+        modal.toggle();
     }
 }
 </script>

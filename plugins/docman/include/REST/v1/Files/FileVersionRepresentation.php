@@ -21,15 +21,22 @@
 
 namespace Tuleap\Docman\REST\v1\Files;
 
+use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\UserRepresentation;
+
 /**
  * @psalm-immutable
  */
 final class FileVersionRepresentation
 {
     /**
-     * @var int Item identifier
+     * @var int Version identifier
      */
     public $id;
+    /**
+     * @var int Version number
+     */
+    public $number;
     /**
      * @var string name of version
      */
@@ -42,30 +49,103 @@ final class FileVersionRepresentation
      * @var string link to download the version
      */
     public $download_href;
+    /**
+     * @var string|null link to the approval table
+     */
+    public ?string $approval_href;
+    /**
+     * @var UserRepresentation User who made the change
+     */
+    public UserRepresentation $author;
+    /**
+     * @var UserRepresentation[] Other users who contributed to the change
+     */
+    public array $coauthors;
+    /**
+     * @var string Date of the change
+     */
+    public string $date;
+    /**
+     * @var string Description of the changes
+     */
+    public string $changelog;
+    /**
+     * @var string Authoring tool used for this version. Empty if unknown.
+     */
+    public string $authoring_tool;
 
-
+    /**
+     * @param UserRepresentation[] $coauthors
+     */
     private function __construct(
         int $id,
+        int $number,
         ?string $label,
         string $filename,
         int $group_id,
         int $item_id,
+        ?string $approval_href,
+        UserRepresentation $author,
+        array $coauthors,
+        string $date,
+        string $changelog,
+        string $authoring_tool,
     ) {
         $this->id            = $id;
+        $this->number        = $number;
         $this->name          = ($label) ?: "";
         $this->filename      = $filename;
-        $this->download_href = "/plugins/docman/?" . http_build_query(
-            [
-                'group_id' => $group_id,
-                'action' => 'show',
-                'id' => $item_id,
-                'version_number' => $id,
-            ]
-        );
+        $this->author        = $author;
+        $this->coauthors     = $coauthors;
+        $this->date          = $date;
+        $this->changelog     = $changelog;
+        $this->approval_href = $approval_href;
+        $this->download_href = "/plugins/docman/?"
+            . http_build_query(
+                [
+                    'group_id'       => $group_id,
+                    'action'         => 'show',
+                    'id'             => $item_id,
+                    'version_number' => $number,
+                ]
+            );
+
+        $this->authoring_tool = $authoring_tool;
     }
 
-    public static function build(int $version_id, ?string $label, string $filename, int $group_id, int $item_id): self
-    {
-        return new self($version_id, $label, $filename, $group_id, $item_id);
+    /**
+     * @param \PFUser[] $coauthors
+     */
+    public static function build(
+        int $version_id,
+        int $number,
+        ?string $label,
+        string $filename,
+        int $group_id,
+        int $item_id,
+        ?string $approval_href,
+        \PFUser $author,
+        array $coauthors,
+        \DateTimeInterface $date,
+        string $changelog,
+        string $authoring_tool,
+    ): self {
+        return new self(
+            $version_id,
+            $number,
+            $label,
+            $filename,
+            $group_id,
+            $item_id,
+            $approval_href,
+            UserRepresentation::build($author),
+            array_map(
+                static fn (\PFUser $coauthor): UserRepresentation => UserRepresentation::build($coauthor),
+                $coauthors
+            ),
+            JsonCast::fromNotNullDateTimeToDate($date),
+            $changelog,
+            $authoring_tool,
+        );
     }
 }

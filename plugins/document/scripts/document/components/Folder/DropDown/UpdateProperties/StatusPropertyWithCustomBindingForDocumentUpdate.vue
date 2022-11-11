@@ -12,6 +12,7 @@
   - but WITHOUT ANY WARRANTY; without even the implied warranty of
   - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   - GNU General Public License for more details.
+
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
@@ -25,19 +26,14 @@
     />
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import StatusProperty from "../PropertiesForCreateOrUpdate/StatusProperty.vue";
-export default {
-    name: "StatusPropertyWithCustomBindingForDocumentUpdate",
-    components: {
-        StatusProperty,
-    },
-    props: {
-        status_value: String,
-    },
-    computed: {
-        ...mapState("configuration", ["is_status_property_used"]),
-    },
-};
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
+
+defineProps<{ status_value: string }>();
+
+const { is_status_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_status_property_used">
+>("configuration", ["is_status_property_used"]);
 </script>

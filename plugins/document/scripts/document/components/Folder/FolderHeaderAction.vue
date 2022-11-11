@@ -36,15 +36,11 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import NewItemButton from "./ActionsButton/NewItemButton.vue";
 import DropDownButton from "./DropDown/DropDownButton.vue";
 import DropDownCurrentFolder from "./DropDown/DropDownCurrentFolder.vue";
-export default {
-    name: "FolderHeaderAction",
-    components: { DropDownCurrentFolder, DropDownButton, NewItemButton },
-    props: {
-        item: Object,
-    },
-};
+import type { Folder } from "../../type";
+
+defineProps<{ item: Folder }>();
 </script>

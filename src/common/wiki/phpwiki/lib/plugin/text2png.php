@@ -61,7 +61,8 @@ class WikiPlugin_text2png extends WikiPlugin
     {
         global $LANG;
         return ['text' => "Hello WikiWorld!",
-                     'l'    => $LANG ];
+            'l'    => $LANG,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -194,7 +195,8 @@ class WikiPlugin_text2png extends WikiPlugin
                 $url = DATA_PATH . "/$url";
             }
             $html->pushContent(HTML::img(['src' => $url,
-                                               'alt' => $text]));
+                'alt' => $text,
+            ]));
         } else {
             trigger_error(sprintf(
                 _("couldn't open file '%s' for writing"),

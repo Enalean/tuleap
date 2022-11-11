@@ -109,6 +109,6 @@ class Tracker_ArtifactFactory_GetChildrenTest extends \Tuleap\Test\PHPUnit\TestC
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($artiafct_as_dar1)->andReturns($child_artifact1);
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($artiafct_as_dar2)->andReturns($child_artifact2);
 
-        $this->artifact_factory->getChildrenForArtifacts($this->user, $artifacts);
+        self::assertSame([$child_artifact1, $child_artifact2], $this->artifact_factory->getChildrenForArtifacts($this->user, $artifacts));
     }
 }

@@ -433,6 +433,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      */
     public function getQueryGroupby(): string
     {
+        if (! $this->isUsed()) {
+            return '';
+        }
         $R2 = 'R2_' . $this->id;
         return "$R2.value";
     }

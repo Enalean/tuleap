@@ -21,6 +21,7 @@
 
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentPresenterBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
@@ -147,12 +148,16 @@ class Tracker_Artifact_Changeset_Comment
      */
     public function getPurifiedBodyForText(): string
     {
-        if ($this->bodyFormat === self::COMMONMARK_COMMENT) {
-            $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
-            return $content_interpretor->getContentStrippedOfTags($this->body);
+        return self::getCommentInPlaintext($this->getPurifier(), $this->body, CommentFormatIdentifier::fromFormatString($this->bodyFormat));
+    }
+
+    public static function getCommentInPlaintext(Codendi_HTMLPurifier $purifier, string $content, CommentFormatIdentifier $comment_format): string
+    {
+        $identifier = (string) $comment_format;
+        if ($identifier === self::COMMONMARK_COMMENT) {
+            return CommonMarkInterpreter::build($purifier)->getContentStrippedOfTags($content);
         }
-        $level = self::$PURIFIER_LEVEL_IN_TEXT[$this->bodyFormat];
-        return $this->purifyBody($level);
+        return $purifier->purify($content, self::$PURIFIER_LEVEL_IN_TEXT[$identifier]);
     }
 
     public function getPurifiedBodyForHTML(): string

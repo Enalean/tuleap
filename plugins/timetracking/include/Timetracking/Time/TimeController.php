@@ -21,8 +21,8 @@
 namespace Tuleap\Timetracking\Time;
 
 use Codendi_Request;
-use CSRFSynchronizerToken;
 use PFUser;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
@@ -60,7 +60,7 @@ class TimeController
         Codendi_Request $request,
         PFUser $user,
         Artifact $artifact,
-        CSRFSynchronizerToken $csrf,
+        CSRFSynchronizerTokenInterface $csrf,
     ) {
         $csrf->check();
 
@@ -80,7 +80,7 @@ class TimeController
         Codendi_Request $request,
         PFUser $user,
         Artifact $artifact,
-        CSRFSynchronizerToken $csrf,
+        CSRFSynchronizerTokenInterface $csrf,
     ) {
         $csrf->check();
 
@@ -100,7 +100,7 @@ class TimeController
         Codendi_Request $request,
         PFUser $user,
         Artifact $artifact,
-        CSRFSynchronizerToken $csrf,
+        CSRFSynchronizerTokenInterface $csrf,
     ) {
         $csrf->check();
 

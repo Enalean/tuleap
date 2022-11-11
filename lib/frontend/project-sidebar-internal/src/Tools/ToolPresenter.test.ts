@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import { default as ToolComponent } from "./ToolPresenter.vue";
 import type { Tool } from "../configuration";
@@ -31,7 +30,7 @@ describe("ToolPresenter", () => {
             href: "/foo",
             label: "Label",
             description: "Description",
-            icon: "fa-fw fas fa-tlp-something",
+            icon: "fa-fw fa-solid fa-tlp-something",
             open_in_new_tab: false,
             is_active: true,
             shortcut_id: "plugin_something",
@@ -60,7 +59,7 @@ describe("ToolPresenter", () => {
             href: "/foo",
             label: "Label",
             description: "Description",
-            icon: "fa-fw fas fa-tlp-somethingelse",
+            icon: "fa-fw fa-solid fa-tlp-somethingelse",
             open_in_new_tab: true,
             is_active: false,
             shortcut_id: "",

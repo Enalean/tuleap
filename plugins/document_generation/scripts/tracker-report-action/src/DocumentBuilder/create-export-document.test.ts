@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as artifact_retriever from "./artifacts-retriever";
 import { createExportDocument } from "./create-export-document";
 import type {
@@ -206,7 +207,7 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Static List",
                         values: [
                             {
-                                id: 4,
+                                id: "4",
                                 label: "Value01",
                                 color: null,
                                 tlp_color: null,
@@ -236,13 +237,13 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Checkbox List",
                         values: [
                             {
-                                id: 15,
+                                id: "15",
                                 label: "MulitValue01",
                                 color: null,
                                 tlp_color: null,
                             },
                             {
-                                id: 16,
+                                id: "16",
                                 label: "MulitValue02",
                                 color: null,
                                 tlp_color: null,
@@ -256,7 +257,7 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Open List",
                         bind_value_objects: [
                             {
-                                id: 12549,
+                                id: "12549",
                                 label: "OpenValue02",
                                 color: null,
                                 tlp_color: null,
@@ -570,7 +571,7 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Static List",
                         values: [
                             {
-                                id: 4,
+                                id: "4",
                                 label: "Value01",
                                 color: null,
                                 tlp_color: null,
@@ -600,7 +601,7 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Checkbox List",
                         values: [
                             {
-                                id: 17,
+                                id: "17",
                                 label: "MulitValue03",
                                 color: null,
                                 tlp_color: null,
@@ -614,11 +615,11 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Open List",
                         bind_value_objects: [
                             {
-                                id: 1,
+                                id: "1",
                                 label: "azerty",
                             },
                             {
-                                id: 12548,
+                                id: "12548",
                                 label: "OpenValue01",
                                 color: null,
                                 tlp_color: null,
@@ -682,7 +683,7 @@ describe("Create ArtifactValues Collection", () => {
                 ],
             },
         ];
-        jest.spyOn(artifact_retriever, "retrieveReportArtifacts").mockResolvedValueOnce(
+        vi.spyOn(artifact_retriever, "retrieveReportArtifacts").mockResolvedValueOnce(
             report_artifacts
         );
 

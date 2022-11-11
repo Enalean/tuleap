@@ -140,7 +140,8 @@ $params =  [
         'file_showfiles',
         'file_p_for',
         $hp->purify($project_manager->getProject($group_id)->getPublicName())
-    ), 'pv' => $pv];
+    ), 'pv' => $pv,
+];
 $service->displayFRSHeader($project, $params['title']);
 
 if ($num_packages < 1) {

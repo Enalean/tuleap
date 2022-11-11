@@ -40,7 +40,7 @@ class ChangesetFromXmlPresenter
 
     public function __construct(\PFUser $user, int $timestamp)
     {
-        $this->user_name  = $user->getName();
+        $this->user_name  = $user->getUserName();
         $this->profil_url = $user->getPublicProfileUrl();
 
         $this->imported_on = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $timestamp);

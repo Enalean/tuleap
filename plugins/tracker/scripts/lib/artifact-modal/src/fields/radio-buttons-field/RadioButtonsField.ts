@@ -69,10 +69,7 @@ export const RadioButtonsField = define<RadioButtonsField>({
     content: (host) => html`
         <div class="tlp-form-element">
             <label class="tlp-label">
-                ${host.label}${host.required &&
-                html`
-                    <i class="fas fa-asterisk"></i>
-                `}
+                ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
             </label>
 
             ${!host.required &&

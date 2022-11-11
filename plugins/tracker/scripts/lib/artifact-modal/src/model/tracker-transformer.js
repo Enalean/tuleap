@@ -66,13 +66,13 @@ function transformField(field) {
         case "sb":
             field.values = filterHiddenValues(field.values);
             field.values = displayI18NLabelIfAvailable(field.values);
-            field.values = addNoneValue(field);
+            field.values = addNoneValueInSelectboxField(field);
             field.filtered_values = { ...field.values };
             break;
         case "msb":
             field.values = filterHiddenValues(field.values);
             field.values = displayI18NLabelIfAvailable(field.values);
-            field.values = addNoneValue(field);
+            field.values = addNoneValueInMultiSelectboxField(field);
             field.filtered_values = { ...field.values };
             break;
         case "cb":
@@ -117,15 +117,31 @@ function displayI18NLabelIfAvailable(field_values) {
     });
 }
 
-function addNoneValue(field) {
-    if (!field.required && !field.has_transitions) {
-        field.values.unshift({
+function addNoneValueInSelectboxField(selectbox_field) {
+    if (
+        selectbox_field.default_value &&
+        selectbox_field.default_value instanceof Array &&
+        selectbox_field.default_value.length === 0 &&
+        !selectbox_field.has_transitions
+    ) {
+        selectbox_field.values.unshift({
             id: 100,
             label: getNone(),
         });
     }
 
-    return field.values;
+    return selectbox_field.values;
+}
+
+function addNoneValueInMultiSelectboxField(multi_selectbox_field) {
+    if (!multi_selectbox_field.required && !multi_selectbox_field.has_transitions) {
+        multi_selectbox_field.values.unshift({
+            id: 100,
+            label: getNone(),
+        });
+    }
+
+    return multi_selectbox_field.values;
 }
 
 function hasFieldDependenciesRules(tracker) {

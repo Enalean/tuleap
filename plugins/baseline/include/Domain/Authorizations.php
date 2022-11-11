@@ -23,24 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use PFUser;
-use Project;
-
 interface Authorizations
 {
-    public function canCreateBaseline(PFUser $current_user, TransientBaseline $baseline): bool;
+    public function canCreateBaseline(UserIdentifier $current_user, TransientBaseline $baseline): bool;
 
-    public function canDeleteBaseline(PFUser $current_user, Baseline $baseline): bool;
+    public function canDeleteBaseline(UserIdentifier $current_user, Baseline $baseline): bool;
 
-    public function canReadBaseline(PFUser $current_user, Baseline $baseline): bool;
+    public function canReadBaseline(UserIdentifier $current_user, Baseline $baseline): bool;
 
-    public function canReadBaselinesOnProject(PFUser $current_user, Project $project): bool;
+    public function canReadBaselinesOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool;
 
-    public function canCreateComparison(PFUser $current_user, TransientComparison $comparison): bool;
+    public function canCreateComparison(UserIdentifier $current_user, TransientComparison $comparison): bool;
 
-    public function canDeleteComparison(PFUser $current_user, Comparison $comparison);
+    public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison);
 
-    public function canReadComparison(PFUser $current_user, Comparison $comparison): bool;
+    public function canReadComparison(UserIdentifier $current_user, Comparison $comparison): bool;
 
-    public function canReadComparisonsOnProject(PFUser $current_user, Project $project): bool;
+    public function canReadComparisonsOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool;
+
+    public function canUserAdministrateBaselineOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool;
 }

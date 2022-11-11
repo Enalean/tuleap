@@ -382,7 +382,8 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         'title' => $GLOBALS['Language']->getText(
             'file_admin_editreleases',
             'release_new_file_version'
-        ), 'help' => 'frs.html#delivery-manager-administration']);
+        ), 'help' => 'frs.html#delivery-manager-administration',
+    ]);
 
     echo '<H3>' . $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) . '</H3>';
     $sql          = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = " . db_ei($group_id) . ") ORDER BY `rank`";
@@ -773,10 +774,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                             <B> ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'details')) . ' :</B>
                         </TD>
                         <TD>
-                            <TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">' . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'file_news_details', [
-                $relname,
-                $url_news,
-                ])) . ' </TEXTAREA>
+                            <TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">' . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'file_news_details', [$relname, $url_news])) . ' </TEXTAREA>
                         </TD>
                     </TR>
                     <TR id="tr_public">
@@ -1162,7 +1160,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 if ($count === false) {
                     $error[] =  $GLOBALS['Language']->getText('global', 'mail_failed', [
                         ForgeConfig::get('sys_email_admin'),
-                        ]);
+                    ]);
                 } else {
                     if ($count > 0) {
                         $info[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'email_sent', $count);

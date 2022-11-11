@@ -39,24 +39,19 @@ clean_tuleap_sources="$(mktemp -d)"
 
 function cleanup {
     docker rm -fv rpm-builder rpm-installer || true
-    rm -rf "$clean_tuleap_sources"
+    git worktree remove -f "$clean_tuleap_sources"
 }
 trap cleanup EXIT
 
 docker rm rpm-builder || true
 
-is_in_git_repo=$(cd "$SRC_DIR" && git rev-parse --is-inside-work-tree 2> /dev/null || true)
-if [[ "$is_in_git_repo" == true ]]; then
-    git checkout-index -a --prefix="$clean_tuleap_sources/"
-else
-    cp -R "$SRC_DIR" "$clean_tuleap_sources/"
-fi
+git worktree add --detach "$clean_tuleap_sources/"
 
 if [ "$ENTERPRISE" == "1" ]; then
     touch "$clean_tuleap_sources/ENTERPRISE_BUILD"
 fi
 
-docker run -i --rm -v "$clean_tuleap_sources":/tuleap -w /tuleap -u "$(id -u):$(id -g)" --tmpfs /tmp/tuleap_build:rw,noexec,nosuid tuleap-generated-files-builder tools/utils/scripts/generated-files-builder.sh prod
+nix-shell --run "$clean_tuleap_sources/tools/utils/scripts/generated-files-builder.sh prod" "$clean_tuleap_sources/shell.nix"
 
 docker run -i --name rpm-builder -e "EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0}" -v /rpms -v "$clean_tuleap_sources":/tuleap:ro -w /tuleap tuleap-generated-files-builder tools/rpm/build_rpm_inside_container.sh
 

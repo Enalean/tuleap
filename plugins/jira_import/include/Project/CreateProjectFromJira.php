@@ -41,6 +41,7 @@ use Tuleap\JiraImport\JiraAgile\JiraSprintIssuesRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\JiraImport\Project\Dashboard\RoadmapDashboardCreator;
+use Tuleap\JiraImport\Project\GroupMembers\GroupMembersImporter;
 use Tuleap\Project\Registration\Template\EmptyTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
@@ -53,7 +54,9 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
@@ -69,65 +72,18 @@ use UserManager;
 
 final class CreateProjectFromJira
 {
-    /**
-     * @var IFindUserFromXMLReference
-     */
-    private $user_finder;
-    /**
-     * @var TemplateFactory
-     */
-    private $template_factory;
-    /**
-     * @var XMLFileContentRetriever
-     */
-    private $xml_file_content_retriever;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var JiraTrackerBuilder
-     */
-    private $jira_tracker_builder;
-    /**
-     * @var ArtifactLinkTypeImporter
-     */
-    private $artifact_link_type_importer;
-
-    /**
-     * @var PlatformConfigurationRetriever
-     */
-    private $platform_configuration_collection_builder;
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-
-    private UserRolesChecker $user_roles_checker;
-    private RoadmapDashboardCreator $roadmap_dashboard_creator;
-
     public function __construct(
-        UserManager $user_manager,
-        TemplateFactory $template_factory,
-        XMLFileContentRetriever $xml_file_content_retriever,
-        IFindUserFromXMLReference $user_finder,
-        JiraTrackerBuilder $jira_tracker_builder,
-        ArtifactLinkTypeImporter $artifact_link_type_importer,
-        PlatformConfigurationRetriever $platform_configuration_collection_builder,
-        \ProjectManager $project_manager,
-        UserRolesChecker $user_roles_checker,
-        RoadmapDashboardCreator $roadmap_dashboard_creator,
+        private UserManager $user_manager,
+        private TemplateFactory $template_factory,
+        private XMLFileContentRetriever $xml_file_content_retriever,
+        private IFindUserFromXMLReference $user_finder,
+        private JiraTrackerBuilder $jira_tracker_builder,
+        private ArtifactLinkTypeImporter $artifact_link_type_importer,
+        private PlatformConfigurationRetriever $platform_configuration_collection_builder,
+        private \ProjectManager $project_manager,
+        private UserRolesChecker $user_roles_checker,
+        private RoadmapDashboardCreator $roadmap_dashboard_creator,
     ) {
-        $this->user_manager                              = $user_manager;
-        $this->user_finder                               = $user_finder;
-        $this->template_factory                          = $template_factory;
-        $this->xml_file_content_retriever                = $xml_file_content_retriever;
-        $this->jira_tracker_builder                      = $jira_tracker_builder;
-        $this->artifact_link_type_importer               = $artifact_link_type_importer;
-        $this->platform_configuration_collection_builder = $platform_configuration_collection_builder;
-        $this->project_manager                           = $project_manager;
-        $this->user_roles_checker                        = $user_roles_checker;
-        $this->roadmap_dashboard_creator                 = $roadmap_dashboard_creator;
     }
 
     /**
@@ -142,6 +98,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $jira_epic_issue_type,
+        ?int $jira_board_id,
     ): \Project {
         if ($this->project_manager->getProjectByCaseInsensitiveUnixName($shortname) !== null) {
             throw new \RuntimeException('Project shortname already exists');
@@ -153,7 +110,8 @@ final class CreateProjectFromJira
             $jira_project,
             $shortname,
             $fullname,
-            $jira_epic_issue_type
+            $jira_epic_issue_type,
+            $jira_board_id,
         );
 
         $archive = new JiraProjectArchive($xml_element);
@@ -168,6 +126,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $jira_epic_issue_type,
+        ?int $jira_board_id,
         string $archive_path,
     ): void {
         $xml_element = $this->generateFromJira(
@@ -177,7 +136,8 @@ final class CreateProjectFromJira
             $jira_project,
             $shortname,
             $fullname,
-            $jira_epic_issue_type
+            $jira_epic_issue_type,
+            $jira_board_id
         );
 
         $xml_element->saveXML($archive_path);
@@ -191,6 +151,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $jira_epic_issue_type,
+        ?int $jira_board_id,
     ): SimpleXMLElement {
         $this->user_roles_checker->checkUserIsAdminOfJiraProject(
             $jira_client,
@@ -217,7 +178,11 @@ final class CreateProjectFromJira
             $logger,
         );
 
-        $board               = $board_retriever->getFirstScrumBoardForProject($jira_project);
+        if ($jira_board_id) {
+            $board = $board_retriever->getScrumBoardByIdForProject($jira_project, $jira_board_id);
+        } else {
+            $board = $board_retriever->getFirstScrumBoardForProject($jira_project);
+        }
         $board_configuration = null;
         if ($board) {
             $board_configuration_retriever = new JiraBoardConfigurationRetrieverFromAPI(
@@ -264,13 +229,16 @@ final class CreateProjectFromJira
 
         $import_user = $this->user_manager->getUserById(TrackerImporterUser::ID);
         assert($import_user !== null);
+
+        $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
+            new JiraTuleapUsersMapping(),
+            $import_user,
+        );
+
         $jira_exporter = JiraXmlExporter::build(
             $jira_client,
             $logger,
-            new JiraUserOnTuleapCache(
-                new JiraTuleapUsersMapping(),
-                $import_user,
-            ),
+            $jira_user_on_tuleap_cache,
         );
 
         $template    = $this->template_factory->getTemplate(EmptyTemplate::NAME);
@@ -287,6 +255,27 @@ final class CreateProjectFromJira
             ) {
                 $service['enabled'] = '1';
             }
+        }
+
+        $group_members_importer = new GroupMembersImporter(
+            $jira_client,
+            $logger,
+            new JiraUserRetriever(
+                $logger,
+                $this->user_manager,
+                $jira_user_on_tuleap_cache,
+                new JiraUserInfoQuerier(
+                    $jira_client,
+                    $logger
+                ),
+                $import_user
+            ),
+            $import_user
+        );
+        $xml_user_groups        = $group_members_importer->getUserGroups($jira_project);
+        if ($xml_user_groups) {
+            unset($xml_element->ugroups);
+            $xml_user_groups->export($xml_element);
         }
 
         $field_id_generator = new FieldAndValueIDGenerator();

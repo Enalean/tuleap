@@ -125,27 +125,29 @@ class WikiGroup
     public function specialGroups()
     {
         return [
-                     GROUP_EVERY,
-                     GROUP_ANONYMOUS,
-                     GROUP_BOGOUSER,
-                     GROUP_SIGNED,
-                     GROUP_AUTHENTICATED,
-                     GROUP_ADMIN,
-                     GROUP_OWNER,
-                     GROUP_CREATOR];
+            GROUP_EVERY,
+            GROUP_ANONYMOUS,
+            GROUP_BOGOUSER,
+            GROUP_SIGNED,
+            GROUP_AUTHENTICATED,
+            GROUP_ADMIN,
+            GROUP_OWNER,
+            GROUP_CREATOR,
+        ];
     }
     /** untranslated */
     public function _specialGroups()
     {
         return [
-                     "_EVERY",
-                     "_ANONYMOUS",
-                     "_BOGOUSER",
-                     "_SIGNED",
-                     "_AUTHENTICATED",
-                     "_ADMIN",
-                     "_OWNER",
-                     "_CREATOR"];
+            "_EVERY",
+            "_ANONYMOUS",
+            "_BOGOUSER",
+            "_SIGNED",
+            "_AUTHENTICATED",
+            "_ADMIN",
+            "_OWNER",
+            "_CREATOR",
+        ];
     }
 
     /**

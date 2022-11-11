@@ -69,7 +69,7 @@ class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends \Tulea
 
         $this->factory->shouldReceive('getGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns([]);
 
-        $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
+        self::assertCount(2, $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user));
     }
 
     public function testItMergesPermissions()

@@ -19,35 +19,30 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TroveCatLink from "./TroveCatLink.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
-import type { State } from "../../store/type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { IS_TROVE_CAT_ENABLED } from "../../injection-keys";
 
 describe("TroveCatLink", () => {
-    it("Display the link", async () => {
+    it("Display the link", () => {
         const wrapper = shallowMount(TroveCatLink, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        is_trove_cat_enabled: true,
-                    } as State,
-                }),
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [IS_TROVE_CAT_ENABLED as symbol]: true,
+                },
             },
         });
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Does net display the link to trove cat if it is deactivated", async () => {
+    it("Does net display the link to trove cat if it is deactivated", () => {
         const wrapper = shallowMount(TroveCatLink, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        is_trove_cat_enabled: false,
-                    } as State,
-                }),
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [IS_TROVE_CAT_ENABLED as symbol]: false,
+                },
             },
         });
 

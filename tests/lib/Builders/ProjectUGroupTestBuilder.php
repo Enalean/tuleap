@@ -22,8 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Builders;
 
+use Tuleap\User\UserGroup\NameTranslator;
+
 final class ProjectUGroupTestBuilder
 {
+    private string $name = 'My group';
+
     private function __construct(private int $id)
     {
     }
@@ -33,11 +37,35 @@ final class ProjectUGroupTestBuilder
         if ($user_group_id < 100) {
             throw new \LogicException('User Group id must be >= 100 for custom user groups');
         }
+
         return new self($user_group_id);
+    }
+
+    public static function buildProjectMembers(): \ProjectUGroup
+    {
+        return new \ProjectUgroup([
+            'ugroup_id' => \ProjectUGroup::PROJECT_MEMBERS,
+            'name'      => NameTranslator::PROJECT_MEMBERS,
+        ]);
+    }
+
+    public static function buildProjectAdmins(): \ProjectUGroup
+    {
+        return new \ProjectUgroup([
+            'ugroup_id' => \ProjectUGroup::PROJECT_ADMIN,
+            'name'      => NameTranslator::PROJECT_ADMINS,
+        ]);
+    }
+
+    public function withName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     public function build(): \ProjectUGroup
     {
-        return new \ProjectUGroup(['ugroup_id' => $this->id]);
+        return new \ProjectUGroup(['ugroup_id' => $this->id, 'name' => $this->name]);
     }
 }

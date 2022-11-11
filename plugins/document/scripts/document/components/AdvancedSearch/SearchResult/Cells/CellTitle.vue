@@ -41,7 +41,12 @@
                 class="document-folder-subitem-link"
                 data-test="link"
             >
-                {{ item.title }}
+                {{ item.title
+                }}<i
+                    class="fas document-action-icon"
+                    v-bind:class="action_icon_classes"
+                    aria-hidden="true"
+                ></i>
             </a>
             <router-link
                 v-else-if="in_app_link"
@@ -50,7 +55,12 @@
                 class="document-folder-subitem-link"
                 data-test="router-link"
             >
-                {{ item.title }}
+                {{ item.title
+                }}<i
+                    class="fas document-action-icon"
+                    v-bind:class="action_icon_classes"
+                    aria-hidden="true"
+                ></i>
             </router-link>
             <span v-else v-bind:title="item.title">{{ item.title }}</span>
         </div>
@@ -58,13 +68,19 @@
 </template>
 <script setup lang="ts">
 import type { Folder, ItemSearchResult } from "../../../../type";
-import { computed, ref } from "@vue/composition-api";
+import { computed, ref } from "vue";
 import {
     ICON_EMBEDDED,
     ICON_EMPTY,
     ICON_FOLDER_ICON,
     ICON_LINK,
     ICON_WIKI,
+    ACTION_ICON_FOLDER,
+    ACTION_ICON_FILE,
+    ACTION_ICON_LINK,
+    ACTION_ICON_EMBEDDED,
+    ACTION_ICON_ONLYOFFICE,
+    ACTION_ICON_WIKI,
     TYPE_EMBEDDED,
     TYPE_FILE,
     TYPE_FOLDER,
@@ -84,6 +100,26 @@ const { project_id } = useState<Pick<ConfigurationState, "project_id">>("configu
 ]);
 
 const props = defineProps<{ item: ItemSearchResult }>();
+
+const action_icon_classes = computed((): string => {
+    switch (props.item.type) {
+        case TYPE_FILE:
+            if (props.item.file_properties && props.item.file_properties.open_href) {
+                return ACTION_ICON_ONLYOFFICE;
+            }
+            return ACTION_ICON_FILE;
+        case TYPE_EMBEDDED:
+            return ACTION_ICON_EMBEDDED;
+        case TYPE_FOLDER:
+            return ACTION_ICON_FOLDER;
+        case TYPE_LINK:
+            return ACTION_ICON_LINK;
+        case TYPE_WIKI:
+            return ACTION_ICON_WIKI;
+        default:
+            return "";
+    }
+});
 
 const icon_classes = computed((): string => {
     switch (props.item.type) {
@@ -108,7 +144,7 @@ const icon_classes = computed((): string => {
 
 const href = computed((): string | null => {
     if (props.item.type === TYPE_FILE && props.item.file_properties) {
-        return props.item.file_properties.download_href;
+        return props.item.file_properties.open_href ?? props.item.file_properties.download_href;
     }
 
     if (props.item.type === TYPE_LINK || props.item.type === TYPE_WIKI) {
@@ -156,10 +192,4 @@ function onDropdownShown(): void {
 function onDropdownHidden(): void {
     is_dropdown_shown.value = false;
 }
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

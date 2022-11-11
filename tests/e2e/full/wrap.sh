@@ -23,7 +23,8 @@ case "${1:-}" in
     exit 1
 esac
 
-DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml  -f ./tests/e2e/docker-compose-test-runner.yml -f tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file -p e2e-tests-${BUILD_TAG:-'dev'}"
+project_name="$(echo -n "e2e-tests-${BUILD_TAG:-dev}" | tr '.' '_' | tr '[A-Z]' '[a-z]')"
+DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml  -f ./tests/e2e/docker-compose-test-runner.yml -f tests/e2e/docker-compose-db-${DB_HOST}.yml $plugins_compose_file -p $project_name"
 
 test_results_folder='./test_results_e2e_full'
 if [ "$#" -eq "2" ]; then

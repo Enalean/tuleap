@@ -23,7 +23,13 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
+use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Gitlab\Admin\GitLabLinkGroupController;
+use Tuleap\Gitlab\Admin\GitLabLinkGroupTabPresenter;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
@@ -32,19 +38,27 @@ use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
+use Tuleap\Gitlab\Group\GroupLinkDAO;
+use Tuleap\Gitlab\Group\GroupLinkRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
+use Tuleap\Gitlab\Reference\Branch\BranchReferenceSplitValuesDao;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchReferenceSplitValuesBuilder;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
 use Tuleap\Gitlab\Reference\GitlabReferenceBuilder;
+use Tuleap\Gitlab\Reference\GitlabReferenceExtractor;
+use Tuleap\Gitlab\Reference\GitlabReferenceValueWithoutSeparatorSplitValuesBuilder;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagReferenceSplitValuesBuilder;
+use Tuleap\Gitlab\Reference\Tag\TagReferenceSplitValuesDao;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
@@ -65,11 +79,10 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookAut
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PreviouslySavedReferencesRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\TuleapReferencesFromMergeRequestDataExtractor;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchInfoDao;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\PostPushWebhookActionBranchHandler;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
-use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
@@ -91,8 +104,8 @@ use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresenter;
@@ -105,10 +118,12 @@ use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -117,6 +132,7 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -186,6 +202,9 @@ class gitlabPlugin extends Plugin
         $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
         $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
 
+        $this->addHook(GitAdminGetExternalPanePresenters::NAME);
+        $this->addHook(CollectGitRoutesEvent::NAME);
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -230,6 +249,14 @@ class gitlabPlugin extends Plugin
             $r->post('/repository/webhook', $this->getRouteHandler('routePostGitlabRepositoryWebhook'));
             $r->post('/integration/{integration_id:\d+}/webhook', $this->getRouteHandler('routePostIntegrationWebhook'));
         });
+    }
+
+    public function collectGitRoutesEvent(CollectGitRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->get(
+            '/{project_name}/administration/gitlab/[{vue-routing:.*}]',
+            $this->getRouteHandler('routeGetGitlabLinkGroupsController')
+        );
     }
 
     public function routePostGitlabRepositoryWebhook(): GitlabRepositoryWebhookController
@@ -335,7 +362,13 @@ class gitlabPlugin extends Plugin
                 $reference_manager,
                 new TrackerPrivateCommentUGroupPermissionInserter(
                     new TrackerPrivateCommentUGroupPermissionDao()
-                )
+                ),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             )
         );
 
@@ -557,7 +590,13 @@ class gitlabPlugin extends Plugin
                 $reference_manager,
                 new TrackerPrivateCommentUGroupPermissionInserter(
                     new TrackerPrivateCommentUGroupPermissionDao()
-                )
+                ),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             )
         );
 
@@ -683,7 +722,17 @@ class gitlabPlugin extends Plugin
         ) {
             $builder = new GitlabReferenceBuilder(
                 new \Tuleap\Gitlab\Reference\ReferenceDao(),
-                $this->getGitlabRepositoryIntegrationFactory()
+                $this->getGitlabRepositoryIntegrationFactory(),
+                new GitlabReferenceExtractor(
+                    new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+                    new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+                    new GitlabBranchReferenceSplitValuesBuilder(
+                        new BranchReferenceSplitValuesDao()
+                    ),
+                    new GitlabTagReferenceSplitValuesBuilder(
+                        new TagReferenceSplitValuesDao()
+                    ),
+                ),
             );
 
             $reference = $builder->buildGitlabReference(
@@ -803,7 +852,17 @@ class gitlabPlugin extends Plugin
             ProjectManager::instance(),
             new TlpRelativeDatePresenterBuilder(),
             UserManager::instance(),
-            UserHelper::instance()
+            UserHelper::instance(),
+            new GitlabReferenceExtractor(
+                new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+                new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+                new GitlabBranchReferenceSplitValuesBuilder(
+                    new BranchReferenceSplitValuesDao()
+                ),
+                new GitlabTagReferenceSplitValuesBuilder(
+                    new TagReferenceSplitValuesDao()
+                ),
+            ),
         );
         $gitlab_organizer->organizeGitLabReferences($organizer);
     }
@@ -876,9 +935,9 @@ class gitlabPlugin extends Plugin
                 new \Cocur\Slugify\Slugify(),
                 new CreateBranchPrefixDao()
             ),
-            new JavascriptAsset(
-                $this->getAssets(),
-                "artifact-create-branch.js"
+            new JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../scripts/artifact-create-branch-action/frontend-assets', '/assets/gitlab/artifact-create-branch-action'),
+                'src/index.ts'
             )
         );
 
@@ -894,11 +953,54 @@ class gitlabPlugin extends Plugin
         $event->addAction($button_action);
     }
 
-    private function getAssets(): IncludeAssets
+    public function gitAdminGetExternalPanePresenters(GitAdminGetExternalPanePresenters $event): void
     {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/gitlab'
+        if ($event->getCurrentTabName() === GitLabLinkGroupTabPresenter::PANE_NAME) {
+            $event->addExternalPanePresenter(GitLabLinkGroupTabPresenter::withActiveState($event->getProject()));
+            return;
+        }
+        $event->addExternalPanePresenter(GitLabLinkGroupTabPresenter::withInactiveState($event->getProject()));
+    }
+
+    public function routeGetGitlabLinkGroupsController(): GitLabLinkGroupController
+    {
+        $git_plugin = PluginManager::instance()->getPluginByName('git');
+        assert($git_plugin instanceof GitPlugin);
+
+        $fine_grained_dao = new FineGrainedDao();
+
+        return new GitLabLinkGroupController(
+            ProjectManager::instance(),
+            EventManager::instance(),
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../scripts/group-link-wizard/frontend-assets',
+                    '/assets/gitlab/group-link-wizard'
+                ),
+                'src/index.ts'
+            ),
+            new JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../scripts/linked-group/frontend-assets', '/assets/gitlab/linked-group'),
+                'src/main.ts'
+            ),
+            $git_plugin->getHeaderRenderer(),
+            $git_plugin->getMirrorDataMapper(),
+            new GitPermissionsManager(
+                new Git_PermissionsDao(),
+                new Git_SystemEventManager(
+                    SystemEventManager::instance(),
+                    new GitRepositoryFactory(
+                        new GitDao(),
+                        ProjectManager::instance()
+                    )
+                ),
+                $fine_grained_dao,
+                new FineGrainedRetriever($fine_grained_dao)
+            ),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
+            new GroupLinkDAO(),
+            new GroupLinkRepositoryIntegrationDAO(),
+            new \Tuleap\Gitlab\Group\GitlabServerURIDeducer(HTTPFactoryBuilder::URIFactory())
         );
     }
 }

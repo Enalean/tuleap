@@ -29,20 +29,20 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
+use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\BaselineArtifactNotFoundException;
 use Tuleap\Baseline\Domain\BaselineArtifactService;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
-use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class BaselineArtifactControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-    use CurrentUserContext;
 
     /** @var BaselineArtifactController */
     private $controller;
@@ -58,10 +58,13 @@ class BaselineArtifactControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var LoggerInterface|MockInterface */
     private $logger;
+    private UserProxy $current_user;
 
     /** @before */
     public function createInstance()
     {
+        $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());
+
         $this->baseline_repository       = Mockery::mock(BaselineRepository::class);
         $this->baseline_artifact_service = Mockery::mock(BaselineArtifactService::class);
         $this->current_user_provider     = Mockery::mock(CurrentUserProvider::class);

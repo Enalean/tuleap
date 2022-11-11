@@ -28,7 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
 
-class JiraUserRetriever
+class JiraUserRetriever implements GetTuleapUserFromJiraUser
 {
     /**
      * @var LoggerInterface
@@ -97,7 +97,7 @@ class JiraUserRetriever
             return $this->default_user;
         }
 
-        $matching_users = $this->user_manager->getAllUsersByEmail($jira_user->getEmailAddress());
+        $matching_users = $this->user_manager->getAndEventuallyCreateUserByEmail($jira_user->getEmailAddress());
 
         if (count($matching_users) !== 1) {
             $this->logger->debug("Unable to identify an unique user on Tuleap side for Jira user $display_name");

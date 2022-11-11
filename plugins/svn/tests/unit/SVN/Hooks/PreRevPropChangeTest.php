@@ -99,6 +99,7 @@ class PreRevPropChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAllowsPropChangeIfNotAllowed(): void
     {
+        $this->expectNotToPerformAssertions();
         $reference_manager = Mockery::mock(ReferenceManager::class);
         $reference_manager->shouldReceive('stringContainsReferences')->andReturnTrue();
         $this->hook_config->shouldReceive('getHookConfig')->withArgs(

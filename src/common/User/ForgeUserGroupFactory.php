@@ -125,10 +125,21 @@ class User_ForgeUserGroupFactory
      */
     public function getProjectUGroupsWithMembers(Project $project): array
     {
+        return array_merge(
+            $this->getProjectUGroupsWithMembersWithoutNobody($project),
+            [$this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)]
+        );
+    }
+
+    /**
+     * @return User_ForgeUGroup[]
+     */
+    public function getProjectUGroupsWithMembersWithoutNobody(Project $project): array
+    {
         $user_groups   = [];
         $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
 
-        return array_merge($user_groups, $this->getStaticByProject($project), [$this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)]);
+        return array_merge($user_groups, $this->getStaticByProject($project));
     }
 
     /**

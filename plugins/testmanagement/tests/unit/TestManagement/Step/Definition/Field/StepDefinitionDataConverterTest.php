@@ -121,13 +121,13 @@ final class StepDefinitionDataConverterTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
         StepDefinitionDataConverter::convertStepDefinitionFromRESTUpdateFormatToDBCompatibleFormat([
-           [
-               'description'             => 'description',
-               'description_format'      => 'commonmark',
-               'expected_results'        => 'result',
-               'expected_results_format' => 'commonmark',
-               'rank' => '1',
-           ],
+            [
+                'description'             => 'description',
+                'description_format'      => 'commonmark',
+                'expected_results'        => 'result',
+                'expected_results_format' => 'commonmark',
+                'rank' => '1',
+            ],
         ]);
     }
 
@@ -136,20 +136,20 @@ final class StepDefinitionDataConverterTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
         StepDefinitionDataConverter::convertStepDefinitionFromRESTUpdateFormatToDBCompatibleFormat([
-           [
-               'description'             => 'description',
-               'description_format'      => 'commonmark',
-               'expected_results'        => 'result',
-               'expected_results_format' => 'commonmark',
-               'rank' => 1,
-           ],
-           [
-               'description'             => 'description',
-               'description_format'      => 'commonmark',
-               'expected_results'        => 'result',
-               'expected_results_format' => 'commonmark',
-               'rank' => 1,
-           ],
+            [
+                'description'             => 'description',
+                'description_format'      => 'commonmark',
+                'expected_results'        => 'result',
+                'expected_results_format' => 'commonmark',
+                'rank' => 1,
+            ],
+            [
+                'description'             => 'description',
+                'description_format'      => 'commonmark',
+                'expected_results'        => 'result',
+                'expected_results_format' => 'commonmark',
+                'rank' => 1,
+            ],
         ]);
     }
 }

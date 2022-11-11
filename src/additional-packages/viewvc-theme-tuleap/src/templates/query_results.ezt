@@ -1,0 +1,107 @@
+[# setup page definitions]
+  [define page_title_classname][end]
+  [define resource_name]
+    [for nav_path]
+        [if-index nav_path last]
+            [if-index nav_path first]
+                /
+            [else]
+                [nav_path.name]
+            [end]
+        [end]
+    [end]
+  [end]
+  [define page_title]<small>Query results on</small> [resource_name][end]
+  [define help_href][docroot]/help_rootview.html[end]
+[# end]
+
+[include "include/header.ezt"]
+
+<p><strong>[english_query]</strong></p>
+[# <!-- {sql} --> ]
+[if-any row_limit_reached]
+<p class="vc_warning">WARNING:  These query results have been
+   artificially limited by an administrative threshold value and do
+   <em>not</em> represent the entirety of the data set which matches
+   the query.  Consider <a href="[queryform_href]">modifying your
+   query to be more specific</a>, using your version control tool's
+   query capabilities, or asking your administrator to raise the
+   database response size threshold.</p>
+[end]
+<p><a href="[queryform_href]">Modify query</a></p>
+<p><a href="[backout_href]">Show commands which could be used to back out these changes</a></p>
+
+<p><strong>+[plus_count]/-[minus_count]</strong> lines changed.</p>
+
+[if-any commits]
+<table cellspacing="1" cellpadding="2">
+ <thead>
+  <tr>
+   <th class="vc_header">Revision</th>
+   <th class="vc_header[is querysort "file"]_sort[end]">File</th>
+[if-any show_branch]
+   <th class="vc_header">Branch</th>
+[end]
+   <th class="vc_header">+/-</th>
+   <th class="vc_header[is querysort "date"]_sort[end]">Date</th>
+   <th class="vc_header[is querysort "author"]_sort[end]">Author</th>
+[# uncommment, if you want a separate Description column: (also see below)
+   <th class="vc_header">Description</th>
+]
+  </tr>
+ </thead>
+[for commits]
+  [for commits.files]
+    <tbody>
+    <tr class="vc_row_[if-index commits even]even[else]odd[end]">
+      <td style="vertical-align: top;">
+        [define rev_href][if-any commits.files.prefer_markup][commits.files.view_href][else][if-any commits.files.download_href][commits.files.download_href][end][end][end]
+	[if-any commits.files.rev][if-any rev_href]<a href="[rev_href]">[end][commits.files.rev][if-any rev_href]</a>[end][else]&nbsp;[end]
+      </td>
+      <td style="vertical-align: top;">
+        <a href="[commits.files.dir_href]">[commits.files.dir]/</a>
+        <a href="[commits.files.log_href]">[commits.files.file]</a>
+      </td>
+[if-any show_branch]
+      <td style="vertical-align: top;">
+	[if-any commits.files.branch][commits.files.branch][else]&nbsp;[end]
+      </td>
+[end]
+      <td style="vertical-align: top;">
+        [# only show a diff link for changes ]
+        [is commits.files.type "Add"]<ins>[end]
+        [is commits.files.type "Change"]<a href="[commits.files.diff_href]">[end]
+        [is commits.files.type "Remove"]<del>[end]
+          [commits.files.plus]/[commits.files.minus]
+        [is commits.files.type "Add"]</ins>[end]
+        [is commits.files.type "Change"]</a>[end]
+        [is commits.files.type "Remove"]</del>[end]
+      </td>
+      <td style="vertical-align: top;">
+	[if-any commits.files.date][commits.files.date][else]&nbsp;[end]
+      </td>
+      <td style="vertical-align: top;">
+	[if-any commits.files.author][commits.files.author][else]&nbsp;[end]
+      </td>
+    </tr>
+  [end]
+  [if-any commits.limited_files]
+    <tr class="vc_row_[if-index commits even]even[else]odd[end]">
+      <td>&nbsp;</td>
+      <td colspan="5">
+        <strong><em><small>Only first [commits.num_files] files shown.
+        <a href="[limit_changes_href]">Show all files</a> or
+        <a href="[queryform_href]">adjust limit</a>.</small></em></strong>
+    </tr>
+  [end]
+  <tr class="vc_row_[if-index commits even]even[else]odd[end]">
+    <td>&nbsp;</td>
+    <td colspan="5"><strong>Log:</strong><br />
+      <pre class="vc_log">[commits.log]</pre></td>
+  </tr>
+  </tbody>
+[end]
+</table>
+[end]
+
+[include "include/footer.ezt"]

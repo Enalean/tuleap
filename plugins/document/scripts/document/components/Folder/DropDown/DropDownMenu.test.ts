@@ -24,9 +24,20 @@ import DropDownMenu from "./DropDownMenu.vue";
 import type { Item, State } from "../../../type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../store/configuration";
+import {
+    TYPE_EMBEDDED,
+    TYPE_EMPTY,
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_LINK,
+    TYPE_WIKI,
+} from "../../../constants";
 
 describe("DropDownMenu", () => {
-    function createWrapper(item: Item): Wrapper<DropDownMenu> {
+    function createWrapper(
+        item: Item,
+        should_display_history_in_document = false
+    ): Wrapper<DropDownMenu> {
         const state = {
             configuration: {
                 project_id: 101,
@@ -42,6 +53,9 @@ describe("DropDownMenu", () => {
             localVue,
             mocks: { $store: store },
             propsData: { isInFolderEmptyState: false, isInQuickLookMode: false, item },
+            provide: {
+                should_display_history_in_document,
+            },
         });
     }
 
@@ -104,5 +118,88 @@ describe("DropDownMenu", () => {
                 wrapper.find("[data-test=document-dropdown-download-folder-as-zip]").exists()
             ).toBeFalsy();
         });
+    });
+
+    describe("History", () => {
+        it("should display a link to the legacy history by default", async () => {
+            const wrapper = createWrapper({
+                id: 4,
+                title: "my item title",
+                type: "file",
+                can_user_manage: false,
+            } as Item);
+
+            await wrapper.vm.$nextTick();
+
+            const link = wrapper.find("[data-test=document-history]").element;
+            if (!(link instanceof HTMLAnchorElement)) {
+                throw Error("Unable to find link");
+            }
+
+            expect(link.href).toContain("action=details&section=history");
+        });
+
+        it("should display a link to the Document history when feature flag is on", async () => {
+            const wrapper = createWrapper(
+                {
+                    id: 4,
+                    title: "my item title",
+                    type: "file",
+                    can_user_manage: false,
+                } as Item,
+                true
+            );
+
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.find("[data-test=document-history]").props("to")).toStrictEqual({
+                name: "history",
+                params: { item_id: 4 },
+            });
+        });
+
+        it.each([TYPE_FOLDER, TYPE_FILE, TYPE_LINK, TYPE_EMBEDDED, TYPE_WIKI, TYPE_EMPTY])(
+            "should not display a %s with versions link by default",
+            async (type) => {
+                const wrapper = createWrapper({
+                    id: 4,
+                    title: "my item title",
+                    type,
+                    can_user_manage: false,
+                } as Item);
+
+                await wrapper.vm.$nextTick();
+
+                expect(wrapper.find("[data-test=document-versions]").exists()).toBe(false);
+            }
+        );
+
+        it.each([
+            [TYPE_FOLDER, false],
+            [TYPE_FILE, true],
+            [TYPE_LINK, true],
+            [TYPE_EMBEDDED, true],
+            [TYPE_WIKI, false],
+            [TYPE_EMPTY, false],
+        ])(
+            "should display a %s with versions link: %s when feature flag is on",
+            async (type, should_versions_be_displayed) => {
+                const wrapper = createWrapper(
+                    {
+                        id: 4,
+                        title: "my item title",
+                        type,
+                        can_user_manage: false,
+                    } as Item,
+                    true
+                );
+
+                await wrapper.vm.$nextTick();
+
+                expect(wrapper.find("[data-test=document-versions]").exists()).toBe(
+                    should_versions_be_displayed
+                );
+            }
+        );
     });
 });

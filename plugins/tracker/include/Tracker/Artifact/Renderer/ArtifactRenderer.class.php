@@ -61,9 +61,11 @@ abstract class Tracker_Artifact_ArtifactRenderer
     {
         $this->enhanceRedirect($request);
 
+        $content  = $this->fetchFormContent($request, $current_user);
+        $content .= $this->fetchRulesAsJavascript();
+
         $this->displayHeader();
-        echo $this->fetchFormContent($request, $current_user);
-        echo $this->fetchRulesAsJavascript();
+        echo $content;
         $this->displayFooter();
     }
 

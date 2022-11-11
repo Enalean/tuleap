@@ -32,7 +32,7 @@
             <select
                 class="tlp-select tlp-select-adjusted"
                 id="document-obsolescence-date-select-update"
-                v-model="selected_date_value"
+                v-bind:value="selected_value"
                 v-on:change="updateDatePickerValue"
                 ref="selectDateValue"
                 data-test="document-obsolescence-date-select-update"
@@ -49,8 +49,8 @@
                 <date-flat-picker
                     v-bind:id="'document-obsolescence-date-update'"
                     v-bind:required="selected_value === 'fixed'"
-                    v-model="obsolescence_date"
-                    ref="input"
+                    v-on:input="updateObsolescenceDateValue"
+                    v-bind:value="date_value"
                 />
             </div>
         </div>
@@ -64,66 +64,64 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-import { getObsolescenceDateValueInput } from "../../../../helpers/properties-helpers/obsolescence-date-value";
+<script setup lang="ts">
+import {
+    formatObsolescenceDateValue,
+    getObsolescenceDateValueInput,
+} from "../../../../helpers/properties-helpers/obsolescence-date-value";
 import DateFlatPicker from "../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
+import emitter from "../../../../helpers/emitter";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
+import { onMounted, onBeforeMount, ref } from "vue";
 
-export default {
-    name: "ObsolescenceDatePropertyForUpdate",
-    components: { DateFlatPicker },
-    props: {
-        value: String,
-    },
-    data() {
-        return {
-            date_value: this.value,
-            selected_value: "",
-            error_message: "",
-            uses_helper_validity: false,
-        };
-    },
-    computed: {
-        ...mapState("configuration", ["is_obsolescence_date_property_used"]),
-        obsolescence_date: {
-            get() {
-                return this.date_value;
-            },
-            set(value) {
-                if (!this.uses_helper_validity) {
-                    this.selected_value = "fixed";
-                }
-                this.date_value = value;
-                this.$emit("input", value);
+const props = defineProps<{
+    value: string;
+}>();
 
-                this.uses_helper_validity = false;
-            },
-        },
-        selected_date_value: {
-            get() {
-                return this.selected_value;
-            },
-            set(value) {
-                this.selected_value = value;
-            },
-        },
-    },
-    mounted() {
-        if (this.value !== "") {
-            this.selected_value = "fixed";
-        } else {
-            this.selected_value = "permanent";
-        }
-    },
-    methods: {
-        updateDatePickerValue(event) {
-            const input_date_value = getObsolescenceDateValueInput(event.target.value);
+let date_value = ref(props.value);
+let selected_value = ref("");
+let error_message = ref("");
+let uses_helper_validity = ref(false);
 
-            this.uses_helper_validity = true;
+const { is_obsolescence_date_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_obsolescence_date_property_used">
+>("configuration", ["is_obsolescence_date_property_used"]);
 
-            this.selected_value = event.target.value;
-            this.obsolescence_date = input_date_value;
-        },
-    },
-};
+onBeforeMount((): void => {
+    date_value.value = formatObsolescenceDateValue(date_value.value);
+    emitter.emit("update-obsolescence-date-property", date_value.value);
+});
+
+onMounted((): void => {
+    if (props.value !== "") {
+        selected_value.value = "fixed";
+    } else {
+        selected_value.value = "permanent";
+    }
+});
+
+function updateDatePickerValue(event: Event): void {
+    if (!(event.target instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    const input_date_value = getObsolescenceDateValueInput(event.target.value);
+
+    uses_helper_validity.value = true;
+
+    selected_value.value = event.target.value;
+    date_value.value = input_date_value;
+    emitter.emit("update-obsolescence-date-property", input_date_value);
+}
+
+function updateObsolescenceDateValue(event: string): void {
+    if (!uses_helper_validity.value) {
+        selected_value.value = "fixed";
+    }
+
+    emitter.emit("update-obsolescence-date-property", event);
+
+    uses_helper_validity.value = false;
+}
 </script>

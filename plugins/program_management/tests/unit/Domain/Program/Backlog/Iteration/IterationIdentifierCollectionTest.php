@@ -35,10 +35,10 @@ final class IterationIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestC
 
     protected function setUp(): void
     {
-        $this->iteration_searcher = SearchIterationsStub::withIterationIds(
-            self::FIRST_ITERATION_ID,
-            self::SECOND_ITERATION_ID
-        );
+        $this->iteration_searcher = SearchIterationsStub::withIterations([
+            ['id' => self::FIRST_ITERATION_ID, 'changeset_id' => 1],
+            ['id' => self::SECOND_ITERATION_ID, 'changeset_id' => 2],
+        ]);
     }
 
     private function getCollection(): IterationIdentifierCollection

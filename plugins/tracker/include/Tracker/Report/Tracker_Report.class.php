@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -67,9 +66,6 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
  */
 class Tracker_Report implements Tracker_Dispatchable_Interface
 {
-    #[FeatureFlagConfigKey("Feature flag to allow tracker's report widgets with session data")]
-    public const FEATURE_FLAG_KEY = 'get_session_data_for_reports_widget';
-
     public const ACTION_SAVE            = 'report-save';
     public const ACTION_SAVEAS          = 'report-saveas';
     public const ACTION_REPLACE         = 'report-replace';
@@ -119,6 +115,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     /** @var IProvideFromAndWhereSQLFragments */
     private $additional_from_where;
 
+    private string $expert_query_from_db;
+
     /**
      * Constructor
      * @param int|string     $id The id of the report
@@ -144,19 +142,20 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $updated_by,
         $updated_at,
     ) {
-        $this->id                  = $id;
-        $this->name                = $name;
-        $this->description         = $description;
-        $this->current_renderer_id = $current_renderer_id;
-        $this->parent_report_id    = $parent_report_id;
-        $this->user_id             = $user_id;
-        $this->is_default          = $is_default;
-        $this->tracker_id          = $tracker_id;
-        $this->is_query_displayed  = $is_query_displayed;
-        $this->is_in_expert_mode   = $is_in_expert_mode;
-        $this->expert_query        = $expert_query;
-        $this->updated_by          = $updated_by;
-        $this->updated_at          = $updated_at;
+        $this->id                   = $id;
+        $this->name                 = $name;
+        $this->description          = $description;
+        $this->current_renderer_id  = $current_renderer_id;
+        $this->parent_report_id     = $parent_report_id;
+        $this->user_id              = $user_id;
+        $this->is_default           = $is_default;
+        $this->tracker_id           = $tracker_id;
+        $this->is_query_displayed   = $is_query_displayed;
+        $this->is_in_expert_mode    = $is_in_expert_mode;
+        $this->expert_query         = $expert_query;
+        $this->expert_query_from_db = $expert_query;
+        $this->updated_by           = $updated_by;
+        $this->updated_at           = $updated_at;
 
         $this->parser = new ParserCacheProxy(new Parser());
     }
@@ -339,7 +338,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public function getMatchingIds($request = null, $use_data_from_db = false)
     {
         if ($this->is_in_expert_mode) {
-            return $this->getMatchingIdsFromExpertQuery();
+            return $this->getMatchingIdsFromExpertQuery($use_data_from_db);
         } else {
             return $this->getMatchingIdsFromCriteria($request, $use_data_from_db);
         }
@@ -1334,7 +1333,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             case self::ACTION_CLEANSESSION:
                 $this->report_session->clean();
                 $GLOBALS['Response']->redirect('?' . http_build_query([
-                        'tracker'   => $this->tracker_id,
+                    'tracker'   => $this->tracker_id,
                 ]));
                 break;
             case 'renderer':
@@ -1354,16 +1353,16 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     $this->report_session->setHasChanged();
                 }
                 $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                            'report'   => $this->id,
-                                                            ]));
+                    'report'   => $this->id,
+                ]));
                 break;
             case 'delete-renderer':
                 if (! $current_user->isAnonymous() && (int) $request->get('renderer')) {
                     $this->report_session->removeRenderer((int) $request->get('renderer'));
                     $this->report_session->setHasChanged();
                     $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                            'report'   => $this->id,
-                                                            ]));
+                        'report'   => $this->id,
+                    ]));
                 }
                 break;
             case 'move-renderer':
@@ -1375,8 +1374,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                         if ($request->get('move-renderer-direction')) {
                             $this->moveRenderer((int) $request->get('renderer'), $request->get('move-renderer-direction'));
                             $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                                    'report'   => $this->id,
-                                                                    ]));
+                                'report'   => $this->id,
+                            ]));
                         }
                     }
                 }
@@ -1388,9 +1387,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 if (! $current_user->isAnonymous() && $new_name) {
                     $new_renderer_id = $this->addRendererInSession($new_name, $new_description, $new_type);
                     $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                            'report'   => $this->id,
-                                                            'renderer' => $new_renderer_id ? $new_renderer_id : '',
-                                                            ]));
+                        'report'   => $this->id,
+                        'renderer' => $new_renderer_id ? $new_renderer_id : '',
+                    ]));
                 }
                 break;
             case self::ACTION_SAVE:
@@ -1950,20 +1949,26 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $this->matching_ids;
     }
 
-    private function getMatchingIdsFromExpertQuery()
+    private function getMatchingIdsFromExpertQuery(bool $use_data_from_db)
     {
         if ($this->matching_ids) {
             return $this->matching_ids;
         }
 
-        if (empty($this->expert_query)) {
+        if ($use_data_from_db) {
+            $expert_query = $this->expert_query_from_db;
+        } else {
+            $expert_query = $this->expert_query;
+        }
+
+        if (empty($expert_query)) {
             $this->matching_ids = $this->getUnfilteredMatchingIds();
 
             return $this->matching_ids;
         }
 
         try {
-            $expression = $this->parser->parse($this->expert_query);
+            $expression = $this->parser->parse($expert_query);
 
             if ($this->canExecuteExpertQuery($expression)) {
                 $from_where = $this->getQueryBuilder()->buildFromWhere($expression, $this->getTracker());

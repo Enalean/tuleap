@@ -20,6 +20,9 @@
 
 namespace Tuleap\Authentication\SplitToken;
 
+/**
+ * @psalm-immutable
+ */
 class SplitToken
 {
     /**

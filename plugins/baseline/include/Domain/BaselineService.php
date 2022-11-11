@@ -23,9 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use PFUser;
-use Project;
-
 class BaselineService
 {
     /** @var BaselineRepository */
@@ -55,7 +52,7 @@ class BaselineService
     /**
      * @throws NotAuthorizedException
      */
-    public function create(PFUser $current_user, TransientBaseline $baseline): Baseline
+    public function create(UserIdentifier $current_user, TransientBaseline $baseline): Baseline
     {
         if (! $this->authorizations->canCreateBaseline($current_user, $baseline)) {
             throw new NotAuthorizedException(
@@ -67,14 +64,10 @@ class BaselineService
         if ($snapshot_date === null) {
             $snapshot_date = $this->clock->now();
         }
-        return $this->baseline_repository->add(
-            $baseline,
-            $current_user,
-            $snapshot_date
-        );
+        return $this->baseline_repository->add($baseline, $current_user, $snapshot_date);
     }
 
-    public function findById(PFUser $current_user, int $id): ?Baseline
+    public function findById(UserIdentifier $current_user, int $id): ?Baseline
     {
         return $this->baseline_repository->findById($current_user, $id);
     }
@@ -83,7 +76,7 @@ class BaselineService
      * @throws NotAuthorizedException
      * @throws BaselineDeletionException
      */
-    public function delete(PFUser $current_user, Baseline $baseline)
+    public function delete(UserIdentifier $current_user, Baseline $baseline)
     {
         if (! $this->authorizations->canDeleteBaseline($current_user, $baseline)) {
             throw new NotAuthorizedException(
@@ -95,7 +88,7 @@ class BaselineService
         if ($comparisons_count > 0) {
             throw new BaselineDeletionException($comparisons_count);
         }
-        return $this->baseline_repository->delete($baseline, $current_user);
+        return $this->baseline_repository->delete($baseline);
     }
 
     /**
@@ -107,8 +100,8 @@ class BaselineService
      * @throws NotAuthorizedException
      */
     public function findByProject(
-        PFUser $current_user,
-        Project $project,
+        UserIdentifier $current_user,
+        ProjectIdentifier $project,
         int $page_size,
         int $baseline_offset,
     ): BaselinesPage {

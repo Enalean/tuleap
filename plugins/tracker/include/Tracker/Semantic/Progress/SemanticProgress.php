@@ -93,7 +93,11 @@ class SemanticProgress extends \Tracker_Semantic
         Codendi_Request $request,
         PFUser $current_user,
     ): void {
-        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
+        $this->tracker->displayAdminItemHeaderBurningParrot(
+            $tracker_manager,
+            'editsemantic',
+            $this->getLabel()
+        );
 
         $renderer = $this->getTemplateRenderer();
         $builder  = new SemanticProgressAdminPresenterBuilder(

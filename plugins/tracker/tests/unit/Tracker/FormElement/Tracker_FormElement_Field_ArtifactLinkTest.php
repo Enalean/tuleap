@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueEmptyChecker;
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -113,14 +114,16 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $tracker  = Mockery::mock(\Tracker::class);
         $artifact->shouldReceive('getLastChangeset')->andReturn($c);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact->shouldReceive('getId')->andReturn(1);
 
         $field->shouldReceive('getLastChangesetValue')->andReturns($cv);
+        $field->shouldReceive('getReverseLinks')->andReturns([]);
 
         $this->assertTrue($field->isValidRegardingRequiredProperty($artifact, null));  // existing values
         $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, ['new_values' => '', 'removed_values' => ['123']]));
     }
 
-    public function testIsValidRequiredFieldWithoutExistingValues(): void
+    public function testIsValidRequiredFieldWithNullValue(): void
     {
         $field = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('isRequired')->andReturns(true);
@@ -133,29 +136,25 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $a = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $a->shouldReceive('getLastChangeset')->andReturns($c);
 
-        $this->assertFalse($field->isValidRegardingRequiredProperty($a, ['new_values' => '']));
+        $checker = $this->createMock(SubmittedValueEmptyChecker::class);
+        $checker->method('isSubmittedValueEmpty')->willReturn(true);
+        $field->shouldReceive('getSubmittedValueEmptyChecker')->andReturns($checker);
+
         $this->assertFalse($field->isValidRegardingRequiredProperty($a, null));
     }
 
-    public function testIsValidAddsErrorIfARequiredFieldIsAnArrayWithoutNewValues(): void
+    public function testIsValidAddsErrorIfARequiredFieldValueIsEmpty(): void
     {
         $f = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('isRequired')->andReturns(true);
 
-        $a = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $a->shouldReceive('getLastChangeset')->andReturns(false);
-        $this->assertFalse($f->isValidRegardingRequiredProperty($a, ['new_values' => '']));
-        $this->assertTrue($f->hasErrors());
-    }
-
-    public function testIsValidAddsErrorIfARequiredFieldValueIsAnEmptyString(): void
-    {
-        $f = Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $f->shouldReceive('isRequired')->andReturns(true);
+        $checker = $this->createMock(SubmittedValueEmptyChecker::class);
+        $checker->method('isSubmittedValueEmpty')->willReturn(true);
+        $f->shouldReceive('getSubmittedValueEmptyChecker')->andReturns($checker);
 
         $a = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $a->shouldReceive('getLastChangeset')->andReturns(false);
-        $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, []));
         $this->assertTrue($f->hasErrors());
     }
 
@@ -420,6 +419,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItDoesNotRaiseWarningIfItDoesNotHaveAllInformationToDisplayAnAsyncRenderer(): void
     {
+        $this->expectNotToPerformAssertions();
         $field = $this->buildField();
 
         $field->process(

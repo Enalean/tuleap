@@ -230,7 +230,7 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
         }
 
         $this->backend->shouldReceive('fork')->andReturn(667, 668, 669);
-        $this->manager->forkRepositories($repos, $this->project, $this->user, $namespace, null, $this->forkPermissions);
+        self::assertTrue($this->manager->forkRepositories($repos, $this->project, $this->user, $namespace, null, $this->forkPermissions));
     }
 
     public function testCloneManyCrossProjectRepositories(): void

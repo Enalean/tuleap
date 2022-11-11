@@ -111,7 +111,7 @@
     "phpunit/phpunit": "^9.1",
     "psalm/plugin-phpunit": "^0.16.1",
     "qossmic/deptrac-shim": "^0.18.0",
-    "slevomat/coding-standard": "^7.0",
+    "slevomat/coding-standard": "^8.3.0",
     "squizlabs/php_codesniffer": "^3.4",
     "vimeo/psalm": "^4.0"
   },

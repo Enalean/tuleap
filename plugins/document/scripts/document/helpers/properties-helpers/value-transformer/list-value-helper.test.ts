@@ -29,7 +29,7 @@ import type { Property, ListValue } from "../../../type";
 describe("list-value-helper", () => {
     describe("assertListIsOnlyMultipleValue", () => {
         it(`returns true when first element is an object`, () => {
-            const list_value: PropertyListValue = [{ id: 1, value: "multiple" } as ListValue];
+            const list_value: PropertyListValue = [{ id: 1, name: "multiple" } as ListValue];
 
             expect(assertListIsOnlyMultipleValue(list_value)).toBe(true);
         });
@@ -49,8 +49,8 @@ describe("list-value-helper", () => {
     describe("processFormattingOnKnownType", () => {
         it(`returns an array of number`, () => {
             const list_value: Array<ListValue> = [
-                { id: 1, value: "multiple" } as ListValue,
-                { id: 2, value: "other" } as ListValue,
+                { id: 1, name: "multiple" } as ListValue,
+                { id: 2, name: "other" } as ListValue,
             ];
 
             expect(processFormattingOnKnownType(list_value)).toStrictEqual([1, 2]);
@@ -78,8 +78,8 @@ describe("list-value-helper", () => {
 
         it(`returns formatted property`, () => {
             const list_value: PropertyListValue = [
-                { id: 1, value: "multiple" } as ListValue,
-                { id: 2, value: "other" } as ListValue,
+                { id: 1, name: "multiple" } as ListValue,
+                { id: 2, name: "other" } as ListValue,
             ];
 
             const property: Property = {
@@ -110,7 +110,7 @@ describe("list-value-helper", () => {
         });
 
         it(`returns formatted property`, () => {
-            const list_value: Array<ListValue> = [{ id: 1, value: "single" } as ListValue];
+            const list_value: Array<ListValue> = [{ id: 1, name: "single" } as ListValue];
 
             const property: Property = {
                 list_value,

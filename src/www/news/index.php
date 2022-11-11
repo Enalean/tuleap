@@ -45,8 +45,9 @@ if ($group_id) {
     $title = $Language->getText('news_index', 'news');
 }
 $params = ['title' => $title,
-              'help' => 'collaboration.html#news-service',
-              'pv' => $pv];
+    'help' => 'collaboration.html#news-service',
+    'pv' => $pv,
+];
 
 news_header($params);
 

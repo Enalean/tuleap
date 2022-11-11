@@ -22,6 +22,7 @@
         class="tlp-modal tlp-modal-danger"
         role="dialog"
         aria-labelledby="document-dragndrop-error-modal-title"
+        ref="modal_element"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-dragndrop-error-modal-title">
@@ -33,7 +34,7 @@
                 class="tlp-modal-close"
                 type="button"
                 data-dismiss="modal"
-                v-bind:aria-label="close"
+                v-bind:aria-label="`${$gettext('Close')}`"
             >
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
@@ -54,24 +55,36 @@
     </div>
 </template>
 
-<script>
-import { createModal } from "tlp";
+<script setup lang="ts">
+import type { Modal } from "tlp";
+import { createModal, EVENT_TLP_MODAL_HIDDEN } from "tlp";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
-export default {
-    props: {
-        body_class: String,
-    },
-    computed: {
-        close() {
-            return this.$gettext("Close");
-        },
-    },
-    mounted() {
-        const modal = createModal(this.$el);
-        modal.addEventListener("tlp-modal-hidden", () => {
-            this.$emit("error-modal-hidden");
-        });
-        modal.show();
-    },
-};
+defineProps<{ body_class?: string }>();
+
+const modal_element = ref<InstanceType<typeof Element>>();
+
+const emit = defineEmits<{
+    (e: "close"): void;
+}>();
+
+function close(): void {
+    emit("close");
+}
+
+let modal: Modal;
+
+onMounted((): void => {
+    if (!modal_element.value) {
+        return;
+    }
+
+    modal = createModal(modal_element.value);
+    modal.show();
+    modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, close);
+});
+
+onBeforeUnmount(() => {
+    modal.removeEventListener(EVENT_TLP_MODAL_HIDDEN, close);
+});
 </script>

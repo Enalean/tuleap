@@ -18,13 +18,11 @@
  */
 
 import {
-    createEditFollowupEditor,
     getFormatOrDefault,
     getLocaleFromBody,
     getTextAreaValue,
     getProjectId,
 } from "./edit-follow-up-comment-helpers";
-import type { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
@@ -39,20 +37,20 @@ describe(`edit-follow-up-comment-helpers`, () => {
 
     describe(`getFormatOrDefault()`, () => {
         it(`when the hidden input can't be found, it will default to "commonmark" format`, () => {
-            expect(getFormatOrDefault(doc, "123")).toEqual(TEXT_FORMAT_COMMONMARK);
+            expect(getFormatOrDefault(doc, "123")).toStrictEqual(TEXT_FORMAT_COMMONMARK);
         });
 
         it(`when the hidden input's value is not a valid format, it will default to "commonmark" format`, () => {
             createHiddenInput(doc, "invalid");
 
-            expect(getFormatOrDefault(doc, "123")).toEqual(TEXT_FORMAT_COMMONMARK);
+            expect(getFormatOrDefault(doc, "123")).toStrictEqual(TEXT_FORMAT_COMMONMARK);
         });
 
         it.each([[TEXT_FORMAT_HTML], [TEXT_FORMAT_TEXT], [TEXT_FORMAT_COMMONMARK]])(
             `when the hidden input's value is %s, it will return it`,
             (expected_format: string) => {
                 createHiddenInput(doc, expected_format);
-                expect(getFormatOrDefault(doc, "123")).toEqual(expected_format);
+                expect(getFormatOrDefault(doc, "123")).toStrictEqual(expected_format);
             }
         );
     });
@@ -146,36 +144,6 @@ describe(`edit-follow-up-comment-helpers`, () => {
             doc.body.append(followups);
 
             expect(getProjectId(followup_body)).toBe("128");
-        });
-    });
-
-    describe(`createEditFollowupEditor()`, () => {
-        let editor_factory: RichTextEditorFactory;
-        beforeEach(() => {
-            editor_factory = {
-                createRichTextEditor: jest.fn(),
-            } as unknown as RichTextEditorFactory;
-        });
-
-        it(`when the given element is not a textarea, it does nothing`, () => {
-            const div = doc.createElement("div");
-            doc.body.append(div);
-
-            createEditFollowupEditor(editor_factory, div, "123", TEXT_FORMAT_TEXT);
-
-            expect(editor_factory.createRichTextEditor).not.toHaveBeenCalled();
-        });
-
-        it(`creates a rich text editor on the given textarea`, () => {
-            const textarea = doc.createElement("textarea");
-            doc.body.append(textarea);
-            const createRichTextEditor = jest.spyOn(editor_factory, "createRichTextEditor");
-
-            createEditFollowupEditor(editor_factory, textarea, "123", TEXT_FORMAT_COMMONMARK);
-
-            const options = createRichTextEditor.mock.calls[0][1];
-            expect(options.format_selectbox_id).toBe("123");
-            expect(options.format_selectbox_name).toBe("comment_format123");
         });
     });
 

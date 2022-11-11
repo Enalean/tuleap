@@ -44,7 +44,7 @@ class GlobalNotificationsEmailRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         parent::setUp();
 
-        $project         = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
+        $project         = \Mockery::spy(\Project::class, ['getID' => false, 'getUserName' => false, 'isPublic' => false]);
         $tracker         = Mockery::mock(Tracker::class)->shouldReceive('getId')->andReturn(10)->getMock();
         $tracker_factory = \Mockery::spy(\TrackerFactory::class);
 

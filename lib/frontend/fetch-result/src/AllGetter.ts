@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Result } from "neverthrow";
-import { combine, ResultAsync } from "neverthrow";
+import { Result } from "neverthrow";
+import { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import type { AutoEncodedParameters } from "./auto-encoder";
@@ -63,7 +63,7 @@ const flatten = <TypeOfArrayItem>(
 ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault> =>
     all_responses_result
         // flatten the Result[] into a single Result
-        .andThen((results) => combine(results))
+        .andThen((results) => Result.combine(results))
         .map((nested_array) =>
             // flatten the ArrayItem[][] into ArrayItem[] and concat after first_results
             nested_array.reduce(
@@ -78,6 +78,8 @@ export type GetAll = {
         options?: GetAllOptions<TypeOfJSONPayload, TypeOfArrayItem>
     ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault>;
 };
+
+const credentials: RequestCredentials = "same-origin";
 
 export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
     function getAllJSON<TypeOfJSONPayload, TypeOfArrayItem>(
@@ -94,7 +96,7 @@ export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
 
         const first_call_params = { ...params, limit, offset };
         const first_call = response_retriever
-            .retrieveResponse(getURI(uri, first_call_params), { method: GET_METHOD })
+            .retrieveResponse(getURI(uri, first_call_params), { method: GET_METHOD, credentials })
             .andThen((response) => {
                 const pagination_size = response.headers.get(PAGINATION_SIZE_HEADER);
                 if (pagination_size === null) {
@@ -126,7 +128,10 @@ export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
                     (new_offset) => {
                         const new_params = { ...params, limit, offset: new_offset };
                         return response_retriever
-                            .retrieveResponse(getURI(uri, new_params), { method: GET_METHOD })
+                            .retrieveResponse(getURI(uri, new_params), {
+                                method: GET_METHOD,
+                                credentials,
+                            })
                             .andThen((response) => {
                                 // Abuse response.json() returning Promise<any> to "cheat" the types.
                                 // We assume response.json() will return some type compatible with TypeOfArrayItem

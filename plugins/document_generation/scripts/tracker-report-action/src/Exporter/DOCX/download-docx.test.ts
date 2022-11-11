@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as trigger_download from "../trigger-blob-download";
-import * as image_loader from "@tuleap/plugin-docgen-docx";
+import image_loader from "@tuleap/plugin-docgen-docx";
 import type { GetText } from "@tuleap/gettext";
 import { downloadDocx } from "./download-docx";
 import { ImageRun } from "docx";
@@ -30,12 +31,12 @@ describe("download-docx", () => {
                 return value;
             },
         } as GetText;
-        const trigger_download_spy = jest.spyOn(trigger_download, "triggerBlobDownload");
+        const trigger_download_spy = vi.spyOn(trigger_download, "triggerBlobDownload");
         trigger_download_spy.mockImplementation((filename: string, blob: Blob) => {
             expect(filename).toBe("Document Title.docx");
             expect(blob.size).toBeGreaterThan(0);
         });
-        jest.spyOn(image_loader, "loadImage").mockResolvedValue(
+        vi.spyOn(image_loader, "loadImage").mockResolvedValue(
             new ImageRun({
                 data: "image_data",
                 transformation: {

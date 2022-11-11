@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-class Role
+interface Role
 {
-    public const ADMIN  = 'BASELINE_ADMIN';
-    public const READER = 'BASELINE_READER';
+    public function getName(): string;
 }

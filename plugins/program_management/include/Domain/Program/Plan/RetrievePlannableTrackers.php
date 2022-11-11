@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\TrackerReference;
+
 interface RetrievePlannableTrackers
 {
     /**
-     * @return int[]
+     * @return TrackerReference[]
      */
     public function getPlannableTrackersOfProgram(int $program_id): array;
 }

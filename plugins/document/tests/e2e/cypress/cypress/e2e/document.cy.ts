@@ -20,41 +20,22 @@
 import { disableSpecificErrorThrownByCkeditor } from "../support/disable-specific-error-thrown-by-ckeditor";
 
 describe("Document new UI", () => {
+    const now = Date.now();
     context("Project Administrators", function () {
-        let project_unixname: string, public_name: string, now: number;
-
-        before(() => {
-            cy.clearSessionCookie();
-            now = Date.now();
-
-            project_unixname = "docman-" + now;
-            public_name = "Docman " + now;
-
-            cy.projectAdministratorLogin();
-        });
-
-        beforeEach(() => {
-            cy.preserveSessionCookies();
-        });
-
-        it("Creates a project with docman service", () => {
-            cy.visit("/project/new");
-            cy.get(
-                "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
-            ).click();
-            cy.get("[data-test=project-registration-next-button]").click();
-
-            cy.get("[data-test=new-project-name]").type(public_name);
-            cy.get("[data-test=project-shortname-slugified-section]").click();
-            cy.get("[data-test=new-project-shortname]").type("{selectall}" + project_unixname);
-            cy.get("[data-test=approve_tos]").click();
-            cy.get("[data-test=project-registration-next-button]").click();
-            cy.get("[data-test=start-working]").click({
-                timeout: 20000,
-            });
-        });
-
         context("Project administrators", function () {
+            const project_unixname = `docman-${now}`,
+                public_name = `Docman${now}`;
+            before(() => {
+                cy.clearSessionCookie();
+
+                cy.projectAdministratorLogin();
+                cy.createNewIssueProject(project_unixname, public_name);
+            });
+
+            beforeEach(() => {
+                cy.preserveSessionCookies();
+            });
+
             it("can access to admin section", function () {
                 cy.visit(`${"/plugins/document/" + project_unixname + "/admin-search"}`);
                 cy.contains("Properties").should("have.attr", "href").as("manage_properties_url");
@@ -132,12 +113,12 @@ describe("Document new UI", () => {
                     force: true,
                 });
 
-                cy.intercept("/api/docman_embedded_files/*/version").as("postVersion");
+                cy.intercept("/api/docman_embedded_files/*/versions").as("postVersions");
 
                 cy.get("[data-test=document-update-version-title]").type("new version");
                 cy.get("[data-test=document-modal-submit-button-create-embedded-version]").click();
 
-                cy.wait("@postVersion", { timeout: 60000 });
+                cy.wait("@postVersions", { timeout: 60000 });
 
                 cy.log("delete a given version of a document");
                 // need to force due to drop down
@@ -189,6 +170,13 @@ describe("Document new UI", () => {
                 disableSpecificErrorThrownByCkeditor();
             });
 
+            function deleteFolder(): void {
+                // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
+                // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
+                cy.get("[data-test=delete-folder-button]").click({ force: true });
+                cy.get("[data-test=document-confirm-deletion-button]").click();
+            }
+
             it("user can manipulate folders", () => {
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-drop-down-button]").click();
@@ -214,10 +202,7 @@ describe("Document new UI", () => {
 
                 cy.get("[data-test=document-quick-look]").contains("My new folder");
 
-                // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
-                // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
-                cy.get("[data-test=document-confirm-deletion-button]").click();
+                deleteFolder();
 
                 cy.get("[data-test=document-tree-content]").should("not.exist");
             });
@@ -343,9 +328,9 @@ describe("Document new UI", () => {
                 });
 
                 // Go to the folder
-                cy.get("[data-test=document-tree-content]")
-                    .contains("a", "Folder download")
-                    .click();
+                cy.get("[data-test=document-tree-content]").contains("a", "Folder download").click({
+                    force: true,
+                });
 
                 // Create an embedded file in this folder
                 cy.get("[data-test=document-header-actions]").within(() => {
@@ -401,74 +386,57 @@ describe("Document new UI", () => {
                         cy.get("[data-test=quick-look-button]").click({ force: true });
                     });
 
-                // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
-                // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
-                cy.get("[data-test=document-confirm-deletion-button]").click();
-            });
-
-            it("user can navigate and manipulate items using keyboard shortcuts", () => {
-                cy.get("[data-test=document-header-actions]").should("be.visible");
-
-                testNewFolderShortcut();
-                testNewItemShortcut();
-                testNavigationShortcuts();
-                deleteItems();
+                deleteFolder();
             });
         });
     });
+
+    context("Writers", function () {
+        it("have specifics permissions", function () {
+            cy.clearSessionCookie();
+            cy.projectAdministratorLogin();
+            const project_name = `document-perm-${now}`;
+            const project_public_name = `Document permission${now}`;
+            cy.createNewIssueProject(project_name, project_public_name);
+            cy.visitProjectService(project_name, "Documents");
+
+            const document_name = `Document ${now}`;
+            cy.log("Add a document");
+            cy.get("[data-test=document-header-actions]").within(() => {
+                cy.get("[data-test=document-item-action-new-button]").click();
+            });
+            cy.get("[data-test=document-new-item-modal]").within(() => {
+                cy.get("[data-test=empty]").click();
+
+                cy.get("[data-test=document-new-item-title]").type(document_name);
+                cy.get("[data-test=document-modal-submit-button-create-item]").click();
+            });
+
+            cy.log("Project administrator can define specifics permissions for Writers");
+            cy.get("[data-test=breadcrumb-project-documentation]").click();
+            cy.get("[data-test=breadcrumb-administrator-link]").click();
+            cy.get("[data-test=admin_permissions]").click();
+            cy.get("[data-test=forbid-writers-to-update]").check();
+            cy.get("[data-test=forbid-writers-to-delete]").check();
+            cy.get("[data-test=save-permissions-button]").click();
+
+            cy.visitProjectService(project_name, "Documents");
+            cy.get("[data-test=document-tree-content]")
+                .contains("tr", document_name)
+                .within(() => {
+                    cy.get("[data-test=dropdown-button]").contains("Delete");
+                    cy.get("[data-test=dropdown-button]").contains("Permissions");
+                });
+
+            cy.clearSessionCookie();
+            cy.projectMemberLogin();
+            cy.visitProjectService(project_name, "Documents");
+            cy.get("[data-test=document-tree-content]")
+                .contains("tr", document_name)
+                .within(() => {
+                    cy.get("[data-test=dropdown-button]").should("not.contain", "Delete");
+                    cy.get("[data-test=dropdown-button]").should("not.contain", "Permissions");
+                });
+        });
+    });
 });
-
-function testNewFolderShortcut(): void {
-    typeShortcut("b");
-    cy.get("[data-test=document-new-folder-modal]")
-        .should("be.visible")
-        .within(() => {
-            cy.focused()
-                .should("have.attr", "data-test", "document-new-item-title")
-                .type("First item");
-            cy.get("[data-test=document-modal-submit-button-create-folder]").click();
-        });
-    cy.get("[data-test=document-new-folder-modal]").should("not.be.visible");
-    cy.get("[data-test=folder-title]").contains("First item");
-}
-
-function testNewItemShortcut(): void {
-    typeShortcut("n");
-    cy.get("[data-test=document-new-item-modal]")
-        .should("be.visible")
-        .within(() => {
-            cy.focused()
-                .should("have.attr", "data-test", "document-new-item-title")
-                .type("Last item");
-            cy.get("[data-test=empty]").click();
-            cy.get("[data-test=document-modal-submit-button-create-item]").click();
-        });
-    cy.get("[data-test=document-new-item-modal]").should("not.be.visible");
-    cy.get("[data-test=empty-file-title]").contains("Last item");
-}
-
-function testNavigationShortcuts(): void {
-    typeShortcut("{ctrl}{uparrow}");
-    cy.focused().should("contain", "First item");
-
-    typeShortcut("{downarrow}");
-    cy.focused().should("contain", "Last item");
-}
-
-function deleteItems(): void {
-    typeShortcut("{del}");
-    cy.get("[data-test=document-confirm-deletion-button]").click();
-    cy.get("[data-test=document-delete-item-modal]").should("not.exist");
-
-    typeShortcut("{ctrl}{uparrow}", "{del}");
-    cy.get("[data-test=document-confirm-deletion-button]").click();
-    cy.get("[data-test=document-delete-item-modal]").should("not.exist");
-}
-
-function typeShortcut(...inputs: string[]): void {
-    for (const input of inputs) {
-        // eslint-disable-next-line cypress/require-data-selectors
-        cy.get("body").type(input);
-    }
-}

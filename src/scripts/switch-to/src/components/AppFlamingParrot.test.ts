@@ -17,73 +17,55 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
 import AppFlamingParrot from "./AppFlamingParrot.vue";
-import $ from "jquery";
-import { createSwitchToLocalVue } from "../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../store/type";
+import { useRootStore } from "../stores/root";
+import { getGlobalTestOptions } from "../helpers/global-options-for-test";
+import { render, fireEvent, configure, cleanup } from "@testing-library/vue";
 
 describe("AppFlamingParrot", () => {
+    beforeEach(() => {
+        configure({
+            testIdAttribute: "data-test",
+        });
+    });
+
+    afterEach(() => {
+        cleanup();
+    });
+
     it("Autofocus the first input in the modal", async () => {
-        const wrapper = shallowMount(AppFlamingParrot, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                    } as State,
-                }),
-            },
-            stubs: {
-                "switch-to-header": {
-                    template: "<input type='text' data-test='focus'/>",
-                },
-            },
+        const { getByTestId } = render(AppFlamingParrot, {
+            global: getGlobalTestOptions(),
         });
 
-        const input = wrapper.find("[data-test=focus]").element;
+        const input = getByTestId("switch-to-filter");
         if (!(input instanceof HTMLElement)) {
             throw Error("input not found");
         }
         const focus = jest.spyOn(input, "focus");
 
-        $(wrapper.element).trigger("shown");
+        await fireEvent(getByTestId("switch-to-modal"), new CustomEvent("shown"));
 
         expect(focus).toHaveBeenCalled();
     });
 
     it("Loads the history when the modal is shown", async () => {
-        const wrapper = shallowMount(AppFlamingParrot, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                    } as State,
-                }),
-            },
+        const { getByTestId } = render(AppFlamingParrot, {
+            global: getGlobalTestOptions(),
         });
 
-        $(wrapper.element).trigger("shown");
+        await fireEvent(getByTestId("switch-to-modal"), new CustomEvent("shown"));
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadHistory");
+        expect(useRootStore().loadHistory).toHaveBeenCalledTimes(1);
     });
 
     it("Clears the filter value when modal is closed", async () => {
-        const wrapper = shallowMount(AppFlamingParrot, {
-            localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                    } as State,
-                }),
-            },
+        const { getByTestId } = render(AppFlamingParrot, {
+            global: getGlobalTestOptions(),
         });
 
-        $(wrapper.element).trigger("hidden");
+        await fireEvent(getByTestId("switch-to-modal"), new CustomEvent("hidden"));
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "");
+        expect(useRootStore().updateFilterValue).toHaveBeenCalledWith("");
     });
 });

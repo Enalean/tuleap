@@ -23,9 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
+use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Http\Message\RequestMatcher\RequestMatcher;
 use Http\Mock\Client;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ForgeConfigSandbox;
@@ -51,16 +54,17 @@ final class InstanceManagementTest extends TestCase
     private TestLogger $logger;
     private Client $mediawiki_client;
     private InstanceManagement $instance_management;
-
+    private MediaWikiCentralDatabaseParameterGeneratorStub $central_database_parameter_generator;
     protected function setUp(): void
     {
         \ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, 'tuleap.example.com');
         $this->logger           = new TestLogger();
         $this->mediawiki_client = new Client();
         $this->mediawiki_client->setDefaultResponse(HTTPFactoryBuilder::responseFactory()->createResponse(400, 'Should be overridden in tests'));
-        $project_120               = ProjectTestBuilder::aProject()->withId(120)->withUnixName('gpig')->build();
-        $project_130               = ProjectTestBuilder::aProject()->withId(self::DELETED_PROJECT_ID)->withUnixName('foo')->withStatusDeleted()->build();
-        $this->instance_management = new InstanceManagement(
+        $project_120                                = ProjectTestBuilder::aProject()->withId(120)->withUnixName('gpig')->build();
+        $project_130                                = ProjectTestBuilder::aProject()->withId(self::DELETED_PROJECT_ID)->withUnixName('foo')->withStatusDeleted()->build();
+        $this->central_database_parameter_generator = new MediaWikiCentralDatabaseParameterGeneratorStub();
+        $this->instance_management                  = new InstanceManagement(
             $this->logger,
             new class ($this->mediawiki_client) implements MediawikiClientFactory {
                 public function __construct(private ClientInterface $client)
@@ -75,6 +79,7 @@ final class InstanceManagementTest extends TestCase
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             ProjectByIDFactoryStub::buildWith($project_120, $project_130),
+            $this->central_database_parameter_generator,
         );
 
         parent::setUp();
@@ -87,7 +92,7 @@ final class InstanceManagementTest extends TestCase
         self::assertFalse($this->mediawiki_client->getLastRequest());
     }
 
-    public function testCreationIsSuccessful(): void
+    public function testCreationWithOneDBPerProjectIsSuccessful(): void
     {
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
@@ -96,11 +101,15 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
-        $create_has_been_called = false;
         $this->mediawiki_client->on(
-            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'PUT'),
-            function () use (&$create_has_been_called) {
-                $create_has_been_called = true;
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'PUT' &&
+                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/instance/gpig' &&
+                        $request->getBody()->getContents() === '{"project_id":120}';
+                }
+            ),
+            function () {
                 return HTTPFactoryBuilder::responseFactory()->createResponse(200);
             }
         );
@@ -108,7 +117,35 @@ final class InstanceManagementTest extends TestCase
 
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
-        self::assertTrue($create_has_been_called);
+        self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testCreationWithCentralDatabaseIsSuccessful(): void
+    {
+        $this->central_database_parameter_generator->central_database = 'tuleap_mediawiki';
+
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(404);
+            }
+        );
+
+        $this->mediawiki_client->on(
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'PUT' &&
+                        $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/instance/gpig' &&
+                        $request->getBody()->getContents() === '{"project_id":120,"dbprefix":"mw_120_"}';
+                }
+            ),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
         self::assertFalse($this->logger->hasErrorRecords());
     }
 
@@ -151,10 +188,34 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
+        $update_instance_has_been_called = false;
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/maintenance/gpig/update$', null, 'POST'),
+            function () use (&$update_instance_has_been_called) {
+                $update_instance_has_been_called = true;
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
         self::assertTrue($resume_has_been_called);
+        self::assertTrue($update_instance_has_been_called);
         self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testErrorIsDetectedWhenCurrentStatusOfTheInstanceCannotBeDetermined(): void
+    {
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
+            static function (): ResponseInterface {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(500);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
+        self::assertTrue($this->logger->hasErrorThatContains('Could not determine current status of the gpig instance'));
     }
 
     public function testSuspendIsSuccessful(): void
@@ -216,7 +277,13 @@ final class InstanceManagementTest extends TestCase
     public function testLogsOutUserOnAllInstancesIsSuccessful(): void
     {
         $this->mediawiki_client->on(
-            new RequestMatcher('^/mediawiki/w/rest\.php/tuleap/maintenance/\*/terminate-sessions$', null, 'POST'),
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                           $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/%2A/terminate-sessions' &&
+                           $request->getBody()->getContents() === '{}';
+                }
+            ),
             function () {
                 return HTTPFactoryBuilder::responseFactory()->createResponse(200);
             }
@@ -227,16 +294,42 @@ final class InstanceManagementTest extends TestCase
         self::assertFalse($this->logger->hasErrorRecords());
     }
 
-    public function testLogsOutUserOnSpecificIsSuccessful(): void
+    public function testLogsOutUserOnSpecificInstanceIsSuccessful(): void
     {
         $this->mediawiki_client->on(
-            new RequestMatcher('^/mediawiki/w/rest\.php/tuleap/maintenance/gpig/terminate-sessions$', null, 'POST'),
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                           $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/terminate-sessions' &&
+                           $request->getBody()->getContents() === '{}';
+                }
+            ),
             function () {
                 return HTTPFactoryBuilder::responseFactory()->createResponse(200);
             }
         );
 
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
+        self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testLogsOutSpecificUserOnSpecificInstanceIsSuccessful(): void
+    {
+        $this->mediawiki_client->on(
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                           $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/terminate-sessions' &&
+                           $request->getBody()->getContents() === '{"user":"103"}';
+                }
+            ),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120, 'user_id' => 103]]));
 
         self::assertFalse($this->logger->hasErrorRecords());
     }

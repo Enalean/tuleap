@@ -57,11 +57,11 @@ class WikiPlugin_FileInfo extends WikiPlugin
     public function getDefaultArguments()
     {
         return [
-                     'file'      => false, // relative path from PHPWIKI_DIR. (required)
-                     'display'   => false, // version,size,date,mtime,owner,name,path,dirname,link.  (required)
-                     'format'    => false, // printf format string with %s only, all display modes
+            'file'      => false, // relative path from PHPWIKI_DIR. (required)
+            'display'   => false, // version,size,date,mtime,owner,name,path,dirname,link.  (required)
+            'format'    => false, // printf format string with %s only, all display modes
                             // from above vars return strings (optional)
-                    ];
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

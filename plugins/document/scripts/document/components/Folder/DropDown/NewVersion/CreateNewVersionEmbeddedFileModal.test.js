@@ -31,17 +31,28 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
     const modal_show = jest.fn();
     const remove_backdrop = jest.fn();
 
-    function getWrapper() {
+    function getWrapper(prop) {
         const state = {
             error: { has_modal_error: false },
         };
         const store_option = { state };
         const store = createStoreMock(store_option);
 
+        store.dispatch.mockImplementation((action) => {
+            if (action === "loadDocument") {
+                return Promise.resolve({
+                    id: 12,
+                    title: "Dacia",
+                    embedded_file_properties: {
+                        content: "VROOM VROOM",
+                    },
+                });
+            }
+        });
         return shallowMount(CreateNewVersionEmbeddedFileModal, {
             localVue,
             propsData: {
-                item: { id: 12, title: "Dacia" },
+                ...prop,
             },
             mocks: { $store: store },
         });
@@ -58,7 +69,9 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
     });
 
     it("Updates the version title", async () => {
-        const wrapper = getWrapper();
+        const wrapper = getWrapper({
+            item: { id: 12, title: "Dacia", embedded_file_properties: {} },
+        });
 
         expect(wrapper.vm.$data.version.title).toBe("");
         emitter.emit("update-version-title", "A title");
@@ -69,7 +82,9 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
     });
 
     it("Updates the changelog", async () => {
-        const wrapper = getWrapper();
+        const wrapper = getWrapper({
+            item: { id: 12, title: "Dacia", embedded_file_properties: {} },
+        });
 
         expect(wrapper.vm.$data.version.changelog).toBe("");
         emitter.emit("update-changelog-property", "A changelog");
@@ -80,7 +95,9 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
     });
 
     it("Updates the lock", async () => {
-        const wrapper = getWrapper();
+        const wrapper = getWrapper({
+            item: { id: 12, title: "Dacia", embedded_file_properties: {} },
+        });
 
         await wrapper.vm.$nextTick();
 
@@ -90,5 +107,24 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$data.version.is_file_locked).toBe(false);
+    });
+
+    it("should not retrieve the document content if there is content when the component is mounted", async () => {
+        const wrapper = getWrapper({
+            item: { id: 12, title: "Dacia", embedded_file_properties: { content: "Time or ..." } },
+        });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.embedded_item.embedded_file_properties.content).toBe("Time or ...");
+    });
+
+    it("should retrieve the document content if there is no content when the component is mounted", async () => {
+        const wrapper = getWrapper({
+            item: { id: 12, title: "Dacia", embedded_file_properties: {} },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.embedded_item.embedded_file_properties.content).toBe("VROOM VROOM");
     });
 });

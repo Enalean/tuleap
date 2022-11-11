@@ -27,6 +27,7 @@ use Service;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\Service\ProjectDefinedService;
+use Tuleap\Project\Service\UserCanAccessToServiceEvent;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -41,6 +42,7 @@ final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\Stub|\Project
      */
     private $project;
+    private EventManager|\PHPUnit\Framework\MockObject\Stub $event_manager;
 
     protected function setUp(): void
     {
@@ -51,14 +53,14 @@ final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user = UserTestBuilder::aUser()->build();
 
-        $event_manager = $this->createStub(EventManager::class);
+        $this->event_manager = $this->createStub(EventManager::class);
 
         $project_manager = $this->createStub(\ProjectManager::class);
         $uri_sanitizer   = $this->createStub(URISanitizer::class);
         $uri_sanitizer->method('sanitizeForHTMLAttribute')->willReturn('/tracker');
 
         $this->builder = new ProjectSidebarToolsBuilder(
-            $event_manager,
+            $this->event_manager,
             $project_manager,
             $uri_sanitizer
         );
@@ -104,6 +106,9 @@ final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project->method('getServices')->willReturn([$admin_service, $summary_service, $tracker_service]);
 
+        $this->event_manager
+            ->method('dispatch')
+            ->willReturnArgument(0);
 
         $sidebar = $this->builder->getSidebarTools(
             $this->user,
@@ -116,5 +121,45 @@ final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertCount(1, $services);
         self::assertSame('Tracker', $services[0]->label);
         self::assertSame('https://example.com/tracker', $services[0]->href);
+    }
+
+    public function testItRemovesServiceUserCannotAccess(): void
+    {
+        $tracker_service = new ProjectDefinedService(
+            $this->project,
+            [
+                'short_name' => 'tracker',
+                'service_id' => 102,
+                'is_active' => true,
+                'label' => 'Tracker',
+                'description' => 'description',
+                'is_used' => true,
+                'is_in_iframe' => true,
+                'rank' => 200,
+                'scope' => 'project',
+                'group_id' => 101,
+                'icon' => 'fa-list',
+                'is_in_new_tab' => false,
+            ]
+        );
+
+        $this->project->method('getServices')->willReturn([$tracker_service]);
+
+        $event = new UserCanAccessToServiceEvent($tracker_service, $this->user);
+        $event->forbidAccessToService();
+
+        $this->event_manager
+            ->method('dispatch')
+            ->willReturn($event);
+
+        $sidebar = $this->builder->getSidebarTools(
+            $this->user,
+            10,
+            $this->project
+        );
+
+        $services = iterator_to_array($sidebar);
+
+        self::assertCount(0, $services);
     }
 }

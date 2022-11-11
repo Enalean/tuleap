@@ -62,7 +62,10 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
                 parent::__construct('');
             }
 
-            public function header(array $params)
+            public function header($params): void
+            {
+            }
+            public function footer($params): void
             {
             }
 

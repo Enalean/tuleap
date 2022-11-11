@@ -30,14 +30,14 @@
 import CKEDITOR from "ckeditor4";
 import codendi from "codendi";
 import {
-    createEditFollowupEditor,
     getFormatOrDefault,
     getLocaleFromBody,
-    getTextAreaValue,
     getProjectId,
+    getTextAreaValue,
 } from "./edit-follow-up-comment-helpers";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
-import { initMentions } from "@tuleap/mention";
+import { RichTextEditorsCreator } from "../rich-text-editor-creator/RichTextEditorsCreator";
+import { UploadImageFormFactory } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
 
 document.observe("dom:loaded", function () {
     $$(".tracker_artifact_followup_comment_controls_edit button").each(function (edit) {
@@ -71,7 +71,12 @@ document.observe("dom:loaded", function () {
                         rteSpan
                     );
                     comment_panel.insert({ before: edit_panel });
-                    createEditFollowupEditor(editor_factory, textarea, id, format);
+                    const creator = new RichTextEditorsCreator(
+                        document,
+                        new UploadImageFormFactory(document, locale),
+                        editor_factory
+                    );
+                    creator.createEditFollowupEditor(id, format);
 
                     var nb_rows_displayed = 5;
                     var nb_rows_content = textarea.value.split(/\n/).length;
@@ -82,7 +87,6 @@ document.observe("dom:loaded", function () {
 
                     comment_panel.hide();
                     textarea.focus();
-                    initMentions("#tracker_followup_comment_edit_" + id);
 
                     var button = new Element("button", { class: "btn btn-primary" })
                         .update(codendi.locales.tracker_artifact.edit_followup_ok)

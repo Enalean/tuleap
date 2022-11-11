@@ -209,47 +209,6 @@ export function getFollowupsComments(
     }, errorHandler);
 }
 
-type UploadedTemporaryFileIdentifier = number;
-
-export function uploadTemporaryFile(
-    file_name: string,
-    file_type: string,
-    first_chunk: string,
-    description: string
-): Promise<UploadedTemporaryFileIdentifier> {
-    const body = JSON.stringify({
-        name: file_name,
-        mimetype: file_type,
-        content: first_chunk,
-        description,
-    });
-
-    return post("/api/v1/artifact_temporary_files", {
-        headers,
-        body,
-    }).then(async (response) => {
-        resetError();
-        const { id } = await response.json();
-        return id;
-    }, errorHandler);
-}
-
-export function uploadAdditionalChunk(
-    temporary_file_id: UploadedTemporaryFileIdentifier,
-    chunk: string,
-    chunk_offset: number
-): Promise<unknown> {
-    const body = JSON.stringify({
-        content: chunk,
-        offset: chunk_offset,
-    });
-
-    return put(encodeURI(`/api/v1/artifact_temporary_files/${temporary_file_id}`), {
-        headers,
-        body,
-    }).catch(errorHandler);
-}
-
 type CommentOrderInvertPreferenceKey = `tracker_comment_invertorder_${number}`;
 type DefaultTextFormatPreferenceKey = "user_edition_default_format";
 type RelativeDateDisplayPreferenceKey = "relative_dates_display";

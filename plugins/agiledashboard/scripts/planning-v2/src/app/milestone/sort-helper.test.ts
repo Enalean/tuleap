@@ -17,50 +17,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { sortByStartDateDescending } from "./sort-helper";
+import { sortByStartDateAscending } from "./sort-helper";
 
 describe(`sort-helper`, () => {
-    describe(`sortByStartDateDescending`, () => {
+    describe(`sortByStartDateAscending`, () => {
         it(`when both start dates are null, it will return 0`, () => {
             const A = { start_date: null };
             const B = { start_date: null };
 
-            expect(sortByStartDateDescending(A, B)).toBe(0);
+            expect(sortByStartDateAscending(A, B)).toBe(0);
         });
 
         it(`when both start dates are the same string, it will return 0`, () => {
             const A = { start_date: "2016-12-04T01:00:00+01:00" };
             const B = { start_date: "2016-12-04T01:00:00+01:00" };
 
-            expect(sortByStartDateDescending(A, B)).toBe(0);
+            expect(sortByStartDateAscending(A, B)).toBe(0);
         });
 
-        it(`when item A's start date is null, it will return -1`, () => {
+        it(`when item A's start date is null, it will return 1`, () => {
             const A = { start_date: null };
             const B = { start_date: "2016-12-04T01:00:00+01:00" };
 
-            expect(sortByStartDateDescending(A, B)).toBe(-1);
+            expect(sortByStartDateAscending(A, B)).toBe(1);
         });
 
-        it(`when item B's start date is null, it will return 1`, () => {
+        it(`when item B's start date is null, it will return -1`, () => {
             const A = { start_date: "2016-12-04T01:00:00+01:00" };
             const B = { start_date: null };
 
-            expect(sortByStartDateDescending(A, B)).toBe(1);
+            expect(sortByStartDateAscending(A, B)).toBe(-1);
         });
 
-        it(`when item A's start date is > (as a string) to item B's start date, it will return -1`, () => {
+        it(`when item A's start date is > (as a string) to item B's start date, it will return 1`, () => {
             const A = { start_date: "2016-12-05T01:00:00+01:00" };
             const B = { start_date: "2016-12-04T01:00:00+01:00" };
 
-            expect(sortByStartDateDescending(A, B)).toBe(-1);
+            expect(sortByStartDateAscending(A, B)).toBe(1);
         });
 
-        it(`when item A's start date is < (as a string) to item B's start date, it will return 1`, () => {
+        it(`when item A's start date is < (as a string) to item B's start date, it will return -1`, () => {
             const A = { start_date: "2016-12-04T01:00:00+01:00" };
             const B = { start_date: "2017-01-01T01:00:00+01:00" };
 
-            expect(sortByStartDateDescending(A, B)).toBe(1);
+            expect(sortByStartDateAscending(A, B)).toBe(-1);
         });
     });
 });

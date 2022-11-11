@@ -24,19 +24,6 @@ rcs_id('$Id: editpage.php,v 1.96 2005/05/06 17:54:22 rurban Exp $');
 
 require_once('lib/Template.php');
 
-// USE_HTMLAREA - Support for some WYSIWYG HTML Editor
-// Not yet enabled, since we cannot convert HTML to Wiki Markup yet.
-// (See HtmlParser.php for the ongoing efforts)
-// We might use a HTML PageType, which is contra wiki, but some people might prefer HTML markup.
-// TODO: Change from constant to user preference variable (checkbox setting),
-//       when HtmlParser is finished.
-if (! defined('USE_HTMLAREA')) {
-    define('USE_HTMLAREA', false);
-}
-if (USE_HTMLAREA) {
-    require_once('lib/htmlarea.php');
-}
-
 class PageEditor
 {
     public function __construct(&$request)
@@ -56,8 +43,9 @@ class PageEditor
         }
 
         $this->meta = ['author' => $this->user->getId(),
-                            'author_id' => $this->user->getAuthenticatedId(),
-                            'mtime' => time()];
+            'author_id' => $this->user->getAuthenticatedId(),
+            'mtime' => time(),
+        ];
 
         $this->tokens = [];
 
@@ -199,10 +187,7 @@ class PageEditor
         }
 
         $title = new FormattedText($title_fs, $pagelink);
-        if (USE_HTMLAREA and $template == 'editpage') {
-            $WikiTheme->addMoreHeaders(Edit_HtmlArea_Head());
-            //$tokens['PAGE_SOURCE'] = Edit_HtmlArea_ConvertBefore($this->_content);
-        }
+
         $template = Template($template, $this->tokens);
         GeneratePage($template, $title, $rev);
         return true;
@@ -392,13 +377,7 @@ class PageEditor
     // possibly convert HTMLAREA content back to Wiki markup
     public function getContent()
     {
-        if (USE_HTMLAREA) {
-            $xml_output     = Edit_HtmlArea_ConvertAfter($this->_content);
-            $this->_content = join("", $xml_output->_content);
-            return $this->_content;
-        } else {
-            return $this->_content;
-        }
+        return $this->_content;
     }
 
     public function getLockedMessage()
@@ -451,27 +430,20 @@ class PageEditor
         $request = &$this->request;
 
         $readonly = ! $this->canEdit(); // || $this->isConcurrentUpdate();
-        if (USE_HTMLAREA) {
-            $html               = $this->getPreview();
-            $this->_wikicontent = $this->_content;
-            $this->_content     = $html->asXML();
-        }
 
         $textarea = HTML::textarea(
             ['class' => 'wikiedit',
-                                         'name' => 'edit[content]',
-                                         'id'   => 'edit[content]',
-                                         'data-test'   => 'textarea-wiki-content',
-                                         'rows' => $request->getPref('editHeight'),
-                                         'cols' => $request->getPref('editWidth'),
-                                         'readonly' => (bool) $readonly],
+                'name' => 'edit[content]',
+                'id'   => 'edit[content]',
+                'data-test'   => 'textarea-wiki-content',
+                'rows' => $request->getPref('editHeight'),
+                'cols' => $request->getPref('editWidth'),
+                'readonly' => (bool) $readonly,
+            ],
             $this->_content
         );
-        if (USE_HTMLAREA) {
-            return Edit_HtmlArea_Textarea($textarea, $this->_wikicontent, 'edit[content]');
-        } else {
-            return $textarea;
-        }
+
+        return $textarea;
     }
 
     public function getFormElements()
@@ -481,36 +453,41 @@ class PageEditor
         $page    = &$this->page;
 
         $h = ['action'   => 'edit',
-                   'pagename' => $page->getName(),
-                   'version'  => $this->version,
-                   'edit[pagetype]' => $this->meta['pagetype'],
-                   'edit[current_version]' => $this->_currentVersion];
+            'pagename' => $page->getName(),
+            'version'  => $this->version,
+            'edit[pagetype]' => $this->meta['pagetype'],
+            'edit[current_version]' => $this->_currentVersion,
+        ];
 
         $el['HIDDEN_INPUTS']      = HiddenInputs($h);
         $el['EDIT_TEXTAREA']      = $this->getTextArea();
         $el['SUMMARY_INPUT']      = HTML::input(['type'  => 'text',
-                                'class' => 'wikitext',
-                                'id' => 'edit[summary]',
-                                'name'  => 'edit[summary]',
-                                'size'  => 50,
-                                'maxlength' => 256,
-                                'value' => $this->meta['summary']]);
+            'class' => 'wikitext',
+            'id' => 'edit[summary]',
+            'name'  => 'edit[summary]',
+            'size'  => 50,
+            'maxlength' => 256,
+            'value' => $this->meta['summary'],
+        ]);
         $el['MINOR_EDIT_CB']      = HTML::input(['type' => 'checkbox',
-                                'name'  => 'edit[minor_edit]',
-                                'id' => 'edit[minor_edit]',
-                                'checked' => (bool) $this->meta['is_minor_edit']]);
+            'name'  => 'edit[minor_edit]',
+            'id' => 'edit[minor_edit]',
+            'checked' => (bool) $this->meta['is_minor_edit'],
+        ]);
         $el['OLD_MARKUP_CB']      = HTML::input(['type' => 'checkbox',
-                                'name' => 'edit[markup]',
-                                'value' => 'old',
-                                'checked' => $this->meta['markup'] < 2.0,
-                                'id' => 'useOldMarkup',
-                                'onclick' => 'showOldMarkupRules(this.checked)']);
+            'name' => 'edit[markup]',
+            'value' => 'old',
+            'checked' => $this->meta['markup'] < 2.0,
+            'id' => 'useOldMarkup',
+            'onclick' => 'showOldMarkupRules(this.checked)',
+        ]);
         $el['OLD_MARKUP_CONVERT'] = ($this->meta['markup'] < 2.0) ? Button('submit:edit[edit_convert]', _("Convert"), 'wikiaction') : '';
         $el['LOCKED_CB']          = HTML::input(['type' => 'checkbox',
-                                'name' => 'edit[locked]',
-                                'id'   => 'edit[locked]',
-                                'disabled' => (bool) ! $this->user->isadmin(),
-                                'checked'  => (bool) $this->locked]);
+            'name' => 'edit[locked]',
+            'id'   => 'edit[locked]',
+            'disabled' => (bool) ! $this->user->isadmin(),
+            'checked'  => (bool) $this->locked,
+        ]);
 
         $el['PREVIEW_B'] = Button(
             'submit:edit[preview]',
@@ -524,21 +501,23 @@ class PageEditor
         $el['IS_CURRENT'] = $this->version == $this->current->getVersion();
 
         $el['WIDTH_PREF']     = HTML::input(['type' => 'text',
-                                    'size' => 3,
-                                    'maxlength' => 4,
-                                    'class' => "numeric",
-                                    'name' => 'pref[editWidth]',
-                                    'id'   => 'pref[editWidth]',
-                                    'value' => $request->getPref('editWidth'),
-                                    'onchange' => 'this.form.submit();']);
+            'size' => 3,
+            'maxlength' => 4,
+            'class' => "numeric",
+            'name' => 'pref[editWidth]',
+            'id'   => 'pref[editWidth]',
+            'value' => $request->getPref('editWidth'),
+            'onchange' => 'this.form.submit();',
+        ]);
         $el['HEIGHT_PREF']    = HTML::input(['type' => 'text',
-                                     'size' => 3,
-                                     'maxlength' => 4,
-                                     'class' => "numeric",
-                                     'name' => 'pref[editHeight]',
-                                     'id'   => 'pref[editHeight]',
-                                     'value' => $request->getPref('editHeight'),
-                                     'onchange' => 'this.form.submit();']);
+            'size' => 3,
+            'maxlength' => 4,
+            'class' => "numeric",
+            'name' => 'pref[editHeight]',
+            'id'   => 'pref[editHeight]',
+            'value' => $request->getPref('editHeight'),
+            'onchange' => 'this.form.submit();',
+        ]);
         $el['SEP']            = $WikiTheme->getButtonSeparator();
         $el['AUTHOR_MESSAGE'] = fmt("Author will be logged as %s.", HTML::em($this->user->getId()));
 

@@ -29,7 +29,9 @@ use GitPlugin;
 use HTTPRequest;
 use Project;
 use ProjectManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
+use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\HudsonGit\Log\LogFactory;
 use Tuleap\Layout\BaseLayout;
@@ -41,64 +43,17 @@ use Tuleap\Request\NotFoundException;
 
 class AdministrationController implements DispatchableWithRequest, DispatchableWithProject
 {
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var GitPermissionsManager
-     */
-    private $git_permissions_manager;
-
-    /**
-     * @var TemplateRenderer
-     */
-    private $renderer;
-
-    /**
-     * @var HeaderRenderer
-     */
-    private $header_renderer;
-
-    /**
-     * @var Git_Mirror_MirrorDataMapper
-     */
-    private $mirror_data_mapper;
-
-    /**
-     * @var JenkinsServerFactory
-     */
-    private $jenkins_server_factory;
-
-    /**
-     * @var IncludeAssets
-     */
-    private $include_assets;
-
-    /**
-     * @var LogFactory
-     */
-    private $log_factory;
-
     public function __construct(
-        ProjectManager $project_manager,
-        GitPermissionsManager $git_permissions_manager,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        JenkinsServerFactory $jenkins_server_factory,
-        LogFactory $log_factory,
-        HeaderRenderer $header_renderer,
-        TemplateRenderer $renderer,
-        IncludeAssets $include_assets,
+        private ProjectManager $project_manager,
+        private GitPermissionsManager $git_permissions_manager,
+        private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        private JenkinsServerFactory $jenkins_server_factory,
+        private LogFactory $log_factory,
+        private HeaderRenderer $header_renderer,
+        private TemplateRenderer $renderer,
+        private IncludeAssets $include_assets,
+        private EventDispatcherInterface $event_manager,
     ) {
-        $this->project_manager         = $project_manager;
-        $this->git_permissions_manager = $git_permissions_manager;
-        $this->renderer                = $renderer;
-        $this->header_renderer         = $header_renderer;
-        $this->mirror_data_mapper      = $mirror_data_mapper;
-        $this->jenkins_server_factory  = $jenkins_server_factory;
-        $this->include_assets          = $include_assets;
-        $this->log_factory             = $log_factory;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -124,14 +79,15 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
             $project
         );
 
+        $event = new GitAdminGetExternalPanePresenters($project, AdministrationPaneBuilder::PANE_NAME);
+        $this->event_manager->dispatch($event);
+
         $this->renderer->renderToPage(
             'git-administration-jenkins',
             new AdministrationPresenter(
                 (int) $project->getID(),
                 count($this->mirror_data_mapper->fetchAllForProject($project)) > 0,
-                [
-                    AdministrationPaneBuilder::buildActivePane($project),
-                ],
+                $event->getExternalPanePresenters(),
                 $this->buildServerPresenters($project),
                 new CSRFSynchronizerToken(
                     URLBuilder::buildAddUrl()

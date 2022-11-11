@@ -262,11 +262,11 @@ class TimetrackingTest extends TimetrackingBase
     public function testAddTimeReturnBadTimeFormatExceptionWrongSeparator()
     {
         $query    = json_encode([
-             "date_time"   => "2018-04-01",
-             "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
-             "time_value"  => "11/11",
-             "step"        => "etape",
-         ]);
+            "date_time"   => "2018-04-01",
+            "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
+            "time_value"  => "11/11",
+            "step"        => "etape",
+        ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'timetracking')->withBody($this->stream_factory->createStream($query)),
             TimetrackingDataBuilder::USER_TESTER_NAME
@@ -342,11 +342,11 @@ class TimetrackingTest extends TimetrackingBase
     public function testAddTimeReturnBadDateFormatException()
     {
         $query    = json_encode([
-             "date_time"   => "oui",
-             "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
-             "time_value"  => "11:11",
-             "step"        => "etape",
-         ]);
+            "date_time"   => "oui",
+            "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
+            "time_value"  => "11:11",
+            "step"        => "etape",
+        ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'timetracking')->withBody($this->stream_factory->createStream($query)),
             TimetrackingDataBuilder::USER_TESTER_NAME

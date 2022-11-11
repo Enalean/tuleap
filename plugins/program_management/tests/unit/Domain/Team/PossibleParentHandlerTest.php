@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveRootPlanningStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchOpenFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProgramsOfTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFeatureIsVisibleByProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -94,7 +95,8 @@ final class PossibleParentHandlerTest extends TestCase
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
-            $this->retrieve_open_feature_count
+            $this->retrieve_open_feature_count,
+            VerifyIsIterationTrackerStub::buildNotIteration()
         );
 
 
@@ -148,7 +150,8 @@ final class PossibleParentHandlerTest extends TestCase
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
-            $this->retrieve_open_feature_count
+            $this->retrieve_open_feature_count,
+            VerifyIsIterationTrackerStub::buildNotIteration()
         );
 
         $possible_parent->handle($possible_parent_selector);
@@ -168,7 +171,8 @@ final class PossibleParentHandlerTest extends TestCase
             BuildProgramStub::stubInvalidProgramAccess(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $search_open_features,
-            $this->retrieve_open_feature_count
+            $this->retrieve_open_feature_count,
+            VerifyIsIterationTrackerStub::buildNotIteration()
         );
 
         $possible_parent->handle($this->possible_parent_selector);
@@ -192,7 +196,8 @@ final class PossibleParentHandlerTest extends TestCase
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(),
             $this->search_open_features,
-            $this->retrieve_open_feature_count
+            $this->retrieve_open_feature_count,
+            VerifyIsIterationTrackerStub::buildNotIteration()
         );
 
         $possible_parent->handle($this->possible_parent_selector);
@@ -225,7 +230,8 @@ final class PossibleParentHandlerTest extends TestCase
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1),
             $this->search_open_features,
-            $this->retrieve_open_feature_count
+            $this->retrieve_open_feature_count,
+            VerifyIsIterationTrackerStub::buildNotIteration()
         );
 
         $possible_parent->handle($this->possible_parent_selector);
@@ -240,7 +246,8 @@ final class PossibleParentHandlerTest extends TestCase
             BuildProgramStub::stubValidProgram(),
             SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1, self::PROGRAM_ID_2),
             $this->search_open_features,
-            $this->retrieve_open_feature_count
+            $this->retrieve_open_feature_count,
+            VerifyIsIterationTrackerStub::buildNotIteration()
         );
 
         $possible_parent->handle($this->possible_parent_selector);
@@ -252,5 +259,21 @@ final class PossibleParentHandlerTest extends TestCase
                 $this->search_open_features->getProgramIdentifiers()
             )
         );
+    }
+
+    public function testItDisableSelectorForIterationTracker(): void
+    {
+        $possible_parent = new PossibleParentHandler(
+            VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures(),
+            BuildProgramStub::stubValidProgram(),
+            SearchProgramsOfTeamStub::buildPrograms(self::PROGRAM_ID_1, self::PROGRAM_ID_2),
+            $this->search_open_features,
+            $this->retrieve_open_feature_count,
+            VerifyIsIterationTrackerStub::buildValidIteration()
+        );
+        $possible_parent->handle($this->possible_parent_selector);
+
+        self::assertNull($this->event->getPossibleParents());
+        self::assertFalse($this->event->isSelectorDisplayed());
     }
 }

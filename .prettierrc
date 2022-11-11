@@ -1,8 +1,10 @@
 {
+    "$schema": "https://json.schemastore.org/prettierrc",
+    "editorconfig": true,
     "printWidth": 100,
     "useTabs": false,
     "tabWidth": 4,
     "bracketSpacing": true,
-    "htmlWhitespaceSensitivity": "ignore",
+    "htmlWhitespaceSensitivity": "css",
     "vueIndentScriptAndStyle": false
 }

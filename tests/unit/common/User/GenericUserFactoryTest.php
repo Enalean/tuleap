@@ -66,7 +66,7 @@ class GenericUserFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:igno
         $this->project->shouldReceive('getUnixName')->andReturns($project_name);
 
         $generic_user = $this->factory->create('120', new \Tuleap\Cryptography\ConcealedString('my_password'));
-        $this->assertEquals(substr($generic_user->getUnixName(), -strlen($project_name)), $project_name);
+        $this->assertEquals(substr($generic_user->getUserName(), -strlen($project_name)), $project_name);
     }
 
     public function testItCreatesUserWithPrefixSetFromConfig(): void
@@ -75,6 +75,6 @@ class GenericUserFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:igno
         ForgeConfig::set(GenericUserFactory::CONFIG_KEY_SUFFIX, $suffix);
 
         $generic_user = $this->factory->create('120', new \Tuleap\Cryptography\ConcealedString('my_password'));
-        $this->assertEquals(substr($generic_user->getUnixName(), -strlen($suffix)), $suffix);
+        $this->assertEquals(substr($generic_user->getUserName(), -strlen($suffix)), $suffix);
     }
 }

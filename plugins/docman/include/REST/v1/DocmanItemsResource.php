@@ -28,6 +28,7 @@ use Codendi_HTMLPurifier;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
+use Docman_MetadataListOfValuesElementFactory;
 use Docman_VersionFactory;
 use EventManager;
 use Luracast\Restler\RestException;
@@ -36,7 +37,10 @@ use Project;
 use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\Log\LogEntry;
+use Tuleap\Docman\Log\LogRetriever;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
+use Tuleap\Docman\REST\v1\Log\LogEntryRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
@@ -197,8 +201,8 @@ final class DocmanItemsResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the item
-     * @param int $offset Position of the first element to display {@from path}{@min 0}
      * @param int $limit  Number of elements displayed {@from path}{@min 0}{@max 50}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return ItemRepresentation[]
      *
@@ -219,11 +223,71 @@ final class DocmanItemsResource extends AuthenticatedResource
         $user          = $items_request->getUser();
 
         $item_representation_builder = $this->getRepresentationBuilder($items_request);
-        $items_representation        = $item_representation_builder->buildParentsItemRepresentation($item, $user, $limit, $offset);
+        $items_representation        = $item_representation_builder->buildParentsItemRepresentation(
+            $item,
+            $user,
+            $limit,
+            $offset
+        );
 
         Header::sendPaginationHeaders($limit, $offset, $items_representation->getTotalSize(), self::MAX_LIMIT);
 
         return $items_representation->getPaginatedElementCollection();
+    }
+
+    /**
+     * @url OPTIONS {id}/logs
+     */
+    public function optionsLogs(int $id): void
+    {
+        $this->sendAllowHeaders();
+    }
+
+    /**
+     * Get the logs of an item
+     *
+     * @url    GET {id}/logs
+     * @access hybrid
+     *
+     * @param int $id     Id of the item
+     * @param int $limit  Number of elements displayed {@from path}{@min 1}{@max 50}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @return LogEntryRepresentation[]
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     *
+     */
+    public function getLogs(int $id, int $limit = self::MAX_LIMIT, int $offset = 0)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaders();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
+        $user          = $items_request->getUser();
+
+        $docman_permissions_manager = \Docman_PermissionsManager::instance($project->getGroupId());
+        $display_access_logs        = $docman_permissions_manager->userCanManage($user, $item->getId());
+
+        $log_retriever = new LogRetriever(
+            new \Tuleap\Docman\Log\LogDao(),
+            UserManager::instance(),
+            new Docman_MetadataListOfValuesElementFactory(),
+        );
+
+        $page = $log_retriever->getPaginatedLogForItem($item, $limit, $offset, $display_access_logs);
+
+        Header::sendPaginationHeaders($limit, $offset, $page->total, self::MAX_LIMIT);
+
+        return array_map(
+            static fn (LogEntry $entry): LogEntryRepresentation => LogEntryRepresentation::fromEntry($entry),
+            $page->entries,
+        );
     }
 
     /**

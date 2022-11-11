@@ -115,19 +115,33 @@ class Git_Exec
         $this->gitCmd('config --add user.email ' . escapeshellarg($email));
     }
 
+    /**
+     * @return array{email: string, name: string}
+     * @throws Git_Command_Exception
+     */
+    public function getAuthorInformation(string $commit_reference): array
+    {
+        $commit_content = $this->catFile($commit_reference);
+        if (preg_match('/^author (?<name>.*) <(?<email>.*)> \d+.*$/m', $commit_content, $matches) === 1) {
+            return $matches;
+        }
+
+        return ['name' => '', 'email' => ''];
+    }
+
     public function remoteAdd($remote)
     {
-        $this->gitCmd('remote add origin ' . escapeshellarg($remote));
+        $this->gitCmd('remote add origin -- ' . escapeshellarg($remote));
     }
 
     public function pullBranch($remote, $branch)
     {
-        $this->gitCmd('pull --quiet ' . $remote . ' ' . $branch);
+        $this->gitCmd('pull --quiet -- ' . escapeshellarg($remote) . ' ' . escapeshellarg($branch));
     }
 
-    public function checkoutBranch($branch)
+    public function checkoutToFetchHead(): void
     {
-        $this->gitCmd('checkout --quiet ' . $branch);
+        $this->gitCmd('checkout --quiet FETCH_HEAD');
     }
 
     public function configFile($file, $config)
@@ -148,7 +162,7 @@ class Git_Exec
     {
         $to_name = basename($to);
         $to_path = realpath(dirname($to)) . '/' . $to_name;
-        $cmd     = 'mv ' . escapeshellarg(realpath($from)) . ' ' . escapeshellarg($to_path);
+        $cmd     = 'mv -- ' . escapeshellarg(realpath($from)) . ' ' . escapeshellarg($to_path);
         return $this->gitCmd($cmd);
     }
 
@@ -162,7 +176,7 @@ class Git_Exec
      */
     public function add($file)
     {
-        $cmd = 'add ' . escapeshellarg(realpath($file));
+        $cmd = 'add -- ' . escapeshellarg(realpath($file));
         return $this->gitCmd($cmd);
     }
 
@@ -177,7 +191,7 @@ class Git_Exec
     public function rm($file)
     {
         if ($this->canRemove($file)) {
-            $cmd = 'rm ' . escapeshellarg(realpath($file));
+            $cmd = 'rm -- ' . escapeshellarg(realpath($file));
             return $this->gitCmd($cmd);
         }
         return true;
@@ -186,7 +200,7 @@ class Git_Exec
     public function recursiveRm($file)
     {
         if ($this->canRemove($file)) {
-            $cmd = 'rm -r ' . escapeshellarg(realpath($file));
+            $cmd = 'rm -r -- ' . escapeshellarg(realpath($file));
             return $this->gitCmd($cmd);
         }
         return true;
@@ -195,12 +209,12 @@ class Git_Exec
     private function canRemove($file)
     {
         $output = [];
-        $this->gitCmdWithOutput('status --porcelain ' . escapeshellarg(realpath($file)), $output);
+        $this->gitCmdWithOutput('status --porcelain -- ' . escapeshellarg(realpath($file)), $output);
         return count($output) == 0;
     }
 
     /**
-     * List all commits between the two revisions
+     * List all commits between the two revisions (from the newest to the oldest)
      *
      * @param String $oldrev
      * @param String $newrev
@@ -211,6 +225,19 @@ class Git_Exec
     {
         $output = [];
         $this->gitCmdWithOutput('rev-list ' . escapeshellarg($oldrev) . '..' . escapeshellarg($newrev), $output);
+        return $output;
+    }
+
+    /**
+     * Will list the revision list from the oldest to the newest
+     *
+     * @throws Git_Command_Exception
+     * @return string[]
+     */
+    public function revListInChronologicalOrder(string $oldrev, string $newrev): array
+    {
+        $output = [];
+        $this->gitCmdWithOutput('rev-list --reverse ' . escapeshellarg($oldrev) . '..' . escapeshellarg($newrev), $output);
         return $output;
     }
 
@@ -226,7 +253,7 @@ class Git_Exec
     {
         $output         = [];
         $other_branches = implode(' ', array_map('escapeshellarg', $this->getOtherBranches($refname)));
-        $this->gitCmdWithOutput('rev-parse --not ' . $other_branches . ' | ' . $this->buildGitCommandForWorkTree() . ' rev-list --stdin ' . escapeshellarg($newrev), $output);
+        $this->gitCmdWithOutput('rev-parse --not ' . $other_branches . ' | ' . $this->buildGitCommandForWorkTree() . ' rev-list --reverse --stdin ' . escapeshellarg($newrev), $output);
         return $output;
     }
 
@@ -267,7 +294,7 @@ class Git_Exec
     {
         $output = [];
         try {
-            $this->gitCmdWithOutput('symbolic-ref --short ' . escapeshellarg($name), $output);
+            $this->gitCmdWithOutput('symbolic-ref --short -- ' . escapeshellarg($name), $output);
         } catch (Git_Command_Exception $e) {
             return null;
         }
@@ -281,7 +308,7 @@ class Git_Exec
 
     private function setSymbolicRef(string $name, string $reference): void
     {
-        $this->gitCmd(sprintf('symbolic-ref %s %s', escapeshellarg($name), escapeshellarg($reference)));
+        $this->gitCmd(sprintf('symbolic-ref -- %s %s', escapeshellarg($name), escapeshellarg($reference)));
     }
 
     public function getAllTagsSortedByCreationDate(): array
@@ -294,14 +321,14 @@ class Git_Exec
     /**
      * @throws Git_Command_Exception
      */
-    public function getCommitMessage(string $ref): array
+    public function getCommitMessage(string $ref): string
     {
-        $ref    = escapeshellarg($ref);
-        $cmd    = "log -1 $ref --pretty=%B";
-        $output = [];
+        $commit_content = $this->catFile($ref);
+        if (preg_match('/(?<=\n\n)(?<message>[\s\S]*)/', $commit_content, $matches) === 1) {
+            return $matches['message'];
+        }
 
-        $this->gitCmdWithOutput($cmd, $output);
-        return $output;
+        return '';
     }
 
     /**
@@ -312,7 +339,7 @@ class Git_Exec
     public function catFile(string $rev): string
     {
         $output = [];
-        $this->gitCmdWithOutput('cat-file -p ' . escapeshellarg($rev), $output);
+        $this->gitCmdWithOutput('cat-file -p -- ' . escapeshellarg($rev), $output);
         return implode(PHP_EOL, $output);
     }
 
@@ -325,7 +352,7 @@ class Git_Exec
     public function getObjectType(string $rev): string
     {
         $output = [];
-        $this->gitCmdWithOutput('cat-file -t ' . escapeshellarg($rev), $output);
+        $this->gitCmdWithOutput('cat-file -t -- ' . escapeshellarg($rev), $output);
         if (count($output) == 1) {
             return $output[0];
         }
@@ -336,7 +363,7 @@ class Git_Exec
     {
         $output = [];
         try {
-            $this->gitCmdWithOutput('cat-file -e ' . escapeshellarg($rev), $output);
+            $this->gitCmdWithOutput('cat-file -e -- ' . escapeshellarg($rev), $output);
         } catch (Git_Command_Exception $exception) {
             return false;
         }
@@ -387,8 +414,16 @@ class Git_Exec
      */
     public function push($origin = 'origin master')
     {
-        $cmd = 'push --porcelain ' . $origin;
+        $cmd = 'push --porcelain -- ' . $origin;
         return $this->gitCmd($cmd);
+    }
+
+    /**
+     * @throw Git_Command_Exception
+     */
+    public function pushForce(string $origin = 'origin master'): bool
+    {
+        return $this->gitCmd('push --force --porcelain -- ' . $origin);
     }
 
     /**
@@ -398,8 +433,8 @@ class Git_Exec
     {
         $destination_url = escapeshellarg($destination_url);
 
-        $push_heads = "push $destination_url refs/heads/*:refs/heads/*";
-        $push_tags  = "push $destination_url refs/tags/*:refs/tags/*";
+        $push_heads = "push -- $destination_url refs/heads/*:refs/heads/*";
+        $push_tags  = "push -- $destination_url refs/tags/*:refs/tags/*";
 
         $this->gitCmd($push_heads);
         $this->gitCmd($push_tags);
@@ -505,7 +540,7 @@ class Git_Exec
      */
     public function updateRef(string $reference, string $new_value): bool
     {
-        $cmd = 'update-ref ' . escapeshellarg($reference) . ' ' . escapeshellarg($new_value);
+        $cmd = 'update-ref -- ' . escapeshellarg($reference) . ' ' . escapeshellarg($new_value);
 
         return $this->gitCmd($cmd);
     }

@@ -22,6 +22,9 @@ namespace Tuleap\HudsonGit\Hook;
 
 use GitRepository;
 use GitRepositoryFactory;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
 use Codendi_Request;
 use Feedback;
@@ -61,6 +64,7 @@ class HookController
         HookDao $dao,
         CSRFSynchronizerToken $csrf,
         Valid_HTTPURI $valid_HTTPURI,
+        private EncryptionKey $encryption_key,
     ) {
         $this->request                = $request;
         $this->git_repository_factory = $git_repository_factory;
@@ -69,7 +73,7 @@ class HookController
         $this->valid_HTTPURI          = $valid_HTTPURI;
     }
 
-    public function save()
+    public function save(): void
     {
         $repository = $this->getRepository();
         $this->checkCSRFToken($repository);
@@ -85,25 +89,34 @@ class HookController
 
             $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
         }
-
-        if ($this->dao->save($repository->getId(), $jenkins_server, $is_commit_reference_needed)) {
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully saved'));
-        } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-hudson_git', 'Unable to save Jenkins webhook'));
+        $cleartext_token = (string) $this->request->get('token');
+        if ($cleartext_token === '') {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext("tuleap-hudson_git", "Jenkins access token is missing.")
+            );
+            $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
         }
+        $token = new ConcealedString($cleartext_token);
+        sodium_memzero($cleartext_token);
+        $encrypted_token = null;
+        if ($token !== null) {
+            $encrypted_token = SymmetricCrypto::encrypt($token, $this->encryption_key);
+        }
+
+
+        $this->dao->save($repository->getId(), $jenkins_server, $encrypted_token, $is_commit_reference_needed);
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully saved'));
         $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
     }
 
-    public function remove()
+    public function remove(): void
     {
         $repository = $this->getRepository();
         $this->checkCSRFToken($repository);
 
-        if ($this->dao->delete($repository->getId())) {
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully removed'));
-        } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-hudson_git', 'Unable to save Jenkins webhook'));
-        }
+        $this->dao->delete($repository->getId());
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully removed'));
         $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
     }
 

@@ -46,19 +46,25 @@ class CommentRepresentation
     /** @var string */
     public $type;
 
+    /**
+     * @var int {@type int}
+     */
+    public int $parent_id;
 
-    public function __construct(int $id, int $project_id, MinimalUserRepresentation $user_representation, int $post_date, string $content)
+
+    public function __construct(int $id, int $project_id, MinimalUserRepresentation $user_representation, int $post_date, string $content, int $parent_id)
     {
         $this->id        = $id;
         $this->user      = $user_representation;
         $this->post_date = JsonCast::toDate($post_date);
         $this->content   = self::getPurifiedContent($project_id, $content);
         $this->type      = 'comment';
+        $this->parent_id = $parent_id;
     }
 
     private static function getPurifiedContent(int $project_id, string $content): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($content, CODENDI_PURIFIER_LIGHT, $project_id);
+        return $purifier->purify($content, Codendi_HTMLPurifier::CONFIG_BASIC, $project_id);
     }
 }

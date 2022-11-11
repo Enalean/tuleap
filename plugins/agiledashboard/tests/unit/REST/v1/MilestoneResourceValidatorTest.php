@@ -218,6 +218,7 @@ final class MilestoneResourceValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAllowsToRemoveFromContentWhenRemovedIdsArePartOfLinkedArtifacts(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->getMockedValidator()->getValidatedArtifactsIdsToAddOrRemoveFromContent(
             $this->user,
             $this->mockMilestoneWithArtifactLinks(),

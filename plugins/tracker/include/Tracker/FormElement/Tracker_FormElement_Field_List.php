@@ -157,7 +157,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function getCriteriaWhere($criteria)
     {
-        return $this->getBind()->getCriteriaWhere($this->getCriteriaValue($criteria));
+        if ($this->isUsed()) {
+            return $this->getBind()->getCriteriaWhere($this->getCriteriaValue($criteria));
+        }
+
+        return '';
     }
 
     /**
@@ -217,6 +221,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function getQueryGroupby(): string
     {
+        if (! $this->isUsed()) {
+            return '';
+        }
         return $this->getBind()->getQueryGroupby();
     }
 
@@ -923,9 +930,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * @return array
+     * @return Tracker_FormElement_Field_List_BindValue[]
      */
-    public function getAllVisibleValues()
+    public function getAllVisibleValues(): array
     {
         return $this->getBind()->getAllVisibleValues();
     }

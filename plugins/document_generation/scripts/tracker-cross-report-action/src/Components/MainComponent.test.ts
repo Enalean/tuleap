@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { describe, it, expect } from "vitest";
 import type { GlobalExportProperties } from "../type";
 import MainComponent from "./MainComponent.vue";
 import { mount } from "@vue/test-utils";

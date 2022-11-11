@@ -17,51 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkSelector, GroupCollection } from "@tuleap/link-selector";
+import type { LinkSelector } from "@tuleap/link-selector";
 
-export type LinkSelectorStub = LinkSelector & {
-    getGroupCollection(): GroupCollection | undefined;
-    getResetCallCount(): number;
-};
+export type LinkSelectorStub = LinkSelector;
 
 const noop = (): void => {
     // Do nothing
 };
 
 export const LinkSelectorStub = {
-    withDropdownContentRecord: (): LinkSelectorStub => {
-        let recorded_argument: GroupCollection | undefined;
-        let call_count = 0;
+    build: (): LinkSelectorStub => {
         return {
-            setDropdownContent(groups): void {
-                recorded_argument = groups;
-            },
-            setPlaceholder: noop,
-
-            getGroupCollection(): GroupCollection | undefined {
-                return recorded_argument;
-            },
-
-            resetSelection(): void {
-                call_count++;
-            },
-            getResetCallCount: () => call_count,
-            destroy: noop,
-        };
-    },
-
-    withResetSelectionCallCount: (): LinkSelectorStub => {
-        let call_count = 0;
-        return {
-            resetSelection(): void {
-                call_count++;
-            },
-
-            getResetCallCount: () => call_count,
-
+            resetSelection: noop,
             setDropdownContent: noop,
             setPlaceholder: noop,
-            getGroupCollection: () => undefined,
             destroy: noop,
         };
     },

@@ -25,41 +25,32 @@ namespace Tuleap\Baseline\Adapter;
 
 use DateTimeInterface;
 use PFUser;
-use Project;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\BaselineArtifact;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
+use Tuleap\Baseline\Domain\UserIdentifier;
 
 class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
 {
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
-
-    /** @var Tracker_Artifact_ChangesetFactory */
-    private $changeset_factory;
-
-    /** @var SemanticValueAdapter */
-    private $semantic_value_adapter;
-
-    /** @var ArtifactLinkRepository */
-    private $artifact_link_adapter;
-
     public function __construct(
-        Tracker_ArtifactFactory $artifact_factory,
-        Tracker_Artifact_ChangesetFactory $changeset_factory,
-        SemanticValueAdapter $semantic_value_adapter,
-        ArtifactLinkRepository $artifact_link_adapter,
+        private Tracker_ArtifactFactory $artifact_factory,
+        private Tracker_Artifact_ChangesetFactory $changeset_factory,
+        private SemanticValueAdapter $semantic_value_adapter,
+        private ArtifactLinkRepository $artifact_link_adapter,
+        private \UserManager $user_manager,
     ) {
-        $this->artifact_factory       = $artifact_factory;
-        $this->changeset_factory      = $changeset_factory;
-        $this->semantic_value_adapter = $semantic_value_adapter;
-        $this->artifact_link_adapter  = $artifact_link_adapter;
     }
 
-    public function findById(PFUser $current_user, int $id): ?BaselineArtifact
+    public function findById(UserIdentifier $user_identifier, int $id): ?BaselineArtifact
     {
+        $current_user = $this->user_manager->getUserById($user_identifier->getId());
+        if (! $current_user) {
+            return null;
+        }
+
         $artifact = $this->artifact_factory->getArtifactById($id);
         if ($artifact === null) {
             return null;
@@ -76,13 +67,18 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         return $this->buildArtifact(
             $current_user,
             $id,
-            $artifact->getTracker()->getProject(),
+            ProjectProxy::buildFromProject($artifact->getTracker()->getProject()),
             $last_changeset
         );
     }
 
-    public function findByIdAt(PFUser $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact
+    public function findByIdAt(UserIdentifier $user_identifier, int $id, DateTimeInterface $date): ?BaselineArtifact
     {
+        $current_user = $this->user_manager->getUserById($user_identifier->getId());
+        if (! $current_user) {
+            return null;
+        }
+
         $tracker_artifact = $this->artifact_factory->getArtifactById($id);
         if ($tracker_artifact === null || ! $tracker_artifact->userCanView($current_user)) {
             return null;
@@ -94,7 +90,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         return $this->buildArtifact(
             $current_user,
             $id,
-            $tracker_artifact->getTracker()->getProject(),
+            ProjectProxy::buildFromProject($tracker_artifact->getTracker()->getProject()),
             $changeset
         );
     }
@@ -102,7 +98,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
     private function buildArtifact(
         PFUser $current_user,
         int $id,
-        Project $project,
+        ProjectIdentifier $project,
         Tracker_Artifact_Changeset $changeset,
     ): BaselineArtifact {
         $title          = $this->semantic_value_adapter->findTitle($changeset, $current_user);

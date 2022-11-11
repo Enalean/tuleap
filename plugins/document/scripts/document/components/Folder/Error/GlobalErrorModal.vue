@@ -75,7 +75,7 @@
 </template>
 <script setup lang="ts">
 import { createModal } from "tlp";
-import { computed, ref, onMounted } from "@vue/composition-api";
+import { computed, ref, onMounted } from "vue";
 import { useNamespacedMutations, useNamespacedState } from "vuex-composition-helpers";
 import type { ErrorState } from "../../../store/error/module";
 

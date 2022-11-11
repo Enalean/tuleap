@@ -36,7 +36,7 @@
             <other-information-properties-for-update
                 v-bind:currently-updated-item="item_to_update"
                 v-bind:property-to-update="formatted_item_properties"
-                v-model="obsolescence_date_value"
+                v-bind:value="obsolescence_date_value"
             />
         </div>
         <modal-footer
@@ -97,28 +97,19 @@ export default {
         aria_labelled_by() {
             return "document-update-file-properties-modal";
         },
-        obsolescence_date_value: {
-            get() {
-                if (!this.item.properties) {
-                    return "";
-                }
+        obsolescence_date_value() {
+            if (!this.item.properties) {
+                return "";
+            }
 
-                const obsolescence_date = this.item.properties.find(
-                    (property) => property.short_name === "obsolescence_date"
-                );
+            const obsolescence_date = this.item.properties.find(
+                (property) => property.short_name === "obsolescence_date"
+            );
 
-                if (!obsolescence_date) {
-                    return "";
-                }
-
-                if (!obsolescence_date.value) {
-                    return "";
-                }
-                return obsolescence_date.value;
-            },
-            set(value) {
-                this.item_to_update.obsolescence_date = value;
-            },
+            if (!obsolescence_date || !obsolescence_date.value) {
+                return "";
+            }
+            return obsolescence_date.value;
         },
     },
     created() {
@@ -128,6 +119,7 @@ export default {
         emitter.on("update-description-property", this.updateDescriptionValue);
         emitter.on("update-owner-property", this.updateOwnerValue);
         emitter.on("update-custom-property", this.updateCustomProperty);
+        emitter.on("update-obsolescence-date-property", this.updateObsolescenceDateProperty);
     },
     beforeDestroy() {
         emitter.off(
@@ -139,6 +131,7 @@ export default {
         emitter.off("update-description-property", this.updateDescriptionValue);
         emitter.off("update-owner-property", this.updateOwnerValue);
         emitter.off("update-custom-property", this.updateCustomProperty);
+        emitter.off("update-obsolescence-date-property", this.updateObsolescenceDateProperty);
     },
     beforeMount() {
         this.item_to_update = JSON.parse(JSON.stringify(this.item));
@@ -211,6 +204,9 @@ export default {
                 (property) => property.short_name === event.property_short_name
             );
             item_properties.value = event.value;
+        },
+        updateObsolescenceDateProperty(event) {
+            this.item_to_update.obsolescence_date = event;
         },
     },
 };

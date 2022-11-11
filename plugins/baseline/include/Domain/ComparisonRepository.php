@@ -23,17 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use PFUser;
-use Project;
-
 interface ComparisonRepository
 {
     /**
      * @throws NotAuthorizedException
      */
-    public function add(TransientComparison $comparison, PFUser $current_user): Comparison;
+    public function add(TransientComparison $comparison, UserIdentifier $current_user): Comparison;
 
-    public function findById(PFUser $current_user, int $id): ?Comparison;
+    public function findById(UserIdentifier $current_user, int $id): ?Comparison;
 
     /**
      * Find all comparisons on given project, ordered by creation date (most recent first).
@@ -42,8 +39,8 @@ interface ComparisonRepository
      * @return Comparison[] requested comparison, excluding not authorized ones
      */
     public function findByProject(
-        PFUser $current_user,
-        Project $project,
+        UserIdentifier $current_user,
+        ProjectIdentifier $project,
         int $page_size,
         int $comparison_offset,
     ): array;
@@ -52,9 +49,9 @@ interface ComparisonRepository
      * @return int total count of all available comparisons in given project, excluding any security policy
      * (for performances reasons)
      */
-    public function countByProject(Project $project): int;
+    public function countByProject(ProjectIdentifier $project): int;
 
-    public function delete(Comparison $comparison, PFUser $current_user): void;
+    public function delete(Comparison $comparison, UserIdentifier $current_user): void;
 
     public function countByBaseline(Baseline $baseline): int;
 }

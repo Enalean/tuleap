@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getCurrentInstance } from "@vue/composition-api";
+import { getCurrentInstance } from "vue";
 
 interface Language {
     $gettext: (msgid: string) => string;

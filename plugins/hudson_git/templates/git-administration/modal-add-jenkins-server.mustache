@@ -21,7 +21,7 @@
 
             <p>{{# dgettext }} tuleap-hudson_git | Jenkins server will be notified about git activity on any repository in the project.{{/ dgettext }}</p>
             <p>
-                <label for="jenkins-server-url">{{# dgettext }} tuleap-hudson_git | Jenkins URL{{/ dgettext }} <i class="fa fa-asterisk"></i></label>
+                <label for="jenkins-server-url">{{# dgettext }} tuleap-hudson_git | Jenkins URL{{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
                 <input type="url"
                        id="jenkins-server-url"
                        class="create-hook-url"
@@ -30,6 +30,13 @@
                        placeholder="https://example.com/jenkins"
                        required
                        pattern="https?://.+"
+                />
+                <label for="jenkins-token">{{# dgettext }} tuleap-hudson_git | Jenkins notifyCommit access token{{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+                <input type="password"
+                       id="jenkins-token"
+                       class="create-hook-url"
+                       name="token"
+                       required
                 />
             </p>
             <div id="jenkins-server-test-feedback">

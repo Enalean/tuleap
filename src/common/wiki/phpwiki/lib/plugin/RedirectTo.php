@@ -66,8 +66,8 @@ class WikiPlugin_RedirectTo extends WikiPlugin
     {
         return [ 'href' => '',
                       // 'type' => 'Temp' // or 'Permanent' // so far ignored
-                      'page' => false,
-                      ];
+            'page' => false,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

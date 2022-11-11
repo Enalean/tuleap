@@ -17,20 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
 import { getReportArtifacts } from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import type { TrackerResponseWithColor } from "@tuleap/plugin-tracker-rest-api-types";
 
-jest.mock("tlp");
+vi.mock("@tuleap/tlp-fetch");
 
 describe("API querier", () => {
     describe("getReportArtifacts", () => {
         it("Given a report id, Then it will get the artifact matching the report, and the report in session if needed", async () => {
             const report_id = 101;
             const report_has_changed = true;
-            const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
+            const tlpRecursiveGet = vi.spyOn(tlp, "recursiveGet");
 
             const artifacts_report_response: ArtifactResponse[] = [
                 {

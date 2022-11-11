@@ -30,6 +30,7 @@ use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
@@ -158,7 +159,7 @@ final class FromJiraTrackerCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(['id' => '10005', 'name' => 'Story', 'subtask' => false])
             ->getMock();
 
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $this->creation_data_checker->shouldReceive('checkAtProjectCreation')->once();
 

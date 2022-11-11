@@ -66,7 +66,13 @@ seed_data() {
         git \
         pullrequest \
         oauth2_server \
-        program_management
+        program_management \
+        onlyoffice \
+        hudson_git \
+        fts_db \
+        fts_meilisearch \
+        baseline \
+        gitlab
 }
 
 setup_tuleap

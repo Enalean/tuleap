@@ -80,7 +80,8 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'message'          => $expected_banner_message,
                 'importance'       => $expected_banner_importance,
-                'preference_value' => null]
+                'preference_value' => null,
+            ]
         );
 
         $user = Mockery::mock(PFUser::class);

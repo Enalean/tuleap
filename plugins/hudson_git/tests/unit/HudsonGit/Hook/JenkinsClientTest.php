@@ -27,6 +27,9 @@ use Mockery;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
@@ -34,6 +37,13 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    private EncryptionKey $encryption_key;
+
+    protected function setUp(): void
+    {
+        $this->encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
+    }
 
     public function testJenkinsIsNotified(): void
     {
@@ -46,12 +56,14 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $request_factory,
             $csrf_crumb_retriever,
             Mockery::mock(JenkinsTuleapPluginHookPayload::class),
-            Mockery::mock(StreamFactoryInterface::class)
+            Mockery::mock(StreamFactoryInterface::class),
+            $this->encryption_key,
         );
 
         $expected_parameters = [
             'url' => 'https://myinstance.example.com/plugins/git/project/myrepo.git',
             'sha1' => '8b2f3943e997d2faf4a55ed78e695bda64fad421',
+            'token' => 'my_secret_token',
         ];
         $expected_url        = 'https://jenkins.example.com/git/notifyCommit?' . http_build_query($expected_parameters);
         $request_factory
@@ -74,6 +86,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $polling_response = $jenkins_client->pushGitNotifications(
             'https://jenkins.example.com',
             'https://myinstance.example.com/plugins/git/project/myrepo.git',
+            SymmetricCrypto::encrypt(new ConcealedString('my_secret_token'), $this->encryption_key),
             '8b2f3943e997d2faf4a55ed78e695bda64fad421'
         );
 
@@ -92,7 +105,8 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             $request_factory,
             $csrf_crumb_retriever,
             Mockery::mock(JenkinsTuleapPluginHookPayload::class),
-            Mockery::mock(StreamFactoryInterface::class)
+            Mockery::mock(StreamFactoryInterface::class),
+            $this->encryption_key
         );
 
         $expected_parameters = [
@@ -119,6 +133,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $polling_response = $jenkins_client->pushGitNotifications(
             'https://jenkins.example.com',
             'https://myinstance.example.com/plugins/git/project/myrepo.git',
+            null,
             null
         );
 
@@ -149,7 +164,8 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             HTTPFactoryBuilder::requestFactory(),
             $csrf_crumb_retriever,
             $payload,
-            $stream_factory
+            $stream_factory,
+            $this->encryption_key,
         );
 
         $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
@@ -188,7 +204,8 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
             HTTPFactoryBuilder::requestFactory(),
             $csrf_crumb_retriever,
             $payload,
-            $stream_factory
+            $stream_factory,
+            $this->encryption_key,
         );
 
         $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');

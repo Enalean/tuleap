@@ -4,6 +4,7 @@
     <long-description>A test project</long-description>
     <services>
         <service shortname="plugin_git" enabled="true" />
+        <service shortname="plugin_tracker" enabled="true" />
     </services>
     <ugroups>
         <ugroup name="project_members" description="">
@@ -17,6 +18,105 @@
             </members>
         </ugroup>
     </ugroups>
+    <trackers>
+    <tracker id="T15" parent_id="0">
+      <name>
+        <![CDATA[ Tracker_1 ]]>
+      </name>
+      <item_name>tracker_1</item_name>
+      <description>
+        <![CDATA[ ]]>
+      </description>
+      <color>inca-silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F406" rank="0" id="406" tracker_id="15" parent_id="0">
+          <name>
+            <![CDATA[ title ]]>
+          </name>
+          <label>
+            <![CDATA[ Title ]]>
+          </label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="text" ID="F407" rank="1" id="407" tracker_id="15" parent_id="0">
+          <name>
+            <![CDATA[ description ]]>
+          </name>
+          <label>
+            <![CDATA[ Description ]]>
+          </label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="cross" ID="F408" rank="2" id="408" tracker_id="15" parent_id="0">
+          <name>
+            <![CDATA[ cross-references ]]>
+          </name>
+          <label>
+            <![CDATA[ Cross-references ]]>
+          </label>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname>title</shortname>
+          <label>Title</label>
+          <description>Define the title of an artifact</description>
+          <field REF="F406"/>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>
+            <![CDATA[ Default ]]>
+          </name>
+          <description>
+            <![CDATA[ The system default artifact report ]]>
+          </description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R148" type="table" rank="0" chunksz="15">
+              <name>
+                <![CDATA[ Results ]]>
+              </name>
+              <columns/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F406" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F406" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F406" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F407" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F407" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F407" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F408" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+      <artifacts>
+        <artifact id="23">
+          <changeset id="CHANGESET_66">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2022-08-09T10:49:59+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[test_artifact_1]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[ref to git #repo01/8957aa17cf3f56658d91d1c67f60e738f3fdcb3e]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+  </trackers>
     <git>
         <repository description="Git repository" bundle-path="export/testRepo.bundle" name="repo01">
             <read>

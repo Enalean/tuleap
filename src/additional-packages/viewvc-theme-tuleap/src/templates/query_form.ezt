@@ -1,0 +1,219 @@
+[# setup page definitions]
+  [define page_title_classname][end]
+  [define resource_name]
+    [for nav_path]
+        [if-index nav_path last]
+            [if-index nav_path first]
+                /
+            [else]
+                [nav_path.name]
+            [end]
+        [end]
+    [end]
+  [end]
+  [define page_title]<small>Query on</small> [resource_name][end]
+  [define help_href][docroot]/help_rootview.html[end]
+[# end]
+
+[include "include/header.ezt" "query"]
+
+<p><a href="[dir_href]">
+<img src="[docroot]/images/dir.png" class="vc_icon" alt="Directory" />
+Browse Directory</a></p>
+
+<form action="[query_action]" method="get">
+
+<div class="vc_query_form">
+  [for query_hidden_values]<input type="hidden" name="[query_hidden_values.name]" value="[query_hidden_values.value]"/>[end]
+<table cellspacing="0" cellpadding="5" class="auto">
+  [is roottype "cvs"]
+  [# For subversion, the branch field is not used ]
+  <tr>
+    <th style="text-align:right;vertical-align:top;">Branch:</th>
+    <td>
+      <input type="text" name="branch" value="[branch]" /><br />
+      <label for="branch_match_exact">
+        <input type="radio" name="branch_match" id="branch_match_exact"
+           value="exact" [is branch_match "exact"]checked="checked"[end] />
+        Exact match
+      </label>
+      <label for="branch_match_glob">
+        <input type="radio" name="branch_match" id="branch_match_glob"
+           value="glob" [is branch_match "glob"]checked="checked"[end] />
+        Glob pattern match
+      </label>
+      <label for="branch_match_regex">
+        <input type="radio" name="branch_match" id="branch_match_regex"
+           value="regex" [is branch_match "regex"]checked="checked"[end] />
+        Regex match
+      </label>
+      <label for="branch_match_notregex">
+        <input type="radio" name="branch_match" id="branch_match_notregex"
+           value="notregex" [is branch_match "notregex"]checked="checked"[end] />
+        Regex doesn't match
+      </label>
+    </td>
+  </tr>
+  [end]
+  <tr>
+    <th style="text-align:right;vertical-align:top;">Subdirectory:</th>
+    <td>
+      <input type="text" name="dir" value="[dir]" /><br />
+      (you can list multiple directories separated by commas)
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align:right;vertical-align:top;">File:</th>
+    <td>
+      <input type="text" name="file" value="[file]" /><br />
+      <label for="file_match_exact">
+        <input type="radio" name="file_match" id="file_match_exact"
+           value="exact" [is file_match "exact"]checked="checked"[end] />
+        Exact match
+      </label>
+      <label for="file_match_glob">
+        <input type="radio" name="file_match" id="file_match_glob"
+           value="glob" [is file_match "glob"]checked="checked"[end] />
+        Glob pattern match
+      </label>
+      <label for="file_match_regex">
+        <input type="radio" name="file_match" id="file_match_regex"
+           value="regex" [is file_match "regex"]checked="checked"[end] />
+        Regex match
+      </label>
+      <label for="file_match_notregex">
+        <input type="radio" name="file_match" id="file_match_notregex"
+           value="notregex" [is file_match "notregex"]checked="checked"[end] />
+        Regex doesn't match
+      </label>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align:right;vertical-align:top;">Who:</th>
+    <td>
+      <input type="text" name="who" value="[who]" /><br />
+      <label for="who_match_exact">
+        <input type="radio" name="who_match" id="who_match_exact"
+           value="exact" [is who_match "exact"]checked="checked"[end] />
+        Exact match
+      </label>
+      <label for="who_match_glob">
+        <input type="radio" name="who_match" id="who_match_glob"
+           value="glob" [is who_match "glob"]checked="checked"[end] />
+        Glob pattern match
+      </label>
+      <label for="who_match_regex">
+        <input type="radio" name="who_match" id="who_match_regex"
+           value="regex" [is who_match "regex"]checked="checked"[end] />
+        Regex match
+      </label>
+      <label for="who_match_notregex">
+        <input type="radio" name="who_match" id="who_match_notregex"
+           value="notregex" [is who_match "notregex"]checked="checked"[end] />
+        Regex doesn't match
+      </label>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align:right;vertical-align:top;">Comment:</th>
+    <td>
+      <input type="text" name="comment" value="[comment]" /><br />
+      <label for="comment_match_exact">
+        <input type="radio" name="comment_match" id="comment_match_exact"
+           value="exact" [is comment_match "exact"]checked=""[end] />
+        Exact match
+      </label>
+      <label for="comment_match_glob">
+        <input type="radio" name="comment_match" id="comment_match_glob"
+           value="glob" [is comment_match "glob"]checked=""[end] />
+        Glob pattern match
+      </label>
+      <label for="comment_match_regex">
+        <input type="radio" name="comment_match" id="comment_match_regex"
+           value="regex" [is comment_match "regex"]checked=""[end] />
+        Regex match
+      </label>
+      <label for="comment_match_notregex">
+        <input type="radio" name="comment_match" id="comment_match_notregex"
+           value="notregex" [is comment_match "notregex"]checked=""[end] />
+        Regex doesn't match
+      </label>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align:right;vertical-align:top;">Sort By:</th>
+    <td>
+      <select name="querysort">
+        <option value="date" [is querysort "date"]selected="selected"[end]>Date</option>
+        <option value="author" [is querysort "author"]selected="selected"[end]>Author</option>
+        <option value="file" [is querysort "file"]selected="selected"[end]>File</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align:right;vertical-align:top;">Date:</th>
+    <td>
+      <table cellspacing="0" cellpadding="0">
+        <tr>
+          <td><input type="radio" name="date" id="date_hours"
+                 value="hours" [is date "hours"]checked="checked"[end] /></td>
+          <td>
+            <label for="date_hours">In the last</label>
+            <input type="text" name="hours" value="[hours]" size="4" />
+            hours
+          </td>
+        </tr>
+        <tr>
+          <td><input type="radio" name="date" id="date_day"
+                 value="day" [is date "day"]checked="checked"[end] /></td>
+          <td><label for="date_day">In the last day</label></td>
+        </tr>
+        <tr>
+          <td><input type="radio" name="date" id="date_week"
+                 value="week" [is date "week"]checked="checked"[end] /></td>
+          <td><label for="date_week">In the last week</label></td>
+        </tr>
+        <tr>
+          <td><input type="radio" name="date" id="date_month"
+                 value="month" [is date "month"]checked="checked"[end] /></td>
+          <td><label for="date_month">In the last month</label></td>
+        </tr>
+        <tr>
+          <td><input type="radio" name="date" id="date_all"
+                 value="all" [is date "all"]checked="checked"[end] /></td>
+          <td><label for="date_all">Since the beginning of time</label></td>
+        </tr>
+        <tr>
+          <td><input type="radio" name="date" id="date_explicit"
+                 value="explicit" [is date "explicit"]checked="checked"[end] /></td>
+          <td>
+            <label for="date_explicit">Between</label>
+            <input type="text" name="mindate" value="[mindate]" size="20" />
+            and
+            <input type="text" name="maxdate" value="[maxdate]" size="20" />
+            <br />
+            (use the form <strong>yyyy-mm-dd hh:mm:ss</strong>)
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <th style="text-align:right;vertical-align:top;">Limit:</th>
+    <td>
+      Show at most
+      <input type="text" name="limit_changes" value="[limit_changes]" size="5" />
+      changed files per commit.<br />
+      (use 0 to show all files)
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><input type="submit" value="Search" /></td>
+  </tr>
+</table>
+</div>
+
+</form>
+
+[include "include/footer.ezt"]

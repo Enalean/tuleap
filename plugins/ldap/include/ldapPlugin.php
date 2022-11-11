@@ -37,6 +37,7 @@ use Tuleap\LDAP\NonUniqueUidRetriever;
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
 use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
 use Tuleap\LDAP\User\AccountCreation;
+use Tuleap\LDAP\User\CreateUserFromEmail;
 use Tuleap\Project\Admin\ProjectMembers\MembersEditProcessAction;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionPresenter;
 use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection;
@@ -60,6 +61,7 @@ use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\AfterLocalStandardLogin;
 use Tuleap\User\BeforeStandardLogin;
+use Tuleap\User\FindUserByEmailEvent;
 use Tuleap\User\UserNameNormalizer;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 
@@ -113,6 +115,7 @@ class LdapPlugin extends Plugin
         $this->addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier', false);
         $this->addHook(UserRetrieverByLoginNameEvent::NAME);
         $this->addHook(\Tuleap\SVNCore\AccessControl\UserRetrieverBySVNLoginNameEvent::NAME);
+        $this->addHook(FindUserByEmailEvent::NAME);
 
         // User Home
         $this->addHook('user_home_pi_entry', 'personalInformationEntry', false);
@@ -147,7 +150,6 @@ class LdapPlugin extends Plugin
 
         // Backend SVN
         $this->addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
-        $this->addHook(Event::SVN_APACHE_AUTH, 'svn_apache_auth', false);
         $this->addHook(GetSVNLoginNameEvent::NAME);
 
         // Daily codendi job
@@ -414,7 +416,13 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType()) {
             if ($event->user->getLdapId() != null) {
-                $event->refuseLogin(sprintf(dgettext('tuleap-ldap', 'Please use your %1$s login (not the %2$s one).'), $this->getLDAPServerCommonName(), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
+                $this->getLogger()->info(
+                    sprintf(
+                        "User %s was found in LDAP but LDAP authentication failed. No fallback on local login.",
+                        $event->user->getUserName(),
+                    )
+                );
+                $event->refuseLogin(_('Invalid Password Or User Name'));
                 return;
             }
         }
@@ -432,7 +440,13 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType() && (new LDAP_ProjectManager())->hasSVNLDAPAuth((int) $event->project->getID())) {
             if ($event->user->getLdapId() !== null) {
-                $event->refuseLogin(sprintf(dgettext('tuleap-ldap', 'Please use your %1$s login (not the %2$s one).'), $this->getLDAPServerCommonName(), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
+                $this->getLogger()->info(
+                    sprintf(
+                        "User %s was found in LDAP but LDAP authentication failed. No fallback on SVN login.",
+                        $event->user->getUserName(),
+                    )
+                );
+                $event->refuseLogin(_('Invalid Password Or User Name'));
             }
         }
     }
@@ -898,19 +912,6 @@ class LdapPlugin extends Plugin
         if ($this->isLdapAuthType()) {
             $params['base']  = 'LDAP_BackendSVN';
             $params['setup'] = [$this->getLdap()];
-        }
-    }
-
-    public function svn_apache_auth($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($this->isLdapAuthType()) {
-            $ldapProjectManager = new LDAP_ProjectManager();
-            if ($ldapProjectManager->hasSVNLDAPAuth($params['project']->getID())) {
-                $params['svn_apache_auth'] = new LDAP_SVN_Apache_ModPerl(
-                    $this->getLdap(),
-                    $params['cache_parameters']
-                );
-            }
         }
     }
 
@@ -1476,5 +1477,10 @@ class LdapPlugin extends Plugin
                 $this->getUserGroupDao()
             )
         )->addAdditionalUserGroupInformation($event);
+    }
+
+    public function findUserByEmailEvent(FindUserByEmailEvent $event): void
+    {
+        (new CreateUserFromEmail($this->getLdap(), $this->getLdapUserManager(), $this->getLogger()))->process($event);
     }
 }

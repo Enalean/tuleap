@@ -69,6 +69,7 @@ use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerExce
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\GitPHP\Pack;
 use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\GitPHP\RepositoryAccessException;
 use Tuleap\Git\GitPHP\RepositoryNotExistingException;
@@ -1092,6 +1093,11 @@ class RepositoryResource extends AuthenticatedResource
         $commit = $project->GetCommit($commit_reference);
         if (! $commit) {
              throw new RestException(404, 'Commit not found');
+        }
+
+        $type = 0;
+        if ($project->GetObject($commit->GetHash(), $type) === false || $type !== Pack::OBJ_COMMIT) {
+            throw new RestException(404, 'Commit not found');
         }
 
         $repository = $this->getRepositoryForCurrentUser($id);

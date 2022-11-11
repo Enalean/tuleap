@@ -1,0 +1,62 @@
+<h1>{{# dgettext }} tuleap-fts_meilisearch | Full-Text search Meilisearch backend {{/ dgettext }}</h1>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa-solid fa-file tlp-pane-title-icon" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-fts_meilisearch | Meilisearch server settings {{/ dgettext }}
+            </h1>
+        </div>
+        <form method="post">
+            <section class="tlp-pane-section">
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="server-url">
+                        {{# dgettext }} tuleap-fts_meilisearch | Server URL {{/ dgettext }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <input type="url" pattern="https://.*" size="50" class="tlp-input" id="server-url" name="server_url" placeholder="https://…" required value="{{ server_url }}">
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="api-key">
+                        {{# dgettext }} tuleap-fts_meilisearch | API key {{/ dgettext }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <input
+                        type="password"
+                        size="50"
+                        class="tlp-input"
+                        id="api-key"
+                        name="api_key"
+                        required
+                        {{# has_existing_key }}placeholder="{{# dgettext }} tuleap-fts_meilisearch | Current key not displayed {{/ dgettext }}"{{/ has_existing_key }}
+                    >
+                </div>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="index-name">
+                        {{# dgettext }} tuleap-fts_meilisearch | Index name {{/ dgettext }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <input
+                        type="text"
+                        size="50"
+                        class="tlp-input"
+                        id="index-name"
+                        name="index_name"
+                        placeholder="fts_tuleap"
+                        value="{{ index_name }}"
+                        required
+                    >
+                </div>
+                <section class="tlp-pane-section-submit">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/csrf_token}}
+                    <button class="tlp-button-primary" type="submit">
+                        <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }} tuleap-fts_meilisearch | Save {{/ dgettext }}
+                    </button>
+                </section>
+            </section>
+        </form>
+    </div>
+</section>

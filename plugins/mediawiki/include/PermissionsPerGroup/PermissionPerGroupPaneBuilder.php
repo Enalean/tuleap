@@ -67,7 +67,9 @@ class PermissionPerGroupPaneBuilder
         $project = $event->getProject();
 
         $selected_group = $event->getSelectedUGroupId();
-        $ugroup         = $this->ugroup_manager->getUGroup($event->getProject(), $selected_group);
+        $ugroup         = $selected_group
+            ? $this->ugroup_manager->getUGroup($event->getProject(), $selected_group)
+            : null;
 
         $permissions = new PermissionPerGroupCollection();
 

@@ -1,15 +1,13 @@
 {
     "name": "agiledashboard",
-    "gettext-js": {
-        "burnup-chart": {
-            "src": "scripts/burnup-chart/src",
-            "po": "scripts/burnup-chart/po"
-        }
-    },
     "gettext-ts": {
         "artifact-additional-action": {
             "src": "scripts/artifact-additional-action/src",
             "po": "scripts/artifact-additional-action/po"
+        },
+        "burnup-chart": {
+            "src": "scripts/burnup-chart/src",
+            "po": "scripts/burnup-chart/po"
         }
     },
     "gettext-angularjs": {

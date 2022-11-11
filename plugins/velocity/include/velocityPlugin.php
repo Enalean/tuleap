@@ -170,11 +170,12 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         return $request->exist('planning_id') && $request->get('pane') === 'details';
     }
 
-    public function beforeEvent(BeforeEvent $before_event)
+    public function beforeEvent(BeforeEvent $before_event): void
     {
         $tracker         = $before_event->getArtifact()->getTracker();
         $semantic_status = Tracker_Semantic_Status::load($tracker);
-        if (! $semantic_status->getField() || $semantic_status->getField()->isMultiple()) {
+        $field           = $semantic_status->getField();
+        if (! $field || $field->isMultiple()) {
             return;
         }
 

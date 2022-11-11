@@ -17,47 +17,69 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./store";
-import type { VueClass } from "vue-class-component/lib/declarations";
-import type { State } from "./store/type";
+import type { Component } from "vue";
+import { createApp, readonly } from "vue";
+import { createPinia } from "pinia";
+import { createGettext } from "vue3-gettext";
+import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
+import type { FullTextState, State } from "./stores/type";
+import { useRootStore } from "./stores/root";
+import { useFullTextStore } from "./stores/fulltext";
+import { getProjectsFromDataset } from "./helpers/get-projects-from-dataset";
+import {
+    ARE_RESTRICTED_USERS_ALLOWED,
+    IS_SEARCH_AVAILABLE,
+    IS_TROVE_CAT_ENABLED,
+    SEARCH_FORM,
+} from "./injection-keys";
 
-export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue>): Promise<void> {
-    await initVueGettext(
-        Vue,
-        (locale: string) =>
-            import(/* webpackChunkName: "switch-to-po-" */ "../po/" + getPOFileFromLocale(locale))
-    );
+export async function init(vue_mount_point: HTMLElement, component: Component): Promise<void> {
+    const gettext = await initVueGettext(createGettext, (locale: string) => {
+        return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+    });
 
-    Vue.use(Vuex);
-
+    const pinia = createPinia();
     const root_state: State = {
-        projects:
-            typeof vue_mount_point.dataset.projects !== "undefined"
-                ? JSON.parse(vue_mount_point.dataset.projects)
-                : [],
-        is_trove_cat_enabled: Boolean(vue_mount_point.dataset.isTroveCatEnabled),
-        are_restricted_users_allowed: Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed),
-        is_search_available: Boolean(vue_mount_point.dataset.isSearchAvailable),
+        projects: getProjectsFromDataset(vue_mount_point.dataset.projects, gettext.$gettext),
         filter_value: "",
-        search_form:
-            typeof vue_mount_point.dataset.searchForm !== "undefined"
-                ? JSON.parse(vue_mount_point.dataset.searchForm)
-                : { type_of_search: "soft", hidden_fields: [] },
         user_id: parseInt(document.body.dataset.userId || "0", 10),
         is_loading_history: true,
         is_history_loaded: false,
         is_history_in_error: false,
         history: { entries: [] },
-        programmatically_focused_element: null,
     };
 
-    const store = createStore(root_state);
+    const app = createApp(component);
+    app.use(pinia);
+    app.provide(IS_SEARCH_AVAILABLE, Boolean(vue_mount_point.dataset.isSearchAvailable));
+    app.provide(IS_TROVE_CAT_ENABLED, Boolean(vue_mount_point.dataset.isTroveCatEnabled));
+    app.provide(
+        ARE_RESTRICTED_USERS_ALLOWED,
+        Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed)
+    );
+    app.provide(
+        SEARCH_FORM,
+        readonly(
+            typeof vue_mount_point.dataset.searchForm !== "undefined"
+                ? JSON.parse(vue_mount_point.dataset.searchForm)
+                : { type_of_search: "soft", hidden_fields: [] }
+        )
+    );
 
-    const AppComponent = Vue.extend(component);
-    new AppComponent({
-        store,
-    }).$mount(vue_mount_point);
+    const store = useRootStore();
+    store.$patch(root_state);
+
+    const fulltext_state: FullTextState = {
+        fulltext_search_url: "/api/v1/search",
+        fulltext_search_results: {},
+        fulltext_search_is_error: false,
+        fulltext_search_is_loading: false,
+        fulltext_search_is_available: true,
+        fulltext_search_has_more_results: false,
+    };
+    const fulltext_store = useFullTextStore();
+    fulltext_store.$patch(fulltext_state);
+
+    app.use(gettext);
+    app.mount(vue_mount_point);
 }

@@ -27,7 +27,7 @@ class FailedToNotifyProjectMemberException extends \Exception
         parent::__construct(
             sprintf(
                 dgettext('tuleap-project_ownership', 'Failed to send notification to user %s .'),
-                $user->getName()
+                $user->getUserName()
             )
         );
     }

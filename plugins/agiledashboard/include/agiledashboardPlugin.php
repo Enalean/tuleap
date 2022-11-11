@@ -44,7 +44,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
-use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
@@ -65,6 +65,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
@@ -110,6 +111,7 @@ use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
@@ -117,8 +119,8 @@ use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
-use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
@@ -158,7 +160,6 @@ use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\User\History\HistoryEntryCollection;
-use Tuleap\User\History\HistoryQuickLink;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\ProvideCurrentUser;
 
@@ -250,7 +251,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(TrackerCrumbInContext::NAME);
-            $this->addHook(HistoryQuickLinkCollection::NAME);
+            $this->addHook(SwitchToLinksCollection::NAME);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(ProjectStatusUpdate::NAME);
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
@@ -809,10 +810,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
-    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $script = $this->getScriptAssetByName('permission-per-group.js');
-        $event->addJavascript($script->getFileURL());
+        $event->addJavascript($this->getScriptAssetByName('permission-per-group.js'));
     }
 
     /**
@@ -1408,13 +1408,15 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             case SystemEvent_BURNUP_DAILY::class:
                 $params['class']        = SystemEvent_BURNUP_DAILY::class;
                 $params['dependencies'] = [
-                    $this->getBurnupDao(),
+                    new BurnupDataDAO(),
                     $this->getBurnupCalculator(),
                     $this->getBurnupCountElementsCalculator(),
                     new BurnupCacheDao(),
                     new CountElementsCacheDao(),
                     $this->getLogger(),
                     new BurnupCacheDateRetriever(),
+                    new PlanningDao(),
+                    \PlanningFactory::build(),
                 ];
                 break;
             case SystemEvent_BURNUP_GENERATE::class:
@@ -1423,13 +1425,15 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 $params['dependencies']   = [
                     $tracker_artifact_factory,
                     SemanticTimeframeBuilder::build(),
-                    new BurnupDao(),
+                    new BurnupDataDAO(),
                     $this->getBurnupCalculator(),
                     $this->getBurnupCountElementsCalculator(),
                     new BurnupCacheDao(),
                     new CountElementsCacheDao(),
                     $this->getLogger(),
                     new BurnupCacheDateRetriever(),
+                    new PlanningDao(),
+                    \PlanningFactory::build(),
                 ];
                 break;
             default:
@@ -1443,39 +1447,25 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $params['types'][] = SystemEvent_BURNUP_GENERATE::class;
     }
 
-    /**
-     * @return BurnupDao
-     */
-    private function getBurnupDao()
-    {
-        return new BurnupDao();
-    }
-
     private function getLogger(): \Psr\Log\LoggerInterface
     {
         return BackendLogger::getDefaultLogger();
     }
 
-    /**
-     * @return BurnupCalculator
-     */
-    private function getBurnupCalculator()
+    private function getBurnupCalculator(): BurnupCalculator
     {
         $changeset_factory = Tracker_Artifact_ChangesetFactoryBuilder::build();
 
         return new BurnupCalculator(
             $changeset_factory,
             $this->getArtifactFactory(),
-            $this->getBurnupDao(),
+            new BurnupDataDAO(),
             $this->getSemanticInitialEffortFactory(),
             $this->getSemanticDoneFactory()
         );
     }
 
-    /**
-     * @return CountElementsCalculator
-     */
-    private function getBurnupCountElementsCalculator()
+    private function getBurnupCountElementsCalculator(): CountElementsCalculator
     {
         $changeset_factory = Tracker_Artifact_ChangesetFactoryBuilder::build();
 
@@ -1483,7 +1473,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $changeset_factory,
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
-            $this->getBurnupDao()
+            new BurnupDataDAO()
         );
     }
 
@@ -1708,18 +1698,36 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         (new \Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder($this->getTrackerFactory(), $this->getKanbanFactory()))->addKanbanCrumb($crumb);
     }
 
-    public function getHistoryQuickLinkCollection(HistoryQuickLinkCollection $collection): void
+    public function getSwitchToQuickLinkCollection(SwitchToLinksCollection $collection): void
     {
         $milestone = $this->getMilestoneFactory()->getMilestoneFromArtifact($collection->getArtifact());
         if ($milestone === null) {
             return;
         }
 
+        $collection->setIconName('fa-map-signs');
+        $collection->removeXRef();
+
         $pane_factory = $this->getMilestonePaneFactory();
 
-        foreach ($pane_factory->getListOfPaneInfo($milestone, $collection->getCurrentUser()) as $pane) {
-            $collection->add(
-                new HistoryQuickLink(
+        $list_of_pane_info = $pane_factory->getListOfPaneInfo($milestone, $collection->getCurrentUser());
+        $first_pane        = array_shift($list_of_pane_info);
+        if (! $first_pane) {
+            return;
+        }
+
+        $collection->setMainUri($first_pane->getUri());
+        $collection->addQuickLink(
+            new SwitchToQuickLink(
+                dgettext('tuleap-agiledashboard', 'Milestone artifact'),
+                $collection->getArtifactUri(),
+                $collection->getArtifactIconName(),
+            )
+        );
+
+        foreach ($list_of_pane_info as $pane) {
+            $collection->addQuickLink(
+                new SwitchToQuickLink(
                     $pane->getTitle(),
                     $pane->getUri(),
                     $pane->getIconName()

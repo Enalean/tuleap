@@ -1,6 +1,6 @@
-// Vitest Snapshot v1
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PrivacyBadge > displays the badge with its popover 1`] = `
+exports[`PrivacyBadge displays the badge with its popover 1`] = `
 <div
   data-v-app=""
 >
@@ -13,7 +13,7 @@ exports[`PrivacyBadge > displays the badge with its popover 1`] = `
     >
       <i
         aria-hidden="true"
-        class="sidebar-dashboard-privacy-icon fas fa-lock-open"
+        class="sidebar-dashboard-privacy-icon fa-solid fa-lock-open"
         data-test="project-icon"
       />
        Public

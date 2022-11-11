@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\NeverThrow;
 
+use Psr\Log\LogLevel;
+use Psr\Log\Test\TestLogger;
+
 final class FaultTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ERROR_MESSAGE     = 'User is not allowed to do that';
@@ -86,5 +89,35 @@ final class FaultTest extends \Tuleap\Test\PHPUnit\TestCase
             $specialized_fault->getStackTraceAsString(),
             'It records the stack trace where it is created'
         );
+    }
+
+    public function testCanWritesToLogger(): void
+    {
+        $logger = new TestLogger();
+        $fault  = Fault::fromMessage('Message');
+
+        Fault::writeToLogger($fault, $logger);
+
+        self::assertTrue($logger->hasErrorRecords());
+    }
+
+    public function testCanWritesToLoggerAtASpecificLogLevel(): void
+    {
+        $logger = new TestLogger();
+        $fault  = Fault::fromMessage('Message');
+
+        Fault::writeToLogger($fault, $logger, LogLevel::INFO);
+
+        self::assertTrue($logger->hasInfoRecords());
+    }
+
+    public function testCanWritesToLoggerEvenWhenThrowableIsNotAnException(): void
+    {
+        $logger = new TestLogger();
+        $fault  = Fault::fromThrowable(new \Error());
+
+        Fault::writeToLogger($fault, $logger);
+
+        self::assertTrue($logger->hasErrorRecords());
     }
 }

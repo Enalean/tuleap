@@ -25,6 +25,7 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchMirroredTimeboxesSynchronization;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\StorePendingTeamSynchronization;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TeamSynchronizationCommand;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -42,6 +43,7 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
         private DispatchMirroredTimeboxesSynchronization $synchronization_dispatcher,
         private SearchVisibleTeamsOfProgram $teams_searcher,
         private BuildProgram $build_program,
+        private StorePendingTeamSynchronization $store_pending_team_synchronization,
     ) {
     }
 
@@ -94,6 +96,7 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
 
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
+        $this->store_pending_team_synchronization->storePendingTeamSynchronization($program, $team);
         $this->synchronization_dispatcher->dispatchSynchronizationCommand(
             TeamSynchronizationCommand::fromProgramAndTeam($program, $team, $user)
         );

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import { EmptyCell, NumberCell, TextCell, HTMLCell, DateCell } from "@tuleap/plugin-docgen-xlsx";
 import type {
     ArtifactReportResponseFieldValue,
@@ -215,7 +216,7 @@ describe("transform-field-value-into-formatted-cell", () => {
             label: "Selectbox Static",
             values: [
                 {
-                    id: 300,
+                    id: "300",
                     label: "On Going",
                     color: null,
                     tlp_color: "lake-placid-blue",
@@ -276,7 +277,7 @@ describe("transform-field-value-into-formatted-cell", () => {
             label: "Radiobutton Static",
             values: [
                 {
-                    id: 300,
+                    id: "300",
                     label: "On Going",
                     color: null,
                     tlp_color: "lake-placid-blue",
@@ -337,13 +338,13 @@ describe("transform-field-value-into-formatted-cell", () => {
             label: "Multiselectbox Static",
             values: [
                 {
-                    id: 1,
+                    id: "1",
                     label: "value01",
                     color: null,
                     tlp_color: "lake-placid-blue",
                 },
                 {
-                    id: 2,
+                    id: "2",
                     label: "value02",
                     color: null,
                     tlp_color: "lake-placid-blue",
@@ -412,13 +413,13 @@ describe("transform-field-value-into-formatted-cell", () => {
             label: "Checkbox Static",
             values: [
                 {
-                    id: 1,
+                    id: "1",
                     label: "value01",
                     color: null,
                     tlp_color: "lake-placid-blue",
                 },
                 {
-                    id: 2,
+                    id: "2",
                     label: "value02",
                     color: null,
                     tlp_color: "lake-placid-blue",
@@ -487,11 +488,11 @@ describe("transform-field-value-into-formatted-cell", () => {
             label: "OpenList Static",
             bind_value_objects: [
                 {
-                    id: 1,
+                    id: "1",
                     label: "value01",
                 },
                 {
-                    id: 1452,
+                    id: "1452",
                     label: "value02",
                     color: null,
                     tlp_color: "lake-placid-blue",

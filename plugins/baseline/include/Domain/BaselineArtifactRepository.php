@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use DateTimeInterface;
-use PFUser;
 
 interface BaselineArtifactRepository
 {
-    public function findById(PFUser $current_user, int $id): ?BaselineArtifact;
+    public function findById(UserIdentifier $current_user, int $id): ?BaselineArtifact;
 
-    public function findByIdAt(PFUser $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact;
+    public function findByIdAt(UserIdentifier $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact;
 }

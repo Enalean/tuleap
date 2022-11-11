@@ -2,12 +2,16 @@
 let
   mediawiki = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "mediawiki";
-    version = "1.35.7";
+    version = "1.35.8";
 
     src = pkgs.fetchurl {
       url = "https://releases.wikimedia.org/mediawiki/${pkgs.lib.versions.majorMinor version}/${pname}-${version}.tar.gz";
-      sha256 = "sha256-v4IvrIsSmMI0Bf1i5uAGw87gq2w+1n+CtaDGYrADIXo=";
+      sha256 = "sha256-XZ4XsFpYVmwzmD3UIysEUh1QltwG0hSkKjpQFmncO4k=";
     };
+
+    patches = [
+      ./mediawiki/drop-myisam.patch
+    ];
 
     dontPatchShebangs = true;
 

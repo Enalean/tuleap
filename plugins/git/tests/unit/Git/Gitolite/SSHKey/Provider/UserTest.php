@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
-use ArrayIterator;
 use Tuleap\Git\Gitolite\SSHKey\Key;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
@@ -42,7 +41,7 @@ class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $user2->shouldReceive('getUsername')->andReturns('user2');
         $user2->shouldReceive('getAuthorizedKeysArray')->andReturns([$key1_user2->getKey()]);
         $user_manager       = \Mockery::spy(\UserManager::class);
-        $users_with_ssh_key = new ArrayIterator([$user1, $user2]);
+        $users_with_ssh_key = [$user1, $user2];
         $user_manager->shouldReceive('getUsersWithSshKey')->andReturns($users_with_ssh_key);
 
         $user_with_ssh_key_provider = new User($user_manager);
@@ -52,9 +51,8 @@ class UserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotFindSSHKeyIfNoUsersHaveUploadedOne(): void
     {
-        $user_manager       = \Mockery::spy(\UserManager::class);
-        $users_with_ssh_key = new ArrayIterator([]);
-        $user_manager->shouldReceive('getUsersWithSshKey')->andReturns($users_with_ssh_key);
+        $user_manager = \Mockery::spy(\UserManager::class);
+        $user_manager->shouldReceive('getUsersWithSshKey')->andReturns([]);
 
         $user_with_ssh_key_provider = new User($user_manager);
 

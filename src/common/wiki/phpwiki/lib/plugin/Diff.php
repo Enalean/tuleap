@@ -56,11 +56,11 @@ class WikiPlugin_Diff extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['pagename' => '[pagename]',
-                     'name'     => _("World"),
-                     'versions' => false,
-                     'version'  => false,
-                     'previous' => 'major', // author, minor or major
-                     ];
+            'name'     => _("World"),
+            'versions' => false,
+            'version'  => false,
+            'previous' => 'major', // author, minor or major
+        ];
     }
 
     public function PageInfoRow($label, $rev, &$request)
@@ -172,8 +172,9 @@ class WikiPlugin_Diff extends WikiPlugin
 
         $otherdiffs = HTML::p(_("Other diffs:"));
         $label      = ['major' => _("Previous Major Revision"),
-                       'minor' => _("Previous Revision"),
-                       'author' => _("Previous Author")];
+            'minor' => _("Previous Revision"),
+            'author' => _("Previous Author"),
+        ];
         foreach ($others as $other) {
             $args = ['pagename' => $pagename, 'previous' => $other];
             if ($version) {
@@ -463,20 +464,22 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
     public function _start_diff()
     {
         $this->_top = HTML::table(['width' => '100%',
-                                        'class' => 'diff',
-                                        'cellspacing' => 1,
-                                        'cellpadding' => 1,
-                                        'border' => 1]);
+            'class' => 'diff',
+            'cellspacing' => 1,
+            'cellpadding' => 1,
+            'border' => 1,
+        ]);
     }
 
     public function _start_block($header)
     {
         $this->_block = HTML::table(
             ['width' => '100%',
-                                          'class' => 'block',
-                                          'cellspacing' => 0,
-                                          'cellpadding' => 1,
-                                          'border' => 0],
+                'class' => 'block',
+                'cellspacing' => 0,
+                'cellpadding' => 1,
+                'border' => 0,
+            ],
             HTML::tr(HTML::td(
                 ['colspan' => 2],
                 HTML::tt($header)
@@ -496,7 +499,8 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
             $prefix = HTML::raw('&nbsp;');
         }
         $prefix = HTML::td(['class' => 'prefix',
-                                 'width' => "1%"], $prefix);
+            'width' => "1%",
+        ], $prefix);
         foreach ($lines as $line) {
             if (! trim($line)) {
                 $line = HTML::raw('&nbsp;');

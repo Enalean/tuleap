@@ -1,0 +1,199 @@
+[# ------------------------------------------------------------------------- ]
+[# CUSTOMIZE ME: To avoid displaying "binary garbage" -- the contents of     ]
+[# files with non-human-readable file formats -- change the value of the     ]
+[# hide_binary_garbage variable below to 1.                                  ]
+[# ------------------------------------------------------------------------- ]
+
+[define hide_binary_garbage]0[end]
+
+[# ------------------------------------------------------------------------- ]
+
+[# setup page definitions]
+  [define page_title_classname][end]
+  [define resource_name]
+    [for nav_path]
+        [if-index nav_path last]
+            [if-index nav_path first]
+                /
+            [else]
+                [nav_path.name]
+            [end]
+        [end]
+    [end]
+  [end]
+  [is annotation "annotated"]
+    [define page_title]<small>Annotation of</small> [resource_name][end]
+  [else]
+    [define page_title]<small>Contents of</small> [resource_name][end]
+  [end]
+  [define help_href][docroot]/help_rootview.html[end]
+[# end]
+
+[include "include/header.ezt" "markup"]
+[include "include/file_header.ezt"]
+
+<div class="vc_summary">
+
+    [if-any vendor_branch] <em>(vendor branch)</em>[end]
+
+    [if-any branches]
+      <br />Branch: <strong>[branches]</strong>
+    [end]
+    [if-any tags]
+      <br />CVS Tags: <strong>[tags]</strong>
+    [end]
+    [if-any branch_points]
+      <br />Branch point for: <strong>[branch_points]</strong>
+    [end]
+    [is roottype "cvs"]
+      [if-any changed]
+        <br />Changes since <strong>[prev]: [changed] lines</strong>
+      [end]
+    [end]
+    [is annotation "binary"]
+      <br /><strong>Unable to calculate annotation data on binary file contents.</strong>
+    [end]
+    [is annotation "error"]
+      <br /><strong>Error occurred while calculating annotation data.</strong>
+    [end]
+</div>
+</div><!-- .tuleap-viewvc-header -->
+<div class="tuleap-viewvc-body">
+
+    <div class="log-revision" id="tuleap-viewvc-file-revision">
+        <div class="log-revision-header">
+            <div class="log-revision-header-title">
+                <a name="rev12"></a>
+                <h4>Revision [if-any revision_href]<a href="[revision_href]"><strong>[rev]</strong></a>[else]<strong>[rev]</strong>[end]
+                </h4>
+            </div>
+            <div class="log-revision-header-actions">
+                <span class="log-revision-header-actions-date">
+                    <span class="log-revision-header-actions-date-label">Modified:</span>
+                    <span title="[if-any ago][ago] ago[end]">[if-any date][date][else]unknown date[end]</span>
+                </span>
+                <span class="log-revision-header-actions-user">
+                    [if-any author]<div class="avatar"><img src="/users/[author]/avatar.png"></div>&nbsp;[author][else]unknown author[end]
+                </span>
+            </div>
+
+        </div>
+        <div class="log-revision-message" id="tuleap-viewvc-file-revision-message">[if-any log][log][end]</div>
+        <div class="log-revision-footer">
+            [if-any orig_path]
+                <span class="log-revision-footer-entry">
+                    <span class="log-revision-footer-entry-label">Original path:</span>
+                    <a href="[orig_href]">[orig_path]</a>
+                </span>
+            [end]
+        </div>
+        <script>
+        (function () {
+            var element = document.querySelector('#tuleap-viewvc-file-revision-message'),
+                message = element.innerHTML.trim(),
+                button = '<button id="tuleap-viewvc-file-revision-message-button" class="btn btn-mini">Expand</button><div id="tuleap-viewvc-file-revision-message-description">',
+                new_message = message.replace(/\n/, button);
+
+            if (message.length === new_message.length) {
+                return;
+            }
+
+            element.innerHTML = new_message + '</div>';
+
+            document.querySelector('#tuleap-viewvc-file-revision-message-button').addEventListener('click', function () {
+                element.classList.add('tuleap-viewvc-file-revision-message--expand');
+                this.style.display = 'none';
+            });
+        })();
+        </script>
+    </div>
+
+[if-any prefer_markup][define hide_binary_garbage]0[end][end]
+[if-any image_src_href][define hide_binary_garbage]0[end][end]
+
+[is hide_binary_garbage "1"]
+<p><strong>This file's contents are not viewable.
+   [if-any download_href]Please <a href="[download_href]">download</a>
+   this version of the file in order to view it.[end]</strong></p>
+[else]
+
+
+[define last_rev]0[end]
+[define rowclass]vc_row_even[end]
+
+[is state "dead"]
+  <div class="alert alert-warning">File removed</div>
+[end]
+
+[if-any lines]
+
+<div id="vc_file">
+    <div id="tuleap-viewvc-file-header">
+        <div id="tuleap-viewvc-file-header-info">
+            <span id="tuleap-viewvc-file-header-info-size">
+                <span id="tuleap-viewvc-file-header-info-size-label">File length:</span> 15 byte(s)
+            </span>
+            [if-any mime_type]
+                <span id="tuleap-viewvc-file-header-info-mime">
+                    <span id="tuleap-viewvc-file-header-info-mime-label">File MIME type:</span> [mime_type]
+                </span>
+            [end]
+            [if-any lockinfo]
+              <span class="badge badge-important" id="tuleap-viewvc-file-header-info-locked" title="Locked: [lockinfo]"><i class="fas fa-lock"></i></span>
+            [end]
+        </div>
+        <div id="tuleap-viewvc-file-header-actions">
+            <div class="btn-group">
+                [if-any download_href]<a href="[download_href]" class="btn btn-small"><i class="icon-download-alt"></i> Download</a>[end]
+                [if-any download_text_href]<a href="[download_text_href]" class="btn btn-small"><i class="icon-file-text-alt"></i> As text</a>[end]
+                <a
+                    [is annotation "annotated"]
+                        href="[view_href]" class="btn btn-small active"
+                    [else]
+                        href="[annotate_href]" class="btn btn-small"
+                    [end]
+                ><i class="fas fa-bullhorn"></i> Annotate</a>
+            </div>
+        </div>
+    </div>
+<table id="tuleap-viewvc-file-content" cellspacing="0" cellpadding="0">
+    <tbody>
+[for lines]
+  [is lines.rev last_rev]
+  [else]
+    [is lines.rev rev]
+      [define rowclass]tuleap-viewvc-file-content-line--special[end]
+    [else]
+      [is rowclass "tuleap-viewvc-file-content-line--even"]
+        [define rowclass]tuleap-viewvc-file-content-line--odd[end]
+      [else]
+        [define rowclass]tuleap-viewvc-file-content-line--even[end]
+      [end]
+    [end]
+  [end]
+
+  <tr class="tuleap-viewvc-file-content-line [rowclass]" id="l[lines.line_number]">
+    <td class="tuleap-viewvc-file-content-line-number"><a href="#l[lines.line_number]">[lines.line_number]</a></td>
+[is annotation "annotated"]
+    <td class="tuleap-viewvc-file-content-line-author">[is lines.rev last_rev]&nbsp;[else][lines.author][end]</td>
+    <td class="tuleap-viewvc-file-content-line-rev">[is lines.rev last_rev]&nbsp;[else][if-any lines.diff_href]<a href="[lines.diff_href]">[end][lines.rev][if-any lines.diff_href]</a>[end][end]</td>
+[end]
+    <td class="tuleap-viewvc-file-content-line-text">[lines.text]</td>
+  </tr>
+  [define last_rev][lines.rev][end]
+[end]
+    </tbody>
+</table>
+</div>
+
+[else]
+[if-any image_src_href]
+<div id="vc_file_image">
+<img src="[image_src_href]" alt="" />
+</div>
+[end]
+[end]
+[end]
+
+[include "include/props.ezt"]
+[include "include/footer.ezt"]

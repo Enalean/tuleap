@@ -115,6 +115,7 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
 
     public function testItAsksToVisitorToUpdateSummary(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->visitor->shouldReceive('update')->with($this->artifact_xml->changeset->field_change[0], $this->field_summary, 'Content of summary field')->ordered();
 
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
@@ -122,6 +123,7 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
 
     public function testItAsksToVisitorToUpdateEffort(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->visitor->shouldReceive('update')->with($this->artifact_xml->changeset->field_change[1], $this->field_effort, '123')->ordered();
 
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());

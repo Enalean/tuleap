@@ -33,20 +33,10 @@ import {
     POST_METHOD,
     PUT_METHOD,
 } from "./constants";
-
-function buildErrorResponse<TypeOfJSONPayload>(json_content: TypeOfJSONPayload): Response {
-    return {
-        ok: false,
-        json: (): Promise<TypeOfJSONPayload> => Promise.resolve(json_content),
-    } as unknown as Response;
-}
+import { RestlerErrorHandler } from "./RestlerErrorHandler";
 
 const isNetworkFault = (fault: Fault): boolean =>
     "isNetworkFault" in fault && fault.isNetworkFault() === true;
-const isJSONParseFault = (fault: Fault): boolean =>
-    "isJSONParseFault" in fault && fault.isJSONParseFault() === true;
-const isTuleapAPIFault = (fault: Fault): boolean =>
-    "isTuleapAPIFault" in fault && fault.isTuleapAPIFault() === true;
 
 describe(`ResponseRetriever`, () => {
     let fetcher: FetchInterface;
@@ -54,7 +44,7 @@ describe(`ResponseRetriever`, () => {
     const uri = "https://example.com/response-retriever-test";
 
     const retrieve = (): ResultAsync<Response, Fault> => {
-        const retriever = ResponseRetriever(fetcher);
+        const retriever = ResponseRetriever(fetcher, RestlerErrorHandler());
         return retriever.retrieveResponse(uri, { method: "GET" });
     };
 
@@ -70,7 +60,7 @@ describe(`ResponseRetriever`, () => {
         `will query the given URI with method %s and return a ResultAsync with the response`,
         async (method: SupportedHTTPMethod) => {
             const fetcher = FetchInterfaceStub.withSuccessiveResponses(success_response);
-            const retriever = ResponseRetriever(fetcher);
+            const retriever = ResponseRetriever(fetcher, RestlerErrorHandler());
 
             const result = await retriever.retrieveResponse(uri, { method });
             if (!result.isOk()) {
@@ -83,17 +73,18 @@ describe(`ResponseRetriever`, () => {
                 throw new Error("Expected a request init");
             }
             expect(request_init.method).toBe(method);
-            expect(request_init.credentials).toBe("same-origin");
         }
     );
 
-    it(`will pass headers and body along to fetch if given in options`, async () => {
+    it(`will pass credentials, mode, headers and body along to fetch if given in options`, async () => {
         const fetcher = FetchInterfaceStub.withSuccessiveResponses(success_response);
-        const retriever = ResponseRetriever(fetcher);
+        const retriever = ResponseRetriever(fetcher, RestlerErrorHandler());
 
         const body = JSON.stringify({ key: "value" });
         const result = await retriever.retrieveResponse(uri, {
             method: "PATCH",
+            credentials: "same-origin",
+            mode: "same-origin",
             headers: new Headers({ "Content-Type": "application/json" }),
             body,
         });
@@ -107,6 +98,7 @@ describe(`ResponseRetriever`, () => {
         }
         expect(request_init.method).toBe("PATCH");
         expect(request_init.credentials).toBe("same-origin");
+        expect(request_init.mode).toBe("same-origin");
         if (!(request_init.headers instanceof Headers)) {
             throw new Error("Expected headers");
         }
@@ -122,40 +114,5 @@ describe(`ResponseRetriever`, () => {
             throw new Error("Expected an Err");
         }
         expect(isNetworkFault(result.error)).toBe(true);
-    });
-
-    it.each([
-        [
-            "with a translated message",
-            { error: { i18n_error_message: "Une erreur s'est produite" } },
-        ],
-        ["with an untranslated message", { error: { message: "An error occurred" } }],
-        ["without a message", {}],
-    ])(
-        `when there is an API error %s, it will return an Err with a TuleapAPIFault`,
-        async (_explanation: string, json_content) => {
-            const response = buildErrorResponse(json_content);
-            fetcher = FetchInterfaceStub.withSuccessiveResponses(response);
-
-            const result = await retrieve();
-            if (!result.isErr()) {
-                throw new Error("Expected an Err");
-            }
-            expect(isTuleapAPIFault(result.error)).toBe(true);
-        }
-    );
-
-    it(`when there is an API error but its JSON cannot be parsed, it will return an Err with a JSONParseFault`, async () => {
-        const response = {
-            ok: false,
-            json: (): Promise<never> => Promise.reject("Could not parse JSON"),
-        } as unknown as Response;
-        fetcher = FetchInterfaceStub.withSuccessiveResponses(response);
-
-        const result = await retrieve();
-        if (!result.isErr()) {
-            throw new Error("Expected an Err");
-        }
-        expect(isJSONParseFault(result.error)).toBe(true);
     });
 });

@@ -40,6 +40,11 @@ final class SearchOpenProgramIncrementsStub implements SearchOpenProgramIncremen
         return new self([$first_pi, ...$other_pis]);
     }
 
+    public static function withoutProgramIncrements(): self
+    {
+        return new self([]);
+    }
+
     public function searchOpenProgramIncrements(int $potential_program_id, UserIdentifier $user): array
     {
         return $this->program_increments;

@@ -88,6 +88,7 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
+use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
@@ -99,6 +100,8 @@ use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestCreatorChecker;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForComment;
+use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
@@ -142,8 +145,7 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var Tuleap\PullRequest\Timeline\Factory */
     private $timeline_factory;
 
-    /** @var Tuleap\PullRequest\Comment\Factory */
-    private $comment_factory;
+    private CommentFactory $comment_factory;
 
     /** @var PaginatedCommentsRepresentationsBuilder */
     private $paginated_timeline_representation_builder;
@@ -233,7 +235,8 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $this->paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
-            $this->timeline_factory
+            $this->timeline_factory,
+            $this->user_manager
         );
 
         $this->paginated_comments_representations_builder = new PaginatedCommentsRepresentationsBuilder(
@@ -318,10 +321,6 @@ class PullRequestsResource extends AuthenticatedResource
      * Retrieve a given pull request. <br/>
      * User is not able to see a pull request in a git repository where he is not able to READ
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url GET {id}
      *
      * @access protected
@@ -369,10 +368,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * Retrieve all commits of a given pull request. <br/>
      * User is not able to see a pull request in a git repository where he is not able to READ
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      *
      * @url    GET {id}/commits
      *
@@ -449,10 +444,6 @@ class PullRequestsResource extends AuthenticatedResource
      * Get labels
      *
      * Get the labels that are defined for this pull request
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      *
      * @url GET {id}/labels
      *
@@ -540,10 +531,6 @@ class PullRequestsResource extends AuthenticatedResource
      * and add it to the current pull request. Please note that you must use the id to remove labels from the
      * pull request.</p>
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url PATCH {id}/labels
      *
      * @access protected
@@ -585,10 +572,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * Get the impacted files for a pull request.<br/>
      * User is not able to see a pull request in a git repository where he is not able to READ
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      *
      * @url GET {id}/files
      *
@@ -632,10 +615,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * Get the diff of a given file between the source branch and the dest branch for a pull request.<br/>
      * User is not able to see a pull request in a git repository where he is not able to READ
-     *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      *
      * @url GET {id}/file_diff
      *
@@ -719,10 +698,6 @@ class PullRequestsResource extends AuthenticatedResource
      * Post a new inline comment for a given pull request file and a position (left | right)<br>
      * Format: { "content": "My new comment" , "unidiff_offset": 1, "file_path": "dir/myfile.txt" , position: "left" }
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url POST {id}/inline-comments
      *
      * @access protected
@@ -763,9 +738,12 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(400, 'Please provide a valid position, either left or right');
         }
 
+        $parent_id_validator = new ParentIdValidatorForInlineComment(new InlineCommentRetriever(new InlineCommentDao()));
+        $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
+
         $post_date = time();
 
-        $this->inline_comment_creator->insert(
+        $id = $this->inline_comment_creator->insert(
             $pull_request,
             $user,
             $comment_data,
@@ -781,7 +759,10 @@ class PullRequestsResource extends AuthenticatedResource
             $post_date,
             $comment_data->content,
             $git_repository_source->getProjectId(),
-            $comment_data->position
+            $comment_data->position,
+            (int) $comment_data->parent_id,
+            $id,
+            $comment_data->file_path
         );
     }
 
@@ -790,9 +771,6 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * Create a new pullrequest.<br/>
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      * <br/>
      * Here is an example of a valid POST content:
      * <pre>
@@ -875,9 +853,6 @@ class PullRequestsResource extends AuthenticatedResource
      * <br/>
      * Update title and description of pull request.
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
      * <br/>
      *
      * Here is an example of a valid PATCH content to merge a pull request:
@@ -1020,10 +995,6 @@ class PullRequestsResource extends AuthenticatedResource
     /**
      * Get pull request's timeline
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url GET {id}/timeline
      *
      * @access protected
@@ -1075,10 +1046,6 @@ class PullRequestsResource extends AuthenticatedResource
     /**
      * Get pull request's comments
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url GET {id}/comments
      *
      * @access protected
@@ -1127,10 +1094,6 @@ class PullRequestsResource extends AuthenticatedResource
      * Post a new comment for a given pull request <br>
      * Format: { "content": "My new comment" }
      *
-     * <pre>
-     * /!\ PullRequest REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
      * @url POST {id}/comments
      *
      * @access protected
@@ -1157,13 +1120,16 @@ class PullRequestsResource extends AuthenticatedResource
             $git_repository->getProject()
         );
 
-        $current_time   = time();
-        $comment        = new Comment(0, $id, $user->getId(), $current_time, $comment_data->content);
+        $parent_id_validator = new ParentIdValidatorForComment($this->comment_factory);
+        $current_time        = time();
+        $comment             = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id);
+
+        $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
         $new_comment_id = $this->comment_factory->save($comment, $user, $project_id);
 
         $user_representation = MinimalUserRepresentation::build($user);
 
-        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent());
+        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId());
     }
 
     /**

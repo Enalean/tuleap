@@ -57,11 +57,11 @@ final class SearchCriteriaFilterTest extends TestCase
         $metadata_factory
             ->method('getMetadataForGroup')
             ->willReturn([
-                             $this->getHardcodedMetadata(Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
-                             $this->getHardcodedMetadata(Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
-                             $this->getCustomMetadata("field_1"),
-                             $this->getCustomMetadata("filename"),
-                         ]);
+                $this->getHardcodedMetadata(Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
+                $this->getHardcodedMetadata(Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
+                $this->getCustomMetadata("field_1"),
+                $this->getCustomMetadata("filename"),
+            ]);
 
 
         $selected_criterion = $this->search_criteria_filter->getCriteria($project, $metadata_factory);

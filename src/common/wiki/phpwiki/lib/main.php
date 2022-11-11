@@ -437,11 +437,12 @@ class WikiRequest extends Request
         static $levels = false;
         if (! $levels) { // This looks like a Visual Basic hack. For the very same reason. "0"
             $levels = ['x-1' => _("FORBIDDEN"),
-                            'x0'  => _("ANON"),
-                            'x1'  => _("BOGO"),
-                            'x2'  => _("USER"),
-                            'x10' => _("ADMIN"),
-                            'x100' => _("UNOBTAINABLE")];
+                'x0'  => _("ANON"),
+                'x1'  => _("BOGO"),
+                'x2'  => _("USER"),
+                'x10' => _("ADMIN"),
+                'x100' => _("UNOBTAINABLE"),
+            ];
         }
         if (! empty($level)) {
             $level = '0';
@@ -529,20 +530,20 @@ class WikiRequest extends Request
         if (! $actionDescriptions) {
             $actionDescriptions
             = ['browse'     => _("view this page"),
-                    'diff'       => _("diff this page"),
-                    'edit'       => _("edit this page"),
-                    'revert'     => _("revert to a previous version of this page"),
-                    'create'     => _("create this page"),
-                    'loadfile'   => _("load files into this wiki"),
-                    'lock'       => _("lock this page"),
-                    'remove'     => _("remove this page"),
-                    'unlock'     => _("unlock this page"),
-                    'upload'     => _("upload a zip dump"),
-                    'verify'     => _("verify the current action"),
-                    'viewsource' => _("view the source of this page"),
-                    'zip'        => _("download a zip dump from this wiki"),
-                    'ziphtml'    => _("download an html zip dump from this wiki"),
-                    ];
+                'diff'       => _("diff this page"),
+                'edit'       => _("edit this page"),
+                'revert'     => _("revert to a previous version of this page"),
+                'create'     => _("create this page"),
+                'loadfile'   => _("load files into this wiki"),
+                'lock'       => _("lock this page"),
+                'remove'     => _("remove this page"),
+                'unlock'     => _("unlock this page"),
+                'upload'     => _("upload a zip dump"),
+                'verify'     => _("verify the current action"),
+                'viewsource' => _("view the source of this page"),
+                'zip'        => _("download a zip dump from this wiki"),
+                'ziphtml'    => _("download an html zip dump from this wiki"),
+            ];
         }
         if (in_array($action, array_keys($actionDescriptions))) {
             return $actionDescriptions[$action];
@@ -568,20 +569,20 @@ class WikiRequest extends Request
         if (! $disallowedActionDescriptions) {
             $disallowedActionDescriptions
             = ['browse'     => _("Browsing pages"),
-                    'diff'       => _("Diffing pages"),
-                    'edit'       => _("Editing pages"),
-                    'revert'     => _("Reverting to a previous version of pages"),
-                    'create'     => _("Creating pages"),
-                    'loadfile'   => _("Loading files"),
-                    'lock'       => _("Locking pages"),
-                    'remove'     => _("Removing pages"),
-                    'unlock'     => _("Unlocking pages"),
-                    'upload'     => _("Uploading zip dumps"),
-                    'verify'     => _("Verify the current action"),
-                    'viewsource' => _("Viewing the source of pages"),
-                    'zip'        => _("Downloading zip dumps"),
-                    'ziphtml'    => _("Downloading html zip dumps"),
-                    ];
+                'diff'       => _("Diffing pages"),
+                'edit'       => _("Editing pages"),
+                'revert'     => _("Reverting to a previous version of pages"),
+                'create'     => _("Creating pages"),
+                'loadfile'   => _("Loading files"),
+                'lock'       => _("Locking pages"),
+                'remove'     => _("Removing pages"),
+                'unlock'     => _("Unlocking pages"),
+                'upload'     => _("Uploading zip dumps"),
+                'verify'     => _("Verify the current action"),
+                'viewsource' => _("Viewing the source of pages"),
+                'zip'        => _("Downloading zip dumps"),
+                'ziphtml'    => _("Downloading html zip dumps"),
+            ];
         }
         if (in_array($action, array_keys($disallowedActionDescriptions))) {
             return $disallowedActionDescriptions[$action];
@@ -1049,11 +1050,11 @@ class WikiRequest extends Request
         $response = false;
         $html     = HTML();
         $em->processEvent('isWikiPageEditable', [
-                        'action'    => 'is_wiki_page_editable',
-                        'group_id'  => GROUP_ID,
-                        'wiki_page' => $this->getArg('pagename'),
-                        'response'  => &$response,
-            ]);
+            'action'    => 'is_wiki_page_editable',
+            'group_id'  => GROUP_ID,
+            'wiki_page' => $this->getArg('pagename'),
+            'response'  => &$response,
+        ]);
         // }}} /Codendi hook
 
         if ($response) {
@@ -1269,8 +1270,9 @@ function main()
     $request->possiblyDeflowerVirginWiki();
 
     $validators = ['wikiname' => WIKI_NAME,
-                        'args'     => wikihash($request->getArgs()),
-                        'prefs'    => wikihash($request->getPrefs())];
+        'args'     => wikihash($request->getArgs()),
+        'prefs'    => wikihash($request->getPrefs()),
+    ];
     if (CACHE_CONTROL == 'STRICT') {
         $dbi                  = $request->getDbh();
         $timestamp            = $dbi->getTimestamp();

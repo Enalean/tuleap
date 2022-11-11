@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as tracker_names_formattor from "./tracker-names-formattor";
 import * as reports_fields_labels_formator from "./reports-fields-labels-formator";
 import type {
@@ -34,7 +35,7 @@ describe("headers-formator", () => {
             new TextCellWithMerges("Tracker01", 1),
             new TextCellWithMerges("Tracker02", 1),
         ];
-        jest.spyOn(tracker_names_formattor, "formatTrackerNames").mockReturnValue(
+        vi.spyOn(tracker_names_formattor, "formatTrackerNames").mockReturnValue(
             expected_tracker_names
         );
         const expected_reports_fields_labels = [
@@ -43,7 +44,7 @@ describe("headers-formator", () => {
             new TextCell("Assigned to"),
             new TextCell("Artifact ID"),
         ];
-        jest.spyOn(reports_fields_labels_formator, "formatReportsFieldsLabels").mockReturnValue(
+        vi.spyOn(reports_fields_labels_formator, "formatReportsFieldsLabels").mockReturnValue(
             expected_reports_fields_labels
         );
 

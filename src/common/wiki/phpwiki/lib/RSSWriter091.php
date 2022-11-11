@@ -117,9 +117,10 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
         $rc_url = WikiURL($request->getArg('pagename'), false, 'absurl');
 
         return ['title' => WIKI_NAME,
-                     'description' => _("RecentChanges"),
-                     'link' => $rc_url,
-                     'language' => 'en-US'];
+            'description' => _("RecentChanges"),
+            'link' => $rc_url,
+            'language' => 'en-US',
+        ];
 
         /* FIXME: language should come from $LANG (or other config variable). */
 
@@ -138,9 +139,9 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
         $pagename = $page->getName();
 
         return [ 'title'        => SplitPagename($pagename),
-                      'description'    => $this->summary($rev),
-                      'link'        => $this->pageURL($rev),
-                      ];
+            'description'    => $this->summary($rev),
+            'link'        => $this->pageURL($rev),
+        ];
     }
 }
 

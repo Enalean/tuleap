@@ -78,7 +78,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\Heartbeat\ExcludeTrackersFromArtifactHeartbeats;
-use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
+use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
@@ -101,7 +101,7 @@ use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeExternalFieldXMLUpdateEvent;
-use Tuleap\User\History\HistoryQuickLink;
+use Tuleap\QuickLink\SwitchToQuickLink;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -156,7 +156,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
             $this->addHook(TRACKER_USAGE);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
-            $this->addHook(HistoryQuickLinkCollection::NAME);
+            $this->addHook(SwitchToLinksCollection::NAME);
             $this->addHook(ExcludeTrackersFromArtifactHeartbeats::NAME);
             $this->addHook(HeartbeatsEntryCollection::NAME);
             $this->addHook(DisplayingTrackerEvent::NAME);
@@ -899,7 +899,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return new ImportXMLFromTracker(new XML_RNGValidator());
     }
 
-    public function getHistoryQuickLinkCollection(HistoryQuickLinkCollection $collection): void
+    public function getSwitchToQuickLinkCollection(SwitchToLinksCollection $collection): void
     {
         $config  = $this->getConfig();
         $tracker = $collection->getArtifact()->getTracker();
@@ -915,17 +915,20 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
         $url = '/plugins/testmanagement/?' . http_build_query(
             [
-                    'group_id' => $project->getID(),
-                ]
+                'group_id' => $project->getID(),
+            ]
         ) . '#!/campaigns/' . urlencode((string) $collection->getArtifact()->getId());
 
-        $collection->add(
-            new HistoryQuickLink(
-                dgettext('tuleap-testmanagement', 'Tests campaign'),
-                $url,
-                'fa-check'
+        $collection->addQuickLink(
+            new SwitchToQuickLink(
+                dgettext('tuleap-testmanagement', 'Tests campaign artifact'),
+                $collection->getArtifactUri(),
+                $collection->getArtifactIconName()
             )
         );
+        $collection->setIconName('fa-check');
+        $collection->setMainUri($url);
+        $collection->removeXRef();
     }
 
     public function collectExcludedTrackerFromArtifactHeartbeats(ExcludeTrackersFromArtifactHeartbeats $event): void

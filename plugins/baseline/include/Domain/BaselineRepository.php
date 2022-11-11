@@ -24,20 +24,18 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Domain;
 
 use DateTimeInterface;
-use PFUser;
-use Project;
 
 interface BaselineRepository
 {
     public function add(
         TransientBaseline $baseline,
-        PFUser $current_user,
+        UserIdentifier $current_user,
         DateTimeInterface $snapshot_date,
     ): Baseline;
 
-    public function findById(PFUser $current_user, int $id): ?Baseline;
+    public function findById(UserIdentifier $current_user, int $id): ?Baseline;
 
-    public function delete(Baseline $baseline, PFUser $current_user);
+    public function delete(Baseline $baseline);
 
     /**
      * Find all baselines on given project, ordered by snapshot date (most recent first).
@@ -45,11 +43,11 @@ interface BaselineRepository
      * @param int $baseline_offset Fetch baselines from this index (start with 0), then follow snapshot date order (in reverse order).
      * @return Baseline[] requested baseline, excluding not authorized ones
      */
-    public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array;
+    public function findByProject(UserIdentifier $current_user, ProjectIdentifier $project, int $page_size, int $baseline_offset): array;
 
     /**
      * @return int total count of all available baselines in given project, excluding any security policy
      * (for performances reasons)
      */
-    public function countByProject(Project $project): int;
+    public function countByProject(ProjectIdentifier $project): int;
 }

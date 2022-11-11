@@ -28,6 +28,10 @@ namespace Tuleap\Queue;
  */
 final class GenericQueueTask implements QueueTask
 {
+    /**
+     * @psalm-param non-empty-string $topic
+     * @psalm-param non-empty-string $message
+     */
     public function __construct(private string $topic, private array $payload, private string $message)
     {
     }

@@ -54,6 +54,7 @@ use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
+use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -63,6 +64,8 @@ use UserManager;
 
 class DocmanEmbeddedFilesResource extends AuthenticatedResource
 {
+    private const MAX_LIMIT = 50;
+
     /**
      * @var \EventManager
      */
@@ -254,6 +257,86 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/version
+     */
+    public function optionsVersion(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * @url    POST {id}/version
+     * @access protected
+     *
+     * @param DocmanEmbeddedFileVersionPOSTRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @hide Only exist for backward compatibility
+     */
+    public function postVersion(
+        int $id,
+        DocmanEmbeddedFileVersionPOSTRepresentation $representation,
+    ): void {
+        $this->postVersions($id, $representation);
+    }
+
+    /**
+     * @url OPTIONS {id}/versions
+     */
+    public function optionsVersions(int $id): void
+    {
+        Header::allowOptionsGetPost();
+    }
+
+    /**
+     * Get versions
+     *
+     * Get versions of an embedded file document
+     * Versions are sorted from newest to oldest.
+     *
+     * @url    GET {id}/versions
+     * @access hybrid
+     *
+     * @param int $id Id of the item
+     * @param int $limit Number of elements displayed {@from path}{@min 1}{@max 50}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @return array {@type \Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionRepresentation}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+
+    public function getVersions(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $this->checkAccess();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $user          = $items_request->getUser();
+        $project       = $items_request->getProject();
+
+        $item->accept($this->getValidator($project, $user, $item), []);
+        // validator make sure that we have an EmbedededFile but we still need $item to have the correct type
+        assert($item instanceof Docman_EmbeddedFile);
+
+        $version_representations_builder = new \Tuleap\Docman\REST\v1\EmbeddedFiles\VersionRepresentationCollectionBuilder(
+            new VersionDao(),
+            UserManager::instance(),
+            new \Docman_ApprovalTableFactoriesFactory(),
+            ProjectManager::instance(),
+        );
+
+        $collection = $version_representations_builder->buildVersionsCollection($item, $limit, $offset);
+
+        Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);
+
+        return $collection->getRepresentations();
+    }
+
+    /**
      * Create a version of an embedded file document
      *
      * <pre>
@@ -264,8 +347,8 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
      *  * empty: No approbation needed for the new version of this document<br>
      * </pre>
      *
-     * @url    POST {id}/version
-     * @access hybrid
+     * @url    POST {id}/versions
+     * @access protected
      *
      * @param int                                         $id             Id of the file
      * @param DocmanEmbeddedFileVersionPOSTRepresentation $representation {@from body}
@@ -278,12 +361,11 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
      * @throws RestException 501
      */
 
-    public function postVersion(
+    public function postVersions(
         int $id,
         DocmanEmbeddedFileVersionPOSTRepresentation $representation,
-    ) {
+    ): void {
         $this->checkAccess();
-        $this->setVersionHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $this->addAllEvent($item_request->getProject());
@@ -365,19 +447,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     private function setHeadersForLock(): void
     {
         Header::allowOptionsPostDelete();
-    }
-
-    /**
-     * @url OPTIONS {id}/version
-     */
-    public function optionsNewVersion(int $id): void
-    {
-        $this->setVersionHeaders();
-    }
-
-    private function setVersionHeaders(): void
-    {
-        Header::allowOptionsPost();
     }
 
     /**

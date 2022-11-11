@@ -32,6 +32,7 @@
                 v-bind:version="version"
                 v-bind:item="item"
                 v-on:approval-table-action-change="setApprovalUpdateAction"
+                v-bind:is-open-after-dnd="false"
             >
                 <file-properties
                     v-model="uploaded_item.file_properties"

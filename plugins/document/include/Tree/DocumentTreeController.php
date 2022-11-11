@@ -25,6 +25,7 @@ namespace Tuleap\Document\Tree;
 use CSRFSynchronizerToken;
 use HTTPRequest;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
@@ -35,6 +36,7 @@ use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -55,6 +57,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         private ListOfSearchCriterionPresenterBuilder $criteria_builder,
         private ListOfSearchColumnDefinitionPresenterBuilder $column_builder,
         private ITellIfWritersAreAllowedToUpdatePropertiesOrDelete $forbid_writers_settings,
+        private EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -103,11 +106,12 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                     $project
                 ),
                 $this->column_builder->getColumns($project, $metadata_factory),
-                $this->filename_pattern_retriever->getPattern((int) $project->getID())
+                $this->filename_pattern_retriever->getPattern((int) $project->getID()),
+                $this->dispatcher->dispatch(new ShouldDisplaySourceColumnForFileVersions())->shouldDisplaySourceColumn()
             )
         );
 
-        $layout->footer(["without_content" => true]);
+        $layout->footer(FooterConfiguration::withoutContent());
     }
 
     /**

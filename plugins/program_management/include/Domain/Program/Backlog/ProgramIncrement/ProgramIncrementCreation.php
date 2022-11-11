@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Events\ArtifactCreatedEvent;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementCreationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DomainChangeset;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RetrieveLastChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TimeboxMirroringOrder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementTrackerIdentifier;
@@ -96,6 +97,41 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
             return null;
         }
         return new self($program_increment, $program_increment_tracker, $changeset, $changeset, $user);
+    }
+
+    public static function fromTeamSynchronization(
+        RetrieveProgramIncrementTracker $tracker_retriever,
+        RetrieveLastChangeset $retrieve_last_changeset,
+        VerifyIsChangeset $verify_is_changeset,
+        ProgramIncrementIdentifier $program_increment,
+        UserIdentifier $user,
+    ): ?self {
+        $program_increment_tracker = ProgramIncrementTrackerIdentifier::fromProgramIncrement(
+            $tracker_retriever,
+            $program_increment
+        );
+
+        $changeset_id = $retrieve_last_changeset->retrieveLastChangesetId($program_increment);
+        if (! $changeset_id) {
+            return null;
+        }
+
+        $changeset_identifier = DomainChangeset::fromId(
+            $verify_is_changeset,
+            $changeset_id
+        );
+
+        if (! $changeset_identifier) {
+            return null;
+        }
+
+        return new self(
+            $program_increment,
+            $program_increment_tracker,
+            $changeset_identifier,
+            $changeset_identifier,
+            $user
+        );
     }
 
     public function getTimebox(): TimeboxIdentifier

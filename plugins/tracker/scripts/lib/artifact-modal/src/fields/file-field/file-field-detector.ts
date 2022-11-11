@@ -18,20 +18,22 @@
  */
 
 import { FILE_FIELD } from "@tuleap/plugin-tracker-constants";
+import type { Field } from "../../domain/fields/Field";
 import { isDisabled } from "../disabled-field-detector";
-import type { Field, FileField } from "../../types";
+import type { FileFieldValueModel } from "../../domain/fields/file-field/FileFieldValueModel";
 
-const isFileField = (field: Field): field is FileField => field.type === FILE_FIELD;
-const isEnabledFileField = (field: Field): field is FileField =>
+const isFileField = (field: Field): field is FileFieldValueModel => field.type === FILE_FIELD;
+const isEnabledFileField = (field: Field): field is FileFieldValueModel =>
     isFileField(field) && !isDisabled(field);
 
-export const getAllFileFields = (tracker_fields: Field[]): FileField[] =>
-    tracker_fields.filter(isEnabledFileField);
+export const getAllFileFields = (
+    tracker_fields: readonly Field[]
+): readonly FileFieldValueModel[] => tracker_fields.filter(isEnabledFileField);
 
-export const isThereAtLeastOneFileField = (tracker_fields: Field[]): boolean =>
+export const isThereAtLeastOneFileField = (tracker_fields: readonly Field[]): boolean =>
     tracker_fields.some(isEnabledFileField);
 
-export function getFirstFileField(tracker_fields: Field[]): FileField | null {
+export function getFirstFileField(tracker_fields: readonly Field[]): FileFieldValueModel | null {
     const result = tracker_fields.find(isEnabledFileField);
     return result !== undefined ? result : null;
 }

@@ -24,12 +24,11 @@
 }
 
 #dashboard-tabs-dropdown-trigger {
-    transition: color 100ms, opacity 100ms;
-    opacity: 0.5;
-    color: var(--tlp-dimmed-color);
+    transition: color 100ms;
+    color: var(--tlp-neutral-dark-color-darker-10);
+    font-size: 0.8rem;
 
     &:hover {
-        opacity: 1;
         color: var(--tlp-main-color);
     }
 }
@@ -233,7 +232,7 @@ body.gu-unselectable {
         @include widget-placeholder(50%, auto, 50%, "column");
     }
 
-    .dashboard-widgets-row:not(.one-column) .dashboard-widget:not(.gu-mirror):not(.gu-transit) {
+    .dashboard-widgets-row:not(.one-column) .dashboard-widget:not(.gu-mirror, .gu-transit) {
         position: relative;
 
         &::after {

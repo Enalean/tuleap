@@ -42,6 +42,7 @@ use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Links\VersionRepresentationCollectionBuilder;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
@@ -52,6 +53,7 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresent
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Docman\Version\LinkVersionDao;
 use Tuleap\Docman\Version\LinkVersionDataUpdator;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
@@ -62,6 +64,8 @@ use UserManager;
 
 class DocmanLinksResource extends AuthenticatedResource
 {
+    private const MAX_LIMIT = 50;
+
     /**
      * @var \EventManager
      */
@@ -245,6 +249,32 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/version
+     */
+    public function optionsNewVersion(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * @url    POST {id}/version
+     * @access protected
+     *
+     * @param DocmanLinkVersionPOSTRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @hide Only exist for backward compatibility
+     */
+
+    public function postVersion(
+        int $id,
+        DocmanLinkVersionPOSTRepresentation $representation,
+    ): void {
+        $this->postVersions($id, $representation);
+    }
+
+
+    /**
      * Create a version of a link
      *
      * <pre>
@@ -255,8 +285,8 @@ class DocmanLinksResource extends AuthenticatedResource
      *  * empty: No approbation needed for the new version of this document<br>
      * </pre>
      *
-     * @url    POST {id}/version
-     * @access hybrid
+     * @url    POST {id}/versions
+     * @access protected
      *
      * @param int                                 $id             Id of the file
      * @param DocmanLinkVersionPOSTRepresentation $representation {@from body}
@@ -268,13 +298,11 @@ class DocmanLinksResource extends AuthenticatedResource
      * @throws RestException 409
      * @throws RestException 501
      */
-
-    public function postVersion(
+    public function postVersions(
         int $id,
         DocmanLinkVersionPOSTRepresentation $representation,
-    ) {
+    ): void {
         $this->checkAccess();
-        $this->setVersionHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $this->addAllEvent($item_request->getProject());
@@ -289,6 +317,51 @@ class DocmanLinksResource extends AuthenticatedResource
             (string) $item->getTitle(),
             (string) $item->getDescription()
         );
+    }
+
+    /**
+     * Get the versions of a link
+     *
+     * Versions are sorted from newest to oldest.
+     *
+     * @url    GET {id}/versions
+     * @access hybrid
+     *
+     * @param int $id Id of the item
+     * @param int $limit Number of elements displayed {@from path}{@min 1}{@max 50}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @return array {@type \Tuleap\Docman\REST\v1\Links\LinkVersionRepresentation}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     *
+     */
+    public function getVersions(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $this->checkAccess();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $user          = $items_request->getUser();
+        $project       = $items_request->getProject();
+
+        $item->accept($this->getValidator($project, $user, $item), []);
+        // validator make sure that we have a Link, but we still need $item to have the correct type
+        assert($item instanceof Docman_Link);
+
+        $item_representation_builder = new VersionRepresentationCollectionBuilder(
+            new LinkVersionDao(),
+            UserManager::instance(),
+        );
+
+        $items_representation = $item_representation_builder->buildVersionsCollection($item, $limit, $offset);
+
+        Header::sendPaginationHeaders($limit, $offset, $items_representation->getTotalSize(), self::MAX_LIMIT);
+
+        return $items_representation->getRepresentations();
     }
 
 
@@ -410,16 +483,11 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
-     * @url OPTIONS {id}/version
+     * @url OPTIONS {id}/versions
      */
-    public function optionsNewVersion(int $id): void
+    public function optionsVersions(int $id): void
     {
-        $this->setVersionHeaders();
-    }
-
-    private function setVersionHeaders(): void
-    {
-        Header::allowOptionsPost();
+        Header::allowOptionsGetPost();
     }
 
     /**

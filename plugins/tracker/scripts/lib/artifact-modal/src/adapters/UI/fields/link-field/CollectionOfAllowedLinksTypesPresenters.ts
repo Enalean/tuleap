@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
+import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
+import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
+import type { CollectAllowedLinksTypes } from "../../../../domain/fields/link-field/CollectAllowedLinksTypes";
 import {
     FORWARD_DIRECTION,
     REVERSE_DIRECTION,
 } from "../../../../domain/fields/link-field/LinkType";
-import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
 
 export type CollectionOfAllowedLinksTypesPresenters = {
     readonly is_parent_type_disabled: boolean;
@@ -30,33 +31,28 @@ export type CollectionOfAllowedLinksTypesPresenters = {
 };
 
 export interface AllowedLinkTypesPresenterContainer {
-    readonly forward_type_presenter: AllowedLinkTypePresenter;
-    readonly reverse_type_presenter: AllowedLinkTypePresenter;
+    readonly forward_type_presenter: LinkType;
+    readonly reverse_type_presenter: LinkType;
 }
 
-export interface AllowedLinkTypePresenter {
-    readonly label: string;
-    readonly shortname: string;
-    readonly direction: "forward" | "reverse";
-}
+const getTypeWithDirection = (two_ways_types: LinkType[], direction: string): LinkType => {
+    const type = two_ways_types.find((type) => type.direction === direction);
+    if (!type) {
+        throw new Error(`Cannot find type with direction ${direction}`);
+    }
+
+    return type;
+};
 
 export const CollectionOfAllowedLinksTypesPresenters = {
     fromCollectionOfAllowedLinkType: (
         parent_verifier: VerifyHasParentLink,
-        types: readonly AllowedLinkTypeRepresentation[]
+        allowed_types: CollectAllowedLinksTypes
     ): CollectionOfAllowedLinksTypesPresenters => ({
         is_parent_type_disabled: parent_verifier.hasParentLink(),
-        types: types.map((allowed_type) => ({
-            forward_type_presenter: {
-                label: allowed_type.forward_label,
-                shortname: allowed_type.shortname,
-                direction: FORWARD_DIRECTION,
-            },
-            reverse_type_presenter: {
-                label: allowed_type.reverse_label,
-                shortname: allowed_type.shortname,
-                direction: REVERSE_DIRECTION,
-            },
+        types: allowed_types.getAll().map((allowed_type) => ({
+            forward_type_presenter: getTypeWithDirection(allowed_type, FORWARD_DIRECTION),
+            reverse_type_presenter: getTypeWithDirection(allowed_type, REVERSE_DIRECTION),
         })),
     }),
 

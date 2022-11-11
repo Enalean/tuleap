@@ -84,4 +84,28 @@ final class CssViteAssetTest extends TestCase
 
         self::assertEquals(CssAssetCollection::empty(), $collection);
     }
+
+    public function testItBuildsFromACSSOnlyAssetInManifest(): void
+    {
+        $manifest_dir = vfsStream::setup()->url();
+        file_put_contents(
+            $manifest_dir . '/manifest.json',
+            <<<EOF
+            {
+              "style.scss": {
+                "file": "assets/style.155a00bb.css",
+                "src": "style.scss",
+                "isEntry": true
+              }
+            }
+            EOF
+        );
+        $include_assets = new IncludeViteAssets($manifest_dir, '/');
+
+        $css_asset = CssViteAsset::fromFileName($include_assets, 'style.scss');
+
+        $theme_variation = $this->createStub(ThemeVariation::class);
+        self::assertSame('/assets/style.155a00bb.css', $css_asset->getFileURL($theme_variation));
+        self::assertSame('style.155a00bb.css', $css_asset->getIdentifier());
+    }
 }

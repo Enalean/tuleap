@@ -32,7 +32,15 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         $all_keys = $get_config_keys->getSortedKeysWithMetadata();
         self::assertArrayHasKey('sys_use_project_registration', $all_keys);
         self::assertEquals(
-            new ConfigKeyMetadata('Is project creation allowed to regular users (1) or not (0)', true, false, null),
+            new ConfigKeyMetadata(
+                'Is project creation allowed to regular users (1) or not (0)',
+                true,
+                false,
+                false,
+                null,
+                null,
+                null
+            ),
             $all_keys['sys_use_project_registration'],
         );
     }
@@ -124,6 +132,21 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('bar', $keys['foo']->category);
     }
 
+    public function testConfigKeyWithValidator(): void
+    {
+        $class = new class {
+            #[ConfigKey('summary')]
+            #[ConfigKeyValueValidator(GetConfigKeysValueValidator::class)]
+            public const SOME_STUFF = 'foo';
+        };
+
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
+
+        $key_metadata = $get_config_keys->getKeyMetadata($class::SOME_STUFF);
+        self::assertInstanceOf(GetConfigKeysValueValidator::class, $key_metadata->value_validator);
+    }
+
     public function testConfigKeyHoldsSecret(): void
     {
         $class = new class {
@@ -137,5 +160,44 @@ final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $key_metadata = $get_config_keys->getKeyMetadata($class::SOME_STUFF);
         self::assertTrue($key_metadata->is_secret);
+        self::assertNull($key_metadata->secret_validator);
+    }
+
+    public function testConfigKeyHoldsSecretWithDedicatedValidator(): void
+    {
+        $class = new class {
+            #[ConfigKey('summary')]
+            #[ConfigKeySecret]
+            #[ConfigKeySecretValidator(GetConfigKeysSecretValidator::class)]
+            public const SOME_STUFF = 'foo';
+        };
+
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
+
+        $key_metadata = $get_config_keys->getKeyMetadata($class::SOME_STUFF);
+        self::assertTrue($key_metadata->is_secret);
+        self::assertInstanceOf(GetConfigKeysSecretValidator::class, $key_metadata->secret_validator);
+    }
+
+    public function testHiddenConfigKey(): void
+    {
+        $class = new class {
+            #[ConfigKey('summary hidden key')]
+            #[ConfigKeyHidden]
+            public const HIDDEN_KEY = 'foo';
+
+            #[ConfigKey('summary regular key')]
+            public const SOME_STUFF = 'bar';
+        };
+
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
+
+        $key_metadata = $get_config_keys->getKeyMetadata($class::HIDDEN_KEY);
+        self::assertTrue($key_metadata->is_hidden);
+
+        $key_metadata = $get_config_keys->getKeyMetadata($class::SOME_STUFF);
+        self::assertFalse($key_metadata->is_hidden);
     }
 }

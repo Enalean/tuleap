@@ -23,35 +23,36 @@
     </span>
 </template>
 
-<script>
+<script setup lang="ts">
 import DateUtils from "../../support/date-utils";
+import { computed } from "vue";
 
-export default {
-    name: "HumanizedDate",
+const props = withDefaults(
+    defineProps<{
+        date: string;
+        start_with_capital?: boolean;
+    }>(),
+    {
+        start_with_capital: false,
+    }
+);
 
-    props: {
-        date: { required: true, type: String },
-        start_with_capital: { type: Boolean, default: false },
-    },
+const formatted_date = computed(() => {
+    return DateUtils.format(props.date);
+});
 
-    computed: {
-        formatted_date() {
-            return DateUtils.format(this.date);
-        },
-        interval_from_now() {
-            return DateUtils.getFromNow(this.date);
-        },
-        humanized_date() {
-            if (this.start_with_capital) {
-                return this.capitalizeFirstLetter(this.interval_from_now);
-            }
-            return this.interval_from_now;
-        },
-    },
-    methods: {
-        capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        },
-    },
-};
+const interval_from_now = computed(() => {
+    return DateUtils.getFromNow(props.date);
+});
+
+const humanized_date = computed((): string => {
+    if (props.start_with_capital) {
+        return capitalizeFirstLetter(interval_from_now.value);
+    }
+    return interval_from_now.value;
+});
+
+function capitalizeFirstLetter(string: string): string {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 </script>

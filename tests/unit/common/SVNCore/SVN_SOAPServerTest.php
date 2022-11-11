@@ -68,12 +68,14 @@ class SVN_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCheckUserSessionAndGroupValidityWithLogDetails(): void
     {
+        $this->expectNotToPerformAssertions();
         $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $this->svn_repository_listing, new EventManager());
         $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
     }
 
     public function testItThrowsSoapFaultIfUserHasWrongPermissions(): void
     {
+        $this->expectNotToPerformAssertions();
         $soap_request_valid = Mockery::mock(SOAPRequestValidator::class);
         $soap_request_valid->shouldReceive('getProjectById')->with($this->group_id, \Mockery::any())->andReturns($this->project);
         $soap_request_valid->shouldReceive('continueSession')->with($this->session_key)->andReturns($this->user);
@@ -85,6 +87,7 @@ class SVN_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotThrowSoapFaultIfRepositoryIsEmpty(): void
     {
+        $this->expectNotToPerformAssertions();
         $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $this->svn_repository_listing, new EventManager());
         $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
     }

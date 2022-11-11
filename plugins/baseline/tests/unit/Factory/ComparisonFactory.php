@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use PFUser;
+use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\Comparison;
 use Tuleap\Baseline\Support\DateTimeFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class ComparisonFactory
 {
@@ -45,7 +46,7 @@ class ComparisonFactory
             BaselineFactory::one()
                 ->artifact($base_baseline->getArtifact())
                 ->build(),
-            new PFUser(),
+            UserProxy::fromUser(UserTestBuilder::aUser()->build()),
             DateTimeFactory::one()
         );
     }

@@ -93,14 +93,14 @@ final class PullRequestsCommentsTest extends RestBase
     {
         $response = $this->getResponse($this->request_factory->createRequest('POST', 'pull_requests/1/comments')->withBody($this->stream_factory->createStream(json_encode(
             [
-                'content' => 'Shot down in flames',
+                'content' => 'You should use Template<T>.',
             ]
         ))));
 
         $this->assertEquals($response->getStatusCode(), 201);
 
         $pull_request_comment = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals('Shot down in flames', $pull_request_comment['content']);
+        $this->assertEquals('You should use Template&lt;T&gt;.', $pull_request_comment['content']);
     }
 
     public function testPostPullRequestCommentWithReadOnlyAdmin(): void

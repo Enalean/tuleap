@@ -91,8 +91,8 @@ class MembershipManagerListGroupsCacheTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class)->shouldReceive('getId')->andReturns(37)->getMock();
 
-        $this->driver->shouldReceive('getAllGroups')->with($this->remote_server)->andReturns([]);
-        $this->driver->shouldReceive('getAllGroups')->with($remote_server2)->andReturns([]);
+        $this->driver->shouldReceive('getAllGroups')->with($this->remote_server)->andReturns([])->once();
+        $this->driver->shouldReceive('getAllGroups')->with($remote_server2)->andReturns([])->once();
         $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);
         $this->membership_manager->doesGroupExistOnServer($remote_server2, $this->u_group);
     }

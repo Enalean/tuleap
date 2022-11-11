@@ -32,6 +32,10 @@ interface PossibleParentSelectorEvent
 
     public function trackerIsInRootPlanning(): bool;
 
+    public function getTrackerId(): int;
+
+    public function disableSelector(): void;
+
     /**
      * @psalm-mutation-free
      */

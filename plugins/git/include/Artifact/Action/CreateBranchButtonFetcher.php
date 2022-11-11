@@ -80,7 +80,7 @@ final class CreateBranchButtonFetcher
 
         return new AdditionalButtonAction(
             $link,
-            $this->javascript_asset->getFileURL()
+            $this->javascript_asset
         );
     }
 

@@ -102,72 +102,33 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
 
     public function fetchForSemanticsHomepage(): string
     {
-        $html = dgettext('tuleap-tracker', '<p>The <strong>contributor(s)/assignee(s)</strong> are the person(s) who are responsible for the work needed to complete the artifact.</p>');
+        $html = dgettext('tuleap-tracker', 'The contributor(s)/assignee(s) are the person(s) who are responsible for the work needed to complete the artifact.');
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
-            $html    .= sprintf(dgettext('tuleap-tracker', '<p>One will be considered as a contributor/assignee of this artifact if her name appears in the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
+            $html    .= sprintf(dgettext('tuleap-tracker', 'One will be considered as a contributor/assignee of this artifact if her name appears in the field %1$s.'), $purifier->purify($field->getLabel()));
         } else {
-            $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>contributor/assignee</em> yet.</p>');
+            $html .= dgettext('tuleap-tracker', 'The artifacts of this tracker does not have any contributor/assignee yet.');
         }
 
         return $html;
     }
 
-    /**
-     * Display the form to let the admin change the semantic
-     *
-     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
-     *
-     * @return void
-     */
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
-        $html = '';
+        $this->tracker->displayAdminItemHeaderBurningParrot(
+            $tracker_manager,
+            'editsemantic',
+            $this->getLabel()
+        );
 
-        if ($list_fields = Tracker_FormElementFactory::instance()->searchUsedUserClosedListFields($this->tracker)) {
-            $html  .= '<form method="POST" action="' . $this->getUrl() . '">';
-            $html  .= $this->getCSRFToken()->fetchHTMLInput();
-            $select = '<select name="list_field_id">';
-            if (! $this->getFieldId()) {
-                $select .= '<option value="" selected="selected">' . $purifier->purify(dgettext('tuleap-tracker', 'Choose a field...')) . '</option>';
-            }
+        $template_renderer       = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $admin_presenter_builder = new \Tuleap\Tracker\Semantic\Contributor\AdminPresenterBuilder(Tracker_FormElementFactory::instance());
 
-            foreach ($list_fields as $list_field) {
-                if ($list_field->getId() == $this->getFieldId()) {
-                    $selected = ' selected="selected" ';
-                } else {
-                    $selected = '';
-                }
-                $select .= '<option value="' . $purifier->purify($list_field->getId()) . '" ' . $selected . '>' . $purifier->purify($list_field->getLabel()) . '</option>';
-            }
-            $select .= '</select>';
+        echo $template_renderer->renderToString(
+            'semantics/admin-contributor',
+            $admin_presenter_builder->build($this, $this->tracker, $this->getCSRFToken())
+        );
 
-            $unset_btn  = '<button type="submit" class="btn btn-danger" name="delete">';
-            $unset_btn .= $purifier->purify(dgettext('tuleap-tracker', 'Unset this semantic')) . '</button>';
-
-            $submit_btn  = '<button type="submit" class="btn btn-primary" name="update">';
-            $submit_btn .= $purifier->purify($GLOBALS['Language']->getText('global', 'save_change')) . '</button>';
-
-            if (! $this->getFieldId()) {
-                $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>contributor/assignee</em> yet.</p>');
-                $html .= '<p>' . $purifier->purify(dgettext('tuleap-tracker', 'Feel free to choose one:'));
-                $html .= $select . ' <br> ' . $submit_btn;
-                $html .= '</p>';
-            } else {
-                $html .= sprintf(dgettext('tuleap-tracker', '<p>One will be considered as a contributor/assignee of this artifact if her name appears in the field <strong>%1$s</strong>.</p>'), $select);
-                $html .= $submit_btn . ' ' . $purifier->purify($GLOBALS['Language']->getText('global', 'or')) . ' ' . $unset_btn;
-            }
-            $html .= '</form>';
-        } else {
-            $html .= dgettext('tuleap-tracker', 'You cannot define the <em>contributor/assignee</em> semantic since there isn\'t any user list field in the tracker');
-        }
-        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . dgettext('tuleap-tracker', 'go back to semantic overview') . '</a></p>';
-        echo $html;
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 

@@ -1531,19 +1531,19 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user, $type, Tracker $tracker)
     {
         $row = [
-                        'formElement_type'  => $type,
-                        'id'                => 0,
-                        'tracker_id'        => $tracker->getId(),
-                        'parent_id'         => null,
-                        'name'              => null,
-                        'label'             => '',
-                        'description'       => null,
-                        'use_it'            => null,
-                        'scope'             => null,
-                        'rank'              => null,
-                        'required'          => 0,
-                        'notifications'     => 0,
-                        'original_field_id' => null,
+            'formElement_type'  => $type,
+            'id'                => 0,
+            'tracker_id'        => $tracker->getId(),
+            'parent_id'         => null,
+            'name'              => null,
+            'label'             => '',
+            'description'       => null,
+            'use_it'            => null,
+            'scope'             => null,
+            'rank'              => null,
+            'required'          => 0,
+            'notifications'     => 0,
+            'original_field_id' => null,
         ];
         if ($form_element = $this->getInstanceFromRow($row)) {
             $form_element->setTracker($tracker);
@@ -1678,8 +1678,9 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
                         EventManager::instance()->processEvent(
                             'tracker_formElement_justcreated',
                             ['id' => $id,
-                                                                     'row' => $form_element_data,
-                            'type' => $type]
+                                'row' => $form_element_data,
+                                'type' => $type,
+                            ]
                         );
                         //Clear some internal cache
                         unset($this->formElements_by_parent[$parent_id]);

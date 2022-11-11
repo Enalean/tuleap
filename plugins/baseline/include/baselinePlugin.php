@@ -21,14 +21,29 @@
 
 declare(strict_types=1);
 
+use Tuleap\Baseline\Adapter\Administration\BaselineUserGroupRetriever;
+use Tuleap\Baseline\Adapter\Administration\PermissionPerGroupBaselineServicePaneBuilder;
+use Tuleap\Baseline\Adapter\Administration\RoleAssignmentsHistoryEntryAdder;
+use Tuleap\Baseline\Adapter\Routing\RejectNonBaselineAdministratorMiddleware;
+use Tuleap\Baseline\BaselineTuleapService;
+use Tuleap\Baseline\Domain\Authorizations;
+use Tuleap\Baseline\Domain\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleAssignmentsHistorySaver;
 use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
+use Tuleap\Baseline\Support\ContainerBuilderFactory;
+use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\Project\Service\UserCanAccessToServiceEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -57,9 +72,13 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
 
     public function getHooksAndCallbacks(): Collection
     {
+        $this->addHook(UserCanAccessToServiceEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
-
+        $this->addHook(GetHistoryKeyLabel::NAME);
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
+        $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -73,18 +92,40 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         return $this->pluginInfo;
     }
 
-    /**
-     * @see Event::SERVICE_CLASSNAMES
-     * @param array{classnames: array<string, class-string>, project: \Project} $params
-     */
-    public function serviceClassnames(array &$params): void
+    public function userCanAccessToService(UserCanAccessToServiceEvent $event): void
     {
-        $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Baseline\BaselineTuleapService::class;
+        if ($event->getService()->getShortName() !== self::SERVICE_SHORTNAME) {
+            return;
+        }
+
+        $authorizations = ContainerBuilderFactory::create()->build()->get(Authorizations::class);
+        assert($authorizations instanceof Authorizations);
+
+        $user    = \Tuleap\Baseline\Adapter\UserProxy::fromUser($event->getUser());
+        $project = \Tuleap\Baseline\Adapter\ProjectProxy::buildFromProject($event->getService()->getProject());
+
+        $can_read_baselines_on_project   = $authorizations->canReadBaselinesOnProject($user, $project);
+        $can_read_comparisons_on_project = $authorizations->canReadComparisonsOnProject($user, $project);
+
+        if (! $can_read_baselines_on_project && ! $can_read_comparisons_on_project) {
+            $event->forbidAccessToService();
+        }
     }
 
     /**
-     * @see Event::SERVICE_IS_USED
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     *
+     * @see Event::SERVICE_CLASSNAMES
+     */
+    public function serviceClassnames(array &$params): void
+    {
+        $params['classnames'][self::SERVICE_SHORTNAME] = BaselineTuleapService::class;
+    }
+
+    /**
      * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     *
+     * @see Event::SERVICE_IS_USED
      */
     public function serviceIsUsed(array $params): void
     {
@@ -108,11 +149,69 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
 
     public function routeGetSlash(): ServiceController
     {
+        $container = ContainerBuilderFactory::create()->build();
+
         return new ServiceController(
             ProjectManager::instance(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
             $this,
-            new ProjectFlagsBuilder(new ProjectFlagsDao())
+            new ProjectFlagsBuilder(new ProjectFlagsDao()),
+            $container->get(Authorizations::class),
+        );
+    }
+
+    public function routeGetProjectAdmin(): \Tuleap\Request\DispatchableWithRequest
+    {
+        $container = ContainerBuilderFactory::create()->build();
+
+        return new \Tuleap\Baseline\ServiceAdministrationController(
+            \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
+            \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
+            $this,
+            TemplateRendererFactory::build(),
+            new \Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenterBuilder(
+                new User_ForgeUserGroupFactory(new UserGroupDao()),
+                $container->get(RoleAssignmentRepository::class),
+            ),
+            new \Tuleap\Baseline\CSRFSynchronizerTokenProvider(),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new \Tuleap\Http\Server\ServiceInstrumentationMiddleware(self::NAME),
+            new \Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware(\Tuleap\Request\ProjectRetriever::buildSelf()),
+            new RejectNonBaselineAdministratorMiddleware(
+                UserManager::instance(),
+                new \Tuleap\Project\Admin\Routing\ProjectAdministratorChecker(),
+                $container->get(Authorizations::class),
+            )
+        );
+    }
+
+    public function routePostProjectAdmin(): \Tuleap\Request\DispatchableWithRequest
+    {
+        $container = ContainerBuilderFactory::create()->build();
+
+        return new \Tuleap\Baseline\ServiceSavePermissionsController(
+            new \Tuleap\Baseline\Domain\RoleAssignmentsSaver(
+                $container->get(RoleAssignmentRepository::class),
+                new BaselineUserGroupRetriever(ProjectManager::instance(), new UGroupManager()),
+                new RoleAssignmentsHistorySaver(
+                    new RoleAssignmentsHistoryEntryAdder(
+                        new ProjectHistoryDao()
+                    )
+                ),
+            ),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new \Tuleap\Baseline\CSRFSynchronizerTokenProvider(),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new \Tuleap\Http\Server\ServiceInstrumentationMiddleware(self::NAME),
+            new \Tuleap\Project\Routing\ProjectByNameRetrieverMiddleware(\Tuleap\Request\ProjectRetriever::buildSelf()),
+            new RejectNonBaselineAdministratorMiddleware(
+                UserManager::instance(),
+                new \Tuleap\Project\Admin\Routing\ProjectAdministratorChecker(),
+                $container->get(Authorizations::class),
+            )
         );
     }
 
@@ -121,6 +220,14 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         $event->getRouteCollector()->addGroup(
             $this->getPluginPath(),
             function (FastRoute\RouteCollector $r) {
+                $r->get(
+                    '/{' . ServiceController::PROJECT_NAME_VARIABLE_NAME . '}/admin',
+                    $this->getRouteHandler('routeGetProjectAdmin')
+                );
+                $r->post(
+                    '/{' . ServiceController::PROJECT_NAME_VARIABLE_NAME . '}/admin',
+                    $this->getRouteHandler('routePostProjectAdmin')
+                );
                 $r->get(
                     '/{' . ServiceController::PROJECT_NAME_VARIABLE_NAME . '}[/{vue-routing:.*}]',
                     $this->getRouteHandler('routeGetSlash')
@@ -136,5 +243,72 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
     {
         $injector = new BaselineRestResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
+    {
+        $label = RoleAssignmentsHistorySaver::getLabelFromKey($event->getKey());
+        if ($label) {
+            $event->setLabel($label);
+        }
+    }
+
+    public function fillProjectHistorySubEvents(array $params): void
+    {
+        RoleAssignmentsHistorySaver::fillProjectHistorySubEvents($params);
+    }
+
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void
+    {
+        $project = $event->getProject();
+        $service = $project->getService(self::SERVICE_SHORTNAME);
+        if (! $service instanceof BaselineTuleapService) {
+            return;
+        }
+
+        if (! $this->isAllowed($project->getID())) {
+            return;
+        }
+
+        $ugroup_manager = new UGroupManager();
+        $container      = ContainerBuilderFactory::create()->build();
+
+        $service_pane_builder = new PermissionPerGroupBaselineServicePaneBuilder(
+            new PermissionPerGroupUGroupFormatter($ugroup_manager),
+            $container->get(RoleAssignmentRepository::class),
+            $ugroup_manager,
+        );
+
+        $template_factory      = TemplateRendererFactory::build();
+        $admin_permission_pane = $template_factory
+            ->getRenderer(__DIR__ . '/../templates')
+            ->renderToString(
+                'project-admin-permission-per-group',
+                $service_pane_builder->buildPresenter($event)
+            );
+
+        $rank_in_project = $service->getRank();
+        $event->addPane($admin_permission_pane, $rank_in_project);
+    }
+
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(
+        NavigationDropdownQuickLinksCollector $quick_links_collector,
+    ): void {
+        $project = $quick_links_collector->getProject();
+        $service = $project->getService(self::SERVICE_SHORTNAME);
+        if (! $service instanceof BaselineTuleapService) {
+            return;
+        }
+
+        if (! $this->isAllowed($project->getID())) {
+            return;
+        }
+
+        $quick_links_collector->addQuickLink(
+            new NavigationDropdownItemPresenter(
+                dgettext('tuleap-baseline', 'Baseline'),
+                \Tuleap\Baseline\ServiceAdministrationController::getAdminUrl($project),
+            )
+        );
     }
 }

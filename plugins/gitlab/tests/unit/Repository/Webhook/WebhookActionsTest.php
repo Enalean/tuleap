@@ -23,7 +23,6 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 use DateTimeImmutable;
 use LogicException;
-use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
@@ -33,6 +32,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagPushWebhookActionProcessor;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -90,7 +90,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
     }

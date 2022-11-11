@@ -23,15 +23,15 @@ namespace Tuleap\Docman\Version;
 
 use Tuleap\DB\DataAccessObject;
 
-class VersionDao extends DataAccessObject
+class VersionDao extends DataAccessObject implements ICountVersions
 {
     /**
-     * @psalm-return list<array{number: int, label: string, filename: string}>
+     * @psalm-return list<array{id: int, number: int, label: string, filename: string, user_id: int, date: int, changelog: string|null, authoring_tool: string}>
      */
     public function searchByItemId(int $id, int $offset, int $limit): array
     {
         $sql =
-            "SELECT number, label, filename
+            "SELECT id, number, label, filename, user_id, date, changelog, authoring_tool
                 FROM plugin_docman_version WHERE item_id = ? ORDER BY number DESC LIMIT ?, ?";
 
         return $this->getDB()->run($sql, $id, $offset, $limit);
@@ -43,5 +43,15 @@ class VersionDao extends DataAccessObject
             'SELECT COUNT(*) AS nb FROM plugin_docman_version WHERE item_id = ?',
             [$id]
         );
+    }
+
+    /**
+     * @psalm-return null|array{id: int, number: int, label: string, filename: string, user_id: int, date: int, changelog: string|null, authoring_tool: string}
+     */
+    public function searchById(int $id): ?array
+    {
+        $sql = "SELECT * FROM plugin_docman_version WHERE id = ?";
+
+        return $this->getDB()->row($sql, $id);
     }
 }

@@ -141,6 +141,7 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
+            null,
             $project
         );
 
@@ -168,6 +169,7 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
+            null,
             $project
         );
 
@@ -195,6 +197,7 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
+            null,
             $project
         );
 
@@ -222,6 +225,7 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
+            null,
             $project
         );
 
@@ -251,6 +255,7 @@ class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
+            null,
             $project
         );
 

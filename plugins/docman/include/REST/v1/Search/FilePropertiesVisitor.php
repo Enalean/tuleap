@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Search;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\OpenItemHref;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 /**
@@ -31,8 +33,10 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
  */
 final class FilePropertiesVisitor implements ItemVisitor
 {
-    public function __construct(private \Docman_VersionFactory $version_factory)
-    {
+    public function __construct(
+        private \Docman_VersionFactory $version_factory,
+        private EventDispatcherInterface $event_dispatcher,
+    ) {
     }
 
     public function visitFolder(\Docman_Folder $item, array $params = [])
@@ -57,8 +61,9 @@ final class FilePropertiesVisitor implements ItemVisitor
             return null;
         }
 
-        $download_href = $this->buildFileDirectAccessURL($item, $version);
-        return FilePropertiesRepresentation::build($version, $download_href);
+        $download_href  = $this->buildFileDirectAccessURL($item, $version);
+        $open_item_href = $this->event_dispatcher->dispatch(new OpenItemHref($item, $version));
+        return FilePropertiesRepresentation::build($version, $download_href, $open_item_href->getHref());
     }
 
     private function buildFileDirectAccessURL(\Docman_Item $item, \Docman_Version $version): string

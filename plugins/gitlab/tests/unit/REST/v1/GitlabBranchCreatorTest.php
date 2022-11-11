@@ -27,7 +27,6 @@ use DateTimeImmutable;
 use Exception;
 use Luracast\Restler\RestException;
 use PFUser;
-use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
@@ -404,7 +403,7 @@ final class GitlabBranchCreatorTest extends TestCase
 
     private function buildMockUser(): PFUser
     {
-        return UserTestBuilder::anActiveUser()->withMemberOf(Project::buildForTest())->build();
+        return UserTestBuilder::anActiveUser()->withMemberOf(ProjectTestBuilder::aProject()->build())->build();
     }
 
     private function mockIntegrationWithAnotherProject(): void
@@ -438,7 +437,7 @@ final class GitlabBranchCreatorTest extends TestCase
             "",
             "https://example.com",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

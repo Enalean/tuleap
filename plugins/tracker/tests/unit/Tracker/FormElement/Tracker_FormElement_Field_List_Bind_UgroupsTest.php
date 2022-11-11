@@ -243,10 +243,10 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
         $bind = $this->buildBindUgroups($values);
         $this->value_dao->shouldReceive('create')->withArgs(
             [$this->field->getId(), ProjectUGroup::PROJECT_MEMBERS, false]
-        );
+        )->atLeast()->once();
         $this->value_dao->shouldReceive('create')->withArgs(
             [$this->field->getId(), $this->customers_ugroup_value->getUgroupId(), false]
-        );
+        )->atLeast()->once();
         $bind->saveObject();
     }
 
@@ -260,7 +260,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends \Tuleap\Test
 
         $this->value_dao->shouldReceive('create')->withArgs(
             [$this->field->getId(), $this->hidden_ugroup_value->getUgroupId(), true]
-        );
+        )->atLeast()->once();
         $bind->saveObject();
     }
 

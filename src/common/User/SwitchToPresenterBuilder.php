@@ -25,23 +25,12 @@ namespace Tuleap\User;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Project\ProjectPresentersBuilder;
 
-class SwitchToPresenterBuilder
+final class SwitchToPresenterBuilder
 {
-    /**
-     * @var ProjectPresentersBuilder
-     */
-    private $project_presenters_builder;
-    /**
-     * @var SearchFormPresenterBuilder
-     */
-    private $search_form_presenter_builder;
-
     public function __construct(
-        ProjectPresentersBuilder $project_presenters_builder,
-        SearchFormPresenterBuilder $search_form_presenter_builder,
+        private ProjectPresentersBuilder $project_presenters_builder,
+        private SearchFormPresenterBuilder $search_form_presenter_builder,
     ) {
-        $this->project_presenters_builder    = $project_presenters_builder;
-        $this->search_form_presenter_builder = $search_form_presenter_builder;
     }
 
     public function build(CurrentUserWithLoggedInInformation $current_user): ?SwitchToPresenter

@@ -31,6 +31,14 @@
     height: 100%;
 }
 
+.pullrequest-timeline-comment-container {
+    width: 100%;
+}
+
+.timeline-comment-element > .pull-request-comment-component {
+    margin: 0 0 var(--tlp-small-spacing);
+}
+
 .pull-request-no-comment {
     flex: 1 1 auto;
 }
@@ -68,140 +76,4 @@
     margin: 0 0 var(--tlp-medium-spacing);
     background: url("../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center
         center;
-}
-
-.pull-request-event {
-    $arrow-width: 6px;
-
-    display: flex;
-    align-items: center;
-    width: 85%;
-    margin: 0 0 var(--tlp-small-spacing);
-
-    > .tlp-avatar {
-        margin: 0 calc(var(--tlp-small-spacing) + #{$arrow-width}) 0 0;
-    }
-
-    > .pull-request-event-content {
-        position: relative;
-        flex: 1;
-        padding: var(--tlp-medium-spacing);
-        border: 1px solid var(--tlp-neutral-normal-color);
-        border-radius: var(--tlp-medium-radius);
-        background: var(--tlp-white-color);
-
-        &::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 0;
-            height: 0;
-            transform: translate(-100%, -50%);
-            border-width: 7px $arrow-width 7px 0;
-            border-style: solid;
-            border-color: transparent var(--tlp-main-color) transparent transparent;
-        }
-
-        &::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -1px;
-            width: 4px;
-            height: 100%;
-            border-radius: var(--tlp-medium-radius) 0 0 var(--tlp-medium-radius);
-            background: var(--tlp-main-color);
-        }
-
-        > .pull-request-event-content-info {
-            margin: 0 0 var(--tlp-small-spacing);
-            font-size: 14px;
-        }
-
-        .pull-request-event-file-path {
-            display: inline-block;
-            margin: 0 0 5px;
-            font-size: 14px;
-
-            .fa-file-text-o {
-                margin: 0 3px 0 0;
-            }
-        }
-    }
-
-    &.is-outdated > .pull-request-event-content {
-        background: transparent;
-    }
-
-    &.is-outdated,
-    &.timeline-event {
-        > .pull-request-event-content {
-            &::before {
-                z-index: 2;
-                border-color: transparent var(--tlp-white-color) transparent transparent;
-            }
-
-            &::after {
-                z-index: 1;
-                top: 50%;
-                left: -1.5px;
-                width: 0;
-                height: 0;
-                transform: translate(-100%, -50%);
-                border-width: 7px $arrow-width 7px 0;
-                border-style: solid;
-                border-color: transparent var(--tlp-neutral-normal-color) transparent transparent;
-                background: none;
-            }
-
-            p {
-                color: var(--tlp-dimmed-color);
-                font-style: italic;
-            }
-        }
-    }
-
-    &:not(.from-pr-author) {
-        align-self: flex-end;
-
-        &.is-outdated,
-        &.timeline-event {
-            > .pull-request-event-content::before {
-                border-color: transparent transparent transparent var(--tlp-white-color);
-            }
-
-            > .pull-request-event-content::after {
-                right: -1px;
-                left: auto;
-                transform: translate(100%, -50%);
-                border-width: 7px 0 7px $arrow-width;
-                border-color: transparent transparent transparent var(--tlp-neutral-normal-color);
-            }
-        }
-
-        &.is-outdated > .pull-request-event-content::before {
-            border-color: transparent;
-        }
-
-        > .tlp-avatar {
-            order: 2;
-            margin: 0 0 0 calc(var(--tlp-small-spacing) + #{$arrow-width});
-        }
-
-        > .pull-request-event-content {
-            &::before {
-                left: 100%;
-                transform: translate(0, -50%);
-                border-width: 7px 0 7px $arrow-width;
-                border-color: transparent transparent transparent var(--tlp-main-color);
-            }
-
-            &::after {
-                right: -1px;
-                left: auto;
-                border-radius: 0 var(--tlp-medium-radius) var(--tlp-medium-radius) 0;
-            }
-        }
-    }
 }

@@ -23,12 +23,13 @@ namespace Tuleap\Gitlab\Reference;
 
 use DateTimeImmutable;
 use PFUser;
-use Project;
 use ProjectManager;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\Gitlab\Reference\Branch\BranchReferenceSplitValuesDao;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranch;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchReferenceSplitValuesBuilder;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommit;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
@@ -36,6 +37,8 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTag;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagReferenceSplitValuesBuilder;
+use Tuleap\Gitlab\Reference\Tag\TagReferenceSplitValuesDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\GlobalLanguageMock;
@@ -95,7 +98,15 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private $gitlab_branch_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabBranchCrossReferenceEnhancer
+     * @var BranchReferenceSplitValuesDao&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $branch_reference_dao;
+    /**
+     * @var TagReferenceSplitValuesDao&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $tag_reference_dao;
+    /**
+     * @var GitlabBranchCrossReferenceEnhancer&\PHPUnit\Framework\MockObject\MockObject
      */
     private $gitlab_branch_cross_reference_enhancer;
 
@@ -113,6 +124,19 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $this->user_manager                             = $this->createMock(\UserManager::class);
         $this->user_helper                              = $this->createMock(\UserHelper::class);
 
+        $this->branch_reference_dao = $this->createMock(BranchReferenceSplitValuesDao::class);
+        $this->tag_reference_dao    = $this->createMock(TagReferenceSplitValuesDao::class);
+        $gitlab_reference_extractor = new GitlabReferenceExtractor(
+            new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+            new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+            new GitlabBranchReferenceSplitValuesBuilder(
+                $this->branch_reference_dao,
+            ),
+            new GitlabTagReferenceSplitValuesBuilder(
+                $this->tag_reference_dao,
+            ),
+        );
+
         $GLOBALS['Language']
             ->method('getText')
             ->with('system', 'datefmt')
@@ -129,7 +153,8 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             $this->project_manager,
             $this->relative_date_builder,
             $this->user_manager,
-            $this->user_helper
+            $this->user_helper,
+            $gitlab_reference_extractor,
         );
     }
 
@@ -195,7 +220,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -460,7 +485,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -537,7 +562,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -607,7 +632,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -676,8 +701,12 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
+        );
+
+        $this->tag_reference_dao->method('getAllTagsSplitValuesInProject')->willReturn(
+            ['repository_name' => 'root/project01', "tag_name" => 'v1.0.2'],
         );
 
         $this->repository_integration_factory
@@ -730,7 +759,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -743,6 +772,10 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'sha1',
             'dev',
             new DateTimeImmutable()
+        );
+
+        $this->branch_reference_dao->method('getAllBranchesSplitValuesInProject')->willReturn(
+            ['repository_name' => 'root/project01', "branch_name" => 'dev'],
         );
 
         $this->gitlab_branch_factory->expects(self::once())
@@ -773,6 +806,69 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
         $by_nature_organizer
             ->expects(self::once())
             ->method('moveCrossReferenceToSection');
+
+        $this->organizer->organizeGitLabReferences($by_nature_organizer);
+    }
+
+    public function testItOrganizesGitlabCrossReferencesInGitLabProjectInSubgroupsInTheirRespectiveRepositorySection(): void
+    {
+        $user = UserTestBuilder::aUser()->build();
+
+        $project = ProjectTestBuilder::aProject()->withUnixName('thenightwatch')->withId(101)->build();
+
+        $this->project_manager
+            ->method('getProject')
+            ->with(101)
+            ->willReturn($project);
+
+        $integration = new GitlabRepositoryIntegration(
+            1,
+            2,
+            'root/project01/repo01',
+            'Need more blankets, we are going to freeze our asses',
+            'the_full_url',
+            new DateTimeImmutable(),
+            $project,
+            false
+        );
+
+        $this->repository_integration_factory
+            ->method('getIntegrationByNameInProject')
+            ->with($project, 'root/project01/repo01')
+            ->willReturn($integration);
+
+        $john_snow_commit = new GitlabCommit(
+            '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
+            1608555618,
+            'Increase blankets stocks for winter',
+            "master",
+            'John Snow',
+            'john-snow@the-wall.com',
+        );
+
+        $this->gitlab_commit_factory->method('getGitlabCommitInRepositoryWithSha1')
+            ->with($integration, '14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->willReturn($john_snow_commit);
+
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_commit')
+            ->withValue('root/project01/repo01/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->withProjectId(101)
+            ->build();
+
+        $this->gitlab_commit_cross_reference_enhancer->method('getCrossReferencePresenterWithCommitInformation')
+            ->with($a_ref, $john_snow_commit, $user)
+            ->willReturn($a_ref);
+
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
+
+        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
+        $by_nature_organizer
+            ->expects(self::once())
+            ->method('moveCrossReferenceToSection')
+            ->with($a_ref, 'thenightwatch/root/project01/repo01');
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }

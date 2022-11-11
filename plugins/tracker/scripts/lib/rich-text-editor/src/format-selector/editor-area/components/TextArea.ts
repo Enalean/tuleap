@@ -41,7 +41,5 @@ export function wrapTextArea(presenter: TextAreaPresenter): TemplateResult {
         }
     });
 
-    return html`
-        ${presenter.textarea}
-    `;
+    return html`${presenter.textarea}`;
 }

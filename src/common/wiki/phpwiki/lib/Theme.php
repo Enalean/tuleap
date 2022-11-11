@@ -1157,9 +1157,10 @@ class PHPWikiTheme
             return HTML();
         }
         $link = HTML::link(['rel'     => $is_alt ? 'alternate stylesheet' : 'stylesheet',
-                                 'type'    => 'text/css',
-                                 'charset' => $GLOBALS['charset'],
-                                 'href'    => $this->_findData($css_file)]);
+            'type'    => 'text/css',
+            'charset' => $GLOBALS['charset'],
+            'href'    => $this->_findData($css_file),
+        ]);
         if ($is_alt) {
             $link->setAttr('title', $title);
         }
@@ -1473,7 +1474,8 @@ class SubmitButton extends HtmlElement
     public function __construct($text, $name = false, $class = false)
     {
         parent::__construct('input', ['type' => 'submit',
-                                          'value' => $text]);
+            'value' => $text,
+        ]);
         if ($name) {
             $this->setAttr('name', $name);
         }
@@ -1500,9 +1502,10 @@ class SubmitImageButton extends SubmitButton
     public function __construct($text, $name, $class, $img_url)
     {
         parent::__construct('input', ['type'  => 'image',
-                                          'src'   => $img_url,
-                                          'value' => $text,
-                                          'alt'   => $text]);
+            'src'   => $img_url,
+            'value' => $text,
+            'alt'   => $text,
+        ]);
         if ($name) {
             $this->setAttr('name', $name);
         }

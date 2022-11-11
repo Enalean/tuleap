@@ -86,4 +86,9 @@ class SessionDao extends \Tuleap\DB\DataAccessObject
     {
         $this->getDB()->run('TRUNCATE TABLE session');
     }
+
+    public function deleteExpiredSession(int $current_time, int $session_lifetime): void
+    {
+        $this->getDB()->run('DELETE FROM session WHERE time + ? < ?', $session_lifetime, $current_time);
+    }
 }

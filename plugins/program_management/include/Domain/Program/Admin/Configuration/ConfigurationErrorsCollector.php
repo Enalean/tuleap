@@ -28,23 +28,23 @@ use Tuleap\ProgramManagement\Domain\ProjectReference;
 final class ConfigurationErrorsCollector
 {
     /**
-     * @var WorkFlowErrorPresenter[]
+     * @var WorkFlowError[]
      */
     private array $transition_rule_error = [];
     /**
-     * @var WorkFlowErrorPresenter[]
+     * @var WorkFlowError[]
      */
     private array $transition_rule_date_error = [];
     /**
-     * @var WorkFlowErrorPresenter[]
+     * @var WorkFlowError[]
      */
     private array $field_dependency_error = [];
     /**
-     * @var SemanticErrorPresenter[]
+     * @var SemanticError[]
      */
     private array $semantic_errors = [];
     /**
-     * @var RequiredErrorPresenter[]
+     * @var RequiredError[]
      */
     private array $required_fields_errors = [];
     /**
@@ -60,7 +60,7 @@ final class ConfigurationErrorsCollector
      */
     private array $team_tracker_id_errors = [];
     /**
-     * @var SemanticStatusNoFieldPresenter[]
+     * @var SemanticStatusNoField[]
      */
     private array $semantic_status_no_field = [];
     /**
@@ -68,11 +68,11 @@ final class ConfigurationErrorsCollector
      */
     private array $status_missing_in_teams = [];
     /**
-     * @var SemanticStatusMissingValuesPresenter[]
+     * @var SemanticStatusMissingValues[]
      */
     private array $semantic_status_missing_values = [];
     /**
-     * @var TitleHasIncorrectTypePresenter[]
+     * @var TitleHasIncorrectType[]
      */
     private array $title_has_incorrect_type_error = [];
     /**
@@ -80,11 +80,11 @@ final class ConfigurationErrorsCollector
      */
     private array $missing_artifact_link = [];
     /**
-     * @var TeamHasNoPlanningPresenter[]
+     * @var TeamHasNoPlanning[]
      */
     private array $no_milestone_planning = [];
     /**
-     * @var TeamHasNoPlanningPresenter[]
+     * @var TeamHasNoPlanning[]
      */
     private array $no_sprint_planning = [];
 
@@ -111,7 +111,7 @@ final class ConfigurationErrorsCollector
         string $semantic_short_name,
         array $potential_trackers_in_error,
     ): void {
-        $this->semantic_errors[] = new SemanticErrorPresenter(
+        $this->semantic_errors[] = new SemanticError(
             $semantic_name,
             $semantic_short_name,
             $potential_trackers_in_error
@@ -121,13 +121,13 @@ final class ConfigurationErrorsCollector
 
     public function addRequiredFieldError(TrackerReference $tracker, ProjectReference $project, int $field_id, string $field_label): void
     {
-        $this->required_fields_errors[] = new RequiredErrorPresenter($field_id, $field_label, $tracker, $project);
+        $this->required_fields_errors[] = new RequiredError($field_id, $field_label, $tracker, $project);
         $this->addTeamInErrorIfNeeded($tracker);
     }
 
     public function addWorkflowTransitionRulesError(TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->transition_rule_error[] = new WorkFlowErrorPresenter(
+        $this->transition_rule_error[] = new WorkFlowError(
             $tracker,
             $project,
             '/plugins/tracker/workflow/' . urlencode((string) $tracker->getId()) . '/transitions'
@@ -137,7 +137,7 @@ final class ConfigurationErrorsCollector
 
     public function addWorkflowTransitionDateRulesError(TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->transition_rule_date_error[] = new WorkFlowErrorPresenter(
+        $this->transition_rule_date_error[] = new WorkFlowError(
             $tracker,
             $project,
             '/plugins/tracker/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-workflow'
@@ -147,7 +147,7 @@ final class ConfigurationErrorsCollector
 
     public function addWorkflowDependencyError(TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->field_dependency_error[] = new WorkFlowErrorPresenter(
+        $this->field_dependency_error[] = new WorkFlowError(
             $tracker,
             $project,
             '/plugins/tracker/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-dependencies'
@@ -175,7 +175,7 @@ final class ConfigurationErrorsCollector
 
     public function addSemanticNoStatusFieldError(TrackerReference $tracker): void
     {
-        $this->semantic_status_no_field[] = new SemanticStatusNoFieldPresenter($tracker->getId());
+        $this->semantic_status_no_field[] = new SemanticStatusNoField($tracker->getId());
         $this->addTeamInErrorIfNeeded($tracker);
     }
 
@@ -193,13 +193,13 @@ final class ConfigurationErrorsCollector
      */
     public function addMissingValueInSemantic(array $missing_values, array $trackers): void
     {
-        $this->semantic_status_missing_values[] = new SemanticStatusMissingValuesPresenter($missing_values, $trackers);
+        $this->semantic_status_missing_values[] = new SemanticStatusMissingValues($missing_values, $trackers);
         $this->addTeamsInErrorIfNeeded($trackers);
     }
 
     public function addTitleHasIncorrectType(string $semantic_title_url, TrackerReference $tracker, string $project_name, string $field_name): void
     {
-        $this->title_has_incorrect_type_error[] = new TitleHasIncorrectTypePresenter($semantic_title_url, $tracker->getLabel(), $project_name, $field_name);
+        $this->title_has_incorrect_type_error[] = new TitleHasIncorrectType($semantic_title_url, $tracker->getLabel(), $project_name, $field_name);
         $this->addTeamInErrorIfNeeded($tracker);
     }
 
@@ -212,13 +212,13 @@ final class ConfigurationErrorsCollector
 
     public function addTeamMilestonePlanningNotFoundOrNotAccessible(ProjectReference $project): void
     {
-        $this->no_milestone_planning[]             = new TeamHasNoPlanningPresenter($project);
+        $this->no_milestone_planning[]             = new TeamHasNoPlanning($project);
         $this->teams_with_error[$project->getId()] = $project->getId();
     }
 
     public function addTeamSprintPlanningNotFoundOrNotAccessible(ProjectReference $project): void
     {
-        $this->no_sprint_planning[]                = new TeamHasNoPlanningPresenter($project);
+        $this->no_sprint_planning[]                = new TeamHasNoPlanning($project);
         $this->teams_with_error[$project->getId()] = $project->getId();
     }
 
@@ -242,7 +242,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return WorkFlowErrorPresenter[]
+     * @return WorkFlowError[]
      */
     public function getTransitionRuleError(): array
     {
@@ -250,7 +250,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return WorkFlowErrorPresenter[]
+     * @return WorkFlowError[]
      */
     public function getTransitionRuleDateError(): array
     {
@@ -258,7 +258,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return WorkFlowErrorPresenter[]
+     * @return WorkFlowError[]
      */
     public function getFieldDependencyError(): array
     {
@@ -266,7 +266,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return SemanticErrorPresenter[]
+     * @return SemanticError[]
      */
     public function getSemanticErrors(): array
     {
@@ -274,7 +274,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return RequiredErrorPresenter[]
+     * @return RequiredError[]
      */
     public function getRequiredFieldsErrors(): array
     {
@@ -306,7 +306,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return SemanticStatusNoFieldPresenter[]
+     * @return SemanticStatusNoField[]
      */
     public function getSemanticStatusNoField(): array
     {
@@ -322,7 +322,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return SemanticStatusMissingValuesPresenter[]
+     * @return SemanticStatusMissingValues[]
      */
     public function getSemanticStatusMissingValues(): array
     {
@@ -330,7 +330,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return TitleHasIncorrectTypePresenter[]
+     * @return TitleHasIncorrectType[]
      */
     public function getTitleHasIncorrectTypeError(): array
     {
@@ -346,7 +346,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return TeamHasNoPlanningPresenter[]
+     * @return TeamHasNoPlanning[]
      */
     public function getNoMilestonePlanning(): array
     {
@@ -354,7 +354,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return TeamHasNoPlanningPresenter[]
+     * @return TeamHasNoPlanning[]
      */
     public function getNoSprintPlanning(): array
     {

@@ -25,10 +25,12 @@ namespace Tuleap\Docman\Upload\Version;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 use Tuleap\Upload\UploadPathAllocator;
 
-class VersionBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VersionBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -37,7 +39,7 @@ class VersionBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\T
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
+        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator, new CurrentRequestUserProviderStub(UserTestBuilder::buildWithId(102)));
 
         $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
@@ -48,11 +50,8 @@ class VersionBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\T
         $item->shouldReceive('getId')->andReturn(5);
         $item_factory->shouldReceive('getItemFromDb')->andReturns($item);
 
-        $id   = 12;
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn('102');
-        $server_request = (new NullServerRequest())->withAttribute('id', (string) $id)
-            ->withAttribute(RESTCurrentUserMiddleware::class, $user);
+        $id             = 12;
+        $server_request = (new NullServerRequest())->withAttribute('id', (string) $id);
 
         $file_information = $data_store->getFileInformation($server_request);
 
@@ -66,7 +65,7 @@ class VersionBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\T
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
+        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator, new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()));
 
         $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
@@ -86,7 +85,7 @@ class VersionBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\T
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
+        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator, new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()));
 
         $request = \Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')->andReturns(null);
@@ -94,20 +93,29 @@ class VersionBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\T
         $this->assertNull($data_store->getFileInformation($request));
     }
 
+    public function testFileInformationCannotBeFoundIfNoCurrentUserIsAssociatedWithTheRequest(): void
+    {
+        $path_allocator = new UploadPathAllocator('/var/tmp');
+        $dao            = $this->createStub(DocumentOnGoingVersionToUploadDAO::class);
+        $item_factory   = $this->createStub(\Docman_ItemFactory::class);
+        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator, new CurrentRequestUserProviderStub(null));
+
+
+        $this->expectException(NotFoundException::class);
+        $data_store->getFileInformation((new NullServerRequest())->withAttribute('id', '102'));
+    }
+
     public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase(): void
     {
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
+        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator, new CurrentRequestUserProviderStub(UserTestBuilder::buildWithId(102)));
 
         $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate')->andReturns([]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn('102');
-        $server_request = (new NullServerRequest())->withAttribute('id', '12')
-            ->withAttribute(RESTCurrentUserMiddleware::class, $user);
+        $server_request = (new NullServerRequest())->withAttribute('id', '12');
 
         $this->assertNull($data_store->getFileInformation($server_request));
     }

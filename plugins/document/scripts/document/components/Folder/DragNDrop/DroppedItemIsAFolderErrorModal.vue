@@ -30,22 +30,22 @@
     </error-modal>
 </template>
 
-<script>
+<script setup lang="ts">
 import ErrorModal from "./ErrorModal.vue";
-export default {
-    components: { ErrorModal },
-    props: {
-        reasons: Array,
-    },
-    computed: {
-        nb_dropped_files() {
-            return this.reasons[0].nb_dropped_files;
-        },
-    },
-    methods: {
-        bubbleErrorModalHidden() {
-            this.$emit("error-modal-hidden");
-        },
-    },
-};
+import { computed } from "vue";
+import type { Reason } from "../../../type";
+
+const props = defineProps<{ reasons: Array<Reason> }>();
+
+const nb_dropped_files = computed((): number => {
+    return props.reasons[0].nb_dropped_files ? props.reasons[0].nb_dropped_files : 0;
+});
+
+const emit = defineEmits<{
+    (e: "error-modal-hidden"): void;
+}>();
+
+function bubbleErrorModalHidden(): void {
+    emit("error-modal-hidden");
+}
 </script>

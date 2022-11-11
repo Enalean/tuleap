@@ -63,9 +63,11 @@ class SetIntValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->set_int_value_dao->shouldReceive('create')
             ->with(1)
-            ->andReturn(9);
+            ->andReturn(9)
+            ->atLeast()->once();
         $this->set_int_value_dao->shouldReceive('updatePostAction')
-            ->with(9, 43, 1);
+            ->with(9, 43, 1)
+            ->atLeast()->once();
 
         $transition    = TransitionFactory::buildATransitionWithId(1);
         $set_int_value = new SetIntValue(43, 1);
@@ -90,7 +92,8 @@ class SetIntValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_int_value_dao
             ->shouldReceive('deletePostActionsByTransitionId')
             ->with(1)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->atLeast()->once();
         $transition = TransitionFactory::buildATransitionWithId(1);
         $this->set_int_value_repository->deleteAllByTransition($transition);
     }

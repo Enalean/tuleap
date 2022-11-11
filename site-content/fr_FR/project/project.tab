@@ -129,10 +129,10 @@ project_admin_permissions	doc_access	Accès à un document
 project_admin_permissions	docgroup_access	Accès à un groupe de document
 project_admin_permissions	wiki_access	Accès au Wiki
 project_admin_permissions	wiki_attachment_access	Accès aux fichiers joints du Wiki
-project_admin_permissions	tracker_artifact_access	Accès à un artefact
-project_admin_permissions	tracker_full_access	Accès à tous les artefacts du tracker
-project_admin_permissions	tracker_submitter_access	Accès à tous les artefacts soumis par le groupe
-project_admin_permissions	tracker_assignee_access	Accès à tous les artefacts confiés au groupe
+project_admin_permissions	tracker_artifact_access	Accès à un artéfact
+project_admin_permissions	tracker_full_access	Accès à tous les artéfacts du tracker
+project_admin_permissions	tracker_submitter_access	Accès à tous les artéfacts soumis par le groupe
+project_admin_permissions	tracker_assignee_access	Accès à tous les artéfacts confiés au groupe
 project_admin_permissions	tracker_field_submit	Peut soumettre ce champ dans l'outil de suivi
 project_admin_permissions	tracker_field_read	Peut lire ce champ dans l'outil de suivi
 project_admin_permissions	tracker_field_update	Peut éditer ce champ dans l'outil de suivi
@@ -162,7 +162,7 @@ project_admin_permissions	override	La permission $1 selectionnée pour $2 a ét�
 #-----------------------------------------------
 # Script: SF/www/project/admin/reference.php
 #
-project_reference	create_for_tracker_fail	Modèle de référence associé au tracker non créé : le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artefacts de ce tracker avec le mot clé 'art'
+project_reference	create_for_tracker_fail	Modèle de référence associé au tracker non créé : le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artéfacts de ce tracker avec le mot clé 'art'
 project_reference	t_r_deleted	Modèle de référence correspondant détruit
 project_reference	extract_syntax	Paramètres :\n  group_id : projet qui définit les modèles de référence\n  text     : texte en entrée
 project_reference	insert_syntax	<p>Param&egrave;tres :<br>- group_id ou group_name : projet qui définit les modèles de référence<br>- text : texte en entr&eacute;e
@@ -412,12 +412,12 @@ project_export_artifact_export	ath_not_created	ArtifactTypeHtml n'a pu être cr�
 project_export_artifact_export	follow_up_comments	Fil de commentaires
 project_export_artifact_export	depend_on	Dépend de
 project_export_artifact_export	all_followup_comments	Tout le fil de commentaires en un seul bloc de texte
-project_export_artifact_export	depend_on_list	Liste des artefacts dont celui-ci dépend
-project_export_artifact_export	art_export	Exportation des artefacts
-project_export_artifact_export	no_art_found	Aucun artefact pour cet outil de suivi. Impossible d'exporter des données.
+project_export_artifact_export	depend_on_list	Liste des artéfacts dont celui-ci dépend
+project_export_artifact_export	art_export	Exportation des artéfacts
+project_export_artifact_export	no_art_found	Aucun artéfact pour cet outil de suivi. Impossible d'exporter des données.
 project_export_artifact_export	db_access_err	Erreur lors de l'accès à la base de données des outils de suivi. Veuillez informer l'administrateur $1 de cette erreur.
-project_export_artifact_export	art_exp_format	Format d'exportation des artefacts
-project_export_artifact_export	art_exp_format_msg	Le format d'exportation des artefacts de cet outil de suivi comporte les champs suivants. Les valeurs données en exemple indique le type des données.
+project_export_artifact_export	art_exp_format	Format d'exportation des artéfacts
+project_export_artifact_export	art_exp_format_msg	Le format d'exportation des artéfacts de cet outil de suivi comporte les champs suivants. Les valeurs données en exemple indique le type des données.
 project_export_artifact_export	add_cc_lbl	Liste CC
 project_export_artifact_export	add_cc_dsc	Liste des personnes recevant une copie carbone (CC) des notifications e-mail (en plus de la personne qui l'a soumis, a qui on l'a confie ou qui a poste un commentaire)
 project_export_artifact_export	cc_comment_lbl	Commentaire CC
@@ -441,7 +441,7 @@ project_export_artifact_history_export	new_val_desc	Valeur du champ après la mo
 project_export_artifact_history_export	mod_by_desc	Nom de l'utilisateur à l'origine de la modification
 project_export_artifact_history_export	mod_on_desc	Date de modification
 project_export_artifact_history_export	comment_type_desc	Type du commentaire ajouté à la fil de commentaires
-project_export_artifact_history_export	label_desc	Nom publique du champ dont la valeur a été modifiée
+project_export_artifact_history_export	label_desc	Nom public du champ dont la valeur a été modifiée
 project_export_artifact_history_export	art_hist_export	Exportation de l'historique des changements
 project_export_artifact_history_export	no_hist_found	Aucun historique de changements pour cet outil de suivi.  Impossible d'exporter des données.
 project_export_artifact_history_export	db_access_err	Erreur lors de l'accès à la base de données de cet outil de suivi. Veuillez informer l'administrateur $1 de cette erreur.

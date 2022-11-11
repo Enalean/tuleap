@@ -267,8 +267,8 @@ echo htmlspecialchars($item['class']) ?>"
 
      // Generate additional footer links
         $footerlinks      = [
-        'lastmod', 'viewcount', 'numberofwatchingusers', 'credits', 'copyright',
-        'privacy', 'about', 'disclaimer', 'tagline',
+            'lastmod', 'viewcount', 'numberofwatchingusers', 'credits', 'copyright',
+            'privacy', 'about', 'disclaimer', 'tagline',
         ];
         $validFooterLinks = [];
         foreach ($footerlinks as $aLink) {

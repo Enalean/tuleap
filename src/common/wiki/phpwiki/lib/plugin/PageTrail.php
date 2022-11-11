@@ -65,9 +65,9 @@ class WikiPlugin_PageTrail extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['numberlinks' => $this->def_numberlinks,
-                     'invisible'   => false,
-                     'duplicates'  => false,
-                     ];
+            'invisible'   => false,
+            'duplicates'  => false,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

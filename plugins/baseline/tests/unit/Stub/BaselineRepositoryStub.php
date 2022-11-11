@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use DateTimeInterface;
-use PFUser;
-use Project;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\BaselineRepository;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\TransientBaseline;
+use Tuleap\Baseline\Domain\UserIdentifier;
 
 /**
  * In memory implementation of BaselineRepository used for tests.
@@ -43,7 +43,7 @@ class BaselineRepositoryStub implements BaselineRepository
 
     public function add(
         TransientBaseline $transient_baseline,
-        PFUser $current_user,
+        UserIdentifier $current_user,
         DateTimeInterface $snapshot_date,
     ): Baseline {
         $baseline = new Baseline(
@@ -62,7 +62,7 @@ class BaselineRepositoryStub implements BaselineRepository
         return $baseline;
     }
 
-    public function findById(PFUser $current_user, int $id): ?Baseline
+    public function findById(UserIdentifier $current_user, int $id): ?Baseline
     {
         if (! isset($this->baselines_by_id[$id])) {
             return null;
@@ -70,7 +70,7 @@ class BaselineRepositoryStub implements BaselineRepository
         return $this->baselines_by_id[$id];
     }
 
-    public function delete(Baseline $baseline, PFUser $current_user): void
+    public function delete(Baseline $baseline): void
     {
         unset($this->baselines_by_id[$baseline->getId()]);
     }
@@ -100,7 +100,7 @@ class BaselineRepositoryStub implements BaselineRepository
     /**
      * @return Baseline[]
      */
-    public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array
+    public function findByProject(UserIdentifier $current_user, ProjectIdentifier $project, int $page_size, int $baseline_offset): array
     {
         $matching_baselines = array_filter(
             $this->baselines_by_id,
@@ -111,7 +111,7 @@ class BaselineRepositoryStub implements BaselineRepository
         return array_slice($matching_baselines, $baseline_offset, $page_size);
     }
 
-    public function countByProject(Project $project): int
+    public function countByProject(ProjectIdentifier $project): int
     {
         return count($this->baselines_by_id);
     }

@@ -80,9 +80,7 @@ export const CheckboxField = define<CheckboxField>({
             <label class="tlp-label">
                 ${host.field_presenter.field_label}
                 ${host.field_presenter.is_field_required &&
-                html`
-                    <i class="fas fa-asterisk" aria-hidden="true"></i>
-                `}
+                html`<i class="fas fa-asterisk" aria-hidden="true"></i>`}
             </label>
 
             ${host.field_presenter.checkbox_values.map((value, index) =>

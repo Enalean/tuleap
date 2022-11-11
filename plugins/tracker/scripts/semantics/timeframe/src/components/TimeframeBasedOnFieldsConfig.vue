@@ -19,111 +19,103 @@
 
 <template>
     <div>
-        <div class="control-group">
-            <label class="control-label" for="start-date">
-                <translate>Start date</translate>
-                <span class="highlight">*</span>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="start-date">
+                {{ $gettext("Start date") }}
+                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             </label>
 
-            <div class="controls">
-                <select
-                    id="start-date"
-                    name="start-date-field-id"
-                    data-test="start-date-field-select-box"
-                    v-model="user_selected_start_date_field_id"
-                    required
+            <select
+                id="start-date"
+                name="start-date-field-id"
+                class="tlp-select tlp-select-adjusted"
+                data-test="start-date-field-select-box"
+                v-model="user_selected_start_date_field_id"
+                required
+            >
+                <option value="" v-translate>Choose a field...</option>
+                <option
+                    v-for="date_field in suitable_start_date_fields"
+                    v-bind:value="date_field.id"
+                    v-bind:name="date_field.label"
+                    v-bind:key="'start-date-field' + date_field.id"
                 >
-                    <option value="" v-translate>Choose a field...</option>
-                    <option
-                        v-for="date_field in suitable_start_date_fields"
-                        v-bind:value="date_field.id"
-                        v-bind:name="date_field.label"
-                        v-bind:key="'start-date-field' + date_field.id"
-                    >
-                        {{ date_field.label }}
-                    </option>
-                </select>
-            </div>
+                    {{ date_field.label }}
+                </option>
+            </select>
         </div>
-
-        <div class="control-group">
-            <div class="controls">
-                <div class="control-group">
-                    <label class="radio" for="option-end-date">
-                        <input
-                            id="option-end-date"
-                            type="radio"
-                            value="end-date"
-                            data-test="option-end-date"
-                            v-bind:checked="!is_in_start_date_duration_mode"
-                            v-on:click="toggleTimeframeMode(MODE_START_DATE_END_DATE)"
-                        />
-                        <translate>End date</translate>
-                        <span
-                            class="highlight"
-                            data-test="end-date-field-highlight-field-required"
-                            v-if="!is_in_start_date_duration_mode"
-                        >
-                            *
-                        </span>
-                    </label>
-                    <select
-                        class="tracker-administration-semantic-timeframe-option-selector"
-                        name="end-date-field-id"
-                        data-test="end-date-field-select-box"
-                        v-model="user_selected_end_date_field_id"
-                        v-bind:required="!is_in_start_date_duration_mode"
-                        v-bind:disabled="is_in_start_date_duration_mode"
-                    >
-                        <option value="" v-translate>Choose a field...</option>
-                        <option
-                            v-for="date_field in suitable_end_date_fields"
-                            v-bind:value="date_field.id"
-                            v-bind:name="date_field.label"
-                            v-bind:key="'end-date-field' + date_field.id"
-                        >
-                            {{ date_field.label }}
-                        </option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label class="radio" for="option-duration">
-                        <input
-                            id="option-duration"
-                            type="radio"
-                            value="duration"
-                            data-test="option-duration"
-                            v-bind:checked="is_in_start_date_duration_mode"
-                            v-on:click="toggleTimeframeMode(MODE_START_DATE_DURATION)"
-                        />
-                        <translate>Duration</translate>
-                        <span
-                            class="highlight"
-                            data-test="duration-field-highlight-field-required"
-                            v-if="is_in_start_date_duration_mode"
-                        >
-                            *
-                        </span>
-                    </label>
-                    <select
-                        class="tracker-administration-semantic-timeframe-option-selector"
-                        name="duration-field-id"
-                        data-test="duration-field-select-box"
-                        v-model="user_selected_duration_field_id"
-                        v-bind:required="is_in_start_date_duration_mode"
-                        v-bind:disabled="!is_in_start_date_duration_mode"
-                    >
-                        <option value="" v-translate>Choose a field...</option>
-                        <option
-                            v-for="numeric_field in usable_numeric_fields"
-                            v-bind:value="numeric_field.id"
-                            v-bind:key="numeric_field.id"
-                        >
-                            {{ numeric_field.label }}
-                        </option>
-                    </select>
-                </div>
-            </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="option-end-date">
+                <input
+                    id="option-end-date"
+                    type="radio"
+                    value="end-date"
+                    data-test="option-end-date"
+                    v-bind:checked="!is_in_start_date_duration_mode"
+                    v-on:click="toggleTimeframeMode(MODE_START_DATE_END_DATE)"
+                />
+                {{ $gettext("End date") }}
+                <i
+                    class="fa-solid fa-asterisk"
+                    aria-hidden="true"
+                    data-test="end-date-field-highlight-field-required"
+                    v-if="!is_in_start_date_duration_mode"
+                ></i>
+            </label>
+            <select
+                class="tlp-select tlp-select-adjusted end-date-field-id"
+                name="end-date-field-id"
+                data-test="end-date-field-select-box"
+                v-model="user_selected_end_date_field_id"
+                v-bind:required="!is_in_start_date_duration_mode"
+                v-bind:disabled="is_in_start_date_duration_mode"
+            >
+                <option value="" v-translate>Choose a field...</option>
+                <option
+                    v-for="date_field in suitable_end_date_fields"
+                    v-bind:value="date_field.id"
+                    v-bind:name="date_field.label"
+                    v-bind:key="'end-date-field' + date_field.id"
+                >
+                    {{ date_field.label }}
+                </option>
+            </select>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="option-duration">
+                <input
+                    id="option-duration"
+                    type="radio"
+                    value="duration"
+                    data-test="option-duration"
+                    v-bind:checked="is_in_start_date_duration_mode"
+                    v-on:click="toggleTimeframeMode(MODE_START_DATE_DURATION)"
+                />
+                {{ $gettext("Duration") }}
+                <i
+                    class="fa-solid fa-asterisk"
+                    aria-hidden="true"
+                    data-test="end-date-field-highlight-field-required"
+                    v-if="!is_in_start_date_duration_mode"
+                ></i>
+            </label>
+            <select
+                class="tlp-select tlp-select-adjusted duration-field-id"
+                name="duration-field-id"
+                data-test="duration-field-select-box"
+                v-model="user_selected_duration_field_id"
+                v-bind:required="is_in_start_date_duration_mode"
+                v-bind:disabled="!is_in_start_date_duration_mode"
+            >
+                <option value="" v-translate>Choose a field...</option>
+                <option
+                    v-for="numeric_field in usable_numeric_fields"
+                    v-bind:value="numeric_field.id"
+                    v-bind:key="numeric_field.id"
+                >
+                    {{ numeric_field.label }}
+                </option>
+            </select>
         </div>
     </div>
 </template>

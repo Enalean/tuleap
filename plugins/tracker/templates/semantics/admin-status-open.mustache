@@ -1,0 +1,89 @@
+<div class="tlp-framed">
+    <p>
+         <a href="{{ tracker_admin_semantic_url }}" class="back-to-semantics">
+            <i class="fas fa-long-arrow-alt-left" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-tracker | Back to semantics {{/ dgettext }}
+         </a>
+    </p>
+
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{ label }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                {{^ can_user_choose_status_field }}
+                    {{# dgettext }}
+                        tuleap-tracker | You cannot define the status semantic since there isn't any list field in the tracker
+                    {{/ dgettext }}
+                {{/ can_user_choose_status_field }}
+                {{# can_user_choose_status_field }}
+                    <form method="POST" action="{{ semantic_status_url }}">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+                         <p>{{# dgettext }} tuleap-tracker | Status semantic allows to define how an artifact is considered to be open. {{/ dgettext }}</p>
+                         {{^ has_status_field }}
+                            <div class="tlp-form-element">
+                                 <label class="tlp-label" for="semantic-status-field">
+                                  {{# dgettext }} tuleap-tracker | Field used by semantic {{/ dgettext }}
+                                 </label>
+                                <select name="field_id" id="semantic-status-field" class="tlp-select tlp-select-adjusted">
+                                    <option value="-1" selected="selected">
+                                        {{# dgettext }}
+                                            tuleap-tracker | Choose a field...
+                                        {{/ dgettext }}
+                                     </option>
+                                    {{# possible_status_field }}
+                                         <option value="{{ id }}" {{# selected }} selected{{/ selected }}>{{ title }}</option>
+                                    {{/ possible_status_field }}
+                                </select>
+                            </div>
+                         {{/ has_status_field }}
+                         {{# has_status_field }}
+                            <input name="field_id" value="{{ field_id }}" type="hidden" />
+                            <div class="tlp-property">
+                                <label class="tlp-label">{{# dgettext }} tuleap-tracker | Field used by semantic {{/ dgettext }}</label>
+                                <p>{{ status_field_label }}</p>
+                            </div>
+                             <div class="tlp-form-element">
+                                  <label class="tlp-label" for="semantic-status-value">
+                                   {{# dgettext }} tuleap-tracker | Values that make an artifact open {{/ dgettext }}
+                                  </label>
+                                 <select name="open_values[{{ field_id }}][]" multiple="multiple" size="7" id="semantic-status-value" class="tlp-select tlp-select-adjusted">
+                                     {{# possible_open_values }}
+                                          <option value="{{ id }}" {{# selected }} selected{{/ selected }}{{# disabled }} disabled{{/ disabled }}>{{ title }}</option>
+                                     {{/ possible_open_values }}
+                                 </select>
+                             </div>
+                         {{/ has_status_field }}
+                         <div class="tlp-pane-section-submit">
+                            {{^ has_status_field }}
+                                <button type="submit" class="tlp-button-primary" name="update">
+                                    {{# dgettext }} tuleap-tracker | Save semantic {{/ dgettext }}
+                                </button>
+                            {{/ has_status_field }}
+                            {{# has_status_field }}
+                                <button type="submit" class="tlp-button-primary" name="update">
+                                    {{# dgettext }} tuleap-tracker | Save open values {{/ dgettext }}
+                                </button>
+                                <button
+                                    type="submit"
+                                    class="tlp-button-danger tlp-button-outline"
+                                    name="delete"
+                                    {{# is_semantic_done_defined }}
+                                        disabled
+                                        title="{{# dgettext }} tuleap-tracker | Status cannot be unset, because this tracker uses Done semantic {{/ dgettext }}"
+                                    {{/ is_semantic_done_defined }}
+                                >
+                                    {{# dgettext }} tuleap-tracker | Unset this semantic {{/ dgettext }}
+                                </button>
+                            {{/ has_status_field }}
+                        </div>
+                    </form>
+                {{/ can_user_choose_status_field }}
+            </section>
+        </div>
+    </section>
+</div>

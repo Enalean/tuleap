@@ -21,11 +21,11 @@ import { createListPicker } from "@tuleap/list-picker";
 
 document.addEventListener("DOMContentLoaded", () => {
     const criteria = document.getElementById("list-picker-criteria");
-    if (criteria) {
+    if (criteria instanceof HTMLSelectElement) {
         createListPicker(criteria, {});
     }
     const columns = document.getElementById("list-picker-columns");
-    if (columns) {
+    if (columns instanceof HTMLSelectElement) {
         createListPicker(columns, {});
     }
 });

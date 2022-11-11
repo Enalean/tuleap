@@ -116,6 +116,8 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->verifier->shouldReceive(['isRestrictedUserAllowedToAccess' => true]);
 
+        $this->expectNotToPerformAssertions();
+
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
@@ -201,6 +203,8 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
+        $this->expectNotToPerformAssertions();
+
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
@@ -224,6 +228,8 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isAnonymous'  => false,
             ]
         );
+
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -249,6 +255,8 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isError'  => false,
             ]
         );
+
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -301,6 +309,8 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getAccess' => Project::ACCESS_PUBLIC,
             ]
         );
+
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -455,6 +465,8 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
+        $this->expectNotToPerformAssertions();
+
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
@@ -486,6 +498,8 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 return true;
             }
         );
+
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
@@ -527,6 +541,9 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'isError'   => false,
             ]
         );
+
+        $this->expectNotToPerformAssertions();
+
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 }

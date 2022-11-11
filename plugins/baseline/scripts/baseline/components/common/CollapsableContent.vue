@@ -38,20 +38,12 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "CollapsableContent",
+<script setup lang="ts">
+import { ref } from "vue";
 
-    data() {
-        return {
-            is_collapsed: false,
-        };
-    },
+const is_collapsed = ref(false);
 
-    methods: {
-        toggleCollapse() {
-            this.is_collapsed = !this.is_collapsed;
-        },
-    },
-};
+function toggleCollapse(): void {
+    is_collapsed.value = !is_collapsed.value;
+}
 </script>

@@ -26,6 +26,8 @@ require_once __DIR__ . '/constants.php';
 use FastRoute\RouteCollector;
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
@@ -40,6 +42,7 @@ use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\HudsonGit\Git\Administration\AddController;
 use Tuleap\HudsonGit\Git\Administration\AdministrationController;
 use Tuleap\HudsonGit\Git\Administration\AdministrationPaneBuilder;
@@ -55,6 +58,9 @@ use Tuleap\HudsonGit\Git\Administration\XML\XMLImporter;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 use Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPrefixToken;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenGeneratorDBStore;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenVerifierController;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
@@ -166,7 +172,7 @@ class hudson_gitPlugin extends Plugin
         }
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeGetPostLegacyController'));
@@ -174,6 +180,7 @@ class hudson_gitPlugin extends Plugin
             $r->post('/jenkins_server', $this->getRouteHandler('getPostGitAdministrationJenkinsServer'));
             $r->post('/jenkins_server/delete', $this->getRouteHandler('getDeleteGitAdministrationJenkinsServer'));
             $r->post('/test_jenkins_server', $this->getRouteHandler('getAjaxAdministrationTestJenkinsServer'));
+            $r->post('/jenkins_tuleap_hook_trigger_check', $this->getRouteHandler('routePostVerifyHookTrigger'));
         });
     }
 
@@ -209,7 +216,8 @@ class hudson_gitPlugin extends Plugin
             self::getGitPermissionsManager(),
             new JenkinsServerAdder(
                 new JenkinsServerDao(),
-                new Valid_HTTPURI()
+                new Valid_HTTPURI(),
+                (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
             ),
             new CSRFSynchronizerToken(URLBuilder::buildAddUrl())
         );
@@ -243,7 +251,24 @@ class hudson_gitPlugin extends Plugin
             ),
             $git_plugin->getHeaderRenderer(),
             TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR . '/templates/git-administration'),
-            $this->getIncludeAssets()
+            $this->getIncludeAssets(),
+            EventManager::instance()
+        );
+    }
+
+    public function routePostVerifyHookTrigger(): JenkinsTuleapPluginHookTokenVerifierController
+    {
+        return new JenkinsTuleapPluginHookTokenVerifierController(
+            HTTPFactoryBuilder::responseFactory(),
+            new Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenVerifierDBStore(
+                new Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                new PrefixedSplitTokenSerializer(new JenkinsTuleapPluginHookPrefixToken()),
+                new SplitTokenVerificationStringHasher(),
+                self::getHudsonGitLogger(),
+            ),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new DisableCacheMiddleware()
         );
     }
 
@@ -286,14 +311,26 @@ class hudson_gitPlugin extends Plugin
             $http_client     = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
             $request_factory = HTTPFactoryBuilder::requestFactory();
             $stream_factory  = HTTPFactoryBuilder::streamFactory();
+            $encryption_key  = (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey();
             $controller      = new Hook\HookTriggerController(
                 new Hook\HookDao(),
                 new Hook\JenkinsClient(
                     $http_client,
                     $request_factory,
                     new JenkinsCSRFCrumbRetriever($http_client, $request_factory),
-                    new JenkinsTuleapPluginHookPayload($repository, $event->getRefname()),
-                    $stream_factory
+                    new JenkinsTuleapPluginHookPayload(
+                        $repository,
+                        $event->getRefname(),
+                        new JenkinsTuleapPluginHookTokenGeneratorDBStore(
+                            new Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenDAO(),
+                            new SplitTokenVerificationStringHasher(),
+                            new PrefixedSplitTokenSerializer(new JenkinsTuleapPluginHookPrefixToken()),
+                            new DateInterval('PT30S'),
+                        ),
+                        fn (): DateTimeImmutable => new DateTimeImmutable(),
+                    ),
+                    $stream_factory,
+                    $encryption_key,
                 ),
                 $this->getLogger(),
                 new LogCreator(
@@ -327,7 +364,8 @@ class hudson_gitPlugin extends Plugin
             ),
             new Hook\HookDao(),
             $this->getCSRF(),
-            new Valid_HTTPURI()
+            new Valid_HTTPURI(),
+            (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
         );
     }
 
@@ -348,6 +386,11 @@ class hudson_gitPlugin extends Plugin
 
     public function gitAdminGetExternalPanePresenters(GitAdminGetExternalPanePresenters $event): void
     {
+        if ($event->getCurrentTabName() === AdministrationPaneBuilder::PANE_NAME) {
+            $event->addExternalPanePresenter(AdministrationPaneBuilder::buildActivePane($event->getProject()));
+            return;
+        }
+
         $event->addExternalPanePresenter(AdministrationPaneBuilder::buildPane($event->getProject()));
     }
 
@@ -369,7 +412,8 @@ class hudson_gitPlugin extends Plugin
         $xml_importer = new XMLImporter(
             new JenkinsServerAdder(
                 new JenkinsServerDao(),
-                new Valid_HTTPURI()
+                new Valid_HTTPURI(),
+                (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
             ),
             $event->getLogger()
         );
@@ -389,7 +433,8 @@ class hudson_gitPlugin extends Plugin
 
         $xml_importer = new XMLExporter(
             self::getJenkinsServerFactory(),
-            $event->getLogger()
+            $event->getLogger(),
+            (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
         );
 
         $xml_importer->export(

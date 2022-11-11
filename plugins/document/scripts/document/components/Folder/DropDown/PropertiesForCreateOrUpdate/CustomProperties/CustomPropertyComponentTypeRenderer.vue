@@ -48,24 +48,13 @@
         data-test="document-custom-property-date"
     />
 </template>
-<script>
+<script setup lang="ts">
 import CustomPropertyDate from "./CustomPropertyDate.vue";
 import CustomPropertyListMultipleValue from "./CustomPropertyListMultipleValue.vue";
 import CustomPropertyListSingleValue from "./CustomPropertyListSingleValue.vue";
 import CustomPropertyString from "./CustomPropertyString.vue";
 import CustomPropertyText from "./CustomPropertyText.vue";
+import type { Property } from "../../../../../type";
 
-export default {
-    name: "CustomPropertyComponentTypeRenderer",
-    components: {
-        CustomPropertyDate,
-        CustomPropertyListMultipleValue,
-        CustomPropertyListSingleValue,
-        CustomPropertyString,
-        CustomPropertyText,
-    },
-    props: {
-        itemProperty: Object,
-    },
-};
+defineProps<{ itemProperty: Property }>();
 </script>

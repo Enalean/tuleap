@@ -22,45 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\ReferenceAliasGit;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use GitRepository;
+use Psr\Log\NullLogger;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 include __DIR__ . '/bootstrap.php';
 
-class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Dao
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
-
-    /**
-     * @var \Logger|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $logger;
-
-    /**
-     * @var ReferencesImporter
-     */
-    private $importer;
-
-    /**
-     * @var \GitRepository|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $repository;
+    private ReferencesImporter $importer;
+    private GitRepository $repository;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao        = \Mockery::spy(\Tuleap\ReferenceAliasGit\Dao::class);
-        $this->logger     = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->importer   = new ReferencesImporter($this->dao, $this->logger);
-        $this->repository = \Mockery::spy(\GitRepository::class);
+        $this->dao      = $this->createMock(\Tuleap\ReferenceAliasGit\Dao::class);
+        $this->importer = new ReferencesImporter($this->dao, new NullLogger());
 
-        $this->repository->shouldReceive('getId')->andReturns(123);
-        $this->repository->shouldReceive('getProjectId')->andReturns(101);
+        $this->repository = new GitRepository();
+        $this->repository->setId(123);
+        $this->repository->setProject(ProjectTestBuilder::aProject()->build());
     }
 
     public function testItShouldAddGitLinks(): void
@@ -72,11 +58,10 @@ class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 XML;
         $simple_xml = new \SimpleXMLElement($xml);
 
-        $this->dao->shouldReceive('getRef')->andReturns([]);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::once())->method('insertRef')->with('cmmt12', 123, 'le_sha1');
 
-        $this->dao->shouldReceive('insertRef')->with('cmmt12', 123, 'le_sha1')->once();
-
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $simple_xml, $this->repository);
+        $this->importer->importCompatRefXML(new ImportConfig(), ProjectTestBuilder::aProject()->build(), $simple_xml, $this->repository);
     }
 
     public function testItShouldNotAddUnknownReferences(): void
@@ -88,10 +73,9 @@ XML;
 XML;
         $simple_xml = new \SimpleXMLElement($xml);
 
-        $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::never())->method('insertRef');
 
-        $this->dao->shouldReceive('insertRef')->never();
-
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $simple_xml, $this->repository);
+        $this->importer->importCompatRefXML(new ImportConfig(), ProjectTestBuilder::aProject()->build(), $simple_xml, $this->repository);
     }
 }

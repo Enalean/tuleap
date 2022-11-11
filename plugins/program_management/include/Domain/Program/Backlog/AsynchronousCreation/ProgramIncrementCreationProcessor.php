@@ -23,24 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\UserStoryPlanException;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
-use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementTrackerIdentifierCollection;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Team\ProgramHasNoTeamException;
 use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
@@ -48,17 +42,12 @@ use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 final class ProgramIncrementCreationProcessor implements ProcessProgramIncrementCreation
 {
     public function __construct(
-        private RetrieveMirroredProgramIncrementTracker $mirrored_tracker_retriever,
-        private CreateProgramIncrements $program_increment_creator,
         private LogMessage $logger,
         private PlanUserStoriesInMirroredProgramIncrements $user_stories_planner,
         private SearchVisibleTeamsOfProgram $teams_searcher,
-        private RetrieveProjectReference $project_retriever,
-        private GatherSynchronizedFields $fields_gatherer,
-        private RetrieveFieldValuesGatherer $values_retriever,
-        private RetrieveChangesetSubmissionDate $submission_date_retriever,
         private RetrieveProgramOfProgramIncrement $program_retriever,
         private BuildProgram $program_builder,
+        private PlanProgramIncrements $plan_program_increment,
     ) {
     }
 
@@ -72,7 +61,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
             )
         );
         try {
-            $this->create($creation);
+            $this->createInAllTeams($creation);
         } catch (
             FieldSynchronizationException
             | MirroredTimeboxReplicationException
@@ -91,6 +80,28 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
     }
 
     /**
+     * @throws UserStoryPlanException
+     * @throws ProgramAccessException
+     * @throws ProjectIsNotAProgramException
+     * @throws FieldSynchronizationException
+     * @throws TeamIsNotVisibleException
+     * @throws MirroredTimeboxReplicationException
+     * @throws ProgramHasNoTeamException
+     */
+    public function synchronizeProgramIncrementAndIterationsForTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void
+    {
+        $this->logger->debug(
+            sprintf(
+                'Processing program increment creation with program increment #%d for user #%d for team #%d',
+                $creation->getProgramIncrement()->getId(),
+                $creation->getUser()->getId(),
+                $team->getId()
+            )
+        );
+        $this->createForATeam($creation, $team);
+    }
+
+    /**
      * @throws FieldSynchronizationException
      * @throws MirroredTimeboxReplicationException
      * @throws ProgramAccessException
@@ -99,15 +110,8 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
      * @throws TeamIsNotVisibleException
      * @throws UserStoryPlanException
      */
-    private function create(ProgramIncrementCreation $creation): void
+    private function createInAllTeams(ProgramIncrementCreation $creation): void
     {
-        $source_values = SourceTimeboxChangesetValues::fromMirroringOrder(
-            $this->fields_gatherer,
-            $this->values_retriever,
-            $this->submission_date_retriever,
-            $creation
-        );
-
         $user    = $creation->getUser();
         $program = ProgramIdentifier::fromProgramIncrement(
             $this->program_retriever,
@@ -116,26 +120,24 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
             $user
         );
 
-        $teams = TeamIdentifierCollection::fromProgram(
-            $this->teams_searcher,
-            $program,
-            $user
-        );
+        $teams       = TeamIdentifierCollection::fromProgram($this->teams_searcher, $program, $user);
+        $plan_change = $this->plan_program_increment->createProgramIncrementAndReturnPlanChange($creation, $teams);
+        $this->user_stories_planner->plan($plan_change);
+    }
 
-        $mirrored_trackers = MirroredProgramIncrementTrackerIdentifierCollection::fromTeams(
-            $this->mirrored_tracker_retriever,
-            $this->project_retriever,
-            $teams,
-            $user
-        );
-
-        $this->program_increment_creator->createProgramIncrements(
-            $source_values,
-            $mirrored_trackers,
-            $user
-        );
-
-        $program_increment_changed = ProgramIncrementChanged::fromCreation($creation);
-        $this->user_stories_planner->plan($program_increment_changed);
+    /**
+     * @throws FieldSynchronizationException
+     * @throws MirroredTimeboxReplicationException
+     * @throws ProgramAccessException
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramHasNoTeamException
+     * @throws TeamIsNotVisibleException
+     * @throws UserStoryPlanException
+     */
+    private function createForATeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void
+    {
+        $teams       = TeamIdentifierCollection::fromSingleTeam($team);
+        $plan_change = $this->plan_program_increment->createProgramIncrementAndReturnPlanChange($creation, $teams);
+        $this->user_stories_planner->planForATeam($plan_change, $team);
     }
 }

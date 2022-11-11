@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-modal-header">
         <h1
-            class="tlp-modal-title document-modal-title"
+            class="tlp-modal-title"
             v-bind:id="ariaLabelledBy"
             v-bind:title="`${$gettext('Close')}`"
         >
@@ -39,8 +39,4 @@
 </template>
 <script setup lang="ts">
 defineProps<{ modalTitle: string; ariaLabelledBy: string }>();
-</script>
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
 </script>

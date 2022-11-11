@@ -57,8 +57,8 @@ class WikiPlugin_AllUsers extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(),
             ['noheader'      => false,
-                   'include_empty' => true,
-                   'debug'         => false,
+                'include_empty' => true,
+                'debug'         => false,
             ]
         );
     }

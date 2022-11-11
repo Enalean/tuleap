@@ -22,20 +22,24 @@ import type { Fault } from "@tuleap/fault";
 import { AllGetter } from "./AllGetter";
 import { ResponseRetriever } from "./ResponseRetriever";
 import { ResultFetcher } from "./ResultFetcher";
+import { RestlerErrorHandler } from "./RestlerErrorHandler";
 
 export type { GetAllOptions, GetAllCollectionCallback } from "./AllGetter";
 export type { OptionsWithAutoEncodedParameters } from "./ResultFetcher";
+export type { RetrieveResponse, ResponseRetrieverOptions } from "./ResponseRetriever";
+export type { ErrorResponseHandler } from "./ErrorResponseHandler";
 
-const response_retriever = ResponseRetriever(window);
+const response_retriever = ResponseRetriever(window, RestlerErrorHandler());
 const all_getter = AllGetter(response_retriever);
-const result_fetcher = ResultFetcher(response_retriever, all_getter);
+const result_fetcher = ResultFetcher(response_retriever);
 
 // Define an unused type alias just so we can import ResultAsync and Fault types for the doc-blocks.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type _Unused = ResultAsync<never, Fault>;
 
-export { ResultFetcher };
 export { decodeJSON } from "./json-decoder";
+export { JSONParseFault } from "./JSONParseFault";
+export { ResponseRetriever } from "./ResponseRetriever";
 
 /**
  * `getJSON` returns a `ResultAsync<TypeOfJSONPayload, Fault>` with `TypeOfJSONPayload` supplied as a generic type.
@@ -96,7 +100,7 @@ export const getJSON = result_fetcher.getJSON;
  * at the same time. Defaults to 6.
  * @returns {ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault>}
  */
-export const getAllJSON = result_fetcher.getAllJSON;
+export const getAllJSON = all_getter.getAllJSON;
 
 /**
  * `head` queries the given URI with HEAD method and returns an `Ok` variant containing a Response.
@@ -125,37 +129,58 @@ export const head = result_fetcher.head;
 export const options = result_fetcher.options;
 
 /**
- * `putJSON` queries the given URI with PUT method and returns an `Ok` variant containing a Response.
+ * `putJSON` queries the given URI with PUT method and returns a `ResultAsync<TypeOfJSONPayload, Fault>`
+ * with `TypeOfJSONPayload` supplied as a generic type.
  * It automatically sets the "Content-type" header to "application/json".
  * If there was a problem (network error, remote API error, JSON parsing error), it returns an `Err` variant
  * containing a `Fault`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
+ * @template TypeOfJSONPayload
  * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
  * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
  * string.
- * @returns {ResultAsync<Response, Fault>}
+ * @returns {ResultAsync<TypeOfJSONPayload, Fault>}
  */
 export const putJSON = result_fetcher.putJSON;
 
 /**
- * `patchJSON` queries the given URI with PATCH method and returns an `Ok` variant containing a Response.
+ * `patchJSON` queries the given URI with PATCH method and returns a `ResultAsync<TypeOfJSONPayload, Fault>`
+ * with `TypeOfJSONPayload` supplied as a generic type.
  * It automatically sets the "Content-type" header to "application/json".
  * If there was a problem (network error, remote API error, JSON parsing error), it returns an `Err` variant
  * containing a `Fault`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
+ * @template TypeOfJSONPayload
  * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
  * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
  * string.
- * @returns {ResultAsync<Response, Fault>}
+ * @returns {ResultAsync<TypeOfJSONPayload, Fault>}
  */
 export const patchJSON = result_fetcher.patchJSON;
 
 /**
- * `postJSON` queries the given URI with POST method and returns an `Ok` variant containing a Response.
+ * `postJSON` queries the given URI with POST method and returns a `ResultAsync<TypeOfJSONPayload, Fault>`
+ * with `TypeOfJSONPayload` supplied as a generic type.
+ * It automatically sets the "Content-type" header to "application/json".
+ * If there was a problem (network error, remote API error, JSON parsing error), it returns an `Err` variant
+ * containing a `Fault`.
+ *
+ * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
+ *
+ * @template TypeOfJSONPayload
+ * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
+ * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
+ * string.
+ * @returns {ResultAsync<TypeOfJSONPayload, Fault>}
+ */
+export const postJSON = result_fetcher.postJSON;
+
+/**
+ * `post` queries the given URI with POST method and returns an `Ok` variant containing a Response.
  * It automatically sets the "Content-type" header to "application/json".
  * If there was a problem (network error, remote API error, JSON parsing error), it returns an `Err` variant
  * containing a `Fault`.
@@ -163,11 +188,13 @@ export const patchJSON = result_fetcher.patchJSON;
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
  * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
+ * @param {OptionsWithAutoEncodedParameters} options An object with a `params` key containing a list of URI
+ * search parameters. Each key-value pair will be URI-encoded and appended to `uri`.
  * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
  * string.
  * @returns {ResultAsync<Response, Fault>}
  */
-export const postJSON = result_fetcher.postJSON;
+export const post = result_fetcher.post;
 
 /**
  * `del` queries the given URI with DELETE method and returns an `Ok` variant containing a Response.

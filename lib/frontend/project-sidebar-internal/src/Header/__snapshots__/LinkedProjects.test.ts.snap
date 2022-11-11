@@ -1,6 +1,6 @@
-// Vitest Snapshot v1
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
+exports[`LinkedProjects displays the linked projects with a popover 1`] = `
 <div
   data-v-app=""
 >
@@ -17,7 +17,7 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
       >
         <i
           aria-hidden="true"
-          class="fas fa-fw fa-tlp-project-boxes"
+          class="fa-solid fa-fw fa-tlp-project-boxes"
         />
       </span>
       <span
@@ -40,7 +40,7 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
         >
           <i
             aria-hidden="true"
-            class="project-sidebar-linked-projects-item-icon fas fa-archive"
+            class="project-sidebar-linked-projects-item-icon fa-solid fa-box-archive"
           />
           <span
             class="project-sidebar-linked-projects-item-name"
@@ -84,7 +84,7 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
     >
       <i
         aria-hidden="true"
-        class="fas fa-fw fa-tlp-project-boxes"
+        class="fa-solid fa-fw fa-tlp-project-boxes"
       />
       <h1
         class="tlp-popover-title"
@@ -107,7 +107,7 @@ exports[`LinkedProjects > displays the linked projects with a popover 1`] = `
           >
             <i
               aria-hidden="true"
-              class="project-sidebar-linked-projects-item-icon fas fa-archive"
+              class="project-sidebar-linked-projects-item-icon fa-solid fa-box-archive"
             />
             <span
               class="project-sidebar-linked-projects-item-name"

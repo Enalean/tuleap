@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\Categories;
 
 use CSRFSynchronizerToken;
-use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class UpdateCategoriesProcessorTest extends TestCase
@@ -79,7 +79,7 @@ final class UpdateCategoriesProcessorTest extends TestCase
         $this->expectException($exception::class);
 
         $this->processor->processUpdate(
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             $csrf,
             CategoryCollection::buildFromWebPayload([])
         );
@@ -94,7 +94,7 @@ final class UpdateCategoriesProcessorTest extends TestCase
             ->method('check');
 
         $category_collection = CategoryCollection::buildFromWebPayload([]);
-        $project             = Project::buildForTest();
+        $project             = ProjectTestBuilder::aProject()->build();
 
         $this->category_collection_consistency_checker
             ->expects(self::once())

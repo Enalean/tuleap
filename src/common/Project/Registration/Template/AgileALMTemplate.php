@@ -34,7 +34,7 @@ class AgileALMTemplate implements TuleapTemplate
 
     private const PROJECT_XML         = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/project.xml';
     private const AGILE_ALM_XML       = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/agile_alm_template.xml';
-    private const TEST_MANAGEMENT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/testmanagement.xml';
+    private const TEST_MANAGEMENT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/testmanagement_generated.xml';
 
     /**
      * @var string

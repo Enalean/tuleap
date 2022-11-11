@@ -45,11 +45,12 @@ class Docman_View_Table extends Docman_View_Browse
             $params['item']->getId(),
             $nbItemsFound,
             ['user' => $params['user'],
-                                                    'ignore_collapse' => true,
-                                                    'ignore_obsolete' => true,
-                                                    'filter' => $params['filter'],
-                                                    'start' => $_low_limit,
-            'offset' => $offset]
+                'ignore_collapse' => true,
+                'ignore_obsolete' => true,
+                'filter' => $params['filter'],
+                'start' => $_low_limit,
+                'offset' => $offset,
+            ]
         );
 
         // Default URL

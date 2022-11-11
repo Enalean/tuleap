@@ -76,7 +76,8 @@ class ServiceProFTPd extends Service
                                     'controller' => 'admin',
                                     'action'     => 'index',
                                 ]),
-                            )]
+                            ),
+                        ]
                     )
                 )
             );

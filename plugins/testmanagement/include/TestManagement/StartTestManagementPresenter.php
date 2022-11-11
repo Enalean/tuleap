@@ -66,9 +66,9 @@ class StartTestManagementPresenter
         if ($this->is_user_admin) {
             $this->ttm_admin_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(
                 [
-                        'group_id' => $project_id,
-                        'action'   => 'admin',
-                    ]
+                    'group_id' => $project_id,
+                    'action'   => 'admin',
+                ]
             );
         }
 

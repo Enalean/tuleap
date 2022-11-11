@@ -21,7 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
 require_once __DIR__ . '/../include/proj_email.php';

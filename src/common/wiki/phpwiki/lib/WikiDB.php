@@ -1114,7 +1114,8 @@ class WikiDB_Page
         global $request;
         if (@is_array($request->_deferredPageRenameNotification)) {
             $request->_deferredPageRenameNotification[] = [$this->_pagename,
-                                                                $to, $meta, $emails, $userids];
+                $to, $meta, $emails, $userids,
+            ];
         } else {
             $oldname = $this->_pagename;
             // Codendi specific

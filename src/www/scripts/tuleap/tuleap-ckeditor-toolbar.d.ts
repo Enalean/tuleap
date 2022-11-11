@@ -19,7 +19,7 @@
 
 interface TuleapCkeditorToolbarConfig {
     toolbar: string[][];
-    stylesSet: { name: string; element: string; overrides?: string }[];
+    stylesSet: { name: string; element: string; overrides?: { [key: string]: never } }[];
     disableNativeSpellChecker: boolean;
 }
 

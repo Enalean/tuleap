@@ -31,8 +31,8 @@ if (defined('NUSOAP')) {
         'all',
         '',
         [
-        'user_id' => ['name' => 'user_id', 'type' => 'xsd:int'],
-        'session_hash' => ['name' => 'session_hash', 'type' => 'xsd:string'],
+            'user_id' => ['name' => 'user_id', 'type' => 'xsd:int'],
+            'session_hash' => ['name' => 'session_hash', 'type' => 'xsd:string'],
         ]
     );
 
@@ -44,7 +44,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'login', // method name
         ['loginname' => 'xsd:string', // input parameters
-        'passwd'    => 'xsd:string',
+            'passwd'    => 'xsd:string',
         ],
         ['return'   => 'tns:Session'], // output parameters
         $uri, // namespace
@@ -58,7 +58,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'loginAs', // method name
         ['admin_session_hash' => 'xsd:string', // input parameters
-          'loginname'    => 'xsd:string',
+            'loginname'    => 'xsd:string',
         ],
         ['return'   => 'xsd:string'], // output parameters
         $uri, // namespace
@@ -123,8 +123,8 @@ if (defined('NUSOAP')) {
         sodium_memzero($passwd);
         if ($current_user->is_logged_in) {
             $return = [
-            'user_id'      => $current_user->user->getId(),
-            'session_hash' => $current_user->user->getSessionHash(),
+                'user_id'      => $current_user->user->getId(),
+                'session_hash' => $current_user->user->getSessionHash(),
             ];
             return $return;
         } else {
@@ -162,8 +162,8 @@ if (defined('NUSOAP')) {
         if (session_continue($session_hash)) {
             $user   = UserManager::instance()->getCurrentUser();
             $return = [
-            'user_id'      => $user->getId(),
-            'session_hash' => $user->getSessionHash(),
+                'user_id'      => $user->getId(),
+                'session_hash' => $user->getSessionHash(),
             ];
             return $return;
         } else {

@@ -28,13 +28,7 @@ namespace Tuleap\BuildVersion\REST\v1;
  */
 class VersionRepresentation
 {
-    /**
-     * @var string
-     */
     public string $flavor_name;
-    /**
-     * @var string
-     */
     public string $version_number;
 
     public function __construct(string $flavor_name, string $version_number)

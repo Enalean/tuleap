@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\REST\v1\Reviewer;
 
 use Tuleap\GlobalLanguageMock;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ReviewerChangeTimelineEventRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,6 +52,6 @@ final class ReviewerChangeTimelineEventRepresentationTest extends \Tuleap\Test\P
 
     private function buildUser(int $user_id): \PFUser
     {
-        return new \PFUser(['user_id' => $user_id, 'language_id' => 'en']);
+        return UserTestBuilder::aUser()->withId($user_id)->withUserName("user")->withRealName("real")->build();
     }
 }

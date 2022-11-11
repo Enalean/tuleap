@@ -28,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use RuntimeException;
 use SimpleXMLElement;
 use Tracker_Report_Renderer;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\XML\MappingsRegistry;
 use Widget;
@@ -84,7 +85,7 @@ class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertWidgetCreateWithParams(456, 'Imported');
 
-        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, \Project::buildForTest());
+        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, ProjectTestBuilder::aProject()->build());
 
         $this->importer->import($event);
     }
@@ -104,7 +105,7 @@ class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(RuntimeException::class);
 
-        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, \Project::buildForTest());
+        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, ProjectTestBuilder::aProject()->build());
 
         $this->importer->import($event);
     }
@@ -118,7 +119,7 @@ class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertWidgetCreateWithDefault();
 
-        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, \Project::buildForTest());
+        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, ProjectTestBuilder::aProject()->build());
 
         $this->importer->import($event);
     }
@@ -136,7 +137,7 @@ class ProjectRendererWidgetXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertWidgetCreateWithDefault();
 
-        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, \Project::buildForTest());
+        $event = new ConfigureAtXMLImport($this->widget, $widget_xml, $this->mapping_registry, ProjectTestBuilder::aProject()->build());
 
         $this->importer->import($event);
     }

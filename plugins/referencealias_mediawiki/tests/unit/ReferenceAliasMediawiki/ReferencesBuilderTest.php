@@ -20,28 +20,20 @@
 
 namespace Tuleap\ReferenceAliasMediawiki;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
 use ProjectManager;
 use Reference;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private ReferencesBuilder $builder;
 
     /**
-     * @var ReferencesBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CompatibilityDao
+     * @var CompatibilityDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var ProjectManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $project_manager;
 
@@ -49,8 +41,8 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->dao             = Mockery::mock(CompatibilityDao::class);
-        $this->project_manager = Mockery::mock(ProjectManager::class);
+        $this->dao             = $this->createMock(CompatibilityDao::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
         $this->builder = new ReferencesBuilder(
             $this->dao,
@@ -60,39 +52,35 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesAReference(): void
     {
-        $project = Mockery::mock(Project::class)->shouldReceive('getUnixNameLowerCase')->andReturn('project01')->getMock();
-
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('wiki123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'target' => 'HomePage',
             ]);
 
         $reference = $this->builder->getReference(
-            $project,
+            ProjectTestBuilder::aProject()->withUnixName('project01')->build(),
             'wiki',
             123
         );
 
-        $this->assertInstanceOf(Reference::class, $reference);
+        self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertSame('mediawiki', $reference->getServiceShortName());
-        $this->assertSame("plugins/mediawiki/wiki/project01/index.php/HomePage", $reference->getLink());
+        self::assertSame('mediawiki', $reference->getServiceShortName());
+        self::assertSame("plugins/mediawiki/wiki/project01/index.php/HomePage", $reference->getLink());
     }
 
     public function testItReturnsNullIfNoEntryFoundInDB(): void
     {
-        $project = Project::buildForTest();
+        $this->dao->expects(self::once())
+            ->method('getRef')
+            ->willReturn([]);
 
-        $this->dao->shouldReceive('getRef')
-            ->once()
-            ->andReturn([]);
-
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
-                $project,
+                ProjectTestBuilder::aProject()->build(),
                 'wiki',
                 123
             )
@@ -101,19 +89,17 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfKeywordIsNotKnown(): void
     {
-        $project = Project::buildForTest();
-
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('whatever123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'target' => 'HomePage',
             ]);
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
-                $project,
+                ProjectTestBuilder::aProject()->build(),
                 'whatever',
                 123
             )

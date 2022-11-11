@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Layout\FooterConfiguration;
+
 header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
@@ -122,5 +124,5 @@ $login_controller->index($presenter);
 if ($pvMode) {
     $GLOBALS['HTML']->pv_footer([]);
 } else {
-    $GLOBALS['HTML']->footer(['without_content' => true]);
+    $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());
 }

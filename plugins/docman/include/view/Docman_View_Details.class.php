@@ -64,7 +64,8 @@ class Docman_View_Details extends Docman_View_Display
             $documents_item['sub_items'] = [[
                 'title' => dgettext('tuleap-docman', 'Administration'),
                 'url' => '/plugins/docman/?' . http_build_query(['group_id' => $project->getGroupId(), 'action' => 'admin']),
-            ]];
+            ],
+            ];
         }
 
         $hierarchy = [];

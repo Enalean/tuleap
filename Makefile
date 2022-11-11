@@ -12,11 +12,11 @@ else
 DOCKER_COMPOSE_FILE=-f docker-compose.yml
 endif
 
-get_ip_addr = `$(DOCKER_COMPOSE) ps -q $(1) | xargs docker inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}'`
+get_ip_addr = `$(DOCKER_COMPOSE) ps -q $(1) | xargs $(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}'`
 
 SUDO=
 DOCKER=$(SUDO) docker
-DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
+DOCKER_COMPOSE=$(SUDO) "$(shell which docker-compose)" $(DOCKER_COMPOSE_FILE)
 
 
 ifeq ($(MODE),Prod)
@@ -113,7 +113,7 @@ generate-templates: generate-templates-plugins ## Generate XML templates
 	xsltproc tools/utils/setup_templates/generate-templates/generate-agile_alm.xml \
 		-o tools/utils/setup_templates/agile_alm/agile_alm_template.xml
 	cp tools/utils/setup_templates/generate-templates/trackers/testmanagement.xml \
-		tools/utils/setup_templates/agile_alm/
+		tools/utils/setup_templates/agile_alm/testmanagement_generated.xml
 	xsltproc tools/utils/setup_templates/generate-templates/generate-kanban.xml \
 		-o tools/utils/setup_templates/kanban/kanban_template.xml
 
@@ -218,12 +218,12 @@ phpunit-ci:
 	$(eval COVERAGE_ENABLED ?= 1)
 	$(eval PHP_VERSION ?= 80)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION)
-	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
+	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
 
 .PHONY: tests-unit-php
 tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (80). FILES to run specific tests.
 	$(eval PHP_VERSION ?= 80)
-	@docker run --rm -v $(CURDIR):/tuleap:ro --network none ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
+	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
 
 ifneq ($(origin SEED),undefined)
     RANDOM_ORDER_SEED_ARGUMENT=--random-order-seed=$(SEED)
@@ -248,17 +248,17 @@ psalm-unused-code: ## Run Psalm (PHP static analysis tool) detection of unused c
 
 psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis tool).
 	$(eval TMPPSALM := $(shell mktemp -d))
-	git checkout-index -a --prefix="$(TMPPSALM)/"
+	git worktree add --detach "$(TMPPSALM)/"
 	$(MAKE) -C "$(TMPPSALM)/" composer js-build
 	pushd "$(TMPPSALM)"; \
 	$(PHP) ./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline; \
 	popd
 	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
-	rm -rf "$(TMPPSALM)"
+	git worktree remove -f "$(TMPPSALM)/"
 
 psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch, should only be used when needed when upgrading Psalm.
 	$(eval TMPPSALM := $(shell mktemp -d))
-	git checkout-index -a --prefix="$(TMPPSALM)/"
+	git worktree add --detach "$(TMPPSALM)/"
 	rm "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml
 	$(MAKE) -C "$(TMPPSALM)/" composer js-build
 	pushd "$(TMPPSALM)"; \
@@ -266,7 +266,7 @@ psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch,
 	    ./src/vendor/bin/psalm --no-cache --use-ini-defaults --set-baseline=./tests/psalm/tuleap-baseline.xml -c=./tests/psalm/psalm.xml; \
 	popd
 	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
-	rm -rf "$(TMPPSALM)"
+	git worktree remove -f "$(TMPPSALM)/"
 
 phpcs: ## Execute PHPCS with the "strict" ruleset. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
@@ -292,7 +292,7 @@ stylelint: ## Execute stylelint. Use FILES parameter to execute on specific file
 	@pnpm run stylelint -- $(FILES)
 
 bash-web: ## Give a bash on web container
-	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
+	@$(DOCKER) exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `$(DOCKER_COMPOSE) ps -q web` bash
 
 .PHONY:pull-docker-images
 pull-docker-images: ## Pull all docker images used for development
@@ -340,8 +340,8 @@ show-passwords: ## Display passwords generated for Docker Compose environment
 
 show-ips: ## Display ips of all running services
 	@$(DOCKER_COMPOSE) ps -q | while read cid; do\
-		name=`docker inspect -f '{{.Name}}' $$cid | sed -e 's/^\/tuleap_\(.*\)_1$$/\1/'`;\
-		ip=`docker inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' $$cid`;\
+		name=`$(DOCKER) inspect -f '{{.Name}}' $$cid | sed -e 's/^\/tuleap_\(.*\)_1$$/\1/'`;\
+		ip=`$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' $$cid`;\
 		echo "$$ip $$name";\
 	done
 
@@ -362,7 +362,7 @@ start-rp:
 
 start-ldap-admin: ## Start ldap administration ui
 	@echo "Start ldap administration ui"
-	@docker-compose up -d ldap-admin
+	@$(DOCKER_COMPOSE) up -d ldap-admin
 	@echo "Open your browser at https://localhost:6443"
 
 start-mailhog: ## Start mailhog to catch emails sent by your Tuleap dev platform
@@ -417,6 +417,14 @@ switch-to-mysql57:
 	$(DOCKER_COMPOSE) exec db55 sh -c 'exec mysqldump --all-databases  -uroot -p"$$MYSQL_ROOT_PASSWORD"' | $(DOCKER) exec -i $(DB57) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD"'
 	$(DOCKER_COMPOSE) exec db sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
 	@echo "Data were migrated to MySQL 5.7"
+
+switch-to-mysql80:
+	$(eval DB80 := $(shell $(DOCKER_COMPOSE) ps -q db))
+	$(DOCKER_COMPOSE) exec db57 sh -c 'exec mysqldump --all-databases -uroot -p"$$MYSQL_ROOT_PASSWORD"' | $(DOCKER) exec -i $(DB80) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -f'
+	$(DOCKER_COMPOSE) exec db sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
+	$(DOCKER_COMPOSE) restart db
+	$(DOCKER_COMPOSE) stop db57
+	@echo "Data were migrated to MySQL 8.0"
 
 load-mariadb: # Works only with tuleap DB ATM (not mediawiki)
 	$(eval MARIADB := $(shell $(DOCKER_COMPOSE) ps -q db-maria-10.3))

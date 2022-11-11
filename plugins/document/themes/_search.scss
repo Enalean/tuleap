@@ -110,6 +110,12 @@
     min-width: 300px;
 }
 
+// Override TLP select2
+/* stylelint-disable-next-line selector-class-pattern */
+.document-search-criterion-owner .select2-container--tlp-select2 {
+    z-index: unset;
+}
+
 .document-search-criterion-number {
     max-width: 8em;
 }

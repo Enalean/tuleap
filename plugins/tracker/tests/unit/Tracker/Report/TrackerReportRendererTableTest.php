@@ -114,32 +114,13 @@ class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->xml = new SimpleXMLElement('<field/>');
     }
 
-    public function testOrderOnArtifactIdDescendingWhenSortIsDefined(): void
-    {
-        $this->tracker_report_renderer_table->shouldReceive('getSort')->andReturn(
-            [
-                '101' => [
-                    'field_id' => 101,
-                    'is_desc' => true,
-                    'rank' => 0,
-                    'field' => $this->form_elements_1,
-                ],
-            ]
-        );
-
-        $this->assertSame(
-            [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,99,100)  GROUP BY id  ORDER BY artifact_id DESC'],
-            $this->tracker_report_renderer_table->buildOrderedQuery($this->matchings_ids, $this->columns, false, false)
-        );
-    }
-
     public function testOrderNotDefinedWhenNoSortDefined(): void
     {
         $this->tracker_report_renderer_table->shouldReceive('getSort')->andReturn([]);
 
         $this->assertSame(
             [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,99,100)  GROUP BY id '],
-            $this->tracker_report_renderer_table->buildOrderedQuery($this->matchings_ids, $this->columns, false, false)
+            $this->tracker_report_renderer_table->buildOrderedQuery($this->matchings_ids, $this->columns, false)
         );
     }
 

@@ -29,6 +29,7 @@ use Codendi_Request;
 use Feedback;
 use Event;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 
 class MailGatewayConfigController
 {
@@ -70,7 +71,8 @@ class MailGatewayConfigController
                 $csrf,
                 $title,
                 $this->localincfinder->getLocalIncPath(),
-                $this->config
+                $this->config,
+                MailTransportBuilder::getPlatformMailConfiguration()
             )
         );
     }
@@ -85,7 +87,8 @@ class MailGatewayConfigController
     private function updateEmailGatewayMode(Codendi_Request $request, Response $response)
     {
         $emailgateway_mode = $request->get('emailgateway_mode');
-        if ($emailgateway_mode && $this->config->setEmailgatewayMode($emailgateway_mode)) {
+        if ($emailgateway_mode) {
+            $this->config->setEmailgatewayMode($emailgateway_mode);
             $response->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Successfully updated, the modification will be active in a few minutes.'));
         }
         $this->event_manager->processEvent(Event::UPDATE_ALIASES, null);

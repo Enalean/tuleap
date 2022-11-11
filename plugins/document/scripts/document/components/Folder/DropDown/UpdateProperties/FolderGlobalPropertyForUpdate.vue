@@ -32,27 +32,21 @@
             v-bind:currently-updated-item="currentlyUpdatedItem"
             v-bind:item-property="itemProperty"
             v-bind:status_value="status_value"
+            v-bind:recursion_option="`none`"
         />
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
 import DescriptionProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/DescriptionProperty.vue";
 import TitleProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/TitleProperty.vue";
+import type { Folder, Item, Property } from "../../../../type";
 
-export default {
-    name: "FolderGlobalPropertyForUpdate",
-    components: {
-        TitleProperty,
-        DescriptionProperty,
-        FolderDefaultPropertiesForUpdate,
-    },
-    props: {
-        currentlyUpdatedItem: Object,
-        parent: Object,
-        itemProperty: Array,
-        status_value: String,
-    },
-};
+defineProps<{
+    currentlyUpdatedItem: Item;
+    parent: Folder;
+    status_value: string;
+    itemProperty: Array<Property>;
+}>();
 </script>

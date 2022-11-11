@@ -107,7 +107,8 @@ class MailingListPresenterBuilder
             return [[
                 'url'   => $default_browse_url,
                 'label' => _('Archives'),
-            ]];
+            ],
+            ];
         }
 
 
@@ -115,7 +116,8 @@ class MailingListPresenterBuilder
             return [[
                 'url'   => $this->getPublicUrl($list_server, $list_name, $default_browse_url),
                 'label' => _('Archives'),
-            ]];
+            ],
+            ];
         }
 
         return [

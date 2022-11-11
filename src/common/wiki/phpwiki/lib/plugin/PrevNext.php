@@ -50,18 +50,18 @@ class WikiPlugin_PrevNext extends WikiPlugin
     public function getDefaultArguments()
     {
         return [
-                     'prev'    => '',
-                     'next'    => '',
-                     'up'      => '',
-                     'contents' => '',
-                     'index'   => '',
-                     'up'      => '',
-                     'first'   => '',
-                     'last'    => '',
-                     'order'   => '',
-                     'style'   => 'button', // or 'text'
-                     'class'   => 'wikiaction',
-                     ];
+            'prev'    => '',
+            'next'    => '',
+            'up'      => '',
+            'contents' => '',
+            'index'   => '',
+            'up'      => '',
+            'first'   => '',
+            'last'    => '',
+            'order'   => '',
+            'style'   => 'button', // or 'text'
+            'class'   => 'wikiaction',
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -69,13 +69,13 @@ class WikiPlugin_PrevNext extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
         $directions =  ['first'    => _("First"),
-                             'prev'     => _("Previous"),
-                             'next'     => _("Next"),
-                             'last'     => _("Last"),
-                             'up'       => _("Up"),
-                             'contents'  => _("Contents"),
-                             'index'    => _("Index"),
-                             ];
+            'prev'     => _("Previous"),
+            'next'     => _("Next"),
+            'last'     => _("Last"),
+            'up'       => _("Up"),
+            'contents'  => _("Contents"),
+            'index'    => _("Index"),
+        ];
         if ($order) { // reorder the buttons: comma-delimited
             $new_directions = [];
             foreach (explode(',', $order) as $o) {

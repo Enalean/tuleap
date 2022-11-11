@@ -57,6 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const project_url = vue_mount_point.dataset.projectUrl;
     const privacy = JSON.parse(vue_mount_point.dataset.privacy);
     const project_flags = JSON.parse(vue_mount_point.dataset.projectFlags);
+    const is_admin = Boolean(vue_mount_point.dataset.isAdmin);
+    const admin_url = vue_mount_point.dataset.adminUrl;
 
     const AppComponent = Vue.extend(App);
     new AppComponent({
@@ -68,7 +70,12 @@ document.addEventListener("DOMContentLoaded", () => {
             project_url,
             privacy,
             project_flags,
+            is_admin,
+            admin_url,
         },
         router,
+        provide: () => ({
+            is_admin,
+        }),
     }).$mount(vue_mount_point);
 });

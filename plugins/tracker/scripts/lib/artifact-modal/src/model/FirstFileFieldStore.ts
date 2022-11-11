@@ -17,13 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Field, FileField } from "../types";
 import { getFirstFileField as detectFirstFileField } from "../fields/file-field/file-field-detector";
+import type { FileFieldValueModel } from "../domain/fields/file-field/FileFieldValueModel";
+import type { Field } from "../domain/fields/Field";
 
-let first_file_field: FileField | null = null;
+export type FirstFileField = Pick<
+    FileFieldValueModel,
+    "field_id" | "file_creation_uri" | "max_size_upload"
+>;
 
-export const setTrackerFields = (fields: Field[]): void => {
+let first_file_field: FirstFileField | null = null;
+
+export const setTrackerFields = (fields: readonly Field[]): void => {
     first_file_field = detectFirstFileField(fields);
 };
 
-export const getFirstFileField = (): FileField | null => first_file_field;
+export const getFirstFileField = (): FirstFileField | null => first_file_field;

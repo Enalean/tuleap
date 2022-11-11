@@ -25,7 +25,7 @@ use Http\Message\Authentication\Bearer;
 use Http\Client\Common\PluginClient;
 use Psr\Http\Client\ClientInterface;
 
-class GitlabHTTPClientFactory
+class GitlabHTTPClientFactory implements BuildGitlabHttpClient
 {
     /**
      * @var ClientInterface
@@ -43,7 +43,7 @@ class GitlabHTTPClientFactory
             $this->client,
             [
                 new AuthenticationPlugin(
-                    new Bearer($gitlab_credentials->getBotApiToken()->getToken()->getString())
+                    new Bearer($gitlab_credentials->getApiToken()->getToken()->getString())
                 ),
             ]
         );

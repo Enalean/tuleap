@@ -26,6 +26,8 @@
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
 use Tuleap\Git\Hook\CrossReferencesExtractor;
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchVerifier;
+use Tuleap\Git\Hook\DefaultBranchPush\PushAnalyzer;
 use Tuleap\Git\Hook\PostReceive;
 use Tuleap\Git\Hook\LogPushes;
 use Tuleap\Git\Hook\ParseLog;
@@ -38,6 +40,7 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Queue\EnqueueTask;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/gitPlugin.php';
@@ -130,10 +133,11 @@ $post_receive = new PostReceive(
             new UGroupManager()
         )
     ),
-    new \Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater(new \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser()),
-    $git_dao,
-    new \Tuleap\Git\Hook\GitPushReceptionDispatcher(new \Tuleap\Git\Hook\Asynchronous\CommitAnalysisProcessorBuilder()),
-    new \Tuleap\Git\Hook\DefaultBranchVerifier($git_exec)
+    new \Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater(
+        new \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser()
+    ),
+    new PushAnalyzer(new DefaultBranchVerifier($git_exec)),
+    new EnqueueTask()
 );
 
 $post_receive->beforeParsingReferences($repository_path);

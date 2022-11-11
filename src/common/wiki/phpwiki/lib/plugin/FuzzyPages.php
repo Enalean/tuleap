@@ -61,7 +61,8 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['s'     => false,
-                     'debug' => false];
+            'debug' => false,
+        ];
     }
 
     public function spelling_similarity($subject)
@@ -151,7 +152,8 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
             $row = HTML::tr(
                 ['class' =>
                                   $score > HIGHLIGHT_ROWS_CUTOFF_SCORE
-                                  ? 'evenrow' : 'oddrow'],
+                                  ? 'evenrow' : 'oddrow',
+                ],
                 HTML::td(WikiLink($found_pagename)),
                 HTML::td(
                     ['align' => 'right'],
@@ -171,9 +173,10 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
     public function formatTable(&$list, &$dbi)
     {
         $table = HTML::table(['cellpadding' => 2,
-                                   'cellspacing' => 1,
-                                   'border'      => 0,
-                                   'class' => 'pagelist']);
+            'cellspacing' => 1,
+            'border'      => 0,
+            'class' => 'pagelist',
+        ]);
         $this->addTableCaption($table, $dbi);
         $this->addTableHead($table);
         $this->addTableBody($list, $table);

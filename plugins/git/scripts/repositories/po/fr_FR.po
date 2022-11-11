@@ -76,7 +76,7 @@ msgstr ""
 "identifiants de connexion."
 
 msgid "Check new token validity"
-msgstr "Vérifier la validité du nouveau token"
+msgstr "Vérifier la validité du nouveau jeton"
 
 msgid "Close"
 msgstr "Fermer"
@@ -103,7 +103,7 @@ msgstr ""
 "succès."
 
 msgid "Edit access token"
-msgstr "Éditer le token d'accès"
+msgstr "Éditer le jeton d'accès"
 
 msgid "Fetch GitLab repositories"
 msgstr "Récuperer les dépôts GitLab"

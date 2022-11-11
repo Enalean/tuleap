@@ -76,9 +76,6 @@ class GitlabRepositoryRepresentation
      */
     public $is_webhook_configured;
 
-    /**
-     * @var string
-     */
     public string $create_branch_prefix;
 
     public function __construct(

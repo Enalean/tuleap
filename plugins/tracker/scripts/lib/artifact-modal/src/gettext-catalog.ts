@@ -56,7 +56,6 @@ export const getLinkFieldFetchErrorMessage = (): string =>
     gettextCatalog.getString("Unable to retrieve the linked artifacts: %s");
 export const getLinkedParentFeedback = (): string =>
     gettextCatalog.getString("The artifact will be linked to %s");
-export const getAddLinkButtonLabel = (): string => gettextCatalog.getString("Add link");
 export const getLinkFieldTableEmptyStateText = (): string => gettextCatalog.getString("No links");
 export const getLinkFieldNoteText = (): string =>
     gettextCatalog.getString("Note: an artifact can only have one parent.");
@@ -108,3 +107,5 @@ export const getAlreadyLinkedInfo = (): string => gettextCatalog.getString("(alr
 export const getOpenArtifactToUnlinkTextStart = (): string => gettextCatalog.getString("Open");
 export const getOpenArtifactToUnlinkTextEnd = (): string =>
     gettextCatalog.getString("to remove link");
+export const getFileUploadErrorMessage = (): string =>
+    gettextCatalog.getString("Error while uploading %(file_name)s: %(error)s");

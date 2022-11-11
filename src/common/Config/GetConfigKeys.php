@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -36,10 +36,11 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\HomePage\NewsCollectionBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\ServerHostname;
-use Tuleap\SVNCore\AccessControl\SVNProjectAccessController;
 use Tuleap\System\ServiceControl;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
@@ -72,7 +73,8 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         ConfigurationVariables::class,
         ServerHostname::class,
         ProjectExportController::class,
-        SVNProjectAccessController::class,
+        MailTransportBuilder::class,
+        MercureClient::class,
     ];
 
     /**
@@ -162,10 +164,13 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         $reflected_class = new \ReflectionClass($class_name);
         $category        = $this->getClassCategory($reflected_class);
         foreach ($reflected_class->getReflectionConstants(\ReflectionClassConstant::IS_PUBLIC) as $const) {
-            $key             = '';
-            $summary         = '';
-            $can_be_modified = true;
-            $is_secret       = false;
+            $key              = '';
+            $summary          = '';
+            $can_be_modified  = true;
+            $is_secret        = false;
+            $is_hidden        = false;
+            $secret_validator = null;
+            $value_validator  = null;
             foreach ($const->getAttributes() as $attribute) {
                 $attribute_object = $attribute->newInstance();
                 if ($attribute_object instanceof ConfigKey) {
@@ -188,6 +193,15 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
                 if ($attribute_object instanceof ConfigKeySecret) {
                     $is_secret = true;
                 }
+                if ($attribute_object instanceof ConfigKeySecretValidator) {
+                    $secret_validator = $attribute_object->validator_class_name::buildSelf();
+                }
+                if ($attribute_object instanceof ConfigKeyValueValidator) {
+                    $value_validator = $attribute_object->validator_class_name::buildSelf();
+                }
+                if ($attribute_object instanceof ConfigKeyHidden) {
+                    $is_hidden = true;
+                }
             }
             if (! $key) {
                 continue;
@@ -196,6 +210,9 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
                 $summary,
                 $can_be_modified,
                 $is_secret,
+                $is_hidden,
+                $secret_validator,
+                $value_validator,
                 $category,
             );
         }

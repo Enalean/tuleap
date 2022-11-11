@@ -82,7 +82,8 @@ if ($request->valid($vFrm)) {
 
     $pm     = ProjectManager::instance();
     $params = ['title' => $pm->getProject($group_id)->getPublicName() . ' forum: ' . $forum_name,
-                      'pv'   => isset($pv) ? $pv : false];
+        'pv'   => isset($pv) ? $pv : false,
+    ];
     forum_header($params);
 
     $sql    = sprintf(

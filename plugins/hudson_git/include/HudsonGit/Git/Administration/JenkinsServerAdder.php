@@ -23,6 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Valid_HTTPURI;
 
 class JenkinsServerAdder
@@ -37,7 +40,7 @@ class JenkinsServerAdder
      */
     private $valid_HTTPURI;
 
-    public function __construct(JenkinsServerDao $jenkins_server_dao, Valid_HTTPURI $valid_HTTPURI)
+    public function __construct(JenkinsServerDao $jenkins_server_dao, Valid_HTTPURI $valid_HTTPURI, private EncryptionKey $encryption_key)
     {
         $this->jenkins_server_dao = $jenkins_server_dao;
         $this->valid_HTTPURI      = $valid_HTTPURI;
@@ -47,7 +50,7 @@ class JenkinsServerAdder
      * @throws JenkinsServerURLNotValidException
      * @throws JenkinsServerAlreadyDefinedException
      */
-    public function addServerInProject(Project $project, string $jenkins_server_url): void
+    public function addServerInProject(Project $project, string $jenkins_server_url, ?ConcealedString $token): void
     {
         $jenkins_server_url = trim($jenkins_server_url);
 
@@ -65,9 +68,15 @@ class JenkinsServerAdder
             throw new JenkinsServerAlreadyDefinedException();
         }
 
+        $encrypted_token = null;
+        if ($token !== null) {
+            $encrypted_token = SymmetricCrypto::encrypt($token, $this->encryption_key);
+        }
+
         $this->jenkins_server_dao->addJenkinsServer(
             $project_id,
-            $jenkins_server_url
+            $jenkins_server_url,
+            $encrypted_token
         );
     }
 }

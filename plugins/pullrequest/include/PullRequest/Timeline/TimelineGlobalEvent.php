@@ -27,52 +27,32 @@ class TimelineGlobalEvent implements TimelineEvent
     public const MERGE   = 3;
     public const ABANDON = 4;
 
-    /** @var int */
-    private $id;
-
-    /** @var int */
-    private $pull_request_id;
-
-    /** @var int */
-    private $user_id;
-
-    /** @var int */
-    private $post_date;
-
-    /** @var int */
-    private $type;
-
-    public function __construct($id, $pull_request_id, $user_id, $post_date, $type)
+    private function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private int $type)
     {
-        $this->id              = $id;
-        $this->pull_request_id = $pull_request_id;
-        $this->user_id         = $user_id;
-        $this->post_date       = $post_date;
-        $this->type            = $type;
     }
 
-    public static function buildFromRow(array $row)
+    public static function buildFromRow(array $row): self
     {
         return new TimelineGlobalEvent(
             $row['id'],
             $row['pull_request_id'],
             $row['user_id'],
             $row['post_date'],
-            $row['type']
+            $row['type'],
         );
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getPullRequestId()
+    public function getPullRequestId(): int
     {
         return $this->pull_request_id;
     }
 
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
@@ -82,7 +62,7 @@ class TimelineGlobalEvent implements TimelineEvent
         return $this->post_date;
     }
 
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }

@@ -104,12 +104,12 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['action' => false,     // required argument
-                     'method' => 'post',    // or get
-                     'class'  => 'wikiaction',
-                     'buttontext' => false, // for the submit button. default: action
-                     'cancel' => false,     // boolean if the action supports cancel also
-                     'nobr' => false,       // "no break": linebreaks or not
-                     ];
+            'method' => 'post',    // or get
+            'class'  => 'wikiaction',
+            'buttontext' => false, // for the submit button. default: action
+            'cancel' => false,     // boolean if the action supports cancel also
+            'nobr' => false,       // "no break": linebreaks or not
+        ];
     }
 
     /* TODO: support better block alignment: <br>, tables, indent
@@ -117,7 +117,8 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
     public function handle_plugin_args_cruft($argstr, $args)
     {
         $allowed = ["editbox", "hidden", "checkbox", "radiobutton"/*deprecated*/,
-                 "radio", "pulldown", "submit", "reset", "combobox"];
+            "radio", "pulldown", "submit", "reset", "combobox",
+        ];
         // no editbox[] = array(...) allowed (space)
         $arg_array = preg_split("/\n/", $argstr);
         // for security we should check this better
@@ -187,9 +188,10 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
         }
         $form           = HTML::form(
             ['action' => $request->getPostURL(),
-                                 'method' => strtolower($method),
-                                 'class'  => 'wikiaction',
-                                 'accept-charset' => $GLOBALS['charset']],
+                'method' => strtolower($method),
+                'class'  => 'wikiaction',
+                'accept-charset' => $GLOBALS['charset'],
+            ],
             HiddenInputs(['action' => $action, 'group_id' => GROUP_ID])
         );
         $nbsp           = HTML::Raw('&nbsp;');
@@ -355,8 +357,9 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
         }
         if ($request->getArg('start_debug')) {
             $form->pushContent(HTML::input(['name' => 'start_debug',
-                                      'value' =>  $request->getArg('start_debug'),
-            'type'  => 'hidden']));
+                'value' =>  $request->getArg('start_debug'),
+                'type'  => 'hidden',
+            ]));
         }
         if (! USE_PATH_INFO) {
             $form->pushContent(HiddenInputs(['pagename' => $basepage]));

@@ -26,9 +26,6 @@ export const NetworkFault = {
                 ? Fault.fromError(error)
                 : Fault.fromMessage("Error during fetch operation");
 
-        return {
-            isNetworkFault: () => true,
-            ...fault,
-        };
+        return { isNetworkFault: () => true, ...fault };
     },
 };

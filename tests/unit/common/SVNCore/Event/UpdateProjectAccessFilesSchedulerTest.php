@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\SVNCore\Event;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use SystemEvent;
 
 final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -47,7 +48,8 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
 
     public function testAnUpdateCanBeScheduled(): void
     {
-        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(false);
+        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, 102)->andReturn(false);
+        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_UGROUP_MODIFY, 102)->andReturn(false);
 
         $this->system_event_manager->shouldReceive('createEvent')->once();
 
@@ -59,7 +61,21 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
 
     public function testAnUpdateIsNotScheduledWhenThereIsAlreadyOneWaitingToBeExecuted(): void
     {
-        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(true);
+        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, 103)->andReturn(true);
+        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_UGROUP_MODIFY, 103)->andReturn(false);
+
+        $this->system_event_manager->shouldReceive('createEvent')->never();
+
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->andReturn(103);
+
+        $this->scheduler->scheduleUpdateOfProjectAccessFiles($project);
+    }
+
+    public function testNoUpdateScheduledWhenThereUGroupModifyAlreadyScheduledBecauseItWillAlsoQueueUpdateLaterOn(): void
+    {
+        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES, 103)->andReturn(false);
+        $this->system_event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->with(SystemEvent::TYPE_UGROUP_MODIFY, 103)->andReturn(true);
 
         $this->system_event_manager->shouldReceive('createEvent')->never();
 

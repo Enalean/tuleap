@@ -3423,27 +3423,30 @@ class GraphTabTitle extends Text
         if ($this->width === TABTITLE_WIDTHFIT) {
             if ($this->align == 'left') {
                 $p = [$x,                $y,
-                $x,                $y - $h + $this->corner,
-                $x + $this->corner,$y - $h,
-                $x + $w - $this->corner, $y - $h,
-                $x + $w, $y - $h + $this->corner,
-                $x + $w, $y];
+                    $x,                $y - $h + $this->corner,
+                    $x + $this->corner,$y - $h,
+                    $x + $w - $this->corner, $y - $h,
+                    $x + $w, $y - $h + $this->corner,
+                    $x + $w, $y,
+                ];
             } elseif ($this->align == 'center') {
                 $x += round($aImg->plotwidth / 2) - round($w / 2);
                 $p  = [$x, $y,
-                $x, $y - $h + $this->corner,
-                $x + $this->corner, $y - $h,
-                $x + $w - $this->corner, $y - $h,
-                $x + $w, $y - $h + $this->corner,
-                $x + $w, $y];
+                    $x, $y - $h + $this->corner,
+                    $x + $this->corner, $y - $h,
+                    $x + $w - $this->corner, $y - $h,
+                    $x + $w, $y - $h + $this->corner,
+                    $x + $w, $y,
+                ];
             } else {
                 $x += $aImg->plotwidth - $w;
                 $p  = [$x, $y,
-                $x, $y - $h + $this->corner,
-                $x + $this->corner,$y - $h,
-                $x + $w - $this->corner, $y - $h,
-                $x + $w, $y - $h + $this->corner,
-                $x + $w, $y];
+                    $x, $y - $h + $this->corner,
+                    $x + $this->corner,$y - $h,
+                    $x + $w - $this->corner, $y - $h,
+                    $x + $w, $y - $h + $this->corner,
+                    $x + $w, $y,
+                ];
             }
         } else {
             if ($this->width === TABTITLE_WIDTHFULL) {
@@ -3454,11 +3457,12 @@ class GraphTabTitle extends Text
 
             // Make the tab fit the width of the plot area
             $p = [$x, $y,
-            $x, $y - $h + $this->corner,
-            $x + $this->corner,$y - $h,
-            $x + $w - $this->corner, $y - $h,
-            $x + $w, $y - $h + $this->corner,
-            $x + $w, $y];
+                $x, $y - $h + $this->corner,
+                $x + $this->corner,$y - $h,
+                $x + $w - $this->corner, $y - $h,
+                $x + $w, $y - $h + $this->corner,
+                $x + $w, $y,
+            ];
         }
         if ($this->halign == 'left') {
             $aImg->SetTextAlign('left', 'bottom');
@@ -5896,7 +5900,8 @@ class ColorFactory
         'peru',
         'slategray',
         'yellow4',
-        'springgreen2'];
+        'springgreen2',
+    ];
     private static $iNum       = 33;
 
     public static function getColor()

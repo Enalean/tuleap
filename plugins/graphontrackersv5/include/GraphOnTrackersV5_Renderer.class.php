@@ -91,8 +91,9 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
         if (! $readonly && $this->chart_to_edit) {
             $url   = '?' . http_build_query([
-                                               'report'   => $this->report->id,
-                                               'renderer' => $this->id]);
+                'report'   => $this->report->id,
+                'renderer' => $this->id,
+            ]);
             $html .= '<p><a href="' . $url . '">&laquo; ' . dgettext('tuleap-graphontrackersv5', 'Go back to charts') . '</a></p>';
             $html .= '<form action="' . $url . '" name="edit_chart_form" method="post">';
             $html .= '<input type="hidden" name="func" VALUE="renderer" />';
@@ -160,10 +161,10 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             $html   .= '</a>';
             $html   .= '<ul class="dropdown-menu pull-right"> ';
             $url     = '?' . http_build_query([
-                                               'report'   => $this->report->id,
-                                               'renderer' => $this->id,
-                                               'func'     => 'renderer',
-                                              ]);
+                'report'   => $this->report->id,
+                'renderer' => $this->id,
+                'func'     => 'renderer',
+            ]);
             $url_add = $url . '&amp;renderer_plugin_graphontrackersv5[add_chart]=';
             foreach ($this->getChartFactory()->getChartFactories() as $factory) {
                 $html .= '<li>';

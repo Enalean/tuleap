@@ -50,6 +50,6 @@ final class CreateInstanceTask implements QueueTask
 
     public function getPreEnqueueMessage(): string
     {
-        return '';
+        return 'Create MediaWiki instance #' . $this->project_id;
     }
 }

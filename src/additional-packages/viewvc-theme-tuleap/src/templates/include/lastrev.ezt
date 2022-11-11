@@ -1,0 +1,18 @@
+<span class="tuleap-viewvc-header-title-lastrev">
+    [if-index nav_path first]
+        /
+    [else]
+        [nav_path.name]
+    [end]
+    <span class="badge badge-default" title="Current path doesn't exist after revision&nbsp;[lastrev]" style="margin-left: 10px;">
+        <i class="fas fa-long-arrow-alt-right"></i> [lastrev]
+    </span>
+<span>
+<script>
+(function ($) {
+    $('.tuleap-viewvc-header-title-lastrev > .badge').tooltip({
+        placement: 'right',
+        container: '.tuleap-viewvc-header'
+    });
+})(jQuery);
+</script>

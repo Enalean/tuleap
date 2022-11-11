@@ -181,7 +181,8 @@ class Docman_ApprovalTableNotificationCycle
             return false;
         } else {
             $dar = $dao->getFirstReviewerByStatus($this->table->getId(), [PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
-                                                                              PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED]);
+                PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED,
+            ]);
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 return $this->notifyIndividual($row['reviewer_id']);

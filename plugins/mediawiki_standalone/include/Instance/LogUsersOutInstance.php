@@ -33,7 +33,7 @@ final class LogUsersOutInstance implements InstanceOperation
 {
     public const TOPIC = 'tuleap.mediawiki-standalone.instance-log-users-out';
 
-    private function __construct(private ?\Project $project)
+    private function __construct(private ?\Project $project, private ?int $user_id)
     {
     }
 
@@ -43,12 +43,17 @@ final class LogUsersOutInstance implements InstanceOperation
             return null;
         }
         $payload = $event->getPayload();
-        if (! isset($payload['project_id']) || ! is_int($payload['project_id'])) {
-            return new self(null);
+        $project = null;
+        if (isset($payload['project_id']) && is_int($payload['project_id'])) {
+            $project = $project_factory->getValidProjectById($payload['project_id']);
         }
 
-        $project = $project_factory->getValidProjectById($payload['project_id']);
-        return new self($project);
+        $user_id = null;
+        if (isset($payload['user_id']) && is_int($payload['user_id'])) {
+            $user_id = $payload['user_id'];
+        }
+
+        return new self($project, $user_id);
     }
 
     public function getRequest(RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory): RequestInterface
@@ -56,7 +61,7 @@ final class LogUsersOutInstance implements InstanceOperation
         return $request_factory->createRequest(
             'POST',
             ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/maintenance/' . urlencode($this->getInstanceNameQualifier()) . '/terminate-sessions'
-        )->withBody($stream_factory->createStream('{}'));
+        )->withBody($stream_factory->createStream($this->getUserSelectorJSONBody()));
     }
 
     private function getInstanceNameQualifier(): string
@@ -66,6 +71,15 @@ final class LogUsersOutInstance implements InstanceOperation
         }
 
         return $this->project->getUnixNameLowerCase();
+    }
+
+    private function getUserSelectorJSONBody(): string
+    {
+        if ($this->user_id === null) {
+            return '{}';
+        }
+
+        return json_encode(['user' => (string) $this->user_id], JSON_THROW_ON_ERROR);
     }
 
     public function getTopic(): string

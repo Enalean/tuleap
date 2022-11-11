@@ -72,9 +72,10 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
             }
         }
         $result = ['read_index'           => $readIndex,
-                        'total_read'           => $totalRead,
-                        'read_projects_number' => $readProjectsNumber,
-                        'read_users_number'    => $readUsersNumber];
+            'total_read'           => $totalRead,
+            'read_projects_number' => $readProjectsNumber,
+            'read_users_number'    => $readUsersNumber,
+        ];
         return $result;
     }
 
@@ -108,9 +109,10 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
             }
         }
         $result = ['commits_index'          => $commitsIndex,
-                        'total_commits'          => $totalCommits,
-                        'commit_projects_number' => $commitProjectsNumber,
-                        'commit_users_number'    => $commitUsersNumber];
+            'total_commits'          => $totalCommits,
+            'commit_projects_number' => $commitProjectsNumber,
+            'commit_users_number'    => $commitUsersNumber,
+        ];
         return $result;
     }
 

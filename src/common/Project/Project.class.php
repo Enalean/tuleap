@@ -85,11 +85,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         $this->project_data_array = $this->data_array;
     }
 
-    public static function buildForTest(): self
-    {
-        return new self(['group_id' => '101']);
-    }
-
     private function cacheServiceClassnames()
     {
         if ($this->serviceClassnames !== null) {
@@ -308,7 +303,12 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
      *
      * @psalm-internal Tuleap\Test\Builders
      */
-    public function addUsedServices(string ...$service_short_names): void
+
+    /**
+     * @param array{0: string, 1: Service}|string ...$services
+     *
+     */
+    public function addUsedServices(...$services): void
     {
         if ($this->services !== null || $this->service_data_array !== null) {
             throw new LogicException('This method is not supposed to be called after caching of Services');
@@ -316,8 +316,13 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
         $this->service_data_array = [];
         $this->services           = []; // Gonna break tests that rely on Services but needed to stop caching in @see cacheServices
-        foreach ($service_short_names as $short_name) {
-            $this->service_data_array[$short_name] = ['is_used' => true];
+        foreach ($services as $service) {
+            if (is_string($service)) {
+                $this->service_data_array[$service] = ['is_used' => true];
+            } else {
+                $this->service_data_array[$service[0]] = ['is_used' => true];
+                $this->services[$service[0]]           = $service[1];
+            }
         }
     }
 

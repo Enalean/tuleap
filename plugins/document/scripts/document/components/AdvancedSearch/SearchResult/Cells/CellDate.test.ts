@@ -19,8 +19,6 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ConfigurationState } from "../../../../store/configuration";
 import CellDate from "./CellDate.vue";
 
 describe("CellDate", () => {
@@ -30,22 +28,15 @@ describe("CellDate", () => {
             propsData: {
                 date: "2021-10-06",
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                        } as unknown as ConfigurationState,
-                    },
-                }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
-            },
         });
 
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.element).toMatchInlineSnapshot(`
+            <td>
+              <document-relative-date-stub
+                date="2021-10-06"
+                relative_placement="top"
+              />
+            </td>
+        `);
     });
 });

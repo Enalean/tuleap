@@ -45,7 +45,7 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
         $this->user    = UserTestBuilder::aUser()->build();
 
         $this->dao = \Mockery::spy(\Tracker_ArtifactDao::class);
@@ -81,7 +81,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             $this->factory,
             \Mockery::spy(\UserManager::class),
-            \Mockery::spy(\UserHelper::class),
             $event_manager
         );
     }

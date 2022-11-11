@@ -54,18 +54,11 @@
             <directory name="plugins/projectmilestones/tests/unit/"/>
             <directory name="plugins/prometheus_metrics/tests/unit/"/>
             <directory name="plugins/pullrequest/tests/unit/"/>
-            <directory name="plugins/referencealias_core/tests/unit/"/>
-            <directory name="plugins/referencealias_git/tests/unit/"/>
-            <directory name="plugins/referencealias_mediawiki/tests/unit/"/>
-            <directory name="plugins/referencealias_svn/tests/unit/"/>
-            <directory name="plugins/referencealias_tracker/tests/unit/"/>
             <directory name="plugins/roadmap/tests/unit/"/>
-            <directory name="plugins/statistics/tests/unit/"/>
             <directory name="plugins/svn/tests/unit/"/>
             <directory name="plugins/taskboard/tests/unit/"/>
             <directory name="plugins/testmanagement/tests/unit/"/>
             <directory name="plugins/tracker/tests/unit/"/>
-            <directory name="plugins/userlog/tests/unit/"/>
             <directory name="plugins/velocity/tests/unit/"/>
             <directory name="plugins/webdav/tests/unit/"/>
         </ignoreFiles>
@@ -84,6 +77,7 @@
         <file name="tests/psalm/stubs/Psr/EventDispatcher/EventDispatcherInterface.phpstub"/>
         <file name="tests/psalm/stubs/ParagonIE/EasyDB/EasyDB.phpstub"/>
         <file name="tests/psalm/stubs/FastRoute/RouteCollector.phpstub"/>
+        <file name="tests/psalm/stubs/ext-ffi.phpstub"/>
     </stubs>
 
     <plugins>

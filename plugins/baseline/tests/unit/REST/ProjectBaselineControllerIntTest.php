@@ -27,6 +27,7 @@ require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
 use DateTimeImmutable;
 use PFUser;
+use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
@@ -62,7 +63,7 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
                         ->build()
                 )
                 ->snapshotDate(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
-                ->author(new PFUser(['user_id' => 22]))
+                ->author(UserProxy::fromUser(new PFUser(['user_id' => 22])))
                 ->build()
         );
 

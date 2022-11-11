@@ -116,57 +116,63 @@ function build_grouphistory_filter($event = null, $subEventsBox = null, $value =
 function get_history_entries()
 {
     $subEvents = ['event_permission' => ['perm_reset_for_field',
-                                                   'perm_granted_for_field',
-                                                   'perm_reset_for_tracker',
-                                                   'perm_granted_for_tracker',
-                                                   'perm_reset_for_package',
-                                                   'perm_granted_for_package',
-                                                   'perm_reset_for_release',
-                                                   'perm_granted_for_release',
-                                                   'perm_reset_for_wiki',
-                                                   'perm_granted_for_wiki',
-                                                   'perm_reset_for_wikipage',
-                                                   'perm_granted_for_wikipage',
-                                                   'perm_reset_for_wikiattachment',
-                                                   'perm_granted_for_wikiattachment',
-                                                   'perm_reset_for_object',
-                                                   'perm_granted_for_object',
-                                                   'perm_reset_for_docgroup',
-                                                   'perm_granted_for_docgroup'],
-                       'event_project' =>    ['rename_done',
-                                                   'rename_with_error',
-                                                   'add_custom_quota',
-                                                   'restore_default_quota',
-                                                   'approved',
-                                                   'deleted',
-                                                   'rename_request',
-                                                   'access',
-                                                   'group_type',
-                                                   'http_domain',
-                                                   'unix_box',
-                                                   'changed_public_info',
-                                                   'changed_trove',
-                                                   'membership_request_updated',
-                                                   'import',
-                                                   'mass_change',
-                                                   'status',
-                                                   'frs_self_add_monitor_package',
-                                                   'frs_add_monitor_package',
-                                                   'frs_stop_monitor_package'],
-                       'event_ug' =>         ['upd_ug',
-                                                   'del_ug',
-                                                   'changed_member_perm',
-                                                   'ugroup_add_binding',
-                                                   'ugroup_remove_binding'],
-                       'event_user' =>       ['changed_personal_email_notif',
-                                                   'added_user',
-                                                   'removed_user'],
-                       'event_others' =>     ['changed_bts_form_message',
-                                                   'changed_bts_allow_anon',
-                                                   'changed_patch_mgr_settings',
-                                                   'changed_task_mgr_other_settings',
-                                                   'changed_sr_settings'],
-                       'choose' =>           ['choose_event']];
+        'perm_granted_for_field',
+        'perm_reset_for_tracker',
+        'perm_granted_for_tracker',
+        'perm_reset_for_package',
+        'perm_granted_for_package',
+        'perm_reset_for_release',
+        'perm_granted_for_release',
+        'perm_reset_for_wiki',
+        'perm_granted_for_wiki',
+        'perm_reset_for_wikipage',
+        'perm_granted_for_wikipage',
+        'perm_reset_for_wikiattachment',
+        'perm_granted_for_wikiattachment',
+        'perm_reset_for_object',
+        'perm_granted_for_object',
+        'perm_reset_for_docgroup',
+        'perm_granted_for_docgroup',
+    ],
+        'event_project' =>    ['rename_done',
+            'rename_with_error',
+            'add_custom_quota',
+            'restore_default_quota',
+            'approved',
+            'deleted',
+            'rename_request',
+            'access',
+            'group_type',
+            'http_domain',
+            'unix_box',
+            'changed_public_info',
+            'changed_trove',
+            'membership_request_updated',
+            'import',
+            'mass_change',
+            'status',
+            'frs_self_add_monitor_package',
+            'frs_add_monitor_package',
+            'frs_stop_monitor_package',
+        ],
+        'event_ug' =>         ['upd_ug',
+            'del_ug',
+            'changed_member_perm',
+            'ugroup_add_binding',
+            'ugroup_remove_binding',
+        ],
+        'event_user' =>       ['changed_personal_email_notif',
+            'added_user',
+            'removed_user',
+        ],
+        'event_others' =>     ['changed_bts_form_message',
+            'changed_bts_allow_anon',
+            'changed_patch_mgr_settings',
+            'changed_task_mgr_other_settings',
+            'changed_sr_settings',
+        ],
+        'choose' =>           ['choose_event'],
+    ];
 
     //Plugins related events should be filled using the hook
     $params = ['subEvents' => &$subEvents];
@@ -210,7 +216,8 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             $msg_key  = $field;
             $arr_args = "";
         }
-        $msg = $Language->getOverridableText('project_admin_utils', $msg_key, $arr_args);
+        $event = EventManager::instance()->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($msg_key));
+        $msg   = $event->getLabel() ?? $Language->getOverridableText('project_admin_utils', $msg_key, $arr_args);
         if (! (strpos($msg, "*** Unkown msg") === false)) {
             $msg = $field;
         }
@@ -224,10 +231,10 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             $ugroupList = explode(",", $val);
             $val        = '';
             foreach ($ugroupList as $ugroup) {
-                if ($val === '') {
+                if ($val !== '') {
                     $val .= ', ';
                 }
-                $val .= \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroup);
+                $val .= \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayName((string) $ugroup);
             }
         } elseif ($msg_key == "group_type") {
             $template = TemplateSingleton::instance();
@@ -239,9 +246,10 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
 
         if ($export) {
             $documents_body =  ['event' => $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id),
-                                     'val'   => $hp->purify($val),
-                                     'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']),
-                                     'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name'])];
+                'val'   => $hp->purify($val),
+                'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']),
+                'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name']),
+            ];
             require_once __DIR__ . '/../export/project_export_utils.php';
             $html .= build_csv_record(['event', 'val', 'date', 'by'], $documents_body) . "\n";
         } else {
@@ -334,7 +342,13 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     foreach ($history_entries as $sub_event_category => $sub_events) {
         $translated_sub_events = [];
         foreach ($sub_events as $sub_event) {
-            $translated_sub_events[$sub_event] = $GLOBALS['Language']->getOverridableText('project_admin_utils', $sub_event);
+            $event                             = EventManager::instance()->dispatch(
+                new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($sub_event)
+            );
+            $translated_sub_events[$sub_event] = $event->getLabel() ?? $GLOBALS['Language']->getOverridableText(
+                'project_admin_utils',
+                $sub_event
+            );
         }
         $translated_events[$sub_event_category] = $translated_sub_events;
     }
@@ -350,7 +364,13 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     if ($subEventsBox !== null) {
         foreach (array_keys($subEventsBox) as $sub_event) {
             if (is_string($sub_event)) {
-                $translated_selected_sub_events[$sub_event] = $GLOBALS['Language']->getOverridableText('project_admin_utils', $sub_event);
+                $event                                      = EventManager::instance()->dispatch(
+                    new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($sub_event)
+                );
+                $translated_selected_sub_events[$sub_event] = $event->getLabel() ?? $GLOBALS['Language']->getOverridableText(
+                    'project_admin_utils',
+                    $sub_event
+                );
             }
         }
     }
@@ -386,9 +406,10 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
 
     $col_list        = ['event', 'val', 'date', 'by'];
     $documents_title =  ['event' => $Language->getText('project_admin_utils', 'event'),
-                              'val'   => $Language->getText('project_admin_utils', 'val'),
-                              'date'  => $Language->getText('project_admin_utils', 'date'),
-                              'by'    => $Language->getText('global', 'by')];
+        'val'   => $Language->getText('project_admin_utils', 'val'),
+        'date'  => $Language->getText('project_admin_utils', 'date'),
+        'by'    => $Language->getText('global', 'by'),
+    ];
     echo build_csv_header($col_list, $documents_title) . $eol;
 
     $dao            = new ProjectHistoryDao(CodendiDataAccess::instance());

@@ -119,6 +119,13 @@ class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->item_permissions_for_groups_builder,
             $this->html_purifier
         );
+
+        \UserManager::setInstance($this->user_manager);
+    }
+
+    protected function tearDown(): void
+    {
+        \UserManager::clearInstance();
     }
 
     public function testItBuildsAnItemRepresentationOfAnItem(): void
@@ -127,7 +134,7 @@ class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $docman_item_id = 666;
         $current_user   = Mockery::mock(\PFUser::class);
         $current_user->shouldReceive('getId')->andReturns($owner_id);
-        $current_user->shouldReceive('getName')->andReturns('toto');
+        $current_user->shouldReceive('getUserName')->andReturns('toto');
         $current_user->shouldReceive('getUserName')->andReturns('toto');
         $current_user->shouldReceive('getRealName')->andReturns('toto');
         $current_user->shouldReceive('isAnonymous')->andReturns(false);
@@ -183,6 +190,10 @@ class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withArgs([$current_user, $docman_item_id])
             ->andReturns(true);
 
+        $this->permissions_manager->shouldReceive('userCanDelete')
+            ->withArgs([$current_user, $docman_item])
+            ->andReturns(true);
+
         $this->lock_factory->shouldReceive('getLockInfoForItem')
             ->withArgs([$docman_item])
             ->andReturns(["user_id" => $owner_id, "lock_date" => 1549461600]);
@@ -201,6 +212,7 @@ class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($representation->title, 'My file.txt');
         $this->assertEquals($representation->is_expanded, false);
         $this->assertEquals($representation->user_can_write, true);
+        $this->assertEquals($representation->user_can_delete, true);
         $this->assertEquals($representation->can_user_manage, true);
         $this->assertEquals($representation->lock_info->locked_by->id, $owner_id);
         $this->assertEquals($representation->lock_info->lock_date, '2019-02-06T15:00:00+01:00');

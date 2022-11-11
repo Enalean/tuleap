@@ -28,15 +28,20 @@ final class FilePOSTRepresentation
     /**
      * @var string The file name {@from body} {@required true}
      */
-    public $name;
+    public string $name;
 
     /**
      * @var int The file size {@from body} {@required true}
      */
-    public $file_size;
+    public int $file_size;
 
     /**
      * @var string The file type {@from body} {@required true}
      */
-    public $file_type;
+    public string $file_type;
+
+    /**
+     * @var string | null Description of the file {@from body} {@required false}
+     */
+    public string | null $description;
 }

@@ -64,7 +64,7 @@ final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['PHP_AUTH_USER'] = 'forge__gerrit_1';
         $_SERVER['PHP_AUTH_PW']   = 'password';
         $expected_user            = \Mockery::mock(\PFO_User::class);
-        $expected_user->shouldReceive('getUnixName');
+        $expected_user->shouldReceive('getUserName');
         $replication_http_user_authenticator->shouldReceive('authenticate')->andReturns($expected_user);
 
         $authenticated_user = $http_access_control->getUser($git_repository, $git_operation);
@@ -106,7 +106,7 @@ final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
         $access_key_authenticator->shouldReceive('getUser')->andReturnNull();
         $expected_user = \Mockery::mock(\PFUser::class);
-        $expected_user->shouldReceive('getUnixName');
+        $expected_user->shouldReceive('getUserName');
         $expected_user->shouldReceive('getId');
         $user_login_manager->shouldReceive('authenticate')->andReturns($expected_user);
         $user_dao->shouldReceive('storeLastAccessDate')->once();
@@ -149,7 +149,7 @@ final class HTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
         $expected_user          = \Mockery::mock(\PFUser::class);
-        $expected_user->shouldReceive('getUnixName');
+        $expected_user->shouldReceive('getUserName');
         $expected_user->shouldReceive('getId');
         $access_key_authenticator->shouldReceive('getUser')->andReturn($expected_user);
 

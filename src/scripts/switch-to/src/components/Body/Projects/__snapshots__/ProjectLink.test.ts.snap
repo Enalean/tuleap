@@ -3,6 +3,7 @@
 exports[`ProjectLink Displays the link to a project 1`] = `
 <div
   class="switch-to-projects-project"
+  data-target-id="switch-to-project-/projects/gpig"
   data-test="switch-to-projects-project"
 >
   <a
@@ -13,23 +14,20 @@ exports[`ProjectLink Displays the link to a project 1`] = `
     <i
       class="fas fa-fw switch-to-projects-project-icon fa-lock-open"
     />
-     
     <span
       class="switch-to-projects-project-label"
     >
       <span
         class="switch-to-projects-project-label-icon"
       >
-        
-                🐹
-            
+        🐹
       </span>
-      
-            Guinea Pig
-        
+      <highlight-matching-text-stub
+        text="Guinea Pig"
+      />
     </span>
   </a>
-   
-  <!---->
+  
+  
 </div>
 `;

@@ -1,0 +1,23 @@
+[# if you want to disable tarball generation remove the following: ]
+[if-any tarball_href]
+<hr/>
+<p style="margin:0;"><a href="[tarball_href]">Download GNU tarball</a></p>
+[end]
+
+[is picklist_len "0"]
+[else]
+  [is picklist_len "1"]
+  [else]
+    <form method="get" action="[dir_paging_action]">
+      [for dir_paging_hidden_values]<input type="hidden" name="[dir_paging_hidden_values.name]" value="[dir_paging_hidden_values.value]"/>[end]
+      <select name="dir_pagestart"  onchange="submit()">
+        [for picklist]
+          <option [is picklist.count dir_pagestart]selected[end] value="[picklist.count]">Page [picklist.page]: [picklist.start] to [picklist.end]</option>
+        [end]
+      </select>
+    </form>
+  [end]
+[end]
+
+[include "props.ezt"]
+[include "footer.ezt"]

@@ -23,9 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
-use PFUser;
-use Project;
-
 class ComparisonService
 {
     /** @var ComparisonRepository */
@@ -44,7 +41,7 @@ class ComparisonService
      * @throws InvalidComparisonException
      * @throws NotAuthorizedException
      */
-    public function create(TransientComparison $transient_comparison, PFUser $current_user): Comparison
+    public function create(TransientComparison $transient_comparison, UserIdentifier $current_user): Comparison
     {
         if (! $this->authorizations->canCreateComparison($current_user, $transient_comparison)) {
             throw new NotAuthorizedException(
@@ -70,7 +67,7 @@ class ComparisonService
         return $this->comparison_repository->add($transient_comparison, $current_user);
     }
 
-    public function findById(PFUser $current_user, int $id): ?Comparison
+    public function findById(UserIdentifier $current_user, int $id): ?Comparison
     {
         return $this->comparison_repository->findById($current_user, $id);
     }
@@ -84,8 +81,8 @@ class ComparisonService
      * @throws NotAuthorizedException
      */
     public function findByProject(
-        PFUser $current_user,
-        Project $project,
+        UserIdentifier $current_user,
+        ProjectIdentifier $project,
         int $page_size,
         int $comparison_offset,
     ): ComparisonsPage {
@@ -107,7 +104,7 @@ class ComparisonService
     /**
      * @throws NotAuthorizedException
      */
-    public function delete(PFUser $current_user, Comparison $comparison): void
+    public function delete(UserIdentifier $current_user, Comparison $comparison): void
     {
         if (! $this->authorizations->canDeleteComparison($current_user, $comparison)) {
             throw new NotAuthorizedException(

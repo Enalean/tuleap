@@ -57,10 +57,10 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
         return array_merge(
             PageList::supportedArgs(),
             [
-                     's'     => false,
+                's'     => false,
                      /* Columns to include in listing */
-                     'info'     => 'pagename,mtime',
-                     'updatelinks' => 0,
+                'info'     => 'pagename,mtime',
+                'updatelinks' => 0,
             ]
         );
     }
@@ -83,7 +83,8 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
         $count     = 0;
         $post_args = $request->getArg('admin_rename');
         $options   = ['regex' => @$post_args['regex'],
-                         'icase' => @$post_args['icase']];
+            'icase' => @$post_args['icase'],
+        ];
         foreach ($pages as $name) {
             if (
                 ($newname = $this->renameHelper($name, $from, $to, $options))
@@ -198,7 +199,8 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
             ['types' =>
                    ['renamed_pagename'
                          => new _PageList_Column_renamed_pagename('rename', _("Rename to")),
-            ]]
+                   ],
+            ]
         );
         $pagelist->addPageList($pages);
 
@@ -228,7 +230,8 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
 
         return HTML::form(
             ['action' => $request->getPostURL(),
-                                'method' => 'post'],
+                'method' => 'post',
+            ],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
@@ -247,8 +250,9 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
     public function checkBox(&$post_args, $name, $msg)
     {
         $checkbox = HTML::input(['type' => 'checkbox',
-                                      'name' => 'admin_rename[' . $name . ']',
-                                      'value' => 1]);
+            'name' => 'admin_rename[' . $name . ']',
+            'value' => 1,
+        ]);
         if (! empty($post_args[$name])) {
             $checkbox->setAttr('checked', 'checked');
         }
@@ -259,10 +263,12 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
     {
         $header->pushContent(_("Rename") . " " . _("from") . ': ');
         $header->pushContent(HTML::input(['name' => 'admin_rename[from]',
-                                               'value' => $post_args['from']]));
+            'value' => $post_args['from'],
+        ]));
         $header->pushContent(' ' . _("to") . ': ');
         $header->pushContent(HTML::input(['name' => 'admin_rename[to]',
-                                               'value' => $post_args['to']]));
+            'value' => $post_args['to'],
+        ]));
         $header->pushContent($this->checkBox($post_args, 'regex', _("Regex?")));
         $header->pushContent($this->checkBox($post_args, 'icase', _("Case insensitive?")));
         $header->pushContent(HTML::br());
@@ -288,7 +294,8 @@ class _PageList_Column_renamed_pagename extends _PageList_Column
         global $request;
         $post_args = $request->getArg('admin_rename');
         $options   = ['regex' => @$post_args['regex'],
-                         'icase' => @$post_args['icase']];
+            'icase' => @$post_args['icase'],
+        ];
         $value     = WikiPlugin_WikiAdminRename::renameHelper(
             $page_handle->getName(),
             $post_args['from'],
@@ -296,8 +303,9 @@ class _PageList_Column_renamed_pagename extends _PageList_Column
             $options
         );
         $div       = HTML::div(" => ", HTML::input(['type' => 'text',
-                                                  'name' => 'rename[]',
-                                                  'value' => $value]));
+            'name' => 'rename[]',
+            'value' => $value,
+        ]));
         $new_page  = $request->getPage($value);
         if ($new_page->exists()) {
             $div->setAttr('class', 'error');

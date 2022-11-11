@@ -23,6 +23,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Events\AfterRepositoryForked;
@@ -103,7 +104,7 @@ use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
 
-class pullrequestPlugin extends Plugin // phpcs:ignore
+class pullrequestPlugin extends Plugin implements PluginWithConfigKeys // phpcs:ignore
 {
     public const PR_REFERENCE_KEYWORD          = 'pr';
     public const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
@@ -167,11 +168,11 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return ['git'];
     }
 
-    public function collectAssets(CollectAssets $retriever)
+    public function collectAssets(CollectAssets $retriever): void
     {
         $assets = new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/pullrequest'
+            __DIR__ . '/../scripts/create-pullrequest-button/frontend-assets',
+            '/assets/pullrequest/create-pullrequest-button'
         );
 
         $css_assets = new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons(
@@ -179,8 +180,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             'repository-style'
         );
         $retriever->addStylesheet($css_assets);
-
-
 
         $create_pullrequest = new JavascriptAsset($assets, 'create-pullrequest-button.js');
         $retriever->addScript($create_pullrequest);
@@ -767,5 +766,10 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
 
         $pull_request_organizer->organizePullRequestReferences($organizer);
+    }
+
+    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(\Tuleap\PullRequest\PullRequestPresenter::class);
     }
 }

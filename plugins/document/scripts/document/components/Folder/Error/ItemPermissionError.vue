@@ -76,7 +76,7 @@
 </template>
 <script setup lang="ts">
 import ItemPermissionErrorSvg from "../../svg/error/ItemPermissionErrorSvg.vue";
-import { computed, ref } from "@vue/composition-api";
+import { computed, ref } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
@@ -109,8 +109,4 @@ function submit(): void {
 const placeholder = computed((): string => {
     return $gettext("Please write something meaningful for the admin.");
 });
-</script>
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
 </script>

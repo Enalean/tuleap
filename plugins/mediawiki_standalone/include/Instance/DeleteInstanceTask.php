@@ -49,6 +49,6 @@ final class DeleteInstanceTask implements QueueTask
 
     public function getPreEnqueueMessage(): string
     {
-        return sprintf('Delete MediaWiki instance %d', $this->project_id);
+        return 'Delete MediaWiki instance #' . $this->project_id;
     }
 }

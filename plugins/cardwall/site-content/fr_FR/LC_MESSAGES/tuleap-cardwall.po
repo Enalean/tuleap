@@ -186,7 +186,7 @@ msgstr ""
 "couleur peuvent être choisis comme couleur de fond des cartes"
 
 msgid "Please select a field to group artifacts in columns."
-msgstr "Sélectionnez un champ pour grouper les artefacts en colonnes."
+msgstr "Sélectionnez un champ pour grouper les artéfacts en colonnes."
 
 msgid "Preview of the card"
 msgstr "Aperçu des cartes"
@@ -239,14 +239,14 @@ msgstr ""
 msgid ""
 "The field used to determine background color has been removed with success."
 msgstr ""
-"Le champs choisi pour déterminer la couleur du fond des cartes a été "
-"supprimé avec succès."
+"Le champ choisi pour déterminer la couleur du fond des cartes a été supprimé "
+"avec succès."
 
 #, php-format
 msgid "The field used to determine background color is now %s"
 msgstr ""
-"Le champs choisi pour déterminer la couleur du fond des cartes est "
-"maintenant %s"
+"Le champ choisi pour déterminer la couleur du fond des cartes est maintenant "
+"%s"
 
 msgid "The following fields are added to the cards"
 msgstr "Les champs suivants sont ajoutés aux cartes"
@@ -267,7 +267,7 @@ msgid "There is no initial effort"
 msgstr "Il n'y pas d'effort initial"
 
 msgid "There is no more field that can be added to the cards."
-msgstr "Il n'y a plus de champs pouveant être ajoutés aux cartes"
+msgstr "Il n'y a plus de champs pouvant être ajoutés aux cartes"
 
 #, php-format
 msgid "There is no values in the field %1$s. Please choose another one."

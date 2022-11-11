@@ -7,7 +7,8 @@
   "dependencies": {
     "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
     "@tuleap/tlp-modal": "link:../../lib/frontend/tlp-modal",
-    "@tuleap/tlp-popovers": "link:../../lib/frontend/tlp-popovers"
+    "@tuleap/tlp-popovers": "link:../../lib/frontend/tlp-popovers",
+    "@tuleap/user-and-ugroup-autocompleter": "link:../../lib/frontend/user-and-ugroup-autocompleter"
   },
   "config": {
     "bin": "../../node_modules/.bin"
@@ -18,7 +19,6 @@
     "watch": "webpack --config webpack.dev.js --watch"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
-    "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support"
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator"
   }
 }

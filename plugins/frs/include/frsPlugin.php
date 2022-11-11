@@ -42,6 +42,8 @@ use Tuleap\FRS\Upload\Tus\FileUploadFinisher;
 use Tuleap\FRS\Upload\Tus\ToBeCreatedFRSFileBuilder;
 use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
@@ -153,12 +155,15 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $path_allocator          = new UploadPathAllocator();
         $logger                  = BackendLogger::getDefaultLogger();
         $db_connection           = DBFactory::getMainTuleapDBConnection();
+        $current_user_provider   = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
+
 
         return FileUploadController::build(
             new FileDataStore(
                 new FileBeingUploadedInformationProvider(
                     $path_allocator,
-                    $file_ongoing_upload_dao
+                    $file_ongoing_upload_dao,
+                    $current_user_provider,
                 ),
                 new FileBeingUploadedWriter(
                     $path_allocator,
@@ -182,7 +187,8 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                     $path_allocator,
                     $file_ongoing_upload_dao
                 )
-            )
+            ),
+            $current_user_provider,
         );
     }
 

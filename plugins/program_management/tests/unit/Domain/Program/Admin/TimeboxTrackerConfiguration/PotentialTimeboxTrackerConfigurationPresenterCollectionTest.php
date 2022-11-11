@@ -22,7 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\TimeboxTrackerConfiguration;
 
-use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramSelectOptionConfigurationPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\PotentialTimeboxTrackerConfigurationCollection;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProgramSelectOptionConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
@@ -44,11 +45,11 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends 
     }
 
     /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
+     * @return ProgramSelectOptionConfiguration[]
      */
     private function getPresenters(TrackerReference|IterationTrackerIdentifier|null $program_tracker): array
     {
-        return PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
+        return PotentialTimeboxTrackerConfigurationCollection::fromTimeboxTracker(
             PotentialTrackerCollection::fromProgram(
                 SearchTrackersOfProgramStub::withTrackers(
                     TrackerReferenceStub::withId(self::FIRST_TRACKER_ID),

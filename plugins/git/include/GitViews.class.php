@@ -22,7 +22,6 @@
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
@@ -49,7 +48,6 @@ class GitViews extends PluginViews
         private FineGrainedRetriever $fine_grained_retriever,
         private DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
         private FineGrainedRepresentationBuilder $fine_grained_builder,
-        private GitPhpAccessLogger $access_loger,
         private RegexpFineGrainedRetriever $regexp_retriever,
         private Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         private HeaderRenderer $header_renderer,
@@ -60,7 +58,7 @@ class GitViews extends PluginViews
         $this->groupId        = (int) $this->request->get('group_id');
         $this->project        = ProjectManager::instance()->getProject($this->groupId);
         $this->projectName    = $this->project->getUnixName();
-        $this->userName       = $this->user->getName();
+        $this->userName       = $this->user->getUserName();
         $this->ugroup_manager = new UGroupManager();
         $this->event_manager  = EventManager::instance();
     }
@@ -221,7 +219,7 @@ class GitViews extends PluginViews
             echo '<td>';
             $placeholder = dgettext('tuleap-git', 'Enter a path or leave it blank');
             echo '<input type="text" title="' . $placeholder . '" placeholder="' . $placeholder . '" id="fork_repositories_path" name="path" />';
-            echo '<input type="hidden" id="fork_repositories_prefix" value="u/' . $purifier->purify($this->user->getName()) . '" />';
+            echo '<input type="hidden" id="fork_repositories_prefix" value="u/' . $purifier->purify($this->user->getUserName()) . '" />';
             echo '</td>';
 
             echo '<td class="last">';
@@ -407,7 +405,7 @@ class GitViews extends PluginViews
                 $this->regexp_retriever
             );
 
-            $userName = $this->user->getName();
+            $userName = $this->user->getUserName();
             echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
         }
     }

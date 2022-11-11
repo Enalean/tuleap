@@ -45,6 +45,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
@@ -70,15 +71,20 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Reference\CheckCrossReferenceValidityEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
+use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager as RESTUserManager;
+use Tuleap\Search\IndexAllPendingItemsEvent;
+use Tuleap\Search\IndexedItemFoundToSearchResult;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -101,6 +107,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\AsynchronousArtifactsDeletionActio
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\PendingArtifactRemovalDao;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -115,6 +122,7 @@ use Tuleap\Tracker\Artifact\Changeset\TextDiff\TextDiffRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\Artifact\Closure\ArtifactClosingReferencesHandler;
+use Tuleap\Tracker\Artifact\Closure\ArtifactWasClosedCache;
 use Tuleap\Tracker\Artifact\CrossReference\CrossReferenceArtifactOrganizer;
 use Tuleap\Tracker\Artifact\InvertCommentsController;
 use Tuleap\Tracker\Artifact\InvertDisplayChangesController;
@@ -215,12 +223,15 @@ use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
+use Tuleap\Tracker\Reference\CrossReferenceValidator;
 use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Search\IndexAllArtifactsProcessor;
+use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -258,7 +269,6 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetPublicAreas;
-use Tuleap\Reference\NatureCollection;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -319,6 +329,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(GetUriFromCrossReference::NAME);
+        $this->addHook(CheckCrossReferenceValidityEvent::NAME);
 
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
@@ -340,6 +351,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $this->addHook(HistoryEntryCollection::NAME);
         $this->addHook(Event::USER_HISTORY_CLEAR, 'clearRecentlyVisitedArtifacts');
+        $this->addHook(IndexedItemFoundToSearchResult::NAME);
 
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(ProjectRegistrationActivateService::NAME);
@@ -357,6 +369,9 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $this->addHook(CollectTuleapComputedMetrics::NAME);
         $this->addHook(ConfigureAtXMLImport::NAME);
+
+        $this->addHook(\Tuleap\Search\IndexAllPendingItemsEvent::NAME);
+        $this->addHook(\Tuleap\Search\IdentifyAllItemsToIndexEvent::NAME);
     }
 
     public function getHooksAndCallbacks()
@@ -476,7 +491,18 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         parse_str($_SERVER['QUERY_STRING'], $query_string);
 
         if (array_keys($query_string) !== ['tracker', 'func']) {
-            if (! isset($query_string['semantic']) || ($query_string['semantic'] !== "title" && $query_string['semantic'] !== "description")) {
+            if (
+                ! isset($query_string['semantic']) ||
+                (
+                    $query_string['semantic'] !== "title" &&
+                    $query_string['semantic'] !== "description" &&
+                    $query_string['semantic'] !== "status" &&
+                    $query_string['semantic'] !== "done" &&
+                    $query_string['semantic'] !== "contributor" &&
+                    $query_string['semantic'] !== "timeframe" &&
+                    $query_string['semantic'] !== "progress"
+                )
+            ) {
                 return false;
             }
         }
@@ -526,19 +552,27 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         }
     }
 
-    public function javascript_file($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function javascript_file($params): void//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->currentRequestIsForPlugin()) {
             $layout = $params['layout'];
             assert($layout instanceof \Layout);
-            $layout->includeJavascriptFile($this->getAssets()->getFileURL('tracker.js'));
+            $legacy_asset = new \Tuleap\Layout\JavascriptAsset(
+                new IncludeAssets(__DIR__ . '/../scripts/legacy/frontend-assets', '/assets/trackers/legacy'),
+                'tracker.js',
+            );
+            // DO NOT REPLACE this `includeJavascriptFile()` with `addJavascriptAsset()`
+            // The tracker artifact view has script tags in the middle of the body expecting to have access to `tuleap.tracker`
+            $layout->includeJavascriptFile($legacy_asset->getFileURL());
             $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'modal-v2.js'));
         }
     }
 
-    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $event->addJavascript($this->getAssets()->getFileURL('tracker-permissions-per-group.js'));
+        $event->addJavascript(
+            new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'tracker-permissions-per-group.js')
+        );
     }
 
     /**
@@ -1050,7 +1084,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         if ($event->status === \Project::STATUS_DELETED) {
-            EventManager::instance()->processEvent(new ProjectDeletionEvent($event->project->getID()));
+            $event_manager = EventManager::instance();
+            $event_manager->processEvent(new ProjectDeletionEvent($event->project->getID()));
 
             $tracker_manager = new TrackerManager();
             $tracker_manager->deleteProjectTrackers((int) $event->project->getID());
@@ -1360,7 +1395,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function backend_alias_get_aliases($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $config = new MailGatewayConfig(
-            new MailGatewayConfigDao()
+            new MailGatewayConfigDao(),
+            MailTransportBuilder::getPlatformMailConfiguration(),
         );
 
         $src_dir = ForgeConfig::get('codendi_dir');
@@ -1672,9 +1708,10 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $visit_retriever = new \Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever(
             new RecentlyVisitedDao(),
             $this->getArtifactFactory(),
-            new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
+            new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
+            new StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
         );
-        $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY);
+        $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY, $collection->getUser());
     }
 
     /**
@@ -1691,6 +1728,20 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $visit_cleaner->clearVisitedArtifacts($user);
     }
 
+    public function convertIndexedItemToSearchResult(IndexedItemFoundToSearchResult $indexed_item_convertor): void
+    {
+        $event_dispatcher = EventManager::instance();
+        $retriever        = new \Tuleap\Tracker\Search\SearchResultRetriever(
+            $this->getArtifactFactory(),
+            $this->getTrackerFormElementFactory(),
+            $event_dispatcher,
+            new \Tuleap\Glyph\GlyphFinder($event_dispatcher),
+            new StatusBadgeBuilder(\Tracker_Semantic_StatusFactory::instance()),
+        );
+
+        $retriever->retrieveSearchResult($indexed_item_convertor);
+    }
+
     public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
     {
         $glyph_locations_collector->addLocation(
@@ -1705,7 +1756,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $this->getArtifactDao(),
             $this->getArtifactFactory(),
             $this->getUserManager(),
-            UserHelper::instance(),
             EventManager::instance()
         );
         $collector->collect($collection);
@@ -1954,7 +2004,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new CSRFSynchronizerToken(TRACKER_BASE_URL . '/config.php'),
             new MailGatewayConfigController(
                 new MailGatewayConfig(
-                    new MailGatewayConfigDao()
+                    new MailGatewayConfigDao(),
+                    MailTransportBuilder::getPlatformMailConfiguration(),
                 ),
                 new Config_LocalIncFinder(),
                 EventManager::instance(),
@@ -2045,6 +2096,12 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             ),
             new DiffProcessor(new Codendi_UnifiedDiffFormatter())
         );
+    }
+
+    public function checkCrossReferenceValidityEvent(CheckCrossReferenceValidityEvent $event): void
+    {
+        $cross_reference_validator = new CrossReferenceValidator(Tracker_ArtifactFactory::instance());
+        $cross_reference_validator->removeInvalidCrossReferences($event);
     }
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
@@ -2179,15 +2236,17 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $file_ongoing_upload_dao,
             $formelement_factory
         );
+        $current_user_provider   = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
 
         return FileUploadController::build(
             new FileDataStore(
-                new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao),
+                new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao, $current_user_provider),
                 new FileBeingUploadedWriter($path_allocator, $db_connection),
                 new FileBeingUploadedLocker($path_allocator),
                 new FileUploadFinisher($file_ongoing_upload_dao, $formelement_factory),
                 new FileUploadCanceler($path_allocator, $file_ongoing_upload_dao)
-            )
+            ),
+            $current_user_provider,
         );
     }
 
@@ -2209,16 +2268,19 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             Tracker_ArtifactFactory::instance()
         );
 
+        $current_user_provider = new RESTCurrentUserMiddleware(RESTUserManager::build(), new BasicAuthentication());
+
         return new AttachmentController(
             $url_verification,
             $file_ongoing_upload_dao,
             $form_element_factory,
-            new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao),
+            new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao, $current_user_provider),
             $file_info_factory,
             $binary_file_response_builder,
             new SapiStreamEmitter(),
+            $current_user_provider,
             new SessionWriteCloseMiddleware(),
-            new RESTCurrentUserMiddleware(RESTUserManager::build(), new BasicAuthentication()),
+            $current_user_provider,
             new TuleapRESTCORSMiddleware()
         );
     }
@@ -2411,7 +2473,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ListPickerIncluder::class);
-        $event->addConfigClass(Tracker_Report::class);
+        $event->addConfigClass(Tracker_FormElement_Field_ArtifactLink::class);
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
     }
 
@@ -2564,7 +2626,13 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 $reference_manager,
                 new TrackerPrivateCommentUGroupPermissionInserter(
                     new TrackerPrivateCommentUGroupPermissionDao()
-                )
+                ),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             )
         );
 
@@ -2573,6 +2641,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $reference_manager,
             $artifact_factory,
             $user_manager,
+            new ArtifactWasClosedCache(),
             new ArtifactCloser(
                 new StatusFieldRetriever($status_semantic_factory),
                 new StatusValueRetriever($status_semantic_factory, $first_possible_value_retriever),
@@ -2586,5 +2655,35 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             )
         );
         $handler->handlePotentialReferencesReceived($event);
+    }
+
+    public function indexAllPendingItems(IndexAllPendingItemsEvent $index_all_possible_items_event): void
+    {
+        $index_batch_queue = $index_all_possible_items_event->getItemToIndexBatchQueue();
+        $index_batch_queue->startBatchingItemsIntoQueue(
+            function (\Tuleap\Search\ItemToIndexQueue $index_queue) use ($index_all_possible_items_event): void {
+                (new IndexAllArtifactsProcessor(
+                    new \Tuleap\Tracker\Search\IndexArtifactDAO(),
+                    static function (): Tracker_ArtifactFactory {
+                        Tracker_ArtifactFactory::clearInstance();
+                        return Tracker_ArtifactFactory::instance();
+                    },
+                    $index_queue,
+                    new ChangesetCommentIndexer(
+                        $index_queue,
+                        EventManager::instance(),
+                        Codendi_HTMLPurifier::instance(),
+                        new \Tracker_Artifact_Changeset_CommentDao(),
+                    )
+                ))->queueAllPendingArtifactsIntoIndexQueue(
+                    $index_all_possible_items_event->getProcessQueueForItemCategory('artifacts')
+                );
+            }
+        );
+    }
+
+    public function identifyAllItemsToIndex(): void
+    {
+        (new \Tuleap\Tracker\Search\IndexArtifactDAO())->markExistingArtifactsAsPending();
     }
 }

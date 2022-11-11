@@ -24,14 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use ParagonIE\EasyDB\EasyDB;
-use PFUser;
-use Project;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\BaselineRepository;
 use Tuleap\Baseline\Domain\Comparison;
 use Tuleap\Baseline\Domain\ComparisonRepository;
+use Tuleap\Baseline\Domain\ProjectIdentifier;
 use Tuleap\Baseline\Domain\TransientComparison;
+use Tuleap\Baseline\Domain\UserIdentifier;
 use UserManager;
 
 class ComparisonRepositoryAdapter implements ComparisonRepository
@@ -68,7 +68,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
     /**
      * Note: Authorizations may have been checked earlier
      */
-    public function add(TransientComparison $comparison, PFUser $current_user): Comparison
+    public function add(TransientComparison $comparison, UserIdentifier $current_user): Comparison
     {
         $creation_date = $this->clock->now();
 
@@ -95,7 +95,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
         );
     }
 
-    public function findById(PFUser $current_user, int $id): ?Comparison
+    public function findById(UserIdentifier $current_user, int $id): ?Comparison
     {
         $rows = $this->db->safeQuery(
             'SELECT id, name, comment, base_baseline_id, compared_to_baseline_id, user_id, creation_date
@@ -122,7 +122,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
     /**
      * Note: Authorizations may have been checked earlier
      */
-    public function delete(Comparison $comparison, PFUser $current_user): void
+    public function delete(Comparison $comparison, UserIdentifier $current_user): void
     {
         $this->db->delete('plugin_baseline_comparison', ['id' => $comparison->getId()]);
     }
@@ -131,10 +131,10 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
      * Note: Authorizations may have been checked earlier
      * @return Comparison[]
      */
-    public function findByProject(PFUser $current_user, Project $project, int $page_size, int $comparison_offset): array
+    public function findByProject(UserIdentifier $current_user, ProjectIdentifier $project, int $page_size, int $comparison_offset): array
     {
         $rows = $this->db->safeQuery(
-            'SELECT 
+            'SELECT
                 comparison.id,
                 comparison.name,
                 comparison.comment,
@@ -169,7 +169,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
     /**
      * Note: Authorizations may have been check earlier
      */
-    public function countByProject(Project $project): int
+    public function countByProject(ProjectIdentifier $project): int
     {
         return $this->db->single(
             'SELECT COUNT(comparison.id) as nb
@@ -185,7 +185,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
         );
     }
 
-    private function mapRow(PFUser $current_user, array $row): ?Comparison
+    private function mapRow(UserIdentifier $current_user, array $row): ?Comparison
     {
         $base_baseline = $this->baseline_repository->findById($current_user, $row['base_baseline_id']);
         if ($base_baseline === null) {
@@ -197,7 +197,12 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
             return null;
         }
 
-        $author        = $this->user_manager->getUserById($row['user_id']);
+        $user = $this->user_manager->getUserById($row['user_id']);
+        if ($user === null) {
+            return null;
+        }
+
+        $author        = UserProxy::fromUser($user);
         $creation_date = $this->clock->at($row['creation_date']);
 
         return new Comparison(

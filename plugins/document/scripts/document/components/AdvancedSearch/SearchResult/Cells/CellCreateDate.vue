@@ -28,9 +28,3 @@ import CellDate from "./CellDate.vue";
 
 defineProps<{ item: ItemSearchResult }>();
 </script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
-</script>

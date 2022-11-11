@@ -17,8 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { loadImage } from "./image-loader";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
+
+vi.mock("@tuleap/tlp-fetch");
 
 describe("image-loader", () => {
     it("loads an image", () => {
@@ -34,7 +37,7 @@ describe("image-loader", () => {
         global.Blob.prototype.arrayBuffer = (): Promise<ArrayBuffer> =>
             Promise.resolve(new ArrayBuffer(1));
 
-        const get_spy = jest.spyOn(tlp_fetch, "get");
+        const get_spy = vi.spyOn(tlp_fetch, "get");
         get_spy.mockResolvedValue({
             blob: () => Promise.resolve(new Blob()),
         } as Response);

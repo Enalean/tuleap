@@ -468,7 +468,7 @@ legend {
         cursor: not-allowed;
     }
 
-    &.active:not(.disabled):not(:disabled) {
+    &.active:not(.disabled, :disabled) {
         border-color: $background-color-active !important;
         background: $background-color-active !important;
     }
@@ -539,7 +539,7 @@ legend {
         );
     }
 
-    &:hover:not(:disabled):not(.disabled):not(.active) {
+    &:hover:not(:disabled, .disabled, .active) {
         @include btn-hover(var(--tlp-neutral-light-color-darker-05));
 
         &.btn-primary {

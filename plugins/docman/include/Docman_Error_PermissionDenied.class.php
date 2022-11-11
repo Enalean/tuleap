@@ -60,7 +60,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
               <br><input name="Submit" type="submit" value="' . $purifier->purify($GLOBALS['Language']->getText('include_exit', 'send_mail')) . '"/></br>
           </form>';
 
-        $GLOBALS['HTML']->footer(['showfeedback' => false]);
+        $GLOBALS['HTML']->footer([]);
     }
 
     /**
@@ -209,7 +209,7 @@ Someone set permissions on this item, preventing users of having access to this 
 If you decide to accept the request, please take the appropriate actions to grant him permission and communicate that information to the requester.
 Otherwise, please inform the requester (%7$s) that he will not get access to the requested data.
 --
-%1$s.'), $user->getRealName(), $user->getName(), $link, $project->getPublicName(), $href_approval, $message_to_admin, $user->getEmail());
+%1$s.'), $user->getRealName(), $user->getUserName(), $link, $project->getPublicName(), $href_approval, $message_to_admin, $user->getEmail());
     }
 
     protected function getPermissionDeniedMailSubject(Project $project, PFUser $user): string

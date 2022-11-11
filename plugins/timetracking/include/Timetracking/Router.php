@@ -194,9 +194,9 @@ class Router
     private function redirectToArtifactViewInTimetrackingPane(Artifact $artifact)
     {
         $url = TRACKER_BASE_URL . '/?' . http_build_query([
-                'aid'  => $artifact->getId(),
-                'view' => 'timetracking',
-            ]);
+            'aid'  => $artifact->getId(),
+            'view' => 'timetracking',
+        ]);
 
         $GLOBALS['Response']->redirect($url);
     }
@@ -204,8 +204,8 @@ class Router
     private function redirectToArtifactView(Artifact $artifact)
     {
         $url = TRACKER_BASE_URL . '/?' . http_build_query([
-                'aid'  => $artifact->getId(),
-            ]);
+            'aid'  => $artifact->getId(),
+        ]);
 
         $GLOBALS['Response']->redirect($url);
     }
@@ -252,7 +252,7 @@ class Router
         );
 
         $url = TRACKER_BASE_URL . '/?' . http_build_query([
-                'tracker' => $tracker_id,
+            'tracker' => $tracker_id,
         ]);
 
         $GLOBALS['Response']->redirect($url);
@@ -261,8 +261,8 @@ class Router
     private function redirectToTimetrackingAdminPage(Tracker $tracker)
     {
         $url = TIMETRACKING_BASE_URL . '/?' . http_build_query([
-                'tracker' => $tracker->getId(),
-                'action' => 'admin-timetracking',
+            'tracker' => $tracker->getId(),
+            'action' => 'admin-timetracking',
         ]);
 
         $GLOBALS['Response']->redirect($url);

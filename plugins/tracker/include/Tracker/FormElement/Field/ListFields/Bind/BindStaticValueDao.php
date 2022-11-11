@@ -30,8 +30,8 @@ class BindStaticValueDao extends DataAccessObject
     public const COPY_BY_REFERENCE = true;
     public const COPY_BY_VALUE     = false;
 
-    private $cache_canbedeleted_values = [];
-    private $cache_canbehidden_values  = [];
+    private array $cache_used_values_in_artifacts = [];
+    private array $cache_cannot_be_hidden_values  = [];
 
     public function searchById($id)
     {
@@ -202,7 +202,6 @@ class BindStaticValueDao extends DataAccessObject
                 WHERE semantic_done.tracker_id = $tracker_id
                 AND static_value.field_id = $field_id";
 
-
         return $this->isValueHiddenable(
             $field_id,
             $value_id,
@@ -210,11 +209,19 @@ class BindStaticValueDao extends DataAccessObject
         );
     }
 
-    private function isValueHiddenable($field_id, $value_id, string $additionnal_unions): bool
+    /**
+     * A value can be hidden if:
+     * - it's not used in workflow transition
+     * - not used in triggers
+     * - not used in field dependencies
+     *
+     * (in addition of other checks provided by $additional_unions like semantic checks)
+     */
+    private function isValueHiddenable($field_id, $value_id, string $additional_unions): bool
     {
         $field_id = $this->da->escapeInt($field_id);
 
-        if (! isset($this->cache_canbehidden_values[$field_id][$value_id])) {
+        if (! isset($this->cache_cannot_be_hidden_values[$field_id][$value_id])) {
             $sql = "SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
                     FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_workflow AS w ON (
@@ -223,7 +230,7 @@ class BindStaticValueDao extends DataAccessObject
                         INNER JOIN tracker_workflow_transition AS wt ON (
                             w.workflow_id = wt.workflow_id
                             AND
-                            (wt.from_id = v.id AND (v.original_value_id <> 0 OR wt.from_id = v.original_value_id))
+                            (wt.from_id = v.id OR (v.original_value_id <> 0 AND wt.from_id = v.original_value_id))
                         )
                     WHERE v.field_id = $field_id
                     UNION
@@ -274,24 +281,29 @@ class BindStaticValueDao extends DataAccessObject
                     UNION SELECT rule_trg_static.value_id  AS id
                         FROM tracker_workflow_trigger_rule_trg_field_static_value AS rule_trg_static
                         WHERE  rule_trg_static.value_id = $value_id
-                    $additionnal_unions
+                    $additional_unions
                     ";
 
-            $this->cache_canbehidden_values[$field_id] = [];
+            $this->cache_cannot_be_hidden_values[$field_id] = [];
             foreach ($this->retrieve($sql) as $row) {
-                $this->cache_canbehidden_values[$field_id][$row['id']] = true;
+                $this->cache_cannot_be_hidden_values[$field_id][$row['id']] = true;
             }
         }
 
-        return ! isset($this->cache_canbehidden_values[$field_id][$value_id]);
+        return ! isset($this->cache_cannot_be_hidden_values[$field_id][$value_id]);
     }
 
+    /**
+     * A value can be deleted if:
+     * - it can be hidden
+     * - not used in changeset history of not deleted artifacts
+     */
     public function canValueBeDeleted(Tracker_FormElement_Field $field, $value_id): bool
     {
         $field_id = $this->da->escapeInt($field->getId());
         $value_id = $this->da->escapeInt($value_id);
 
-        if (! isset($this->cache_canbedeleted_values[$field_id])) {
+        if (! isset($this->cache_used_values_in_artifacts[$field_id])) {
             $sql = "SELECT DISTINCT IF (v.original_value_id, v.original_value_id, v.id) AS id
                     FROM tracker_field_list_bind_static_value AS v
                         INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id)
@@ -310,23 +322,15 @@ class BindStaticValueDao extends DataAccessObject
                         INNER JOIN tracker_changeset ON (tracker_changeset.id = cv.changeset_id)
                         INNER JOIN tracker_artifact ON (tracker_changeset.artifact_id = tracker_artifact.id)
                     WHERE cv.field_id = $field_id
-                    UNION
-                    SELECT tracker_workflow_trigger_rule_static_value.value_id
-                    FROM tracker_workflow_trigger_rule_static_value
-                    WHERE tracker_workflow_trigger_rule_static_value.value_id = $value_id
-                    UNION
-                    SELECT tracker_workflow_trigger_rule_trg_field_static_value.value_id
-                    FROM tracker_workflow_trigger_rule_trg_field_static_value
-                    WHERE tracker_workflow_trigger_rule_trg_field_static_value.value_id = $value_id
                     ";
 
-            $this->cache_canbedeleted_values[$field_id] = [];
+            $this->cache_used_values_in_artifacts[$field_id] = [];
             foreach ($this->retrieve($sql) as $row) {
-                $this->cache_canbedeleted_values[$field_id][$row['id']] = true;
+                $this->cache_used_values_in_artifacts[$field_id][$row['id']] = true;
             }
         }
 
-        return $this->canValueBeHidden($field, $value_id) && ! isset($this->cache_canbedeleted_values[$field_id][$value_id]);
+        return $this->canValueBeHidden($field, $value_id) && ! isset($this->cache_used_values_in_artifacts[$field_id][$value_id]);
     }
 
     public function updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id)

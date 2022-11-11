@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- ViewVC :: http://www.viewvc.org/ -->
+<head>
+  <title>Checkin Database Query</title>
+  [if-any docroot]<link rel="stylesheet" href="[docroot]/styles.css" type="text/css" />[end]
+</head>
+
+<body>
+
+[# setup page definitions]
+  [define help_href][if-any docroot][docroot]/help_query.html[end][end]
+[# end]
+
+  <p> 
+    Select your parameters for querying the CVS commit database.  You
+    can search for multiple matches by typing a comma-seperated list
+    into the text fields.  Regular expressions, and wildcards are also
+    supported.  Blank text input fields are treated as wildcards.
+  </p>
+  <p>
+    Any of the text entry fields can take a comma-seperated list of
+    search arguments.  For example, to search for all commits from
+    authors <em>jpaint</em> and <em>gstein</em>, just type: <strong>jpaint,
+    gstein</strong> in the <em>Author</em> input box.  If you are searching
+    for items containing spaces or quotes, you will need to quote your
+    request.  For example, the same search above with quotes is:
+    <strong>"jpaint", "gstein"</strong>.
+  </p>
+  <p>                           
+
+    Wildcard and regular expression searches are entered in a similar
+    way to the quoted requests.  You must quote any wildcard or
+    regular expression request, and a command charactor preceeds the
+    first quote.  The command charactor <strong>l</strong> is for wildcard
+    searches, and the wildcard charactor is a percent (<strong>%</strong>).  The
+    command charactor for regular expressions is <strong>r</strong>, and is
+    passed directly to MySQL, so you'll need to refer to the MySQL
+    manual for the exact regex syntax.  It is very similar to Perl.  A
+    wildard search for all files with a <em>.py</em> extention is:
+    <strong>l"%.py"</strong> in the <em>File</em> input box.  The same search done
+    with a regular expression is: <strong>r".*\.py"</strong>.
+  </p>
+  <p>                  
+    All search types can be mixed, as long as they are seperated by
+    commas.
+  </p>                                                    
+
+<form method="get" action="">
+
+<div class="vc_query_form">
+<table cellspacing="0" cellpadding="2" class="auto">
+ <tr>
+  <td>
+   <table>
+    <tr>
+     <td style="vertical-align:top;">
+
+      <table>
+       <tr>
+        <td align="right">CVS Repository:</td>
+        <td>
+         <input type="text" name="repository" size="40" value="[repository]" />
+        </td>
+       </tr>
+       <tr>
+        <td align="right">CVS Branch:</td>
+        <td>
+         <input type="text" name="branch" size="40" value="[branch]" />
+        </td>
+       </tr>
+       <tr>
+        <td align="right">Directory:</td>
+        <td>
+         <input type="text" name="directory" size="40" value="[directory]" />
+        </td>
+       </tr>
+       <tr>
+        <td align="right">File:</td>
+        <td>
+         <input type="text" name="file" size="40" value="[file]" />
+        </td>
+       </tr>
+       <tr>
+        <td align="right">Author:</td>
+        <td>
+         <input type="text" name="who" size="40" value="[who]" />
+        </td>
+       </tr>
+      </table>
+
+     </td>
+     <td style="vertical-align:top;">
+
+      <table>
+       <tr>
+        <td align="left">Sort By:</td>
+        <td>
+         <select name="sortby">
+          <option value="date" [is sortby "date"]selected="selected"[end]>Date</option>
+          <option value="author" [is sortby "author"]selected="selected"[end]>Author</option>
+          <option value="file" [is sortby "file"]selected="selected"[end]>File</option>
+         </select>
+        </td>
+       </tr>
+       <tr>
+        <td colspan="2">
+         <table cellspacing="0" cellpadding="0">
+          <tr>
+           <td>Date:</td>
+          </tr>
+          <tr>
+           <td><input type="radio" name="date" value="hours"
+		  [is date "hours"]checked="checked"[end] /></td>
+           <td>In the last
+             <input type="text" name="hours" value="[hours]" size="4" />hours
+           </td>
+          </tr>
+          <tr>
+           <td><input type="radio" name="date" value="day"
+		  [is date "day"]checked="checked"[end] /></td>
+           <td>In the last day</td>
+          </tr>
+          <tr>
+           <td><input type="radio" name="date" value="week"
+		  [is date "week"]checked="checked"[end] /></td>
+           <td>In the last week</td>
+          </tr>
+          <tr>
+           <td><input type="radio" name="date" value="month"
+		  [is date "month"]checked="checked"[end] /></td>
+           <td>In the last month</td>
+          </tr>
+          <tr>
+           <td><input type="radio" name="date" value="all"
+		  [is date "all"]checked="checked"[end] /></td>
+           <td>Since the beginning of time</td>
+          </tr>
+         </table>
+        </td>
+       </tr>
+      </table>
+
+     </td>
+    </tr>
+   </table>
+  </td>
+  <td>
+   <input type="submit" value="Search" />
+  </td>
+ </tr>
+</table>
+</div>
+
+</form>
+
+[is query "skipped"]
+[else]
+<p><strong>[num_commits]</strong> matches found.</p>
+[if-any row_limit_reached]
+<p class="vc_warning">WARNING:  These query results have been
+   artificially limited by an administrative threshold value and do
+   <em>not</em> represent the entirety of the data set which matches
+   the query.  Consider modifying your query to be more specific</a>,
+   using your version control tool's query capabilities, or asking
+   your administrator to raise the database response size
+   threshold.</p>
+[end]
+[if-any commits]
+<table cellspacing="0" cellpadding="2">
+ <thead>
+ <tr class="vc_header">
+  <th>Revision</th>
+  <th>File</th>
+  <th>Branch</th>
+  <th>+/-</th>
+  <th>Date</th>
+  <th>Author</th>
+[# uncommment, if you want a separate Description column: (also see below)
+<th>Description</th>
+]
+ </tr>
+ </thead>
+[for commits]
+ <tbody>
+  [for commits.files]
+    <tr class="vc_row_[if-index commits even]even[else]odd[end]">
+      <td style="vertical-align:top;">
+	[if-any commits.files.rev][commits.files.rev][else]&nbsp;[end]
+      </td>
+      <td style="vertical-align:top;">[commits.files.link]</td>
+      <td style="vertical-align:top;">
+	[if-any commits.files.branch][commits.files.branch][else]&nbsp;[end]
+      </td>
+      <td style="vertical-align:top;">
+        [is commits.files.type "Add"]<ins>[end]
+        [is commits.files.type "Change"]<a href="[commits.files.difflink]">[end]
+        [is commits.files.type "Remove"]<del>[end]
+          [commits.files.plus]/[commits.files.minus]
+        [is commits.files.type "Add"]</ins>[end]
+        [is commits.files.type "Change"]</a>[end]
+        [is commits.files.type "Remove"]</del>[end]
+      </td>
+      <td style="vertical-align:top;">
+	[if-any commits.files.date][commits.files.date][else]&nbsp;[end]
+      </td>
+      <td style="vertical-align:top;">
+	[if-any commits.files.author][commits.files.author][else]&nbsp;[end]
+      </td>
+
+[# uncommment, if you want a separate Description column:
+      {if-index commits.files first}
+        <td style="vertical-align:top;" rowspan="{commits.num_files}">
+          {if-any commits.log}{commits.log}{else}&nbsp;{end}
+        </td>
+      {end}
+
+   (substitute brackets for the braces)
+]
+    </tr>
+[# and also take the following out in the "Description column" case:]
+      [if-index commits.files last]
+	<tr class="vc_row_[if-index commits even]even[else]odd[end]">
+	  <td>&nbsp;</td>
+	  <td colspan="5"><strong>Log:</strong><br />
+	    <pre class="vc_log">[if-any commits.log][commits.log][else]&nbsp;[end]</pre></td>
+	</tr>
+      [end]
+[# ---]
+  [end]
+ </tbody>
+[end]
+
+ <tr class="vc_header">
+  <th style="text-align:left;vertical-align:top;">&nbsp;</th>
+  <th style="text-align:left;vertical-align:top;">&nbsp;</th>
+  <th style="text-align:left;vertical-align:top;">&nbsp;</th>
+  <th style="text-align:left;vertical-align:top;">&nbsp;</th>
+  <th style="text-align:left;vertical-align:top;">&nbsp;</th>
+  <th style="text-align:left;vertical-align:top;">&nbsp;</th>
+[# uncommment, if you want a separate Description column:
+  <th style="text-align:left;vertical-align:top;">&nbsp;</th>
+]
+ </tr>
+</table>
+[end]
+[end]
+[include "include/footer.ezt"]

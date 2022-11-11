@@ -117,8 +117,7 @@ $plugin_loader  = new PluginLoader(
 $cookie_manager = new CookieManager();
 
 $loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_loader);
-$global_server    = $_SERVER ?? [];
-$loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT, $global_server);
+$loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT, $_SERVER);
 
 if (! IS_SCRIPT) {
     header('X-UA-Compatible: IE=Edge');
@@ -204,8 +203,8 @@ if (! defined('FRONT_ROUTER')) {
 if (! IS_SCRIPT) {
     if (! defined('FRONT_ROUTER')) {
         $urlVerifFactory = new URLVerificationFactory($event_manager);
-        $urlVerif        = $urlVerifFactory->getURLVerification($global_server);
-        $urlVerif->assertValidUrl($global_server, $request);
+        $urlVerif        = $urlVerifFactory->getURLVerification($_SERVER);
+        $urlVerif->assertValidUrl($_SERVER, $request);
 
         (new RequestInstrumentation(Prometheus::instance()))->incrementLegacy(
             DetectedBrowser::detectFromTuleapHTTPRequest($request)

@@ -25,16 +25,10 @@ namespace Tuleap\Gitlab\API;
 
 use DateTimeImmutable;
 
-class GitlabProjectBuilder
+class GitlabProjectBuilder implements BuildGitlabProjects
 {
-    /**
-     * @var ClientWrapper
-     */
-    private $gitlab_api_client;
-
-    public function __construct(ClientWrapper $gitlab_api_client)
+    public function __construct(private WrapGitlabClient $gitlab_api_client)
     {
-        $this->gitlab_api_client = $gitlab_api_client;
     }
 
     /**
@@ -52,6 +46,28 @@ class GitlabProjectBuilder
         }
 
         return $this->buildGitlabProject($gitlab_project_data);
+    }
+
+    /**
+     * @return GitlabProject[]
+     * @throws GitlabRequestException
+     * @throws GitlabResponseAPIException
+     */
+    public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
+    {
+        $group_projects_data = $this->gitlab_api_client->getPaginatedUrl($credentials, "/groups/" . $gitlab_group_id . "/projects");
+
+        if (! isset($group_projects_data)) {
+            throw new GitlabResponseAPIException(
+                "The query is not in error but the json content is empty. This is not expected."
+            );
+        }
+
+        $gitlab_projects = [];
+        foreach ($group_projects_data as $gitlab_project) {
+            $gitlab_projects[] = $this->buildGitlabProject($gitlab_project);
+        }
+        return $gitlab_projects;
     }
 
     /**

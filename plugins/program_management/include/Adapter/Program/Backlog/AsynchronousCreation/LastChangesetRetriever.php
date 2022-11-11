@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RetrieveLastChangeset;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 
 final class LastChangesetRetriever implements RetrieveLastChangeset
 {
@@ -34,9 +34,9 @@ final class LastChangesetRetriever implements RetrieveLastChangeset
     ) {
     }
 
-    public function retrieveLastChangesetId(IterationIdentifier $iteration_identifier): ?int
+    public function retrieveLastChangesetId(TimeboxIdentifier $timebox_identifier): ?int
     {
-        $iteration_artifact = $this->artifact_retriever->getNonNullArtifact($iteration_identifier);
+        $iteration_artifact = $this->artifact_retriever->getNonNullArtifact($timebox_identifier);
         $changeset          = $this->changeset_factory->getLastChangeset($iteration_artifact);
         if ($changeset === null) {
             return null;

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -26,10 +26,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_ArtifactFactory;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
-use UserHelper;
 use UserManager;
 
 final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -38,7 +38,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private LatestHeartbeatsCollector $collector;
     private \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager $user_manager;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserHelper $user_helper;
     private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory $factory;
     private \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExecutionDao $dao;
 
@@ -47,20 +46,18 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao          = \Mockery::mock(ExecutionDao::class);
         $this->factory      = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->glyph_finder = \Mockery::mock(GlyphFinder::class);
-        $this->user_helper  = \Mockery::mock(UserHelper::class);
         $this->user_manager = \Mockery::mock(UserManager::class);
 
         $this->collector = new LatestHeartbeatsCollector(
             $this->dao,
             $this->factory,
-            $this->user_helper,
             $this->user_manager
         );
     }
 
     public function testItDoesNotCollectAnythingWhenNoTestExecHaveBeenUpdated(): void
     {
-        $project = \Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getUgroups')->once()->andReturn([]);
 
@@ -75,20 +72,20 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCollectCampaign(): void
     {
-        $project = \Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getUgroups')->once()->andReturn([]);
 
         $collection = new HeartbeatsEntryCollection($project, $user);
 
         $row_artifact = [
-           'id' => 101,
-           'tracker_id' => 1,
-           'submitted_by' => 1001,
-           'submitted_on' => 123456789,
-           'last_update_date' => 123456789,
-           'last_updated_by_id' => 101,
-           'use_artifact_permissions' => 1,
+            'id' => 101,
+            'tracker_id' => 1,
+            'submitted_by' => 1001,
+            'submitted_on' => 123456789,
+            'last_update_date' => 123456789,
+            'last_updated_by_id' => 101,
+            'use_artifact_permissions' => 1,
         ];
 
         $this->dao->shouldReceive('searchLastTestExecUpdate')->once()->andReturn([$row_artifact]);
@@ -108,7 +105,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->shouldReceive('getInstanceFromRow')->andReturn($artifact);
 
         $this->user_manager->shouldReceive('getUserById')->andReturn($user);
-        $this->user_helper->shouldReceive('getLinkOnUser')->once();
 
         $this->collector->collect($collection);
 

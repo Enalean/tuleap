@@ -35,9 +35,6 @@ class BreadCrumbLink
      * @var array<string, string>
      */
     private $data_attributes = [];
-    /**
-     * @var string
-     */
     private string $project_icon;
 
     public function __construct(

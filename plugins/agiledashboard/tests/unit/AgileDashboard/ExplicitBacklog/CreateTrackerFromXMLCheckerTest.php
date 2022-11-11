@@ -64,7 +64,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             <tracker />
         ');
 
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkTrackerCanBeCreatedInTrackerCreationContext(
             $this->project,
@@ -80,8 +80,6 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101)
             ->once()
             ->andReturnTrue();
-
-        $this->doesNotPerformAssertions();
 
         $this->checker->checkTrackerCanBeCreatedInTrackerCreationContext(
             $this->project,
@@ -112,7 +110,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             <project />
         ');
 
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkTrackersCanBeCreatedInProjectImportContext($xml);
     }
@@ -121,7 +119,7 @@ class CreateTrackerFromXMLCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $xml = $this->buildFullProjectXML();
 
-        $this->doesNotPerformAssertions();
+        $this->expectNotToPerformAssertions();
 
         $this->checker->checkTrackersCanBeCreatedInProjectImportContext($xml);
     }

@@ -2,9 +2,11 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/dom': link:../dom
   hotkeys-js: ^3.8.3
 
 dependencies:
+  '@tuleap/dom': link:../dom
   hotkeys-js: 3.8.3
 
 devDependencies:

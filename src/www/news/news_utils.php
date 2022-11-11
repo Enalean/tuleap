@@ -406,7 +406,7 @@ function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $det
     $body  = '';
     $body .= $Language->getText('news_utils', 'news_request_mail_intro', [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_project', [$group->getPublicName(), $group->getUnixName()]) . ForgeConfig::get('sys_lf');
-    $body .= $Language->getText('news_utils', 'news_request_mail_submitted_by', [$user->getName()]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_submitted_by', [$user->getUserName()]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_summary', [$summary]) . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_details', [$details]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_approve_link') . ForgeConfig::get('sys_lf');

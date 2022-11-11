@@ -31,6 +31,7 @@ final class CommentCreator
         private \Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
         private \ReferenceManager $reference_manager,
         private TrackerPrivateCommentUGroupPermissionInserter $comment_ugroup_permission_inserter,
+        private ChangesetCommentIndexer $changeset_comment_indexer,
     ) {
     }
 
@@ -66,5 +67,7 @@ final class CommentCreator
             (int) $comment->getSubmitter()->getId(),
             $artifact->getTracker()->getItemName()
         );
+
+        $this->changeset_comment_indexer->indexNewChangesetComment($comment, $artifact);
     }
 }

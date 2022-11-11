@@ -40,10 +40,11 @@ class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
         fwrite($fd, 'A test file');
         fclose($fd);
         $this->file = ['name'     => 'File test 1',
-                            'type'     => 'text/plain',
-                            'size'     => '11',
-                            'tmp_name' => $tmpName,
-                            'error'    => UPLOAD_ERR_OK];
+            'type'     => 'text/plain',
+            'size'     => '11',
+            'tmp_name' => $tmpName,
+            'error'    => UPLOAD_ERR_OK,
+        ];
     }
 
     public function testOk(): void

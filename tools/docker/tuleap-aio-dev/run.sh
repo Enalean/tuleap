@@ -56,6 +56,9 @@ if [ "$TULEAP_INSTALL_TIME" == "false" ]; then
     /usr/share/tuleap/tools/docker/tuleap-aio-dev/boot-upgrade.sh
 fi
 
+tuleap config-set onlyoffice_document_server_url https://tuleap-web.tuleap-aio-dev.docker/onlyoffice-doc-server/ || true
+tuleap config-set onlyoffice_document_server_secret TULEAP_DO_NOT_USE_THIS_IN_PRODUCTION || true
+
 # Activate backend/crontab
 systemctl start tuleap
 
@@ -68,12 +71,19 @@ else
 
     cp -f /etc/pki/tls/certs/localhost.cert.pem /etc/pki/ca-trust/source/anchors/tuleap-web-cert.pem
 
-    while [ ! -f /etc/pki/ca-trust/source/anchors/tuleap-realtime-cert.pem ]; do
+    while [ ! -f /realtime-cert/tuleap-realtime-cert.pem ]; do
         echo "Waiting for Tuleap Realtime certificate…"
         sleep 1
     done
+    cp -f /realtime-cert/tuleap-realtime-cert.pem /etc/pki/ca-trust/source/anchors/tuleap-realtime-cert.pem
 
-    echo "Tuleap Realtime certificate has been found. Adding to the CA bundle."
+    while [ ! -f /front-cert/certs/front-reverse-proxy.cert.pem ]; do
+        echo "Waiting for front reverse proxy certificate…"
+        sleep 1
+    done
+    cp -f /front-cert/certs/front-reverse-proxy.cert.pem /etc/pki/ca-trust/source/anchors/tuleap-front-cert.pem
+
+    echo "All certificates have been found. Adding to the CA bundle."
     update-ca-trust enable
     update-ca-trust extract
 

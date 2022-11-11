@@ -60,10 +60,10 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
         return array_merge(
             PageList::supportedArgs(),
             [
-                   's'         => false,
-                   'perm'     => false,
+                's'         => false,
+                'perm'     => false,
                    /* Columns to include in listing */
-                   'info'     => 'pagename,perm,mtime,author',
+                'info'     => 'pagename,perm,mtime,author',
             ]
         );
     }
@@ -189,7 +189,8 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
 
         return HTML::form(
             ['action' => $request->getPostURL(),
-                                'method' => 'post'],
+                'method' => 'post',
+            ],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
@@ -214,12 +215,14 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
         );
         $header->pushContent(_("Chmod to permission:"));
         $header->pushContent(HTML::input(['name' => 'admin_chmod[perm]',
-                                               'value' => $post_args['perm']]));
+            'value' => $post_args['perm'],
+        ]));
         $header->pushContent(' ' . _("(ugo : rwx)"));
         $header->pushContent(HTML::p());
         $checkbox = HTML::input(['type' => 'checkbox',
-                                      'name' => 'admin_chmod[updatechildren]',
-                                      'value' => 1]);
+            'name' => 'admin_chmod[updatechildren]',
+            'value' => 1,
+        ]);
         if (! empty($post_args['updatechildren'])) {
             $checkbox->setAttr('checked', 'checked');
         }

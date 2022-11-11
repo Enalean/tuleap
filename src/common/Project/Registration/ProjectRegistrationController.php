@@ -26,6 +26,7 @@ use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -81,6 +82,6 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
         $this->template_renderer_factory
             ->getRenderer(__DIR__ . '/../../../templates/project/registration/')
             ->renderToPage('project-registration', $this->presenter_builder->buildPresenter());
-        $layout->footer(["without_content" => true]);
+        $layout->footer(FooterConfiguration::withoutContent());
     }
 }

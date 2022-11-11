@@ -3977,7 +3977,8 @@ class LinkArrow
     private $ix;
     private $iy;
     private $isizespec  = [
-    [2,3],[3,5],[3,8],[6,15],[8,22]];
+        [2,3],[3,5],[3,8],[6,15],[8,22],
+    ];
     private $iDirection = ARROW_DOWN;
     private $iType      = ARROWT_SOLID;
     private $iSize      = ARROW_S2;
@@ -4157,15 +4158,17 @@ class GanttLink
                         // are very close we also change the path so it comes in from
                         // the left on the activity
                         $c = [$x1,$y1,$x1 + $this->iPathExtend,$y1,
-                        $x1 + $this->iPathExtend,$midy,
-                        $x2,$midy,$x2,$y2];
+                            $x1 + $this->iPathExtend,$midy,
+                            $x2,$midy,$x2,$y2,
+                        ];
                         break;
                     case 3:
                         if ($y2 - $midy < 6) {
                             $c         = [$x1,$y1,$x1,$midy,
-                            $x2 - $this->iPathExtend,$midy,
-                            $x2 - $this->iPathExtend,$y2,
-                            $x2,$y2];
+                                $x2 - $this->iPathExtend,$midy,
+                                $x2 - $this->iPathExtend,$y2,
+                                $x2,$y2,
+                            ];
                             $arrowtype = ARROW_RIGHT;
                         } else {
                             $c = [$x1, $y1, $x1, $midy, $x2, $midy, $x2, $y2];
@@ -4211,15 +4214,17 @@ class GanttLink
                     case 2:
                         // Always extend out horizontally a bit from the first point
                         $c = [$x1,$y1,$x1 + $this->iPathExtend,$y1,
-                        $x1 + $this->iPathExtend,$midy,
-                        $x2,$midy,$x2,$y2];
+                            $x1 + $this->iPathExtend,$midy,
+                            $x2,$midy,$x2,$y2,
+                        ];
                         break;
                     case 3:
                         if ($midy - $y2 < 16) {
                             $arrowtype = ARROW_RIGHT;
                             $c         = [$x1,$y1,$x1,$midy,$x2 - $this->iPathExtend,$midy,
-                            $x2 - $this->iPathExtend,$y2,
-                            $x2,$y2];
+                                $x2 - $this->iPathExtend,$y2,
+                                $x2,$y2,
+                            ];
                         } else {
                             $c = [$x1, $y1, $x1, $midy, $x2, $midy, $x2, $y2];
                         }

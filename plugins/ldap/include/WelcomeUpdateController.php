@@ -120,7 +120,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
         if ((int) $request->get('pv') === 2) {
             $layout->pv_footer([]);
         } else {
-            $layout->footer(['showfeedback' => false]);
+            $layout->footer([]);
         }
     }
 }

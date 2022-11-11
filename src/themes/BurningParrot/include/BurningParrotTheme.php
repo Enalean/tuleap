@@ -40,7 +40,11 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfiguration;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
@@ -113,11 +117,19 @@ class BurningParrotTheme extends BaseLayout
         $this->theme_variant_color = ThemeVariantColor::buildFromVariant((new ThemeVariant())->getVariantForUser($this->current_user->user));
         $this->theme_variation     = new ThemeVariation($this->theme_variant_color, $this->current_user->user);
 
+        $this->includeFooterJavascriptFile((new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'))->getFileURL());
         $this->includeFooterJavascriptFile(
             $this->include_asset->getFileURLWithFallback('tlp-' . $this->current_user->user->getLocale() . '.js', 'tlp-en_US.js')
         );
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
-        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('switch-to-bp.js'));
+
+        $this->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../scripts/switch-to/frontend-assets',
+                '/assets/core/switch-to'
+            ),
+            'src/index-bp.ts'
+        ));
     }
 
     protected function getUser()
@@ -133,11 +145,21 @@ class BurningParrotTheme extends BaseLayout
     {
     }
 
-    public function header(array $params): void
+    public function header(HeaderConfiguration|array $params): void
     {
         $this->header_has_been_written = true;
         $project                       = null;
         $project_context               = null;
+        $in_project_without_sidebar    = null;
+
+        if ($params instanceof HeaderConfiguration) {
+            $in_project_without_sidebar = $params->in_project_without_sidebar;
+            $params                     = [
+                'title'      => $params->title,
+                'body_class' => $params->body_class,
+            ];
+        }
+
         if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
 
@@ -236,7 +258,8 @@ class BurningParrotTheme extends BaseLayout
             $this->detected_browser,
             $this->theme_variant_color,
             $this->theme_variation,
-            $this->javascript_assets
+            $this->javascript_assets,
+            $in_project_without_sidebar,
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
@@ -308,7 +331,7 @@ class BurningParrotTheme extends BaseLayout
         return $body_classes;
     }
 
-    public function footer(array $params)
+    public function footer(FooterConfiguration|array $params): void
     {
         $javascript_files = [];
         EventManager::instance()->processEvent(
@@ -348,13 +371,12 @@ class BurningParrotTheme extends BaseLayout
      * Note: there is an ugly dependency on the page content being rendered first.
      * Although this is the case, it's worth bearing in mind when refactoring.
      *
-     * @param array $params
-     * @return bool
+     * @param FooterConfiguration|array $params
      */
-    private function canShowFooter($params)
+    private function canShowFooter($params): bool
     {
-        if (! empty($params['without_content'])) {
-            return false;
+        if ($params instanceof FooterConfiguration) {
+            return $params->without_content === false;
         }
 
         if (empty($params['group']) && ! $this->show_sidebar) {

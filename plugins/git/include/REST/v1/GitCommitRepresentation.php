@@ -40,7 +40,14 @@ class GitCommitRepresentation
     public string $html_url;
     public ?GitCommitStatusRepresentation $commit_status;
     public GitCommitVerificationRepresentation $verification;
+    /**
+     * @var ReferenceRepresentation[]
+     */
+    public array $cross_references;
 
+    /**
+     * @param ReferenceRepresentation[] $references
+     */
     public function __construct(
         string $id,
         string $title,
@@ -53,22 +60,24 @@ class GitCommitRepresentation
         ?MinimalUserRepresentation $author,
         ?GitCommitStatusRepresentation $commit_status,
         string $repository_path,
+        array $references,
     ) {
-        $this->id             = $id;
-        $this->title          = $title;
-        $this->message        = $message;
-        $this->author_name    = $author_name;
-        $this->authored_date  = JsonCast::toDate($authored_date);
-        $this->committed_date = JsonCast::toDate($committed_date);
-        $this->verification   = $verification;
-        $this->author         = $author;
-        $this->commit_status  = $commit_status;
-        $this->html_url       = $repository_path . '?' . http_build_query(
+        $this->id               = $id;
+        $this->title            = $title;
+        $this->message          = $message;
+        $this->author_name      = $author_name;
+        $this->authored_date    = JsonCast::toDate($authored_date);
+        $this->committed_date   = JsonCast::toDate($committed_date);
+        $this->verification     = $verification;
+        $this->author           = $author;
+        $this->commit_status    = $commit_status;
+        $this->html_url         = $repository_path . '?' . http_build_query(
             [
-                    'a' => 'commit',
-                    'h' => $id,
-                ]
+                'a' => 'commit',
+                'h' => $id,
+            ]
         );
-        $this->author_email   = $author_email;
+        $this->author_email     = $author_email;
+        $this->cross_references = $references;
     }
 }

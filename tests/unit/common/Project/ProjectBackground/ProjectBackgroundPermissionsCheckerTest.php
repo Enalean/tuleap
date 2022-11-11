@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\ProjectBackground;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class ProjectBackgroundPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -43,7 +44,7 @@ final class ProjectBackgroundPermissionsCheckerTest extends \Tuleap\Test\PHPUnit
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->andReturn(true);
 
-        $project    = \Project::buildForTest();
+        $project    = ProjectTestBuilder::aProject()->build();
         $permission = $this->permissions_checker->getModifyProjectBackgroundPermission($project, $user);
         self::assertNotNull($permission);
         self::assertSame($project, $permission->getProject());
@@ -55,7 +56,7 @@ final class ProjectBackgroundPermissionsCheckerTest extends \Tuleap\Test\PHPUnit
         $user->shouldReceive('isAdmin')->andReturn(false);
 
         $permission = $this->permissions_checker->getModifyProjectBackgroundPermission(
-            \Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             $user
         );
         self::assertNull($permission);

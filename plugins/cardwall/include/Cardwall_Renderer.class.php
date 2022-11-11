@@ -241,9 +241,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $html .= $renderer->renderToString('additional-button', $additional_button_presenter);
 
         $use_data_from_db = true;
-        if (ForgeConfig::getFeatureFlag(Tracker_Report::FEATURE_FLAG_KEY)) {
-            $use_data_from_db = false;
-        }
 
         $html .= $this->fetchCards($this->report->getMatchingIds(null, $use_data_from_db), $user);
         $html .= $this->fetchWidgetGoToReport();

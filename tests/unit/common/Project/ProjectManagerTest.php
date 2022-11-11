@@ -146,7 +146,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $p2->shouldReceive('getUnixName')->andReturns('two');
 
         $p = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $p->shouldReceive('createProjectInstance')->andReturns($p1, $p2, $p1);
+        $p->shouldReceive('createProjectInstance')->andReturns($p1, $p2, $p1)->atLeast()->once();
         $p->shouldReceive('createProjectInstance')->with(1)->ordered();
         $p->shouldReceive('createProjectInstance')->with(2)->ordered();
         $p->shouldReceive('createProjectInstance')->with(1)->ordered();
@@ -241,7 +241,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $pm->shouldReceive('getProject')->andReturns($project);
         $pm->shouldReceive('checkRestrictedAccess')->andReturns(true);
 
-        $pm->getGroupByIdForSoap(1, '');
+        self::assertSame($project, $pm->getGroupByIdForSoap(1, ''));
     }
 
     public function testCheckRestrictedAccessNoRestricted(): void

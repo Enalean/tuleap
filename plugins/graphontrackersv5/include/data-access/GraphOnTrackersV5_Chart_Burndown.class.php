@@ -272,8 +272,9 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     public function arrayOfSpecificProperties()
     {
         return ['start_date' => $this->getStartDate(),
-                     'field_id' => $this->getFieldId(),
-                     'duration' => $this->getDuration()];
+            'field_id' => $this->getFieldId(),
+            'duration' => $this->getDuration(),
+        ];
     }
 
     public function exportToXml(SimpleXMLElement $root, $formsMapping)

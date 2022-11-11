@@ -1,0 +1,151 @@
+[include "include/dir_header.ezt"]
+
+<table class="table" id="directory-content">
+<thead>
+<tr>
+  <th class="vc_header[is sortby "file"]_sort[end]" colspan="2">
+    [if-any sortby_file_href]
+        <a href="[sortby_file_href]#dirlist">
+            <span>File</span>
+            [is sortby "file"]
+                <i class="fas fa-caret-[is sortdir "up"]up[else]down[end]" title="[is sortdir "down"](rev)[end]"></i>
+            [end]
+        </a>
+    [else]File[end]
+
+  </th>
+
+  <th class="vc_header[is sortby "rev"]_sort[end]">
+    [if-any sortby_rev_href]
+        <a href="[sortby_rev_href]#dirlist">
+            <span>Rev.</span>
+            [is sortby "rev"]
+              <i class="fas fa-caret-[is sortdir "up"]up[else]down[end]" title="[is sortdir "down"](rev)[end]"></i>
+            [end]
+        </a>
+    [else]Rev.[end]
+  </th>
+
+  <th class="vc_header[is sortby "date"]_sort[end]">
+    [if-any sortby_date_href]
+        <a href="[sortby_date_href]#dirlist">
+            <span>Age</span>
+            [is sortby "date"]
+                <i class="fas fa-caret-[is sortdir "up"]up[else]down[end]" title="[is sortdir "down"](rev)[end]"></i>
+            [end]
+        </a>
+    [else]Age[end]
+
+  </th>
+  <th class="vc_header[is sortby "author"]_sort[end]">
+    [if-any sortby_author_href]
+        <a href="[sortby_author_href]#dirlist">
+            <span>Author</span>
+            [is sortby "author"]
+                <i class="fas fa-caret-[is sortdir "up"]up[else]down[end]" title="[is sortdir "down"](rev)[end]"></i>
+            [end]
+        </a>
+    [else]Author[end]
+
+  </th>
+[is cfg.options.show_logs "1"]
+  <th class="vc_header[is sortby "log"]_sort[end]">
+    [if-any sortby_log_href]
+        <a href="[sortby_log_href]#dirlist">
+            <span>Last log entry</span>
+            [is sortby "log"]
+                <i class="fas fa-caret-[is sortdir "up"]up[else]down[end]" title="[is sortdir "down"](rev)[end]"></i>
+            [end]
+        </a>
+    [else]Last log entry[end]
+
+  </th>
+[end]
+</tr>
+</thead>
+
+<tbody>
+[if-any up_href]
+  <tr>
+    <td colspan="[is cfg.options.show_logs "1"]6[else]5[end]" class="tuleap-viewvc-directory-content-up">
+      <a href="[up_href]">
+        <i class="fas fa-level-up-alt"></i>&nbsp;Parent&nbsp;Directory
+      </a>
+    </td>
+  </tr>
+ [end]
+ [if-any entries]
+ [for entries]
+   <tr>
+     <td[if-any entries.graph_href][else] colspan="2"[end]>
+        <a name="[entries.anchor]"
+        [is entries.pathtype "dir"]
+            href="[entries.view_href]" title="View directory contents">
+        [else]
+            [define rev_href]
+                [if-any entries.prefer_markup]
+                    [entries.view_href]
+                [else]
+                    [if-any entries.download_href]
+                        [entries.download_href]
+                    [end]
+                [end]
+            [end]
+            [if-any entries.rev]
+                [if-any rev_href]
+                    href="[rev_href]" title="[if-any entries.prefer_markup]View[else]Download[end] file contents">
+                [end]
+            [else]
+                href="[entries.log_href]" title="View file revision log">
+            [end]
+        [end]
+       <i class="[is entries.pathtype "dir"]fas fa-folder[else][is entries.state "dead"]fas fa-question[else]far fa-file[end][end]"></i>&nbsp;[entries.name]
+       </a>
+       [is entries.state "dead"](dead)[end]
+     </td>
+     [if-any entries.graph_href]
+       <td style="width:1%"><a href="[entries.graph_href]"
+       title="View Revision Graph"><img
+       src="[docroot]/images/cvsgraph_16x16.png"
+       alt="View Revision Graph" class="vc_icon" />
+       </a></td>
+     [end]
+     [if-any entries.errors]
+       <td colspan=[is cfg.options.show_logs "1"]4[else]3[end]>
+         [for entries.errors]<em>[entries.errors]</em>[end]
+       </td>
+     [else]
+       [is entries.pathtype "dir"]
+       <td>[if-any entries.rev]<a href="[entries.log_href]" title="View directory revision log">[entries.rev]</a>[end]</td>
+       [else]
+       <td style="white-space: nowrap;">[if-any entries.rev]<a href="[entries.log_href]" title="View file revision log">[entries.rev]</a>[end]
+       [if-any entries.lockinfo]<i class="fas fa-lock" title="Locked by [entries.lockinfo]"</i>[end]
+       </td>
+       [end]
+       <td>[entries.ago]</td>
+       <td>[entries.author]</td>
+       [is cfg.options.show_logs "1"]
+         <td>
+         [if-any entries.short_log]
+           [if-any entries.log_rev]
+             <em>(from [entries.log_file]/[entries.log_rev])</em>
+             [entries.short_log]
+           [else][if-any entries.rev]
+             [entries.short_log]
+           [end][end]
+         [end]
+         </td>
+       [end]
+     [end]
+  </tr>
+[end]
+[else]
+<tr>
+    <td colspan="[is cfg.options.show_logs "1"]6[else]5[end]" class="tuleap-viewvc-directory-content-empty">This directory is empty</td>
+</tr>
+[end]
+</tbody>
+
+</table>
+
+[include "include/dir_footer.ezt"]

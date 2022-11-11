@@ -4,6 +4,8 @@ set -e
 
 TULEAP_BUILD_TMP_FOLDER='/tmp/tuleap_build'
 
+ROOT_DIR=$(readlink -f "$(dirname $0)/../../..")
+
 create_tuleap_build_folders() {
     mkdir -p "$TULEAP_BUILD_TMP_FOLDER"
 }
@@ -11,7 +13,7 @@ create_tuleap_build_folders() {
 build_generated_files() {
     # Setting the HOME environment variable is crappy but it seems that is the
     # only way to prevent npm and node-gyp to put their files everywhere
-    TMPDIR="$TULEAP_BUILD_TMP_FOLDER" TMP="$TULEAP_BUILD_TMP_FOLDER" HOME="$TULEAP_BUILD_TMP_FOLDER" OS='rhel7' make -C "$(pwd)/tools/rpm" tarball
+    TMPDIR="$TULEAP_BUILD_TMP_FOLDER" TMP="$TULEAP_BUILD_TMP_FOLDER" HOME="$TULEAP_BUILD_TMP_FOLDER" OS='rhel7' make -C "$ROOT_DIR/tools/rpm" tarball
     if [ "$1" = "dev" ]; then
         TMPDIR="$TULEAP_BUILD_TMP_FOLDER" TMP="$TULEAP_BUILD_TMP_FOLDER" HOME="$TULEAP_BUILD_TMP_FOLDER" make composer generate-po
     fi
@@ -24,7 +26,7 @@ configure_composer_github_auth(){
 }
 
 copy_tarball_to_output_dir() {
-    cp "$TULEAP_BUILD_TMP_FOLDER"/rpmbuild/SOURCES/*.tar.gz "$(pwd)"
+    cp "$TULEAP_BUILD_TMP_FOLDER"/rpmbuild/SOURCES/*.tar.gz "$ROOT_DIR"
 }
 
 create_tuleap_build_folders

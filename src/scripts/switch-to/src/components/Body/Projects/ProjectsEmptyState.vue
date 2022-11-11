@@ -22,33 +22,19 @@
     <section class="empty-state-pane switch-to-projects-empty">
         <projects-empty-state-svg />
 
-        <p
-            class="empty-state-text empty-state-text-smaller switch-to-projects-empty-text"
-            v-translate
-        >
-            You don't belong to any projects
+        <p class="empty-state-text empty-state-text-smaller switch-to-projects-empty-text">
+            {{ $gettext("You don't belong to any projects") }}
         </p>
 
         <trove-cat-link
             class="tlp-button-secondary switch-to-projects-softwaremap-empty-state empty-state-action"
         >
-            {{ trove_cat_label }}
+            {{ $gettext("Browse all projects") }}
         </trove-cat-link>
     </section>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import ProjectsEmptyStateSvg from "./ProjectsEmptyStateSvg.vue";
 import TroveCatLink from "../TroveCatLink.vue";
-
-@Component({
-    components: { TroveCatLink, ProjectsEmptyStateSvg },
-})
-export default class ProjectsEmptyState extends Vue {
-    get trove_cat_label(): string {
-        return this.$gettext("Browse all projects");
-    }
-}
 </script>

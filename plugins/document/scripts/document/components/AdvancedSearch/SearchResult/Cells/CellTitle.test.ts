@@ -36,6 +36,7 @@ describe("CellTitle", () => {
                     file_properties: {
                         file_type: "text/html",
                         download_href: "/path/to/file",
+                        open_href: null,
                     } as FileProperties,
                 } as unknown as ItemSearchResult,
             },
@@ -52,6 +53,37 @@ describe("CellTitle", () => {
 
         const link = wrapper.find("[data-test=link]");
         expect(link.attributes().href).toBe("/path/to/file");
+        expect(link.attributes().title).toBe("Lorem");
+    });
+
+    it("should output a link to open a File", () => {
+        const wrapper = shallowMount(CellTitle, {
+            localVue,
+            propsData: {
+                item: {
+                    id: 123,
+                    type: "file",
+                    title: "Lorem",
+                    file_properties: {
+                        file_type: "text/html",
+                        download_href: "/path/to/file",
+                        open_href: "/path/to/open/file",
+                    } as FileProperties,
+                } as unknown as ItemSearchResult,
+            },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: {
+                            project_id: 101,
+                        } as unknown as ConfigurationState,
+                    },
+                }),
+            },
+        });
+
+        const link = wrapper.find("[data-test=link]");
+        expect(link.attributes().href).toBe("/path/to/open/file");
         expect(link.attributes().title).toBe("Lorem");
     });
 

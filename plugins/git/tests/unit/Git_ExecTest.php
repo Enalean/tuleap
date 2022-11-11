@@ -186,29 +186,18 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsEachLineOfTheCommitMessage(): void
     {
-        touch("$this->fixture_dir/toto");
-        $this->git_exec->add("$this->fixture_dir/toto");
-        $message = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n"
+        $message     = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n"
             . "\n"
             . "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\n"
             . "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n"
             . "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\n"
             . "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n"
-            . "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n";
-        $this->git_exec->commit($message);
-        $command = new System_Command();
-        $output  = $command->exec(
-            sprintf('%1$s -C %2$s rev-parse HEAD', Git_Exec::getGitCommand(), $this->fixture_dir)
-        );
-        if (count($output) < 1) {
-            throw new Exception('Expected to find the commit we just made');
-        }
-        $commit_sha1 = $output[0];
+            . "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+        $commit_sha1 = $this->getSha1($message);
 
         $result = $this->git_exec->getCommitMessage($commit_sha1);
 
-        self::assertCount(8, $result);
-        self::assertSame($message, implode("\n", $result));
+        self::assertSame($message, $result);
     }
 
     public function testItThrowsWhenTheReferenceDoesNotExist(): void
@@ -237,5 +226,46 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->git_exec->updateRef('refs/heads/new_branch', 'main');
         self::assertEqualsCanonicalizing(["main", "new_branch"], $this->git_exec->getAllBranchesSortedByCreationDate());
+    }
+
+    public function testRetrieveAuthorEmail(): void
+    {
+        $author = "test@example.com";
+        $this->git_exec->setLocalCommiter('test', $author);
+        $commit_sha1 = $this->getSha1("add stuff");
+
+        self::assertSame($author, $this->git_exec->getAuthorInformation($commit_sha1)['email']);
+    }
+
+
+    public function testRetrieveAuthorName(): void
+    {
+        $author = "test";
+        $this->git_exec->setLocalCommiter($author, "test@example.com");
+        $commit_sha1 = $this->getSha1("add stuff");
+
+        self::assertSame($author, $this->git_exec->getAuthorInformation($commit_sha1)['name']);
+    }
+
+    private function getSha1(string $commit_message): string
+    {
+        touch("$this->fixture_dir/toto");
+        //we must add content
+        file_put_contents("$this->fixture_dir/toto", "stuff");
+        $this->git_exec->add("$this->fixture_dir/toto");
+
+        $this->git_exec->commit($commit_message);
+        $command = new \System_Command();
+        $output  = $command->exec(
+            sprintf(
+                '%1$s -C %2$s rev-parse HEAD',
+                \Git_Exec::getGitCommand(),
+                $this->fixture_dir
+            )
+        );
+        if (count($output) < 1) {
+            throw new Exception('Expected to find the commit we just made');
+        }
+        return $output[0];
     }
 }

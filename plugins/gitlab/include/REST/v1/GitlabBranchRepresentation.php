@@ -26,9 +26,6 @@ namespace Tuleap\Gitlab\REST\v1;
  */
 final class GitlabBranchRepresentation
 {
-    /**
-     * @var string
-     */
     public string $branch_name;
 
     public static function build(string $branch_name): self

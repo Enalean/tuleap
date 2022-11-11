@@ -36,7 +36,7 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends \Tuleap
         );
 
         $this->assertJsonStringEqualsJsonString(
-            '{"access_token":"identifier","token_type":"bearer","expires_in":10}',
+            '{"access_token":"identifier","token_type":"Bearer","expires_in":10}',
             json_encode($representation, JSON_THROW_ON_ERROR)
         );
     }
@@ -50,7 +50,7 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends \Tuleap
         );
 
         $this->assertJsonStringEqualsJsonString(
-            '{"access_token":"identifier","refresh_token":"refresh_identifier","token_type":"bearer","expires_in":10}',
+            '{"access_token":"identifier","refresh_token":"refresh_identifier","token_type":"Bearer","expires_in":10}',
             json_encode($representation, JSON_THROW_ON_ERROR)
         );
     }
@@ -65,7 +65,7 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends \Tuleap
         );
 
         $this->assertJsonStringEqualsJsonString(
-            '{"access_token":"identifier","id_token":"jwt_id_token","token_type":"bearer","expires_in":10}',
+            '{"access_token":"identifier","id_token":"jwt_id_token","token_type":"Bearer","expires_in":10}',
             json_encode($representation, JSON_THROW_ON_ERROR)
         );
     }

@@ -19,22 +19,31 @@
 
 import { isDisabled } from "./disabled-field-detector";
 import * as modal_creation_mode_state from "../modal-creation-mode-state";
-import type { Field } from "../types";
+import type { Permission } from "@tuleap/plugin-tracker-constants";
+import type { Field } from "../domain/fields/Field";
 
 describe(`disabled-field-detector`, () => {
     describe(`isDisabled()`, () => {
+        let create_permissions: readonly Permission[];
+        let update_permissions: readonly Permission[];
+
+        beforeEach(() => {
+            create_permissions = ["read", "create"];
+            update_permissions = ["read", "update"];
+        });
+
         describe(`given the modal is in Creation mode`, () => {
             beforeEach(() => {
                 jest.spyOn(modal_creation_mode_state, "isInCreationMode").mockReturnValue(true);
             });
 
             it(`when the field has the "create" permission, then it returns false`, () => {
-                const field = { permissions: ["read", "create"] } as Field;
+                const field = { permissions: create_permissions } as Field;
                 expect(isDisabled(field)).toBe(false);
             });
 
             it(`when the field does not have the "create" permission, then it returns true`, () => {
-                const field = { permissions: ["read", "update"] } as Field;
+                const field = { permissions: update_permissions } as Field;
                 expect(isDisabled(field)).toBe(true);
             });
         });
@@ -45,12 +54,12 @@ describe(`disabled-field-detector`, () => {
             });
 
             it(`when the field has the "update" permission, then it returns false`, () => {
-                const field = { permissions: ["read", "update"] } as Field;
+                const field = { permissions: update_permissions } as Field;
                 expect(isDisabled(field)).toBe(false);
             });
 
             it(`when the field does not have the "update" permission, then it returns true`, () => {
-                const field = { permissions: ["read", "create"] } as Field;
+                const field = { permissions: create_permissions } as Field;
                 expect(isDisabled(field)).toBe(true);
             });
         });

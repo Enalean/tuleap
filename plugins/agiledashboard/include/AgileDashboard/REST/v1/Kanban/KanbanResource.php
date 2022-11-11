@@ -52,6 +52,9 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\RealTimeMercure\Client;
+use Tuleap\RealTimeMercure\ClientBuilder;
+use Tuleap\RealTimeMercure\MercureMessageDataPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
@@ -175,11 +178,12 @@ class KanbanResource extends AuthenticatedResource
     private $filtered_diagram_builder;
     /** @var ItemRepresentationBuilder */
     private $item_representation_builder;
-
     /**
      * @var TrackerReportUpdater
      */
     private $tracker_report_updater;
+    private Client $mercure_client;
+
     private FirstPossibleValueInListRetriever $first_possible_value_retriever;
 
     public function __construct()
@@ -244,6 +248,7 @@ class KanbanResource extends AuthenticatedResource
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger()
         );
+        $this->mercure_client         = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
@@ -1209,6 +1214,13 @@ class KanbanResource extends AuthenticatedResource
 
             $this->node_js_client->sendMessage($message);
         }
+        if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
+            $mercure_message = new MercureMessageDataPresenter(
+                'kanban/' . $kanban->getId() . '/',
+                '{"cmd":[{"kanban":"delete"}]}'
+            );
+            $this->mercure_client->sendMessage($mercure_message);
+        }
     }
 
     /**
@@ -1260,7 +1272,7 @@ class KanbanResource extends AuthenticatedResource
             $new_column_id = $this->kanban_column_manager->createColumn($current_user, $kanban, $column_label);
         } catch (AgileDashboard_UserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch (Kanban_SemanticStatusNotDefinedException $exception) {
+        } catch (Kanban_SemanticStatusNotDefinedException | SemanticStatusNotDefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
             throw new RestException(400, $exception->getMessage());

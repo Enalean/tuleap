@@ -112,11 +112,12 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact_factory
             ->shouldReceive('getArtifactsByTrackerIdUserCanView')
             ->andReturn([
-                    $this->artifact_open_current_with_start_date,
-                    $this->artifact_open_current_without_start_date,
-                    $this->artifact_open_future_without_start_date,
-                    $this->artifact_closed_passed,
-                    $this->artifact_open_future_with_start_date]);
+                $this->artifact_open_current_with_start_date,
+                $this->artifact_open_current_without_start_date,
+                $this->artifact_open_future_without_start_date,
+                $this->artifact_closed_passed,
+                $this->artifact_open_future_with_start_date,
+            ]);
         $artifact_factory
             ->shouldReceive('getClosedArtifactsByTrackerIdUserCanView')
             ->andReturn([

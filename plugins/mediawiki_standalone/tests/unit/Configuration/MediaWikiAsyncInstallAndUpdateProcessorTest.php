@@ -27,7 +27,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class MediaWikiAsyncUpdateProcessorTest extends TestCase
+final class MediaWikiAsyncInstallAndUpdateProcessorTest extends TestCase
 {
     private \Closure $has_update_been_executed;
     private MediaWikiAsyncUpdateProcessor $update_processor;

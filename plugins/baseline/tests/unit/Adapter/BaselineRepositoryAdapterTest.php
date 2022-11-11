@@ -30,21 +30,19 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
-use PFUser;
 use Tuleap\Baseline\Domain\Authorizations;
-use Tuleap\Baseline\Domain\AuthorizationsImpl;
 use Tuleap\Baseline\Domain\Baseline;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
+use Tuleap\Baseline\Domain\UserIdentifier;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
-use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 
 class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-    use CurrentUserContext;
 
     /** @var BaselineRepositoryAdapter */
     private $repository;
@@ -63,6 +61,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var ClockAdapter|MockInterface */
     private $clock;
+    private UserIdentifier $current_user;
 
     /** @before */
     public function createInstance()
@@ -81,6 +80,13 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->authorizations,
             $this->clock
         );
+
+        $user               = UserTestBuilder::aUser()->build();
+        $this->current_user = UserProxy::fromUser($user);
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with($this->current_user->getId())
+            ->andReturn($user);
     }
 
     public function testFindById()
@@ -91,7 +97,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->current_user, 10)
             ->andReturn($artifact);
 
-        $user = new PFUser();
+        $user = UserTestBuilder::aUser()->build();
         $this->user_manager
             ->shouldReceive('getUserById')
             ->with(22)
@@ -122,7 +128,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             "Persisted baseline",
             $artifact,
             DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
-            $user
+            UserProxy::fromUser($user),
         );
         $this->assertEquals($expected_baseline, $baseline);
     }
@@ -147,7 +153,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->current_user, 10)
             ->andReturn($artifact);
 
-        $user = new PFUser();
+        $user = UserTestBuilder::aUser()->build();
         $this->user_manager
             ->shouldReceive('getUserById')
             ->with(22)
@@ -183,7 +189,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->current_user, 10)
             ->andReturn(null);
 
-        $user = new PFUser();
+        $user = UserTestBuilder::aUser()->build();
         $this->user_manager
             ->shouldReceive('getUserById')
             ->with(22)
@@ -217,7 +223,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->current_user, 10)
             ->andReturn($artifact);
 
-        $user = new PFUser();
+        $user = UserTestBuilder::aUser()->build();
         $this->user_manager
             ->shouldReceive('getUserById')
             ->with(22)
@@ -242,13 +248,15 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
 
-        $expected_baselines = [new Baseline(
-            1,
-            "Persisted baseline",
-            $artifact,
-            DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
-            $user
-        )];
+        $expected_baselines = [
+            new Baseline(
+                1,
+                "Persisted baseline",
+                $artifact,
+                DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
+                UserProxy::fromUser($user),
+            ),
+        ];
         $this->assertEquals($expected_baselines, $baselines);
     }
 
@@ -259,7 +267,7 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->current_user, 10)
             ->andReturn(null);
 
-        $user = new PFUser();
+        $user = UserTestBuilder::aUser()->build();
         $this->user_manager
             ->shouldReceive('getUserById')
             ->with(22)

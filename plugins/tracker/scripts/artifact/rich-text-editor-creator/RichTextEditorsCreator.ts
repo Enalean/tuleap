@@ -28,6 +28,7 @@ import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracke
 import { initMentionsOnEditorDataReady } from "./init-mentions";
 
 const NEW_FOLLOWUP_TEXTAREA_ID = "tracker_followup_comment_new";
+const EDIT_FOLLOWUP_TEXTAREA_BASE_ID = "tracker_followup_comment_edit_";
 const NEW_FOLLOWUP_ID_SUFFIX = "new";
 const TEXT_FIELDS_SELECTOR = ".tracker_artifact_field textarea";
 
@@ -54,6 +55,23 @@ export class RichTextEditorsCreator {
             onEditorDataReady: initMentionsOnEditorDataReady,
         };
         this.editor_factory.createRichTextEditor(new_followup_textarea, options);
+    }
+
+    public createEditFollowupEditor(changeset_id: number, format: TextFieldFormat): void {
+        const edit_followup_textarea = this.doc.getElementById(
+            EDIT_FOLLOWUP_TEXTAREA_BASE_ID + changeset_id
+        );
+        if (!(edit_followup_textarea instanceof HTMLTextAreaElement)) {
+            // When copying artifacts or browsing as anonymous, there is no "edit follow-up" textarea
+            return;
+        }
+        const options: RichTextEditorOptions = {
+            format_selectbox_id: changeset_id.toString(),
+            format_selectbox_value: format,
+            onEditorInit: (ckeditor) => this.image_upload_factory.forbidImageUpload(ckeditor),
+            onEditorDataReady: initMentionsOnEditorDataReady,
+        };
+        this.editor_factory.createRichTextEditor(edit_followup_textarea, options);
     }
 
     /**

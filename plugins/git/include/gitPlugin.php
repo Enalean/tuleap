@@ -31,6 +31,8 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
@@ -75,6 +77,13 @@ use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
 use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\Git\Hook\Asynchronous\AsynchronousEventHandler;
+use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushParser;
+use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
+use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
+use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeCommand;
+use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeAction;
+use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeFFI;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
@@ -182,6 +191,7 @@ use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
@@ -190,6 +200,8 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
@@ -201,7 +213,7 @@ use Tuleap\User\PasswordVerifier;
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const LOG_IDENTIFIER = 'git_syslog';
 
@@ -340,6 +352,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
         $this->addHook(PendingDocumentsRetriever::NAME);
+        $this->addHook(WorkerEvent::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -348,6 +361,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
+            $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
         }
 
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
@@ -473,6 +487,11 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         return $this->getPluginInfo()->getPropertyValueForName($key);
     }
 
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(PreReceiveAnalyzeCommand::class);
+    }
+
     public function cssFile($params)
     {
         // Only show the stylesheet if we're actually in the Git pages.
@@ -495,9 +514,17 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         }
     }
 
-    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
+    public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $event->addJavascript($this->getIncludeAssets()->getFileURL('permission-per-group.js'));
+        $event->addJavascript(
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../scripts/permissions-per-group/frontend-assets',
+                    '/assets/git/permissions-per-group'
+                ),
+                'src/index.ts'
+            )
+        );
     }
 
     public function javascript($params)
@@ -1649,7 +1676,6 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
             new ProjectHistoryDao(),
             new DefaultBranchUpdater(new DefaultBranchUpdateExecutorAsGitoliteUser()),
             $this->getDescriptionUpdater(),
-            $this->getGitPhpAccessLogger(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getRegexpFineGrainedDisabler(),
@@ -2233,7 +2259,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
                 $tab_content  .= '<tr>';
                 $tab_content  .= '<td>' . $html_purifier->purify($archived_repository->getName()) . '</td>';
                 $tab_content  .= '<td>' . DateHelper::relativeDateInlineContext((int) $creation_date->getTimestamp(), $user) . '</td>';
-                $tab_content  .= '<td>' . $html_purifier->purify($archived_repository->getCreator()->getName()) . '</td>';
+                $tab_content  .= '<td>' . $html_purifier->purify($archived_repository->getCreator()->getUserName()) . '</td>';
                 $tab_content  .= '<td>' . DateHelper::relativeDateInlineContext((int) $deletion_date->getTimestamp(), $user)  . '</td>';
                 $tab_content  .= '<td class="tlp-table-cell-actions">
                                     <form method="post" action="/plugins/git/"
@@ -2422,8 +2448,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
             $this->getRepositoryFactory(),
             $this->getGitLogDao(),
             $this->getGitRepositoryUrlManager(),
-            UserManager::instance(),
-            UserHelper::instance()
+            UserManager::instance()
         );
         $collector->collect($collection);
     }
@@ -2846,6 +2871,19 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
                 );
             }
         );
+        if (\ForgeConfig::getFeatureFlag(PreReceiveAnalyzeCommand::FEATURE_FLAG_KEY) === '1') {
+            $commands_collector->addCommand(
+                PreReceiveAnalyzeCommand::NAME,
+                function (): PreReceiveAnalyzeCommand {
+                    return new PreReceiveAnalyzeCommand(
+                        new PreReceiveAnalyzeAction(
+                            $this->getRepositoryFactory(),
+                            new PreReceiveAnalyzeFFI()
+                        )
+                    );
+                }
+            );
+        }
     }
 
     public function collectAccessKeyScopeBuilder(AccessKeyScopeBuilderCollector $collector): void
@@ -2904,9 +2942,12 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
             new BranchNameCreatorFromArtifact(
                 new Slugify()
             ),
-            new \Tuleap\Layout\JavascriptAsset(
-                $this->getAssets(),
-                'git-artifact-create-branch.js'
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../scripts/artifact-create-branch-action/frontend-assets/',
+                    '/assets/git/artifact-create-branch-action'
+                ),
+                'src/index.ts'
             ),
             new \Tuleap\Git\PullRequestEndpointsAvailableChecker(EventManager::instance()),
         );
@@ -2921,6 +2962,40 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         }
 
         $event->addAction($button_action);
+    }
+
+    public function semanticDoneUsedExternalServiceEvent(SemanticDoneUsedExternalServiceEvent $event): void
+    {
+        $project = $event->getTracker()->getProject();
+        if (! $project->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $event->setExternalServicesDescriptions(
+            new SemanticDoneUsedExternalService(
+                dgettext('tuleap-git', 'Git'),
+                dgettext('tuleap-git', 'close artifacts'),
+            )
+        );
+    }
+
+    public function workerEvent(WorkerEvent $event): void
+    {
+        $logger        = $this->getLogger();
+        $event_manager = \EventManager::instance();
+
+        $handler = new AsynchronousEventHandler(
+            $logger,
+            new DefaultBranchPushParser(
+                \UserManager::instance(),
+                new GitRepositoryRetriever(
+                    new \GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
+                )
+            ),
+            new DefaultBranchPushProcessorBuilder(),
+            $event_manager
+        );
+        $handler->handle($event);
     }
 
     private function getAssets(): IncludeAssets

@@ -114,7 +114,7 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mail->shouldReceive('setTo')->with($idle_user->getEmail());
         $this->mail->shouldReceive('setSubject');
         $this->mail->shouldReceive('setBodyHtml');
-        $this->mail->shouldReceive('send')->andReturn(true);
+        $this->mail->shouldReceive('send')->andReturn(true)->atLeast()->once();
         $this->template_renderer->shouldReceive('renderToString')
             ->with('mail-suspension-alert', $this->mail_account_suspension_alert_presenter)
             ->andReturn('Rendered_Email');
@@ -176,7 +176,7 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mail->shouldReceive('setTo')->with($inactive_user->getEmail());
         $this->mail->shouldReceive('setSubject');
         $this->mail->shouldReceive('setBodyHtml');
-        $this->mail->shouldReceive('send')->andReturn(true);
+        $this->mail->shouldReceive('send')->andReturn(true)->atLeast()->once();
         $this->template_renderer->shouldReceive('renderToString')
             ->with('mail-suspension', $this->mail_account_suspension_presenter)
             ->andReturn('Rendered_Email');

@@ -75,7 +75,9 @@ class PermissionPerGroupGitSectionBuilder
         $unique_permissions = array_unique($all_permissions, SORT_NUMERIC);
         $permissions        = $this->formatter->formatCollectionOfUgroupIds($unique_permissions, $project);
 
-        $selected_ugroup = $this->ugroup_manager->getUGroup($event->getProject(), $selected_ugroup_id);
+        $selected_ugroup = $selected_ugroup_id
+            ? $this->ugroup_manager->getUGroup($event->getProject(), $selected_ugroup_id)
+            : null;
 
         return new PermissionPerGroupPanePresenter($permissions, $selected_ugroup);
     }

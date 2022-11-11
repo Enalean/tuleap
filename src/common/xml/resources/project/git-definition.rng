@@ -180,6 +180,13 @@
               <attribute name="url">
                 <data type="string"/>
               </attribute>
+              <optional>
+                <attribute name="jenkins_token">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
               <empty/>
             </element>
           </oneOrMore>

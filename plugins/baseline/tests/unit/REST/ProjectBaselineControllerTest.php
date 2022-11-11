@@ -29,6 +29,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use Project;
+use Tuleap\Baseline\Adapter\UserProxy;
 use Tuleap\Baseline\Domain\BaselineService;
 use Tuleap\Baseline\Domain\BaselinesPage;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
@@ -38,12 +39,11 @@ use Tuleap\Baseline\Domain\NotAuthorizedException;
 use Tuleap\Baseline\Domain\ProjectRepository;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
-use Tuleap\Baseline\Support\CurrentUserContext;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class ProjectBaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
-    use CurrentUserContext;
 
     /** @var ProjectBaselineController */
     private $controller;
@@ -65,6 +65,8 @@ class ProjectBaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function createInstance()
     {
+        $this->current_user = UserProxy::fromUser(UserTestBuilder::aUser()->build());
+
         $this->current_user_provider = Mockery::mock(CurrentUserProvider::class)->shouldIgnoreMissing();
         $this->current_user_provider
             ->allows(['getUser' => $this->current_user])

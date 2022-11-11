@@ -72,7 +72,7 @@ class AgileDashboard_KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->wip_limit  = 12;
 
         $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('getName')->andReturn('user name');
+        $this->user->shouldReceive('getUserName')->andReturn('user name');
         $this->column = new AgileDashboard_KanbanColumn($this->column_id, $this->kanban_id, "Todo", true, null, 2, true);
 
         $this->column_dao             = \Mockery::spy(\AgileDashboard_KanbanColumnDao::class);

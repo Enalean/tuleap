@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Campaign;
 
 use HTTPRequest;
-use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use function PHPUnit\Framework\assertSame;
 
 class StatusChangedRedirectURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -31,7 +31,7 @@ class StatusChangedRedirectURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItBuildsRedirectToCampaignURL(): void
     {
         $request = new HTTPRequest();
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         assertSame(
             "/plugins/testmanagement/?group_id=101#!/campaigns/1234",
@@ -47,7 +47,7 @@ class StatusChangedRedirectURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = new HTTPRequest();
         $request->set("milestone_id", "3");
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         assertSame(
             "/plugins/testmanagement/?group_id=101&milestone_id=3#!/campaigns/1234",

@@ -6,6 +6,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%1$s repository integrated %2$s"
+msgid_plural "%1$s repositories integrated %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Allow artifact closure"
+msgstr ""
+
 #, php-format
 msgid "An error occurred while creating the branch on GitLab: %s"
 msgstr ""
@@ -14,10 +22,22 @@ msgstr ""
 msgid "An error occurred while creating the merge request on GitLab: %s"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
 msgid "Closed"
 msgstr ""
 
 msgid "Create GitLab branch and merge request"
+msgstr ""
+
+msgid "Edit access token"
+msgstr ""
+
+msgid "Edit configuration"
 msgstr ""
 
 #, php-format
@@ -30,7 +50,16 @@ msgstr ""
 msgid "GitLab Branch"
 msgstr ""
 
+msgid "GitLab Group Link"
+msgstr ""
+
 msgid "GitLab Tag"
+msgstr ""
+
+msgid "GitLab access token"
+msgstr ""
+
+msgid "GitLab access token scope must contain at least: api."
 msgstr ""
 
 msgid "GitLab branch"
@@ -39,13 +68,38 @@ msgstr ""
 msgid "GitLab commit"
 msgstr ""
 
+msgid "GitLab group"
+msgstr ""
+
 msgid "GitLab integration"
 msgstr ""
 
 msgid "GitLab merge request"
 msgstr ""
 
+msgid "GitLab server URL"
+msgstr ""
+
 msgid "GitLab tag"
+msgstr ""
+
+msgid ""
+"If selected, artifacts of this project can be closed with GitLab commit "
+"messages from the selected repository."
+msgstr ""
+
+msgid ""
+"If set, this prefix will be automatically added to the branch name in the "
+"create GitLab branch action."
+msgstr ""
+
+msgid "Last Synchronization"
+msgstr ""
+
+msgid "Linked"
+msgstr ""
+
+msgid "Linked group information"
 msgstr ""
 
 msgid "Merged"
@@ -57,10 +111,26 @@ msgid ""
 "GitLab server error: %s"
 msgstr ""
 
+msgid "No"
+msgstr ""
+
 msgid "No credentials found to contact the GitLab server."
 msgstr ""
 
 msgid "Open"
+msgstr ""
+
+msgid ""
+"Please note that the following settings will be applied for all new "
+"synchronized\n"
+"                repositories and may be overridden by each repository once "
+"linked."
+msgstr ""
+
+msgid "Prefix"
+msgstr ""
+
+msgid "Prefix the branch name"
 msgstr ""
 
 msgid "Provides an integration GitLab to Tuleap."
@@ -76,6 +146,18 @@ msgid "Reference to a GitLab merge request"
 msgstr ""
 
 msgid "Reference to a GitLab tag"
+msgstr ""
+
+msgid "Save token"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Synchronize"
+msgstr ""
+
+msgid "The GitLab group has been successfully unlinked."
 msgstr ""
 
 msgid "The GitLab repository integration cannot be found."
@@ -99,10 +181,32 @@ msgstr ""
 msgid "The repository %s is not found on GitLab server"
 msgstr ""
 
+msgid ""
+"This will not delete the Group on GitLab side. It removes the link between "
+"the Tuleap Project\n"
+"            and the GitLab group. All GitLab projects part of the group will "
+"stay integrated with Tuleap, their configuration will not change. If you "
+"wish to remove\n"
+"            the integrations of the GitLab projects part of this group, you "
+"must remove each one manually."
+msgstr ""
+
 #, php-format
 msgid ""
 "Unable to contact the server with the provided token. Please ensure that "
 "token has \"api\" scope. GitLab server error: %s"
+msgstr ""
+
+msgid "Unlink"
+msgstr ""
+
+msgid "Unlink the project from the GitLab group"
+msgstr ""
+
+msgid "Update configuration"
+msgstr ""
+
+msgid "Update token"
 msgstr ""
 
 msgid ""
@@ -113,6 +217,14 @@ msgstr ""
 msgid ""
 "We managed to generate a new secret and to send it to the server, but "
 "couldn't parse the response. You should check that everything is ok."
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid ""
+"You are about to unlink %1$s from %2$s GitLab group. Please confirm your "
+"action."
 msgstr ""
 
 msgid "close artifacts"

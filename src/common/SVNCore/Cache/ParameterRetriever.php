@@ -22,10 +22,8 @@ namespace Tuleap\SVNCore\Cache;
 
 class ParameterRetriever
 {
-    public const MAXIMUM_CREDENTIALS         = 'maximum_credentials';
-    public const LIFETIME                    = 'lifetime';
-    public const MAXIMUM_CREDENTIALS_DEFAULT = 10;
-    public const LIFETIME_DEFAULT            = 5;
+    public const LIFETIME         = 'lifetime';
+    public const LIFETIME_DEFAULT = 5;
 
     /**
      * @var ParameterDao
@@ -38,30 +36,23 @@ class ParameterRetriever
     }
 
     /**
-     * @return Parameters
      * @throws ParameterDataAccessException
      */
-    public function getParameters()
+    public function getParameters(): Parameters
     {
         $rows = $this->dao->search();
         if ($rows === false) {
             throw new ParameterDataAccessException();
         }
 
-        $maximum_credentials = self::MAXIMUM_CREDENTIALS_DEFAULT;
-        $lifetime            = self::LIFETIME_DEFAULT;
+        $lifetime = self::LIFETIME_DEFAULT;
 
         foreach ($rows as $row) {
-            switch ($row['name']) {
-                case self::MAXIMUM_CREDENTIALS:
-                    $maximum_credentials = (int) $row['value'];
-                    break;
-                case self::LIFETIME:
-                    $lifetime = (int) $row['value'];
-                    break;
+            if ($row['name'] === self::LIFETIME) {
+                $lifetime = (int) $row['value'];
             }
         }
 
-        return new Parameters($maximum_credentials, $lifetime);
+        return new Parameters($lifetime);
     }
 }

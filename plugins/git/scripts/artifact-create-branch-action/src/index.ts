@@ -53,12 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const gettext_provider = await initVueGettext(
             createGettext,
-            (locale: string) =>
-                import(
-                    /* webpackChunkName: "artifact-create-branch-action-po-" */ `../po/${getPOFileFromLocaleWithoutExtension(
-                        locale
-                    )}.po`
-                )
+            (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
         );
 
         try {

@@ -49,10 +49,10 @@ class TreesTest extends \Tuleap\Test\PHPUnit\TestCase
         //  /   / \
         // 3   4   5
         $nodes = [
-                     0 => [1, 2],
-                     1 => [3],
-                     2 => [4, 5],
-                 ];
+            0 => [1, 2],
+            1 => [3],
+            2 => [4, 5],
+        ];
         $tree  = Trees::nodeListToTree($nodes);
         $this->assertEquals([0 => [1 => [3 => null], 2 => [4 => null, 5 => null]]], $tree);
     }
@@ -74,32 +74,32 @@ class TreesTest extends \Tuleap\Test\PHPUnit\TestCase
         //  /   / \
         // 3   4   5
         $tree1 = [
-                     0 => [
-                              'children' => [
-                                                1 => [
-                                                         'children' => [3 => null],
-                                                     ],
-                                                2 => [
-                                                         'children' => [4 => null, 5 => null],
-                                                     ],
-                                                ],
-                                            ],
-                 ];
+            0 => [
+                'children' => [
+                    1 => [
+                        'children' => [3 => null],
+                    ],
+                    2 => [
+                        'children' => [4 => null, 5 => null],
+                    ],
+                ],
+            ],
+        ];
 
         $expected = [
-                     '(root)' => [
-                              'children' => [
-                                                1 => [
-                                                         'children' => [3 => ['tag' => 'IN_BOTH']],
-                                                         'tag'      => 'IN_BOTH',
-                                                     ],
-                                                2 => [
-                                                         'children' => [4 => ['tag' => 'IN_BOTH'], 5 => ['tag' => 'IN_BOTH']],
-                                                         'tag'      => 'IN_BOTH',
-                                                     ],
-                                                ],
-                                            ],
-                 ];
+            '(root)' => [
+                'children' => [
+                    1 => [
+                        'children' => [3 => ['tag' => 'IN_BOTH']],
+                        'tag'      => 'IN_BOTH',
+                    ],
+                    2 => [
+                        'children' => [4 => ['tag' => 'IN_BOTH'], 5 => ['tag' => 'IN_BOTH']],
+                        'tag'      => 'IN_BOTH',
+                    ],
+                ],
+            ],
+        ];
 
         $res = Trees::mergeTag($tree1, $tree1);
         $this->assertEquals($expected, $res);
@@ -112,14 +112,14 @@ class TreesTest extends \Tuleap\Test\PHPUnit\TestCase
         //  / \   \
         // 3   4   5
         $tree1 = [
-                     0 => [
-                              'children' => [
-                                                1 => ['children' => [3 => null, 4 => null]],
-                                                2 => ['children' => [5 => null]],
-                                            ],
-                              'somedata' => 1,
-                          ],
-                 ];
+            0 => [
+                'children' => [
+                    1 => ['children' => [3 => null, 4 => null]],
+                    2 => ['children' => [5 => null]],
+                ],
+                'somedata' => 1,
+            ],
+        ];
 
         // Tree 2
         //
@@ -129,14 +129,14 @@ class TreesTest extends \Tuleap\Test\PHPUnit\TestCase
         //      |
         //      6
         $tree2 = [
-                     0 => [
-                              'children' => [
-                                                1 => null,
-                                                2 => ['children' => [6 => null]],
-                                                7 => ['somedata' => 2],
-                                            ],
-                          ],
-                 ];
+            0 => [
+                'children' => [
+                    1 => null,
+                    2 => ['children' => [6 => null]],
+                    7 => ['somedata' => 2],
+                ],
+            ],
+        ];
 
         // Expected result: the two previous trees merged
         //
@@ -146,15 +146,15 @@ class TreesTest extends \Tuleap\Test\PHPUnit\TestCase
         //  / \   / \
         // 3   4 5   6
         $expected = [
-                     '(root)' => [
-                              'children' => [
-                                                1 => ['children' => [3 => ['tag' => 'IN_FIRST'], 4 => ['tag' => 'IN_FIRST']], 'tag' => 'IN_BOTH'],
-                                                2 => ['children' => [5 => ['tag' => 'IN_FIRST'], 6 => ['tag' => 'IN_SECOND']], 'tag' => 'IN_BOTH'],
-                                                7 => ['tag' => 'IN_SECOND', 'somedata' => 2],
-                                            ],
-                              'somedata' => 1,
-                          ],
-                 ];
+            '(root)' => [
+                'children' => [
+                    1 => ['children' => [3 => ['tag' => 'IN_FIRST'], 4 => ['tag' => 'IN_FIRST']], 'tag' => 'IN_BOTH'],
+                    2 => ['children' => [5 => ['tag' => 'IN_FIRST'], 6 => ['tag' => 'IN_SECOND']], 'tag' => 'IN_BOTH'],
+                    7 => ['tag' => 'IN_SECOND', 'somedata' => 2],
+                ],
+                'somedata' => 1,
+            ],
+        ];
 
          $res = Trees::mergeTag($tree1, $tree2);
          $this->assertEquals($expected, $res);

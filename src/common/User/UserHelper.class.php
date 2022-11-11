@@ -19,20 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * UserHelper
- */
-class UserHelper
+use Tuleap\User\BuildDisplayName;
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserHelper implements BuildDisplayName
 {
     public const PREFERENCES_NAME_AND_LOGIN = 0;
     public const PREFERENCES_LOGIN_AND_NAME = 1;
     public const PREFERENCES_LOGIN          = 2;
     public const PREFERENCES_REAL_NAME      = 3;
 
-    public $_username_display;
-    public $_cache_by_id;
-    public $_cache_by_username;
-    public $_userdao;
+    public $_username_display; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_cache_by_id; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_cache_by_username; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_userdao; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /**
      * Constructor
@@ -46,7 +46,7 @@ class UserHelper
         $this->_userdao           = $this->_getuserDao();
     }
 
-    protected static $_instance;
+    protected static $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /**
      *
      * @return UserHelper
@@ -70,11 +70,11 @@ class UserHelper
         self::$_instance = null;
     }
 
-    public function _getCurrentUserUsernameDisplayPreference()
+    public function _getCurrentUserUsernameDisplayPreference() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->_getUserManager()->getCurrentUser()->getPreference("username_display");
     }
-    public function _getUserManager()
+    public function _getUserManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return UserManager::instance();
     }
@@ -89,10 +89,8 @@ class UserHelper
      *  3: realname
      *  4: realname (user_name)
      *
-     * @param  user_name  string
-     * @param  realname  string
      */
-    public function getDisplayName($user_name, $realname)
+    public function getDisplayName(string $user_name, string $realname): string
     {
         $name = '';
         switch ($this->_username_display) {
@@ -234,8 +232,8 @@ class UserHelper
         } else {
             if (! isset($this->_cache_by_id[$user_id])) {
                 $this->_cache_by_id[$user_id] = $GLOBALS['Language']->getText('global', 'none');
-                $dar                          = $this->_userdao->searchByUserId($user_id);
-                if ($row = $dar->getRow()) {
+                $row                          = $this->_userdao->searchByUserId($user_id);
+                if ($row !== null) {
                     $this->_cache_by_id[$user_id]                = $this->getDisplayName($row['user_name'], $row['realname']);
                     $this->_cache_by_username[$row['user_name']] = $this->_cache_by_id[$user_id];
                 }
@@ -264,8 +262,8 @@ class UserHelper
                 $display = $this->getDisplayNameFromUser($user);
             } else {
                 if (! isset($this->_cache_by_username[$user_name])) {
-                    $dar = $this->_userdao->searchByUserName($user_name);
-                    if ($row = $dar->getRow()) {
+                    $row = $this->_userdao->searchByUserName($user_name);
+                    if ($row !== null) {
                         $this->_cache_by_id[$row['user_id']]         = $this->getDisplayName($row['user_name'], $row['realname']);
                         $this->_cache_by_username[$row['user_name']] = $this->_cache_by_id[$row['user_id']];
                     } else {
@@ -303,14 +301,14 @@ class UserHelper
         if ($user && ! $user->isNone()) {
             return '<a href="' . $this->getUserUrl($user) . '">' . $hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
         } else {
-            $username = $user ? $user->getName() : '';
+            $username = $user ? $user->getUserName() : '';
             return $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
         }
     }
 
     public function getUserUrl(PFUser $user)
     {
-        return "/users/" . urlencode($user->getName());
+        return "/users/" . urlencode($user->getUserName());
     }
 
     public function getAbsoluteUserURL(PFUser $user): string
@@ -323,7 +321,7 @@ class UserHelper
      *
      * @param string  $user_name
      */
-    public function _isUserNameNone($user_name)
+    public function _isUserNameNone($user_name) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $user_name == $GLOBALS['Language']->getText('global', 'none');
     }
@@ -331,9 +329,8 @@ class UserHelper
     /**
      * Returns the user dao
      */
-    public function _getUserDao()
+    public function _getUserDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        $dao = new UserDao(CodendiDataAccess::instance());
-        return $dao;
+        return new UserDao();
     }
 }

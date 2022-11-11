@@ -22,7 +22,7 @@ import {
     enableAutocompleter,
     addDataToAutocompleter,
     resetPlaceholder,
-} from "../../../../src/scripts/tuleap/user-and-ugroup-autocompleter";
+} from "@tuleap/user-and-ugroup-autocompleter";
 
 document.addEventListener("DOMContentLoaded", function () {
     var add_button_global_notif = document.getElementById("tracker-global-notifications-add"),

@@ -25,15 +25,14 @@ namespace Tuleap\Docman\Download;
 use Docman_File;
 use Docman_ItemFactory;
 use Psr\Log\LoggerInterface;
-use PFUser;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
-use Tuleap\REST\RESTCurrentUserMiddleware;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Tuleap\User\ProvideCurrentRequestUser;
 
 final class DocmanFileDownloadController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
@@ -54,6 +53,7 @@ final class DocmanFileDownloadController extends DispatchablePSR15Compatible imp
         EmitterInterface $emitter,
         Docman_ItemFactory $item_factory,
         DocmanFileDownloadResponseGenerator $file_download_response_generator,
+        private ProvideCurrentRequestUser $current_request_user_provider,
         LoggerInterface $logger,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -73,10 +73,12 @@ final class DocmanFileDownloadController extends DispatchablePSR15Compatible imp
         if ($item === null || ! $item instanceof Docman_File) {
             throw new NotFoundException(dgettext('tuleap-docman', 'The file cannot be found.'));
         }
+        $attribute_version_id = $request->getAttribute('version_id');
+        $current_user         = $this->current_request_user_provider->getCurrentRequestUser($request);
+        if ($current_user === null) {
+            throw new NotFoundException();
+        }
         try {
-            $attribute_version_id = $request->getAttribute('version_id');
-            $current_user         = $request->getAttribute(RESTCurrentUserMiddleware::class);
-            assert($current_user instanceof PFUser);
             return $this->file_download_response_generator->generateResponse(
                 $request,
                 $current_user,

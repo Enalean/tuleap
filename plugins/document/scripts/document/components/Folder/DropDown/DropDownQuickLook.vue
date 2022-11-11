@@ -20,11 +20,16 @@
 <template>
     <div class="document-quick-look-folder-action">
         <div class="tlp-dropdown-split-button">
+            <download-button
+                v-bind:item="item"
+                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
+                v-if="should_display_download_button"
+            />
             <create-new-item-version-button
                 v-bind:item="item"
                 v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
                 v-bind:icon-classes="'fas fa-share tlp-button-icon'"
-                v-if="!is_item_a_wiki_with_approval_table && !is_item_a_folder"
+                v-else-if="should_display_new_version_button"
                 data-test="document-quicklook-action-button-new-version"
             />
             <new-item-button
@@ -40,6 +45,19 @@
                 v-bind:is-appended="item.user_can_write && !is_item_a_wiki_with_approval_table"
             >
                 <drop-down-menu v-bind:item="item">
+                    <create-new-item-version-button
+                        v-bind:item="item"
+                        v-bind:button-classes="`tlp-dropdown-menu-item`"
+                        v-bind:icon-classes="`fas fa-fw fa-share tlp-dropdown-menu-item-icon`"
+                        v-if="
+                            should_display_download_button &&
+                            item.user_can_write &&
+                            !is_item_a_folder
+                        "
+                        data-test="document-dropdown-create-new-version-button"
+                        slot="new-item-version"
+                    />
+
                     <template v-if="!is_item_a_folder && item.user_can_write">
                         <lock-item
                             v-bind:item="item"
@@ -71,14 +89,15 @@ import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "./NewVersion/NewItemVersionButton.vue";
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
 import DropDownButton from "./DropDownButton.vue";
+import DownloadButton from "../../QuickLook/DownloadButton.vue";
 import LockItem from "./Lock/LockItem.vue";
 import UnlockItem from "./Lock/UnlockItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
-import { isFolder, isWiki } from "../../../helpers/type-check-helper";
+import { isFile, isFolder, isWiki } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
@@ -98,13 +117,18 @@ const is_item_a_folder = computed((): boolean => {
     return isFolder(props.item);
 });
 
+const should_display_download_button = computed(
+    (): boolean =>
+        isFile(props.item) &&
+        props.item.file_properties &&
+        (props.item.file_properties.open_href || "") !== ""
+);
+
+const should_display_new_version_button = computed(
+    (): boolean => !is_item_a_wiki_with_approval_table.value && !is_item_a_folder.value
+);
+
 const should_display_update_properties = computed((): boolean => {
     return canUpdateProperties(forbid_writers_to_update.value, props.item);
 });
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

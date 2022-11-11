@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Artifact\Action;
 
 use Cocur\Slugify\Slugify;
 use PFUser;
-use Project;
 use Tracker;
 use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
@@ -32,6 +31,7 @@ use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentation;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Test\Builders\IncludeAssetsBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -71,14 +71,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsTheActionLinkButton(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = new Project([
-            'group_id' => 101,
-            'group_name' => 'project01',
-            'unix_group_name' => 'project01',
-            'status' => 'A',
-            'access' => 'public',
-            'type' => 1,
-        ]);
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 
@@ -158,20 +151,13 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ],
             $button_action->getLinkPresenter()->data[2]
         );
-        self::assertSame('action.js', $button_action->getAssetLink());
+        self::assertSame($this->javascript_asset, $button_action->asset);
     }
 
     public function testItReturnsTheActionLinkButtonWithoutArtifactTitle(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = new Project([
-            'group_id' => 101,
-            'group_name' => 'project01',
-            'unix_group_name' => 'project01',
-            'status' => 'A',
-            'access' => 'public',
-            'type' => 1,
-        ]);
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 
@@ -252,14 +238,14 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ],
             $button_action->getLinkPresenter()->data[2]
         );
-        self::assertSame('action.js', $button_action->getAssetLink());
+        self::assertSame($this->javascript_asset, $button_action->asset);
     }
 
     public function testItReturnsNullIfProjectCannotUseGitlabIntegration(): void
     {
         $artifact = $this->createMock(Artifact::class);
         $user     = $this->createMock(PFUser::class);
-        $project  = Project::buildForTest();
+        $project  = ProjectTestBuilder::aProject()->build();
         $tracker  = $this->createMock(Tracker::class);
 
         $tracker
@@ -286,7 +272,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsNullIfUserIsNotProjectMember(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = Project::buildForTest();
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 
@@ -320,7 +306,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsNullIfUserCannotSeeArtifact(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = Project::buildForTest();
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 
@@ -360,7 +346,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsNullIfProjectDoesNotHaveIntegrationWithSecretConfigured(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = Project::buildForTest();
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 

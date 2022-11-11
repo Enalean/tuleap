@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use DateTimeInterface;
-use PFUser;
 use Tuleap\Baseline\Domain\BaselineArtifact;
 use Tuleap\Baseline\Domain\BaselineArtifactRepository;
 use Tuleap\Baseline\Domain\Clock;
+use Tuleap\Baseline\Domain\UserIdentifier;
 
 /**
  * In memory implementation of BaselineArtifactRepository used for tests
@@ -54,7 +54,7 @@ class BaselineArtifactRepositoryStub implements BaselineArtifactRepository
         $history->add($artifact, $date);
     }
 
-    public function findById(PFUser $current_user, int $id): ?BaselineArtifact
+    public function findById(UserIdentifier $current_user, int $id): ?BaselineArtifact
     {
         $history = $this->artifact_histories_by_id[$id];
         if ($history === null) {
@@ -63,7 +63,7 @@ class BaselineArtifactRepositoryStub implements BaselineArtifactRepository
         return $history->findAt($this->clock->now());
     }
 
-    public function findByIdAt(PFUser $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact
+    public function findByIdAt(UserIdentifier $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact
     {
         $history = $this->artifact_histories_by_id[$id];
         \assert($history instanceof ArtifactHistory);

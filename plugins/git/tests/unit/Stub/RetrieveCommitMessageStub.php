@@ -29,7 +29,6 @@ final class RetrieveCommitMessageStub implements \Tuleap\Git\CommitMetadata\Retr
      */
     private function __construct(
         private bool $should_throw,
-        private bool $always_return,
         private array $return_values,
     ) {
     }
@@ -39,26 +38,18 @@ final class RetrieveCommitMessageStub implements \Tuleap\Git\CommitMetadata\Retr
      */
     public static function withSuccessiveMessages(string $message, string ...$other_messages): self
     {
-        return new self(false, false, [$message, ...$other_messages]);
-    }
-
-    public static function withMessage(string $message): self
-    {
-        return new self(false, true, [$message]);
+        return new self(false, [$message, ...$other_messages]);
     }
 
     public static function withError(): self
     {
-        return new self(true, false, ['']);
+        return new self(true, ['']);
     }
 
     public function getCommitMessage(string $ref): string
     {
         if ($this->should_throw) {
             throw new \Git_Command_Exception('log', [], 1);
-        }
-        if ($this->always_return) {
-            return $this->return_values[0];
         }
         if (count($this->return_values) > 0) {
             return array_shift($this->return_values);

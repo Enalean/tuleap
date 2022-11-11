@@ -24,7 +24,6 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\NullServerRequest;
@@ -37,8 +36,6 @@ use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
 final class SVNProjectAccessControllerTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     /**
      * @var SVNLoginNameUserProvider&\PHPUnit\Framework\MockObject\Stub
      */
@@ -71,7 +68,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         };
 
         $cache_parameters = $this->createStub(ParameterRetriever::class);
-        $cache_parameters->method('getParameters')->willReturn(new \Tuleap\SVNCore\Cache\Parameters(10, $cache_lifetime_minutes));
+        $cache_parameters->method('getParameters')->willReturn(new \Tuleap\SVNCore\Cache\Parameters($cache_lifetime_minutes));
 
         return new SVNProjectAccessController(
             HTTPFactoryBuilder::responseFactory(),
@@ -102,19 +99,6 @@ final class SVNProjectAccessControllerTest extends TestCase
 
         self::assertEquals(204, $response->getStatusCode());
         self::assertEquals('max-age=600', $response->getHeaderLine('Cache-Control'));
-    }
-
-    public function testBypassAuthWhenFeatureFlagIsDisabled(): void
-    {
-        \ForgeConfig::setFeatureFlag('disable_php_based_svn_auth', '1');
-
-        $controller = $this->buildController($this->createStub(\ProjectManager::class), CheckProjectAccessStub::withValidAccess(), false);
-
-        $request  = self::buildServerRequest('project_name', 'valid_login_name', 'password');
-        $response = $controller->handle($request);
-
-        self::assertEquals(204, $response->getStatusCode());
-        self::assertEquals('max-age=10', $response->getHeaderLine('Cache-Control'));
     }
 
     public function testRequestIsRejectedWhenAuthorizationHeaderIsMissing(): void

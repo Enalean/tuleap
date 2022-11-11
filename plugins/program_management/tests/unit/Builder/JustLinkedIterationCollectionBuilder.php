@@ -29,14 +29,13 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIterationHasBeenLinkedBeforeStub;
 final class JustLinkedIterationCollectionBuilder
 {
     /**
-     * @no-named-arguments
+     * @param $with_iterations array{id: int, changeset_id: int}[]
      */
     public static function buildWithProgramIncrementAndIterationIds(
         ProgramIncrementIdentifier $program_increment,
-        int $just_linked_iteration_id,
-        int ...$other_ids,
+        array $with_iterations,
     ): JustLinkedIterationCollection {
-        $iterations = IterationIdentifierCollectionBuilder::buildWithIds($just_linked_iteration_id, ...$other_ids);
+        $iterations = IterationIdentifierCollectionBuilder::buildWithIterations($with_iterations);
         return JustLinkedIterationCollection::fromIterations(
             VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
             $program_increment,

@@ -1,0 +1,25 @@
+[if-any properties]
+<div id="tuleap-viewvc-properties">
+    <h4>Properties</h4>
+    <table class="table" class="auto">
+    <thead>
+      <tr>
+        <th class="vc_header_sort">Name</th>
+        <th class="vc_header">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+    [for properties]
+      <tr class="vc_row_[if-index properties even]even[else]odd[end]">
+        <td><strong>[properties.name]</strong></td>
+        [if-any properties.undisplayable]
+        <td><em>Property value is undisplayable.</em></td>
+        [else]
+        <td style="white-space: pre;">[properties.value]</td>
+        [end]
+      </tr>
+    [end]
+    </tbody>
+    </table>
+</div>
+[end]

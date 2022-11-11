@@ -23,16 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Statistics;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Statistics_Formatter;
 use Statistics_Services_UsageFormatter;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /** @var Statistics_Services_UsageFormatter */
     private $usage_formatter;
 
@@ -44,7 +40,7 @@ final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\
     protected function setUp(): void
     {
         parent::setUp();
-        $stats_formatter       = Mockery::mock(Statistics_Formatter::class);
+        $stats_formatter       = $this->createMock(Statistics_Formatter::class);
         $this->usage_formatter = new Statistics_Services_UsageFormatter($stats_formatter);
 
         $this->first_input_datas = [
@@ -78,10 +74,10 @@ final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\
         ];
 
         $datas = $this->usage_formatter->buildDatas($this->first_input_datas, "title");
-        $this->assertEquals($datas, $expected);
+        self::assertEquals($datas, $expected);
     }
 
-    public function testItOnlyAddTitlesWhithEmptyData(): void
+    public function testItOnlyAddTitlesWithEmptyData(): void
     {
         $input_datas = [
             [
@@ -108,6 +104,6 @@ final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\
         $this->usage_formatter->buildDatas($this->first_input_datas, "title");
         $datas = $this->usage_formatter->buildDatas($input_datas, "descr");
 
-        $this->assertEquals($datas, $expected);
+        self::assertEquals($datas, $expected);
     }
 }

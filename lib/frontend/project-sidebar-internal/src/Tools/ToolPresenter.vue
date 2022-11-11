@@ -41,7 +41,7 @@
         <span class="project-sidebar-nav-item-label">{{ label }}</span>
         <i
             v-if="open_in_new_tab"
-            class="fas fa-arrow-right project-sidebar-nav-item-new-tab"
+            class="fa-solid fa-arrow-right project-sidebar-nav-item-new-tab"
             aria-hidden="true"
             data-test="tool-new-tab-icon"
         ></i>

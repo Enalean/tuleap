@@ -42,12 +42,13 @@ import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
-import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
-import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
+import { selectOrThrow } from "@tuleap/dom";
+import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
+import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -91,22 +92,12 @@ describe(`NewLinkTemplate`, () => {
     ])(`will render an artifact about to be linked (a new link)`, (_type_of_link, new_link) => {
         render(new_link);
 
-        const row = target.querySelector("[data-test=link-row]");
-        const link = target.querySelector("[data-test=link-link]");
-        const xref = target.querySelector("[data-test=link-xref]");
-        const title = target.querySelector("[data-test=link-title]");
-        const status = target.querySelector("[data-test=link-status]");
-        const type = target.querySelector("[data-test=link-type]");
-        if (
-            !(row instanceof HTMLElement) ||
-            !(link instanceof HTMLAnchorElement) ||
-            !(xref instanceof HTMLElement) ||
-            !(title instanceof HTMLElement) ||
-            !(status instanceof HTMLElement) ||
-            !(type instanceof HTMLElement)
-        ) {
-            throw new Error("An expected element has not been found in template");
-        }
+        const row = selectOrThrow(target, "[data-test=link-row]");
+        const link = selectOrThrow(target, "[data-test=link-link]", HTMLAnchorElement);
+        const xref = selectOrThrow(target, "[data-test=link-xref]");
+        const title = selectOrThrow(target, "[data-test=link-title]");
+        const status = selectOrThrow(target, "[data-test=link-status]");
+        const type = selectOrThrow(target, "[data-test=link-type]");
         const expected_type =
             new_link.link_type.shortname === UNTYPED_LINK ? "Linked to" : new_link.link_type.label;
 
@@ -126,13 +117,18 @@ describe(`NewLinkTemplate`, () => {
         const getHost = (new_link: NewLink): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
             const fault_notifier = NotifyFaultStub.withCount();
-            const type_retriever = RetrieveSelectedLinkTypeStub.withType(
-                LinkTypeStub.buildUntyped()
-            );
             const notification_clearer = ClearFaultNotificationStub.withCount();
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(28);
             const parents_retriever = RetrievePossibleParentsStub.withoutParents();
             const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
+            const allowed_types = [
+                {
+                    shortname: IS_CHILD_LINK_TYPE,
+                    forward_label: "Child",
+                    reverse_label: "Parent",
+                },
+            ];
+
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
                 RetrieveLinkedArtifactsSyncStub.withoutLink(),
@@ -147,7 +143,6 @@ describe(`NewLinkTemplate`, () => {
                     ),
                     fault_notifier,
                     notification_clearer,
-                    type_retriever,
                     parents_retriever,
                     link_verifier,
                     current_artifact_identifier,
@@ -157,26 +152,20 @@ describe(`NewLinkTemplate`, () => {
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
                 VerifyHasParentLinkStub.withNoParentLink(),
-                type_retriever,
-                SetSelectedLinkTypeStub.buildPassThrough(),
                 parents_retriever,
                 link_verifier,
                 {
                     field_id: 525,
                     label: "Artifact link",
                     type: "art_link",
-                    allowed_types: [
-                        {
-                            shortname: IS_CHILD_LINK_TYPE,
-                            forward_label: "Child",
-                            reverse_label: "Parent",
-                        },
-                    ],
+                    allowed_types,
                 },
                 current_artifact_identifier,
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("bug #22"),
-                ControlLinkedArtifactsPopoversStub.build()
+                ControlLinkedArtifactsPopoversStub.build(),
+                AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types),
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
             );
 
             return {
@@ -194,11 +183,7 @@ describe(`NewLinkTemplate`, () => {
             const new_link = NewLinkStub.withDefaults();
             const host = getHost(new_link);
             render(host, new_link);
-            const button = target.querySelector("[data-test=action-button]");
-
-            if (!(button instanceof HTMLButtonElement)) {
-                throw new Error("An expected element has not been found in template");
-            }
+            const button = selectOrThrow(target, "[data-test=action-button]", HTMLButtonElement);
             button.click();
 
             expect(host.new_links_presenter).toHaveLength(0);

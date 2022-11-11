@@ -28,12 +28,13 @@ class TuleapLocalSettingsGenerator extends LocalSettingsGenerator
         $this->values['wgDefaultSkin'] = 'tuleap';
         $ls                            = parent::getText();
         $tuleapFarm                    = <<<'HERE'
-### Load local configuration varibales ###
-require_once( "$IP/LocalSettings.local.php" );
 ### Farm Instance Configuration Dispatcher ###
 $GLOBALS['wgTuleapFarmConfig'] = [
 	'instanceDir' => '/var/lib/tuleap/mediawiki/projects/'
 ];
+### Load local configuration variables ###
+require_once( "$IP/LocalSettings.local.php" );
+
 require_once( "$IP/extensions/TuleapWikiFarm/TuleapWikiFarm.setup.php" );
 HERE;
 

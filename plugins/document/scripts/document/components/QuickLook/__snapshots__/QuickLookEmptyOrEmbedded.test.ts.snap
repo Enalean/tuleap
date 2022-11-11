@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuickLookEmptyOrEmbedded Component can be rendered for embedded 1`] = `
+<div
+  class="document-quick-look-document-action"
+>
+  <drop-down-quick-look-stub
+    item="[object Object]"
+  />
+   
+  <div
+    class="document-header-spacer"
+  />
+   
+  <quick-look-delete-button-stub
+    item="[object Object]"
+  />
+</div>
+`;
+
+exports[`QuickLookEmptyOrEmbedded Component can be rendered for empty 1`] = `
+<div
+  class="document-quick-look-document-action"
+>
+  <drop-down-quick-look-stub
+    item="[object Object]"
+  />
+   
+  <div
+    class="document-header-spacer"
+  />
+   
+  <quick-look-delete-button-stub
+    item="[object Object]"
+  />
+</div>
+`;

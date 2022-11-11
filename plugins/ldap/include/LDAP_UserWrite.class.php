@@ -136,7 +136,7 @@ class LDAP_UserWrite
             $this->updateUserLdapId($user);
             $this->ldap_user_dao->createLdapUser($user->getId(), $_SERVER['REQUEST_TIME'], $this->getUserLdapId($user));
         } else {
-            $this->logger->debug('No password for user ' . $user->getUnixName() . ' ' . $user->getId() . ' skip LDAP account creation');
+            $this->logger->debug('No password for user ' . $user->getUserName() . ' ' . $user->getId() . ' skip LDAP account creation');
         }
     }
 

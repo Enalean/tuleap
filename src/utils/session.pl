@@ -17,52 +17,12 @@
 # along with Tuleap. If not, see <http://www.gnu.org/licenses/
 #
 
-use vars qw ( %G_USER );
-
-
-sub session_checkip {
-  my ($oldip, $newip) = @_;
-
-  my @eoldip = split(/\./,$oldip);
-  my @enewip = split(/\./,$newip);
-
-  # require same class b subnet
-  return (($eoldip[0]==$enewip[0]) && ($eoldip[1]==$enewip[1]));
-
-}
-
-sub session_setglobals {
-
-  my $user_id = shift;
-
-  if ($user_id > 0) {
-    my $sth = $dbh->prepare("SELECT user_id,user_name FROM user WHERE user_id='$user_id'");
-    my $result = $sth->execute();
-
-    if (!$result || $sth->rows < 1) {
-      # echo db_error();
-      %G_USER = {};
-    } else {
-      my $hash_ref = $sth->fetchrow_hashref; 
-      foreach my $key (keys %$hash_ref) {
-	$G_USER{$key} = $hash_ref->{$key};
-      }
-      # echo $G_USER['user_name'].'<BR>';
-    }
-  } else {
-    %G_USER = {};
-  }
-}
-
-#############################
-# Get Codendi apache user from local.inc
-#############################
 sub session_store_access {
   my ($uid) = @_;
 
   my $sth = $dbh->prepare("SELECT last_access_date FROM user_access WHERE user_id='$uid'");
   $sth->execute();
-  $hash_ref = $sth->fetchrow_hashref; 
+  $hash_ref = $sth->fetchrow_hashref;
 
   # does hash value exists
   if ($hash_ref->{'last_access_date'}) {

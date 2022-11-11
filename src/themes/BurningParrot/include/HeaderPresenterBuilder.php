@@ -29,6 +29,7 @@ use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithDensityVariants;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
@@ -103,6 +104,7 @@ class HeaderPresenterBuilder
         ThemeVariantColor $theme_color,
         ThemeVariation $theme_variation,
         array $javascript_assets,
+        ?InProjectWithoutSidebar $in_project_without_sidebar,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->imgroot                  = $imgroot;
@@ -129,6 +131,7 @@ class HeaderPresenterBuilder
                 $this->shouldLogoBeDisplayed(),
                 $is_legacy_logo_customized,
                 $is_svg_logo_customized,
+                $in_project_without_sidebar,
                 $platform_banner,
             ),
             $theme_color,
@@ -175,6 +178,7 @@ class HeaderPresenterBuilder
                 new CssAssetWithoutVariantDeclinaisons($core_assets, 'tlp'),
                 new CssAssetWithDensityVariants($core_assets, 'tlp-vars'),
                 new CssAssetWithoutVariantDeclinaisons($core_assets, 'BurningParrot/burning-parrot'),
+                new CssAssetWithoutVariantDeclinaisons($core_assets, 'common-theme/project-sidebar'),
             ]
         );
         $this->css_assets = $css_assets->merge($this->css_assets);

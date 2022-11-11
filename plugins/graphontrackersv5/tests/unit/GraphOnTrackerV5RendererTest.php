@@ -92,7 +92,7 @@ class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExportIfFieldUsedOnCumulativeChart(): void
     {
-        $this->chart->shouldReceive('exportToXML');
+        $this->chart->shouldReceive('exportToXML')->atLeast()->once();
         $this->chart_factory->shouldReceive('getCharts')->andReturn([$this->chart]);
         $this->form_element_factory->shouldReceive('getUsedFormElementById')->andReturn(true);
 

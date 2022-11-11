@@ -49,7 +49,7 @@ class Git_Mirror_Mirror
         $this->name     = $name;
 
         $this->ssh_key    = ($owner->getAuthorizedKeysRaw()) ? $owner->getAuthorizedKeysRaw() : '';
-        $this->owner_name = $owner->getName();
+        $this->owner_name = $owner->getUserName();
         $this->owner_id   = $owner->getId();
     }
 

@@ -34,14 +34,14 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
-        'name' => ['name' => 'name', 'type' => 'xsd:string'],
-        'description' => ['name' => 'description', 'type' => 'xsd:string'],
-        'item_name' => ['name' => 'item_name', 'type' => 'xsd:string'],
-        'open_count' => ['name' => 'open_count', 'type' => 'xsd:int'],
-        'total_count' => ['name' => 'total_count', 'type' => 'xsd:int'],
-        'reports_desc' => ['name' => 'reports', 'type' => 'tns:ArrayOfArtifactReportDesc'],
+            'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
+            'name' => ['name' => 'name', 'type' => 'xsd:string'],
+            'description' => ['name' => 'description', 'type' => 'xsd:string'],
+            'item_name' => ['name' => 'item_name', 'type' => 'xsd:string'],
+            'open_count' => ['name' => 'open_count', 'type' => 'xsd:int'],
+            'total_count' => ['name' => 'total_count', 'type' => 'xsd:int'],
+            'reports_desc' => ['name' => 'reports', 'type' => 'tns:ArrayOfArtifactReportDesc'],
         ]
     );
 
@@ -63,16 +63,16 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
-        'name' => ['name' => 'name', 'type' => 'xsd:string'],
-        'description' => ['name' => 'description', 'type' => 'xsd:string'],
-        'item_name' => ['name' => 'item_name', 'type' => 'xsd:string'],
-        'open_count' => ['name' => 'open_count', 'type' => 'xsd:int'],
-        'total_count' => ['name' => 'total_count', 'type' => 'xsd:int'],
-        'total_file_size' => ['name' => 'total_file_size', 'type' => 'xsd:float'],
-        'field_sets' => ['name' => 'field_sets', 'type' => 'tns:ArrayOfArtifactFieldSet'],
-        'field_dependencies' => ['name' => 'field_dependencies', 'type' => 'tns:ArrayOfArtifactRule'],
+            'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
+            'name' => ['name' => 'name', 'type' => 'xsd:string'],
+            'description' => ['name' => 'description', 'type' => 'xsd:string'],
+            'item_name' => ['name' => 'item_name', 'type' => 'xsd:string'],
+            'open_count' => ['name' => 'open_count', 'type' => 'xsd:int'],
+            'total_count' => ['name' => 'total_count', 'type' => 'xsd:int'],
+            'total_file_size' => ['name' => 'total_file_size', 'type' => 'xsd:float'],
+            'field_sets' => ['name' => 'field_sets', 'type' => 'tns:ArrayOfArtifactFieldSet'],
+            'field_dependencies' => ['name' => 'field_dependencies', 'type' => 'tns:ArrayOfArtifactRule'],
         ]
     );
 
@@ -94,14 +94,14 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'field_set_id' => ['name' => 'field_set_id', 'type' => 'xsd:int'],
-        'group_artifact_id'  => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'name' => ['name' => 'name', 'type' => 'xsd:string'],
-        'label' => ['name' => 'label', 'type' => 'xsd:string'],
-        'description' => ['name' => 'description', 'type' => 'xsd:string'],
-        'description_text' => ['name' => 'description_text', 'type' => 'xsd:string'],
-        'rank' => ['name' => 'rank', 'type' => 'xsd:int'],
-        'fields' => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactField'],
+            'field_set_id' => ['name' => 'field_set_id', 'type' => 'xsd:int'],
+            'group_artifact_id'  => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'name' => ['name' => 'name', 'type' => 'xsd:string'],
+            'label' => ['name' => 'label', 'type' => 'xsd:string'],
+            'description' => ['name' => 'description', 'type' => 'xsd:string'],
+            'description_text' => ['name' => 'description_text', 'type' => 'xsd:string'],
+            'rank' => ['name' => 'rank', 'type' => 'xsd:int'],
+            'fields' => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactField'],
         ]
     );
 
@@ -123,27 +123,27 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'field_id' => ['name' => 'field_id', 'type' => 'xsd:int'],
-        'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'field_set_id' => ['name' => 'field_set_id', 'type' => 'xsd:int'],
-        'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'data_type' => ['name' => 'data_type', 'type' => 'xsd:int'],
-        'display_type' => ['name' => 'display_type', 'type' => 'xsd:string'],
-        'display_size' => ['name' => 'display_size', 'type' => 'xsd:string'],
-        'label' => ['name' => 'label', 'type' => 'xsd:string'],
-        'description' => ['name' => 'description', 'type' => 'xsd:string'],
-        'scope' => ['name' => 'scope', 'type' => 'xsd:string'],
-        'required' => ['name' => 'required', 'type' => 'xsd:int'],
-        'empty_ok' => ['name' => 'empty_ok', 'type' => 'xsd:int'],
-        'keep_history' => ['name' => 'keep_history', 'type' => 'xsd:int'],
-        'special' => ['name' => 'special', 'type' => 'xsd:int'],
-        'value_function' => ['name' => 'value_function', 'type' => 'xsd:string'],
-        'available_values' => ['name' => 'available_values', 'type' => 'tns:ArrayOfArtifactFieldValueList'],
-        'default_value' => ['name' => 'default_value', 'type' => 'xsd:string'],
-        'user_can_submit' => ['name' => 'user_can_submit', 'type' => 'xsd:boolean'],
-        'user_can_update' => ['name' => 'user_can_update', 'type' => 'xsd:boolean'],
-        'user_can_read'   => ['name' => 'user_can_read', 'type' => 'xsd:boolean'],
-        'is_standard_field'   => ['name' => 'is_standard_field', 'type' => 'xsd:boolean'],
+            'field_id' => ['name' => 'field_id', 'type' => 'xsd:int'],
+            'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'field_set_id' => ['name' => 'field_set_id', 'type' => 'xsd:int'],
+            'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
+            'data_type' => ['name' => 'data_type', 'type' => 'xsd:int'],
+            'display_type' => ['name' => 'display_type', 'type' => 'xsd:string'],
+            'display_size' => ['name' => 'display_size', 'type' => 'xsd:string'],
+            'label' => ['name' => 'label', 'type' => 'xsd:string'],
+            'description' => ['name' => 'description', 'type' => 'xsd:string'],
+            'scope' => ['name' => 'scope', 'type' => 'xsd:string'],
+            'required' => ['name' => 'required', 'type' => 'xsd:int'],
+            'empty_ok' => ['name' => 'empty_ok', 'type' => 'xsd:int'],
+            'keep_history' => ['name' => 'keep_history', 'type' => 'xsd:int'],
+            'special' => ['name' => 'special', 'type' => 'xsd:int'],
+            'value_function' => ['name' => 'value_function', 'type' => 'xsd:string'],
+            'available_values' => ['name' => 'available_values', 'type' => 'tns:ArrayOfArtifactFieldValueList'],
+            'default_value' => ['name' => 'default_value', 'type' => 'xsd:string'],
+            'user_can_submit' => ['name' => 'user_can_submit', 'type' => 'xsd:boolean'],
+            'user_can_update' => ['name' => 'user_can_update', 'type' => 'xsd:boolean'],
+            'user_can_read'   => ['name' => 'user_can_read', 'type' => 'xsd:boolean'],
+            'is_standard_field'   => ['name' => 'is_standard_field', 'type' => 'xsd:boolean'],
         ]
     );
 
@@ -155,7 +155,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactField[]'],
+            ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactField[]'],
         ],
         'tns:ArtifactField'
     );
@@ -167,9 +167,9 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'field_id' => ['name' => 'field_id', 'type' => 'xsd:int'],
-        'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
-        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
+            'field_id' => ['name' => 'field_id', 'type' => 'xsd:int'],
+            'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
+            'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
         ]
     );
 
@@ -181,7 +181,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldValue[]'],
+            ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldValue[]'],
         ],
         'tns:ArtifactFieldValue'
     );
@@ -193,8 +193,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
+            'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
+            'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
         ]
     );
 
@@ -206,7 +206,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldNameValue[]'],
+            ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldNameValue[]'],
         ],
         'tns:ArtifactFieldNameValue'
     );
@@ -218,13 +218,13 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'field_id' => ['name' => 'field_id', 'type' => 'xsd:int'],
-        'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'value_id' => ['name' => 'value_id', 'type' => 'xsd:int'],
-        'value' => ['name' => 'value', 'type' => 'xsd:string'],
-        'description' => ['name' => 'description', 'type' => 'xsd:string'],
-        'order_id' => ['name' => 'order_id', 'type' => 'xsd:int'],
-        'status' => ['name' => 'status', 'type' => 'xsd:string'],
+            'field_id' => ['name' => 'field_id', 'type' => 'xsd:int'],
+            'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'value_id' => ['name' => 'value_id', 'type' => 'xsd:int'],
+            'value' => ['name' => 'value', 'type' => 'xsd:string'],
+            'description' => ['name' => 'description', 'type' => 'xsd:string'],
+            'order_id' => ['name' => 'order_id', 'type' => 'xsd:int'],
+            'status' => ['name' => 'status', 'type' => 'xsd:string'],
         ]
     );
 
@@ -236,7 +236,7 @@ if (defined('NUSOAP')) {
         'SOAP-ENC:Array',
         [],
         [
-        ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldValueList[]'],
+            ['ref' => 'SOAP-ENC:arrayType','wsdl:arrayType' => 'tns:ArtifactFieldValueList[]'],
         ],
         'tns:ArtifactFieldValueList'
     );
@@ -248,12 +248,12 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'rule_id' => ['name' => 'rule_id', 'type' => 'xsd:int'],
-        'group_artifact_id'  => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'source_field_id' => ['name' => 'source_field_id', 'type' => 'xsd:int'],
-        'source_value_id' => ['name' => 'source_value_id', 'type' => 'xsd:int'],
-        'target_field_id' => ['name' => 'target_field_id', 'type' => 'xsd:int'],
-        'target_value_id' => ['name' => 'target_value_id', 'type' => 'xsd:int'],
+            'rule_id' => ['name' => 'rule_id', 'type' => 'xsd:int'],
+            'group_artifact_id'  => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'source_field_id' => ['name' => 'source_field_id', 'type' => 'xsd:int'],
+            'source_value_id' => ['name' => 'source_value_id', 'type' => 'xsd:int'],
+            'target_field_id' => ['name' => 'target_field_id', 'type' => 'xsd:int'],
+            'target_value_id' => ['name' => 'target_value_id', 'type' => 'xsd:int'],
         ]
     );
 
@@ -275,17 +275,17 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
-        'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'status_id' => ['name' => 'status_id', 'type' => 'xsd:int'],
-        'submitted_by' => ['name' => 'submitted_by', 'type' => 'xsd:int'],
-        'open_date' => ['name' => 'open_date', 'type' => 'xsd:int'],
-        'close_date' => ['name' => 'close_date', 'type' => 'xsd:int'],
-        'last_update_date' => ['name' => 'last_update_date', 'type' => 'xsd:int'],
-        'summary' => ['name' => 'summary', 'type' => 'xsd:string'],
-        'details' => ['name' => 'details', 'type' => 'xsd:string'],
-        'severity' => ['name' => 'severity', 'type' => 'xsd:int'],
-        'extra_fields' => ['name' => 'extra_fields', 'type' => 'tns:ArrayOfArtifactFieldValue'],
+            'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
+            'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'status_id' => ['name' => 'status_id', 'type' => 'xsd:int'],
+            'submitted_by' => ['name' => 'submitted_by', 'type' => 'xsd:int'],
+            'open_date' => ['name' => 'open_date', 'type' => 'xsd:int'],
+            'close_date' => ['name' => 'close_date', 'type' => 'xsd:int'],
+            'last_update_date' => ['name' => 'last_update_date', 'type' => 'xsd:int'],
+            'summary' => ['name' => 'summary', 'type' => 'xsd:string'],
+            'details' => ['name' => 'details', 'type' => 'xsd:string'],
+            'severity' => ['name' => 'severity', 'type' => 'xsd:int'],
+            'extra_fields' => ['name' => 'extra_fields', 'type' => 'tns:ArrayOfArtifactFieldValue'],
         ]
     );
 
@@ -307,9 +307,9 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
-        'operator' => ['name' => 'operator', 'type' => 'xsd:string'],
+            'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
+            'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
+            'operator' => ['name' => 'operator', 'type' => 'xsd:string'],
         ]
     );
 
@@ -331,8 +331,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'sort_direction' => ['name' => 'sort_direction', 'type' => 'xsd:string'],
+            'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
+            'sort_direction' => ['name' => 'sort_direction', 'type' => 'xsd:string'],
         ]
     );
 
@@ -355,8 +355,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'total_artifacts_number' => ['name' => 'total_artifacts_number', 'type' => 'xsd:int'],
-        'artifacts' => ['name' => 'artifacts', 'type' => 'tns:ArrayOfArtifact'],
+            'total_artifacts_number' => ['name' => 'total_artifacts_number', 'type' => 'xsd:int'],
+            'artifacts' => ['name' => 'artifacts', 'type' => 'tns:ArrayOfArtifact'],
         ]
     );
 
@@ -367,10 +367,10 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'artifact_canned_id' => ['name' => 'artifact_canned_id', 'type' => 'xsd:int'],
-        'group_artifact_id'  => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'title'          => ['name' => 'title', 'type' => 'xsd:string'],
-        'body'              => ['name' => 'body', 'type' => 'xsd:string'],
+            'artifact_canned_id' => ['name' => 'artifact_canned_id', 'type' => 'xsd:int'],
+            'group_artifact_id'  => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'title'          => ['name' => 'title', 'type' => 'xsd:string'],
+            'body'              => ['name' => 'body', 'type' => 'xsd:string'],
         ]
     );
 
@@ -392,17 +392,17 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'artifact_id'          => ['name' => 'artifact_id', 'type' => 'xsd:int'],
-        'follow_up_id'          => ['name' => 'follow_up_id', 'type' => 'xsd:int'],
-        'comment'           => ['name' => 'comment', 'type' => 'xsd:string'],
-        'date'                     => ['name' => 'date', 'type' => 'xsd:int'],
-        'original_date'                     => ['name' => 'original_date', 'type' => 'xsd:int'],
-        'by'               => ['name' => 'by', 'type' => 'xsd:string'],
-        'original_by'               => ['name' => 'original_by', 'type' => 'xsd:string'],
-        'comment_type_id'     => ['name' => 'comment_type_id', 'type' => 'xsd:int'],
-        'comment_type'     => ['name' => 'comment_type', 'type' => 'xsd:string'],
-        'field_name'     => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'user_can_edit'  => ['name' => 'user_can_edit', 'type' => 'xsd:int'],
+            'artifact_id'          => ['name' => 'artifact_id', 'type' => 'xsd:int'],
+            'follow_up_id'          => ['name' => 'follow_up_id', 'type' => 'xsd:int'],
+            'comment'           => ['name' => 'comment', 'type' => 'xsd:string'],
+            'date'                     => ['name' => 'date', 'type' => 'xsd:int'],
+            'original_date'                     => ['name' => 'original_date', 'type' => 'xsd:int'],
+            'by'               => ['name' => 'by', 'type' => 'xsd:string'],
+            'original_by'               => ['name' => 'original_by', 'type' => 'xsd:string'],
+            'comment_type_id'     => ['name' => 'comment_type_id', 'type' => 'xsd:int'],
+            'comment_type'     => ['name' => 'comment_type', 'type' => 'xsd:string'],
+            'field_name'     => ['name' => 'field_name', 'type' => 'xsd:string'],
+            'user_can_edit'  => ['name' => 'user_can_edit', 'type' => 'xsd:int'],
         ]
     );
 
@@ -424,12 +424,12 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'report_id'         => ['name' => 'report_id', 'type' => 'xsd:int'],
-        'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'name'              => ['name' => 'name', 'type' => 'xsd:string'],
-        'description'       => ['name' => 'description', 'type' => 'xsd:string'],
-        'scope'             => ['name' => 'scope', 'type' => 'xsd:string'],
-        'fields'            => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactReportField'],
+            'report_id'         => ['name' => 'report_id', 'type' => 'xsd:int'],
+            'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'name'              => ['name' => 'name', 'type' => 'xsd:string'],
+            'description'       => ['name' => 'description', 'type' => 'xsd:string'],
+            'scope'             => ['name' => 'scope', 'type' => 'xsd:string'],
+            'fields'            => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactReportField'],
         ]
     );
 
@@ -451,11 +451,11 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'report_id'         => ['name' => 'report_id', 'type' => 'xsd:int'],
-        'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
-        'name'              => ['name' => 'name', 'type' => 'xsd:string'],
-        'description'       => ['name' => 'description', 'type' => 'xsd:string'],
-        'scope'             => ['name' => 'scope', 'type' => 'xsd:string'],
+            'report_id'         => ['name' => 'report_id', 'type' => 'xsd:int'],
+            'group_artifact_id' => ['name' => 'group_artifact_id', 'type' => 'xsd:int'],
+            'name'              => ['name' => 'name', 'type' => 'xsd:string'],
+            'description'       => ['name' => 'description', 'type' => 'xsd:string'],
+            'scope'             => ['name' => 'scope', 'type' => 'xsd:string'],
         ]
     );
 
@@ -477,15 +477,15 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'id' => ['name' => 'id', 'type' => 'xsd:int'],
-        'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
-        'filename' => ['name' => 'filename', 'type' => 'xsd:string'],
-        'description' => ['name' => 'description', 'type' => 'xsd:string'],
-        'bin_data' => ['name' => 'bin_data', 'type' => 'xsd:base64Binary'],
-        'filesize' => ['name' => 'filesize', 'type' => 'xsd:int'],
-        'filetype' => ['name' => 'filetype', 'type' => 'xsd:string'],
-        'adddate' => ['name' => 'adddate', 'type' => 'xsd:int'],
-        'submitted_by' => ['name' => 'submitted_by', 'type' => 'xsd:string'],
+            'id' => ['name' => 'id', 'type' => 'xsd:int'],
+            'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
+            'filename' => ['name' => 'filename', 'type' => 'xsd:string'],
+            'description' => ['name' => 'description', 'type' => 'xsd:string'],
+            'bin_data' => ['name' => 'bin_data', 'type' => 'xsd:base64Binary'],
+            'filesize' => ['name' => 'filesize', 'type' => 'xsd:int'],
+            'filetype' => ['name' => 'filetype', 'type' => 'xsd:string'],
+            'adddate' => ['name' => 'adddate', 'type' => 'xsd:int'],
+            'submitted_by' => ['name' => 'submitted_by', 'type' => 'xsd:string'],
         ]
     );
 
@@ -507,13 +507,13 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'report_id'           => ['name' => 'report_id', 'type' => 'xsd:int'],
-        'field_name'          => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'show_on_query'       => ['name' => 'show_on_query', 'type' => 'xsd:int'],
-        'show_on_result'      => ['name' => 'show_on_result', 'type' => 'xsd:int'],
-        'place_query'           => ['name' => 'place_query', 'type' => 'xsd:int'],
-        'place_result'           => ['name' => 'place_result', 'type' => 'xsd:int'],
-        'col_width'          => ['name' => 'col_width', 'type' => 'xsd:int'],
+            'report_id'           => ['name' => 'report_id', 'type' => 'xsd:int'],
+            'field_name'          => ['name' => 'field_name', 'type' => 'xsd:string'],
+            'show_on_query'       => ['name' => 'show_on_query', 'type' => 'xsd:int'],
+            'show_on_result'      => ['name' => 'show_on_result', 'type' => 'xsd:int'],
+            'place_query'           => ['name' => 'place_query', 'type' => 'xsd:int'],
+            'place_result'           => ['name' => 'place_result', 'type' => 'xsd:int'],
+            'col_width'          => ['name' => 'col_width', 'type' => 'xsd:int'],
         ]
     );
 
@@ -535,13 +535,13 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'artifact_cc_id' => ['name' => 'artifact_cc_id', 'type' => 'xsd:int'],
-        'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
-        'email' => ['name' => 'email', 'type' => 'xsd:string'],
-        'added_by' => ['name' => 'added_by', 'type' => 'xsd:int'],
-        'added_by_name' => ['name' => 'added_by_name', 'type' => 'xsd:string'],
-        'comment' => ['name' => 'comment', 'type' => 'xsd:string'],
-        'date' => ['name' => 'date', 'type' => 'xsd:int'],
+            'artifact_cc_id' => ['name' => 'artifact_cc_id', 'type' => 'xsd:int'],
+            'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
+            'email' => ['name' => 'email', 'type' => 'xsd:string'],
+            'added_by' => ['name' => 'added_by', 'type' => 'xsd:int'],
+            'added_by_name' => ['name' => 'added_by_name', 'type' => 'xsd:string'],
+            'comment' => ['name' => 'comment', 'type' => 'xsd:string'],
+            'date' => ['name' => 'date', 'type' => 'xsd:int'],
         ]
     );
 
@@ -563,14 +563,14 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'artifact_depend_id'          => ['name' => 'artifact_depend_id', 'type' => 'xsd:int'],
-        'artifact_id'                 => ['name' => 'artifact_id', 'type' => 'xsd:int'],
-        'is_dependent_on_artifact_id' => ['name' => 'is_dependent_on_artifact_id', 'type' => 'xsd:int'],
-        'summary' => ['name' => 'summary', 'type' => 'xsd:string'],
-        'tracker_id' => ['name' => 'tracker_id', 'type' => 'xsd:int'],
-        'tracker_name' => ['name' => 'tracker_name', 'type' => 'xsd:string'],
-        'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
-        'group_name' => ['name' => 'group_name', 'type' => 'xsd:string'],
+            'artifact_depend_id'          => ['name' => 'artifact_depend_id', 'type' => 'xsd:int'],
+            'artifact_id'                 => ['name' => 'artifact_id', 'type' => 'xsd:int'],
+            'is_dependent_on_artifact_id' => ['name' => 'is_dependent_on_artifact_id', 'type' => 'xsd:int'],
+            'summary' => ['name' => 'summary', 'type' => 'xsd:string'],
+            'tracker_id' => ['name' => 'tracker_id', 'type' => 'xsd:int'],
+            'tracker_name' => ['name' => 'tracker_name', 'type' => 'xsd:string'],
+            'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
+            'group_name' => ['name' => 'group_name', 'type' => 'xsd:string'],
         ]
     );
 
@@ -594,11 +594,11 @@ if (defined('NUSOAP')) {
         [
         //'artifact_history_id' => array('name'=>'artifact_history_id', 'type' => 'xsd:int'),
         //'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
-        'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'old_value' => ['name' => 'old_value', 'type' => 'xsd:string'],
-        'new_value' => ['name' => 'new_value', 'type' => 'xsd:string'],
-        'modification_by' => ['name' => 'modification_by', 'type' => 'xsd:string'],
-        'date' => ['name' => 'date', 'type' => 'xsd:int'],
+            'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
+            'old_value' => ['name' => 'old_value', 'type' => 'xsd:string'],
+            'new_value' => ['name' => 'new_value', 'type' => 'xsd:string'],
+            'modification_by' => ['name' => 'modification_by', 'type' => 'xsd:string'],
+            'date' => ['name' => 'date', 'type' => 'xsd:int'],
         ]
     );
 
@@ -631,9 +631,9 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
-        'severity' => ['name' => 'severity', 'type' => 'xsd:int'],
-        'fields' => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactFieldFromReport'],
+            'artifact_id' => ['name' => 'artifact_id', 'type' => 'xsd:int'],
+            'severity' => ['name' => 'severity', 'type' => 'xsd:int'],
+            'fields' => ['name' => 'fields', 'type' => 'tns:ArrayOfArtifactFieldFromReport'],
         ]
     );
 
@@ -655,8 +655,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
-        'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
+            'field_name' => ['name' => 'field_name', 'type' => 'xsd:string'],
+            'field_value' => ['name' => 'field_value', 'type' => 'xsd:string'],
         ]
     );
 
@@ -678,8 +678,8 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'total_artifacts_number' => ['name' => 'total_artifacts_number', 'type' => 'xsd:int'],
-        'artifacts' => ['name' => 'artifacts', 'type' => 'tns:ArrayOfArtifactFromReport'],
+            'total_artifacts_number' => ['name' => 'total_artifacts_number', 'type' => 'xsd:int'],
+            'artifacts' => ['name' => 'artifacts', 'type' => 'tns:ArrayOfArtifactFromReport'],
         ]
     );
 
@@ -690,7 +690,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'getTrackerList', // method name
         ['sessionKey' => 'xsd:string', // input parameters
-          'group_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfTrackerDesc'], // output parameters
         $uri, // namespace
@@ -704,8 +704,8 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactType', // method name
         ['sessionKey' => 'xsd:string', // input parameters
-          'group_id' => 'xsd:int',
-          'group_artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArtifactType'], // output parameters
         $uri, // namespace
@@ -719,7 +719,7 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactTypes', // method name
         ['sessionKey' => 'xsd:string', // input parameters
-          'group_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactType'], // output parameters
         $uri, // namespace
@@ -733,11 +733,11 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifacts',
         ['sessionKey' => 'xsd:string',
-          'group_id' => 'xsd:int',
-          'group_artifact_id' => 'xsd:int',
-          'criteria' => 'tns:ArrayOfCriteria',
-          'offset' => 'xsd:int',
-          'max_rows' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'criteria' => 'tns:ArrayOfCriteria',
+            'offset' => 'xsd:int',
+            'max_rows' => 'xsd:int',
         ],
         ['return' => 'tns:ArtifactQueryResult'],
         $uri,
@@ -754,13 +754,13 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactsFromReport',
         ['sessionKey' => 'xsd:string',
-          'group_id' => 'xsd:int',
-          'group_artifact_id' => 'xsd:int',
-          'report_id' => 'xsd:int',
-          'criteria' => 'tns:ArrayOfCriteria',
-          'offset' => 'xsd:int',
-          'max_rows' => 'xsd:int',
-          'sort_criteria' => 'tns:ArrayOfSortCriteria',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'report_id' => 'xsd:int',
+            'criteria' => 'tns:ArrayOfCriteria',
+            'offset' => 'xsd:int',
+            'max_rows' => 'xsd:int',
+            'sort_criteria' => 'tns:ArrayOfSortCriteria',
         ],
         ['return' => 'tns:ArtifactFromReportResult'],
         $uri,
@@ -777,14 +777,14 @@ if (defined('NUSOAP')) {
     $server->register(
         'addArtifact',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'status_id' => 'xsd:int',
-        'close_date' => 'xsd:int',
-        'summary' => 'xsd:string',
-        'details' => 'xsd:string',
-        'severity' => 'xsd:int',
-        'extra_fields' => 'tns:ArrayOfArtifactFieldValue',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'status_id' => 'xsd:int',
+            'close_date' => 'xsd:int',
+            'summary' => 'xsd:string',
+            'details' => 'xsd:string',
+            'severity' => 'xsd:int',
+            'extra_fields' => 'tns:ArrayOfArtifactFieldValue',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -800,14 +800,14 @@ if (defined('NUSOAP')) {
     $server->register(
         'addArtifactWithFieldNames',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'status_id' => 'xsd:int',
-        'close_date' => 'xsd:int',
-        'summary' => 'xsd:string',
-        'details' => 'xsd:string',
-        'severity' => 'xsd:int',
-        'extra_fields' => 'tns:ArrayOfArtifactFieldNameValue',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'status_id' => 'xsd:int',
+            'close_date' => 'xsd:int',
+            'summary' => 'xsd:string',
+            'details' => 'xsd:string',
+            'severity' => 'xsd:int',
+            'extra_fields' => 'tns:ArrayOfArtifactFieldNameValue',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -823,15 +823,15 @@ if (defined('NUSOAP')) {
     $server->register(
         'updateArtifact',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'status_id' => 'xsd:int',
-        'close_date' => 'xsd:int',
-        'summary' => 'xsd:string',
-        'details' => 'xsd:string',
-        'severity' => 'xsd:int',
-        'extra_fields' => 'tns:ArrayOfArtifactFieldValue',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'status_id' => 'xsd:int',
+            'close_date' => 'xsd:int',
+            'summary' => 'xsd:string',
+            'details' => 'xsd:string',
+            'severity' => 'xsd:int',
+            'extra_fields' => 'tns:ArrayOfArtifactFieldValue',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -847,15 +847,15 @@ if (defined('NUSOAP')) {
     $server->register(
         'updateArtifactWithFieldNames',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'status_id' => 'xsd:int',
-        'close_date' => 'xsd:int',
-        'summary' => 'xsd:string',
-        'details' => 'xsd:string',
-        'severity' => 'xsd:int',
-        'extra_fields' => 'tns:ArrayOfArtifactFieldNameValue',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'status_id' => 'xsd:int',
+            'close_date' => 'xsd:int',
+            'summary' => 'xsd:string',
+            'details' => 'xsd:string',
+            'severity' => 'xsd:int',
+            'extra_fields' => 'tns:ArrayOfArtifactFieldNameValue',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -871,9 +871,9 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactFollowups',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactFollowup'],
         $uri,
@@ -888,8 +888,8 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactCannedResponses',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactCanned'],
         $uri,
@@ -903,8 +903,8 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactReports',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactReport'],
         $uri,
@@ -918,9 +918,9 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactAttachedFiles',
         ['sessionKey' => 'xsd:string',
-          'group_id' => 'xsd:int',
-          'group_artifact_id' => 'xsd:int',
-          'artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactFile'],
         $uri,
@@ -935,10 +935,10 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactAttachedFile',
         ['sessionKey' => 'xsd:string',
-          'group_id' => 'xsd:int',
-          'group_artifact_id' => 'xsd:int',
-          'artifact_id' => 'xsd:int',
-          'file_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'file_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArtifactFile'],
         $uri,
@@ -954,9 +954,9 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactById',
         ['sessionKey' => 'xsd:string',
-          'group_id' => 'xsd:int',
-          'group_artifact_id' => 'xsd:int',
-          'artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:Artifact'],
         $uri,
@@ -971,9 +971,9 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactDependencies',
         ['sessionKey' => 'xsd:string',
-          'group_id' => 'xsd:int',
-          'group_artifact_id' => 'xsd:int',
-          'artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactDependency'],
         $uri,
@@ -988,9 +988,9 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactInverseDependencies',
         ['sessionKey' => 'xsd:string',
-          'group_id' => 'xsd:int',
-          'group_artifact_id' => 'xsd:int',
-          'artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactDependency'],
         $uri,
@@ -1005,13 +1005,13 @@ if (defined('NUSOAP')) {
     $server->register(
         'addArtifactAttachedFile',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'encoded_data' => 'xsd:string',
-        'description' => 'xsd:string',
-        'filename' => 'xsd:string',
-        'filetype' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'encoded_data' => 'xsd:string',
+            'description' => 'xsd:string',
+            'filename' => 'xsd:string',
+            'filetype' => 'xsd:string',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -1029,10 +1029,10 @@ if (defined('NUSOAP')) {
     $server->register(
         'deleteArtifactAttachedFile',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'file_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'file_id' => 'xsd:int',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -1048,10 +1048,10 @@ if (defined('NUSOAP')) {
     $server->register(
         'addArtifactDependencies',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'is_dependent_on_artifact_ids' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'is_dependent_on_artifact_ids' => 'xsd:string',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1068,10 +1068,10 @@ if (defined('NUSOAP')) {
     $server->register(
         'deleteArtifactDependency',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'dependent_on_artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'dependent_on_artifact_id' => 'xsd:int',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -1087,12 +1087,12 @@ if (defined('NUSOAP')) {
     $server->register(
         'addArtifactFollowup',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'body' => 'xsd:string',
-        'comment_type_id' => 'xsd:int',
-        'format' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'body' => 'xsd:string',
+            'comment_type_id' => 'xsd:int',
+            'format' => 'xsd:int',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1109,11 +1109,11 @@ if (defined('NUSOAP')) {
     $server->register(
         'updateArtifactFollowUp',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'artifact_history_id' => 'xsd:int',
-        'comment' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'artifact_history_id' => 'xsd:int',
+            'comment' => 'xsd:string',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1128,10 +1128,10 @@ if (defined('NUSOAP')) {
     $server->register(
         'deleteArtifactFollowUp',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'artifact_history_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'artifact_history_id' => 'xsd:int',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1146,8 +1146,8 @@ if (defined('NUSOAP')) {
     $server->register(
         'existArtifactSummary',
         ['sessionKey' => 'xsd:string',
-        'group_artifact_id' => 'xsd:int',
-        'summary' => 'xsd:string',
+            'group_artifact_id' => 'xsd:int',
+            'summary' => 'xsd:string',
         ],
         ['return' => 'xsd:int'],
         $uri,
@@ -1161,9 +1161,9 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactCCList',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactCC'],
         $uri,
@@ -1176,11 +1176,11 @@ if (defined('NUSOAP')) {
     $server->register(
         'addArtifactCC',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'cc_list' => 'xsd:string',
-        'cc_comment' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'cc_list' => 'xsd:string',
+            'cc_comment' => 'xsd:string',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1193,10 +1193,10 @@ if (defined('NUSOAP')) {
     $server->register(
         'deleteArtifactCC',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'artifact_cc_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
+            'artifact_cc_id' => 'xsd:int',
         ],
         ['return' => 'xsd:boolean'],
         $uri,
@@ -1209,9 +1209,9 @@ if (defined('NUSOAP')) {
     $server->register(
         'getArtifactHistory',
         ['sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
+            'group_id' => 'xsd:int',
+            'group_artifact_id' => 'xsd:int',
+            'artifact_id' => 'xsd:int',
         ],
         ['return' => 'tns:ArrayOfArtifactHistory'],
         $uri,
@@ -1304,15 +1304,15 @@ if (defined('NUSOAP')) {
                         . " AND (agl.group_artifact_id =" . db_ei($at_arr[$i]->getID()) . ")";
                     $result   = db_query($sql);
                     $return[] = [
-                    'group_artifact_id' => $at_arr[$i]->data_array['group_artifact_id'],
-                    'group_id' => $at_arr[$i]->data_array['group_id'],
-                    'name' => SimpleSanitizer::unsanitize($at_arr[$i]->data_array['name']),
-                    'description' => SimpleSanitizer::unsanitize($at_arr[$i]->data_array['description']),
-                    'item_name' => $at_arr[$i]->data_array['item_name'],
-                    'open_count' => ($at_arr[$i]->userHasFullAccess() ? $at_arr[$i]->getOpenCount() : -1),
-                    'total_count' => ($at_arr[$i]->userHasFullAccess() ? $at_arr[$i]->getTotalCount() : -1),
-                    'total_file_size' => db_result($result, 0, 0),
-                    'reports_desc' => $reports_desc,
+                        'group_artifact_id' => $at_arr[$i]->data_array['group_artifact_id'],
+                        'group_id' => $at_arr[$i]->data_array['group_id'],
+                        'name' => SimpleSanitizer::unsanitize($at_arr[$i]->data_array['name']),
+                        'description' => SimpleSanitizer::unsanitize($at_arr[$i]->data_array['description']),
+                        'item_name' => $at_arr[$i]->data_array['item_name'],
+                        'open_count' => ($at_arr[$i]->userHasFullAccess() ? $at_arr[$i]->getOpenCount() : -1),
+                        'total_count' => ($at_arr[$i]->userHasFullAccess() ? $at_arr[$i]->getTotalCount() : -1),
+                        'total_file_size' => db_result($result, 0, 0),
+                        'reports_desc' => $reports_desc,
                     ];
                 }
             }
@@ -1329,11 +1329,11 @@ if (defined('NUSOAP')) {
                     //skip if error
                 } else {
                     $return[] = [
-                    'report_id'          => $artifactreportdesc->getID(),
-                    'group_artifact_id'  => $artifactreportdesc->getArtifactTypeID(),
-                    'name'               => $artifactreportdesc->getName(),
-                    'description'        => $artifactreportdesc->getDescription(),
-                    'scope'              => $artifactreportdesc->getScope(),
+                        'report_id'          => $artifactreportdesc->getID(),
+                        'group_artifact_id'  => $artifactreportdesc->getArtifactTypeID(),
+                        'name'               => $artifactreportdesc->getName(),
+                        'description'        => $artifactreportdesc->getDescription(),
+                        'scope'              => $artifactreportdesc->getScope(),
                     ];
                 }
             }
@@ -1476,26 +1476,26 @@ if (defined('NUSOAP')) {
                             // we don't send hidden values (status == 'H')
                             if ($field_status != 'H') {
                                 $availablevalues[] =  [
-                                'field_id' => $field->getID(),
-                                'group_artifact_id' => $at->getID(),
-                                'value_id' => db_result($result, $j, 0),
-                                'value' => SimpleSanitizer::unsanitize(db_result($result, $j, 1)),
-                                'description' => SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result, $j, 4) : ''),
-                                'order_id' => ($cols > 2) ? db_result($result, $j, 5) : 0,
-                                'status' => $field_status,
+                                    'field_id' => $field->getID(),
+                                    'group_artifact_id' => $at->getID(),
+                                    'value_id' => db_result($result, $j, 0),
+                                    'value' => SimpleSanitizer::unsanitize(db_result($result, $j, 1)),
+                                    'description' => SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result, $j, 4) : ''),
+                                    'order_id' => ($cols > 2) ? db_result($result, $j, 5) : 0,
+                                    'status' => $field_status,
                                 ];
                             }
                         }
                         // For bound-values select boxes, we add the none value.
                         if (($field->isMultiSelectBox() || $field->isSelectBox()) && ($field->isBound())) {
                             $availablevalues[] =  [
-                            'field_id' => $field->getID(),
-                            'group_artifact_id' => $at->getID(),
-                            'value_id' => 100,
-                            'value' => 'None',
-                            'description' => '',
-                            'order_id' => 10,
-                            'status' => 'P',
+                                'field_id' => $field->getID(),
+                                'group_artifact_id' => $at->getID(),
+                                'value_id' => 100,
+                                'value' => 'None',
+                                'description' => '',
+                                'order_id' => 10,
+                                'status' => 'P',
                             ];
                         }
                         if ($field->isMultiSelectBox()) {
@@ -1504,39 +1504,39 @@ if (defined('NUSOAP')) {
                             $defaultvalue = $field->getDefaultValue();
                         }
                         $fields[] = [
-                        'field_id' => $field->getID(),
-                        'group_artifact_id' => $at->getID(),
-                        'field_set_id' => $field->getFieldSetID(),
-                        'field_name' => SimpleSanitizer::unsanitize($field->getName()),
-                        'data_type' => $field->getDataType(),
-                        'display_type' => $field->getDisplayType(),
-                        'display_size' => $field->getDisplaySize(),
-                        'label'    => SimpleSanitizer::unsanitize($field->getLabel()),
-                        'description' => SimpleSanitizer::unsanitize($field->getDescription()),
-                        'scope' => $field->getScope(),
-                        'required' => $field->getRequired(),
-                        'empty_ok' => $field->getEmptyOk(),
-                        'keep_history' => $field->getKeepHistory(),
-                        'special' => $field->getSpecial(),
-                        'value_function' => implode(",", $field->getValueFunction()),
-                        'available_values' => $availablevalues,
-                        'default_value' => $defaultvalue,
-                        'user_can_submit' => $field->userCanSubmit($group_id, $group_artifact_id, $user_id),
-                        'user_can_read' => $field->userCanRead($group_id, $group_artifact_id, $user_id),
-                        'user_can_update' => $field->userCanUpdate($group_id, $group_artifact_id, $user_id),
-                        'is_standard_field' => $field->isStandardField(),
+                            'field_id' => $field->getID(),
+                            'group_artifact_id' => $at->getID(),
+                            'field_set_id' => $field->getFieldSetID(),
+                            'field_name' => SimpleSanitizer::unsanitize($field->getName()),
+                            'data_type' => $field->getDataType(),
+                            'display_type' => $field->getDisplayType(),
+                            'display_size' => $field->getDisplaySize(),
+                            'label'    => SimpleSanitizer::unsanitize($field->getLabel()),
+                            'description' => SimpleSanitizer::unsanitize($field->getDescription()),
+                            'scope' => $field->getScope(),
+                            'required' => $field->getRequired(),
+                            'empty_ok' => $field->getEmptyOk(),
+                            'keep_history' => $field->getKeepHistory(),
+                            'special' => $field->getSpecial(),
+                            'value_function' => implode(",", $field->getValueFunction()),
+                            'available_values' => $availablevalues,
+                            'default_value' => $defaultvalue,
+                            'user_can_submit' => $field->userCanSubmit($group_id, $group_artifact_id, $user_id),
+                            'user_can_read' => $field->userCanRead($group_id, $group_artifact_id, $user_id),
+                            'user_can_update' => $field->userCanUpdate($group_id, $group_artifact_id, $user_id),
+                            'is_standard_field' => $field->isStandardField(),
                         ];
                     }
                 }
                 $field_sets[] = [
-                'field_set_id' => $result_fieldset->getID(),
-                'group_artifact_id' => $result_fieldset->getArtifactTypeID(),
-                'name' => SimpleSanitizer::unsanitize($result_fieldset->getName()),
-                'label' => SimpleSanitizer::unsanitize($result_fieldset->getLabel()),
-                'description' => SimpleSanitizer::unsanitize($result_fieldset->getDescription()),
-                'description_text' => SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()),
-                'rank' => $result_fieldset->getRank(),
-                'fields' => $fields,
+                    'field_set_id' => $result_fieldset->getID(),
+                    'group_artifact_id' => $result_fieldset->getArtifactTypeID(),
+                    'name' => SimpleSanitizer::unsanitize($result_fieldset->getName()),
+                    'label' => SimpleSanitizer::unsanitize($result_fieldset->getLabel()),
+                    'description' => SimpleSanitizer::unsanitize($result_fieldset->getDescription()),
+                    'description_text' => SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()),
+                    'rank' => $result_fieldset->getRank(),
+                    'fields' => $fields,
                 ];
             }
 
@@ -1550,16 +1550,16 @@ if (defined('NUSOAP')) {
                 . " AND (agl.group_artifact_id =" . db_ei($at->getID()) . ")";
             $result = db_query($sql);
             $return = [
-            'group_artifact_id' => $at->data_array['group_artifact_id'],
-            'group_id' => $at->data_array['group_id'],
-            'name' => SimpleSanitizer::unsanitize($at->data_array['name']),
-            'description' => SimpleSanitizer::unsanitize($at->data_array['description']),
-            'item_name' => $at->data_array['item_name'],
-            'open_count' => ($at->userHasFullAccess() ? $open_count : -1),
-            'total_count' => ($at->userHasFullAccess() ? $count : -1),
-            'total_file_size' => db_result($result, 0, 0),
-            'field_sets' => $field_sets,
-            'field_dependencies' => $field_dependencies,
+                'group_artifact_id' => $at->data_array['group_artifact_id'],
+                'group_id' => $at->data_array['group_id'],
+                'name' => SimpleSanitizer::unsanitize($at->data_array['name']),
+                'description' => SimpleSanitizer::unsanitize($at->data_array['description']),
+                'item_name' => $at->data_array['item_name'],
+                'open_count' => ($at->userHasFullAccess() ? $open_count : -1),
+                'total_count' => ($at->userHasFullAccess() ? $count : -1),
+                'total_file_size' => db_result($result, 0, 0),
+                'field_sets' => $field_sets,
+                'field_dependencies' => $field_dependencies,
             ];
         }
         return $return;
@@ -1807,9 +1807,9 @@ if (defined('NUSOAP')) {
                     $field = $art_field_fact->getFieldFromId($field_id);
                     if ($field->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                         $extrafieldvalues[] =  [
-                        'field_id'    => $field_id,
-                        'artifact_id' => $artifact->getID(),
-                        'field_value' => html_entity_decode($value),  //util_unconvert_htmlspecialchars ?
+                            'field_id'    => $field_id,
+                            'artifact_id' => $artifact->getID(),
+                            'field_value' => html_entity_decode($value),  //util_unconvert_htmlspecialchars ?
                         ];
                     }
                 }
@@ -2442,17 +2442,17 @@ if (defined('NUSOAP')) {
             $comment  = Codendi_HTMLPurifier::instance()->purify(db_result($followups_res, $i, 'new_value'), CODENDI_PURIFIER_BASIC_NOBR, $group_id);
             $id       = db_result($followups_res, $i, 'artifact_history_id');
             $return[] =  [
-            'artifact_id'         => db_result($followups_res, $i, 'artifact_id'),
-            'follow_up_id'        => $id,
-            'comment'             => util_unconvert_htmlspecialchars($comment), //db_result($followups_res, $i, 'new_value'),
-            'date'                => db_result($followups_res, $i, 'date'),
-            'original_date'       => db_result($artifact->getOriginalCommentDate($id), 0, 'date'),
-            'by'                  => (db_result($followups_res, $i, 'mod_by') == 100 ? db_result($followups_res, $i, 'email') : db_result($followups_res, $i, 'user_name')),
-            'original_by'         => (db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by') == 100 ? db_result($artifact->getOriginalCommentSubmitter($id), 0, 'email') : user_getname(db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by'))),
-            'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
-            'comment_type'        => util_unconvert_htmlspecialchars(db_result($followups_res, $i, 'comment_type')),
-            'field_name'          => db_result($followups_res, $i, 'field_name'),
-            'user_can_edit'       => $artifact->userCanEditFollowupComment($id) ? 1 : 0,
+                'artifact_id'         => db_result($followups_res, $i, 'artifact_id'),
+                'follow_up_id'        => $id,
+                'comment'             => util_unconvert_htmlspecialchars($comment), //db_result($followups_res, $i, 'new_value'),
+                'date'                => db_result($followups_res, $i, 'date'),
+                'original_date'       => db_result($artifact->getOriginalCommentDate($id), 0, 'date'),
+                'by'                  => (db_result($followups_res, $i, 'mod_by') == 100 ? db_result($followups_res, $i, 'email') : db_result($followups_res, $i, 'user_name')),
+                'original_by'         => (db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by') == 100 ? db_result($artifact->getOriginalCommentSubmitter($id), 0, 'email') : user_getname(db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by'))),
+                'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
+                'comment_type'        => util_unconvert_htmlspecialchars(db_result($followups_res, $i, 'comment_type')),
+                'field_name'          => db_result($followups_res, $i, 'field_name'),
+                'user_can_edit'       => $artifact->userCanEditFollowupComment($id) ? 1 : 0,
             ];
         }
         return $return;
@@ -2497,10 +2497,10 @@ if (defined('NUSOAP')) {
         $rows   = db_numrows($cannedresponses_res);
         for ($i = 0; $i < $rows; $i++) {
             $return[] =  [
-            'artifact_canned_id' => db_result($cannedresponses_res, $i, 'artifact_canned_id'),
-            'group_artifact_id' => $group_artifact_id,
-            'title' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'title')),
-            'body' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'body')),
+                'artifact_canned_id' => db_result($cannedresponses_res, $i, 'artifact_canned_id'),
+                'group_artifact_id' => $group_artifact_id,
+                'title' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'title')),
+                'body' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'body')),
             ];
         }
         return $return;
@@ -2562,23 +2562,23 @@ if (defined('NUSOAP')) {
                     if (is_array($report_fields) && count($report_fields) > 0) {
                         foreach ($report_fields as $field) {
                             $fields[] =  [
-                            'report_id'      => $artifactreport->getID(),
-                            'field_name'     => $field->getName(),
-                            'show_on_query'  => $field->getShowOnQuery(),
-                            'show_on_result' => $field->getShowOnResult(),
-                            'place_query'      => $field->getPlaceQuery(),
-                            'place_result'      => $field->getPlaceResult(),
-                            'col_width'     => $field->getColWidth(),
+                                'report_id'      => $artifactreport->getID(),
+                                'field_name'     => $field->getName(),
+                                'show_on_query'  => $field->getShowOnQuery(),
+                                'show_on_result' => $field->getShowOnResult(),
+                                'place_query'      => $field->getPlaceQuery(),
+                                'place_result'      => $field->getPlaceResult(),
+                                'col_width'     => $field->getColWidth(),
                             ];
                         }
                     }
                     $return[] = [
-                    'report_id'           => $artifactreport->getID(),
-                    'group_artifact_id'   => $artifactreport->getArtifactTypeID(),
-                    'name'                     => $artifactreport->getName(),
-                    'description'           => $artifactreport->getDescription(),
-                    'scope'           => $artifactreport->getScope(),
-                    'fields'          => $fields,
+                        'report_id'           => $artifactreport->getID(),
+                        'group_artifact_id'   => $artifactreport->getArtifactTypeID(),
+                        'name'                     => $artifactreport->getName(),
+                        'description'           => $artifactreport->getDescription(),
+                        'scope'           => $artifactreport->getScope(),
+                        'fields'          => $fields,
                     ];
                 }
             }
@@ -2708,15 +2708,15 @@ if (defined('NUSOAP')) {
         for ($i = 0; $i < $rows; $i++) {
             $bin_data = db_result($attachedfiles_arr, $i, 'bin_data');
             $return[] = [
-            'id' => db_result($attachedfiles_arr, $i, 'id'),
-            'artifact_id' => db_result($attachedfiles_arr, $i, 'artifact_id'),
-            'filename' => db_result($attachedfiles_arr, $i, 'filename'),
-            'description' => SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description')),
-            'bin_data' => ($set_bin_data ? $bin_data : null),
-            'filesize' => db_result($attachedfiles_arr, $i, 'filesize'),
-            'filetype' => db_result($attachedfiles_arr, $i, 'filetype'),
-            'adddate' => db_result($attachedfiles_arr, $i, 'adddate'),
-            'submitted_by' => db_result($attachedfiles_arr, $i, 'user_name'),
+                'id' => db_result($attachedfiles_arr, $i, 'id'),
+                'artifact_id' => db_result($attachedfiles_arr, $i, 'artifact_id'),
+                'filename' => db_result($attachedfiles_arr, $i, 'filename'),
+                'description' => SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description')),
+                'bin_data' => ($set_bin_data ? $bin_data : null),
+                'filesize' => db_result($attachedfiles_arr, $i, 'filesize'),
+                'filetype' => db_result($attachedfiles_arr, $i, 'filetype'),
+                'adddate' => db_result($attachedfiles_arr, $i, 'adddate'),
+                'submitted_by' => db_result($attachedfiles_arr, $i, 'user_name'),
             ];
         }
         return $return;
@@ -2815,14 +2815,14 @@ if (defined('NUSOAP')) {
             $artifact = new Artifact($artifact_type, db_result($dependencies, $i, 'is_dependent_on_artifact_id'));
             if ($artifact && $artifact->userCanView()) {
                 $return[] = [
-                'artifact_depend_id' => db_result($dependencies, $i, 'artifact_depend_id'),
-                'artifact_id' => db_result($dependencies, $i, 'artifact_id'),
-                'is_dependent_on_artifact_id' => db_result($dependencies, $i, 'is_dependent_on_artifact_id'),
-                'summary' => util_unconvert_htmlspecialchars(db_result($dependencies, $i, 'summary')),
-                'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
-                'tracker_name' => SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'name')),
-                'group_id' => db_result($dependencies, $i, 'group_id'),
-                'group_name' => db_result($dependencies, $i, 'group_name'),
+                    'artifact_depend_id' => db_result($dependencies, $i, 'artifact_depend_id'),
+                    'artifact_id' => db_result($dependencies, $i, 'artifact_id'),
+                    'is_dependent_on_artifact_id' => db_result($dependencies, $i, 'is_dependent_on_artifact_id'),
+                    'summary' => util_unconvert_htmlspecialchars(db_result($dependencies, $i, 'summary')),
+                    'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
+                    'tracker_name' => SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'name')),
+                    'group_id' => db_result($dependencies, $i, 'group_id'),
+                    'group_name' => db_result($dependencies, $i, 'group_name'),
                 ];
             }
         }
@@ -2896,14 +2896,14 @@ if (defined('NUSOAP')) {
             $artifact = new Artifact($artifact_type, db_result($inverse_dependencies, $i, 'artifact_id'));
             if ($artifact && $artifact->userCanView()) {
                 $return[] = [
-                'artifact_depend_id' => db_result($inverse_dependencies, $i, 'artifact_depend_id'),
-                'artifact_id' => db_result($inverse_dependencies, $i, 'artifact_id'),
-                'is_dependent_on_artifact_id' => $artifact_id,
-                'summary' => util_unconvert_htmlspecialchars(db_result($inverse_dependencies, $i, 'summary')),
-                'tracker_id' => db_result($inverse_dependencies, $i, 'group_artifact_id'),
-                'tracker_name' => SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'name')),
-                'group_id' => db_result($inverse_dependencies, $i, 'group_id'),
-                'group_name' => db_result($inverse_dependencies, $i, 'group_name'),
+                    'artifact_depend_id' => db_result($inverse_dependencies, $i, 'artifact_depend_id'),
+                    'artifact_id' => db_result($inverse_dependencies, $i, 'artifact_id'),
+                    'is_dependent_on_artifact_id' => $artifact_id,
+                    'summary' => util_unconvert_htmlspecialchars(db_result($inverse_dependencies, $i, 'summary')),
+                    'tracker_id' => db_result($inverse_dependencies, $i, 'group_artifact_id'),
+                    'tracker_name' => SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'name')),
+                    'group_id' => db_result($inverse_dependencies, $i, 'group_id'),
+                    'group_name' => db_result($inverse_dependencies, $i, 'group_name'),
                 ];
             }
         }
@@ -3467,13 +3467,13 @@ if (defined('NUSOAP')) {
         for ($i = 0; $i < $rows; $i++) {
             // retrieve the field, for permission checks
             $return[] = [
-            'artifact_cc_id' => db_result($artifact_cc_list, $i, 'artifact_cc_id'),
-            'artifact_id' => $artifact_id,
-            'email' => db_result($artifact_cc_list, $i, 'email'),
-            'added_by' => db_result($artifact_cc_list, $i, 'added_by'),
-            'added_by_name' => db_result($artifact_cc_list, $i, 'user_name'),
-            'comment' => SimpleSanitizer::unsanitize(db_result($artifact_cc_list, $i, 'comment')),
-            'date' => db_result($artifact_cc_list, $i, 'date'),
+                'artifact_cc_id' => db_result($artifact_cc_list, $i, 'artifact_cc_id'),
+                'artifact_id' => $artifact_id,
+                'email' => db_result($artifact_cc_list, $i, 'email'),
+                'added_by' => db_result($artifact_cc_list, $i, 'added_by'),
+                'added_by_name' => db_result($artifact_cc_list, $i, 'user_name'),
+                'comment' => SimpleSanitizer::unsanitize(db_result($artifact_cc_list, $i, 'comment')),
+                'date' => db_result($artifact_cc_list, $i, 'date'),
             ];
         }
         return $return;
@@ -3651,11 +3651,11 @@ if (defined('NUSOAP')) {
                     $return[] = [
                     //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
                     //'artifact_id' => db_result($history, $i, 'artifact_id'),
-                    'field_name' => db_result($history, $i, 'field_name'),
-                    'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
-                    'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
-                    'modification_by' => db_result($history, $i, 'user_name'),
-                    'date' => db_result($history, $i, 'date'),
+                        'field_name' => db_result($history, $i, 'field_name'),
+                        'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
+                        'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
+                        'modification_by' => db_result($history, $i, 'user_name'),
+                        'date' => db_result($history, $i, 'date'),
                     ];
                 }
             } else {
@@ -3667,11 +3667,11 @@ if (defined('NUSOAP')) {
                 $return[] = [
                 //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
                 //'artifact_id' => db_result($history, $i, 'artifact_id'),
-                'field_name' => $field_name,
-                'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
-                'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
-                'modification_by' => db_result($history, $i, 'user_name'),
-                'date' => db_result($history, $i, 'date'),
+                    'field_name' => $field_name,
+                    'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
+                    'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
+                    'modification_by' => db_result($history, $i, 'user_name'),
+                    'date' => db_result($history, $i, 'date'),
                 ];
             }
         }

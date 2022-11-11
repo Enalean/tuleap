@@ -123,8 +123,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->project_manager->shouldReceive('getParentProject')->with($this->project->getID())->andReturns($this->parent_project);
         $this->project_manager->shouldReceive('getParentProject')->with($this->parent_project->getID())->andReturns(null);
 
-        $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->project, $this->project_admins_gerrit_name)->ordered();
-        $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->parent_project, $this->project_admins_gerrit_parent_name)->ordered();
+        $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->project, $this->project_admins_gerrit_name)->ordered()->atLeast()->once();
+        $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->parent_project, $this->project_admins_gerrit_parent_name)->ordered()->atLeast()->once();
 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }

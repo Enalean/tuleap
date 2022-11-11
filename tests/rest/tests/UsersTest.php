@@ -19,22 +19,27 @@
  */
 
 use Test\Rest\TuleapConfig;
+use Tuleap\REST\ForgeAccessSandbox;
 
 /**
  * @group UserGroupTests
  */
 final class UsersTest extends RestBase // phpcs:ignore
 {
-    /**
- * @var TuleapConfig
-*/
-    private $tuleap_config;
+    use ForgeAccessSandbox;
+
+    private TuleapConfig $tuleap_config;
 
     public function __construct()
     {
         parent::__construct();
         $this->tuleap_config = TuleapConfig::instance();
-        $this->tuleap_config->setForgeToAnonymous();
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->setForgeToAnonymous();
     }
 
     public function testGetIdAsAnonymousHasMinimalInformation()
@@ -214,13 +219,13 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $value = json_encode(
             [
-            'values' => [
+                'values' => [
                     'status' => "R",
-            ],
+                ],
             ]
         );
 
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -240,9 +245,9 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $value    = json_encode(
             [
-            'values' => [
+                'values' => [
                     'status' => "A",
-            ],
+                ],
             ]
         );
         $response = $this->getResponseByName(
@@ -264,7 +269,7 @@ final class UsersTest extends RestBase // phpcs:ignore
                 ],
             ]
         );
-        $this->tuleap_config->setForgeToRegular();
+        $this->setForgeToRegular();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -290,7 +295,7 @@ final class UsersTest extends RestBase // phpcs:ignore
             ]
         );
 
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -383,7 +388,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testInRestrictedForgeThatActiveProjectMemberIsMemberOfStaticUgroup()
     {
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -394,13 +399,11 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRestrictedForgeThatRestrictedProjectMemberIsMemberOfStaticUgroup()
     {
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -411,13 +414,11 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRestrictedForgeThatRestrictedMemberOfStaticUGroupAlsoBecomesProjectMemberInPrivateProject(): void
     {
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -432,13 +433,11 @@ final class UsersTest extends RestBase // phpcs:ignore
             $ugroups,
             'rest_api_restricted_2 should be listed as member of ug_103 ugroup because he is added as project member automatically'
         );
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRestrictedForgeThatRestrictedNotProjectMemberIsNotMemberOfStaticUGroupInPublicProject(): void
     {
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -453,13 +452,11 @@ final class UsersTest extends RestBase // phpcs:ignore
             $ugroups,
             'rest_api_restricted_2 should NOT be listed as member of ug_103 ugroup because he is not project member'
         );
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRestrictedForgeThatRestrictedIsMemberOfStaticUGroupInPublicInclRestrictedProject(): void
     {
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -474,13 +471,11 @@ final class UsersTest extends RestBase // phpcs:ignore
             $ugroups,
             'rest_api_restricted_2 should be listed as member of ug_105 ugroup because he is added as project member automatically'
         );
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRestrictedForgeThatActiveNotProjectMemberIsNotMemberOfStaticUgroup()
     {
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -490,13 +485,11 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRestrictedForgeThatActiveMemberOfStaticUGroupAlsoBecomesProjectMemberInPrivateProject(): void
     {
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -511,13 +504,11 @@ final class UsersTest extends RestBase // phpcs:ignore
             $ugroups,
             'rest_api_tester_5 should be listed as member of ug_103 ugroup because he is added as project member automatically'
         );
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRestrictedForgeThatActiveNotProjectMemberIsMemberOfStaticUGroupInPublicProject(): void
     {
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -532,13 +523,11 @@ final class UsersTest extends RestBase // phpcs:ignore
             $ugroups,
             'rest_api_tester_5 should be listed as member of ug_104 ugroup because the project is public'
         );
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRestrictedForgeThatActiveMemberOfStaticUGroupAlsoBecomesProjectMemberInPublicInclRestrictedProject(): void
     {
-        $this->tuleap_config->setForgeToRestricted();
+        $this->setForgeToRestricted();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -553,8 +542,6 @@ final class UsersTest extends RestBase // phpcs:ignore
             $ugroups,
             'rest_api_tester_5 should be listed as member of ug_105 ugroup because he is added as project member automatically'
         );
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInAnonymousForgeThatActiveProjectMemberIsMemberOfStaticUgroup()
@@ -616,7 +603,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testInRegularForgeThatActiveProjectMemberIsMemberOfStaticUgroup()
     {
-        $this->tuleap_config->setForgeToRegular();
+        $this->setForgeToRegular();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -626,14 +613,12 @@ final class UsersTest extends RestBase // phpcs:ignore
         $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
 
     public function testInRegularForgeThatActiveNotProjectMemberIsNotMemberOfStaticUgroup()
     {
-        $this->tuleap_config->setForgeToRegular();
+        $this->setForgeToRegular();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -643,13 +628,11 @@ final class UsersTest extends RestBase // phpcs:ignore
         $ugroups = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRegularForgeThatActiveNotProjectMemberIsMemberOfStaticUgroupInPublicProject(): void
     {
-        $this->tuleap_config->setForgeToRegular();
+        $this->setForgeToRegular();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -662,13 +645,11 @@ final class UsersTest extends RestBase // phpcs:ignore
             $ugroups,
             'rest_api_tester_5 should be listed as member of ug_104 ugroup because the project is public'
         );
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testInRegularForgeThatActiveMemberOfStaticUGroupAlsoBecomesProjectMemberInPrivateProject(): void
     {
-        $this->tuleap_config->setForgeToRegular();
+        $this->setForgeToRegular();
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -683,8 +664,6 @@ final class UsersTest extends RestBase // phpcs:ignore
             $ugroups,
             'rest_api_tester_5 should be listed as member of ug_103 ugroup because he is added as project member automatically'
         );
-
-        $this->tuleap_config->setForgeToAnonymous();
     }
 
     public function testGetUsersWithMatching(): void
@@ -1108,13 +1087,13 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $history_entries = json_encode(
             [
-                 [
+                [
                     'visit_time' => 1496386853,
                     'xref' => 'bugs #845',
                     'link' => '/plugins/tracker/?aid=845',
                     'title' => '',
-                 ],
-             ]
+                ],
+            ]
         );
 
         $response = $this->getResponseByName(

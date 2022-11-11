@@ -31,10 +31,11 @@ class Feedback
      */
     private $formatter;
 
-    public const INFO  =  'info';
-    public const WARN  = 'warning';
-    public const ERROR = 'error';
-    public const DEBUG = 'debug';
+    public const INFO    =  'info';
+    public const WARN    = 'warning';
+    public const ERROR   = 'error';
+    public const DEBUG   = 'debug';
+    public const SUCCESS = 'success';
 
     public function __construct()
     {

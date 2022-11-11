@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Administration;
 
 use Tuleap\OAuth2ServerCore\App\AppDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -43,7 +44,7 @@ final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAppIsPartOfTheExpectedProject(): void
     {
-        $expected_project = \Project::buildForTest();
+        $expected_project = ProjectTestBuilder::aProject()->build();
         $this->app_dao->method('searchProjectIDByClientID')->willReturn((int) $expected_project->getID());
 
         self::assertTrue($this->project_verifier->isAppPartOfTheExpectedProject($expected_project, 1));
@@ -64,7 +65,7 @@ final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->app_dao->method('searchProjectIDByClientID')->willReturn($app_project_id);
 
-        self::assertFalse($this->project_verifier->isAppPartOfTheExpectedProject(\Project::buildForTest(), 1));
+        self::assertFalse($this->project_verifier->isAppPartOfTheExpectedProject(ProjectTestBuilder::aProject()->build(), 1));
     }
 
     public function dataProviderAppNotPartOfExpectedProject(): array

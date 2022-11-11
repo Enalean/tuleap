@@ -52,7 +52,8 @@ final class PsalmCILauncherTest extends \Tuleap\Test\PHPUnit\TestCase
             self::FILE_IN_SCOPE,
             self::FILE_OUT_OF_SCOPE,
             self::FILE_NOT_EXISTING,
-        ]]);
+        ],
+        ]);
         $this->assertSame(0, $command_tester->getStatusCode());
     }
 

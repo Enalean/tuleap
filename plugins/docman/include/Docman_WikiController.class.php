@@ -144,14 +144,14 @@ class Docman_WikiController extends Docman_Controller
             );
 
             $event_manager->processEvent('plugin_docman_event_wikipage_update', [
-                    'group_id'       => $group_id,
-                    'item'           => $document,
-                    'user'           => $user,
-                    'url'            => $diff_link,
-                    'wiki_page'      => $wiki_page_name,
-                    'old_value'      => $version,
-                    'new_value'      => $version + 1,
-                ]);
+                'group_id'       => $group_id,
+                'item'           => $document,
+                'user'           => $user,
+                'url'            => $diff_link,
+                'wiki_page'      => $wiki_page_name,
+                'old_value'      => $version,
+                'new_value'      => $version + 1,
+            ]);
         }
         $event_manager->processEvent('send_notifications', []);
     }

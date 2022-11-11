@@ -21,6 +21,7 @@
 namespace Tuleap\User\History;
 
 use Tuleap\Glyph\Glyph;
+use Tuleap\QuickLink\SwitchToQuickLink;
 
 class HistoryEntry
 {
@@ -28,10 +29,6 @@ class HistoryEntry
      * @var int
      */
     private $visit_time;
-    /**
-     * @var string
-     */
-    private $xref;
     /**
      * @var string
      */
@@ -57,7 +54,7 @@ class HistoryEntry
      */
     private $project;
     /**
-     * @var HistoryQuickLink[]
+     * @var SwitchToQuickLink[]
      */
     private $quick_links;
     /**
@@ -65,9 +62,12 @@ class HistoryEntry
      */
     private $icon_name;
 
+    /**
+     * @param HistoryEntryBadge[] $badges
+     */
     public function __construct(
         $visit_time,
-        $xref,
+        private ?string $xref,
         $link,
         $title,
         $color,
@@ -76,9 +76,9 @@ class HistoryEntry
         string $icon_name,
         \Project $project,
         array $quick_links,
+        private array $badges,
     ) {
         $this->visit_time  = (int) $visit_time;
-        $this->xref        = $xref;
         $this->link        = $link;
         $this->title       = $title;
         $this->color       = $color;
@@ -98,7 +98,7 @@ class HistoryEntry
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getXref()
     {
@@ -154,7 +154,7 @@ class HistoryEntry
     }
 
     /**
-     * @return HistoryQuickLink[]
+     * @return SwitchToQuickLink[]
      */
     public function getQuickLinks()
     {
@@ -164,5 +164,13 @@ class HistoryEntry
     public function getIconName(): string
     {
         return $this->icon_name;
+    }
+
+    /**
+     * @return HistoryEntryBadge[]
+     */
+    public function getBadges(): array
+    {
+        return $this->badges;
     }
 }

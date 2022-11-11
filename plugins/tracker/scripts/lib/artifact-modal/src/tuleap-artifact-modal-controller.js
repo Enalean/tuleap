@@ -35,10 +35,10 @@ import {
     isUploadingInCKEditor,
     setIsNotUploadingInCKEditor,
 } from "./fields/file-field/is-uploading-in-ckeditor-state";
-import { uploadAllTemporaryFiles } from "./fields/file-field/file-uploader.js";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import moment from "moment";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
+import { sprintf } from "sprintf-js";
 import {
     getTargetFieldPossibleValues,
     setUpFieldDependenciesActions,
@@ -66,11 +66,17 @@ import { NewLinksStore } from "./adapters/Memory/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
 import { ParentLinkVerifier } from "./domain/fields/link-field/ParentLinkVerifier";
 import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
-import { SelectedLinkTypeStore } from "./adapters/Memory/SelectedLinkTypeStore";
 import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
 import { PossibleParentsCache } from "./adapters/Memory/PossibleParentsCache";
 import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedVerifier";
 import { LinkedArtifactsPopoversController } from "./adapters/UI/fields/link-field/LinkedArtifactsPopoversController";
+import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploader";
+import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
+import { getFileUploadErrorMessage } from "./gettext-catalog";
+import { AllowedLinksTypesCollection } from "./adapters/UI/fields/link-field/AllowedLinksTypesCollection";
+import { TrackerInAHierarchyVerifier } from "./domain/fields/link-field/TrackerInAHierarchyVerifier";
+
+const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
 export default ArtifactModalController;
 
@@ -105,7 +111,6 @@ function ArtifactModalController(
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
     const new_links_store = NewLinksStore();
-    const type_store = SelectedLinkTypeStore();
     const possible_parents_cache = PossibleParentsCache(api_client);
     const already_linked_verifier = AlreadyLinkedVerifier(links_store, new_links_store);
     const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
@@ -117,6 +122,7 @@ function ArtifactModalController(
     const current_tracker_identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(
         modal_model.tracker_id
     );
+    const file_uploader = FileFieldsUploader(api_client, FileUploader());
 
     Object.assign(self, {
         $onInit: init,
@@ -169,7 +175,6 @@ function ArtifactModalController(
                     api_client,
                     fault_feedback_controller,
                     fault_feedback_controller,
-                    type_store,
                     possible_parents_cache,
                     already_linked_verifier,
                     current_artifact_identifier,
@@ -179,8 +184,6 @@ function ArtifactModalController(
                 new_links_store,
                 new_links_store,
                 ParentLinkVerifier(links_store, new_links_store, parent_identifier),
-                type_store,
-                type_store,
                 possible_parents_cache,
                 already_linked_verifier,
                 field,
@@ -191,7 +194,9 @@ function ArtifactModalController(
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
                     modal_model.tracker.color_name
                 ),
-                LinkedArtifactsPopoversController()
+                LinkedArtifactsPopoversController(),
+                AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
+                TrackerInAHierarchyVerifier(modal_model.tracker.parent)
             );
         },
         getFileFieldController: (field) => {
@@ -239,6 +244,7 @@ function ArtifactModalController(
         user_locale: document.body.dataset.userLocale,
         confirm_action_to_edit,
         getButtonText,
+        uploadAllFileFields,
     });
 
     function getButtonText() {
@@ -309,13 +315,33 @@ function ArtifactModalController(
         }
     }
 
+    function uploadAllFileFields() {
+        return $q(function (resolve, reject) {
+            file_uploader.uploadAllFileFields(getAllFileFields(Object.values(self.values))).match(
+                () => resolve(undefined),
+                (fault) => {
+                    let error_message = String(fault);
+                    if (isFileUploadFault(fault)) {
+                        error_message = sprintf(getFileUploadErrorMessage(), {
+                            file_name: fault.getFileName(),
+                            error: String(fault),
+                        });
+                    }
+                    setError(error_message);
+                    reject(Error(error_message));
+                }
+            );
+        });
+    }
+
     function submit() {
         if (isUploadingInCKEditor() || TuleapArtifactModalLoading.loading) {
-            return;
+            return $q.resolve();
         }
         TuleapArtifactModalLoading.loading = true;
 
-        uploadAllFileFields()
+        return self
+            .uploadAllFileFields()
             .then(function () {
                 const validated_values = validateArtifactFieldsValues(
                     self.values,
@@ -385,52 +411,6 @@ function ArtifactModalController(
             setError(gettextCatalog.getString("An error occurred while saving the artifact."));
         }
         TuleapArtifactModalLoading.loading = false;
-    }
-
-    function uploadAllFileFields() {
-        const promises = getAllFileFields(Object.values(self.values)).map((file_field_value) =>
-            uploadFileField(file_field_value)
-        );
-
-        return $q.all(promises);
-    }
-
-    function uploadFileField(file_field_value) {
-        const promise = $q.when(uploadAllTemporaryFiles(file_field_value.temporary_files)).then(
-            (temporary_files_ids) => {
-                const uploaded_files_ids = temporary_files_ids.filter((id) => Number.isInteger(id));
-
-                file_field_value.value = file_field_value.value.concat(uploaded_files_ids);
-            },
-            (error) => {
-                if (isUploadQuotaExceeded(error)) {
-                    setError(
-                        gettextCatalog.getString(
-                            "You exceeded your current file upload quota. Please remove existing temporary files or wait until they are cleaned up."
-                        )
-                    );
-                    throw error;
-                }
-
-                const { file_name } = error;
-                setError(
-                    gettextCatalog.getString(
-                        "An error occurred while uploading this file: {{ file_name }}.",
-                        { file_name }
-                    )
-                );
-                throw error;
-            }
-        );
-
-        return promise;
-    }
-    function isUploadQuotaExceeded(error) {
-        return (
-            error.code === 406 &&
-            Object.prototype.hasOwnProperty.call(error, "message") &&
-            error.message.includes("You exceeded your quota")
-        );
     }
 
     function getDropdownAttribute(field) {

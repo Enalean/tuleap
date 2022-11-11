@@ -37,6 +37,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -229,6 +230,9 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
         $artifact_saver->shouldReceive('saveChangeset')->once();
         $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($factory);
 
+        $changeset_comment_indexer = $this->createStub(ChangesetCommentIndexer::class);
+        $changeset_comment_indexer->method('indexNewChangesetComment');
+
         $creator = new NewChangesetCreator(
             $fields_validator,
             $fields_retriever,
@@ -248,6 +252,7 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 $comment_dao,
                 $reference_manager,
                 Mockery::spy(TrackerPrivateCommentUGroupPermissionInserter::class),
+                $changeset_comment_indexer,
             )
         );
         $creator->create($changeset_creation, PostCreationContext::withNoConfig(false));

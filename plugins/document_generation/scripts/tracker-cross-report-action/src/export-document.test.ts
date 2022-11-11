@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import type { ExportSettings } from "./export-document";
 import { downloadXLSXDocument } from "./export-document";
 import * as data_formator from "./Data/data-formator";
@@ -24,8 +25,8 @@ import type { ReportSection } from "./Data/data-formator";
 
 describe("export-document", () => {
     it("generates the export document and then trigger the download", async (): Promise<void> => {
-        const document_exporter = jest.fn();
-        const format_data = jest
+        const document_exporter = vi.fn();
+        const format_data = vi
             .spyOn(data_formator, "formatData")
             .mockResolvedValue({} as ReportSection);
 

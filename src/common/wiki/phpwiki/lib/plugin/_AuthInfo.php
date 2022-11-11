@@ -72,15 +72,17 @@ class WikiPlugin__AuthInfo extends WikiPlugin
 
         $html  = HTML(HTML::h3(fmt("General Auth Settings")));
         $table = HTML::table(['border' => 1,
-                                  'cellpadding' => 2,
-                                  'cellspacing' => 0]);
+            'cellpadding' => 2,
+            'cellspacing' => 0,
+        ]);
         $table->pushContent($this->_showhash(
             "AUTH DEFINES",
             $this->_buildConstHash(
                 ["ENABLE_USER_NEW","ALLOW_ANON_USER",
-                                          "ALLOW_ANON_EDIT","ALLOW_BOGO_LOGIN",
-                                          "REQUIRE_SIGNIN_BEFORE_EDIT","ALLOW_USER_PASSWORDS",
-                "PASSWORD_LENGTH_MINIMUM"]
+                    "ALLOW_ANON_EDIT","ALLOW_BOGO_LOGIN",
+                    "REQUIRE_SIGNIN_BEFORE_EDIT","ALLOW_USER_PASSWORDS",
+                    "PASSWORD_LENGTH_MINIMUM",
+                ]
             )
         ));
         if ((defined('ALLOW_LDAP_LOGIN') && ALLOW_LDAP_LOGIN) or in_array("LDAP", $GLOBALS['USER_AUTH_ORDER'])) {
@@ -96,7 +98,8 @@ class WikiPlugin__AuthInfo extends WikiPlugin
             $table->pushContent($this->_showhash(
                 "AUTH_USER_FILE",
                 $this->_buildConstHash(["AUTH_USER_FILE",
-                "AUTH_USER_FILE_STORABLE"])
+                    "AUTH_USER_FILE_STORABLE",
+                ])
             ));
         }
         if (defined('GROUP_METHOD')) {
@@ -113,8 +116,9 @@ class WikiPlugin__AuthInfo extends WikiPlugin
             $html->pushContent(HTML::p(fmt("No userid")));
         } else {
             $table = HTML::table(['border' => 1,
-                                       'cellpadding' => 2,
-                                       'cellspacing' => 0]);
+                'cellpadding' => 2,
+                'cellspacing' => 0,
+            ]);
             //$table->pushContent(HTML::tr(HTML::td(array('colspan' => 2))));
             $userdata = obj2hash($user, ['_dbi', '_request', 'password', 'passwd']);
             $table->pushContent($this->_showhash("User: Object of " . $user::class, $userdata));
@@ -150,10 +154,12 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         if ($heading) {
             $rows[] = HTML::tr(
                 ['bgcolor' => '#ffcccc',
-                                     'style' => 'color:#000000'],
+                    'style' => 'color:#000000',
+                ],
                 HTML::td(
                     ['colspan' => 2,
-                                              'style' => 'color:#000000'],
+                        'style' => 'color:#000000',
+                    ],
                     $heading
                 )
             );
@@ -176,8 +182,9 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                         //if (empty($seen[$heading])) $seen[$heading] = 1;
                         $val = HTML::table(
                             ['border' => 1,
-                                                 'cellpadding' => 2,
-                                                 'cellspacing' => 0],
+                                'cellpadding' => 2,
+                                'cellspacing' => 0,
+                            ],
                             $this->_showhash($heading, obj2hash($val), $depth + 1)
                         );
                     } else {
@@ -191,8 +198,9 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                         //if (empty($seen[$heading])) $seen[$heading] = 1;
                         $val = HTML::table(
                             ['border' => 1,
-                                                 'cellpadding' => 2,
-                                                 'cellspacing' => 0],
+                                'cellpadding' => 2,
+                                'cellspacing' => 0,
+                            ],
                             $this->_showhash($heading, $val, $depth + 1)
                         );
                     } else {
@@ -202,8 +210,9 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                 $rows[] = HTML::tr(
                     HTML::td(
                         ['align' => 'right',
-                                                  'bgcolor' => '#cccccc',
-                                                  'style' => 'color:#000000'],
+                            'bgcolor' => '#cccccc',
+                            'style' => 'color:#000000',
+                        ],
                         HTML(
                             HTML::raw('&nbsp;'),
                             $key,
@@ -212,7 +221,8 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                     ),
                     HTML::td(
                         ['bgcolor' => '#ffffff',
-                                                  'style' => 'color:#000000'],
+                            'style' => 'color:#000000',
+                        ],
                         $val ? $val : HTML::raw('&nbsp;')
                     )
                 );

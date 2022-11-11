@@ -123,8 +123,8 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['src'      => '',          // textfile of image list, or local dir.
-                     'url'      => '',          // if src=localfs, url prefix (webroot for the links)
-                     'mode'    => 'normal',     // normal|thumbs|tiles|list
+            'url'      => '',          // if src=localfs, url prefix (webroot for the links)
+            'mode'    => 'normal',     // normal|thumbs|tiles|list
                          // "normal" - Normal table which shows photos full-size
                          // "thumbs" - WinXP thumbnail style
                          // "tiles"  - WinXP tiles style
@@ -132,38 +132,38 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
                          // "row"    - inline thumbnails
                          // "column" - photos full-size, displayed in 1 column
                          // "slide"  - slideshow mode, needs javascript on client
-                     'numcols'    => 3,        // photos per row, columns
-                     'showdesc'    => 'both',    // none|name|desc|both
+            'numcols'    => 3,        // photos per row, columns
+            'showdesc'    => 'both',    // none|name|desc|both
                          // "none"   - No descriptions next to photos
                          // "name"   - Only filename shown
                          // "desc"   - Only description (from textfile) shown
                          // "both"     - If no description found, then filename will be used
-                     'link'    => true,     // show link to original sized photo
+            'link'    => true,     // show link to original sized photo
                          // If true, each image will be hyperlinked to a page where the single
                          // photo will be shown full-size. Only works when mode != 'normal'
-                     'attrib'    => '',        // 'sort, nowrap, alt'
+            'attrib'    => '',        // 'sort, nowrap, alt'
                          // attrib arg allows multiple attributes: attrib=sort,nowrap,alt
                          // 'sort' sorts alphabetically, 'nowrap' for cells, 'alt' to use
                         // descs instead of filenames in image ALT-tags
-                     'bgcolor'  => '#eae8e8',    // cell bgcolor (lightgrey)
-                     'hlcolor'    => '#c0c0ff',    // highlight color (lightblue)
-                     'align'    => 'center',    // alignment of table
-                     'height'   => 'auto',    // image height (auto|75|100%)
-                     'width'    => 'auto',    // image width (auto|75|100%)
+            'bgcolor'  => '#eae8e8',    // cell bgcolor (lightgrey)
+            'hlcolor'    => '#c0c0ff',    // highlight color (lightblue)
+            'align'    => 'center',    // alignment of table
+            'height'   => 'auto',    // image height (auto|75|100%)
+            'width'    => 'auto',    // image width (auto|75|100%)
                      // Size of shown photos. Either absolute value (e.g. "50") or
                      // HTML style percentage (e.g. "75%") or "auto" for no special
                      // action.
-                     'cellwidth' => 'image',    // cell (auto|equal|image|75|100%)
+            'cellwidth' => 'image',    // cell (auto|equal|image|75|100%)
                      // Width of cells in table. Either absolute value in pixels, HTML
                      // style percentage, "auto" (no special action), "equal" (where
                      // all columns are equally sized) or "image" (take height and
                      // width of the photo in that cell).
-                     'tablewidth' => false,    // table (75|100%)
-                     'p'    => false,     // "displaythissinglephoto.jpg"
-                     'h'    => false,     // "highlightcolorofthisphoto.jpg"
-                     'duration' => 6, // in slide mode, in seconds
-                     'thumbswidth' => 80, //width of thumbnails
-                     ];
+            'tablewidth' => false,    // table (75|100%)
+            'p'    => false,     // "displaythissinglephoto.jpg"
+            'h'    => false,     // "highlightcolorofthisphoto.jpg"
+            'duration' => 6, // in slide mode, in seconds
+            'thumbswidth' => 80, //width of thumbnails
+        ];
     }
     // descriptions (instead of filenames) for image alt-tags
 
@@ -277,11 +277,12 @@ display_slides();"));
             }
             // $params will be used for each <img > tag
             $params = ['src'    => $value["name"],
-                            'src_tile' => $value["name_tile"],
-                            'border' => "0",
-                            'alt'    => ($value["desc"] != "" and in_array("alt", $attributes))
+                'src_tile' => $value["name_tile"],
+                'border' => "0",
+                'alt'    => ($value["desc"] != "" and in_array("alt", $attributes))
                                     ? $value["desc"]
-                                    : basename($value["name"])];
+                                    : basename($value["name"]),
+            ];
             if (! @empty($value['location'])) {
                 $params = array_merge($params, ["location" => $value['location']]);
             }
@@ -338,8 +339,9 @@ display_slides();"));
 
             // cell operations
             $cell = ['align'   => "center",
-                          'valign'  => "top",
-                          'bgcolor' => "$color"];
+                'valign'  => "top",
+                'bgcolor' => "$color",
+            ];
             if ($cellwidth != 'auto') {
                 if ($cellwidth == 'equal') {
                     $newcellwidth = round(100 / $numcols) . "%";
@@ -448,16 +450,18 @@ display_slides();"));
                 $row->pushContent(
                     HTML::td(
                         ["valign"  => "top",
-                                   "nowrap"  => 0,
-                                   "bgcolor" => $color],
+                            "nowrap"  => 0,
+                            "bgcolor" => $color,
+                        ],
                         HTML::span(['class' => 'boldsmall'], ($url_text))
                     )
                 );
                 $row->pushContent(
                     HTML::td(
                         ["valign"  => "top",
-                                   "nowrap"  => 0,
-                                   "bgcolor" => $color],
+                            "nowrap"  => 0,
+                            "bgcolor" => $color,
+                        ],
                         HTML::span(
                             ['class' => 'gensmall'],
                             ($size[0] .
@@ -472,8 +476,9 @@ display_slides();"));
                     $row->pushContent(
                         HTML::td(
                             ["valign"  => "top",
-                                       "nowrap"  => 0,
-                                       "bgcolor" => $color],
+                                "nowrap"  => 0,
+                                "bgcolor" => $color,
+                            ],
                             HTML::span(['class' => 'gensmall'], $desc)
                         )
                     );
@@ -522,7 +527,8 @@ display_slides();"));
                                 . 'margin-left: -' . round($newwidth / 2) . 'px;'
                                 . 'text-align: center; '
                                 . 'vertical-align: top',
-                                'name' => "wikislide" . $count];
+                        'name' => "wikislide" . $count,
+                    ];
                 } else {
                     $cell = ['style' => 'display: none; '
                                 . 'position: absolute ;'
@@ -530,7 +536,8 @@ display_slides();"));
                                 . 'margin-left: -' . round($newwidth / 2) . 'px;'
                                 . 'text-align: center; '
                                 . 'vertical-align: top',
-                                'name' => "wikislide" . $count];
+                        'name' => "wikislide" . $count,
+                    ];
                 }
                 if ($align == 'left' || $align == 'right') {
                     if ($count == 0) {
@@ -538,13 +545,15 @@ display_slides();"));
                                               . 'position: absolute; '
                                               . $align . ': 50px; '
                                               . 'vertical-align: top',
-                                    'name' => "wikislide" . $count];
+                            'name' => "wikislide" . $count,
+                        ];
                     } else {
                         $cell = ['style' => 'display: none; '
                                               . 'position: absolute; '
                                               . $align . ': 50px; '
                                               . 'vertical-align: top',
-                                    'name' => "wikislide" . $count];
+                            'name' => "wikislide" . $count,
+                        ];
                     }
                 }
                 $row->pushContent(
@@ -563,8 +572,9 @@ display_slides();"));
                         HTML::tr(HTML::td($url_image)),
                         HTML::tr(HTML::td(
                             ["class" => "gensmall",
-                                                      "style" => "text-align: center; "
-                                                                . "background-color: $color"],
+                                "style" => "text-align: center; "
+                                                                . "background-color: $color",
+                            ],
                             $desc
                         ))
                     )
@@ -591,9 +601,10 @@ display_slides();"));
 
         //create main table
         $table_attributes = ["border"      => 0,
-                                  "cellpadding" => 5,
-                                  "cellspacing" => 2,
-                                  "width"       => $tablewidth];
+            "cellpadding" => 5,
+            "cellspacing" => 2,
+            "width"       => $tablewidth,
+        ];
 
         if (! @empty($tableheight)) {
             $table_attributes = array_merge(
@@ -643,7 +654,8 @@ display_slides();"));
             return $this->error(_("Bad url in src: remove all of <, >, \""));
         }
         $photos[] =  ["name" => $src, //album_location."/$src".album_default_extension,
-                           "desc" => ""];
+            "desc" => "",
+        ];
     }
 
     /**
@@ -690,10 +702,11 @@ display_slides();"));
             foreach ($list as $file) {
                 // convert local path to webpath
                 $photos[] =  ["src" => $file,
-                                   "name" => $webpath . "/$file",
-                                   "name_tile" =>  $src . "/$file",
-                                   "src"  => $src . "/$file",
-                                   "desc" => ""];
+                    "name" => $webpath . "/$file",
+                    "name_tile" =>  $src . "/$file",
+                    "src"  => $src . "/$file",
+                    "desc" => "",
+                ];
             }
             return;
         }
@@ -705,20 +718,22 @@ display_slides();"));
                 }
                 if ($web_location == 1 and ! empty($contents)) {
                     $photos[] =  ["src" => $src,
-                                       "name" => $src,
-                                       "name_tile" => $src,
-                                       "src"  => $src,
-                                       "desc" => ""];
+                        "name" => $src,
+                        "name_tile" => $src,
+                        "src"  => $src,
+                        "desc" => "",
+                    ];
                     return;
                 }
                 if (! file_exists($src)) {
                     return $this->error(fmt("Unable to find src='%s'", $src));
                 }
                 $photos[] =  ["src" => $src,
-                                   "name" => "../" . $src,
-                                   "name_tile" =>  $src,
-                                   "src"  => $src,
-                                   "desc" => ""];
+                    "name" => "../" . $src,
+                    "name_tile" =>  $src,
+                    "src"  => $src,
+                    "desc" => "",
+                ];
                 return;
             }
         }
@@ -739,9 +754,10 @@ display_slides();"));
                     $data[1] = '';
                 }
                 $photos[] =  ["name" => dirname($src) . "/" . trim($data[0]),
-                                   "location" => "../" . dirname($src) . "/" . trim($data[0]),
-                                   "desc" => trim($data[1]),
-                                   "name_tile" => dirname($src) . "/" . trim($data[0])];
+                    "location" => "../" . dirname($src) . "/" . trim($data[0]),
+                    "desc" => trim($data[1]),
+                    "name_tile" => dirname($src) . "/" . trim($data[0]),
+                ];
             }
             fclose($fp);
         } elseif ($web_location == 1) {
@@ -760,9 +776,10 @@ display_slides();"));
                     $data[1] = '';
                 }
                 $photos[] =  ["name" => dirname($src) . "/" . trim($data[0]),
-                                   "src" => dirname($src) . "/" . trim($data[0]),
-                                   "desc" => trim($data[1]),
-                                   "name_tile" => dirname($src) . "/" . trim($data[0])];
+                    "src" => dirname($src) . "/" . trim($data[0]),
+                    "desc" => trim($data[1]),
+                    "name_tile" => dirname($src) . "/" . trim($data[0]),
+                ];
             }
         }
     }

@@ -33,7 +33,7 @@ final class PHPStringMustacheRendererTest extends TestCase
             __DIR__
         );
 
-        $result = $renderer->renderToString('test-template-php', ['content' => "my'var'content\\"]);
+        $result = $renderer->renderToString('test-template-php', ['content' => "my'var'\"content\\"]);
 
         self::assertStringEqualsFile(__DIR__ . '/test-template-php-result.php', $result);
     }

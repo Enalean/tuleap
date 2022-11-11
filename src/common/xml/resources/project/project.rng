@@ -289,6 +289,13 @@
               <attribute name="url">
                 <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
               </attribute>
+              <optional>
+                <attribute name="jenkins_token">
+                  <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
               <empty/>
             </element>
           </oneOrMore>

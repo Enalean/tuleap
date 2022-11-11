@@ -74,11 +74,12 @@ class Docman_MetadataDao extends DataAccessObject
     public function updateById($id, $name, $description, $emptyAllowed, $mulValuesAllowed, $useIt)
     {
         $row = ['field_id' => $id,
-                     'name' => $name,
-                     'description' => $description,
-                     'empty_ok' => $emptyAllowed,
-                     'mul_val_ok' => $mulValuesAllowed,
-                     'use_it' => $useIt];
+            'name' => $name,
+            'description' => $description,
+            'empty_ok' => $emptyAllowed,
+            'mul_val_ok' => $mulValuesAllowed,
+            'use_it' => $useIt,
+        ];
         return $this->updateFromRow($row);
     }
 
@@ -147,7 +148,8 @@ class Docman_MetadataDao extends DataAccessObject
         if ($mdId !== false) {
             //update label
             $row     = ['field_id' => $mdId,
-                         'label'    => 'field_' . $mdId];
+                'label'    => 'field_' . $mdId,
+            ];
             $updated = $this->updateFromRow($row);
             if (! $updated) {
                 return false;

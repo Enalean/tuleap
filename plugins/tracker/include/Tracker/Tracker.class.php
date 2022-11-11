@@ -27,10 +27,12 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
@@ -40,6 +42,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
@@ -669,8 +672,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                             $GLOBALS['Response']->redirect(
                                 TRACKER_BASE_URL . '/?' . http_build_query(
                                     [
-                                    'tracker' => $this->getId(),
-                                    'func'    => $func,
+                                        'tracker' => $this->getId(),
+                                        'func'    => $func,
                                     ]
                                 )
                             );
@@ -1066,7 +1069,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             $visit_retriever            = new VisitRetriever(
                 new RecentlyVisitedDao(),
                 $this->getTrackerArtifactFactory(),
-                new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
+                new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
+                new \Tuleap\Tracker\Artifact\StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
             );
             $recently_visited_artifacts = $visit_retriever->getMostRecentlySeenArtifacts(
                 $current_user,
@@ -1754,7 +1758,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     private function getMailGatewayConfig()
     {
         return new MailGatewayConfig(
-            new MailGatewayConfigDao()
+            new MailGatewayConfigDao(),
+            MailTransportBuilder::getPlatformMailConfiguration(),
         );
     }
 
@@ -3214,6 +3219,12 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $changeset_comment_dao,
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
+                    $event_manager,
+                    Codendi_HTMLPurifier::instance(),
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                ),
             )
         );
 

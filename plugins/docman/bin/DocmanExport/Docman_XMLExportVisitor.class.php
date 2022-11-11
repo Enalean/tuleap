@@ -234,7 +234,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
             $um   = UserManager::instance();
             $user = $um->getUserById($userId);
             if ($user !== null) {
-                $this->userCache[$userId] = $user->getName();
+                $this->userCache[$userId] = $user->getUserName();
             } else {
                 $this->userCache[$userId] = '';
             }

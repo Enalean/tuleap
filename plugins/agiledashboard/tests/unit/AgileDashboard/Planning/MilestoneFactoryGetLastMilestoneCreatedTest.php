@@ -87,17 +87,17 @@ final class MilestoneFactoryGetLastMilestoneCreatedTest extends \Tuleap\Test\PHP
         $this->milestone_factory = Mockery::mock(
             Planning_MilestoneFactory::class,
             [
-                                                $planning_factory,
-                                                $this->artifact_factory,
-                                                Mockery::mock(Tracker_FormElementFactory::class),
-                                                Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
-                                                Mockery::mock(PlanningPermissionsManager::class),
-                                                Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class),
-                                                Mockery::mock(ScrumForMonoMilestoneChecker::class),
-                                                Mockery::mock(SemanticTimeframeBuilder::class),
-                                                new NullLogger(),
-                                                Mockery::spy(MilestoneBurndownFieldChecker::class),
-                                            ]
+                $planning_factory,
+                $this->artifact_factory,
+                Mockery::mock(Tracker_FormElementFactory::class),
+                Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
+                Mockery::mock(PlanningPermissionsManager::class),
+                Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class),
+                Mockery::mock(ScrumForMonoMilestoneChecker::class),
+                Mockery::mock(SemanticTimeframeBuilder::class),
+                new NullLogger(),
+                Mockery::spy(MilestoneBurndownFieldChecker::class),
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();

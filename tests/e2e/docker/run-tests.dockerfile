@@ -6,3 +6,4 @@ RUN wget https://download.cypress.io/desktop/${CYPRESS_VERSION}?platform=linux -
 FROM ${DOCKER_REGISTRY}/cypress/base:14.7.0
 COPY --from=cypress_bin_downloader /Cypress/ /Cypress/
 ENV CYPRESS_RUN_BINARY /Cypress/Cypress
+RUN npm install -g junit-report-merger
