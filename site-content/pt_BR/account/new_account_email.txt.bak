@@ -20,9 +20,9 @@ $section_three = "** OBSERVAÇÕES IMPORTANTES **\n\nEmbora sua conta Web já estej
                    ." horas a partir de agora. \n\n\nEnquanto isso recomendamos fortemente que você navegue pelo site, leia "
                    ." a documentação do mesmo e finalize a configuração do seu Perfil de Usuário"
                    ."(Defina suas preferências, etc.)\n\n\nAproveite o site e nos passe um feedback de como podemos melhorar "
-                   .\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." e também divulgue ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." para todos.";
+                   .\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." e divulgue ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." para todos.";
 
-$section_after_login = "\nA senha deve ter lhe sido informada por um dos administradores do site. Por favor altere-a no seu primeiro acesso ao web site. Se você ainda não foi informado sobre a sua senha, você pode utilizar o procedimento de senha perdida para gerar uma nova.";
+$section_after_login = "\nA senha deve ter lhe sido informada por um dos administradores do site. Please change it after your first connection to the web site. If the password has not been communicated to you, you can use the lost password procedure to generate a new password.";
 
 $thanks = "Obrigado!";
 

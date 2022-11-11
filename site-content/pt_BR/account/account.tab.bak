@@ -11,7 +11,7 @@
 #
 #
 
-account_login	name	Usuário
-account_login	password	Senha
-account_login	need_help	Não consegue acessar? Envie um email para os administradores
-account_login	page_title	$1 Acesso
+account_login	name	Username
+account_login	password	Password
+account_login	need_help	Can't log in? Send an email to administrators
+account_login	page_title	$1 login
