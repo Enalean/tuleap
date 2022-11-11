@@ -30,7 +30,7 @@ msgid ""
 "\"%s\" label already exists. If you save your modifications, both labels "
 "will be merged."
 msgstr ""
-"O rótulo \"%s\" já existe. Se você salvar suas modificações, ambas os "
+"O rótulo \"%s\" já existe. Se você salvar suas modificações, ambos os "
 "rótulos serão fundidos."
 
 #, php-format
