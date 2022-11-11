@@ -1,0 +1,17 @@
+#/**
+#  *
+#  * Account scripts message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#
+
+account_login	name	Username
+account_login	password	Password
+account_login	need_help	Can't log in? Send an email to administrators
+account_login	page_title	$1 login
