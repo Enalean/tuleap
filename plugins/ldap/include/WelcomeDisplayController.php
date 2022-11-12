@@ -71,6 +71,9 @@ class WelcomeDisplayController implements DispatchableWithRequest
 
         $currentUser = $request->getCurrentUser();
         $timezone    = $request->get('timezone');
+        if ($timezone === false) {
+            $timezone = null;
+        }
 
         $pv  = 0;
         $vPv = new Valid_Pv();
@@ -165,10 +168,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
         ($pv === 2) ? $layout->pv_footer([]) : $layout->footer([]);
     }
 
-    /**
-     * @param string|false $timezone
-     */
-    private function getTimezonePopup(BaseLayout $layout, $timezone): string
+    private function getTimezonePopup(BaseLayout $layout, ?string $timezone): string
     {
         $layout->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
         $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');

@@ -947,6 +947,9 @@ msgstr ""
 "Choisissez un forum et vous pourrez le parcourir, effectuer une recherche et "
 "poster un message."
 
+msgid "Choose a timezone"
+msgstr "Sélectionnez un fuseau horaire"
+
 msgid "Clear history"
 msgstr "Effacer l'historique"
 
@@ -2335,6 +2338,9 @@ msgstr "Aucun projet à valider"
 
 msgid "No template information have been provided to create the project"
 msgstr "Aucune information de template a été fournie pour créer le projet"
+
+msgid "No timezone set. Please select one."
+msgstr "Aucun fuseau horaire défini. Merci d'en choisir un."
 
 msgid "No users to validate"
 msgstr "Aucun utilisateur à valider"
@@ -4931,6 +4937,13 @@ msgstr "Votre avatar"
 
 msgid "Your catchy headline"
 msgstr "Votre accroche"
+
+msgid ""
+"Your current timezone (%s) is not listed in the available timezones. Please "
+"select a new one."
+msgstr ""
+"Votre fuseau horaire actuel (%s) n'est pas listé dans les fuseaux horaires "
+"disponibles. Merci d'en choisir un nouveau."
 
 #, php-format
 msgid ""

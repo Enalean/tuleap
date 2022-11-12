@@ -26,11 +26,5 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("#timezone not found or is not select");
     }
 
-    if (!select.value) {
-        select.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    }
-
-    select2(select, {
-        placeholder: "Choose a timezone",
-    });
+    select2(select);
 });

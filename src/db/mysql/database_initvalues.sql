@@ -54,7 +54,7 @@ INSERT INTO user SET \
         sticky_login = 0, \
         authorized_keys = NULL, \
         email_new = NULL, \
-        timezone = 'GMT', \
+        timezone = 'UTC', \
         language_id = 'en_US', \
         last_pwd_update = '0';
 
@@ -84,7 +84,7 @@ INSERT INTO user SET \
         sticky_login = 0, \
         authorized_keys = NULL, \
         email_new = NULL, \
-        timezone = 'GMT', \
+        timezone = 'UTC', \
         language_id = 'en_US', \
         last_pwd_update = '0';
 
