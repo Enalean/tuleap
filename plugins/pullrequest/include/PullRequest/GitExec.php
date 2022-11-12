@@ -23,7 +23,6 @@ namespace Tuleap\PullRequest;
 use Git_Command_Exception;
 use Git_Exec;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
-use Tuleap\PullRequest\Exception\UnknownReferenceException;
 
 class GitExec extends Git_Exec
 {
@@ -46,22 +45,24 @@ class GitExec extends Git_Exec
         throw new UnknownBranchNameException($branch_name);
     }
 
+    /**
+     * @throws Git_Command_Exception
+     */
     public function getModifiedFilesNameStatus($src_reference, $dest_reference)
     {
         $output = [];
 
-        try {
-            $this->gitCmdWithOutput(
-                'diff --no-renames --name-status ' . escapeshellarg($dest_reference) . '...' . escapeshellarg($src_reference),
-                $output
-            );
-        } catch (Git_Command_Exception $exception) {
-            throw new UnknownReferenceException();
-        }
+        $this->gitCmdWithOutput(
+            'diff --no-renames --name-status ' . escapeshellarg($dest_reference) . '...' . escapeshellarg($src_reference),
+            $output
+        );
 
         return $output;
     }
 
+    /**
+     * @throws Git_Command_Exception
+     */
     public function getModifiedFilesLineStat($ref_base, $ref_compare)
     {
         $ref_base    = escapeshellarg($ref_base);
@@ -69,11 +70,8 @@ class GitExec extends Git_Exec
         $cmd         = "diff --no-renames --numstat $ref_base...$ref_compare";
         $output      = [];
 
-        try {
-            $this->gitCmdWithOutput($cmd, $output);
-        } catch (Git_Command_Exception $exception) {
-            throw new UnknownReferenceException();
-        }
+        $this->gitCmdWithOutput($cmd, $output);
+
         return $output;
     }
 
@@ -143,6 +141,9 @@ class GitExec extends Git_Exec
         return $output;
     }
 
+    /**
+     * @throws Git_Command_Exception
+     */
     public function getShortStat($ref_base, $ref_compare)
     {
         return $this->parseDiffNumStatOutput(

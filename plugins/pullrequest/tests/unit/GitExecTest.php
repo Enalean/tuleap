@@ -20,22 +20,17 @@
 
 namespace Tuleap\PullRequest;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Git_Command_Exception;
 use Tuleap\TemporaryTestDirectory;
 
 require_once __DIR__ . '/bootstrap.php';
 
 class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
-    private $fixture_dir;
-
-    /**
-     * @var GitExec
-     */
-    private $git_exec;
+    private string $fixture_dir;
+    private GitExec $git_exec;
 
     protected function setUp(): void
     {
@@ -56,9 +51,9 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $sha1 = $this->git_exec->getBranchSha1('refs/heads/main');
 
-        $this->assertNotNull($sha1);
-        $this->assertNotEmpty($sha1);
-        $this->assertEquals(40, strlen($sha1));
+        self::assertNotNull($sha1);
+        self::assertNotEmpty($sha1);
+        self::assertEquals(40, strlen($sha1));
     }
 
     public function testItThrowsAnExceptionIfBranchDoesNotExist(): void
@@ -80,8 +75,8 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $files = $this->git_exec->getModifiedFilesNameStatus($sha1_src, $sha1_dest);
 
-        $this->assertTrue(count($files) > 0);
-        $this->assertEquals('M	toto', $files[0]);
+        self::assertTrue(count($files) > 0);
+        self::assertEquals('M	toto', $files[0]);
     }
 
     public function testItUsesTheCommonAncestorToDoTheDiff(): void
@@ -102,15 +97,15 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $files = $this->git_exec->getModifiedFilesNameStatus($sha1_src, $sha1_dest);
 
-        $this->assertEquals('A	added-file-in-dev', $files[0]);
+        self::assertEquals('A	added-file-in-dev', $files[0]);
     }
 
-    public function testItThrowsAnExceptionIfReferenceIsUnknown(): void
+    public function testItThrowsAnExceptionIfTheCommandFailsToRetrieveModifiedLinesWithANonExistingBranch(): void
     {
         $sha1_src  = 'weeakplbrhmj03pjcjtw5blestib2hy3rgpwxmwt';
         $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/main');
 
-        $this->expectException('Tuleap\PullRequest\Exception\UnknownReferenceException');
+        $this->expectException(Git_Command_Exception::class);
 
         $this->git_exec->getModifiedFilesNameStatus($sha1_src, $sha1_dest);
     }
@@ -134,9 +129,9 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->commit("rm $file2_path & modify $file1_path");
 
         $short_stat = $this->git_exec->getShortStat('main', 'dev');
-        $this->assertEquals(2, $short_stat->getFilesChangedNumber());
-        $this->assertEquals(1, $short_stat->getLinesAddedNumber());
-        $this->assertEquals(1, $short_stat->getLinesRemovedNumber());
+        self::assertEquals(2, $short_stat->getFilesChangedNumber());
+        self::assertEquals(1, $short_stat->getLinesAddedNumber());
+        self::assertEquals(1, $short_stat->getLinesRemovedNumber());
     }
 
     public function testItReturnsModifiedLinesStats(): void
@@ -159,19 +154,19 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $modified_files = $this->git_exec->getModifiedFilesLineStat('main', 'dev');
 
-        $this->assertEquals(["1\t0\tfile1", "0\t1\tfile2"], $modified_files);
+        self::assertEquals(["1\t0\tfile1", "0\t1\tfile2"], $modified_files);
     }
 
     public function testItReturnsFalseIfBaseCommitRefDoesntExist_isAncestor(): void // phpcs:ignore
     {
         $res = $this->git_exec->isAncestor('aldfkezjjzfrkj', 'HEAD');
-        $this->assertFalse($res);
+        self::assertFalse($res);
     }
 
     public function testItReturnsFalseIfMergedCommitRefDoesntExist_isAncestor(): void // phpcs:ignore
     {
         $res = $this->git_exec->isAncestor('HEAD^', 'fezefzefzeef');
-        $this->assertFalse($res);
+        self::assertFalse($res);
     }
 
     public function testItReturnsFalseWhenIsNotAncestor(): void
@@ -181,7 +176,7 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->commit("add stuff");
 
         $res = $this->git_exec->isAncestor('HEAD^', 'HEAD');
-        $this->assertFalse($res);
+        self::assertFalse($res);
     }
 
     public function testItReturnsTrueWhenIsAncestor(): void
@@ -191,6 +186,6 @@ class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->commit("add stuff");
 
         $res = $this->git_exec->isAncestor('HEAD', 'HEAD^');
-        $this->assertTrue($res);
+        self::assertTrue($res);
     }
 }

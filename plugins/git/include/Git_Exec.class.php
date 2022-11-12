@@ -485,6 +485,9 @@ class Git_Exec
         return $this->git_dir;
     }
 
+    /**
+     * @throws Git_Command_Exception
+     */
     protected function gitCmd($cmd)
     {
         $output = [];

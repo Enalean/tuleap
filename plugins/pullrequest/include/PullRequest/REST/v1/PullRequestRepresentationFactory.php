@@ -57,6 +57,9 @@ class PullRequestRepresentationFactory
         $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
     }
 
+    /**
+     * @throws \Git_Command_Exception
+     */
     public function getPullRequestRepresentation(
         PullRequestWithGitReference $pull_request_with_git_reference,
         \GitRepository $repository_src,

@@ -37,9 +37,10 @@ class PullRequestFileRepresentationFactory
     }
 
     /**
-     * @throws \Tuleap\PullRequest\Exception\UnknownReferenceException
+     * @throws \Git_Command_Exception
+     * @return PullRequestFileRepresentation[]
      */
-    public function getModifiedFilesRepresentations(PullRequest $pull_request)
+    public function getModifiedFilesRepresentations(PullRequest $pull_request): array
     {
         $x_files = [];
 
