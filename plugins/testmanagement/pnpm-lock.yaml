@@ -43,7 +43,6 @@ specifiers:
   d3-zoom: ^3.0.0
   docx: ^7.3.0
   dompurify: ^2.3.6
-  dragula: ^3.7.2
   jquery: ^3.6.0
   lodash: ^2.4.2
   moment: ^2.29.4
@@ -93,7 +92,6 @@ dependencies:
   d3-zoom: 3.0.0
   docx: 7.3.0
   dompurify: 2.3.6
-  dragula: 3.7.3
   lodash: 2.4.2
   moment: 2.29.4
   path-browserify: 1.0.1
@@ -251,10 +249,6 @@ packages:
     resolution: {integrity: sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw==}
     dev: false
 
-  /atoa/1.0.0:
-    resolution: {integrity: sha1-DMDpGkgOc4+SPrwQNnZHF3mzSkk=}
-    dev: false
-
   /backo2/1.0.2:
     resolution: {integrity: sha1-MasayLEpNjRj41s+u2n038+6eUc=}
     dev: false
@@ -305,21 +299,8 @@ packages:
       proto-list: 1.2.4
     dev: true
 
-  /contra/1.9.4:
-    resolution: {integrity: sha1-9TveQtfltZhcrk2ZqNYQUm3o8o0=}
-    dependencies:
-      atoa: 1.0.0
-      ticky: 1.0.1
-    dev: false
-
   /core-util-is/1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
-    dev: false
-
-  /crossvent/1.5.5:
-    resolution: {integrity: sha1-rSCHjkkh6b5z2daXb4suzQ9xoLE=}
-    dependencies:
-      custom-event: 1.0.1
     dev: false
 
   /csstype/3.1.0:
@@ -327,10 +308,6 @@ packages:
 
   /custom-error-instance/2.1.1:
     resolution: {integrity: sha1-PPY5FIemYppiR+sMoM4ACBt+Nho=}
-    dev: false
-
-  /custom-event/1.0.1:
-    resolution: {integrity: sha1-XQKkaFCt8bSjF5RqOSj8y1v9BCU=}
     dev: false
 
   /d3-color/1.0.3:
@@ -458,13 +435,6 @@ packages:
 
   /dompurify/2.3.6:
     resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
-    dev: false
-
-  /dragula/3.7.3:
-    resolution: {integrity: sha512-/rRg4zRhcpf81TyDhaHLtXt6sEywdfpv1cRUMeFFy7DuypH2U0WUL0GTdyAQvXegviT4PJK4KuMmOaIDpICseQ==}
-    dependencies:
-      contra: 1.9.4
-      crossvent: 1.5.5
     dev: false
 
   /editorconfig/0.15.3:
@@ -865,10 +835,6 @@ packages:
     resolution: {integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==}
     dependencies:
       safe-buffer: 5.1.2
-    dev: false
-
-  /ticky/1.0.1:
-    resolution: {integrity: sha1-t8+nHnaPHJAAxJe5FRswlHxQ5G0=}
     dev: false
 
   /to-fast-properties/2.0.0:

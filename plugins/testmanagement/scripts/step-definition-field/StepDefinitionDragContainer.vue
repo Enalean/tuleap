@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div ref="dragula_container">
+    <div>
         <input
             v-if="hasNoStepRemaining"
             type="hidden"
@@ -26,7 +26,17 @@
             value="1"
         />
         <template v-for="(step, index) in steps">
-            <div class="ttm-definition-step-draggable" v-bind:key="'add-button-' + step.uuid">
+            <div
+                class="ttm-definition-step-draggable"
+                v-bind:key="'add-button-' + step.uuid"
+                v-bind:draggable="is_dragging"
+                v-on:dragstart.self="onDragStart($event, step, index)"
+                v-on:dragover.prevent="onDragOver(step)"
+                v-on:drop="onDrop(index)"
+                v-on:dragenter.prevent
+                v-on:dragend.prevent="onDragEnd"
+                v-bind:class="getDragndropClasses(step, index)"
+            >
                 <step-definition-entry
                     v-bind:key="step.uuid"
                     v-bind:dynamic_rank="index + 1"
@@ -50,6 +60,13 @@ import { mapState, mapMutations } from "vuex";
 export default {
     name: "StepDefinitionDragContainer",
     components: { StepDefinitionEntry },
+    data() {
+        return {
+            dragged_step: null,
+            hovered_step: null,
+            dragged_step_index: 0,
+        };
+    },
     computed: {
         ...mapState(["steps", "is_dragging", "field_id"]),
         hasNoStepRemaining() {
@@ -58,25 +75,42 @@ export default {
             );
         },
     },
-    watch: {
-        is_dragging(new_value) {
-            if (new_value === true) {
-                window.addEventListener("mousemove", this.replaceDragulaMirror);
+    methods: {
+        ...mapMutations(["addStep", "moveStep"]),
+        onDragEnd() {
+            this.dragged_step = null;
+            this.hovered_step = null;
+            this.dragged_step_index = 0;
+        },
+        onDragStart(event, step, index) {
+            event.dataTransfer.dropEffect = "move";
+            event.dataTransfer.effectAllowed = "move";
+            this.dragged_step_index = index;
+            this.dragged_step = { ...step };
+        },
+        onDrop(index) {
+            this.moveStep([this.dragged_step, index]);
+        },
+        onDragOver(step) {
+            if (step.uuid !== this.dragged_step.uuid) {
+                this.hovered_step = { ...step };
             } else {
-                window.removeEventListener("mousemove", this.replaceDragulaMirror);
+                this.hovered_step = null;
             }
         },
-    },
-    mounted() {
-        this.initContainer(this.$refs.dragula_container);
-    },
-    methods: {
-        ...mapMutations(["addStep", "initContainer"]),
-        replaceDragulaMirror(event) {
-            const mirrors = document.getElementsByClassName("gu-mirror");
-            if (mirrors.length > 0) {
-                mirrors[0].style.top = event.pageY + "px";
+        getDragndropClasses(step, index) {
+            if (!this.hovered_step || this.hovered_step.uuid !== step.uuid) {
+                return "";
             }
+
+            if (index === this.dragged_step_index) {
+                return "";
+            }
+
+            return (
+                "ttm-definition-step-draggable-drop-" +
+                (index < this.dragged_step_index ? "before" : "after")
+            );
         },
     },
 };
