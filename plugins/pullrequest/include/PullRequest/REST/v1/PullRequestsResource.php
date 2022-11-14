@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use BackendLogger;
 use EventManager;
-use Git_Command_Exception;
 use Git_GitRepositoryUrlManager;
 use GitDao;
 use GitPlugin;
@@ -73,7 +72,6 @@ use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestTargetException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
-use Tuleap\PullRequest\Exception\UnknownReferenceException;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\FileUniDiff;
@@ -408,19 +406,15 @@ class PullRequestsResource extends AuthenticatedResource
             $this->commit_representation_builder
         );
 
-        try {
-            $commit_representation = $commit_factory->getPullRequestCommits(
-                $pull_requests_with_git_reference->getPullRequest(),
-                $limit,
-                $offset
-            );
+        $commit_representation = $commit_factory->getPullRequestCommits(
+            $pull_requests_with_git_reference->getPullRequest(),
+            $limit,
+            $offset
+        );
 
-            Header::sendPaginationHeaders($limit, $offset, $commit_representation->getSize(), self::MAX_LIMIT);
+        Header::sendPaginationHeaders($limit, $offset, $commit_representation->getSize(), self::MAX_LIMIT);
 
-            return $commit_representation->getCommitsCollection();
-        } catch (Git_Command_Exception $exception) {
-            throw new RestException(500, $exception->getMessage());
-        }
+        return $commit_representation->getCommitsCollection();
     }
 
     /**
@@ -601,11 +595,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $file_representation_factory = new PullRequestFileRepresentationFactory($executor);
 
-        try {
-            $modified_files = $file_representation_factory->getModifiedFilesRepresentations($pull_request);
-        } catch (UnknownReferenceException $exception) {
-            throw new RestException(404, $exception->getMessage());
-        }
+        $modified_files = $file_representation_factory->getModifiedFilesRepresentations($pull_request);
 
         return $modified_files;
     }
