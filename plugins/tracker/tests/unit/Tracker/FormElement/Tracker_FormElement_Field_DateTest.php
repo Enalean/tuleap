@@ -162,8 +162,9 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
     public function testGetFieldData(): void
     {
         $field = $this->getDateField();
-        $this->assertEquals($field->getFieldData('2010-04-30'), '2010-04-30');
-        $this->assertNull($field->getFieldData('03-04-2010'));
+        self::assertEquals('2010-04-30', $field->getFieldData('2010-04-30'));
+        self::assertEquals('2010-04-30 6:08', $field->getFieldData('2010-04-30 6:08'));
+        self::assertNull($field->getFieldData('03-04-2010'));
     }
 
     public function testGetFieldDataAsTimestamp(): void
