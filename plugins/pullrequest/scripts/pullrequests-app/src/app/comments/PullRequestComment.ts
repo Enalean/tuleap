@@ -31,8 +31,9 @@ import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPr
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 import type { PullRequestPresenter } from "./PullRequestPresenter";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
+import type { FileDiffWidgetType } from "../file-diff/diff-modes/types";
 
-export const TAG_NAME = "tuleap-pullrequest-comment";
+export const TAG_NAME: FileDiffWidgetType = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestComment & HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;

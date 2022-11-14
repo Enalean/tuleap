@@ -18,6 +18,7 @@
  */
 
 import type { LineHandle, LineWidget } from "codemirror";
+import type { FileDiffWidget } from "./types";
 
 /**
  * @types/codemirror's type definition for LineWidget is too minimalist
@@ -25,7 +26,7 @@ import type { LineHandle, LineWidget } from "codemirror";
  * able to retrieve and filter widgets by their types.
  */
 export interface LineWidgetWithNode extends LineWidget {
-    node: HTMLElement;
+    node: FileDiffWidget;
 }
 
 /**

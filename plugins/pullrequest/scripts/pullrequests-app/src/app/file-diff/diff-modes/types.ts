@@ -48,3 +48,24 @@ export interface RemovedFileLine extends UnidiffFileLine {
 }
 
 export type FileLine = UnMovedFileLine | AddedFileLine | RemovedFileLine;
+
+export type FileDiffWidgetType =
+    | "new-inline-comment"
+    | "tuleap-pullrequest-comment"
+    | "tuleap-pullrequest-placeholder";
+
+interface WidgetElement extends HTMLElement {
+    localName: FileDiffWidgetType;
+}
+
+export interface FileDiffCommentWidget extends WidgetElement {
+    localName: "new-inline-comment" | "tuleap-pullrequest-comment";
+}
+
+export interface FileDiffPlaceholderWidget extends WidgetElement {
+    localName: "tuleap-pullrequest-placeholder";
+    isReplacingAComment: boolean;
+    height: number;
+}
+
+export type FileDiffWidget = FileDiffCommentWidget | FileDiffPlaceholderWidget;

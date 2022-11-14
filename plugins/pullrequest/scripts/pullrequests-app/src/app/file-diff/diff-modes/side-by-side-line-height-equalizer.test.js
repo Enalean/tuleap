@@ -17,41 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TAG_NAME as PULLREQUEST_COMMENT_TAG_NAME } from "../../comments/PullRequestComment.ts";
 import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
-
-import * as side_by_side_widget_finder from "./side-by-side-comment-placeholder-widget-finder.ts";
+import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
 
 describe("line-height-equalizer", () => {
-    let getCommentPlaceholderWidget;
-
     const left_codemirror = "left-codemirror";
     const right_codemirror = "right-codemirror";
-
-    beforeEach(() => {
-        getCommentPlaceholderWidget = jest.spyOn(
-            side_by_side_widget_finder,
-            "getCommentPlaceholderWidget"
-        );
-    });
 
     describe("equalizeSides", () => {
         it("Given a line with a new comment, when the opposite line has no comment or placeholder, then it should return some widget creation parameters for the opposite line with height equal to the new_comment widget height.", () => {
             const handles = {
                 left_handle: {
-                    text: "Ceci est un text",
+                    text: "Ceci est un texte",
                     widgets: [
                         {
-                            node: {
-                                localName: "new-inline-comment",
-                                classList: { contains: () => false },
-                                getBoundingClientRect: () => ({ height: 20 }),
-                            },
+                            node: FileDiffWidgetStub.buildInlineCommentWidget(),
                         },
                     ],
                 },
                 right_handle: {
-                    text: "Ceci est un autre text",
+                    text: "Ceci est un autre texte",
                 },
             };
 
@@ -67,205 +52,122 @@ describe("line-height-equalizer", () => {
         });
 
         it("Given a line with 1 comment, 1 new comment, when the opposite has a placeholder, then it should adjust the opposite placeholder height.", () => {
-            const changed = jest.fn();
-
             const placeholder = {
-                height: 20,
-                node: {
-                    localName: "placeholder",
-                    style: { height: "20px" },
-                    className: "pull-request-file-diff-comment-placeholder-block",
-                },
-                changed,
+                node: FileDiffWidgetStub.buildCodeCommentPlaceholder(),
             };
 
             const handles = {
                 left_handle: {
-                    text: "Ceci est un text",
+                    text: "Ceci est un texte",
                     widgets: [
                         {
-                            node: {
-                                localName: PULLREQUEST_COMMENT_TAG_NAME,
-                                className: "",
-                                getBoundingClientRect: () => ({ height: 25 }),
-                            },
+                            node: FileDiffWidgetStub.buildInlineCommentWidget(25),
                         },
                         {
-                            node: {
-                                localName: "new-inline-comment",
-                                className: "",
-                                getBoundingClientRect: () => ({ height: 20 }),
-                            },
+                            node: FileDiffWidgetStub.buildNewInlineCommentWidget(20),
                         },
                     ],
                 },
                 right_handle: {
-                    text: "Ceci est un autre text",
+                    text: "Ceci est un autre texte",
                     widgets: [placeholder],
                 },
             };
 
-            getCommentPlaceholderWidget.mockReturnValueOnce(null).mockReturnValueOnce(placeholder);
-
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
             expect(placeholder_to_create).toBeUndefined();
-            expect(changed).toHaveBeenCalled();
-            expect(placeholder.node.style.height).toBe("45px");
+            expect(placeholder.node.height).toBe(45);
         });
 
         it("Given a line with 2 comments, when the opposite has a placeholder and a new comment is added, then it should reduce the opposite placeholder height.", () => {
             const placeholder = {
-                height: 45,
-                node: {
-                    localName: "placeholder",
-                    style: { height: "45px" },
-                    className: "pull-request-file-diff-comment-placeholder-block",
-                },
-                changed: () => {},
+                node: FileDiffWidgetStub.buildCodeCommentPlaceholder(45),
             };
 
             const handles = {
                 left_handle: {
-                    text: "Ceci est un text",
+                    text: "Ceci est un texte",
                     widgets: [
                         {
-                            node: {
-                                localName: PULLREQUEST_COMMENT_TAG_NAME,
-                                className: "",
-                                getBoundingClientRect: () => ({ height: 25 }),
-                            },
+                            node: FileDiffWidgetStub.buildInlineCommentWidget(25),
                         },
                         {
-                            node: {
-                                localName: PULLREQUEST_COMMENT_TAG_NAME,
-                                className: "",
-                                getBoundingClientRect: () => ({ height: 20 }),
-                            },
+                            node: FileDiffWidgetStub.buildInlineCommentWidget(20),
                         },
                     ],
                 },
                 right_handle: {
-                    text: "Ceci est un autre text",
+                    text: "Ceci est un autre texte",
                     name: "right",
                     widgets: [
                         {
-                            node: {
-                                localName: "new-inline-comment",
-                                className: "",
-                                getBoundingClientRect: () => ({ height: 20 }),
-                            },
+                            node: FileDiffWidgetStub.buildNewInlineCommentWidget(20),
                         },
                         placeholder,
                     ],
                 },
             };
 
-            const opposite_placeholder = null;
-            const current_placeholder = placeholder;
-
-            getCommentPlaceholderWidget
-                .mockReturnValueOnce(current_placeholder)
-                .mockReturnValueOnce(opposite_placeholder);
-
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
             expect(placeholder_to_create).toBeUndefined();
-            expect(placeholder.node.style.height).toBe("25px");
+            expect(placeholder.node.height).toBe(25);
         });
 
         it("When the two sides have the same number of comments, then the placeholders should be minimized (height 0px).", () => {
             const placeholder = {
                 height: 20,
-                node: {
-                    localName: "placeholder",
-                    style: { height: "20px" },
-                    className: "pull-request-file-diff-comment-placeholder-block",
-                },
+                node: FileDiffWidgetStub.buildCodeCommentPlaceholder(20),
                 changed: () => {},
             };
 
             const handles = {
                 left_handle: {
-                    text: "Ceci est un text",
+                    text: "Ceci est un texte",
                     widgets: [
                         {
-                            node: {
-                                localName: PULLREQUEST_COMMENT_TAG_NAME,
-                                className: "",
-                                getBoundingClientRect: () => ({ height: 20 }),
-                            },
+                            node: FileDiffWidgetStub.buildInlineCommentWidget(20),
                         },
                     ],
                 },
                 right_handle: {
-                    text: "Ceci est un autre text",
+                    text: "Ceci est un autre texte",
                     widgets: [
                         placeholder,
                         {
-                            node: {
-                                localName: "new-inline-comment",
-                                className: "",
-                                getBoundingClientRect: () => ({ height: 20 }),
-                            },
+                            node: FileDiffWidgetStub.buildNewInlineCommentWidget(20),
                         },
                     ],
                 },
             };
-            const opposite_placeholder = null;
-            const current_placeholder = placeholder;
-
-            getCommentPlaceholderWidget
-                .mockReturnValueOnce(current_placeholder)
-                .mockReturnValueOnce(opposite_placeholder)
-                .mockReturnValueOnce(current_placeholder)
-                .mockReturnValueOnce(opposite_placeholder);
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
             expect(placeholder_to_create).toBeUndefined();
-            expect(placeholder.node.style.height).toBe("0px");
+            expect(placeholder.node.height).toBe(0);
         });
     });
 
     it("Given a line with a code placeholder (added/deleted line), when a new inline comment is added, a comment placeholder will be added and the code placeholder will remain untouched.", () => {
-        const changed = jest.fn();
-
         const code_placeholder = {
-            height: 20,
-            node: {
-                localName: "placeholder",
-                style: { height: "20px" },
-                className: "pull-request-file-diff-placeholder-block",
-            },
-            changed,
+            node: FileDiffWidgetStub.buildCodePlaceholder(20),
         };
 
         const handles = {
             left_handle: {
-                text: "Ceci est un text",
+                text: "Ceci est un texte",
                 widgets: [code_placeholder],
             },
             right_handle: {
-                text: "Ceci est un autre text",
+                text: "Ceci est un autre texte",
                 widgets: [
                     {
-                        node: {
-                            localName: "new-inline-comment",
-                            className: "",
-                            getBoundingClientRect: () => ({ height: 20 }),
-                        },
+                        node: FileDiffWidgetStub.buildNewInlineCommentWidget(20),
                     },
                 ],
             },
         };
-
-        const opposite_placeholder = null;
-        const current_placeholder = null;
-
-        getCommentPlaceholderWidget
-            .mockReturnValueOnce(current_placeholder)
-            .mockReturnValueOnce(opposite_placeholder);
 
         const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
@@ -276,7 +178,5 @@ describe("line-height-equalizer", () => {
             display_above_line: false,
             is_comment_placeholder: true,
         });
-
-        expect(changed).not.toHaveBeenCalled();
     });
 });

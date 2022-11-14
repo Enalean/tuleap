@@ -166,16 +166,12 @@ function CodeMirrorHelperService(
             coverGutter: true,
             above: display_above_line,
         };
-        const elem = $document[0].createElement("div");
-        elem.classList.add("pull-request-file-diff-placeholder-block");
 
-        if (is_comment_placeholder) {
-            elem.classList.add("pull-request-file-diff-comment-placeholder-block");
-        }
+        const placeholder = document.createElement("tuleap-pullrequest-placeholder");
+        placeholder.height = widget_height;
+        placeholder.isReplacingAComment = is_comment_placeholder;
 
-        elem.style.height = `${widget_height}px`;
-
-        code_mirror.addLineWidget(handle, elem, options);
+        code_mirror.addLineWidget(handle, placeholder, options);
     }
 
     function postComment(unidiff_offset, comment_text, file_path, pull_request_id, position) {
