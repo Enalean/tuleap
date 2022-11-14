@@ -17,12 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getCommentPlaceholderWidget } from "./side-by-side-widget-finder.js";
+import type { LineHandle } from "codemirror";
+import type { LineHandleWithWidgets, LineWidgetWithNode } from "./types-codemirror-overriden";
+import {
+    COMMENT_PLACEHOLDER_WIDGET_CLASS,
+    getCommentPlaceholderWidget,
+} from "./side-by-side-comment-placeholder-widget-finder";
+
+function getLineWidget(widget_class: string): LineWidgetWithNode {
+    const widget = document.createElement("div");
+    widget.classList.add(widget_class);
+
+    return {
+        node: widget,
+    } as unknown as LineWidgetWithNode;
+}
 
 describe("widget finder", () => {
     describe("getCommentPlaceholderWidget", () => {
         it("Given a handle, when it has no widgets, then it will return null", () => {
-            const handle = {};
+            const handle = {
+                text: "# README",
+            } as LineHandle;
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
 
@@ -30,27 +46,20 @@ describe("widget finder", () => {
         });
 
         it("Given a handle with no comment placeholder, then it will return null", () => {
-            const contains = jest.fn();
-            contains.mockReturnValue(false);
-
-            const comment_placeholder = { node: { classList: { contains } } };
             const handle = {
-                widgets: [comment_placeholder],
-            };
+                widgets: [getLineWidget("some-widget")],
+            } as LineHandleWithWidgets;
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
 
-            expect(comment_placeholder_widget).toBeUndefined();
+            expect(comment_placeholder_widget).toBeNull();
         });
 
         it("Given a handle with a comment placeholder, then it will return the comment placeholder widget", () => {
-            const contains = jest.fn();
-            contains.mockReturnValue(true);
-
-            const comment_placeholder = { node: { classList: { contains } } };
+            const comment_placeholder = getLineWidget(COMMENT_PLACEHOLDER_WIDGET_CLASS);
             const handle = {
                 widgets: [comment_placeholder],
-            };
+            } as LineHandleWithWidgets;
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
 

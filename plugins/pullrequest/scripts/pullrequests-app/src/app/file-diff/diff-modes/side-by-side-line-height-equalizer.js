@@ -20,7 +20,8 @@
 import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment.ts";
 import { NAME as NEW_INLINE_COMMENT_NAME } from "../new-inline-comment-component";
 import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
-import { getCommentPlaceholderWidget } from "./side-by-side-widget-finder.js";
+import { getCommentPlaceholderWidget } from "./side-by-side-comment-placeholder-widget-finder.ts";
+import { doesHandleHaveWidgets } from "./side-by-side-line-widgets-helper.ts";
 
 export function equalizeSides(left_code_mirror, right_code_mirror, handles) {
     if (typeof handles === "undefined") {
@@ -70,16 +71,8 @@ function getSumOfWidgetsHeights(widgets) {
         .reduce((sum, value) => sum + value, 0);
 }
 
-function hasNoWidgets(handle) {
-    return (
-        !Object.prototype.hasOwnProperty.call(handle, "widgets") ||
-        !handle.widgets ||
-        (Object.prototype.hasOwnProperty.call(handle, "widgets") && handle.widgets.length === 0)
-    );
-}
-
 function getTotalHeight(handle) {
-    if (hasNoWidgets(handle)) {
+    if (!doesHandleHaveWidgets(handle)) {
         return 0;
     }
 
@@ -91,7 +84,7 @@ function getTotalHeight(handle) {
 }
 
 function getCommentsHeight(handle) {
-    if (hasNoWidgets(handle)) {
+    if (!doesHandleHaveWidgets(handle)) {
         return 0;
     }
 

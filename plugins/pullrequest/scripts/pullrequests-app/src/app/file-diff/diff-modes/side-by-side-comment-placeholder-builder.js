@@ -29,6 +29,7 @@ import { NAME as NEW_INLINE_COMMENT_NAME } from "../new-inline-comment-component
 
 import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
 import { isAnUnmovedLine } from "./file-line-helper";
+import { doesHandleHaveWidgets } from "./side-by-side-line-widgets-helper.ts";
 
 export { buildCommentsPlaceholderWidget };
 
@@ -230,7 +231,7 @@ function sumGroupCommentsHeights(group) {
 }
 
 function sumCommentsHeight(handle) {
-    if (hasNoWidgets(handle)) {
+    if (!doesHandleHaveWidgets(handle)) {
         return 0;
     }
 
@@ -253,12 +254,4 @@ function getSumOfWidgetsHeights(widgets) {
     return widgets
         .map((widget) => widget.node.getBoundingClientRect().height)
         .reduce((sum, value) => sum + value, 0);
-}
-
-function hasNoWidgets(handle) {
-    return (
-        !Object.prototype.hasOwnProperty.call(handle, "widgets") ||
-        !handle.widgets ||
-        (Object.prototype.hasOwnProperty.call(handle, "widgets") && handle.widgets.length === 0)
-    );
 }

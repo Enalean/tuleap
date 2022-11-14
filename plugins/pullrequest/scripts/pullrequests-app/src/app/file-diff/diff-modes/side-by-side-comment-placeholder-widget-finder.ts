@@ -17,13 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { getCommentPlaceholderWidget };
+import type { LineWidgetWithNode } from "./types-codemirror-overriden";
+import type { FileLineHandle } from "./types-codemirror-overriden";
+import { doesHandleHaveWidgets } from "./side-by-side-line-widgets-helper";
 
-function getCommentPlaceholderWidget(handle) {
-    if (!handle.widgets) {
+export const COMMENT_PLACEHOLDER_WIDGET_CLASS = "pull-request-file-diff-comment-placeholder-block";
+
+export function getCommentPlaceholderWidget(handle: FileLineHandle): LineWidgetWithNode | null {
+    if (!doesHandleHaveWidgets(handle)) {
         return null;
     }
-    return handle.widgets.find((widget) => {
-        return widget.node.classList.contains("pull-request-file-diff-comment-placeholder-block");
+
+    const widget = handle.widgets.find((widget) => {
+        return widget.node.classList.contains(COMMENT_PLACEHOLDER_WIDGET_CLASS);
     });
+
+    return widget ?? null;
 }
