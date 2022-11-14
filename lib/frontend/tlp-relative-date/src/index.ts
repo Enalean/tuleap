@@ -18,7 +18,9 @@
  */
 
 import { RelativeDateElement } from "./relative-date-element";
+
 export { RelativeDateElement } from "./relative-date-element";
+export type { FirstDateShown, OtherDatePlacement } from "./relative-date-element";
 export * from "./relative-date-helper";
 
 if (!window.customElements.get("tlp-relative-date")) {

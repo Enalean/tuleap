@@ -17,14 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RelativeDateElement } from "@tuleap/tlp-relative-date";
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
+import type {
+    RelativeDateElement,
+    RelativeDatesDisplayPreference,
+} from "@tuleap/tlp-relative-date";
+import {
+    relativeDatePlacement,
+    relativeDatePreference,
+    PREFERENCE_CHOICES,
+} from "@tuleap/tlp-relative-date";
 
 document.addEventListener("DOMContentLoaded", () => {
     listenToPreferenceChange(document);
 });
 
-export function listenToPreferenceChange(doc: HTMLDocument): void {
+export function listenToPreferenceChange(doc: Document): void {
     const date_display_preference_select = doc.getElementById("relative-dates-display");
 
     if (!(date_display_preference_select instanceof HTMLSelectElement)) {
@@ -43,11 +50,17 @@ export function listenToPreferenceChange(doc: HTMLDocument): void {
     );
 }
 
+const isValidPreference = (preference: string): preference is RelativeDatesDisplayPreference =>
+    PREFERENCE_CHOICES.includes(preference);
+
 function applyDatesDisplayPreference(
     date_display_preference_select: HTMLSelectElement,
     tlp_relative_dates_component: RelativeDateElement
 ): void {
     const preference = date_display_preference_select.value;
+    if (!isValidPreference(preference)) {
+        return;
+    }
 
     tlp_relative_dates_component.placement = relativeDatePlacement(preference, "right");
     tlp_relative_dates_component.preference = relativeDatePreference(preference);
