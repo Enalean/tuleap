@@ -20,7 +20,10 @@
 import { getJSON, getAllJSON, postJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { PostFileResponse } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    ChangesetWithCommentRepresentation,
+    PostFileResponse,
+} from "@tuleap/plugin-tracker-rest-api-types";
 import type { UserHistoryResponse, SearchResultEntry } from "@tuleap/core-rest-api-types";
 import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
@@ -45,6 +48,9 @@ import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploa
 import type { RetrieveUserHistory } from "../../domain/fields/link-field/RetrieveUserHistory";
 import type { UserIdentifier } from "../../domain/UserIdentifier";
 import type { SearchArtifacts } from "../../domain/fields/link-field/SearchArtifacts";
+import type { RetrieveComments } from "../../domain/comments/RetrieveComments";
+import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
+import { FollowUpCommentProxy } from "./comments/FollowUpCommentProxy";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -57,7 +63,8 @@ type TuleapAPIClientType = RetrieveParent &
     RetrievePossibleParents &
     CreateFileUpload &
     RetrieveUserHistory &
-    SearchArtifacts;
+    SearchArtifacts &
+    RetrieveComments;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -147,5 +154,18 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
                 .filter((entry) => entry.type === ARTIFACT_TYPE)
                 .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
         });
+    },
+
+    getComments(artifact_id, is_order_inverted): ResultAsync<readonly FollowUpComment[], Fault> {
+        return getAllJSON<
+            readonly ChangesetWithCommentRepresentation[],
+            ChangesetWithCommentRepresentation
+        >(`/api/v1/artifacts/${artifact_id.id}/changesets`, {
+            params: {
+                limit: 50,
+                fields: "comments",
+                order: is_order_inverted ? "desc" : "asc",
+            },
+        }).map((comments) => comments.map(FollowUpCommentProxy.fromRepresentation));
     },
 });

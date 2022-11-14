@@ -4,7 +4,6 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "main": "dist/plugin-tracker-artifact-modal.js",
   "style": "dist/style.css",
   "dependencies": {
@@ -39,6 +38,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/core-constants": "workspace:*",
     "@tuleap/dom": "workspace:*",
     "@types/ckeditor": "^4.9.10",
     "angular": "^1.8.2",

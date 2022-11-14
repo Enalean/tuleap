@@ -133,51 +133,6 @@ describe("rest-service", () => {
         });
     });
 
-    describe("getFollowupsComments() -", () => {
-        it("Given an artifact id, a limit, an offset and an order, when I get the artifact's followup comments, then a promise will be resolved with an object containing the comments in a 'results' property and the total number of comments in a 'total' property", async () => {
-            const return_json = [
-                {
-                    id: 629,
-                    last_comment: {
-                        body: "orometer",
-                        format: "text",
-                    },
-                },
-                {
-                    id: 593,
-                    last_comment: {
-                        body: "mystagogic",
-                        format: "html",
-                    },
-                },
-            ];
-            const [first_response, second_response] = return_json;
-
-            const tlpGetSpy = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(tlpGetSpy, {
-                headers: {
-                    /** 'X-PAGINATION-SIZE' */
-                    get: () => "74",
-                },
-                return_json,
-            });
-
-            const followup_comments = await RestService.getFollowupsComments(148, 66, 23, "desc");
-
-            expect(followup_comments.total).toBe("74");
-            expect(followup_comments.results[0]).toEqual(first_response);
-            expect(followup_comments.results[1]).toEqual(second_response);
-            expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/artifacts/148/changesets", {
-                params: {
-                    fields: "comments",
-                    limit: 66,
-                    offset: 23,
-                    order: "desc",
-                },
-            });
-        });
-    });
-
     describe("getUserPreference() -", () => {
         it("Given a key, when I search for a preference, then a promise will be resolved with an object of user preference representation", async () => {
             const return_json = {

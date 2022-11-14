@@ -117,3 +117,10 @@ export const getUserHistoryErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving recently viewed artifacts: %s");
 export const getSearchArtifactsErrorMessage = (): string =>
     gettextCatalog.getString("Error while searching for artifacts: %s");
+export const getCommentsSectionTitle = (): string => gettextCatalog.getString("Follow-ups");
+export const getChangesetsCommentMessage = (): string =>
+    gettextCatalog.getString("Only comments are displayed");
+export const getEmptyCommentsMessage = (): string => gettextCatalog.getString("No follow-ups");
+export const getFollowupEditedBy = (): string => gettextCatalog.getString("Edited by %(user)s");
+export const getCommentsRetrievalErrorMessage = (): string =>
+    gettextCatalog.getString("Error while retrieving the comments: %s");

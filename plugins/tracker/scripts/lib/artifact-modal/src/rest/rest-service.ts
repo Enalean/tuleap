@@ -175,40 +175,6 @@ export function searchUsers(query: string): Promise<SearchedUsers> {
     }, errorHandler);
 }
 
-type FollowupsOrder = "asc" | "desc";
-
-interface FollowupCommentRepresentation {
-    readonly id: number;
-}
-
-interface FollowupsCommentsCollection {
-    readonly results: FollowupCommentRepresentation[];
-    total: string;
-}
-
-export function getFollowupsComments(
-    artifact_id: number,
-    limit: number,
-    offset: number,
-    order: FollowupsOrder
-): Promise<FollowupsCommentsCollection> {
-    return get(encodeURI(`/api/v1/artifacts/${artifact_id}/changesets`), {
-        params: {
-            fields: "comments",
-            limit,
-            offset,
-            order,
-        },
-    }).then(async (response) => {
-        resetError();
-        const followup_comments = await response.json();
-        return {
-            results: followup_comments,
-            total: response.headers.get("X-PAGINATION-SIZE") ?? "0",
-        };
-    }, errorHandler);
-}
-
 type CommentOrderInvertPreferenceKey = `tracker_comment_invertorder_${number}`;
 type DefaultTextFormatPreferenceKey = "user_edition_default_format";
 type RelativeDateDisplayPreferenceKey = "relative_dates_display";

@@ -18,11 +18,11 @@
  */
 
 import { define, dispatch } from "hybrids";
-import { getCommentLabel } from "../gettext-catalog";
-import type { TextAndFormat } from "../common/text-and-format";
-import { getTextAndFormatTemplate } from "../common/text-and-format";
-import { getValidFormat } from "../common/RichTextEditor";
-import "../common/FormatSelector";
+import { getCommentLabel } from "../../../gettext-catalog";
+import type { TextAndFormat } from "../../../common/text-and-format";
+import { getTextAndFormatTemplate } from "../../../common/text-and-format";
+import { getValidFormat } from "../../../common/RichTextEditor";
+import "../../../common/FormatSelector";
 
 export interface FollowupEditor extends TextAndFormat {
     content: () => HTMLElement;

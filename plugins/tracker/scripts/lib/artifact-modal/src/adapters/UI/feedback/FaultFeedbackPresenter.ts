@@ -20,6 +20,7 @@
 import type { Fault } from "@tuleap/fault";
 import { sprintf } from "sprintf-js";
 import {
+    getCommentsRetrievalErrorMessage,
     getLinkFieldFetchErrorMessage,
     getMatchingArtifactErrorMessage,
     getParentFetchErrorMessage,
@@ -44,6 +45,8 @@ const isUserHistoryFault = (fault: Fault): boolean =>
     "isUserHistoryRetrieval" in fault && fault.isUserHistoryRetrieval() === true;
 const isSearchArtifacts = (fault: Fault): boolean =>
     "isSearchArtifacts" in fault && fault.isSearchArtifacts() === true;
+const isCommentsRetrieval = (fault: Fault): boolean =>
+    "isCommentsRetrieval" in fault && fault.isCommentsRetrieval() === true;
 
 export const FaultFeedbackPresenter = {
     buildEmpty: (): FaultFeedbackPresenter => ({ message: "" }),
@@ -65,6 +68,9 @@ export const FaultFeedbackPresenter = {
         }
         if (isSearchArtifacts(fault)) {
             return { message: sprintf(getSearchArtifactsErrorMessage(), fault) };
+        }
+        if (isCommentsRetrieval(fault)) {
+            return { message: sprintf(getCommentsRetrievalErrorMessage(), fault) };
         }
         return { message: String(fault) };
     },

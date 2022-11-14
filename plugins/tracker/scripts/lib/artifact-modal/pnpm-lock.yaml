@@ -4,6 +4,7 @@ specifiers:
   '@tuleap/angular-tlp': workspace:*
   '@tuleap/build-system-configurator': workspace:*
   '@tuleap/ckeditor-image-upload': workspace:*
+  '@tuleap/core-constants': workspace:*
   '@tuleap/core-rest-api-types': workspace:*
   '@tuleap/date-helper': workspace:*
   '@tuleap/dom': workspace:*
@@ -61,6 +62,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/core-constants': link:../../../../../lib/frontend/constants
   '@tuleap/dom': link:../../../../../lib/frontend/dom
   '@types/ckeditor': 4.9.10
   angular: 1.8.2
