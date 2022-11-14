@@ -83,7 +83,7 @@ export default class CollapsibleFolder extends Vue {
     @Prop({ required: false, default: false })
     readonly is_base_folder!: boolean;
     @Prop({ required: true })
-    readonly children!: Map<string, Folder | Repository> | Array<Folder | Repository>;
+    readonly children!: Array<Folder | Repository>;
 
     private is_folder_collapsed = false;
 

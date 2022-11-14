@@ -18,7 +18,6 @@
  */
 
 import {
-    createHierarchy,
     filterAChild,
     filterAFolder,
     checkRepositoryMatchQuery,
@@ -30,51 +29,23 @@ import {
 import type { Folder, Repository } from "../type";
 
 describe("filter", () => {
-    describe("createHierarchy", () => {
-        it("set children if children is not present in map", () => {
-            const hierarchy = {
-                is_folder: true,
-                label: "tutu",
-                children: new Map(),
-            } as Folder;
-            const path_part = "toto";
-
-            createHierarchy(hierarchy, path_part);
-
-            expect(hierarchy.label).toBe("tutu");
-        });
-
-        it("get the children", () => {
-            const hierarchy = {
-                is_folder: true,
-                label: "toto",
-                children: new Map(),
-            } as Folder;
-            const path_part = "toto";
-
-            const result = createHierarchy(hierarchy, path_part);
-
-            expect(hierarchy.label).toEqual(result.label);
-        });
-    });
-
     describe("sortByLabelAlphabetically", () => {
         it("sort folders", () => {
-            const folderA = {
+            const folderA: Folder = {
                 is_folder: true,
                 label: "Xtoto",
-                children: new Map(),
-            } as Folder;
-            const folderB = {
+                children: [],
+            };
+            const folderB: Folder = {
                 is_folder: true,
                 label: "Atutu",
-                children: new Map(),
-            } as Folder;
+                children: [],
+            };
 
             const items = [folderA, folderB];
 
             const sorted_folder = sortByLabelAlphabetically(items);
-            expect(sorted_folder).toEqual([folderB, folderA]);
+            expect(sorted_folder).toStrictEqual([folderB, folderA]);
         });
     });
 

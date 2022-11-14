@@ -118,9 +118,7 @@ export interface GitLabDataWithTokenPayload {
 export interface Folder {
     is_folder: boolean;
     label: string;
-    children:
-        | Map<string, Folder | Repository | FormattedGitLabRepository>
-        | Array<Folder | Repository | FormattedGitLabRepository>;
+    children: Array<Folder | Repository | FormattedGitLabRepository>;
     normalized_path?: string;
     path_without_project?: string;
 }
