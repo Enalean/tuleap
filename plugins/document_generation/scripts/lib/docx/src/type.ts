@@ -249,7 +249,10 @@ export type ArtifactReportResponseFieldValue =
     | ArtifactReportResponseStepDefinitionFieldValue;
 
 export interface ArtifactResponse
-    extends Omit<ArtifactResponseWithoutStepDefinition, "values" | "_pick_what_you_need"> {
+    extends Pick<
+        ArtifactResponseWithoutStepDefinition,
+        "id" | "title" | "xref" | "tracker" | "html_url" | "status" | "is_open"
+    > {
     readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
 }
 
@@ -266,7 +269,7 @@ export interface StepExecutionFieldStructure extends BaseFieldStructure {
 }
 
 export interface TrackerDefinition
-    extends Omit<TrackerResponseNoInstance, "fields" | "_pick_what_you_need"> {
+    extends Pick<TrackerResponseNoInstance, "id" | "label" | "item_name" | "structure"> {
     readonly fields: ReadonlyArray<FieldsStructure>;
 }
 

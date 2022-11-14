@@ -20,4 +20,7 @@
 import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
 
 // I represent the Tracker JSON representation after it has been transformed in tracker-transformer
-export type TrackerWithChangesetValues = Omit<TrackerResponseNoInstance, "_pick_what_you_need">;
+export type TrackerWithChangesetValues = Pick<
+    TrackerResponseNoInstance,
+    "id" | "label" | "item_name" | "fields" | "structure" | "project"
+>;

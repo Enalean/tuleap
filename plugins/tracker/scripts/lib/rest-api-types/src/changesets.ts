@@ -50,6 +50,6 @@ export type ChangesetWithCommentRepresentation = (
     readonly id: number;
     readonly submitted_on: string;
     readonly last_comment: CommentRepresentation;
-    readonly last_modified_by: RegisteredUserWithAvatar;
+    readonly last_modified_by: AnonymousUserWithAvatar | RegisteredUserWithAvatar;
     readonly last_modified_date: string;
 };
