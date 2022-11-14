@@ -126,6 +126,7 @@ export interface TrackerResponseNoInstance extends MinimalTrackerResponse {
     readonly item_name: string;
     readonly fields: ReadonlyArray<StructureFields>;
     readonly structure: ReadonlyArray<StructureFormat>;
+    readonly project: TrackerProjectRepresentation;
 }
 
 export interface TrackerUsedArtifactLinkResponse {
