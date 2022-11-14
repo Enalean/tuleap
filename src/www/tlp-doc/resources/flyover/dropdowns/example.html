@@ -37,7 +37,13 @@
 <div>
     <div class="tlp-dropdown-menu" id="dropdown-menu-example-options" role="menu">
         <span class="tlp-dropdown-menu-title" role="menuitem">Favorites</span>
-        <a href="#" class="tlp-dropdown-menu-item" role="menuitem">User story</a>
+        <div class="tlp-dropdown-menu-item" id="dropdown-menu-example-options-submenu" aria-haspopup="true" role="menuitem">
+            Create a new awesome item…
+            <div class="tlp-dropdown-menu tlp-dropdown-submenu tlp-dropdown-menu-side" id="dropdown-menu-example-options-submenu-options" role="menu" aria-label="User story">
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Fancy user story</a>
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Task</a>
+            </div>
+        </div>
         <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Task</a>
     </div>
 </div>
@@ -46,8 +52,17 @@
     tlp.createDropdown(
         document.getElementById("dropdown-example-options"),
         {
-            keyboard     : false,
+            keyboard: false,
             dropdown_menu: document.getElementById("dropdown-menu-example-options"),
+        }
+    );
+
+    // For the sub dropdown
+    tlp.createDropdown(
+        document.getElementById("dropdown-menu-example-options-submenu"),
+        {
+            keyboard: false,
+            dropdown_menu: document.getElementById("dropdown-menu-example-options-submenu-options"),
         }
     );
 </script>
@@ -71,7 +86,7 @@
     tlp.createDropdown(
         document.getElementById("dropdown-disable-options"),
         {
-            keyboard     : false,
+            keyboard: false,
             dropdown_menu: document.getElementById("dropdown-menu-disable-options"),
         }
     );

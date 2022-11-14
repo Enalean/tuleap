@@ -18,7 +18,7 @@
  *
  */
 
-describe("Document search", () => {
+describe("Document filename pattern", () => {
     let project_unixname: string, public_name: string, now: number;
 
     before(() => {
@@ -67,7 +67,11 @@ describe("Document search", () => {
 
         cy.log("At file creation pattern is displayed");
         cy.visitProjectService(project_unixname, "Documents");
-        cy.get("[data-test=document-item-action-new-button]").click();
+
+        cy.get("[data-test=document-header-actions]").within(() => {
+            cy.get("[data-test=document-item-action-new-button]").click();
+            cy.get("[data-test=document-new-file-creation-button]").click();
+        });
         cy.get("[data-test=document-new-item-title]").type("test");
         // eslint-disable-next-line no-template-curly-in-string
         cy.get("[data-test=preview]").contains("tuleap-${ID}-test");

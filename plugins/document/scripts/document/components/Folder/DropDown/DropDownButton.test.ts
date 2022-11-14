@@ -75,8 +75,7 @@ describe("DropDownButton", () => {
         expect(document.addEventListener).toHaveBeenCalledTimes(1);
 
         expect(wrapper.find(".tlp-append").exists()).toBeFalsy();
-        expect(wrapper.find(".fa-ellipsis-h").exists()).toBeTruthy();
-        expect(wrapper.find(".tlp-button-icon-right").exists()).toBeTruthy();
+        expect(wrapper.find(".fa-ellipsis").exists()).toBeTruthy();
     });
 
     it(`Given drop down button is in quick look mode

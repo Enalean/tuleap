@@ -32,17 +32,11 @@
                 v-else-if="should_display_new_version_button"
                 data-test="document-quicklook-action-button-new-version"
             />
-            <new-item-button
-                v-if="item.user_can_write && is_item_a_folder"
-                class="tlp-button-primary tlp-button-small tlp-button-outline"
-                v-bind:item="item"
-                data-test="document-quicklook-action-button-new-item"
-            />
             <drop-down-button
                 v-bind:is-in-quick-look-mode="true"
                 v-bind:is-in-folder-empty-state="false"
                 v-bind:is-in-large-mode="false"
-                v-bind:is-appended="item.user_can_write && !is_item_a_wiki_with_approval_table"
+                v-bind:is-appended="false"
             >
                 <drop-down-menu v-bind:item="item">
                     <create-new-item-version-button
@@ -87,7 +81,6 @@
 <script setup lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "./NewVersion/NewItemVersionButton.vue";
-import NewItemButton from "../ActionsButton/NewItemButton.vue";
 import DropDownButton from "./DropDownButton.vue";
 import DownloadButton from "../../QuickLook/DownloadButton.vue";
 import LockItem from "./Lock/LockItem.vue";

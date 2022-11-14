@@ -80,13 +80,15 @@ function testNewFolderShortcut(folder_title: string): void {
 
 function testNewItemShortcut(item_title: string): void {
     typeShortcut("n");
+    cy.get("[data-test=document-header-actions]").within(() => {
+        cy.get("[data-test=document-new-empty-creation-button]").click();
+    });
     cy.get("[data-test=document-new-item-modal]")
         .should("be.visible")
         .within(() => {
             cy.focused()
                 .should("have.attr", "data-test", "document-new-item-title")
                 .type(item_title);
-            cy.get("[data-test=empty]").click();
             cy.get("[data-test=document-modal-submit-button-create-item]").click();
         });
     cy.get("[data-test=document-new-item-modal]").should("not.be.visible");

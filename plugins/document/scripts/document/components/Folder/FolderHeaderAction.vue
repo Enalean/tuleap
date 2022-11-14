@@ -18,16 +18,15 @@
   -->
 
 <template>
-    <div class="tlp-dropdown-split-button">
-        <new-item-button
-            class="tlp-button-primary tlp-dropdown-split-button-main"
+    <div>
+        <new-item-dropdown
             v-bind:item="item"
             v-if="item.user_can_write"
             data-test="document-item-action-new-button"
         />
         <drop-down-button
             v-bind:is-in-large-mode="false"
-            v-bind:is-appended="item.user_can_write"
+            v-bind:is-appended="false"
             v-bind:is-in-quick-look-mode="false"
             v-bind:is-in-folder-empty-state="false"
         >
@@ -37,10 +36,10 @@
 </template>
 
 <script setup lang="ts">
-import NewItemButton from "./ActionsButton/NewItemButton.vue";
 import DropDownButton from "./DropDown/DropDownButton.vue";
 import DropDownCurrentFolder from "./DropDown/DropDownCurrentFolder.vue";
 import type { Folder } from "../../type";
+import NewItemDropdown from "./DropDown/NewDocument/NewItemDropdown.vue";
 
 defineProps<{ item: Folder }>();
 </script>

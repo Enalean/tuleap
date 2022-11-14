@@ -20,6 +20,7 @@
 
 import mitt from "mitt";
 import type { Item, ListValue } from "../type";
+import type { ItemType } from "../type";
 
 export interface DeleteItemEvent {
     item: Item;
@@ -74,7 +75,7 @@ export type Events = {
     "update-multiple-properties-list-value": {
         detail: { value: number[] | [] | ListValue[] | null; id: string };
     };
-    createItem: { item: Item };
+    createItem: { item: Item; type: ItemType };
     deleteItem: DeleteItemEvent;
     "new-item-has-just-been-created": void;
     "item-properties-have-just-been-updated": void;

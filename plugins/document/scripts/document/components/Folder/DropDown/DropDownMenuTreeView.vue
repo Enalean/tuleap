@@ -25,12 +25,11 @@
         />
 
         <template v-if="item.user_can_write && is_item_a_folder">
-            <new-folder-secondary-action
+            <new-item-submenu
                 v-bind:item="item"
-                slot="new-folder-secondary-action"
+                slot="new-document"
                 data-test="document-folder-content-creation"
             />
-            <new-document v-bind:item="item" slot="new-document" />
         </template>
 
         <template v-if="!is_item_a_folder">
@@ -88,9 +87,7 @@
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../DropDown/NewVersion/NewItemVersionButton.vue";
 import DeleteItem from "./Delete/DeleteItem.vue";
-import NewFolderSecondaryAction from "./NewFolderSecondaryAction.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
-import NewDocument from "./NewDocument/NewDocument.vue";
 import LockItem from "./Lock/LockItem.vue";
 import UnlockItem from "./Lock/UnlockItem.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
@@ -104,6 +101,7 @@ import { computed } from "vue";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
 import DownloadFile from "./DownloadFile.vue";
+import NewItemSubmenu from "./NewDocument/NewItemSubmenu.vue";
 
 const props = defineProps<{ item: Item }>();
 
