@@ -17,11 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { FirstDateShown, OtherDatePlacement } from "./relative-date-element";
+
+export type RelativeDatesDisplayPreference =
+    | "relative_first-absolute_shown"
+    | "absolute_first-relative_shown"
+    | "relative_first-absolute_tooltip"
+    | "absolute_first-relative_tooltip";
+
+const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN = "relative_first-absolute_shown";
 const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN = "absolute_first-relative_shown";
 const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP = "relative_first-absolute_tooltip";
 const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP = "absolute_first-relative_tooltip";
 
-export function relativeDatePreference(relative_dates_display: string): string {
+export const PREFERENCE_CHOICES = [
+    PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
+    PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+    PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
+    PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
+];
+
+export function relativeDatePreference(
+    relative_dates_display: RelativeDatesDisplayPreference
+): FirstDateShown {
     if (
         relative_dates_display === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN ||
         relative_dates_display === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP
@@ -33,9 +51,9 @@ export function relativeDatePreference(relative_dates_display: string): string {
 }
 
 export function relativeDatePlacement(
-    relative_dates_display: string,
+    relative_dates_display: RelativeDatesDisplayPreference,
     position_when_shown: "right" | "top"
-): string {
+): OtherDatePlacement {
     if (
         relative_dates_display === PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP ||
         relative_dates_display === PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP

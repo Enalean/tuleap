@@ -19,6 +19,9 @@
 
 import formatRelativeDate from "./relative-date-formatter";
 
+export type FirstDateShown = "absolute" | "relative";
+export type OtherDatePlacement = "top" | "right" | "tooltip";
+
 const allowed_placements = ["top", "right", "tooltip"];
 const allowed_preferences = ["absolute", "relative"];
 
