@@ -105,6 +105,8 @@ final class AccountInformationCollectionPresenter
      */
     public $default_avatar_data_url;
 
+    public string $current_timezone;
+
     public function __construct(
         AccountTabPresenterCollection $tabs,
         CSRFSynchronizerToken $csrf_token,
@@ -124,6 +126,7 @@ final class AccountInformationCollectionPresenter
         $this->can_change_email        = $account_information_collection->isUserAllowedToChangeEmail();
         $this->extra_information       = $account_information_collection->getExtraInformation();
         $this->timezone                = new Account_TimezoneSelectorPresenter($user->getTimezone());
+        $this->current_timezone        = $user->getTimezone() ?: '';
         $this->change_email_pending    = $user->getConfirmHash() != '';
         $this->default_avatar_data_url = $default_avatar_data_url;
     }
