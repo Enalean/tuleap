@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ADDED_GROUP, UNMOVED_GROUP } from "./side-by-side-line-grouper.js";
+import { ADDED_GROUP, UNMOVED_GROUP } from "./types.ts";
 import {
     getGroupLines,
     getGroupOfLine,

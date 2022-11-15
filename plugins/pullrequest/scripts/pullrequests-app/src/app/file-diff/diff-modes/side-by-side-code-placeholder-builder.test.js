@@ -18,7 +18,7 @@
  */
 
 import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-builder.js";
-import { ADDED_GROUP, DELETED_GROUP } from "./side-by-side-line-grouper.js";
+import { ADDED_GROUP, DELETED_GROUP } from "./types.ts";
 import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 
 describe("side-by-side code placeholder builder", () => {

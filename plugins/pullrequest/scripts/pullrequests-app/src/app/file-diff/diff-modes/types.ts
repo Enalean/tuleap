@@ -17,6 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export type GroupType = "unmoved" | "deleted" | "added";
+export const UNMOVED_GROUP: GroupType = "unmoved";
+export const DELETED_GROUP: GroupType = "deleted";
+export const ADDED_GROUP: GroupType = "added";
+
+export interface GroupOfLines {
+    readonly type: GroupType;
+    unidiff_offsets: number[];
+}
+
 export interface UnidiffFileLine {
     readonly unidiff_offset: number;
 }

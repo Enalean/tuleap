@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DELETED_GROUP } from "./side-by-side-line-grouper.js";
+import { DELETED_GROUP } from "./types.ts";
 import { getGroupOfLine, getLineOfHandle } from "./side-by-side-lines-state.js";
 
 export { getDisplayAboveLineForWidget };

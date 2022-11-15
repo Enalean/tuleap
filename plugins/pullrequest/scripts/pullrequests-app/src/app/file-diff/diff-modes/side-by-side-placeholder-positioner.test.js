@@ -19,7 +19,7 @@
 
 import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
 import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
-import { DELETED_GROUP } from "./side-by-side-line-grouper.js";
+import { DELETED_GROUP } from "./types.ts";
 
 describe("placeholder positioner", () => {
     let getGroupOfLine, getLineOfHandle;

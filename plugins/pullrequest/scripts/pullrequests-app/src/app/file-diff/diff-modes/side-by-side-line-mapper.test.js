@@ -18,7 +18,7 @@
  */
 
 import { buildLineToLineHandlesMap } from "./side-by-side-line-mapper.js";
-import { ADDED_GROUP, DELETED_GROUP } from "./side-by-side-line-grouper.js";
+import { ADDED_GROUP, DELETED_GROUP } from "./types.ts";
 
 describe("side-by-side line mapper", () => {
     describe("buildLineToLineHandlesMap()", () => {

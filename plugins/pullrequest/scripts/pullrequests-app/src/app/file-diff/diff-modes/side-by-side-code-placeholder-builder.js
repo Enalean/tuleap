@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ADDED_GROUP, DELETED_GROUP } from "./side-by-side-line-grouper.js";
+import { ADDED_GROUP, DELETED_GROUP } from "./types.ts";
 import { getGroupLines, getGroupOfLine, getLineHandles } from "./side-by-side-lines-state.js";
 
 export function buildCodePlaceholderWidget(line, left_code_mirror, right_code_mirror) {
