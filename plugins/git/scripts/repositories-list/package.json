@@ -1,0 +1,40 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-git-repositories-list",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/burningparrot-theme": "link:../../../../src/themes/BurningParrot",
+    "@tuleap/project-background": "link:../../../../lib/frontend/project-background",
+    "@tuleap/project-privacy-helper": "link:../../../../lib/frontend/project-privacy-helper",
+    "@tuleap/tlp-dropdown": "link:../../../../lib/frontend/tlp-dropdown",
+    "@tuleap/tlp-fetch": "link:../../../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-modal": "link:../../../../lib/frontend/tlp-modal",
+    "@tuleap/tlp-popovers": "link:../../../../lib/frontend/tlp-popovers",
+    "@tuleap/vue-breadcrumb-privacy": "link:../../../../lib/frontend/vue-breadcrumb-privacy",
+    "@tuleap/vue2-gettext-init": "link:../../../../lib/frontend/vue2-gettext-init",
+    "javascript-time-ago": "^2.3.4",
+    "vue": "^2.7.8",
+    "vue-dompurify-html": "^2.5.1",
+    "vue-gettext": "^2.1.12",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator",
+    "@tuleap/po-gettext-plugin": "link:../../../../lib/frontend/po-gettext-plugin",
+    "@tuleap/vuex-store-wrapper-jest": "link:../../../../lib/frontend/vuex-store-wrapper-jest",
+    "@types/javascript-time-ago": "^2.0.1",
+    "@vue/test-utils": "^1.3.0",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.1.2",
+    "vuex-class": "^0.3.2"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

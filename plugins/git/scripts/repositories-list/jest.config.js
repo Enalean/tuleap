@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "repository/repository";
-@use "widget/last-pushes-widget";
-@use "project-background-header";
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import { env } from "process";
+
+env.DISABLE_TS_TYPECHECK = "true";
+
+const jest_base_config = defineJestConfiguration();
+export default {
+    ...jest_base_config,
+    displayName: "git-repositories-list",
+};

@@ -6,8 +6,8 @@
             "po": "scripts/permissions-per-group/po"
         },
         "git-repositories": {
-            "src": "scripts/repositories/src",
-            "po": "scripts/repositories/po"
+            "src": "scripts/repositories-list/src",
+            "po": "scripts/repositories-list/po"
         },
         "branch-tag-selector": {
             "src": "scripts/repository/branch-tag-selector/src",
