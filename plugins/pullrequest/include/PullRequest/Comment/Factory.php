@@ -42,7 +42,7 @@ class Factory
             $comment->getUserId(),
             $comment->getPostDate(),
             $comment->getContent(),
-            $comment->getParentId()
+            $comment->getParentId(),
         );
 
         $this->reference_manager->extractCrossRef(
@@ -89,7 +89,7 @@ class Factory
             $row['user_id'],
             $row['post_date'],
             $row['content'],
-            (int) $row['parent_id']
+            (int) $row['parent_id'],
         );
     }
 }
