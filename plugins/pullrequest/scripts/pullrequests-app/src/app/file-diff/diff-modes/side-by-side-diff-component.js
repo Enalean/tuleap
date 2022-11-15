@@ -34,7 +34,10 @@ import { synchronize } from "./side-by-side-scroll-synchronizer.js";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/collaspible-code-sections-builder.ts";
 import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
 
-import { POSITION_LEFT, POSITION_RIGHT } from "../inline-comment-positions.js";
+import {
+    INLINE_COMMENT_POSITION_RIGHT,
+    INLINE_COMMENT_POSITION_LEFT,
+} from "../../comments/PullRequestCommentPresenter";
 
 import "./modes.js";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
@@ -163,9 +166,11 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
         }
 
         const target_code_mirror =
-            comment.position === POSITION_LEFT ? left_code_mirror : right_code_mirror;
+            comment.position === INLINE_COMMENT_POSITION_LEFT
+                ? left_code_mirror
+                : right_code_mirror;
         const line_number =
-            comment.position === POSITION_LEFT
+            comment.position === INLINE_COMMENT_POSITION_LEFT
                 ? comment_line.old_offset - 1
                 : comment_line.new_offset - 1;
 
@@ -177,7 +182,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
-                comment.position === POSITION_LEFT
+                comment.position === INLINE_COMMENT_POSITION_LEFT
                     ? getLeftLine(line_number)
                     : getRightLine(line_number)
             );
@@ -256,7 +261,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             line_number,
             self.filePath,
             self.pullRequestId,
-            POSITION_LEFT,
+            INLINE_COMMENT_POSITION_LEFT,
             () => recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line)
         );
     }
@@ -273,7 +278,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             line_number,
             self.filePath,
             self.pullRequestId,
-            POSITION_RIGHT,
+            INLINE_COMMENT_POSITION_RIGHT,
             () => recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line)
         );
     }

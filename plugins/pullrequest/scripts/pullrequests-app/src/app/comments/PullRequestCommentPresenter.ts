@@ -29,7 +29,8 @@ export const TYPE_INLINE_COMMENT: CommentType = "inline-comment";
 export const TYPE_GLOBAL_COMMENT: CommentType = "comment";
 export const TYPE_EVENT_COMMENT: CommentType = "timeline-event";
 
-type InlineCommentPosition = "left" | "right";
+export type InlineCommentPosition = "left" | "right";
+export const INLINE_COMMENT_POSITION_LEFT: InlineCommentPosition = "left";
 export const INLINE_COMMENT_POSITION_RIGHT: InlineCommentPosition = "right";
 
 export interface State {

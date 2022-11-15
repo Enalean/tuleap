@@ -22,7 +22,10 @@ import { getStore } from "../comments-store.ts";
 import { getCollapsibleCodeSections } from "../../code-collapse/collaspible-code-sections-builder.ts";
 
 import "./modes.js";
-import { POSITION_LEFT, POSITION_RIGHT } from "../inline-comment-positions.js";
+import {
+    INLINE_COMMENT_POSITION_RIGHT,
+    INLINE_COMMENT_POSITION_LEFT,
+} from "../../comments/PullRequestCommentPresenter";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
 
 export default {
@@ -88,8 +91,8 @@ function controller($element, $scope, FileDiffRestService, CodeMirrorHelperServi
         const line = self.diff.lines[line_number];
 
         return gutter === GUTTER_OLDLINES && line.new_offset === null
-            ? POSITION_LEFT
-            : POSITION_RIGHT;
+            ? INLINE_COMMENT_POSITION_LEFT
+            : INLINE_COMMENT_POSITION_RIGHT;
     }
 
     function addNewComment(code_mirror, line_number, gutter) {
