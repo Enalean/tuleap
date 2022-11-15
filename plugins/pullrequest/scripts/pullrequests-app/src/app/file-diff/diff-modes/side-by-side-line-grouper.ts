@@ -57,6 +57,7 @@ function groupLinesByChangeType(file_lines: FileLine[]): GroupOfLines[] {
         const new_group: GroupOfLines = {
             type: current_change_type,
             unidiff_offsets: [line.unidiff_offset],
+            has_initial_comment_placeholder: false,
         };
 
         accumulator.push(new_group);

@@ -7,13 +7,13 @@ import {
     getCollapsibleSectionsSideBySide,
 } from "./collaspible-code-sections-builder";
 import type { PullRequestInlineCommentPresenter } from "../comments/PullRequestCommentPresenter";
-import type { FileLine } from "../file-diff/diff-modes/types";
+import { FileLineStub } from "../../../tests/stubs/FileLineStub";
 
 describe("code-collapse-service", () => {
     describe("isThereACommentOnThisLine", () => {
         it("Given a line and a collection of comments, Then it should return true if a comment is on the given line, false otherwise.", () => {
-            const commented_line = { unidiff_offset: 666 } as FileLine;
-            const not_commented_line = { unidiff_offset: 111 } as FileLine;
+            const commented_line = FileLineStub.buildUnMovedFileLine(666, 666);
+            const not_commented_line = FileLineStub.buildUnMovedFileLine(111, 111);
 
             const inline_comments = [
                 {

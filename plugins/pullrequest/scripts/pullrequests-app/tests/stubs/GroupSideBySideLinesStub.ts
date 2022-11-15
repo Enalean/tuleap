@@ -23,7 +23,7 @@ import type { GroupOfLines } from "../../src/app/file-diff/diff-modes/types";
 interface StubGroupSideBySideLines {
     hasBuiltLineToGroupMap: () => boolean;
     hasBuildFirstLineToGroupMap: () => boolean;
-    withLineToGroupMap: (line_to_group_map: Map<number, GroupOfLines>) => GroupSideBySideLines;
+    withGroupsOfLines: (groups_of_lines: GroupOfLines[]) => GroupSideBySideLines;
     withEmptyLineToGroupMap: () => GroupSideBySideLines;
 }
 
@@ -31,7 +31,15 @@ export const GroupSideBySideLinesStub = (): StubGroupSideBySideLines => {
     let has_built_line_to_group_map = false,
         has_built_first_line_to_group_map = false;
 
-    const buildLineToGroupMap = (map: Map<number, GroupOfLines>): Map<number, GroupOfLines> => {
+    const buildLineToGroupMap = (groups_of_lines: GroupOfLines[]): Map<number, GroupOfLines> => {
+        const map = groups_of_lines.reduce((map, group) => {
+            group.unidiff_offsets.forEach((line_unidiff_offset) => {
+                map.set(line_unidiff_offset, group);
+            });
+
+            return map;
+        }, new Map<number, GroupOfLines>());
+
         has_built_line_to_group_map = true;
 
         return map;
@@ -44,14 +52,12 @@ export const GroupSideBySideLinesStub = (): StubGroupSideBySideLines => {
     };
 
     return {
-        withLineToGroupMap: (
-            line_to_group_map: Map<number, GroupOfLines>
-        ): GroupSideBySideLines => ({
-            buildLineToGroupMap: () => buildLineToGroupMap(line_to_group_map),
+        withGroupsOfLines: (groups_of_lines: GroupOfLines[]): GroupSideBySideLines => ({
+            buildLineToGroupMap: () => buildLineToGroupMap(groups_of_lines),
             buildFirstLineToGroupMap: () => buildFirstLineToGroupMap(),
         }),
         withEmptyLineToGroupMap: (): GroupSideBySideLines => ({
-            buildLineToGroupMap: () => buildLineToGroupMap(new Map()),
+            buildLineToGroupMap: () => buildLineToGroupMap([]),
             buildFirstLineToGroupMap: () => buildFirstLineToGroupMap(),
         }),
         hasBuiltLineToGroupMap: (): boolean => has_built_line_to_group_map,

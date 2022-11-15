@@ -20,6 +20,7 @@
 import { UNMOVED_GROUP, DELETED_GROUP, ADDED_GROUP } from "./types";
 import type { GroupSideBySideLines } from "./side-by-side-line-grouper";
 import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
+import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 
 describe("Side-by-side line grouper", () => {
     describe("buildLineGroups()", () => {
@@ -28,13 +29,13 @@ describe("Side-by-side line grouper", () => {
 
             beforeEach(() => {
                 line_grouper = SideBySideLineGrouper([
-                    { unidiff_offset: 1, old_offset: 1, new_offset: 1 },
-                    { unidiff_offset: 2, old_offset: 2, new_offset: null },
-                    { unidiff_offset: 3, old_offset: 3, new_offset: null },
-                    { unidiff_offset: 4, old_offset: 4, new_offset: null },
-                    { unidiff_offset: 5, old_offset: 5, new_offset: 2 },
-                    { unidiff_offset: 6, old_offset: 6, new_offset: null },
-                    { unidiff_offset: 7, old_offset: 7, new_offset: null },
+                    FileLineStub.buildUnMovedFileLine(1, 1),
+                    FileLineStub.buildRemovedLine(2, 2),
+                    FileLineStub.buildRemovedLine(3, 3),
+                    FileLineStub.buildRemovedLine(4, 4),
+                    FileLineStub.buildUnMovedFileLine(5, 2),
+                    FileLineStub.buildRemovedLine(6, 6),
+                    FileLineStub.buildRemovedLine(7, 7),
                 ]);
             });
 
@@ -50,18 +51,22 @@ describe("Side-by-side line grouper", () => {
                 expect(first_unmoved_group).toStrictEqual({
                     type: UNMOVED_GROUP,
                     unidiff_offsets: [1],
+                    has_initial_comment_placeholder: false,
                 });
                 expect(first_deleted_group).toStrictEqual({
                     type: DELETED_GROUP,
                     unidiff_offsets: [2, 3, 4],
+                    has_initial_comment_placeholder: false,
                 });
                 expect(second_unmoved_group).toStrictEqual({
                     type: UNMOVED_GROUP,
                     unidiff_offsets: [5],
+                    has_initial_comment_placeholder: false,
                 });
                 expect(second_deleted_group).toStrictEqual({
                     type: DELETED_GROUP,
                     unidiff_offsets: [6, 7],
+                    has_initial_comment_placeholder: false,
                 });
             });
 
@@ -90,14 +95,14 @@ describe("Side-by-side line grouper", () => {
 
             beforeEach(() => {
                 line_grouper = SideBySideLineGrouper([
-                    { unidiff_offset: 1, old_offset: 1, new_offset: 1 },
-                    { unidiff_offset: 2, old_offset: 2, new_offset: 2 },
-                    { unidiff_offset: 3, old_offset: null, new_offset: 3 },
-                    { unidiff_offset: 4, old_offset: null, new_offset: 4 },
-                    { unidiff_offset: 5, old_offset: null, new_offset: 5 },
-                    { unidiff_offset: 6, old_offset: 3, new_offset: 6 },
-                    { unidiff_offset: 7, old_offset: null, new_offset: 7 },
-                    { unidiff_offset: 8, old_offset: null, new_offset: 8 },
+                    FileLineStub.buildUnMovedFileLine(1, 1),
+                    FileLineStub.buildUnMovedFileLine(2, 2),
+                    FileLineStub.buildAddedLine(3, 3),
+                    FileLineStub.buildAddedLine(4, 4),
+                    FileLineStub.buildAddedLine(5, 5),
+                    FileLineStub.buildUnMovedFileLine(6, 6),
+                    FileLineStub.buildAddedLine(7, 7),
+                    FileLineStub.buildAddedLine(8, 8),
                 ]);
             });
 
@@ -113,18 +118,22 @@ describe("Side-by-side line grouper", () => {
                 expect(first_unmoved_group).toStrictEqual({
                     type: UNMOVED_GROUP,
                     unidiff_offsets: [1, 2],
+                    has_initial_comment_placeholder: false,
                 });
                 expect(first_added_group).toStrictEqual({
                     type: ADDED_GROUP,
                     unidiff_offsets: [3, 4, 5],
+                    has_initial_comment_placeholder: false,
                 });
                 expect(second_unmoved_group).toStrictEqual({
                     type: UNMOVED_GROUP,
                     unidiff_offsets: [6],
+                    has_initial_comment_placeholder: false,
                 });
                 expect(second_added_group).toStrictEqual({
                     type: ADDED_GROUP,
                     unidiff_offsets: [7, 8],
+                    has_initial_comment_placeholder: false,
                 });
             });
 
