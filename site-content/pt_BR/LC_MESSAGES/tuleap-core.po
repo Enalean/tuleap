@@ -1022,6 +1022,9 @@ msgstr "Confirmar"
 msgid "Confirm the account creation"
 msgstr "Confirmar a criação da conta"
 
+msgid "Confirmation link sent"
+msgstr ""
+
 msgid "Congratulations!"
 msgstr "Parabéns!"
 
@@ -1262,6 +1265,9 @@ msgstr "Detalhes"
 
 msgid "Developer Commits (Last 7 days/Total)"
 msgstr "Commits de Desenvolvedores (Últimos 7 dias/Total)"
+
+msgid "Didn't get a confirmation email? Check your spam folder."
+msgstr ""
 
 msgid "Disallow for all projects"
 msgstr "Desautorizar em todos os projetos"
@@ -3995,13 +4001,6 @@ msgstr ""
 "I Been Pwned."
 
 msgid ""
-"To do this click the confirm button in the email. <i class=\"fa fa-envelope-o"
-"\"></i>"
-msgstr ""
-"Para fazer isso, clique no botão confirmar no email. <i class=\"fa fa-"
-"envelope-o\"></i>"
-
-msgid ""
 "To proceed with the file download, click on '<b>I accept</b>'. If you do not "
 "want to download the file click on '<b>I decline</b>' and <a href=\"mailto:%s"
 "\"><b>contact us</b></a> if you need clarification or want to explain why "
@@ -4318,6 +4317,9 @@ msgstr ""
 
 msgid "We cannot find any widgets."
 msgstr "Não localizamos nenhum widget."
+
+msgid "We emailed a confirmation link to <strong>%s</strong>,"
+msgstr ""
 
 msgid "We need at least one email to send an invitation"
 msgstr "É necessário pelo menos um email para o envio de um convite"
@@ -4875,9 +4877,6 @@ msgstr ""
 "favor envie um email para <a href=\"mailto:%s\">a administradores do site</"
 "a>."
 
-msgid "Your account is created, </br>it now needs to be activated."
-msgstr "A sua conta foi criada, </br> agora precisa ser ativada."
-
 msgid "Your avatar"
 msgstr "Seu avatar"
 
@@ -4942,6 +4941,9 @@ msgstr "ativo no mês passado"
 
 msgid "active last week"
 msgstr "ativo na semana passada"
+
+msgid "check your email for the link to activate your account."
+msgstr ""
 
 msgid "commits at once"
 msgstr "commit imediatamente"

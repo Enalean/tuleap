@@ -401,6 +401,8 @@ const theme_entry_points = {
     "common-theme/project-sidebar": "./node_modules/@tuleap/common-theme/css/project-sidebar.scss",
     "account-style": "./node_modules/@tuleap/burningparrot-theme/css/account/account.scss",
     "dashboards-style": "./node_modules/@tuleap/burningparrot-theme/css/dashboards/dashboards.scss",
+    "account-registration-style":
+        "./node_modules/@tuleap/burningparrot-theme/css/account-registration/account-registration.scss",
     "project-registration-style":
         "./node_modules/@tuleap/burningparrot-theme/css/project-registration/project-registration.scss",
     "project-registration-creation-style":
