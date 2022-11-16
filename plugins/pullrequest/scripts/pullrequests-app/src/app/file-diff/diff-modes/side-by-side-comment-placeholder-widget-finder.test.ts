@@ -17,31 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LineHandle } from "codemirror";
-import type { LineHandleWithWidgets } from "./types-codemirror-overriden";
 import { getCommentPlaceholderWidget } from "./side-by-side-comment-placeholder-widget-finder";
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
+import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 
 describe("widget finder", () => {
     describe("getCommentPlaceholderWidget", () => {
         it("Given a handle, when it has no widgets, then it will return null", () => {
-            const handle = {
-                text: "# README",
-            } as LineHandle;
-
+            const handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
 
             expect(comment_placeholder_widget).toBeNull();
         });
 
         it("Given a handle with no comment placeholder, then it will return null", () => {
-            const handle = {
-                widgets: [
-                    {
-                        node: FileDiffWidgetStub.buildInlineCommentWidget(),
-                    },
-                ],
-            } as LineHandleWithWidgets;
+            const handle = FileLineHandleStub.buildLineHandleWithWidgets([
+                FileDiffWidgetStub.buildInlineCommentWidget(),
+            ]);
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
 
@@ -49,14 +41,12 @@ describe("widget finder", () => {
         });
 
         it("Given a handle with a comment placeholder, then it will return the comment placeholder widget", () => {
-            const comment_placeholder = { node: FileDiffWidgetStub.buildCodeCommentPlaceholder() };
-            const handle = {
-                widgets: [comment_placeholder],
-            } as LineHandleWithWidgets;
+            const comment_placeholder = FileDiffWidgetStub.buildCodeCommentPlaceholder();
+            const handle = FileLineHandleStub.buildLineHandleWithWidgets([comment_placeholder]);
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
 
-            expect(comment_placeholder_widget).toBe(comment_placeholder);
+            expect(comment_placeholder_widget?.node).toBe(comment_placeholder);
         });
     });
 });

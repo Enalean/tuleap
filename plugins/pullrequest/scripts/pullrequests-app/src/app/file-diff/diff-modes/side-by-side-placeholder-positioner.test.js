@@ -21,6 +21,7 @@ import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positio
 import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
+import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 
 describe("placeholder positioner", () => {
     let getGroupOfLine, getLineOfHandle;
@@ -32,7 +33,7 @@ describe("placeholder positioner", () => {
 
     describe("getDisplayAboveLineForWidget()", () => {
         it("Given a handle, when the line is part of a deleted group, then it should return true", () => {
-            const handle = {};
+            const handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const line = FileLineStub.buildRemovedLine(666, 666);
 
             getLineOfHandle.mockReturnValue(line);
@@ -49,7 +50,7 @@ describe("placeholder positioner", () => {
         });
 
         it("Given a handle without line, then it should return false", () => {
-            const handle = {};
+            const handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
 
             getLineOfHandle.mockReturnValue(null);
 

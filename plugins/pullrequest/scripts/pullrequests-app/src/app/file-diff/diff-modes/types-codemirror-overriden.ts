@@ -21,6 +21,15 @@ import type { LineHandle, LineWidget } from "codemirror";
 import type { FileDiffWidget } from "./types";
 
 /**
+ * @types/codemirror's type definition for LineHandle is too minimalist
+ * and does not contain a "height" property. We need to override it to
+ * be able to compute code placeholders heights.
+ */
+export interface LineHandleWithAHeight extends LineHandle {
+    height: number;
+}
+
+/**
  * @types/codemirror's type definition for LineWidget is too minimalist
  * and does not contain a "node" property. We need to override it to be
  * able to retrieve and filter widgets by their types.
@@ -34,8 +43,8 @@ export interface LineWidgetWithNode extends LineWidget {
  * and does not contain a "widgets" property. We need to override it to
  * be able to retrieve the list of widgets given a LineHandle.
  */
-export interface LineHandleWithWidgets extends LineHandle {
+export interface LineHandleWithWidgets extends LineHandleWithAHeight {
     widgets: LineWidgetWithNode[];
 }
 
-export type FileLineHandle = LineHandleWithWidgets | LineHandle;
+export type FileLineHandle = LineHandleWithWidgets | LineHandleWithAHeight | LineHandle;

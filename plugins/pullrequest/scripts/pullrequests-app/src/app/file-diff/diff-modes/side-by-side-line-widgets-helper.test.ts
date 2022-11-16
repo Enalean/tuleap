@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LineHandleWithWidgets } from "./types-codemirror-overriden";
+import type { FileLineHandle } from "./types-codemirror-overriden";
 import {
     doesHandleHaveWidgets,
     isANewInlineCommentWidget,
@@ -26,20 +26,26 @@ import {
 } from "./side-by-side-line-widgets-helper";
 
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
+import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 
 describe("side-by-side-widget-helper", () => {
     describe("doesHandleHaveWidgets", () => {
         it.each([
-            [true, "has widgets", { widgets: [FileDiffWidgetStub.buildInlineCommentWidget()] }],
-            [false, "has no widgets", { widgets: [] }],
-            [false, "is a simple LineHandle", {}],
-            [false, "is a broken LineHandle (yes, they can be)", { widgets: null }],
-        ])("should return %s when the handle %s", (has_widgets, handle_description, widgets) => {
-            const handle = {
-                text: "# README",
-                ...widgets,
-            } as LineHandleWithWidgets;
-
+            [
+                true,
+                "has widgets",
+                FileLineHandleStub.buildLineHandleWithWidgets([
+                    FileDiffWidgetStub.buildInlineCommentWidget(),
+                ]),
+            ],
+            [false, "has no widgets", FileLineHandleStub.buildLineHandleWithWidgets([])],
+            [false, "is a simple LineHandle", FileLineHandleStub.buildLineHandleWithNoWidgets()],
+            [
+                false,
+                "is a broken LineHandle (yes, they can be)",
+                { widgets: null } as unknown as FileLineHandle,
+            ],
+        ])("should return %s when the handle %s", (has_widgets, handle_description, handle) => {
             expect(doesHandleHaveWidgets(handle)).toBe(has_widgets);
         });
     });

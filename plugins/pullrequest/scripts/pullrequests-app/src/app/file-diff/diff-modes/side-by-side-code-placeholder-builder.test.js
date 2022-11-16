@@ -21,6 +21,7 @@ import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-buil
 import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
+import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 
 describe("side-by-side code placeholder builder", () => {
     const left_code_mirror = {};
@@ -38,9 +39,9 @@ describe("side-by-side code placeholder builder", () => {
             it("Given the first line of a deleted group, then it will return the right code mirror (where the line widget will go), the right line handle and the sum of the group's line handles' heights", () => {
                 const first_deleted_line = FileLineStub.buildRemovedLine(2, 2);
                 const second_deleted_line = FileLineStub.buildRemovedLine(3, 3);
-                const first_right_handle = {};
-                const first_left_handle = { height: 40 };
-                const second_left_handle = { height: 20 };
+                const first_right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+                const first_left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(40);
+                const second_left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(20);
                 getLineHandles.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return {
@@ -89,9 +90,9 @@ describe("side-by-side code placeholder builder", () => {
             it("Given the deleted group starts at the beginning of the file, then the height of the first line will be subtracted from the height of the widget because there is always a first line, even when it's empty", () => {
                 const first_deleted_line = FileLineStub.buildRemovedLine(1, 1);
                 const second_deleted_line = FileLineStub.buildRemovedLine(2, 2);
-                const first_right_handle = { height: 20 };
-                const first_left_handle = { height: 20 };
-                const second_left_handle = { height: 57 };
+                const first_right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(20);
+                const first_left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(20);
+                const second_left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(57);
                 getLineHandles.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return {
@@ -136,9 +137,9 @@ describe("side-by-side code placeholder builder", () => {
             it("Given the first line of an added group, then it will return the left code mirror (where the line widget will go), the left line handle and the sum of the group's line handles' heights", () => {
                 const first_added_line = FileLineStub.buildAddedLine(2, 2);
                 const second_added_line = FileLineStub.buildAddedLine(3, 3);
-                const first_left_handle = {};
-                const first_right_handle = { height: 20 };
-                const second_right_handle = { height: 40 };
+                const first_left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+                const first_right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(20);
+                const second_right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(40);
                 getLineHandles.mockImplementation((value) => {
                     if (value === first_added_line) {
                         return {
@@ -186,9 +187,9 @@ describe("side-by-side code placeholder builder", () => {
             it("Given the added group starts at the beginning of the file, then the height of the first line will be subtracted from the height of the widget because there is always a first line, even when it's empty", () => {
                 const first_added_line = FileLineStub.buildAddedLine(1, 1);
                 const second_added_line = FileLineStub.buildAddedLine(2, 2);
-                const first_left_handle = { height: 20 };
-                const first_right_handle = { height: 57 };
-                const second_right_handle = { height: 20 };
+                const first_left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(20);
+                const first_right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(57);
+                const second_right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets(20);
                 getLineHandles.mockImplementation((value) => {
                     if (value === first_added_line) {
                         return {
