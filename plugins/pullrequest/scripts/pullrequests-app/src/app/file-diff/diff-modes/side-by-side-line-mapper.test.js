@@ -18,7 +18,9 @@
  */
 
 import { buildLineToLineHandlesMap } from "./side-by-side-line-mapper.js";
-import { ADDED_GROUP, DELETED_GROUP } from "./types.ts";
+import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
+import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
+import { GroupSideBySideLinesStub } from "../../../../tests/stubs/GroupSideBySideLinesStub";
 
 describe("side-by-side line mapper", () => {
     describe("buildLineToLineHandlesMap()", () => {
@@ -34,9 +36,8 @@ describe("side-by-side line mapper", () => {
         describe("Unmoved lines -", () => {
             it(`Given diff lines, a map from line to group and the left and right code mirrors,
                 then it will return a map from line to left-side LineHandle and right-side LineHandle for unmoved lines`, () => {
-                const first_unmoved_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
-                const second_unmoved_line = { unidiff_offset: 2, old_offset: 2, new_offset: 2 };
-                const lines = [first_unmoved_line, second_unmoved_line];
+                const first_unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1);
+                const second_unmoved_line = FileLineStub.buildUnMovedFileLine(2, 2);
 
                 const first_line_left_handle = {};
                 const first_line_right_handle = {};
@@ -62,7 +63,7 @@ describe("side-by-side line mapper", () => {
                 });
 
                 const map = buildLineToLineHandlesMap(
-                    lines,
+                    [first_unmoved_line, second_unmoved_line],
                     null,
                     left_code_mirror,
                     right_code_mirror
@@ -80,13 +81,9 @@ describe("side-by-side line mapper", () => {
         describe("Added lines -", () => {
             it(`will return a map from line to right-side LineHandle and on the left-side to the first line before the added group
                 so that I can place a line widget there`, () => {
-                const first_line = {
-                    unidiff_offset: 1,
-                    old_offset: 1,
-                    new_offset: 1,
-                };
-                const first_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 2 };
-                const second_added_line = { unidiff_offset: 3, old_offset: null, new_offset: 3 };
+                const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
+                const first_added_line = FileLineStub.buildAddedLine(2, 2);
+                const second_added_line = FileLineStub.buildAddedLine(3, 3);
                 const lines = [first_line, first_added_line, second_added_line];
 
                 const first_line_before_group_left_handle = {};
@@ -111,14 +108,13 @@ describe("side-by-side line mapper", () => {
                     throw new Error(value);
                 });
 
-                const added_group = {
-                    unidiff_offsets: [2, 3],
-                    type: ADDED_GROUP,
-                };
-                const line_to_group_map = new Map([
-                    [2, added_group],
-                    [3, added_group],
+                const added_group = GroupOfLinesStub.buildGroupOfAddedLines([
+                    first_added_line,
+                    second_added_line,
                 ]);
+                const line_to_group_map = GroupSideBySideLinesStub()
+                    .withGroupsOfLines([added_group])
+                    .buildLineToGroupMap();
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -137,8 +133,8 @@ describe("side-by-side line mapper", () => {
 
             it(`Given the added group starts at the beginning of the file,
                 then the left-side LineHandle will be at the start of the file (line 0)`, () => {
-                const first_added_line = { unidiff_offset: 1, old_offset: null, new_offset: 1 };
-                const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 2 };
+                const first_added_line = FileLineStub.buildAddedLine(1, 1);
+                const second_added_line = FileLineStub.buildAddedLine(2, 2);
                 const lines = [first_added_line, second_added_line];
 
                 const first_line_left_handle = {};
@@ -160,14 +156,13 @@ describe("side-by-side line mapper", () => {
                     throw new Error(value);
                 });
 
-                const added_group = {
-                    unidiff_offsets: [1, 2],
-                    type: ADDED_GROUP,
-                };
-                const line_to_group_map = new Map([
-                    [1, added_group],
-                    [2, added_group],
+                const added_group = GroupOfLinesStub.buildGroupOfAddedLines([
+                    first_added_line,
+                    second_added_line,
                 ]);
+                const line_to_group_map = GroupSideBySideLinesStub()
+                    .withGroupsOfLines([added_group])
+                    .buildLineToGroupMap();
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -188,14 +183,10 @@ describe("side-by-side line mapper", () => {
         describe("Deleted lines -", () => {
             it(`will return a map from line to left-side LineHandle and on the right-side to the first line after the deleted group
                 so that I can place a line widget there`, () => {
-                const first_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
-                const second_deleted_line = { unidiff_offset: 2, old_offset: 2, new_offset: null };
-                const third_deleted_line = { unidiff_offset: 3, old_offset: 3, new_offset: null };
-                const fourth_line = {
-                    unidiff_offset: 4,
-                    old_offset: 4,
-                    new_offset: 2,
-                };
+                const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
+                const second_deleted_line = FileLineStub.buildRemovedLine(2, 2);
+                const third_deleted_line = FileLineStub.buildRemovedLine(3, 3);
+                const fourth_line = FileLineStub.buildUnMovedFileLine(4, 2);
                 const lines = [first_line, second_deleted_line, third_deleted_line, fourth_line];
 
                 const second_deleted_line_left_handle = {};
@@ -224,14 +215,13 @@ describe("side-by-side line mapper", () => {
                     throw new Error(value);
                 });
 
-                const deleted_group = {
-                    unidiff_offsets: [2, 3],
-                    type: DELETED_GROUP,
-                };
-                const line_to_group_map = new Map([
-                    [2, deleted_group],
-                    [3, deleted_group],
+                const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines([
+                    second_deleted_line,
+                    third_deleted_line,
                 ]);
+                const line_to_group_map = GroupSideBySideLinesStub()
+                    .withGroupsOfLines([deleted_group])
+                    .buildLineToGroupMap();
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -250,10 +240,10 @@ describe("side-by-side line mapper", () => {
 
             it(`Given the deleted group is at the end of the file,
                 then the right-side LineHandle will be at the last line of the previous group`, () => {
-                const first_unmoved_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
-                const second_unmoved_line = { unidiff_offset: 2, old_offset: 2, new_offset: 2 };
-                const third_deleted_line = { unidiff_offset: 3, old_offset: 3, new_offset: null };
-                const fourth_deleted_line = { unidiff_offset: 4, old_offset: 4, new_offset: null };
+                const first_unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1);
+                const second_unmoved_line = FileLineStub.buildUnMovedFileLine(2, 2);
+                const third_deleted_line = FileLineStub.buildRemovedLine(3, 3);
+                const fourth_deleted_line = FileLineStub.buildRemovedLine(4, 4);
                 const lines = [
                     first_unmoved_line,
                     second_unmoved_line,
@@ -286,14 +276,13 @@ describe("side-by-side line mapper", () => {
                     throw new Error(index);
                 });
 
-                const deleted_group = {
-                    unidiff_offsets: [3, 4],
-                    type: DELETED_GROUP,
-                };
-                const line_to_group_map = new Map([
-                    [3, deleted_group],
-                    [4, deleted_group],
+                const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines([
+                    third_deleted_line,
+                    fourth_deleted_line,
                 ]);
+                const line_to_group_map = GroupSideBySideLinesStub()
+                    .withGroupsOfLines([deleted_group])
+                    .buildLineToGroupMap();
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -311,8 +300,8 @@ describe("side-by-side line mapper", () => {
             });
 
             it(`Given we're dealing with a deleted file, then the right-side LineHandle will be at the start of the file (line 0)`, () => {
-                const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
-                const second_deleted_line = { unidiff_offset: 2, old_offset: 2, new_offset: null };
+                const first_deleted_line = FileLineStub.buildRemovedLine(1, 1);
+                const second_deleted_line = FileLineStub.buildRemovedLine(2, 2);
                 const lines = [first_deleted_line, second_deleted_line];
 
                 const first_line_left_handle = {};
@@ -334,14 +323,13 @@ describe("side-by-side line mapper", () => {
                     throw new Error(value);
                 });
 
-                const deleted_group = {
-                    unidiff_offsets: [1, 2],
-                    type: DELETED_GROUP,
-                };
-                const line_to_group_map = new Map([
-                    [1, deleted_group],
-                    [2, deleted_group],
+                const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines([
+                    first_deleted_line,
+                    second_deleted_line,
                 ]);
+                const line_to_group_map = GroupSideBySideLinesStub()
+                    .withGroupsOfLines([deleted_group])
+                    .buildLineToGroupMap();
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -362,8 +350,8 @@ describe("side-by-side line mapper", () => {
         describe(`Modified lines -`, () => {
             it(`Given the modified line is at the beginning of the file,
                 then the first deleted line will match the first added line and vice-versa`, () => {
-                const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
-                const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 1 };
+                const first_deleted_line = FileLineStub.buildRemovedLine(1, 1);
+                const second_added_line = FileLineStub.buildAddedLine(2, 1);
                 const lines = [first_deleted_line, second_added_line];
 
                 const first_line_left_handle = {};
@@ -380,12 +368,13 @@ describe("side-by-side line mapper", () => {
                     }
                     throw new Error(index);
                 });
-                const deleted_group = { unidiff_offsets: [1], type: DELETED_GROUP };
-                const added_group = { unidiff_offsets: [2], type: ADDED_GROUP };
-                const line_to_group_map = new Map([
-                    [1, deleted_group],
-                    [2, added_group],
+                const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines([
+                    first_deleted_line,
                 ]);
+                const added_group = GroupOfLinesStub.buildGroupOfAddedLines([second_added_line]);
+                const line_to_group_map = GroupSideBySideLinesStub()
+                    .withGroupsOfLines([deleted_group, added_group])
+                    .buildLineToGroupMap();
 
                 const map = buildLineToLineHandlesMap(
                     lines,

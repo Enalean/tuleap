@@ -19,7 +19,8 @@
 
 import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
 import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
-import { DELETED_GROUP } from "./types.ts";
+import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
+import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
 
 describe("placeholder positioner", () => {
     let getGroupOfLine, getLineOfHandle;
@@ -32,12 +33,12 @@ describe("placeholder positioner", () => {
     describe("getDisplayAboveLineForWidget()", () => {
         it("Given a handle, when the line is part of a deleted group, then it should return true", () => {
             const handle = {};
-            const line = { unidiff_offset: 666 };
+            const line = FileLineStub.buildRemovedLine(666, 666);
 
             getLineOfHandle.mockReturnValue(line);
             getGroupOfLine.mockImplementation((l) => {
                 if (line === l) {
-                    return { type: DELETED_GROUP };
+                    return GroupOfLinesStub.buildGroupOfRemovedLines([line]);
                 }
                 throw new Error(l);
             });

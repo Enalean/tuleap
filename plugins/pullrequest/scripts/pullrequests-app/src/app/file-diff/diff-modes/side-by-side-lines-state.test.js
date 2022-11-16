@@ -24,8 +24,9 @@ import {
     getLineOfHandle,
 } from "./side-by-side-lines-state.js";
 import * as side_by_side_line_mapper from "./side-by-side-line-mapper.js";
-import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "./types";
 import { GroupSideBySideLinesStub } from "../../../../tests/stubs/GroupSideBySideLinesStub";
+import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
+import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
 
 describe("side-by-side lines state", () => {
     let side_by_side_line_grouper, buildLineToLineHandlesMap, left_code_mirror, right_code_mirror;
@@ -45,9 +46,9 @@ describe("side-by-side lines state", () => {
         it("Given diff lines, the left and right code mirrors, then it will store the lines, set the left and right code mirror content and build line maps", () => {
             buildLineToLineHandlesMap.mockImplementation(() => {});
             const lines = [
-                { old_offset: 1, new_offset: 1 },
-                { old_offset: 2, new_offset: null },
-                { old_offset: null, new_offset: 2 },
+                FileLineStub.buildUnMovedFileLine(1, 1),
+                FileLineStub.buildRemovedLine(2, 2),
+                FileLineStub.buildAddedLine(3, 2),
             ];
 
             initDataAndCodeMirrors(
@@ -70,8 +71,8 @@ describe("side-by-side lines state", () => {
             const comment = {
                 unidiff_offset: 2,
             };
-            const first_line = { unidiff_offset: 1 };
-            const second_line = { unidiff_offset: 2 };
+            const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
+            const second_line = FileLineStub.buildUnMovedFileLine(2, 2);
             const lines = [first_line, second_line];
             initDataAndCodeMirrors(
                 lines,
@@ -86,37 +87,39 @@ describe("side-by-side lines state", () => {
 
     describe("getGroupLines()", () => {
         it("Given a group, then it will return the group's lines", () => {
-            const group = {
-                unidiff_offsets: [2, 3],
-            };
-            const first_line = { unidiff_offset: 1 };
-            const second_line = { unidiff_offset: 2 };
-            const third_line = { unidiff_offset: 3 };
-            const lines = [first_line, second_line, third_line];
+            const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
+            const second_line = FileLineStub.buildUnMovedFileLine(2, 2);
+            const third_line = FileLineStub.buildRemovedLine(3, 3);
+
+            const unmoved_lines = GroupOfLinesStub.buildGroupOfUnMovedLines([
+                first_line,
+                second_line,
+            ]);
+            const removed_lines = GroupOfLinesStub.buildGroupOfUnMovedLines([third_line]);
+
             initDataAndCodeMirrors(
-                lines,
+                [first_line, second_line, third_line],
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withEmptyLineToGroupMap()
+                side_by_side_line_grouper.withGroupsOfLines([unmoved_lines, removed_lines])
             );
 
-            const group_lines = getGroupLines(group);
-
-            expect(group_lines).toStrictEqual([second_line, third_line]);
+            expect(getGroupLines(unmoved_lines)).toStrictEqual([first_line, second_line]);
+            expect(getGroupLines(removed_lines)).toStrictEqual([third_line]);
         });
     });
 
     describe("getLineOfHandle()", () => {
         it("Given handles matching an unmoved line, then it will return the unmoved line", () => {
-            const line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
+            const unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1);
             const left_handle = {};
             const right_handle = {};
-            const unmoved_group = { type: UNMOVED_GROUP };
+            const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([unmoved_line]);
 
             buildLineToLineHandlesMap.mockReturnValue(
                 new Map([
                     [
-                        line,
+                        unmoved_line,
                         {
                             left_handle,
                             right_handle,
@@ -125,26 +128,24 @@ describe("side-by-side lines state", () => {
                 ])
             );
             initDataAndCodeMirrors(
-                [line],
+                [unmoved_line],
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withLineToGroupMap(
-                    new Map([[line.unidiff_offset, unmoved_group]])
-                )
+                side_by_side_line_grouper.withGroupsOfLines([unmoved_group])
             );
 
-            expect(getLineOfHandle(left_handle)).toBe(line);
-            expect(getLineOfHandle(right_handle)).toBe(line);
+            expect(getLineOfHandle(left_handle)).toBe(unmoved_line);
+            expect(getLineOfHandle(right_handle)).toBe(unmoved_line);
         });
 
         it("Given the left handle of an added line, then it will return the opposite line (not the added line)", () => {
-            const added_line = { unidiff_offset: 1, old_offset: null, new_offset: 1 };
-            const opposite_line = { unidiff_offset: 2, old_offset: 1, new_offset: 2 };
+            const added_line = FileLineStub.buildAddedLine(1, 1);
+            const opposite_line = FileLineStub.buildUnMovedFileLine(2, 1);
             const added_handle = {};
             const opposite_left_handle = {};
             const opposite_right_handle = {};
-            const added_group = { type: ADDED_GROUP };
-            const unmoved_group = { type: UNMOVED_GROUP };
+            const added_group = GroupOfLinesStub.buildGroupOfAddedLines([added_line]);
+            const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([opposite_line]);
 
             buildLineToLineHandlesMap.mockReturnValue(
                 new Map([
@@ -168,12 +169,7 @@ describe("side-by-side lines state", () => {
                 [added_line, opposite_line],
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withLineToGroupMap(
-                    new Map([
-                        [added_line.unidiff_offset, added_group],
-                        [opposite_line.unidiff_offset, unmoved_group],
-                    ])
-                )
+                side_by_side_line_grouper.withGroupsOfLines([added_group, unmoved_group])
             );
 
             expect(getLineOfHandle(added_handle)).toBe(added_line);
@@ -181,13 +177,13 @@ describe("side-by-side lines state", () => {
         });
 
         it("Given the right handle of a deleted line, then it will return the opposite line (not the deleted line)", () => {
-            const opposite_line = { unidiff_offset: 1, old_offset: null, new_offset: 1 };
-            const deleted_line = { unidiff_offset: 2, old_offset: 1, new_offset: null };
+            const deleted_line = FileLineStub.buildRemovedLine(1, 1);
+            const opposite_line = FileLineStub.buildAddedLine(2, 1);
             const opposite_left_handle = {};
             const opposite_right_handle = {};
             const deleted_handle = { a: "a" };
-            const added_group = { type: ADDED_GROUP };
-            const deleted_group = { type: DELETED_GROUP };
+            const added_group = GroupOfLinesStub.buildGroupOfAddedLines([opposite_line]);
+            const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines([deleted_line]);
 
             buildLineToLineHandlesMap.mockReturnValue(
                 new Map([
@@ -211,12 +207,7 @@ describe("side-by-side lines state", () => {
                 [opposite_line, deleted_line],
                 left_code_mirror,
                 right_code_mirror,
-                side_by_side_line_grouper.withLineToGroupMap(
-                    new Map([
-                        [opposite_line.unidiff_offset, added_group],
-                        [deleted_line.unidiff_offset, deleted_group],
-                    ])
-                )
+                side_by_side_line_grouper.withGroupsOfLines([added_group, deleted_group])
             );
 
             expect(getLineOfHandle(deleted_handle)).toBe(deleted_line);

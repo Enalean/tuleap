@@ -18,8 +18,9 @@
  */
 
 import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-builder.js";
-import { ADDED_GROUP, DELETED_GROUP } from "./types.ts";
 import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
+import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
+import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
 
 describe("side-by-side code placeholder builder", () => {
     const left_code_mirror = {};
@@ -35,8 +36,8 @@ describe("side-by-side code placeholder builder", () => {
     describe("buildCodePlaceholderWidget()", () => {
         describe("Deleted group -", () => {
             it("Given the first line of a deleted group, then it will return the right code mirror (where the line widget will go), the right line handle and the sum of the group's line handles' heights", () => {
-                const first_deleted_line = { unidiff_offset: 2, old_offset: 2, new_offset: null };
-                const second_deleted_line = { unidiff_offset: 3, old_offset: 3, new_offset: null };
+                const first_deleted_line = FileLineStub.buildRemovedLine(2, 2);
+                const second_deleted_line = FileLineStub.buildRemovedLine(3, 3);
                 const first_right_handle = {};
                 const first_left_handle = { height: 40 };
                 const second_left_handle = { height: 20 };
@@ -52,10 +53,10 @@ describe("side-by-side code placeholder builder", () => {
                     }
                     throw new Error(value);
                 });
-                const group = {
-                    unidiff_offsets: [2, 3],
-                    type: DELETED_GROUP,
-                };
+                const group = GroupOfLinesStub.buildGroupOfRemovedLines([
+                    first_deleted_line,
+                    second_deleted_line,
+                ]);
                 getGroupOfLine.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return group;
@@ -76,7 +77,7 @@ describe("side-by-side code placeholder builder", () => {
                     right_code_mirror
                 );
 
-                expect(widget_params).toEqual({
+                expect(widget_params).toStrictEqual({
                     code_mirror: right_code_mirror,
                     handle: first_right_handle,
                     widget_height: 60,
@@ -86,8 +87,8 @@ describe("side-by-side code placeholder builder", () => {
             });
 
             it("Given the deleted group starts at the beginning of the file, then the height of the first line will be subtracted from the height of the widget because there is always a first line, even when it's empty", () => {
-                const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
-                const second_deleted_line = { unidiff_offset: 2, old_offset: 2, new_offset: null };
+                const first_deleted_line = FileLineStub.buildRemovedLine(1, 1);
+                const second_deleted_line = FileLineStub.buildRemovedLine(2, 2);
                 const first_right_handle = { height: 20 };
                 const first_left_handle = { height: 20 };
                 const second_left_handle = { height: 57 };
@@ -103,10 +104,10 @@ describe("side-by-side code placeholder builder", () => {
                     }
                     throw new Error(value);
                 });
-                const group = {
-                    unidiff_offsets: [1, 2],
-                    type: DELETED_GROUP,
-                };
+                const group = GroupOfLinesStub.buildGroupOfRemovedLines([
+                    first_deleted_line,
+                    second_deleted_line,
+                ]);
                 getGroupOfLine.mockReturnValue(group);
                 getGroupLines.mockImplementation((value) => {
                     if (value === group) {
@@ -121,7 +122,7 @@ describe("side-by-side code placeholder builder", () => {
                     right_code_mirror
                 );
 
-                expect(widget_params).toEqual({
+                expect(widget_params).toStrictEqual({
                     code_mirror: right_code_mirror,
                     handle: first_right_handle,
                     widget_height: 57,
@@ -133,8 +134,8 @@ describe("side-by-side code placeholder builder", () => {
 
         describe("Added group -", () => {
             it("Given the first line of an added group, then it will return the left code mirror (where the line widget will go), the left line handle and the sum of the group's line handles' heights", () => {
-                const first_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 2 };
-                const second_added_line = { unidiff_offset: 3, old_offset: null, new_offset: 3 };
+                const first_added_line = FileLineStub.buildAddedLine(2, 2);
+                const second_added_line = FileLineStub.buildAddedLine(3, 3);
                 const first_left_handle = {};
                 const first_right_handle = { height: 20 };
                 const second_right_handle = { height: 40 };
@@ -150,10 +151,10 @@ describe("side-by-side code placeholder builder", () => {
                     }
                     throw new Error(value);
                 });
-                const group = {
-                    unidiff_offsets: [2, 3],
-                    type: ADDED_GROUP,
-                };
+                const group = GroupOfLinesStub.buildGroupOfAddedLines([
+                    first_added_line,
+                    second_added_line,
+                ]);
                 getGroupOfLine.mockImplementation((value) => {
                     if (value === first_added_line) {
                         return group;
@@ -173,7 +174,7 @@ describe("side-by-side code placeholder builder", () => {
                     right_code_mirror
                 );
 
-                expect(widget_params).toEqual({
+                expect(widget_params).toStrictEqual({
                     code_mirror: left_code_mirror,
                     handle: first_left_handle,
                     widget_height: 60,
@@ -183,8 +184,8 @@ describe("side-by-side code placeholder builder", () => {
             });
 
             it("Given the added group starts at the beginning of the file, then the height of the first line will be subtracted from the height of the widget because there is always a first line, even when it's empty", () => {
-                const first_added_line = { unidiff_offset: 1, old_offset: null, new_offset: 1 };
-                const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 2 };
+                const first_added_line = FileLineStub.buildAddedLine(1, 1);
+                const second_added_line = FileLineStub.buildAddedLine(2, 2);
                 const first_left_handle = { height: 20 };
                 const first_right_handle = { height: 57 };
                 const second_right_handle = { height: 20 };
@@ -200,10 +201,10 @@ describe("side-by-side code placeholder builder", () => {
                     }
                     throw new Error(value);
                 });
-                const group = {
-                    unidiff_offsets: [2, 3],
-                    type: ADDED_GROUP,
-                };
+                const group = GroupOfLinesStub.buildGroupOfAddedLines([
+                    first_added_line,
+                    second_added_line,
+                ]);
                 getGroupOfLine.mockReturnValue(group);
                 getGroupLines.mockImplementation((value) => {
                     if (value === group) {
@@ -218,7 +219,7 @@ describe("side-by-side code placeholder builder", () => {
                     right_code_mirror
                 );
 
-                expect(widget_params).toEqual({
+                expect(widget_params).toStrictEqual({
                     code_mirror: left_code_mirror,
                     handle: first_left_handle,
                     widget_height: 57,
