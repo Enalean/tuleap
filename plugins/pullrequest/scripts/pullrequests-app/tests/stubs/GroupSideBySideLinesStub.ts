@@ -20,7 +20,7 @@
 import type { GroupSideBySideLines } from "../../src/app/file-diff/diff-modes/side-by-side-line-grouper";
 import type { GroupOfLines } from "../../src/app/file-diff/diff-modes/types";
 
-interface StubGroupSideBySideLines {
+export interface StubGroupSideBySideLines {
     hasBuiltLineToGroupMap: () => boolean;
     hasBuildFirstLineToGroupMap: () => boolean;
     withGroupsOfLines: (groups_of_lines: GroupOfLines[]) => GroupSideBySideLines;

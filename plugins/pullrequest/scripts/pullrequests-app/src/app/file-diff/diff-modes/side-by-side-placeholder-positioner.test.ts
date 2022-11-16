@@ -17,44 +17,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
-import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
 import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
+import { FileLinesStateStub } from "../../../../tests/stubs/FileLinesStateStub";
+import type { FileLine } from "./types";
+import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
 
 describe("placeholder positioner", () => {
-    let getGroupOfLine, getLineOfHandle;
-
-    beforeEach(() => {
-        getGroupOfLine = jest.spyOn(side_by_side_lines_state, "getGroupOfLine");
-        getLineOfHandle = jest.spyOn(side_by_side_lines_state, "getLineOfHandle");
-    });
-
     describe("getDisplayAboveLineForWidget()", () => {
         it("Given a handle, when the line is part of a deleted group, then it should return true", () => {
             const handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
-            const line = FileLineStub.buildRemovedLine(666, 666);
+            const line = FileLineStub.buildRemovedLine(3, 3);
+            const state = FileLinesStateStub.build(
+                [line],
+                [GroupOfLinesStub.buildGroupOfRemovedLines([line])],
+                new Map([
+                    [
+                        line as FileLine,
+                        {
+                            left_handle: handle,
+                            right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
+                        },
+                    ],
+                ])
+            );
 
-            getLineOfHandle.mockReturnValue(line);
-            getGroupOfLine.mockImplementation((l) => {
-                if (line === l) {
-                    return GroupOfLinesStub.buildGroupOfRemovedLines([line]);
-                }
-                throw new Error(l);
-            });
-
-            const should_display_above = getDisplayAboveLineForWidget(handle);
+            const should_display_above =
+                SideBySidePlaceholderPositioner(state).getDisplayAboveLineForWidget(handle);
 
             expect(should_display_above).toBe(true);
         });
 
         it("Given a handle without line, then it should return false", () => {
             const handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+            const state = FileLinesStateStub.build([], [], new Map([]));
 
-            getLineOfHandle.mockReturnValue(null);
-
-            const should_display_above = getDisplayAboveLineForWidget(handle);
+            const should_display_above =
+                SideBySidePlaceholderPositioner(state).getDisplayAboveLineForWidget(handle);
 
             expect(should_display_above).toBe(false);
         });

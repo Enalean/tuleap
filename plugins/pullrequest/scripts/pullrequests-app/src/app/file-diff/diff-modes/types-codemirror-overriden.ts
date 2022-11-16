@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LineHandle, LineWidget } from "codemirror";
+import type { LineHandle, LineWidget, Editor } from "codemirror";
 import type { FileDiffWidget } from "./types";
 
 /**
@@ -48,3 +48,11 @@ export interface LineHandleWithWidgets extends LineHandleWithAHeight {
 }
 
 export type FileLineHandle = LineHandleWithWidgets | LineHandleWithAHeight | LineHandle;
+
+export interface PlaceholderCreationParams {
+    code_mirror: Editor;
+    handle: FileLineHandle;
+    widget_height: number;
+    display_above_line: boolean;
+    is_comment_placeholder: boolean;
+}
