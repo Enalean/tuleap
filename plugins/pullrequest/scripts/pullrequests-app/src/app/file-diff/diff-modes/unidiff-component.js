@@ -21,7 +21,7 @@ import CodeMirror from "codemirror";
 import { getStore } from "../comments-store.ts";
 import { getCollapsibleCodeSections } from "../../code-collapse/collaspible-code-sections-builder.ts";
 
-import "./modes.js";
+import "./modes.ts";
 import {
     INLINE_COMMENT_POSITION_RIGHT,
     INLINE_COMMENT_POSITION_LEFT,

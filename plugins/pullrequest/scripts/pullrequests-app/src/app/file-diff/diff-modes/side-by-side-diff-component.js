@@ -39,7 +39,7 @@ import {
     INLINE_COMMENT_POSITION_LEFT,
 } from "../../comments/PullRequestCommentPresenter";
 
-import "./modes.js";
+import "./modes.ts";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
 import { NAME as INLINE_COMMENT_NAME } from "../new-inline-comment-component";
 import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
