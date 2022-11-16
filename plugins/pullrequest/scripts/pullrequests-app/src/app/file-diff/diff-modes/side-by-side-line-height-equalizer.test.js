@@ -20,7 +20,7 @@
 import { TAG_NAME as PULLREQUEST_COMMENT_TAG_NAME } from "../../comments/PullRequestComment.ts";
 import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
 
-import * as side_by_side_widget_finder from "./side-by-side-widget-finder.js";
+import * as side_by_side_widget_finder from "./side-by-side-comment-placeholder-widget-finder.ts";
 
 describe("line-height-equalizer", () => {
     let getCommentPlaceholderWidget;

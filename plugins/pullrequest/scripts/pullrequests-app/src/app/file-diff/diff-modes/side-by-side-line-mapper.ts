@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Editor, LineHandle } from "codemirror";
+import type { Editor } from "codemirror";
+import type { FileLineHandle } from "./types-codemirror-overriden";
 import { ADDED_GROUP, DELETED_GROUP } from "./types";
 import type { FileLine, GroupOfLines } from "./types";
 import { isAnAddedLine, isAnUnmovedLine, isARemovedLine } from "./file-line-helper";
 
 export interface SynchronizedLineHandles {
-    left_handle: LineHandle;
-    right_handle: LineHandle;
+    left_handle: FileLineHandle;
+    right_handle: FileLineHandle;
 }
 
 export interface MapSideBySideLines {
