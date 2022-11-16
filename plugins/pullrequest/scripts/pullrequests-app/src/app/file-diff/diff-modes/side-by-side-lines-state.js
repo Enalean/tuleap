@@ -23,28 +23,16 @@ let diff_lines;
 let first_line_to_group_map;
 let line_to_group_map;
 let line_to_line_handles_map;
-let left_lines;
-let right_lines;
 
-export function initDataAndCodeMirrors(
+export function initSideBySideFileDiffState(
     file_lines,
-    left_code_mirror,
-    right_code_mirror,
     side_by_side_line_grouper,
     side_by_side_line_mapper
 ) {
     diff_lines = file_lines;
-    left_lines = file_lines.filter((line) => line.old_offset !== null);
-    right_lines = file_lines.filter((line) => line.new_offset !== null);
 
     first_line_to_group_map = side_by_side_line_grouper.buildFirstLineToGroupMap();
     line_to_group_map = side_by_side_line_grouper.buildLineToGroupMap();
-
-    const left_content = left_lines.map(({ content }) => content).join("\n");
-    const right_content = right_lines.map(({ content }) => content).join("\n");
-
-    left_code_mirror.setValue(left_content);
-    right_code_mirror.setValue(right_content);
 
     line_to_line_handles_map =
         side_by_side_line_mapper.buildLineToLineHandlesMap(line_to_group_map);
@@ -70,14 +58,6 @@ export function getCommentLine(comment) {
 
 export function isFirstLineOfGroup(line) {
     return first_line_to_group_map.has(line.unidiff_offset);
-}
-
-export function getRightLine(line_number) {
-    return right_lines[line_number];
-}
-
-export function getLeftLine(line_number) {
-    return left_lines[line_number];
 }
 
 export function getLineOfHandle(handle) {

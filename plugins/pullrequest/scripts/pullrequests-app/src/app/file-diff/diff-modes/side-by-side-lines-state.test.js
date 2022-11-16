@@ -18,7 +18,7 @@
  */
 
 import {
-    initDataAndCodeMirrors,
+    initSideBySideFileDiffState,
     getCommentLine,
     getGroupLines,
     getLineOfHandle,
@@ -31,36 +31,29 @@ import { MapSideBySideLinesStub } from "../../../../tests/stubs/MapSideBySideLin
 import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 
 describe("side-by-side lines state", () => {
-    let side_by_side_line_grouper, side_by_side_line_mapper, left_code_mirror, right_code_mirror;
+    let side_by_side_line_grouper, side_by_side_line_mapper;
 
     beforeEach(() => {
         side_by_side_line_grouper = GroupSideBySideLinesStub();
         side_by_side_line_mapper = MapSideBySideLinesStub();
-
-        left_code_mirror = buildCodeMirrorSpy();
-        right_code_mirror = buildCodeMirrorSpy();
     });
 
-    describe("initDataAndCodeMirrors()", () => {
-        it("Given diff lines, the left and right code mirrors, then it will store the lines, set the left and right code mirror content and build line maps", () => {
+    describe("initSideBySideFileDiffState()", () => {
+        it("Given diff lines, the left and right code mirrors, then it will store the lines and build line maps", () => {
             const lines = [
                 FileLineStub.buildUnMovedFileLine(1, 1),
                 FileLineStub.buildRemovedLine(2, 2),
                 FileLineStub.buildAddedLine(3, 2),
             ];
 
-            initDataAndCodeMirrors(
+            initSideBySideFileDiffState(
                 lines,
-                left_code_mirror,
-                right_code_mirror,
                 side_by_side_line_grouper.withEmptyLineToGroupMap(),
                 side_by_side_line_mapper.withSideBySideLineMap(new Map())
             );
 
             expect(side_by_side_line_grouper.hasBuiltLineToGroupMap()).toBe(true);
             expect(side_by_side_line_grouper.hasBuildFirstLineToGroupMap()).toBe(true);
-            expect(left_code_mirror.setValue).toHaveBeenCalled();
-            expect(right_code_mirror.setValue).toHaveBeenCalled();
             expect(side_by_side_line_mapper.getNbCalls()).toBe(1);
         });
     });
@@ -73,10 +66,8 @@ describe("side-by-side lines state", () => {
             const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
             const second_line = FileLineStub.buildUnMovedFileLine(2, 2);
             const lines = [first_line, second_line];
-            initDataAndCodeMirrors(
+            initSideBySideFileDiffState(
                 lines,
-                left_code_mirror,
-                right_code_mirror,
                 side_by_side_line_grouper.withEmptyLineToGroupMap(),
                 side_by_side_line_mapper.withSideBySideLineMap(new Map())
             );
@@ -97,10 +88,8 @@ describe("side-by-side lines state", () => {
             ]);
             const removed_lines = GroupOfLinesStub.buildGroupOfUnMovedLines([third_line]);
 
-            initDataAndCodeMirrors(
+            initSideBySideFileDiffState(
                 [first_line, second_line, third_line],
-                left_code_mirror,
-                right_code_mirror,
                 side_by_side_line_grouper.withGroupsOfLines([unmoved_lines, removed_lines]),
                 side_by_side_line_mapper.withSideBySideLineMap(new Map())
             );
@@ -117,10 +106,8 @@ describe("side-by-side lines state", () => {
             const right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([unmoved_line]);
 
-            initDataAndCodeMirrors(
+            initSideBySideFileDiffState(
                 [unmoved_line],
-                left_code_mirror,
-                right_code_mirror,
                 side_by_side_line_grouper.withGroupsOfLines([unmoved_group]),
                 side_by_side_line_mapper.withSideBySideLineMap(
                     new Map([
@@ -148,10 +135,8 @@ describe("side-by-side lines state", () => {
             const added_group = GroupOfLinesStub.buildGroupOfAddedLines([added_line]);
             const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([opposite_line]);
 
-            initDataAndCodeMirrors(
+            initSideBySideFileDiffState(
                 [added_line, opposite_line],
-                left_code_mirror,
-                right_code_mirror,
                 side_by_side_line_grouper.withGroupsOfLines([added_group, unmoved_group]),
                 side_by_side_line_mapper.withSideBySideLineMap(
                     new Map([
@@ -186,10 +171,8 @@ describe("side-by-side lines state", () => {
             const added_group = GroupOfLinesStub.buildGroupOfAddedLines([opposite_line]);
             const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines([deleted_line]);
 
-            initDataAndCodeMirrors(
+            initSideBySideFileDiffState(
                 [opposite_line, deleted_line],
-                left_code_mirror,
-                right_code_mirror,
                 side_by_side_line_grouper.withGroupsOfLines([added_group, deleted_group]),
                 side_by_side_line_mapper.withSideBySideLineMap(
                     new Map([
@@ -216,10 +199,3 @@ describe("side-by-side lines state", () => {
         });
     });
 });
-
-function buildCodeMirrorSpy() {
-    return {
-        getLineHandle: jest.fn(),
-        setValue: jest.fn(),
-    };
-}
