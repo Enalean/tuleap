@@ -28,11 +28,12 @@ import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComme
 import { NAME as NEW_INLINE_COMMENT_NAME } from "../new-inline-comment-component.js";
 
 import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
+import { isAnUnmovedLine } from "./file-line-helper";
 
 export { buildCommentsPlaceholderWidget };
 
 function buildCommentsPlaceholderWidget(line, left_code_mirror, right_code_mirror) {
-    if (lineIsUnmoved(line)) {
+    if (isAnUnmovedLine(line)) {
         return buildCommentsPlaceholderWidgetForUnmovedLine(
             line,
             left_code_mirror,
@@ -260,8 +261,4 @@ function hasNoWidgets(handle) {
         !handle.widgets ||
         (Object.prototype.hasOwnProperty.call(handle, "widgets") && handle.widgets.length === 0)
     );
-}
-
-function lineIsUnmoved(line) {
-    return line.new_offset !== null && line.old_offset !== null;
 }

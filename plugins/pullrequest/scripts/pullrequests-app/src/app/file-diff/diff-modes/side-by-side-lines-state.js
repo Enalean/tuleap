@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { buildLineToLineHandlesMap } from "./side-by-side-line-mapper.js";
 import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "./types.ts";
 
 let diff_lines;
@@ -31,7 +30,8 @@ export function initDataAndCodeMirrors(
     file_lines,
     left_code_mirror,
     right_code_mirror,
-    side_by_side_line_grouper
+    side_by_side_line_grouper,
+    side_by_side_line_mapper
 ) {
     diff_lines = file_lines;
     left_lines = file_lines.filter((line) => line.old_offset !== null);
@@ -46,12 +46,8 @@ export function initDataAndCodeMirrors(
     left_code_mirror.setValue(left_content);
     right_code_mirror.setValue(right_content);
 
-    line_to_line_handles_map = buildLineToLineHandlesMap(
-        diff_lines,
-        line_to_group_map,
-        left_code_mirror,
-        right_code_mirror
-    );
+    line_to_line_handles_map =
+        side_by_side_line_mapper.buildLineToLineHandlesMap(line_to_group_map);
 }
 
 export function getGroupLines(group) {

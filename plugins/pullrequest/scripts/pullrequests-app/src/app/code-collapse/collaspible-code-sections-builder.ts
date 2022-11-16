@@ -19,6 +19,7 @@
 
 import type { PullRequestInlineCommentPresenter } from "../comments/PullRequestCommentPresenter";
 import type { FileLine, UnMovedFileLine } from "../file-diff/diff-modes/types";
+import { isAnUnmovedLine } from "../file-diff/diff-modes/file-line-helper";
 
 const COLLAPSE_THRESHOLD = 10;
 
@@ -39,10 +40,6 @@ export function isThereACommentOnThisLine(
     return Boolean(
         inline_comments.find((comment) => comment.unidiff_offset === file_line.unidiff_offset)
     );
-}
-
-function isAnUnmovedLine(line: FileLine | undefined): line is UnMovedFileLine {
-    return line !== undefined && line.new_offset !== null && line.old_offset !== null;
 }
 
 export function getUnchangedSections(
