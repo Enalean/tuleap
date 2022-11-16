@@ -17,11 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment.ts";
-import { NAME as NEW_INLINE_COMMENT_NAME } from "../new-inline-comment-component";
 import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
 import { getCommentPlaceholderWidget } from "./side-by-side-comment-placeholder-widget-finder.ts";
 import { doesHandleHaveWidgets } from "./side-by-side-line-widgets-helper.ts";
+import {
+    isCommentWidget,
+    isCodeCommentPlaceholderWidget,
+} from "./side-by-side-line-widgets-helper.ts";
 
 export function equalizeSides(left_code_mirror, right_code_mirror, handles) {
     if (typeof handles === "undefined") {
@@ -61,13 +63,7 @@ export function equalizeSides(left_code_mirror, right_code_mirror, handles) {
 
 function getSumOfWidgetsHeights(widgets) {
     return widgets
-        .map((widget) => {
-            if (isCommentWidget(widget)) {
-                return widget.node.getBoundingClientRect().height;
-            }
-
-            return widget.height;
-        })
+        .map((widget) => widget.node.getBoundingClientRect().height)
         .reduce((sum, value) => sum + value, 0);
 }
 
@@ -77,7 +73,7 @@ function getTotalHeight(handle) {
     }
 
     const widgets = handle.widgets.filter(
-        (widget) => isCommentWidget(widget) || isCommentPlaceholderWidget(widget)
+        (widget) => isCommentWidget(widget.node) || isCodeCommentPlaceholderWidget(widget.node)
     );
 
     return getSumOfWidgetsHeights(widgets);
@@ -88,8 +84,7 @@ function getCommentsHeight(handle) {
         return 0;
     }
 
-    const comments_widgets = handle.widgets.filter((widget) => isCommentWidget(widget));
-
+    const comments_widgets = handle.widgets.filter((widget) => isCommentWidget(widget.node));
     if (!comments_widgets.length) {
         return 0;
     }
@@ -97,22 +92,8 @@ function getCommentsHeight(handle) {
     return getSumOfWidgetsHeights(comments_widgets);
 }
 
-function isCommentWidget(line_widget) {
-    return (
-        line_widget.node.localName === NEW_INLINE_COMMENT_NAME ||
-        line_widget.node.localName === INLINE_COMMENT_NAME
-    );
-}
-
-function isCommentPlaceholderWidget(line_widget) {
-    return line_widget.node.className.includes("pull-request-file-diff-comment-placeholder-block");
-}
-
 function adjustPlaceholderHeight(placeholder, widget_height) {
-    const height = Math.max(widget_height, 0);
-    placeholder.node.style.height = `${height}px`;
-
-    placeholder.changed();
+    placeholder.node.height = Math.max(widget_height, 0);
 }
 
 function adjustHeights(

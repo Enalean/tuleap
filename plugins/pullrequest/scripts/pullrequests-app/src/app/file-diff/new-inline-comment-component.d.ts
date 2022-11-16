@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LineWidgetWithNode } from "./types-codemirror-overriden";
-import type { FileLineHandle } from "./types-codemirror-overriden";
-import {
-    doesHandleHaveWidgets,
-    isCodeCommentPlaceholderWidget,
-} from "./side-by-side-line-widgets-helper";
+import type { FileDiffWidgetType } from "./diff-modes/types";
 
-export function getCommentPlaceholderWidget(handle: FileLineHandle): LineWidgetWithNode | null {
-    if (!doesHandleHaveWidgets(handle)) {
-        return null;
-    }
-
-    return (
-        handle.widgets.find((widget): boolean => isCodeCommentPlaceholderWidget(widget.node)) ??
-        null
-    );
-}
+export const NAME: FileDiffWidgetType;

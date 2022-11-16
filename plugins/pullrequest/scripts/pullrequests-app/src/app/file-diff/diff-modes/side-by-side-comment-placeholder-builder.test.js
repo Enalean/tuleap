@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment.ts";
 import { buildCommentsPlaceholderWidget } from "./side-by-side-comment-placeholder-builder.js";
-
-import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
+import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
+import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
 
 describe("side-by-side widget builder", () => {
     const left_code_mirror = {};
@@ -40,13 +39,7 @@ describe("side-by-side widget builder", () => {
         describe("Given an unmoved line,", () => {
             const unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1);
             describe("when it has a comment on the right side", () => {
-                const fake_widget = {
-                    height: 20,
-                    node: {
-                        localName: INLINE_COMMENT_NAME,
-                        getBoundingClientRect: () => ({ height: 20 }),
-                    },
-                };
+                const fake_widget = { node: FileDiffWidgetStub.buildInlineCommentWidget(20) };
                 const left_handle = {};
                 const right_handle = { widgets: [fake_widget] };
                 beforeEach(() => {
@@ -93,10 +86,7 @@ describe("side-by-side widget builder", () => {
 
             describe("when it has a comment on the left side", () => {
                 const fake_widget = {
-                    node: {
-                        localName: INLINE_COMMENT_NAME,
-                        getBoundingClientRect: () => ({ height: 66 }),
-                    },
+                    node: FileDiffWidgetStub.buildInlineCommentWidget(66),
                 };
                 const right_handle = {};
                 const left_handle = { widgets: [fake_widget] };
@@ -177,16 +167,10 @@ describe("side-by-side widget builder", () => {
             const first_added_line = FileLineStub.buildAddedLine(1, 1);
             const second_added_line = FileLineStub.buildAddedLine(2, 2);
             const first_widget = {
-                node: {
-                    localName: INLINE_COMMENT_NAME,
-                    getBoundingClientRect: () => ({ height: 48 }),
-                },
+                node: FileDiffWidgetStub.buildInlineCommentWidget(48),
             };
             const second_widget = {
-                node: {
-                    localName: INLINE_COMMENT_NAME,
-                    getBoundingClientRect: () => ({ height: 95 }),
-                },
+                node: FileDiffWidgetStub.buildInlineCommentWidget(95),
             };
             const left_handle = {};
             const first_right_handle = { widgets: [first_widget] };
@@ -266,16 +250,10 @@ describe("side-by-side widget builder", () => {
             const first_deleted_line = FileLineStub.buildRemovedLine(55, 55);
             const second_deleted_line = FileLineStub.buildRemovedLine(56, 56);
             const first_widget = {
-                node: {
-                    localName: INLINE_COMMENT_NAME,
-                    getBoundingClientRect: () => ({ height: 62 }),
-                },
+                node: FileDiffWidgetStub.buildInlineCommentWidget(62),
             };
             const second_widget = {
-                node: {
-                    localName: INLINE_COMMENT_NAME,
-                    getBoundingClientRect: () => ({ height: 42 }),
-                },
+                node: FileDiffWidgetStub.buildInlineCommentWidget(42),
             };
             const first_left_handle = { widgets: [first_widget] };
             const second_left_handle = { widgets: [second_widget] };
@@ -356,10 +334,7 @@ describe("side-by-side widget builder", () => {
             const third_added_line = FileLineStub.buildAddedLine(7, 5);
             const fourth_added_line = FileLineStub.buildAddedLine(8, 6);
             const first_widget = {
-                node: {
-                    localName: INLINE_COMMENT_NAME,
-                    getBoundingClientRect: () => ({ height: 89 }),
-                },
+                node: FileDiffWidgetStub.buildInlineCommentWidget(89),
             };
             const left_handle = {
                 widgets: [first_widget],

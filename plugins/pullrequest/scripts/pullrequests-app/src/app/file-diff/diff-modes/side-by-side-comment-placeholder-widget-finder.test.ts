@@ -18,20 +18,9 @@
  */
 
 import type { LineHandle } from "codemirror";
-import type { LineHandleWithWidgets, LineWidgetWithNode } from "./types-codemirror-overriden";
-import {
-    COMMENT_PLACEHOLDER_WIDGET_CLASS,
-    getCommentPlaceholderWidget,
-} from "./side-by-side-comment-placeholder-widget-finder";
-
-function getLineWidget(widget_class: string): LineWidgetWithNode {
-    const widget = document.createElement("div");
-    widget.classList.add(widget_class);
-
-    return {
-        node: widget,
-    } as unknown as LineWidgetWithNode;
-}
+import type { LineHandleWithWidgets } from "./types-codemirror-overriden";
+import { getCommentPlaceholderWidget } from "./side-by-side-comment-placeholder-widget-finder";
+import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
 
 describe("widget finder", () => {
     describe("getCommentPlaceholderWidget", () => {
@@ -47,7 +36,11 @@ describe("widget finder", () => {
 
         it("Given a handle with no comment placeholder, then it will return null", () => {
             const handle = {
-                widgets: [getLineWidget("some-widget")],
+                widgets: [
+                    {
+                        node: FileDiffWidgetStub.buildInlineCommentWidget(),
+                    },
+                ],
             } as LineHandleWithWidgets;
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
@@ -56,7 +49,7 @@ describe("widget finder", () => {
         });
 
         it("Given a handle with a comment placeholder, then it will return the comment placeholder widget", () => {
-            const comment_placeholder = getLineWidget(COMMENT_PLACEHOLDER_WIDGET_CLASS);
+            const comment_placeholder = { node: FileDiffWidgetStub.buildCodeCommentPlaceholder() };
             const handle = {
                 widgets: [comment_placeholder],
             } as LineHandleWithWidgets;

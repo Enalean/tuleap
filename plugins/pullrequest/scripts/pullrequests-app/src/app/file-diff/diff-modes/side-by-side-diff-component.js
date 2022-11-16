@@ -41,10 +41,10 @@ import {
 
 import "./modes.js";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
-import { NAME as INLINE_COMMENT_NAME } from "../new-inline-comment-component";
 import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
 import { isAnUnmovedLine } from "./file-line-helper";
 import { SideBySideLineMapper } from "./side-by-side-line-mapper";
+import { isANewInlineCommentWidget } from "./side-by-side-line-widgets-helper";
 
 export default {
     template: `
@@ -208,7 +208,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
 
     function handleCodeMirrorEvents(left_code_mirror, right_code_mirror) {
         left_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
-            if (line_widget.node.localName !== INLINE_COMMENT_NAME) {
+            if (!isANewInlineCommentWidget(line_widget.node)) {
                 return;
             }
 
@@ -219,7 +219,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             );
         });
         right_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
-            if (line_widget.node.localName !== INLINE_COMMENT_NAME) {
+            if (!isANewInlineCommentWidget(line_widget.node)) {
                 return;
             }
 
