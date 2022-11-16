@@ -19,6 +19,7 @@
 
 import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
+import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 
 describe("line-height-equalizer", () => {
     const left_codemirror = "left-codemirror";
@@ -27,22 +28,15 @@ describe("line-height-equalizer", () => {
     describe("equalizeSides", () => {
         it("Given a line with a new comment, when the opposite line has no comment or placeholder, then it should return some widget creation parameters for the opposite line with height equal to the new_comment widget height.", () => {
             const handles = {
-                left_handle: {
-                    text: "Ceci est un texte",
-                    widgets: [
-                        {
-                            node: FileDiffWidgetStub.buildInlineCommentWidget(),
-                        },
-                    ],
-                },
-                right_handle: {
-                    text: "Ceci est un autre texte",
-                },
+                left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
+                    FileDiffWidgetStub.buildInlineCommentWidget(),
+                ]),
+                right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
             };
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
-            expect(placeholder_to_create).toEqual({
+            expect(placeholder_to_create).toStrictEqual({
                 code_mirror: right_codemirror,
                 handle: handles.right_handle,
                 widget_height: 20,
@@ -52,126 +46,72 @@ describe("line-height-equalizer", () => {
         });
 
         it("Given a line with 1 comment, 1 new comment, when the opposite has a placeholder, then it should adjust the opposite placeholder height.", () => {
-            const placeholder = {
-                node: FileDiffWidgetStub.buildCodeCommentPlaceholder(),
-            };
-
+            const placeholder = FileDiffWidgetStub.buildCodeCommentPlaceholder(20);
             const handles = {
-                left_handle: {
-                    text: "Ceci est un texte",
-                    widgets: [
-                        {
-                            node: FileDiffWidgetStub.buildInlineCommentWidget(25),
-                        },
-                        {
-                            node: FileDiffWidgetStub.buildNewInlineCommentWidget(20),
-                        },
-                    ],
-                },
-                right_handle: {
-                    text: "Ceci est un autre texte",
-                    widgets: [placeholder],
-                },
+                left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
+                    FileDiffWidgetStub.buildInlineCommentWidget(25),
+                    FileDiffWidgetStub.buildNewInlineCommentWidget(20),
+                ]),
+                right_handle: FileLineHandleStub.buildLineHandleWithWidgets([placeholder]),
             };
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
             expect(placeholder_to_create).toBeUndefined();
-            expect(placeholder.node.height).toBe(45);
+            expect(placeholder.height).toBe(45);
         });
 
         it("Given a line with 2 comments, when the opposite has a placeholder and a new comment is added, then it should reduce the opposite placeholder height.", () => {
-            const placeholder = {
-                node: FileDiffWidgetStub.buildCodeCommentPlaceholder(45),
-            };
-
+            const placeholder = FileDiffWidgetStub.buildCodeCommentPlaceholder(45);
             const handles = {
-                left_handle: {
-                    text: "Ceci est un texte",
-                    widgets: [
-                        {
-                            node: FileDiffWidgetStub.buildInlineCommentWidget(25),
-                        },
-                        {
-                            node: FileDiffWidgetStub.buildInlineCommentWidget(20),
-                        },
-                    ],
-                },
-                right_handle: {
-                    text: "Ceci est un autre texte",
-                    name: "right",
-                    widgets: [
-                        {
-                            node: FileDiffWidgetStub.buildNewInlineCommentWidget(20),
-                        },
-                        placeholder,
-                    ],
-                },
+                left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
+                    FileDiffWidgetStub.buildInlineCommentWidget(25),
+                    FileDiffWidgetStub.buildInlineCommentWidget(20),
+                ]),
+                right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
+                    FileDiffWidgetStub.buildNewInlineCommentWidget(20),
+                    placeholder,
+                ]),
             };
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
             expect(placeholder_to_create).toBeUndefined();
-            expect(placeholder.node.height).toBe(25);
+            expect(placeholder.height).toBe(25);
         });
 
         it("When the two sides have the same number of comments, then the placeholders should be minimized (height 0px).", () => {
-            const placeholder = {
-                height: 20,
-                node: FileDiffWidgetStub.buildCodeCommentPlaceholder(20),
-                changed: () => {},
-            };
-
+            const placeholder = FileDiffWidgetStub.buildCodeCommentPlaceholder(20);
             const handles = {
-                left_handle: {
-                    text: "Ceci est un texte",
-                    widgets: [
-                        {
-                            node: FileDiffWidgetStub.buildInlineCommentWidget(20),
-                        },
-                    ],
-                },
-                right_handle: {
-                    text: "Ceci est un autre texte",
-                    widgets: [
-                        placeholder,
-                        {
-                            node: FileDiffWidgetStub.buildNewInlineCommentWidget(20),
-                        },
-                    ],
-                },
+                left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
+                    FileDiffWidgetStub.buildInlineCommentWidget(20),
+                ]),
+                right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
+                    placeholder,
+                    FileDiffWidgetStub.buildNewInlineCommentWidget(20),
+                ]),
             };
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
             expect(placeholder_to_create).toBeUndefined();
-            expect(placeholder.node.height).toBe(0);
+            expect(placeholder.height).toBe(0);
         });
     });
 
     it("Given a line with a code placeholder (added/deleted line), when a new inline comment is added, a comment placeholder will be added and the code placeholder will remain untouched.", () => {
-        const code_placeholder = {
-            node: FileDiffWidgetStub.buildCodePlaceholder(20),
-        };
-
         const handles = {
-            left_handle: {
-                text: "Ceci est un texte",
-                widgets: [code_placeholder],
-            },
-            right_handle: {
-                text: "Ceci est un autre texte",
-                widgets: [
-                    {
-                        node: FileDiffWidgetStub.buildNewInlineCommentWidget(20),
-                    },
-                ],
-            },
+            left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
+                FileDiffWidgetStub.buildCodePlaceholder(20),
+            ]),
+            right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
+                FileDiffWidgetStub.buildNewInlineCommentWidget(20),
+            ]),
         };
 
         const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
-        expect(placeholder_to_create).toEqual({
+        expect(placeholder_to_create).toStrictEqual({
             code_mirror: "left-codemirror",
             handle: handles.left_handle,
             widget_height: 20,

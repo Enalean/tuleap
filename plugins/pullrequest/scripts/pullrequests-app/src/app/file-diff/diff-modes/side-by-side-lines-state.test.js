@@ -28,6 +28,7 @@ import { GroupSideBySideLinesStub } from "../../../../tests/stubs/GroupSideBySid
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
 import { MapSideBySideLinesStub } from "../../../../tests/stubs/MapSideBySideLinesStub";
+import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 
 describe("side-by-side lines state", () => {
     let side_by_side_line_grouper, side_by_side_line_mapper, left_code_mirror, right_code_mirror;
@@ -112,8 +113,8 @@ describe("side-by-side lines state", () => {
     describe("getLineOfHandle()", () => {
         it("Given handles matching an unmoved line, then it will return the unmoved line", () => {
             const unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1);
-            const left_handle = {};
-            const right_handle = {};
+            const left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+            const right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([unmoved_line]);
 
             initDataAndCodeMirrors(
@@ -141,9 +142,9 @@ describe("side-by-side lines state", () => {
         it("Given the left handle of an added line, then it will return the opposite line (not the added line)", () => {
             const added_line = FileLineStub.buildAddedLine(1, 1);
             const opposite_line = FileLineStub.buildUnMovedFileLine(2, 1);
-            const added_handle = {};
-            const opposite_left_handle = {};
-            const opposite_right_handle = {};
+            const added_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+            const opposite_left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+            const opposite_right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const added_group = GroupOfLinesStub.buildGroupOfAddedLines([added_line]);
             const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([opposite_line]);
 
@@ -179,9 +180,9 @@ describe("side-by-side lines state", () => {
         it("Given the right handle of a deleted line, then it will return the opposite line (not the deleted line)", () => {
             const deleted_line = FileLineStub.buildRemovedLine(1, 1);
             const opposite_line = FileLineStub.buildAddedLine(2, 1);
-            const opposite_left_handle = {};
-            const opposite_right_handle = {};
-            const deleted_handle = { a: "a" };
+            const opposite_left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+            const opposite_right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+            const deleted_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const added_group = GroupOfLinesStub.buildGroupOfAddedLines([opposite_line]);
             const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines([deleted_line]);
 

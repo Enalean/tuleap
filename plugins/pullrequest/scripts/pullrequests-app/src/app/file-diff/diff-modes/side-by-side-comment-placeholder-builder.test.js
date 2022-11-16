@@ -22,6 +22,7 @@ import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
 import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
+import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 
 describe("side-by-side widget builder", () => {
     const left_code_mirror = {};
@@ -39,9 +40,10 @@ describe("side-by-side widget builder", () => {
         describe("Given an unmoved line,", () => {
             const unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1);
             describe("when it has a comment on the right side", () => {
-                const fake_widget = { node: FileDiffWidgetStub.buildInlineCommentWidget(20) };
-                const left_handle = {};
-                const right_handle = { widgets: [fake_widget] };
+                const left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+                const right_handle = FileLineHandleStub.buildLineHandleWithWidgets([
+                    FileDiffWidgetStub.buildInlineCommentWidget(20),
+                ]);
                 beforeEach(() => {
                     getLineHandles.mockImplementation((value) => {
                         if (value === unmoved_line) {
@@ -85,11 +87,10 @@ describe("side-by-side widget builder", () => {
             });
 
             describe("when it has a comment on the left side", () => {
-                const fake_widget = {
-                    node: FileDiffWidgetStub.buildInlineCommentWidget(66),
-                };
-                const right_handle = {};
-                const left_handle = { widgets: [fake_widget] };
+                const right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+                const left_handle = FileLineHandleStub.buildLineHandleWithWidgets([
+                    FileDiffWidgetStub.buildInlineCommentWidget(66),
+                ]);
 
                 beforeEach(() => {
                     getLineHandles.mockImplementation((value) => {
@@ -145,11 +146,12 @@ describe("side-by-side widget builder", () => {
             });
 
             it("When it has no comment, then widget parameters will be null", () => {
-                const left_handle = {};
-                const right_handle = {};
                 getLineHandles.mockImplementation((value) => {
                     if (value === unmoved_line) {
-                        return { left_handle, right_handle };
+                        return {
+                            left_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
+                            right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
+                        };
                     }
                 });
 
@@ -166,15 +168,13 @@ describe("side-by-side widget builder", () => {
         describe("Given the first line of an added file and the group lines had comments", () => {
             const first_added_line = FileLineStub.buildAddedLine(1, 1);
             const second_added_line = FileLineStub.buildAddedLine(2, 2);
-            const first_widget = {
-                node: FileDiffWidgetStub.buildInlineCommentWidget(48),
-            };
-            const second_widget = {
-                node: FileDiffWidgetStub.buildInlineCommentWidget(95),
-            };
-            const left_handle = {};
-            const first_right_handle = { widgets: [first_widget] };
-            const second_right_handle = { widgets: [second_widget] };
+            const left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+            const first_right_handle = FileLineHandleStub.buildLineHandleWithWidgets([
+                FileDiffWidgetStub.buildInlineCommentWidget(48),
+            ]);
+            const second_right_handle = FileLineHandleStub.buildLineHandleWithWidgets([
+                FileDiffWidgetStub.buildInlineCommentWidget(95),
+            ]);
             const group = GroupOfLinesStub.buildGroupOfAddedLines([
                 first_added_line,
                 second_added_line,
@@ -249,14 +249,12 @@ describe("side-by-side widget builder", () => {
         describe("Given the first line of a deleted file and the group lines had comments", () => {
             const first_deleted_line = FileLineStub.buildRemovedLine(55, 55);
             const second_deleted_line = FileLineStub.buildRemovedLine(56, 56);
-            const first_widget = {
-                node: FileDiffWidgetStub.buildInlineCommentWidget(62),
-            };
-            const second_widget = {
-                node: FileDiffWidgetStub.buildInlineCommentWidget(42),
-            };
-            const first_left_handle = { widgets: [first_widget] };
-            const second_left_handle = { widgets: [second_widget] };
+            const first_left_handle = FileLineHandleStub.buildLineHandleWithWidgets([
+                FileDiffWidgetStub.buildInlineCommentWidget(62),
+            ]);
+            const second_left_handle = FileLineHandleStub.buildLineHandleWithWidgets([
+                FileDiffWidgetStub.buildInlineCommentWidget(42),
+            ]);
             const right_handle = {};
             const group = GroupOfLinesStub.buildGroupOfRemovedLines([
                 first_deleted_line,
@@ -333,13 +331,11 @@ describe("side-by-side widget builder", () => {
             const second_deleted_line = FileLineStub.buildRemovedLine(6, 6);
             const third_added_line = FileLineStub.buildAddedLine(7, 5);
             const fourth_added_line = FileLineStub.buildAddedLine(8, 6);
-            const first_widget = {
-                node: FileDiffWidgetStub.buildInlineCommentWidget(89),
-            };
-            const left_handle = {
-                widgets: [first_widget],
-            };
-            const right_handle = {};
+
+            const left_handle = FileLineHandleStub.buildLineHandleWithWidgets([
+                FileDiffWidgetStub.buildInlineCommentWidget(89),
+            ]);
+            const right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             let deleted_group, added_group;
 
             beforeEach(() => {
@@ -355,7 +351,10 @@ describe("side-by-side widget builder", () => {
                     if (value === first_deleted_line) {
                         return { left_handle, right_handle };
                     }
-                    return { left_handle: {}, right_handle: {} };
+                    return {
+                        left_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
+                        right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
+                    };
                 });
                 getLineOfHandle.mockImplementation((value) => {
                     if (value === left_handle) {
@@ -433,8 +432,8 @@ describe("side-by-side widget builder", () => {
         describe("Given the first line of a group that has already been handled", () => {
             const first_deleted_line = FileLineStub.buildRemovedLine(5, 5);
             const second_added_line = FileLineStub.buildAddedLine(6, 5);
-            const left_handle = {};
-            const right_handle = {};
+            const left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
+            const right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines(
                 [first_deleted_line],
                 true
