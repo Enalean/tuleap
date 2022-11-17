@@ -17,21 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    initSideBySideFileDiffState,
-    getCommentLine,
-    getGroupLines,
-    getLineOfHandle,
-} from "./side-by-side-lines-state.js";
-
 import { GroupSideBySideLinesStub } from "../../../../tests/stubs/GroupSideBySideLinesStub";
+import type { StubGroupSideBySideLines } from "../../../../tests/stubs/GroupSideBySideLinesStub";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
 import { MapSideBySideLinesStub } from "../../../../tests/stubs/MapSideBySideLinesStub";
+import type { StubSideBySideLineMapper } from "../../../../tests/stubs/MapSideBySideLinesStub";
 import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
+import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
+import type { FileLine } from "./types";
+import { SideBySideLineState } from "./side-by-side-lines-state";
 
 describe("side-by-side lines state", () => {
-    let side_by_side_line_grouper, side_by_side_line_mapper;
+    let side_by_side_line_grouper: StubGroupSideBySideLines,
+        side_by_side_line_mapper: StubSideBySideLineMapper;
 
     beforeEach(() => {
         side_by_side_line_grouper = GroupSideBySideLinesStub();
@@ -46,7 +45,7 @@ describe("side-by-side lines state", () => {
                 FileLineStub.buildAddedLine(3, 2),
             ];
 
-            initSideBySideFileDiffState(
+            SideBySideLineState(
                 lines,
                 side_by_side_line_grouper.withEmptyLineToGroupMap(),
                 side_by_side_line_mapper.withSideBySideLineMap(new Map())
@@ -60,19 +59,20 @@ describe("side-by-side lines state", () => {
 
     describe("getCommentLine()", () => {
         it("Given a comment, then it will return its line", () => {
-            const comment = {
+            const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter({
                 unidiff_offset: 2,
-            };
+            });
             const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
             const second_line = FileLineStub.buildUnMovedFileLine(2, 2);
             const lines = [first_line, second_line];
-            initSideBySideFileDiffState(
+
+            const state = SideBySideLineState(
                 lines,
                 side_by_side_line_grouper.withEmptyLineToGroupMap(),
                 side_by_side_line_mapper.withSideBySideLineMap(new Map())
             );
 
-            expect(getCommentLine(comment)).toBe(second_line);
+            expect(state.getCommentLine(comment)).toBe(second_line);
         });
     });
 
@@ -86,16 +86,16 @@ describe("side-by-side lines state", () => {
                 first_line,
                 second_line,
             ]);
-            const removed_lines = GroupOfLinesStub.buildGroupOfUnMovedLines([third_line]);
+            const removed_lines = GroupOfLinesStub.buildGroupOfRemovedLines([third_line]);
 
-            initSideBySideFileDiffState(
+            const state = SideBySideLineState(
                 [first_line, second_line, third_line],
                 side_by_side_line_grouper.withGroupsOfLines([unmoved_lines, removed_lines]),
                 side_by_side_line_mapper.withSideBySideLineMap(new Map())
             );
 
-            expect(getGroupLines(unmoved_lines)).toStrictEqual([first_line, second_line]);
-            expect(getGroupLines(removed_lines)).toStrictEqual([third_line]);
+            expect(state.getGroupLines(unmoved_lines)).toStrictEqual([first_line, second_line]);
+            expect(state.getGroupLines(removed_lines)).toStrictEqual([third_line]);
         });
     });
 
@@ -106,7 +106,7 @@ describe("side-by-side lines state", () => {
             const right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([unmoved_line]);
 
-            initSideBySideFileDiffState(
+            const state = SideBySideLineState(
                 [unmoved_line],
                 side_by_side_line_grouper.withGroupsOfLines([unmoved_group]),
                 side_by_side_line_mapper.withSideBySideLineMap(
@@ -122,8 +122,8 @@ describe("side-by-side lines state", () => {
                 )
             );
 
-            expect(getLineOfHandle(left_handle)).toBe(unmoved_line);
-            expect(getLineOfHandle(right_handle)).toBe(unmoved_line);
+            expect(state.getLineOfHandle(left_handle)).toBe(unmoved_line);
+            expect(state.getLineOfHandle(right_handle)).toBe(unmoved_line);
         });
 
         it("Given the left handle of an added line, then it will return the opposite line (not the added line)", () => {
@@ -135,20 +135,20 @@ describe("side-by-side lines state", () => {
             const added_group = GroupOfLinesStub.buildGroupOfAddedLines([added_line]);
             const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([opposite_line]);
 
-            initSideBySideFileDiffState(
+            const state = SideBySideLineState(
                 [added_line, opposite_line],
                 side_by_side_line_grouper.withGroupsOfLines([added_group, unmoved_group]),
                 side_by_side_line_mapper.withSideBySideLineMap(
                     new Map([
                         [
-                            added_line,
+                            added_line as FileLine,
                             {
                                 left_handle: opposite_left_handle,
                                 right_handle: added_handle,
                             },
                         ],
                         [
-                            opposite_line,
+                            opposite_line as FileLine,
                             {
                                 left_handle: opposite_left_handle,
                                 right_handle: opposite_right_handle,
@@ -158,8 +158,8 @@ describe("side-by-side lines state", () => {
                 )
             );
 
-            expect(getLineOfHandle(added_handle)).toBe(added_line);
-            expect(getLineOfHandle(opposite_left_handle)).toBe(opposite_line);
+            expect(state.getLineOfHandle(added_handle)).toBe(added_line);
+            expect(state.getLineOfHandle(opposite_left_handle)).toBe(opposite_line);
         });
 
         it("Given the right handle of a deleted line, then it will return the opposite line (not the deleted line)", () => {
@@ -171,20 +171,20 @@ describe("side-by-side lines state", () => {
             const added_group = GroupOfLinesStub.buildGroupOfAddedLines([opposite_line]);
             const deleted_group = GroupOfLinesStub.buildGroupOfRemovedLines([deleted_line]);
 
-            initSideBySideFileDiffState(
+            const state = SideBySideLineState(
                 [opposite_line, deleted_line],
                 side_by_side_line_grouper.withGroupsOfLines([added_group, deleted_group]),
                 side_by_side_line_mapper.withSideBySideLineMap(
                     new Map([
                         [
-                            opposite_line,
+                            opposite_line as FileLine,
                             {
                                 left_handle: opposite_left_handle,
                                 right_handle: opposite_right_handle,
                             },
                         ],
                         [
-                            deleted_line,
+                            deleted_line as FileLine,
                             {
                                 left_handle: deleted_handle,
                                 right_handle: opposite_right_handle,
@@ -194,8 +194,8 @@ describe("side-by-side lines state", () => {
                 )
             );
 
-            expect(getLineOfHandle(deleted_handle)).toBe(deleted_line);
-            expect(getLineOfHandle(opposite_right_handle)).toBe(opposite_line);
+            expect(state.getLineOfHandle(deleted_handle)).toBe(deleted_line);
+            expect(state.getLineOfHandle(opposite_right_handle)).toBe(opposite_line);
         });
     });
 });

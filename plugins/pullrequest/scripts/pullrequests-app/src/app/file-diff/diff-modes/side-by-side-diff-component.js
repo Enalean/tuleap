@@ -20,14 +20,9 @@
 import CodeMirror from "codemirror";
 import "codemirror/addon/scroll/simplescrollbars.js";
 import { getStore } from "../comments-store.ts";
-import {
-    initSideBySideFileDiffState,
-    isFirstLineOfGroup,
-    getCommentLine,
-    getLineHandles,
-} from "./side-by-side-lines-state.js";
-import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-builder.js";
-import { buildCommentsPlaceholderWidget } from "./side-by-side-comment-placeholder-builder.js";
+import { SideBySideLineState } from "./side-by-side-lines-state.ts";
+import { SideBySideCodePlaceholderBuilder } from "./side-by-side-code-placeholder-builder.ts";
+import { SideBySideCommentPlaceholderBuilder } from "./side-by-side-comment-placeholder-builder.ts";
 import { synchronize } from "./side-by-side-scroll-synchronizer.ts";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/collaspible-code-sections-builder.ts";
 import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
@@ -44,6 +39,7 @@ import { isAnUnmovedLine } from "./file-line-helper";
 import { SideBySideLineMapper } from "./side-by-side-line-mapper";
 import { isANewInlineCommentWidget } from "./side-by-side-line-widgets-helper";
 import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors-content-manager";
+import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
 
 export default {
     template: `
@@ -66,6 +62,10 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
     Object.assign(self, {
         $onInit,
         code_mirrors_content_manager: {},
+        file_lines_state: {},
+        comment_placeholder_builder: {},
+        code_placeholder_builder: {},
+        placeholder_positioner: {},
     });
 
     function $onInit() {
@@ -109,15 +109,29 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             right_code_mirror
         );
 
-        initSideBySideFileDiffState(
+        self.file_lines_state = SideBySideLineState(
             file_lines,
             SideBySideLineGrouper(file_lines),
             SideBySideLineMapper(file_lines, left_code_mirror, right_code_mirror)
         );
 
+        self.placeholder_positioner = SideBySidePlaceholderPositioner(self.file_lines_state);
+        self.comment_placeholder_builder = SideBySideCommentPlaceholderBuilder(
+            left_code_mirror,
+            right_code_mirror,
+            self.file_lines_state,
+            self.placeholder_positioner
+        );
+
+        self.code_placeholder_builder = SideBySideCodePlaceholderBuilder(
+            left_code_mirror,
+            right_code_mirror,
+            self.file_lines_state
+        );
+
         const code_placeholders = file_lines.map((line) => {
             displayLine(line, left_code_mirror, right_code_mirror);
-            return addCodePlaceholder(line, left_code_mirror, right_code_mirror);
+            return addCodePlaceholder(line);
         });
 
         code_placeholders.forEach((widget_params) => {
@@ -127,9 +141,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
         });
 
-        file_lines.forEach((line) => {
-            addCommentsPlaceholder(line, left_code_mirror, right_code_mirror);
-        });
+        file_lines.forEach(addCommentsPlaceholder);
 
         getStore()
             .getAllRootComments()
@@ -141,7 +153,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
     }
 
     function displayInlineComment(comment, left_code_mirror, right_code_mirror) {
-        const comment_line = getCommentLine(comment);
+        const comment_line = self.file_lines_state.getCommentLine(comment);
 
         if (comment_line.new_offset === null) {
             CodeMirrorHelperService.displayInlineComment(
@@ -158,7 +170,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
                 );
             };
 
-            return addCommentsPlaceholder(comment_line, left_code_mirror, right_code_mirror);
+            return addCommentsPlaceholder(comment_line);
         }
 
         if (comment_line.old_offset === null) {
@@ -176,7 +188,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
                 );
             };
 
-            return addCommentsPlaceholder(comment_line, left_code_mirror, right_code_mirror);
+            return addCommentsPlaceholder(comment_line);
         }
 
         const target_code_mirror =
@@ -202,14 +214,15 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             );
         };
 
-        return addCommentsPlaceholder(comment_line, left_code_mirror, right_code_mirror);
+        return addCommentsPlaceholder(comment_line);
     }
 
     function recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line) {
         const placeholder_to_create = equalizeSides(
             left_code_mirror,
             right_code_mirror,
-            getLineHandles(line)
+            self.file_lines_state.getLineHandles(line),
+            self.placeholder_positioner
         );
 
         if (placeholder_to_create) {
@@ -297,22 +310,18 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
         );
     }
 
-    function addCodePlaceholder(line, left_code_mirror, right_code_mirror) {
-        if (isAnUnmovedLine(line) || !isFirstLineOfGroup(line)) {
+    function addCodePlaceholder(line) {
+        if (isAnUnmovedLine(line) || !self.file_lines_state.isFirstLineOfGroup(line)) {
             return null;
         }
-        return buildCodePlaceholderWidget(line, left_code_mirror, right_code_mirror);
+        return self.code_placeholder_builder.buildCodePlaceholderWidget(line);
     }
 
-    function addCommentsPlaceholder(line, left_code_mirror, right_code_mirror) {
-        if (!isAnUnmovedLine(line) && !isFirstLineOfGroup(line)) {
+    function addCommentsPlaceholder(line) {
+        if (!isAnUnmovedLine(line) && !self.file_lines_state.isFirstLineOfGroup(line)) {
             return;
         }
-        const widget_params = buildCommentsPlaceholderWidget(
-            line,
-            left_code_mirror,
-            right_code_mirror
-        );
+        const widget_params = self.comment_placeholder_builder.buildCommentsPlaceholderWidget(line);
         if (!widget_params) {
             return;
         }

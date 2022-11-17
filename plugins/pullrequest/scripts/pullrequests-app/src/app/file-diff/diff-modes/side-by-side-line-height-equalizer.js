@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
 import { getCommentPlaceholderWidget } from "./side-by-side-comment-placeholder-widget-finder.ts";
 import { doesHandleHaveWidgets } from "./side-by-side-line-widgets-helper.ts";
 import {
@@ -25,7 +24,7 @@ import {
     isCodeCommentPlaceholderWidget,
 } from "./side-by-side-line-widgets-helper.ts";
 
-export function equalizeSides(left_code_mirror, right_code_mirror, handles) {
+export function equalizeSides(left_code_mirror, right_code_mirror, handles, positionner) {
     if (typeof handles === "undefined") {
         // Do nothing
         return null;
@@ -47,7 +46,8 @@ export function equalizeSides(left_code_mirror, right_code_mirror, handles) {
             left_code_mirror,
             right_handle,
             right_line_height,
-            right_code_mirror
+            right_code_mirror,
+            positionner
         );
     }
 
@@ -57,7 +57,8 @@ export function equalizeSides(left_code_mirror, right_code_mirror, handles) {
         right_code_mirror,
         left_handle,
         left_line_height,
-        left_code_mirror
+        left_code_mirror,
+        positionner
     );
 }
 
@@ -102,7 +103,8 @@ function adjustHeights(
     code_mirror,
     opposite_handle,
     opposite_line_height,
-    opposite_code_mirror
+    opposite_code_mirror,
+    positionner
 ) {
     const placeholder = getCommentPlaceholderWidget(handle);
     let optimum_height = opposite_line_height - getCommentsHeight(handle);
@@ -113,7 +115,7 @@ function adjustHeights(
         if (!opposite_placeholder) {
             optimum_height = line_height - getCommentsHeight(opposite_handle);
 
-            const display_above_line = getDisplayAboveLineForWidget(handle);
+            const display_above_line = positionner.getDisplayAboveLineForWidget(handle);
 
             return {
                 code_mirror: opposite_code_mirror,

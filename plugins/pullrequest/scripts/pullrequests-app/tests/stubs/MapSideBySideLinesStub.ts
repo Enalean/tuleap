@@ -23,7 +23,7 @@ import type {
 } from "../../src/app/file-diff/diff-modes/side-by-side-line-mapper";
 import type { FileLine } from "../../src/app/file-diff/diff-modes/types";
 
-interface StubSideBySideLineMapper {
+export interface StubSideBySideLineMapper {
     withSideBySideLineMap: (map: Map<FileLine, SynchronizedLineHandles>) => MapSideBySideLines;
     getNbCalls: () => number;
 }

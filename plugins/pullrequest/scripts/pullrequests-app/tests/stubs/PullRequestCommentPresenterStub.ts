@@ -87,7 +87,9 @@ export const PullRequestCommentPresenterStub = {
         ...data,
     }),
 
-    buildFileDiffCommentPresenter: (): PullRequestInlineCommentPresenter => ({
+    buildFileDiffCommentPresenter: (
+        data: Partial<PullRequestInlineCommentPresenter> = {}
+    ): PullRequestInlineCommentPresenter => ({
         ...comment_presenter_base,
         type: TYPE_INLINE_COMMENT,
         is_inline_comment: true,
@@ -95,5 +97,6 @@ export const PullRequestCommentPresenterStub = {
         file_path: "README.md",
         position: INLINE_COMMENT_POSITION_RIGHT,
         is_file_diff_comment: true,
+        ...data,
     }),
 };

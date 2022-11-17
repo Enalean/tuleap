@@ -35,7 +35,7 @@ export interface MapSideBySideLines {
 }
 
 export const SideBySideLineMapper = (
-    lines: FileLine[],
+    lines: readonly FileLine[],
     left_code_mirror: Editor,
     right_code_mirror: Editor
 ): MapSideBySideLines => ({

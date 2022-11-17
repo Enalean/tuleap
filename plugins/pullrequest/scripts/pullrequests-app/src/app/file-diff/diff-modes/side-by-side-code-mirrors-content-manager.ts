@@ -27,7 +27,7 @@ interface ManageCodeMirrorsContent {
 }
 
 export const SideBySideCodeMirrorsContentManager = (
-    file_lines: FileLine[],
+    file_lines: readonly FileLine[],
     left_code_mirror: Editor,
     right_code_mirror: Editor
 ): ManageCodeMirrorsContent => {

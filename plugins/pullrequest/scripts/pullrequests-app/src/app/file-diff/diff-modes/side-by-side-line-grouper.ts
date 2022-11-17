@@ -25,7 +25,7 @@ export interface GroupSideBySideLines {
     buildFirstLineToGroupMap: () => Map<number, GroupOfLines>;
 }
 
-export const SideBySideLineGrouper = (lines: FileLine[]): GroupSideBySideLines => {
+export const SideBySideLineGrouper = (lines: readonly FileLine[]): GroupSideBySideLines => {
     const groups = groupLinesByChangeType(lines);
     return {
         buildLineToGroupMap: (): Map<number, GroupOfLines> =>
@@ -44,7 +44,7 @@ export const SideBySideLineGrouper = (lines: FileLine[]): GroupSideBySideLines =
     };
 };
 
-function groupLinesByChangeType(file_lines: FileLine[]): GroupOfLines[] {
+function groupLinesByChangeType(file_lines: readonly FileLine[]): GroupOfLines[] {
     return file_lines.reduce((accumulator: GroupOfLines[], line: FileLine): GroupOfLines[] => {
         const current_change_type = getChangeType(line);
         const previous_group = accumulator[accumulator.length - 1];
