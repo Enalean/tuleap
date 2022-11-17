@@ -24,40 +24,45 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\NullLogger;
+use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\WorkerAvailability;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArchiveAndDeleteArtifactTaskBuilder
-     */
-    private $task_builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|QueueFactory
-     */
-    private $queue_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|WorkerAvailability
-     */
-    private $worker_availability;
-    /**
      * @var AsynchronousArtifactsDeletionActionsRunner
      */
     private $runner;
 
+    private IsAsyncTaskProcessingAvailable $worker_availability;
+    /**
+     * @var QueueFactory&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $queue_factory;
+    /**
+     * @var ArchiveAndDeleteArtifactTaskBuilder&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $task_builder;
+
     protected function setUp(): void
     {
-        $this->queue_factory       = \Mockery::mock(QueueFactory::class);
-        $this->task_builder        = \Mockery::mock(ArchiveAndDeleteArtifactTaskBuilder::class);
-        $this->worker_availability = \Mockery::mock(WorkerAvailability::class);
+        $this->queue_factory       = $this->createMock(QueueFactory::class);
+        $this->task_builder        = $this->createMock(ArchiveAndDeleteArtifactTaskBuilder::class);
+        $this->worker_availability = new class implements IsAsyncTaskProcessingAvailable {
+            public function canProcessAsyncTasks(): bool
+            {
+                return false;
+            }
+        };
 
         $this->runner = new AsynchronousArtifactsDeletionActionsRunner(
-            \Mockery::mock(PendingArtifactRemovalDao::class),
+            $this->createMock(PendingArtifactRemovalDao::class),
             new NullLogger(),
-            \Mockery::mock(\UserManager::class),
+            $this->createMock(\UserManager::class),
             $this->queue_factory,
             $this->worker_availability,
             $this->task_builder
@@ -66,19 +71,16 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends \Tuleap\Test\
 
     public function testDoesNotTryToProcessTheDeletionAsynchronouslyWhenNoWorkerIsAvailable(): void
     {
-        $this->queue_factory->shouldNotReceive('getPersistentQueue');
-        $task = \Mockery::mock(ArchiveAndDeleteArtifactTask::class);
-        $this->task_builder->shouldReceive('build')->once()->andReturn($task);
-        $task->shouldReceive('archive')->once();
+        $this->queue_factory->expects(self::never())->method('getPersistentQueue');
+        $task = $this->createMock(ArchiveAndDeleteArtifactTask::class);
+        $task->expects(self::once())->method('archive');
+        $this->task_builder->expects(self::once())->method('build')->willReturn($task);
 
-        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(false);
-
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(1234);
+        $artifact = ArtifactTestBuilder::anArtifact(1234)->build();
 
         $this->runner->executeArchiveAndArtifactDeletion(
             $artifact,
-            \Mockery::mock(\PFUser::class)
+            UserTestBuilder::anActiveUser()->build()
         );
     }
 }

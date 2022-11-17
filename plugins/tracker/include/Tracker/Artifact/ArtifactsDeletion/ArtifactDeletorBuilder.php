@@ -24,6 +24,8 @@ use BackendLogger;
 use EventManager;
 use ProjectHistoryDao;
 use Tracker_ArtifactDao;
+use Tuleap\Queue\ForceSynchronousMode;
+use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerAvailability;
 use WrapperLogger;
@@ -32,6 +34,16 @@ class ArtifactDeletorBuilder
 {
     public static function build(): ArtifactDeletor
     {
+        return self::buildDeletor(new WorkerAvailability());
+    }
+
+    public static function buildForcedSynchronousDeletor(): ArtifactDeletor
+    {
+        return self::buildDeletor(new ForceSynchronousMode());
+    }
+
+    private static function buildDeletor(IsAsyncTaskProcessingAvailable $task_processing_available): ArtifactDeletor
+    {
         $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
 
         $async_artifact_archive_runner = new AsynchronousArtifactsDeletionActionsRunner(
@@ -39,7 +51,7 @@ class ArtifactDeletorBuilder
             $logger,
             \UserManager::instance(),
             new QueueFactory($logger),
-            new WorkerAvailability(),
+            $task_processing_available,
             new ArchiveAndDeleteArtifactTaskBuilder()
         );
 

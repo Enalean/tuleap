@@ -1217,7 +1217,11 @@ class ArtifactsResource extends AuthenticatedResource
         $contributor_semantic_checker = new MoveContributorSemanticChecker($this->formelement_factory);
 
         return new MoveArtifact(
-            $this->artifacts_deletion_manager,
+            new ArtifactsDeletionManager(
+                new ArtifactsDeletionDAO(),
+                ArtifactDeletorBuilder::buildForcedSynchronousDeletor(),
+                new ArtifactDeletionLimitRetriever($this->artifacts_deletion_config, $this->user_deletion_retriever),
+            ),
             $builder->build($children_collector, $file_path_xml_exporter, $user, $user_xml_exporter, true),
             new MoveChangesetXMLUpdater(
                 $this->event_manager,
