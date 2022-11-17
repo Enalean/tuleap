@@ -160,11 +160,10 @@ describe("Document PhpWiki integration", () => {
 function createAWikiDocument(document_title: string, page_name: string): void {
     cy.get("[data-test=document-header-actions]").within(() => {
         cy.get("[data-test=document-item-action-new-button]").click();
+        cy.get("[data-test=document-new-wiki-creation-button]").click();
     });
 
     cy.get("[data-test=document-new-item-modal]").within(() => {
-        cy.get("[data-test=wiki]").click();
-
         cy.get("[data-test=document-new-item-title]").type(document_title);
         cy.get("[data-test=document-new-item-wiki-page-name]").type(page_name);
         cy.get("[data-test=document-modal-submit-button-create-item]").click();

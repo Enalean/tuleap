@@ -373,6 +373,18 @@ import { createLinkSelector } from "@tuleap/link-selector";
                 });
             }
 
+            var dropdown_trigger_options_submenu = document.getElementById(
+                "dropdown-menu-example-options-submenu"
+            );
+            if (dropdown_trigger_options_submenu) {
+                createDropdown(dropdown_trigger_options_submenu, {
+                    keyboard: false,
+                    dropdown_menu: document.getElementById(
+                        "dropdown-menu-example-options-submenu-options"
+                    ),
+                });
+            }
+
             var dropdown_trigger_disabled_options = document.getElementById(
                 "dropdown-disable-options"
             );

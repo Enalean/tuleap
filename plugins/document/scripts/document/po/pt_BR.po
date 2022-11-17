@@ -289,6 +289,9 @@ msgstr ""
 msgid "Focus the document search bar"
 msgstr ""
 
+msgid "Folder"
+msgstr ""
+
 msgid "Global search"
 msgstr ""
 
@@ -400,6 +403,9 @@ msgid "Narrow view"
 msgstr ""
 
 msgid "Navigation in Documents service"
+msgstr ""
+
+msgid "New"
 msgstr ""
 
 msgid "New document"
@@ -717,6 +723,9 @@ msgid "Update permissions"
 msgstr ""
 
 msgid "Update properties"
+msgstr ""
+
+msgid "Upload a file"
 msgstr ""
 
 msgid "Upload error"

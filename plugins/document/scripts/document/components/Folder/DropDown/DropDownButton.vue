@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-dropdown document-dropdown-menu-button">
         <button
-            class="tlp-button-primary"
+            class="tlp-button-primary document-dropdown-menu-button-button"
             v-bind:class="{
                 'tlp-button-large': isInLargeMode,
                 'tlp-button-small tlp-button-outline': isInQuickLookMode,
@@ -32,11 +32,11 @@
             data-test="document-drop-down-button"
             v-bind:aria-label="$gettext(`Open dropdown menu`)"
         >
-            <i class="fa fa-ellipsis-h" v-if="!isAppended"></i>
-            <i class="fa fa-caret-down" v-bind:class="{ 'tlp-button-icon-right': !isAppended }"></i>
+            <i v-if="isAppended" class="fa-solid fa-caret-down" aria-hidden="true"></i>
+            <i v-else class="fa-solid fa-ellipsis" aria-hidden="true"></i>
         </button>
         <div
-            class="tlp-dropdown-menu document-dropdown-menu"
+            class="tlp-dropdown-menu tlp-dropdown-menu-right document-dropdown-menu"
             v-bind:class="{
                 'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState,
                 'tlp-dropdown-menu-right': isInQuickLookMode,

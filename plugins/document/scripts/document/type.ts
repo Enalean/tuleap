@@ -23,6 +23,14 @@ import type { PermissionsState } from "./store/permissions/permissions-default-s
 import type { PropertiesState } from "./store/properties/module";
 import type { Upload } from "tus-js-client";
 import type { RestUser } from "./api/rest-querier";
+import {
+    TYPE_EMBEDDED,
+    TYPE_EMPTY,
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_LINK,
+    TYPE_WIKI,
+} from "./constants";
 
 export interface State {
     is_loading_folder: boolean;
@@ -107,9 +115,19 @@ interface MinimalItem {
     readonly id: number;
     readonly title: string;
     readonly parent_id: number | null;
-    readonly type: string;
+    readonly type: string; // Should use ItemType
     level?: number;
 }
+
+export const ItemType = [
+    TYPE_FOLDER,
+    TYPE_FILE,
+    TYPE_EMBEDDED,
+    TYPE_WIKI,
+    TYPE_LINK,
+    TYPE_EMPTY,
+] as const;
+export type ItemType = typeof ItemType[number];
 
 export interface Item extends MinimalItem {
     description: string;

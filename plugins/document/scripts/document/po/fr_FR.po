@@ -314,6 +314,9 @@ msgstr "Date fixe"
 msgid "Focus the document search bar"
 msgstr "Se placer dans la barre de recherche"
 
+msgid "Folder"
+msgstr "Dossier"
+
 msgid "Global search"
 msgstr "Recherche globale"
 
@@ -429,6 +432,9 @@ msgstr "Vue étroite"
 
 msgid "Navigation in Documents service"
 msgstr "Navigation dans le service Documents"
+
+msgid "New"
+msgstr "Nouveau"
 
 msgid "New document"
 msgstr "Nouveau document"
@@ -775,6 +781,9 @@ msgstr "Mettre à jour les permissions"
 
 msgid "Update properties"
 msgstr "Mettre à jour les propriétés"
+
+msgid "Upload a file"
+msgstr "Téléverser un fichier"
 
 msgid "Upload error"
 msgstr "Erreur de téléversement"

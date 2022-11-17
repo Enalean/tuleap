@@ -31,7 +31,6 @@ $tlp-dropdown-transition: 75ms ease-out;
     position: absolute;
     z-index: 1000;
     flex-direction: column;
-    margin: $tlp-dropdown-arrow-size 0 0;
     padding: var(--tlp-small-spacing) 0;
     transition: box-shadow $tlp-dropdown-transition;
     border-bottom: 0;
@@ -40,47 +39,51 @@ $tlp-dropdown-transition: 75ms ease-out;
     box-shadow: none;
     pointer-events: none;
 
-    &::before,
-    &::after {
-        content: "";
-        display: block;
-        position: absolute;
-        left: 20px;
-        width: 0;
-        height: 0;
-        margin: 0 #{-$tlp-dropdown-arrow-size};
-        border: $tlp-dropdown-arrow-size solid transparent;
-    }
+    &:not(.tlp-dropdown-submenu) {
+        margin: $tlp-dropdown-arrow-size 0 0;
 
-    &::before {
-        bottom: calc(100% + 1px);
-        border-bottom-color: var(--tlp-dark-color-transparent-90);
-    }
-
-    &::after {
-        bottom: 100%;
-        border-bottom-color: var(--tlp-white-color);
-    }
-
-    &[data-placement^="top"] {
-        &::before {
-            top: calc(100% + 1px);
-            border-top-color: var(--tlp-dark-color-transparent-90);
-            border-bottom-color: transparent;
-        }
-
-        &::after {
-            top: 100%;
-            border-top-color: var(--tlp-white-color);
-            border-bottom-color: transparent;
-        }
-    }
-
-    &[data-placement$="end"] {
         &::before,
         &::after {
-            right: 20px;
-            left: auto;
+            content: "";
+            display: block;
+            position: absolute;
+            left: 20px;
+            width: 0;
+            height: 0;
+            margin: 0 #{-$tlp-dropdown-arrow-size};
+            border: $tlp-dropdown-arrow-size solid transparent;
+        }
+
+        &::before {
+            bottom: calc(100% + 1px);
+            border-bottom-color: var(--tlp-dark-color-transparent-90);
+        }
+
+        &::after {
+            bottom: 100%;
+            border-bottom-color: var(--tlp-white-color);
+        }
+
+        &[data-placement^="top"] {
+            &::before {
+                top: calc(100% + 1px);
+                border-top-color: var(--tlp-dark-color-transparent-90);
+                border-bottom-color: transparent;
+            }
+
+            &::after {
+                top: 100%;
+                border-top-color: var(--tlp-white-color);
+                border-bottom-color: transparent;
+            }
+        }
+
+        &[data-placement$="end"] {
+            &::before,
+            &::after {
+                right: 20px;
+                left: auto;
+            }
         }
     }
 

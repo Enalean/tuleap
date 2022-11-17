@@ -58,8 +58,6 @@ describe("DropDownQuickLook", () => {
             false
         );
 
-        expect(wrapper.find("[data-test=dropdown-menu-folder-creation]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=dropdown-menu-file-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
     });
 
@@ -134,9 +132,6 @@ describe("DropDownQuickLook", () => {
             );
 
             expect(
-                wrapper.find("[data-test=document-quicklook-action-button-new-item]").exists()
-            ).toBeTruthy();
-            expect(
                 wrapper.find("[data-test=document-quicklook-action-button-new-version]").exists()
             ).toBeFalsy();
             expect(
@@ -159,8 +154,6 @@ describe("DropDownQuickLook", () => {
                 false
             );
 
-            expect(wrapper.find("[data-test=dropdown-menu-folder-creation]").exists()).toBeFalsy();
-            expect(wrapper.find("[data-test=dropdown-menu-file-creation]").exists()).toBeFalsy();
             expect(
                 wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists()
             ).toBeFalsy();

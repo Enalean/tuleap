@@ -30,8 +30,6 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
-            <type-selector v-model="item.type" />
-
             <document-global-property-for-create
                 v-bind:currently-updated-item="item"
                 v-bind:parent="parent"
@@ -85,7 +83,6 @@ import { TYPE_FILE } from "../../../../constants";
 import DocumentGlobalPropertyForCreate from "./PropertiesForCreate/DocumentGlobalPropertyForCreate.vue";
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 import WikiProperties from "../PropertiesForCreateOrUpdate/WikiProperties.vue";
-import TypeSelector from "./TypeSelector.vue";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
@@ -112,7 +109,6 @@ export default {
         ModalHeader,
         LinkProperties,
         WikiProperties,
-        TypeSelector,
         CreationModalPermissionsSection,
         ModalFeedback,
     },
@@ -198,6 +194,7 @@ export default {
         },
         async show(event) {
             this.item = this.getDefaultItem();
+            this.item.type = event.type;
             this.parent = event.item;
             this.addParentPropertiesToDefaultItem();
             this.item.permissions_for_groups = JSON.parse(

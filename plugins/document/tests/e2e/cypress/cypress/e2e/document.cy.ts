@@ -54,8 +54,7 @@ describe("Document new UI", () => {
                 cy.log("property is displayed in modal");
                 cy.visitProjectService(project_unixname, "Documents");
                 cy.get("[data-test=document-header-actions]").within(() => {
-                    cy.get("[data-test=document-drop-down-button]").click();
-
+                    cy.get("[data-test=document-item-action-new-button]").click();
                     cy.get("[data-test=document-new-folder-creation-button]").click();
                 });
                 cy.get("[data-test=document-new-folder-modal]").within(() => {
@@ -81,11 +80,10 @@ describe("Document new UI", () => {
                 cy.visitProjectService(project_unixname, "Documents");
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-item-action-new-button]").click();
+                    cy.get("[data-test=document-new-embedded-creation-button]").click();
                 });
 
                 cy.get("[data-test=document-new-item-modal]").within(() => {
-                    cy.get("[data-test=embedded]").click();
-
                     cy.get("[data-test=document-new-item-title]").type("My embedded");
 
                     cy.window().then((win) => {
@@ -179,7 +177,7 @@ describe("Document new UI", () => {
 
             it("user can manipulate folders", () => {
                 cy.get("[data-test=document-header-actions]").within(() => {
-                    cy.get("[data-test=document-drop-down-button]").click();
+                    cy.get("[data-test=document-item-action-new-button]").click();
 
                     cy.get("[data-test=document-new-folder-creation-button]").click();
                 });
@@ -210,10 +208,9 @@ describe("Document new UI", () => {
             it("user can manipulate empty document", () => {
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-item-action-new-button]").click();
+                    cy.get("[data-test=document-new-empty-creation-button]").click();
                 });
                 cy.get("[data-test=document-new-item-modal]").within(() => {
-                    cy.get("[data-test=empty]").click();
-
                     cy.get("[data-test=document-new-item-title]").type("My new empty document");
                     cy.get("[data-test=document-modal-submit-button-create-item]").click();
                 });
@@ -238,10 +235,10 @@ describe("Document new UI", () => {
             it("user can manipulate links", () => {
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-item-action-new-button]").click();
+                    cy.get("[data-test=document-new-link-creation-button]").click();
                 });
 
                 cy.get("[data-test=document-new-item-modal]").within(() => {
-                    cy.get("[data-test=link]").click();
                     cy.get("[data-test=document-new-item-title]").type("My new link document");
                     cy.get("[data-test=document-new-item-link-url]").type("https://example.com");
                     cy.get("[data-test=document-modal-submit-button-create-item]").click();
@@ -280,11 +277,10 @@ describe("Document new UI", () => {
             it("user should be able to create an embedded file", () => {
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-item-action-new-button]").click();
+                    cy.get("[data-test=document-new-embedded-creation-button]").click();
                 });
 
                 cy.get("[data-test=document-new-item-modal]").within(() => {
-                    cy.get("[data-test=embedded]").click();
-
                     cy.get("[data-test=document-new-item-title]").type("My new html content");
 
                     cy.window().then((win) => {
@@ -315,7 +311,7 @@ describe("Document new UI", () => {
             it(`user can download a folder as a zip archive`, () => {
                 // Create a folder
                 cy.get("[data-test=document-header-actions]").within(() => {
-                    cy.get("[data-test=document-drop-down-button]").click();
+                    cy.get("[data-test=document-item-action-new-button]").click();
                     // need to force click because buttons can be out of viewport
                     cy.get("[data-test=document-new-folder-creation-button]").click({
                         force: true,
@@ -335,10 +331,10 @@ describe("Document new UI", () => {
                 // Create an embedded file in this folder
                 cy.get("[data-test=document-header-actions]").within(() => {
                     cy.get("[data-test=document-item-action-new-button]").click();
+                    cy.get("[data-test=document-new-embedded-creation-button]").click();
                 });
 
                 cy.get("[data-test=document-new-item-modal]").within(() => {
-                    cy.get("[data-test=embedded]").click();
                     cy.get("[data-test=document-new-item-title]").type("Embedded file");
 
                     cy.window().then((win) => {
@@ -404,10 +400,9 @@ describe("Document new UI", () => {
             cy.log("Add a document");
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-item-action-new-button]").click();
+                cy.get("[data-test=document-new-empty-creation-button]").click();
             });
             cy.get("[data-test=document-new-item-modal]").within(() => {
-                cy.get("[data-test=empty]").click();
-
                 cy.get("[data-test=document-new-item-title]").type(document_name);
                 cy.get("[data-test=document-modal-submit-button-create-item]").click();
             });

@@ -7,7 +7,7 @@ exports[`LinkCellTitle should render link title 1`] = `
   />
    
   <i
-    class="fa fa-fw document-folder-content-icon fa-link document-link-icon"
+    class="fa-fw document-folder-content-icon fa-solid fa-link document-link-icon"
   />
    
   <a

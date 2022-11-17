@@ -31,11 +31,11 @@ export const ACTION_ICON_EMBEDDED = "fa-arrow-right";
 export const ACTION_ICON_ONLYOFFICE = "fa-arrow-right";
 export const ACTION_ICON_WIKI = "fa-arrow-right";
 
-export const ICON_LINK = "fa-link document-link-icon";
-export const ICON_EMBEDDED = "fa-file-text document-text-icon";
-export const ICON_WIKI = "fa-wikipedia-w document-wiki-icon";
-export const ICON_EMPTY = "fa-file-o document-empty-icon";
-export const ICON_FOLDER_ICON = "fa-folder-open-o document-folder-icon";
+export const ICON_LINK = "fa-solid fa-link document-link-icon";
+export const ICON_EMBEDDED = "fa-solid fa-file-lines document-text-icon";
+export const ICON_WIKI = "fa-brands fa-wikipedia-w document-wiki-icon";
+export const ICON_EMPTY = "fa-regular fa-file document-empty-icon";
+export const ICON_FOLDER_ICON = "fa-regular fa-folder-open document-folder-icon";
 
 export const DOCMAN_FOLDER_EXPANDED_VALUE = 2;
 
