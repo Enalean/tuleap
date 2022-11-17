@@ -22,7 +22,7 @@ specifiers:
   angular-sanitize: ^1.8.2
   codemirror: ^5.62.0
   dompurify: ^2.3.6
-  hybrids: ^8.0.2
+  hybrids: ^8.1.8
   jquery: ^3.6.0
   moment: ^2.29.4
   neverthrow: 5.0.0
@@ -47,7 +47,7 @@ dependencies:
   angular-sanitize: 1.8.3
   codemirror: 5.65.9
   dompurify: 2.4.0
-  hybrids: 8.1.5
+  hybrids: 8.1.8
   moment: 2.29.4
   neverthrow: 5.0.0
   sprintf-js: 1.1.2
@@ -297,8 +297,8 @@ packages:
     resolution: {integrity: sha512-WdZTbAByD+pHfl/g9QSsBIIwy8IT+EsPiKDs0KNX+zSHhdDLFKdZu0BQHljvO+0QI/BasbMSUa8wYNCZTvhslg==}
     dev: true
 
-  /hybrids/8.1.5:
-    resolution: {integrity: sha512-jdYIwTb7fKC9RD/sEobu1qeTtHZEYRXEVLdnztEyP1Yq8uZUXKrx+/lS3pbjFt13qmuZSu6RzR59H2hFPafuMQ==}
+  /hybrids/8.1.8:
+    resolution: {integrity: sha512-L17oEEwS8KYh13QnohZhwbnnTFq1fvl6uxoA7DM56/gdFNgYSaaphWpab6PgF+fYTP1AQlfj9bv6Dnc2sQ+Clw==}
     hasBin: true
     dev: false
 

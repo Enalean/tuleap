@@ -23,7 +23,7 @@ specifiers:
   angular-gettext: ^2.4.2
   angular-mocks: ^1.8.2
   dompurify: ^2.3.6
-  hybrids: ^8.0.2
+  hybrids: ^8.1.8
   lodash: 2.4.0
   moment: ^2.29.4
   neverthrow: ^5.0.0
@@ -49,7 +49,7 @@ dependencies:
   angular-custom-elements: 2.1.0
   angular-gettext: 2.4.2
   dompurify: 2.3.6
-  hybrids: 8.0.2
+  hybrids: 8.1.8
   lodash: 2.4.0
   moment: 2.29.4
   neverthrow: 5.0.0
@@ -109,8 +109,8 @@ packages:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
     dev: false
 
-  /hybrids/8.0.2:
-    resolution: {integrity: sha512-zWoTtXfyWhcccPdOcMeKgNSZ0UPKw6+00pCZYdaRNPPvkCIag0MMNco1vhCot32i8Ma3Uvy9rzVQhOrSPXIWDQ==}
+  /hybrids/8.1.8:
+    resolution: {integrity: sha512-L17oEEwS8KYh13QnohZhwbnnTFq1fvl6uxoA7DM56/gdFNgYSaaphWpab6PgF+fYTP1AQlfj9bv6Dnc2sQ+Clw==}
     hasBin: true
     dev: false
 
