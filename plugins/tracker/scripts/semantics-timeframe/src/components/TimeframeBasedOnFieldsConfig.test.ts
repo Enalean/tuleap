@@ -17,54 +17,60 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createSemanticTimeframeAdminLocalVue } from "../helpers/local-vue-for-tests";
 import TimeframeBasedOnFieldsConfig from "./TimeframeBasedOnFieldsConfig.vue";
+import { createGettext } from "vue3-gettext";
+
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "assertSelectContainsValues"] }] */
+
+interface TestConfig {
+    selected_start_date_field_id: number | "";
+    selected_end_date_field_id: number | "";
+    selected_duration_field_id: number | "";
+}
 
 describe("TimeframeBasedOnFieldsConfig", () => {
-    const config_using_end_date_mode = {
+    const config_using_end_date_mode: TestConfig = {
         selected_start_date_field_id: 1001,
         selected_end_date_field_id: 1002,
         selected_duration_field_id: "",
     };
 
-    const config_using_duration_mode = {
+    const config_using_duration_mode: TestConfig = {
         selected_start_date_field_id: 1001,
         selected_end_date_field_id: "",
         selected_duration_field_id: 1004,
     };
 
-    const empty_config = {
+    const empty_config: TestConfig = {
         selected_start_date_field_id: "",
         selected_end_date_field_id: "",
         selected_duration_field_id: "",
     };
 
-    async function getWrapper(config: {
-        selected_start_date_field_id: number | string;
-        selected_end_date_field_id: number | string;
-        selected_duration_field_id: number | string;
-    }): Promise<Wrapper<TimeframeBasedOnFieldsConfig>> {
+    function getWrapper(
+        config: TestConfig
+    ): VueWrapper<InstanceType<typeof TimeframeBasedOnFieldsConfig>> {
         return shallowMount(TimeframeBasedOnFieldsConfig, {
-            localVue: await createSemanticTimeframeAdminLocalVue(),
-            propsData: {
+            global: { plugins: [createGettext({ silent: true })] },
+            props: {
                 ...config,
                 usable_date_fields: [
-                    { id: 1001, label: "start date" },
-                    { id: 1002, label: "end date" },
-                    { id: 1003, label: "due date" },
+                    { id: "1001", label: "start date" },
+                    { id: "1002", label: "end date" },
+                    { id: "1003", label: "due date" },
                 ],
                 usable_numeric_fields: [
-                    { id: 1004, label: "duration" },
-                    { id: 1005, label: "nb days" },
+                    { id: "1004", label: "duration" },
+                    { id: "1005", label: "nb days" },
                 ],
             },
         });
     }
 
     function getHTMLInputElement(
-        wrapper: Wrapper<TimeframeBasedOnFieldsConfig>,
+        wrapper: VueWrapper<InstanceType<typeof TimeframeBasedOnFieldsConfig>>,
         selector: string
     ): HTMLInputElement {
         const target = wrapper.find(selector).element;
@@ -76,7 +82,7 @@ describe("TimeframeBasedOnFieldsConfig", () => {
     }
 
     function getHTMLSelectElement(
-        wrapper: Wrapper<TimeframeBasedOnFieldsConfig>,
+        wrapper: VueWrapper<InstanceType<typeof TimeframeBasedOnFieldsConfig>>,
         selector: string
     ): HTMLSelectElement {
         const target = wrapper.find(selector).element;
@@ -129,13 +135,13 @@ describe("TimeframeBasedOnFieldsConfig", () => {
                     "[data-test=duration-field-select-box]"
                 );
 
-                expect(start_date_select_box.value).toEqual(
+                expect(start_date_select_box.value).toStrictEqual(
                     String(timeframe_config.selected_start_date_field_id)
                 );
-                expect(end_date_select_box.value).toEqual(
+                expect(end_date_select_box.value).toStrictEqual(
                     String(timeframe_config.selected_end_date_field_id)
                 );
-                expect(duration_select_box.value).toEqual(
+                expect(duration_select_box.value).toStrictEqual(
                     String(timeframe_config.selected_duration_field_id)
                 );
 
@@ -148,7 +154,7 @@ describe("TimeframeBasedOnFieldsConfig", () => {
                 expect(end_date_select_box.hasAttribute("disabled")).toBe(false);
                 expect(end_date_select_box.hasAttribute("required")).toBe(true);
                 expect(
-                    wrapper.find("[data-test=end-date-field-highlight-field-required").exists()
+                    wrapper.find("[data-test=end-date-field-highlight-field-required]").exists()
                 ).toBe(true);
             }
         );
@@ -181,26 +187,26 @@ describe("TimeframeBasedOnFieldsConfig", () => {
                 "[data-test=duration-field-select-box]"
             );
 
-            expect(start_date_select_box.value).toEqual(
+            expect(start_date_select_box.value).toStrictEqual(
                 String(config_using_duration_mode.selected_start_date_field_id)
             );
-            expect(end_date_select_box.value).toEqual(
+            expect(end_date_select_box.value).toStrictEqual(
                 String(config_using_duration_mode.selected_end_date_field_id)
             );
-            expect(duration_select_box.value).toEqual(
+            expect(duration_select_box.value).toStrictEqual(
                 String(config_using_duration_mode.selected_duration_field_id)
             );
 
             expect(duration_select_box.hasAttribute("disabled")).toBe(false);
             expect(duration_select_box.hasAttribute("required")).toBe(true);
             expect(
-                wrapper.find("[data-test=duration-field-highlight-field-required").exists()
+                wrapper.find("[data-test=duration-field-highlight-field-required]").exists()
             ).toBe(true);
 
             expect(end_date_select_box.hasAttribute("disabled")).toBe(true);
             expect(end_date_select_box.hasAttribute("required")).toBe(false);
             expect(
-                wrapper.find("[data-test=end-date-field-highlight-field-required").exists()
+                wrapper.find("[data-test=end-date-field-highlight-field-required]").exists()
             ).toBe(false);
         });
     });
@@ -219,20 +225,20 @@ describe("TimeframeBasedOnFieldsConfig", () => {
         option_duration_radio_button.dispatchEvent(new Event("click"));
         await wrapper.vm.$nextTick();
 
-        expect(getHTMLSelectElement(wrapper, "[data-test=end-date-field-select-box").disabled).toBe(
-            true
-        );
-        expect(wrapper.find("[data-test=end-date-field-highlight-field-required").exists()).toBe(
+        expect(
+            getHTMLSelectElement(wrapper, "[data-test=end-date-field-select-box]").disabled
+        ).toBe(true);
+        expect(wrapper.find("[data-test=end-date-field-highlight-field-required]").exists()).toBe(
             false
         );
 
         option_end_date_radio_button.dispatchEvent(new Event("click"));
         await wrapper.vm.$nextTick();
 
-        expect(getHTMLSelectElement(wrapper, "[data-test=duration-field-select-box").disabled).toBe(
-            true
-        );
-        expect(wrapper.find("[data-test=duration-field-highlight-field-required").exists()).toBe(
+        expect(
+            getHTMLSelectElement(wrapper, "[data-test=duration-field-select-box]").disabled
+        ).toBe(true);
+        expect(wrapper.find("[data-test=duration-field-highlight-field-required]").exists()).toBe(
             false
         );
     });
@@ -252,12 +258,10 @@ describe("TimeframeBasedOnFieldsConfig", () => {
         assertSelectContainsValues(start_date_select_box, ["", "1001", "1002", "1003"]);
         assertSelectContainsValues(end_date_select_box, ["", "1001", "1002", "1003"]);
 
-        await wrapper.setData({ user_selected_start_date_field_id: 1001 });
-
+        await wrapper.find("[data-test=start-date-field-select-box]").setValue("1001");
         assertSelectContainsValues(end_date_select_box, ["", "1002", "1003"]);
 
-        await wrapper.setData({ user_selected_end_date_field_id: 1002 });
-
+        await wrapper.find("[data-test=end-date-field-select-box]").setValue("1002");
         assertSelectContainsValues(start_date_select_box, ["", "1001", "1003"]);
     });
 });

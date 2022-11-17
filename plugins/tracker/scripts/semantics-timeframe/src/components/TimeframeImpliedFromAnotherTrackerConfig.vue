@@ -32,7 +32,7 @@
                 class="tlp-select tlp-select-adjusted"
                 required
             >
-                <option value="" disabled v-translate>Choose a tracker...</option>
+                <option value="" disabled>{{ $gettext("Choose a tracker...") }}</option>
                 <option
                     v-for="tracker in suitable_trackers"
                     v-bind:value="tracker.id"
@@ -54,10 +54,11 @@
             v-else-if="has_other_trackers_implying_their_timeframes"
             class="tlp-alert-danger"
             data-test="error-message-other-trackers-implying-their-timeframe"
-            v-translate
         >
-            You cannot make this semantic inherit from another tracker because some other trackers
-            are inheriting their own semantics timeframe from this one.
+            {{
+                $gettext(`You cannot make this semantic inherit from another tracker because some other trackers
+            are inheriting their own semantics timeframe from this one.`)
+            }}
         </div>
         <div
             v-else
@@ -68,46 +69,39 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Tracker } from "../type";
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 
-@Component
-export default class TimeframeImpliedFromAnotherTrackerConfig extends Vue {
-    @Prop({ required: true })
-    readonly suitable_trackers!: Tracker[];
+const props = defineProps<{
+    suitable_trackers: Tracker[];
+    has_artifact_link_field: boolean;
+    implied_from_tracker_id: number | "";
+    current_tracker_id: number;
+    has_other_trackers_implying_their_timeframes: boolean;
+}>();
 
-    @Prop({ required: true })
-    readonly has_artifact_link_field!: boolean;
+const user_select_implied_from_tracker_id = ref<number | "">("");
 
-    @Prop({ required: true })
-    readonly implied_from_tracker_id!: number | "";
+const gettext_provider = useGettext();
 
-    @Prop({ required: true })
-    readonly current_tracker_id!: number;
+onMounted((): void => {
+    user_select_implied_from_tracker_id.value = props.implied_from_tracker_id;
+});
 
-    @Prop({ required: true })
-    readonly has_other_trackers_implying_their_timeframes!: boolean;
+const can_semantic_be_implied = computed((): boolean => {
+    return props.has_artifact_link_field && !props.has_other_trackers_implying_their_timeframes;
+});
 
-    user_select_implied_from_tracker_id: number | "" = "";
+const missing_artifact_link_field_error_message = computed((): string => {
+    const tracker_fields_admin_url = `/plugins/tracker/?tracker=${props.current_tracker_id}&func=admin-formElements`;
 
-    mounted(): void {
-        this.user_select_implied_from_tracker_id = this.implied_from_tracker_id;
-    }
-
-    get can_semantic_be_implied(): boolean {
-        return this.has_artifact_link_field && !this.has_other_trackers_implying_their_timeframes;
-    }
-
-    get missing_artifact_link_field_error_message(): string {
-        const tracker_fields_admin_url = `/plugins/tracker/?tracker=${this.current_tracker_id}&func=admin-formElements`;
-
-        let translated = this.$gettext(
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext(
             `Please <a href="%{ tracker_fields_admin_url }">add an artifact link field</a> to your tracker first.`
-        );
-
-        return this.$gettextInterpolate(translated, { tracker_fields_admin_url });
-    }
-}
+        ),
+        { tracker_fields_admin_url }
+    );
+});
 </script>

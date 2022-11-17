@@ -19,18 +19,19 @@
 
 import { shallowMount } from "@vue/test-utils";
 
-import { createSemanticTimeframeAdminLocalVue } from "../helpers/local-vue-for-tests";
 import TimeframeImpliedFromAnotherTrackerConfig from "./TimeframeImpliedFromAnotherTrackerConfig.vue";
+import { createGettext } from "vue3-gettext";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 describe("TimeframeImpliedFromAnotherTrackerConfig", () => {
     it("should display the current configuration when the semantic timeframe is inherited from another tracker", async () => {
         const wrapper = shallowMount(TimeframeImpliedFromAnotherTrackerConfig, {
-            localVue: await createSemanticTimeframeAdminLocalVue(),
-            propsData: {
+            global: { plugins: [createGettext({ silent: true }), VueDOMPurifyHTML] },
+            props: {
                 suitable_trackers: [
-                    { id: 150, name: "Sprints" },
-                    { id: 151, name: "Releases" },
-                    { id: 152, name: "Epics" },
+                    { id: "150", name: "Sprints" },
+                    { id: "151", name: "Releases" },
+                    { id: "152", name: "Epics" },
                 ],
                 has_artifact_link_field: true,
                 implied_from_tracker_id: 150,
@@ -49,10 +50,10 @@ describe("TimeframeImpliedFromAnotherTrackerConfig", () => {
         expect(select_box.value).toBe("150");
     });
 
-    it("should display an error message when the semantic cannot be inherited because some trackers inherit from the current tracker", async () => {
+    it("should display an error message when the semantic cannot be inherited because some trackers inherit from the current tracker", () => {
         const wrapper = shallowMount(TimeframeImpliedFromAnotherTrackerConfig, {
-            localVue: await createSemanticTimeframeAdminLocalVue(),
-            propsData: {
+            global: { plugins: [createGettext({ silent: true }), VueDOMPurifyHTML] },
+            props: {
                 suitable_trackers: [],
                 has_artifact_link_field: true,
                 implied_from_tracker_id: "",
@@ -68,10 +69,10 @@ describe("TimeframeImpliedFromAnotherTrackerConfig", () => {
         ).toBe(true);
     });
 
-    it("should display an error message when the semantic cannot be inherited because the current tracker has no link field", async () => {
+    it("should display an error message when the semantic cannot be inherited because the current tracker has no link field", () => {
         const wrapper = shallowMount(TimeframeImpliedFromAnotherTrackerConfig, {
-            localVue: await createSemanticTimeframeAdminLocalVue(),
-            propsData: {
+            global: { plugins: [createGettext({ silent: true }), VueDOMPurifyHTML] },
+            props: {
                 suitable_trackers: [],
                 has_artifact_link_field: false,
                 implied_from_tracker_id: "",

@@ -17,25 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 
 import TimeframeConfigModeSelector from "./TimeframeConfigModeSelector.vue";
-import { createSemanticTimeframeAdminLocalVue } from "../helpers/local-vue-for-tests";
 import { MODE_BASED_ON_TRACKER_FIELDS, MODE_IMPLIED_FROM_ANOTHER_TRACKER } from "../constants";
+import { createGettext } from "vue3-gettext";
 
 describe("TimeframeConfigModeSelector", () => {
-    async function getWrapper(is_implied: boolean): Promise<Wrapper<TimeframeConfigModeSelector>> {
+    function getWrapper(
+        is_implied: boolean
+    ): VueWrapper<InstanceType<typeof TimeframeConfigModeSelector>> {
         return shallowMount(TimeframeConfigModeSelector, {
-            localVue: await createSemanticTimeframeAdminLocalVue(),
-            propsData: {
+            global: { plugins: [createGettext({ silent: true })] },
+            props: {
                 implied_from_tracker_id: is_implied ? 150 : "",
             },
         });
     }
 
     function getTimeframeModeSelectBox(
-        wrapper: Wrapper<TimeframeConfigModeSelector>
+        wrapper: VueWrapper<InstanceType<typeof TimeframeConfigModeSelector>>
     ): HTMLSelectElement {
         const select_box = wrapper.find("[data-test=timeframe-mode-select-box]").element;
         if (!(select_box instanceof HTMLSelectElement)) {
@@ -48,36 +50,37 @@ describe("TimeframeConfigModeSelector", () => {
         const wrapper = await getWrapper(true);
         const select_box = getTimeframeModeSelectBox(wrapper);
 
-        expect(select_box.value).toEqual(MODE_IMPLIED_FROM_ANOTHER_TRACKER);
+        expect(select_box.value).toStrictEqual(MODE_IMPLIED_FROM_ANOTHER_TRACKER);
     });
 
     it("should display the based on tracker fields mode", async () => {
         const wrapper = await getWrapper(false);
         const select_box = getTimeframeModeSelectBox(wrapper);
 
-        expect(select_box.value).toEqual(MODE_BASED_ON_TRACKER_FIELDS);
+        expect(select_box.value).toStrictEqual(MODE_BASED_ON_TRACKER_FIELDS);
     });
 
     it("should emit an event each time a new mode is selected", async () => {
         const wrapper = await getWrapper(false);
-        const select_box = getTimeframeModeSelectBox(wrapper);
+        expect(getEmittedEventValueAt(0)).toBe(MODE_BASED_ON_TRACKER_FIELDS);
 
-        jest.spyOn(wrapper.vm, "$emit");
+        await wrapper
+            .find("[data-test=timeframe-mode-select-box]")
+            .setValue(MODE_IMPLIED_FROM_ANOTHER_TRACKER);
+        expect(getEmittedEventValueAt(1)).toBe(MODE_IMPLIED_FROM_ANOTHER_TRACKER);
 
-        await wrapper.setData({ active_timeframe_mode: MODE_IMPLIED_FROM_ANOTHER_TRACKER });
-        select_box.dispatchEvent(new Event("change"));
+        await wrapper
+            .find("[data-test=timeframe-mode-select-box]")
+            .setValue(MODE_BASED_ON_TRACKER_FIELDS);
+        expect(getEmittedEventValueAt(2)).toBe(MODE_BASED_ON_TRACKER_FIELDS);
 
-        expect(wrapper.vm.$emit).toHaveBeenCalledWith(
-            "timeframe-mode-selected",
-            MODE_IMPLIED_FROM_ANOTHER_TRACKER
-        );
+        function getEmittedEventValueAt(n: number): string {
+            const emitted_event = wrapper.emitted<string>("timeframe-mode-selected");
+            if (emitted_event === undefined) {
+                throw Error("Event not emitted");
+            }
 
-        await wrapper.setData({ active_timeframe_mode: MODE_BASED_ON_TRACKER_FIELDS });
-        select_box.dispatchEvent(new Event("change"));
-
-        expect(wrapper.vm.$emit).toHaveBeenCalledWith(
-            "timeframe-mode-selected",
-            MODE_BASED_ON_TRACKER_FIELDS
-        );
+            return emitted_event[n][0];
+        }
     });
 });

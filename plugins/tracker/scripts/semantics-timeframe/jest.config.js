@@ -22,7 +22,14 @@ import { env } from "process";
 
 env.DISABLE_TS_TYPECHECK = "true";
 
+const jest_base_config = defineJestConfiguration();
+
 export default {
-    ...defineJestConfiguration(),
+    ...jest_base_config,
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
+    testPathIgnorePatterns: ["/node_modules/"],
     displayName: "tracker/semantic-timeframe",
 };
