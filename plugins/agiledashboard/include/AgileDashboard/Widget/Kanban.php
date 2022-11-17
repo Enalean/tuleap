@@ -186,7 +186,7 @@ abstract class Kanban extends Widget
             if ($tracker === null) {
                 throw new \RuntimeException('Tracker does not exist');
             }
-            $project_id = $tracker->getProject()->getID();
+            $project_id = (int) $tracker->getProject()->getID();
             $is_empty   = ! $kanban;
 
             $user_is_kanban_admin = $this->permissions_manager->userCanAdministrate(

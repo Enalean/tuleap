@@ -133,7 +133,7 @@ class ShowKanbanController extends BaseController
                 $tracker->getGroupId()
             );
 
-            $filter_tracker_report_id = $this->request->get('tracker_report_id');
+            $filter_tracker_report_id = (int) $this->request->get('tracker_report_id');
             $dashboard_widget_id      = 0;
 
             return $this->renderToString(
@@ -143,7 +143,7 @@ class ShowKanbanController extends BaseController
                     $user,
                     $user_is_kanban_admin,
                     $user->getShortLocale(),
-                    $tracker->getGroupId(),
+                    (int) $tracker->getGroupId(),
                     $dashboard_widget_id,
                     $filter_tracker_report_id,
                 )

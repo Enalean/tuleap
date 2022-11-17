@@ -29,54 +29,35 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Widget\WidgetFactory;
 
-class KanbanPresenter
+final class KanbanPresenter
 {
-    /** @var string */
-    public $language;
-
+    public string $language;
     /** @var string json of Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder */
-    public $kanban_representation;
-
+    public string $kanban_representation;
     /** @var string json of Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownRepresentationBuilder */
-    public $dashboard_dropdown_representation;
-
-    /** @var bool */
-    public $user_is_kanban_admin;
-
-    /** @var int */
-    public $project_id;
-
-    /** @var int */
-    public $user_id;
-
-    /** @var string */
-    public $view_mode;
-
-    /** @var string */
-    public $nodejs_server;
-
-    /** @var int */
-    public $widget_id;
-
+    public string $dashboard_dropdown_representation;
+    public bool $user_is_kanban_admin;
+    public int $project_id;
+    public int $user_id;
+    public string $view_mode;
+    public string $nodejs_server;
+    public int $widget_id;
     /**
-     * @var array
+     * @var string json of \Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder
      */
-    public $tracker_reports;
-
-    /** @var string */
-    public $user_accessibility_mode;
-
-    /** @var string */
-    public $is_list_picker_enabled;
+    public string $tracker_reports;
+    public string $kanban_url;
+    public bool $user_accessibility_mode;
+    public bool $is_list_picker_enabled;
 
     public function __construct(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
-        $user_is_kanban_admin,
-        $language,
-        $project_id,
-        $dashboard_widget_id,
-        $selected_tracker_report_id,
+        bool $user_is_kanban_admin,
+        string $language,
+        int $project_id,
+        int $dashboard_widget_id,
+        int $selected_tracker_report_id,
     ) {
         $user_preferences              = new AgileDashboard_KanbanUserPreferences();
         $kanban_representation_builder = new Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder(
@@ -112,10 +93,19 @@ class KanbanPresenter
             new TrackerReportDao()
         );
 
-        $this->widget_id                         = json_encode($dashboard_widget_id);
-        $this->kanban_representation             = json_encode($kanban_representation_builder->build($kanban, $user));
-        $this->dashboard_dropdown_representation = json_encode($widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id)));
-        $this->tracker_reports                   = json_encode($tracker_report_builder->build($selected_tracker_report_id));
+        $this->widget_id                         = $dashboard_widget_id;
+        $this->kanban_representation             = json_encode(
+            $kanban_representation_builder->build($kanban, $user),
+            JSON_THROW_ON_ERROR,
+        );
+        $this->dashboard_dropdown_representation = json_encode(
+            $widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id)),
+            JSON_THROW_ON_ERROR
+        );
+        $this->tracker_reports                   = json_encode(
+            $tracker_report_builder->build($selected_tracker_report_id),
+            JSON_THROW_ON_ERROR
+        );
         $this->user_is_kanban_admin              = (int) $user_is_kanban_admin;
         $this->language                          = $language;
         $this->project_id                        = $project_id;
@@ -131,9 +121,9 @@ class KanbanPresenter
                 'id'       => $kanban->getId(),
             ]
         );
-        $this->user_accessibility_mode           = json_encode((bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE));
-        $this->is_list_picker_enabled            = json_encode(ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(
+        $this->user_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
+        $this->is_list_picker_enabled            = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(
             $kanban->getTrackerId()
-        ));
+        );
     }
 }
