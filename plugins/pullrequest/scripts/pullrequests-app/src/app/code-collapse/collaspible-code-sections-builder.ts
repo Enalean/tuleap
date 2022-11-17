@@ -168,7 +168,7 @@ export function getCollapsibleSectionsSideBySide(
         if (section.start === 0) {
             synchronized_sections.push(
                 getDiffSideBySideSection(
-                    { old_offset: 0, new_offset: 0, unidiff_offset: 0 },
+                    { old_offset: 0, new_offset: 0, unidiff_offset: 0, content: "" },
                     line_end
                 )
             );

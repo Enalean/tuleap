@@ -21,12 +21,10 @@ import CodeMirror from "codemirror";
 import "codemirror/addon/scroll/simplescrollbars.js";
 import { getStore } from "../comments-store.ts";
 import {
-    initDataAndCodeMirrors,
+    initSideBySideFileDiffState,
     isFirstLineOfGroup,
     getCommentLine,
     getLineHandles,
-    getRightLine,
-    getLeftLine,
 } from "./side-by-side-lines-state.js";
 import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-builder.js";
 import { buildCommentsPlaceholderWidget } from "./side-by-side-comment-placeholder-builder.js";
@@ -45,6 +43,7 @@ import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
 import { isAnUnmovedLine } from "./file-line-helper";
 import { SideBySideLineMapper } from "./side-by-side-line-mapper";
 import { isANewInlineCommentWidget } from "./side-by-side-line-widgets-helper";
+import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors-content-manager";
 
 export default {
     template: `
@@ -63,9 +62,13 @@ controller.$inject = ["$element", "$scope", "$q", "CodeMirrorHelperService"];
 
 function controller($element, $scope, $q, CodeMirrorHelperService) {
     const self = this;
-    self.$onInit = init;
 
-    function init() {
+    Object.assign(self, {
+        $onInit,
+        code_mirrors_content_manager: {},
+    });
+
+    function $onInit() {
         const [left_element, right_element] = $element[0].querySelectorAll(
             ".pull-request-side-by-side-diff"
         );
@@ -100,10 +103,14 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
     }
 
     function displaySideBySideDiff(file_lines, left_code_mirror, right_code_mirror) {
-        initDataAndCodeMirrors(
+        self.code_mirrors_content_manager = SideBySideCodeMirrorsContentManager(
             file_lines,
             left_code_mirror,
-            right_code_mirror,
+            right_code_mirror
+        );
+
+        initSideBySideFileDiffState(
+            file_lines,
             SideBySideLineGrouper(file_lines),
             SideBySideLineMapper(file_lines, left_code_mirror, right_code_mirror)
         );
@@ -145,7 +152,9 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
                 recomputeCommentPlaceholderHeight(
                     left_code_mirror,
                     right_code_mirror,
-                    getLeftLine(comment_line.old_offset - 1)
+                    self.code_mirrors_content_manager.getLineInLeftCodeMirror(
+                        comment_line.old_offset - 1
+                    )
                 );
             };
 
@@ -161,7 +170,9 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
                 recomputeCommentPlaceholderHeight(
                     left_code_mirror,
                     right_code_mirror,
-                    getRightLine(comment_line.new_offset - 1)
+                    self.code_mirrors_content_manager.getLineInRightCodeMirror(
+                        comment_line.new_offset - 1
+                    )
                 );
             };
 
@@ -186,8 +197,8 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
                 left_code_mirror,
                 right_code_mirror,
                 comment.position === INLINE_COMMENT_POSITION_LEFT
-                    ? getLeftLine(line_number)
-                    : getRightLine(line_number)
+                    ? self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
+                    : self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
             );
         };
 
@@ -215,7 +226,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
-                getLeftLine(line_number)
+                self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
             );
         });
         right_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
@@ -226,21 +237,21 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
-                getRightLine(line_number)
+                self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
             );
         });
         left_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
             recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
-                getLeftLine(line_number)
+                self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
             );
         });
         right_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
             recomputeCommentPlaceholderHeight(
                 left_code_mirror,
                 right_code_mirror,
-                getRightLine(line_number)
+                self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
             );
         });
 
@@ -253,7 +264,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
     }
 
     function addCommentOnLeftCodeMirror(left_code_mirror, right_code_mirror, line_number) {
-        const line = getLeftLine(line_number);
+        const line = self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number);
         if (!line) {
             return;
         }
@@ -270,7 +281,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
     }
 
     function addCommentOnRightCodeMirror(left_code_mirror, right_code_mirror, line_number) {
-        const line = getRightLine(line_number);
+        const line = self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number);
         if (!line) {
             return;
         }

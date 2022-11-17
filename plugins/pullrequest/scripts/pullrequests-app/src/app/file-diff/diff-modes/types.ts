@@ -30,6 +30,7 @@ export interface GroupOfLines {
 
 export interface UnidiffFileLine {
     readonly unidiff_offset: number;
+    readonly content: string;
 }
 
 export interface UnMovedFileLine extends UnidiffFileLine {
@@ -48,6 +49,8 @@ export interface RemovedFileLine extends UnidiffFileLine {
 }
 
 export type FileLine = UnMovedFileLine | AddedFileLine | RemovedFileLine;
+export type LeftLine = UnMovedFileLine | RemovedFileLine;
+export type RightLine = UnMovedFileLine | AddedFileLine;
 
 export type FileDiffWidgetType =
     | "new-inline-comment"

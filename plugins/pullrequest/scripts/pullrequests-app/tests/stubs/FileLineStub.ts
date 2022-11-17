@@ -24,19 +24,30 @@ import type {
 } from "../../src/app/file-diff/diff-modes/types";
 
 export const FileLineStub = {
-    buildAddedLine: (unidiff_offset: number, line_number: number): AddedFileLine => ({
+    buildAddedLine: (unidiff_offset: number, line_number: number, content = ""): AddedFileLine => ({
         unidiff_offset,
         new_offset: line_number,
         old_offset: null,
+        content,
     }),
-    buildRemovedLine: (unidiff_offset: number, line_number: number): RemovedFileLine => ({
+    buildRemovedLine: (
+        unidiff_offset: number,
+        line_number: number,
+        content = ""
+    ): RemovedFileLine => ({
         unidiff_offset,
         new_offset: null,
         old_offset: line_number,
+        content,
     }),
-    buildUnMovedFileLine: (unidiff_offset: number, line_number: number): UnMovedFileLine => ({
+    buildUnMovedFileLine: (
+        unidiff_offset: number,
+        line_number: number,
+        content = ""
+    ): UnMovedFileLine => ({
         unidiff_offset,
         new_offset: line_number,
         old_offset: line_number,
+        content,
     }),
 };
