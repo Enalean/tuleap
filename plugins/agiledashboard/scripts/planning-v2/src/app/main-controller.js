@@ -41,14 +41,14 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         SharedPropertiesService.setMilestoneId(milestone_id);
         const view_mode = planning_init_data.viewMode;
         SharedPropertiesService.setViewMode(view_mode);
-        const is_in_explicit_top_backlog = planning_init_data.isInExplicitTopBacklog;
+        const is_in_explicit_top_backlog = planning_init_data.isInExplicitTopBacklog === "1";
         SharedPropertiesService.setIsInExplicitTopBacklogManagement(is_in_explicit_top_backlog);
-        setAccessibilityMode(JSON.parse(planning_init_data.userAccessibilityMode));
+        setAccessibilityMode(planning_init_data.userAccessibilityMode === "1");
         SharedPropertiesService.setAllowedAdditionalPanesToDisplay(
             JSON.parse(planning_init_data.allowedAdditionalPanesToDisplay)
         );
 
-        const is_list_picker_enabled = Boolean(JSON.parse(planning_init_data.isListPickerEnabled));
+        const is_list_picker_enabled = planning_init_data.isListPickerEnabled === "1";
         SharedPropertiesService.setEnableListPicker(is_list_picker_enabled);
 
         const trackers_disabling_list_picker = JSON.parse(
