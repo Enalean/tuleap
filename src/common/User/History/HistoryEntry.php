@@ -18,137 +18,73 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\History;
 
 use Tuleap\Glyph\Glyph;
 use Tuleap\QuickLink\SwitchToQuickLink;
 
-class HistoryEntry
+/**
+ * @psalm-immutable
+ */
+final class HistoryEntry
 {
     /**
-     * @var int
-     */
-    private $visit_time;
-    /**
-     * @var string
-     */
-    private $link;
-    /**
-     * @var string
-     */
-    private $title;
-    /**
-     * @var string
-     */
-    private $color;
-    /**
-     * @var ?Glyph
-     */
-    private $small_icon;
-    /**
-     * @var ?Glyph
-     */
-    private $normal_icon;
-    /**
-     * @var \Project
-     */
-    private $project;
-    /**
-     * @var SwitchToQuickLink[]
-     */
-    private $quick_links;
-    /**
-     * @var string
-     */
-    private $icon_name;
-
-    /**
+     * @param SwitchToQuickLink[] $quick_links
      * @param HistoryEntryBadge[] $badges
      */
     public function __construct(
-        $visit_time,
+        private int $visit_time,
         private ?string $xref,
-        $link,
-        $title,
-        $color,
-        ?Glyph $small_icon,
-        ?Glyph $normal_icon,
-        string $icon_name,
-        \Project $project,
-        array $quick_links,
+        private string $link,
+        private string $title,
+        private string $color,
+        private ?Glyph $small_icon,
+        private ?Glyph $normal_icon,
+        private string $icon_name,
+        private \Project $project,
+        private array $quick_links,
         private array $badges,
     ) {
-        $this->visit_time  = (int) $visit_time;
-        $this->link        = $link;
-        $this->title       = $title;
-        $this->color       = $color;
-        $this->small_icon  = $small_icon;
-        $this->normal_icon = $normal_icon;
-        $this->icon_name   = $icon_name;
-        $this->project     = $project;
-        $this->quick_links = $quick_links;
     }
 
-    /**
-     * @return int
-     */
-    public function getVisitTime()
+    public function getVisitTime(): int
     {
         return $this->visit_time;
     }
 
-    /**
-     * @return ?string
-     */
-    public function getXref()
+    public function getXref(): ?string
     {
         return $this->xref;
     }
 
-    /**
-     * @return string
-     */
-    public function getLink()
+    public function getLink(): string
     {
         return $this->link;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @return string
-     */
-    public function getColor()
+    public function getColor(): string
     {
         return $this->color;
     }
 
-    /**
-     * @return ?Glyph
-     */
-    public function getSmallIcon()
+    public function getSmallIcon(): ?Glyph
     {
         return $this->small_icon;
     }
 
-    /**
-     * @return ?Glyph
-     */
-    public function getNormalIcon()
+    public function getNormalIcon(): ?Glyph
     {
         return $this->normal_icon;
     }
 
-    /**
-     * @return \Project
-     */
-    public function getProject()
+    public function getProject(): \Project
     {
         return $this->project;
     }
@@ -156,7 +92,7 @@ class HistoryEntry
     /**
      * @return SwitchToQuickLink[]
      */
-    public function getQuickLinks()
+    public function getQuickLinks(): array
     {
         return $this->quick_links;
     }

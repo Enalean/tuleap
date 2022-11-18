@@ -24,23 +24,22 @@ namespace Tuleap\User\History;
 
 use Tuleap\Event\Dispatchable;
 
-class HistoryEntryCollection implements Dispatchable
+final class HistoryEntryCollection implements Dispatchable
 {
     public const NAME = 'getHistoryEntryCollection';
-    /**
-     * @var \PFUser
-     */
-    private $user;
 
-    public function __construct(\PFUser $user)
-    {
-        $this->user = $user;
+    public function __construct(
+        /**
+         * @psalm-readonly
+         */
+        private \PFUser $user,
+    ) {
     }
 
     /**
      * @var HistoryEntry[]
      */
-    private $entries = [];
+    private array $entries = [];
 
     /**
      * @return HistoryEntry[]

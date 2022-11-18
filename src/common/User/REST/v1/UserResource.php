@@ -72,11 +72,6 @@ class UserResource extends AuthenticatedResource
     /** @var UserManager */
     private $user_manager;
 
-    /**
-     * @var HistoryRetriever
-     */
-    private $history_retriever;
-
     /** @var User_ForgeUserGroupPermissionsManager */
     private $forge_ugroup_permissions_manager;
 
@@ -90,7 +85,6 @@ class UserResource extends AuthenticatedResource
         $this->user_manager         = UserManager::instance();
         $this->json_decoder         = new JsonDecoder();
         $this->ugroup_literalizer   = new UGroupLiteralizer();
-        $this->history_retriever    = new HistoryRetriever(\EventManager::instance());
         $this->user_group_retriever = new UserGroupRetriever(new \UGroupManager());
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
@@ -707,7 +701,7 @@ class UserResource extends AuthenticatedResource
      *
      * @return UserHistoryRepresentation {@type UserHistoryRepresentation}
      */
-    public function getHistory($id)
+    public function getHistory($id): UserHistoryRepresentation
     {
         $this->sendAllowHeadersForHistory();
 
@@ -716,14 +710,12 @@ class UserResource extends AuthenticatedResource
         $current_user = $this->user_manager->getCurrentUser();
         $this->checkUserCanAccessToTheHistory($current_user, $id);
 
-        $history = $this->history_retriever->getHistory($current_user);
+        $history_retriever = new HistoryRetriever(\EventManager::instance());
 
-        $filtered_history = array_filter(
-            $history,
-            function (HistoryEntry $entry) use ($current_user) {
-                return $current_user->isSuperUser() || ! $entry->getProject()->isSuspended();
-            }
-        );
+        $filtered_history = array_values(array_filter(
+            $history_retriever->getHistory($current_user),
+            static fn(HistoryEntry $entry) => $current_user->isSuperUser() || ! $entry->getProject()->isSuspended()
+        ));
 
         return UserHistoryRepresentation::build($filtered_history);
     }
