@@ -19,7 +19,7 @@
  */
 
 import mitt from "mitt";
-import type { Item, ListValue } from "../type";
+import type { Empty, Item, ListValue } from "../type";
 import type { ItemType } from "../type";
 
 export interface DeleteItemEvent {
@@ -67,6 +67,7 @@ export type Events = {
     "show-update-item-properties-modal": UpdatePropertiesEvent;
     "show-update-permissions-modal": UpdatePermissionsEvent;
     "show-create-new-item-version-modal": NewVersionEvent;
+    "show-create-new-version-modal-for-empty": { item: Empty; type: ItemType };
     "set-dropdown-shown": { is_dropdown_shown: boolean };
     "show-max-archive-size-threshold-exceeded-modal": MaxArchiveSizeThresholdExceededEvent;
     "show-archive-size-warning-modal": ArchiveSizeWarningModalEvent;

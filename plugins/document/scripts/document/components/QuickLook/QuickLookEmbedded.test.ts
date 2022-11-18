@@ -19,33 +19,19 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import QuickLookEmptyOrEmbedded from "./QuickLookEmptyOrEmbedded.vue";
+import QuickLookEmbedded from "./QuickLookEmbedded.vue";
 import localVue from "../../helpers/local-vue";
-import { TYPE_EMBEDDED, TYPE_EMPTY } from "../../constants";
+import { TYPE_EMBEDDED } from "../../constants";
 import type { Item } from "../../type";
 
-describe("QuickLookEmptyOrEmbedded", () => {
+describe("QuickLookEmbedded", () => {
     it("Component can be rendered for embedded", () => {
         const item = {
             type: TYPE_EMBEDDED,
             user_can_write: false,
         } as Item;
 
-        const wrapper = shallowMount(QuickLookEmptyOrEmbedded, {
-            localVue,
-            propsData: { item: item },
-        });
-
-        expect(wrapper.element).toMatchSnapshot();
-    });
-
-    it("Component can be rendered for empty", () => {
-        const item = {
-            type: TYPE_EMPTY,
-            user_can_write: true,
-        } as Item;
-
-        const wrapper = shallowMount(QuickLookEmptyOrEmbedded, {
+        const wrapper = shallowMount(QuickLookEmbedded, {
             localVue,
             propsData: { item: item },
         });
