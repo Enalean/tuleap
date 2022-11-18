@@ -21,7 +21,7 @@ import type { FileDiffCommentWidget, FileDiffPlaceholderWidget, FileDiffWidget }
 import type { FileLineHandle, LineHandleWithWidgets } from "./types-codemirror-overriden";
 import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment";
 import { TAG_NAME as PLACEHOLDER_NAME } from "../FileDiffPlaceholder";
-import { NAME as NEW_INLINE_COMMENT_NAME } from "../new-inline-comment-component";
+import { TAG_NAME as NEW_INLINE_COMMENT_NAME } from "../NewInlineCommentForm";
 
 export function doesHandleHaveWidgets(handle: FileLineHandle): handle is LineHandleWithWidgets {
     return "widgets" in handle && Array.isArray(handle.widgets) && handle.widgets.length > 0;

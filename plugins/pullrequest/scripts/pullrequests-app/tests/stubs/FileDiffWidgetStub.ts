@@ -45,9 +45,9 @@ export const FileDiffWidgetStub = {
         getBoundingClientRect: stubBounding(height),
     }),
 
-    buildNewInlineCommentWidget: (height = 20): FileDiffCommentWidget => ({
+    buildNewCommentFormWidget: (height = 20): FileDiffCommentWidget => ({
         ...base_element,
-        localName: "new-inline-comment",
+        localName: "tuleap-pullrequest-new-comment-form",
         getBoundingClientRect: stubBounding(height),
     }),
 
