@@ -31,14 +31,22 @@ use Tuleap\User\History\HistoryEntryCollection;
 
 final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID                       = 101;
-    private const MAX_LENGTH                    = 10;
-    private const FIRST_KANBAN_ID               = 1;
-    private const FIRST_TRACKER_ID              = 12;
-    private const FIRST_KANBAN_VISIT_TIMESTAMP  = 1491246376;
+    private const USER_ID    = 101;
+    private const MAX_LENGTH = 10;
+    private const PROJECT_ID = 345;
+
+    private const FIRST_KANBAN_ID              = 1;
+    private const FIRST_KANBAN_NAME            = 'Kanban Tasks';
+    private const FIRST_KANBAN_VISIT_TIMESTAMP = 1491246376;
+    private const FIRST_TRACKER_ID             = 12;
+    private const FIRST_TRACKER_COLOR          = 'chrome-silver';
+
     private const SECOND_KANBAN_ID              = 2;
-    private const SECOND_TRACKER_ID             = 24;
+    private const SECOND_KANBAN_NAME            = 'Another Kanban';
     private const SECOND_KANBAN_VISIT_TIMESTAMP = 1522959274;
+    private const SECOND_TRACKER_ID             = 24;
+    private const SECOND_TRACKER_COLOR          = 'red-wine';
+
     /**
      * @var RecentlyVisitedKanbanDao&MockObject
      */
@@ -113,7 +121,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIgnoresKanbanOfUnknownTracker(): void
     {
-        $kanban = new \AgileDashboard_Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, 'Kanban Tasks');
+        $kanban = new \AgileDashboard_Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
 
         $this->dao->method('searchVisitByUserId')
             ->with(self::USER_ID, self::MAX_LENGTH)
@@ -133,18 +141,18 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildEntries(): void
     {
-        $kanban_1 = new \AgileDashboard_Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, 'Kanban Tasks');
-        $kanban_2 = new \AgileDashboard_Kanban(self::SECOND_KANBAN_ID, self::SECOND_TRACKER_ID, 'Another Kanban');
+        $kanban_1 = new \AgileDashboard_Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
+        $kanban_2 = new \AgileDashboard_Kanban(self::SECOND_KANBAN_ID, self::SECOND_TRACKER_ID, self::SECOND_KANBAN_NAME);
 
-        $project = ProjectTestBuilder::aProject()->withId(345)->build();
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
         $tracker_12 = TrackerTestBuilder::aTracker()->withName('release')
             ->withProject($project)
-            ->withColor(TrackerColor::fromName('chrome-silver'))
+            ->withColor(TrackerColor::fromName(self::FIRST_TRACKER_COLOR))
             ->build();
         $tracker_24 = TrackerTestBuilder::aTracker()->withName('sprint')
             ->withProject($project)
-            ->withColor(TrackerColor::fromName('red-wine'))
+            ->withColor(TrackerColor::fromName(self::SECOND_TRACKER_COLOR))
             ->build();
 
         $this->dao->method('searchVisitByUserId')
@@ -162,5 +170,42 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->getVisitHistory($collection);
 
         $this->assertCount(2, $collection->getEntries());
+        foreach ($collection->getEntries() as $entry) {
+            self::assertSame(VisitRetriever::TYPE, $entry->getType());
+            self::assertNull($entry->getXref());
+            self::assertNull($entry->getSmallIcon());
+            self::assertNull($entry->getNormalIcon());
+            self::assertSame('fa-columns', $entry->getIconName());
+            self::assertSame($project, $entry->getProject());
+            self::assertEmpty($entry->getQuickLinks());
+            self::assertEmpty($entry->getBadges());
+        }
+
+        [$first_entry, $second_entry] = $collection->getEntries();
+        self::assertSame(self::FIRST_KANBAN_VISIT_TIMESTAMP, $first_entry->getVisitTime());
+        self::assertSame(
+            sprintf(
+                '/plugins/agiledashboard/?group_id=%d&action=showKanban&id=%d',
+                self::PROJECT_ID,
+                self::FIRST_KANBAN_ID
+            ),
+            $first_entry->getLink()
+        );
+        self::assertSame(self::FIRST_KANBAN_ID, $first_entry->getPerTypeId());
+        self::assertSame(self::FIRST_KANBAN_NAME, $first_entry->getTitle());
+        self::assertSame(self::FIRST_TRACKER_COLOR, $first_entry->getColor());
+
+        self::assertSame(self::SECOND_KANBAN_VISIT_TIMESTAMP, $second_entry->getVisitTime());
+        self::assertSame(
+            sprintf(
+                '/plugins/agiledashboard/?group_id=%d&action=showKanban&id=%d',
+                self::PROJECT_ID,
+                self::SECOND_KANBAN_ID
+            ),
+            $second_entry->getLink()
+        );
+        self::assertSame(self::SECOND_KANBAN_ID, $second_entry->getPerTypeId());
+        self::assertSame(self::SECOND_KANBAN_NAME, $second_entry->getTitle());
+        self::assertSame(self::SECOND_TRACKER_COLOR, $second_entry->getColor());
     }
 }

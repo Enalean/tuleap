@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,26 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\User\REST\v1;
 
-use Tuleap\User\History\HistoryEntry;
+use Tuleap\Test\Builders\HistoryEntryBuilder;
 
-/**
- * @psalm-immutable
- */
-final class UserHistoryRepresentation
+final class UserHistoryRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @param UserHistoryEntryRepresentation[] $entries
-     */
-    private function __construct(public array $entries)
+    public function testItBuilds(): void
     {
-    }
+        $first_entry  = HistoryEntryBuilder::anEntryVisitedAt(1390469207)->build();
+        $second_entry = HistoryEntryBuilder::anEntryVisitedAt(1960365651)->build();
 
-    public static function build(HistoryEntry ...$history): self
-    {
-        $entries = [];
-        foreach ($history as $history_entry) {
-            $entries[] = UserHistoryEntryRepresentation::build($history_entry);
-        }
-        return new self($entries);
+        $representation = UserHistoryRepresentation::build($first_entry, $second_entry);
+        self::assertCount(2, $representation->entries);
     }
 }

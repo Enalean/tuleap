@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -35,11 +36,20 @@ use Tuleap\User\History\HistoryEntryCollection;
 
 final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID                         = 101;
-    private const FIRST_ARTIFACT_ID               = 1;
-    private const FIRST_ARTIFACT_VISIT_TIMESTAMP  = 1584987154;
+    private const USER_ID = 101;
+
+    private const FIRST_ARTIFACT_ID              = 1;
+    private const FIRST_ARTIFACT_VISIT_TIMESTAMP = 1584987154;
+    private const FIRST_ARTIFACT_TITLE           = 'Random title';
+    private const FIRST_TRACKER_COLOR            = 'fiesta-red';
+    private const FIRST_TRACKER_SHORTNAME        = 'bug';
+
     private const SECOND_ARTIFACT_ID              = 2;
     private const SECOND_ARTIFACT_VISIT_TIMESTAMP = 1844678754;
+    private const SECOND_ARTIFACT_TITLE           = 'lowland';
+    private const SECOND_TRACKER_COLOR            = 'deep-blue';
+    private const SECOND_TRACKER_SHORTNAME        = 'story';
+
     private \PFUser $user;
     /**
      * @var GlyphFinder&Stub
@@ -62,7 +72,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user         = UserTestBuilder::buildWithId(self::USER_ID);
         $this->glyph_finder = $this->createStub(\Tuleap\Glyph\GlyphFinder::class);
-        $this->glyph_finder->method('get')->willReturn($this->createStub(\Tuleap\Glyph\Glyph::class));
+        $this->glyph_finder->method('get')->willReturn(new Glyph('<svg>icon</svg>'));
         $this->status_factory = $this->createStub(\Tracker_Semantic_StatusFactory::class);
         $semantic_status      = $this->createStub(\Tracker_Semantic_Status::class);
         $semantic_status->method('getField')->willReturn(null);
@@ -93,35 +103,61 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
+        $project = ProjectTestBuilder::aProject()->withId(208)->build();
+
         $first_tracker  = TrackerTestBuilder::aTracker()
-            ->withProject(ProjectTestBuilder::aProject()->build())
-            ->withShortName('bug')
-            ->withColor(TrackerColor::fromName('fiesta-red'))
+            ->withProject($project)
+            ->withShortName(self::FIRST_TRACKER_SHORTNAME)
+            ->withColor(TrackerColor::fromName(self::FIRST_TRACKER_COLOR))
             ->build();
         $first_artifact = ArtifactTestBuilder::anArtifact(self::FIRST_ARTIFACT_ID)
             ->inTracker($first_tracker)
-            ->withTitle('Random title')
+            ->withTitle(self::FIRST_ARTIFACT_TITLE)
             ->build();
 
         $second_tracker  = TrackerTestBuilder::aTracker()
-            ->withProject(ProjectTestBuilder::aProject()->build())
-            ->withShortName('story')
-            ->withColor(TrackerColor::fromName('deep-blue'))
+            ->withProject($project)
+            ->withShortName(self::SECOND_TRACKER_SHORTNAME)
+            ->withColor(TrackerColor::fromName(self::SECOND_TRACKER_COLOR))
             ->build();
         $second_artifact = ArtifactTestBuilder::anArtifact(self::SECOND_ARTIFACT_ID)
             ->inTracker($second_tracker)
-            ->withTitle('lowland')
+            ->withTitle(self::SECOND_ARTIFACT_TITLE)
             ->build();
 
-        $this->artifact_factory->method('getArtifactById')->willReturnOnConsecutiveCalls($first_artifact, $second_artifact);
+        $this->artifact_factory->method('getArtifactById')->willReturnOnConsecutiveCalls(
+            $first_artifact,
+            $second_artifact
+        );
         $max_length_history = 2;
         $collection         = new HistoryEntryCollection($this->user);
         $this->getVisitHistory($collection, $max_length_history);
 
-        $history = $collection->getEntries();
-        $this->assertCount($max_length_history, $history);
-        $this->assertSame(self::FIRST_ARTIFACT_VISIT_TIMESTAMP, $history[0]->getVisitTime());
-        $this->assertSame(self::SECOND_ARTIFACT_VISIT_TIMESTAMP, $history[1]->getVisitTime());
+        $this->assertCount($max_length_history, $collection->getEntries());
+        foreach ($collection->getEntries() as $entry) {
+            self::assertSame(VisitRetriever::TYPE, $entry->getType());
+            self::assertNotNull($entry->getSmallIcon());
+            self::assertNotNull($entry->getNormalIcon());
+            self::assertSame('fa-solid fa-list-ol', $entry->getIconName());
+            self::assertSame($project, $entry->getProject());
+            self::assertEmpty($entry->getQuickLinks());
+            self::assertEmpty($entry->getBadges());
+        }
+
+        [$first_entry, $second_entry] = $collection->getEntries();
+        $this->assertSame(self::FIRST_ARTIFACT_VISIT_TIMESTAMP, $first_entry->getVisitTime());
+        self::assertSame(self::FIRST_ARTIFACT_ID, $first_entry->getPerTypeId());
+        self::assertSame(self::FIRST_ARTIFACT_TITLE, $first_entry->getTitle());
+        self::assertSame(self::FIRST_TRACKER_COLOR, $first_entry->getColor());
+        self::assertSame(sprintf('/plugins/tracker/?aid=%d', self::FIRST_ARTIFACT_ID), $first_entry->getLink());
+        self::assertSame(sprintf('%s #%d', self::FIRST_TRACKER_SHORTNAME, self::FIRST_ARTIFACT_ID), $first_entry->getXref());
+
+        $this->assertSame(self::SECOND_ARTIFACT_VISIT_TIMESTAMP, $second_entry->getVisitTime());
+        self::assertSame(self::SECOND_ARTIFACT_ID, $second_entry->getPerTypeId());
+        self::assertSame(self::SECOND_ARTIFACT_TITLE, $second_entry->getTitle());
+        self::assertSame(self::SECOND_TRACKER_COLOR, $second_entry->getColor());
+        self::assertSame(sprintf('/plugins/tracker/?aid=%d', self::SECOND_ARTIFACT_ID), $second_entry->getLink());
+        self::assertSame(sprintf('%s #%d', self::SECOND_TRACKER_SHORTNAME, self::SECOND_ARTIFACT_ID), $second_entry->getXref());
     }
 
     public function testItExpectsBrokenHistory(): void

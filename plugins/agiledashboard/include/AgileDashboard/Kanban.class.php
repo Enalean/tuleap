@@ -21,7 +21,7 @@
 
 class AgileDashboard_Kanban
 {
-    /** @var int */
+    /** @var int|string */
     private $id;
 
     /** @var int */
@@ -37,9 +37,9 @@ class AgileDashboard_Kanban
         $this->name       = $name;
     }
 
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     public function getTrackerId()

@@ -22,8 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\History;
 
-use Tuleap\Glyph\Glyph;
-use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\HistoryEntryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
@@ -50,9 +49,9 @@ final class HistoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRetrievesHistorySortedByVisitTime(): void
     {
         $entries = [
-            $this->getHistoryEntryAt(300),
-            $this->getHistoryEntryAt(100),
-            $this->getHistoryEntryAt(200),
+            HistoryEntryBuilder::anEntryVisitedAt(300)->build(),
+            HistoryEntryBuilder::anEntryVisitedAt(100)->build(),
+            HistoryEntryBuilder::anEntryVisitedAt(200)->build(),
         ];
 
         $history = $this->getHistory($entries);
@@ -67,28 +66,11 @@ final class HistoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $entries = [];
         foreach (range(1, HistoryRetriever::MAX_LENGTH_HISTORY * 2) as $n) {
-            $entries[] = $this->getHistoryEntryAt($n);
+            $entries[] = HistoryEntryBuilder::anEntryVisitedAt($n)->build();
         }
 
         $history = $this->getHistory($entries);
 
         $this->assertCount(HistoryRetriever::MAX_LENGTH_HISTORY, $history);
-    }
-
-    private function getHistoryEntryAt(int $visit_time): HistoryEntry
-    {
-        return new HistoryEntry(
-            $visit_time,
-            '',
-            '',
-            '',
-            '',
-            $this->createMock(Glyph::class),
-            $this->createMock(Glyph::class),
-            '',
-            ProjectTestBuilder::aProject()->build(),
-            [],
-            [],
-        );
     }
 }

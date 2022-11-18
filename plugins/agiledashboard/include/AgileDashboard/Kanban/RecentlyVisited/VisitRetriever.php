@@ -27,6 +27,8 @@ use Tuleap\User\History\HistoryEntryCollection;
 
 final class VisitRetriever
 {
+    public const TYPE = 'kanban';
+
     public function __construct(
         private RecentlyVisitedKanbanDao $dao,
         private \AgileDashboard_KanbanFactory $kanban_factory,
@@ -79,6 +81,8 @@ final class VisitRetriever
                 ),
                 $kanban->getName(),
                 $tracker->getColor()->getName(),
+                self::TYPE,
+                $kanban->getId(),
                 null,
                 null,
                 'fa-columns',
