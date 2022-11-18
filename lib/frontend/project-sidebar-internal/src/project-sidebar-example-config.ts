@@ -124,7 +124,7 @@ export const example_config: Configuration = {
             label: "Brand",
             href: "https://example.com",
             description: "",
-            icon: "fa-fw fa-brand fa-figma",
+            icon: "fa-fw fa-brands fa-figma",
             open_in_new_tab: false,
             is_active: false,
             shortcut_id: "",
