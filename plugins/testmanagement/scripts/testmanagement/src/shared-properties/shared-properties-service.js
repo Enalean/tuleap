@@ -10,6 +10,7 @@ function SharedPropertiesService() {
         uuid: undefined,
         milestone: undefined,
         trackers_using_list_picker: [],
+        is_search_enabled: false,
         csrf_token_campaign_status: undefined,
         file_upload_max_size: 0,
         base_url: "",
@@ -60,6 +61,10 @@ function SharedPropertiesService() {
         setCurrentMilestone,
         isListPickerUsedByTracker,
         setTrackersUsingListPicker,
+        setSearchEnabled: (search_enabled) => {
+            property.is_search_enabled = search_enabled;
+        },
+        isSearchEnabled: () => property.is_search_enabled,
         getCSRFTokenCampaignStatus,
         setCSRFTokenCampaignStatus,
         setFileUploadMaxSize,

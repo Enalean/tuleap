@@ -458,7 +458,8 @@ function KanbanCtrl(
             self.kanban.tracker_id,
             null,
             callback,
-            SharedPropertiesService.isListPickerEnabled()
+            SharedPropertiesService.isListPickerEnabled(),
+            SharedPropertiesService.isSearchEnabled()
         );
     }
 
@@ -636,7 +637,8 @@ function KanbanCtrl(
                 kanban.tracker_id,
                 item.id,
                 callback,
-                SharedPropertiesService.isListPickerEnabled()
+                SharedPropertiesService.isListPickerEnabled(),
+                SharedPropertiesService.isSearchEnabled()
             );
         }
     }

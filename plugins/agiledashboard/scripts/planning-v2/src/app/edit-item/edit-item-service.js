@@ -40,7 +40,8 @@ function EditItemService(
                 callback,
                 SharedPropertiesService.isListPickerEnabledForTracker(
                     backlog_item.artifact.tracker.id
-                )
+                ),
+                SharedPropertiesService.isSearchEnabled()
             );
         }
     }

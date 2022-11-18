@@ -63,14 +63,16 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
      * @param {int} parent_artifact_id       The artifact's parent's id
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the new artifact's id.
-     * @param {array} prefill_values         The prefill values for creation, using field name as identifier
      * @param {boolean} is_list_picker_enabled  Enable the new list picker or not. Currently it is behind a feature flag. (To be removed when the feature flag will be removed)
+     * @param {boolean} is_search_enabled Enable picking artifact links from history and search results. (To be removed when the feature flag is removed)
+     * @param {array} prefill_values         The prefill values for creation, using field name as identifier
      */
     function showCreation(
         tracker_id,
         parent_artifact_id,
         displayItemCallback,
         is_list_picker_enabled = false,
+        is_search_enabled = false,
         prefill_values
     ) {
         TuleapArtifactModalLoading.loading = true;
@@ -85,6 +87,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                     tracker_id,
                     parent_artifact_id,
                     is_list_picker_enabled,
+                    is_search_enabled,
                     prefill_values
                 ),
                 displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
@@ -103,13 +106,15 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * @param {int} artifact_id              The id of the artifact we want to edit
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the edited artifact's id.
      * @param {boolean} is_list_picker_enabled  Enable the new list picker or not. Currently it is behind a feature flag. (To be removed when the feature flag will be removed)
+     * @param {boolean} is_search_enabled Enable picking artifact links from history and search results. (To be removed when the feature flag is removed)
      */
     function showEdition(
         user_id,
         tracker_id,
         artifact_id,
         displayItemCallback,
-        is_list_picker_enabled = false
+        is_list_picker_enabled = false,
+        is_search_enabled = false
     ) {
         TuleapArtifactModalLoading.loading = true;
 
@@ -123,7 +128,8 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                     user_id,
                     tracker_id,
                     artifact_id,
-                    is_list_picker_enabled
+                    is_list_picker_enabled,
+                    is_search_enabled
                 ),
                 displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
             },
@@ -134,15 +140,18 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         tracker_id,
         parent_artifact_id,
         is_list_picker_enabled,
+        is_search_enabled,
         prefill_values
     ) {
-        var modal_model = {};
+        const modal_model = {
+            tracker_id,
+            parent_artifact_id,
+            is_list_picker_enabled,
+            is_search_enabled,
+        };
 
         const creation_mode = true;
         setCreationMode(creation_mode);
-        modal_model.tracker_id = tracker_id;
-        modal_model.parent_artifact_id = parent_artifact_id;
-        modal_model.is_list_picker_enabled = is_list_picker_enabled;
 
         var promise = $q
             .when(getTracker(tracker_id))
@@ -174,16 +183,23 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         return promise;
     }
 
-    function initEditionModalModel(user_id, tracker_id, artifact_id, is_list_picker_enabled) {
-        var modal_model = {};
+    function initEditionModalModel(
+        user_id,
+        tracker_id,
+        artifact_id,
+        is_list_picker_enabled,
+        is_search_enabled
+    ) {
+        const modal_model = {
+            user_id,
+            tracker_id,
+            artifact_id,
+            is_list_picker_enabled,
+            is_search_enabled,
+        };
 
         const creation_mode = false;
-
-        modal_model.is_list_picker_enabled = is_list_picker_enabled;
         setCreationMode(creation_mode);
-        modal_model.user_id = user_id;
-        modal_model.tracker_id = tracker_id;
-        modal_model.artifact_id = artifact_id;
         var transformed_tracker;
 
         var promise = $q

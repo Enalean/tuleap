@@ -64,6 +64,7 @@ function TestManagementCtrl(
             testmanagement_init_data.trackersUsingListPicker
         );
         SharedPropertiesService.setTrackersUsingListPicker(trackers_ids_using_list_picker);
+        SharedPropertiesService.setSearchEnabled(testmanagement_init_data.isSearchEnabled === "1");
 
         const csrf_token = testmanagement_init_data.csrfTokenCampaignStatus;
         SharedPropertiesService.setCSRFTokenCampaignStatus(csrf_token);
