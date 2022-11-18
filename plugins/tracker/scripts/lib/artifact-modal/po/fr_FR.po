@@ -163,6 +163,9 @@ msgstr "Parents possibles"
 msgid "Preview"
 msgstr "Aperçu"
 
+msgid "Recently viewed artifacts"
+msgstr "Artéfacts vus récemment"
+
 msgid "References list is empty."
 msgstr "Cet artéfact n'est pas référencé, et n'est pas source de références."
 

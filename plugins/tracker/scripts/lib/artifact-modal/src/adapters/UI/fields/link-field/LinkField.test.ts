@@ -38,7 +38,7 @@ import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
-import type { LinkSelector, GroupCollection } from "@tuleap/link-selector";
+import type { LinkSelector, GroupCollection, GroupOfItems } from "@tuleap/link-selector";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
@@ -49,6 +49,7 @@ import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossRef
 import { selectOrThrow } from "@tuleap/dom";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
+import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -173,6 +174,10 @@ describe("LinkField", () => {
                         retrievePossibleParentsGroups(): PromiseLike<GroupCollection> {
                             return Promise.resolve([PossibleParentsGroup.buildEmpty()]);
                         },
+                        recentlyViewedItems(): GroupOfItems {
+                            return RecentlyViewedArtifactGroup.buildEmpty();
+                        },
+                        is_search_feature_flag_enabled: true,
                     } as LinkFieldControllerType,
                     link_selector: link_selector as LinkSelector,
                     current_link_type: LinkTypeStub.buildUntyped(),
@@ -210,7 +215,7 @@ describe("LinkField", () => {
                 const link_type = setType(LinkTypeStub.buildUntyped());
                 const result = setType(link_type);
                 expect(result).toBe(link_type);
-                expect(host.dropdown_content).toHaveLength(0);
+                expect(host.dropdown_content).toHaveLength(1);
             });
         });
 

@@ -37,4 +37,6 @@ export const LinkType = {
 
     isReverseChild: (type: LinkType): boolean =>
         type.shortname === IS_CHILD_LINK_TYPE && type.direction === REVERSE_DIRECTION,
+
+    isUntypedLink: (type: LinkType): boolean => type.shortname === UNTYPED_LINK,
 };

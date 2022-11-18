@@ -178,7 +178,8 @@ function ArtifactModalController(
                     possible_parents_cache,
                     already_linked_verifier,
                     current_artifact_identifier,
-                    current_tracker_identifier
+                    current_tracker_identifier,
+                    modal_model.is_search_enabled
                 ),
                 new_links_store,
                 new_links_store,
@@ -196,7 +197,8 @@ function ArtifactModalController(
                 ),
                 LinkedArtifactsPopoversController(),
                 AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
-                TrackerInAHierarchyVerifier(modal_model.tracker.parent)
+                TrackerInAHierarchyVerifier(modal_model.tracker.parent),
+                modal_model.is_search_enabled
             );
         },
         getFileFieldController: (field) => {
@@ -256,10 +258,6 @@ function ArtifactModalController(
     }
 
     function init() {
-        if (modal_model.is_search_enabled) {
-            // eslint-disable-next-line no-console
-            console.info("Search is enabled");
-        }
         setFieldDependenciesWatchers();
 
         modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", setIsNotUploadingInCKEditor);
