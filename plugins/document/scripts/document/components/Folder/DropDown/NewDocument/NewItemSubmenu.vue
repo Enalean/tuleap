@@ -20,7 +20,7 @@
 <template>
     <div
         v-if="is_item_a_folder && item.user_can_write"
-        class="tlp-dropdown-menu-item"
+        class="tlp-dropdown-menu-item tlp-dropdown-menu-item-submenu"
         role="menuitem"
         aria-haspopup="true"
         v-bind:aria-expanded="is_dropdown_open"
