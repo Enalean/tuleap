@@ -66,8 +66,12 @@ class PullRequestInlineCommentRepresentation
      * @var string {@type string}
      */
     public string $file_path;
+    /**
+     * @var string {@type string}
+     */
+    public string $color;
 
-    public function __construct($unidiff_offset, $user, $post_date, $content, $project_id, $position, int $parent_id, int $id, string $file_path)
+    public function __construct($unidiff_offset, $user, $post_date, $content, $project_id, $position, int $parent_id, int $id, string $file_path, string $color)
     {
         $this->unidiff_offset = $unidiff_offset;
         $this->user           = $user;
@@ -77,6 +81,7 @@ class PullRequestInlineCommentRepresentation
         $this->parent_id      = $parent_id;
         $this->id             = $id;
         $this->file_path      = $file_path;
+        $this->color          = $color;
     }
 
     private static function getPurifiedContent(string $content, int $project_id): string

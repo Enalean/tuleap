@@ -198,7 +198,8 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
             'My comment',
             false,
             0,
-            "right"
+            "right",
+            ""
         );
     }
 }

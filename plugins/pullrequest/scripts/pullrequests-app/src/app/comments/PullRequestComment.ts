@@ -61,6 +61,19 @@ const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
     return classes;
 };
 
+const getCommentContentClasses = (host: PullRequestComment): MapOfClasses => {
+    const classes: MapOfClasses = {
+        "pull-request-comment-content": true,
+    };
+
+    if (host.comment.color) {
+        classes[`pull-request-comment-content-color`] = true;
+        classes[`tlp-swatch-${host.comment.color}`] = true;
+    }
+
+    return classes;
+};
+
 export const setReplies = (
     host: PullRequestComment,
     presenter: PullRequestCommentRepliesCollectionPresenter | undefined
@@ -132,7 +145,7 @@ export const PullRequestComment = define<PullRequestComment>({
                     />
                 </div>
 
-                <div class="pull-request-comment-content">
+                <div class="${getCommentContentClasses(host)}">
                     ${getCommentBody(host)} ${getCommentFooter(host)}
                 </div>
             </div>

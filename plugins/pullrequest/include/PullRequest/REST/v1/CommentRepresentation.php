@@ -51,8 +51,13 @@ class CommentRepresentation
      */
     public int $parent_id;
 
+    /**
+     * @var string {@type string}
+     */
+    public string $color;
 
-    public function __construct(int $id, int $project_id, MinimalUserRepresentation $user_representation, int $post_date, string $content, int $parent_id)
+
+    public function __construct(int $id, int $project_id, MinimalUserRepresentation $user_representation, int $post_date, string $content, int $parent_id, string $color)
     {
         $this->id        = $id;
         $this->user      = $user_representation;
@@ -60,6 +65,7 @@ class CommentRepresentation
         $this->content   = self::getPurifiedContent($project_id, $content);
         $this->type      = 'comment';
         $this->parent_id = $parent_id;
+        $this->color     = $color;
     }
 
     private static function getPurifiedContent(int $project_id, string $content): string

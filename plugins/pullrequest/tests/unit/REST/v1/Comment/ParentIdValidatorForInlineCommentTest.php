@@ -79,7 +79,8 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
             "My content",
             false,
             0,
-            "right"
+            "right",
+            ""
         );
         $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
 
@@ -101,7 +102,8 @@ final class ParentIdValidatorForInlineCommentTest extends TestCase
             "My content",
             false,
             0,
-            "right"
+            "right",
+            ""
         );
         $this->inline_comment_retriever->method('getInlineCommentByID')->willReturn($comment);
 

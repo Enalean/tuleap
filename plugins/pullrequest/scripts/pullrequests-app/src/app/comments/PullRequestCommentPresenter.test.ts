@@ -113,6 +113,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
             unidiff_offset: 8,
             position: "right",
             parent_id: 0,
+            color: "graffiti-yellow",
         };
         const result = PullRequestCommentPresenter.fromFileDiffComment(event);
         expect(result.type).toBe("inline-comment");
@@ -131,6 +132,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
             content: "",
             user: {} as PullRequestUser,
             parent_id: 12,
+            color: "",
         };
 
         const presenter = PullRequestCommentPresenter.fromCommentReply(

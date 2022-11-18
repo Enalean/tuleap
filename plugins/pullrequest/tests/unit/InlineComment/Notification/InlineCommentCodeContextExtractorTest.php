@@ -168,7 +168,8 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
             'Comment',
             false,
             0,
-            'right'
+            'right',
+            ""
         );
     }
 

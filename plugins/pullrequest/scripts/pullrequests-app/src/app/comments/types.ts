@@ -36,4 +36,5 @@ export interface FileDiffCommentPayload {
     readonly position: InlineCommentPosition;
     readonly file_path: string;
     readonly parent_id: number;
+    readonly color: string;
 }

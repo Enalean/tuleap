@@ -71,6 +71,7 @@ export const PullRequestCommentController = (
                 );
 
                 host.replies = replies_store.getCommentReplies(host.comment);
+                host.comment.color = comment_payload.color;
             },
             (fault) => {
                 // Do nothing for the moment, we have no way to display a Fault yet

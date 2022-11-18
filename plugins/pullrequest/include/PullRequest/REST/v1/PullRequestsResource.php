@@ -100,6 +100,7 @@ use Tuleap\PullRequest\PullRequestCreatorChecker;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestWithGitReference;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
+use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForComment;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
@@ -265,8 +266,9 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $dao                          = new \Tuleap\PullRequest\InlineComment\Dao();
-        $color_assigner               = new ThreadCommentColorAssigner($dao, new ThreadCommentDao(), $dao);
-        $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_assigner);
+        $color_retriever              = new ThreadCommentColorRetriever(new ThreadCommentDao());
+        $color_assigner               = new ThreadCommentColorAssigner($dao, $dao);
+        $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_retriever, $color_assigner);
 
         $this->access_control_verifier = new AccessControlVerifier(
             new FineGrainedRetriever(new FineGrainedDao()),
@@ -736,7 +738,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $post_date = time();
 
-        $id = $this->inline_comment_creator->insert(
+        $inserted_inline_comment = $this->inline_comment_creator->insert(
             $pull_request,
             $user,
             $comment_data,
@@ -754,8 +756,9 @@ class PullRequestsResource extends AuthenticatedResource
             $git_repository_source->getProjectId(),
             $comment_data->position,
             (int) $comment_data->parent_id,
-            $id,
-            $comment_data->file_path
+            $inserted_inline_comment->id,
+            $comment_data->file_path,
+            $inserted_inline_comment->color
         );
     }
 
@@ -1114,18 +1117,20 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $dao                 = new CommentDao();
-        $color_assigner      = new ThreadCommentColorAssigner($dao, new ThreadCommentDao(), $dao);
+        $color_retriever     = new ThreadCommentColorRetriever(new ThreadCommentDao());
+        $color_assigner      = new ThreadCommentColorAssigner($dao, $dao);
         $parent_id_validator = new ParentIdValidatorForComment($this->comment_factory);
         $current_time        = time();
-        $comment             = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id);
-        $color_assigner->assignColor($id, (int) $comment_data->parent_id);
+        $comment             = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, '');
+        $color               = $color_retriever->retrieveColor($id, (int) $comment_data->parent_id);
+        $color_assigner->assignColor((int) $comment_data->parent_id, $color);
 
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
         $new_comment_id = $this->comment_factory->save($comment, $user, $project_id);
 
         $user_representation = MinimalUserRepresentation::build($user);
 
-        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId());
+        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId(), $color);
     }
 
     /**

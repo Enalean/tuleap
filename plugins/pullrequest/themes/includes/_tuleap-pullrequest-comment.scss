@@ -197,3 +197,25 @@ $thread-border-width: 2px;
         width: calc(100% + $left-offset);
     }
 }
+
+.pull-request-comment-follow-up-color {
+    border-left: $thread-border-width solid var(--primary-color);
+
+    &::after {
+        background: var(--primary-color);
+    }
+
+    &::before {
+        border-color: transparent var(--primary-color) transparent transparent;
+    }
+}
+
+.pull-request-comment-content-color {
+    &::before {
+        border-color: transparent var(--primary-color) transparent transparent;
+    }
+
+    &::after {
+        background: var(--primary-color);
+    }
+}

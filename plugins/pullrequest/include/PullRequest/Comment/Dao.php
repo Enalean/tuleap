@@ -51,11 +51,11 @@ class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColor
     /**
      * @return array|null
      *
-     * @psalm-return array{id:int, pull_request_id:int, user_id:int, post_date:int, content:string, parent_id: int}|null
+     * @psalm-return array{id:int, pull_request_id:int, user_id:int, post_date:int, content:string, parent_id: int, color:string|null}|null
      */
     public function searchByCommentID(int $comment_id): ?array
     {
-        $sql = 'SELECT id, pull_request_id, user_id, post_date, content, parent_id
+        $sql = 'SELECT id, pull_request_id, user_id, post_date, content, parent_id, color
                 FROM plugin_pullrequest_comments
                 WHERE id = ?';
 
