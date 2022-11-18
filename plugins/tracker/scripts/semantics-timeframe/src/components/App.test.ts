@@ -25,7 +25,7 @@ import { createSemanticTimeframeAdminLocalVue } from "../helpers/local-vue-for-t
 import TimeframeConfigModeSelector from "./TimeframeConfigModeSelector.vue";
 import TimeframeBasedOnFieldsConfig from "./TimeframeBasedOnFieldsConfig.vue";
 import TimeframeImpliedFromAnotherTrackerConfig from "./TimeframeImpliedFromAnotherTrackerConfig.vue";
-import { MODE_BASED_ON_TRACKER_FIELDS, MODE_IMPLIED_FROM_ANOTHER_TRACKER } from "../../constants";
+import { MODE_BASED_ON_TRACKER_FIELDS, MODE_IMPLIED_FROM_ANOTHER_TRACKER } from "../constants";
 
 describe("App", () => {
     async function getWrapper(): Promise<Wrapper<App>> {
@@ -45,6 +45,7 @@ describe("App", () => {
                 has_other_trackers_implying_their_timeframes: false,
                 has_tracker_charts: false,
                 has_artifact_link_field: true,
+                semantic_presentation: "",
             },
         });
     }

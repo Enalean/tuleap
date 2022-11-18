@@ -71,26 +71,26 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import type { Tracker } from "../../type";
+import type { Tracker } from "../type";
 
 @Component
 export default class TimeframeImpliedFromAnotherTrackerConfig extends Vue {
     @Prop({ required: true })
-    private readonly suitable_trackers!: Tracker[];
+    readonly suitable_trackers!: Tracker[];
 
     @Prop({ required: true })
-    private readonly has_artifact_link_field!: boolean;
+    readonly has_artifact_link_field!: boolean;
 
     @Prop({ required: true })
-    private readonly implied_from_tracker_id!: number | "";
+    readonly implied_from_tracker_id!: number | "";
 
     @Prop({ required: true })
-    private readonly current_tracker_id!: number;
+    readonly current_tracker_id!: number;
 
     @Prop({ required: true })
-    private readonly has_other_trackers_implying_their_timeframes!: boolean;
+    readonly has_other_trackers_implying_their_timeframes!: boolean;
 
-    private user_select_implied_from_tracker_id: number | "" = "";
+    user_select_implied_from_tracker_id: number | "" = "";
 
     mounted(): void {
         this.user_select_implied_from_tracker_id = this.implied_from_tracker_id;

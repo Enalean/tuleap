@@ -46,22 +46,22 @@ import { Component, Prop } from "vue-property-decorator";
 @Component
 export default class TimeframeAdminSubmitButtons extends Vue {
     @Prop({ required: true })
-    private readonly start_date_field_id!: number | "";
+    readonly start_date_field_id!: number | "";
 
     @Prop({ required: true })
-    private readonly end_date_field_id!: number | "";
+    readonly end_date_field_id!: number | "";
 
     @Prop({ required: true })
-    private readonly duration_field_id!: number | "";
+    readonly duration_field_id!: number | "";
 
     @Prop({ required: true })
-    private readonly has_other_trackers_implying_their_timeframes!: boolean;
+    readonly has_other_trackers_implying_their_timeframes!: boolean;
 
     @Prop({ required: true })
-    private readonly has_tracker_charts!: boolean;
+    readonly has_tracker_charts!: boolean;
 
     @Prop({ required: true })
-    private readonly implied_from_tracker_id!: number | "";
+    readonly implied_from_tracker_id!: number | "";
 
     get is_semantic_configured(): boolean {
         return (

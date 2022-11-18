@@ -71,8 +71,8 @@ import TimeframeAdminSubmitButtons from "./TimeframeAdminSubmitButtons.vue";
 import TimeframeImpliedFromAnotherTrackerConfig from "./TimeframeImpliedFromAnotherTrackerConfig.vue";
 import TimeframeConfigModeSelector from "./TimeframeConfigModeSelector.vue";
 
-import type { TrackerField, Tracker } from "../../type";
-import { MODE_BASED_ON_TRACKER_FIELDS } from "../../constants";
+import type { TrackerField, Tracker } from "../type";
+import { MODE_BASED_ON_TRACKER_FIELDS } from "../constants";
 
 @Component({
     components: {
@@ -84,48 +84,48 @@ import { MODE_BASED_ON_TRACKER_FIELDS } from "../../constants";
 })
 export default class App extends Vue {
     @Prop({ required: true })
-    private readonly usable_date_fields!: TrackerField[];
+    readonly usable_date_fields!: TrackerField[];
 
     @Prop({ required: true })
-    private readonly usable_numeric_fields!: TrackerField[];
+    readonly usable_numeric_fields!: TrackerField[];
 
     @Prop({ required: true })
-    private readonly suitable_trackers!: Tracker[];
+    readonly suitable_trackers!: Tracker[];
 
     @Prop({ required: true })
-    private readonly start_date_field_id!: number | "";
+    readonly start_date_field_id!: number | "";
 
     @Prop({ required: true })
-    private readonly end_date_field_id!: number | "";
+    readonly end_date_field_id!: number | "";
 
     @Prop({ required: true })
-    private readonly duration_field_id!: number | "";
+    readonly duration_field_id!: number | "";
 
     @Prop({ required: true })
-    private readonly implied_from_tracker_id!: number | "";
+    readonly implied_from_tracker_id!: number | "";
 
     @Prop({ required: true })
-    private readonly current_tracker_id!: number;
+    readonly current_tracker_id!: number;
 
     @Prop({ required: true })
-    private readonly target_url!: string;
+    readonly target_url!: string;
 
     @Prop({ required: true })
-    private readonly csrf_token!: string;
+    readonly csrf_token!: string;
 
     @Prop({ required: true })
-    private readonly has_other_trackers_implying_their_timeframes!: boolean;
+    readonly has_other_trackers_implying_their_timeframes!: boolean;
 
     @Prop({ required: true })
-    private readonly has_tracker_charts!: boolean;
+    readonly has_tracker_charts!: boolean;
 
     @Prop({ required: true })
-    private readonly has_artifact_link_field!: boolean;
+    readonly has_artifact_link_field!: boolean;
 
     @Prop({ required: true })
-    private readonly semantic_presentation!: string;
+    readonly semantic_presentation!: string;
 
-    private is_based_on_tracker_fields_mode_enabled = true;
+    is_based_on_tracker_fields_mode_enabled = true;
 
     toggleTimeframeConfigs(value: string): void {
         this.is_based_on_tracker_fields_mode_enabled = value === MODE_BASED_ON_TRACKER_FIELDS;

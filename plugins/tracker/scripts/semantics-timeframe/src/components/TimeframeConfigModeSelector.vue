@@ -42,15 +42,15 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { MODE_BASED_ON_TRACKER_FIELDS, MODE_IMPLIED_FROM_ANOTHER_TRACKER } from "../../constants";
-import type { TimeframeMode } from "../../type";
+import { MODE_BASED_ON_TRACKER_FIELDS, MODE_IMPLIED_FROM_ANOTHER_TRACKER } from "../constants";
+import type { TimeframeMode } from "../type";
 
 @Component
 export default class TimeframeConfigModeSelector extends Vue {
     @Prop({ required: true })
-    private readonly implied_from_tracker_id!: number | "";
+    readonly implied_from_tracker_id!: number | "";
 
-    private readonly EVENT_NAME = "timeframe-mode-selected";
+    readonly EVENT_NAME = "timeframe-mode-selected";
 
     mounted(): void {
         this.active_timeframe_mode =
@@ -61,7 +61,7 @@ export default class TimeframeConfigModeSelector extends Vue {
         this.dispatchSelection();
     }
 
-    private active_timeframe_mode = "";
+    active_timeframe_mode = "";
 
     dispatchSelection() {
         this.$emit(this.EVENT_NAME, this.active_timeframe_mode);

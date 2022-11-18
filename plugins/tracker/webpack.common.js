@@ -125,7 +125,6 @@ const config_for_burning_parrot = {
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
         "tracker-permissions-per-group": "./scripts/permissions-per-group/src/index.js",
         "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
-        "tracker-semantic-timeframe-option-selector": "./scripts/semantics/timeframe/index.ts",
     },
     context,
     output,

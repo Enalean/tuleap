@@ -95,8 +95,8 @@
                 <i
                     class="fa-solid fa-asterisk"
                     aria-hidden="true"
-                    data-test="end-date-field-highlight-field-required"
-                    v-if="!is_in_start_date_duration_mode"
+                    data-test="duration-field-highlight-field-required"
+                    v-if="is_in_start_date_duration_mode"
                 ></i>
             </label>
             <select
@@ -124,32 +124,32 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-import type { TrackerField } from "../../type";
+import type { TrackerField } from "../type";
 
 @Component
 export default class TimeframeBasedOnFieldsConfig extends Vue {
     @Prop({ required: true })
-    private readonly usable_date_fields!: TrackerField[];
+    readonly usable_date_fields!: TrackerField[];
 
     @Prop({ required: true })
-    private readonly usable_numeric_fields!: TrackerField[];
+    readonly usable_numeric_fields!: TrackerField[];
 
     @Prop({ required: true })
-    private readonly selected_start_date_field_id!: number | "";
+    readonly selected_start_date_field_id!: number | "";
 
     @Prop({ required: true })
-    private readonly selected_end_date_field_id!: number | "";
+    readonly selected_end_date_field_id!: number | "";
 
     @Prop({ required: true })
-    private readonly selected_duration_field_id!: number | "";
+    readonly selected_duration_field_id!: number | "";
 
-    private user_selected_start_date_field_id: number | "" = "";
-    private user_selected_end_date_field_id: number | "" = "";
-    private user_selected_duration_field_id: number | "" = "";
-    private is_in_start_date_duration_mode = false;
+    user_selected_start_date_field_id: number | "" = "";
+    user_selected_end_date_field_id: number | "" = "";
+    user_selected_duration_field_id: number | "" = "";
+    is_in_start_date_duration_mode = false;
 
-    private readonly MODE_START_DATE_END_DATE = "MODE_START_DATE_END_DATE";
-    private readonly MODE_START_DATE_DURATION = "MODE_START_DATE_DURATION";
+    readonly MODE_START_DATE_END_DATE = "MODE_START_DATE_END_DATE";
+    readonly MODE_START_DATE_DURATION = "MODE_START_DATE_DURATION";
 
     mounted(): void {
         this.user_selected_start_date_field_id = this.selected_start_date_field_id;

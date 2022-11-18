@@ -100,7 +100,7 @@ describe("TimeframeBasedOnFieldsConfig", () => {
 
     describe("initialisation", () => {
         it.each([empty_config, config_using_end_date_mode])(
-            "should select the start date/end date by default, and when the mode is active at initialisation",
+            "should select the start date/end date by default, and when the mode is active at initialisation, as per %s",
             async (timeframe_config) => {
                 const wrapper = await getWrapper(timeframe_config);
 

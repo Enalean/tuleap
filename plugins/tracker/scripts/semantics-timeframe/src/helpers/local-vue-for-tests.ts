@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+import { createLocalVue } from "@vue/test-utils";
+import type { Vue } from "vue/types/vue";
+import GetTextPlugin from "vue-gettext";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
-module.exports = {
-    ...defineJestConfiguration(),
-    displayName: "tracker/semantic-timeframe",
-};
+export function createSemanticTimeframeAdminLocalVue(): typeof Vue {
+    const local_vue = createLocalVue();
+
+    local_vue.use(VueDOMPurifyHTML);
+    local_vue.use(GetTextPlugin, {
+        translations: {},
+        silent: true,
+    });
+
+    return local_vue;
+}

@@ -32,7 +32,8 @@ use Tracker_FormElement_Field_Numeric;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeCurrentConfigurationPresenterBuilder;
 
@@ -83,6 +84,15 @@ class SemanticTimeframe extends Tracker_Semantic
         Codendi_Request $request,
         PFUser $current_user,
     ): void {
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../../scripts/semantics-timeframe/frontend-assets',
+                    '/assets/trackers/semantics-timeframe'
+                ),
+                'src/index.ts'
+            )
+        );
         $this->tracker->displayAdminItemHeaderBurningParrot(
             $tracker_manager,
             'editsemantic',
@@ -108,12 +118,6 @@ class SemanticTimeframe extends Tracker_Semantic
         );
 
         $this->getRenderer()->renderToPage('timeframe-semantic-admin', $presenter);
-
-        $assets = new IncludeAssets(__DIR__ . '/../../../../frontend-assets', '/assets/trackers');
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile(
-            $assets->getFileURL("tracker-semantic-timeframe-option-selector.js")
-        );
 
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
