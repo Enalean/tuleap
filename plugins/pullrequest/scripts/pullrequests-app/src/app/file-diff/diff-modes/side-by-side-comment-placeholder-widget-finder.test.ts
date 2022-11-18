@@ -46,7 +46,7 @@ describe("widget finder", () => {
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
 
-            expect(comment_placeholder_widget?.node).toBe(comment_placeholder);
+            expect(comment_placeholder_widget).toBe(comment_placeholder);
         });
     });
 });

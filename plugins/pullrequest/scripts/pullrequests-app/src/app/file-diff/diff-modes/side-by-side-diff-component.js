@@ -25,7 +25,7 @@ import { SideBySideCodePlaceholderBuilder } from "./side-by-side-code-placeholde
 import { SideBySideCommentPlaceholderBuilder } from "./side-by-side-comment-placeholder-builder.ts";
 import { synchronize } from "./side-by-side-scroll-synchronizer.ts";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/collaspible-code-sections-builder.ts";
-import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
+import { SideBySideLinesHeightEqualizer } from "./side-by-side-line-height-equalizer.ts";
 
 import {
     INLINE_COMMENT_POSITION_RIGHT,
@@ -66,6 +66,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
         comment_placeholder_builder: {},
         code_placeholder_builder: {},
         placeholder_positioner: {},
+        lines_equalizer: {},
     });
 
     function $onInit() {
@@ -129,6 +130,12 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             self.file_lines_state
         );
 
+        self.lines_equalizer = SideBySideLinesHeightEqualizer(
+            left_code_mirror,
+            right_code_mirror,
+            self.placeholder_positioner
+        );
+
         const code_placeholders = file_lines.map((line) => {
             displayLine(line, left_code_mirror, right_code_mirror);
             return addCodePlaceholder(line);
@@ -162,8 +169,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
                 comment_line.old_offset - 1
             ).node.post_rendering_callback = () => {
                 recomputeCommentPlaceholderHeight(
-                    left_code_mirror,
-                    right_code_mirror,
                     self.code_mirrors_content_manager.getLineInLeftCodeMirror(
                         comment_line.old_offset - 1
                     )
@@ -180,8 +185,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
                 comment_line.new_offset - 1
             ).node.post_rendering_callback = () => {
                 recomputeCommentPlaceholderHeight(
-                    left_code_mirror,
-                    right_code_mirror,
                     self.code_mirrors_content_manager.getLineInRightCodeMirror(
                         comment_line.new_offset - 1
                     )
@@ -206,8 +209,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             line_number
         ).node.post_rendering_callback = () => {
             recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
                 comment.position === INLINE_COMMENT_POSITION_LEFT
                     ? self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
                     : self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
@@ -217,14 +218,13 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
         return addCommentsPlaceholder(comment_line);
     }
 
-    function recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line) {
-        const placeholder_to_create = equalizeSides(
-            left_code_mirror,
-            right_code_mirror,
-            self.file_lines_state.getLineHandles(line),
-            self.placeholder_positioner
-        );
+    function recomputeCommentPlaceholderHeight(line) {
+        const line_handles = self.file_lines_state.getLineHandles(line);
+        if (!line_handles) {
+            return;
+        }
 
+        const placeholder_to_create = self.lines_equalizer.equalizeSides(line_handles);
         if (placeholder_to_create) {
             CodeMirrorHelperService.displayPlaceholderWidget(placeholder_to_create);
         }
@@ -237,8 +237,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             }
 
             recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
                 self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
             );
         });
@@ -248,22 +246,16 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             }
 
             recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
                 self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
             );
         });
         left_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
             recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
                 self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
             );
         });
         right_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
             recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
                 self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
             );
         });
@@ -289,7 +281,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             self.filePath,
             self.pullRequestId,
             INLINE_COMMENT_POSITION_LEFT,
-            () => recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line)
+            () => recomputeCommentPlaceholderHeight(line)
         );
     }
 
@@ -306,7 +298,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             self.filePath,
             self.pullRequestId,
             INLINE_COMMENT_POSITION_RIGHT,
-            () => recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line)
+            () => recomputeCommentPlaceholderHeight(line)
         );
     }
 

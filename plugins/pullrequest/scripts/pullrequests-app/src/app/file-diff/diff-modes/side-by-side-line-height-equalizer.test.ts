@@ -17,30 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
-import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
+import type { Editor } from "codemirror";
+import type { SynchronizedLineHandles } from "./side-by-side-line-mapper";
+import type { EqualizeLinesHeights } from "./side-by-side-line-height-equalizer";
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
 import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 import { FileLinesStateStub } from "../../../../tests/stubs/FileLinesStateStub";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
-
-const left_codemirror = "left-codemirror";
-const right_codemirror = "right-codemirror";
-
-function getPlaceholderPositioner(handles) {
-    const line = FileLineStub.buildUnMovedFileLine(1, 1);
-
-    return SideBySidePlaceholderPositioner(
-        FileLinesStateStub.build(
-            [line],
-            [GroupOfLinesStub.buildGroupOfUnMovedLines([line])],
-            new Map([[line, handles]])
-        )
-    );
-}
+import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
+import { SideBySideLinesHeightEqualizer } from "./side-by-side-line-height-equalizer";
 
 describe("line-height-equalizer", () => {
+    let left_codemirror: Editor, right_codemirror: Editor;
+
+    function getLinesHeightsEqualizer(handles: SynchronizedLineHandles): EqualizeLinesHeights {
+        const line = FileLineStub.buildUnMovedFileLine(1, 1);
+
+        return SideBySideLinesHeightEqualizer(
+            left_codemirror,
+            right_codemirror,
+            SideBySidePlaceholderPositioner(
+                FileLinesStateStub.build(
+                    [line],
+                    [GroupOfLinesStub.buildGroupOfUnMovedLines([line])],
+                    new Map([[line, handles]])
+                )
+            )
+        );
+    }
+
+    beforeEach(() => {
+        left_codemirror = { name: "left-codemirror" } as unknown as Editor;
+        right_codemirror = { name: "right-codemirror" } as unknown as Editor;
+    });
+
     describe("equalizeSides", () => {
         it("Given a line with a new comment, when the opposite line has no comment or placeholder, then it should return some widget creation parameters for the opposite line with height equal to the new_comment widget height.", () => {
             const handles = {
@@ -50,14 +61,8 @@ describe("line-height-equalizer", () => {
                 right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
             };
 
-            const placeholder_to_create = equalizeSides(
-                left_codemirror,
-                right_codemirror,
-                handles,
-                getPlaceholderPositioner(handles)
-            );
-
-            expect(placeholder_to_create).toStrictEqual({
+            const lines_equalizer = getLinesHeightsEqualizer(handles);
+            expect(lines_equalizer.equalizeSides(handles)).toStrictEqual({
                 code_mirror: right_codemirror,
                 handle: handles.right_handle,
                 widget_height: 20,
@@ -76,14 +81,10 @@ describe("line-height-equalizer", () => {
                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([placeholder]),
             };
 
-            const placeholder_to_create = equalizeSides(
-                left_codemirror,
-                right_codemirror,
-                handles,
-                getPlaceholderPositioner(handles)
-            );
+            const lines_equalizer = getLinesHeightsEqualizer(handles);
+            const placeholder_to_create = lines_equalizer.equalizeSides(handles);
 
-            expect(placeholder_to_create).toBeUndefined();
+            expect(placeholder_to_create).toBeNull();
             expect(placeholder.height).toBe(45);
         });
 
@@ -100,9 +101,10 @@ describe("line-height-equalizer", () => {
                 ]),
             };
 
-            const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
+            const lines_equalizer = getLinesHeightsEqualizer(handles);
+            const placeholder_to_create = lines_equalizer.equalizeSides(handles);
 
-            expect(placeholder_to_create).toBeUndefined();
+            expect(placeholder_to_create).toBeNull();
             expect(placeholder.height).toBe(25);
         });
 
@@ -118,14 +120,10 @@ describe("line-height-equalizer", () => {
                 ]),
             };
 
-            const placeholder_to_create = equalizeSides(
-                left_codemirror,
-                right_codemirror,
-                handles,
-                getPlaceholderPositioner(handles)
-            );
+            const lines_equalizer = getLinesHeightsEqualizer(handles);
+            const placeholder_to_create = lines_equalizer.equalizeSides(handles);
 
-            expect(placeholder_to_create).toBeUndefined();
+            expect(placeholder_to_create).toBeNull();
             expect(placeholder.height).toBe(0);
         });
     });
@@ -140,15 +138,11 @@ describe("line-height-equalizer", () => {
             ]),
         };
 
-        const placeholder_to_create = equalizeSides(
-            left_codemirror,
-            right_codemirror,
-            handles,
-            getPlaceholderPositioner(handles)
-        );
+        const lines_equalizer = getLinesHeightsEqualizer(handles);
+        const placeholder_to_create = lines_equalizer.equalizeSides(handles);
 
         expect(placeholder_to_create).toStrictEqual({
-            code_mirror: "left-codemirror",
+            code_mirror: left_codemirror,
             handle: handles.left_handle,
             widget_height: 20,
             display_above_line: false,

@@ -17,20 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LineWidgetWithNode } from "./types-codemirror-overriden";
+import type { FileDiffPlaceholderWidget } from "./types";
 import type { FileLineHandle } from "./types-codemirror-overriden";
 import {
     doesHandleHaveWidgets,
     isCodeCommentPlaceholderWidget,
 } from "./side-by-side-line-widgets-helper";
 
-export function getCommentPlaceholderWidget(handle: FileLineHandle): LineWidgetWithNode | null {
+export function getCommentPlaceholderWidget(
+    handle: FileLineHandle
+): FileDiffPlaceholderWidget | null {
     if (!doesHandleHaveWidgets(handle)) {
         return null;
     }
 
+    const line_widgets = handle.widgets.map((line_widget) => line_widget.node);
     return (
-        handle.widgets.find((widget): boolean => isCodeCommentPlaceholderWidget(widget.node)) ??
-        null
+        line_widgets.find((widget_element): widget_element is FileDiffPlaceholderWidget =>
+            isCodeCommentPlaceholderWidget(widget_element)
+        ) ?? null
     );
 }
