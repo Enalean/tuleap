@@ -57,7 +57,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "My content",
-            1234
+            1234,
+            "graffiti-yellow"
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 
@@ -75,7 +76,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "My content",
-            0
+            0,
+            "graffiti-yellow"
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 
@@ -94,7 +96,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "My content",
-            0
+            0,
+            "graffiti-yellow"
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 

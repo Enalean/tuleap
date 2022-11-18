@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest\InlineComment;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
 use PFUser;
 use ReferenceManager;
@@ -30,28 +31,12 @@ use pullrequestPlugin;
 
 class InlineCommentCreator
 {
-    /**
-     * @var Dao
-     */
-    private $dao;
-
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
     public function __construct(
-        Dao $dao,
-        ReferenceManager $reference_manager,
-        EventDispatcherInterface $event_dispatcher,
+        private Dao $dao,
+        private ReferenceManager $reference_manager,
+        private EventDispatcherInterface $event_dispatcher,
+        private ThreadCommentColorAssigner $color_assigner,
     ) {
-        $this->dao               = $dao;
-        $this->reference_manager = $reference_manager;
-        $this->event_dispatcher  = $event_dispatcher;
     }
 
     public function insert(
@@ -71,8 +56,10 @@ class InlineCommentCreator
             $comment_data->unidiff_offset,
             $comment_data->content,
             $comment_data->position,
-            (int) $comment_data->parent_id
+            (int) $comment_data->parent_id,
         );
+
+        $this->color_assigner->assignColor($pull_request_id, (int) $comment_data->parent_id);
 
         $this->reference_manager->extractCrossRef(
             $comment_data->content,

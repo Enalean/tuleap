@@ -165,7 +165,8 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
             $user_id,
             10,
             'My comment',
-            0
+            0,
+            "inca-silver"
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\InlineComment;
+namespace Tuleap\PullRequest\Comment;
 
-class InlineCommentRetriever
+use Tuleap\DB\DataAccessObject;
+
+class ThreadCommentDao extends DataAccessObject
 {
-    /**
-     * @var Dao
-     */
-    private $dao;
-
-    public function __construct(Dao $dao)
+    public function searchAllThreadByPullRequestId(int $id): array
     {
-        $this->dao = $dao;
-    }
+        $sql = 'SELECT global.id
+                FROM plugin_pullrequest_comments AS global
+                WHERE global.pull_request_id = ? AND global.parent_id = 0
+                UNION
+                SELECT inline.id
+                FROM plugin_pullrequest_inline_comments AS inline
+                WHERE inline.pull_request_id = ? AND inline.parent_id = 0';
 
-    public function getInlineCommentByID(int $inline_comment_id): ?InlineComment
-    {
-        $row = $this->dao->searchByCommentID($inline_comment_id);
-        if ($row === null) {
-            return null;
-        }
-
-        return InlineComment::buildFromRow($row);
+        return $this->getDB()->run($sql, $id, $id);
     }
 }

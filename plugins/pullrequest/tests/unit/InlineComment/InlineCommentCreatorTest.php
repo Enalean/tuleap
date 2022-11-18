@@ -26,8 +26,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
+use Tuleap\PullRequest\Comment\ThreadCommentDao;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
 
 final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -36,11 +38,13 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNewInlineCommentCanBeCreated(): void
     {
-        $dao               = \Mockery::mock(Dao::class);
-        $reference_manager = \Mockery::mock(ReferenceManager::class);
-        $event_dispatcher  = \Mockery::mock(EventDispatcherInterface::class);
+        $dao                = \Mockery::mock(Dao::class);
+        $reference_manager  = \Mockery::mock(ReferenceManager::class);
+        $event_dispatcher   = \Mockery::mock(EventDispatcherInterface::class);
+        $thread_comment_dao = $this->createMock(ThreadCommentDao::class);
+        $color_assigner     = new ThreadCommentColorAssigner($dao, $thread_comment_dao, $dao);
 
-        $creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher);
+        $creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_assigner);
 
         $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\InlineComment;
+namespace Tuleap\PullRequest\Comment;
 
-class InlineCommentRetriever
+interface ThreadColorUpdater
 {
-    /**
-     * @var Dao
-     */
-    private $dao;
-
-    public function __construct(Dao $dao)
-    {
-        $this->dao = $dao;
-    }
-
-    public function getInlineCommentByID(int $inline_comment_id): ?InlineComment
-    {
-        $row = $this->dao->searchByCommentID($inline_comment_id);
-        if ($row === null) {
-            return null;
-        }
-
-        return InlineComment::buildFromRow($row);
-    }
+    public function setThreadColor(int $pull_request_id, string $color): void;
 }
