@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 
 /**
@@ -29,12 +30,12 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
     /** @var PlanningV2PaneInfo */
     private $info;
 
-    /** @var AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter */
+    /** @var PlanningV2Presenter */
     private $presenter;
 
     public function __construct(
         PlanningV2PaneInfo $info,
-        AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter $presenter,
+        PlanningV2Presenter $presenter,
     ) {
         $this->info      = $info;
         $this->presenter = $presenter;
