@@ -1066,11 +1066,13 @@ class Tracker implements Tracker_Dispatchable_Interface
             echo dgettext('tuleap-tracker', 'Recent artifacts');
             echo '</div>';
             echo '<div class="tracker-link-artifact-recentitems-way-content">';
+            $event_manager              = \EventManager::instance();
             $visit_retriever            = new VisitRetriever(
                 new RecentlyVisitedDao(),
                 $this->getTrackerArtifactFactory(),
-                new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
+                new \Tuleap\Glyph\GlyphFinder($event_manager),
                 new \Tuleap\Tracker\Artifact\StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
+                $event_manager
             );
             $recently_visited_artifacts = $visit_retriever->getMostRecentlySeenArtifacts(
                 $current_user,

@@ -22,34 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Kanban\RecentlyVisited;
 
-use AgileDashboard_KanbanFactory;
-use TrackerFactory;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryEntryCollection;
 
-class VisitRetriever
+final class VisitRetriever
 {
-    /**
-     * @var RecentlyVisitedKanbanDao
-     */
-    private $dao;
-    /**
-     * @var AgileDashboard_KanbanFactory
-     */
-    private $kanban_factory;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
     public function __construct(
-        RecentlyVisitedKanbanDao $dao,
-        AgileDashboard_KanbanFactory $kanban_factory,
-        TrackerFactory $tracker_factory,
+        private RecentlyVisitedKanbanDao $dao,
+        private \AgileDashboard_KanbanFactory $kanban_factory,
+        private \TrackerFactory $tracker_factory,
     ) {
-        $this->dao             = $dao;
-        $this->kanban_factory  = $kanban_factory;
-        $this->tracker_factory = $tracker_factory;
     }
 
     public function getVisitHistory(HistoryEntryCollection $collection, int $max_length_history): void
@@ -60,41 +42,50 @@ class VisitRetriever
         );
 
         foreach ($recently_visited_rows as $recently_visited_row) {
-            try {
-                $kanban = $this->kanban_factory->getKanban(
-                    $collection->getUser(),
-                    $recently_visited_row['kanban_id']
-                );
-            } catch (\AgileDashboard_KanbanCannotAccessException | \AgileDashboard_KanbanNotFoundException $e) {
-                continue;
-            }
-
-            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-            if ($tracker === null) {
-                continue;
-            }
-
-            $collection->addEntry(
-                new HistoryEntry(
-                    $recently_visited_row['created_on'],
-                    null,
-                    AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
-                        [
-                            'group_id' => $tracker->getProject()->getID(),
-                            'action'   => 'showKanban',
-                            'id'       => $kanban->getId(),
-                        ]
-                    ),
-                    $kanban->getName(),
-                    $tracker->getColor()->getName(),
-                    null,
-                    null,
-                    'fa-columns',
-                    $tracker->getProject(),
-                    [],
-                    [],
-                )
+            $this->addEntry(
+                $collection,
+                (int) $recently_visited_row['created_on'],
+                (int) $recently_visited_row['kanban_id']
             );
         }
+    }
+
+    private function addEntry(
+        HistoryEntryCollection $collection,
+        int $created_on,
+        int $kanban_id,
+    ): void {
+        try {
+            $kanban = $this->kanban_factory->getKanban($collection->getUser(), $kanban_id);
+        } catch (\AgileDashboard_KanbanCannotAccessException | \AgileDashboard_KanbanNotFoundException) {
+            return;
+        }
+
+        $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+        if ($tracker === null) {
+            return;
+        }
+
+        $collection->addEntry(
+            new HistoryEntry(
+                $created_on,
+                null,
+                AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
+                    [
+                        'group_id' => $tracker->getProject()->getID(),
+                        'action'   => 'showKanban',
+                        'id'       => $kanban->getId(),
+                    ]
+                ),
+                $kanban->getName(),
+                $tracker->getColor()->getName(),
+                null,
+                null,
+                'fa-columns',
+                $tracker->getProject(),
+                [],
+                [],
+            )
+        );
     }
 }

@@ -1705,11 +1705,13 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function getHistoryEntryCollection(HistoryEntryCollection $collection)
     {
+        $event_manager   = \EventManager::instance();
         $visit_retriever = new \Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever(
             new RecentlyVisitedDao(),
             $this->getArtifactFactory(),
-            new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
+            new \Tuleap\Glyph\GlyphFinder($event_manager),
             new StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
+            $event_manager
         );
         $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY, $collection->getUser());
     }
