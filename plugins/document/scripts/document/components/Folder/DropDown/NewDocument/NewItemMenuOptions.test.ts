@@ -20,7 +20,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import NewItemMenuOptions from "./NewItemMenuOptions.vue";
 import { shallowMount } from "@vue/test-utils";
-import type { Item } from "../../../../type";
+import type { Item, NewItemAlternativeArray } from "../../../../type";
 import type { ConfigurationState } from "../../../../store/configuration";
 import localVue from "../../../../helpers/local-vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
@@ -50,12 +50,16 @@ describe("NewItemMenuOptions", function () {
         configuration: Pick<ConfigurationState, "embedded_are_allowed" | "user_can_create_wiki"> = {
             embedded_are_allowed: false,
             user_can_create_wiki: false,
-        }
+        },
+        create_new_item_alternatives: NewItemAlternativeArray = []
     ): Wrapper<NewItemMenuOptions> {
         return shallowMount(NewItemMenuOptions, {
             localVue,
             propsData: {
                 item: CURRENT_FOLDER,
+            },
+            provide: {
+                create_new_item_alternatives,
             },
             mocks: {
                 $store: createStoreMock({
@@ -142,5 +146,18 @@ describe("NewItemMenuOptions", function () {
         expect(wrapper.find("[data-test=document-new-embedded-creation-button]").exists()).toBe(
             false
         );
+    });
+
+    it("should display new item alternatives", function () {
+        const wrapper = getWrapper({ user_can_create_wiki: false, embedded_are_allowed: false }, [
+            {
+                title: "section",
+                alternatives: [
+                    { mime_type: "application/word", title: "Documents" },
+                    { mime_type: "application/powerpoint", title: "Presentation" },
+                ],
+            },
+        ]);
+        expect(wrapper.findAll("[data-test=alternative]")).toHaveLength(2);
     });
 });

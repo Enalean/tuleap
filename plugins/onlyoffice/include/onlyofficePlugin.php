@@ -40,6 +40,9 @@ use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\OpenItemHref;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\Version\CoAuthorDao;
+use Tuleap\Document\Tree\Create\NewItemAlternative;
+use Tuleap\Document\Tree\Create\NewItemAlternativeCollector;
+use Tuleap\Document\Tree\Create\NewItemAlternativeSection;
 use Tuleap\Document\Tree\ShouldDisplaySourceColumnForFileVersions;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
@@ -49,6 +52,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenter;
+use Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
@@ -113,7 +117,38 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook(OpenItemHref::NAME);
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(ShouldDisplaySourceColumnForFileVersions::NAME);
+        $this->addHook(NewItemAlternativeCollector::NAME);
         return parent::getHooksAndCallbacks();
+    }
+
+    public function newItemAlternativeCollector(NewItemAlternativeCollector $collector): void
+    {
+        $only_office_availability_checker = new OnlyOfficeAvailabilityChecker(
+            PluginManager::instance(),
+            $this,
+            self::getLogger()
+        );
+        if ($only_office_availability_checker->isOnlyOfficeIntegrationAvailableForProject($collector->getProject())) {
+            $collector->addSection(
+                new NewItemAlternativeSection(
+                    dgettext('tuleap-onlyoffice', 'Online office files'),
+                    [
+                        new NewItemAlternative(
+                            'application/word',
+                            dgettext('tuleap-onlyoffice', 'Document')
+                        ),
+                        new NewItemAlternative(
+                            'application/excel',
+                            dgettext('tuleap-onlyoffice', 'Spreadsheet')
+                        ),
+                        new NewItemAlternative(
+                            'application/powerpoint',
+                            dgettext('tuleap-onlyoffice', 'Presentation')
+                        ),
+                    ]
+                )
+            );
+        }
     }
 
     public function shouldDisplaySourceColumnForFileVersions(ShouldDisplaySourceColumnForFileVersions $event): void
@@ -252,7 +287,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     public function openItemHref(OpenItemHref $open_item_href): void
     {
         $transformer = new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-            new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, self::getLogger()),
+            new OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, self::getLogger()),
             ProjectManager::instance(),
         );
 
@@ -275,7 +310,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
                 self::getDocmanFileLastVersionProvider(),
                 new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-                    new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger),
+                    new OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger),
                     ProjectManager::instance(),
                 ),
             ),
@@ -298,7 +333,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                     new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
                         self::getDocmanFileLastVersionProvider(),
                         new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-                            new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger),
+                            new OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger),
                             ProjectManager::instance(),
                         ),
                     ),

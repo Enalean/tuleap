@@ -92,6 +92,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         consider_string_criteria_as_text
     );
     const columns = JSON.parse(vue_mount_point.dataset.columns);
+    const create_new_item_alternatives = JSON.parse(
+        vue_mount_point.dataset.createNewItemAlternatives
+    );
 
     moment.tz(user_timezone);
     moment.locale(user_locale);
@@ -147,6 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         provide: {
             should_display_history_in_document,
             should_display_source_column_for_versions,
+            create_new_item_alternatives,
         },
     }).$mount(vue_mount_point);
 
