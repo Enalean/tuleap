@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-dropdown-menu" role="menu" v-bind:aria-label="$gettext('New')">
+    <div class="tlp-dropdown-menu" role="menu" v-bind:aria-label="$gettext('Convert to…')">
         <button
             type="button"
             class="tlp-dropdown-menu-item"
@@ -27,7 +27,7 @@
             v-on:click.prevent="showNewVersionModal(TYPE_FILE)"
         >
             <i class="fa-solid fa-fw fa-upload tlp-dropdown-menu-item-icon"></i>
-            {{ $gettext("Upload a file") }}
+            {{ $gettext("Uploaded file") }}
         </button>
         <button
             type="button"

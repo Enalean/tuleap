@@ -29,8 +29,8 @@
         ref="button"
         v-bind:id="button_id"
     >
-        <i class="fa-solid fa-fw fa-plus tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
-        {{ $gettext("New version") }}
+        <i class="fa-solid fa-fw fa-repeat tlp-dropdown-menu-item-icon" aria-hidden="true"></i>
+        {{ $gettext("Convert to…") }}
         <new-version-empty-menu-options
             v-bind:item="item"
             class="tlp-dropdown-submenu tlp-dropdown-menu-side"
