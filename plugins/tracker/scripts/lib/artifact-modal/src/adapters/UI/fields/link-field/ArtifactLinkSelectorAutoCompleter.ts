@@ -35,9 +35,11 @@ import { LinkableArtifactFilter } from "../../../../domain/fields/link-field/Lin
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
 import type { LinkField } from "./LinkField";
+import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
+    getRecentlyViewedItems(): GroupOfItems;
 };
 
 const isExpectedFault = (fault: Fault): boolean =>
@@ -54,9 +56,14 @@ export const ArtifactLinkSelectorAutoCompleter = (
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
-    current_tracker_identifier: CurrentTrackerIdentifier
+    current_tracker_identifier: CurrentTrackerIdentifier,
+    is_search_feature_flag_enabled: boolean
 ): ArtifactLinkSelectorAutoCompleterType => {
     let loaded_possible_parents_cache: GroupCollection = [PossibleParentsGroup.buildLoadingState()];
+
+    const getRecentlyViewedItems = (): GroupOfItems => {
+        return RecentlyViewedArtifactGroup.buildEmpty();
+    };
 
     const getMatchingArtifactsGroup = (
         linkable_number: LinkableNumber
@@ -111,13 +118,21 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 current_artifact_identifier
             );
             const is_parent_selected = isParentSelected(host);
+
             if (!linkable_number && !is_parent_selected) {
                 host.dropdown_content = [];
+                if (is_search_feature_flag_enabled) {
+                    host.dropdown_content = [getRecentlyViewedItems()];
+                }
                 return;
             }
             let loading_groups = [];
+
             if (linkable_number) {
                 loading_groups.push(MatchingArtifactsGroup.buildLoadingState());
+                if (is_search_feature_flag_enabled && !is_parent_selected) {
+                    loading_groups.push(RecentlyViewedArtifactGroup.buildLoadingState());
+                }
             }
             if (is_parent_selected) {
                 loading_groups = loading_groups.concat(loaded_possible_parents_cache);
@@ -127,11 +142,16 @@ export const ArtifactLinkSelectorAutoCompleter = (
             let groups = [];
             if (linkable_number) {
                 groups.push(await getMatchingArtifactsGroup(linkable_number));
+                if (!is_parent_selected && is_search_feature_flag_enabled) {
+                    groups.push(getRecentlyViewedItems());
+                }
             }
+
             if (is_parent_selected) {
                 groups = groups.concat(await getFilteredPossibleParentsGroups(query));
             }
             host.dropdown_content = groups;
         },
+        getRecentlyViewedItems,
     };
 };

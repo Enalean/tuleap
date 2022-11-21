@@ -92,6 +92,7 @@ describe("TypeSelectorTemplate", () => {
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(30);
         const parents_retriever = RetrievePossibleParentsStub.withoutParents();
         const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
+        const is_search_feature_flag_enabled = true;
         const controller = LinkFieldController(
             RetrieveAllLinkedArtifactsStub.withoutLink(),
             RetrieveLinkedArtifactsSyncStub.withoutLink(),
@@ -109,7 +110,8 @@ describe("TypeSelectorTemplate", () => {
                 parents_retriever,
                 link_verifier,
                 current_artifact_identifier,
-                current_tracker_identifier
+                current_tracker_identifier,
+                is_search_feature_flag_enabled
             ),
             AddNewLinkStub.withCount(),
             DeleteNewLinkStub.withCount(),
@@ -123,7 +125,8 @@ describe("TypeSelectorTemplate", () => {
             ArtifactCrossReferenceStub.withRef("bug #22"),
             ControlLinkedArtifactsPopoversStub.build(),
             AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
-            VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
+            VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
+            is_search_feature_flag_enabled
         );
         host = {
             controller,

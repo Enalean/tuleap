@@ -32,9 +32,10 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
-import type { GroupCollection } from "@tuleap/link-selector";
+import type { GroupCollection, GroupOfItems } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { LinkField } from "./LinkField";
+import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
 
 const ARTIFACT_ID = 1621;
 const TRACKER_ID = 978;
@@ -63,9 +64,10 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         current_tracker_identifier: CurrentTrackerIdentifier,
         host: LinkField;
 
+    const is_search_feature_flag_enabled = true;
+
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
-
         artifact = LinkableArtifactStub.withCrossReference(
             ARTIFACT_ID,
             "Do some stuff",
@@ -94,10 +96,32 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             parents_retriever,
             VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
             current_artifact_identifier,
-            current_tracker_identifier
+            current_tracker_identifier,
+            is_search_feature_flag_enabled
         );
         await autocompleter.autoComplete(host, query);
     };
+
+    describe("getRecentlyViewedItems", () => {
+        const getRecentlyViewedItems = (): GroupOfItems => {
+            const artifact_link_selector_auto_completer = ArtifactLinkSelectorAutoCompleter(
+                artifact_retriever,
+                fault_notifier,
+                notification_clearer,
+                parents_retriever,
+                VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
+                current_artifact_identifier,
+                current_tracker_identifier,
+                is_search_feature_flag_enabled
+            );
+            return artifact_link_selector_auto_completer.getRecentlyViewedItems();
+        };
+
+        it("Introduces getRecentlyViewedItems test", () => {
+            const recently_viewed_items = getRecentlyViewedItems();
+            expect(recently_viewed_items).toStrictEqual(RecentlyViewedArtifactGroup.buildEmpty());
+        });
+    });
 
     describe(`given the selected type is NOT reverse _is_child`, () => {
         it.each([
@@ -110,24 +134,26 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 await autocomplete(query);
 
                 expect(notification_clearer.getCallCount()).toBe(1);
-                expect(host.dropdown_content).toHaveLength(0);
+                expect(host.dropdown_content).toHaveLength(1);
             }
         );
 
         it(`when an artifact is returned by the api,
-            then it will set a group with one item holding the matching artifact
+            then it will set two groups:
+            first with item holding the matching artifact
+            second with recently viewed artifacts
             and clear the fault notification`, async () => {
             const promise = autocomplete(String(ARTIFACT_ID));
 
             expect(notification_clearer.getCallCount()).toBe(1);
             const loading_groups = host.dropdown_content;
-            expect(loading_groups).toHaveLength(1);
+            expect(loading_groups).toHaveLength(2);
             expect(loading_groups[0].is_loading).toBe(true);
 
             await promise;
 
             const groups = host.dropdown_content;
-            expect(groups).toHaveLength(1);
+            expect(groups).toHaveLength(2);
             expect(groups[0].is_loading).toBe(false);
             expect(groups[0].items).toHaveLength(1);
 
@@ -136,7 +162,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         });
 
         it(`when an unexpected error is returned by the api (not code 403 or 404),
-            then it will set a group with zero items so that link-selector can show the empty state message
+            then it will set a matching artifact and recently viewed artifacts groups with zero items so that link-selector can show the empty state message
             and notify the fault`, async () => {
             const fault = Fault.fromMessage("Nope");
             artifact_retriever = RetrieveMatchingArtifactStub.withFault(fault);
@@ -146,9 +172,9 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(notification_clearer.getCallCount()).toBe(1);
             expect(fault_notifier.getCallCount()).toBe(1);
             const groups = host.dropdown_content;
-            expect(groups).toHaveLength(1);
-            expect(groups[0].items).toHaveLength(0);
-            expect(groups[0].empty_message).not.toBe("");
+            expect(groups).toHaveLength(2);
+            expect(groups[1].items).toHaveLength(0);
+            expect(groups[1].empty_message).not.toBe("");
         });
 
         it.each([
@@ -156,7 +182,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             ["404 Not Found error code", NotFoundFault()],
         ])(
             `when the API responds %s,
-            it will set a group with zero items so that link-selector can show the empty state message
+            it will set a matching artifact and recently viewed artifacts groups with zero items so that link-selector can show the empty state message
             and will not notify the fault as it is expected that it can fail
             (maybe the linkable number does not match any artifact)`,
             async (_type_of_error, fault) => {
@@ -167,9 +193,9 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 expect(notification_clearer.getCallCount()).toBe(1);
                 expect(fault_notifier.getCallCount()).toBe(0);
                 const groups = host.dropdown_content;
-                expect(groups).toHaveLength(1);
-                expect(groups[0].items).toHaveLength(0);
-                expect(groups[0].empty_message).not.toBe("");
+                expect(groups).toHaveLength(2);
+                expect(groups[1].items).toHaveLength(0);
+                expect(groups[1].empty_message).not.toBe("");
             }
         );
     });

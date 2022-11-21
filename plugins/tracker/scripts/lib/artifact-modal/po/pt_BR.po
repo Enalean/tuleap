@@ -153,6 +153,9 @@ msgstr ""
 msgid "Preview"
 msgstr "Pré-visualização"
 
+msgid "Recently viewed artifacts"
+msgstr ""
+
 msgid "References list is empty."
 msgstr ""
 

@@ -152,7 +152,11 @@ export const setCurrentLinkType = (host: LinkField, link_type: LinkType | undefi
 
     if (!LinkType.isReverseChild(link_type)) {
         host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
-        host.dropdown_content = [];
+        if (host.controller.is_search_feature_flag_enabled) {
+            host.dropdown_content = [host.controller.recentlyViewedItems()];
+        } else {
+            host.dropdown_content = [];
+        }
         return link_type;
     }
     host.link_selector.setPlaceholder(getParentLinkSelectorPlaceholderText());
@@ -254,7 +258,6 @@ export const LinkField = define<LinkField>({
 
             controller.retrievePossibleParentsGroups().then((groups) => {
                 host.current_link_type = controller.getCurrentLinkType(groups.length > 0);
-                host.dropdown_content = groups;
                 host.allowed_link_types = controller.displayAllowedTypes();
             });
 
