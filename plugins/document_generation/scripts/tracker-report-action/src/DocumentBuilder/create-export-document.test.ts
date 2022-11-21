@@ -761,7 +761,7 @@ describe("Create ArtifactValues Collection", () => {
                     {
                         content_length: "short",
                         field_name: "Submitted On",
-                        field_value: "12/28/2020 9:55:55 AM",
+                        field_value: "12/28/2020 9:55:55 AM",
                         value_type: "string",
                     },
                     {
@@ -1022,7 +1022,7 @@ describe("Create ArtifactValues Collection", () => {
                     {
                         content_length: "short",
                         field_name: "Submitted On",
-                        field_value: "12/29/2020 9:55:55 AM",
+                        field_value: "12/29/2020 9:55:55 AM",
                         value_type: "string",
                     },
                     {
