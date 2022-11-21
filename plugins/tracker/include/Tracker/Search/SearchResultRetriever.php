@@ -36,6 +36,8 @@ use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 class SearchResultRetriever
 {
+    public const TYPE = 'artifact';
+
     public function __construct(
         private \Tracker_ArtifactFactory $artifact_factory,
         private \Tracker_FormElementFactory $form_element_factory,
@@ -119,6 +121,8 @@ class SearchResultRetriever
             $collection->getMainUri(),
             $artifact->getTitle() ?? '',
             $tracker->getColor()->getName(),
+            self::TYPE,
+            $artifact->getId(),
             $this->glyph_finder->get('tuleap-tracker-small'),
             $this->glyph_finder->get('tuleap-tracker'),
             $collection->getIconName(),

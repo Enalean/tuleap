@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Search;
 
-use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\SearchResultEntryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -33,11 +33,11 @@ final class IndexedItemFoundToSearchResultTest extends TestCase
         $user  = UserTestBuilder::buildWithDefaults();
         $event = new IndexedItemFoundToSearchResult([1, new IndexedItemFound('type', ['a' => 'a'], null)], $user);
 
-        $search_result = self::buildSearchResultEntry();
+        $search_result = SearchResultEntryBuilder::anEntry()->build();
         $event->addSearchResult(1, $search_result);
 
         self::assertEquals([1 => $search_result], $event->search_results);
-        self::assertEquals($user, $event->user);
+        self::assertSame($user, $event->user);
     }
 
     public function testCannotProvideASearchResultAtAPriorityThatDoesNotExist(): void
@@ -45,32 +45,15 @@ final class IndexedItemFoundToSearchResultTest extends TestCase
         $event = new IndexedItemFoundToSearchResult([1, new IndexedItemFound('type', ['a' => 'a'], null)], UserTestBuilder::buildWithDefaults());
 
         $this->expectException(\LogicException::class);
-        $event->addSearchResult(2, self::buildSearchResultEntry());
+        $event->addSearchResult(2, SearchResultEntryBuilder::anEntry()->build());
     }
 
     public function testCannotOverwriteASearchResultAtAGivenPriority(): void
     {
         $event = new IndexedItemFoundToSearchResult([1, new IndexedItemFound('type', ['a' => 'a'], null)], UserTestBuilder::buildWithDefaults());
 
-        $event->addSearchResult(1, self::buildSearchResultEntry());
+        $event->addSearchResult(1, SearchResultEntryBuilder::anEntry()->build());
         $this->expectException(\LogicException::class);
-        $event->addSearchResult(1, self::buildSearchResultEntry());
-    }
-
-    private static function buildSearchResultEntry(): SearchResultEntry
-    {
-        return new SearchResultEntry(
-            null,
-            '/',
-            'Title',
-            'Color',
-            null,
-            null,
-            'icon_name',
-            ProjectTestBuilder::aProject()->build(),
-            [],
-            null,
-            [],
-        );
+        $event->addSearchResult(1, SearchResultEntryBuilder::anEntry()->build());
     }
 }
