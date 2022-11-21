@@ -171,6 +171,9 @@ msgstr "Contenu"
 msgid "Continue"
 msgstr "Continuer"
 
+msgid "Convert to…"
+msgstr "Convertir en…"
+
 msgid "Copy"
 msgstr "Copier"
 
@@ -444,9 +447,6 @@ msgstr "Nouveau dossier"
 
 msgid "New value"
 msgstr "Nouvelle valeur"
-
-msgid "New version"
-msgstr "Nouvelle version"
 
 msgid "New version for \"%s\""
 msgstr "Nouvelle version de \"%s\""
@@ -785,14 +785,14 @@ msgstr "Mettre à jour les permissions"
 msgid "Update properties"
 msgstr "Mettre à jour les propriétés"
 
-msgid "Upload a file"
-msgstr "Téléverser un fichier"
-
 msgid "Upload error"
 msgstr "Erreur de téléversement"
 
 msgid "Uploaded"
 msgstr "Téléversé"
+
+msgid "Uploaded file"
+msgstr "Fichier téléversé"
 
 msgid "Uploading documents"
 msgstr "Documents en cours de téléversement"

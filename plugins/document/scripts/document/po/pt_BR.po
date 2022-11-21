@@ -154,6 +154,9 @@ msgstr "Conteúdo"
 msgid "Continue"
 msgstr ""
 
+msgid "Convert to…"
+msgstr ""
+
 msgid "Copy"
 msgstr ""
 
@@ -415,9 +418,6 @@ msgid "New folder"
 msgstr ""
 
 msgid "New value"
-msgstr ""
-
-msgid "New version"
 msgstr ""
 
 msgid "New version for \"%s\""
@@ -728,13 +728,13 @@ msgstr ""
 msgid "Update properties"
 msgstr ""
 
-msgid "Upload a file"
-msgstr ""
-
 msgid "Upload error"
 msgstr ""
 
 msgid "Uploaded"
+msgstr ""
+
+msgid "Uploaded file"
 msgstr ""
 
 msgid "Uploading documents"

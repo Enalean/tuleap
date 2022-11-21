@@ -38,7 +38,7 @@
             v-on:click.prevent="showNewDocumentModal(TYPE_FILE)"
         >
             <i class="fa-solid fa-fw fa-upload tlp-dropdown-menu-item-icon"></i>
-            {{ $gettext("Upload a file") }}
+            {{ $gettext("Uploaded file") }}
         </button>
         <button
             type="button"

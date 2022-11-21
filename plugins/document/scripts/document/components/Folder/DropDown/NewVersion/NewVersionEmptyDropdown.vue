@@ -26,8 +26,8 @@
             data-shortcut-create-document
             ref="trigger"
         >
-            <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
-            {{ $gettext("New version") }}
+            <i class="fa-solid fa-repeat tlp-button-icon" aria-hidden="true"></i>
+            {{ $gettext("Convert to…") }}
             <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
         </button>
 
