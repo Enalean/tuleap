@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Select2Plugin } from "tlp";
+
 interface OptionsProjectSelect2 {
     include_private_projects?: boolean;
     placeholder?: string;
@@ -33,7 +35,7 @@ interface OptionsUserSelect2 {
 export function autocomplete_projects_for_select2(
     element: Element,
     options: OptionsProjectSelect2
-): Select2Plugin;
+): void;
 
 export function autocomplete_users_for_select2(
     element: Element,

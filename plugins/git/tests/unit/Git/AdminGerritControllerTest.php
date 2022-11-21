@@ -27,7 +27,7 @@ use Git_RemoteServer_GerritServerFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use Response;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
 use User_SSHKeyValidator;
 
 class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -102,7 +102,7 @@ class AdminGerritControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(GerritServerResourceRestrictor::class),
             \Mockery::spy(RemoteServer\Gerrit\Restrictor::class),
             new AdminGerritBuilder(\Mockery::spy(User_SSHKeyValidator::class)),
-            \Mockery::mock(IncludeAssets::class)
+            JavascriptAssetGenericBuilder::build()
         );
     }
 

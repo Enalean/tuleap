@@ -20,6 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import CriterionOwner from "./CriterionOwner.vue";
 import localVue from "../../../helpers/local-vue";
+import type { Select2Plugin } from "tlp";
 import * as autocomplete from "@tuleap/autocomplete-for-select2";
 import * as retrieve_selected_owner from "../../../helpers/owner/retrieve-selected-owner";
 import type { RestUser } from "../../../api/rest-querier";
@@ -27,14 +28,19 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 jest.mock("tlp");
 
+interface Select2Mock extends Select2Plugin {
+    trigger(): this;
+    on(): this;
+}
+
 describe("CriterionOwner", () => {
     it("should render the component with an already selected user", async () => {
         const autocompleter = jest.spyOn(autocomplete, "autocomplete_users_for_select2");
-        let select2 = {};
+        let select2 = {} as Select2Mock;
         select2 = {
-            trigger: (): Record<string, never> => select2,
-            on: (): Record<string, never> => select2,
-        };
+            trigger: (): Select2Mock => select2,
+            on: (): Select2Mock => select2,
+        } as unknown as Select2Mock;
         autocompleter.mockReturnValue(select2);
 
         const get_spy = jest.spyOn(retrieve_selected_owner, "retrieveSelectedOwner");

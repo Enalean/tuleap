@@ -976,7 +976,10 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $project_manager
             ),
             $this->getBigObjectAuthorizationManager(),
-            $this->getIncludeAssets(),
+            new \Tuleap\Layout\IncludeViteAssets(
+                __DIR__ . '/../scripts/siteadmin/frontend-assets/',
+                '/assets/git/siteadmin'
+            ),
             new VersionDetector()
         );
     }

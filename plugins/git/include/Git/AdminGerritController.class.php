@@ -23,7 +23,7 @@ use Tuleap\Git\AdminAllowedProjectsGerritPresenter;
 use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -51,10 +51,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
      * @var Restrictor
      */
     private $gerrit_restrictor;
-    /**
-     * @var IncludeAssets
-     */
-    private $include_assets;
+    private JavascriptAssetGeneric $asset;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -63,7 +60,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         GerritServerResourceRestrictor $gerrit_ressource_restrictor,
         Restrictor $gerrit_restrictor,
         AdminGerritBuilder $admin_gerrit_builder,
-        IncludeAssets $include_assets,
+        JavascriptAssetGeneric $asset,
     ) {
         $this->gerrit_server_factory       = $gerrit_server_factory;
         $this->csrf                        = $csrf;
@@ -71,7 +68,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         $this->gerrit_ressource_restrictor = $gerrit_ressource_restrictor;
         $this->gerrit_restrictor           = $gerrit_restrictor;
         $this->admin_gerrit_builder        = $admin_gerrit_builder;
-        $this->include_assets              = $include_assets;
+        $this->asset                       = $asset;
     }
 
     public function process(Codendi_Request $request)
@@ -159,7 +156,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
             $this->getListOfGerritServersPresenters()
         );
 
-        $GLOBALS['HTML']->includeFooterJavascriptFile($this->include_assets->getFileURL('siteadmin-gerrit.js'));
+        $GLOBALS['HTML']->addJavascriptAsset($this->asset);
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             $title,

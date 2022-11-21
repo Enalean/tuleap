@@ -28,7 +28,9 @@ use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 
 /**
  * This routes site admin part of Git
@@ -84,10 +86,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
      */
     private $big_object_authorization_manager;
 
-    /**
-     * @var IncludeAssets
-     */
-    private $include_assets;
+    private IncludeViteAssets $include_assets;
 
     /**
      * @var VersionDetector
@@ -108,7 +107,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         GerritServerResourceRestrictor $gerrit_ressource_restrictor,
         Restrictor $gerrit_restrictor,
         BigObjectAuthorizationManager $big_object_authorization_manager,
-        IncludeAssets $include_assets,
+        IncludeViteAssets $include_assets,
         VersionDetector $version_detector,
     ) {
         $this->gerrit_server_factory            = $gerrit_server_factory;
@@ -139,7 +138,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
 
         $controller->process($request);
 
-        $layout->addCssAsset(new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($this->include_assets, 'bp-style-siteadmin'));
+        $layout->addCssAsset(CssViteAsset::fromFileName($this->include_assets, 'themes/git.scss'));
 
         $controller->display($request);
     }
@@ -154,7 +153,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->gerrit_ressource_restrictor,
                 $this->gerrit_restrictor,
                 new AdminGerritBuilder(new User_SSHKeyValidator()),
-                $this->include_assets
+                new JavascriptViteAsset($this->include_assets, 'src/gerrit/index.ts'),
             );
         } elseif ($request->get('pane') == 'gitolite_config') {
             return new Git_AdminGitoliteConfig(
@@ -163,7 +162,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->git_system_event_manager,
                 $this->admin_page_renderer,
                 $this->big_object_authorization_manager,
-                $this->include_assets,
+                new JavascriptViteAsset($this->include_assets, 'src/gitolite.ts'),
                 $this->version_detector
             );
         } elseif ($request->get('pane') === 'mirrors_admin' || $request->get('view') === 'mirrors_restriction') {
@@ -174,7 +173,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->project_manager,
                 $this->git_system_event_manager,
                 $this->admin_page_renderer,
-                $this->include_assets
+                new JavascriptViteAsset($this->include_assets, 'src/mirror/index.ts'),
             );
         } else {
             return new GeneralSettingsController(

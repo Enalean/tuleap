@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick, openTargetModalIdOnClick } from "tlp";
+import { openAllTargetModalsOnClick, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 
 document.addEventListener("DOMContentLoaded", () => {
     initAddModal();
