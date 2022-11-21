@@ -62,6 +62,29 @@
             <i class="fa-fw tlp-dropdown-menu-item-icon" v-bind:class="ICON_WIKI"></i>
             {{ $gettext("Wiki page") }}
         </button>
+        <template v-for="section in create_new_item_alternatives">
+            <span class="tlp-dropdown-menu-title" v-bind:key="section.title">{{
+                section.title
+            }}</span>
+            <span
+                v-for="alternative in section.alternatives"
+                class="tlp-dropdown-menu-item"
+                role="menuitem"
+                v-bind:key="section.title + alternative.title"
+                data-test="alternative"
+            >
+                <i
+                    class="fa fa-fw tlp-dropdown-menu-item-icon"
+                    v-bind:class="iconForMimeType(alternative.mime_type)"
+                ></i>
+                {{ alternative.title }}
+            </span>
+        </template>
+        <span
+            class="tlp-dropdown-menu-separator"
+            role="separator"
+            v-if="create_new_item_alternatives.length > 0"
+        ></span>
         <button
             type="button"
             class="tlp-dropdown-menu-item"
@@ -102,10 +125,18 @@ import {
 import emitter from "../../../../helpers/emitter";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
+import { inject } from "vue";
+import type { NewItemAlternativeArray } from "../../../../type";
+import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 
 const { embedded_are_allowed, user_can_create_wiki } = useState<
     Pick<ConfigurationState, "embedded_are_allowed" | "user_can_create_wiki">
 >("configuration", ["embedded_are_allowed", "user_can_create_wiki"]);
+
+const create_new_item_alternatives = inject<NewItemAlternativeArray>(
+    "create_new_item_alternatives",
+    []
+);
 
 const props = defineProps<{ item: Item }>();
 function showNewDocumentModal(type: ItemType): void {

@@ -33,6 +33,7 @@ use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Settings\ITellIfWritersAreAllowedToUpdatePropertiesOrDelete;
 use Tuleap\Document\Config\ModalDisplayer;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
+use Tuleap\Document\Tree\Create\NewItemAlternativeCollector;
 use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -107,7 +108,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 ),
                 $this->column_builder->getColumns($project, $metadata_factory),
                 $this->filename_pattern_retriever->getPattern((int) $project->getID()),
-                $this->dispatcher->dispatch(new ShouldDisplaySourceColumnForFileVersions())->shouldDisplaySourceColumn()
+                $this->dispatcher->dispatch(new ShouldDisplaySourceColumnForFileVersions())->shouldDisplaySourceColumn(),
+                $this->dispatcher->dispatch(new NewItemAlternativeCollector($project))->getSections(),
             )
         );
 

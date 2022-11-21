@@ -545,3 +545,15 @@ export interface Reason {
 export interface FeedbackHandler {
     success: (feedback: string | null) => void;
 }
+
+export type NewItemAlternativeArray = readonly NewItemAlternativeSection[];
+
+export interface NewItemAlternativeSection {
+    readonly title: string;
+    readonly alternatives: readonly NewItemAlternative[];
+}
+
+export interface NewItemAlternative {
+    readonly mime_type: string;
+    readonly title: string;
+}
