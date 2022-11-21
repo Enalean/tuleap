@@ -39,6 +39,8 @@ final class SearchResultEntry
         public string $link,
         public string $title,
         public string $color,
+        public string $type,
+        public int $per_type_id,
         public ?Glyph $small_icon,
         public ?Glyph $normal_icon,
         public string $icon_name,

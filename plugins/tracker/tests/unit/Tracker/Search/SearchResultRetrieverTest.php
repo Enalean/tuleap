@@ -26,16 +26,23 @@ use Tracker_FormElement_Field;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
-use Tuleap\Search\SearchResultEntry;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\SearchResultEntryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\TrackerColor;
 
 final class SearchResultRetrieverTest extends TestCase
 {
+    private const TRACKER_COLOR   = 'teddy-brown';
+    private const ARTIFACT_ID     = 123;
+    private const ARTIFACT_TITLE  = 'title';
+    private const CROPPED_CONTENT = '... excerpt ...';
+
     /**
      * @var \Tracker_ArtifactFactory&\PHPUnit\Framework\MockObject\Stub
      */
@@ -72,12 +79,23 @@ final class SearchResultRetrieverTest extends TestCase
     public function testTransformIndexedFieldContentIntoASearchUserWhenUserCanAccessTheArtifactAndField(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
-            [2 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '123', 'field_id' => '777'], "... excerpt ...")],
+            [
+                2 => new IndexedItemFound(
+                    'plugin_artifact_field',
+                    ['artifact_id' => (string) self::ARTIFACT_ID, 'field_id' => '777'],
+                    self::CROPPED_CONTENT
+                ),
+            ],
             UserTestBuilder::buildWithDefaults()
         );
 
         $project  = ProjectTestBuilder::aProject()->build();
-        $artifact = ArtifactTestBuilder::anArtifact(123)->withTitle('title')->inProject($project)->build();
+        $tracker  = TrackerTestBuilder::aTracker()->withColor(TrackerColor::fromName(self::TRACKER_COLOR))
+            ->withProject($project)
+            ->build();
+        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->withTitle(self::ARTIFACT_TITLE)
+            ->inTracker($tracker)
+            ->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
         $field = $this->createStub(Tracker_FormElement_Field::class);
         $field->method('userCanRead')->willReturn(true);
@@ -87,52 +105,57 @@ final class SearchResultRetrieverTest extends TestCase
 
         self::assertEquals(
             [
-                2 => new SearchResultEntry(
-                    $artifact->getXRef(),
-                    $artifact->getUri(),
-                    $artifact->getTitle(),
-                    'fiesta-red',
-                    null,
-                    null,
-                    'fa-solid fa-list-ol',
-                    $project,
-                    [],
-                    "... excerpt ...",
-                    [],
-                ),
+                2 => SearchResultEntryBuilder::anEntry()->withCrossReference($artifact->getXRef())
+                    ->withLink($artifact->getUri())
+                    ->withTitle(self::ARTIFACT_TITLE)
+                    ->withColorName(self::TRACKER_COLOR)
+                    ->withType(SearchResultRetriever::TYPE)
+                    ->withPerTypeId(self::ARTIFACT_ID)
+                    ->withIconName('fa-solid fa-list-ol')
+                    ->inProject($project)
+                    ->withCroppedContent(self::CROPPED_CONTENT)
+                    ->build(),
             ],
             $indexed_item_convertor->search_results
         );
     }
 
-    public function testTransformIndexedChangesetCommentIntoASearchUserWhenUserCanAccessTheArtifactd(): void
+    public function testTransformIndexedChangesetCommentIntoASearchUserWhenUserCanAccessTheArtifact(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
-            [2 => new IndexedItemFound('plugin_artifact_changeset_comment', ['artifact_id' => '123'], "... excerpt ...")],
+            [
+                2 => new IndexedItemFound(
+                    'plugin_artifact_changeset_comment',
+                    ['artifact_id' => (string) self::ARTIFACT_ID],
+                    self::CROPPED_CONTENT
+                ),
+            ],
             UserTestBuilder::buildWithDefaults()
         );
 
         $project  = ProjectTestBuilder::aProject()->build();
-        $artifact = ArtifactTestBuilder::anArtifact(123)->withTitle('title')->inProject($project)->build();
+        $tracker  = TrackerTestBuilder::aTracker()->withColor(TrackerColor::fromName(self::TRACKER_COLOR))
+            ->withProject($project)
+            ->build();
+        $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->withTitle(self::ARTIFACT_TITLE)
+            ->inTracker($tracker)
+            ->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
         $this->retriever->retrieveSearchResult($indexed_item_convertor);
 
         self::assertEquals(
             [
-                2 => new SearchResultEntry(
-                    $artifact->getXRef(),
-                    $artifact->getUri(),
-                    $artifact->getTitle(),
-                    'fiesta-red',
-                    null,
-                    null,
-                    'fa-solid fa-list-ol',
-                    $project,
-                    [],
-                    "... excerpt ...",
-                    [],
-                ),
+                2 => SearchResultEntryBuilder::anEntry()->withCrossReference($artifact->getXRef())
+                    ->withLink($artifact->getUri())
+                    ->withTitle(self::ARTIFACT_TITLE)
+                    ->withColorName(self::TRACKER_COLOR)
+                    ->withType(SearchResultRetriever::TYPE)
+                    ->withPerTypeId(self::ARTIFACT_ID)
+                    ->withIconName('fa-solid fa-list-ol')
+                    ->inProject($project)
+                    ->withCroppedContent(self::CROPPED_CONTENT)
+                    ->build(),
             ],
             $indexed_item_convertor->search_results
         );

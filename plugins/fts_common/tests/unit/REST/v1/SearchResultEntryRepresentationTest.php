@@ -20,43 +20,43 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\REST\v1;
+namespace Tuleap\FullTextSearchCommon\REST\v1;
 
 use Tuleap\Glyph\Glyph;
 use Tuleap\QuickLink\SwitchToQuickLink;
-use Tuleap\Test\Builders\HistoryEntryBuilder;
+use Tuleap\Search\SearchResultEntryBadge;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\User\History\HistoryEntryBadge;
+use Tuleap\Test\Builders\SearchResultEntryBuilder;
 
-final class UserHistoryEntryRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SearchResultEntryRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const VISIT_TIMESTAMP = 1654304679;
-    private const TYPE            = 'vesperian';
-    private const PER_TYPE_ID     = 56;
-    private const XREF            = 'bug #' . self::PER_TYPE_ID;
-    private const URI             = '/plugins/thaumaturgism/?id=' . self::PER_TYPE_ID;
-    private const TITLE           = 'Le rédynamisme';
-    private const COLOR_NAME      = 'plum-crazy';
-    private const ICON_NAME       = 'fa-solid fa-seedling';
-    private const PROJECT_ID      = 111;
+    private const TYPE            = 'countersale';
+    private const PER_TYPE_ID     = 85;
+    private const XREF            = 'countersale #' . self::PER_TYPE_ID;
+    private const URI             = '/plugins/overpopulousness?id=' . self::PER_TYPE_ID;
+    private const TITLE           = 'incristaliser';
+    private const COLOR_NAME      = 'sherwood-green';
+    private const ICON_NAME       = 'fa-solid fa-hashtag';
+    private const PROJECT_ID      = 231;
     private const SMALL_ICON_SVG  = '<svg>small</svg>';
     private const NORMAL_ICON_SVG = '<svg>normal</svg>';
+    private const CROPPED_CONTENT = '...dumontite carbonatization...';
 
-    private const FIRST_QUICK_LINK_NAME  = 'outworth';
-    private const FIRST_QUICK_LINK_URI   = '/plugins/modestness?id=' . self::PER_TYPE_ID;
-    private const FIRST_QUICK_LINK_ICON  = 'fa-solid fa-plug';
-    private const SECOND_QUICK_LINK_NAME = 'unflagging';
-    private const SECOND_QUICK_LINK_URI  = '/plugins/hydrocyanic?id=' . self::PER_TYPE_ID;
-    private const SECOND_QUICK_LINK_ICON = 'fa-solid fa-cloud-bolt';
+    private const FIRST_QUICK_LINK_NAME  = 'rambong';
+    private const FIRST_QUICK_LINK_URI   = '/plugins/unhypothecated?id=' . self::PER_TYPE_ID;
+    private const FIRST_QUICK_LINK_ICON  = 'fa-solid fa-business-time';
+    private const SECOND_QUICK_LINK_NAME = 'nonsuit';
+    private const SECOND_QUICK_LINK_URI  = '/plugins/featured?id=' . self::PER_TYPE_ID;
+    private const SECOND_QUICK_LINK_ICON = 'fa-brands fa-java';
 
-    private const FIRST_BADGE_LABEL  = 'Open';
-    private const FIRST_BADGE_COLOR  = 'surf-green';
-    private const SECOND_BADGE_LABEL = 'Easy Fix';
+    private const FIRST_BADGE_LABEL  = 'Featured';
+    private const FIRST_BADGE_COLOR  = 'lilac-purple';
+    private const SECOND_BADGE_LABEL = 'Renowned';
 
     public function testItBuilds(): void
     {
-        $first_badge  = new HistoryEntryBadge(self::FIRST_BADGE_LABEL, self::FIRST_BADGE_COLOR);
-        $second_badge = new HistoryEntryBadge(self::SECOND_BADGE_LABEL, null);
+        $first_badge  = new SearchResultEntryBadge(self::FIRST_BADGE_LABEL, self::FIRST_BADGE_COLOR);
+        $second_badge = new SearchResultEntryBadge(self::SECOND_BADGE_LABEL, null);
 
         $first_quick_link  = new SwitchToQuickLink(
             self::FIRST_QUICK_LINK_NAME,
@@ -70,23 +70,23 @@ final class UserHistoryEntryRepresentationTest extends \Tuleap\Test\PHPUnit\Test
         );
 
         $project        = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
-        $entry          = HistoryEntryBuilder::anEntryVisitedAt(self::VISIT_TIMESTAMP)
+        $entry          = SearchResultEntryBuilder::anEntry()
             ->withCrossReference(self::XREF)
             ->withLink(self::URI)
             ->withTitle(self::TITLE)
             ->withColorName(self::COLOR_NAME)
             ->withType(self::TYPE)
             ->withPerTypeId(self::PER_TYPE_ID)
+            ->withIconName(self::ICON_NAME)
             ->withSmallIcon(new Glyph(self::SMALL_ICON_SVG))
             ->withNormalIcon(new Glyph(self::NORMAL_ICON_SVG))
-            ->withIconName(self::ICON_NAME)
+            ->withCroppedContent(self::CROPPED_CONTENT)
             ->inProject($project)
             ->withQuickLinks($first_quick_link, $second_quick_link)
             ->withBadges($first_badge, $second_badge)
             ->build();
-        $representation = UserHistoryEntryRepresentation::build($entry);
+        $representation = SearchResultEntryRepresentation::fromSearchResultEntry($entry);
 
-        self::assertSame('2022-06-04T03:04:39+02:00', $representation->visit_time);
         self::assertSame(self::XREF, $representation->xref);
         self::assertSame(self::URI, $representation->html_url);
         self::assertSame(self::TITLE, $representation->title);
@@ -96,6 +96,7 @@ final class UserHistoryEntryRepresentationTest extends \Tuleap\Test\PHPUnit\Test
         self::assertSame(self::ICON_NAME, $representation->icon_name);
         self::assertSame(self::SMALL_ICON_SVG, $representation->small_icon);
         self::assertSame(self::NORMAL_ICON_SVG, $representation->icon);
+        self::assertSame(self::CROPPED_CONTENT, $representation->cropped_content);
         self::assertSame(self::PROJECT_ID, $representation->project->id);
 
         self::assertCount(2, $representation->quick_links);
@@ -118,20 +119,19 @@ final class UserHistoryEntryRepresentationTest extends \Tuleap\Test\PHPUnit\Test
     public function testItBuildsNullableProperties(): void
     {
         $project        = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
-        $entry          = HistoryEntryBuilder::anEntryVisitedAt(self::VISIT_TIMESTAMP)
-            ->withLink(self::URI)
+        $entry          = SearchResultEntryBuilder::anEntry()
             ->withTitle(self::TITLE)
+            ->withLink(self::URI)
             ->withColorName(self::COLOR_NAME)
             ->withType(self::TYPE)
             ->withPerTypeId(self::PER_TYPE_ID)
             ->withIconName(self::ICON_NAME)
             ->inProject($project)
             ->build();
-        $representation = UserHistoryEntryRepresentation::build($entry);
+        $representation = SearchResultEntryRepresentation::fromSearchResultEntry($entry);
 
-        self::assertSame('2022-06-04T03:04:39+02:00', $representation->visit_time);
-        self::assertSame(self::URI, $representation->html_url);
         self::assertSame(self::TITLE, $representation->title);
+        self::assertSame(self::URI, $representation->html_url);
         self::assertSame(self::COLOR_NAME, $representation->color_name);
         self::assertSame(self::TYPE, $representation->type);
         self::assertSame(self::PER_TYPE_ID, $representation->per_type_id);
@@ -140,6 +140,7 @@ final class UserHistoryEntryRepresentationTest extends \Tuleap\Test\PHPUnit\Test
         self::assertNull($representation->xref);
         self::assertNull($representation->small_icon);
         self::assertNull($representation->icon);
+        self::assertNull($representation->cropped_content);
         self::assertEmpty($representation->quick_links);
         self::assertEmpty($representation->badges);
     }
