@@ -24,13 +24,12 @@ import {
     TYPE_INLINE_COMMENT,
 } from "./PullRequestCommentPresenter";
 import type {
-    FileDiffCommentPayload,
     PullRequestData,
     State,
     CommentReplyPayload,
     TimelineEventPayload,
 } from "./PullRequestCommentPresenter";
-import type { PullRequestUser } from "./PullRequestCommentPresenter";
+import type { FileDiffCommentPayload, PullRequestUser } from "./types";
 import { setCatalog } from "../gettext-catalog";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 

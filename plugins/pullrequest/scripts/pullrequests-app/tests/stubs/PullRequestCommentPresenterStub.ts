@@ -26,8 +26,9 @@ import {
     TYPE_EVENT_COMMENT,
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
-    INLINE_COMMENT_POSITION_RIGHT,
 } from "../../src/app/comments/PullRequestCommentPresenter";
+
+import { INLINE_COMMENT_POSITION_RIGHT } from "../../src/app/comments/types";
 
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     id: 12,

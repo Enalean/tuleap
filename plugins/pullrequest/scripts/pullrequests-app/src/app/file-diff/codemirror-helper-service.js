@@ -19,26 +19,22 @@
 
 import CodeMirror from "codemirror";
 import { getStore } from "./comments-store.ts";
-import { PullRequestCommentPresenter } from "../comments/PullRequestCommentPresenter";
 import { RelativeDateHelper } from "../helpers/date-helpers";
 import { PullRequestCommentController } from "../comments/PullRequestCommentController";
 import { PullRequestCommentReplyFormFocusHelper } from "../comments/PullRequestCommentReplyFormFocusHelper";
 import { PullRequestPresenter } from "../comments/PullRequestPresenter";
 import { PullRequestCommentNewReplySaver } from "../comments/PullRequestCommentReplySaver";
 import { PullRequestCurrentUserPresenter } from "../comments/PullRequestCurrentUserPresenter";
-import { TAG_NAME as NEW_COMMENT_FORM_TAG_NAME } from "./NewInlineCommentForm";
+import { TAG_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../comments/new-comment-form/NewInlineCommentForm";
 import { TAG_NAME as COMMENT_TAG_NAME } from "../comments/PullRequestComment";
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./FileDiffPlaceholder";
+import { NewInlineCommentSaver } from "../comments/new-comment-form/NewInlineCommentSaver";
 
 export default CodeMirrorHelperService;
 
-CodeMirrorHelperService.$inject = [
-    "FileDiffRestService",
-    "gettextCatalog",
-    "SharedPropertiesService",
-];
+CodeMirrorHelperService.$inject = ["gettextCatalog", "SharedPropertiesService"];
 
-function CodeMirrorHelperService(FileDiffRestService, gettextCatalog, SharedPropertiesService) {
+function CodeMirrorHelperService(gettextCatalog, SharedPropertiesService) {
     const self = this;
     Object.assign(self, {
         collapseCommonSectionsSideBySide,
@@ -77,38 +73,32 @@ function CodeMirrorHelperService(FileDiffRestService, gettextCatalog, SharedProp
 
     function showCommentForm(
         code_mirror,
-        unidiff_offset,
-        display_line_number,
-        file_path,
-        pull_request_id,
-        position,
+        widget_line_number,
+        new_inline_comment_context,
         post_rendering_callback = () => {}
     ) {
         const new_comment_element = document.createElement(NEW_COMMENT_FORM_TAG_NAME);
 
         const widget = code_mirror.addLineWidget(
-            display_line_number,
+            widget_line_number,
             new_comment_element,
-            getWidgetPlacementOptions(code_mirror, display_line_number)
+            getWidgetPlacementOptions(code_mirror, widget_line_number)
         );
 
+        new_comment_element.comment_saver = NewInlineCommentSaver(new_inline_comment_context);
         new_comment_element.post_rendering_callback = post_rendering_callback;
-        new_comment_element.post_submit_callback = (comment_text) =>
-            Promise.resolve(
-                postComment(unidiff_offset, comment_text, file_path, pull_request_id, position)
-            ).then((comment) => {
-                widget.clear();
+        new_comment_element.post_submit_callback = (comment_presenter) => {
+            widget.clear();
 
-                const comment_presenter = PullRequestCommentPresenter.fromFileDiffComment(comment);
-                getStore().addRootComment(comment_presenter);
-                const comment_widget = self.displayInlineComment(
-                    code_mirror,
-                    comment_presenter,
-                    display_line_number
-                );
+            getStore().addRootComment(comment_presenter);
+            const comment_widget = self.displayInlineComment(
+                code_mirror,
+                comment_presenter,
+                widget_line_number
+            );
 
-                comment_widget.node.post_rendering_callback = post_rendering_callback;
-            });
+            comment_widget.node.post_rendering_callback = post_rendering_callback;
+        };
 
         new_comment_element.on_cancel_callback = () => {
             widget.clear();
@@ -151,16 +141,6 @@ function CodeMirrorHelperService(FileDiffRestService, gettextCatalog, SharedProp
         placeholder.isReplacingAComment = is_comment_placeholder;
 
         code_mirror.addLineWidget(handle, placeholder, options);
-    }
-
-    function postComment(unidiff_offset, comment_text, file_path, pull_request_id, position) {
-        return FileDiffRestService.postInlineComment(
-            pull_request_id,
-            file_path,
-            unidiff_offset,
-            comment_text,
-            position
-        );
     }
 
     function getCollapsedLabelElement(section) {

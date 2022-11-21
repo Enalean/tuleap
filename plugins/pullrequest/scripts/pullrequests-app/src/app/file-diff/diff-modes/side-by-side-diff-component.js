@@ -27,10 +27,7 @@ import { synchronize } from "./side-by-side-scroll-synchronizer.ts";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/collaspible-code-sections-builder.ts";
 import { SideBySideLinesHeightEqualizer } from "./side-by-side-line-height-equalizer.ts";
 
-import {
-    INLINE_COMMENT_POSITION_RIGHT,
-    INLINE_COMMENT_POSITION_LEFT,
-} from "../../comments/PullRequestCommentPresenter";
+import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
 
 import "./modes.ts";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
@@ -39,6 +36,7 @@ import { isAnUnmovedLine } from "./file-line-helper";
 import { SideBySideLineMapper } from "./side-by-side-line-mapper";
 import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors-content-manager";
 import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
+import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 
 export default {
     template: `
@@ -252,11 +250,13 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
 
         CodeMirrorHelperService.showCommentForm(
             left_code_mirror,
-            line.unidiff_offset,
             line_number,
-            self.filePath,
-            self.pullRequestId,
-            INLINE_COMMENT_POSITION_LEFT,
+            NewInlineCommentContext.fromContext(
+                self.pullRequestId,
+                self.filePath,
+                line.unidiff_offset,
+                INLINE_COMMENT_POSITION_LEFT
+            ),
             () => recomputeCommentPlaceholderHeight(line)
         );
     }
@@ -269,11 +269,13 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
 
         CodeMirrorHelperService.showCommentForm(
             right_code_mirror,
-            line.unidiff_offset,
             line_number,
-            self.filePath,
-            self.pullRequestId,
-            INLINE_COMMENT_POSITION_RIGHT,
+            NewInlineCommentContext.fromContext(
+                self.pullRequestId,
+                self.filePath,
+                line.unidiff_offset,
+                INLINE_COMMENT_POSITION_RIGHT
+            ),
             () => recomputeCommentPlaceholderHeight(line)
         );
     }

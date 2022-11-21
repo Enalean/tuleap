@@ -22,11 +22,9 @@ import { getStore } from "../comments-store.ts";
 import { getCollapsibleCodeSections } from "../../code-collapse/collaspible-code-sections-builder.ts";
 
 import "./modes.ts";
-import {
-    INLINE_COMMENT_POSITION_RIGHT,
-    INLINE_COMMENT_POSITION_LEFT,
-} from "../../comments/PullRequestCommentPresenter";
+import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
+import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,
@@ -100,11 +98,13 @@ function controller($element, $scope, FileDiffRestService, CodeMirrorHelperServi
 
         CodeMirrorHelperService.showCommentForm(
             code_mirror,
-            Number(line_number) + 1,
             line_number,
-            self.filePath,
-            self.pullRequestId,
-            comment_position
+            NewInlineCommentContext.fromContext(
+                self.pullRequestId,
+                self.filePath,
+                Number(line_number) + 1,
+                comment_position
+            )
         );
     }
 
