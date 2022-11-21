@@ -88,7 +88,7 @@ import UnlockItem from "./Lock/UnlockItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
-import { isFile, isFolder, isWiki } from "../../../helpers/type-check-helper";
+import { isEmpty, isFile, isFolder, isWiki } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
 import { computed } from "vue";
 import { useState } from "vuex-composition-helpers";
@@ -118,7 +118,8 @@ const should_display_download_button = computed(
 );
 
 const should_display_new_version_button = computed(
-    (): boolean => !is_item_a_wiki_with_approval_table.value && !is_item_a_folder.value
+    (): boolean =>
+        !is_item_a_wiki_with_approval_table.value && !is_item_a_folder.value && !isEmpty(props.item)
 );
 
 const should_display_update_properties = computed((): boolean => {

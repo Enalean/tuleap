@@ -417,6 +417,9 @@ msgstr ""
 msgid "New value"
 msgstr ""
 
+msgid "New version"
+msgstr ""
+
 msgid "New version for \"%s\""
 msgstr ""
 

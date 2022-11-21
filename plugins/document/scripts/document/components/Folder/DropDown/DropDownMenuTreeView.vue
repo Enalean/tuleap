@@ -57,7 +57,13 @@
                 v-bind:item="item"
                 v-bind:button-classes="`tlp-dropdown-menu-item`"
                 v-bind:icon-classes="`fas fa-fw fa-share tlp-dropdown-menu-item-icon`"
-                v-if="!is_item_a_folder"
+                v-if="!is_item_an_empty"
+                data-test="document-dropdown-create-new-version-button"
+                slot="new-item-version"
+            />
+            <new-version-empty-submenu
+                v-bind:item="item"
+                v-else
                 data-test="document-dropdown-create-new-version-button"
                 slot="new-item-version"
             />
@@ -93,7 +99,7 @@ import UnlockItem from "./Lock/UnlockItem.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
-import { isFile, isFolder } from "../../../helpers/type-check-helper";
+import { isEmpty, isFile, isFolder } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
@@ -102,6 +108,7 @@ import { canUpdateProperties } from "../../../helpers/can-update-properties-help
 import { canDelete } from "../../../helpers/can-delete-helper";
 import DownloadFile from "./DownloadFile.vue";
 import NewItemSubmenu from "./NewDocument/NewItemSubmenu.vue";
+import NewVersionEmptySubmenu from "./NewVersion/NewVersionEmptySubmenu.vue";
 
 const props = defineProps<{ item: Item }>();
 
@@ -115,6 +122,10 @@ const is_item_a_folder = computed((): boolean => {
 
 const is_item_a_file = computed((): boolean => {
     return isFile(props.item);
+});
+
+const is_item_an_empty = computed((): boolean => {
+    return isEmpty(props.item);
 });
 
 const should_display_update_properties = computed((): boolean => {

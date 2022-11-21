@@ -123,10 +123,12 @@ const quick_look_component_action = computed(() => {
         case TYPE_LINK:
             return () => import(/* webpackChunkName: "quick-look-link" */ `./QuickLookLink.vue`);
         case TYPE_EMPTY:
+            return () =>
+                import(/* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmpty.vue`);
         case TYPE_EMBEDDED:
             return () =>
                 import(
-                    /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmptyOrEmbedded.vue`
+                    /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmbedded.vue`
                 );
         default:
             return null;

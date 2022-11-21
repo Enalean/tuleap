@@ -31,7 +31,6 @@
         />
         <modal-feedback />
 
-        <type-selector-for-empty-modal v-model="new_item_version.type" />
         <div class="tlp-modal-body">
             <link-properties
                 v-model="new_item_version.link_properties"
@@ -61,19 +60,16 @@ import { mapState } from "vuex";
 import { createModal } from "tlp";
 import { sprintf } from "sprintf-js";
 import { TYPE_FILE } from "../../../../constants";
-import { redirectToUrl } from "../../../../helpers/location-helper";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedProperties.vue";
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
-import TypeSelectorForEmptyModal from "./TypeSelectorForEmptyModal.vue";
 
 export default {
     name: "CreateNewVersionEmptyModal",
     components: {
-        TypeSelectorForEmptyModal,
         FileProperties,
         LinkProperties,
         ModalFeedback,
@@ -83,12 +79,16 @@ export default {
     },
     props: {
         item: Object,
+        type: {
+            required: false,
+            type: String,
+        },
     },
     data() {
         return {
             is_loading: false,
             new_item_version: {
-                type: TYPE_FILE,
+                type: this.type || TYPE_FILE,
                 link_properties: {
                     link_url: "",
                 },
@@ -124,11 +124,6 @@ export default {
         },
         hide() {
             this.$emit("hidden");
-        },
-        redirectToLegacyUrl() {
-            return redirectToUrl(
-                `/plugins/docman/index.php?group_id=${this.project_id}&id=${this.item.id}&action=action_update`
-            );
         },
         async createNewVersion(event) {
             event.preventDefault();

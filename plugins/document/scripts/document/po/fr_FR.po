@@ -445,6 +445,9 @@ msgstr "Nouveau dossier"
 msgid "New value"
 msgstr "Nouvelle valeur"
 
+msgid "New version"
+msgstr "Nouvelle version"
+
 msgid "New version for \"%s\""
 msgstr "Nouvelle version de \"%s\""
 
