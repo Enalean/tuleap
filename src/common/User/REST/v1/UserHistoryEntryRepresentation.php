@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\REST\v1;
 
 use Tuleap\Project\REST\MinimalProjectRepresentation;
@@ -29,115 +31,90 @@ use Tuleap\User\History\HistoryEntryBadge;
 /**
  * @psalm-immutable
  */
-class UserHistoryEntryRepresentation
+final class UserHistoryEntryRepresentation
 {
     /**
-     * @var string Date of the visit of this entry {@type int} {@required true}
+     * @var string Date of the visit of this entry
      */
-    public $visit_time;
+    public string $visit_time;
     /**
-     * @var string | null Cross reference representing the entry {@type string} {@required true}
+     * @var string | null Cross-reference representing the entry
      */
-    public $xref;
+    public ?string $xref;
     /**
-     * @var string Link to the entry {@type string} {@required true}
+     * @var string Link to the entry
      */
-    public $html_url;
+    public string $html_url;
     /**
-     * @var string | null Title of the entry {@type string} {@required true}
+     * @var string Title of the entry
      */
-    public $title;
+    public string $title;
     /**
-     * @var string Name of the color associated with the entry {@type string} {@required true}
+     * @var string Name of the color associated with the entry
      */
-    public $color_name;
+    public string $color_name;
     /**
-     * @var string SVG icon associated with the entry {@type string} {@required true}
+     * @var string Type of the entry
+     */
+    public string $type;
+    /**
+     * @var int ID of the entry respective to its $type
+     */
+    public int $per_type_id;
+    /**
+     * @var string SVG icon associated with the entry
      * @psalm-var string|null
      */
-    public $icon;
+    public ?string $icon;
     /**
-     * @var string SVG icon (small size) associated with the entry {@type string} {@required true}
+     * @var string SVG icon (small size) associated with the entry
      * @psalm-var string|null
      */
-    public $small_icon;
+    public ?string $small_icon;
     /**
-     * @var MinimalProjectRepresentation Project to which this user's history entry belongs {@required true}
+     * @var MinimalProjectRepresentation Project to which this user's history entry belongs
      */
-    public $project;
+    public MinimalProjectRepresentation $project;
     /**
-     * @var SwitchToQuickLinkRepresentation[] Quick links to related information {@required true}
+     * @var SwitchToQuickLinkRepresentation[] Quick links to related information
      */
-    public $quick_links;
+    public array $quick_links;
     /**
-     * @var string The name of the icon {@required true}
+     * @var string The name of the icon
      */
-    public $icon_name;
+    public string $icon_name;
     /**
-     * @var HistoryEntryBadge[] The badges for the item {@required true}
+     * @var HistoryEntryBadge[] The badges for the item
      */
-    public $badges;
+    public array $badges;
 
-    /**
-     * @param SwitchToQuickLinkRepresentation[] $quick_links
-     */
-    private function __construct(
-        string $visit_time,
-        ?string $xref,
-        string $html_url,
-        ?string $title,
-        string $color_name,
-        string $icon_name,
-        ?string $small_icon,
-        ?string $icon,
-        MinimalProjectRepresentation $project,
-        array $quick_links,
-        array $badges,
-    ) {
-        $this->visit_time  = $visit_time;
-        $this->xref        = $xref;
-        $this->html_url    = $html_url;
-        $this->title       = $title;
-        $this->color_name  = $color_name;
-        $this->icon_name   = $icon_name;
-        $this->small_icon  = $small_icon;
-        $this->icon        = $icon;
-        $this->project     = $project;
-        $this->quick_links = $quick_links;
-        $this->badges      = $badges;
+    private function __construct()
+    {
     }
 
     public static function build(HistoryEntry $entry): self
     {
-        $small_icon       = null;
-        $glyph_small_icon = $entry->getSmallIcon();
-        if ($glyph_small_icon !== null) {
-            $small_icon = $glyph_small_icon->getInlineString();
-        }
-        $icon              = null;
-        $glyph_normal_icon = $entry->getNormalIcon();
-        if ($glyph_normal_icon !== null) {
-            $icon = $glyph_normal_icon->getInlineString();
-        }
-
         $quick_links = [];
         foreach ($entry->getQuickLinks() as $quick_link) {
             $quick_link_representation = SwitchToQuickLinkRepresentation::build($quick_link);
             $quick_links[]             = $quick_link_representation;
         }
 
-        return new self(
-            JsonCast::toDate($entry->getVisitTime()),
-            $entry->getXref(),
-            $entry->getLink(),
-            $entry->getTitle(),
-            $entry->getColor(),
-            $entry->getIconName(),
-            $small_icon,
-            $icon,
-            new MinimalProjectRepresentation($entry->getProject()),
-            $quick_links,
-            $entry->getBadges(),
-        );
+        $representation              = new self();
+        $representation->visit_time  = JsonCast::toDate($entry->getVisitTime());
+        $representation->xref        = $entry->getXref();
+        $representation->html_url    = $entry->getLink();
+        $representation->title       = $entry->getTitle();
+        $representation->color_name  = $entry->getColor();
+        $representation->icon_name   = $entry->getIconName();
+        $representation->type        = $entry->getType();
+        $representation->per_type_id = $entry->getPerTypeId();
+        $representation->small_icon  = $entry->getSmallIcon()?->getInlineString();
+        $representation->icon        = $entry->getNormalIcon()?->getInlineString();
+        $representation->project     = new MinimalProjectRepresentation($entry->getProject());
+        $representation->quick_links = $quick_links;
+        $representation->badges      = $entry->getBadges();
+
+        return $representation;
     }
 }

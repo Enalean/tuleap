@@ -699,7 +699,6 @@ class UserResource extends AuthenticatedResource
      *
      * @throws RestException 403
      *
-     * @return UserHistoryRepresentation {@type UserHistoryRepresentation}
      */
     public function getHistory($id): UserHistoryRepresentation
     {
@@ -712,12 +711,12 @@ class UserResource extends AuthenticatedResource
 
         $history_retriever = new HistoryRetriever(\EventManager::instance());
 
-        $filtered_history = array_values(array_filter(
+        $filtered_history = array_filter(
             $history_retriever->getHistory($current_user),
             static fn(HistoryEntry $entry) => $current_user->isSuperUser() || ! $entry->getProject()->isSuspended()
-        ));
+        );
 
-        return UserHistoryRepresentation::build($filtered_history);
+        return UserHistoryRepresentation::build(...$filtered_history);
     }
 
     /**

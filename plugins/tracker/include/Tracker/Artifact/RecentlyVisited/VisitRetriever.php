@@ -32,6 +32,8 @@ use Tuleap\User\History\HistoryEntryCollection;
 
 final class VisitRetriever
 {
+    public const TYPE = 'artifact';
+
     public function __construct(
         private RecentlyVisitedDao $dao,
         private \Tracker_ArtifactFactory $artifact_factory,
@@ -92,6 +94,8 @@ final class VisitRetriever
                     $collection->getMainUri(),
                     $artifact->getTitle() ?? '',
                     $tracker->getColor()->getName(),
+                    self::TYPE,
+                    $artifact->getId(),
                     $this->glyph_finder->get('tuleap-tracker-small'),
                     $this->glyph_finder->get('tuleap-tracker'),
                     $collection->getIconName(),

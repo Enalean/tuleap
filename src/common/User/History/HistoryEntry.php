@@ -40,6 +40,8 @@ final class HistoryEntry
         private string $link,
         private string $title,
         private string $color,
+        private string $type,
+        private int $per_type_id,
         private ?Glyph $small_icon,
         private ?Glyph $normal_icon,
         private string $icon_name,
@@ -72,6 +74,16 @@ final class HistoryEntry
     public function getColor(): string
     {
         return $this->color;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getPerTypeId(): int
+    {
+        return $this->per_type_id;
     }
 
     public function getSmallIcon(): ?Glyph
