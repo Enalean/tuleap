@@ -26,7 +26,7 @@
             v-on:click="wikiPageRedirect"
             data-test="go-to-the-wiki-page"
         >
-            <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i>
+            <i class="fa-solid fa-right-long tlp-button-icon"></i>
             <translate>Go to the wiki page</translate>
         </button>
         <drop-down-quick-look v-bind:item="item" />

@@ -24,7 +24,7 @@
                 class="tlp-pane-title document-quick-look-title"
                 v-bind:title="currently_previewed_item.title"
             >
-                <i class="tlp-pane-title-icon fa" v-bind:class="icon_class"></i>
+                <i class="tlp-pane-title-icon" v-bind:class="icon_class"></i>
                 {{ currently_previewed_item.title }}
             </h2>
             <div class="document-quick-look-close-button" v-on:click="closeQuickLookEvent">×</div>

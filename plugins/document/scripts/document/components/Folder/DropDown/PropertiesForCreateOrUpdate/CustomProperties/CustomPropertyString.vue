@@ -26,7 +26,7 @@
         <label class="tlp-label" v-bind:for="`document-${currentlyUpdatedItemProperty.short_name}`">
             {{ currentlyUpdatedItemProperty.name }}
             <i
-                class="fa fa-asterisk"
+                class="fa-solid fa-asterisk"
                 v-if="currentlyUpdatedItemProperty.is_required"
                 data-test="document-custom-property-is-required"
             ></i>

@@ -25,7 +25,7 @@
                 class="tlp-button-primary"
                 v-bind:item="item"
                 button-classes=""
-                icon-classes="fas fa-share tlp-button-icon"
+                icon-classes="fa-solid fa-share tlp-button-icon"
                 data-test="item-action-create-new-version-button"
                 v-if="item.user_can_write"
             />

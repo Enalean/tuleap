@@ -20,7 +20,7 @@
 <template>
     <div v-if="is_an_embedded_file && is_loading_content" class="document-quicklook-content">
         <i
-            class="fa fa-spin fa-circle-o-notch document-preview-spinner"
+            class="fa-solid fa-spin fa-circle-notch document-preview-spinner"
             data-test="document-preview-spinner"
         ></i>
     </div>
@@ -37,7 +37,7 @@
         v-else-if="is_an_image && currently_previewed_item.user_can_write"
     >
         <div class="document-quick-look-image-overlay">
-            <i class="far fa-file-image document-quick-look-update-image-icon"></i>
+            <i class="fa-regular fa-file-image document-quick-look-update-image-icon"></i>
             <span class="document-quick-look-dropzone-text" v-translate>
                 Drop to upload a new version
             </span>
@@ -53,7 +53,7 @@
         v-else-if="is_an_image && !currently_previewed_item.user_can_write"
     >
         <div class="document-quick-look-image-overlay">
-            <i class="fa fa-ban"></i>
+            <i class="fa-solid fa-ban"></i>
             <span class="document-quick-look-dropzone-text" v-translate>
                 You are not allowed to upload a new version of this file
             </span>
@@ -80,7 +80,7 @@
         v-else-if="is_item_a_folder && !currently_previewed_item.user_can_write"
     >
         <icon-quicklook-folder />
-        <i class="fa fa-ban"></i>
+        <i class="fa-solid fa-ban"></i>
         <span key="folder" class="document-quick-look-dropzone-text tlp-text-danger" v-translate>
             You are not allowed to write in this folder
         </span>
@@ -90,14 +90,14 @@
         class="document-quick-look-icon-container"
         v-else-if="currently_previewed_item.user_can_write"
     >
-        <i class="fa document-quick-look-icon" v-bind:class="iconClass"></i>
+        <i class="document-quick-look-icon" v-bind:class="iconClass"></i>
         <span key="upload" class="document-quick-look-dropzone-text" v-translate>
             Drop to upload a new version
         </span>
     </div>
     <div class="document-quick-look-icon-container" v-else>
-        <i class="fa document-quick-look-icon" v-bind:class="iconClass"></i>
-        <i class="fa fa-ban"></i>
+        <i class="document-quick-look-icon" v-bind:class="iconClass"></i>
+        <i class="fa-solid fa-ban"></i>
         <span key="file" class="document-quick-look-dropzone-text" v-translate>
             You are not allowed to upload a new version of this file
         </span>

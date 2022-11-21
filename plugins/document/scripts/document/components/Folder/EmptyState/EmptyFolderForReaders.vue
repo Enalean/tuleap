@@ -33,7 +33,7 @@
             class="empty-state-action tlp-button-primary tlp-button-large"
             v-if="can_go_to_parent"
         >
-            <i class="fa fa-long-arrow-right tlp-button-icon"></i>
+            <i class="fa-solid fa-arrow-right-long tlp-button-icon"></i>
             <translate>Go to parent folder</translate>
         </router-link>
     </section>

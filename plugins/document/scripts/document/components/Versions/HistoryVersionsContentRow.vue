@@ -120,7 +120,7 @@
                             class="tlp-button-icon"
                             aria-hidden="true"
                             v-bind:class="{
-                                'fa-regular fa-trash-can': !is_deleting,
+                                'fa-solid fa-trash-can': !is_deleting,
                                 'fa-solid fa-circle-notch fa-spin': is_deleting,
                             }"
                         ></i>

@@ -63,7 +63,7 @@ describe("DropDownButton", () => {
 
         expect(wrapper.find(".tlp-append").exists()).toBeTruthy();
         expect(wrapper.find(".tlp-button-icon-right").exists()).toBeFalsy();
-        expect(wrapper.find(".fa-ellipsis-h").exists()).toBeFalsy();
+        expect(wrapper.find(".fa-ellipsis").exists()).toBeFalsy();
     });
 
     it(`Given drop down button is not appended (aka user has read permissions)

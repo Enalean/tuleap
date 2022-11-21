@@ -24,7 +24,7 @@
         v-if="$route.name !== 'root_folder'"
         data-test="item-can-go-to-root-button"
     >
-        <i class="fa fa-long-arrow-right tlp-button-icon"></i>
+        <i class="fa-solid fa-arrow-right-long tlp-button-icon"></i>
         <translate>Go to Document manager home page</translate>
     </router-link>
 </template>

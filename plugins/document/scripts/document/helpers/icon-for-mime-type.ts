@@ -27,23 +27,23 @@ function iconForMimeType(mime_type: string): string {
     let icon;
     switch (parts[0]) {
         case "audio":
-            icon = "fa-file-audio-o document-audio-icon";
+            icon = "fa-solid fa-file-audio document-audio-icon";
             break;
         case "video":
-            icon = "fa-file-video-o document-video-icon";
+            icon = "fa-solid fa-file-video document-video-icon";
             break;
         case "image":
-            icon = "fa-file-image-o document-image-icon";
+            icon = "fa-solid fa-file-image document-image-icon";
             break;
         case "text":
             if (typeof parts[1] !== "undefined" && parts[1] === "html") {
-                icon = "fa-file-code-o document-code-icon";
+                icon = "fa-regular fa-file-code document-code-icon";
             } else {
-                icon = "fa-file-text-o document-text-icon";
+                icon = "fa-regular fa-file-lines document-text-icon";
             }
             break;
         case "application":
-            icon = "fa-file-code-o document-code-icon";
+            icon = "fa-regular fa-file-code document-code-icon";
             if (typeof parts[1] !== "undefined") {
                 switch (parts[1]) {
                     case "gzip":
@@ -53,10 +53,10 @@ function iconForMimeType(mime_type: string): string {
                     case "x-gzip":
                     case "x-gtar":
                     case "x-compressed":
-                        icon = "fa-file-archive-o document-archive-icon";
+                        icon = "fa-solid fa-file-zipper document-archive-icon";
                         break;
                     case "pdf":
-                        icon = "fa-file-pdf-o document-pdf-icon";
+                        icon = "fa-solid fa-file-pdf document-pdf-icon";
                         break;
                     case "rtf":
                     case "msword":
@@ -77,7 +77,7 @@ function iconForMimeType(mime_type: string): string {
                     case "vnd.stardivision.writer-global":
                     case "x-starwriter":
                     case "x-soffice":
-                        icon = "fa-file-word-o document-document-icon";
+                        icon = "fa-solid fa-file-word document-document-icon";
                         break;
                     case "powerpoint":
                     case "vnd.ms-powerpoint":
@@ -90,7 +90,7 @@ function iconForMimeType(mime_type: string): string {
                     case "vnd.stardivision.impress":
                     case "vnd.stardivision.impress-packed":
                     case "x-starimpress":
-                        icon = "fa-file-powerpoint-o document-presentation-icon";
+                        icon = "fa-solid fa-file-powerpoint document-presentation-icon";
                         break;
                     case "excel":
                     case "vnd.ms-excel":
@@ -102,7 +102,7 @@ function iconForMimeType(mime_type: string): string {
                     case "vnd.oasis.opendocument.spreadsheet-template":
                     case "vnd.stardivision.calc":
                     case "x-starcalc":
-                        icon = "fa-file-excel-o document-spreadsheet-icon";
+                        icon = "fa-solid fa-file-excel document-spreadsheet-icon";
                         break;
                     default:
                         break;

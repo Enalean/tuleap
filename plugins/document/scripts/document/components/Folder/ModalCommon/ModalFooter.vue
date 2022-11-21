@@ -36,12 +36,12 @@
         >
             <i
                 v-if="props.isLoading"
-                class="tlp-button-icon fa fa-spin fa-circle-o-notch"
+                class="tlp-button-icon fa-solid fa-spin fa-circle-notch"
                 data-test="document-modal-footer-spinner"
             ></i>
             <i
                 v-else
-                class="fa tlp-button-icon"
+                class="tlp-button-icon"
                 v-bind:class="props.iconSubmitButtonClass"
                 data-test="document-modal-footer-icon"
             ></i>

@@ -34,7 +34,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body">
@@ -67,7 +67,7 @@
                 data-test="reload"
                 v-on:click="reloadPage"
             >
-                <i class="fas fa-sync tlp-button-icon"></i>
+                <i class="fa-solid fa-rotate tlp-button-icon"></i>
                 <translate>Reload the page</translate>
             </button>
         </div>

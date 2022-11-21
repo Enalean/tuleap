@@ -21,7 +21,7 @@
     <div class="document-file-upload-cell-title document-file-upload-fake-item-cell-title">
         <span>
             <fake-caret v-bind:item="item" />
-            <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
+            <i class="fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
             {{ item.title }}
         </span>
         <upload-progress-bar v-bind:item="item" />

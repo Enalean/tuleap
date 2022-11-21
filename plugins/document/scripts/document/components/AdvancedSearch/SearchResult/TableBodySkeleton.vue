@@ -27,10 +27,10 @@
                     v-bind:key="'document-search-result-' + column.name + '-skeleton'"
                 >
                     <i
-                        class="fas tlp-skeleton-icon document-search-result-icon"
+                        class="tlp-skeleton-icon document-search-result-icon"
                         v-bind:class="{
-                            'fa-file-alt': column.name === 'title',
-                            'fa-user': column.name === 'owner',
+                            'fa-regular fa-file-lines': column.name === 'title',
+                            'fa-solid fa-user': column.name === 'owner',
                         }"
                         v-if="column.name === 'title' || column.name === 'owner'"
                         aria-hidden="true"

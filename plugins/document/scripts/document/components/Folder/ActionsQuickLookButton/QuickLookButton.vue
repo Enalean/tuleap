@@ -25,7 +25,7 @@
         data-test="document-quick-look-button"
         v-on:click="toggleQuickLook()"
     >
-        <i class="fa fa-eye tlp-button-icon"></i>
+        <i class="fa-solid fa-eye tlp-button-icon"></i>
         <translate>Quick look</translate>
     </button>
 </template>

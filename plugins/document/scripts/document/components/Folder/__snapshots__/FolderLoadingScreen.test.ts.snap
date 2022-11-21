@@ -6,7 +6,7 @@ exports[`FolderLoadingScreen displays the folder loading screen 1`] = `
 >
   <skeleton-table-stub
     cell_classes=",document-tree-cell-owner,document-tree-cell-updatedate"
-    icons="fa-folder,fa-folder,fa-file-o,fa-file-o,fa-file-o"
+    icons="fa-solid fa-folder,fa-solid fa-folder,fa-regular fa-file,fa-regular fa-file,fa-regular fa-file"
     nb_cols="3"
     nb_rows="5"
   >

@@ -21,7 +21,13 @@
         <skeleton-table
             v-bind:nb_rows="5"
             v-bind:nb_cols="3"
-            v-bind:icons="['fa-folder', 'fa-folder', 'fa-file-o', 'fa-file-o', 'fa-file-o']"
+            v-bind:icons="[
+                'fa-solid fa-folder',
+                'fa-solid fa-folder',
+                'fa-regular fa-file',
+                'fa-regular fa-file',
+                'fa-regular fa-file',
+            ]"
             v-bind:cell_classes="['', 'document-tree-cell-owner', 'document-tree-cell-updatedate']"
         >
             <th class="document-tree-head-name" v-translate>Name</th>

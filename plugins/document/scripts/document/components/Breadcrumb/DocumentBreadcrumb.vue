@@ -40,7 +40,7 @@
                     v-bind:title="`${$gettext('Project documentation')}`"
                     data-test="breadcrumb-project-documentation"
                 >
-                    <i class="breadcrumb-link-icon far fa-folderpen"></i>
+                    <i class="breadcrumb-link-icon fa-regular fa-folder-open"></i>
                     <translate>Documents</translate>
                 </router-link>
                 <div class="breadcrumb-switch-menu-container">
@@ -52,7 +52,7 @@
                                 v-bind:title="`${$gettext('Administration')}`"
                                 data-test="breadcrumb-administrator-link"
                             >
-                                <i class="fa fa-cog fa-fw"></i>
+                                <i class="fa-solid fa-gear fa-fw"></i>
                                 <translate>Administration</translate>
                             </a>
                         </span>

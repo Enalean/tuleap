@@ -33,7 +33,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                <i class="fa-regular fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body">

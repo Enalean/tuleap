@@ -26,7 +26,7 @@
                 class="document-modal-other-information-title-container-spinner"
                 data-test="document-folder-default-properties-spinner"
             >
-                <i class="fa fa-spin fa-circle-o-notch"></i>
+                <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
             <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
         </div>

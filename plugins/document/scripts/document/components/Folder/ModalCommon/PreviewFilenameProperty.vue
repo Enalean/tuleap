@@ -22,7 +22,7 @@
     <div class="tlp-property" v-if="is_filename_pattern_enforced && isFile(props.item)">
         <label class="tlp-label">
             {{ filename_preview_label }}
-            <i v-bind:title="tooltip_text" class="fas fa-question-circle" role="img"></i>
+            <i v-bind:title="tooltip_text" class="fa-solid fa-circle-question" role="img"></i>
         </label>
         <p data-test="preview">
             <slot></slot>

@@ -22,7 +22,7 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="document-new-item-status">
             <translate>Status</translate>
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <select
             class="tlp-select"

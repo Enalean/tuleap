@@ -37,7 +37,7 @@
             v-bind:is-loading="is_loading"
             v-bind:submit-button-label="submit_button_label"
             v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-submit-button-class="'fa-plus'"
+            v-bind:icon-submit-button-class="'fa-solid fa-plus'"
             data-test="document-modal-submit-button-create-wiki-version"
         />
     </form>

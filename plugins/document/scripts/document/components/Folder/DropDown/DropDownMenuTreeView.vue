@@ -56,7 +56,7 @@
             <create-new-item-version-button
                 v-bind:item="item"
                 v-bind:button-classes="`tlp-dropdown-menu-item`"
-                v-bind:icon-classes="`fas fa-fw fa-share tlp-dropdown-menu-item-icon`"
+                v-bind:icon-classes="`fa-solid fa-fw fa-share tlp-dropdown-menu-item-icon`"
                 v-if="!is_item_an_empty"
                 data-test="document-dropdown-create-new-version-button"
                 slot="new-item-version"
