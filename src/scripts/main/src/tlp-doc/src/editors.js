@@ -373,14 +373,28 @@ import { createLinkSelector } from "@tuleap/link-selector";
                 });
             }
 
-            var dropdown_trigger_options_submenu = document.getElementById(
-                "dropdown-menu-example-options-submenu"
+            var dropdown_trigger_options_submenu_1 = document.getElementById(
+                "dropdown-menu-example-options-submenu-1"
             );
-            if (dropdown_trigger_options_submenu) {
-                createDropdown(dropdown_trigger_options_submenu, {
+            if (dropdown_trigger_options_submenu_1) {
+                createDropdown(dropdown_trigger_options_submenu_1, {
                     keyboard: false,
+                    trigger: "hover-and-click",
                     dropdown_menu: document.getElementById(
-                        "dropdown-menu-example-options-submenu-options"
+                        "dropdown-menu-example-options-submenu-options-1"
+                    ),
+                });
+            }
+
+            var dropdown_trigger_options_submenu_2 = document.getElementById(
+                "dropdown-menu-example-options-submenu-2"
+            );
+            if (dropdown_trigger_options_submenu_2) {
+                createDropdown(dropdown_trigger_options_submenu_2, {
+                    keyboard: false,
+                    trigger: "hover-and-click",
+                    dropdown_menu: document.getElementById(
+                        "dropdown-menu-example-options-submenu-options-2"
                     ),
                 });
             }
