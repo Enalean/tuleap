@@ -37,18 +37,19 @@ function iconForMimeType(mime_type: string): string {
             break;
         case "text":
             if (typeof parts[1] !== "undefined" && parts[1] === "html") {
-                icon = "fa-regular fa-file-code document-code-icon";
+                icon = "fa-solid fa-file-code document-code-icon";
             } else {
                 icon = "fa-regular fa-file-lines document-text-icon";
             }
             break;
         case "application":
-            icon = "fa-regular fa-file-code document-code-icon";
+            icon = "fa-solid fa-file-code document-code-icon";
             if (typeof parts[1] !== "undefined") {
                 switch (parts[1]) {
                     case "gzip":
                     case "zip":
                     case "x-tar":
+                    case "x-rar":
                     case "x-java-archive":
                     case "x-gzip":
                     case "x-gtar":
