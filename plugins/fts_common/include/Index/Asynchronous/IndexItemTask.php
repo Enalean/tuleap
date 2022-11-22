@@ -56,7 +56,8 @@ final class IndexItemTask implements \Tuleap\Queue\QueueTask
             ! ($payload['project_id'] === null || is_int($payload['project_id'])) ||
             ! is_string($payload['content']) ||
             ! is_array($payload['metadata']) ||
-            count($payload['metadata']) === 0
+            count($payload['metadata']) === 0 ||
+            (isset($payload['content_type']) && ! in_array($payload['content_type'], ItemToIndex::ALL_CONTENT_TYPES, true))
         ) {
             $worker_event->getLogger()->warning(
                 sprintf('Got an event %s with an unexpected payload (%s)', self::TOPIC, var_export($payload, true))
@@ -64,7 +65,7 @@ final class IndexItemTask implements \Tuleap\Queue\QueueTask
             return null;
         }
 
-        return new ItemToIndex($payload['type'], $payload['project_id'], $payload['content'], $payload['metadata']);
+        return new ItemToIndex($payload['type'], $payload['project_id'], $payload['content'], $payload['content_type'] ?? ItemToIndex::CONTENT_TYPE_PLAINTEXT, $payload['metadata']);
     }
 
     public function getTopic(): string

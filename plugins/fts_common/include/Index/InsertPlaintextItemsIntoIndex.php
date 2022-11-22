@@ -22,25 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\FullTextSearchCommon\Index;
 
-use Tuleap\Instrument\Prometheus\Prometheus;
-use Tuleap\Search\ItemToIndex;
-use Tuleap\Test\PHPUnit\TestCase;
-
-final class InsertItemsIntoIndexMetricCollectorTest extends TestCase
+interface InsertPlaintextItemsIntoIndex
 {
-    public function testCollectMetricWhenInsertingItemsIntoTheIndex(): void
-    {
-        $prometheus = Prometheus::getInMemory();
-        $inserter   = new InsertItemsIntoIndexMetricCollector(
-            new NullIndexHandler(),
-            $prometheus
-        );
-
-        $inserter->indexItems(
-            new ItemToIndex('a', 120, 'content', 'plaintext', ['A' => 'A']),
-            new ItemToIndex('b', 120, 'content', 'plaintext', ['A' => 'A']),
-        );
-
-        $this->assertStringContainsString('tuleap_fts_index_requests_total 2', $prometheus->renderText());
-    }
+    public function indexItems(PlaintextItemToIndex ...$items): void;
 }

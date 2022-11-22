@@ -43,6 +43,7 @@ final class FieldContentIndexerTest extends TestCase
                     'plugin_artifact_field',
                     4,
                     'value',
+                    'plaintext',
                     [
                         'field_id'    => '1',
                         'artifact_id' => '2',
@@ -64,7 +65,8 @@ final class FieldContentIndexerTest extends TestCase
         $indexer->indexFieldContent(
             new Artifact(2, 3, 0, 0, true),
             $field,
-            'value'
+            'value',
+            ItemToIndex::CONTENT_TYPE_PLAINTEXT,
         );
 
         self::assertTrue($has_been_called);

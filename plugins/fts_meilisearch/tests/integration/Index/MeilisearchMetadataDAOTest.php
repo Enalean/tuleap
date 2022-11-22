@@ -24,9 +24,9 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
+use Tuleap\FullTextSearchCommon\Index\PlaintextItemToIndex;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
-use Tuleap\Search\ItemToIndex;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class MeilisearchMetadataDAOTest extends TestCase
@@ -51,12 +51,12 @@ final class MeilisearchMetadataDAOTest extends TestCase
 
     public function testCanInsertMetadataAndRetrieveThem(): void
     {
-        $item_1_id = $this->dao->saveItemMetadata(new ItemToIndex('type', 102, 'content', ['A' => 'A1']));
-        $item_2_id = $this->dao->saveItemMetadata(new ItemToIndex('type', 102, 'content', ['A' => 'A2']));
+        $item_1_id = $this->dao->saveItemMetadata(new PlaintextItemToIndex('type', 102, 'content', ['A' => 'A1']));
+        $item_2_id = $this->dao->saveItemMetadata(new PlaintextItemToIndex('type', 102, 'content', ['A' => 'A2']));
 
         self::assertEquals(
             $item_1_id,
-            $this->dao->saveItemMetadata(new ItemToIndex('type', 102, 'content updated', ['A' => 'A1']))
+            $this->dao->saveItemMetadata(new PlaintextItemToIndex('type', 102, 'content updated', ['A' => 'A1']))
         );
 
         self::assertEquals(
@@ -70,9 +70,9 @@ final class MeilisearchMetadataDAOTest extends TestCase
 
     public function testCanRemoveItemsMetadata(): void
     {
-        $item_1_id = $this->dao->saveItemMetadata(new ItemToIndex('type', 102, 'content', ['A' => 'A1', 'B' => 'B']));
-        $item_2_id = $this->dao->saveItemMetadata(new ItemToIndex('type', 102, 'content', ['A' => 'A2', 'B' => 'B']));
-        $item_3_id = $this->dao->saveItemMetadata(new ItemToIndex('type', 103, 'content', ['A' => 'A3', 'B' => 'B']));
+        $item_1_id = $this->dao->saveItemMetadata(new PlaintextItemToIndex('type', 102, 'content', ['A' => 'A1', 'B' => 'B']));
+        $item_2_id = $this->dao->saveItemMetadata(new PlaintextItemToIndex('type', 102, 'content', ['A' => 'A2', 'B' => 'B']));
+        $item_3_id = $this->dao->saveItemMetadata(new PlaintextItemToIndex('type', 103, 'content', ['A' => 'A3', 'B' => 'B']));
 
         self::assertEqualsCanonicalizing([$item_1_id, $item_2_id, $item_3_id], $this->dao->searchMatchingEntries(new IndexedItemsToRemove('type', ['B' => 'B'])));
         self::assertEqualsCanonicalizing([$item_1_id, $item_2_id], $this->dao->searchMatchingEntriesByProjectID(102));

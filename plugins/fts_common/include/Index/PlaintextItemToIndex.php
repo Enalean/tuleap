@@ -20,27 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Search;
+namespace Tuleap\FullTextSearchCommon\Index;
 
-use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\EventDispatcherStub;
-
-final class ItemToIndexQueueEventBasedTest extends TestCase
+/**
+ * @psalm-immutable
+ */
+final class PlaintextItemToIndex
 {
-    public function testDispatchEvent(): void
-    {
-        $item_to_index = new ItemToIndex('type', 102, 'content', 'plaintext', ['A' => 'A']);
-
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            static function (ItemToIndex $received) use ($item_to_index): ItemToIndex {
-                self::assertSame($item_to_index, $received);
-                return $received;
-            }
-        );
-        $queue            = new ItemToIndexQueueEventBased($event_dispatcher);
-
-        $queue->addItemToQueue($item_to_index);
-
-        self::assertEquals(1, $event_dispatcher->getCallCount());
+    /**
+     * @param non-empty-array<non-empty-string,string> $metadata
+     */
+    public function __construct(
+        public string $type,
+        public ?int $project_id,
+        public string $content,
+        public array $metadata,
+    ) {
     }
 }

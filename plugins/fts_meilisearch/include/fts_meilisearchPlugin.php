@@ -95,7 +95,12 @@ final class fts_meilisearchPlugin extends FullTextSearchBackendPlugin implements
 
     protected function getItemInserter(): \Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex
     {
-        return $this->getMeilisearchHandler();
+        $html_purifier = Codendi_HTMLPurifier::instance();
+        return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexPlaintextTransformer(
+            $this->getMeilisearchHandler(),
+            $html_purifier,
+            \Tuleap\Markdown\CommonMarkInterpreter::build($html_purifier),
+        );
     }
 
     protected function getItemRemover(): \Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems

@@ -31,13 +31,20 @@ final class ItemToIndex implements Dispatchable
 {
     public const NAME = 'indexItem';
 
+    public const ALL_CONTENT_TYPES       = [self::CONTENT_TYPE_PLAINTEXT, self::CONTENT_TYPE_COMMONMARK, self::CONTENT_TYPE_HTML];
+    public const CONTENT_TYPE_PLAINTEXT  = 'plaintext';
+    public const CONTENT_TYPE_COMMONMARK = 'commonmark';
+    public const CONTENT_TYPE_HTML       = 'html';
+
     /**
+     * @psalm-param self::CONTENT_TYPE_* $content_type
      * @param non-empty-array<non-empty-string,string> $metadata
      */
     public function __construct(
         public string $type,
         public ?int $project_id,
         public string $content,
+        public string $content_type,
         public array $metadata,
     ) {
     }

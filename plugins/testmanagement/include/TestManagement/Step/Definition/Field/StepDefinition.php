@@ -32,6 +32,7 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
+use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\TestManagement\Step\Definition\Field\XML\XMLStepDefinition;
@@ -432,6 +433,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             $artifact,
             $this,
             $content_to_index,
+            ItemToIndex::CONTENT_TYPE_PLAINTEXT,
         );
     }
 

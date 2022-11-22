@@ -151,7 +151,7 @@ class Tracker_Artifact_Changeset_Comment
         return self::getCommentInPlaintext($this->getPurifier(), $this->body, CommentFormatIdentifier::fromFormatString($this->bodyFormat));
     }
 
-    public static function getCommentInPlaintext(Codendi_HTMLPurifier $purifier, string $content, CommentFormatIdentifier $comment_format): string
+    private static function getCommentInPlaintext(Codendi_HTMLPurifier $purifier, string $content, CommentFormatIdentifier $comment_format): string
     {
         $identifier = (string) $comment_format;
         if ($identifier === self::COMMONMARK_COMMENT) {

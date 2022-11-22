@@ -350,7 +350,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         (new FieldContentIndexer($index_queue, $event_dispatcher))->indexFieldContent(
             $artifact,
             $this,
-            $content
+            $content,
+            \Tuleap\Search\ItemToIndex::CONTENT_TYPE_PLAINTEXT,
         );
     }
 
