@@ -135,9 +135,9 @@ class PriorityDaoPerformancesTest extends \Tuleap\Test\PHPUnit\TestCase
         for ($i = 1; $i <= $k; $i++) {
             $this->progress($i, $k);
             $this->generateRandomArtifactPriorities($n);
-            $row          = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $n - 1")->getRow();
+            $row          = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE `rank` = $n - 1")->getRow();
             $artifact_id  = $row['artifact_id'];
-            $row          = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
+            $row          = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE `rank` = $new_rank")->getRow();
             $successor_id = $row['artifact_id'];
             $start        = microtime(true);
             $this->dao->moveListOfArtifactsBefore([$artifact_id], $successor_id);
@@ -156,10 +156,10 @@ class PriorityDaoPerformancesTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->progress($i, $k);
             $this->generateRandomArtifactPriorities($n);
             $artifact_ids = [];
-            foreach ($this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank >= $n - 10") as $row) {
+            foreach ($this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE `rank` >= $n - 10") as $row) {
                 $artifact_ids[] = $row['artifact_id'];
             }
-            $row          = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
+            $row          = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE `rank` = $new_rank")->getRow();
             $successor_id = $row['artifact_id'];
             $start        = microtime(true);
             $this->dao->moveListOfArtifactsBefore($artifact_ids, $successor_id);
@@ -195,7 +195,7 @@ class PriorityDaoPerformancesTest extends \Tuleap\Test\PHPUnit\TestCase
 
         shuffle($inserts);
         foreach (array_chunk($inserts, 10000) as $chunk) {
-            $sql  = "INSERT INTO tracker_artifact_priority_rank (artifact_id, rank) VALUES ";
+            $sql  = "INSERT INTO tracker_artifact_priority_rank (artifact_id, `rank`) VALUES ";
             $sql .= implode(',', $chunk);
             $this->db->run($sql);
         }

@@ -33,7 +33,7 @@ class Tracker_Artifact_PriorityHistoryDao extends DataAccessObject
         $old_global_rank     = $this->da->escapeInt($old_global_rank);
 
         $sql = "INSERT INTO tracker_artifact_priority_history (moved_artifact_id, artifact_id_higher, artifact_id_lower, context, project_id, prioritized_by, prioritized_on, has_been_raised)
-                SELECT $moved_artifact_id, $artifact_higher_id, $artifact_lower_id, $context_id, $project_id, $priority_updated_by, $priority_updated_on, ($old_global_rank > rank)
+                SELECT $moved_artifact_id, $artifact_higher_id, $artifact_lower_id, $context_id, $project_id, $priority_updated_by, $priority_updated_on, ($old_global_rank > `rank`)
                 FROM tracker_artifact_priority_rank
                 WHERE artifact_id = $moved_artifact_id";
 
