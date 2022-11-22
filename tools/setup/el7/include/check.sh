@@ -63,6 +63,11 @@ _checkMandatoryOptions() {
 _checkOsVersion() {
     if [ -e "${rh_release}" ]; then
 
+        if ${grep} -i --silent "Rocky Linux release 9.*" ${rh_release}; then
+            _infoMessage "$(${cat} ${rh_release})"
+            return;
+        fi
+
         if ! ${grep} --silent "Red Hat.*7\|CentOS.*7" ${rh_release}; then
             _errorMessage "Sorry, ${script_name} is only for RedHat/CentOS 7"
             exit 1
@@ -71,7 +76,7 @@ _checkOsVersion() {
         _infoMessage "$(${cat} ${rh_release})"
 
     else
-        _errorMessage "Sorry, Tuleap is running only on RedHat/CentOS"
+        _errorMessage "Sorry, Tuleap is running only on RedHat/CentOS/RockyLinux"
         exit 1
     fi
 }

@@ -28,9 +28,14 @@ ifeq ($(strip $(EXPERIMENTAL_BUILD)),1)
 	RPMBUILD += --with experimental
 endif
 
-ifeq ($(strip $(OS)),rhel7)
+ifeq ($(strip $(OS)),centos7)
 SPEC_FILE=tuleap.rhel7.spec
 DIST=.el7
+SRPMS=$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm
+RPMBUILD += --define "%dist $(DIST)"
+else ifeq ($(strip $(OS)),el9)
+SPEC_FILE=tuleap.rhel7.spec
+DIST=.el9
 SRPMS=$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm
 RPMBUILD += --define "%dist $(DIST)"
 else
