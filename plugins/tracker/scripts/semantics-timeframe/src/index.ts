@@ -19,8 +19,11 @@
 
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import App from "./src/components/App.vue";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
+import App from "./components/App.vue";
+import {
+    getPOFileFromLocaleWithoutExtension,
+    initVueGettextFromPoGettextPlugin,
+} from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("semantic-timeframe-admin-mount-point");
@@ -28,16 +31,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    Vue.use(VueDOMPurifyHTML);
+    const locale = document.body.dataset.userLocale;
+    if (locale === undefined) {
+        throw new Error("Unable to load user locale");
+    }
 
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "tracker-semantic-timeframe-admin-po" */ "./po/" +
-                    getPOFileFromLocale(locale)
-            )
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
+
+    Vue.config.language = locale;
+    Vue.use(VueDOMPurifyHTML);
 
     const AppComponent = Vue.extend(App);
 

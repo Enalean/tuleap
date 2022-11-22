@@ -40,8 +40,8 @@
             "po": "scripts/tracker-creation/po"
         },
         "timeframe-admin": {
-            "src": "scripts/semantics/timeframe/src",
-            "po": "scripts/semantics/timeframe/po"
+            "src": "scripts/semantics-timeframe/src",
+            "po": "scripts/semantics-timeframe/po"
         }
     },
     "gettext-angularjs": {

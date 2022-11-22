@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 
 import TimeframeConfigModeSelector from "./TimeframeConfigModeSelector.vue";
 import { createSemanticTimeframeAdminLocalVue } from "../helpers/local-vue-for-tests";
-import { MODE_BASED_ON_TRACKER_FIELDS, MODE_IMPLIED_FROM_ANOTHER_TRACKER } from "../../constants";
+import { MODE_BASED_ON_TRACKER_FIELDS, MODE_IMPLIED_FROM_ANOTHER_TRACKER } from "../constants";
 
 describe("TimeframeConfigModeSelector", () => {
     async function getWrapper(is_implied: boolean): Promise<Wrapper<TimeframeConfigModeSelector>> {
