@@ -13,4 +13,6 @@
     pkgs.which
     pkgs.cosign
     pkgs.cachix
+    pkgs.cpio
+    pkgs.gzip
 ] ++ pkgs.lib.optionals (! pkgs.stdenv.isDarwin) [ pkgs.glibc ]
