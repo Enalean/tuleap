@@ -28,23 +28,13 @@
             data-test="create-folder-button"
         />
         <drop-down-quick-look v-bind:item="item" />
-        <template v-if="can_delete_folder">
-            <div class="document-header-spacer"></div>
-            <quick-look-delete-button v-bind:item="item" data-test="delete-folder-button" />
-        </template>
     </div>
 </template>
 
 <script setup lang="ts">
-import QuickLookDeleteButton from "../Folder/ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
 import type { Item } from "../../type";
-import { computed } from "vue";
 import NewItemDropdown from "../Folder/DropDown/NewDocument/NewItemDropdown.vue";
 
-const props = defineProps<{ item: Item }>();
-
-const can_delete_folder = computed((): boolean => {
-    return props.item.user_can_write;
-});
+defineProps<{ item: Item }>();
 </script>

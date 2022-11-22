@@ -171,7 +171,7 @@ describe("Document new UI", () => {
             function deleteFolder(): void {
                 // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
                 // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-                cy.get("[data-test=delete-folder-button]").click({ force: true });
+                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
                 cy.get("[data-test=document-confirm-deletion-button]").click();
             }
 

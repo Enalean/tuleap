@@ -11,13 +11,5 @@ exports[`QuickLookEmpty Component can be rendered for empty 1`] = `
   <drop-down-quick-look-stub
     item="[object Object]"
   />
-   
-  <div
-    class="document-header-spacer"
-  />
-   
-  <quick-look-delete-button-stub
-    item="[object Object]"
-  />
 </div>
 `;

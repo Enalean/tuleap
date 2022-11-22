@@ -37,21 +37,5 @@ describe("QuickLookFolder", () => {
         });
 
         expect(wrapper.find("[data-test=create-folder-button]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=delete-folder-button]").exists()).toBeTruthy();
-    });
-
-    it("User can NOT create/remove folder when he can write", () => {
-        const item = {
-            type: TYPE_FOLDER,
-            user_can_write: false,
-        } as Item;
-
-        const wrapper = shallowMount(QuickLookFolder, {
-            localVue,
-            propsData: { item: item },
-        });
-
-        expect(wrapper.find("[data-test=create-folder-button]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=delete-folder-button]").exists()).toBeFalsy();
     });
 });
