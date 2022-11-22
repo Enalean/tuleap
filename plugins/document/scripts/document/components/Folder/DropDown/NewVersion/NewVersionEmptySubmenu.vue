@@ -44,7 +44,12 @@
 import type { Empty } from "../../../../type";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Dropdown } from "tlp";
-import { createDropdown, EVENT_TLP_DROPDOWN_HIDDEN, EVENT_TLP_DROPDOWN_SHOWN } from "tlp";
+import {
+    createDropdown,
+    EVENT_TLP_DROPDOWN_HIDDEN,
+    TRIGGER_HOVER_AND_CLICK,
+    EVENT_TLP_DROPDOWN_SHOWN,
+} from "tlp";
 import NewVersionEmptyMenuOptions from "./NewVersionEmptyMenuOptions.vue";
 
 const props = defineProps<{ item: Empty }>();
@@ -66,6 +71,7 @@ onMounted(() => {
 
     dropdown.value = createDropdown(button.value, {
         dropdown_menu: menu.value.$el,
+        trigger: TRIGGER_HOVER_AND_CLICK,
     });
     dropdown.value.addEventListener(EVENT_TLP_DROPDOWN_SHOWN, onDropdownOpen);
     dropdown.value.addEventListener(EVENT_TLP_DROPDOWN_HIDDEN, onDropdownClose);

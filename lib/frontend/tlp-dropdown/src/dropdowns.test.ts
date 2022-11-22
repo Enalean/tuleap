@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Dropdown } from "./dropdowns";
 import {
     createDropdown,
-    EVENT_TLP_DROPDOWN_SHOWN,
-    EVENT_TLP_DROPDOWN_HIDDEN,
     DROPDOWN_MENU_CLASS_NAME,
     DROPDOWN_SHOWN_CLASS_NAME,
+    EVENT_TLP_DROPDOWN_HIDDEN,
+    EVENT_TLP_DROPDOWN_SHOWN,
+    TRIGGER_HOVER_AND_CLICK,
 } from "./dropdowns";
 import type { ComputePositionReturn } from "@floating-ui/dom";
 
@@ -206,11 +207,29 @@ describe(`Dropdowns`, () => {
     });
 
     it(`when I click on the trigger element, it will show the dropdown`, () => {
-        const dropdown = createDropdown(doc, trigger_element);
-        dropdown.show();
+        createDropdown(doc, trigger_element);
         simulateClick(trigger_element);
 
-        expectTheDropdownToBeHidden(dropdown_element);
+        expectTheDropdownToBeShown(dropdown_element);
+    });
+
+    describe("mouse events", function () {
+        it(`when I hover the trigger element, it will show the dropdown`, () => {
+            createDropdown(doc, trigger_element, { trigger: TRIGGER_HOVER_AND_CLICK });
+            simulateMouseEnter(trigger_element);
+
+            expectTheDropdownToBeShown(dropdown_element);
+        });
+
+        it(`when I leave the trigger element, it will hide the dropdown`, () => {
+            const dropdown = createDropdown(doc, trigger_element, {
+                trigger: TRIGGER_HOVER_AND_CLICK,
+            });
+            dropdown.show();
+            simulateMouseLeave(trigger_element);
+
+            expectTheDropdownToBeHidden(dropdown_element);
+        });
     });
 
     describe(`close events`, () => {
@@ -342,6 +361,14 @@ function expectTheDropdownToBeHidden(dropdown_element: HTMLElement): void {
 
 function simulateClick(element: EventTarget): void {
     element.dispatchEvent(new Event("click", { bubbles: true }));
+}
+
+function simulateMouseEnter(element: EventTarget): void {
+    element.dispatchEvent(new Event("mouseenter", { bubbles: true }));
+}
+
+function simulateMouseLeave(element: EventTarget): void {
+    element.dispatchEvent(new Event("mouseleave", { bubbles: true }));
 }
 
 function simulateEscapeKey(element: EventTarget): void {

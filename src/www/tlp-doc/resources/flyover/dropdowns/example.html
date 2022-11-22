@@ -30,7 +30,7 @@
 <br><br>
 
 <button type="button" id="dropdown-example-options" class="tlp-button-primary tlp-button-outline">
-    Using options
+    Using options and submenu
     <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
 </button>
 <!-- Dropdown menu, anywhere in the page -->
@@ -38,17 +38,33 @@
     <div class="tlp-dropdown-menu" id="dropdown-menu-example-options" role="menu">
         <span class="tlp-dropdown-menu-title" role="menuitem">Favorites</span>
         <div class="tlp-dropdown-menu-item tlp-dropdown-menu-item-submenu"
-             id="dropdown-menu-example-options-submenu"
+             id="dropdown-menu-example-options-submenu-1"
              aria-haspopup="true"
              role="menuitem"
         >
             Create a new awesome item…
-            <div class="tlp-dropdown-menu tlp-dropdown-submenu tlp-dropdown-menu-side" id="dropdown-menu-example-options-submenu-options" role="menu" aria-label="User story">
+            <div class="tlp-dropdown-menu tlp-dropdown-submenu tlp-dropdown-menu-side" id="dropdown-menu-example-options-submenu-options-1" role="menu" aria-label="User story">
                 <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Fancy user story</a>
                 <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Task</a>
             </div>
         </div>
-        <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Task</a>
+        <div class="tlp-dropdown-menu-item tlp-dropdown-menu-item-submenu"
+             id="dropdown-menu-example-options-submenu-2"
+             aria-haspopup="true"
+             role="menuitem"
+        >
+            Task
+            <div class="tlp-dropdown-menu tlp-dropdown-submenu tlp-dropdown-menu-side" id="dropdown-menu-example-options-submenu-options-2" role="menu" aria-label="User story">
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Lorem</a>
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Ipsum</a>
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Doloret</a>
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Sit</a>
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Amet</a>
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Consectetur</a>
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Adipiscing</a>
+                <a href="#" class="tlp-dropdown-menu-item" role="menuitem">Elit</a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -66,6 +82,7 @@
         document.getElementById("dropdown-menu-example-options-submenu"),
         {
             keyboard: false,
+            trigger: "hover-and-click",
             dropdown_menu: document.getElementById("dropdown-menu-example-options-submenu-options"),
         }
     );

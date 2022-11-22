@@ -44,7 +44,12 @@ import { isFolder } from "../../../../helpers/type-check-helper";
 import type { Item } from "../../../../type";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Dropdown } from "tlp";
-import { createDropdown, EVENT_TLP_DROPDOWN_HIDDEN, EVENT_TLP_DROPDOWN_SHOWN } from "tlp";
+import {
+    createDropdown,
+    EVENT_TLP_DROPDOWN_HIDDEN,
+    EVENT_TLP_DROPDOWN_SHOWN,
+    TRIGGER_HOVER_AND_CLICK,
+} from "tlp";
 import NewItemMenuOptions from "./NewItemMenuOptions.vue";
 
 const props = defineProps<{ item: Item }>();
@@ -68,6 +73,7 @@ onMounted(() => {
     }
 
     dropdown.value = createDropdown(button.value, {
+        trigger: TRIGGER_HOVER_AND_CLICK,
         dropdown_menu: menu.value.$el,
     });
     dropdown.value.addEventListener(EVENT_TLP_DROPDOWN_SHOWN, onDropdownOpen);
