@@ -39,7 +39,6 @@ import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
-    getRecentlyViewedItems(): GroupOfItems;
 };
 
 const isExpectedFault = (fault: Fault): boolean =>
@@ -142,7 +141,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
             let groups = [];
             if (linkable_number) {
                 groups.push(await getMatchingArtifactsGroup(linkable_number));
-                if (!is_parent_selected && is_search_feature_flag_enabled) {
+                if (is_search_feature_flag_enabled && !is_parent_selected) {
                     groups.push(getRecentlyViewedItems());
                 }
             }
@@ -152,6 +151,5 @@ export const ArtifactLinkSelectorAutoCompleter = (
             }
             host.dropdown_content = groups;
         },
-        getRecentlyViewedItems,
     };
 };
