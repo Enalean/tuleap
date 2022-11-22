@@ -26,7 +26,7 @@
                 class="document-modal-other-information-title-container-spinner"
                 data-test="document-folder-default-properties-spinner"
             >
-                <i class="fa fa-spin fa-circle-o-notch"></i>
+                <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
             <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
         </div>
@@ -38,7 +38,7 @@
             <div class="document-default-properties">
                 <div class="document-properties-container" v-if="is_status_property_used">
                     <div class="document-recursion-checkbox-container">
-                        <label class="tlp-label"><i class="fas fa-redo"></i></label>
+                        <label class="tlp-label"><i class="fa-solid fa-rotate-right"></i></label>
                         <input
                             id="status"
                             type="checkbox"
@@ -59,7 +59,7 @@
                     class="document-properties-container"
                 >
                     <div class="document-recursion-checkbox-container">
-                        <label class="tlp-label"><i class="fas fa-redo"></i></label>
+                        <label class="tlp-label"><i class="fa-solid fa-rotate-right"></i></label>
                         <input
                             v-bind:id="custom.short_name"
                             type="checkbox"

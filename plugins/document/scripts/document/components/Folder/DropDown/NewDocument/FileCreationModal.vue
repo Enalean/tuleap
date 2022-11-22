@@ -28,7 +28,6 @@
         <modal-header
             v-bind:modal-title="$gettext('Create a new file')"
             v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-header-class="'fa-plus'"
         />
         <modal-feedback />
         <div class="tlp-modal-body">

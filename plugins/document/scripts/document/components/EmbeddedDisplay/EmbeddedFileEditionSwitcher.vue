@@ -35,7 +35,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
                 v-bind:title="large_view_title"
             >
-                <i class="fa fa-tlp-text-large"></i>
+                <i class="fa-solid fa-tlp-text-large"></i>
             </label>
         </div>
         <div class="tlp-button-bar-item" v-bind:title="narrow_view_title">
@@ -54,7 +54,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
                 v-bind:title="narrow_view_title"
             >
-                <i class="fa fa-tlp-text-narrow"></i>
+                <i class="fa-solid fa-tlp-text-narrow"></i>
             </label>
         </div>
     </div>

@@ -27,7 +27,7 @@
         data-test="document-delete-item"
         data-shortcut-delete
     >
-        <i class="far fa-trash-alt fa-fw tlp-dropdown-menu-item-icon"></i>
+        <i class="fa-solid fa-trash fa-fw tlp-dropdown-menu-item-icon"></i>
         <translate>Delete</translate>
     </button>
 </template>

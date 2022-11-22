@@ -27,7 +27,7 @@
         v-bind:disabled="pasting_in_progress"
         data-shortcut-copy
     >
-        <i class="fa fa-fw fa-copy tlp-dropdown-menu-item-icon"></i>
+        <i class="fa-solid fa-fw fa-copy tlp-dropdown-menu-item-icon"></i>
         <translate>Copy</translate>
     </button>
 </template>

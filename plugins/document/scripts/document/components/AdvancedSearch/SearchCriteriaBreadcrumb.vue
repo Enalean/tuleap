@@ -22,14 +22,14 @@
     <p class="document-search-breadcrumbs">
         <span class="document-search-breadcrumbs-label" v-translate>Searching in</span>
         <i
-            class="fas fa-circle-notch fa-spin"
+            class="fa-solid fa-circle-notch fa-spin"
             aria-hidden="true"
             v-if="is_loading_ascendant_hierarchy"
         ></i>
         <template v-else>
             <template v-for="(folder, index) of current_folder_ascendant_hierarchy">
                 <i
-                    class="fas fa-chevron-right document-search-breadcrumbs-separator"
+                    class="fa-solid fa-chevron-right document-search-breadcrumbs-separator"
                     aria-hidden="true"
                     v-if="index > 0"
                     v-bind:key="'separator-' + folder.id"

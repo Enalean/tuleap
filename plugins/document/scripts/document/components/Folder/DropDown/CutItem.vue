@@ -28,7 +28,7 @@
         v-if="can_cut_item"
         data-shortcut-cut
     >
-        <i class="fa fa-fw fa-cut tlp-dropdown-menu-item-icon"></i>
+        <i class="fa-solid fa-fw fa-scissors tlp-dropdown-menu-item-icon"></i>
         <translate>Cut</translate>
     </button>
 </template>

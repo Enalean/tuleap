@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SearchInformationPopover should display a popover content 1`] = `
-<div class="popover-information" criterion="Cars"><span><i class="fas fa-question-circle popover-search-icon"></i></span>
+<div class="popover-information" criterion="Cars"><span><i class="fa-solid fa-question-circle popover-search-icon"></i></span>
   <section class="tlp-popover popover-search">
     <div class="tlp-popover-arrow"></div>
     <div class="tlp-popover-header">

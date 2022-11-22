@@ -28,8 +28,8 @@
             v-bind:aria-label="button_label"
             v-bind:id="button_id"
         >
-            <i class="fa fa-ellipsis-h"></i>
-            <i class="fa fa-caret-down tlp-button-icon-right"></i>
+            <i class="fa-solid fa-ellipsis"></i>
+            <i class="fa-solid fa-caret-down tlp-button-icon-right"></i>
         </button>
         <div
             class="tlp-dropdown-menu document-dropdown-menu tlp-dropdown-menu-right"
@@ -39,7 +39,7 @@
         >
             <drop-down-menu-tree-view v-if="should_menu_be_displayed" v-bind:item="real_item" />
             <div class="document-search-dropdown-spinner" data-test="spinner" v-else>
-                <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+                <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>
             </div>
         </div>
     </div>

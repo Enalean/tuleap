@@ -29,7 +29,7 @@
             You may only access documents you are granted read permission on.
         </p>
         <a href="/my/" class="empty-state-action tlp-button-primary">
-            <i class="fa fa-long-arrow-right tlp-button-icon"></i>
+            <i class="fa-solid fa-arrow-right-long tlp-button-icon"></i>
             <translate>Go to my home page</translate>
         </a>
     </section>

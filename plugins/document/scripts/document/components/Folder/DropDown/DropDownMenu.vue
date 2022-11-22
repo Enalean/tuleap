@@ -38,7 +38,7 @@
             role="menuitem"
             data-shortcut-notifications
         >
-            <i class="far fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
+            <i class="fa-regular fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
             <span v-translate>Notifications</span>
         </a>
         <router-link
@@ -63,7 +63,7 @@
             data-shortcut-history
             data-test="document-history"
         >
-            <i class="fa fa-fw fa-history tlp-dropdown-menu-item-icon"></i>
+            <i class="fa-solid fa-fw fa-clock-rotate-left tlp-dropdown-menu-item-icon"></i>
             <span v-translate>History</span>
         </a>
         <router-link
@@ -87,7 +87,7 @@
             data-test="document-dropdown-approval-tables"
             data-shortcut-approval-tables
         >
-            <i class="far fa-fw fa-check-square tlp-dropdown-menu-item-icon"></i>
+            <i class="fa-regular fa-fw fa-square-check tlp-dropdown-menu-item-icon"></i>
             <span v-translate>Approval tables</span>
         </a>
 

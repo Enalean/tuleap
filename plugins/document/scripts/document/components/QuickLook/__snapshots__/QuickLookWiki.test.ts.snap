@@ -10,7 +10,7 @@ exports[`QuickLookWiki renders quick look for wiki document 1`] = `
     type="button"
   >
     <i
-      class="fas fa-long-arrow-alt-right tlp-button-icon"
+      class="fa-solid fa-right-long tlp-button-icon"
     />
      
     <translate-stub

@@ -47,7 +47,7 @@
                                 Write your message below and click on the button to send your
                                 request to the project administrators
                             </translate>
-                            <i class="fa fa-asterisk"></i>
+                            <i class="fa-solid fa-asterisk"></i>
                         </label>
                         <textarea
                             class="tlp-textarea"
@@ -66,7 +66,7 @@
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
                     <button type="button" class="tlp-button-primary" v-on:click="submit">
-                        <i class="far fa-envelope tlp-button-icon"></i>
+                        <i class="fa-regular fa-envelope tlp-button-icon"></i>
                         <translate>Send mail</translate>
                     </button>
                 </section>

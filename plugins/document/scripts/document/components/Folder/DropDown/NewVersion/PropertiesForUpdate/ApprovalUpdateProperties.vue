@@ -21,7 +21,7 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="document-new-file-upload-approval-table-action">
             <translate>Approval table</translate>
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <div id="document-new-file-upload-approval-table-action">
             <div class="tlp-form-element">

@@ -30,7 +30,7 @@
         />
         <div class="document-search-result-title">
             <i
-                class="fa fa-fw document-search-result-icon"
+                class="fa-fw document-search-result-icon"
                 v-bind:class="icon_classes"
                 aria-hidden="true"
             ></i>

@@ -25,7 +25,7 @@
             class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
             v-on:click="redirectUrl"
         >
-            <i class="fas fa-external-link-alt tlp-button-icon"></i>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
             <translate>Open link</translate>
         </button>
         <drop-down-quick-look v-bind:item="item" />

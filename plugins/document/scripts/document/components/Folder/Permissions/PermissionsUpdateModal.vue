@@ -29,7 +29,7 @@
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body">
             <div v-if="project_ugroups === null" class="document-permissions-modal-loading-state">
-                <i class="fa fa-spin fa-circle-o-notch"></i>
+                <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
             <div
                 v-else-if="item.permissions_for_groups"
@@ -49,7 +49,7 @@
             v-bind:is-loading="!can_be_submitted"
             v-bind:submit-button-label="submit_button_label"
             v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-submit-button-class="'fa-pencil'"
+            v-bind:icon-submit-button-class="'fa-solid fa-pencil'"
             data-test="document-modal-submit-update-permissions"
         />
     </form>

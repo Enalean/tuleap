@@ -9,7 +9,7 @@ exports[`QuickLookLink renders quick look for link document 1`] = `
     type="button"
   >
     <i
-      class="fas fa-external-link-alt tlp-button-icon"
+      class="fa-solid fa-arrow-up-right-from-square"
     />
      
     <translate-stub

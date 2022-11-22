@@ -23,7 +23,7 @@ exports[`SearchCriteriaBreadcrumb should display a link to each ascendant folder
   </a>
   <i
     aria-hidden="true"
-    class="fas fa-chevron-right document-search-breadcrumbs-separator"
+    class="fa-solid fa-chevron-right document-search-breadcrumbs-separator"
   />
    
   <a
@@ -70,7 +70,7 @@ exports[`SearchCriteriaBreadcrumb should display a spinner while ascendant hiera
    
   <i
     aria-hidden="true"
-    class="fas fa-circle-notch fa-spin"
+    class="fa-solid fa-circle-notch fa-spin"
   />
 </p>
 `;

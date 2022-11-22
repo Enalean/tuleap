@@ -34,7 +34,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="close"
             >
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <modal-feedback />
@@ -57,7 +57,7 @@
             />
             <span class="document-confirm-deletion-modal-wiki-page-referencers-loading">
                 <i
-                    class="fa fa-spin fa-circle-o-notch"
+                    class="fa-solid fa-spin fa-circle-notch"
                     v-if="is_item_a_wiki(item) && wiki_page_referencers_loading"
                 ></i>
             </span>
@@ -79,10 +79,10 @@
                 v-bind:disabled="is_confirm_button_disabled"
             >
                 <i
-                    class="fa tlp-button-icon"
+                    class="tlp-button-icon"
                     v-bind:class="{
-                        'fa-spin fa-circle-o-notch': is_an_action_on_going,
-                        'fa-trash-o': !is_an_action_on_going,
+                        'fa-solid fa-spin fa-circle-notch': is_an_action_on_going,
+                        'fa-solid fa-trash': !is_an_action_on_going,
                     }"
                 ></i>
                 <span v-translate>Delete</span>

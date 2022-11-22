@@ -25,7 +25,7 @@
                 v-if="project_ugroups === null"
                 class="document-permissions-creation-modal-title-spinner"
             >
-                <i class="fa fa-spin fa-circle-o-notch"></i>
+                <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
             <h2 class="tlp-modal-subtitle" v-translate>Permissions</h2>
         </div>

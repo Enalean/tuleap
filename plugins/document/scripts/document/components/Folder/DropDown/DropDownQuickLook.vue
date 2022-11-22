@@ -28,7 +28,7 @@
             <create-new-item-version-button
                 v-bind:item="item"
                 v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
-                v-bind:icon-classes="'fas fa-share tlp-button-icon'"
+                v-bind:icon-classes="'fa-solid fa-share tlp-button-icon'"
                 v-else-if="should_display_new_version_button"
                 data-test="document-quicklook-action-button-new-version"
             />
@@ -42,7 +42,7 @@
                     <create-new-item-version-button
                         v-bind:item="item"
                         v-bind:button-classes="`tlp-dropdown-menu-item`"
-                        v-bind:icon-classes="`fas fa-fw fa-share tlp-dropdown-menu-item-icon`"
+                        v-bind:icon-classes="`fa-solid fa-fw fa-share tlp-dropdown-menu-item-icon`"
                         v-if="
                             should_display_download_button &&
                             item.user_can_write &&

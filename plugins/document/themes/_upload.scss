@@ -108,6 +108,7 @@ $progress-bar-background-color: var(--tlp-neutral-normal-color);
     .document-folder-content-icon {
         transform: rotate(90deg);
         animation: none;
+        font-weight: 900;
 
         &::before {
             content: "\f064"; // fa-mail-forward
