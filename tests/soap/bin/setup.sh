@@ -46,7 +46,7 @@ setup_database() {
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
 
-    MYSQLROOT="/opt/rh/rh-mysql57/root/usr/bin/mysql -h$DB_HOST -uroot -pwelcome0"
+    MYSQLROOT="/opt/rh/rh-mysql80/root/usr/bin/mysql -h$DB_HOST -uroot -pwelcome0"
 
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
         --host="${DB_HOST}" \

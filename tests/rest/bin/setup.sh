@@ -34,7 +34,7 @@ setup_database() {
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
-    MYSQL_CLI="/opt/rh/rh-mysql57/root/usr/bin/mysql"
+    MYSQL_CLI="/opt/rh/rh-mysql80/root/usr/bin/mysql"
     MYSQL="$MYSQL_CLI --local-infile=1 -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
     MYSQLROOT="$MYSQL_CLI -h$DB_HOST -uroot -pwelcome0"

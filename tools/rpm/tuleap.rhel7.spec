@@ -52,7 +52,7 @@ Requires: php80-php-common >= 8.0.7
 Requires: php80-php, php80-php-mysql, php80-php-xml, php80-php-mbstring, php80-php-gd, php80-php-soap
 Requires: php80-php-intl, php80-php-process, php80-php-opcache, php80-php-fpm, php80-php-pecl-redis5, php80-php-sodium
 Requires: php80-php-pecl-zip
-Requires: rh-mysql57-mysql
+Requires: rh-mysql80-mysql
 
 Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, perl-JSON, sudo, openssh
 Requires: highlight, nginx, logrotate
