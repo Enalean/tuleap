@@ -165,6 +165,9 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $commit = $this->project->GetCommit($this->params['hashbase']);
+        if ($commit === null) {
+            throw new NotFoundException();
+        }
         $this->tpl->assign('commit', $commit);
 
         if ((! isset($this->params['hash'])) && (isset($this->params['file']))) {

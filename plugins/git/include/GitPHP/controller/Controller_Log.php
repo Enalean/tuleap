@@ -104,7 +104,11 @@ class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function LoadData() // @codingStandardsIgnoreLine
     {
-        $this->tpl->assign('commit', $this->project->GetCommit($this->params['hashbase']));
+        $commit = $this->project->GetCommit($this->params['hashbase']);
+        if ($commit === null) {
+            throw new NotFoundException();
+        }
+        $this->tpl->assign('commit', $commit);
         $this->tpl->assign('hashbase', $this->params['hashbase']);
         $this->tpl->assign('head', $this->project->GetHeadCommit());
         $this->tpl->assign('page', $this->params['page']);

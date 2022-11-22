@@ -97,6 +97,9 @@ class Controller_Commit extends ControllerBase // @codingStandardsIgnoreLine
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $commit = $this->project->GetCommit($this->params['hash']);
+        if ($commit === null) {
+            throw new NotFoundException();
+        }
         $this->tpl->assign('commit', $commit);
         $this->tpl->assign('tree', $commit->GetTree());
         $treediff = $commit->DiffToParent();

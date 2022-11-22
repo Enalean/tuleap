@@ -127,6 +127,9 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $commit = $this->project->GetCommit($this->params['hash']);
+        if ($commit === null) {
+            throw new NotFoundException();
+        }
         $this->tpl->assign('commit', $commit);
 
         if (isset($this->params['hashparent'])) {

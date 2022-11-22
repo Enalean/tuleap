@@ -121,14 +121,23 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
         }
 
         $commit = $this->project->GetCommit($this->params['hashbase']);
+        if ($commit === null) {
+            throw new NotFoundException();
+        }
         $this->tpl->assign('commit', $commit);
 
         $blobparent = $this->project->GetBlob($this->params['hashparent']);
+        if ($blobparent === null) {
+            throw new NotFoundException();
+        }
         $blobparent->SetCommit($commit);
         $blobparent->SetPath($this->params['file']);
         $this->tpl->assign('blobparent', $blobparent);
 
         $blob = $this->project->GetBlob($this->params['hash']);
+        if ($blob === null) {
+            throw new NotFoundException();
+        }
         $blob->SetPath($this->params['file']);
         $this->tpl->assign('blob', $blob);
 
