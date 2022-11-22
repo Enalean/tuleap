@@ -109,7 +109,18 @@ export class Dropdown {
             placement: wanted_placement,
             middleware: [
                 offset(({ rects, placement }) => {
-                    return (placement.indexOf("top") === 0 ? rects.reference.height / 2 : 0) + 4;
+                    const mainAxis =
+                        (placement.indexOf("top") === 0 ? rects.reference.height / 2 : 0) - 4;
+
+                    if (this.dropdown_menu.classList.contains("tlp-dropdown-menu-side")) {
+                        if (placement.indexOf("end") > 0) {
+                            return { mainAxis, crossAxis: 8 };
+                        }
+
+                        return { mainAxis, crossAxis: -8 };
+                    }
+
+                    return mainAxis;
                 }),
                 flip({ fallbackStrategy: "initialPlacement" }),
                 shift({ padding: 16 }),
