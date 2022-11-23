@@ -198,6 +198,9 @@ msgstr "Créer un nouveau dossier"
 msgid "Create a new version of document"
 msgstr "Créer une nouvelle version du document"
 
+msgid "Create and edit document"
+msgstr "Créer et éditer le document"
+
 msgid "Create document"
 msgstr "Créer le document"
 

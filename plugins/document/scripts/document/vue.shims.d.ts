@@ -22,3 +22,18 @@ declare module "*.vue" {
     import Vue from "vue";
     export default Vue;
 }
+
+declare module "*.docx" {
+    const value: string;
+    export default value;
+}
+
+declare module "*.pptx" {
+    const value: string;
+    export default value;
+}
+
+declare module "*.xlsx" {
+    const value: string;
+    export default value;
+}

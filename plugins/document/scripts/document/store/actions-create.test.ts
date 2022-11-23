@@ -102,7 +102,7 @@ describe("actions-create", () => {
             await createNewItem(context, [item, parent, current_folder]);
 
             expect(getItem).toHaveBeenCalledWith(66);
-            expect(emitter.emit).toHaveBeenCalledWith("new-item-has-just-been-created");
+            expect(emitter.emit).toHaveBeenCalledWith("new-item-has-just-been-created", { id: 66 });
             expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
             expect(context.dispatch).not.toHaveBeenCalledWith("error/handleErrorsForModal");
         });

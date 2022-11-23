@@ -21,6 +21,7 @@
 import mitt from "mitt";
 import type { Empty, Item, ListValue } from "../type";
 import type { ItemType } from "../type";
+import type { NewItemAlternative } from "../type";
 
 export interface DeleteItemEvent {
     item: Item;
@@ -76,9 +77,9 @@ export type Events = {
     "update-multiple-properties-list-value": {
         detail: { value: number[] | [] | ListValue[] | null; id: string };
     };
-    createItem: { item: Item; type: ItemType };
+    createItem: { item: Item; type: ItemType; from_alternative?: NewItemAlternative };
     deleteItem: DeleteItemEvent;
-    "new-item-has-just-been-created": void;
+    "new-item-has-just-been-created": { id: number };
     "item-properties-have-just-been-updated": void;
     "item-permissions-have-just-been-updated": void;
     "item-has-just-been-deleted": void;

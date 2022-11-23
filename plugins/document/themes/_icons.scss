@@ -67,10 +67,25 @@
     color: tlp-swatch-colors.$deep-blue-primary;
 }
 
+.document-document-badge.tlp-badge-outline {
+    background: tlp-swatch-colors.$deep-blue-secondary;
+    color: tlp-swatch-colors.$deep-blue-text;
+}
+
 .document-presentation-icon {
     color: tlp-swatch-colors.$clockwork-orange-primary;
 }
 
+.document-presentation-badge.tlp-badge-outline {
+    background: tlp-swatch-colors.$clockwork-orange-secondary;
+    color: tlp-swatch-colors.$clockwork-orange-text;
+}
+
 .document-spreadsheet-icon {
     color: tlp-swatch-colors.$sherwood-green-primary;
+}
+
+.document-spreadsheet-badge.tlp-badge-outline {
+    background: tlp-swatch-colors.$sherwood-green-secondary;
+    color: tlp-swatch-colors.$sherwood-green-text;
 }

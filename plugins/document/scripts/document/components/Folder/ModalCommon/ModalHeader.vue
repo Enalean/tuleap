@@ -26,6 +26,7 @@
             v-bind:title="`${$gettext('Close')}`"
         >
             {{ modalTitle }}
+            <slot></slot>
         </h1>
         <button
             class="tlp-modal-close"

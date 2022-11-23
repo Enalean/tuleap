@@ -27,7 +27,7 @@ import {
 } from "../api/rest-querier";
 import { adjustItemToContentAfterItemCreationInAFolder } from "./actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
 import type { ActionContext } from "vuex";
-import type { Folder, Item, RootState } from "../type";
+import type { CreatedItem, Folder, Item, RootState } from "../type";
 import {
     isEmbedded,
     isEmpty,
@@ -43,7 +43,7 @@ import { getErrorMessage } from "../helpers/properties-helpers/error-handler-hel
 export const createNewItem = async (
     context: ActionContext<RootState, RootState>,
     [item, parent, current_folder]: [Item, Folder, Folder]
-): Promise<void> => {
+): Promise<CreatedItem | undefined> => {
     try {
         let should_display_item = true;
         let item_reference;
@@ -61,8 +61,13 @@ export const createNewItem = async (
                 should_display_item = false;
             }
             item_to_create.file_properties = item.file_properties;
-            await createNewFile(context, item_to_create, parent, should_display_item);
-            return;
+            item_reference = await createNewFile(
+                context,
+                item_to_create,
+                parent,
+                should_display_item
+            );
+            return item_reference;
         }
         if (isFolder(item)) {
             item_reference = await addNewFolder(item_to_create, parent.id);
@@ -79,15 +84,16 @@ export const createNewItem = async (
                 "error/handleErrorsForModal",
                 new Error("Item type " + item_to_create.type + " is not supported for creation")
             );
-            return;
+            return undefined;
         }
-        emitter.emit("new-item-has-just-been-created");
+        emitter.emit("new-item-has-just-been-created", item_reference);
         await adjustItemToContentAfterItemCreationInAFolder(
             context,
             parent,
             current_folder,
             item_reference.id
         );
+        return item_reference;
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
     }
