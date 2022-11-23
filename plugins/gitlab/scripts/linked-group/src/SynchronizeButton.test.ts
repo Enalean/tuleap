@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, beforeEach, vi, expect } from "vitest";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync, errAsync } from "neverthrow";
 import { selectOrThrow } from "@tuleap/dom";
@@ -39,6 +40,8 @@ import {
 } from "./classnames";
 
 const GROUP_LINK_ID = 33;
+
+vi.mock("@tuleap/fetch-result");
 
 describe(`SynchronizeButton`, () => {
     describe(`when I click the synchronize button`, () => {
@@ -85,7 +88,7 @@ describe(`SynchronizeButton`, () => {
             and update the last synchronization badge`, async () => {
             const number_of_integrations = 7;
             const result = okAsync({ number_of_integrations });
-            const postSpy = jest.spyOn(fetch_result, "postJSON").mockReturnValue(result);
+            const postSpy = vi.spyOn(fetch_result, "postJSON").mockReturnValue(result);
 
             button.click();
             expect(feedback.classList.contains(FEEDBACK_HIDDEN_CLASSNAME)).toBe(true);
@@ -113,7 +116,7 @@ describe(`SynchronizeButton`, () => {
             and an error badge`, async () => {
             const error_message = "Something went wrong";
             const result = errAsync(Fault.fromMessage(error_message));
-            jest.spyOn(fetch_result, "postJSON").mockReturnValue(result);
+            vi.spyOn(fetch_result, "postJSON").mockReturnValue(result);
 
             button.click();
             await result;

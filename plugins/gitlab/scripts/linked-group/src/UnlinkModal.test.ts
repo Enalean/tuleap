@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, beforeEach, vi, expect } from "vitest";
 import {
     UNLINK_CONFIRM_ICON_SELECTOR,
     UNLINK_CONFIRM_SELECTOR,
@@ -32,12 +33,14 @@ import { FEEDBACK_HIDDEN_CLASSNAME, HIDDEN_ICON_CLASSNAME } from "./classnames";
 
 const GROUP_LINK_ID = 77;
 
+vi.mock("@tuleap/fetch-result");
+
 describe(`UnlinkModal`, () => {
     let doc: Document, loc: Location;
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         loc = {
-            replace: jest.fn(),
+            replace: vi.fn(),
             href: "https://gitlab.example.com/plugins/git/project_101/administration/gitlab/",
         } as unknown as Location;
     });
@@ -78,9 +81,9 @@ describe(`UnlinkModal`, () => {
         it(`will call the REST route, reload the page
             and will keep the button disabled with a spinner
             to prevent user from triggering delete again while the page is reloading`, async () => {
-            const replace = jest.spyOn(loc, "replace");
+            const replace = vi.spyOn(loc, "replace");
             const result = okAsync({} as Response);
-            const delSpy = jest.spyOn(fetch_result, "del").mockReturnValue(result);
+            const delSpy = vi.spyOn(fetch_result, "del").mockReturnValue(result);
 
             clickOnConfirm();
 
@@ -102,9 +105,9 @@ describe(`UnlinkModal`, () => {
         it(`and there is a REST error,
             it will show an error message in the modal feedback`, async () => {
             const error_message = "Forbidden";
-            const replace = jest.spyOn(loc, "replace");
+            const replace = vi.spyOn(loc, "replace");
             const result = errAsync(Fault.fromMessage(error_message));
-            jest.spyOn(fetch_result, "del").mockReturnValue(result);
+            vi.spyOn(fetch_result, "del").mockReturnValue(result);
 
             clickOnConfirm();
 
