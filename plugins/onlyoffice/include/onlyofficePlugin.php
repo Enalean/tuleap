@@ -128,27 +128,34 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             $this,
             self::getLogger()
         );
-        if ($only_office_availability_checker->isOnlyOfficeIntegrationAvailableForProject($collector->getProject())) {
-            $collector->addSection(
-                new NewItemAlternativeSection(
-                    dgettext('tuleap-onlyoffice', 'Online office files'),
-                    [
-                        new NewItemAlternative(
-                            'application/word',
-                            dgettext('tuleap-onlyoffice', 'Document')
-                        ),
-                        new NewItemAlternative(
-                            'application/excel',
-                            dgettext('tuleap-onlyoffice', 'Spreadsheet')
-                        ),
-                        new NewItemAlternative(
-                            'application/powerpoint',
-                            dgettext('tuleap-onlyoffice', 'Presentation')
-                        ),
-                    ]
-                )
-            );
+        if (! $only_office_availability_checker->isOnlyOfficeIntegrationAvailableForProject($collector->getProject())) {
+            return;
         }
+
+        $filename_pattern_retriever = new FilenamePatternRetriever(new SettingsDAO());
+        if ($filename_pattern_retriever->getPattern((int) $collector->getProject()->getID())->isEnforced()) {
+            return;
+        }
+
+        $collector->addSection(
+            new NewItemAlternativeSection(
+                dgettext('tuleap-onlyoffice', 'Online office files'),
+                [
+                    new NewItemAlternative(
+                        'application/word',
+                        dgettext('tuleap-onlyoffice', 'Document')
+                    ),
+                    new NewItemAlternative(
+                        'application/excel',
+                        dgettext('tuleap-onlyoffice', 'Spreadsheet')
+                    ),
+                    new NewItemAlternative(
+                        'application/powerpoint',
+                        dgettext('tuleap-onlyoffice', 'Presentation')
+                    ),
+                ]
+            )
+        );
     }
 
     public function shouldDisplaySourceColumnForFileVersions(ShouldDisplaySourceColumnForFileVersions $event): void
