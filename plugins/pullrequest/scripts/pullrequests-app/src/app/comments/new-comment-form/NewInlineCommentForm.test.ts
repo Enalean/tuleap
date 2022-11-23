@@ -18,9 +18,12 @@
  */
 
 import { selectOrThrow } from "@tuleap/dom";
-import { setCatalog } from "../gettext-catalog";
+import { setCatalog } from "../../gettext-catalog";
 import type { HostElement } from "./NewInlineCommentForm";
 import { form_height_descriptor, getCancelButton, getSubmitButton } from "./NewInlineCommentForm";
+import { INLINE_COMMENT_POSITION_RIGHT } from "../types";
+import { SaveNewInlineCommentStub } from "../../../../tests/stubs/SaveNewInlineCommentStub";
+import { PullRequestCommentPresenter } from "../PullRequestCommentPresenter";
 
 describe("NewInlineCommentForm", () => {
     let target: ShadowRoot;
@@ -70,15 +73,39 @@ describe("NewInlineCommentForm", () => {
         );
 
         it(`When the submit button is clicked
-            Then the submit callback is triggered`, async () => {
+            Then the comment is saved
+            And post_submit_callback is triggered`, async () => {
+            const new_inline_comment_payload = {
+                id: 13,
+                content: "Please don't",
+                user: {
+                    avatar_url: "avatar.png",
+                    display_name: "John Doe",
+                    user_url: "user-url",
+                },
+                post_date: "right now",
+                unidiff_offset: 55,
+                file_path: "README.md",
+                position: INLINE_COMMENT_POSITION_RIGHT,
+                parent_id: 0,
+            };
+
+            const comment_saver = SaveNewInlineCommentStub.withResponsePayload(
+                new_inline_comment_payload
+            );
+
             const host = {
                 comment: "Please remove this line",
-                post_submit_callback: jest.fn().mockReturnValue(Promise.resolve()),
+                post_submit_callback: jest.fn(),
+                comment_saver,
             } as unknown as HostElement;
 
             await renderSubmitButton(host).click();
 
-            expect(host.post_submit_callback).toHaveBeenCalledTimes(1);
+            expect(comment_saver.getLastCallParams()).toBe("Please remove this line");
+            expect(host.post_submit_callback).toHaveBeenCalledWith(
+                PullRequestCommentPresenter.fromFileDiffComment(new_inline_comment_payload)
+            );
         });
 
         it("When the comment is being saved, then the submit button should display a spinner", () => {

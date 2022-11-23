@@ -23,15 +23,12 @@ import {
     getUserRebasePullRequest,
     getUserUpdatePullRequest,
 } from "../gettext-catalog";
+import type { FileDiffCommentPayload, InlineCommentPosition, PullRequestUser } from "./types";
 
 export type CommentType = "inline-comment" | "comment" | "timeline-event";
 export const TYPE_INLINE_COMMENT: CommentType = "inline-comment";
 export const TYPE_GLOBAL_COMMENT: CommentType = "comment";
 export const TYPE_EVENT_COMMENT: CommentType = "timeline-event";
-
-export type InlineCommentPosition = "left" | "right";
-export const INLINE_COMMENT_POSITION_LEFT: InlineCommentPosition = "left";
-export const INLINE_COMMENT_POSITION_RIGHT: InlineCommentPosition = "right";
 
 export interface State {
     readonly href: (name: string, url_parameters: Record<string, unknown>) => string;
@@ -39,23 +36,6 @@ export interface State {
 
 export interface PullRequestData {
     readonly id: number;
-}
-
-export interface PullRequestUser {
-    readonly avatar_url: string;
-    readonly display_name: string;
-    readonly user_url: string;
-}
-
-export interface FileDiffCommentPayload {
-    readonly id: number;
-    readonly content: string;
-    readonly user: PullRequestUser;
-    readonly post_date: string;
-    readonly unidiff_offset: number;
-    readonly position: InlineCommentPosition;
-    readonly file_path: string;
-    readonly parent_id: number;
 }
 
 export interface TimelineEventPayload {

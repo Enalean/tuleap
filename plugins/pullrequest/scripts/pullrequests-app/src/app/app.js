@@ -81,7 +81,7 @@ import PullRequestConfig from "./pull-request/pull-request-config.js";
 import angular_custom_elements_module from "angular-custom-elements";
 import "./comments/PullRequestComment.ts";
 import "./file-diff/FileDiffPlaceholder.ts";
-import "./file-diff/NewInlineCommentForm.ts";
+import "./comments/new-comment-form/NewInlineCommentForm.ts";
 
 export default angular
     .module("tuleap.pull-request", [

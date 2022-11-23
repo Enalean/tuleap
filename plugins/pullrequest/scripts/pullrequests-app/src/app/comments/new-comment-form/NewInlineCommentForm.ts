@@ -19,26 +19,43 @@
 
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { FileDiffWidgetType } from "./diff-modes/types";
-import { getCancelButtonText, getNewInlineCommentSubmitButtonText } from "../gettext-catalog";
+import type { FileDiffWidgetType } from "../../file-diff/diff-modes/types";
+import type { PullRequestInlineCommentPresenter } from "../PullRequestCommentPresenter";
+import type { SaveNewInlineComment } from "./NewInlineCommentSaver";
+import { getCancelButtonText, getNewInlineCommentSubmitButtonText } from "../../gettext-catalog";
+import { PullRequestCommentPresenter } from "../PullRequestCommentPresenter";
+import type { FileDiffCommentPayload } from "../types";
 
 export const TAG_NAME: FileDiffWidgetType = "tuleap-pullrequest-new-comment-form";
 export type HostElement = NewInlineCommentForm & HTMLElement;
 
-interface NewInlineCommentForm {
+export interface NewInlineCommentForm {
     readonly content: () => HTMLElement;
     readonly element_height: number;
     readonly after_render_once: unknown;
-    readonly post_submit_callback: (comment: string) => Promise<void>;
     readonly post_rendering_callback: () => void;
     readonly on_cancel_callback: () => void;
+    readonly post_submit_callback: (new_comment: PullRequestInlineCommentPresenter) => void;
+    readonly comment_saver: SaveNewInlineComment;
     comment: string;
     is_saving_comment: boolean;
 }
 
 const onClickSaveComment = (host: NewInlineCommentForm): void => {
     host.is_saving_comment = true;
-    host.post_submit_callback(host.comment).finally(() => (host.is_saving_comment = false));
+    host.comment_saver
+        .postComment(host.comment)
+        .match(
+            (payload: FileDiffCommentPayload) => {
+                host.post_submit_callback(PullRequestCommentPresenter.fromFileDiffComment(payload));
+            },
+            (fault) => {
+                // Do nothing for the moment, we have no way to display a Fault yet
+                // eslint-disable-next-line no-console
+                console.error(String(fault));
+            }
+        )
+        .finally(() => (host.is_saving_comment = false));
 };
 
 const onClickCancel = (host: NewInlineCommentForm): void => {
@@ -117,6 +134,7 @@ define<NewInlineCommentForm>({
     post_rendering_callback: undefined,
     element_height: form_height_descriptor,
     after_render_once: form_first_render_descriptor,
+    comment_saver: undefined,
     comment: "",
     is_saving_comment: false,
     content: (host) => html`
