@@ -87,28 +87,7 @@ const webpack_config_for_vanilla = {
     },
 };
 
-const webpack_config_for_legacy_scripts = {
-    entry: {},
-    context,
-    output,
-    externals: {
-        tuleap: "tuleap",
-    },
-    plugins: [
-        ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
-            "git.js": [
-                "./scripts/git.js",
-                "./scripts/mass-update.js",
-                "./scripts/webhooks.js",
-                "./scripts/permissions.js",
-            ],
-        }),
-        manifest_plugin,
-    ],
-};
-
 const entry_points = {
-    default: "./themes/default/css/style.scss",
     "bp-style": "./themes/BurningParrot/git.scss",
 };
 
@@ -125,6 +104,5 @@ const webpack_config_for_themes = {
 export default [
     webpack_config_for_vue,
     webpack_config_for_vanilla,
-    webpack_config_for_legacy_scripts,
     webpack_config_for_themes,
 ];

@@ -500,7 +500,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getIncludeAssets()->getFileURL('default.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getLegacyAssets()->getFileURL('default.css') . '" />';
         }
     }
 
@@ -510,7 +510,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $layout = $params['layout'];
             assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getIncludeAssets(), 'git.js'));
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getLegacyAssets(), 'git.js'));
         }
     }
 
@@ -2757,11 +2757,11 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return $header_displayed_builder->build($selected_tab);
     }
 
-    public function getIncludeAssets(): IncludeAssets
+    public function getLegacyAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            "/assets/git"
+            __DIR__ . '/../scripts/legacy/frontend-assets',
+            '/assets/git/legacy'
         );
     }
 
