@@ -118,6 +118,7 @@ describe("PullRequestCommentRepliesStore", () => {
         store.addRootComment(new_comment);
 
         expect(store.getCommentReplies(new_comment)).toStrictEqual([]);
+        expect(store.getAllRootComments()).toContain(new_comment);
     });
 
     it("should add a reply to a global comment", () => {
