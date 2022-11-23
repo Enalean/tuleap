@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
+use Tuleap\PullRequest\Comment\ParentCommentSearcher;
 use Tuleap\PullRequest\Comment\ThreadCommentDao;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
@@ -39,13 +40,15 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNewInlineCommentCanBeCreated(): void
     {
-        $dao                = $this->createMock(Dao::class);
-        $reference_manager  = \Mockery::mock(ReferenceManager::class);
-        $event_dispatcher   = \Mockery::mock(EventDispatcherInterface::class);
-        $thread_comment_dao = $this->createMock(ThreadCommentDao::class);
+        $dao                     = $this->createMock(Dao::class);
+        $reference_manager       = \Mockery::mock(ReferenceManager::class);
+        $event_dispatcher        = \Mockery::mock(EventDispatcherInterface::class);
+        $thread_comment_dao      = $this->createMock(ThreadCommentDao::class);
+        $parent_comment_searcher = $this->createMock(ParentCommentSearcher::class);
         $thread_comment_dao->method('searchAllThreadByPullRequestId')->willReturn([]);
-        $dao->method('searchByCommentID')->willReturn(['parent_id' => 0, "id" => 1]);
-        $color_retriever = new ThreadCommentColorRetriever($thread_comment_dao);
+        $dao->method('searchByCommentID')->willReturn(['parent_id' => 0, "id" => 1, 'color' => ""]);
+        $parent_comment_searcher->method('searchByCommentID')->willReturn(['parent_id' => 0, "id" => 1, 'color' => ""]);
+        $color_retriever = new ThreadCommentColorRetriever($thread_comment_dao, $parent_comment_searcher);
         $color_assigner  = new ThreadCommentColorAssigner($dao, $dao);
 
         $creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_retriever, $color_assigner);

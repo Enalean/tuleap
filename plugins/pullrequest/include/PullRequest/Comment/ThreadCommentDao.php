@@ -28,13 +28,13 @@ class ThreadCommentDao extends DataAccessObject
 {
     public function searchAllThreadByPullRequestId(int $id): array
     {
-        $sql = 'SELECT global.id
+        $sql = "SELECT global.id
                 FROM plugin_pullrequest_comments AS global
-                WHERE global.pull_request_id = ? AND global.parent_id = 0
+                WHERE global.pull_request_id = ? AND global.parent_id = 0 AND (global.color != '')
                 UNION
                 SELECT inline.id
                 FROM plugin_pullrequest_inline_comments AS inline
-                WHERE inline.pull_request_id = ? AND inline.parent_id = 0';
+                WHERE inline.pull_request_id = ? AND inline.parent_id = 0 AND (inline.color != '')";
 
         return $this->getDB()->run($sql, $id, $id);
     }
