@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp_modal from "@tuleap/tlp-modal";
+import { describe, it, beforeEach, vi, expect } from "vitest";
+import tlp_modal from "@tuleap/tlp-modal";
 import * as gitlab_querier from "@tuleap/plugin-git-gitlab-api-querier";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync, errAsync } from "neverthrow";
@@ -44,6 +45,9 @@ import { selectOrThrow } from "@tuleap/dom";
 const noop = (): void => {
     // Do nothing;
 };
+
+vi.mock("@tuleap/plugin-git-gitlab-api-querier");
+vi.mock("@tuleap/fetch-result");
 
 const GROUP_LINK_ID = 89;
 const GITLAB_GROUP_ID = 68;
@@ -81,7 +85,7 @@ describe(`TokenModal`, () => {
             show: noop,
             hide: noop,
         } as tlp_modal.Modal;
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
 
         TokenModal(doc, gettext, {
             id: GROUP_LINK_ID,
@@ -93,7 +97,7 @@ describe(`TokenModal`, () => {
     });
 
     it(`when I click on the "edit" button, it will show the modal`, () => {
-        const show = jest.spyOn(modal_instance, "show");
+        const show = vi.spyOn(modal_instance, "show");
 
         edit_button.click();
 
@@ -125,13 +129,13 @@ describe(`TokenModal`, () => {
         }
 
         it(`will show a spinner, disable the form elements, call the REST endpoints and close the modal`, async () => {
-            const modalHide = jest.spyOn(modal_instance, "hide");
+            const modalHide = vi.spyOn(modal_instance, "hide");
             const validate_token_result = okAsync({} as Response);
             const save_token_result = okAsync(undefined);
-            const validateTokenSpy = jest
+            const validateTokenSpy = vi
                 .spyOn(gitlab_querier, "get")
                 .mockReturnValue(validate_token_result);
-            const saveTokenSpy = jest
+            const saveTokenSpy = vi
                 .spyOn(fetch_result, "patchJSON")
                 .mockReturnValue(save_token_result);
 
@@ -179,9 +183,9 @@ describe(`TokenModal`, () => {
         ])(
             `%s, it will show an error message in the modal feedback`,
             async (_precondition, validate_token_result, save_token_result, error_message) => {
-                const modalHide = jest.spyOn(modal_instance, "hide");
-                jest.spyOn(gitlab_querier, "get").mockReturnValue(validate_token_result);
-                jest.spyOn(fetch_result, "patchJSON").mockReturnValue(save_token_result);
+                const modalHide = vi.spyOn(modal_instance, "hide");
+                vi.spyOn(gitlab_querier, "get").mockReturnValue(validate_token_result);
+                vi.spyOn(fetch_result, "patchJSON").mockReturnValue(save_token_result);
 
                 confirm_button.click();
                 await validate_token_result;

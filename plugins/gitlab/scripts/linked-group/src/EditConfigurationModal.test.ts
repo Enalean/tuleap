@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp_modal from "@tuleap/tlp-modal";
+import { describe, it, beforeEach, vi, expect } from "vitest";
+import tlp_modal from "@tuleap/tlp-modal";
 import * as fetch_result from "@tuleap/fetch-result";
 import {
     EDIT_CONFIG_SELECTOR,
@@ -52,6 +53,8 @@ const noop = (): void => {
 
 const GROUP_LINK_ID = 33;
 const BRANCH_PREFIX = "dev-";
+
+vi.mock("@tuleap/fetch-result");
 
 describe(`EditConfigurationModal`, () => {
     let edit_button: HTMLButtonElement,
@@ -98,7 +101,7 @@ describe(`EditConfigurationModal`, () => {
             show: noop,
             hide: noop,
         } as tlp_modal.Modal;
-        jest.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
+        vi.spyOn(tlp_modal, "createModal").mockReturnValue(modal_instance);
 
         EditConfigurationModal(doc, gettext, GROUP_LINK_ID).init();
         body = doc.body;
@@ -116,7 +119,7 @@ describe(`EditConfigurationModal`, () => {
         });
 
         it(`when I click on the "edit" button, it will show the modal`, () => {
-            const show = jest.spyOn(modal_instance, "show");
+            const show = vi.spyOn(modal_instance, "show");
 
             edit_button.click();
 
@@ -192,8 +195,8 @@ describe(`EditConfigurationModal`, () => {
                 allow_artifact_closure: true,
                 create_branch_prefix: BRANCH_PREFIX,
             });
-            const patchSpy = jest.spyOn(fetch_result, "patchJSON").mockReturnValue(result);
-            const modalHide = jest.spyOn(modal_instance, "hide");
+            const patchSpy = vi.spyOn(fetch_result, "patchJSON").mockReturnValue(result);
+            const modalHide = vi.spyOn(modal_instance, "hide");
 
             confirm_button.click();
 
@@ -222,7 +225,7 @@ describe(`EditConfigurationModal`, () => {
                 allow_artifact_closure: true,
                 create_branch_prefix: "",
             });
-            const patchSpy = jest.spyOn(fetch_result, "patchJSON").mockReturnValue(result);
+            const patchSpy = vi.spyOn(fetch_result, "patchJSON").mockReturnValue(result);
             prefix_checkbox.checked = false;
 
             confirm_button.click();
@@ -238,8 +241,8 @@ describe(`EditConfigurationModal`, () => {
         it(`and there is a REST error, it will show an error message in the modal feedback`, async () => {
             const error_message = "Forbidden";
             const result = errAsync(Fault.fromMessage(error_message));
-            jest.spyOn(fetch_result, "patchJSON").mockReturnValue(result);
-            const modalHide = jest.spyOn(modal_instance, "hide");
+            vi.spyOn(fetch_result, "patchJSON").mockReturnValue(result);
+            const modalHide = vi.spyOn(modal_instance, "hide");
 
             confirm_button.click();
             await result;

@@ -25,6 +25,6 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "test": "vitest"
   }
 }
