@@ -104,6 +104,7 @@ export const PullRequestCommentRepliesStore = (
     const inline_comments_replies_map = buildMapFromComments(
         comments.filter(getOnlyInlineCommentReplies)
     );
+    const root_comments = comments.filter(getOnlyRootComments);
 
     return {
         getCommentReplies: (
@@ -121,17 +122,21 @@ export const PullRequestCommentRepliesStore = (
                 ? PullRequestCommentRepliesCollectionPresenter.fromReplies(replies)
                 : PullRequestCommentRepliesCollectionPresenter.buildEmpty();
         },
-        getAllRootComments: (): PullRequestCommentPresenter[] =>
-            comments.filter(getOnlyRootComments),
+        getAllRootComments: (): PullRequestCommentPresenter[] => root_comments,
         addRootComment: (comment: PullRequestCommentPresenter): void => {
+            if (comment.type !== TYPE_INLINE_COMMENT && comment.type !== TYPE_GLOBAL_COMMENT) {
+                return;
+            }
+
             if (comment.type === TYPE_INLINE_COMMENT) {
                 inline_comments_replies_map.set(comment.id, []);
-                return;
             }
 
             if (comment.type === TYPE_GLOBAL_COMMENT) {
                 global_comments_replies_map.set(comment.id, []);
             }
+
+            root_comments.push(comment);
         },
         addReplyToComment: (
             comment: PullRequestCommentPresenter,
