@@ -2,14 +2,12 @@
 # * the database is part of this compose file and that's not suitable for production
 # * password are either hardcoded to dumb value or not existent (redis)
 #
-# You should have a .env file with 2 variables defined:
+# You should have a .env file with those variables defined:
 # TULEAP_FQDN
 # MYSQL_ROOT_PASSWORD
 # MYSQL_TULEAPADM_PASSWORD
 # SITE_ADMINISTRATOR_PASSWORD
 # See https://docs.docker.com/compose/environment-variables/
-
-version: "2"
 
 services:
   web:
@@ -40,12 +38,12 @@ services:
 
   # This is for test purpose only. It's not advised to run a production database as a docker container
   db:
-    image: mysql:5.7
-    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--sql-mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"]
+    image: mysql:8.0
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--sql-mode=NO_ENGINE_SUBSTITUTION"]
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
-      - db57-data:/var/lib/mysql
+      - db80-data:/var/lib/mysql
 
   # This is for test purpose only. It's not advised to run a production database as a docker container
   redis:
@@ -60,5 +58,5 @@ services:
 
 volumes:
   tuleap-data:
-  db57-data:
+  db80-data:
   redis-data:
