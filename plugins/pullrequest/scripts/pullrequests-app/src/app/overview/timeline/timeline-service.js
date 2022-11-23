@@ -72,7 +72,6 @@ function TimelineService(TimelineRestService, gettextCatalog, $state) {
                 event,
                 pullRequest
             );
-            timeline.push(comment_presenter);
             comment_replies_store.addRootComment(comment_presenter);
         });
     }

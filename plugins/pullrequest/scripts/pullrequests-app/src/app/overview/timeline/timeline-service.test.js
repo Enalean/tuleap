@@ -107,7 +107,6 @@ describe("TimelineService", function () {
             $httpBackend.flush();
 
             expect(comments_store.getCommentReplies(expectedComment)).toStrictEqual([]);
-            expect(timeline.map(({ id }) => id)).toStrictEqual([expectedComment.id]);
         });
     });
 });
