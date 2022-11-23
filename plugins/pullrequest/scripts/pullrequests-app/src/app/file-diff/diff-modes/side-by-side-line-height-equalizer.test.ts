@@ -76,7 +76,7 @@ describe("line-height-equalizer", () => {
             const handles = {
                 left_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                     FileDiffWidgetStub.buildInlineCommentWidget(25),
-                    FileDiffWidgetStub.buildNewInlineCommentWidget(20),
+                    FileDiffWidgetStub.buildNewCommentFormWidget(20),
                 ]),
                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([placeholder]),
             };
@@ -96,7 +96,7 @@ describe("line-height-equalizer", () => {
                     FileDiffWidgetStub.buildInlineCommentWidget(20),
                 ]),
                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
-                    FileDiffWidgetStub.buildNewInlineCommentWidget(20),
+                    FileDiffWidgetStub.buildNewCommentFormWidget(20),
                     placeholder,
                 ]),
             };
@@ -116,7 +116,7 @@ describe("line-height-equalizer", () => {
                 ]),
                 right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
                     placeholder,
-                    FileDiffWidgetStub.buildNewInlineCommentWidget(20),
+                    FileDiffWidgetStub.buildNewCommentFormWidget(20),
                 ]),
             };
 
@@ -134,7 +134,7 @@ describe("line-height-equalizer", () => {
                 FileDiffWidgetStub.buildCodePlaceholder(20),
             ]),
             right_handle: FileLineHandleStub.buildLineHandleWithWidgets([
-                FileDiffWidgetStub.buildNewInlineCommentWidget(20),
+                FileDiffWidgetStub.buildNewCommentFormWidget(20),
             ]),
         };
 

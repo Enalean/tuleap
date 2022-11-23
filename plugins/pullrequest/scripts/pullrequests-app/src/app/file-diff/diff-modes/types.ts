@@ -53,7 +53,7 @@ export type LeftLine = UnMovedFileLine | RemovedFileLine;
 export type RightLine = UnMovedFileLine | AddedFileLine;
 
 export type FileDiffWidgetType =
-    | "new-inline-comment"
+    | "tuleap-pullrequest-new-comment-form"
     | "tuleap-pullrequest-comment"
     | "tuleap-pullrequest-placeholder";
 
@@ -62,7 +62,7 @@ interface WidgetElement extends HTMLElement {
 }
 
 export interface FileDiffCommentWidget extends WidgetElement {
-    localName: "new-inline-comment" | "tuleap-pullrequest-comment";
+    localName: "tuleap-pullrequest-new-comment-form" | "tuleap-pullrequest-comment";
 }
 
 export interface FileDiffPlaceholderWidget extends WidgetElement {

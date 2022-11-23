@@ -55,7 +55,7 @@ describe("side-by-side-widget-helper", () => {
             [true, "a code placeholder", FileDiffWidgetStub.buildCodeCommentPlaceholder()],
             [false, "a comment placeholder", FileDiffWidgetStub.buildCodePlaceholder()],
             [false, "an inline-comment", FileDiffWidgetStub.buildInlineCommentWidget()],
-            [false, "a new-inline-comment", FileDiffWidgetStub.buildNewInlineCommentWidget()],
+            [false, "a new-comment-form", FileDiffWidgetStub.buildNewCommentFormWidget()],
         ])(
             "should return %s when the widget is %s",
             (is_comment_placeholder, widget_name, widget) => {
@@ -69,7 +69,7 @@ describe("side-by-side-widget-helper", () => {
             [false, "a code placeholder", FileDiffWidgetStub.buildCodePlaceholder()],
             [false, "a comment placeholder", FileDiffWidgetStub.buildCodeCommentPlaceholder()],
             [true, "an inline-comment", FileDiffWidgetStub.buildInlineCommentWidget()],
-            [true, "a new inline comment", FileDiffWidgetStub.buildNewInlineCommentWidget()],
+            [true, "a new comment form", FileDiffWidgetStub.buildNewCommentFormWidget()],
         ])("should return %s when the widget is %s", (expected_result, widget_name, widget) => {
             expect(isCommentWidget(widget)).toBe(expected_result);
         });
@@ -80,7 +80,7 @@ describe("side-by-side-widget-helper", () => {
             [false, "a code placeholder", FileDiffWidgetStub.buildCodePlaceholder()],
             [false, "a comment placeholder", FileDiffWidgetStub.buildCodeCommentPlaceholder()],
             [false, "an inline-comment", FileDiffWidgetStub.buildInlineCommentWidget()],
-            [true, "a new inline comment", FileDiffWidgetStub.buildNewInlineCommentWidget()],
+            [true, "a new comment form", FileDiffWidgetStub.buildNewCommentFormWidget()],
         ])("should return %s when the widget is %s", (expected_result, widget_name, widget) => {
             expect(isANewInlineCommentWidget(widget)).toBe(expected_result);
         });

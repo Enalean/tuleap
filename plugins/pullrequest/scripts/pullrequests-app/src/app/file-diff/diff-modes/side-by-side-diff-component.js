@@ -37,7 +37,6 @@ import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharac
 import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
 import { isAnUnmovedLine } from "./file-line-helper";
 import { SideBySideLineMapper } from "./side-by-side-line-mapper";
-import { isANewInlineCommentWidget } from "./side-by-side-line-widgets-helper";
 import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors-content-manager";
 import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
 
@@ -231,44 +230,21 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
     }
 
     function handleCodeMirrorEvents(left_code_mirror, right_code_mirror) {
-        left_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
-            if (!isANewInlineCommentWidget(line_widget.node)) {
-                return;
-            }
+        const getLineNumberFromEvent = (gutter_click_event) =>
+            // We need this trick because CodeMirror can sometimes provide the
+            // wrong line number. Hence, we need to parse the content of the gutter
+            // which holds the line number.
+            Number.parseInt(gutter_click_event.target.textContent, 10) - 1;
 
-            recomputeCommentPlaceholderHeight(
-                self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
-            );
+        left_code_mirror.on("gutterClick", (left_code_mirror, line_number, gutter, event) => {
+            addCommentOnLeftCodeMirror(left_code_mirror, getLineNumberFromEvent(event));
         });
-        right_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
-            if (!isANewInlineCommentWidget(line_widget.node)) {
-                return;
-            }
-
-            recomputeCommentPlaceholderHeight(
-                self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
-            );
+        right_code_mirror.on("gutterClick", (right_code_mirror, line_number, gutter, event) => {
+            addCommentOnRightCodeMirror(right_code_mirror, getLineNumberFromEvent(event));
         });
-        left_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
-            recomputeCommentPlaceholderHeight(
-                self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
-            );
-        });
-        right_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
-            recomputeCommentPlaceholderHeight(
-                self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
-            );
-        });
-
-        left_code_mirror.on("gutterClick", (left_code_mirror, line_number) =>
-            addCommentOnLeftCodeMirror(left_code_mirror, right_code_mirror, line_number)
-        );
-        right_code_mirror.on("gutterClick", (right_code_mirror, line_number) =>
-            addCommentOnRightCodeMirror(left_code_mirror, right_code_mirror, line_number)
-        );
     }
 
-    function addCommentOnLeftCodeMirror(left_code_mirror, right_code_mirror, line_number) {
+    function addCommentOnLeftCodeMirror(left_code_mirror, line_number) {
         const line = self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number);
         if (!line) {
             return;
@@ -285,7 +261,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
         );
     }
 
-    function addCommentOnRightCodeMirror(left_code_mirror, right_code_mirror, line_number) {
+    function addCommentOnRightCodeMirror(right_code_mirror, line_number) {
         const line = self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number);
         if (!line) {
             return;

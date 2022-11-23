@@ -42,3 +42,5 @@ export const getCancelButtonText = (): string => gettextCatalog.getString("Cance
 export const getCommentTextAreaPlaceholderText = (): string =>
     gettextCatalog.getString("Say something…");
 export const getOutdatedCommentBadgeText = (): string => gettextCatalog.getString("Outdated");
+export const getNewInlineCommentSubmitButtonText = (): string =>
+    gettextCatalog.getString("Comment");

@@ -26,32 +26,19 @@ import { PullRequestCommentReplyFormFocusHelper } from "../comments/PullRequestC
 import { PullRequestPresenter } from "../comments/PullRequestPresenter";
 import { PullRequestCommentNewReplySaver } from "../comments/PullRequestCommentReplySaver";
 import { PullRequestCurrentUserPresenter } from "../comments/PullRequestCurrentUserPresenter";
+import { TAG_NAME as NEW_COMMENT_FORM_TAG_NAME } from "./NewInlineCommentForm";
+import { TAG_NAME as COMMENT_TAG_NAME } from "../comments/PullRequestComment";
+import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./FileDiffPlaceholder";
 
 export default CodeMirrorHelperService;
 
 CodeMirrorHelperService.$inject = [
-    "$rootScope",
-    "$compile",
-    "$document",
-    "$timeout",
-    "$state",
     "FileDiffRestService",
-    "TooltipService",
     "gettextCatalog",
     "SharedPropertiesService",
 ];
 
-function CodeMirrorHelperService(
-    $rootScope,
-    $compile,
-    $document,
-    $timeout,
-    $state,
-    FileDiffRestService,
-    TooltipService,
-    gettextCatalog,
-    SharedPropertiesService
-) {
+function CodeMirrorHelperService(FileDiffRestService, gettextCatalog, SharedPropertiesService) {
     const self = this;
     Object.assign(self, {
         collapseCommonSectionsSideBySide,
@@ -62,7 +49,7 @@ function CodeMirrorHelperService(
     });
 
     function displayInlineComment(code_mirror, comment, line_number) {
-        const inline_comment_element = document.createElement("tuleap-pullrequest-comment");
+        const inline_comment_element = document.createElement(COMMENT_TAG_NAME);
         inline_comment_element.comment = comment;
         inline_comment_element.setAttribute("class", "inline-comment-element");
         inline_comment_element.relativeDateHelper = RelativeDateHelper(
@@ -95,46 +82,38 @@ function CodeMirrorHelperService(
         file_path,
         pull_request_id,
         position,
-        post_submit_callback
+        post_rendering_callback = () => {}
     ) {
-        const child_scope = $rootScope.$new(true);
-        child_scope.submitCallback = (comment_text) => {
-            return postComment(unidiff_offset, comment_text, file_path, pull_request_id, position)
-                .then((comment) => {
-                    const comment_presenter =
-                        PullRequestCommentPresenter.fromFileDiffComment(comment);
-                    getStore().addRootComment(comment_presenter);
-                    const comment_widget = self.displayInlineComment(
-                        code_mirror,
-                        comment_presenter,
-                        display_line_number
-                    );
+        const new_comment_element = document.createElement(NEW_COMMENT_FORM_TAG_NAME);
 
-                    comment_widget.node.post_rendering_callback = post_submit_callback;
+        const widget = code_mirror.addLineWidget(
+            display_line_number,
+            new_comment_element,
+            getWidgetPlacementOptions(code_mirror, display_line_number)
+        );
 
-                    return comment_widget;
-                })
-                .then(() => {
-                    TooltipService.setupTooltips();
-                });
+        new_comment_element.post_rendering_callback = post_rendering_callback;
+        new_comment_element.post_submit_callback = (comment_text) =>
+            Promise.resolve(
+                postComment(unidiff_offset, comment_text, file_path, pull_request_id, position)
+            ).then((comment) => {
+                widget.clear();
+
+                const comment_presenter = PullRequestCommentPresenter.fromFileDiffComment(comment);
+                getStore().addRootComment(comment_presenter);
+                const comment_widget = self.displayInlineComment(
+                    code_mirror,
+                    comment_presenter,
+                    display_line_number
+                );
+
+                comment_widget.node.post_rendering_callback = post_rendering_callback;
+            });
+
+        new_comment_element.on_cancel_callback = () => {
+            widget.clear();
+            post_rendering_callback();
         };
-        const new_inline_comment_element = $compile(`
-            <new-inline-comment submit-callback="submitCallback"
-                                codemirror-widget="codemirror_widget"
-            ></new-inline-comment>
-        `)(child_scope)[0];
-
-        const options = getWidgetPlacementOptions(code_mirror, display_line_number);
-        // Wait for angular to actually render the component so that it has a height
-        return $timeout(() => {
-            const widget = code_mirror.addLineWidget(
-                display_line_number,
-                new_inline_comment_element,
-                options
-            );
-            child_scope.codemirror_widget = widget;
-            return widget;
-        });
     }
 
     function getWidgetPlacementOptions(code_mirror, display_line_number) {
@@ -167,7 +146,7 @@ function CodeMirrorHelperService(
             above: display_above_line,
         };
 
-        const placeholder = document.createElement("tuleap-pullrequest-placeholder");
+        const placeholder = document.createElement(PLACEHOLDER_TAG_NAME);
         placeholder.height = widget_height;
         placeholder.isReplacingAComment = is_comment_placeholder;
 
