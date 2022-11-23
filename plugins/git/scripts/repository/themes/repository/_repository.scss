@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "gitphp/commit";
-@use "gitphp/tag";
-@use "gitphp/commitdiff";
-@use "gitphp/shortlog";
-@use "gitphp/blob";
-@use "gitphp/tree";
-@use "gitphp/highlight";
+@use "./gitphp/commit";
+@use "./gitphp/tag";
+@use "./gitphp/commitdiff";
+@use "./gitphp/shortlog";
+@use "./gitphp/blob";
+@use "./gitphp/tree";
+@use "./gitphp/highlight";
 @use "../gitphp-override";
 
 .git-repository-header {
@@ -113,8 +113,7 @@
 .git-repository-branch-tag-selector-is-loading {
     height: 40px;
     margin: var(--tlp-medium-spacing) 0;
-    background: url("../../../../src/www/themes/BurningParrot/images/spinner.gif") no-repeat center
-        center;
+    background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;
 }
 
 /* stylelint-disable-next-line selector-class-pattern */

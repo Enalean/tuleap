@@ -23,8 +23,9 @@ namespace Tuleap\Git\GitPHP;
 
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Git\Unicode\DangerousUnicodeText;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 
 /**
  * Blame controller class
@@ -154,7 +155,10 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('bloblines', $blob->GetData(true));
         $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));
-        $git_assets = new IncludeAssets(__DIR__ . '/../../../frontend-assets', '/assets/git');
-        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($git_assets, 'line-highlight.js'));
+        $git_assets = new IncludeViteAssets(
+            __DIR__ . '/../../../scripts/repository/frontend-assets',
+            '/assets/git/repository'
+        );
+        $GLOBALS['Response']->includeFooterJavascriptFile((new JavascriptViteAsset($git_assets, 'src/file/line-highlight.ts'))->getFileURL());
     }
 }

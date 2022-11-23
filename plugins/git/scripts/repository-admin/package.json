@@ -1,18 +1,18 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-git-legacy",
+  "name": "@tuleap/plugin-git-repository-admin",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/html-escaper": "link:../../../../lib/frontend/html-escaper"
+    "@tuleap/user-and-ugroup-autocompleter": "link:../../../../lib/frontend/user-and-ugroup-autocompleter"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.mjs",
-    "watch": "webpack --config webpack.dev.mjs --watch"
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
   }
 }

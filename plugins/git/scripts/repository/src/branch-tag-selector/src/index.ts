@@ -19,16 +19,15 @@
 
 import Vue from "vue";
 import App from "./components/App.vue";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
+import {
+    initVueGettextFromPoGettextPlugin,
+    getPOFileFromLocaleWithoutExtension,
+} from "@tuleap/vue2-gettext-init";
 
 export async function init(mount_point: HTMLDivElement, button: HTMLElement): Promise<void> {
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "branch-tag-selector-po-" */ "../po/" +
-                    getPOFileFromLocale(locale)
-            )
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
 
     const repository_id = Number(button.dataset.repositoryId);

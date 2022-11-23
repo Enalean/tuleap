@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 
 export default function initAlreadyForkedModal(): void {
     const button = document.getElementById("git-repository-already-forked-button");

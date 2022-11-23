@@ -2,10 +2,10 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/html-escaper': link:../../../../lib/frontend/html-escaper
+  '@tuleap/user-and-ugroup-autocompleter': link:../../../../lib/frontend/user-and-ugroup-autocompleter
 
 dependencies:
-  '@tuleap/html-escaper': link:../../../../lib/frontend/html-escaper
+  '@tuleap/user-and-ugroup-autocompleter': link:../../../../lib/frontend/user-and-ugroup-autocompleter
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator

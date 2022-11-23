@@ -28,7 +28,8 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Git\GitPresenters\RepositoryPaneNotificationPresenter;
 use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 
 class Notification extends Pane
 {
@@ -91,8 +92,11 @@ class Notification extends Pane
             )
         );
         $html    .= $this->getPluginNotifications();
-        $assets   = new IncludeAssets(__DIR__ . "/../../../../frontend-assets", "/assets/git");
-        $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('repo-admin-notifications.js'));
+        $assets   = new IncludeViteAssets(
+            __DIR__ . '/../../../../scripts/repository-admin/frontend-assets',
+            '/assets/git/repository-admin'
+        );
+        $GLOBALS['Response']->includeFooterJavascriptFile((new JavascriptViteAsset($assets, 'src/admin-notifications.js'))->getFileURL());
 
         return $html;
     }
