@@ -1,9 +1,6 @@
 # This compose file is provided for test purpose as:
-# * it doesnt run the docker.tuleap.org/tuleap-enterprise-edition image but the community one (tuleap-aio).
 # * the database is part of this compose file and that's not suitable for production
 # * password are either hardcoded to dumb value or not existent (redis)
-version: "2"
-
 services:
   web:
     image: docker.tuleap.org/tuleap-enterprise-edition:dev
@@ -40,12 +37,12 @@ services:
 #      - TULEAP_LOG_SERVER=some-server:514
 
   db:
-    image: mysql:5.7
-    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--sql-mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION", "--port=3307"]
+    image: mysql:8.0
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--sql-mode=NO_ENGINE_SUBSTITUTION", "--port=3307"]
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
-      - db57-data:/var/lib/mysql
+      - db80-data:/var/lib/mysql
 
   redis:
     image: redis:6
@@ -58,5 +55,5 @@ services:
 
 volumes:
   tuleap-data:
-  db57-data:
+  db80-data:
   redis-data:
