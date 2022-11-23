@@ -3224,7 +3224,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                 new ChangesetCommentIndexer(
                     new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
-                    Codendi_HTMLPurifier::instance(),
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )

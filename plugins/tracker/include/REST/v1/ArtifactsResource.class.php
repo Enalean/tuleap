@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use Codendi_HTMLPurifier;
 use EventManager;
 use FeedbackDao;
 use Luracast\Restler\RestException;
@@ -753,7 +752,6 @@ class ArtifactsResource extends AuthenticatedResource
                 new ChangesetCommentIndexer(
                     new ItemToIndexQueueEventBased($event_dispatcher),
                     $event_dispatcher,
-                    Codendi_HTMLPurifier::instance(),
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )

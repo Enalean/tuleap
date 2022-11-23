@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 use Cardwall_Column;
 use Cardwall_OnTop_ColumnDao;
 use Cardwall_OnTop_Config_ColumnFactory;
-use Codendi_HTMLPurifier;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
@@ -137,7 +136,6 @@ class CardMappedFieldUpdater
                 new ChangesetCommentIndexer(
                     new ItemToIndexQueueEventBased($event_dispatcher),
                     $event_dispatcher,
-                    Codendi_HTMLPurifier::instance(),
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )

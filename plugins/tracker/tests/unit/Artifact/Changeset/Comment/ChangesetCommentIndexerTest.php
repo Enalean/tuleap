@@ -153,7 +153,6 @@ final class ChangesetCommentIndexerTest extends TestCase
         return new ChangesetCommentIndexer(
             new ItemToIndexQueueEventBased($event_dispatcher),
             $event_dispatcher,
-            \Codendi_HTMLPurifier::instance(),
             $changeset_comment_dao,
         );
     }
