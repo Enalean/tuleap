@@ -21,7 +21,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\Gitolite\VersionDetector;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -51,11 +51,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
      */
     private $big_object_authorization_manager;
 
-    /**
-     * @var IncludeAssets
-     */
-    private $include_assets;
-
+    private JavascriptAssetGeneric $asset;
     /**
      * @var VersionDetector
      */
@@ -67,7 +63,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         Git_SystemEventManager $system_event_manager,
         AdminPageRenderer $admin_page_renderer,
         BigObjectAuthorizationManager $big_object_authorization_manager,
-        IncludeAssets $include_assets,
+        JavascriptAssetGeneric $asset,
         VersionDetector $version_detector,
     ) {
         $this->csrf                             = $csrf;
@@ -75,7 +71,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         $this->system_event_manager             = $system_event_manager;
         $this->admin_page_renderer              = $admin_page_renderer;
         $this->big_object_authorization_manager = $big_object_authorization_manager;
-        $this->include_assets                   = $include_assets;
+        $this->asset                            = $asset;
         $this->version_detector                 = $version_detector;
     }
 
@@ -193,7 +189,7 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         $title         = dgettext('tuleap-git', 'Git');
         $template_path = dirname(GIT_BASE_DIR) . '/templates';
 
-        $GLOBALS['HTML']->includeFooterJavascriptFile($this->include_assets->getFileURL('siteadmin-gitolite.js'));
+        $GLOBALS['HTML']->addJavascriptAsset($this->asset);
 
         $admin_presenter = new Git_AdminGitoliteConfigPresenter(
             $title,

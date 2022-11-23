@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "gitolite";
+@use "./gitolite";
 
 .form-element-group {
     display: flex;

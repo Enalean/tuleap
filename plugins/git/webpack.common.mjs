@@ -65,9 +65,6 @@ const webpack_config_for_vue = {
 
 const webpack_config_for_vanilla = {
     entry: {
-        "siteadmin-gitolite": "./scripts/siteadmin/gitolite.ts",
-        "siteadmin-gerrit": "./scripts/siteadmin/gerrit/index.ts",
-        "siteadmin-mirror": "./scripts/siteadmin/mirror/index.ts",
         "repo-admin-notifications": "./scripts/admin-notifications.js",
     },
     context,
@@ -78,13 +75,11 @@ const webpack_config_for_vanilla = {
     },
     module: {
         rules: [
-            webpack_configurator.rule_po_files,
             ...webpack_configurator.configureTypescriptRules(),
         ],
     },
     plugins: [
         manifest_plugin,
-        webpack_configurator.getMomentLocalePlugin(),
         webpack_configurator.getTypescriptCheckerPlugin(false),
     ],
     resolve: {
@@ -115,7 +110,6 @@ const webpack_config_for_legacy_scripts = {
 const entry_points = {
     default: "./themes/default/css/style.scss",
     "bp-style": "./themes/BurningParrot/git.scss",
-    "bp-style-siteadmin": "./themes/BurningParrot/site-admin/git.scss",
 };
 
 const webpack_config_for_themes = {

@@ -20,7 +20,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\Mirror\MirrorPresenter;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -41,10 +41,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
 
     /** @var AdminPageRenderer */
     private $admin_page_renderer;
-    /**
-     * @var IncludeAssets
-     */
-    private $include_assets;
+    private JavascriptAssetGeneric $asset;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -53,7 +50,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         ProjectManager $project_manager,
         Git_SystemEventManager $git_system_event_manager,
         AdminPageRenderer $admin_page_renderer,
-        IncludeAssets $include_assets,
+        JavascriptAssetGeneric $asset,
     ) {
         $this->csrf                           = $csrf;
         $this->git_mirror_mapper              = $git_mirror_mapper;
@@ -61,7 +58,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         $this->project_manager                = $project_manager;
         $this->git_system_event_manager       = $git_system_event_manager;
         $this->admin_page_renderer            = $admin_page_renderer;
-        $this->include_assets                 = $include_assets;
+        $this->asset                          = $asset;
     }
 
     public function process(Codendi_Request $request)
@@ -101,7 +98,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                 $this->renderAPresenter($title, $template_path, $presenter);
                 break;
             default:
-                $GLOBALS['HTML']->includeFooterJavascriptFile($this->include_assets->getFileURL('siteadmin-mirror.js'));
+                $GLOBALS['HTML']->addJavascriptAsset($this->asset);
 
                 $presenter = $this->getAllMirrorsPresenter($title);
                 $this->renderANoFramedPresenter($title, $template_path, $presenter);
