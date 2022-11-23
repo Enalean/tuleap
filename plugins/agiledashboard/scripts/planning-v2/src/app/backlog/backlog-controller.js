@@ -312,6 +312,7 @@ function BacklogController(
         }
 
         NewTuleapArtifactModalService.showCreation(
+            SharedPropertiesService.getUserId(),
             item_type.id,
             null,
             callback,
@@ -337,6 +338,7 @@ function BacklogController(
         }
 
         NewTuleapArtifactModalService.showCreation(
+            SharedPropertiesService.getUserId(),
             item_type.id,
             null,
             callback,

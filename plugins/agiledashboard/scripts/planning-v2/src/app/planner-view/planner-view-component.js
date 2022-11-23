@@ -256,6 +256,7 @@ function controller(
         const parent_artifact_id = self.isMilestoneContext() ? self.milestone_id : null;
 
         NewTuleapArtifactModalService.showCreation(
+            self.user_id,
             submilestone_type.id,
             parent_artifact_id,
             callback,
@@ -321,6 +322,7 @@ function controller(
         }
 
         NewTuleapArtifactModalService.showCreation(
+            self.user_id,
             item_type.id,
             null,
             callback,

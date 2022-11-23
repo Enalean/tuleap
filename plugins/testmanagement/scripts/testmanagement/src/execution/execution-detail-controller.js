@@ -225,7 +225,9 @@ function ExecutionDetailCtrl(
         ];
 
         const issue_tracker_id = SharedPropertiesService.getIssueTrackerId();
+        const current_user = SharedPropertiesService.getCurrentUser();
         NewTuleapArtifactModalService.showCreation(
+            current_user.id,
             issue_tracker_id,
             null,
             callback,

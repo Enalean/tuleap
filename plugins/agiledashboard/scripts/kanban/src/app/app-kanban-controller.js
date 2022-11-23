@@ -455,6 +455,7 @@ function KanbanCtrl(
         };
 
         NewTuleapArtifactModalService.showCreation(
+            SharedPropertiesService.getUserId(),
             self.kanban.tracker_id,
             null,
             callback,

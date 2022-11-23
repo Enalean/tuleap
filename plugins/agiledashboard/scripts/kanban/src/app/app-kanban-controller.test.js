@@ -39,6 +39,7 @@ describe("KanbanCtrl", function () {
         UserPreferencesService,
         kanban;
 
+    const user_id = 757;
     function emptyArray(array) {
         array.length = 0;
     }
@@ -84,7 +85,7 @@ describe("KanbanCtrl", function () {
         };
 
         jest.spyOn(SharedPropertiesService, "getKanban").mockReturnValue(kanban);
-        jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(757);
+        jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(user_id);
 
         jest.spyOn(KanbanService, "getBacklog").mockReturnValue($q.defer().promise);
         jest.spyOn(KanbanService, "getBacklogSize").mockReturnValue($q.defer().promise);
@@ -698,6 +699,7 @@ describe("KanbanCtrl", function () {
             KanbanCtrl.openAddArtifactModal(fake_event);
 
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
+                user_id,
                 56,
                 null,
                 expect.any(Function),
@@ -714,6 +716,7 @@ describe("KanbanCtrl", function () {
 
             beforeEach(function () {
                 NewTuleapArtifactModalService.showCreation.mockImplementation(function (
+                    user_id,
                     a,
                     b,
                     callback

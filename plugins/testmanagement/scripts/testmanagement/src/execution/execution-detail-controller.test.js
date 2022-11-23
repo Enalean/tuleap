@@ -35,6 +35,7 @@ describe("ExecutionDetailController -", () => {
         ExecutionRestService,
         ExecutionDetailController;
 
+    const user = { id: 626 };
     beforeEach(() => {
         angular.mock.module(execution_module);
         ckeditorGetData = {};
@@ -113,8 +114,9 @@ describe("ExecutionDetailController -", () => {
             $scope.campaign = {
                 label: "shirtless",
             };
+            jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
             jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(
-                (tracker_id, b, callback) => {
+                (user_id, tracker_id, b, callback) => {
                     callback(artifact.id);
                 }
             );
@@ -161,7 +163,6 @@ describe("ExecutionDetailController -", () => {
     });
 
     describe("Status updates", () => {
-        const user = { id: 626 };
         const execution = {
             id: 8,
             status: "notrun",
