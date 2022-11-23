@@ -22,26 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
-use Tuleap\PullRequest\Comment\ParentCommentSearcher;
-use Tuleap\PullRequest\Comment\ThreadColorUpdater;
+use Tuleap\PullRequest\Comment\ThreadCommentDao;
 
-class ThreadCommentColorAssigner
+class ThreadCommentColorRetriever
 {
-    public function __construct(private ParentCommentSearcher $dao, private ThreadColorUpdater $thread_color_updater)
+    public function __construct(private ThreadCommentDao $comment_dao)
     {
     }
 
-    public function assignColor(int $parent_id, string $color): void
+    public function retrieveColor(int $id, int $parent_id): string
     {
         if ($parent_id === 0) {
-            return;
+            return "";
         }
 
-        $parent_comment = $this->dao->searchByCommentID($parent_id);
-        if (! $parent_comment || $parent_comment['parent_id'] !== 0) {
-            return;
-        }
+        $all_comments = $this->comment_dao->searchAllThreadByPullRequestId($id);
+        return $this->getCorrespondingTlpColor($all_comments);
+    }
 
-        $this->thread_color_updater->setThreadColor($parent_comment['id'], $color);
+    private function getCorrespondingTlpColor(array $all_comments): string
+    {
+        $count = count($all_comments);
+        if ($count >= count(ThreadColors::TLP_COLORS)) {
+            $count %= count(ThreadColors::TLP_COLORS);
+        }
+        return ThreadColors::TLP_COLORS[$count];
     }
 }

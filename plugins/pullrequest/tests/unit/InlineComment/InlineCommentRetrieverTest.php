@@ -58,6 +58,7 @@ final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             'is_outdated' => 0,
             'parent_id' => 0,
             'position' => 'right',
+            "color" => null,
         ]);
 
         $this->assertNotNull($this->retriever->getInlineCommentByID(12));

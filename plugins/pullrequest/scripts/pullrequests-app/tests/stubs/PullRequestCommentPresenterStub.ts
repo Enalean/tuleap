@@ -44,6 +44,7 @@ const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     parent_id: 0,
     type: TYPE_GLOBAL_COMMENT,
     is_file_diff_comment: false,
+    color: "",
 };
 
 const file = {

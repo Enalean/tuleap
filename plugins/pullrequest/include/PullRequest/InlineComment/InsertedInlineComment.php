@@ -20,28 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\REST\v1\Comment;
+namespace Tuleap\PullRequest\InlineComment;
 
-use Tuleap\PullRequest\Comment\ParentCommentSearcher;
-use Tuleap\PullRequest\Comment\ThreadColorUpdater;
-
-class ThreadCommentColorAssigner
+/**
+ * @psalm-immutable
+ */
+final class InsertedInlineComment
 {
-    public function __construct(private ParentCommentSearcher $dao, private ThreadColorUpdater $thread_color_updater)
+    private function __construct(public int $id, public string $color)
     {
     }
 
-    public function assignColor(int $parent_id, string $color): void
+    public static function build(int $id, string $color): self
     {
-        if ($parent_id === 0) {
-            return;
-        }
-
-        $parent_comment = $this->dao->searchByCommentID($parent_id);
-        if (! $parent_comment || $parent_comment['parent_id'] !== 0) {
-            return;
-        }
-
-        $this->thread_color_updater->setThreadColor($parent_comment['id'], $color);
+        return new self($id, $color);
     }
 }

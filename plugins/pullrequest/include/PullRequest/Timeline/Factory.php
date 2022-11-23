@@ -94,7 +94,8 @@ class Factory
             $row['user_id'],
             $row['post_date'],
             $row['content'],
-            $row['parent_id']
+            $row['parent_id'],
+            (string) $row['color'],
         );
     }
 }

@@ -51,6 +51,7 @@ export interface TimelineEventPayload {
     readonly file_path?: string;
     readonly position?: InlineCommentPosition;
     readonly unidiff_offset?: number;
+    readonly color: string;
 }
 
 export interface CommentReplyPayload {
@@ -59,6 +60,7 @@ export interface CommentReplyPayload {
     readonly user: PullRequestUser;
     readonly post_date: string;
     readonly parent_id: number;
+    readonly color: string;
 }
 
 interface PullRequestCommentFile {
@@ -78,6 +80,7 @@ interface CommonComment {
     readonly post_date: string;
     readonly file?: PullRequestCommentFile;
     readonly parent_id: number;
+    color: string;
 }
 
 export interface PullRequestGlobalCommentPresenter extends CommonComment {
@@ -109,6 +112,7 @@ export const PullRequestCommentPresenter = {
         file_path: comment.file_path,
         parent_id: comment.parent_id,
         is_file_diff_comment: true,
+        color: comment.color,
     }),
     fromTimelineEvent: (
         $state: State,
@@ -142,6 +146,7 @@ export const PullRequestCommentPresenter = {
             parent_id: event.parent_id,
             ...file,
             is_file_diff_comment: false,
+            color: event.color,
         };
     },
     fromCommentReply: (
@@ -157,6 +162,7 @@ export const PullRequestCommentPresenter = {
         is_inline_comment: parent_comment.is_inline_comment,
         parent_id: reply.parent_id,
         is_file_diff_comment: false,
+        color: "",
     }),
 };
 

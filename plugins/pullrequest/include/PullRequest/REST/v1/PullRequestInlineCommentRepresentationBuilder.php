@@ -52,7 +52,8 @@ class PullRequestInlineCommentRepresentationBuilder
                 $row['position'],
                 $row['parent_id'],
                 $row['id'],
-                $row['file_path']
+                $row['file_path'],
+                (string) $row['color']
             );
         }
 

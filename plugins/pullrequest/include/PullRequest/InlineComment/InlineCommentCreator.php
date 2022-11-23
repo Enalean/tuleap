@@ -24,6 +24,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
+use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
 use PFUser;
 use ReferenceManager;
@@ -35,6 +36,7 @@ class InlineCommentCreator
         private Dao $dao,
         private ReferenceManager $reference_manager,
         private EventDispatcherInterface $event_dispatcher,
+        private ThreadCommentColorRetriever $color_retriever,
         private ThreadCommentColorAssigner $color_assigner,
     ) {
     }
@@ -43,9 +45,9 @@ class InlineCommentCreator
         PullRequest $pull_request,
         PFUser $user,
         PullRequestInlineCommentPOSTRepresentation $comment_data,
-        $post_date,
-        $project_id,
-    ): int {
+        int $post_date,
+        int $project_id,
+    ): InsertedInlineComment {
         $pull_request_id = $pull_request->getId();
 
         $inserted = $this->dao->insert(
@@ -59,7 +61,8 @@ class InlineCommentCreator
             (int) $comment_data->parent_id,
         );
 
-        $this->color_assigner->assignColor($pull_request_id, (int) $comment_data->parent_id);
+        $color = $this->color_retriever->retrieveColor($pull_request_id, (int) $comment_data->parent_id);
+        $this->color_assigner->assignColor((int) $comment_data->parent_id, $color);
 
         $this->reference_manager->extractCrossRef(
             $comment_data->content,
@@ -72,6 +75,6 @@ class InlineCommentCreator
 
         $this->event_dispatcher->dispatch(PullRequestNewInlineCommentEvent::fromInlineCommentID($inserted));
 
-        return $inserted;
+        return InsertedInlineComment::build($inserted, $color);
     }
 }

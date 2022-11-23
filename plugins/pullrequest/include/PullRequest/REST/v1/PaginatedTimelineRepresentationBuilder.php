@@ -63,7 +63,8 @@ class PaginatedTimelineRepresentationBuilder
                     $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
                     $event->getContent(),
-                    $event->getParentId()
+                    $event->getParentId(),
+                    $event->getColor()
                 );
             case InlineComment::class:
                 assert($event instanceof InlineComment);
@@ -77,7 +78,8 @@ class PaginatedTimelineRepresentationBuilder
                     $project_id,
                     $event->getParentId(),
                     $event->getId(),
-                    $event->getPosition()
+                    $event->getPosition(),
+                    $event->getColor()
                 );
             case TimelineGlobalEvent::class:
                 assert($event instanceof TimelineGlobalEvent);

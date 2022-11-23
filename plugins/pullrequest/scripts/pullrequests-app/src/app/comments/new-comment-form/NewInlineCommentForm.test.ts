@@ -88,6 +88,7 @@ describe("NewInlineCommentForm", () => {
                 file_path: "README.md",
                 position: INLINE_COMMENT_POSITION_RIGHT,
                 parent_id: 0,
+                color: "",
             };
 
             const comment_saver = SaveNewInlineCommentStub.withResponsePayload(

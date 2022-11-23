@@ -35,6 +35,7 @@ final class InlineComment implements TimelineEvent
         private bool $is_outdated,
         private int $parent_id,
         private string $position,
+        private string $color,
     ) {
     }
 
@@ -51,6 +52,7 @@ final class InlineComment implements TimelineEvent
             (bool) $row['is_outdated'],
             (int) $row['parent_id'],
             $row['position'],
+            (string) $row['color'],
         );
     }
 
@@ -112,5 +114,10 @@ final class InlineComment implements TimelineEvent
     public function getPosition(): string
     {
         return $this->position;
+    }
+
+    public function getColor(): string
+    {
+        return $this->color;
     }
 }
