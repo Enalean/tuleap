@@ -112,7 +112,7 @@ class hudson_gitPlugin extends Plugin
             && strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getIncludeAssets()->getFileURL('style.css') . '" />';
-            echo '<link rel="stylesheet" type="text/css" href="' . $git_plugin->getIncludeAssets()->getFileURL('default.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $git_plugin->getLegacyAssets()->getFileURL('default.css') . '" />';
         }
     }
 

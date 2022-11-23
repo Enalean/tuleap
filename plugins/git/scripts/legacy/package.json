@@ -1,0 +1,15 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-git-legacy",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.prod.mjs",
+    "watch": "webpack --config webpack.dev.mjs --watch"
+  }
+}
