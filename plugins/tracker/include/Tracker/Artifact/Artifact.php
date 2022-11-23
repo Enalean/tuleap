@@ -2210,7 +2210,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 new ChangesetCommentIndexer(
                     new ItemToIndexQueueEventBased($event_dispatcher),
                     $event_dispatcher,
-                    Codendi_HTMLPurifier::instance(),
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )

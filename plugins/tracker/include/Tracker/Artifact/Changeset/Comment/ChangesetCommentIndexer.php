@@ -35,7 +35,6 @@ class ChangesetCommentIndexer
     public function __construct(
         private ItemToIndexQueue $index_queue,
         private EventDispatcherInterface $event_dispatcher,
-        private \Codendi_HTMLPurifier $purifier,
         private Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
     ) {
     }

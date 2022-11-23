@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Codendi_HTMLPurifier;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_Artifact_ChangesetFactoryBuilder;
@@ -161,7 +160,6 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 new ChangesetCommentIndexer(
                     new ItemToIndexQueueEventBased($event_dispatcher),
                     $event_dispatcher,
-                    Codendi_HTMLPurifier::instance(),
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )

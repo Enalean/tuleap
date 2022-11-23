@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1\Card;
 
-use Codendi_HTMLPurifier;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Exception;
@@ -127,7 +126,6 @@ class CardPatcher
                 new ChangesetCommentIndexer(
                     new ItemToIndexQueueEventBased($event_dispatcher),
                     $event_dispatcher,
-                    Codendi_HTMLPurifier::instance(),
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )
