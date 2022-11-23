@@ -24,6 +24,11 @@ import * as vue from "vue";
 import type { App } from "vue";
 
 vi.mock("vue");
+vi.mock("./Components/MainComponent.vue", () => {
+    return {
+        default: {},
+    };
+});
 
 describe("init-modal", () => {
     it("initializes the modal multiple times", () => {
