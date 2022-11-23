@@ -63,9 +63,11 @@
             {{ $gettext("Wiki page") }}
         </button>
         <template v-for="section in create_new_item_alternatives">
-            <span class="tlp-dropdown-menu-title" v-bind:key="section.title">{{
-                section.title
-            }}</span>
+            <span
+                class="tlp-dropdown-menu-title document-dropdown-menu-title"
+                v-bind:key="section.title"
+                >{{ section.title }}</span
+            >
             <span
                 v-for="alternative in section.alternatives"
                 class="tlp-dropdown-menu-item"

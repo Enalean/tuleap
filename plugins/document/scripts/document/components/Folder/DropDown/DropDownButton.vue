@@ -36,10 +36,9 @@
             <i v-else class="fa-solid fa-ellipsis" aria-hidden="true"></i>
         </button>
         <div
-            class="tlp-dropdown-menu tlp-dropdown-menu-right document-dropdown-menu"
+            class="tlp-dropdown-menu document-dropdown-menu"
             v-bind:class="{
                 'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState,
-                'tlp-dropdown-menu-right': isInQuickLookMode,
             }"
             role="menu"
         >
