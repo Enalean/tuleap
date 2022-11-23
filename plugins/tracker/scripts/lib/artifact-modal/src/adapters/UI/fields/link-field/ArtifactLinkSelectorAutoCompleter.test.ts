@@ -32,10 +32,9 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
-import type { GroupCollection, GroupOfItems } from "@tuleap/link-selector";
+import type { GroupCollection } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { LinkField } from "./LinkField";
-import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
 
 const ARTIFACT_ID = 1621;
 const TRACKER_ID = 978;
@@ -101,27 +100,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         );
         await autocompleter.autoComplete(host, query);
     };
-
-    describe("getRecentlyViewedItems", () => {
-        const getRecentlyViewedItems = (): GroupOfItems => {
-            const artifact_link_selector_auto_completer = ArtifactLinkSelectorAutoCompleter(
-                artifact_retriever,
-                fault_notifier,
-                notification_clearer,
-                parents_retriever,
-                VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
-                current_artifact_identifier,
-                current_tracker_identifier,
-                is_search_feature_flag_enabled
-            );
-            return artifact_link_selector_auto_completer.getRecentlyViewedItems();
-        };
-
-        it("Introduces getRecentlyViewedItems test", () => {
-            const recently_viewed_items = getRecentlyViewedItems();
-            expect(recently_viewed_items).toStrictEqual(RecentlyViewedArtifactGroup.buildEmpty());
-        });
-    });
 
     describe(`given the selected type is NOT reverse _is_child`, () => {
         it.each([

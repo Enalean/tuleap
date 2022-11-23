@@ -56,7 +56,6 @@ import type {
 import type { LinkField } from "./LinkField";
 import type { CollectAllowedLinksTypes } from "../../../../domain/fields/link-field/CollectAllowedLinksTypes";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
-import type { GroupOfItems } from "@tuleap/link-selector";
 
 export type LinkFieldControllerType = {
     displayField(): LinkFieldPresenter;
@@ -65,13 +64,11 @@ export type LinkFieldControllerType = {
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     autoComplete(host: LinkField, query: string): void;
-    recentlyViewedItems(): GroupOfItems;
     addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
     initPopovers: (popover_elements: LinkedArtifactPopoverElement[]) => void;
     retrievePossibleParentsGroups(): PromiseLike<GroupCollection>;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
-    is_search_feature_flag_enabled: boolean;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -113,11 +110,8 @@ export const LinkFieldController = (
     current_artifact_reference: ArtifactCrossReference | null,
     control_popovers: ControlLinkedArtifactsPopovers,
     allowed_links_types_collection: CollectAllowedLinksTypes,
-    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy,
-    is_search_feature_flag_enabled: boolean
+    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy
 ): LinkFieldControllerType => ({
-    is_search_feature_flag_enabled: is_search_feature_flag_enabled,
-
     displayField: () =>
         LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
 
@@ -163,8 +157,6 @@ export const LinkFieldController = (
     },
 
     autoComplete: links_autocompleter.autoComplete,
-
-    recentlyViewedItems: links_autocompleter.getRecentlyViewedItems,
 
     addNewLink(artifact, type): NewLinkCollectionPresenter {
         new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));

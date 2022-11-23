@@ -187,8 +187,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 ArtifactCrossReferenceStub.withRef("story #72"),
                 ControlLinkedArtifactsPopoversStub.build(),
                 AllowedLinksTypesCollection.buildFromTypesRepresentations([]),
-                VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
-                is_search_feature_flag_enabled
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
             );
 
             return {

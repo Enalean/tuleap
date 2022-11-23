@@ -162,8 +162,7 @@ describe(`LinkFieldController`, () => {
             cross_reference,
             ControlLinkedArtifactsPopoversStub.build(),
             AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_link_types),
-            verify_is_tracker_in_a_hierarchy,
-            is_search_feature_flag_enabled
+            verify_is_tracker_in_a_hierarchy
         );
     };
 

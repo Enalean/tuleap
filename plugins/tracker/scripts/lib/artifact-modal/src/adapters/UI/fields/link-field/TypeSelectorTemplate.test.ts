@@ -125,8 +125,7 @@ describe("TypeSelectorTemplate", () => {
             ArtifactCrossReferenceStub.withRef("bug #22"),
             ControlLinkedArtifactsPopoversStub.build(),
             AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
-            VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
-            is_search_feature_flag_enabled
+            VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
         );
         host = {
             controller,

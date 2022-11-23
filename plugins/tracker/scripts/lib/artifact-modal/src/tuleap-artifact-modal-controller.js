@@ -197,8 +197,7 @@ function ArtifactModalController(
                 ),
                 LinkedArtifactsPopoversController(),
                 AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
-                TrackerInAHierarchyVerifier(modal_model.tracker.parent),
-                modal_model.is_search_enabled
+                TrackerInAHierarchyVerifier(modal_model.tracker.parent)
             );
         },
         getFileFieldController: (field) => {
