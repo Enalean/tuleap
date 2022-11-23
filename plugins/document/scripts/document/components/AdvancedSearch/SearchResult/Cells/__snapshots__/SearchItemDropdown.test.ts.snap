@@ -26,7 +26,7 @@ exports[`SearchItemDropdown should render the dropdown with the menu detached 1`
     </div>
   </div>
   <div
-    class="tlp-dropdown-menu document-dropdown-menu tlp-dropdown-menu-right"
+    class="tlp-dropdown-menu document-dropdown-menu"
     data-dropdown="menu"
     data-triggered-by="document-search-dropdown-trigger-111"
     role="menu"

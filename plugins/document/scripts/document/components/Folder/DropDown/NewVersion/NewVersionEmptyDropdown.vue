@@ -31,11 +31,7 @@
             <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
         </button>
 
-        <new-version-empty-menu-options
-            v-bind:item="item"
-            ref="menu"
-            class="tlp-dropdown-menu-right"
-        />
+        <new-version-empty-menu-options v-bind:item="item" ref="menu" />
     </div>
 </template>
 

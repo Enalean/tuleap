@@ -32,7 +32,7 @@
             <i class="fa-solid fa-caret-down tlp-button-icon-right"></i>
         </button>
         <div
-            class="tlp-dropdown-menu document-dropdown-menu tlp-dropdown-menu-right"
+            class="tlp-dropdown-menu document-dropdown-menu"
             role="menu"
             ref="dropdown_menu"
             v-bind:data-triggered-by="button_id"
