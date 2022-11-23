@@ -97,9 +97,15 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
     protected function LoadData(): void // @codingStandardsIgnoreLine
     {
         $head = $this->project->GetHeadCommit();
+        if ($head === null) {
+            throw new NotFoundException();
+        }
         $this->tpl->assign('head', $head);
 
         $tag = $this->project->GetTag($this->params['hash']);
+        if ($tag === null) {
+            throw new NotFoundException();
+        }
 
         $tagger = $tag->GetTagger() ?: '';
         preg_match('/(?P<name>.*)\s*<(?P<email>.*)>/', $tagger, $matches);

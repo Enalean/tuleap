@@ -105,9 +105,15 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $head = $this->project->GetHeadCommit();
+        if ($head === null) {
+            throw new NotFoundException();
+        }
         $this->tpl->assign('head', $head);
 
         $commit = $this->project->GetCommit($this->params['hashbase']);
+        if ($commit === null) {
+            throw new NotFoundException();
+        }
         $this->tpl->assign('commit', $commit);
 
         if ((! isset($this->params['hash'])) && (isset($this->params['file']))) {
