@@ -21,8 +21,18 @@ import type {
     FileDiffCommentWidget,
     FileDiffPlaceholderWidget,
 } from "../../src/app/file-diff/diff-modes/types";
+import { PullRequestCommentPresenterStub } from "./PullRequestCommentPresenterStub";
+import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
+import { PullRequestCommentControllerStub } from "./PullRequestCommentControllerStub";
+import { CurrentPullRequestUserPresenterStub } from "./CurrentPullRequestUserPresenterStub";
+import { CurrentPullRequestPresenterStub } from "./CurrentPullRequestPresenterStub";
+import { SaveNewInlineCommentStub } from "./SaveNewInlineCommentStub";
 
 const base_element = document.implementation.createHTMLDocument().createElement("div");
+
+const noop = (): void => {
+    // Do nothing
+};
 
 const stubBounding = (height: number) => {
     return (): DOMRect => ({
@@ -43,12 +53,22 @@ export const FileDiffWidgetStub = {
         ...base_element,
         localName: "tuleap-pullrequest-comment",
         getBoundingClientRect: stubBounding(height),
+        comment: PullRequestCommentPresenterStub.buildInlineComment(),
+        relativeDateHelper: RelativeDateHelperStub,
+        controller: PullRequestCommentControllerStub(),
+        currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
+        currentPullRequest: CurrentPullRequestPresenterStub.withDefault(),
+        post_rendering_callback: noop,
     }),
 
     buildNewCommentFormWidget: (height = 20): FileDiffCommentWidget => ({
         ...base_element,
         localName: "tuleap-pullrequest-new-comment-form",
         getBoundingClientRect: stubBounding(height),
+        comment_saver: SaveNewInlineCommentStub.withDefault(),
+        post_rendering_callback: noop,
+        post_submit_callback: noop,
+        on_cancel_callback: noop,
     }),
 
     buildCodeCommentPlaceholder: (height = 20): FileDiffPlaceholderWidget => ({

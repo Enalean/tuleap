@@ -17,7 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FileDiffCommentWidget, FileDiffPlaceholderWidget, FileDiffWidget } from "./types";
+import type {
+    FileDiffCommentWidget,
+    FileDiffPlaceholderWidget,
+    FileDiffWidget,
+    InlineCommentWidget,
+    NewInlineCommentFormWidget,
+} from "./types";
 import type { FileLineHandle, LineHandleWithWidgets } from "./types-codemirror-overriden";
 import { TAG_NAME as INLINE_COMMENT_NAME } from "../../comments/PullRequestComment";
 import { TAG_NAME as PLACEHOLDER_NAME } from "../FileDiffPlaceholder";
@@ -33,14 +39,26 @@ export function isCodeCommentPlaceholderWidget(
     return isPlaceholderWidget(widget) && Boolean(widget.isReplacingAComment) === true;
 }
 
-function isPlaceholderWidget(widget: FileDiffWidget): widget is FileDiffPlaceholderWidget {
+export function isPlaceholderWidget(
+    widget: FileDiffWidget | HTMLElement
+): widget is FileDiffPlaceholderWidget {
     return widget.localName === PLACEHOLDER_NAME;
 }
 
-export function isCommentWidget(widget: FileDiffWidget): widget is FileDiffCommentWidget {
-    return isANewInlineCommentWidget(widget) || widget.localName === INLINE_COMMENT_NAME;
+export function isCommentWidget(
+    widget: FileDiffWidget | HTMLElement
+): widget is FileDiffCommentWidget {
+    return isANewInlineCommentWidget(widget) || isPullRequestCommentWidget(widget);
 }
 
-export function isANewInlineCommentWidget(widget: FileDiffWidget): widget is FileDiffCommentWidget {
+export function isPullRequestCommentWidget(
+    widget: FileDiffWidget | HTMLElement
+): widget is InlineCommentWidget {
+    return widget.localName === INLINE_COMMENT_NAME;
+}
+
+export function isANewInlineCommentWidget(
+    widget: FileDiffWidget | HTMLElement
+): widget is NewInlineCommentFormWidget {
     return widget.localName === NEW_INLINE_COMMENT_NAME;
 }

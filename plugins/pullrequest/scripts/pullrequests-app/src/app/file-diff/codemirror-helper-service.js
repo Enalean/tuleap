@@ -18,130 +18,17 @@
  */
 
 import CodeMirror from "codemirror";
-import { getStore } from "./comments-store.ts";
-import { RelativeDateHelper } from "../helpers/date-helpers";
-import { PullRequestCommentController } from "../comments/PullRequestCommentController";
-import { PullRequestCommentReplyFormFocusHelper } from "../comments/PullRequestCommentReplyFormFocusHelper";
-import { PullRequestPresenter } from "../comments/PullRequestPresenter";
-import { PullRequestCommentNewReplySaver } from "../comments/PullRequestCommentReplySaver";
-import { PullRequestCurrentUserPresenter } from "../comments/PullRequestCurrentUserPresenter";
-import { TAG_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../comments/new-comment-form/NewInlineCommentForm";
-import { TAG_NAME as COMMENT_TAG_NAME } from "../comments/PullRequestComment";
-import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./FileDiffPlaceholder";
-import { NewInlineCommentSaver } from "../comments/new-comment-form/NewInlineCommentSaver";
 
 export default CodeMirrorHelperService;
 
-CodeMirrorHelperService.$inject = ["gettextCatalog", "SharedPropertiesService"];
+CodeMirrorHelperService.$inject = ["gettextCatalog"];
 
-function CodeMirrorHelperService(gettextCatalog, SharedPropertiesService) {
+function CodeMirrorHelperService(gettextCatalog) {
     const self = this;
     Object.assign(self, {
         collapseCommonSectionsSideBySide,
         collapseCommonSectionsUnidiff,
-        displayInlineComment,
-        showCommentForm,
-        displayPlaceholderWidget,
     });
-
-    function displayInlineComment(code_mirror, comment, line_number) {
-        const inline_comment_element = document.createElement(COMMENT_TAG_NAME);
-        inline_comment_element.comment = comment;
-        inline_comment_element.setAttribute("class", "inline-comment-element");
-        inline_comment_element.relativeDateHelper = RelativeDateHelper(
-            SharedPropertiesService.getDateTimeFormat(),
-            SharedPropertiesService.getRelativeDateDisplay(),
-            SharedPropertiesService.getUserLocale()
-        );
-        inline_comment_element.controller = PullRequestCommentController(
-            PullRequestCommentReplyFormFocusHelper(),
-            getStore(),
-            PullRequestCommentNewReplySaver()
-        );
-        inline_comment_element.currentUser = PullRequestCurrentUserPresenter.fromUserInfo(
-            SharedPropertiesService.getUserId(),
-            SharedPropertiesService.getUserAvatarUrl()
-        );
-        inline_comment_element.currentPullRequest = PullRequestPresenter.fromPullRequest(
-            SharedPropertiesService.getPullRequest()
-        );
-
-        const options = getWidgetPlacementOptions(code_mirror, line_number);
-
-        return code_mirror.addLineWidget(line_number, inline_comment_element, options);
-    }
-
-    function showCommentForm(
-        code_mirror,
-        widget_line_number,
-        new_inline_comment_context,
-        post_rendering_callback = () => {}
-    ) {
-        const new_comment_element = document.createElement(NEW_COMMENT_FORM_TAG_NAME);
-
-        const widget = code_mirror.addLineWidget(
-            widget_line_number,
-            new_comment_element,
-            getWidgetPlacementOptions(code_mirror, widget_line_number)
-        );
-
-        new_comment_element.comment_saver = NewInlineCommentSaver(new_inline_comment_context);
-        new_comment_element.post_rendering_callback = post_rendering_callback;
-        new_comment_element.post_submit_callback = (comment_presenter) => {
-            widget.clear();
-
-            getStore().addRootComment(comment_presenter);
-            const comment_widget = self.displayInlineComment(
-                code_mirror,
-                comment_presenter,
-                widget_line_number
-            );
-
-            comment_widget.node.post_rendering_callback = post_rendering_callback;
-        };
-
-        new_comment_element.on_cancel_callback = () => {
-            widget.clear();
-            post_rendering_callback();
-        };
-    }
-
-    function getWidgetPlacementOptions(code_mirror, display_line_number) {
-        const options = {
-            coverGutter: true,
-        };
-        const line_handle = code_mirror.getLineHandle(display_line_number);
-        const placeholder_index = getPlaceholderWidgetIndex(line_handle);
-        if (placeholder_index !== -1) {
-            options.insertAt = placeholder_index;
-        }
-        return options;
-    }
-
-    function getPlaceholderWidgetIndex(handle) {
-        if (!handle.widgets) {
-            return -1;
-        }
-        return handle.widgets.findIndex((widget) => {
-            return widget.node.classList.contains("pull-request-file-diff-placeholder-block");
-        });
-    }
-
-    function displayPlaceholderWidget(widget_params) {
-        const { code_mirror, handle, widget_height, display_above_line, is_comment_placeholder } =
-            widget_params;
-
-        const options = {
-            coverGutter: true,
-            above: display_above_line,
-        };
-
-        const placeholder = document.createElement(PLACEHOLDER_TAG_NAME);
-        placeholder.height = widget_height;
-        placeholder.isReplacingAComment = is_comment_placeholder;
-
-        code_mirror.addLineWidget(handle, placeholder, options);
-    }
 
     function getCollapsedLabelElement(section) {
         const collapsed_label = document.createElement("span");

@@ -37,6 +37,13 @@ import { SideBySideLineMapper } from "./side-by-side-line-mapper";
 import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors-content-manager";
 import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
 import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
+import { SideBySideCodeMirrorWidgetCreator } from "./side-by-side-code-mirror-widget-creator";
+import { RelativeDateHelper } from "../../helpers/date-helpers";
+import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
+import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
+import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
+import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
+import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
 
 export default {
     template: `
@@ -51,9 +58,15 @@ export default {
     },
 };
 
-controller.$inject = ["$element", "$scope", "$q", "CodeMirrorHelperService"];
+controller.$inject = [
+    "$element",
+    "$scope",
+    "$q",
+    "CodeMirrorHelperService",
+    "SharedPropertiesService",
+];
 
-function controller($element, $scope, $q, CodeMirrorHelperService) {
+function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropertiesService) {
     const self = this;
 
     Object.assign(self, {
@@ -64,6 +77,25 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
         code_placeholder_builder: {},
         placeholder_positioner: {},
         lines_equalizer: {},
+        widget_creator: SideBySideCodeMirrorWidgetCreator(
+            document,
+            RelativeDateHelper(
+                SharedPropertiesService.getDateTimeFormat(),
+                SharedPropertiesService.getRelativeDateDisplay(),
+                SharedPropertiesService.getUserLocale()
+            ),
+            PullRequestCommentController(
+                PullRequestCommentReplyFormFocusHelper(),
+                getStore(),
+                PullRequestCommentNewReplySaver()
+            ),
+            getStore(),
+            PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest()),
+            PullRequestCurrentUserPresenter.fromUserInfo(
+                SharedPropertiesService.getUserId(),
+                SharedPropertiesService.getUserAvatarUrl()
+            )
+        ),
     });
 
     function $onInit() {
@@ -142,7 +174,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             if (!widget_params) {
                 return;
             }
-            CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
+            self.widget_creator.displayPlaceholderWidget(widget_params);
         });
 
         file_lines.forEach(addCommentsPlaceholder);
@@ -160,33 +192,35 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
         const comment_line = self.file_lines_state.getCommentLine(comment);
 
         if (comment_line.new_offset === null) {
-            CodeMirrorHelperService.displayInlineComment(
+            self.widget_creator.displayInlineCommentWidget(
                 left_code_mirror,
                 comment,
-                comment_line.old_offset - 1
-            ).node.post_rendering_callback = () => {
-                recomputeCommentPlaceholderHeight(
-                    self.code_mirrors_content_manager.getLineInLeftCodeMirror(
-                        comment_line.old_offset - 1
-                    )
-                );
-            };
+                comment_line.old_offset - 1,
+                () => {
+                    recomputeCommentPlaceholderHeight(
+                        self.code_mirrors_content_manager.getLineInLeftCodeMirror(
+                            comment_line.old_offset - 1
+                        )
+                    );
+                }
+            );
 
             return addCommentsPlaceholder(comment_line);
         }
 
         if (comment_line.old_offset === null) {
-            CodeMirrorHelperService.displayInlineComment(
+            self.widget_creator.displayInlineCommentWidget(
                 right_code_mirror,
                 comment,
-                comment_line.new_offset - 1
-            ).node.post_rendering_callback = () => {
-                recomputeCommentPlaceholderHeight(
-                    self.code_mirrors_content_manager.getLineInRightCodeMirror(
-                        comment_line.new_offset - 1
-                    )
-                );
-            };
+                comment_line.new_offset - 1,
+                () => {
+                    recomputeCommentPlaceholderHeight(
+                        self.code_mirrors_content_manager.getLineInRightCodeMirror(
+                            comment_line.new_offset - 1
+                        )
+                    );
+                }
+            );
 
             return addCommentsPlaceholder(comment_line);
         }
@@ -200,17 +234,18 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
                 ? comment_line.old_offset - 1
                 : comment_line.new_offset - 1;
 
-        CodeMirrorHelperService.displayInlineComment(
+        self.widget_creator.displayInlineCommentWidget(
             target_code_mirror,
             comment,
-            line_number
-        ).node.post_rendering_callback = () => {
-            recomputeCommentPlaceholderHeight(
-                comment.position === INLINE_COMMENT_POSITION_LEFT
-                    ? self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
-                    : self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
-            );
-        };
+            line_number,
+            () => {
+                recomputeCommentPlaceholderHeight(
+                    comment.position === INLINE_COMMENT_POSITION_LEFT
+                        ? self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
+                        : self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
+                );
+            }
+        );
 
         return addCommentsPlaceholder(comment_line);
     }
@@ -223,7 +258,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
 
         const placeholder_to_create = self.lines_equalizer.equalizeSides(line_handles);
         if (placeholder_to_create) {
-            CodeMirrorHelperService.displayPlaceholderWidget(placeholder_to_create);
+            self.widget_creator.displayPlaceholderWidget(placeholder_to_create);
         }
     }
 
@@ -248,7 +283,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             return;
         }
 
-        CodeMirrorHelperService.showCommentForm(
+        self.widget_creator.displayNewInlineCommentFormWidget(
             left_code_mirror,
             line_number,
             NewInlineCommentContext.fromContext(
@@ -267,7 +302,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             return;
         }
 
-        CodeMirrorHelperService.showCommentForm(
+        self.widget_creator.displayNewInlineCommentFormWidget(
             right_code_mirror,
             line_number,
             NewInlineCommentContext.fromContext(
@@ -296,7 +331,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
             return;
         }
 
-        CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
+        self.widget_creator.displayPlaceholderWidget(widget_params);
     }
 
     function displayLine(line, left_code_mirror, right_code_mirror) {
