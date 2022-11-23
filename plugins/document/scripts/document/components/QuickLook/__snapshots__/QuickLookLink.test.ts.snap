@@ -8,26 +8,19 @@ exports[`QuickLookLink renders quick look for link document 1`] = `
     class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
     type="button"
   >
-    <i
-      class="fa-solid fa-arrow-up-right-from-square"
-    />
-     
     <translate-stub
       tag="span"
     >
       Open link
     </translate-stub>
+     
+    <i
+      aria-hidden="true"
+      class="fa-solid fa-right-long tlp-button-icon-right"
+    />
   </button>
    
   <drop-down-quick-look-stub
-    item="[object Object]"
-  />
-   
-  <div
-    class="document-header-spacer"
-  />
-   
-  <quick-look-delete-button-stub
     item="[object Object]"
   />
 </div>

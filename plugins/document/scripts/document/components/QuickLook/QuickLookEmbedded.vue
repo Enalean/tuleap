@@ -20,15 +20,19 @@
 
 <template>
     <div class="document-quick-look-document-action">
+        <router-link
+            class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+            v-bind:to="{ name: 'item', params: { folder_id: item.parent_id, item_id: item.id } }"
+        >
+            <translate>Open</translate>
+            <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
+        </router-link>
         <drop-down-quick-look v-bind:item="item" />
-        <div class="document-header-spacer"></div>
-        <quick-look-delete-button v-bind:item="item" />
     </div>
 </template>
 
 <script setup lang="ts">
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
-import QuickLookDeleteButton from "../Folder/ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import type { Item } from "../../type";
 
 defineProps<{ item: Item }>();

@@ -26,18 +26,15 @@
             v-on:click="wikiPageRedirect"
             data-test="go-to-the-wiki-page"
         >
-            <i class="fa-solid fa-right-long tlp-button-icon"></i>
-            <translate>Go to the wiki page</translate>
+            <translate>Open</translate>
+            <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
         </button>
         <drop-down-quick-look v-bind:item="item" />
-        <div class="document-header-spacer"></div>
-        <quick-look-delete-button v-bind:item="item" />
     </div>
 </template>
 
 <script setup lang="ts">
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
-import QuickLookDeleteButton from "../Folder/ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import type { Item } from "../../type";

@@ -22,14 +22,11 @@
     <div class="document-quick-look-document-action">
         <new-version-empty-dropdown v-bind:item="item" v-if="should_display_new_version_button" />
         <drop-down-quick-look v-bind:item="item" />
-        <div class="document-header-spacer"></div>
-        <quick-look-delete-button v-bind:item="item" />
     </div>
 </template>
 
 <script setup lang="ts">
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
-import QuickLookDeleteButton from "../Folder/ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import type { Empty } from "../../type";
 import NewVersionEmptyDropdown from "../Folder/DropDown/NewVersion/NewVersionEmptyDropdown.vue";
 import { computed } from "vue";

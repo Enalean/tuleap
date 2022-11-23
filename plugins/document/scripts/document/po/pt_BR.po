@@ -315,9 +315,6 @@ msgstr ""
 msgid "Go to the last version (%{ version_number })."
 msgstr ""
 
-msgid "Go to the wiki page"
-msgstr ""
-
 msgid "Got it"
 msgstr ""
 
