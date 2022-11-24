@@ -17,6 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+jest.mock("@tuleap/tlp-modal", () => {
+    return {
+        createModal: () => ({
+            addEventListener: jest.fn(),
+            show: jest.fn(),
+        }),
+    };
+});
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";

@@ -17,6 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Modal } from "@tuleap/tlp-modal";
+
+jest.mock("@tuleap/tlp-modal", () => {
+    return {
+        createModal: (): Modal =>
+            ({
+                addEventListener: jest.fn(),
+            } as unknown as Modal),
+    };
+});
+
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SearchItemModals from "./SearchItemModals.vue";

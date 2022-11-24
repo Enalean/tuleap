@@ -23,11 +23,9 @@ import localVue from "../../../../helpers/local-vue";
 import NewItemModal from "./NewItemModal.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import emitter from "../../../../helpers/emitter";
-import * as tlp from "tlp";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../../constants";
 import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
-
-jest.mock("tlp");
 
 describe("NewItemModal", () => {
     let factory, store;
@@ -103,7 +101,7 @@ describe("NewItemModal", () => {
             });
         };
 
-        jest.spyOn(tlp, "createModal").mockReturnValue({
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             removeEventListener: () => {},
             show: () => {},

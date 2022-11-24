@@ -9,7 +9,6 @@ exports[`SearchItemDropdown should render the dropdown with the menu detached 1`
       <button
         aria-label="Open dropdown menu"
         class="tlp-button-primary tlp-button-small"
-        data-dropdown="trigger"
         data-test="trigger"
         id="document-search-dropdown-trigger-111"
         type="button"
@@ -27,7 +26,6 @@ exports[`SearchItemDropdown should render the dropdown with the menu detached 1`
   </div>
   <div
     class="tlp-dropdown-menu document-dropdown-menu"
-    data-dropdown="menu"
     data-triggered-by="document-search-dropdown-trigger-111"
     role="menu"
   >

@@ -21,13 +21,11 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Modal } from "tlp";
-import * as tlp from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import FileCreationModal from "./FileCreationModal.vue";
 import { TYPE_FILE } from "../../../../constants";
 import type { State } from "../../../../type";
-
-jest.mock("tlp");
 
 describe("FileCreationModal", () => {
     const add_event_listener = jest.fn();
@@ -54,7 +52,7 @@ describe("FileCreationModal", () => {
     }
 
     beforeEach(() => {
-        jest.spyOn(tlp, "createModal").mockImplementation(() => {
+        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
                 addEventListener: add_event_listener,
                 show: modal_show,

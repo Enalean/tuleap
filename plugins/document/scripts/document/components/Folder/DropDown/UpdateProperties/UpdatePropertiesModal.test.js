@@ -24,9 +24,7 @@ import emitter from "../../../../helpers/emitter";
 
 import UpdatePropertiesModal from "./UpdatePropertiesModal.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import * as tlp from "tlp";
-
-jest.mock("tlp");
+import * as tlp_modal from "@tuleap/tlp-modal";
 
 describe("UpdatePropertiesModal", () => {
     let factory, store;
@@ -70,7 +68,7 @@ describe("UpdatePropertiesModal", () => {
             });
         };
 
-        jest.spyOn(tlp, "createModal").mockReturnValue({
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

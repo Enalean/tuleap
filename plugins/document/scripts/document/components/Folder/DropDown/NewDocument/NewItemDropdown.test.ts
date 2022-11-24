@@ -20,12 +20,12 @@
 import { shallowMount } from "@vue/test-utils";
 import NewItemDropdown from "./NewItemDropdown.vue";
 import type { Item } from "../../../../type";
-import * as tlp from "tlp";
-import type { Dropdown } from "tlp";
+import * as tlp_dropdown from "@tuleap/tlp-dropdown";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
 import localVue from "../../../../helpers/local-vue";
 import { TYPE_FOLDER } from "../../../../constants";
 import { ItemType } from "../../../../type";
-jest.mock("tlp");
+jest.mock("@tuleap/tlp-dropdown");
 
 describe("NewItemDropdown", function () {
     let fake_dropdown_object: Dropdown;
@@ -34,7 +34,7 @@ describe("NewItemDropdown", function () {
     beforeEach(() => {
         fake_dropdown_object = {} as Dropdown;
 
-        createDropdown = jest.spyOn(tlp, "createDropdown");
+        createDropdown = jest.spyOn(tlp_dropdown, "createDropdown");
         createDropdown.mockReturnValue(fake_dropdown_object);
     });
 

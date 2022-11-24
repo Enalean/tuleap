@@ -43,8 +43,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Popover } from "tlp";
-import { createPopover } from "tlp";
+import type { Popover } from "@tuleap/tlp-popovers";
+import { createPopover } from "@tuleap/tlp-popovers";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 

@@ -48,13 +48,13 @@
 </template>
 
 <script lang="ts">
-import type { Dropdown } from "tlp";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
 import {
     createDropdown,
     EVENT_TLP_DROPDOWN_SHOWN,
     EVENT_TLP_DROPDOWN_HIDDEN,
-    EVENT_TLP_MODAL_SHOWN,
-} from "tlp";
+} from "@tuleap/tlp-dropdown";
+import { EVENT_TLP_MODAL_SHOWN } from "@tuleap/tlp-modal";
 import emitter from "../../../helpers/emitter";
 import { Component, Prop, Vue } from "vue-property-decorator";
 

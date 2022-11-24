@@ -43,13 +43,13 @@
 import { isFolder } from "../../../../helpers/type-check-helper";
 import type { Item } from "../../../../type";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import type { Dropdown } from "tlp";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
 import {
     createDropdown,
     EVENT_TLP_DROPDOWN_HIDDEN,
     EVENT_TLP_DROPDOWN_SHOWN,
     TRIGGER_HOVER_AND_CLICK,
-} from "tlp";
+} from "@tuleap/tlp-dropdown";
 import NewItemMenuOptions from "./NewItemMenuOptions.vue";
 
 const props = defineProps<{ item: Item }>();

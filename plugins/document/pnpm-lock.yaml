@@ -12,8 +12,10 @@ specifiers:
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
+  '@tuleap/tlp-dropdown': link:../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers': link:../../lib/frontend/tlp-popovers
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants
@@ -54,8 +56,10 @@ dependencies:
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
+  '@tuleap/tlp-dropdown': link:../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers': link:../../lib/frontend/tlp-popovers
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants

@@ -57,7 +57,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import { sprintf } from "sprintf-js";
 import { TYPE_FILE } from "../../../../constants";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";

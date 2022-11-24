@@ -23,11 +23,9 @@ import localVue from "../../../helpers/local-vue";
 import PermissionsUpdateModal from "./PermissionsUpdateModal.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
-import * as tlp from "tlp";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import * as handle_errors from "../../../store/actions-helpers/handle-errors";
 import emitter from "../../../helpers/emitter";
-
-jest.mock("tlp");
 
 describe("PermissionsUpdateModal", () => {
     let factory, store;
@@ -47,7 +45,7 @@ describe("PermissionsUpdateModal", () => {
         };
 
         let hideFunction = null;
-        jest.spyOn(tlp, "createModal").mockReturnValue({
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener(type, listener) {
                 hideFunction = listener;
             },

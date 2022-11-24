@@ -46,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Modal } from "tlp";
-import { createModal } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
 import DocumentGlobalPropertyForCreate from "./PropertiesForCreate/DocumentGlobalPropertyForCreate.vue";
 import type { DefaultFileItem, Folder, RootState } from "../../../../type";
 import { TYPE_FILE } from "../../../../constants";
