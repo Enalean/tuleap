@@ -24,6 +24,8 @@ import NewItemModal from "./NewItemModal.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import emitter from "../../../../helpers/emitter";
 import * as tlp from "tlp";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../../constants";
+import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
 
 jest.mock("tlp");
 
@@ -103,6 +105,7 @@ describe("NewItemModal", () => {
 
         jest.spyOn(tlp, "createModal").mockReturnValue({
             addEventListener: () => {},
+            removeEventListener: () => {},
             show: () => {},
             hide: () => {},
         });
@@ -135,6 +138,7 @@ describe("NewItemModal", () => {
             value: "wololo some words",
         });
         expect(wrapper.vm.item.properties[0].value).toBe("wololo some words");
+        wrapper.destroy();
     });
 
     it("inherit default values from parent properties", async () => {
@@ -162,6 +166,7 @@ describe("NewItemModal", () => {
         await wrapper.vm.$nextTick().then(() => {});
 
         expect(wrapper.vm.item.properties).toStrictEqual(item_to_create.properties);
+        wrapper.destroy();
     });
 
     it("Updates status", () => {
@@ -187,6 +192,7 @@ describe("NewItemModal", () => {
         expect(wrapper.vm.item.status).toBe("approved");
         emitter.emit("update-status-property", "draft");
         expect(wrapper.vm.item.status).toBe("draft");
+        wrapper.destroy();
     });
 
     it("Updates title", () => {
@@ -212,6 +218,40 @@ describe("NewItemModal", () => {
         expect(wrapper.vm.item.title).toBe("Color folder");
         emitter.emit("update-title-property", "A folder");
         expect(wrapper.vm.item.title).toBe("A folder");
+        wrapper.destroy();
+    });
+
+    it("should update the filename accordingly to title when created from empty", async function () {
+        jest.spyOn(get_office_file, "getEmptyOfficeFileFromMimeType").mockResolvedValue({
+            badge_class: "document-document-badge",
+            extension: "docx",
+            file: new File([], "document.docx", { type: "application/docx" }),
+        });
+
+        const wrapper = factory({});
+        const parent = {
+            id: 123,
+            type: TYPE_FOLDER,
+            permissions_for_groups: { apply_permissions_on_children: true },
+            properties: [],
+        };
+        emitter.emit("createItem", {
+            item: parent,
+            type: TYPE_FILE,
+            from_alternative: {
+                mime_type: "application/word",
+                title: "Document",
+            },
+        });
+
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        emitter.emit("update-title-property", "Specs V1");
+        expect(wrapper.vm.item.file_properties.file.name).toBe("Specs V1.docx");
+        emitter.emit("update-title-property", "Specs V1.final");
+        expect(wrapper.vm.item.file_properties.file.name).toBe("Specs V1.final.docx");
+        wrapper.destroy();
     });
 
     it("Updates description", () => {
@@ -236,5 +276,6 @@ describe("NewItemModal", () => {
         expect(wrapper.vm.item.description).toBe("A custom description");
         emitter.emit("update-description-property", "A description");
         expect(wrapper.vm.item.description).toBe("A description");
+        wrapper.destroy();
     });
 });

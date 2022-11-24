@@ -148,7 +148,7 @@ describe("NewItemMenuOptions", function () {
         );
     });
 
-    it("should display new item alternatives", function () {
+    it("should display new item alternatives", async function () {
         const wrapper = getWrapper({ user_can_create_wiki: false, embedded_are_allowed: false }, [
             {
                 title: "section",
@@ -158,6 +158,15 @@ describe("NewItemMenuOptions", function () {
                 ],
             },
         ]);
-        expect(wrapper.findAll("[data-test=alternative]")).toHaveLength(2);
+        const alternatives = wrapper.findAll("[data-test=alternative]");
+        expect(alternatives).toHaveLength(2);
+
+        await alternatives.at(0).trigger("click");
+
+        expect(emitter.emit).toHaveBeenCalledWith("createItem", {
+            item: CURRENT_FOLDER,
+            type: TYPE_FILE,
+            from_alternative: { mime_type: "application/word", title: "Documents" },
+        });
     });
 });

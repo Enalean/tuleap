@@ -24,6 +24,7 @@ import { uploadFile } from "./upload-file";
 import type { ActionContext } from "vuex";
 import type { FakeItem, Folder, Property, RootState } from "../../type";
 import emitter from "../../helpers/emitter";
+import type { CreatedItem } from "../../type";
 
 export async function createNewFile(
     context: ActionContext<RootState, RootState>,
@@ -40,7 +41,7 @@ export async function createNewFile(
     },
     parent: Folder,
     should_display_fake_item: boolean
-): Promise<void> {
+): Promise<CreatedItem> {
     const dropped_file = item_to_create.file_properties.file;
     const new_file = await addNewFile(
         {
@@ -56,12 +57,13 @@ export async function createNewFile(
     if (dropped_file.size === 0) {
         const created_item = await getItem(new_file.id);
         flagItemAsCreated(context, created_item);
-        emitter.emit("new-item-has-just-been-created");
+        emitter.emit("new-item-has-just-been-created", created_item);
 
-        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
+        await context.commit("addJustCreatedItemToFolderContent", created_item);
+        return new_file;
     }
     if (context.state.folder_content.find(({ id }) => id === new_file.id)) {
-        return;
+        return new_file;
     }
     const fake_item: FakeItem = {
         id: new_file.id,
@@ -94,4 +96,6 @@ export async function createNewFile(
         collapsed_folder: parent,
         toggle: display_progress_bar_on_folder,
     });
+
+    return new_file;
 }

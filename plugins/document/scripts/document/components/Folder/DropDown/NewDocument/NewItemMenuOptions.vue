@@ -68,19 +68,20 @@
                 v-bind:key="section.title"
                 >{{ section.title }}</span
             >
-            <span
+            <button
                 v-for="alternative in section.alternatives"
                 class="tlp-dropdown-menu-item"
                 role="menuitem"
                 v-bind:key="section.title + alternative.title"
                 data-test="alternative"
+                v-on:click.prevent="showNewDocumentAlternativeModal(alternative)"
             >
                 <i
                     class="fa fa-fw tlp-dropdown-menu-item-icon"
                     v-bind:class="iconForMimeType(alternative.mime_type)"
                 ></i>
                 {{ alternative.title }}
-            </span>
+            </button>
         </template>
         <span
             class="tlp-dropdown-menu-separator"
@@ -111,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Item, ItemType } from "../../../../type";
+import type { Item, ItemType, NewItemAlternative } from "../../../../type";
 import {
     ICON_EMBEDDED,
     TYPE_FILE,
@@ -143,6 +144,14 @@ const create_new_item_alternatives = inject<NewItemAlternativeArray>(
 const props = defineProps<{ item: Item }>();
 function showNewDocumentModal(type: ItemType): void {
     emitter.emit("createItem", { item: props.item, type });
+}
+
+function showNewDocumentAlternativeModal(alternative: NewItemAlternative): void {
+    emitter.emit("createItem", {
+        item: props.item,
+        type: TYPE_FILE,
+        from_alternative: alternative,
+    });
 }
 
 function showNewFolderModal(): void {

@@ -181,6 +181,9 @@ msgstr ""
 msgid "Create a new version of document"
 msgstr ""
 
+msgid "Create and edit document"
+msgstr ""
+
 msgid "Create document"
 msgstr ""
 

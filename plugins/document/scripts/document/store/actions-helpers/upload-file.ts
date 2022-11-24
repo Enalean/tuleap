@@ -78,7 +78,7 @@ export function uploadFile(
                     }
                     context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
                     context.commit("removeFileFromUploadsList", fake_item);
-                    emitter.emit("new-item-has-just-been-created");
+                    emitter.emit("new-item-has-just-been-created", file);
                 }
             } catch (exception) {
                 fake_item.upload_error = FILE_UPLOAD_UNKNOWN_ERROR;
