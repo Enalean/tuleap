@@ -87,7 +87,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import { TYPE_FILE } from "../../../../constants";
 import DocumentGlobalPropertyForCreate from "./PropertiesForCreate/DocumentGlobalPropertyForCreate.vue";
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";

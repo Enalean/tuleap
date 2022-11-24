@@ -43,13 +43,13 @@
 <script setup lang="ts">
 import type { Empty } from "../../../../type";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import type { Dropdown } from "tlp";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
 import {
     createDropdown,
     EVENT_TLP_DROPDOWN_HIDDEN,
     TRIGGER_HOVER_AND_CLICK,
     EVENT_TLP_DROPDOWN_SHOWN,
-} from "tlp";
+} from "@tuleap/tlp-dropdown";
 import NewVersionEmptyMenuOptions from "./NewVersionEmptyMenuOptions.vue";
 
 const props = defineProps<{ item: Empty }>();

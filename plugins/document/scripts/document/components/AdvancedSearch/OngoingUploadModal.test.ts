@@ -20,7 +20,7 @@ import GlobalUploadProgressBar from "../Folder/ProgressBar/GlobalUploadProgressB
 
 const createModal = jest.fn();
 
-jest.mock("tlp", () => {
+jest.mock("@tuleap/tlp-modal", () => {
     return {
         createModal,
     };
@@ -30,10 +30,10 @@ import OngoingUploadModal from "./OngoingUploadModal.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
-import type { Modal } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ItemFile, RootState } from "../../type";
-import { EVENT_TLP_MODAL_HIDDEN } from "tlp";
+import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 
 describe("OngoingUploadModal", () => {
     let modal: Modal, addEventListener: jest.SpyInstance, show: jest.SpyInstance;

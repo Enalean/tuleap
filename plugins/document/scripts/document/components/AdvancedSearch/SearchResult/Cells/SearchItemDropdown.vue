@@ -50,8 +50,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Item, ItemSearchResult } from "../../../../type";
 import { useActions } from "vuex-composition-helpers";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
-import type { Dropdown } from "tlp";
-import { createDropdown, EVENT_TLP_DROPDOWN_HIDDEN, EVENT_TLP_DROPDOWN_SHOWN } from "tlp";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
+import {
+    createDropdown,
+    EVENT_TLP_DROPDOWN_HIDDEN,
+    EVENT_TLP_DROPDOWN_SHOWN,
+} from "@tuleap/tlp-dropdown";
 import emitter from "../../../../helpers/emitter";
 import DropDownMenuTreeView from "../../../Folder/DropDown/DropDownMenuTreeView.vue";
 import type { RootActionsRetrieve } from "../../../../store/actions-retrieve";

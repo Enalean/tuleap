@@ -93,8 +93,8 @@
 
 <script lang="ts">
 import { sprintf } from "sprintf-js";
-import type { Modal } from "tlp";
-import { createModal } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import { isFolder, isWiki } from "../../../../helpers/type-check-helper";
 import { Component, Prop, Vue } from "vue-property-decorator";

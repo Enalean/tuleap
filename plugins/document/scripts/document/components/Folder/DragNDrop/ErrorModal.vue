@@ -56,8 +56,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Modal } from "tlp";
-import { createModal, EVENT_TLP_MODAL_HIDDEN } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 defineProps<{ body_class?: string }>();

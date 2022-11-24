@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";

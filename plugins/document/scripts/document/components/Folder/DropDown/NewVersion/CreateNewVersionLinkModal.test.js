@@ -21,11 +21,9 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import * as tlp from "tlp";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import CreateNewVersionLinkModal from "./CreateNewVersionLinkModal.vue";
 import emitter from "../../../../helpers/emitter";
-
-jest.mock("tlp");
 
 describe("CreateNewVersionLinkModal", () => {
     const add_event_listener = jest.fn();
@@ -49,7 +47,7 @@ describe("CreateNewVersionLinkModal", () => {
     }
 
     beforeEach(() => {
-        jest.spyOn(tlp, "createModal").mockImplementation(() => {
+        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
                 addEventListener: add_event_listener,
                 show: modal_show,

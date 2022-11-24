@@ -40,8 +40,8 @@
 import { isFolder } from "../../../../helpers/type-check-helper";
 import type { Item } from "../../../../type";
 import { computed, onMounted, ref } from "vue";
-import type { Dropdown } from "tlp";
-import { createDropdown } from "tlp";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import NewItemMenuOptions from "./NewItemMenuOptions.vue";
 
 const props = withDefaults(defineProps<{ item: Item; is_in_quicklook?: boolean }>(), {

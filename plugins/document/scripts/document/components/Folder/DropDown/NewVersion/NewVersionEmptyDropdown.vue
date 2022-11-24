@@ -38,8 +38,8 @@
 <script setup lang="ts">
 import type { Empty } from "../../../../type";
 import { onMounted, ref } from "vue";
-import type { Dropdown } from "tlp";
-import { createDropdown } from "tlp";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import NewVersionEmptyMenuOptions from "./NewVersionEmptyMenuOptions.vue";
 
 defineProps<{ item: Empty }>();
