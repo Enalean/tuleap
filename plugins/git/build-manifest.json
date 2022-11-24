@@ -10,8 +10,8 @@
             "po": "scripts/repositories-list/po"
         },
         "branch-tag-selector": {
-            "src": "scripts/repository/branch-tag-selector/src",
-            "po": "scripts/repository/branch-tag-selector/po"
+            "src": "scripts/repository/src/branch-tag-selector/src",
+            "po": "scripts/repository/src/branch-tag-selector/po"
         }
     },
     "gettext-vue3": {

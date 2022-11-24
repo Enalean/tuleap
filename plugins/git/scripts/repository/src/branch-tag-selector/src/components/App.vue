@@ -59,7 +59,7 @@
     </div>
 </template>
 <script lang="ts">
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import BranchesSection from "./BranchesSection.vue";
 import TagsSection from "./TagsSection.vue";
 import Vue from "vue";

@@ -24,7 +24,7 @@
         v-bind:placeholder="placeholder"
         ref="filter"
         v-bind:value="value"
-        v-on:input="$emit('input', $event.target.value)"
+        v-on:input="onInput($event)"
     />
 </template>
 
@@ -42,6 +42,13 @@ export default class RefsFilter extends Vue {
         if (this.$refs.filter instanceof HTMLInputElement) {
             this.$refs.filter.focus();
         }
+    }
+
+    onInput(event: Event): void {
+        if (!(event.target instanceof HTMLInputElement)) {
+            return;
+        }
+        this.$emit("input", event.target.value);
     }
 }
 </script>

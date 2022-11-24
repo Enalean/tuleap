@@ -4,29 +4,13 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "dependencies": {
-    "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
-    "@tuleap/project-background": "link:../../lib/frontend/project-background",
-    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
-    "@tuleap/user-and-ugroup-autocompleter": "link:../../lib/frontend/user-and-ugroup-autocompleter",
-    "@tuleap/vue2-gettext-init": "link:../../lib/frontend/vue2-gettext-init",
-    "javascript-time-ago": "^2.3.4",
-    "vue": "^2.7.8"
-  },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
     "@tuleap/cypress-configurator": "link:../../lib/test-utils/cypress-configurator",
     "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support",
-    "@tuleap/potentially-dangerous-bidirectional-characters": "link:../../lib/frontend/potentially-dangerous-bidirectional-characters",
-    "@types/javascript-time-ago": "^2.0.1",
-    "@vue/test-utils": "^1.3.0",
-    "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2"
+    "@tuleap/potentially-dangerous-bidirectional-characters": "link:../../lib/frontend/potentially-dangerous-bidirectional-characters"
   },
   "scripts": {
-    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.mjs && pnpm run build:backend-assets",
-    "build:backend-assets": "rm -rf ./backend-assets && mkdir ./backend-assets && ./node_modules/.bin/potentially-dangerous-bidirectional-characters > ./backend-assets/potentially-dangerous-bidirectional-characters.json",
-    "watch": "webpack --config webpack.dev.mjs --watch",
-    "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js \"scripts/repository\""
+    "build": "pnpm run build:backend-assets",
+    "build:backend-assets": "rm -rf ./backend-assets && mkdir ./backend-assets && ./node_modules/.bin/potentially-dangerous-bidirectional-characters > ./backend-assets/potentially-dangerous-bidirectional-characters.json"
   }
 }

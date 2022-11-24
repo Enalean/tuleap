@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../themes/git.scss";
 import initAlreadyForkedModal from "./already-forked-modal";
 import initCopyButton from "./copy-button";
 import initCloneBarPopover from "./clone-bar-popover";
