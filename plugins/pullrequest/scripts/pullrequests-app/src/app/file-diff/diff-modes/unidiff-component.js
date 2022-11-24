@@ -24,7 +24,14 @@ import { getCollapsibleCodeSections } from "../../code-collapse/collaspible-code
 import "./modes.ts";
 import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
+import { SideBySideCodeMirrorWidgetCreator } from "./side-by-side-code-mirror-widget-creator";
+import { RelativeDateHelper } from "../../helpers/date-helpers";
+import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
+import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
 import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
+import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
+import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
+import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
 
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,
@@ -36,19 +43,50 @@ export default {
     },
 };
 
-controller.$inject = ["$element", "$scope", "FileDiffRestService", "CodeMirrorHelperService"];
+controller.$inject = [
+    "$element",
+    "$scope",
+    "FileDiffRestService",
+    "CodeMirrorHelperService",
+    "SharedPropertiesService",
+];
 
-function controller($element, $scope, FileDiffRestService, CodeMirrorHelperService) {
+function controller(
+    $element,
+    $scope,
+    FileDiffRestService,
+    CodeMirrorHelperService,
+    SharedPropertiesService
+) {
     const self = this;
 
     const GUTTER_NEWLINES = "gutter-newlines";
     const GUTTER_OLDLINES = "gutter-oldlines";
 
     Object.assign(self, {
-        $onInit: init,
+        $onInit,
+        widget_creator: SideBySideCodeMirrorWidgetCreator(
+            document,
+            RelativeDateHelper(
+                SharedPropertiesService.getDateTimeFormat(),
+                SharedPropertiesService.getRelativeDateDisplay(),
+                SharedPropertiesService.getUserLocale()
+            ),
+            PullRequestCommentController(
+                PullRequestCommentReplyFormFocusHelper(),
+                getStore(),
+                PullRequestCommentNewReplySaver()
+            ),
+            getStore(),
+            PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest()),
+            PullRequestCurrentUserPresenter.fromUserInfo(
+                SharedPropertiesService.getUserId(),
+                SharedPropertiesService.getUserAvatarUrl()
+            )
+        ),
     });
 
-    function init() {
+    function $onInit() {
         const codemirror_area = $element[0].querySelector(".pull-request-unidiff");
         const unidiff_options =
             getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible({
@@ -75,7 +113,7 @@ function controller($element, $scope, FileDiffRestService, CodeMirrorHelperServi
         getStore()
             .getAllRootComments()
             .forEach((comment) => {
-                CodeMirrorHelperService.displayInlineComment(
+                self.widget_creator.displayInlineCommentWidget(
                     unidiff_codemirror,
                     comment,
                     comment.unidiff_offset - 1
@@ -96,7 +134,7 @@ function controller($element, $scope, FileDiffRestService, CodeMirrorHelperServi
     function addNewComment(code_mirror, line_number, gutter) {
         const comment_position = getCommentPosition(line_number, gutter);
 
-        CodeMirrorHelperService.showCommentForm(
+        self.widget_creator.displayNewInlineCommentFormWidget(
             code_mirror,
             line_number,
             NewInlineCommentContext.fromContext(
@@ -104,7 +142,10 @@ function controller($element, $scope, FileDiffRestService, CodeMirrorHelperServi
                 self.filePath,
                 Number(line_number) + 1,
                 comment_position
-            )
+            ),
+            () => {
+                // Nothing to do
+            }
         );
     }
 

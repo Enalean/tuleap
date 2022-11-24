@@ -21,7 +21,7 @@ import type { Editor } from "codemirror";
 import type { FileLine, RightLine, LeftLine } from "./types";
 import { isAnAddedLine, isAnUnmovedLine, isARemovedLine } from "./file-line-helper";
 
-interface ManageCodeMirrorsContent {
+export interface ManageCodeMirrorsContent {
     getLineInLeftCodeMirror: (line_number: number) => LeftLine;
     getLineInRightCodeMirror: (line_number: number) => RightLine;
 }

@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { okAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
 import type { FileDiffCommentPayload } from "../../src/app/comments/types";
 import type { SaveNewInlineComment } from "../../src/app/comments/new-comment-form/NewInlineCommentSaver";
 
@@ -40,4 +40,13 @@ export const SaveNewInlineCommentStub = {
             },
         };
     },
+    withDefault: (): SaveNewInlineComment => ({
+        postComment: (): ResultAsync<FileDiffCommentPayload, Fault> => {
+            return errAsync(
+                Fault.fromMessage(
+                    "SaveNewInlineCommentStub::postComment was called while it's not configured"
+                )
+            );
+        },
+    }),
 };
