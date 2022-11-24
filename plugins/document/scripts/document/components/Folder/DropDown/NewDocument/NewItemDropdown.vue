@@ -29,10 +29,18 @@
         >
             <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
             {{ $gettext("New") }}
-            <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+            <i
+                class="fa-solid fa-caret-down tlp-button-icon-right"
+                aria-hidden="true"
+                ref="anchor"
+            ></i>
         </button>
 
-        <new-item-menu-options v-bind:item="item" ref="menu" />
+        <new-item-menu-options
+            v-bind:item="item"
+            ref="menu"
+            class="document-dropdown-menu-for-new-item-button"
+        />
     </div>
 </template>
 
@@ -55,6 +63,7 @@ const is_item_a_folder = computed((): boolean => {
 const classes = computed((): string => (props.is_in_quicklook ? "tlp-button-small" : ""));
 
 const trigger = ref<HTMLElement | null>(null);
+const anchor = ref<HTMLElement | null>(null);
 const dropdown = ref<Dropdown | null>(null);
 
 onMounted(() => {
@@ -62,6 +71,12 @@ onMounted(() => {
         return;
     }
 
-    dropdown.value = createDropdown(trigger.value);
+    if (!(anchor.value instanceof HTMLElement)) {
+        return;
+    }
+
+    dropdown.value = createDropdown(trigger.value, {
+        anchor: anchor.value,
+    });
 });
 </script>
