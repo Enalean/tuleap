@@ -928,7 +928,6 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         );
         $collection->setIconName('fa-check');
         $collection->setMainUri($url);
-        $collection->removeXRef();
     }
 
     public function collectExcludedTrackerFromArtifactHeartbeats(ExcludeTrackersFromArtifactHeartbeats $event): void

@@ -1706,7 +1706,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
 
         $collection->setIconName('fa-map-signs');
-        $collection->removeXRef();
 
         $pane_factory = $this->getMilestonePaneFactory();
 

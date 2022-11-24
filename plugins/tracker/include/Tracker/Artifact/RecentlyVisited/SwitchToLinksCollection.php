@@ -35,7 +35,7 @@ class SwitchToLinksCollection implements Dispatchable
     private array $quick_links = [];
     private string $icon_name;
     private string $main_uri;
-    private ?string $xref;
+    private string $xref;
 
     public function __construct(private Artifact $artifact, private \PFUser $current_user)
     {
@@ -94,13 +94,8 @@ class SwitchToLinksCollection implements Dispatchable
         $this->main_uri = $main_uri;
     }
 
-    public function getXRef(): ?string
+    public function getXRef(): string
     {
         return $this->xref;
-    }
-
-    public function removeXRef(): void
-    {
-        $this->xref = null;
     }
 }
