@@ -38,11 +38,11 @@ describe("line-height-equalizer", () => {
             left_codemirror,
             right_codemirror,
             SideBySidePlaceholderPositioner(
-                FileLinesStateStub.build(
+                FileLinesStateStub(
                     [line],
                     [GroupOfLinesStub.buildGroupOfUnMovedLines([line])],
                     new Map([[line, handles]])
-                )
+                ).getState()
             )
         );
     }

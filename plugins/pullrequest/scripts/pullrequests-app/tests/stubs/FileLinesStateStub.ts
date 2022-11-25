@@ -31,6 +31,11 @@ import { FileLineStub } from "./FileLineStub";
 import { GroupOfLinesStub } from "./GroupOfLinesStub";
 import { FileLineHandleStub } from "./FileLineHandleStub";
 
+export interface StubFileLinesState {
+    getState: () => FileLinesState;
+    getFileLines: () => FileLine[];
+}
+
 function stubMissingFileLinesAtTheBeginningIfNeeded(file_lines: FileLine[]): UnMovedFileLine[] {
     if (file_lines.length === 0 || file_lines[0].unidiff_offset === 1) {
         return [];
@@ -44,28 +49,32 @@ function stubMissingFileLinesAtTheBeginningIfNeeded(file_lines: FileLine[]): UnM
     return new_lines;
 }
 
-export const FileLinesStateStub = {
-    build: (
-        file_lines: FileLine[],
-        groups_of_lines: GroupOfLines[],
-        line_to_handles_map: Map<FileLine, SynchronizedLineHandles>
-    ): FileLinesState => {
-        const missing_lines = stubMissingFileLinesAtTheBeginningIfNeeded(file_lines);
-        if (missing_lines) {
-            groups_of_lines.unshift(GroupOfLinesStub.buildGroupOfUnMovedLines(missing_lines));
+export const FileLinesStateStub = (
+    file_lines: FileLine[],
+    groups_of_lines: GroupOfLines[],
+    line_to_handles_map: Map<FileLine, SynchronizedLineHandles>
+): StubFileLinesState => {
+    const missing_lines = stubMissingFileLinesAtTheBeginningIfNeeded(file_lines);
+    if (missing_lines) {
+        groups_of_lines.unshift(GroupOfLinesStub.buildGroupOfUnMovedLines(missing_lines));
 
-            missing_lines.forEach((line) => {
-                line_to_handles_map.set(line, {
-                    left_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
-                    right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
-                });
+        missing_lines.forEach((line) => {
+            line_to_handles_map.set(line, {
+                left_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
+                right_handle: FileLineHandleStub.buildLineHandleWithNoWidgets(),
             });
-        }
+        });
+    }
 
-        return SideBySideLineState(
-            [...missing_lines, ...file_lines],
-            GroupSideBySideLinesStub().withGroupsOfLines(groups_of_lines),
-            MapSideBySideLinesStub().withSideBySideLineMap(line_to_handles_map)
-        );
-    },
+    const all_file_lines = [...missing_lines, ...file_lines];
+    const state = SideBySideLineState(
+        all_file_lines,
+        GroupSideBySideLinesStub().withGroupsOfLines(groups_of_lines),
+        MapSideBySideLinesStub().withSideBySideLineMap(line_to_handles_map)
+    );
+
+    return {
+        getState: (): FileLinesState => state,
+        getFileLines: (): FileLine[] => all_file_lines,
+    };
 };

@@ -21,11 +21,11 @@ import type { Editor } from "codemirror";
 import type { PlaceholderCreationParams } from "./types-codemirror-overriden";
 import type { CurrentPullRequestUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
 import type { PullRequestPresenter } from "../../comments/PullRequestPresenter";
-import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
 import type { IRelativeDateHelper } from "../../helpers/date-helpers";
 import type { ControlPullRequestComment } from "../../comments/PullRequestCommentController";
 import type { InlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
+import type { InlineCommentWidgetCreationParams } from "./types-codemirror-overriden";
 
 import { getWidgetPlacementOptions } from "./file-line-widget-placement-helper";
 import {
@@ -39,14 +39,15 @@ import { TAG_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../../comments/new-commen
 import { TAG_NAME as COMMENT_TAG_NAME } from "../../comments/PullRequestComment";
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "../FileDiffPlaceholder";
 
-export interface CreateFileDiffWidget {
+export interface CreatePlaceholderWidget {
     displayPlaceholderWidget: (widget_params: PlaceholderCreationParams) => void;
-    displayInlineCommentWidget: (
-        code_mirror: Editor,
-        comment: PullRequestInlineCommentPresenter,
-        line_number: number,
-        post_rendering_callback: () => void
-    ) => void;
+}
+
+export interface CreateInlineCommentWidget {
+    displayInlineCommentWidget: (widget_params: InlineCommentWidgetCreationParams) => void;
+}
+
+export interface CreateNewInlineCommentFormWidget {
     displayNewInlineCommentFormWidget: (
         code_mirror: Editor,
         widget_line_number: number,
@@ -54,6 +55,10 @@ export interface CreateFileDiffWidget {
         post_rendering_callback: () => void
     ) => void;
 }
+
+export type CreateFileDiffWidget = CreatePlaceholderWidget &
+    CreateInlineCommentWidget &
+    CreateNewInlineCommentFormWidget;
 
 export const SideBySideCodeMirrorWidgetCreator = (
     doc: Document,
@@ -63,28 +68,30 @@ export const SideBySideCodeMirrorWidgetCreator = (
     pull_request_presenter: PullRequestPresenter,
     current_user_presenter: CurrentPullRequestUserPresenter
 ): CreateFileDiffWidget => {
-    const displayInlineCommentWidget = (
-        code_mirror: Editor,
-        comment: PullRequestInlineCommentPresenter,
-        line_number: number,
-        post_rendering_callback: () => void
-    ): void => {
+    const displayInlineCommentWidget = (widget_params: InlineCommentWidgetCreationParams): void => {
         const inline_comment_element = doc.createElement(COMMENT_TAG_NAME);
         if (!isPullRequestCommentWidget(inline_comment_element)) {
             return;
         }
 
         inline_comment_element.setAttribute("class", "inline-comment-element");
-        inline_comment_element.comment = comment;
+        inline_comment_element.comment = widget_params.comment;
         inline_comment_element.relativeDateHelper = relative_dates_helper;
         inline_comment_element.controller = controller;
         inline_comment_element.currentUser = current_user_presenter;
         inline_comment_element.currentPullRequest = pull_request_presenter;
-        inline_comment_element.post_rendering_callback = post_rendering_callback;
+        inline_comment_element.post_rendering_callback = widget_params.post_rendering_callback;
 
-        const options = getWidgetPlacementOptions(code_mirror, line_number);
+        const options = getWidgetPlacementOptions(
+            widget_params.code_mirror,
+            widget_params.line_number
+        );
 
-        code_mirror.addLineWidget(line_number, inline_comment_element, options);
+        widget_params.code_mirror.addLineWidget(
+            widget_params.line_number,
+            inline_comment_element,
+            options
+        );
     };
 
     return {
@@ -127,12 +134,12 @@ export const SideBySideCodeMirrorWidgetCreator = (
                 widget.clear();
                 comments_store.addRootComment(comment_presenter);
 
-                displayInlineCommentWidget(
+                displayInlineCommentWidget({
                     code_mirror,
-                    comment_presenter,
-                    widget_line_number,
-                    post_rendering_callback
-                );
+                    comment: comment_presenter,
+                    line_number: widget_line_number,
+                    post_rendering_callback,
+                });
             };
 
             new_comment_element.on_cancel_callback = (): void => {

@@ -24,7 +24,7 @@ import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors
 describe("side-by-side-code-mirrors-content-manager", () => {
     it(`Given the lines of a file and the two codemirror editors
         Then the left codemirror should have its content set with deleted and unmoved lines
-        And the right codemirror should have its content set with added and unmoved lines.`, () => {
+        And the right codemirror should have its content set with added and unmoved lines`, () => {
         let left_code_mirror_content = "";
         let right_code_mirror_content = "";
 

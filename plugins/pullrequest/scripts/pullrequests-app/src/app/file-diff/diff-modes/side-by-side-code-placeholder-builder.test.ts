@@ -41,7 +41,7 @@ describe("side-by-side-code-placeholder-builder", () => {
                 const code_placeholder_builder = SideBySideCodePlaceholderBuilder(
                     left_code_mirror,
                     right_code_mirror,
-                    FileLinesStateStub.build(
+                    FileLinesStateStub(
                         [
                             FileLineStub.buildRemovedLine(1, 1),
                             second_line_deleted,
@@ -71,7 +71,7 @@ describe("side-by-side-code-placeholder-builder", () => {
                                 },
                             ],
                         ])
-                    )
+                    ).getState()
                 );
 
                 const widget_params =
@@ -94,7 +94,7 @@ describe("side-by-side-code-placeholder-builder", () => {
                 const code_placeholder_builder = SideBySideCodePlaceholderBuilder(
                     left_code_mirror,
                     right_code_mirror,
-                    FileLinesStateStub.build(
+                    FileLinesStateStub(
                         [first_line_deleted, second_line_deleted],
                         [
                             GroupOfLinesStub.buildGroupOfRemovedLines([
@@ -121,7 +121,7 @@ describe("side-by-side-code-placeholder-builder", () => {
                                 },
                             ],
                         ])
-                    )
+                    ).getState()
                 );
 
                 const widget_params =
@@ -146,7 +146,7 @@ describe("side-by-side-code-placeholder-builder", () => {
                 const code_placeholder_builder = SideBySideCodePlaceholderBuilder(
                     left_code_mirror,
                     right_code_mirror,
-                    FileLinesStateStub.build(
+                    FileLinesStateStub(
                         [
                             FileLineStub.buildUnMovedFileLine(1, 1),
                             second_line_added,
@@ -176,7 +176,7 @@ describe("side-by-side-code-placeholder-builder", () => {
                                 },
                             ],
                         ])
-                    )
+                    ).getState()
                 );
 
                 const widget_params =
@@ -199,7 +199,7 @@ describe("side-by-side-code-placeholder-builder", () => {
                 const code_placeholder_builder = SideBySideCodePlaceholderBuilder(
                     left_code_mirror,
                     right_code_mirror,
-                    FileLinesStateStub.build(
+                    FileLinesStateStub(
                         [first_line_added, second_line_added],
                         [
                             GroupOfLinesStub.buildGroupOfAddedLines([
@@ -225,7 +225,7 @@ describe("side-by-side-code-placeholder-builder", () => {
                                 },
                             ],
                         ])
-                    )
+                    ).getState()
                 );
 
                 const widget_params =

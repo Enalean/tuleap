@@ -22,7 +22,6 @@ import "codemirror/addon/scroll/simplescrollbars.js";
 import { getStore } from "../comments-store.ts";
 import { SideBySideLineState } from "./side-by-side-lines-state.ts";
 import { SideBySideCodePlaceholderBuilder } from "./side-by-side-code-placeholder-builder.ts";
-import { SideBySideCommentPlaceholderBuilder } from "./side-by-side-comment-placeholder-builder.ts";
 import { synchronize } from "./side-by-side-scroll-synchronizer.ts";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/collaspible-code-sections-builder.ts";
 import { SideBySideLinesHeightEqualizer } from "./side-by-side-line-height-equalizer.ts";
@@ -44,6 +43,7 @@ import { PullRequestCommentController } from "../../comments/PullRequestCommentC
 import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
 import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
 import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
+import { SideBySideCodeMirrorWidgetsCreationManager } from "./side-by-side-code-mirror-widgets-creation-manager";
 
 export default {
     template: `
@@ -73,9 +73,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
         $onInit,
         code_mirrors_content_manager: {},
         file_lines_state: {},
-        comment_placeholder_builder: {},
-        code_placeholder_builder: {},
-        placeholder_positioner: {},
         lines_equalizer: {},
         widget_creator: SideBySideCodeMirrorWidgetCreator(
             document,
@@ -145,15 +142,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
             SideBySideLineMapper(file_lines, left_code_mirror, right_code_mirror)
         );
 
-        self.placeholder_positioner = SideBySidePlaceholderPositioner(self.file_lines_state);
-        self.comment_placeholder_builder = SideBySideCommentPlaceholderBuilder(
-            left_code_mirror,
-            right_code_mirror,
-            self.file_lines_state,
-            self.placeholder_positioner
-        );
-
-        self.code_placeholder_builder = SideBySideCodePlaceholderBuilder(
+        const code_placeholder_builder = SideBySideCodePlaceholderBuilder(
             left_code_mirror,
             right_code_mirror,
             self.file_lines_state
@@ -162,92 +151,35 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
         self.lines_equalizer = SideBySideLinesHeightEqualizer(
             left_code_mirror,
             right_code_mirror,
-            self.placeholder_positioner
+            SideBySidePlaceholderPositioner(self.file_lines_state)
         );
 
-        const code_placeholders = file_lines.map((line) => {
-            displayLine(line, left_code_mirror, right_code_mirror);
-            return addCodePlaceholder(line);
-        });
+        const widget_creation_manager = SideBySideCodeMirrorWidgetsCreationManager(
+            self.file_lines_state,
+            self.lines_equalizer,
+            self.code_mirrors_content_manager,
+            self.widget_creator,
+            self.widget_creator
+        );
 
-        code_placeholders.forEach((widget_params) => {
-            if (!widget_params) {
+        file_lines.forEach((line) => {
+            displayLine(line, left_code_mirror, right_code_mirror);
+
+            if (isAnUnmovedLine(line) || !self.file_lines_state.isFirstLineOfGroup(line)) {
                 return;
             }
-            self.widget_creator.displayPlaceholderWidget(widget_params);
+
+            const placeholder_params = code_placeholder_builder.buildCodePlaceholderWidget(line);
+            if (!placeholder_params) {
+                return;
+            }
+
+            self.widget_creator.displayPlaceholderWidget(placeholder_params);
         });
 
-        file_lines.forEach(addCommentsPlaceholder);
-
-        getStore()
-            .getAllRootComments()
-            .forEach((comment) => {
-                displayInlineComment(comment, left_code_mirror, right_code_mirror);
-            });
+        getStore().getAllRootComments().forEach(widget_creation_manager.displayInlineComment);
 
         handleCodeMirrorEvents(left_code_mirror, right_code_mirror);
-    }
-
-    function displayInlineComment(comment, left_code_mirror, right_code_mirror) {
-        const comment_line = self.file_lines_state.getCommentLine(comment);
-
-        if (comment_line.new_offset === null) {
-            self.widget_creator.displayInlineCommentWidget(
-                left_code_mirror,
-                comment,
-                comment_line.old_offset - 1,
-                () => {
-                    recomputeCommentPlaceholderHeight(
-                        self.code_mirrors_content_manager.getLineInLeftCodeMirror(
-                            comment_line.old_offset - 1
-                        )
-                    );
-                }
-            );
-
-            return addCommentsPlaceholder(comment_line);
-        }
-
-        if (comment_line.old_offset === null) {
-            self.widget_creator.displayInlineCommentWidget(
-                right_code_mirror,
-                comment,
-                comment_line.new_offset - 1,
-                () => {
-                    recomputeCommentPlaceholderHeight(
-                        self.code_mirrors_content_manager.getLineInRightCodeMirror(
-                            comment_line.new_offset - 1
-                        )
-                    );
-                }
-            );
-
-            return addCommentsPlaceholder(comment_line);
-        }
-
-        const target_code_mirror =
-            comment.position === INLINE_COMMENT_POSITION_LEFT
-                ? left_code_mirror
-                : right_code_mirror;
-        const line_number =
-            comment.position === INLINE_COMMENT_POSITION_LEFT
-                ? comment_line.old_offset - 1
-                : comment_line.new_offset - 1;
-
-        self.widget_creator.displayInlineCommentWidget(
-            target_code_mirror,
-            comment,
-            line_number,
-            () => {
-                recomputeCommentPlaceholderHeight(
-                    comment.position === INLINE_COMMENT_POSITION_LEFT
-                        ? self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
-                        : self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
-                );
-            }
-        );
-
-        return addCommentsPlaceholder(comment_line);
     }
 
     function recomputeCommentPlaceholderHeight(line) {
@@ -313,25 +245,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
             ),
             () => recomputeCommentPlaceholderHeight(line)
         );
-    }
-
-    function addCodePlaceholder(line) {
-        if (isAnUnmovedLine(line) || !self.file_lines_state.isFirstLineOfGroup(line)) {
-            return null;
-        }
-        return self.code_placeholder_builder.buildCodePlaceholderWidget(line);
-    }
-
-    function addCommentsPlaceholder(line) {
-        if (!isAnUnmovedLine(line) && !self.file_lines_state.isFirstLineOfGroup(line)) {
-            return;
-        }
-        const widget_params = self.comment_placeholder_builder.buildCommentsPlaceholderWidget(line);
-        if (!widget_params) {
-            return;
-        }
-
-        self.widget_creator.displayPlaceholderWidget(widget_params);
     }
 
     function displayLine(line, left_code_mirror, right_code_mirror) {

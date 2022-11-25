@@ -130,12 +130,12 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             ) as InlineCommentWidget;
             createElement.mockReturnValue(inline_comment_widget);
 
-            getWidgetCreator().displayInlineCommentWidget(
+            getWidgetCreator().displayInlineCommentWidget({
                 code_mirror,
                 comment,
-                12,
-                post_rendering_callback
-            );
+                line_number: 12,
+                post_rendering_callback,
+            });
 
             expect(inline_comment_widget.comment).toStrictEqual(comment);
             expect(inline_comment_widget.relativeDateHelper).toStrictEqual(relative_date_helper);
