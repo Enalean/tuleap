@@ -53,6 +53,21 @@ $nav-margin: 30px;
 
     &.doc-background-dark {
         background: $tlp-dark-color;
+
+        .tlp-button-ellipsis {
+            --tlp-button-ellipsis-color: var(--tlp-button-ellipsis-color-on-dark-value);
+            --tlp-button-ellipsis-hover-color: var(--tlp-button-ellipsis-hover-color-on-dark-value);
+            --tlp-button-ellipsis-focus-border-color: var(
+                --tlp-button-ellipsis-focus-border-color-on-dark-value
+            );
+            --tlp-button-ellipsis-disabled-color: var(
+                --tlp-button-ellipsis-disabled-color-on-dark-value
+            );
+            --tlp-button-ellipsis-disabled-opacity: var(
+                --tlp-button-ellipsis-disabled-opacity-on-dark-value
+            );
+            --tlp-button-ellipsis-text-shadow: var(--tlp-button-ellipsis-text-shadow-on-dark-value);
+        }
     }
 
     .doc-section {
