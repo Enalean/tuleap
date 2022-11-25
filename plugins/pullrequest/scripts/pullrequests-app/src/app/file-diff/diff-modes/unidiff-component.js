@@ -137,19 +137,19 @@ function controller(
     function addNewComment(code_mirror, line_number, gutter) {
         const comment_position = getCommentPosition(line_number, gutter);
 
-        self.widget_creator.displayNewInlineCommentFormWidget(
+        self.widget_creator.displayNewInlineCommentFormWidget({
             code_mirror,
             line_number,
-            NewInlineCommentContext.fromContext(
+            context: NewInlineCommentContext.fromContext(
                 self.pullRequestId,
                 self.filePath,
                 Number(line_number) + 1,
                 comment_position
             ),
-            () => {
+            post_rendering_callback: () => {
                 // Nothing to do
-            }
-        );
+            },
+        });
     }
 
     function displayUnidiff(unidiff_codemirror, file_lines) {

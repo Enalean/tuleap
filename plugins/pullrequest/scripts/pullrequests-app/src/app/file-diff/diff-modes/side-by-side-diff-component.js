@@ -35,7 +35,6 @@ import { isAnUnmovedLine } from "./file-line-helper";
 import { SideBySideLineMapper } from "./side-by-side-line-mapper";
 import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors-content-manager";
 import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
-import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 import { SideBySideCodeMirrorWidgetCreator } from "./side-by-side-code-mirror-widget-creator";
 import { RelativeDateHelper } from "../../helpers/date-helpers";
 import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
@@ -71,28 +70,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
 
     Object.assign(self, {
         $onInit,
-        code_mirrors_content_manager: {},
-        file_lines_state: {},
-        lines_equalizer: {},
-        widget_creator: SideBySideCodeMirrorWidgetCreator(
-            document,
-            RelativeDateHelper(
-                SharedPropertiesService.getDateTimeFormat(),
-                SharedPropertiesService.getRelativeDateDisplay(),
-                SharedPropertiesService.getUserLocale()
-            ),
-            PullRequestCommentController(
-                PullRequestCommentReplyFormFocusHelper(),
-                getStore(),
-                PullRequestCommentNewReplySaver()
-            ),
-            getStore(),
-            PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest()),
-            PullRequestCurrentUserPresenter.fromUserInfo(
-                SharedPropertiesService.getUserId(),
-                SharedPropertiesService.getUserAvatarUrl()
-            )
-        ),
     });
 
     function $onInit() {
@@ -130,13 +107,33 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
     }
 
     function displaySideBySideDiff(file_lines, left_code_mirror, right_code_mirror) {
-        self.code_mirrors_content_manager = SideBySideCodeMirrorsContentManager(
+        const code_mirrors_content_manager = SideBySideCodeMirrorsContentManager(
             file_lines,
             left_code_mirror,
             right_code_mirror
         );
 
-        self.file_lines_state = SideBySideLineState(
+        const widget_creator = SideBySideCodeMirrorWidgetCreator(
+            document,
+            RelativeDateHelper(
+                SharedPropertiesService.getDateTimeFormat(),
+                SharedPropertiesService.getRelativeDateDisplay(),
+                SharedPropertiesService.getUserLocale()
+            ),
+            PullRequestCommentController(
+                PullRequestCommentReplyFormFocusHelper(),
+                getStore(),
+                PullRequestCommentNewReplySaver()
+            ),
+            getStore(),
+            PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest()),
+            PullRequestCurrentUserPresenter.fromUserInfo(
+                SharedPropertiesService.getUserId(),
+                SharedPropertiesService.getUserAvatarUrl()
+            )
+        );
+
+        const file_lines_state = SideBySideLineState(
             file_lines,
             SideBySideLineGrouper(file_lines),
             SideBySideLineMapper(file_lines, left_code_mirror, right_code_mirror)
@@ -145,27 +142,26 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
         const code_placeholder_builder = SideBySideCodePlaceholderBuilder(
             left_code_mirror,
             right_code_mirror,
-            self.file_lines_state
-        );
-
-        self.lines_equalizer = SideBySideLinesHeightEqualizer(
-            left_code_mirror,
-            right_code_mirror,
-            SideBySidePlaceholderPositioner(self.file_lines_state)
+            file_lines_state
         );
 
         const widget_creation_manager = SideBySideCodeMirrorWidgetsCreationManager(
-            self.file_lines_state,
-            self.lines_equalizer,
-            self.code_mirrors_content_manager,
-            self.widget_creator,
-            self.widget_creator
+            file_lines_state,
+            SideBySideLinesHeightEqualizer(
+                left_code_mirror,
+                right_code_mirror,
+                SideBySidePlaceholderPositioner(file_lines_state)
+            ),
+            code_mirrors_content_manager,
+            widget_creator,
+            widget_creator,
+            widget_creator
         );
 
         file_lines.forEach((line) => {
             displayLine(line, left_code_mirror, right_code_mirror);
 
-            if (isAnUnmovedLine(line) || !self.file_lines_state.isFirstLineOfGroup(line)) {
+            if (isAnUnmovedLine(line) || !file_lines_state.isFirstLineOfGroup(line)) {
                 return;
             }
 
@@ -174,27 +170,11 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
                 return;
             }
 
-            self.widget_creator.displayPlaceholderWidget(placeholder_params);
+            widget_creator.displayPlaceholderWidget(placeholder_params);
         });
 
         getStore().getAllRootComments().forEach(widget_creation_manager.displayInlineComment);
 
-        handleCodeMirrorEvents(left_code_mirror, right_code_mirror);
-    }
-
-    function recomputeCommentPlaceholderHeight(line) {
-        const line_handles = self.file_lines_state.getLineHandles(line);
-        if (!line_handles) {
-            return;
-        }
-
-        const placeholder_to_create = self.lines_equalizer.equalizeSides(line_handles);
-        if (placeholder_to_create) {
-            self.widget_creator.displayPlaceholderWidget(placeholder_to_create);
-        }
-    }
-
-    function handleCodeMirrorEvents(left_code_mirror, right_code_mirror) {
         const getLineNumberFromEvent = (gutter_click_event) =>
             // We need this trick because CodeMirror can sometimes provide the
             // wrong line number. Hence, we need to parse the content of the gutter
@@ -202,49 +182,21 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
             Number.parseInt(gutter_click_event.target.textContent, 10) - 1;
 
         left_code_mirror.on("gutterClick", (left_code_mirror, line_number, gutter, event) => {
-            addCommentOnLeftCodeMirror(left_code_mirror, getLineNumberFromEvent(event));
+            widget_creation_manager.displayNewInlineCommentForm(
+                INLINE_COMMENT_POSITION_LEFT,
+                self.pullRequestId,
+                self.filePath,
+                getLineNumberFromEvent(event)
+            );
         });
         right_code_mirror.on("gutterClick", (right_code_mirror, line_number, gutter, event) => {
-            addCommentOnRightCodeMirror(right_code_mirror, getLineNumberFromEvent(event));
+            widget_creation_manager.displayNewInlineCommentForm(
+                INLINE_COMMENT_POSITION_RIGHT,
+                self.pullRequestId,
+                self.filePath,
+                getLineNumberFromEvent(event)
+            );
         });
-    }
-
-    function addCommentOnLeftCodeMirror(left_code_mirror, line_number) {
-        const line = self.code_mirrors_content_manager.getLineInLeftCodeMirror(line_number);
-        if (!line) {
-            return;
-        }
-
-        self.widget_creator.displayNewInlineCommentFormWidget(
-            left_code_mirror,
-            line_number,
-            NewInlineCommentContext.fromContext(
-                self.pullRequestId,
-                self.filePath,
-                line.unidiff_offset,
-                INLINE_COMMENT_POSITION_LEFT
-            ),
-            () => recomputeCommentPlaceholderHeight(line)
-        );
-    }
-
-    function addCommentOnRightCodeMirror(right_code_mirror, line_number) {
-        const line = self.code_mirrors_content_manager.getLineInRightCodeMirror(line_number);
-        if (!line) {
-            return;
-        }
-
-        self.widget_creator.displayNewInlineCommentFormWidget(
-            right_code_mirror,
-            line_number,
-            NewInlineCommentContext.fromContext(
-                self.pullRequestId,
-                self.filePath,
-                line.unidiff_offset,
-                INLINE_COMMENT_POSITION_RIGHT
-            ),
-            () => recomputeCommentPlaceholderHeight(line)
-        );
     }
 
     function displayLine(line, left_code_mirror, right_code_mirror) {

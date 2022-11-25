@@ -20,17 +20,27 @@
 import type {
     CreateInlineCommentWidget,
     CreatePlaceholderWidget,
+    CreateNewInlineCommentFormWidget,
 } from "./side-by-side-code-mirror-widget-creator";
 import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
 import type { FileLine } from "./types";
 import type { FileLinesState } from "./side-by-side-lines-state";
 import type { EqualizeLinesHeights } from "./side-by-side-line-height-equalizer";
 import type { ManageCodeMirrorsContent } from "./side-by-side-code-mirrors-content-manager";
+import type { InlineCommentPosition } from "../../comments/types";
+
 import { isAnAddedLine, isARemovedLine } from "./file-line-helper";
 import { INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
+import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 
 export interface ManageCodeMirrorWidgetsCreation {
     displayInlineComment: (comment: PullRequestInlineCommentPresenter) => void;
+    displayNewInlineCommentForm: (
+        position: InlineCommentPosition,
+        pull_request_id: number,
+        file_path: string,
+        line_number: number
+    ) => void;
 }
 
 export const SideBySideCodeMirrorWidgetsCreationManager = (
@@ -38,6 +48,7 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
     lines_equalizer: EqualizeLinesHeights,
     code_mirrors_content_manager: ManageCodeMirrorsContent,
     inline_comment_widget_creator: CreateInlineCommentWidget,
+    new_inline_comment_form_widget_creator: CreateNewInlineCommentFormWidget,
     placeholder_widget_creator: CreatePlaceholderWidget
 ): ManageCodeMirrorWidgetsCreation => {
     const recomputeCommentPlaceholderHeight = (line: FileLine): void => {
@@ -112,6 +123,42 @@ export const SideBySideCodeMirrorWidgetsCreationManager = (
                             ? code_mirrors_content_manager.getLineInLeftCodeMirror(line_number)
                             : code_mirrors_content_manager.getLineInRightCodeMirror(line_number)
                     );
+                },
+            });
+        },
+        displayNewInlineCommentForm: (
+            position: InlineCommentPosition,
+            pull_request_id: number,
+            file_path: string,
+            code_mirror_line_number: number
+        ): void => {
+            const line =
+                position === INLINE_COMMENT_POSITION_LEFT
+                    ? code_mirrors_content_manager.getLineInLeftCodeMirror(code_mirror_line_number)
+                    : code_mirrors_content_manager.getLineInRightCodeMirror(
+                          code_mirror_line_number
+                      );
+
+            if (!line) {
+                return;
+            }
+
+            const code_mirror =
+                position === INLINE_COMMENT_POSITION_LEFT
+                    ? code_mirrors_content_manager.getLeftCodeMirrorEditor()
+                    : code_mirrors_content_manager.getRightCodeMirrorEditor();
+
+            new_inline_comment_form_widget_creator.displayNewInlineCommentFormWidget({
+                code_mirror,
+                line_number: code_mirror_line_number,
+                context: NewInlineCommentContext.fromContext(
+                    pull_request_id,
+                    file_path,
+                    line.unidiff_offset,
+                    position
+                ),
+                post_rendering_callback: () => {
+                    recomputeCommentPlaceholderHeight(line);
                 },
             });
         },

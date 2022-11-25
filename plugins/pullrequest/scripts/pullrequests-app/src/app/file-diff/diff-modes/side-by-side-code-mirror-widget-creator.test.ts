@@ -177,12 +177,12 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             };
             code_mirror.addLineWidget.mockReturnValueOnce(line_widget);
 
-            getWidgetCreator().displayNewInlineCommentFormWidget(
+            getWidgetCreator().displayNewInlineCommentFormWidget({
                 code_mirror,
-                15,
+                line_number: 15,
                 context,
-                post_rendering_callback
-            );
+                post_rendering_callback,
+            });
 
             expect(new_comment_form.comment_saver).toBeDefined();
             expect(new_comment_form.post_rendering_callback).toStrictEqual(post_rendering_callback);
