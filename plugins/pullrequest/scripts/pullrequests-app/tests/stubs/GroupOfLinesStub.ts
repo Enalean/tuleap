@@ -30,28 +30,16 @@ import {
 } from "../../src/app/file-diff/diff-modes/types";
 
 export const GroupOfLinesStub = {
-    buildGroupOfRemovedLines: (
-        lines: RemovedFileLine[],
-        has_initial_comment_placeholder = false
-    ): GroupOfLines => ({
+    buildGroupOfRemovedLines: (lines: RemovedFileLine[]): GroupOfLines => ({
         type: DELETED_GROUP,
         unidiff_offsets: lines.map((line) => line.unidiff_offset),
-        has_initial_comment_placeholder,
     }),
-    buildGroupOfAddedLines: (
-        lines: AddedFileLine[],
-        has_initial_comment_placeholder = false
-    ): GroupOfLines => ({
+    buildGroupOfAddedLines: (lines: AddedFileLine[]): GroupOfLines => ({
         type: ADDED_GROUP,
         unidiff_offsets: lines.map((line) => line.unidiff_offset),
-        has_initial_comment_placeholder,
     }),
-    buildGroupOfUnMovedLines: (
-        lines: UnMovedFileLine[],
-        has_initial_comment_placeholder = false
-    ): GroupOfLines => ({
+    buildGroupOfUnMovedLines: (lines: UnMovedFileLine[]): GroupOfLines => ({
         type: UNMOVED_GROUP,
         unidiff_offsets: lines.map((line) => line.unidiff_offset),
-        has_initial_comment_placeholder,
     }),
 };

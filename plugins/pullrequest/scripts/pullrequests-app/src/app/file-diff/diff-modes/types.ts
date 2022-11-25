@@ -35,7 +35,6 @@ export const ADDED_GROUP: GroupType = "added";
 export interface GroupOfLines {
     readonly type: GroupType;
     unidiff_offsets: number[];
-    has_initial_comment_placeholder: boolean;
 }
 
 export interface UnidiffFileLine {
