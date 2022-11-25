@@ -235,8 +235,8 @@ final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItInsertsLinkForReferences(): void
     {
         $reference_dao                = \Mockery::mock(\ReferenceDao::class);
-        $data_access_result_reference = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface::class);
-        $data_access_result_reference->shouldReceive('getRow')->andReturns(
+        $data_access_result_reference = $this->createStub(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface::class);
+        $data_access_result_reference->method('getRow')->willReturn(
             [
                 'id' => 1,
                 'keyword' => 'myref',

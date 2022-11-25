@@ -52,7 +52,7 @@ final class ConfigurationResponseRepresentation implements \JsonSerializable
         $this->supported_languages         = $supported_languages;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $issuer = Issuer::toString();
         // See https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata

@@ -42,32 +42,32 @@ class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Counta
     /**
      * @return Tracker_Workflow_Trigger_TriggerRule
      */
-    public function current()
+    public function current(): Tracker_Workflow_Trigger_TriggerRule|false
     {
         return current($this->trigger_rules);
     }
 
-    public function key()
+    public function key(): int
     {
         return key($this->trigger_rules);
     }
 
-    public function next()
+    public function next(): void
     {
         next($this->trigger_rules);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->trigger_rules);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return current($this->trigger_rules) !== false;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->trigger_rules);
     }

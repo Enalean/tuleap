@@ -48,10 +48,8 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
 
     /**
      * Return the number of entries in a result set.
-     *
-     * @return int
      */
-    public function count()
+    public function count(): int
     {
         if ($this->list && array_key_exists('count', $this->list)) {
             return $this->list['count'];
@@ -75,7 +73,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      *
      * @param $pos int
      */
-    public function seek($pos)
+    public function seek($pos): void
     {
         $this->key   = $pos;
         $this->valid = true;
@@ -116,10 +114,8 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      * Return the current element.
      *
      * Standard function implemented from Iterator interface
-     *
-     * @return LDAPResult
      */
-    public function current()
+    public function current(): LDAPResult
     {
         return new LDAPResult($this->list[$this->key], $this->ldapParams);
     }
@@ -128,10 +124,8 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      * Return the key of the current element.
      *
      * Standard function implemented from Iterator interface
-     *
-     * @return int
      */
-    public function key()
+    public function key(): int
     {
         return $this->key;
     }
@@ -141,7 +135,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      *
      * Standard function implemented from Iterator interface
      */
-    public function next()
+    public function next(): void
     {
         $this->valid = (++$this->key < $this->count());
     }
@@ -151,7 +145,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      *
      * Standard function implemented from Iterator interface
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->valid = true;
         $this->key   = 0;
@@ -161,10 +155,8 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      * Check if there is a current element after calls to rewind() or next().
      *
      * Standard function implemented from Iterator interface
-     *
-     * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->valid;
     }

@@ -34,7 +34,7 @@ final class BatchResponseObjectWithoutAction implements BatchResponseObject
         $this->object = $object;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'oid'    => $this->object->getOID()->getValue(),

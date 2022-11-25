@@ -45,7 +45,7 @@ class ProjectTemplatesRepresentation implements \JsonSerializable
     /**
      * @inheritDoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'project_name' => $this->project_name,

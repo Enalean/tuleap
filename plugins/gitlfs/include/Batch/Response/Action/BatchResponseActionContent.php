@@ -54,7 +54,7 @@ class BatchResponseActionContent implements \JsonSerializable
         $this->expires_in                 = $expires_in;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'href'       => $this->href->getHref(),

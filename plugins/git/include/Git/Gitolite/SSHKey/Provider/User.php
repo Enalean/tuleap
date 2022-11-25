@@ -46,15 +46,12 @@ class User implements IProvideKey
         $this->rewind();
     }
 
-    /**
-     * @return Key
-     */
-    public function current()
+    public function current(): Key
     {
         return new Key($this->current_username, $this->user_ssh_key_iterator->current());
     }
 
-    public function next()
+    public function next(): void
     {
         $this->current_position++;
         $this->user_ssh_key_iterator->next();
@@ -70,17 +67,17 @@ class User implements IProvideKey
         $this->user_with_ssh_keys->next();
     }
 
-    public function key()
+    public function key(): int
     {
         return $this->current_position;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->user_ssh_key_iterator->valid();
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->user_with_ssh_keys->rewind();
         $this->current_position      = 0;

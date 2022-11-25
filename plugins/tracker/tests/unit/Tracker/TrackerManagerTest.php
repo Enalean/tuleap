@@ -26,7 +26,7 @@ use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
@@ -34,17 +34,11 @@ class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private $tracker;
 
-    /**
-     * @var array
-     */
-    private $backup_globals;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->backup_globals = array_merge([], $GLOBALS);
-        $GLOBALS['HTML']      = Mockery::spy(\Layout::class);
+        $GLOBALS['HTML'] = Mockery::spy(\Layout::class);
 
         $this->user = \Mockery::spy(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturns(666);
@@ -92,8 +86,7 @@ class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['group_id']);
-        $GLOBALS = $this->backup_globals;
+        unset($GLOBALS['group_id'], $GLOBALS['HTML']);
 
         parent::tearDown();
     }

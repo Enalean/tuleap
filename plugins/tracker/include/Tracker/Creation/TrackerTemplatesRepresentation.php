@@ -51,10 +51,7 @@ class TrackerTemplatesRepresentation implements \JsonSerializable
         $this->tlp_color   = $tlp_color;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id'          => $this->id,
