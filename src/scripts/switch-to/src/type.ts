@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface ElementWithQuickLinks {
-    readonly quick_links: QuickLink[];
-}
+import type { SearchResultEntry, QuickLink } from "@tuleap/core-rest-api-types";
+
+export type { QuickLink, Badge as ItemBadge } from "@tuleap/core-rest-api-types";
 
 export interface ProjectBaseDefinition {
     readonly project_uri: string;
@@ -33,7 +33,9 @@ export interface ProjectBaseDefinition {
     readonly icon: string;
 }
 
-export type Project = ProjectBaseDefinition & ElementWithQuickLinks;
+export type Project = ProjectBaseDefinition & {
+    readonly quick_links: QuickLink[];
+};
 
 export interface HiddenField {
     readonly name: string;
@@ -45,32 +47,14 @@ export interface SearchForm {
     readonly hidden_fields: HiddenField[];
 }
 
-export interface QuickLink {
-    readonly name: string;
-    readonly html_url: string;
-    readonly icon_name: string;
-}
-
-interface ProjectReference {
-    readonly label: string;
-}
-
-export interface ItemBadge {
-    readonly color: string | null;
-    readonly label: string;
-}
-
-export interface ItemDefinition extends ElementWithQuickLinks {
-    readonly xref: string | null;
-    readonly html_url: string;
-    readonly title: string | null;
-    readonly color_name: string;
-    readonly icon_name: string;
-    readonly project: ProjectReference;
+export type ItemDefinition = Pick<
+    SearchResultEntry,
+    "xref" | "html_url" | "title" | "color_name" | "icon_name" | "quick_links" | "badges"
+> & {
+    readonly project: { readonly label: string };
     readonly cropped_content?: string | null;
-    readonly badges: ReadonlyArray<ItemBadge>;
-}
+};
 
-export interface UserHistory {
+export type UserHistory = {
     readonly entries: ItemDefinition[];
-}
+};

@@ -31,6 +31,7 @@ import type {
     SubmissionDateFieldIdentifier,
     TrackerColorName,
 } from "@tuleap/plugin-tracker-constants";
+import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
 import type { UserGroupRepresentation } from "./artifacts";
 import type { OpenListFieldStructure } from "./open-list-field";
@@ -106,11 +107,7 @@ export interface MinimalTrackerResponse {
     readonly label: string;
 }
 
-export interface TrackerProjectRepresentation {
-    readonly id: number;
-    readonly label: string;
-    readonly icon: string;
-}
+export type TrackerProjectRepresentation = ProjectReference;
 
 export interface TrackerResponseWithColor extends MinimalTrackerResponse {
     readonly color_name: TrackerColorName;

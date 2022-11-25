@@ -4,10 +4,10 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "link:../../../lib/frontend/concurrency-limit-pool",
+    "@tuleap/core-rest-api-types": "link:../../../lib/frontend/rest-api-types",
     "@tuleap/fetch-result": "link:../../../lib/frontend/fetch-result",
     "@tuleap/project-privacy-helper": "link:../../../lib/frontend/project-privacy-helper",
     "@tuleap/tlp-fetch": "link:../../../lib/frontend/tlp-fetch",

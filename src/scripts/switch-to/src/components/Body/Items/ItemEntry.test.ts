@@ -46,7 +46,7 @@ describe("ItemEntry", () => {
                     xref: "art #123",
                     title: "Lorem ipsum",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -69,7 +69,7 @@ describe("ItemEntry", () => {
                     xref: "art #123",
                     title: "Lorem ipsum",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -103,7 +103,7 @@ describe("ItemEntry", () => {
                     quick_links: [
                         { name: "TTM", icon_name: "fa-check", html_url: "/ttm" },
                         { name: "AD", icon_name: "fa-table", html_url: "/ad" },
-                    ],
+                    ] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -125,7 +125,7 @@ describe("ItemEntry", () => {
                     icon_name: "fa-columns",
                     title: "Kanban",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -147,7 +147,7 @@ describe("ItemEntry", () => {
                 icon_name: "fa-columns",
                 title: "Kanban",
                 color_name: "lake-placid-blue",
-                quick_links: [] as QuickLink[],
+                quick_links: [] as ReadonlyArray<QuickLink>,
                 project: {
                     label: "Guinea Pig",
                 },
@@ -188,7 +188,7 @@ describe("ItemEntry", () => {
             icon_name: "fa-columns",
             title: "Kanban",
             color_name: "lake-placid-blue",
-            quick_links: [] as QuickLink[],
+            quick_links: [] as ReadonlyArray<QuickLink>,
             project: {
                 label: "Guinea Pig",
             },
@@ -235,7 +235,7 @@ describe("ItemEntry", () => {
                     icon_name: "fa-columns",
                     title: "Kanban",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -271,7 +271,7 @@ describe("ItemEntry", () => {
                     icon_name: "fa-columns",
                     title: "Kanban",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -307,7 +307,7 @@ describe("ItemEntry", () => {
                     icon_name: "fa-columns",
                     title: "Kanban",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -343,7 +343,7 @@ describe("ItemEntry", () => {
                     icon_name: "fa-columns",
                     title: "Kanban",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -380,7 +380,7 @@ describe("ItemEntry", () => {
                     icon_name: "fa-columns",
                     title: "Kanban",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -410,7 +410,7 @@ describe("ItemEntry", () => {
                     xref: "art #123",
                     title: "Lorem ipsum",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
@@ -436,7 +436,7 @@ describe("ItemEntry", () => {
                     xref: "art #123",
                     title: "Lorem ipsum",
                     color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                     project: {
                         label: "Guinea Pig",
                     },
