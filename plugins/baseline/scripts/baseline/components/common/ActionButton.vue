@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const props = withDefaults(defineProps<{ icon: string; loading?: boolean; disabled?: boolean }>(), {
+const props = withDefaults(defineProps<{ icon: string; loading?: boolean; disabled: boolean }>(), {
     loading: false,
     disabled: false,
 });
