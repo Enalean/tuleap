@@ -6,6 +6,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid ""
+"(S)FTP Browser (and underlying server ProFTPD) is unsupported and will be "
+"removed soon. Please use Documents and/or Files services instead."
+msgstr ""
+
 msgid "(S)FTP Browser permissions"
 msgstr ""
 
