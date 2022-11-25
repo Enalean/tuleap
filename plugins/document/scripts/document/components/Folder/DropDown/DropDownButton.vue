@@ -35,13 +35,7 @@
             <i v-if="isAppended" class="fa-solid fa-caret-down" aria-hidden="true"></i>
             <i v-else class="fa-solid fa-ellipsis" aria-hidden="true"></i>
         </button>
-        <div
-            class="tlp-dropdown-menu document-dropdown-menu"
-            v-bind:class="{
-                'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState,
-            }"
-            role="menu"
-        >
+        <div class="tlp-dropdown-menu document-dropdown-menu" role="menu">
             <slot></slot>
         </div>
     </div>
@@ -60,9 +54,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class DropDownButton extends Vue {
-    @Prop({ required: true })
-    readonly isInFolderEmptyState!: boolean;
-
     @Prop({ required: true })
     readonly isInLargeMode!: boolean;
 
