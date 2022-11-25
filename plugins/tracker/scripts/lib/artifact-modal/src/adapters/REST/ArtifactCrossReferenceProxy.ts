@@ -19,10 +19,16 @@
 
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { ArtifactCrossReference } from "../../domain/ArtifactCrossReference";
+import type { UserHistoryEntry } from "./user-history/UserHistory";
 
 export const ArtifactCrossReferenceProxy = {
     fromAPIArtifact: (artifact: ArtifactWithStatus): ArtifactCrossReference => ({
         ref: `${artifact.xref}`,
         color: artifact.tracker.color_name,
+    }),
+
+    fromAPIUserHistory: (entry: UserHistoryEntry): ArtifactCrossReference => ({
+        ref: `${entry.xref}`,
+        color: entry.color_name,
     }),
 };

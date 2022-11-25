@@ -27,6 +27,9 @@ import {
     current_link_type_descriptor,
     setLinkedArtifacts,
     setNewLinks,
+    setMatchingArtifactSection,
+    setRecentlyViewedArtifact,
+    setPossibleParentsSection,
 } from "./LinkField";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
@@ -38,7 +41,7 @@ import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
-import type { LinkSelector, GroupCollection } from "@tuleap/link-selector";
+import type { LinkSelector, GroupCollection, GroupOfItems } from "@tuleap/link-selector";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
@@ -160,6 +163,71 @@ describe("LinkField", () => {
     });
 
     describe(`setters`, () => {
+        describe("dropdown sections setter", () => {
+            let link_selector: LinkSelectorStub, host: LinkField;
+            beforeEach(() => {
+                link_selector = LinkSelectorStub.build();
+
+                const initial_dropdown_content: GroupCollection = [];
+                host = {
+                    controller: {
+                        autoComplete(): void {
+                            //Do nothing
+                        },
+                    } as unknown as LinkFieldControllerType,
+                    link_selector: link_selector as LinkSelector,
+                    current_link_type: LinkTypeStub.buildUntyped(),
+                    matching_artifact_section: initial_dropdown_content,
+                    possible_parents_section: initial_dropdown_content,
+                    recently_viewed_section: initial_dropdown_content,
+                } as LinkField;
+            });
+            describe("set_matching_artifact_section", () => {
+                it("returns an empty array if there is no collection is provided", () => {
+                    const result = setMatchingArtifactSection(host, undefined);
+                    expect(result).toStrictEqual([]);
+                });
+
+                it("returns set the dropdown content and return the collection given", () => {
+                    const result = setMatchingArtifactSection(host, [
+                        { label: "group 1" } as GroupOfItems,
+                    ]);
+
+                    expect(result).toHaveLength(1);
+                    expect(result[0].label).toBe("group 1");
+                });
+            });
+            describe("set_recently_viewed_artifact", () => {
+                it("returns an empty array if there is no collection is provided", () => {
+                    const result = setRecentlyViewedArtifact(host, undefined);
+                    expect(result).toStrictEqual([]);
+                });
+
+                it("returns set the dropdown content and return the collection given", () => {
+                    const result = setRecentlyViewedArtifact(host, [
+                        { label: "group 1" } as GroupOfItems,
+                    ]);
+
+                    expect(result).toHaveLength(1);
+                    expect(result[0].label).toBe("group 1");
+                });
+            });
+            describe("set_possible_parents_section", () => {
+                it("returns an empty array if there is no collection is provided", () => {
+                    const result = setPossibleParentsSection(host, undefined);
+                    expect(result).toStrictEqual([]);
+                });
+
+                it("returns set the dropdown content and return the collection given", () => {
+                    const result = setPossibleParentsSection(host, [
+                        { label: "group 1" } as GroupOfItems,
+                    ]);
+
+                    expect(result).toHaveLength(1);
+                    expect(result[0].label).toBe("group 1");
+                });
+            });
+        });
         describe(`current_link_type_descriptor`, () => {
             let link_selector: LinkSelectorStub, host: LinkField;
 
@@ -175,7 +243,9 @@ describe("LinkField", () => {
                     } as unknown as LinkFieldControllerType,
                     link_selector: link_selector as LinkSelector,
                     current_link_type: LinkTypeStub.buildUntyped(),
-                    dropdown_content: initial_dropdown_content,
+                    matching_artifact_section: initial_dropdown_content,
+                    possible_parents_section: initial_dropdown_content,
+                    recently_viewed_section: initial_dropdown_content,
                 } as LinkField;
             });
 

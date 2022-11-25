@@ -22,6 +22,9 @@ import {
     getNoResultFoundEmptyState,
     getRecentlyViewedArtifactGroupLabel,
 } from "../../../../gettext-catalog";
+import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
+import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 
 export const RecentlyViewedArtifactGroup = {
     buildEmpty: (): GroupOfItems => ({
@@ -37,5 +40,18 @@ export const RecentlyViewedArtifactGroup = {
         empty_message: "",
         items: [],
         is_loading: true,
+    }),
+
+    fromUserHistory: (
+        link_verifier: VerifyIsAlreadyLinked,
+        linkable_artifacts: readonly LinkableArtifact[]
+    ): GroupOfItems => ({
+        label: getRecentlyViewedArtifactGroupLabel(),
+        icon: "",
+        empty_message: getNoResultFoundEmptyState(),
+        items: linkable_artifacts.map((artifact) =>
+            LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
+        ),
+        is_loading: false,
     }),
 };

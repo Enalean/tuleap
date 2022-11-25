@@ -36,6 +36,8 @@ import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field
 import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
 import type { LinkField } from "./LinkField";
 import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
+import type { RetrieveUserHistory } from "../../../../domain/fields/link-field/RetrieveUserHistory";
+import type { UserIdentifier } from "../../../../domain/UserIdentifier";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
@@ -56,12 +58,24 @@ export const ArtifactLinkSelectorAutoCompleter = (
     link_verifier: VerifyIsAlreadyLinked,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
+    user_history_retriever: RetrieveUserHistory,
+    user: UserIdentifier,
     is_search_feature_flag_enabled: boolean
 ): ArtifactLinkSelectorAutoCompleterType => {
-    let loaded_possible_parents_cache: GroupCollection = [PossibleParentsGroup.buildLoadingState()];
-
-    const getRecentlyViewedItems = (): GroupOfItems => {
-        return RecentlyViewedArtifactGroup.buildEmpty();
+    const getRecentlyViewedItems = (query: string): PromiseLike<GroupOfItems> => {
+        const filter = LinkableArtifactFilter(query);
+        return user_history_retriever
+            .getUserArtifactHistory(user)
+            .map((artifacts) => artifacts.filter(filter.matchesQuery))
+            .match(
+                (artifacts) =>
+                    RecentlyViewedArtifactGroup.fromUserHistory(link_verifier, artifacts),
+                (fault) => {
+                    // eslint-disable-next-line no-console
+                    console.log(fault.valueOf());
+                    return RecentlyViewedArtifactGroup.buildEmpty();
+                }
+            );
     };
 
     const getMatchingArtifactsGroup = (
@@ -98,18 +112,14 @@ export const ArtifactLinkSelectorAutoCompleter = (
     const getFilteredPossibleParentsGroups = async (query: string): Promise<GroupCollection> => {
         const matching_parents = await getPossibleParentsGroup(query);
         if (matching_parents.length === 0) {
-            const empty_possible_parents_group = [PossibleParentsGroup.buildEmpty()];
-            loaded_possible_parents_cache = empty_possible_parents_group;
-            return empty_possible_parents_group;
+            return [PossibleParentsGroup.buildEmpty()];
         }
-
-        loaded_possible_parents_cache = matching_parents;
 
         return matching_parents;
     };
 
     return {
-        autoComplete: async (host: LinkField, query: string): Promise<void> => {
+        autoComplete: (host: LinkField, query: string): void => {
             notification_clearer.clearFaultNotification();
 
             const linkable_number = LinkableNumberProxy.fromQueryString(
@@ -118,38 +128,31 @@ export const ArtifactLinkSelectorAutoCompleter = (
             );
             const is_parent_selected = isParentSelected(host);
 
-            if (!linkable_number && !is_parent_selected) {
-                host.dropdown_content = [];
-                if (is_search_feature_flag_enabled) {
-                    host.dropdown_content = [getRecentlyViewedItems()];
-                }
-                return;
-            }
-            let loading_groups = [];
-
+            host.matching_artifact_section = [];
+            host.recently_viewed_section = [];
+            host.possible_parents_section = [];
             if (linkable_number) {
-                loading_groups.push(MatchingArtifactsGroup.buildLoadingState());
-                if (is_search_feature_flag_enabled && !is_parent_selected) {
-                    loading_groups.push(RecentlyViewedArtifactGroup.buildLoadingState());
-                }
+                host.matching_artifact_section = [MatchingArtifactsGroup.buildLoadingState()];
+                getMatchingArtifactsGroup(linkable_number).then((group) => {
+                    host.matching_artifact_section = [group];
+                });
+            }
+            if (is_search_feature_flag_enabled && !is_parent_selected) {
+                host.recently_viewed_section = [RecentlyViewedArtifactGroup.buildLoadingState()];
+                getRecentlyViewedItems(query).then((group) => {
+                    if (!isParentSelected(host)) {
+                        host.recently_viewed_section = [group];
+                    }
+                });
             }
             if (is_parent_selected) {
-                loading_groups = loading_groups.concat(loaded_possible_parents_cache);
+                host.possible_parents_section = [PossibleParentsGroup.buildLoadingState()];
+                getFilteredPossibleParentsGroups(query).then((groups) => {
+                    if (isParentSelected(host)) {
+                        host.possible_parents_section = groups;
+                    }
+                });
             }
-            host.dropdown_content = loading_groups;
-
-            let groups = [];
-            if (linkable_number) {
-                groups.push(await getMatchingArtifactsGroup(linkable_number));
-                if (is_search_feature_flag_enabled && !is_parent_selected) {
-                    groups.push(getRecentlyViewedItems());
-                }
-            }
-
-            if (is_parent_selected) {
-                groups = groups.concat(await getFilteredPossibleParentsGroups(query));
-            }
-            host.dropdown_content = groups;
         },
     };
 };

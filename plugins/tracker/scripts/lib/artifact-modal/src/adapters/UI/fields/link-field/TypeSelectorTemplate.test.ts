@@ -51,6 +51,9 @@ import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/C
 import { selectOrThrow } from "@tuleap/dom";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
+import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
+import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
+import { okAsync } from "neverthrow";
 
 const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupElement =>
     selectOrThrow(select, "[data-test=link-type-select-optgroup]", HTMLOptGroupElement);
@@ -103,7 +106,7 @@ describe("TypeSelectorTemplate", () => {
             notification_clearer,
             ArtifactLinkSelectorAutoCompleter(
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
-                    LinkableArtifactStub.withDefaults()
+                    okAsync(LinkableArtifactStub.withDefaults())
                 ),
                 fault_notifier,
                 notification_clearer,
@@ -111,6 +114,8 @@ describe("TypeSelectorTemplate", () => {
                 link_verifier,
                 current_artifact_identifier,
                 current_tracker_identifier,
+                RetrieveUserHistoryStub.withoutUserHistory(),
+                UserIdentifierProxyStub.fromUserId(101),
                 is_search_feature_flag_enabled
             ),
             AddNewLinkStub.withCount(),

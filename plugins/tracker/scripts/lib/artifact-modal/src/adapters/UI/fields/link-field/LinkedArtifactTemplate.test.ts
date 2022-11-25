@@ -50,6 +50,9 @@ import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAl
 import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
+import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
+import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
+import { okAsync } from "neverthrow";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -160,7 +163,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 notification_clearer,
                 ArtifactLinkSelectorAutoCompleter(
                     RetrieveMatchingArtifactStub.withMatchingArtifact(
-                        LinkableArtifactStub.withDefaults()
+                        okAsync(LinkableArtifactStub.withDefaults())
                     ),
                     fault_notifier,
                     notification_clearer,
@@ -168,6 +171,8 @@ describe(`LinkedArtifactTemplate`, () => {
                     link_verifier,
                     current_artifact_identifier,
                     current_tracker_identifier,
+                    RetrieveUserHistoryStub.withoutUserHistory(),
+                    UserIdentifierProxyStub.fromUserId(101),
                     is_search_feature_flag_enabled
                 ),
                 AddNewLinkStub.withCount(),

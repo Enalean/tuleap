@@ -75,6 +75,7 @@ import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
 import { getFileUploadErrorMessage } from "./gettext-catalog";
 import { AllowedLinksTypesCollection } from "./adapters/UI/fields/link-field/AllowedLinksTypesCollection";
 import { TrackerInAHierarchyVerifier } from "./domain/fields/link-field/TrackerInAHierarchyVerifier";
+import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -179,6 +180,8 @@ function ArtifactModalController(
                     already_linked_verifier,
                     current_artifact_identifier,
                     current_tracker_identifier,
+                    api_client,
+                    UserIdentifierProxy.fromUserId(modal_model.user_id),
                     modal_model.is_search_enabled
                 ),
                 new_links_store,
@@ -257,10 +260,6 @@ function ArtifactModalController(
     }
 
     function init() {
-        if (modal_model.is_search_enabled) {
-            // eslint-disable-next-line no-console
-            console.log(modal_model.user_id);
-        }
         setFieldDependenciesWatchers();
 
         modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", setIsNotUploadingInCKEditor);
