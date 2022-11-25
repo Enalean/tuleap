@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Editor, LineWidgetOptions } from "codemirror";
+import type { LineWidgetOptions } from "codemirror";
 import type { FileLineHandle } from "./types-codemirror-overriden";
+import type { CommentWidgetCreationParams } from "./types-codemirror-overriden";
 import {
     doesHandleHaveWidgets,
     isCodeCommentPlaceholderWidget,
@@ -35,10 +36,11 @@ const getPlaceholderWidgetIndex = (handle: FileLineHandle): number => {
 };
 
 export const getWidgetPlacementOptions = (
-    code_mirror: Editor,
-    display_line_number: number
+    comment_widget_params: CommentWidgetCreationParams
 ): LineWidgetOptions => {
-    const line_handle = code_mirror.getLineHandle(display_line_number);
+    const line_handle = comment_widget_params.code_mirror.getLineHandle(
+        comment_widget_params.line_number
+    );
     if (!line_handle) {
         return {};
     }

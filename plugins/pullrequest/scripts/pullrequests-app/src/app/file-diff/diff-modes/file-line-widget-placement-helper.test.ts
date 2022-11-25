@@ -18,6 +18,7 @@
  */
 
 import type { Editor, LineHandle } from "codemirror";
+import type { CommentWidgetCreationParams } from "./types-codemirror-overriden";
 import { getWidgetPlacementOptions } from "./file-line-widget-placement-helper";
 import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
@@ -34,17 +35,22 @@ const buildEditorWithLineHandle = (line_handle: LineHandle | null): EditorWithLi
 describe("file-line-widget-placement-helper", () => {
     describe("getWidgetPlacementOptions()", () => {
         it("should return an empty LineWidgetOption when there is no handle for the given line number", () => {
-            const options = getWidgetPlacementOptions(buildEditorWithLineHandle(null), 15);
+            const options = getWidgetPlacementOptions({
+                code_mirror: buildEditorWithLineHandle(null),
+                line_number: 15,
+            } as unknown as CommentWidgetCreationParams);
 
             expect(options).toStrictEqual({});
         });
 
         it(`When the line handle associated to the given line number has no widgets
             Then it should return a LineWidgetOption with no insertAt property`, () => {
-            const options = getWidgetPlacementOptions(
-                buildEditorWithLineHandle(FileLineHandleStub.buildLineHandleWithNoWidgets()),
-                15
-            );
+            const options = getWidgetPlacementOptions({
+                code_mirror: buildEditorWithLineHandle(
+                    FileLineHandleStub.buildLineHandleWithNoWidgets()
+                ),
+                line_number: 15,
+            } as unknown as CommentWidgetCreationParams);
 
             expect(options).toStrictEqual({
                 coverGutter: true,
@@ -54,15 +60,15 @@ describe("file-line-widget-placement-helper", () => {
         it(`When the line handle associated to the given line number has comment widgets
             Then it should return a LineWidgetOption with no insertAt property
             So the widget will be placed below all the existing widgets in the line handle`, () => {
-            const options = getWidgetPlacementOptions(
-                buildEditorWithLineHandle(
+            const options = getWidgetPlacementOptions({
+                code_mirror: buildEditorWithLineHandle(
                     FileLineHandleStub.buildLineHandleWithWidgets([
                         FileDiffWidgetStub.buildInlineCommentWidget(),
                         FileDiffWidgetStub.buildInlineCommentWidget(),
                     ])
                 ),
-                15
-            );
+                line_number: 15,
+            } as unknown as CommentWidgetCreationParams);
 
             expect(options).toStrictEqual({
                 coverGutter: true,
@@ -72,15 +78,15 @@ describe("file-line-widget-placement-helper", () => {
         it(`When the line handle associated to the given line number has a code comment placeholder widget
             Then it should return a LineWidgetOption with no insertAt corresponding to the placeholder index
             So the new widget can be inserted right above the placeholder`, () => {
-            const options = getWidgetPlacementOptions(
-                buildEditorWithLineHandle(
+            const options = getWidgetPlacementOptions({
+                code_mirror: buildEditorWithLineHandle(
                     FileLineHandleStub.buildLineHandleWithWidgets([
                         FileDiffWidgetStub.buildInlineCommentWidget(),
                         FileDiffWidgetStub.buildCodeCommentPlaceholder(),
                     ])
                 ),
-                15
-            );
+                line_number: 15,
+            } as unknown as CommentWidgetCreationParams);
 
             expect(options).toStrictEqual({
                 coverGutter: true,

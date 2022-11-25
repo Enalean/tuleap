@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Editor } from "codemirror";
 import type { PlaceholderCreationParams } from "./types-codemirror-overriden";
 import type { CurrentPullRequestUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
 import type { PullRequestPresenter } from "../../comments/PullRequestPresenter";
 import type { IRelativeDateHelper } from "../../helpers/date-helpers";
 import type { ControlPullRequestComment } from "../../comments/PullRequestCommentController";
-import type { InlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
-import type { InlineCommentWidgetCreationParams } from "./types-codemirror-overriden";
+import type {
+    InlineCommentWidgetCreationParams,
+    NewInlineCommentFormWidgetCreationParams,
+} from "./types-codemirror-overriden";
 
 import { getWidgetPlacementOptions } from "./file-line-widget-placement-helper";
 import {
@@ -49,10 +50,7 @@ export interface CreateInlineCommentWidget {
 
 export interface CreateNewInlineCommentFormWidget {
     displayNewInlineCommentFormWidget: (
-        code_mirror: Editor,
-        widget_line_number: number,
-        new_inline_comment_context: InlineCommentContext,
-        post_rendering_callback: () => void
+        widget_params: NewInlineCommentFormWidgetCreationParams
     ) => void;
 }
 
@@ -82,15 +80,10 @@ export const SideBySideCodeMirrorWidgetCreator = (
         inline_comment_element.currentPullRequest = pull_request_presenter;
         inline_comment_element.post_rendering_callback = widget_params.post_rendering_callback;
 
-        const options = getWidgetPlacementOptions(
-            widget_params.code_mirror,
-            widget_params.line_number
-        );
-
         widget_params.code_mirror.addLineWidget(
             widget_params.line_number,
             inline_comment_element,
-            options
+            getWidgetPlacementOptions(widget_params)
         );
     };
 
@@ -111,23 +104,20 @@ export const SideBySideCodeMirrorWidgetCreator = (
         },
         displayInlineCommentWidget,
         displayNewInlineCommentFormWidget: (
-            code_mirror: Editor,
-            widget_line_number: number,
-            new_inline_comment_context: InlineCommentContext,
-            post_rendering_callback: () => void
+            widget_params: NewInlineCommentFormWidgetCreationParams
         ): void => {
             const new_comment_element = doc.createElement(NEW_COMMENT_FORM_TAG_NAME);
             if (!isANewInlineCommentWidget(new_comment_element)) {
                 return;
             }
 
-            new_comment_element.comment_saver = NewInlineCommentSaver(new_inline_comment_context);
-            new_comment_element.post_rendering_callback = post_rendering_callback;
+            new_comment_element.comment_saver = NewInlineCommentSaver(widget_params.context);
+            new_comment_element.post_rendering_callback = widget_params.post_rendering_callback;
 
-            const widget = code_mirror.addLineWidget(
-                widget_line_number,
+            const widget = widget_params.code_mirror.addLineWidget(
+                widget_params.line_number,
                 new_comment_element,
-                getWidgetPlacementOptions(code_mirror, widget_line_number)
+                getWidgetPlacementOptions(widget_params)
             );
 
             new_comment_element.post_submit_callback = (comment_presenter): void => {
@@ -135,16 +125,16 @@ export const SideBySideCodeMirrorWidgetCreator = (
                 comments_store.addRootComment(comment_presenter);
 
                 displayInlineCommentWidget({
-                    code_mirror,
+                    code_mirror: widget_params.code_mirror,
                     comment: comment_presenter,
-                    line_number: widget_line_number,
-                    post_rendering_callback,
+                    line_number: widget_params.line_number,
+                    post_rendering_callback: widget_params.post_rendering_callback,
                 });
             };
 
             new_comment_element.on_cancel_callback = (): void => {
                 widget.clear();
-                post_rendering_callback();
+                widget_params.post_rendering_callback();
             };
         },
     };
