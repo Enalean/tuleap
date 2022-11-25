@@ -2,7 +2,7 @@
   "label": "Buttons",
   "children": [
     "types",
-    "tags",
+    "ellipsis",
     "disabled",
     "sizes",
     "icon",

@@ -25,24 +25,32 @@ $tlp-button-background-timing: 75ms;
 $tlp-button-normal-height: 40px;
 $tlp-button-normal-line-height: 1.5rem;
 $tlp-button-normal-font-size: 0.875rem;
+$tlp-button-ellipsis-normal-line-height: 1.875rem;
+$tlp-button-ellipsis-normal-font-size: 1.875rem;
 $tlp-button-normal-font-weight: 500;
 $tlp-button-normal-padding: 0 var(--tlp-medium-spacing);
 $tlp-button-normal-radius: var(--tlp-medium-radius);
 $tlp-button-large-height: 48px;
 $tlp-button-large-line-height: 1.5rem;
 $tlp-button-large-font-size: 1.25rem;
+$tlp-button-ellipsis-large-line-height: 2.25rem;
+$tlp-button-ellipsis-large-font-size: 2.25rem;
 $tlp-button-large-font-weight: 500;
 $tlp-button-large-padding: 0 var(--tlp-large-spacing);
 $tlp-button-large-radius: var(--tlp-medium-radius);
 $tlp-button-small-height: 32px;
 $tlp-button-small-line-height: 1.5rem;
 $tlp-button-small-font-size: 0.75rem;
+$tlp-button-ellipsis-small-line-height: 1.5rem;
+$tlp-button-ellipsis-small-font-size: 1.5rem;
 $tlp-button-small-font-weight: 500;
 $tlp-button-small-padding: 0 var(--tlp-medium-spacing);
 $tlp-button-small-radius: var(--tlp-small-radius);
 $tlp-button-mini-height: 24px;
 $tlp-button-mini-line-height: 1.15rem;
 $tlp-button-mini-font-size: 0.75rem;
+$tlp-button-ellipsis-mini-line-height: 1.25rem;
+$tlp-button-ellipsis-mini-font-size: 1.25rem;
 $tlp-button-mini-font-weight: 500;
 $tlp-button-mini-padding: 0 var(--tlp-small-spacing);
 $tlp-button-mini-radius: var(--tlp-small-radius);
@@ -189,6 +197,53 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
             $outline-background-color-active
         );
     }
+
+    &.tlp-button-ellipsis {
+        --tlp-button-ellipsis-color: #{$outline-text-color};
+        --tlp-button-ellipsis-color-on-dark-value: var(--tlp-white-color);
+        --tlp-button-ellipsis-text-shadow: none;
+        --tlp-button-ellipsis-text-shadow-on-dark-value: 0 1px 2px rgb(0 0 0 / 30%);
+        --tlp-button-ellipsis-hover-color: #{$outline-background-color-hover};
+        --tlp-button-ellipsis-hover-color-on-dark-value: rgb(0 0 0 / 30%);
+        --tlp-button-ellipsis-focus-border-color: var(--tlp-white-color);
+        --tlp-button-ellipsis-focus-border-color-on-dark-value: transparent;
+        --tlp-button-ellipsis-disabled-color: #{$outline-color-disabled};
+        --tlp-button-ellipsis-disabled-color-on-dark-value: var(--tlp-white-color);
+        --tlp-button-ellipsis-disabled-opacity: 1;
+        --tlp-button-ellipsis-disabled-opacity-on-dark-value: 0.5;
+
+        border: 1px solid transparent;
+        background: none;
+        box-shadow: none;
+        color: var(--tlp-button-ellipsis-color);
+        font-size: $tlp-button-ellipsis-normal-font-size;
+        line-height: $tlp-button-ellipsis-normal-line-height;
+        text-shadow: var(--tlp-button-ellipsis-text-shadow);
+
+        &:hover {
+            background: var(--tlp-button-ellipsis-hover-color);
+        }
+
+        &:focus {
+            border: 1px solid var(--tlp-button-ellipsis-focus-border-color);
+            background: var(--tlp-button-ellipsis-hover-color);
+            box-shadow: var(--tlp-shadow-focus);
+        }
+
+        &:active {
+            background: var(--tlp-button-ellipsis-hover-color);
+        }
+
+        &:disabled,
+        &.disabled {
+            opacity: var(--tlp-button-ellipsis-disabled-opacity);
+            color: var(--tlp-button-ellipsis-disabled-color);
+
+            &:hover {
+                background: none;
+            }
+        }
+    }
 }
 
 /**
@@ -316,6 +371,11 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     font-weight: $tlp-button-large-font-weight;
     line-height: $tlp-button-large-line-height;
 
+    &.tlp-button-ellipsis {
+        font-size: $tlp-button-ellipsis-large-font-size;
+        line-height: $tlp-button-ellipsis-large-line-height;
+    }
+
     > .tlp-button-icon {
         margin: 0 8px 0 0;
         font-size: 0.875rem;
@@ -334,6 +394,11 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     font-size: $tlp-button-small-font-size;
     font-weight: $tlp-button-small-font-weight;
     line-height: $tlp-button-small-line-height;
+
+    &.tlp-button-ellipsis {
+        font-size: $tlp-button-ellipsis-small-font-size;
+        line-height: $tlp-button-ellipsis-small-line-height;
+    }
 
     > .tlp-button-icon {
         margin: 0 4px 0 0;
@@ -354,6 +419,11 @@ $tlp-button-outline-hover-color: var(--tlp-neutral-light-color-lighter-30);
     font-size: $tlp-button-mini-font-size;
     font-weight: $tlp-button-mini-font-weight;
     line-height: $tlp-button-mini-line-height;
+
+    &.tlp-button-ellipsis {
+        font-size: $tlp-button-ellipsis-mini-font-size;
+        line-height: $tlp-button-ellipsis-mini-line-height;
+    }
 
     > .tlp-button-icon {
         margin: 0 4px 0 0;

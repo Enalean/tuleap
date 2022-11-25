@@ -21,11 +21,12 @@
 <template>
     <div class="tlp-dropdown document-dropdown-menu-button">
         <button
-            class="tlp-button-primary document-dropdown-menu-button-button"
+            class="tlp-button-primary"
             v-bind:class="{
                 'tlp-button-large': isInLargeMode,
                 'tlp-button-small tlp-button-outline': isInQuickLookMode,
                 'tlp-append tlp-dropdown-split-button-caret': isAppended,
+                'tlp-button-ellipsis': !isAppended,
             }"
             ref="dropdownButton"
             type="button"
