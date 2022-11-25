@@ -257,6 +257,10 @@ function ArtifactModalController(
     }
 
     function init() {
+        if (modal_model.is_search_enabled) {
+            // eslint-disable-next-line no-console
+            console.log(modal_model.user_id);
+        }
         setFieldDependenciesWatchers();
 
         modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", setIsNotUploadingInCKEditor);

@@ -60,6 +60,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * given tracker.
      * displayItemCallback will be called after the last HTTP response is received.
      *
+     * @param {int} user_id                  The id of current user
      * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
      * @param {int} parent_artifact_id       The artifact's parent's id
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the new artifact's id.
@@ -68,6 +69,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * @param {array} prefill_values         The prefill values for creation, using field name as identifier
      */
     function showCreation(
+        user_id,
         tracker_id,
         parent_artifact_id,
         displayItemCallback,
@@ -84,6 +86,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             tlpModalOptions: { keyboard: false, destroy_on_hide: true },
             resolve: {
                 modal_model: self.initCreationModalModel(
+                    user_id,
                     tracker_id,
                     parent_artifact_id,
                     is_list_picker_enabled,
@@ -101,7 +104,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * existing values.
      * displayItemCallback will be called after the last HTTP response is received.
      *
-     * @param {int} user_id                  The idea of current user
+     * @param {int} user_id                  The id of current user
      * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
      * @param {int} artifact_id              The id of the artifact we want to edit
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the edited artifact's id.
@@ -137,6 +140,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
     }
 
     function initCreationModalModel(
+        user_id,
         tracker_id,
         parent_artifact_id,
         is_list_picker_enabled,
@@ -144,6 +148,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         prefill_values
     ) {
         const modal_model = {
+            user_id,
             tracker_id,
             parent_artifact_id,
             is_list_picker_enabled,

@@ -5,13 +5,15 @@ import "angular-mocks";
 import BaseBacklogItemDetailsController from "./backlog-item-details-controller.js";
 
 describe("BacklogItemDetailsController -", function () {
-    var $q,
+    let $q,
         $scope,
         BacklogItemDetailsController,
         BacklogItemCollectionService,
         NewTuleapArtifactModalService,
-        BacklogItemService;
+        BacklogItemService,
+        SharedPropertiesService;
 
+    const user_id = 102;
     beforeEach(function () {
         angular.mock.module(planning_module);
 
@@ -21,7 +23,8 @@ describe("BacklogItemDetailsController -", function () {
             $controller,
             _BacklogItemCollectionService_,
             _BacklogItemService_,
-            _NewTuleapArtifactModalService_
+            _NewTuleapArtifactModalService_,
+            _SharedPropertiesService_
         ) {
             $q = _$q_;
             $scope = $rootScope.$new();
@@ -46,6 +49,9 @@ describe("BacklogItemDetailsController -", function () {
                 BacklogItemService: BacklogItemService,
                 NewTuleapArtifactModalService: NewTuleapArtifactModalService,
             });
+
+            SharedPropertiesService = _SharedPropertiesService_;
+            jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(user_id);
         });
     });
 
@@ -73,6 +79,7 @@ describe("BacklogItemDetailsController -", function () {
 
             expect(event.preventDefault).toHaveBeenCalled();
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
+                user_id,
                 7,
                 BacklogItemDetailsController.backlog_item.id,
                 expect.any(Function),
@@ -84,8 +91,8 @@ describe("BacklogItemDetailsController -", function () {
         describe("callback -", () => {
             let artifact;
             beforeEach(() => {
-                NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
-                    callback(207)
+                NewTuleapArtifactModalService.showCreation.mockImplementation(
+                    (user_id, a, b, callback) => callback(207)
                 );
                 artifact = {
                     backlog_item: {

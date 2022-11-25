@@ -49,9 +49,12 @@ webpack configuration:
 To create a new artifact, use:
 ```javascript
 NewTuleapArtifactModalService.showCreation(
+    user_id,
     tracker_id,
     parent_item,
-    callback
+    callback,
+    true | false, //enable or not the list picker
+    prefill_values
 );
 ```
 
@@ -64,7 +67,7 @@ NewTuleapArtifactModalService.showEdition(
     tracker_id,
     artifact_id,
     callback,
-    prefill_values
+    true | false, //enable or not the list picker
 );
 ```
 
