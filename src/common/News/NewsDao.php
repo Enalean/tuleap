@@ -83,8 +83,7 @@ class NewsDao extends \Tuleap\DB\DataAccessObject
             WHERE news_bytes.is_approved = 1
                 AND `groups`.status = 'A'
                 AND `groups`.access IN ($where_statement)
-            GROUP BY news_bytes.forum_id
-            ORDER BY date DESC LIMIT ? ";
+            ORDER BY news_bytes.date DESC LIMIT ? ";
 
         return $this->getDB()->safeQuery($sql, array_merge($where_statement->values(), [$limit]));
     }

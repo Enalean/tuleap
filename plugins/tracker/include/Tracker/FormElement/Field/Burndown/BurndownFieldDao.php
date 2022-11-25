@@ -202,7 +202,7 @@ class BurndownFieldDao extends SpecificPropertiesDao
               burndown_field.formElement_type = 'burndown'
               AND tracker_artifact.id = $artifact_id
               AND burndown_field.use_it = 1
-            GROUP BY tracker_artifact.id, burndown_field.id
+            GROUP BY tracker_artifact.id, burndown_field.id, remaining_effort_field_id
             HAVING start_date IS NOT NULL
             AND duration IS NOT NULL";
 
@@ -258,7 +258,7 @@ class BurndownFieldDao extends SpecificPropertiesDao
               burndown_field.formElement_type = 'burndown'
               AND tracker_artifact.id = $artifact_id
               AND burndown_field.use_it = 1
-            GROUP BY tracker_artifact.id, burndown_field.id
+            GROUP BY tracker_artifact.id, burndown_field.id, remaining_effort_field_id
             HAVING start_date IS NOT NULL
             AND end_date IS NOT NULL";
 

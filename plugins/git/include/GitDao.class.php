@@ -744,13 +744,55 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         }
         $query_parameters = array_merge($additional_where_statement->values(), $limit_parameters);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS git.*,
-                  IF(plugin_git_log.push_date, MAX(plugin_git_log.push_date), UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
+        $sql = "SELECT SQL_CALC_FOUND_ROWS
+                  git.repository_id,
+                  git.repository_name,
+                  git.repository_description,
+                  git.repository_path,
+                  git.repository_parent_id,
+                  git.project_id,
+                  git.repository_creation_user_id,
+                  git.repository_creation_date,
+                  git.repository_deletion_date,
+                  git.repository_is_initialized,
+                  git.repository_access,
+                  git.repository_events_mailing_prefix,
+                  git.repository_backend_type,
+                  git.repository_scope,
+                  git.repository_namespace,
+                  git.repository_backup_path,
+                  git.remote_server_id,
+                  git.remote_server_disconnect_date,
+                  git.remote_project_deleted,
+                  git.remote_project_deleted_date,
+                  git.remote_server_migration_status,
+                  IF(plugin_git_log.push_date, MAX(plugin_git_log.push_date),UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
                 FROM plugin_git AS git
                   LEFT JOIN plugin_git_log ON plugin_git_log.repository_id = git.repository_id
                 WHERE
                   $additional_where_statement
-                GROUP BY git.repository_id
+                GROUP BY git.repository_id,
+                  git.repository_name,
+                  git.repository_description,
+                  git.repository_path,
+                  git.repository_parent_id,
+                  git.project_id,
+                  git.repository_creation_user_id,
+                  git.repository_creation_date,
+                  git.repository_deletion_date,
+                  git.repository_is_initialized,
+                  git.repository_access,
+                  git.repository_events_mailing_prefix,
+                  git.repository_backend_type,
+                  git.repository_scope,
+                  git.repository_namespace,
+                  git.repository_backup_path,
+                  git.remote_server_id,
+                  git.remote_server_disconnect_date,
+                  git.remote_project_deleted,
+                  git.remote_project_deleted_date,
+                  git.remote_server_migration_status,
+                  plugin_git_log.push_date
                 ORDER BY $order
                 $limit_statement";
 

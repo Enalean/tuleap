@@ -328,8 +328,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
                 FROM tracker_artifact AS artifact
                     INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
                     " . implode('', $join_fields) . "
-                WHERE artifact.id IN ($artifact_ids)
-                GROUP by artifact.id";
+                WHERE artifact.id IN ($artifact_ids)";
         return $this->retrieve($sql);
     }
 }
