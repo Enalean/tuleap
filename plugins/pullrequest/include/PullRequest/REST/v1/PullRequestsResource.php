@@ -266,7 +266,7 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $dao                          = new \Tuleap\PullRequest\InlineComment\Dao();
-        $color_retriever              = new ThreadCommentColorRetriever(new ThreadCommentDao());
+        $color_retriever              = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
         $color_assigner               = new ThreadCommentColorAssigner($dao, $dao);
         $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_retriever, $color_assigner);
 
@@ -1116,7 +1116,7 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $dao                 = new CommentDao();
-        $color_retriever     = new ThreadCommentColorRetriever(new ThreadCommentDao());
+        $color_retriever     = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
         $color_assigner      = new ThreadCommentColorAssigner($dao, $dao);
         $parent_id_validator = new ParentIdValidatorForComment($this->comment_factory);
         $current_time        = time();

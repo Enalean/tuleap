@@ -52,7 +52,7 @@ final class InlineComment implements TimelineEvent
             (bool) $row['is_outdated'],
             (int) $row['parent_id'],
             $row['position'],
-            (string) $row['color'],
+            $row['color'],
         );
     }
 

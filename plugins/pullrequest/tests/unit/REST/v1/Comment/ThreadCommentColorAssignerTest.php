@@ -44,7 +44,7 @@ final class ThreadCommentColorAssignerTest extends TestCase
         $this->global_dao
             ->expects(self::never())
             ->method('setThreadColor');
-        $this->global_dao->method('searchByCommentID')->willReturn(['parent_id' => 456, 'id' => 1]);
+        $this->global_dao->method('searchByCommentID')->willReturn(['parent_id' => 456, 'id' => 1, "color" => ""]);
         $this->color_assigner->assignColor(1, "graffity-yellow");
     }
 
@@ -53,13 +53,23 @@ final class ThreadCommentColorAssignerTest extends TestCase
         $this->global_dao
             ->expects(self::never())
             ->method('setThreadColor');
-        $this->global_dao->method('searchByCommentID')->willReturn(['parent_id' => 456, 'id' => 1]);
+        $this->global_dao->method('searchByCommentID')->willReturn(['parent_id' => 456, 'id' => 1, "color" => ""]);
         $this->color_assigner->assignColor(1, "graffity-yellow");
+    }
+
+    public function testItDoesNotAssignColorForExistingThreads(): void
+    {
+        $parent_row = ['parent_id' => 0, 'id' => 1, "color" => "flamingo_pink"];
+        $this->global_dao->method('searchByCommentID')->willReturn($parent_row);
+        $this->global_dao
+            ->expects(self::never())
+            ->method('setThreadColor');
+        $this->color_assigner->assignColor(1, "daphne-blue");
     }
 
     public function testItAssignColorToANewThread(): void
     {
-        $parent_row = ['parent_id' => 0, 'id' => 1];
+        $parent_row = ['parent_id' => 0, 'id' => 1, 'color' => ''];
         $this->global_dao->method('searchByCommentID')->willReturn($parent_row);
         $this->global_dao->expects(self::once())->method("setThreadColor")->with($parent_row['id'], "daphne-blue");
         $this->color_assigner->assignColor(1, "daphne-blue");

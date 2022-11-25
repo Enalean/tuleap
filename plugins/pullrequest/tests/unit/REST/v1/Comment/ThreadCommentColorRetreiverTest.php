@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
+use Tuleap\PullRequest\Comment\Dao;
 use Tuleap\PullRequest\Comment\ThreadCommentDao;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -37,13 +38,15 @@ final class ThreadCommentColorRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->thread_global  = $this->createMock(ThreadCommentDao::class);
-        $this->color_assigner = new ThreadCommentColorRetriever($this->thread_global);
+        $this->thread_global    = $this->createMock(ThreadCommentDao::class);
+        $this->comment_searcher = $this->createMock(Dao::class);
+        $this->color_assigner   = new ThreadCommentColorRetriever($this->thread_global, $this->comment_searcher);
     }
 
     public function testItRetrieveColorForFirstThread(): void
     {
         $this->thread_global->method('searchAllThreadByPullRequestId')->willReturn([]);
+        $this->comment_searcher->method('searchByCommentID')->willReturn(["color" => ""]);
 
         self::assertEquals("graffiti-yellow", $this->color_assigner->retrieveColor(self::PULLREQUEST_ID, self::PARENT_ID));
     }
@@ -51,12 +54,21 @@ final class ThreadCommentColorRetrieverTest extends TestCase
     public function testItReturnsColorWhenPRHasMoreThanAThread(): void
     {
         $this->thread_global->method('searchAllThreadByPullRequestId')->willReturn([1]);
+        $this->comment_searcher->method('searchByCommentID')->willReturn(["color" => ""]);
         self::assertEquals("daphne-blue", $this->color_assigner->retrieveColor(self::PULLREQUEST_ID, self::PARENT_ID));
     }
 
     public function testItReturnsSameColorWhenPRHasManyThreads(): void
     {
         $this->thread_global->method('searchAllThreadByPullRequestId')->willReturn([1, 2, 3, 4, 5, 6, 7, 8]);
+        $this->comment_searcher->method('searchByCommentID')->willReturn(["color" => ""]);
         self::assertEquals("graffiti-yellow", $this->color_assigner->retrieveColor(self::PULLREQUEST_ID, self::PARENT_ID));
+    }
+
+    public function testItReturnsParentColor(): void
+    {
+        $this->comment_searcher->method('searchByCommentID')->willReturn(["color" => "flamingo-pink"]);
+        $this->thread_global->method('searchAllThreadByPullRequestId')->willReturn([1]);
+        self::assertEquals("flamingo-pink", $this->color_assigner->retrieveColor(self::PULLREQUEST_ID, self::PARENT_ID));
     }
 }

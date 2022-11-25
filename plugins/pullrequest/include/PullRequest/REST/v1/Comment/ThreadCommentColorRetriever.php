@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\REST\v1\Comment;
 
+use Tuleap\PullRequest\Comment\ParentCommentSearcher;
 use Tuleap\PullRequest\Comment\ThreadCommentDao;
 
 class ThreadCommentColorRetriever
 {
-    public function __construct(private ThreadCommentDao $comment_dao)
+    public function __construct(private ThreadCommentDao $comment_dao, private ParentCommentSearcher $dao)
     {
     }
 
@@ -34,6 +35,11 @@ class ThreadCommentColorRetriever
     {
         if ($parent_id === 0) {
             return "";
+        }
+
+        $parent_comment = $this->dao->searchByCommentID($parent_id);
+        if ($parent_comment && $parent_comment['color'] !== '') {
+            return $parent_comment['color'];
         }
 
         $all_comments = $this->comment_dao->searchAllThreadByPullRequestId($id);

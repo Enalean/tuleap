@@ -38,7 +38,7 @@ class ThreadCommentColorAssigner
         }
 
         $parent_comment = $this->dao->searchByCommentID($parent_id);
-        if (! $parent_comment || $parent_comment['parent_id'] !== 0) {
+        if (! $parent_comment || $parent_comment['parent_id'] !== 0 || $parent_comment['color'] !== '') {
             return;
         }
 
