@@ -56,6 +56,10 @@ export interface UpdateCustomEvent {
     readonly value: string;
 }
 
+export interface ItemHasJustBeenUpdatedEvent {
+    readonly item: Item;
+}
+
 export type Events = {
     "update-status-property": string;
     "update-status-recursion": boolean;
@@ -83,7 +87,7 @@ export type Events = {
     "item-properties-have-just-been-updated": void;
     "item-permissions-have-just-been-updated": void;
     "item-has-just-been-deleted": void;
-    "item-has-just-been-updated": void;
+    "item-has-just-been-updated": ItemHasJustBeenUpdatedEvent;
     "item-is-being-uploaded": void;
     "update-lock": boolean;
     "update-custom-property": UpdateCustomEvent;

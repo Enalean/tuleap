@@ -28,10 +28,18 @@
         >
             <i class="fa-solid fa-repeat tlp-button-icon" aria-hidden="true"></i>
             {{ $gettext("Convert to…") }}
-            <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+            <i
+                class="fa-solid fa-caret-down tlp-button-icon-right"
+                aria-hidden="true"
+                ref="anchor"
+            ></i>
         </button>
 
-        <new-version-empty-menu-options v-bind:item="item" ref="menu" />
+        <new-version-empty-menu-options
+            v-bind:item="item"
+            ref="menu"
+            class="document-dropdown-menu-for-convert-button"
+        />
     </div>
 </template>
 
@@ -45,6 +53,7 @@ import NewVersionEmptyMenuOptions from "./NewVersionEmptyMenuOptions.vue";
 defineProps<{ item: Empty }>();
 
 const trigger = ref<HTMLElement | null>(null);
+const anchor = ref<HTMLElement | null>(null);
 const dropdown = ref<Dropdown | null>(null);
 
 onMounted(() => {
@@ -52,6 +61,12 @@ onMounted(() => {
         return;
     }
 
-    dropdown.value = createDropdown(trigger.value);
+    if (!(anchor.value instanceof HTMLElement)) {
+        return;
+    }
+
+    dropdown.value = createDropdown(trigger.value, {
+        anchor: anchor.value,
+    });
 });
 </script>

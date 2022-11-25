@@ -38,6 +38,7 @@ export interface DropdownOptions {
     keyboard?: boolean;
     trigger?: TriggerType;
     dropdown_menu?: Element;
+    anchor?: Element;
 }
 export type DropdownEventHandler = (event: CustomEvent<{ target: HTMLElement }>) => void;
 
@@ -55,6 +56,7 @@ export const createDropdown = (
 export class Dropdown {
     private readonly doc: Document;
     private readonly trigger_element: Element;
+    private readonly anchor_element: Element;
     private readonly dropdown_menu: HTMLElement;
     private readonly keyboard: boolean;
     is_shown: boolean;
@@ -72,6 +74,7 @@ export class Dropdown {
             keyboard = true,
             dropdown_menu = this.getDropdownMenu(),
             trigger = TRIGGER_CLICK,
+            anchor = null,
         } = options;
         if (dropdown_menu === null) {
             throw new Error("Could not find .tlp-dropdown-menu");
@@ -80,9 +83,10 @@ export class Dropdown {
             throw new Error("Dropdown menu must be an HTML element");
         }
         this.dropdown_menu = dropdown_menu;
+        this.anchor_element = anchor || this.trigger_element;
         this.is_shown = false;
         this.cleanup = autoUpdate(
-            this.trigger_element,
+            this.anchor_element,
             this.dropdown_menu,
             this.updatePositionOfMenu.bind(this)
         );
@@ -115,31 +119,27 @@ export class Dropdown {
             : "start";
         const wanted_placement: Placement = `${side}-${alignment}`;
 
-        const { x, y, placement } = await computePosition(
-            this.trigger_element,
-            this.dropdown_menu,
-            {
-                placement: wanted_placement,
-                middleware: [
-                    offset(({ rects, placement }) => {
-                        const mainAxis =
-                            (placement.indexOf("top") === 0 ? rects.reference.height / 2 : 0) - 4;
+        const { x, y, placement } = await computePosition(this.anchor_element, this.dropdown_menu, {
+            placement: wanted_placement,
+            middleware: [
+                offset(({ rects, placement }) => {
+                    const mainAxis =
+                        (placement.indexOf("top") === 0 ? rects.reference.height / 2 : 0) - 4;
 
-                        if (this.dropdown_menu.classList.contains("tlp-dropdown-menu-side")) {
-                            if (placement.indexOf("end") > 0) {
-                                return { mainAxis, crossAxis: 8 };
-                            }
-
-                            return { mainAxis, crossAxis: -8 };
+                    if (this.dropdown_menu.classList.contains("tlp-dropdown-menu-side")) {
+                        if (placement.indexOf("end") > 0) {
+                            return { mainAxis, crossAxis: 8 };
                         }
 
-                        return mainAxis;
-                    }),
-                    flip({ fallbackStrategy: "initialPlacement" }),
-                    shift({ padding: 16 }),
-                ],
-            }
-        );
+                        return { mainAxis, crossAxis: -8 };
+                    }
+
+                    return mainAxis;
+                }),
+                flip({ fallbackStrategy: "initialPlacement" }),
+                shift({ padding: 16 }),
+            ],
+        });
 
         Object.assign(this.dropdown_menu.style, {
             left: `${x}px`,

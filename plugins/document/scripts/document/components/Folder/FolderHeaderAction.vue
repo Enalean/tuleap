@@ -28,7 +28,6 @@
             v-bind:is-in-large-mode="false"
             v-bind:is-appended="false"
             v-bind:is-in-quick-look-mode="false"
-            v-bind:is-in-folder-empty-state="false"
         >
             <drop-down-current-folder />
         </drop-down-button>

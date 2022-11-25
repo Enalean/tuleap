@@ -228,7 +228,9 @@ describe("actions-update", () => {
             ]);
 
             expect(postEmbeddedFile).toHaveBeenCalled();
-            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", {
+                item: { ...item, updated: true },
+            });
         });
         it("handles error when there is a problem with the update", async () => {
             const item = { id: 45 } as Embedded;
@@ -269,7 +271,9 @@ describe("actions-update", () => {
                 true,
             ]);
             expect(postWiki).toHaveBeenCalled();
-            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", {
+                item: { ...item, updated: true },
+            });
             expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
                 root: true,
             });
@@ -314,7 +318,9 @@ describe("actions-update", () => {
                 null,
             ]);
             expect(postLinkVersion).toHaveBeenCalled();
-            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", {
+                item: { ...item, updated: true },
+            });
             expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
                 root: true,
             });
@@ -381,7 +387,9 @@ describe("actions-update", () => {
             expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
             expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
 
-            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", {
+                item,
+            });
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
                 updated_item
@@ -421,7 +429,7 @@ describe("actions-update", () => {
             expect(postNewLinkVersionFromEmpty).not.toHaveBeenCalled();
             expect(postNewEmbeddedFileVersionFromEmpty).toHaveBeenCalled();
             expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
-            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
+            expect(emit).toHaveBeenCalledWith("item-has-just-been-updated", { item });
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
                 updated_item

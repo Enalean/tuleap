@@ -38,6 +38,15 @@ import { isEmpty, isFakeItem } from "../helpers/type-check-helper";
 import emitter from "../helpers/emitter";
 import { getErrorMessage } from "../helpers/properties-helpers/error-handler-helper";
 
+export interface RootActionsUpdate {
+    readonly createNewFileVersion: typeof createNewFileVersion;
+    readonly createNewFileVersionFromModal: typeof createNewFileVersionFromModal;
+    readonly createNewEmbeddedFileVersionFromModal: typeof createNewEmbeddedFileVersionFromModal;
+    readonly createNewWikiVersionFromModal: typeof createNewWikiVersionFromModal;
+    readonly createNewLinkVersionFromModal: typeof createNewLinkVersionFromModal;
+    readonly createNewVersionFromEmpty: typeof createNewVersionFromEmpty;
+}
+
 export async function createNewFileVersion(
     context: ActionContext<RootState, RootState>,
     [item, dropped_file]: [ItemFile, File]
@@ -106,7 +115,7 @@ export const createNewEmbeddedFileVersionFromModal = async (
             approval_table_action
         );
         Vue.set(item, "updated", true);
-        emitter.emit("item-has-just-been-updated");
+        emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
     }
@@ -127,7 +136,7 @@ export const createNewWikiVersionFromModal = async (
         const updated_item = await getItem(item.id);
         context.commit("replaceFolderContentByItem", updated_item, { root: true });
         Vue.set(item, "updated", true);
-        emitter.emit("item-has-just-been-updated");
+        emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
     }
@@ -156,7 +165,7 @@ export const createNewLinkVersionFromModal = async (
         const updated_item = await getItem(item.id);
         context.commit("replaceFolderContentByItem", updated_item, { root: true });
         Vue.set(item, "updated", true);
-        emitter.emit("item-has-just-been-updated");
+        emitter.emit("item-has-just-been-updated", { item });
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
     }
@@ -205,7 +214,7 @@ export const createNewVersionFromEmpty = async (
         const updated_item = await getItem(item.id);
         Vue.set(updated_item, "updated", true);
         if (selected_type === TYPE_LINK || selected_type === TYPE_EMBEDDED) {
-            emitter.emit("item-has-just-been-updated");
+            emitter.emit("item-has-just-been-updated", { item });
         } else {
             emitter.emit("item-is-being-uploaded");
         }
