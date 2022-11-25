@@ -56,6 +56,13 @@ class ServiceProFTPd extends Service
 
     private function displayServiceHeader(HTTPRequest $request, $title)
     {
+        $GLOBALS['HTML']->addFeedback(
+            \Feedback::WARN,
+            dgettext(
+                'tuleap-proftpd',
+                '(S)FTP Browser (and underlying server ProFTPD) is unsupported and will be removed soon. Please use Documents and/or Files services instead.'
+            )
+        );
         $proftpd_breadcrumb = new BreadCrumb(
             new BreadCrumbLink($this->getInternationalizedName(), $this->getUrl()),
         );
