@@ -55,14 +55,17 @@ class Docman_Folder extends Docman_Item
     {
         $this->_items->add($item, -($item->getRank()));
     }
+
     public function &getAllItems()
     {
         return $this->_items;
     }
+
     public function removeAllItems()
     {
         $this->_resetItems();
     }
+
     public function _resetItems()
     {
         if (isset($this->_items)) {

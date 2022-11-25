@@ -310,7 +310,6 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-
     public function testItUpdatesEmailFormatPreferenceToHtml(): void
     {
         $this->expectNotToPerformAssertions();

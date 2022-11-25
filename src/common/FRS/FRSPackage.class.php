@@ -78,38 +78,47 @@ class FRSPackage
     {
         return $this->package_id;
     }
+
     public function setPackageID($package_id)
     {
         $this->package_id = (int) $package_id;
     }
+
     public function getGroupID()
     {
         return $this->group_id;
     }
+
     public function setGroupID($group_id)
     {
         $this->group_id = (int) $group_id;
     }
+
     public function getName()
     {
         return $this->name;
     }
+
     public function setName($name)
     {
         $this->name = $name;
     }
+
     public function getStatusID()
     {
         return $this->status_id;
     }
+
     public function setStatusID($status_id)
     {
         $this->status_id = (int) $status_id;
     }
+
     public function getRank()
     {
         return $this->rank;
     }
+
     public function setRank($rank)
     {
         $this->rank = $rank;

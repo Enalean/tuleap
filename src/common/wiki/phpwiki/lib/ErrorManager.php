@@ -468,6 +468,7 @@ class PhpError
     {
         return ($this->errno & EM_NOTICE_ERRORS) != 0;
     }
+
     public function getHtmlClass()
     {
         if ($this->isNotice()) {

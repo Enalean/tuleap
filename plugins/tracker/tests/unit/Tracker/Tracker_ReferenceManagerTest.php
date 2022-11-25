@@ -72,7 +72,6 @@ final class Tracker_ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->setTracker($tracker);
     }
 
-
     public function testItReturnsNullIfThereIsNoArtifactMatching(): void
     {
         $this->artifact_factory->shouldReceive('getArtifactById')->with(101)->andReturns(null);

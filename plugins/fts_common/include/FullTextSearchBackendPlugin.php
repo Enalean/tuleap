@@ -138,7 +138,10 @@ abstract class FullTextSearchBackendPlugin extends Plugin
     }
 
     abstract protected function getIndexSearcher(): SearchIndexedItem;
+
     abstract protected function getItemInserter(): InsertItemsIntoIndex;
+
     abstract protected function getItemRemover(): DeleteIndexedItems;
+
     abstract protected function getBatchQueue(): ItemToIndexBatchQueue;
 }

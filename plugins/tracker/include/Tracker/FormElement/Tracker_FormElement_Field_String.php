@@ -152,7 +152,6 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         return '<div class="tracker-string-field-value">' . $value . '</div>';
     }
 
-
     /**
      * Fetch the html code to display the field value in artifact
      *

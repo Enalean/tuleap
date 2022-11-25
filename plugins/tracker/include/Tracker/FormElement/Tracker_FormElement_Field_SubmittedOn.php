@@ -185,7 +185,6 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         return false;
     }
 
-
     public function fetchSubmit(array $submitted_values)
     {
         // We do not display the field in the artifact submit form

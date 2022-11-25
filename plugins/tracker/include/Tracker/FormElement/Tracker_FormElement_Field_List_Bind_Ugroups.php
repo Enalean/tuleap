@@ -73,6 +73,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     {
         return $value->getLabel();
     }
+
     /**
      * @return string
      */

@@ -745,8 +745,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->dashboard_duplicator->duplicate($template, $new_project, $mapping_registry);
     }
 
-
-
    /**
     * Verify if the approbation of the new project is automatic or not
     * protected for testing purpose

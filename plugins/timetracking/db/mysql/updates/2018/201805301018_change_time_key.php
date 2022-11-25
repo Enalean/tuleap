@@ -28,6 +28,7 @@ class b201805301018_change_time_key extends ForgeUpgrade_Bucket // @codingStanda
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
+
     public function up()
     {
         $sql = "ALTER TABLE plugin_timetracking_times DROP INDEX user_id , ADD INDEX time (user_id, artifact_id)";

@@ -94,7 +94,6 @@ class TimetrackingReportDao extends DataAccessObject
         return $this->getDB()->row($sql, $content_id);
     }
 
-
     public function searchReportTrackersById(int $report_id)
     {
         $sql = 'SELECT report_tracker.*

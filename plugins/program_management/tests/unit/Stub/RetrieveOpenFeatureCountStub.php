@@ -31,6 +31,7 @@ final class RetrieveOpenFeatureCountStub implements RetrieveOpenFeatureCount
     private function __construct(private int $open_feature_count)
     {
     }
+
     public static function withValue(int $open_feature_count): self
     {
         return new self($open_feature_count);

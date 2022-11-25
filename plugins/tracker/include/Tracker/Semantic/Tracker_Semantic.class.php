@@ -49,6 +49,7 @@ abstract class Tracker_Semantic
     {
         $this->tracker = $tracker;
     }
+
     /**
      * Get the tracker
      *

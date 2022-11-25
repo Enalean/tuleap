@@ -42,15 +42,18 @@ abstract class HTML_Element
         $this->desc   = $desc;
         $this->params = [];
     }
+
     public function getValue()
     {
         return $this->value;
     }
+
     protected function renderLabel()
     {
         $hp = Codendi_HTMLPurifier::instance();
         return '<label for="' . $this->id . '">' .  $hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
     }
+
     public function render()
     {
         $html  = '';
@@ -62,19 +65,23 @@ abstract class HTML_Element
         $html .= $this->renderValue();
         return $html;
     }
+
     protected function renderValue()
     {
         $hp = Codendi_HTMLPurifier::instance();
         return $hp->purify($this->getValue(), CODENDI_PURIFIER_CONVERT_HTML);
     }
+
     public function getId()
     {
         return $this->id;
     }
+
     public function setId($id)
     {
         $this->id = $id;
     }
+
     public function addParam($key, $value)
     {
         $this->params[$key] = $value;

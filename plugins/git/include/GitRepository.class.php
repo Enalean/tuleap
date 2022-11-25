@@ -199,7 +199,6 @@ class GitRepository
         $this->backend = $backend;
     }
 
-
     /**
      * Allow to mock in UT
      *
@@ -380,7 +379,6 @@ class GitRepository
         return PathJoinUtil::unixPathJoin([$this->getNamespace(), $this->getName()]);
     }
 
-
     public function getDescription()
     {
         return $this->description;
@@ -400,6 +398,7 @@ class GitRepository
     {
         return $this->isInitialized;
     }
+
     /**
      *  Check repo status, if it is not initialized
      * @return bool
@@ -465,6 +464,7 @@ class GitRepository
         }
         return $this->deletionDate;
     }
+
     /**
      * relative path to the repository dir (actually this is the project directory)
      * @param String $dir

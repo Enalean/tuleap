@@ -99,6 +99,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
             $milestone_dao->deleteAllPluginWithProject((int) $event->project->getID());
         }
     }
+
     /**
      * Hook: event raised when widget are instanciated
      *

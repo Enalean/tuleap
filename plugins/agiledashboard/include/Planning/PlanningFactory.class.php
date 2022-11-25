@@ -188,7 +188,6 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         return $planning;
     }
 
-
     /**
      * Return the planning at the top of planning hierarchy
      *

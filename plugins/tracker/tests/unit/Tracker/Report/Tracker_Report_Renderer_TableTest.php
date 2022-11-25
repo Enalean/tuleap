@@ -47,7 +47,6 @@ final class Tracker_Report_Renderer_TableTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertTrue(isset($options_menu['export']));
     }
 
-
     public function testDoesNotShowExportFeaturesWhenTheUserIsAnonymous(): void
     {
         $options_menu = $this->renderer_table->getOptionsMenuItems(UserTestBuilder::anAnonymousUser()->build());

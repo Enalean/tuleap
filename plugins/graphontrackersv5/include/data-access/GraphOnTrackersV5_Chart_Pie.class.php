@@ -68,6 +68,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
     {
         return $this->field_base;
     }
+
     public function setField_base($field_base)
     {
         return $this->field_base = $field_base;
@@ -77,6 +78,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
     {
         return new GraphOnTrackersV5_Engine_Pie();
     }
+
     protected function getChartDataBuilder($artifacts)
     {
         return new GraphOnTrackersV5_Chart_PieDataBuilder($this, $artifacts);
@@ -133,7 +135,6 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
             return false;
         }
     }
-
 
     public function getChartType()
     {

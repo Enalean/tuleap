@@ -189,9 +189,6 @@ class ArtifactType
         return true;
     }
 
-
-
-
     /**
      *  fetch the notification roles for this ArtifactType from the database.
      *
@@ -399,8 +396,6 @@ class ArtifactType
     {
         return ($this->data_array['status'] == 'A');
     }
-
-
 
     /**
      *    getCannedResponses - returns a result set of canned responses.
@@ -723,7 +718,6 @@ class ArtifactType
             return false;
     }
 
-
     /**
      *      userHasFullAccess - A bit more restrictive than userCanView: determine if the user has
          *        the 'TRACKER_ACCESS_FULL' permission on the tracker.
@@ -786,7 +780,6 @@ class ArtifactType
             return false;
         }
     }
-
 
     /**
      *      userCanSubmit - determine if the user can submit an artifact (if he can submit a field).
@@ -1098,7 +1091,6 @@ class ArtifactType
         return $sql;
     }
 
-
     public function getUsersPerm($group_artifact_id)
     {
         $sql = "SELECT u.user_id,u.user_name,au.perm_level " .
@@ -1350,8 +1342,6 @@ class ArtifactType
         }
         return $results;
     }
-
-
 
     /**
      * Check if for a user and for role, there is a change
@@ -1683,7 +1673,6 @@ class ArtifactType
         }
     }
 
-
     /**
      * Return the query string, for export
      *
@@ -1757,7 +1746,6 @@ class ArtifactType
         }
     }
 
-
     /**
      * Return the artifact data with all fields set to default values. (for export)
      *
@@ -1775,7 +1763,6 @@ class ArtifactType
 
         return $record;
     }
-
 
     /** retrieves all the cc addresses with their artifact_cc_ids
      * for a list of artifact_ids
@@ -1816,7 +1803,6 @@ class ArtifactType
         return $ok;
     }
 
-
     /**
      * retrieves all the attached files with their size and id
      * for a list of artifact_ids
@@ -1827,7 +1813,6 @@ class ArtifactType
         $sql = "select filename,filesize,id from artifact_file where artifact_id in (" . db_es(implode(",", $change_ids)) . ") order by filename,filesize";
         return db_query($sql);
     }
-
 
     /**
     * Delete the files with specified id from $ids
@@ -1881,7 +1866,6 @@ class ArtifactType
         return db_query($sql);
     }
 
-
     /** delete all the dependencies specified in delete_dependend */
     public function deleteDependencies($delete_depend)
     {
@@ -1901,7 +1885,6 @@ class ArtifactType
         return $changed;
     }
 
-
     /**
      * @param group_id: the group id of the new tracker
      * @param group_id_template: the template group id (used for the copy)
@@ -1917,7 +1900,6 @@ class ArtifactType
         }
         return true;
     }
-
 
     public function copyArtifact($from_atid, $from_aid)
     {

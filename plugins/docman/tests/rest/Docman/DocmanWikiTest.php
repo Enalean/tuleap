@@ -458,7 +458,6 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-
     /**
      * @depends testGetRootId
      */

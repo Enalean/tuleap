@@ -34,6 +34,7 @@ class b201905061047_add_widget_title extends ForgeUpgrade_Bucket // @codingStand
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
+
     public function up()
     {
         $sql = "ALTER TABLE plugin_timetracking_overview_widget ADD widget_title VARCHAR(255) NOT NULL";

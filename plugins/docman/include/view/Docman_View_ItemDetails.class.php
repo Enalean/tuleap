@@ -43,10 +43,12 @@ class Docman_View_ItemDetails
             $this->setCurrentSection($section->getId());
         }
     }
+
     public function setCurrentSection($id_section)
     {
         $this->current_section = $id_section;
     }
+
     public function fetch()
     {
         $html = '';
@@ -68,6 +70,7 @@ class Docman_View_ItemDetails
         }
         return $html;
     }
+
     public function display()
     {
         echo $this->fetch();

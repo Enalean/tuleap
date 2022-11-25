@@ -37,6 +37,7 @@ final class RetrieveStatusValueUserCanSeeStub implements RetrieveStatusValueUser
     {
         return new self($value);
     }
+
     public function getLabel(ArtifactIdentifier $artifact_identifier, UserIdentifier $user_identifier): ?string
     {
         return $this->value;

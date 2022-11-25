@@ -428,6 +428,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                     INNER JOIN tracker_changeset_value_date AS $R2 ON ($R2.changeset_value_id = $R1.id)
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
     }
+
     /**
      * Get the "group by" statement to retrieve field values
      */

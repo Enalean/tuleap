@@ -279,6 +279,7 @@ class ArtifactReport
                   AND field_name = '" . db_es($field_name) . "'";
         db_query($sql);
     }
+
     public function toggleFieldQueryUsage($field_name)
     {
         $sql = "UPDATE artifact_report_field
@@ -287,6 +288,7 @@ class ArtifactReport
                   AND field_name = '" . db_es($field_name) . "'";
         db_query($sql);
     }
+
     /**
      *    fetchData - re-fetch the data for this ArtifactReport from the database.
      *
@@ -704,7 +706,6 @@ class ArtifactReport
         }
     }
 
-
     /**
      * Return the value to find for a field, for the current query
      *
@@ -932,7 +933,6 @@ class ArtifactReport
         }
     }
 
-
     /**
      * Return the different elements for building the current query
      *
@@ -1118,7 +1118,6 @@ class ArtifactReport
             $order_by = "";
         }
     }
-
 
     /**
      * Return the query result in a multi array

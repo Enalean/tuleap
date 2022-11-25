@@ -101,7 +101,6 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->report->getCriteria();
     }
 
-
     public function testItFetchesByNameIfTheFormElementByIdDoesNotExist(): void
     {
         $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns(null)->once();

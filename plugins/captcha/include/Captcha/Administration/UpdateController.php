@@ -76,7 +76,6 @@ class UpdateController implements DispatchableWithRequest
         $layout->redirect(CAPTCHA_BASE_URL . '/admin/');
     }
 
-
     private function checkUserIsSiteAdmin(PFUser $user, BaseLayout $layout)
     {
         if (! $user->isSuperUser()) {

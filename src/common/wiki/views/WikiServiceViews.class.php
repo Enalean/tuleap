@@ -388,7 +388,6 @@ class WikiServiceViews extends WikiViews
         }
     }
 
-
   /**
    * install: ask for confirmation and choose language
    */
@@ -407,7 +406,6 @@ class WikiServiceViews extends WikiViews
         echo '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_create') . '" data-test="create-wiki">
 </form>';
     }
-
 
   /**
    * install

@@ -71,6 +71,7 @@ abstract class PluginController
     {
         return $this->user;
     }
+
     /**
      * Function called by process method
      */
@@ -132,10 +133,12 @@ abstract class PluginController
     {
         return $this->permittedActions;
     }
+
     public function addPermittedAction($action)
     {
         $this->permittedActions[] = $action;
     }
+
     /**
      * This function is useful to control action execution in the controller, this kind of action is a logical view not a method of PluginAction class
      * One should use this to filter the 'action' parameter in the HTTP request (add, clone, del, help etc...)

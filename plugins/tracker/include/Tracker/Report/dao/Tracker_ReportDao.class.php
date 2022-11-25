@@ -56,6 +56,7 @@ class Tracker_ReportDao extends DataAccessObject
                 ORDER BY name";
         return $this->retrieve($sql);
     }
+
     public function searchDefaultByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
@@ -177,7 +178,6 @@ class Tracker_ReportDao extends DataAccessObject
                 WHERE id = $from_report_id";
         return $this->updateAndGetLastId($sql);
     }
-
 
     /**
      * Not really report table specific but we have to find a place.
@@ -361,7 +361,6 @@ class Tracker_ReportDao extends DataAccessObject
 
         return $sqls;
     }
-
 
     private function getSqlFilterForContributorGroup($from, $where, $contributor_field_id, $join_user_constraint)
     {

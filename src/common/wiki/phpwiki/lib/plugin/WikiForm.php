@@ -55,7 +55,6 @@ class WikiPlugin_WikiForm extends WikiPlugin
         ];
     }
 
-
     public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));

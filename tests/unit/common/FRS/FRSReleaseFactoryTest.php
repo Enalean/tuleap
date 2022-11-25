@@ -107,7 +107,6 @@ class FRSReleaseFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $this->assertFalse($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
-
     public function testAdminCanAlwaysUpdateReleases()
     {
         $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(true);

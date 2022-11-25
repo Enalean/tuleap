@@ -532,8 +532,6 @@ final class KanbanTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
-
-
     /**
      * @depends testPOSTKanbanColumn
      */

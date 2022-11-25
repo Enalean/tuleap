@@ -33,8 +33,11 @@ interface ProgramIncrementUpdateEvent
 {
     public const TOPIC = 'tuleap.program_management.program_increment.update';
     public function getProgramIncrement(): ProgramIncrementIdentifier;
+
     public function getUser(): UserIdentifier;
+
     public function getChangeset(): ChangesetIdentifier;
+
     public function getOldChangeset(): ChangesetIdentifier;
 
     /**

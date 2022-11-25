@@ -24,7 +24,6 @@ abstract class RestrictedResourceDao extends DataAccessObject
 
     abstract public function getResourceFieldName();
 
-
     abstract public function isResourceRestricted($resource_id);
 
     abstract public function setResourceRestricted($resource_id);
@@ -32,7 +31,6 @@ abstract class RestrictedResourceDao extends DataAccessObject
     abstract public function unsetResourceRestricted($resource_id);
 
     abstract public function searchAllowedProjectsOnResource($resource_id);
-
 
     public function allowProjectOnResource($resource_id, $project_id)
     {

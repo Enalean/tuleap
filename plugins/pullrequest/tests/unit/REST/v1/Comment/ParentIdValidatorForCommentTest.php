@@ -86,7 +86,6 @@ final class ParentIdValidatorForCommentTest extends TestCase
         $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
     }
 
-
     public function testItDoesNotThrowIfParentIdIsValidForComment(): void
     {
         $parent_id = 1;

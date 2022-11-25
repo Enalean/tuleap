@@ -34,6 +34,7 @@ class LockResponseLockRepresentation implements LockResponse
     {
         $this->lock = $lock;
     }
+
     public function jsonSerialize(): array
     {
         return [

@@ -54,6 +54,7 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $html .= '</div>';
         return $html;
     }
+
     public function fetchFolder($folder, $params)
     {
         $hp       = Codendi_HTMLPurifier::instance();
@@ -121,22 +122,27 @@ class Docman_View_ParentsTree /* implements Visitor*/
         }
         return $t;
     }
+
     public function visitDocument(&$item, $params = [])
     {
         return false;
     }
+
     public function visitWiki(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitLink(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitEmbeddedFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);

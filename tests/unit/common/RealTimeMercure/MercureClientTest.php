@@ -62,6 +62,7 @@ final class MercureClientTest extends TestCase
         $this->jwt_configuration     = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
         $this->mercure_jwt_generator = new MercureJWTGenerator($this->jwt_configuration, $this->user_manager);
     }
+
     public function testMessageIsTransmittedToRealTimeMercureServer(): void
     {
         $http_client    = new \Http\Mock\Client();

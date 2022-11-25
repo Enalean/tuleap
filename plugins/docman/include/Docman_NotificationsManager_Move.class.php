@@ -75,6 +75,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
             $this->getMessageLink($type, $params)
         );
     }
+
     public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';

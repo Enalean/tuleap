@@ -84,7 +84,6 @@ final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
         mkdir(ForgeConfig::get('ftp_anon_dir_prefix'), 0770, true);
     }
 
-
     protected function tearDown(): void
     {
         Backend::clearInstances();
@@ -105,7 +104,6 @@ final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertNotNull(BackendSystem::instance());
     }
-
 
     public function testCreateUserHome(): void
     {

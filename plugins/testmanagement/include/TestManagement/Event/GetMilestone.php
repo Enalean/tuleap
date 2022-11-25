@@ -59,7 +59,6 @@ class GetMilestone implements Dispatchable
         return $this->milestone_id;
     }
 
-
     public function getMilestone(): ?Planning_Milestone
     {
         return $this->milestone;

@@ -461,7 +461,6 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         }
     }
 
-
     /**
      * Wrapper for tests
      *

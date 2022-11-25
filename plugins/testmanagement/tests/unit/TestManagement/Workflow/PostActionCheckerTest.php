@@ -69,7 +69,6 @@ final class PostActionCheckerTest extends TestCase
         self::assertTrue($event->arePostActionsEligible());
     }
 
-
     public function testItBlocksPostActionForHiddenFieldsetWhenTrackerIsUsedInTestManagement(): void
     {
         $this->config->method('getTestExecutionTrackerId')->willReturn(self::TRACKER_ID);

@@ -32,7 +32,6 @@ interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, 
      */
     public function getPermissionsByUgroupId();
 
-
     /**
      * Transforms FormElement into a SimpleXMLElement
      */

@@ -52,10 +52,12 @@ class Widget_MyLatestSvnCommits extends Widget // phpcs:ignore PSR1.Classes.Clas
     {
         return $GLOBALS['Language']->getText('my_index', 'my_latest_svn_commit');
     }
+
     public function _getLinkToCommit($group_id, $commit_id)  // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return '/svn/?func=detailrevision&amp;group_id=' . $group_id . '&amp;rev_id=' . $commit_id;
     }
+
     public function _getLinkToMore($group_id, $commiter)  // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return '/svn/?func=browse&group_id=' . $group_id . '&_commiter=' . $commiter;
@@ -112,10 +114,12 @@ class Widget_MyLatestSvnCommits extends Widget // phpcs:ignore PSR1.Classes.Clas
     {
         return _('Source code management');
     }
+
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_latest_svn_commits', 'description');
     }
+
     public function isAjax()
     {
         return true;

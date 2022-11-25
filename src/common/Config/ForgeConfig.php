@@ -221,7 +221,6 @@ class ForgeConfig
         return self::decryptValue(self::get($name));
     }
 
-
     public static function exists($name): bool
     {
         return isset(self::$conf_stack[0][$name]);

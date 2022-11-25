@@ -233,6 +233,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
             $this->addProjectMember($session_key, $group_id, $user->getUserName());
         }
     }
+
     /**
      *
      * @param String  $session_key  The project admin session hash

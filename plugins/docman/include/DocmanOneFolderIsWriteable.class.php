@@ -49,14 +49,17 @@ class DocmanOneFolderIsWriteable /* implements Visitor */
     {
         return false;
     }
+
     public function visitLink(&$item, $params = [])
     {
         return false;
     }
+
     public function visitFile(&$item, $params = [])
     {
         return false;
     }
+
     public function visitEmbeddedFile(&$item, $params = [])
     {
         return false;

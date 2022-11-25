@@ -676,6 +676,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         return $this->_fetchFieldMasschange('tracker_field_' . $this->id, 'artifact[' . $this->id . ']', $this->getBind()->getDefaultValues());
     }
+
     /**
      * Fetch the html code to display the field value in artifact
      *
@@ -884,7 +885,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             return false;
         }
     }
-
 
     protected function isTransitionValid($field_value_from, $field_value_to)
     {
@@ -1108,7 +1108,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return '</select>';
     }
 
-
     protected function _fetchFieldMasschange($id, $name, $selected_values) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $purifier   = Codendi_HTMLPurifier::instance();
@@ -1151,7 +1150,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= '</select>';
         return $html;
     }
-
 
     protected function getMaxSize()
     {
@@ -1497,7 +1495,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         return array_keys($default_array);
     }
-
 
     public function getDefaultRESTValue()
     {

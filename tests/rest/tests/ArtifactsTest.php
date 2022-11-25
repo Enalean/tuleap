@@ -73,7 +73,6 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         return $artifact_reference['id'];
     }
 
-
     public function testComputedFieldsCalculation()
     {
         $this->checkComputedFieldValueForArtifactId(
@@ -416,6 +415,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals("wunderbar", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
         return $artifact_id;
     }
+
     /**
      * @depends testPostArtifact
      */
@@ -752,6 +752,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
+
     /**
      * @throws Exception
      */

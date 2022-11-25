@@ -213,6 +213,7 @@ class MyProjects extends \Widget
     {
         return true;
     }
+
     public function displayRss(): void
     {
         $hp         = Codendi_HTMLPurifier::instance();
@@ -263,6 +264,7 @@ class MyProjects extends \Widget
         }
         $rss->display();
     }
+
     public function getDescription(): string
     {
         return $GLOBALS['Language']->getText('widget_description_my_projects', 'description');

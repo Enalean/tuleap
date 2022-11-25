@@ -123,6 +123,7 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
     {
         self::$_instance = $instance;
     }
+
     /**
      * ProjectManager is a singleton need this to clean after tests
      * @return ProjectManager
@@ -645,7 +646,6 @@ class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // 
         }
         return false;
     }
-
 
     /**
      * Returns the message to be displayed to requester asking access for a given project

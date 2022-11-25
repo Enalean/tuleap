@@ -37,7 +37,6 @@ class ApprovalTableException extends Exception
         $this->i18n_message = $i18n_message;
     }
 
-
     public static function approvalTableActionIsMandatory(string $title): self
     {
         return new self(

@@ -489,6 +489,7 @@ class Request
     {
         return $this->session->get($key);
     }
+
     public function setSessionVar($key, $val)
     {
         if ($key == 'wiki_user') {
@@ -516,6 +517,7 @@ class Request
         }
         return $this->session->set($key, $val);
     }
+
     public function deleteSessionVar($key)
     {
         return $this->session->delete($key);
@@ -747,7 +749,6 @@ class HTTP_ETag
         }
         return true;
     }
-
 
     public function asString()
     {

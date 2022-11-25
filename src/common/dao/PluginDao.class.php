@@ -76,7 +76,6 @@ class PluginDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-
     /**
     * @return int|false
     */

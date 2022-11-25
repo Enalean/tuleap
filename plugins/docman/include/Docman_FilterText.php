@@ -27,10 +27,12 @@ class Docman_FilterText extends \Docman_Filter
     {
         parent::__construct($md);
     }
+
     public function initFromRow($row)
     {
         $this->setValue($row['value_string']);
     }
+
     public function getUrlParameters()
     {
         $hp    = \Codendi_HTMLPurifier::instance();

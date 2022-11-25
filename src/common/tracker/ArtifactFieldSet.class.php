@@ -117,6 +117,7 @@ class ArtifactFieldSet
     {
         $this->ArtifactFields = $fields;
     }
+
     /**
      * getArtifactFields - get the ArtifactField objects contained in this ArtifactFieldSet
      *

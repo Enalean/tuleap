@@ -223,7 +223,6 @@ class MetadataUsageChecker
         }
     }
 
-
     /**
      * @param \Tracker_FormElement[] $fields
      * @return bool

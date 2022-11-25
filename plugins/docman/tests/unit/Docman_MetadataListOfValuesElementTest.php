@@ -42,7 +42,6 @@ class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandard
         $this->metadata_list_values = new \Docman_MetadataListOfValuesElement();
     }
 
-
     public function testItInitsTheClassAttributeIfTheRowValueIsSet(): void
     {
         $row = [

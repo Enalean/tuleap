@@ -229,7 +229,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             && permission_clear_all($group_id, Git::PERM_WPLUS, $object_id);
     }
 
-
     /**
      * Test is user can read the content of this repository and metadata
      *

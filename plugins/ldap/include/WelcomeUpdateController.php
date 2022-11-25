@@ -102,7 +102,6 @@ class WelcomeUpdateController implements DispatchableWithRequest
         account_redirect_after_login($current_user, $request->get('return_to'));
     }
 
-
     private function welcomeExitError(HTTPRequest $request, BaseLayout $layout, $title, $text): void
     {
         assert($layout instanceof \Layout);

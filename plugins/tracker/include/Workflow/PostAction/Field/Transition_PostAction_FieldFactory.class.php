@@ -125,7 +125,6 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         return $dao->searchByTransitionId($transition->getId());
     }
 
-
     /**
      * @return \Transition_PostAction_Field_Date[]
      */
@@ -304,8 +303,6 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         }
         throw new Transition_PostAction_NotFoundException();
     }
-
-
 
     /**
      * Retrieves the field from the given PostAction database row.

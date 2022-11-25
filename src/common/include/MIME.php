@@ -37,6 +37,7 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     {
         $this->XDG_DATA_DIRS = \explode(':', isset($_ENV['XDG_DATA_DIRS']) ? $_ENV['XDG_DATA_DIRS'] : '/usr/local/share/:/usr/share/');
     }
+
     /**
      * Singleton
      * @return MIME
@@ -49,6 +50,7 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         }
         return self::$_instance;
     }
+
     /**
      * tries to determine the mimetype of the given file
      * if the second variable is false, the file won't be opened and magic checking will be skipped
@@ -184,6 +186,7 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         }
         return 'text/plain';
     }
+
     /**
      * apply the magic rules recursivily -- helper function for type()
      */
@@ -204,6 +207,7 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         }
         return \false;
     }
+
     /**
      * gets the textual description of the mimetype, optionally in the specified language
      */

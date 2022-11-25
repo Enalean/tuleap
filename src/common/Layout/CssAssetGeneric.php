@@ -26,5 +26,6 @@ namespace Tuleap\Layout;
 interface CssAssetGeneric
 {
     public function getFileURL(ThemeVariation $variant): string;
+
     public function getIdentifier(): string;
 }

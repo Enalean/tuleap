@@ -342,7 +342,6 @@ class CGIFCOLORTABLE
         unset($this->m_arColors);
     }
 
-
     public function load($lpData, $num)
     {
         $this->m_nColors  = 0;
@@ -441,7 +440,6 @@ class CGIFFILEHEADER
         unset($this->m_nPixelRatio);
         unset($this->m_colorTable);
     }
-
 
     public function load($lpData, &$hdrLen)
     {
@@ -777,8 +775,6 @@ class CGIF
         return true;
     }
 
-
-
     public function getBmp($bgColor)
     {
         $out = "";
@@ -877,8 +873,6 @@ class CGIF
 
         return $out;
     }
-
-
 
     public function getPng($bgColor)
     {

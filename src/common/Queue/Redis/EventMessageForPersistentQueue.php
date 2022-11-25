@@ -28,7 +28,10 @@ namespace Tuleap\Queue\Redis;
 interface EventMessageForPersistentQueue
 {
     public function getTopic(): string;
+
     public function getPayload();
+
     public function getEnqueueTime(): float;
+
     public function getNumberOfTimesMessageHasBeenQueued(): int;
 }

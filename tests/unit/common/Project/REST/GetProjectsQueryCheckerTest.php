@@ -65,7 +65,6 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNull($this->checker->checkQuery($json_query, false));
     }
 
-
     public function testItRaiseAnExceptionForCriterionProvidedByPlugin()
     {
         $this->event_manager->shouldReceive("processEvent")->with(

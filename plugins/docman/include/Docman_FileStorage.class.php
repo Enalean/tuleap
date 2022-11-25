@@ -39,6 +39,7 @@ class Docman_FileStorage
             return false;
         }
     }
+
     public function store($content, $group_id, $item_id, $version_number, $chunk_offset = 0, $chunk_size = 0)
     {
         $path = $this->_getPath('file', $group_id, $item_id, $version_number);
@@ -89,6 +90,7 @@ class Docman_FileStorage
     {
         return unlink($path);
     }
+
     /**
     *
     *  +----------------------------------------------------------------------------+

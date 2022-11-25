@@ -36,7 +36,6 @@ class BackendMailingList extends Backend
         return $this->_mailinglistdao;
     }
 
-
     /**
      * Update mailman configuration for the given list
      * Write configuration in temporary file, and load it with mailman config_list tool
@@ -81,7 +80,6 @@ class BackendMailingList extends Backend
         }
         return false;
     }
-
 
     /**
      * Create new mailing list with mailman 'newlist' tool

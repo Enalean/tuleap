@@ -375,7 +375,6 @@ class Backend
         return $this->httpUser;
     }
 
-
     /**
      * Return user ID running the Apache server
      *
@@ -530,7 +529,6 @@ class Backend
         }
         return $this->writeArrayToFile($new_file_array, $filename);
     }
-
 
     /**
      * Write an array to a file

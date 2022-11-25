@@ -70,7 +70,6 @@ class FRSFileDao extends DataAccessObject
         return $this->_search(' release_id=' . $this->da->escapeInt($_id) . ' ' . $where_status, '', '');
     }
 
-
     public function searchInfoByGroupFileID($group_id, $file_id)
     {
         $_group_id = (int) $group_id;
@@ -227,7 +226,6 @@ class FRSFileDao extends DataAccessObject
         return $this->_createAndReturnId($sql);
     }
 
-
     public function createFromArray($data_array)
     {
         $arg    = [];
@@ -249,11 +247,11 @@ class FRSFileDao extends DataAccessObject
         }
     }
 
-
     public function _createAndReturnId($sql)
     {
         return $this->updateAndGetLastId($sql);
     }
+
     /**
      * Update a row in the table frs_file
      *

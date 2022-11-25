@@ -125,6 +125,7 @@ class CampaignRepresentation
         $this->uri   = self::ROUTE . '/' . $this->id;
         $this->total = $nb_of_notrun + $nb_of_passed + $nb_of_failed + $nb_of_blocked;
     }
+
     public static function build(
         Campaign $campaign,
         Config $testmanagement_config,

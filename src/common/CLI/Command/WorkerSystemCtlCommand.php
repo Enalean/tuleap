@@ -57,7 +57,6 @@ class WorkerSystemCtlCommand extends Command
             ->addArgument('action', InputArgument::REQUIRED, 'Possible actions: start|stop');
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         switch ($input->getArgument('action')) {

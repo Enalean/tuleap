@@ -67,7 +67,6 @@ final class BackendCVSTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('codendi_bin_prefix', '/usr/lib/tuleap/bin');
     }
 
-
     protected function tearDown(): void
     {
         Backend::clearInstances();
@@ -84,7 +83,6 @@ final class BackendCVSTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertNotNull(BackendCVS::instance());
     }
-
 
     public function testArchiveProjectCVS(): void
     {

@@ -588,7 +588,6 @@ class SystemEventManager
         return new SVNAuthenticationCacheInvalidator(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), $redis_client);
     }
 
-
     /**
      * @return array
      */
@@ -787,7 +786,6 @@ class SystemEventManager
         return ! $this->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent::TYPE_PROJECT_RENAME, $project->getId());
     }
 
-
     /**
      * Return true if there is no pending rename user event on this new name
      * @param string $newName
@@ -801,7 +799,6 @@ class SystemEventManager
         }
         return false;
     }
-
 
     /**
      * Return true if there is no pending rename project event on this new name

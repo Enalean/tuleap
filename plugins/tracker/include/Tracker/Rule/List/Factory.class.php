@@ -194,7 +194,6 @@ class Tracker_Rule_List_Factory
         return $this->dao->insert($list_rule);
     }
 
-
     /**
      *
      * @param int $tracker_id

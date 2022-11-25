@@ -66,7 +66,6 @@ final class CollectLinkedProjectsProxy implements CollectLinkedProjectsEvent
         return $this->source_project;
     }
 
-
     public function addTeams(): void
     {
         $collection = LinkedProjectsCollection::fromSourceProject(

@@ -30,6 +30,7 @@ class HTML_Element_Input_Hidden extends HTML_Element_Input
         $html = $this->renderValue([]);
         return $html;
     }
+
     protected function getInputType()
     {
         return 'hidden';

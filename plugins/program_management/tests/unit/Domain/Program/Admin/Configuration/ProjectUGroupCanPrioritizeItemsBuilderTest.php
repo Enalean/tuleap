@@ -37,7 +37,6 @@ final class ProjectUGroupCanPrioritizeItemsBuilderTest extends \Tuleap\Test\PHPU
         $this->program = ProgramForAdministrationIdentifierBuilder::build();
     }
 
-
     public function testBuildPresenterWithDynamicAndStaticProjectUGroup(): void
     {
         $ugroup_manager = RetrieveUGroupsStub::buildWithUGroups();

@@ -63,7 +63,6 @@ class NodeBuilderFactory
         return $this->artifact_builder->getNodeRepresentation($user, $artifact);
     }
 
-
     /**
      * @param int $id
      *

@@ -35,6 +35,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $this->_controller   = $controller;
         parent::__construct($item, $url, 'actions', dgettext('tuleap-docman', 'Actions'));
     }
+
     public function getContent($params = [])
     {
         $user = $this->_controller->getUser();
@@ -177,6 +178,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content .= '</dd>';
         return $content;
     }
+
     public function visitDocument($item, $params = [])
     {
         $content  = '';
@@ -191,14 +193,17 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content .= '</dd>';
         return $content;
     }
+
     public function visitWiki($item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitLink($item, $params = [])
     {
         return $this->getSectionForNewVersion();
     }
+
     public function visitFile($item, $params = [])
     {
         return $this->getSectionForNewVersion();

@@ -26,6 +26,7 @@ class Docman_ValidateFilterFactory
     public function __construct()
     {
     }
+
     public function getFromFilter($filter)
     {
         $f = \null;

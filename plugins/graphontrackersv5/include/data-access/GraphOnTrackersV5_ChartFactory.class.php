@@ -125,7 +125,6 @@ class GraphOnTrackersV5_ChartFactory
         return $charts;
     }
 
-
     public function getReportRenderersByReportFromDb($report)
     {
         $renderers = [];
@@ -136,7 +135,6 @@ class GraphOnTrackersV5_ChartFactory
         }
         return $renderers;
     }
-
 
     public function getChartFactories()
     {
@@ -190,7 +188,6 @@ class GraphOnTrackersV5_ChartFactory
             $c->delete();
         }
     }
-
 
     public function updateDb($renderer_id, $chart)
     {

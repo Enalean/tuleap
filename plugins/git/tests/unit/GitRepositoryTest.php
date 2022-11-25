@@ -141,6 +141,7 @@ class GitRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertTrue($repo->belongsTo($user));
     }
+
     public function testUserRepositoryDoesNotBelongToAnotherUser(): void
     {
         $creator = new PFUser(['language_id' => 1]);

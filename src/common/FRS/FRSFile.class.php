@@ -445,7 +445,6 @@ class FRSFile
         return $package_id;
     }
 
-
     /**
      * Get the Group (the project) of this File
      *

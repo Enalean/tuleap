@@ -32,6 +32,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         $this->force = $force;
         $this->token = $token;
     }
+
     public function getContent($params = [])
     {
         return $this->item->accept($this);
@@ -66,6 +67,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     {
         return "";
     }
+
     public function visitDocument($item, $params = [])
     {
         $content = '';
@@ -83,18 +85,22 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
 
         return $content;
     }
+
     public function visitWiki($item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitLink($item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitFile($item, $params = [])
     {
         return '';
     }
+
     public function visitEmbeddedFile($item, $params = [])
     {
         return $this->visitFile($item, $params);

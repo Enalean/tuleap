@@ -177,6 +177,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
             return number_format($b, $n ? 3 : 0) . $suffix;
         }
     }
+
     public function phonysize($a)
     {
         $factor = 1024 * 1024 * 1000;

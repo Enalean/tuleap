@@ -185,21 +185,25 @@ class HTML extends HtmlElement
         $el = new HtmlElement('link');
         return $el->_init2(func_get_args());
     }
+
     public static function meta(/*...*/)
     {
         $el = new HtmlElement('meta');
         return $el->_init2(func_get_args());
     }
+
     public function style(/*...*/)
     {
         $el = new HtmlElement('style');
         return $el->_init2(func_get_args());
     }
+
     public static function script(/*...*/)
     {
         $el = new HtmlElement('script');
         return $el->_init2(func_get_args());
     }
+
     public static function noscript(/*...*/)
     {
         $el = new HtmlElement('noscript');
@@ -211,16 +215,19 @@ class HTML extends HtmlElement
         $el = new HtmlElement('a');
         return $el->_init2(func_get_args());
     }
+
     public static function img(/*...*/)
     {
         $el = new HtmlElement('img');
         return $el->_init2(func_get_args());
     }
+
     public static function br(/*...*/)
     {
         $el = new HtmlElement('br');
         return $el->_init2(func_get_args());
     }
+
     public static function span(/*...*/)
     {
         $el = new HtmlElement('span');
@@ -232,26 +239,31 @@ class HTML extends HtmlElement
         $el = new HtmlElement('h1');
         return $el->_init2(func_get_args());
     }
+
     public static function h2(/*...*/)
     {
         $el = new HtmlElement('h2');
         return $el->_init2(func_get_args());
     }
+
     public static function h3(/*...*/)
     {
         $el = new HtmlElement('h3');
         return $el->_init2(func_get_args());
     }
+
     public static function h4(/*...*/)
     {
         $el = new HtmlElement('h4');
         return $el->_init2(func_get_args());
     }
+
     public static function h5(/*...*/)
     {
         $el = new HtmlElement('h5');
         return $el->_init2(func_get_args());
     }
+
     public static function h6(/*...*/)
     {
         $el = new HtmlElement('h6');
@@ -263,21 +275,25 @@ class HTML extends HtmlElement
         $el = new HtmlElement('hr');
         return $el->_init2(func_get_args());
     }
+
     public static function div(/*...*/)
     {
         $el = new HtmlElement('div');
         return $el->_init2(func_get_args());
     }
+
     public static function p(/*...*/)
     {
         $el = new HtmlElement('p');
         return $el->_init2(func_get_args());
     }
+
     public static function pre(/*...*/)
     {
         $el = new HtmlElement('pre');
         return $el->_init2(func_get_args());
     }
+
     public static function blockquote(/*...*/)
     {
         $el = new HtmlElement('blockquote');
@@ -289,11 +305,13 @@ class HTML extends HtmlElement
         $el = new HtmlElement('em');
         return $el->_init2(func_get_args());
     }
+
     public static function strong(/*...*/)
     {
         $el = new HtmlElement('strong');
         return $el->_init2(func_get_args());
     }
+
     public static function small(/*...*/)
     {
         $el = new HtmlElement('small');
@@ -305,16 +323,19 @@ class HTML extends HtmlElement
         $el = new HtmlElement('tt');
         return $el->_init2(func_get_args());
     }
+
     public static function u(/*...*/)
     {
         $el = new HtmlElement('u');
         return $el->_init2(func_get_args());
     }
+
     public static function sup(/*...*/)
     {
         $el = new HtmlElement('sup');
         return $el->_init2(func_get_args());
     }
+
     public static function sub(/*...*/)
     {
         $el = new HtmlElement('sub');
@@ -326,26 +347,31 @@ class HTML extends HtmlElement
         $el = new HtmlElement('ul');
         return $el->_init2(func_get_args());
     }
+
     public static function ol(/*...*/)
     {
         $el = new HtmlElement('ol');
         return $el->_init2(func_get_args());
     }
+
     public static function dl(/*...*/)
     {
         $el = new HtmlElement('dl');
         return $el->_init2(func_get_args());
     }
+
     public static function li(/*...*/)
     {
         $el = new HtmlElement('li');
         return $el->_init2(func_get_args());
     }
+
     public static function dt(/*...*/)
     {
         $el = new HtmlElement('dt');
         return $el->_init2(func_get_args());
     }
+
     public static function dd(/*...*/)
     {
         $el = new HtmlElement('dd');
@@ -357,46 +383,55 @@ class HTML extends HtmlElement
         $el = new HtmlElement('table');
         return $el->_init2(func_get_args());
     }
+
     public static function caption(/*...*/)
     {
         $el = new HtmlElement('caption');
         return $el->_init2(func_get_args());
     }
+
     public static function thead(/*...*/)
     {
         $el = new HtmlElement('thead');
         return $el->_init2(func_get_args());
     }
+
     public static function tbody(/*...*/)
     {
         $el = new HtmlElement('tbody');
         return $el->_init2(func_get_args());
     }
+
     public static function tfoot(/*...*/)
     {
         $el = new HtmlElement('tfoot');
         return $el->_init2(func_get_args());
     }
+
     public static function tr(/*...*/)
     {
         $el = new HtmlElement('tr');
         return $el->_init2(func_get_args());
     }
+
     public static function td(/*...*/)
     {
         $el = new HtmlElement('td');
         return $el->_init2(func_get_args());
     }
+
     public static function th(/*...*/)
     {
         $el = new HtmlElement('th');
         return $el->_init2(func_get_args());
     }
+
     public static function colgroup(/*...*/)
     {
         $el = new HtmlElement('colgroup');
         return $el->_init2(func_get_args());
     }
+
     public static function col(/*...*/)
     {
         $el = new HtmlElement('col');
@@ -408,31 +443,37 @@ class HTML extends HtmlElement
         $el = new HtmlElement('form');
         return $el->_init2(func_get_args());
     }
+
     public static function input(/*...*/)
     {
         $el = new HtmlElement('input');
         return $el->_init2(func_get_args());
     }
+
     public static function button(/*...*/)
     {
         $el = new HtmlElement('button');
         return $el->_init2(func_get_args());
     }
+
     public static function option(/*...*/)
     {
         $el = new HtmlElement('option');
         return $el->_init2(func_get_args());
     }
+
     public static function select(/*...*/)
     {
         $el = new HtmlElement('select');
         return $el->_init2(func_get_args());
     }
+
     public static function textarea(/*...*/)
     {
         $el = new HtmlElement('textarea');
         return $el->_init2(func_get_args());
     }
+
     public static function label(/*...*/)
     {
         $el = new HtmlElement('label');
@@ -444,46 +485,55 @@ class HTML extends HtmlElement
         $el = new HtmlElement('area');
         return $el->_init2(func_get_args());
     }
+
     public static function map(/*...*/)
     {
         $el = new HtmlElement('map');
         return $el->_init2(func_get_args());
     }
+
     public static function frame(/*...*/)
     {
         $el = new HtmlElement('frame');
         return $el->_init2(func_get_args());
     }
+
     public static function frameset(/*...*/)
     {
         $el = new HtmlElement('frameset');
         return $el->_init2(func_get_args());
     }
+
     public static function iframe(/*...*/)
     {
         $el = new HtmlElement('iframe');
         return $el->_init2(func_get_args());
     }
+
     public static function nobody(/*...*/)
     {
         $el = new HtmlElement('nobody');
         return $el->_init2(func_get_args());
     }
+
     public static function object(/*...*/)
     {
         $el = new HtmlElement('object');
         return $el->_init2(func_get_args());
     }
+
     public static function embed(/*...*/)
     {
         $el = new HtmlElement('embed');
         return $el->_init2(func_get_args());
     }
+
     public static function fieldset(/*...*/)
     {
         $el = new HtmlElement('fieldset');
         return $el->_init2(func_get_args());
     }
+
     public static function legend(/*...*/)
     {
         $el = new HtmlElement('legend');

@@ -35,10 +35,12 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits // phpc
     {
         return $GLOBALS['Language']->getText('include_project_home', 'latest_svn_commit');
     }
+
     public function _getLinkToCommit($data) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return '/svn/?func=detailrevision&amp;group_id=' . $this->group_id . '&amp;commit_id=' . $data['commit_id'];
     }
+
     public function _getLinkToMore() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return '/svn/?func=browse&group_id=' . $this->group_id;

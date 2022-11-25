@@ -32,6 +32,7 @@ class Rule_Regexp extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         parent::__construct();
         $this->pattern = $pattern;
     }
+
     public function isValid($val): bool
     {
         return (bool) \preg_match($this->pattern, $val);

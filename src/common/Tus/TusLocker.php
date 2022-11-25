@@ -25,5 +25,6 @@ namespace Tuleap\Tus;
 interface TusLocker
 {
     public function lock(TusFileInformation $file_information): bool;
+
     public function unlock(TusFileInformation $file_information): void;
 }

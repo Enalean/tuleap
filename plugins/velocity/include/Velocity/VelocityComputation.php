@@ -45,7 +45,6 @@ class VelocityComputation
         $this->computation_checker = $computation_checker;
     }
 
-
     public function compute(
         BeforeEvent $before_event,
         array &$already_computed_velocity,

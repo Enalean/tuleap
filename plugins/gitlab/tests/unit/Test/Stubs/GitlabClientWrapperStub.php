@@ -46,7 +46,6 @@ final class GitlabClientWrapperStub implements WrapGitlabClient
         return $this->json;
     }
 
-
     public function getPaginatedUrl(Credentials $gitlab_credentials, string $url, int $row_per_page = self::DEFAULT_NUMBER_OF_ROW_PER_PAGE): ?array
     {
         return $this->json;

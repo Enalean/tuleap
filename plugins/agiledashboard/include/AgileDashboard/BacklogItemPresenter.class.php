@@ -228,6 +228,7 @@ class AgileDashboard_BacklogItemPresenter implements
     {
         return $this->artifact->isOpen();
     }
+
     public function getRemainingEffort()
     {
         return $this->remaining_effort;

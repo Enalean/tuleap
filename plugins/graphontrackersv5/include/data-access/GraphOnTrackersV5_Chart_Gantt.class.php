@@ -113,70 +113,87 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     {
         return $this->field_start;
     }
+
     public function setField_start($field_start)
     {
         return $this->field_start = $field_start;
     }
+
     public function getField_due()
     {
         return $this->field_due;
     }
+
     public function setField_due($field_due)
     {
         return $this->field_due = $field_due;
     }
+
     public function getField_finish()
     {
         return $this->field_finish;
     }
+
     public function setField_finish($field_finish)
     {
         return $this->field_finish = $field_finish;
     }
+
     public function getField_percentage()
     {
         return $this->field_percentage;
     }
+
     public function setField_percentage($field_percentage)
     {
         return $this->field_percentage = $field_percentage;
     }
+
     public function getField_righttext()
     {
         return $this->field_righttext;
     }
+
     public function setField_righttext($field_righttext)
     {
         return $this->field_righttext = $field_righttext;
     }
+
     public function getScale()
     {
         return $this->scale;
     }
+
     public function setScale($scale)
     {
         return $this->scale = $scale;
     }
+
     public function getAs_of_date()
     {
         return $this->as_of_date;
     }
+
     public function setAs_of_date($as_of_date)
     {
         return $this->as_of_date = $as_of_date;
     }
+
     public function getSummary()
     {
         return $this->summary;
     }
+
     public function setSummary($summary)
     {
         return $this->summary = $summary;
     }
+
     public static function getDefaultHeight()
     {
         return 0;
     }
+
     public static function getDefaultWidth()
     {
         return 0;
@@ -186,6 +203,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     {
         return new GraphOnTrackersV5_Engine_Gantt();
     }
+
     protected function getChartDataBuilder($artifacts)
     {
         return new GraphOnTrackersV5_Chart_GanttDataBuilder($this, $artifacts);

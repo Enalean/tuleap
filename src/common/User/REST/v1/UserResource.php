@@ -564,7 +564,6 @@ class UserResource extends AuthenticatedResource
         );
     }
 
-
     /**
      * Partial update of user details
      *
@@ -819,7 +818,6 @@ class UserResource extends AuthenticatedResource
 
         return $access_key_representations;
     }
-
 
     /**
      * @throws RestException 400

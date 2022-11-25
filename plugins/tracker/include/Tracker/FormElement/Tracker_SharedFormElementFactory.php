@@ -35,7 +35,6 @@ class Tracker_SharedFormElementFactory
         $this->factory            = $factory;
     }
 
-
     public function createFormElement(Tracker $tracker, array $formElement_data, PFUser $user, $tracker_is_empty, $force_absolute_ranking)
     {
         $formElement = $this->factory->getFormElementById($formElement_data['field_id']);

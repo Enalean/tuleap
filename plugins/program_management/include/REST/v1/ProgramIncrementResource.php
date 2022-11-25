@@ -314,6 +314,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
     {
         Header::allowOptionsGetPatch();
     }
+
     /**
      * Get iterations linked to a program increment
      *

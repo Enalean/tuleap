@@ -28,7 +28,10 @@ use Tracker_FormElement_Field_List_Bind_Users;
 interface BindVisitor
 {
     public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind, BindParameters $parameters);
+
     public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters);
+
     public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters);
+
     public function visitListBindNull(Tracker_FormElement_Field_List_Bind_Null $bind, BindParameters $parameters);
 }

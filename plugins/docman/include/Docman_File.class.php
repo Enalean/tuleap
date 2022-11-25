@@ -38,6 +38,7 @@ class Docman_File extends Docman_Document
     {
         $this->currentVersion = $currentVersion;
     }
+
     public function getCurrentVersion()
     {
         return $this->currentVersion;

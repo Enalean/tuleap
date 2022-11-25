@@ -208,7 +208,6 @@ class TuleapTemplate extends BaseTemplate
         wfRestoreWarnings();
     }
 
-
     protected function renderPortals($sidebar)
     {
         if (! isset($sidebar['SEARCH'])) {
@@ -259,6 +258,7 @@ class TuleapTemplate extends BaseTemplate
     </div>
         <?php
     }
+
     public function toolbox()
     {
         ?>

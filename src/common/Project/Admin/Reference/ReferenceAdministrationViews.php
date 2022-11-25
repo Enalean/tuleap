@@ -154,7 +154,6 @@ class ReferenceAdministrationViews extends Views
 ';
     }
 
-
     public function edit()
     {
         $request  = HTTPRequest::instance();

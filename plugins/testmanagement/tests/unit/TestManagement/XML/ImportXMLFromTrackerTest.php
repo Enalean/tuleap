@@ -155,6 +155,7 @@ final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals($step_def, $result);
     }
+
     public function testGetInstanceFromXMLReturnsStepExecution()
     {
         $xml_input = new SimpleXMLElement(

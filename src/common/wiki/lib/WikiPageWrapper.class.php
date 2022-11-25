@@ -178,7 +178,6 @@ Upload:num_rev/filename
         $pagehandle->save($text, $version + 1, $meta);
     }
 
-
     public function render($lite = false, $full_screen = false)
     {
         if ($lite) {

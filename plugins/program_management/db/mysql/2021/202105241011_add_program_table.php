@@ -27,10 +27,12 @@ final class b202105241011_add_program_table extends \Tuleap\ForgeUpgrade\Bucket
     {
         return 'Add plugin_program_management_program table';
     }
+
     public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
+
     public function up(): void
     {
         $sql = 'CREATE TABLE plugin_program_management_program(

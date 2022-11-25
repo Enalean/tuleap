@@ -123,7 +123,6 @@ class AfterItemCreationVisitor implements ItemVisitor
         throw new CannotCreateThisItemTypeException();
     }
 
-
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
         $initial_version_number = 1;

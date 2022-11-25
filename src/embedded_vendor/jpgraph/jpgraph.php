@@ -339,7 +339,6 @@ class DateLocale
         return true;
     }
 
-
     public function GetDayAbb()
     {
         return $this->iDayAbb[$this->iLocale];
@@ -1800,7 +1799,6 @@ class Graph
         }
     }
 
-
     public function doAutoScaleYnAxis()
     {
         if ($this->y2scale != null) {
@@ -2892,7 +2890,6 @@ class Graph
         $this->titlebackground_frameweight = $aFrameWeight;
         $this->titlebackground_bevelheight = $aBevelHeight;
     }
-
 
     public function StrokeTitles()
     {
@@ -4737,7 +4734,6 @@ class LinearTicks extends Ticks
         $this->iAdjustForDST = $aFlg;
     }
 
-
     public function _doLabelFormat($aVal, $aIdx, $aNbrTicks)
     {
         // If precision hasn't been specified set it to a sensible value
@@ -5385,7 +5381,6 @@ class LinearScale
         return [$numsteps, $minstep, $majstep];
     }
 
-
     public function IntCalcTicks($maxsteps, $min, $max, $a, $majend = true)
     {
         $diff = $max - $min;
@@ -5430,7 +5425,6 @@ class LinearScale
 
         return [$numsteps, $adjmin, $adjmax, $majstep];
     }
-
 
     public function IntCalcTicksFreeze($maxsteps, $min, $max, $a)
     {

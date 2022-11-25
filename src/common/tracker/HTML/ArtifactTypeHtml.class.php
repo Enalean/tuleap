@@ -693,6 +693,7 @@ EOS;
         $html .= "</p>";
         print $html;
     }
+
     /**
      *  Display the select box with the permissions values
      *
@@ -748,7 +749,6 @@ EOS;
             echo '<H3>' . $Language->getText('tracker_include_type', 'no_user') . '</H3>';
         }
     }
-
 
     /**
      *  Display the differents options for this tracker
@@ -2156,7 +2156,6 @@ EOS;
         }
     }
 
-
     /**
          * Display the artifact to do mass changes
          *
@@ -2450,7 +2449,6 @@ EOS;
             echo '</table>';
     }
 
-
     /**
     * Show all the cc addresses of all the artifacts in $change_ids
     * @param group_id: the group id
@@ -2673,9 +2671,6 @@ EOS;
 
         return($out);
     }
-
-
-
 
     /**
      *  Display the fieldset creation or update form

@@ -251,7 +251,6 @@ class WikiAttachment /* implements UGroupPermission */
     {
     }
 
-
     /**
      *
      * Classical URI:
@@ -499,8 +498,6 @@ class WikiAttachment /* implements UGroupPermission */
         return true;
     }
 
-
-
     public function htmlDump()
     {
         $this->revision->htmlDump();
@@ -525,7 +522,6 @@ class WikiAttachment /* implements UGroupPermission */
         return (permission_exist('WIKIATTACHMENT_READ', $this->id));
     }
 
-
     /**
      * @access public
      */
@@ -534,7 +530,6 @@ class WikiAttachment /* implements UGroupPermission */
         require_once __DIR__ . '/../../../www/project/admin/permissions.php';
         return ($this->permissionExist() == false || permission_is_authorized('WIKIATTACHMENT_READ', $this->id, $uid, $this->gid));
     }
-
 
     /**
      *@access public
@@ -645,7 +640,6 @@ class WikiAttachment /* implements UGroupPermission */
         }
         return false;
     }
-
 
     /**
      * Erase from the file system one attachment with its all version

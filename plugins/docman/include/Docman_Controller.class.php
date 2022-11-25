@@ -190,6 +190,7 @@ class Docman_Controller extends Controler
     {
         return $this->logger;
     }
+
     public function logsDaily($params)
     {
         $this->logger->logsDaily($params);
@@ -226,18 +227,21 @@ class Docman_Controller extends Controler
         $user = $this->getUser();
         return $dPm->userCanRead($user, $item_id);
     }
+
     public function userCanWrite($item_id)
     {
         $dPm  = $this->_getPermissionsManager();
         $user = $this->getUser();
         return $dPm->userCanWrite($user, $item_id);
     }
+
     public function userCanManage($item_id)
     {
         $dPm  = $this->_getPermissionsManager();
         $user = $this->getUser();
         return $dPm->userCanManage($user, $item_id);
     }
+
     public function userCanAdmin()
     {
         $dPm  = $this->_getPermissionsManager();
@@ -279,6 +283,7 @@ class Docman_Controller extends Controler
     {
         $this->reportId = $id;
     }
+
     public function getReportId()
     {
         return $this->reportId;
@@ -1817,6 +1822,7 @@ class Docman_Controller extends Controler
             }
         }
     }
+
     public function _count(&$item, &$hierarchy, $go = false)
     {
         $nb = $go ? 1 : 0;

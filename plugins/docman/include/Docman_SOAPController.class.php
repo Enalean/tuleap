@@ -37,6 +37,7 @@ class Docman_SOAPController extends Docman_Controller
     {
         $this->_setView('SOAP');
     }
+
     /* protected */ public function _set_redirectView()
     {
         $this->_setView('SOAP');
@@ -50,18 +51,22 @@ class Docman_SOAPController extends Docman_Controller
                 break;
         }
     }
+
     /* protected */ public function _set_moveView_errorPerms()
     {
         $this->_setView('SOAP');
     }
+
     /* protected */ public function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view)
     {
         $this->_setView('SOAP');
     }
+
     /* protected */ public function _set_createItemView_afterCreate($view)
     {
         $this->_setView('SOAP');
     }
+
     /* protected */ public function _set_doesnot_belong_to_project_error($item, $group)
     {
         $this->feedback->log('error', sprintf(dgettext('tuleap-docman', 'The item %1$s doesn\'t exist or doesn\'t belong to project %2$s.'), $item->getId(), $group->getPublicName()));

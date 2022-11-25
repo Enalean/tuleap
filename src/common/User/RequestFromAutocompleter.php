@@ -142,7 +142,6 @@ class RequestFromAutocompleter
         return empty($emails) && empty($ugroups) && empty($users);
     }
 
-
     private function isLookingLikeAnEmail($listener)
     {
         return $this->rule_email->isValid($listener);

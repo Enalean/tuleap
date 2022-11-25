@@ -46,7 +46,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         $this->ldapParams = $ldapParams;
     }
 
-
     /**
      * Return the number of entries in a result set.
      *
@@ -61,7 +60,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         }
     }
 
-
     /**
      * Return true if there is no entries in the result set.
      *
@@ -71,7 +69,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
     {
         return empty($this->list);
     }
-
 
     /**
      * Move key to the position given in parameter.
@@ -90,7 +87,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         }
     }
 
-
     /**
      * Move key to the position given in parameter.
      *
@@ -106,7 +102,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         }
     }
 
-
     /**
      * Return true if result set is not empty.
      *
@@ -116,7 +111,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
     {
         return ! $this->isEmpty();
     }
-
 
     /**
      * Return the current element.
@@ -130,7 +124,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         return new LDAPResult($this->list[$this->key], $this->ldapParams);
     }
 
-
     /**
      * Return the key of the current element.
      *
@@ -143,7 +136,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         return $this->key;
     }
 
-
     /**
      * Move forward to next element.
      *
@@ -153,7 +145,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
     {
         $this->valid = (++$this->key < $this->count());
     }
-
 
     /**
      * Rewind the Iterator to the first element.
@@ -165,7 +156,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         $this->valid = true;
         $this->key   = 0;
     }
-
 
     /**
      * Check if there is a current element after calls to rewind() or next().

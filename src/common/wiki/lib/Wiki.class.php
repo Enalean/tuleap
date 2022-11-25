@@ -103,7 +103,6 @@ class Wiki
         return $ret;
     }
 
-
   /**
    * Reset access permissions.
    *
@@ -117,7 +116,6 @@ class Wiki
             $this->gid
         );
     }
-
 
   /**
    * Check WikiEntry existance for given project.
@@ -152,7 +150,6 @@ class Wiki
         }
     }
 
-
   /**
    * Get number of project wiki pages.
    * @return number of project pages (0 if wiki is empty)
@@ -175,7 +172,6 @@ class Wiki
             return 0;
         }
     }
-
 
   /**
    * Get wiki language (set at creation time)

@@ -167,7 +167,6 @@ class Tracker_Action_UpdateArtifact
         $GLOBALS['Response']->sendJSON($cards_info);
     }
 
-
     private function getCardUpdateInfo(Artifact $artifact, PFUser $current_user)
     {
         $card_info              = [];

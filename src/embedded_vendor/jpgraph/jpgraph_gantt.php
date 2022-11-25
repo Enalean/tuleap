@@ -1724,7 +1724,6 @@ class TextProperty
         $this->iFontArray = $aFontArray;
     }
 
-
     public function IsColumns()
     {
         return is_array($this->iText);

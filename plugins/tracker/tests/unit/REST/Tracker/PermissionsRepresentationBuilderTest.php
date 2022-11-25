@@ -88,7 +88,6 @@ final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
         $this->assertNull($this->builder->getPermissionsRepresentation($this->tracker, $a_random_user));
     }
 
-
     public function testItReturnsAnEmptyRepresentationWhenThereAreNoPermissions(): void
     {
         $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([]);

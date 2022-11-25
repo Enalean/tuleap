@@ -2632,7 +2632,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $has_blocking_error;
     }
 
-
     /**
      * Check if CSV contains all the required fields and values associated
      *
@@ -2687,7 +2686,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
         return false;
     }
-
 
     /**
      * Import artifacts from CSV file ($_FILES['csv_filename']['tmp_name'])  in this tracker

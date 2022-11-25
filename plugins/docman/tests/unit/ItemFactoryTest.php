@@ -341,7 +341,6 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($rootId);
     }
 
-
     public function testBuildTreeFromLeavesMultipleStep2()
     {
         $fld140 = new Docman_Folder(['item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation', 'rank' => 0]);

@@ -75,7 +75,6 @@ class VividTheme extends Theme
 //        $graph->img->SetAntiAliasing();
     }
 
-
     public function SetupPieGraph($graph)
     {
         // graph
@@ -99,7 +98,6 @@ class VividTheme extends Theme
 
         $graph->SetAntiAliasing();
     }
-
 
     public function PreStrokeApply($graph)
     {

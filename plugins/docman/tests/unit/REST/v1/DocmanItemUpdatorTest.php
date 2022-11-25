@@ -135,7 +135,6 @@ class DocmanItemUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->updator->updateCommonData($item, false, $user, $approval_table_action, $version);
     }
 
-
     public function testItUpdatesAnItemWithoutAnApprovalTableAndUnlockTheItem(): void
     {
         $item                  = \Mockery::mock(Docman_Item::class);

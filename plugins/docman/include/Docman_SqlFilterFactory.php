@@ -26,6 +26,7 @@ class Docman_SqlFilterFactory
     public function __construct()
     {
     }
+
     public static function getFromFilter($filter)
     {
         $f = \null;

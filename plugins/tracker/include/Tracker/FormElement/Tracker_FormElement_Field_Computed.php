@@ -296,7 +296,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return new FieldCalculator(new ComputedFieldCalculator(new ComputedFieldDao()));
     }
 
-
     public function validateValue($value)
     {
         if (! is_array($value)) {

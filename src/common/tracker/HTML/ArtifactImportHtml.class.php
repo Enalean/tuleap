@@ -39,7 +39,6 @@ class ArtifactImportHtml extends ArtifactImport
         return parent::__construct($ath, $art_field_fact, $group);
     }
 
-
   /**
    * Permit CSV file input,parse the CSV file and show the parse report
    *
@@ -87,12 +86,10 @@ class ArtifactImportHtml extends ArtifactImport
         $this->ath->footer([]);
     }
 
-
     public function showErrors()
     {
         echo $this->getErrorMessage() . " <br>\n";
     }
-
 
   /**
  * create the html output to visualize what has been parsed
@@ -270,9 +267,6 @@ class ArtifactImportHtml extends ArtifactImport
         (new ProjectHistoryDao())->groupAddHistory('import', $this->ath->getName(), $this->group->group_id);
     }
 
-
-
-
   /**
    * Display screen showing the allowed input format of the CSV files
    *
@@ -340,7 +334,6 @@ class ArtifactImportHtml extends ArtifactImport
 
         $this->ath->footer([]);
     }
-
 
   /**
    * Display screen accepting the CSV file to be parsed

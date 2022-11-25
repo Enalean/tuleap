@@ -30,6 +30,7 @@ class URL
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
         return $components;
     }
+
     public function getHost($url)
     {
         $components = self::parse($url);
@@ -41,6 +42,7 @@ class URL
         $components = self::parse($url);
         return $components[2];
     }
+
     /**
      *
      * Retreives the project name from svn request uri

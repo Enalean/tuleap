@@ -36,6 +36,7 @@ class WikiPlugin_PageDump extends WikiPlugin
     {
         return _("PageDump");
     }
+
     public function getDescription()
     {
         return _("View a single page dump online.");

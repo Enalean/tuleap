@@ -87,6 +87,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     }
 
     abstract public function loadFromSession();
+
     abstract public function loadFromDb();
 
     /**
@@ -109,62 +110,77 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     {
         return $this->id;
     }
+
     public function getRank()
     {
         return $this->rank;
     }
+
     public function setRank($rank)
     {
         $this->rank = $rank;
     }
+
     public function getTitle()
     {
         return $this->title;
     }
+
     public function setTitle($title)
     {
         $this->title = $title;
     }
+
     public function getDescription()
     {
         return $this->description;
     }
+
     public function setDescription($description)
     {
         $this->description = $description;
     }
+
     public function getRenderer()
     {
         return $this->renderer;
     }
+
     public function setRenderer($renderer)
     {
         $this->renderer = $renderer;
     }
+
     public function getHeight()
     {
         return $this->height;
     }
+
     public function setHeight($height)
     {
         return $this->height = $height;
     }
+
     public function getWidth()
     {
         return $this->width;
     }
+
     public function setWidth($width)
     {
         return $this->width = $width;
     }
+
     public static function getDefaultHeight()
     {
         return 400;
     }
+
     public static function getDefaultWidth()
     {
         return 600;
     }
+
     /**
      * Display the html <img /> tag to embed the chart in a html page.
      */
@@ -535,10 +551,12 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
             $cdata->insert($root, 'description', $this->description);
         }
     }
+
     public function delete()
     {
         $this->getDao()->delete($this->id);
     }
+
     /**
      * Duplicate the chart
      */

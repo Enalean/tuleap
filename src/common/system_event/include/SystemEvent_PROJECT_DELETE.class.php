@@ -188,7 +188,6 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
         return $pm->deleteMembershipRequestNotificationEntries($groupId);
     }
 
-
     /**
      * Remove Files, releases and packages for a given project.
      *

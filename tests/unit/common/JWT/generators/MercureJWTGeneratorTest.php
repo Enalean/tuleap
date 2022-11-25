@@ -82,6 +82,7 @@ final class MercureJWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertSame($expected, (array) $decoded->claims()->get('mercure')['subscribe']);
     }
+
     public function testContentJWTSubscriptionEnabled(): void
     {
         $expected = [

@@ -95,7 +95,6 @@ final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user->setUserPw('some_password_hash');
     }
 
-
     public function testItThrowExceptionForAnonymous(): void
     {
         $this->expectException(ForbiddenException::class);

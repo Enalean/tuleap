@@ -63,6 +63,7 @@ class WikiPlugin_AsciiMath extends WikiPlugin
     {
         return [];
     }
+
     public function handle_plugin_args_cruft(&$argstr, &$args)
     {
         $this->source = $argstr;

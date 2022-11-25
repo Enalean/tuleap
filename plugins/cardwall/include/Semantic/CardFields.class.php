@@ -277,7 +277,6 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         $this->getDao()->remove($this->tracker->getId(), $field->getId());
     }
 
-
     public function save()
     {
         $dao = $this->getDao();

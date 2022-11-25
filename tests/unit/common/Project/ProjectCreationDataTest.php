@@ -179,7 +179,6 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_visibility, $project_data->getAccess());
     }
 
-
     public function testItCreatesAPublicProjectFromWebPayload(): void
     {
         ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);

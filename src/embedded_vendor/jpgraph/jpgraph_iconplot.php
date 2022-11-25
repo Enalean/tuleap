@@ -121,19 +121,21 @@ class IconPlot
     {
         return false;
     }
+
     public function GetMinDate()
     {
         return false;
     }
+
     public function GetLineNbr()
     {
         return 0;
     }
+
     public function GetAbsHeight()
     {
         return 0;
     }
-
 
     public function Min()
     {

@@ -380,6 +380,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     {
         return (int) $value;
     }
+
     protected function buildMatchExpression($field_name, $criteria_value)
     {
         $expr    = '';
@@ -1190,7 +1191,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         return $this->fetchHtmlWidgetMasschange($name, $artifact_links, $prefill_new_values, $read_only);
     }
-
 
     /**
      * Fetch the html code to display the field value in tooltip

@@ -35,7 +35,6 @@ class IdForXMLImportExportConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(123, IdForXMLImportExportConvertor::convertXMLIdToFileInfoId('fileinfo_123'));
     }
 
-
     /**
      * @testWith [""]
      *           ["invalid_prefix_123"]

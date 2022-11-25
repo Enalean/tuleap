@@ -62,7 +62,6 @@ class BackendAliases extends Backend
         return $this->need_update;
     }
 
-
     /**
      * Write System email aliases:
      * - generic aliases like codendi-admin
@@ -107,7 +106,6 @@ class BackendAliases extends Backend
         // Run newaliases
         return ($this->system("/usr/bin/newaliases > /dev/null") !== false);
     }
-
 
     /**
      * Generic part: should be written first

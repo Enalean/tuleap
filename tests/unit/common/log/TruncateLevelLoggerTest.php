@@ -96,7 +96,6 @@ class TruncateLevelLoggerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ign
         $truncate_logger->error("error message");
     }
 
-
     public function testFallbackToWarningLevelWhenLevelIsUnknown(): void
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, 'warn');

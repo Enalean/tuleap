@@ -127,7 +127,6 @@ class Tracker_RulesManager
         return $this->rule_date_factory;
     }
 
-
     private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
@@ -543,7 +542,6 @@ class Tracker_RulesManager
 
         $this->tracker->displayFooter($engine);
     }
-
 
     protected function displayDependenciesMatrix($source_field, $target_field, $dependencies = null)
     {

@@ -1332,7 +1332,6 @@ class ProjectResource extends AuthenticatedResource
         );
     }
 
-
     private function userCanAccessPhpWikiService(PFUser $user, $project_id)
     {
         $wiki_service = new Wiki($project_id);

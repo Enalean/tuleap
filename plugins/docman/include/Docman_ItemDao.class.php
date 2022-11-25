@@ -579,7 +579,6 @@ class Docman_ItemDao extends DataAccessObject
         return $this->update($sql);
     }
 
-
     /**
      * Delete entry that match $item_id in plugin_docman_item
      *
@@ -1084,6 +1083,7 @@ class Docman_ItemDao extends DataAccessObject
 
         return (! $res) ? 0 : (int) $res['nb'];
     }
+
     public function countDocumentAfter(int $timestamp): int
     {
         $sql = 'SELECT count(*) as nb

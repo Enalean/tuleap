@@ -141,7 +141,6 @@ class TrackersResource extends AuthenticatedResource
         );
     }
 
-
     /**
      * @url OPTIONS
      */

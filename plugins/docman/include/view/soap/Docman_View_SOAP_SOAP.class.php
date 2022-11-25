@@ -26,6 +26,7 @@ class Docman_View_SOAP_SOAP
     {
         $this->_controller = $controller;
     }
+
     public function display($params = [])
     {
         return isset($params['action_result']) ? $params['action_result'] : true;

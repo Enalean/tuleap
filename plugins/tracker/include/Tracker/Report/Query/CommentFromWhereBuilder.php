@@ -25,5 +25,6 @@ namespace Tuleap\Tracker\Report\Query;
 interface CommentFromWhereBuilder
 {
     public function getFromWhereWithComment(string $value, string $suffix): FromWhere;
+
     public function getFromWhereWithoutComment(string $suffix): FromWhere;
 }

@@ -143,6 +143,8 @@
     <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine"/>
     <!-- Forbid useless uses of the same namespace -->
     <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
+    <!-- Require 1 blank line between class methods -->
+    <rule ref="SlevomatCodingStandard.Classes.MethodSpacing"/>
     <!-- Require empty newlines before and after uses -->
     <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing">
         <properties>

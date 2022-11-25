@@ -539,6 +539,7 @@ class RectPatternFactory
     {
         // Empty
     }
+
     public function Create($aPattern, $aColor, $aWeight = 1)
     {
         switch ($aPattern) {

@@ -167,7 +167,6 @@ class CrossTrackerTest extends RestBase
         $this->assertGetReport($cross_tracker_artifacts);
     }
 
-
     public function testGetReportWithoutArtifacts()
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/2/content?limit=50&offset=0'));

@@ -140,7 +140,6 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         return $GLOBALS['HTML']->getImagePath('ic/ui-perTrackerId--plus.png');
     }
 
-
     /**
      * Fetch the html code to display the field value in tooltip
      *

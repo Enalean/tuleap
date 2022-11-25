@@ -34,6 +34,7 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->_group = \false;
         $this->_tag   = '~begin';
     }
+
     public function _flushGroup($new_tag)
     {
         if ($this->_group !== \false) {
@@ -51,6 +52,7 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->_group = '';
         $this->_tag   = $new_tag;
     }
+
     public function _flushLine($new_tag)
     {
         $this->_flushGroup($new_tag);
@@ -59,6 +61,7 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
         }
         $this->_line = "";
     }
+
     public function addWords($words, $tag = '')
     {
         if ($tag != $this->_tag) {
@@ -78,6 +81,7 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
             $this->_group .= $word;
         }
     }
+
     public function getLines()
     {
         $this->_flushLine('~done');

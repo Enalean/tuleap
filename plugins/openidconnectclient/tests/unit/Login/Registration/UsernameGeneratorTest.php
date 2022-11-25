@@ -122,7 +122,6 @@ class UsernameGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($username, $generated_username);
     }
 
-
     public function testItNeedsAtLeastGivenOrFamilyNamesToGenerateUsername(): void
     {
         $rule = \Mockery::spy(\Rule_UserName::class);

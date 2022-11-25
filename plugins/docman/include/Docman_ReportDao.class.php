@@ -76,7 +76,6 @@ class Docman_ReportDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-
     public function create($name, $title, $groupId, $userId, $itemId, $scope, $isDefault, $advancedSearch, $description, $image)
     {
         $sql = sprintf(
@@ -97,6 +96,7 @@ class Docman_ReportDao extends DataAccessObject
         );
         return $this->createAndReturnId($sql);
     }
+
     /**
      * To avoid inserting two similar:
      *  - personnel report for the same user

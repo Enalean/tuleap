@@ -278,6 +278,7 @@ class FRSReleaseDao extends DataAccessObject
     {
         return $this->updateAndGetLastId($sql);
     }
+
     /**
      * Update a row in the table frs_release
      *

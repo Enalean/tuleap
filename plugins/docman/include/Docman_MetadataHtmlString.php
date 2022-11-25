@@ -31,6 +31,7 @@ class Docman_MetadataHtmlString extends \Docman_MetadataHtml
         $value = $this->hp->purify($this->md->getValue(), \CODENDI_PURIFIER_BASIC, $this->md->getGroupId());
         return $value;
     }
+
     public function _getField()
     {
         $value = $this->md->getValue();

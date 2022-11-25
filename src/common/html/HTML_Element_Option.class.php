@@ -31,14 +31,17 @@ class HTML_Element_Option extends HTML_Element
         parent::__construct($label, '', $value);
         $this->setSelected($selected);
     }
+
     public function setSelected($selected = false)
     {
         $this->selected = $selected ? 'selected="selected"' : '';
     }
+
     public function render()
     {
         return $this->renderValue();
     }
+
     protected function renderValue()
     {
         $hp    = Codendi_HTMLPurifier::instance();

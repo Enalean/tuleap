@@ -215,7 +215,6 @@ final class OnlyOfficeCallbackDocumentSaver implements SaveOnlyOfficeCallbackDoc
         return Result::ok(null);
     }
 
-
     /**
      * @psalm-param list<int> $author_ids
      */

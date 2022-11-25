@@ -126,6 +126,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
     {
         return $this->tracker_representations[$tracker_id];
     }
+
     protected function assertLinks(ResponseInterface $response, $nature_is_child, $artifact_id, $nature_empty): void
     {
         $links = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

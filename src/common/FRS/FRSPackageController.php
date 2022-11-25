@@ -183,7 +183,6 @@ class FRSPackageController
         $renderer->renderToPage('permissions-presenter', $presenter);
     }
 
-
     private function getFrsUGroupsByPermission($permission_type, array $project_ugroups, $object_id = null)
     {
         $options = [];

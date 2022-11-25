@@ -106,7 +106,6 @@ class WikiPlugin_CreateBib extends WikiPlugin
         return $articles;
     }
 
-
     public function dumpFile(&$thispage, $filename)
     {
         include_once("lib/loadsave.php");

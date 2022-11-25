@@ -32,6 +32,7 @@ class CollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $c = new Collection();
         $this->assertTrue($c->isEmpty());
     }
+
     public function testNonEmptyCollection()
     {
         $c = new Collection();
@@ -39,6 +40,7 @@ class CollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $c->add($a);
         $this->assertFalse($c->isEmpty());
     }
+
     public function testContains()
     {
         $col     = new Collection();
@@ -71,6 +73,7 @@ class CollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $col->add($key3);
         $this->assertTrue($col->contains($key3_val));
     }
+
     public function testReference()
     {
         $col     = new Collection();
@@ -82,6 +85,7 @@ class CollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($col->contains($a));
         $this->assertFalse($col->contains($b));
     }
+
     public function testSize()
     {
         $a       = new stdClass();
@@ -147,6 +151,7 @@ class CollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $col1->add($b);
         $this->assertFalse($col1->equals($col2));
     }
+
     public function testEqualsTwoElements()
     {
         $a       = new stdClass();

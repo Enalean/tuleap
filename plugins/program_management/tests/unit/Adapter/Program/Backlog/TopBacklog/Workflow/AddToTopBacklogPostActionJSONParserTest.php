@@ -68,7 +68,6 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
         self::assertInstanceOf(AddToTopBacklogPostActionValue::class, $post_action);
     }
 
-
     public function testThrowsAnExceptionWhenTheWorkflowIsNotPartOfAPlannableTracker(): void
     {
         $workflow = $this->createMock(Workflow::class);

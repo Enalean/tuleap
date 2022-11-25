@@ -167,7 +167,6 @@ class WikiServiceAdminViews extends WikiViews
         }
     }
 
-
   /**
    * wikiDocuments - public view
    */
@@ -293,7 +292,6 @@ class WikiServiceAdminViews extends WikiViews
         print '<p><a href="' . $this->wikiAdminLink . '&view=wikiPages"' . $GLOBALS['Language']->getText('global', 'back') . '</a></p>' . "\n";
     }
 
-
   /**
    * pagePerms - public View
    */
@@ -350,7 +348,6 @@ class WikiServiceAdminViews extends WikiViews
 
         print '<hr/><p><a href="' . $this->wikiAdminLink . '">' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin') . '</a></p>' . "\n";
     }
-
 
     /**
     * browsePages - private
@@ -463,7 +460,6 @@ class WikiServiceAdminViews extends WikiViews
         print '<hr/><p><a href="' . $this->wikiAdminLink . '">' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin') . '</a></p>' . "\n";
         print '</form>';
     }
-
 
     public function attachmentPerms()
     {

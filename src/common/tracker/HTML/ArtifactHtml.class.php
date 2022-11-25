@@ -415,7 +415,6 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         return $html;
     }
 
-
         /**
          * return a field for the given user.
          *
@@ -688,7 +687,6 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         echo '</form>';
     }
 
-
         /**
          * Display the history
          *
@@ -856,7 +854,6 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         return($out);
     }
-
 
     public function displayAdd($user_id)
     {

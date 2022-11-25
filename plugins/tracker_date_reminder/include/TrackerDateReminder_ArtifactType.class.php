@@ -27,7 +27,6 @@ class TrackerDateReminder_ArtifactType
         $this->at = $at;
     }
 
-
     /**
     * Add artifact to artifact_date_reminder_processing table
     *

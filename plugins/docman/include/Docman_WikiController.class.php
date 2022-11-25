@@ -232,6 +232,7 @@ class Docman_WikiController extends Docman_Controller
             $this->request->set('display_remove_button', false);
         }
     }
+
     public function wiki_before_content()
     {
         $wiki_page = $this->request->get('wiki_page');

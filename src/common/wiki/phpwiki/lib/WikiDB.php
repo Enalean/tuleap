@@ -75,7 +75,6 @@ class WikiDB
         return new WikiDB_SQL();
     }
 
-
     /**
      *
      *
@@ -431,7 +430,6 @@ class WikiDB
         //return new WikiDB_PageIterator($this, $result);
     }
 
-
     /**
      * Call the appropriate backend method.
      *
@@ -518,7 +516,6 @@ class WikiDB
         $ts = $this->get('_timestamp');
         $this->set('_timestamp', [time(), $ts[1] + 1]);
     }
-
 
     /**
      * Access WikiDB global meta-data.
@@ -815,7 +812,6 @@ class WikiDB_Page
         $cache->delete_versiondata($pagename, $version);
         $backend->unlock(['version']);
     }
-
 
     /**
      * Create a new revision of a {@link WikiDB_Page}.
@@ -1288,6 +1284,7 @@ class WikiDB_Page
     {
         return $this->getLinks(true, $include_empty, $sortby, $limit, $exclude);
     }
+
     /**
      * Forward Links: All Links from this page to other pages.
      */
@@ -1467,7 +1464,6 @@ class WikiDB_Page
         return $strval;
     }
 
-
     /**
      * @access private
      * @param integer_or_object $version_or_pagerevision
@@ -1622,6 +1618,7 @@ class WikiDB_PageRevision
     {
         return $this->_pagename;
     }
+
     public function getName()
     {
         return $this->_pagename;
@@ -1850,7 +1847,6 @@ class WikiDB_PageRevision
         }
         return $meta;
     }
-
 
     /**
      * Return a string representation of the revision.
@@ -2124,19 +2120,23 @@ class WikiDB_Array_PageIterator
         $this->_pages = $pagenames;
         reset($this->_pages);
     }
+
     public function next()
     {
         $c = current($this->_pages);
         next($this->_pages);
         return $c !== false ? $this->_dbi->getPage($c) : false;
     }
+
     public function count()
     {
         return count($this->_pages);
     }
+
     public function free()
     {
     }
+
     public function asArray()
     {
         reset($this->_pages);
@@ -2160,19 +2160,23 @@ class WikiDB_Array_generic_iter
             reset($this->_array);
         }
     }
+
     public function next()
     {
         $c = current($this->_array);
         next($this->_array);
         return $c !== false ? $c : false;
     }
+
     public function count()
     {
         return count($this->_array);
     }
+
     public function free()
     {
     }
+
     public function asArray()
     {
         if (! empty($this->_array)) {

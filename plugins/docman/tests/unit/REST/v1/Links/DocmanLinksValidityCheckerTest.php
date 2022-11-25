@@ -67,7 +67,6 @@ class DocmanLinksValidityCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->addToAssertionCount(1);
     }
 
-
     public function testLinkIsNotValid(): void
     {
         $this->expectException(RestException::class);

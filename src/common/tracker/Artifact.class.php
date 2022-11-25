@@ -112,7 +112,6 @@ class Artifact
         return true;
     }
 
-
     /**
      *  fetchData - re-fetch the data for this Artifact from the database.
      *
@@ -189,7 +188,6 @@ class Artifact
             return $this->data_array[$name];
         }
     }
-
 
     /**
      *  getMultiAssignedTo - get the value for the 'multi_assigned_to' field
@@ -385,7 +383,6 @@ class Artifact
         //echo $sql;
         return db_query($sql);
     }
-
 
     /**
      *  Create a new artifact (and its values) in the db
@@ -611,8 +608,6 @@ class Artifact
         return ! $was_error;
     }
 
-
-
     /**
      *  Add a followup comment
      *
@@ -648,7 +643,6 @@ class Artifact
             return false;
         }
     }
-
 
     /**
      * handle a simple follow-up comment
@@ -1124,7 +1118,6 @@ class Artifact
         }
     }
 
-
     /**
      * Check if an email address already exists
      *
@@ -1264,8 +1257,6 @@ class Artifact
         return $ok;
     }
 
-
-
     /**
      * Delete an email address in the CC list
      *
@@ -1341,7 +1332,6 @@ class Artifact
         }
     }
 
-
     /**
      * Insert a artifact dependency with the current one
      *
@@ -1357,7 +1347,6 @@ class Artifact
         $res = db_query($sql);
         return ($res);
     }
-
 
     /**
      * Delete all the CC Names of this Artifact
@@ -1406,7 +1395,6 @@ class Artifact
         }
         return true;
     }
-
 
     /**
      * Insert artifact dependencies
@@ -1531,7 +1519,6 @@ class Artifact
     {
         return (($status == '3') || ($status == '10') );
     }
-
 
     /**
      * get all the field values for this artifact
@@ -1994,8 +1981,6 @@ class Artifact
         }
     }
 
-
-
     /**
      *      userCanView - determine if the user can view this artifact.
      *
@@ -2123,7 +2108,6 @@ class Artifact
         return $extrafielddata;
     }
 
-
     /**
      * Build an array of user_ids using the changes array
      *
@@ -2230,8 +2214,6 @@ class Artifact
             }
         }
     }
-
-
 
     /** group users to be notified of artifact changes
      * groups are done with respect to ugroups and
@@ -3186,7 +3168,6 @@ class Artifact
         $out .= $this->fetchHtmlAnswerButton($artifact_href);
         return $out;
     }
-
 
         /**
          * Return the string to display the follow ups comments

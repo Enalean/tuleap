@@ -25,22 +25,27 @@ class Docman_SubItemsRemovalVisitor /* implements Visitor */
     {
         $item->removeAllItems();
     }
+
     public function visitDocument(&$item, $params = [])
     {
         //Do nothing
     }
+
     public function visitWiki(&$item, $params = [])
     {
         $this->visitDocument($item, $params);
     }
+
     public function visitLink(&$item, $params = [])
     {
         $this->visitDocument($item, $params);
     }
+
     public function visitFile(&$item, $params = [])
     {
         $this->visitDocument($item, $params);
     }
+
     public function visitEmbeddedFile(&$item, $params = [])
     {
         return $this->visitFile($item, $params);

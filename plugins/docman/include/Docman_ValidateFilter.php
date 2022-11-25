@@ -32,10 +32,12 @@ class Docman_ValidateFilter
         $this->message = '';
         $this->isValid = \null;
     }
+
     public function validate()
     {
         return $this->isValid;
     }
+
     public function getMessage()
     {
         return $this->message;

@@ -119,7 +119,6 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
         }
     }
 
-
     /**
      * @url OPTIONS {id}/children
      *

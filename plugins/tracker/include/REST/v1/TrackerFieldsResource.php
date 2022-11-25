@@ -54,7 +54,6 @@ class TrackerFieldsResource extends AuthenticatedResource
         Header::allowOptionsPatch();
     }
 
-
     /**
      * Partial update of a tracker field
      *

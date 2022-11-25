@@ -217,7 +217,6 @@ class RepositoryHeaderPresenterBuilder
         );
     }
 
-
     private function getCommitsTab(GitRepository $repository)
     {
         $is_selected = $this->selected_tab === self::TAB_COMMITS;

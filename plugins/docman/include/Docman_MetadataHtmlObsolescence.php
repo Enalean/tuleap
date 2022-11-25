@@ -36,6 +36,7 @@ class Docman_MetadataHtmlObsolescence extends \Docman_MetadataHtml
                 return \DateHelper::formatForLanguage($GLOBALS['Language'], $v, \true);
         }
     }
+
     public function _getField()
     {
         $labels        = [\PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => \dgettext('tuleap-docman', 'Permanent'), 3 => \dgettext('tuleap-docman', '3 Months from today'), 6 => \dgettext('tuleap-docman', '6 Months from today'), 12 => \dgettext('tuleap-docman', '12 Months from today'), 100 => \dgettext('tuleap-docman', 'Fixed date'), 200 => \dgettext('tuleap-docman', 'Obsolete today')];

@@ -22,6 +22,7 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
 
         echo '</select>';
     }
+
     public function _displayItem($item, $params)
     {
         $hp = Codendi_HTMLPurifier::instance();
@@ -29,6 +30,7 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
             echo '<option value="' . ($item->getRank() + 1) . '" ' . ($params['force_ordering'] === ("" . ($item->getRank() + 1)) ? 'selected="selected"' : '') . '>After ' .  $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
         }
     }
+
     public function visitFolder(&$item, $params = [])
     {
         if ($item->getParentId() == $params['parent_id']) {
@@ -50,18 +52,22 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
             $this->_displayItem($item, $params);
         }
     }
+
     public function visitWiki(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitLink(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitEmbeddedFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);

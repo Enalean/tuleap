@@ -29,5 +29,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 interface TitleFieldReference
 {
     public function getId(): int;
+
     public function getLabel(): string;
 }

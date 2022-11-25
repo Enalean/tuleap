@@ -177,7 +177,6 @@ class DocmanLinksResource extends AuthenticatedResource
         $this->event_manager->processEvent('send_notifications', []);
     }
 
-
     private function setHeaders(): void
     {
         Header::allowOptionsPatchDelete();
@@ -273,7 +272,6 @@ class DocmanLinksResource extends AuthenticatedResource
         $this->postVersions($id, $representation);
     }
 
-
     /**
      * Create a version of a link
      *
@@ -363,7 +361,6 @@ class DocmanLinksResource extends AuthenticatedResource
 
         return $items_representation->getRepresentations();
     }
-
 
     /**
      * Update the link document metadata
@@ -507,7 +504,6 @@ class DocmanLinksResource extends AuthenticatedResource
     {
         return new RestLockUpdater(new Docman_LockFactory(new \Docman_LockDao(), new Docman_Log()), $this->getPermissionManager($project));
     }
-
 
     private function getPermissionManager(\Project $project): Docman_PermissionsManager
     {

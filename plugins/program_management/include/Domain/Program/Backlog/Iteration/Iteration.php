@@ -44,6 +44,7 @@ final class Iteration
         public bool $user_can_update,
     ) {
     }
+
     public static function build(
         RetrieveStatusValueUserCanSee $retrieve_status_value,
         RetrieveTitleValueUserCanSee $retrieve_title_value,

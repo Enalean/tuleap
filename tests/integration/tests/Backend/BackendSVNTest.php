@@ -96,7 +96,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->backend = \Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
-
     protected function tearDown(): void
     {
         //clear the cache between each tests
@@ -116,7 +115,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertNotNull(BackendSVN::instance());
     }
-
 
     public function testArchiveProjectSVN(): void
     {
@@ -142,7 +140,6 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         // Check that a wrong project id does not raise an error
         $this->assertEquals($this->backend->archiveProjectSVN(99999), false);
     }
-
 
     public function testCreateProjectSVN(): void
     {

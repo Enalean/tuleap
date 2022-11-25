@@ -67,7 +67,6 @@ class FileModuleMonitorDao extends DataAccessObject
         return $this->_search(' fm.filemodule_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY filemodule_id DESC');
     }
 
-
     /**
      * Check user's monitoring of the given package.
      *
@@ -128,7 +127,6 @@ class FileModuleMonitorDao extends DataAccessObject
                      VALUES (" . implode(", ", $values) . ")";
         return $this->update($sql);
     }
-
 
      /**
      * Delete entry that match $package_id and $user_id (current user) in filemodule_monitor

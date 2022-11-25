@@ -77,7 +77,6 @@ class PullRequestMerger
         }
     }
 
-
     public function detectMergeabilityStatus(
         GitExec $git_exec_destination,
         $merge_revision,

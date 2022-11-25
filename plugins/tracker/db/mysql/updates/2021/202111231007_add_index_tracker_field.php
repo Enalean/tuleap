@@ -27,6 +27,7 @@ final class b202111231007_add_index_tracker_field extends \Tuleap\ForgeUpgrade\B
     {
         return 'Add an index to the tracker_field table';
     }
+
     public function up(): void
     {
         $this->api->addIndex(

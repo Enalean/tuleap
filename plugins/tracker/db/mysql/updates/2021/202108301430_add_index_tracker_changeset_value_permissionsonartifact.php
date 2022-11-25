@@ -27,6 +27,7 @@ final class b202108301430_add_index_tracker_changeset_value_permissionsonartifac
     {
         return 'Add an index to the tracker_changeset_value_permissionsonartifact table';
     }
+
     public function up(): void
     {
         $this->api->addIndex(

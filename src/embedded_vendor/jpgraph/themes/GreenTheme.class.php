@@ -79,7 +79,6 @@ class GreenTheme extends Theme
 //        $graph->img->SetAntiAliasing();
     }
 
-
     public function SetupPieGraph($graph)
     {
         // graph
@@ -103,7 +102,6 @@ class GreenTheme extends Theme
 
         $graph->SetAntiAliasing();
     }
-
 
     public function PreStrokeApply($graph)
     {

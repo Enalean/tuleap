@@ -112,7 +112,6 @@ class ByFieldController implements DispatchableWithRequest
         $tracker->displayFooter($tracker_manager);
     }
 
-
     private function getUGroupPermissionsPerField(\Tracker $tracker, int $selected_id): ByFieldGroupPermissions
     {
         $ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions(

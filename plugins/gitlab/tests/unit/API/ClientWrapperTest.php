@@ -228,7 +228,6 @@ final class ClientWrapperTest extends TestCase
         $wrapper->postUrl($credentials, '/something', ['data' => 'data']);
     }
 
-
     public function testItThrowsExceptionIfThereIsAnErrorInTheGitlabSide(): void
     {
         $client_interface = new class implements ClientInterface {
@@ -287,7 +286,6 @@ final class ClientWrapperTest extends TestCase
 
         self::assertSame([['id' => 100]], $result);
     }
-
 
     public function testItReturnsThePaginatedResult(): void
     {

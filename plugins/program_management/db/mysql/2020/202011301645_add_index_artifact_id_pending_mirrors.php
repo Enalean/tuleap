@@ -27,10 +27,12 @@ final class b202011301645_add_index_artifact_id_pending_mirrors extends \Tuleap\
     {
         return 'Add index on program_artifact_id column on the plugin_scaled_agile_pending_mirrors table';
     }
+
     public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
+
     public function up(): void
     {
         $this->db->addIndex(

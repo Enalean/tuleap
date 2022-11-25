@@ -28,15 +28,26 @@ use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 interface Tracker_Artifact_ChangesetValueVisitor
 {
     public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value);
+
     public function visitDate(Tracker_Artifact_ChangesetValue_Date $changeset_value);
+
     public function visitFile(Tracker_Artifact_ChangesetValue_File $changeset_value);
+
     public function visitFloat(Tracker_Artifact_ChangesetValue_Float $changeset_value);
+
     public function visitInteger(Tracker_Artifact_ChangesetValue_Integer $changeset_value);
+
     public function visitList(Tracker_Artifact_ChangesetValue_List $changeset_value);
+
     public function visitOpenList(Tracker_Artifact_ChangesetValue_OpenList $changeset_value);
+
     public function visitPermissionsOnArtifact(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value);
+
     public function visitString(Tracker_Artifact_ChangesetValue_String $changeset_value);
+
     public function visitText(Tracker_Artifact_ChangesetValue_Text $changeset_value);
+
     public function visitComputed(ChangesetValueComputed $changeset_value);
+
     public function visitExternalField(Tracker_Artifact_ChangesetValue $changeset_value);
 }

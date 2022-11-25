@@ -187,10 +187,12 @@ class Docman_Icons
     {
         return $this->images_path . 'folder-spinner.gif';
     }
+
     public function getSpinner()
     {
         return $this->images_path . 'spinner.gif';
     }
+
     public function getIcon($icon)
     {
         return $this->images_path . $icon;

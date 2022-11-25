@@ -38,6 +38,7 @@ class Valid_File extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         }
         return \true;
     }
+
     /**
      * Check rules on given file.
      *

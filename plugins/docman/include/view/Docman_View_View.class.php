@@ -61,30 +61,39 @@
         $this->_footer($params);
         echo '</div>';
     }
+
     /* protected */ public function _header($params)
     {
     }
+
     /* protected */ public function _scripts($params)
     {
     }
+
     /* protected */ public function _feedback($params)
     {
     }
+
     protected function displayTitle(array $params): void
     {
     }
+
     protected function displayOldBreadcrumbs(array $params): void
     {
     }
+
     protected function displayMode(array $params): void
     {
     }
+
     /* protected */ public function _filter($params)
     {
     }
+
     /* protected */ public function _content($params)
     {
     }
+
     /* protected */ public function _javascript($params)
     {
         if ($this->javascript != "") {
@@ -95,21 +104,23 @@
             "</script>\n";
         }
     }
+
     /* protected */ public function _footer($params)
     {
     }
-
 
     public function &_getVersionFactory($params)
     {
         $vf = new Docman_VersionFactory();
         return $vf;
     }
+
     public function &_getDocmanIcons($params)
     {
         $icons = new Docman_Icons($params['theme_path'] . '/images/ic/');
         return $icons;
     }
+
     public function _getItemFactory()
     {
         return new Docman_ItemFactory();

@@ -47,6 +47,7 @@ class MediawikiManager
     {
         return $this->dao;
     }
+
     public function saveCompatibilityViewOption(Project $project, $compatibility_view_option)
     {
         $project_id                = $project->getID();
@@ -225,6 +226,7 @@ class MediawikiManager
             new MediawikiAdminAllProjects()
         );
     }
+
     /**
      * @return bool true if user can read
      */

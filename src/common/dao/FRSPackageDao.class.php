@@ -136,13 +136,11 @@ class FRSPackageDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-
     public function searchPackageByName($package_name, $group_id)
     {
         $_group_id = (int) $group_id;
         return $this->_search(' group_id=' . $this->da->escapeInt($_group_id) . ' AND name=' . $this->da->quoteSmart(htmlspecialchars($package_name)), '', '');
     }
-
 
     /**
      * create a row in the table frs_package
@@ -218,6 +216,7 @@ class FRSPackageDao extends DataAccessObject
     {
         return $this->updateAndGetLastId($sql);
     }
+
     /**
      * Update a row in the table frs_package
      *

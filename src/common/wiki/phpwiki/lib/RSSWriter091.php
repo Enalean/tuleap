@@ -31,6 +31,7 @@ class RSSWriter091 extends RssWriter
         $this->XmlElement('rss', ['version' => "0.91"]);
         $this->_items = [];
     }
+
   /**
    * Finish construction of RSS.
    */
@@ -109,7 +110,6 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
         $request->finish();             // NORETURN!!!!
     }
 
-
     public function channel_properties()
     {
         global $request;
@@ -131,7 +131,6 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
          * copyright
          */
     }
-
 
     public function item_properties($rev)
     {

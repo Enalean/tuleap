@@ -38,6 +38,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         parent::__construct($id);
         $this->setOwner($owner_id, $owner_type);
     }
+
     public function getTitle()
     {
         return $this->image_title ?: 'Image';
@@ -158,6 +159,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
             $this->content_id  = $id;
         }
     }
+
     public function create(Codendi_Request $request)
     {
         $content_id = false;
@@ -177,6 +179,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         }
         return $content_id;
     }
+
     public function updatePreferences(Codendi_Request $request)
     {
         $done       = false;
@@ -205,11 +208,13 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         }
         return $done;
     }
+
     public function destroy($id)
     {
         $sql = 'DELETE FROM widget_image WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
         db_query($sql);
     }
+
     public function isUnique()
     {
         return false;

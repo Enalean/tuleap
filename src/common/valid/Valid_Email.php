@@ -36,6 +36,7 @@ class Valid_Email extends \Valid_String // phpcs:ignore PSR1.Classes.ClassDeclar
         }
         parent::__construct($key);
     }
+
     public function validate($value)
     {
         $this->addRule(new \Rule_Email($this->separator));

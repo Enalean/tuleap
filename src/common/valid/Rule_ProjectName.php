@@ -44,6 +44,7 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
         $this->error = $GLOBALS['Language']->getText('include_account', 'dns_error');
         return \false;
     }
+
     /**
      * Verify group name availability in the FS
      *
@@ -81,6 +82,7 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
         }
         return \true;
     }
+
     /**
      * Prevent from renaming two projects on the same name
      * before that the rename is performed by the system
@@ -96,6 +98,7 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
         }
         return \true;
     }
+
     /**
      * Wrapper for event manager
      *
@@ -105,6 +108,7 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
     {
         return \EventManager::instance();
     }
+
     /**
      * Check validity
      *
@@ -116,10 +120,12 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
     {
         return $this->isStartingWithAlphanumericCharacter($val) && $this->isDNSCompliant($val) && parent::isValid($val) && $this->isNameAvailable($val) && $this->getPendingProjectRename($val);
     }
+
     protected function _getErrorExists() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $GLOBALS['Language']->getText('rule_group_name', 'error_exists');
     }
+
     protected function _getErrorNoSpaces() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $GLOBALS['Language']->getText('include_account', 'project_spaces');

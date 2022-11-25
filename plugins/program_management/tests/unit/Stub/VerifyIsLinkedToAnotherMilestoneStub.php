@@ -30,6 +30,7 @@ final class VerifyIsLinkedToAnotherMilestoneStub implements VerifyIsLinkedToAnot
     private function __construct(private bool $is_linked)
     {
     }
+
     public static function buildIsLinked(): self
     {
         return new self(true);

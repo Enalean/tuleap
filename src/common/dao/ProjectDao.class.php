@@ -541,7 +541,6 @@ class ProjectDao extends DataAccessObject
         return $this->update($sql);
     }
 
-
     /**
      * Returns the message to be displayed to requester asking access for a given project
      *

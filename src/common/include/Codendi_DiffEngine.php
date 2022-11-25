@@ -232,6 +232,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $seps[] = $flip ? [$ylim, $xlim] : [$xlim, $ylim];
         return [$this->lcs, $seps];
     }
+
     public function _lcs_pos($ypos)
     {
         $end = $this->lcs;

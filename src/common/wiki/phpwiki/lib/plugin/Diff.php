@@ -378,6 +378,7 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
     {
         $this->_top = HTML::div(['class' => 'diff']);
     }
+
     public function _end_diff()
     {
         $val = $this->_top;
@@ -426,6 +427,7 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
     {
         $this->_lines($lines, 'context');
     }
+
     public function _deleted($lines)
     {
         $this->_lines($lines, 'deleted', '-', 'del');

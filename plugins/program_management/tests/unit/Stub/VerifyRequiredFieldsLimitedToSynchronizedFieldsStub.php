@@ -35,6 +35,7 @@ final class VerifyRequiredFieldsLimitedToSynchronizedFieldsStub implements Verif
     private function __construct(private bool $are_fields_valid)
     {
     }
+
     public static function withValidField(): self
     {
         return new self(true);

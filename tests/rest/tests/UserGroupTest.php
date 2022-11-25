@@ -308,6 +308,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
 
         $this->assertEquals(403, $response->getStatusCode());
     }
+
     /**
      * @depends testGetMultipleUsersFromAStaticGroup
      */

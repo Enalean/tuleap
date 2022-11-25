@@ -36,6 +36,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     {
         return [];
     }
+
     /**
      * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values
@@ -46,6 +47,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     {
         return [];
     }
+
     /**
      * Get the field data for artifact submission
      *
@@ -58,6 +60,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     {
         return [];
     }
+
     /**
      * @return array
      */
@@ -65,6 +68,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     {
         return [];
     }
+
     /**
      * @return array
      */
@@ -157,7 +161,6 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
         return '';
     }
 
-
     /**
      * Get the "from" statement to retrieve field values
      * You can join on artifact AS a, tracker_changeset AS c
@@ -171,7 +174,6 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     {
         return '';
     }
-
 
     /**
      * Get a bindvalue by its row
@@ -217,11 +219,11 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
         return '';
     }
 
-
     public function getDao()
     {
         return null;
     }
+
     public function getValueDao()
     {
         return null;
@@ -236,7 +238,6 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     {
         return '';
     }
-
 
     /**
      * Allow the user to define the bind

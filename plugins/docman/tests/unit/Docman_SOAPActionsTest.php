@@ -169,7 +169,6 @@ class Docman_SOAPActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($this->MD5Map[$params['item_id']], $action->getControler()->_viewParams['action_result']);
     }
 
-
     public function testGetFileMD5sumAllVersions()
     {
         $action = $this->action;

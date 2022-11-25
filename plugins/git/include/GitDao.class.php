@@ -327,7 +327,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
         return true;
     }
 
-
     public function searchProjectRepositoryByPath($projectId, $repositoryPath)
     {
         // BINARY ? used in query in order to create a case sensitive match

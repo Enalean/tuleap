@@ -167,18 +167,21 @@ class ReasonerBackend
     public function __construct()
     {
     }
+
     /**
      * transform to reasoner syntax
      */
     public function transformTo()
     {
     }
+
     /**
      * transform from reasoner syntax
      */
     public function transformFrom()
     {
     }
+
     /**
      * call the reasoner
      */

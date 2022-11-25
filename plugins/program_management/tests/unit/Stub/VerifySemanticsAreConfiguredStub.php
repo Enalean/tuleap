@@ -33,6 +33,7 @@ final class VerifySemanticsAreConfiguredStub implements VerifySemanticsAreConfig
     private function __construct(private bool $is_semantic_valid)
     {
     }
+
     public static function withValidSemantics(): self
     {
         return new self(true);

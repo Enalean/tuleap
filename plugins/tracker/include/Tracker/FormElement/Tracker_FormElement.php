@@ -192,10 +192,12 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     {
         return $this->scope;
     }
+
     public function getParentId()
     {
         return $this->parent_id;
     }
+
     public function getRank()
     {
         return $this->rank;
@@ -1426,7 +1428,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     {
         return false;
     }
-
 
     /**
      * Return underlying content. Should be overwritten in container fields

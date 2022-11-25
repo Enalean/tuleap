@@ -93,6 +93,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         $this->_sort = $sort;
     }
+
     /**
      * Get field ids used to (multi)sort results
      * @return array [{'field_id' => 12, 'is_desc' => 0, 'rank' => 2}, [...]]
@@ -148,6 +149,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
         return $this->_sort;
     }
+
     /**
      * Adds sort values to database
      *
@@ -171,6 +173,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         $this->_columns = $cols;
     }
+
     /**
      * Adds columns to database
      *
@@ -247,6 +250,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         $this->_aggregates = $aggs;
     }
+
     /**
      * Adds aggregates to database
      *
@@ -261,6 +265,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
         }
     }
+
     public function getAggregates()
     {
         $session_renderer_table_functions = null;
@@ -2454,7 +2459,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $success;
     }
 
-
     /**
      * Update the renderer
      *
@@ -2690,7 +2694,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         return $matching_ids_from_result;
     }
-
 
     private function getBaseQueryFrom(): string
     {

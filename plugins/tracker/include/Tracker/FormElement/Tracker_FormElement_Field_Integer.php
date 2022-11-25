@@ -99,6 +99,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
     {
         return new IntegerValueDao();
     }
+
     protected function getDao()
     {
         return new IntegerFieldDao();

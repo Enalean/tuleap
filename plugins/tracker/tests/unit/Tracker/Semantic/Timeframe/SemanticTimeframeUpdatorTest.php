@@ -217,7 +217,6 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->updator->update($this->tracker, $request);
     }
 
-
     public function testItUpdatesTheSemanticWhenItIsImpliedFromAnotherTracker(): void
     {
         $sprints_tracker_id = 150;

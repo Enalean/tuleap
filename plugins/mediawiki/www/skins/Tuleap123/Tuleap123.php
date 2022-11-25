@@ -388,6 +388,7 @@ class Tuleap123Template extends BaseTemplate
     </div>
         <?php
     }
+
     public function toolbox()
     {
         ?>

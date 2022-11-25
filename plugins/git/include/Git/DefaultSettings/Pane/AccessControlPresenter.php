@@ -169,7 +169,6 @@ class AccessControlPresenter
         $this->has_tags_permissions     = count($this->tags_permissions) > 0;
     }
 
-
     private function getWarningContentForRegexpDisableModal()
     {
         if ($this->are_regexp_permission_conflicting_at_site_level) {

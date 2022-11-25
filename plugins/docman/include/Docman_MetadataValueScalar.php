@@ -41,30 +41,37 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
         $this->valueDate   = \null;
         $this->valueString = \null;
     }
+
     public function setValueText($v)
     {
         $this->valueText = $v;
     }
+
     public function getValueText()
     {
         return $this->valueText;
     }
+
     public function setValueDate($v)
     {
         $this->valueDate = $v;
     }
+
     public function getValueDate()
     {
         return $this->valueDate;
     }
+
     public function setValueString($v)
     {
         $this->valueString = $v;
     }
+
     public function getValueString()
     {
         return $this->valueString;
     }
+
     public function getValue()
     {
         switch ($this->type) {
@@ -78,6 +85,7 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
                 return \null;
         }
     }
+
     public function setValue($v)
     {
         switch ($this->type) {
@@ -94,6 +102,7 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
                 return \null;
         }
     }
+
     public function initFromRow($row)
     {
         parent::initFromRow($row);

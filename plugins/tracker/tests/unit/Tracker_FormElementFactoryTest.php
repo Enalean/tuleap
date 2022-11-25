@@ -86,7 +86,6 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS = $this->backup_globals;
     }
 
-
     public function testSaveObject(): void
     {
         $a_formelement = Mockery::spy(Tracker_FormElement_Container_Fieldset::class);
@@ -244,7 +243,6 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(['date' => true, 'text' => true], $found_fields);
     }
-
 
     private function thenICompareProjectSharedFieldsWithExpectedResult($project_id, $expectedResult): void
     {

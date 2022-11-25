@@ -89,7 +89,6 @@ final class FileImporter_PathTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_importer->import(__DIR__ . '/_fixtures/xferlog_relative');
     }
 
-
     public function testItFetchTheProjectNameWhenPathIsAbsolute(): void
     {
         $this->dao->method('store');
