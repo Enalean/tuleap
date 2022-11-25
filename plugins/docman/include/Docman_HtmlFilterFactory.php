@@ -27,6 +27,7 @@ class Docman_HtmlFilterFactory
     public function __construct()
     {
     }
+
     public static function getFromFilter($filter)
     {
         $f = \null;

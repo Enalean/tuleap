@@ -53,7 +53,6 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider
         $this->milestone_factory   = $milestone_factory;
     }
 
-
     public function getMilestone()
     {
         if (! $this->milestone_has_been_loaded) {

@@ -100,7 +100,6 @@ class Docman_ErrorPermissionDeniedTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-
     public function testUrlTransformActionDetailsSectionDifferentEnd(): void
     {
         $e   = new Docman_Error_PermissionDenied();
@@ -112,7 +111,6 @@ class Docman_ErrorPermissionDeniedTest extends \Tuleap\Test\PHPUnit\TestCase
             $res
         );
     }
-
 
     public function testUrlQueryToArrayWithIdMiddle(): void
     {

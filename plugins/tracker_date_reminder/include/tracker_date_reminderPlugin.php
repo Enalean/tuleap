@@ -270,7 +270,6 @@ class tracker_date_reminderPlugin extends Plugin
         }
     }
 
-
     /**
      * Hook: Artifact update in web interface
      *

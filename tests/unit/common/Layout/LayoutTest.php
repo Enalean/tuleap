@@ -65,6 +65,7 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
             public function header($params): void
             {
             }
+
             public function footer($params): void
             {
             }

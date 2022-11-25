@@ -29,6 +29,7 @@ class Docman_SqlReportColumn extends \Docman_MetadataSqlQueryChunk
         $this->column = $column;
         parent::__construct($column->md);
     }
+
     public function getOrderBy()
     {
         $sql  = '';

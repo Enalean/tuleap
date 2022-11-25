@@ -79,7 +79,6 @@ class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-
     public function testItGetsTheTextDefinitionRepresentation(): void
     {
         $user       = Mockery::mock(PFUser::class);

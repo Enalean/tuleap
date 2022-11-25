@@ -92,7 +92,6 @@ class WikiCloner
         return $tmpl_wiki_attach_exist;
     }
 
-
  /**
    *
    *  Create a clone of the template wiki. It includes:
@@ -645,6 +644,7 @@ class WikiCloner
             }
         }
     }
+
  /**
    *  Creates a clone of a template attachment
    *
@@ -751,7 +751,6 @@ class WikiCloner
         return db_escape_string($string);
     }
 
-
  /**
    * Serialize data
    */
@@ -763,7 +762,6 @@ class WikiCloner
         assert(is_array($data));
         return serialize($data);
     }
-
 
  /**
    * Deserialize data

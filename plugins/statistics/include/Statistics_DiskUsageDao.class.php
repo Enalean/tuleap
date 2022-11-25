@@ -318,7 +318,6 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         return $this->retrieve($sql);
     }
 
-
     public function searchServicesSizesPerProject($groupId, $date)
     {
         $sql = 'SELECT service, size' .
@@ -354,7 +353,6 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
                ' ORDER BY date ASC, size DESC';
         return $this->retrieve($sql);
     }
-
 
     /**
      * Compute evolution size of  user for a given period
@@ -417,6 +415,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         //echo $sql.PHP_EOL;
         return $this->update($sql);
     }
+
     /**
      * Computes size of project for a given service
      * @param Date    $startDate

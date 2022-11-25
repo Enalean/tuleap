@@ -103,6 +103,7 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
         }
         return $version;
     }
+
     /**
      * Returns the version of a given id
      *
@@ -121,7 +122,6 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
         }
         return $version;
     }
-
 
     /**
      * Retrieve the next available version number for a file
@@ -204,7 +204,6 @@ class Docman_VersionFactory implements \Tuleap\Docman\Version\IDeleteVersion
         }
         return false;
     }
-
 
     /**
      * Restore one version

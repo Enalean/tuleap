@@ -25,5 +25,6 @@ namespace Tuleap\Git\Repository\Settings\ArtifactClosure;
 interface ConfigureAllowArtifactClosure
 {
     public function allowArtifactClosureForRepository(int $repository_id): void;
+
     public function forbidArtifactClosureForRepository(int $repository_id): void;
 }

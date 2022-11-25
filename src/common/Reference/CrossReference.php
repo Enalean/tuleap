@@ -70,59 +70,71 @@ class CrossReference
     {
         return $this->refSourceId;
     }
+
     public function getRefSourceGid()
     {
         return $this->refSourceGid;
     }
+
     public function getRefSourceType()
     {
         return $this->refSourceType;
     }
+
     public function getRefTargetId()
     {
         return $this->refTargetId;
     }
+
     public function getRefTargetGid()
     {
         return $this->refTargetGid;
     }
+
     public function getRefTargetType()
     {
         return $this->refTargetType;
     }
+
     public function getUserId()
     {
         return $this->userId;
     }
+
     public function getRefTargetUrl()
     {
         return $this->targetUrl;
     }
+
     public function getRefSourceUrl()
     {
         return $this->sourceUrl;
     }
+
     public function getRefSourceKey()
     {
         return $this->sourceKey;
     }
+
     public function getRefTargetKey()
     {
         return $this->targetKey;
     }
+
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
+
     public function getInsertSourceType()
     {
         return $this->insertSourceType;
     }
+
     public function getInsertTargetType()
     {
         return $this->insertTargetType;
     }
-
 
     /**
      * Return true if current CrossReference is really "cross referenced" with $crossref

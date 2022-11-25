@@ -30,6 +30,7 @@ final class VerifyIsInTopBacklogStub implements VerifyIsInTopBacklog
     private function __construct(private bool $is_in_top_backlog)
     {
     }
+
     public static function buildIsInTopBacklog(): self
     {
         return new self(true);
@@ -39,7 +40,6 @@ final class VerifyIsInTopBacklogStub implements VerifyIsInTopBacklog
     {
         return new self(false);
     }
-
 
     public function isInTheExplicitTopBacklog(int $artifact_id): bool
     {

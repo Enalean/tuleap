@@ -174,6 +174,7 @@ final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit
 
         $field->getFieldDataFromRESTValueByField($value);
     }
+
     /**
      * @testWith [100]
      *  ["100"]

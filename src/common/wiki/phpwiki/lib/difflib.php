@@ -911,6 +911,7 @@ class DiffFormatter
     {
         $this->_lines($lines, '', ">");
     }
+
     public function _deleted($lines)
     {
         $this->_lines($lines, '', "<");
@@ -952,10 +953,12 @@ class UnifiedDiffFormatter extends DiffFormatter
     {
         $this->_lines($lines, '', "+");
     }
+
     public function _deleted($lines)
     {
         $this->_lines($lines, '', "-");
     }
+
     public function _changed($orig, $final)
     {
         $this->_deleted($orig);
@@ -998,18 +1001,22 @@ class BlockDiffFormatter extends DiffFormatter
             echo "$prefix\n";
         }
     }
+
     public function _added($lines)
     {
         $this->_lines($lines, '', ">>>>>>>");
     }
+
     public function _deleted($lines)
     {
         $this->_lines($lines, '', "<<<<<<<");
     }
+
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         return "";
     }
+
     public function _changed($orig, $final)
     {
         $this->_deleted($orig);

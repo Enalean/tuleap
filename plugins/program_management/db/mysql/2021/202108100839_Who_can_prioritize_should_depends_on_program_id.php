@@ -29,7 +29,6 @@ final class b202108100839_Who_can_prioritize_should_depends_on_program_id extend
         return 'Replace program_increment_tracker_id by program_id plugin_program_management_can_prioritize_features';
     }
 
-
     public function up(): void
     {
         if ($this->api->columnNameExists('plugin_program_management_can_prioritize_features', 'project_id')) {

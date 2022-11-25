@@ -30,6 +30,7 @@ final class SearchProgramIncrementLinkedToFeatureStub implements SearchProgramIn
     private function __construct(private array $program_increments)
     {
     }
+
     public static function with(array $program_increments): self
     {
         return new self($program_increments);

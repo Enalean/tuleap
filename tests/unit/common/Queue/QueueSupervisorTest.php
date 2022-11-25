@@ -56,7 +56,6 @@ final class QueueSupervisorTest extends TestCase
         self::assertFalse($this->logger->hasWarningRecords());
     }
 
-
     public function testWarnsWhenOldestMessageIsOld(): void
     {
         $supervisor = new QueueSupervisor(

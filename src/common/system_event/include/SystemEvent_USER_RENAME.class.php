@@ -122,7 +122,6 @@ class SystemEvent_USER_RENAME extends SystemEvent
         return (bool) $renameState;
     }
 
-
      /**
      * Update database
      *

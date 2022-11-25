@@ -45,6 +45,7 @@ class Codendi_HtmlUnifiedDiffFormatter extends \Codendi_UnifiedDiffFormatter // 
         parent::__construct($context_lines);
         $this->_html = '';
     }
+
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         if ($xbeg > 1) {
@@ -52,15 +53,18 @@ class Codendi_HtmlUnifiedDiffFormatter extends \Codendi_UnifiedDiffFormatter // 
         }
         return "";
     }
+
     public function _start_diff()
     {
         $this->_html .= '';
     }
+
     public function _end_diff()
     {
         $this->_html .= '';
         return $this->_html;
     }
+
     public function _start_block($header)
     {
         $this->_html .= '<div class="block">';
@@ -68,10 +72,12 @@ class Codendi_HtmlUnifiedDiffFormatter extends \Codendi_UnifiedDiffFormatter // 
             $this->_html .= '<tt>' . $header . '</tt>';
         }
     }
+
     public function _end_block()
     {
         $this->_html .= '</div>';
     }
+
     public function _lines($lines, $class = '', $prefix = \false, $elem = \false)
     {
         if (! $prefix) {
@@ -89,18 +95,22 @@ class Codendi_HtmlUnifiedDiffFormatter extends \Codendi_UnifiedDiffFormatter // 
         }
         $this->_html .= '</div>';
     }
+
     public function _context($lines)
     {
         $this->_lines($lines, 'context');
     }
+
     public function _deleted($lines)
     {
         $this->_lines($lines, 'deleted', '-', 'del');
     }
+
     public function _added($lines)
     {
         $this->_lines($lines, 'added', '+', 'ins');
     }
+
     public function _changed($orig, $fin)
     {
         $diff = new \Codendi_WordLevelDiff($orig, $fin);

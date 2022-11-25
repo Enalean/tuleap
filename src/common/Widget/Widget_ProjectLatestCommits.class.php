@@ -41,6 +41,7 @@ abstract class Widget_ProjectLatestCommits extends Widget
     /* protected */ public function _getLinkToCommit($data)
     {
     }
+
     /* protected */ public function _getLinkToMore()
     {
     }

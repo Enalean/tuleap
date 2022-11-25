@@ -100,7 +100,6 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmit', $submitted_values);
     }
 
-
     /**
      * Fetch the element for the submit masschange form
      */
@@ -123,6 +122,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     {
         return $this->fetchWithColumnGroup('fetchAdmin', [$tracker]);
     }
+
     public function fetchAdminInGroup($tracker)
     {
         $html  = '';

@@ -28,6 +28,7 @@ class Docman_HtmlFilterListAdvanced extends \Docman_HtmlFilterList
     {
         parent::__construct($filter);
     }
+
     public function buildSelectBox($vals, $txts)
     {
         // Purifying is disabled as $txts already contains purified strings

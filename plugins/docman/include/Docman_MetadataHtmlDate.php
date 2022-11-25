@@ -42,6 +42,7 @@ class Docman_MetadataHtmlDate extends \Docman_MetadataHtml
         $field .= \html_field_date($name, $selected, \false, '10', '10', $this->formParams['form_name'], \false);
         return $field;
     }
+
     public function getValue()
     {
         $v = $this->md->getValue();

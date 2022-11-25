@@ -65,6 +65,7 @@ final class IterationResource
         $this->user_manager = \UserManager::instance();
         $this->user_adapter = new UserManagerAdapter($this->user_manager);
     }
+
     /**
      * Get the user stories linked to an iteration in team projects
      *

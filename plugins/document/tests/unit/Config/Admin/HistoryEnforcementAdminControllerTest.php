@@ -69,7 +69,6 @@ final class HistoryEnforcementAdminControllerTest extends \Tuleap\Test\PHPUnit\T
         );
     }
 
-
     public function testItRendersThePage(): void
     {
         $user = Mockery::mock(PFUser::class);

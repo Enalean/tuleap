@@ -284,7 +284,6 @@ class Git_Driver_Gerrit_MembershipManager
         $this->updateUserMembership($command);
     }
 
-
     /**
      * This should probably be in a dedicated GerritUserGroup object.
      *

@@ -90,7 +90,6 @@ class Tracker_Report_Criteria
         $this->id = $id;
     }
 
-
     /**
      * @param mixed $value
      */

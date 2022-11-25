@@ -32,6 +32,7 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input
             $this->params['checked'] = 'checked';
         }
     }
+
     public function render()
     {
         $hp    = Codendi_HTMLPurifier::instance();
@@ -41,6 +42,7 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input
         $html .= '</label>';
         return $html;
     }
+
     public function renderValue()
     {
         $hf    = new HTML_Element_Input_Hidden('', $this->name, 0, '');
@@ -48,10 +50,12 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input
         $html .= parent::renderValue();
         return $html;
     }
+
     protected function getInputType()
     {
         return 'checkbox';
     }
+
     /**
      * The value for a checkbox is always 1
      */

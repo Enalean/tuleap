@@ -178,7 +178,6 @@ class DefinitionRepresentationBuilder
         return $artifact->getValue($field, $changeset);
     }
 
-
     public static function getTextChangesetValue(
         Tracker_FormElementFactory $form_element_factory,
         int $tracker_id,

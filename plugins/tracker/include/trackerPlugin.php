@@ -414,7 +414,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         return $this->pluginInfo;
     }
 
-
     /**
      * @see Event::PROCCESS_SYSTEM_CHECK
      */
@@ -1283,6 +1282,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $params['user'] = new Tracker_Workflow_WorkflowUser($params['row']);
         }
     }
+
     public function plugin_statistics_service_usage($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $dao = $this->getArtifactDao();
@@ -1413,6 +1413,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE, "\"|$command\"");
         }
     }
+
     public function get_projectid_from_url($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $url = $params['url'];
@@ -1449,7 +1450,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $params['types'][] = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME;
         $params['types'][] = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME;
     }
-
 
     /** @see Event::SERVICES_TRUNCATED_EMAILS */
     public function services_truncated_emails(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

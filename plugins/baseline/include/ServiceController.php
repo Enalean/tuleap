@@ -55,7 +55,6 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
     ) {
     }
 
-
     private function includeJavascriptFiles(BaseLayout $layout)
     {
         $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('baseline.js'));

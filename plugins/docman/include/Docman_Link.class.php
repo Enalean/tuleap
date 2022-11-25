@@ -40,6 +40,7 @@ class Docman_Link extends Docman_Document
     {
         return $this->url;
     }
+
     public function setUrl($url)
     {
         $this->url = $url;
@@ -55,6 +56,7 @@ class Docman_Link extends Docman_Document
         parent::initFromRow($row);
         $this->setUrl($row['link_url']);
     }
+
     public function toRow()
     {
         $row              = parent::toRow();

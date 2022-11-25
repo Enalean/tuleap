@@ -430,7 +430,6 @@ class PullRequestsResource extends AuthenticatedResource
         $this->sendAllowHeadersForCommits();
     }
 
-
     /**
      * @url OPTIONS {id}/labels
      */
@@ -1358,7 +1357,6 @@ class PullRequestsResource extends AuthenticatedResource
     {
         Header::allowOptionsGet();
     }
-
 
     private function sendAllowHeadersForLabels()
     {

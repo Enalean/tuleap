@@ -27,10 +27,12 @@ class Docman_MetadataHtmlEmbeddedFile extends \Docman_MetadataHtml
     {
         $this->content = $content;
     }
+
     public function getLabel($show_mandatory_information = \true)
     {
         return \dgettext('tuleap-docman', 'Content:');
     }
+
     public function getField()
     {
         $hp    = \Codendi_HTMLPurifier::instance();
@@ -38,6 +40,7 @@ class Docman_MetadataHtmlEmbeddedFile extends \Docman_MetadataHtml
         $html .= '<textarea id="embedded_content" name="content" cols="80" rows="20">' . $hp->purify($this->content) . '</textarea>';
         return $html;
     }
+
     public function &getValidator()
     {
         $validator = \null;

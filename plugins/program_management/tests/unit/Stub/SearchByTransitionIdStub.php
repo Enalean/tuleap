@@ -30,14 +30,17 @@ final class SearchByTransitionIdStub implements SearchByTransitionId
     private function __construct(private array $transitions)
     {
     }
+
     public static function withTransitions(array $transitions): self
     {
         return new self($transitions);
     }
+
     public static function withoutTransitions(): self
     {
         return new self([]);
     }
+
     /**
      * @return array{id: int}|null
      */

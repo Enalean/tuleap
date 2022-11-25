@@ -203,7 +203,6 @@ final class ConfigurationErrorsCollector
         $this->addTeamInErrorIfNeeded($tracker);
     }
 
-
     public function addMissingFieldArtifactLink(string $field_administration_url, TrackerReference $tracker, string $project_name): void
     {
         $this->missing_artifact_link[] = new MissingArtifactLinkField($field_administration_url, $tracker->getLabel(), $project_name);

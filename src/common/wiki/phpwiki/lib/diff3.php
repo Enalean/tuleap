@@ -75,7 +75,6 @@ class _Diff3_BlockBuilder
         $this->orig = $this->final1 = $this->final2 = [];
     }
 
-
     public function _append(&$array, $lines)
     {
         array_splice($array, sizeof($array), 0, $lines);
@@ -204,7 +203,6 @@ class Diff3
 
         return $blocks;
     }
-
 
     public function merged_output($label1 = false, $label2 = false)
     {

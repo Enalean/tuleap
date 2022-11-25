@@ -45,7 +45,6 @@ class JenkinsTuleapPluginHookPayload implements Payload
         $this->payload = $this->buildPayload($git_repository, $refname);
     }
 
-
     private function buildPayload(GitRepository $git_repository, string $refname): array
     {
         $branch_name = str_replace('refs/heads/', '', $refname);

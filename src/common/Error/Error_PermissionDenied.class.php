@@ -59,7 +59,6 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         return $link;
     }
 
-
     /**
      *
      * Returns the administrators' list of a given project
@@ -149,7 +148,6 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         $urlData      = \Tuleap\ServerHostname::HTTPSUrl() . $request->get('url_data');
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
     }
-
 
     /**
      * Send mail to administrators with the apropriate subject and body

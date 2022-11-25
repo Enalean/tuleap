@@ -36,38 +36,47 @@ class Docman_MetadataValue
         $this->itemId  = \null;
         $this->type    = \null;
     }
+
     public function setFieldId($v)
     {
         $this->fieldId = $v;
     }
+
     public function getFieldId()
     {
         return $this->fieldId;
     }
+
     public function setItemId($v)
     {
         $this->itemId = $v;
     }
+
     public function getItemId()
     {
         return $this->itemId;
     }
+
     public function setValue($v)
     {
         \trigger_error('Docman_MetadataValue::setValue is virtual but is not implemented.', \E_USER_ERROR);
     }
+
     public function getValue()
     {
         \trigger_error('Docman_MetadataValue::getValue is virtual but is not implemented.', \E_USER_ERROR);
     }
+
     public function setType($v)
     {
         $this->type = $v;
     }
+
     public function getType()
     {
         return $this->type;
     }
+
     public function initFromRow($row)
     {
         if (isset($row['field_id'])) {

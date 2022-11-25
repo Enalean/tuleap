@@ -116,11 +116,13 @@ class WikiGroup
     {
         return in_array($group, $this->specialGroups());
     }
+
     /** untranslated */
     public function _specialGroup($group)
     {
         return in_array($group, $this->_specialGroups());
     }
+
     /** translated */
     public function specialGroups()
     {
@@ -135,6 +137,7 @@ class WikiGroup
             GROUP_CREATOR,
         ];
     }
+
     /** untranslated */
     public function _specialGroups()
     {

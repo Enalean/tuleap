@@ -98,7 +98,6 @@ class _RecentChanges_Formatter
         return $this->authorHasPage() ? WikiURL($author) : false;
     }
 
-
     public function status($rev)
     {
         if ($rev->hasDefaultContents()) {
@@ -216,6 +215,7 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
             $WikiTheme->makeButton("RSS", $rss_url, 'rssicon')
         );
     }
+
     public function rss2_icon()
     {
         global $request, $WikiTheme;
@@ -334,7 +334,6 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
     {
         return HTML::p(false, $this->pre_description());
     }
-
 
     public function title()
     {
@@ -471,9 +470,11 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
     {
         //omit rssicon
     }
+
     public function rss2_icon()
     {
     }
+
     public function title()
     {
         //title click opens the normal RC or RE page in the main browser frame
@@ -482,6 +483,7 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
         $titlelink->setAttr('target', '_content');
         return HTML($this->logo(), $titlelink);
     }
+
     public function logo()
     {
         //logo click opens the HomePage in the main browser frame
@@ -516,6 +518,7 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
         $linkurl = new RawXml(str_replace('<img ', '<img style="height:2ex" ', asXML($linkurl)));
         return $linkurl;
     }
+
     public function historyLink($rev)
     {
         $linkurl = parent::historyLink($rev);
@@ -524,6 +527,7 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
         $linkurl = new RawXml(str_replace('<img ', '<img style="height:2ex" ', asXML($linkurl)));
         return $linkurl;
     }
+
     public function pageLink($rev, $link_text = false)
     {
         $linkurl = parent::pageLink($rev);
@@ -548,7 +552,6 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
             "]"
         );
     }
-
 
     public function format($changes)
     {
@@ -587,27 +590,35 @@ class _RecentChanges_BoxFormatter extends _RecentChanges_HtmlFormatter
     public function rss_icon()
     {
     }
+
     public function rss2_icon()
     {
     }
+
     public function title()
     {
     }
+
     public function authorLink($rev)
     {
     }
+
     public function diffLink($rev)
     {
     }
+
     public function historyLink($rev)
     {
     }
+
     public function summaryAsHTML($rev)
     {
     }
+
     public function description()
     {
     }
+
     public function format($changes)
     {
         include_once('lib/InlineParser.php');

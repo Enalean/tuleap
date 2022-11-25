@@ -73,10 +73,12 @@ class Response
     {
         $this->_feedback->display();
     }
+
     public function feedbackHasWarningsOrErrors()
     {
         return $this->_feedback->hasWarningsOrErrors();
     }
+
     public function feedbackHasErrors()
     {
         return $this->_feedback->hasErrors();

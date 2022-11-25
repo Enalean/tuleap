@@ -114,6 +114,7 @@ class ArtifactFactory
 
         return $artifacts;
     }
+
     /**
      *  getArtifacts - get an array of Artifact objects
      *
@@ -224,7 +225,6 @@ class ArtifactFactory
         }
         return $artifacts;
     }
-
 
     public function getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, &$total_artifacts)
     {

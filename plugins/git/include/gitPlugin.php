@@ -397,7 +397,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         // nothing to do for git
     }
 
-
     public function addMissingService(AddMissingService $event): void
     {
         // nothing to do for git
@@ -1180,6 +1179,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             }
         }
     }
+
     public function permission_get_object_type($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_type']) {
@@ -1188,6 +1188,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             }
         }
     }
+
     public function permission_get_object_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_name']) {
@@ -1556,7 +1557,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     {
         return UserManager::instance()->getUserById($params['user_id']);
     }
-
 
     private function getUGroupFromParams(array $params)
     {
@@ -2363,7 +2363,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $params['services'][] = dgettext('tuleap-git', 'Git');
         }
     }
-
 
     /**
      *

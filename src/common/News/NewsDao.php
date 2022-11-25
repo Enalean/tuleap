@@ -89,7 +89,6 @@ class NewsDao extends \Tuleap\DB\DataAccessObject
         return $this->getDB()->safeQuery($sql, array_merge($where_statement->values(), [$limit]));
     }
 
-
     /**
      * @psalm-return array{id:int, group_id:int, submitted_by:int, is_approved:int, date:int, forum_id:int, summary: string, details: string}|null
      */

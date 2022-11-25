@@ -143,6 +143,7 @@ class _PageList_Column_ListPages_count extends _PageList_Column
         $this->_direction = $backwards;
         return parent::__construct($field, $display, 'center');
     }
+
     public function _getValue($page, &$revision_handle)
     {
         $iter  = $page->getLinks($this->_direction);

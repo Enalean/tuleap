@@ -103,7 +103,6 @@ class GitRepositoryFactory
         return $repositories;
     }
 
-
     /**
      * Get a deleted repository by its id
      *

@@ -52,7 +52,6 @@ class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tr
         return $this->update($sql);
     }
 
-
     /**
      * @return bool true if success
      */

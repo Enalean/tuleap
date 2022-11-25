@@ -34,6 +34,7 @@ class b201905061046_change_timetracking_overview_report_name extends ForgeUpgrad
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
+
     public function up()
     {
         $sql = "RENAME TABLE plugin_timetracking_overview_report TO plugin_timetracking_overview_widget";

@@ -64,7 +64,6 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
         );
     }
 
-
     public function testVerifyRequestAnonymousWhenScriptException(): void
     {
         $this->currentUserIsNotLoggedIn();

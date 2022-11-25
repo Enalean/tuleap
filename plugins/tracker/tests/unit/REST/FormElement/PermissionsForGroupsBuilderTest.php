@@ -295,7 +295,6 @@ final class PermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->assertEmpty($representation->can_update);
     }
 
-
     public function testItReturnsACompleteDefinitionOfGroups(): void
     {
         $field_id     = 1234;

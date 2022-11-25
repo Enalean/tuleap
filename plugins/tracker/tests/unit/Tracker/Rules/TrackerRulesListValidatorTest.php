@@ -226,7 +226,6 @@ class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, [$tracker_rule_list]));
     }
 
-
     public function testValidateListRulesReturnErrorIfSourceValuesAreDifferent(): void
     {
         $GLOBALS['Response']->method('addFeedback')->with('error', 'aaaaa(Champ1) -> bbbbb(Champ2)');

@@ -78,7 +78,6 @@ final class IterationUpdate implements TimeboxMirroringOrder
         return new self($event->getIteration(), $iteration_tracker, $event->getChangeset(), $event->getUser());
     }
 
-
     public function getTimebox(): TimeboxIdentifier
     {
         return $this->iteration;

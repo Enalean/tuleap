@@ -89,10 +89,12 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
     {
         return "WikiFormRich";
     }
+
     public function getDescription()
     {
         return _("Provide generic WikiForm input buttons");
     }
+
     public function getVersion()
     {
         return preg_replace(
@@ -101,6 +103,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
             "\$Revision: 1.15 $"
         );
     }
+
     public function getDefaultArguments()
     {
         return ['action' => false,     // required argument

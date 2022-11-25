@@ -337,6 +337,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             }
         }
     }
+
     public function permission_get_object_type($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_type']) {
@@ -349,6 +350,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             }
         }
     }
+
     public function permission_get_object_name($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_name']) {
@@ -384,6 +386,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             $params['allowed'] = $this->_cached_permission_user_allowed_to_change;
         }
     }
+
     public function &getPluginInfo()
     {
         if (! is_a($this->pluginInfo, 'DocmanPluginInfo')) {
@@ -466,6 +469,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             }
         }
     }
+
     public function soap($arams)
     {
         require_once('soap.php');
@@ -538,7 +542,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
         $proxy->process($request, $user);
     }
-
 
     public function processSOAP($request)
     {
@@ -1281,6 +1284,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             $this->getItemFactory()
         );
     }
+
     private function getUGroupsRetriever()
     {
         return new UGroupsRetriever($this->getUGroupToNotifyDao(), $this->getItemFactory());
@@ -1542,6 +1546,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             EventManager::instance(),
         );
     }
+
     public function routeDownloadFolderAsZip(): DocumentFolderZipStreamer
     {
         return new DocumentFolderZipStreamer(

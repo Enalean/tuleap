@@ -52,7 +52,6 @@ class DocmanDataBuilder
         $this->addContent();
     }
 
-
     /**
      * To help understand tests structure, below a representation of folder hierarchy
      *

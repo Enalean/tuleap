@@ -187,7 +187,6 @@ class Tracker_Widget_MyArtifacts extends Widget
         return $html_my_artifacts;
     }
 
-
     public function _display_artifacts(MyArtifactsCollection $my_artifacts) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $hp = Codendi_HTMLPurifier::instance();

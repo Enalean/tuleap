@@ -81,7 +81,6 @@ class WikiService extends Controler
         }
     }
 
-
   /**
    * Check access permissions for wiki and wiki pages.
    *

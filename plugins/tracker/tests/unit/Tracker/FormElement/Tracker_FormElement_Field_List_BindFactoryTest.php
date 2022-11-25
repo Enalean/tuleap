@@ -161,7 +161,6 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
         );
     }
 
-
     public function testItImportsStaticUgroups(): void
     {
         $ugroup_manager = Mockery::mock(UGroupManager::class);

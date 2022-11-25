@@ -247,7 +247,6 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-
     /**
      * @depends testGetRootId
      */
@@ -413,7 +412,6 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
-
 
     /**
      * @depends testGetRootId

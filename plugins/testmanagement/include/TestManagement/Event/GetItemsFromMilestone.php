@@ -58,7 +58,6 @@ class GetItemsFromMilestone implements Dispatchable
         return $this->milestone_id;
     }
 
-
     public function getItemsIds(): array
     {
         return $this->items_ids;

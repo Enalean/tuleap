@@ -44,7 +44,6 @@ class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));
     }
 
-
     public function testBurndownFieldIsNotExportedInCSV(): void
     {
         $field = \Mockery::mock(\Tracker_FormElement_Field_Burndown::class);

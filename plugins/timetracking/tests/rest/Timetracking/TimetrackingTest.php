@@ -230,6 +230,7 @@ class TimetrackingTest extends TimetrackingBase
             $this->assertEquals($times[0]['id'], $times_ids[$offset]);
         }
     }
+
     public function testAddTimeSuccess()
     {
         $query    = json_encode([

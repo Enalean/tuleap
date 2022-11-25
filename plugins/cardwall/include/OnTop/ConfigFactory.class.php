@@ -123,6 +123,7 @@ class Cardwall_OnTop_ConfigFactory
         $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $mappingfield_dao, $mappingvalue_dao, $tracker_factory, $config->getMappings()));
         return $updater;
     }
+
     /**
      * @return Cardwall_OnTop_Dao
      */

@@ -32,6 +32,7 @@ final class VerifyUserCanSubmitStub implements VerifyUserCanSubmit
     private function __construct(private bool $can_submit)
     {
     }
+
     public static function userCanSubmit(): self
     {
         return new self(true);

@@ -30,18 +30,22 @@ class Docman_View_GetShowViewVisitor implements ItemVisitor
     {
         return (string) Docman_View_Browse::getViewForCurrentUser($item->getGroupId(), $params);
     }
+
     public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return 'Redirect';
     }
+
     public function visitLink(Docman_Link $item, $params = [])
     {
         return 'Redirect';
     }
+
     public function visitFile(Docman_File $item, $params = [])
     {
         return 'Download';
     }
+
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return 'Embedded';

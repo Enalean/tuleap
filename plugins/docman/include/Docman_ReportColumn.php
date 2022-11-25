@@ -31,14 +31,17 @@ class Docman_ReportColumn
         $this->md   = $md;
         $this->sort = \null;
     }
+
     public function setSort($s)
     {
         $this->sort = $s;
     }
+
     public function getSort()
     {
         return $this->sort;
     }
+
     public function getSortParameter()
     {
         $sortParam = \null;
@@ -47,6 +50,7 @@ class Docman_ReportColumn
         }
         return $sortParam;
     }
+
     public function getSortSelectorHtml()
     {
         $html = '';
@@ -57,6 +61,7 @@ class Docman_ReportColumn
         }
         return $html;
     }
+
     public function getTitle($view, $viewParams)
     {
         $sort = $this->getSort();
@@ -83,6 +88,7 @@ class Docman_ReportColumn
         $href = '<a href="' . $url . '" title="' . $title . '">' . $link . '</a>';
         return $href;
     }
+
     public function initFromRequest($request)
     {
         $sortparam = $this->getSortParameter();
@@ -90,6 +96,7 @@ class Docman_ReportColumn
             $this->setSort((int) $request->get($sortparam));
         }
     }
+
     public function _getMdHtml($item) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $mdHtml = \null;
@@ -99,6 +106,7 @@ class Docman_ReportColumn
         }
         return $mdHtml;
     }
+
     public function getTableBox($item, $view, $params)
     {
         $mdHtml = $this->_getMdHtml($item);
@@ -107,6 +115,7 @@ class Docman_ReportColumn
         }
         return '';
     }
+
     public function getJavascript($item, $view)
     {
         return '';

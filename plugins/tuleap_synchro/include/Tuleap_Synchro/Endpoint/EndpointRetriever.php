@@ -37,7 +37,6 @@ class EndpointRetriever
         $this->endpoint_builder = $endpoint_builder;
     }
 
-
     /**
      * @param $webhook
      * @return null|Endpoint

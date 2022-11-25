@@ -226,6 +226,7 @@ class Docman_VersionDao extends DataAccessObject
         );
         return $this->_createAndReturnId($sql);
     }
+
     public function createFromRow(array $row)
     {
         if (! isset($row['date']) || $row['date'] == '') {
@@ -251,6 +252,7 @@ class Docman_VersionDao extends DataAccessObject
             return false;
         }
     }
+
     public function _createAndReturnId($sql)
     {
         $inserted = $this->update($sql);

@@ -103,6 +103,7 @@ class Codendi_Session extends PHP_Session
         $session = &$this->getNamespace($namespace, true);
         $session = $value;
     }
+
     /**
      * Allows one get a subtree of the session by addressing it with dotted path my.sub.tree :)
      * @param string $namespace

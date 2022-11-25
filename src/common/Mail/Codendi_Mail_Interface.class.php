@@ -38,16 +38,25 @@ interface Codendi_Mail_Interface
     public function send();
 
     public function setCc($cc);
+
     public function setBcc($bcc);
+
     public function setFrom($email);
+
     public function setSubject($subject);
+
     public function setTo($to);
+
     public function setBody($body);
 
     public function getBcc();
+
     public function getCc();
+
     public function getBody();
+
     public function getTo();
+
     public function getSubject();
 
     public function addAdditionalHeader($name, $value);

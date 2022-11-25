@@ -60,7 +60,6 @@ class DynamicCredentialsTest extends \RestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-
     /**
      * @depends testPOSTNewAccountAndLogin
      * @depends testPOSTNewAccountAndLoginFailureWithExpiredAccount

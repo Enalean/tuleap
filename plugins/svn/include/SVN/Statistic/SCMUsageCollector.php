@@ -51,7 +51,6 @@ class SCMUsageCollector
         return $content;
     }
 
-
     private function collectAccessesByMonth(Statistics_Formatter $formatter)
     {
         $accesses_by_month = [];

@@ -45,7 +45,6 @@ final class ReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(1, $ref->getNumParam());
     }
 
-
     public function testReplace(): void
     {
         // Test with full list

@@ -71,7 +71,6 @@ final class ReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEmpty($reviewers);
     }
 
-
     public function testCanRetrieveReviewerList(): void
     {
         $user_row_147 = ['user_id' => 147];

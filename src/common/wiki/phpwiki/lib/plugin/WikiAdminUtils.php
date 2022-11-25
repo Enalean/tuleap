@@ -213,7 +213,6 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         }
     }
 
-
     public function _do_convert_cached_html(&$request, $args)
     {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");

@@ -349,6 +349,7 @@ class _PageList_Column_checkbox extends _PageList_Column
         ]);
         parent::__construct($field, $heading, 'center');
     }
+
     public function _getValue($page_handle, &$revision_handle, $pagelist = [])
     {
         $pagename = $page_handle->getName();
@@ -369,6 +370,7 @@ class _PageList_Column_checkbox extends _PageList_Column
             ]);
         }
     }
+
     public function format($pagelist, $page_handle, &$revision_handle)
     {
         return HTML::td(
@@ -725,7 +727,6 @@ class PageList
     {
         $this->_messageIfEmpty = $msg;
     }
-
 
     public function getTotal()
     {
@@ -1540,6 +1541,7 @@ function flipAll(formObj) {
         }
         $this->_stack->push($stack);
     }
+
     public function _restoreOptions()
     {
         assert($this->_stack);

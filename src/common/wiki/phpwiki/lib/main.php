@@ -291,6 +291,7 @@ class WikiRequest extends Request
             return $this->_prefs->get($key);
         }
     }
+
     public function & getDbh()
     {
         return $this->_dbi;

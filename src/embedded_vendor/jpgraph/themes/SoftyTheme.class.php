@@ -110,7 +110,6 @@ class SoftyTheme extends Theme
 //        $graph->img->SetAntiAliasing();
     }
 
-
     public function SetupPieGraph($graph)
     {
         // graph
@@ -123,7 +122,6 @@ class SoftyTheme extends Theme
 
         $graph->SetAntiAliasing();
     }
-
 
     public function PreStrokeApply($graph)
     {

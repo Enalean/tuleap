@@ -28,6 +28,7 @@ class Docman_FilterListAdvanced extends \Docman_FilterList
         parent::__construct($md);
         $this->setValue([]);
     }
+
     public function _urlValueIsValid($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($request->exist($this->md->getLabel())) {
@@ -46,6 +47,7 @@ class Docman_FilterListAdvanced extends \Docman_FilterList
         }
         return \false;
     }
+
     public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (\Docman_Filter::_urlMatchUpdate($request)) {
@@ -67,6 +69,7 @@ class Docman_FilterListAdvanced extends \Docman_FilterList
         }
         return \false;
     }
+
     public function _urlMatchAdd($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (parent::_urlMatchAdd($request)) {
@@ -75,10 +78,12 @@ class Docman_FilterListAdvanced extends \Docman_FilterList
         }
         return \false;
     }
+
     public function addValue($val)
     {
         $this->value[] = $val;
     }
+
     public function initFromRow($row)
     {
         $this->addValue($row['value_love']);

@@ -177,6 +177,7 @@ class Statistics_DiskUsageManager
         }
         return $res;
     }
+
     public function getLatestData()
     {
         $dao  = $this->_getDao();

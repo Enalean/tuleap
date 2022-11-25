@@ -75,14 +75,17 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
     {
         return $this->field_base;
     }
+
     public function setField_base($field_base)
     {
         return $this->field_base = $field_base;
     }
+
     public function getField_group()
     {
         return $this->field_group;
     }
+
     public function setField_group($field_group)
     {
         return $this->field_group = $field_group;
@@ -92,10 +95,12 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
     {
         return new GraphOnTrackersV5_Engine_Bar();
     }
+
     protected function getChartDataBuilder($artifacts)
     {
         return new GraphOnTrackersV5_Chart_BarDataBuilder($this, $artifacts);
     }
+
     public function getProperties()
     {
         return array_merge(

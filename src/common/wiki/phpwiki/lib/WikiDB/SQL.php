@@ -31,7 +31,6 @@ class WikiDB_SQL extends WikiDB
         parent::__construct($backend);
     }
 
-
     /**
      * Determine whether page exists (in non-default form).
      * @see WikiDB::isWikiPage for the slow generic version

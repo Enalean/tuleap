@@ -183,7 +183,6 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
         return $table;
     }
 
-
     public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
@@ -200,8 +199,6 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
         $this->sortCollectedPages($this->_list);
         return $this->formatTable($this->_list, $dbi);
     }
-
-
 
     public function _pushDebugHeadingTDinto(&$row)
     {

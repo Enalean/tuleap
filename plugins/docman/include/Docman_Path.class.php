@@ -26,6 +26,7 @@ class Docman_Path
     {
         $this->path = [];
     }
+
     public function get(&$item)
     {
         if (! isset($this->path[$item->getId()])) {

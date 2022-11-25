@@ -998,7 +998,6 @@ class FRSFileFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
 
-
     public function testCreateFileNotYetIncoming()
     {
         $p = \Mockery::spy(\Project::class);

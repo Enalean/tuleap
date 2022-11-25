@@ -35,6 +35,7 @@ class Docman_SqlFilter extends \Docman_MetadataSqlQueryChunk
         $this->filter = $filter;
         parent::__construct($filter->md);
     }
+
     public function getFrom()
     {
         $tables = [];
@@ -45,6 +46,7 @@ class Docman_SqlFilter extends \Docman_MetadataSqlQueryChunk
         }
         return $tables;
     }
+
     public function _getSpecificSearchChunk() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt = [];
@@ -54,6 +56,7 @@ class Docman_SqlFilter extends \Docman_MetadataSqlQueryChunk
         }
         return $stmt;
     }
+
     public function getWhere()
     {
         $where      = '';

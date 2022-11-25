@@ -46,6 +46,7 @@ final class ProjectBackgroundRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             self::assertFalse($backgrounds[$i]->is_selected);
         }
     }
+
     public function testGetBackgrounds(): void
     {
         $project = Mockery::mock(\Project::class);

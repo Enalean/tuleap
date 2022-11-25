@@ -81,6 +81,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         return $value->getLabel();
     }
+
     /**
      * @return string
      */

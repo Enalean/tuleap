@@ -47,6 +47,7 @@ class HTML_Element_Columns extends HTML_Element
         parent::__construct(null, null, null);
         $this->components = func_get_args();
     }
+
     public function render()
     {
         $html = '<table id="' . $this->id . '" ><tr>';

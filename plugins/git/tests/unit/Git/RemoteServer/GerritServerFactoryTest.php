@@ -222,7 +222,6 @@ class GerritServerFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(1, $servers);
     }
 
-
     public function testItSavesAnExistingServer(): void
     {
         $this->main_gerrit_server->setLogin('new_login');

@@ -246,7 +246,6 @@ class DocmanWikiResource extends AuthenticatedResource
         Header::allowOptionsPost();
     }
 
-
     /**
      * Update the wiki document metadata
      *

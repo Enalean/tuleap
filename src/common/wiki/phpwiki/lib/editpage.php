@@ -193,7 +193,6 @@ class PageEditor
         return true;
     }
 
-
     public function viewSource()
     {
         assert($this->isInitialEdit());
@@ -423,7 +422,6 @@ class PageEditor
             $message
         );
     }
-
 
     public function getTextArea()
     {

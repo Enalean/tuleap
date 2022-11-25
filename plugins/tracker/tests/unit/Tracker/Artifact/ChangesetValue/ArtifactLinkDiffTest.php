@@ -153,7 +153,6 @@ class ArtifactLinkDiffTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals("\n    * Added Fixed in: bug #122\n", $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
 
-
     public function testGetFormattedWithRemovedOneArtifactWithRandomType()
     {
         $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new TypePresenter('', '', '', true));

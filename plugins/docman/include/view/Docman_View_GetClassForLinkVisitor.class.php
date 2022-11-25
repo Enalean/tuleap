@@ -19,18 +19,22 @@ class Docman_View_GetClassForLinkVisitor /* implements Visitor*/
     {
         return '';
     }
+
     public function visitWiki(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitLink(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitEmbeddedFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);

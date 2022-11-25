@@ -224,7 +224,6 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         return $html;
     }
 
-
     public function _getReviewCurrentVersion()
     {
         $version     = null;

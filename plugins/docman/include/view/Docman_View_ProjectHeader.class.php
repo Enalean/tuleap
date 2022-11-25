@@ -82,7 +82,6 @@
         ];
     }
 
-
     /* protected */ public function _getJSDocmanParameters($params)
     {
         return [];

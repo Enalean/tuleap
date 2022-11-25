@@ -27,6 +27,7 @@ class ArtifactGroupListDao extends DataAccessObject
         parent::__construct($da);
         $this->table_name = 'artifact_group_list';
     }
+
     public function updateArtifactGroupList($artifact_id, $group_id, $name, $description, $itemname, $allow_copy, $submit_instructions, $browse_instructions, $instantiate_for_new_projects)
     {
         $artifact_id                  = $this->da->quoteSmart($artifact_id);

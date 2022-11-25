@@ -327,7 +327,6 @@ abstract class SystemEvent
         return 0;
     }
 
-
     /**
      * Process stored event
      * Virtual method redeclared in children
@@ -431,6 +430,7 @@ abstract class SystemEvent
 
         return $user;
     }
+
     /**
      * Wrapper for event manager
      *

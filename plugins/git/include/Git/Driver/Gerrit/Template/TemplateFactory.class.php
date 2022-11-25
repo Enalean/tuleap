@@ -52,7 +52,6 @@ class Git_Driver_Gerrit_Template_TemplateFactory
         return $templates;
     }
 
-
     /**
      * Get All templates for a repository
      *

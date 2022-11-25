@@ -31,6 +31,8 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 interface TrackerReference extends TrackerIdentifier
 {
     public function getLabel(): string;
+
     public function getProjectId(): int;
+
     public function getProjectLabel(): string;
 }

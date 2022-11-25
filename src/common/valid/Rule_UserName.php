@@ -45,6 +45,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     /**
      * Test is the value is Codendi username
      *
@@ -61,6 +62,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     /**
      * Test if the value is a project name
      *
@@ -77,6 +79,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     /**
      * Test if the value contains spaces
      *
@@ -101,6 +104,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \true;
     }
+
     /**
      * Test if the name contains illegal chars
      *
@@ -116,6 +120,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     /**
      * Test if the name is already reserved
      *
@@ -133,6 +138,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     /**
      * Test if the name begins with a reserved prefix
      *
@@ -147,6 +153,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     /**
      * Test if the name corresponds to a CVS user account
      *
@@ -162,6 +169,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     /**
      * Test minimal length of name
      *
@@ -177,6 +185,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     /**
      * Test maximal length of name
      *
@@ -193,6 +202,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     /**
      * Prevent from renaming two users on the same name
      * before that the rename is performed by the system
@@ -208,6 +218,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \true;
     }
+
     /**
      * Test if name is valid
      *
@@ -235,6 +246,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         return $this->noSpaces($val) && $is_valid && ! $this->lessThanMin($val) && ! $this->greaterThanMax($val) && ! $this->containsIllegalChars($val);
     }
+
     /**
      * Error message
      *
@@ -244,6 +256,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return $this->error;
     }
+
     /**
      * Returns error message when the username already exists
      *
@@ -257,6 +270,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return $GLOBALS['Language']->getText('rule_user_name', 'error_exists');
     }
+
     /**
      * Returns error message when name contains a space
      *
@@ -270,6 +284,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return $GLOBALS['Language']->getText('include_account', 'login_err');
     }
+
     /**
      * Wrapper
      *
@@ -279,6 +294,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return \ProjectManager::instance();
     }
+
     /**
      * Wrapper
      *
@@ -288,6 +304,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return \UserManager::instance();
     }
+
     /**
      * Wrapper
      *
@@ -297,6 +314,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return \Backend::instance($type);
     }
+
     /**
      * Wrapper
      *

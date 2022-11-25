@@ -27,6 +27,7 @@ use Tuleap\Cryptography\ConcealedString;
 interface SecretValidator
 {
     public static function buildSelf(): self;
+
     /**
      * @throws InvalidConfigKeyValueException
      */

@@ -53,6 +53,7 @@ class Docman_MetadataHtmlFactory
         }
         return $mdh;
     }
+
     public function buildFieldArray($mdIter, $mdla, $whitelist, $formName, $themePath)
     {
         $fields     = [];

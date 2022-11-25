@@ -797,7 +797,6 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-
     /**
      * @depends testGetRootId
      */

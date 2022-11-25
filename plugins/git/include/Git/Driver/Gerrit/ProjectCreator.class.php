@@ -188,7 +188,6 @@ class Git_Driver_Gerrit_ProjectCreator
         $this->pushToServer();
     }
 
-
     public function checkTemplateIsAvailableForProject($template_id, GitRepository $repository)
     {
         $available_templates = $this->template_factory->getTemplatesAvailableForRepository($repository);
@@ -432,6 +431,7 @@ class Git_Driver_Gerrit_ProjectCreator
         $this->git_exec->setWorkTree($this->dir);
         $this->git_exec->configFile($this->dir . '/project.config', "--add access.$section/*.$permission '$value'");
     }
+
     private function pushToServer()
     {
         $this->git_exec->setWorkTree($this->dir);

@@ -45,6 +45,7 @@ class Docman_MetadataListOfValuesElement
     {
         $this->id = $v;
     }
+
     public function getId()
     {
         return $this->id;
@@ -54,6 +55,7 @@ class Docman_MetadataListOfValuesElement
     {
         $this->name = $v;
     }
+
     public function getName()
     {
         return $this->name;
@@ -63,6 +65,7 @@ class Docman_MetadataListOfValuesElement
     {
         $this->description = $v;
     }
+
     public function getDescription()
     {
         return $this->description;
@@ -72,6 +75,7 @@ class Docman_MetadataListOfValuesElement
     {
         $this->rank = $v;
     }
+
     public function getRank()
     {
         return $this->rank;
@@ -81,6 +85,7 @@ class Docman_MetadataListOfValuesElement
     {
         $this->status = $v;
     }
+
     public function getStatus()
     {
         return $this->status;

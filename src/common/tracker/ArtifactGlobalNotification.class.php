@@ -28,22 +28,27 @@ class ArtifactGlobalNotification
     {
         $this->data = $data;
     }
+
     public function getId()
     {
         return $this->data['id'];
     }
+
     public function getTrackerId()
     {
         return $this->data['tracker_id'];
     }
+
     public function getAddresses()
     {
         return $this->data['addresses'];
     }
+
     public function isAllUpdates()
     {
         return $this->data['all_updates'];
     }
+
     public function isCheckPermissions()
     {
         return $this->data['check_permissions'];

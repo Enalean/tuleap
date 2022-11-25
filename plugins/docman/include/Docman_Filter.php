@@ -30,17 +30,21 @@ class Docman_Filter
         $this->value = \null;
         $this->md    = $md;
     }
+
     public function setValue($v)
     {
         $this->value = $v;
     }
+
     public function getValue()
     {
         return $this->value;
     }
+
     public function initFromRow($row)
     {
     }
+
     public function getUrlParameters()
     {
         $param = [];
@@ -49,6 +53,7 @@ class Docman_Filter
         //}
         return $param;
     }
+
     public function _urlMatchDelete($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($request->exist('del_filter') && $this->md->getLabel() == $request->get('del_filter')) {
@@ -56,6 +61,7 @@ class Docman_Filter
         }
         return \false;
     }
+
     public function _urlValueIsValid($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($request->exist($this->md->getLabel())) {
@@ -63,6 +69,7 @@ class Docman_Filter
         }
         return \false;
     }
+
     public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if ($this->_urlValueIsValid($request)) {
@@ -79,6 +86,7 @@ class Docman_Filter
         }
         return \false;
     }
+
     public function initOnUrlMatch($request)
     {
         if ($this->md !== \null) {

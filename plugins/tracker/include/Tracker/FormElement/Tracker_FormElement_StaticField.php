@@ -106,6 +106,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
     {
         return $this->fetchReadOnly();
     }
+
     /**
      * Say if the field is updateable
      *

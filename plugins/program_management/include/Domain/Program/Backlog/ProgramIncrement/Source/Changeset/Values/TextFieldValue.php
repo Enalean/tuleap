@@ -29,5 +29,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 interface TextFieldValue
 {
     public function getValue(): string;
+
     public function getFormat(): string;
 }

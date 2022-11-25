@@ -44,10 +44,12 @@ class hudsonViews extends Views
         $GLOBALS['HTML']->header(['title' => $this->_getTitle(), 'group' => $request->get('group_id'), 'toptab' => 'hudson', [], 'body_class' => ['continuous-integration-body']]);
         echo '<h2 class="almost-tlp-title project-header-title">' . $this->_getTitle() . '</h2>';
     }
+
     public function _getTitle()
     {
         return dgettext('tuleap-hudson', 'Continuous Integration');
     }
+
     public function _getHelp($section = '', $questionmark = false)
     {
         if (trim($section) !== '' && $section[0] !== '#') {
@@ -60,6 +62,7 @@ class hudsonViews extends Views
         }
         return help_button('ci.html' . $section, $help_label);
     }
+
     public function footer()
     {
         $GLOBALS['HTML']->footer([]);

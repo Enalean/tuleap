@@ -36,35 +36,43 @@ class Docman_FilterDateAdvanced extends \Docman_FilterDate
         $this->valueStart     = '';
         $this->valueEnd       = '';
     }
+
     public function setValueStart($v)
     {
         $this->valueStart = $v;
     }
+
     public function getValueStart()
     {
         return $this->valueStart;
     }
+
     public function setValueEnd($v)
     {
         $this->valueEnd = $v;
     }
+
     public function getValueEnd()
     {
         return $this->valueEnd;
     }
+
     public function initFromRow($row)
     {
         $this->setValueStart($row['value_date1']);
         $this->setValueEnd($row['value_date2']);
     }
+
     public function getFieldStartValueName()
     {
         return $this->fieldNameStart;
     }
+
     public function getFieldEndValueName()
     {
         return $this->fieldNameEnd;
     }
+
     public function getUrlParameters()
     {
         $param                        = [];
@@ -72,6 +80,7 @@ class Docman_FilterDateAdvanced extends \Docman_FilterDate
         $param[$this->fieldNameEnd]   = $this->valueEnd;
         return $param;
     }
+
     public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $fieldExist = \false;

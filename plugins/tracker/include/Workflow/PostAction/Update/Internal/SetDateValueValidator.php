@@ -66,7 +66,6 @@ class SetDateValueValidator
         }
     }
 
-
     /**
      * @throws InvalidPostActionException
      */

@@ -214,7 +214,6 @@ class ArtifactFieldSetFactory
         return $used_fieldsets;
     }
 
-
     /**
      * getAllFieldSetsContainingUnusedFields - returns an array of fieldsets that contain unused fields in the tracker
      * unused for a field means that the 'use this field' checkbox has not been checked,
@@ -339,7 +338,6 @@ class ArtifactFieldSetFactory
         }
         return true;
     }
-
 
     /**
      *

@@ -27,6 +27,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
     {
         return $params['parent']->getId();
     }
+
     public function _buildMessage($event, $params, $user)
     {
         switch ($event) {
@@ -47,6 +48,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
                 break;
         }
     }
+
     public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';

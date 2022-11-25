@@ -41,6 +41,7 @@ class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
         $this->edits = $eng->diff($from_lines, $to_lines);
         //$this->_check($from_lines, $to_lines);
     }
+
     /**
      * Compute reversed Diff.
      *
@@ -60,6 +61,7 @@ class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
         }
         return $rev;
     }
+
     /**
      * Check for empty diff.
      *
@@ -74,6 +76,7 @@ class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
         }
         return \true;
     }
+
     /**
      * Compute the length of the Longest Common Subsequence (LCS).
      *
@@ -91,6 +94,7 @@ class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
         }
         return $lcs;
     }
+
     /**
      * Get the original set of lines.
      *
@@ -109,6 +113,7 @@ class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
         }
         return $lines;
     }
+
     /**
      * Get the fin set of lines.
      *
@@ -127,6 +132,7 @@ class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
         }
         return $lines;
     }
+
     /**
      * Check a Diff for validity.
      *

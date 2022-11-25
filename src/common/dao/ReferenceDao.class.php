@@ -197,7 +197,6 @@ class ReferenceDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-
     /**
     * Searches Reference by scope and service short name
     * Don't return reference 100 (empty reference)
@@ -213,7 +212,6 @@ class ReferenceDao extends DataAccessObject
         );
         return $this->retrieve($sql);
     }
-
 
     /**
     * Searches Reference by keyword and group_id
@@ -231,7 +229,6 @@ class ReferenceDao extends DataAccessObject
         );
         return $this->retrieve($sql);
     }
-
 
     /**
     * Searches Reference by keyword and group_id
@@ -259,8 +256,6 @@ class ReferenceDao extends DataAccessObject
         );
         return $this->retrieve($sql);
     }
-
-
 
     /**
     * create a row in the table reference

@@ -99,6 +99,7 @@ class Docman_ItemFactory
     {
         $this->groupId = $id;
     }
+
     public function getGroupId()
     {
         return $this->groupId;
@@ -1234,7 +1235,6 @@ class Docman_ItemFactory
         return $v->getItemMapping();
     }
 
-
     /**
      * @return Docman_Item|null
      */
@@ -1247,6 +1247,7 @@ class Docman_ItemFactory
         }
         return $this->rootItems[$group_id];
     }
+
     public function isRoot(Docman_Item $item)
     {
         $root = $this->getRoot($item->getGroupId());
@@ -1255,6 +1256,7 @@ class Docman_ItemFactory
         }
         return $item->getId() == $root->getId();
     }
+
     public function createRoot($group_id, $title)
     {
         $dao  = $this->_getItemDao();

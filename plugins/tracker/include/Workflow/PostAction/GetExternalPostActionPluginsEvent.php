@@ -49,6 +49,7 @@ class GetExternalPostActionPluginsEvent implements Dispatchable
     {
         $this->service_name_used[] = $service_name;
     }
+
     /**
      * @return string[]
      */

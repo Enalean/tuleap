@@ -185,7 +185,6 @@ class ArtifactTypeFactory
           return $myArtifactTypes;
     }
 
-
     /**
      *    getPendingArtifactTypes - return an array of ArtifactType objects with 'D' status
      *
@@ -378,7 +377,6 @@ class ArtifactTypeFactory
 
         return true;
     }
-
 
     /**
      *    Retrieve the artifacts where user $user_id is a submitter or assignee

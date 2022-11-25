@@ -126,7 +126,6 @@ class RssWriter extends XmlElement
         $this->_finished = true;
     }
 
-
     /**
      * Write output to HTTP client.
      */
@@ -137,7 +136,6 @@ class RssWriter extends XmlElement
         printf("<!-- generator=\"PhpWiki-%s\" -->\n", PHPWIKI_VERSION);
         $this->printXML();
     }
-
 
     /**
      * Create a new RDF <em>typedNode</em>.

@@ -135,10 +135,15 @@ abstract class BaseLayout extends Response
     }
 
     abstract public function header(HeaderConfiguration|array $params): void;
+
     abstract protected function hasHeaderBeenWritten(): bool;
+
     abstract public function footer(FooterConfiguration|array $params): void;
+
     abstract public function displayStaticWidget(Widget_Static $widget);
+
     abstract public function includeCalendarScripts();
+
     abstract protected function getUser();
 
     public function addCssAsset(CssAssetGeneric $asset): void

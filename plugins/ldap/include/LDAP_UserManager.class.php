@@ -494,7 +494,6 @@ class LDAP_UserManager
         }
     }
 
-
     /**
      * Return true if user is deleted from ldap server
      *

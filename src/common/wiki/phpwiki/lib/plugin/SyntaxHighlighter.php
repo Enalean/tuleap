@@ -71,14 +71,17 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
     {
         return _("SyntaxHighlighter");
     }
+
     public function getDescription()
     {
         return _("Source code syntax highlighter (via http://www.andre-simon.de)");
     }
+
     public function managesValidators()
     {
         return true;
     }
+
     public function getVersion()
     {
         return preg_replace(
@@ -87,6 +90,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
             "\$Revision: 1.7 $"
         );
     }
+
     public function getDefaultArguments()
     {
         return [
@@ -97,6 +101,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
             'wrap'   => 0,
         ];
     }
+
     public function handle_plugin_args_cruft($argstr, $args)
     {
         $this->source = $argstr;

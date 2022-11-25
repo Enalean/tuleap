@@ -30,10 +30,12 @@ class Rule_RealName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \true;
     }
+
     private function containsBackslashCharacter($string)
     {
         return \strpos($string, "\\") !== \false;
     }
+
     private function containsNonPrintingCharacter($string)
     {
         for ($i = 0; $i < \strlen($string); $i++) {
@@ -43,6 +45,7 @@ class Rule_RealName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
         return \false;
     }
+
     private function isNonPrintingCharacter($char)
     {
         return \hexdec(\bin2hex($char)) < 32;

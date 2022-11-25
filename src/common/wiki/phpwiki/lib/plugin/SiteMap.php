@@ -165,7 +165,6 @@ class WikiPlugin_SiteMap extends WikiPlugin
         return $pagearr;
     }
 
-
     public function run($dbi, $argstr, &$request, $basepage)
     {
         include_once('lib/BlockParser.php');

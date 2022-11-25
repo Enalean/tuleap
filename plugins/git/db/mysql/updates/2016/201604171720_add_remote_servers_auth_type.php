@@ -40,7 +40,6 @@ EOT;
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-
     /**
      * Creation of the table
      *

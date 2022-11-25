@@ -39,6 +39,7 @@ final class RootPlanningEditionEventProxy implements RootPlanningEditionEvent
     {
         return new self($event, ProjectProxy::buildFromProject($event->getProject()));
     }
+
     public function getProjectIdentifier(): ProjectIdentifier
     {
         return $this->project_identifier;

@@ -95,7 +95,6 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
         return '<div class="diff">' . $formated_diff . '</div>';
     }
 
-
     public function nodiff($format = 'html')
     {
     }

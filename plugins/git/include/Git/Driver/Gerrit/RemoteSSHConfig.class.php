@@ -24,7 +24,10 @@
 interface Git_Driver_Gerrit_RemoteSSHConfig
 {
     public function getSSHPort();
+
     public function getHost();
+
     public function getLogin();
+
     public function getIdentityFile();
 }

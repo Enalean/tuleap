@@ -30,10 +30,12 @@ class Docman_FilterList extends \Docman_Filter
         parent::__construct($md);
         $this->setValue(0);
     }
+
     public function initFromRow($row)
     {
         $this->setValue($row['value_love']);
     }
+
     /**
      * @todo: should valid an int
      */
@@ -44,6 +46,7 @@ class Docman_FilterList extends \Docman_Filter
         }
         return \false;
     }
+
     public function _urlValueIsValid($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (parent::_urlValueIsValid($request)) {
@@ -53,6 +56,7 @@ class Docman_FilterList extends \Docman_Filter
         }
         return \false;
     }
+
     public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (parent::_urlMatchUpdate($request)) {

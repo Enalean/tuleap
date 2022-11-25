@@ -55,27 +55,31 @@ class MailingList
         return $this->_ugroupdao;
     }
 
-
     public function getId()
     {
         return $this->id;
     }
+
     public function getListName()
     {
         return $this->list_name;
     }
+
     public function getListPassword()
     {
         return $this->password;
     }
+
     public function getListAdmin()
     {
         return $this->list_admin;
     }
+
     public function getDescription()
     {
         return $this->description;
     }
+
     public function getIsPublic()
     {
         return $this->is_public;

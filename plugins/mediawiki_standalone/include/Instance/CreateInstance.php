@@ -236,7 +236,6 @@ final class CreateInstance
             );
     }
 
-
     private function updateInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
         $request = $request_factory->createRequest(

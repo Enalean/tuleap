@@ -47,7 +47,6 @@ class Cardwall_MappingCollection implements IteratorAggregate
         $this->mappings_by_field_id[$mapping->field_id][] = $mapping;
     }
 
-
     /**
      * Returns the list of static field values of the swimline
      *

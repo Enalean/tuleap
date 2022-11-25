@@ -162,6 +162,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         }
         return $this->has_children;
     }
+
     /**
      * @return Artifact
      */

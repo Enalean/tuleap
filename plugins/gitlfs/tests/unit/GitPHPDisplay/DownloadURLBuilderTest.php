@@ -73,8 +73,6 @@ EOS;
         $this->assertSame('', $this->download_url_builder->buildDownloadURL($this->repository, $this->user, $file));
     }
 
-
-
     public function testItReturnsEmptyUrlIfUserCannotReadTheRepository()
     {
         $file = <<<EOS

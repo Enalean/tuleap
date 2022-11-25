@@ -771,6 +771,7 @@ class KanbanResource extends AuthenticatedResource
 
         return $backlog_item_ids;
     }
+
     /**
      * @url OPTIONS {id}/backlog
      *

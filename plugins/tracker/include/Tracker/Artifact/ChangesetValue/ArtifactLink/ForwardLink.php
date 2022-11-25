@@ -27,5 +27,6 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 interface ForwardLink
 {
     public function getTargetArtifactId(): int;
+
     public function getType(): ?string;
 }

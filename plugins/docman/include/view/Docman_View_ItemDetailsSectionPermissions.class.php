@@ -29,6 +29,7 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
     {
         parent::__construct($item, $url, 'permissions', dgettext('tuleap-docman', 'Permissions'));
     }
+
     public function getContent($params = [])
     {
         $content  = '';

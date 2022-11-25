@@ -24,6 +24,7 @@ class TrackerDateReminder_ArtifactFieldFactory
     public function __construct()
     {
     }
+
     /**
      * Return all date fields used
      *

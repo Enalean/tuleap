@@ -27,6 +27,7 @@ class Docman_SqlFilterGlobalText extends \Docman_SqlFilterText
     {
         parent::__construct($filter);
     }
+
     public function getFrom()
     {
         $tables = [];
@@ -37,6 +38,7 @@ class Docman_SqlFilterGlobalText extends \Docman_SqlFilterText
         }
         return $tables;
     }
+
     public function _getSpecificSearchChunk() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt = [];

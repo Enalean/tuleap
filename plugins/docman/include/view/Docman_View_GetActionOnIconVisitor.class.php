@@ -19,18 +19,22 @@ class Docman_View_GetActionOnIconVisitor /* implements Visitor*/
     {
         return 'show';
     }
+
     public function visitWiki(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitLink(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitEmbeddedFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);

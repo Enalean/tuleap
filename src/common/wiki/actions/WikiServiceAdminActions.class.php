@@ -68,7 +68,6 @@ class WikiServiceAdminActions extends WikiActions
         return true;
     }
 
-
     public function create()
     {
         $page = $_POST['page'];
@@ -214,7 +213,6 @@ class WikiServiceAdminActions extends WikiActions
             ]
         );
     }
-
 
     /**
      * Wrapper to set permissions on wiki attachments.

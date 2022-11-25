@@ -217,7 +217,6 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         return true;
     }
 
-
     /**
      * Validate a value
      *

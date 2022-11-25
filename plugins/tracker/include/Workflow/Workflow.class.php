@@ -319,7 +319,6 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $fields_data = $this->before_event->getFieldsData();
     }
 
-
     /**
      * Execute actions after transition happens (if there is one)
      *

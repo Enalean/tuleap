@@ -45,10 +45,12 @@
     {
         return $this->id;
     }
+
     public function getTitle()
     {
         return $this->title;
     }
+
     public function getContent($params = [])
     {
         return '';

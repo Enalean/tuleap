@@ -87,7 +87,6 @@ class NodeResource
         }
     }
 
-
     private function sendAllowHeaders(Artifact $artifact): void
     {
         $date = $artifact->getLastUpdateDate();

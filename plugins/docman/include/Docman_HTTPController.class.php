@@ -34,7 +34,6 @@ class Docman_HTTPController extends Docman_Controller
         parent::__construct($plugin, $pluginPath, $themePath, $request);
     }
 
-
     /* protected */ public function _includeView()
     {
         $className = 'Docman_View_' . $this->view;
@@ -44,10 +43,12 @@ class Docman_HTTPController extends Docman_Controller
         }
         return false;
     }
+
     /* protected */ public function _set_deleteView_errorPerms()
     {
         $this->view = 'Details';
     }
+
     /* protected */ public function _set_redirectView()
     {
         if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
@@ -55,6 +56,7 @@ class Docman_HTTPController extends Docman_Controller
         }
         $this->view = 'RedirectAfterCrud';
     }
+
     /* protected */ public function _setView($view)
     {
         if ($view == 'getRootFolder') {
@@ -64,14 +66,17 @@ class Docman_HTTPController extends Docman_Controller
             $this->view = $view;
         }
     }
+
     /* protected */ public function _set_moveView_errorPerms()
     {
         $this->view = 'Details';
     }
+
     /* protected */ public function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view)
     {
            $this->view = $item->accept($get_show_view, $this->request->get('report'));
     }
+
     /* protected */ public function _set_createItemView_afterCreate($view)
     {
         if ($view == 'createFolder') {
@@ -80,6 +85,7 @@ class Docman_HTTPController extends Docman_Controller
             $this->view = 'NewDocument';
         }
     }
+
     /* protected */ public function _set_doesnot_belong_to_project_error($item, $group)
     {
         $this->feedback->log('warning', sprintf(dgettext('tuleap-docman', 'The item %1$s doesn\'t exist or doesn\'t belong to project %2$s.'), $item->getId(), $group->getPublicName()));

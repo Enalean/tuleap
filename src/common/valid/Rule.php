@@ -33,6 +33,7 @@ abstract class Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public function __construct()
     {
     }
+
     /**
      * Check if $val is a valid not.
      *
@@ -40,6 +41,7 @@ abstract class Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @return bool
      */
     abstract public function isValid($val);
+
     /**
      * Default error message if rule is not apply on value.
      *

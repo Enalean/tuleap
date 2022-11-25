@@ -801,7 +801,6 @@ class ProjectTest extends ProjectBase
         self::assertEquals([["name" => "Test Rest", "value" => "Admin test"]], $json_project['additional_fields']);
     }
 
-
     public function testGETbyIdForDelegatedRestProjectManager()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->request_factory->createRequest('GET', 'projects/' . $this->project_deleted_id));
@@ -906,7 +905,6 @@ class ProjectTest extends ProjectBase
 
         self::assertEquals(200, $response->getStatusCode());
     }
-
 
     public function testOPTIONSmilestones()
     {

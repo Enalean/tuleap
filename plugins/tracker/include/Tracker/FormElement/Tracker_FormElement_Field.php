@@ -54,7 +54,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     abstract public function fetchCriteriaValue($criteria);
 
-
     /**
      * Display the field as a Changeset value.
      * Used in CSV data export.
@@ -400,6 +399,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     {
         return false;
     }
+
     public function getQueryFromAggregate()
     {
         return $this->getQueryFrom();
@@ -544,8 +544,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
         return $output;
     }
-
-
 
     /**
      * Fetch the element for the submit new artifact form
@@ -1250,7 +1248,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     {
         return new Tracker_Artifact_Changeset_ValueDao();
     }
-
 
     protected function getPreviousChangesetValue($old_changeset)
     {

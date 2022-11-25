@@ -69,7 +69,6 @@ class FilesDownloadLimitsAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCa
         );
     }
 
-
     public function testItRendersThePage(): void
     {
         $user = Mockery::mock(PFUser::class);

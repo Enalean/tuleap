@@ -35,6 +35,7 @@ final class SearchIterationsStub implements SearchIterations
     {
         return $this->iterations;
     }
+
     /**
      * @param $iterations array{id: int, changeset_id: int}[]
      */

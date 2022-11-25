@@ -255,7 +255,6 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return $output;
     }
 
-
     private function textboxlist($keyword, $limit = 10): array
     {
         $json_values     = [];

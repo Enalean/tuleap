@@ -237,7 +237,6 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($author, $this->git_exec->getAuthorInformation($commit_sha1)['email']);
     }
 
-
     public function testRetrieveAuthorName(): void
     {
         $author = "test";

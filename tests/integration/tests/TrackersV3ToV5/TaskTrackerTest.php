@@ -316,7 +316,6 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(2, $this->report_factory->getReportsByTrackerId(self::$task_tracker_id, null));
     }
 
-
     public function testItHasAReportNamedBugs()
     {
         $this->assertEquals($this->tasks_report->name, 'Tasks');

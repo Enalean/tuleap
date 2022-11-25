@@ -728,6 +728,7 @@ class PHPWikiTheme
     {
         $this->_imageAlt[$alias] = $alt_text;
     }
+
     public function getImageAlt($alias)
     {
         return $this->_imageAlt[$alias];
@@ -798,6 +799,7 @@ class PHPWikiTheme
     {
         return $this->_linkIcon;
     }
+
     public function setLinkIconAttr($where)
     {
         $this->_linkIcon = $where;
@@ -1266,6 +1268,7 @@ class PHPWikiTheme
     {
         array_push($this->_MoreHeaders, $element);
     }
+
     public function getMoreHeaders()
     {
         if (empty($this->_MoreHeaders)) {
@@ -1536,6 +1539,7 @@ class SidebarBox
         $this->title = $title;
         $this->body  = $body;
     }
+
     public function format()
     {
         return WikiPlugin::makeBox($this->title, $this->body);

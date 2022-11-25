@@ -74,10 +74,12 @@ class UserHelper implements BuildDisplayName
     {
         return $this->_getUserManager()->getCurrentUser()->getPreference("username_display");
     }
+
     public function _getUserManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return UserManager::instance();
     }
+
     /**
      * getDisplayName
      *

@@ -732,7 +732,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $status_value->getLabel();
     }
 
-
     /**
      * @param String $status
      */
@@ -2013,7 +2012,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         return $this->hierarchy_factory;
     }
-
 
     public function setHierarchyFactory($hierarchy = null)
     {

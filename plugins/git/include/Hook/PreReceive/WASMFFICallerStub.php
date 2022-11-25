@@ -29,5 +29,6 @@ abstract class WASMFFICallerStub
     }
 
     abstract public function analyze(string $json): \FFI\CData;
+
     abstract public function freeAnalyzeOutput(\FFI\CData $json_ptr): void;
 }

@@ -2286,7 +2286,6 @@ class soap_transport_http extends nusoap_base
         return $respdata;
     }
 
-
     /**
     * send the SOAP message via HTTPS 1.0 using CURL
     *

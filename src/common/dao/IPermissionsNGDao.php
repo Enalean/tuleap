@@ -26,8 +26,12 @@
 interface IPermissionsNGDao
 {
     public function searchDefaults($permission_type, $with_name = true);
+
     public function searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, $with_name = true);
+
     public function clearPermission($permission_type, $object_id);
+
     public function addPermission($permission_type, $object_id, $ugroup_id);
+
     public function addHistory($project_id, $permission_type, $object_id);
 }

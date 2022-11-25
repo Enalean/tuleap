@@ -103,10 +103,12 @@ class Reference
     {
         return $this->id;
     }
+
     public function getKeyword()
     {
         return $this->keyword;
     }
+
     public function getDescription()
     {
         return $this->description;
@@ -132,26 +134,32 @@ class Reference
     {
         return $this->link;
     }
+
     public function getScope()
     {
         return $this->scope;
     }
+
     public function getServiceShortName()
     {
         return $this->service_short_name;
     }
+
     public function getNature()
     {
         return $this->nature;
     }
+
     public function isActive()
     {
         return $this->is_active;
     }
+
     public function getGroupId()
     {
         return $this->group_id;
     }
+
     /**
      * @return bool true if this is a system reference (false if project reference)
      */
@@ -159,8 +167,6 @@ class Reference
     {
         return ($this->scope == 'S');
     }
-
-
 
     /**
      * @see computeNumParam()

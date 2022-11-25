@@ -147,7 +147,6 @@ class DbaDatabase
         }
     }
 
-
     public function firstkey()
     {
         return dba_firstkey($this->_dbh);

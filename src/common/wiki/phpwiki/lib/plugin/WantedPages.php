@@ -39,10 +39,12 @@ class WikiPlugin_WantedPages extends WikiPlugin
     {
         return _("WantedPages");
     }
+
     public function getDescription()
     {
         return _("Lists referenced page names which do not exist yet.");
     }
+
     public function getVersion()
     {
         return preg_replace(
@@ -51,6 +53,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
             "\$Revision: 1.16 $"
         );
     }
+
     public function getDefaultArguments()
     {
         return array_merge(
@@ -148,6 +151,7 @@ class _PageList_Column_WantedPages_wanted extends _PageList_Column
         $this->parentobj = $params[3];
         parent::__construct($params[0], $params[1], $params[2]);
     }
+
     public function _getValue($page, &$revision_handle)
     {
         $html = false;

@@ -71,7 +71,6 @@ class ParserCoreAndPluginTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-
     public function testItReturnsLastAccessTimeStampForUsers()
     {
         $parser    = new Parser();

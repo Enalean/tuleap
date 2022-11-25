@@ -123,7 +123,6 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-
     /**
     * create a row in the table tracker_global_notification
     * @return true or id(auto_increment) if there is no error

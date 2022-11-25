@@ -80,7 +80,6 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         return $this->getDB()->row($sql, $id, $user_id, $timestamp);
     }
 
-
     public function searchDocumentVersionOngoingUploadForAnotherUserByItemIdAndExpirationDate(int $id, int $user_id, int $timestamp): array
     {
         $sql = 'SELECT *

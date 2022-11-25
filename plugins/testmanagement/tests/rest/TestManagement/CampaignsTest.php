@@ -155,7 +155,6 @@ final class CampaignsTest extends BaseTest
         $this->revertCampaign($campaign);
     }
 
-
     public function testPatchCampaignSuccessWithAutomatedTests()
     {
         $campaign                = $this->valid_73_campaign;

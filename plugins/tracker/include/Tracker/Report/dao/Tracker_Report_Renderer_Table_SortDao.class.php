@@ -45,6 +45,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
                 WHERE renderer_id = $renderer_id AND field_id = $field_id";
         return $this->update($sql);
     }
+
     public function create($renderer_id, $field_id, $is_desc = 0, $rank = 0)
     {
         $renderer_id = $this->da->escapeInt($renderer_id);

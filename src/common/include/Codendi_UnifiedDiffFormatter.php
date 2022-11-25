@@ -33,6 +33,7 @@ class Codendi_UnifiedDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignor
         $this->leading_context_lines  = $context_lines;
         $this->trailing_context_lines = $context_lines;
     }
+
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         if ($xlen != 1) {
@@ -43,14 +44,17 @@ class Codendi_UnifiedDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignor
         }
         return "@@ -{$xbeg} +{$ybeg} @@\n";
     }
+
     public function _added($lines)
     {
         $this->_lines($lines, "+");
     }
+
     public function _deleted($lines)
     {
         $this->_lines($lines, "-");
     }
+
     public function _changed($orig, $fin)
     {
         $this->_deleted($orig);

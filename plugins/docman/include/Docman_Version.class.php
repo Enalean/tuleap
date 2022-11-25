@@ -55,6 +55,7 @@ class Docman_Version implements Version
     {
         return $this->id;
     }
+
     public function setId($id)
     {
         $this->id = $id;
@@ -65,6 +66,7 @@ class Docman_Version implements Version
     {
         return $this->authorId;
     }
+
     public function setAuthorId($authorId)
     {
         $this->authorId = $authorId;
@@ -75,6 +77,7 @@ class Docman_Version implements Version
     {
         return $this->itemId;
     }
+
     public function setItemId($itemId)
     {
         $this->itemId = $itemId;
@@ -89,6 +92,7 @@ class Docman_Version implements Version
     {
         return $this->number;
     }
+
     public function setNumber($number)
     {
         $this->number = $number;
@@ -99,6 +103,7 @@ class Docman_Version implements Version
     {
         return $this->label;
     }
+
     public function setLabel($label)
     {
         $this->label = $label;
@@ -109,6 +114,7 @@ class Docman_Version implements Version
     {
         return $this->changelog;
     }
+
     public function setChangelog($changelog)
     {
         $this->changelog = $changelog;
@@ -119,6 +125,7 @@ class Docman_Version implements Version
     {
         return $this->date;
     }
+
     public function setDate($date)
     {
         $this->date = $date;
@@ -149,6 +156,7 @@ class Docman_Version implements Version
     {
         return $this->filesize;
     }
+
     public function setFilesize(int $filesize)
     {
         $this->filesize = $filesize;
@@ -199,6 +207,7 @@ class Docman_Version implements Version
         }
         return $this->_content;
     }
+
     public function setContent($content)
     {
         $this->_content = $content;

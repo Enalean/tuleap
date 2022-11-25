@@ -30,6 +30,7 @@ final class SearchPlannedUserStoryStub implements SearchPlannedUserStory
     private function __construct(private array $user_stories)
     {
     }
+
     public static function withoutUserStories(): self
     {
         return new self([]);

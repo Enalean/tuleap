@@ -100,7 +100,6 @@ class SetDateValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_date_value_repository->deleteAllByTransition($transition);
     }
 
-
     public function testDeleteThrowsWhenDeletionFails()
     {
         $this->set_date_value_dao->shouldReceive('deletePostActionsByTransitionId')

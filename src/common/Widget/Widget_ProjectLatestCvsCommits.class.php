@@ -36,10 +36,12 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits
     {
         return $GLOBALS['Language']->getText('include_project_home', 'latest_cvs_commit');
     }
+
     public function _getLinkToCommit($data)
     {
         return '/cvs/index.php?func=detailcommit&amp;group_id=' . $this->group_id . '&amp;commit_id=' . $data['id'];
     }
+
     public function _getLinkToMore()
     {
         return '/cvs/?func=browse&group_id=' . $this->group_id;

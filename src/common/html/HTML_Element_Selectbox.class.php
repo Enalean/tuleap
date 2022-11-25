@@ -39,6 +39,7 @@ class HTML_Element_Selectbox extends HTML_Element
             $this->addOption(new HTML_Element_Option(dgettext('tuleap-core', '-- None --'), "", ($this->value === "" || $this->value === null)));
         }
     }
+
     public function renderValue()
     {
         $hp   = Codendi_HTMLPurifier::instance();
@@ -53,6 +54,7 @@ class HTML_Element_Selectbox extends HTML_Element
         $html .= '</select>';
         return $html;
     }
+
     public function addOption(HTML_Element_Option $option)
     {
         $this->options[] = $option;

@@ -366,7 +366,6 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($this->docmanPm->userCanManage($this->user, $itemId));
     }
 
-
     public function testCacheUserCanRead(): void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject');

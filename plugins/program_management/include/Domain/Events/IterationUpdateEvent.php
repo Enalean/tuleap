@@ -35,6 +35,8 @@ interface IterationUpdateEvent
     public const TOPIC = 'tuleap.program_management.iteration.update';
 
     public function getIteration(): IterationIdentifier;
+
     public function getUser(): UserIdentifier;
+
     public function getChangeset(): ChangesetIdentifier;
 }

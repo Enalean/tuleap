@@ -42,10 +42,12 @@ class WikiPlugin_RdfDefinition extends WikiPlugin
     {
         return _("RdfDefinition");
     }
+
     public function getDescription()
     {
         return _("Define the RDF vocabulary for a wiki subset.");
     }
+
     public function getVersion()
     {
         return preg_replace(
@@ -54,12 +56,14 @@ class WikiPlugin_RdfDefinition extends WikiPlugin
             "\$Revision: 1.6 $"
         );
     }
+
     public function getDefaultArguments()
     {
         return [
             'pages' => false,        // define affected pageset here?
         ];
     }
+
     public function handle_plugin_args_cruft(&$argstr, &$args)
     {
         $this->source = $argstr;

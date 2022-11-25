@@ -731,6 +731,7 @@ class UserPreferences
     {
         return serialize($nonpacked);
     }
+
     public function unpack($packed)
     {
         if (! $packed) {

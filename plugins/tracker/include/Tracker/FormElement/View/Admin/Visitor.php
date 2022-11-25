@@ -147,6 +147,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Burndown($element, $this->allUsedElements);
     }
+
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $element)
     {
         $this->element      = $element;

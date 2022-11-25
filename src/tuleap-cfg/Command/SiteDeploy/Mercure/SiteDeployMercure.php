@@ -27,6 +27,7 @@ final class SiteDeployMercure
     public function __construct()
     {
     }
+
     public function deploy(): void
     {
         $file               = '/etc/tuleap/conf/mercure.env';

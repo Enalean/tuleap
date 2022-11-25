@@ -78,12 +78,10 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
         $this->progress = $progress;
     }
 
-
     public function setRight($right)
     {
         $this->right = $right;
     }
-
 
     public function setAsOfDate($asOfDate)
     {
@@ -100,7 +98,6 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
         $this->summary = $summary;
     }
 
-
     public function setLinks($links)
     {
         $this->links = $links;
@@ -110,7 +107,6 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
     {
         $this->data = $data;
     }
-
 
     public function formatScale()
     {
@@ -147,7 +143,6 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
         }
         return $scale_dim;
     }
-
 
     /**
     * Builds gantt graph

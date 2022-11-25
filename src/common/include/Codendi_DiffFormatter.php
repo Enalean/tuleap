@@ -103,6 +103,7 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
         }
         return $this->_end_diff();
     }
+
     public function _block($xbeg, $xlen, $ybeg, $ylen, &$edits)
     {
         $this->_start_block($this->_block_header($xbeg, $xlen, $ybeg, $ylen));
@@ -121,16 +122,19 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
         }
         $this->_end_block();
     }
+
     public function _start_diff()
     {
         \ob_start();
     }
+
     public function _end_diff()
     {
         $val = \ob_get_contents();
         \ob_end_clean();
         return $val;
     }
+
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         if ($xlen > 1) {
@@ -141,31 +145,38 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
         }
         return $xbeg . ($xlen ? $ylen ? 'c' : 'd' : 'a') . $ybeg;
     }
+
     public function _start_block($header)
     {
         echo $header;
     }
+
     public function _end_block()
     {
     }
+
     public function _lines($lines, $prefix = ' ')
     {
         foreach ($lines as $line) {
             echo "{$prefix} {$line}\n";
         }
     }
+
     public function _context($lines)
     {
         $this->_lines($lines);
     }
+
     public function _added($lines)
     {
         $this->_lines($lines, ">");
     }
+
     public function _deleted($lines)
     {
         $this->_lines($lines, "<");
     }
+
     public function _changed($orig, $fin)
     {
         $this->_deleted($orig);

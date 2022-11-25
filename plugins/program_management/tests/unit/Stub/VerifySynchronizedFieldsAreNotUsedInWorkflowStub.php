@@ -33,14 +33,17 @@ final class VerifySynchronizedFieldsAreNotUsedInWorkflowStub implements VerifySy
     private function __construct(private bool $has_an_active_workflow)
     {
     }
+
     public static function withoutAWorkflow(): self
     {
         return new self(true);
     }
+
     public static function withAnActiveWorkflow(): self
     {
         return new self(false);
     }
+
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,

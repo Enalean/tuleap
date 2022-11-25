@@ -30,6 +30,7 @@ class Valid_Pv extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         parent::__construct('pv');
     }
+
     public function validate($value)
     {
         $this->addRule(new \Rule_WhiteList([0, 1, 2]));

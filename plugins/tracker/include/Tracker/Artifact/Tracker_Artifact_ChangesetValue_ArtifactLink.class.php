@@ -137,7 +137,6 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         return new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao());
     }
 
-
     /**
      * Returns the "set to" for field added later
      *

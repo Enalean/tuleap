@@ -72,7 +72,6 @@ class AdminPageRenderer
         $this->getRenderer($template_path)->renderToPage($template_name, $presenter);
     }
 
-
     private function renderSideBar()
     {
         $admin_sidebar_presenter = $this->getAdminSidebarPresenter();

@@ -43,6 +43,7 @@ class Docman_ApprovalReviewer
     {
         $this->reviewerId = $v;
     }
+
     public function getId()
     {
         return $this->reviewerId;
@@ -52,6 +53,7 @@ class Docman_ApprovalReviewer
     {
         $this->rank = $v;
     }
+
     public function getRank()
     {
         return $this->rank;
@@ -61,6 +63,7 @@ class Docman_ApprovalReviewer
     {
         $this->reviewDate = $v;
     }
+
     public function getReviewDate()
     {
         return $this->reviewDate;
@@ -70,6 +73,7 @@ class Docman_ApprovalReviewer
     {
         $this->state = $v;
     }
+
     public function getState()
     {
         return $this->state;
@@ -79,6 +83,7 @@ class Docman_ApprovalReviewer
     {
         $this->comment = $v;
     }
+
     public function getComment()
     {
         return $this->comment;
@@ -88,6 +93,7 @@ class Docman_ApprovalReviewer
     {
         $this->version = $v;
     }
+
     public function getVersion()
     {
         return $this->version;

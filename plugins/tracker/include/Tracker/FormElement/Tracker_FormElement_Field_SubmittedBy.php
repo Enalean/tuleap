@@ -75,6 +75,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         // SubmittedOn is stored in the artifact
         return '';
     }
+
     public function getQueryFromAggregate()
     {
         $R1 = 'R1_' . $this->id;
@@ -397,6 +398,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     {
         return UserManager::instance();
     }
+
      /**
      * Get the field data for artifact submission
      * Check if the user name exists in the platform

@@ -33,7 +33,6 @@ class BackendCVS extends Backend
         return new ServiceDao(CodendiDataAccess::instance());
     }
 
-
     /**
      * Return true if server uses CVS NT, or false if it uses GNU CVS
      *
@@ -311,6 +310,7 @@ class BackendCVS extends Backend
 
         return $this->writeArrayToFile($members_name_array, $cvswriters_file);
     }
+
     /**
      * Update CVS writers into all projects that given user belongs to
      *
@@ -334,7 +334,6 @@ class BackendCVS extends Backend
         }
         return true;
     }
-
 
     /**
      * Update CVS Watch Mode
@@ -592,7 +591,6 @@ class BackendCVS extends Backend
         return is_dir($cvsroot) && $this->chmod($cvsroot, $perms);
     }
 
-
     /**
      * Check ownership/mode/privacy of repository
      *
@@ -674,7 +672,6 @@ class BackendCVS extends Backend
         $path = ForgeConfig::get('cvs_prefix') . "/" . $name;
         return (! $this->fileExists($path));
     }
-
 
     /**
      * Rename cvs repository (following project unix_name change)

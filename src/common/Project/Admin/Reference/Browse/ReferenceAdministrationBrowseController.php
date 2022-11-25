@@ -61,6 +61,7 @@ class ReferenceAdministrationBrowseController implements DispatchableWithRequest
         $this->header_navigation_displayer = $header_navigation_displayer;
         $this->project_access_checker      = $project_access_checker;
     }
+
     /**
      * @throws ForbiddenException
      * @throws NotFoundException

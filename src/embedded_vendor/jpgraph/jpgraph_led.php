@@ -260,12 +260,10 @@ class DigitalLED74
         return $img;
     }
 
-
     public function Stroke($aValStr, $aColor = 0, $aFileName = '')
     {
         $this->StrokeNumber($aValStr, $aColor, $aFileName);
     }
-
 
     public function StrokeNumber($aValStr, $aColor = 0, $aFileName = '')
     {

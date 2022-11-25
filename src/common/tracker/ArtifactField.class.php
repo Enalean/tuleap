@@ -375,7 +375,6 @@ class ArtifactField
         return $this->value_function;
     }
 
-
     /**
      *  Get the use_it attribute value
      *
@@ -418,12 +417,10 @@ class ArtifactField
         return $this->default_value;
     }
 
-
     public function getFieldSetID()
     {
         return $this->field_set_id;
     }
-
 
     /**
      *  Dump attribute values
@@ -693,8 +690,6 @@ class ArtifactField
         return false;
     }
 
-
-
     /**
      * Return all possible values for a select box field
      * Rk: if the checked value is given then it means that we want this value
@@ -798,7 +793,6 @@ class ArtifactField
 
         return false;
     }
-
 
     /**
      * Return all the values for a select box field for a specified status (exclude binding values)
@@ -1058,7 +1052,6 @@ class ArtifactField
         $value = $this->getDefaultValue();
         return $this->insertFieldValue($artifact_id, $value);
     }
-
 
     /**
      *  Return the value used for the where clause
@@ -1703,8 +1696,6 @@ class ArtifactField
         }
     }
 
-
-
     /** return true if user has Read or Update permission on this field
      * @param group_id: the project this field is in
      * @param group_artifact_id: the trackers id this field is in
@@ -1746,7 +1737,6 @@ class ArtifactField
         return $ok;
     }
 
-
     /** return true if user has Submit permission on this field
      * @param group_id: the project this field is in
      * @param group_artifact_id: the trackers id this field is in
@@ -1768,7 +1758,6 @@ class ArtifactField
         return $ok;
     }
 
-
     /** return true if users in ugroups have Submit permission on this field
      * @param ugroups: the ugroups users are part of
      * @param group_artifact_id: the trackers id this field is in
@@ -1779,7 +1768,6 @@ class ArtifactField
         $ok = $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_READ', $ugroups);
         return $ok;
     }
-
 
     /** return true if users in ugroups have Submit permission on this field
      * @param ugroups: the ugroups users are part of
@@ -1792,7 +1780,6 @@ class ArtifactField
         return $ok;
     }
 
-
     /** return true if users in ugroups have Submit permission on this field
      * @param ugroups: the ugroups users are part of
      * @param group_artifact_id: the trackers id this field is in
@@ -1803,8 +1790,6 @@ class ArtifactField
         $ok = $pm->userHasPermission($group_artifact_id . "#" . $this->field_id, 'TRACKER_FIELD_SUBMIT', $ugroups);
         return $ok;
     }
-
-
 
     /**
      * Retrieve users permissions (TRACKER_FIELD_SUBMIT, -UPDATE, -READ)

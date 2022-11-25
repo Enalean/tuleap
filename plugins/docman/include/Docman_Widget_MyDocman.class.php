@@ -176,10 +176,12 @@ class Docman_Widget_MyDocman extends Widget
         }
         return $html;
     }
+
     public function isAjax()
     {
         return true;
     }
+
     public function getCategory()
     {
         return dgettext('tuleap-docman', 'Document manager');

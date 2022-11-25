@@ -155,7 +155,6 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($r->isValid("user"));
     }
 
-
     public function testItDontCheckIfUnixUserExistsWhenUnixUsersDisabled(): void
     {
         ForgeConfig::set("homedir_prefix", "");

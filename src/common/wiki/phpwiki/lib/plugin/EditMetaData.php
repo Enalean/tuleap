@@ -71,7 +71,6 @@ class WikiPlugin_EditMetaData extends WikiPlugin
         ];
     }
 
-
     public function run($dbi, $argstr, &$request, $basepage)
     {
         $this->_args = $this->getArgs($argstr, $request);

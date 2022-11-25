@@ -74,7 +74,6 @@ class Docman_PermissionsManagerDao extends DataAccessObject
         }
     }
 
-
     /**
      * Returns project admin members for a given group
      *

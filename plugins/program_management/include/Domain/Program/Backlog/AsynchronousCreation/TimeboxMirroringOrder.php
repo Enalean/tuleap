@@ -33,7 +33,10 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 interface TimeboxMirroringOrder
 {
     public function getTimebox(): TimeboxIdentifier;
+
     public function getTracker(): TrackerIdentifier;
+
     public function getChangeset(): ChangesetIdentifier;
+
     public function getUser(): UserIdentifier;
 }

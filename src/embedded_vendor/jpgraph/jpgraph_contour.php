@@ -456,7 +456,6 @@ class ContourPlot extends Plot
         }
     }
 
-
     /**
      * Flipe the data around the center
      *
@@ -489,7 +488,6 @@ class ContourPlot extends Plot
     {
         $this->showLegend = $aFlg;
     }
-
 
     /**
      * @param $aFlg true if the legend should start with the lowest isobar on top
@@ -536,7 +534,6 @@ class ContourPlot extends Plot
             }
         }
     }
-
 
     /**
      *  Framework function which gets called before the Stroke() method is called

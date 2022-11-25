@@ -60,6 +60,7 @@ class WikiPlugin_IncludeSiteMap extends WikiPlugin_SiteMap
             $this->_pagename
         );
     }
+
     public function getDefaultArguments()
     {
         return ['exclude'        => '',

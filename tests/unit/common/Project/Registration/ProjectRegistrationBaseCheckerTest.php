@@ -60,7 +60,6 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
         );
     }
 
-
     /**
      * @testWith [true, true]
      *           [false, false]

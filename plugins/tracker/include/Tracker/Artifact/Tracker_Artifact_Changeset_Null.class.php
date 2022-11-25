@@ -39,7 +39,6 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
         parent::__construct(null, null, null, null, null);
     }
 
-
     /**
      * Return the value of a field in the current changeset
      *

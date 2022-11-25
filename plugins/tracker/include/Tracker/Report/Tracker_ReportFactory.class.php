@@ -79,6 +79,7 @@ class Tracker_ReportFactory
         }
         return $reports;
     }
+
     /**
      * @param int $tracker_id the id of the tracker
      * @return Tracker_Report|null

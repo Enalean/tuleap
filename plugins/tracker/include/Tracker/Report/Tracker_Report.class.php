@@ -296,6 +296,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     {
         return Tracker_FormElementFactory::instance();
     }
+
     /**
      * Sets or adds a criterion to the global report search criteria list
      * @param int $field_id criterion id to be added or set
@@ -1236,7 +1237,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $rrf->createInSession($this, $name, $description, $type);
     }
 
-
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         if ($this->isObsolete()) {
@@ -1562,6 +1562,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
         Tracker_ReportFactory::instance()->save($this);
     }
+
     /**
      * NOTICE: make sure you are in the correct session namespace
      */

@@ -171,6 +171,7 @@ class Tracker_DateReminderManager
             $this->sendReminder($artifact, $m['recipients'], $m['headers'], $m['subject'], $m['htmlBody'], $m['txtBody']);
         }
     }
+
     /**
      * Build the reminder messages
      *

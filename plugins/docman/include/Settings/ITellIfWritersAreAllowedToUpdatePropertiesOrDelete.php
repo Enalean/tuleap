@@ -25,5 +25,6 @@ namespace Tuleap\Docman\Settings;
 interface ITellIfWritersAreAllowedToUpdatePropertiesOrDelete
 {
     public function areWritersAllowedToUpdateProperties(int $project_id): bool;
+
     public function areWritersAllowedToDelete(int $project_id): bool;
 }

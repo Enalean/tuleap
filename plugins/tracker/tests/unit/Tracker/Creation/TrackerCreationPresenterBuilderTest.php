@@ -265,7 +265,6 @@ final class TrackerCreationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->assertEquals($expected_template, $presenter);
     }
 
-
     public function testItBuildsAListOfTrackersBuildByProject(): void
     {
         $project = \Mockery::mock(\Project::class);

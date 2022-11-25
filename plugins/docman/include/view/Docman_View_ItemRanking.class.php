@@ -36,7 +36,6 @@ class Docman_View_ItemRanking
         $this->dropDownName = $v;
     }
 
-
     public function setSelectedValue($v)
     {
         if (is_numeric($v)) {

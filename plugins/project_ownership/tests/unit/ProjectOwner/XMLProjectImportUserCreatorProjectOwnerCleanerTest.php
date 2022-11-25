@@ -67,7 +67,6 @@ final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends \Tuleap\T
         $cleaner->updateProjectOwnership($this->createEvent($creator, $ugroup));
     }
 
-
     private function createEvent(PFUser $creator, ProjectUGroup $ugroup): ProjectImportCleanupUserCreatorFromAdministrators
     {
         return new ProjectImportCleanupUserCreatorFromAdministrators($creator, $ugroup);

@@ -46,11 +46,13 @@ class ArtifactGlobalNotificationFactory
         $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         return $dao->create($tracker_id, '', 0, 1);
     }
+
     public function removeGlobalNotificationForTracker($global_notification_id, $tracker_id)
     {
         $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         return $dao->delete($global_notification_id, $tracker_id);
     }
+
     public function updateGlobalNotification($global_notification_id, $data)
     {
         $dao               = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
@@ -64,6 +66,7 @@ class ArtifactGlobalNotificationFactory
         }
         return false;
     }
+
     /**
      * @param bool $update true if the action is an update one (update artifact, add comment, ...) false if it is a create action.
      */

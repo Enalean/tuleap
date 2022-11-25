@@ -46,7 +46,6 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
         return $json[0]['id'];
     }
 
-
     public function testGetRootId(): int
     {
         $project_response = $this->getResponse(
@@ -71,7 +70,6 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
         $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         return $json_docman_service['root_item']['id'];
     }
-
 
     public function loadRootFolderContent(int $root_id, string $user_name = \TestDataBuilder::ADMIN_USER_NAME): array
     {

@@ -183,6 +183,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     {
         return new TextValueDao();
     }
+
     protected function getDao()
     {
         return new TextFieldDao();

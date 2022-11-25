@@ -38,6 +38,7 @@ class GenericProviderManager
     {
         $this->generic_provider_dao = $generic_provider_dao;
     }
+
     /**
      * @throws ProviderMalformedDataException
      */

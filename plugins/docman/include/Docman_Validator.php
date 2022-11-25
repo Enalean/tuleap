@@ -27,10 +27,12 @@ class Docman_Validator
     {
         $this->_errors[] = $error;
     }
+
     public function getErrors()
     {
         return $this->_errors;
     }
+
     public function isValid()
     {
         return \count($this->_errors) ? \false : \true;

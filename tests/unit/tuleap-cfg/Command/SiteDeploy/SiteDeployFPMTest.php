@@ -152,7 +152,6 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertStringContainsString('user = ' . $this->current_user, file_get_contents($this->php_configuration_folder . '/php-fpm.d/tuleap_common.part'));
     }
 
-
     public function testForceDeployRemovesExistingTuleapPartsFiles(): void
     {
         touch($this->php_configuration_folder . '/php-fpm.d/tuleap_errors_stuff.part');

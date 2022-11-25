@@ -443,7 +443,6 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
         return $this->getDao()->getChildrenCount($artifact_ids);
     }
 
-
     /**
      * Return children of all given artifacts.
      *

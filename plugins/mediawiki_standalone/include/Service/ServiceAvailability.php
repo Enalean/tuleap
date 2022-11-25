@@ -26,6 +26,8 @@ namespace Tuleap\MediawikiStandalone\Service;
 interface ServiceAvailability
 {
     public function isForService(string $service_shortname): bool;
+
     public function getProject(): \Project;
+
     public function cannotBeActivated(string $reason): void;
 }

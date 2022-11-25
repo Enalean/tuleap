@@ -752,7 +752,6 @@ class Docman_MetadataFactory
         }
     }
 
-
     public function _findRealMetadataByName($name, &$mda)
     {
         $dao = $this->getDao();

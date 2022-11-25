@@ -125,7 +125,6 @@ class ArtifactRuleDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-
     /**
     * create a row in the table artifact_rule
     * @return false|int id(auto_increment) if there is no error
@@ -152,7 +151,6 @@ class ArtifactRuleDao extends DataAccessObject
         }
         return $inserted;
     }
-
 
     /**
     * Searches ArtifactRule by GroupArtifactId
@@ -252,6 +250,7 @@ class ArtifactRuleDao extends DataAccessObject
         );
         return $this->update($sql);
     }
+
     public function deleteByField($artifact_type, $field_id)
     {
         $sql = sprintf(
@@ -265,6 +264,7 @@ class ArtifactRuleDao extends DataAccessObject
         );
         return $this->update($sql);
     }
+
     public function deleteByFieldValue($artifact_type, $field_id, $value_id)
     {
         $sql = sprintf(
@@ -287,6 +287,7 @@ class ArtifactRuleDao extends DataAccessObject
         );
         return $this->update($sql);
     }
+
     public function copyRules($from_artifact_type, $to_artifact_type)
     {
         $sql      = sprintf(

@@ -28,22 +28,27 @@ class Docman_ReportColumnLocation extends \Docman_ReportColumn
     {
         $this->sort = \null;
     }
+
     public function setSort($s)
     {
         return;
     }
+
     public function getSortSelectorHtml()
     {
         return;
     }
+
     public function getTitle($defaultUrl, $viewParams = '')
     {
         return \dgettext('tuleap-docman', 'Location');
     }
+
     public function initFromRequest($request)
     {
         return;
     }
+
     public function getTableBox($item, $view, $params)
     {
         $hp        = \Codendi_HTMLPurifier::instance();

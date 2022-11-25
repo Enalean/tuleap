@@ -26,6 +26,7 @@ class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVi
     {
         return [];
     }
+
     public function visitWiki(\Docman_Wiki $item, $params = [])
     {
         $pagename = '';
@@ -38,6 +39,7 @@ class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVi
         }
         return [new \Docman_MetadataHtmlWiki($pagename)];
     }
+
     public function visitLink(\Docman_Link $item, $params = [])
     {
         $link_url = '';
@@ -50,10 +52,12 @@ class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVi
         }
         return [new \Docman_MetadataHtmlLink($link_url)];
     }
+
     public function visitFile(\Docman_File $item, $params = [])
     {
         return [new \Docman_MetadataHtmlFile($params['request'])];
     }
+
     public function visitEmbeddedFile(\Docman_EmbeddedFile $item, $params = [])
     {
         $content = '';
@@ -63,10 +67,12 @@ class Docman_View_GetSpecificFieldsVisitor implements \Tuleap\Docman\Item\ItemVi
         }
         return [new \Docman_MetadataHtmlEmbeddedFile($content)];
     }
+
     public function visitEmpty(\Docman_Empty $item, $params = [])
     {
         return [new \Docman_MetadataHtmlEmpty()];
     }
+
     public function visitItem(\Docman_Item $item, array $params = [])
     {
         throw new \LogicException('Cannot get the specific fields of a non specialized item');

@@ -31,6 +31,7 @@ final class SearchOpenFeaturesStub implements SearchOpenFeatures
     private function __construct(private array $open_features, public array $program_identifiers)
     {
     }
+
     public static function withRows(array $open_features): self
     {
         return new self($open_features, []);

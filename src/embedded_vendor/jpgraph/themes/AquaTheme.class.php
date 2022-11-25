@@ -97,7 +97,6 @@ class AquaTheme extends Theme
 //        $graph->img->SetAntiAliasing();
     }
 
-
     public function SetupPieGraph($graph)
     {
         // graph
@@ -121,7 +120,6 @@ class AquaTheme extends Theme
 
         $graph->SetAntiAliasing();
     }
-
 
     public function PreStrokeApply($graph)
     {

@@ -125,7 +125,6 @@ class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEmpty($post_actions);
     }
 
-
     public function testItWarmsTheCacheUpBeforeGettingThePostAction()
     {
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')

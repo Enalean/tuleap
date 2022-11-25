@@ -123,7 +123,6 @@ class Template
         $this->_locals[$varname] = $value;
     }
 
-
     public function printExpansion($defaults = false)
     {
         if (! is_array($defaults)) { // HTML object or template object

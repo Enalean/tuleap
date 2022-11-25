@@ -47,6 +47,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     {
         return '';
     }
+
     /* protected */ public function _getJSDocmanParameters($params)
     {
         $doc_params = [];

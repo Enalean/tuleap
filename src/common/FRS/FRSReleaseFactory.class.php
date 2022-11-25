@@ -204,7 +204,6 @@ class FRSReleaseFactory
         return $dar->valid();
     }
 
-
     /**
      * @return int|null
      */

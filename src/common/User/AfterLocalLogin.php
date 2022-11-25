@@ -27,5 +27,6 @@ use Tuleap\Event\Dispatchable;
 interface AfterLocalLogin extends Dispatchable
 {
     public function isIsLoginAllowed(): bool;
+
     public function getFeedbackMessage(): string;
 }

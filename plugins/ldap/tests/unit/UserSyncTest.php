@@ -63,7 +63,6 @@ class UserSyncTest extends \Tuleap\Test\PHPUnit\TestCase
         $sync->sync($user, $lr);
     }
 
-
     public function testUserUpdateRealnameIfLdapDoesntMatch(): void
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();

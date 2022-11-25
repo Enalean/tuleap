@@ -80,6 +80,7 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
 
         return $parent;
     }
+
     /**
      * Child 1
      */
@@ -184,6 +185,7 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
         $this->thenGivenTreeNodeDataContentTemplateAssertPattern($givenChild, $this->getPatternSuite(" content"));
     }
+
     /**
      * Child 8
      */
