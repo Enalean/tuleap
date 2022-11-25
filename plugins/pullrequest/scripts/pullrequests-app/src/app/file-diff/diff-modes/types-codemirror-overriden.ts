@@ -19,6 +19,7 @@
 
 import type { LineHandle, LineWidget, Editor } from "codemirror";
 import type { FileDiffWidget } from "./types";
+import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
 
 /**
  * @types/codemirror's type definition for LineHandle is too minimalist
@@ -55,4 +56,11 @@ export interface PlaceholderCreationParams {
     widget_height: number;
     display_above_line: boolean;
     is_comment_placeholder: boolean;
+}
+
+export interface InlineCommentWidgetCreationParams {
+    code_mirror: Editor;
+    comment: PullRequestInlineCommentPresenter;
+    line_number: number;
+    post_rendering_callback: () => void;
 }

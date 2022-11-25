@@ -113,11 +113,14 @@ function controller(
         getStore()
             .getAllRootComments()
             .forEach((comment) => {
-                self.widget_creator.displayInlineCommentWidget(
-                    unidiff_codemirror,
+                self.widget_creator.displayInlineCommentWidget({
+                    code_mirror: unidiff_codemirror,
                     comment,
-                    comment.unidiff_offset - 1
-                );
+                    line_number: comment.unidiff_offset - 1,
+                    post_rendering_callback: () => {
+                        // Do nothing
+                    },
+                });
             });
 
         unidiff_codemirror.on("gutterClick", addNewComment);

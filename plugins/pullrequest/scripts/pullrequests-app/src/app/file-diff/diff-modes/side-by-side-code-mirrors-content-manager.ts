@@ -24,6 +24,8 @@ import { isAnAddedLine, isAnUnmovedLine, isARemovedLine } from "./file-line-help
 export interface ManageCodeMirrorsContent {
     getLineInLeftCodeMirror: (line_number: number) => LeftLine;
     getLineInRightCodeMirror: (line_number: number) => RightLine;
+    getLeftCodeMirrorEditor: () => Editor;
+    getRightCodeMirrorEditor: () => Editor;
 }
 
 export const SideBySideCodeMirrorsContentManager = (
@@ -48,5 +50,7 @@ export const SideBySideCodeMirrorsContentManager = (
     return {
         getLineInLeftCodeMirror: (line_number: number): LeftLine => left_lines[line_number],
         getLineInRightCodeMirror: (line_number: number): RightLine => right_lines[line_number],
+        getLeftCodeMirrorEditor: (): Editor => left_code_mirror,
+        getRightCodeMirrorEditor: (): Editor => right_code_mirror,
     };
 };

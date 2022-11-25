@@ -29,7 +29,7 @@ describe("placeholder positioner", () => {
         it("Given a handle, when the line is part of a deleted group, then it should return true", () => {
             const handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const line = FileLineStub.buildRemovedLine(3, 3);
-            const state = FileLinesStateStub.build(
+            const state = FileLinesStateStub(
                 [line],
                 [GroupOfLinesStub.buildGroupOfRemovedLines([line])],
                 new Map([
@@ -41,7 +41,7 @@ describe("placeholder positioner", () => {
                         },
                     ],
                 ])
-            );
+            ).getState();
 
             const should_display_above =
                 SideBySidePlaceholderPositioner(state).getDisplayAboveLineForWidget(handle);
@@ -51,7 +51,7 @@ describe("placeholder positioner", () => {
 
         it("Given a handle without line, then it should return false", () => {
             const handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
-            const state = FileLinesStateStub.build([], [], new Map([]));
+            const state = FileLinesStateStub([], [], new Map([])).getState();
 
             const should_display_above =
                 SideBySidePlaceholderPositioner(state).getDisplayAboveLineForWidget(handle);
