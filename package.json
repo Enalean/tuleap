@@ -82,7 +82,7 @@
     "vue-eslint-parser": "^9.0.3",
     "vue-loader": "^15.10.0",
     "vue-template-compiler": "^2.7.8",
-    "vue-tsc": "^0.39.4",
+    "vue-tsc": "^1.0.9",
     "webpack": "^5.74.0",
     "webpack-assets-manifest": "^5.1.0",
     "webpack-cli": "^4.10.0",
