@@ -170,14 +170,6 @@ $nav-margin: 30px;
         }
     }
 
-    #dropdown-icon-right-example {
-        color: color.adjust($tlp-dimmed-color, $alpha: - 0.2);
-
-        &:hover {
-            color: $main-color;
-        }
-    }
-
     .popover-examples-container {
         &::before {
             border-color: color.adjust($tlp-dimmed-color, $alpha: - 0.2);

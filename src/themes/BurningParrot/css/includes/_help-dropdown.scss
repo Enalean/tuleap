@@ -44,6 +44,10 @@ body.reduce-help-button .help-dropdown {
         &::after {
             right: 16px; // not related to condensed mode
         }
+
+        &::after {
+            border-top-color: var(--tlp-dark-color);
+        }
     }
 }
 

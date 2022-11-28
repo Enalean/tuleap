@@ -21,7 +21,6 @@
 @use "@tuleap/project-background";
 
 .project-with-background {
-    .execution-header-button-edit,
     .test-campaigns-header-title,
     .test-campaign-header-title,
     .test-administration-title,
@@ -29,10 +28,19 @@
         @include project-background.title-header-typography;
     }
 
-    .execution-header-button-edit:focus-visible {
-        @include project-background.background-for-links;
-
-        box-shadow: none;
+    .execution-header-button-edit.tlp-button-ellipsis {
+        --tlp-button-ellipsis-color: var(--tlp-button-ellipsis-color-on-dark-value);
+        --tlp-button-ellipsis-hover-color: var(--tlp-button-ellipsis-hover-color-on-dark-value);
+        --tlp-button-ellipsis-focus-border-color: var(
+            --tlp-button-ellipsis-focus-border-color-on-dark-value
+        );
+        --tlp-button-ellipsis-disabled-color: var(
+            --tlp-button-ellipsis-disabled-color-on-dark-value
+        );
+        --tlp-button-ellipsis-disabled-opacity: var(
+            --tlp-button-ellipsis-disabled-opacity-on-dark-value
+        );
+        --tlp-button-ellipsis-text-shadow: var(--tlp-button-ellipsis-text-shadow-on-dark-value);
     }
 
     .test-campaign-header {

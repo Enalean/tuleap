@@ -114,9 +114,7 @@ export class Dropdown {
             : this.dropdown_menu.classList.contains("tlp-dropdown-menu-side")
             ? "right"
             : "bottom";
-        const alignment = this.dropdown_menu.classList.contains("tlp-dropdown-menu-right")
-            ? "end"
-            : "start";
+        const alignment = "start";
         const wanted_placement: Placement = `${side}-${alignment}`;
 
         const { x, y, placement } = await computePosition(this.anchor_element, this.dropdown_menu, {

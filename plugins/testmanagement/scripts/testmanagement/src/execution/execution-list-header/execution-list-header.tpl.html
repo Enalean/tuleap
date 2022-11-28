@@ -34,7 +34,7 @@
             <div class="tlp-dropdown execution-header-button" ng-if="$ctrl.campaign_state.campaign.user_can_update">
                 <button
                     type="button"
-                    class="tlp-button-primary tlp-button-outline execution-header-button-edit"
+                    class="tlp-button-primary tlp-button-ellipsis tlp-button-small execution-header-button-edit"
                     aria-haspopup="true"
                     aria-controls="test-campaign-edit-menu"
                     id="test-campaign-edit-menu-trigger"
@@ -44,7 +44,7 @@
                 >
                     <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
                 </button>
-                <div class="tlp-dropdown-menu tlp-dropdown-menu-right execution-header-button-edit-menu" role="menu" id="test-campaign-edit-menu">
+                <div class="tlp-dropdown-menu execution-header-button-edit-menu" role="menu" id="test-campaign-edit-menu">
                     <button
                         type="button"
                         ng-click="$ctrl.openEditCampaignLabelModal()"

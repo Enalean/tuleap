@@ -434,22 +434,9 @@ import { createLinkSelector } from "@tuleap/link-selector";
                 });
             }
 
-            var dropdown_trigger_large_split_example_right_options = document.getElementById(
-                "dropdown-large-split-example-right"
-            );
-            if (dropdown_trigger_large_split_example_right_options) {
-                createDropdown(dropdown_trigger_large_split_example_right_options, {
-                    dropdown_menu: document.getElementById(
-                        "dropdown-large-split-example-right-menu"
-                    ),
-                });
-            }
-
             [
                 "dropdown-example",
-                "dropdown-right-example",
                 "dropdown-top-example",
-                "dropdown-top-right-example",
                 "dropdown-icon-right-example",
                 "dropdown-with-tabs-example",
             ]

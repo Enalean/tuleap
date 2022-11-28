@@ -151,6 +151,7 @@ $kanban-column-footer-height: 50px;
 
 .kanban-board {
     display: flex;
+    z-index: 1;
     flex: 1 1 auto;
     width: 100%;
     overflow: auto;
@@ -285,7 +286,6 @@ $kanban-column-footer-height: 50px;
 
 .kanban-column-header {
     display: flex;
-    z-index: 4;
     flex: 0 0 $kanban-column-header-height;
     align-items: center;
     justify-content: space-between;

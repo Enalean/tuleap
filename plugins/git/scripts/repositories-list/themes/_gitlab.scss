@@ -25,9 +25,11 @@
     color: var(--tlp-danger-color);
 }
 
-.tlp-dropdown-menu.tlp-dropdown-menu-right.tlp-dropdown-menu-on-icon {
-    &.gitlab-administration-dropdown {
-        transform: translateX(12px);
+.gitlab-administration-dropdown.tlp-dropdown-menu.tlp-dropdown-shown.tlp-dropdown-menu-on-icon {
+    transform: translate(-13px, 4px);
+
+    &[data-placement$="end"] {
+        transform: translate(13px, 4px);
     }
 }
 
