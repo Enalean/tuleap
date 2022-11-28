@@ -18,49 +18,54 @@
  */
 
 import type { Editor } from "codemirror";
-import type {
-    FileLineHandle,
-    LineHandleWithAHeight,
-    PlaceholderCreationParams,
-} from "./types-codemirror-overriden";
+import type { FileLineHandle, LineHandleWithAHeight } from "./types-codemirror-overriden";
 import type { FileLinesState } from "./side-by-side-lines-state";
 import type { FileLine, GroupOfLines } from "./types";
+import type { ManageCodeMirrorsContent } from "./side-by-side-code-mirrors-content-manager";
+import type { CreatePlaceholderWidget } from "./side-by-side-code-mirror-widget-creator";
 import { ADDED_GROUP, DELETED_GROUP } from "./types";
+import { isAnUnmovedLine } from "./file-line-helper";
 
-interface BuildCodePlaceholder {
-    buildCodePlaceholderWidget: (line: FileLine) => PlaceholderCreationParams | null;
+interface ManageCodePlaceholdersCreation {
+    displayCodePlaceholderIfNeeded: (line: FileLine) => void;
 }
 
-export const SideBySideCodePlaceholderBuilder = (
-    left_code_mirror: Editor,
-    right_code_mirror: Editor,
-    file_lines_state: FileLinesState
-): BuildCodePlaceholder => {
+export const SideBySideCodePlaceholderCreationManager = (
+    code_mirrors_content_manager: ManageCodeMirrorsContent,
+    file_lines_state: FileLinesState,
+    placeholder_widget_creator: CreatePlaceholderWidget
+): ManageCodePlaceholdersCreation => {
     const getCodeMirror = (group: GroupOfLines): Editor => {
-        return group.type === ADDED_GROUP ? left_code_mirror : right_code_mirror;
+        return group.type === ADDED_GROUP
+            ? code_mirrors_content_manager.getLeftCodeMirrorEditor()
+            : code_mirrors_content_manager.getRightCodeMirrorEditor();
     };
 
     return {
-        buildCodePlaceholderWidget: (line: FileLine): PlaceholderCreationParams | null => {
+        displayCodePlaceholderIfNeeded: (line: FileLine): void => {
+            if (isAnUnmovedLine(line) || !file_lines_state.isFirstLineOfGroup(line)) {
+                return;
+            }
+
             const line_group = file_lines_state.getGroupOfLine(line);
             if (!line_group) {
-                return null;
+                return;
             }
 
             const handle = file_lines_state.getOppositeHandleOfLine(line, line_group);
             if (!handle) {
-                return null;
+                return;
             }
 
             const group_height = sumGroupLinesHeight(file_lines_state, line_group);
 
-            return {
+            placeholder_widget_creator.displayPlaceholderWidget({
                 code_mirror: getCodeMirror(line_group),
                 handle,
                 widget_height: getAdjustedPlaceholderWidgetAndHeight(line, handle, group_height),
-                display_above_line: line_group.type === DELETED_GROUP,
+                display_above_line: isFirstLineOfFile(line) || line_group.type === DELETED_GROUP,
                 is_comment_placeholder: false,
-            };
+            });
         },
     };
 };
@@ -78,14 +83,15 @@ function getAdjustedPlaceholderWidgetAndHeight(
     placeholder_line_handle: FileLineHandle,
     widget_height: number
 ): number {
-    if (
-        isAFileLineHandleWithAHeight(placeholder_line_handle) &&
-        (line.new_offset === 1 || line.old_offset === 1)
-    ) {
-        return widget_height - placeholder_line_handle.height;
+    if (isFirstLineOfFile(line) && isAFileLineHandleWithAHeight(placeholder_line_handle)) {
+        return Math.abs(widget_height - placeholder_line_handle.height);
     }
 
     return widget_height;
+}
+
+function isFirstLineOfFile(line: FileLine): boolean {
+    return line.new_offset === 1 || line.old_offset === 1;
 }
 
 function isAFileLineHandleWithAHeight(

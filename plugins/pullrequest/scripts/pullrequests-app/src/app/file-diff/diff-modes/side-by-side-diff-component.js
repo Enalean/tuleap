@@ -21,7 +21,7 @@ import CodeMirror from "codemirror";
 import "codemirror/addon/scroll/simplescrollbars.js";
 import { getStore } from "../comments-store.ts";
 import { SideBySideLineState } from "./side-by-side-lines-state.ts";
-import { SideBySideCodePlaceholderBuilder } from "./side-by-side-code-placeholder-builder.ts";
+import { SideBySideCodePlaceholderCreationManager } from "./side-by-side-code-placeholder-creation-manager.ts";
 import { synchronize } from "./side-by-side-scroll-synchronizer.ts";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/collaspible-code-sections-builder.ts";
 import { SideBySideLinesHeightEqualizer } from "./side-by-side-line-height-equalizer.ts";
@@ -31,7 +31,6 @@ import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../
 import "./modes.ts";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
 import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
-import { isAnUnmovedLine } from "./file-line-helper";
 import { SideBySideLineMapper } from "./side-by-side-line-mapper";
 import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors-content-manager";
 import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
@@ -139,10 +138,10 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
             SideBySideLineMapper(file_lines, left_code_mirror, right_code_mirror)
         );
 
-        const code_placeholder_builder = SideBySideCodePlaceholderBuilder(
-            left_code_mirror,
-            right_code_mirror,
-            file_lines_state
+        const code_placeholder_creation_manager = SideBySideCodePlaceholderCreationManager(
+            code_mirrors_content_manager,
+            file_lines_state,
+            widget_creator
         );
 
         const widget_creation_manager = SideBySideCodeMirrorWidgetsCreationManager(
@@ -161,16 +160,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
         file_lines.forEach((line) => {
             displayLine(line, left_code_mirror, right_code_mirror);
 
-            if (isAnUnmovedLine(line) || !file_lines_state.isFirstLineOfGroup(line)) {
-                return;
-            }
-
-            const placeholder_params = code_placeholder_builder.buildCodePlaceholderWidget(line);
-            if (!placeholder_params) {
-                return;
-            }
-
-            widget_creator.displayPlaceholderWidget(placeholder_params);
+            code_placeholder_creation_manager.displayCodePlaceholderIfNeeded(line);
         });
 
         getStore().getAllRootComments().forEach(widget_creation_manager.displayInlineComment);

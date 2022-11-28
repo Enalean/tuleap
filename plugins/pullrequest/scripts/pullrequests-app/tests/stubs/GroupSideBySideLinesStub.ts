@@ -45,20 +45,26 @@ export const GroupSideBySideLinesStub = (): StubGroupSideBySideLines => {
         return map;
     };
 
-    const buildFirstLineToGroupMap = (): Map<number, GroupOfLines> => {
+    const buildFirstLineToGroupMap = (
+        groups_of_lines: GroupOfLines[]
+    ): Map<number, GroupOfLines> => {
         has_built_first_line_to_group_map = true;
 
-        return new Map();
+        return groups_of_lines.reduce((accumulator, group) => {
+            accumulator.set(group.unidiff_offsets[0], group);
+
+            return accumulator;
+        }, new Map<number, GroupOfLines>());
     };
 
     return {
         withGroupsOfLines: (groups_of_lines: GroupOfLines[]): GroupSideBySideLines => ({
             buildLineToGroupMap: () => buildLineToGroupMap(groups_of_lines),
-            buildFirstLineToGroupMap: () => buildFirstLineToGroupMap(),
+            buildFirstLineToGroupMap: () => buildFirstLineToGroupMap(groups_of_lines),
         }),
         withEmptyLineToGroupMap: (): GroupSideBySideLines => ({
             buildLineToGroupMap: () => buildLineToGroupMap([]),
-            buildFirstLineToGroupMap: () => buildFirstLineToGroupMap(),
+            buildFirstLineToGroupMap: () => buildFirstLineToGroupMap([]),
         }),
         hasBuiltLineToGroupMap: (): boolean => has_built_line_to_group_map,
         hasBuildFirstLineToGroupMap: (): boolean => has_built_first_line_to_group_map,
