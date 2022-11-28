@@ -58,8 +58,13 @@ coming from Karma/Jasmine and can be progressive.
 * Bad, because the IDE integrations is not yet completely there: there is *official* support for VS Code and a plugin
 supported by someone in the community for Jetbrains IDEs but [no native support][VITEST_JETBRAINS_FEATURE_REQUEST].
 
+## Links
+
+* Is influenced by [ADR-0018: Choice of JavaScript Bundler][2]
+
 [0]: https://jestjs.io/
 [1]: https://vitest.dev/
+[2]: ./0018-js-bundler.md
 [TOOLCHAIN_ESBUILD]: https://tuleap.net/plugins/tracker/?aid=20149
 [ADR-0010]: ./0010-ts-typechecking-individual-task.md
 [EXISTING_JEST_CONFIG_ESM_WORKAROUND]: https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=blob&hb=dd97b0182d5b1b1130f1537f964e062618db3936&h=f6004aa9f8395b23a1b92bacdf7b1879950a51c5&f=lib%2Ffrontend%2Fbuild-system-configurator%2Fsrc%2Fjest%2Fbase-config.ts#L110
