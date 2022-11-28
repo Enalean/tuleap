@@ -46,29 +46,14 @@ execution-list-header {
     margin: 0 var(--tlp-small-spacing) var(--tlp-medium-spacing) 0;
 }
 
-.execution-header-button-edit.tlp-button-outline {
+.execution-header-button-edit.tlp-button-ellipsis {
     position: relative;
     top: calc((-1) * var(--tlp-small-spacing));
-    height: auto;
-    padding: 4px;
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-
-    &:focus,
-    &:hover {
-        background: transparent;
-        box-shadow: none;
-    }
-
-    &:focus-visible {
-        box-shadow: var(--tlp-shadow-focus);
-    }
 }
 
-.tlp-dropdown-menu-right.execution-header-button-edit-menu {
+.execution-header-button-edit-menu {
     // magic value to adjust the menu just at the middle of the ellipsis
-    transform: translateX(8px);
+    transform: translateX(7px);
 }
 
 $testers-padding: 4px;

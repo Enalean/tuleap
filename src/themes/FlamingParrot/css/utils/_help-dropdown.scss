@@ -46,29 +46,9 @@
     font-weight: 400;
     line-height: 14px;
 
-    &::after {
+    &.help-dropdown-menu[data-placement^="top"]::after {
         border: 10px solid transparent;
         border-top-color: var(--tlp-dark-color);
-    }
-
-    &.dropdown-menu-top {
-        &::before {
-            display: none;
-        }
-
-        &::after {
-            top: 100%;
-            border-top-color: var(--tlp-dark-color);
-            border-bottom-color: transparent;
-        }
-    }
-
-    &.dropdown-menu-right {
-        &::before,
-        &::after {
-            right: 20px;
-            left: auto;
-        }
     }
 
     &.tlp-dropdown-shown {

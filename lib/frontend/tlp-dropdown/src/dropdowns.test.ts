@@ -142,8 +142,6 @@ describe(`Dropdowns`, () => {
         it.each([
             [[], "bottom-start"],
             [["tlp-dropdown-menu-top"], "top-start"],
-            [["tlp-dropdown-menu-right"], "bottom-end"],
-            [["tlp-dropdown-menu-top", "tlp-dropdown-menu-right"], "top-end"],
         ])(
             `when menu has classes %s, it will try to position the menu to %s`,
             async (classes: string[], expected_placement: string) => {

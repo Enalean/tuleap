@@ -138,7 +138,7 @@
                     <i class="fa fa-ellipsis-h tlp-button-icon"></i>
                     <i class="fa fa-caret-down tlp-button-icon-right"></i>
                 </button>
-                <div class="tlp-dropdown-menu tlp-dropdown-menu-right" role="menu">
+                <div class="tlp-dropdown-menu" role="menu">
                     {if isset($mark) && $mark}
                         <a class="tlp-dropdown-menu-item"
                            href="?a=commit&amp;h={$commit_presenter->commit->GetHash()|urlencode}"

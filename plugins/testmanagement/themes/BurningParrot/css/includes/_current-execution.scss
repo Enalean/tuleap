@@ -633,7 +633,7 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     margin: 0 5px 0 0;
 }
 
-.dropdown-link-bug-menu {
+.dropdown-link-bug-menu.tlp-dropdown-menu.tlp-dropdown-menu-on-icon.tlp-dropdown-shown {
     transform: translateX(4px);
 }
 
