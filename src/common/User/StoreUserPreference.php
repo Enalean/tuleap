@@ -26,8 +26,12 @@ namespace Tuleap\User;
 interface StoreUserPreference
 {
     public function search(int $user_id, string $preference_name): array;
+
     public function set(int $user_id, string $preference_name, string $preference_value): void;
+
     public function delete(int $user_id, string $preference_name): void;
+
     public function deleteByPreferenceNameAndValue(string $preference_name, string $preference_value): void;
+
     public function deletePreferenceForAllUsers(string $preference_name): void;
 }
