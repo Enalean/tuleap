@@ -1,11 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/core-rest-api-types': link:../../../../../lib/frontend/rest-api-types
   '@tuleap/plugin-tracker-constants': link:../constants
 
 dependencies:
+  '@tuleap/core-rest-api-types': link:../../../../../lib/frontend/rest-api-types
   '@tuleap/plugin-tracker-constants': link:../constants
-
-devDependencies:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator

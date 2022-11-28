@@ -1,6 +1,6 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-tracker-rest-api-types",
+  "name": "@tuleap/core-rest-api-types",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
@@ -11,10 +11,6 @@
     ".": {
       "require": "./dist/main.js"
     }
-  },
-  "dependencies": {
-    "@tuleap/core-rest-api-types": "link:../../../../../lib/frontend/rest-api-types",
-    "@tuleap/plugin-tracker-constants": "link:../constants"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
