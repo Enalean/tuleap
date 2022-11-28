@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Builders;
 
+use Tuleap\Test\User\StoreUserPreferenceStub;
+
 class UserTestBuilder
 {
     private array $params                = ['language_id' => 'en_US'];
@@ -34,6 +36,19 @@ class UserTestBuilder
     public static function aUser(): self
     {
         return new self();
+    }
+
+    public static function aRandomActiveUser(): self
+    {
+        $rand_id = random_int(0, PHP_INT_MAX);
+        return (new self())
+            ->withStatus(\PFUser::STATUS_ACTIVE)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects()
+            ->withId($rand_id)
+            ->withUserName('user_' . $rand_id)
+            ->withRealName('User ' . $rand_id)
+            ->withEmail('user_' . $rand_id . '@example.com');
     }
 
     public static function anActiveUser(): self
@@ -200,6 +215,7 @@ class UserTestBuilder
         if ($this->is_site_administrator !== null) {
             $user->setIsSuperUser($this->is_site_administrator);
         }
+        $user->preferencesdao = new StoreUserPreferenceStub();
         return $user;
     }
 

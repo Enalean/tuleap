@@ -1536,6 +1536,11 @@ msgstr "Filtrar por nome"
 msgid "Flat"
 msgstr "Simples"
 
+msgid ""
+"For all other services, you will receive an email when you are in the "
+"notification list"
+msgstr ""
+
 msgid "Forbidden"
 msgstr "Proibido"
 
@@ -2951,6 +2956,9 @@ msgstr "Receber emails adicionais da comunidade"
 msgid "Receive emails about site updates, including security notices"
 msgstr ""
 "Receber emails sobre atualizações no site, incluindo avisos de segurança"
+
+msgid "Receive emails for actions I do on the platform:"
+msgstr ""
 
 msgid "Recently"
 msgstr "Recentemente"

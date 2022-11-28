@@ -62,6 +62,26 @@
                                 {{# gettext }}Text{{/ gettext }}
                             </label>
                         </div>
+
+                        {{# has_notifications_on_own_actions }}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label">{{# gettext }}Receive emails for actions I do on the platform: {{/ gettext }}</label>
+                            {{# notification_on_own_actions }}
+                            <label class="tlp-label tlp-checkbox">
+                                <input
+                                    type="checkbox"
+                                    name="{{ name }}"
+                                    value="1"
+                                    data-test="user-prefs-notification-own-actions-{{ name }}"
+                                    {{# wants_notifications }}checked{{/ wants_notifications }}
+                                >
+                                {{ label }}
+                            </label>
+                            {{/ notification_on_own_actions }}
+                            <p class="tlp-text-info">{{# gettext }}For all other services, you will receive an email when you are in the notification list{{/ gettext }}</p>
+                        </div>
+                        {{/ has_notifications_on_own_actions }}
+
                     </section>
                     <section class="tlp-pane-section tlp-pane-section-submit user-preferences-section-submit">
                         {{# csrf_token }}

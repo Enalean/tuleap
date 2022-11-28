@@ -479,6 +479,7 @@ class RouteCollector
         return new UpdateNotificationsPreferences(
             DisplayNotificationsController::getCSRFToken(),
             \UserManager::instance(),
+            EventManager::instance(),
         );
     }
 

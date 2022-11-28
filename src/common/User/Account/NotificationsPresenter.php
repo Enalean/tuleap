@@ -29,16 +29,6 @@ use CSRFSynchronizerToken;
 final class NotificationsPresenter
 {
     /**
-     * @var CSRFSynchronizerToken
-     * @psalm-readonly
-     */
-    public $csrf_token;
-    /**
-     * @var AccountTabPresenterCollection
-     * @psalm-readonly
-     */
-    public $tabs;
-    /**
      * @var bool
      * @psalm-readonly
      */
@@ -59,10 +49,27 @@ final class NotificationsPresenter
      */
     public $email_format_text;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token, AccountTabPresenterCollection $tabs, \PFUser $user, string $mail_format_preference)
-    {
-        $this->csrf_token = $csrf_token;
-        $this->tabs       = $tabs;
+    /**
+     * @psalm-readonly
+     */
+    public bool $has_notifications_on_own_actions;
+
+    public function __construct(
+        /**
+         * @readonly
+         */
+        public CSRFSynchronizerToken $csrf_token,
+        /**
+         * @readonly
+         */
+        public AccountTabPresenterCollection $tabs,
+        /**
+         * @readonly
+         */
+        public NotificationsOnOwnActionsCollection $notification_on_own_actions,
+        \PFUser $user,
+        string $mail_format_preference,
+    ) {
         if ($user->getMailSiteUpdates()) {
             $this->site_email_updates_checked = true;
         }
@@ -76,5 +83,6 @@ final class NotificationsPresenter
             $this->email_format_html = false;
             $this->email_format_text = true;
         }
+        $this->has_notifications_on_own_actions = count($this->notification_on_own_actions) > 0;
     }
 }
