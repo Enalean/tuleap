@@ -27,7 +27,7 @@ pipeline {
                     dir 'sources/tools/utils/nix/'
                     filename 'build-tools.dockerfile'
                     reuseNode true
-                    args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only'
+                    args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only -v /nix -v /root'
                 }
             }
             steps {
@@ -43,7 +43,11 @@ pipeline {
                         ),
                         string(credentialsId: 'github-token-composer', variable: 'COMPOSER_GITHUB_AUTH')
                     ]) {
-                        sh 'tools/utils/scripts/generated-files-builder.sh dev'
+                        sh """
+                        # nix-daemon needs root (for now)
+                        su-exec-nixdaemon root sh -c 'TMPDIR=/tmp/tuleap_build/ nix-daemon' &
+                        tools/utils/scripts/generated-files-builder.sh dev
+                        """
                     }
                 }
             }
@@ -52,7 +56,7 @@ pipeline {
         stage('Check lockfiles') {
             steps { script {
                 actions = load 'sources/tests/actions.groovy'
-                actions.runFilesStatusChangesDetection('plugins/botmattermost_agiledashboard', 'lockfiles', 'package-lock.json composer.lock')
+                actions.runFilesStatusChangesDetection('plugins/botmattermost_agiledashboard', 'lockfiles', 'composer.lock')
             } }
             post {
                 failure {
