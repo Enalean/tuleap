@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
@@ -17,18 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use serde::{Deserialize, Serialize};
 
-declare(strict_types=1);
+#[derive(Serialize)]
+pub struct InternalErrorJson {
+    pub internal_error: String,
+}
 
-namespace Tuleap\Git\Hook\PreReceive;
+#[derive(Serialize)]
+pub struct UserErrorJson {
+    pub error: String,
+}
 
-abstract class WASMFFICallerStub
-{
-    final private function __construct()
-    {
-    }
+#[derive(Serialize)]
+pub struct RejectionMessageJson {
+    pub rejection_message: Option<String>,
+}
 
-    abstract public function callWasmModule(string $filename, string $json): \FFI\CData;
-
-    abstract public function freeCallWasmModuleOutput(\FFI\CData $json_ptr): void;
+#[derive(Deserialize)]
+pub struct WasmExpectedOutputJson {
+    pub result: Option<String>,
 }

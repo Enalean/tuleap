@@ -16,10 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 pub struct JsonData {
     pub obj_type: String,
     pub content: String,
+}
+
+#[derive(Serialize)]
+pub struct JsonResult {
+    pub result: Option<String>,
 }

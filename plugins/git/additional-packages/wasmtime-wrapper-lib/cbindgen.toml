@@ -1,0 +1,2 @@
+language = "C"
+header = "#define FFI_LIB \"/usr/share/tuleap/plugins/git/additional-packages/wasmtime-wrapper-lib/target/x86_64-unknown-linux-gnu/release/libwasmtimewrapper.so\""
