@@ -1,12 +1,12 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/filter-inline-table': link:../../../../../lib/frontend/filter-table
-  '@tuleap/link-selector': link:../../../../../lib/frontend/link-selector
-  '@tuleap/list-picker': link:../../../../../lib/frontend/list-picker
-  '@tuleap/tlp': link:../../../../themes/tlp
-  '@tuleap/tlp-relative-date': link:../../../../../lib/frontend/tlp-relative-date
-  '@tuleap/tlp-swatch-colors': link:../../../../../lib/frontend/tlp-swatch-colors
+  '@tuleap/filter-inline-table': workspace:*
+  '@tuleap/link-selector': workspace:*
+  '@tuleap/list-picker': workspace:*
+  '@tuleap/tlp': workspace:*
+  '@tuleap/tlp-relative-date': workspace:*
+  '@tuleap/tlp-swatch-colors': workspace:*
   codemirror: ^5.62.0
   dompurify: ^2.3.6
 

@@ -16,11 +16,11 @@
     }
   },
   "dependencies": {
-    "@tuleap/tlp-fetch": "link:../tlp-fetch",
+    "@tuleap/tlp-fetch": "workspace:*",
     "tus-js-client": "^2.3.1"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../build-system-configurator",
+    "@tuleap/build-system-configurator": "workspace:*",
     "@types/ckeditor": "^4.9.10"
   },
   "scripts": {

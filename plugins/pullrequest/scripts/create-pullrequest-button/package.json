@@ -5,13 +5,13 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/tlp-fetch": "link:../../../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-fetch": "workspace:*",
     "vue": "^2.7.8",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",

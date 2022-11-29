@@ -1,14 +1,14 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/angular-async': link:../../../../lib/frontend/angular-async
-  '@tuleap/angular-tlp': link:../../../../lib/frontend/angular-tlp
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/html-escaper': link:../../../../lib/frontend/html-escaper
-  '@tuleap/plugin-agiledashboard-card-fields': link:../lib/card-fields
-  '@tuleap/plugin-agiledashboard-shared': link:../lib/shared
-  '@tuleap/plugin-tracker-artifact-modal': link:../../../tracker/scripts/lib/artifact-modal
-  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/angular-async': workspace:*
+  '@tuleap/angular-tlp': workspace:*
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/html-escaper': workspace:*
+  '@tuleap/plugin-agiledashboard-card-fields': workspace:*
+  '@tuleap/plugin-agiledashboard-shared': workspace:*
+  '@tuleap/plugin-tracker-artifact-modal': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
   angular: ^1.8.2
   angular-gettext: ^2.4.2
   angular-jwt: ^0.1.11

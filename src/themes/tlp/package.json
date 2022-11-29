@@ -9,16 +9,16 @@
   "module": "./src/js/index.ts",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "@tuleap/tlp-dropdown": "link:../../../lib/frontend/tlp-dropdown",
-    "@tuleap/tlp-modal": "link:../../../lib/frontend/tlp-modal",
-    "@tuleap/tlp-popovers": "link:../../../lib/frontend/tlp-popovers",
-    "@tuleap/tlp-swatch-colors": "link:../../../lib/frontend/tlp-swatch-colors",
+    "@tuleap/tlp-dropdown": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
+    "@tuleap/tlp-popovers": "workspace:*",
+    "@tuleap/tlp-swatch-colors": "workspace:*",
     "flatpickr": "^4.6.9",
     "jquery": "^3.6.0",
     "select2": "^4.0.13"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../lib/frontend/build-system-configurator",
+    "@tuleap/build-system-configurator": "workspace:*",
     "@types/jquery": "^3.5.5"
   },
   "scripts": {

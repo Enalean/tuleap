@@ -6,19 +6,19 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/fault": "link:../../../../lib/frontend/fault",
-    "@tuleap/fetch-result": "link:../../../../lib/frontend/fetch-result",
-    "@tuleap/fp-feedback": "link:../../../../lib/frontend/fp-feedback",
-    "@tuleap/tlp": "link:../../../../src/themes/tlp",
-    "@tuleap/tlp-modal": "link:../../../../lib/frontend/tlp-modal",
-    "@tuleap/vue3-gettext-init": "link:../../../../lib/frontend/vue3-gettext-init",
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/fp-feedback": "workspace:*",
+    "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
+    "@tuleap/vue3-gettext-init": "workspace:*",
     "neverthrow": "^5.0.0",
     "vue": "3.2.37",
     "vue3-gettext": "^2.2.1"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator",
-    "@tuleap/po-gettext-plugin": "link:../../../../lib/frontend/po-gettext-plugin",
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*",
     "@vue/test-utils": "^2.0.2"
   },
   "scripts": {

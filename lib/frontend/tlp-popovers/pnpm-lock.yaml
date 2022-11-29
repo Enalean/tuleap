@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@floating-ui/dom': ^0.5.4
-  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/build-system-configurator': workspace:*
 
 dependencies:
   '@floating-ui/dom': 0.5.4

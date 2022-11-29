@@ -10,13 +10,13 @@
   "main": "dist/plugin-tracker-color-picker.umd.cjs",
   "style": "dist/style.css",
   "dependencies": {
-    "@tuleap/tlp-swatch-colors": "link:../../../../../lib/frontend/tlp-swatch-colors",
+    "@tuleap/tlp-swatch-colors": "workspace:*",
     "vue": "^2.7.8",
     "vue-gettext": "^2.1.12"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator",
-    "@tuleap/po-gettext-plugin": "link:../../../../../lib/frontend/po-gettext-plugin"
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*"
   },
   "scripts": {
     "build": "vite build",

@@ -13,6 +13,6 @@
     }
   },
   "dependencies": {
-    "@tuleap/tlp-swatch-colors": "link:../tlp-swatch-colors"
+    "@tuleap/tlp-swatch-colors": "workspace:*"
   }
 }

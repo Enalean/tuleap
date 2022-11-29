@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/gettext': link:../../lib/frontend/gettext
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/gettext': workspace:*
   '@types/bootstrap': ^3.4.0
   '@types/jquery': ^3.5.5
   jquery: ^3.6.0

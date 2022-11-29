@@ -16,14 +16,14 @@
     }
   },
   "dependencies": {
-    "@tuleap/ckeditor-image-upload": "link:../../../../../lib/frontend/ckeditor-image-upload",
-    "@tuleap/gettext": "link:../../../../../lib/frontend/gettext",
+    "@tuleap/ckeditor-image-upload": "workspace:*",
+    "@tuleap/gettext": "workspace:*",
     "pretty-kibibytes": "^4.0.4",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator",
-    "@tuleap/po-gettext-plugin": "link:../../../../../lib/frontend/po-gettext-plugin",
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*",
     "css.escape": "^1.5.1",
     "@types/ckeditor": "4.9.10",
     "@types/jest": "^29.0.3"

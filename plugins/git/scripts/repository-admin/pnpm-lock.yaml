@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/user-and-ugroup-autocompleter': link:../../../../lib/frontend/user-and-ugroup-autocompleter
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/user-and-ugroup-autocompleter': workspace:*
 
 dependencies:
   '@tuleap/user-and-ugroup-autocompleter': link:../../../../lib/frontend/user-and-ugroup-autocompleter

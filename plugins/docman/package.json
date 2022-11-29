@@ -5,10 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
-    "@tuleap/tlp-modal": "link:../../lib/frontend/tlp-modal",
-    "@tuleap/tlp-popovers": "link:../../lib/frontend/tlp-popovers",
-    "@tuleap/user-and-ugroup-autocompleter": "link:../../lib/frontend/user-and-ugroup-autocompleter"
+    "@tuleap/html-escaper": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
+    "@tuleap/tlp-popovers": "workspace:*",
+    "@tuleap/user-and-ugroup-autocompleter": "workspace:*"
   },
   "config": {
     "bin": "../../node_modules/.bin"
@@ -19,6 +19,6 @@
     "watch": "webpack --config webpack.dev.js --watch"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   }
 }

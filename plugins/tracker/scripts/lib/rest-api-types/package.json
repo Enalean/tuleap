@@ -13,8 +13,8 @@
     }
   },
   "dependencies": {
-    "@tuleap/core-rest-api-types": "link:../../../../../lib/frontend/rest-api-types",
-    "@tuleap/plugin-tracker-constants": "link:../constants"
+    "@tuleap/core-rest-api-types": "workspace:*",
+    "@tuleap/plugin-tracker-constants": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

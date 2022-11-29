@@ -16,16 +16,16 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@tuleap/concurrency-limit-pool": "link:../../../../../lib/frontend/concurrency-limit-pool",
-    "@tuleap/plugin-tracker-constants": "link:../../../../tracker/scripts/lib/constants",
-    "@tuleap/plugin-tracker-rest-api-types": "link:../../../../tracker/scripts/lib/rest-api-types",
-    "@tuleap/tlp-fetch": "link:../../../../../lib/frontend/tlp-fetch",
+    "@tuleap/concurrency-limit-pool": "workspace:*",
+    "@tuleap/plugin-tracker-constants": "workspace:*",
+    "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*",
     "docx": "^7.3.0",
     "dompurify": "^2.3.6",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator",
+    "@tuleap/build-system-configurator": "workspace:*",
     "@types/dompurify": "^2.3.2",
     "@types/sprintf-js": "^1.1.2"
   }

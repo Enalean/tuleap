@@ -14,7 +14,7 @@
     "codemirror": "^5.62.0"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator",
+    "@tuleap/build-system-configurator": "workspace:*",
     "@types/codemirror": "^5.60.1"
   },
   "scripts": {

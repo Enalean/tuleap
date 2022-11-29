@@ -19,6 +19,6 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   }
 }

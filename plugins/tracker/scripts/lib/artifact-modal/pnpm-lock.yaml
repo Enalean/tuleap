@@ -1,22 +1,22 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/angular-tlp': link:../../../../../lib/frontend/angular-tlp
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/ckeditor-image-upload': link:../../../../../lib/frontend/ckeditor-image-upload
-  '@tuleap/date-helper': link:../../../../../lib/frontend/date-helper
-  '@tuleap/dom': link:../../../../../lib/frontend/dom
-  '@tuleap/fault': link:../../../../../lib/frontend/fault
-  '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
-  '@tuleap/link-selector': link:../../../../../lib/frontend/link-selector
-  '@tuleap/list-picker': link:../../../../../lib/frontend/list-picker
-  '@tuleap/plugin-tracker-constants': link:../constants
-  '@tuleap/plugin-tracker-rest-api-types': link:../rest-api-types
-  '@tuleap/plugin-tracker-rich-text-editor': link:../rich-text-editor
-  '@tuleap/tlp': link:../../../../../src/themes/tlp
-  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-relative-date': link:../../../../../lib/frontend/tlp-relative-date
-  '@tuleap/tooltip': link:../../../../../lib/frontend/tooltip
+  '@tuleap/angular-tlp': workspace:*
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/ckeditor-image-upload': workspace:*
+  '@tuleap/date-helper': workspace:*
+  '@tuleap/dom': workspace:*
+  '@tuleap/fault': workspace:*
+  '@tuleap/fetch-result': workspace:*
+  '@tuleap/link-selector': workspace:*
+  '@tuleap/list-picker': workspace:*
+  '@tuleap/plugin-tracker-constants': workspace:*
+  '@tuleap/plugin-tracker-rest-api-types': workspace:*
+  '@tuleap/plugin-tracker-rich-text-editor': workspace:*
+  '@tuleap/tlp': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/tlp-relative-date': workspace:*
+  '@tuleap/tooltip': workspace:*
   '@types/ckeditor': ^4.9.10
   angular: ^1.8.2
   angular-custom-elements: ^2.1.0

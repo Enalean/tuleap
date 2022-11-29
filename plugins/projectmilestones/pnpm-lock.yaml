@@ -1,17 +1,17 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
-  '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/date-helper': link:../../lib/frontend/date-helper
-  '@tuleap/pie-chart': link:../../lib/frontend/pie-chart
-  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
-  '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
-  '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
+  '@tuleap/autocomplete-for-select2': workspace:*
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/chart-builder': workspace:*
+  '@tuleap/cypress-configurator': workspace:*
+  '@tuleap/cypress-utilities-support': workspace:*
+  '@tuleap/date-helper': workspace:*
+  '@tuleap/pie-chart': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/tlp-swatch-colors': workspace:*
+  '@tuleap/vue2-gettext-init': workspace:*
+  '@tuleap/vuex-store-wrapper-jest': workspace:*
   '@types/d3-array': ^2.12.1
   '@types/d3-selection': ^2.0.0
   '@types/d3-shape': ^2.1.0
