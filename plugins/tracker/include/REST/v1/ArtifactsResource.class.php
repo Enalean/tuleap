@@ -664,7 +664,7 @@ class ArtifactsResource extends AuthenticatedResource
         $reverse_order = (bool) (strtolower($order) === self::ORDER_DESC);
         $changesets    = $this->builder->getArtifactChangesetsRepresentation($user, $artifact, $fields, $offset, $limit, $reverse_order);
 
-        $this->sendAllowHeadersForChangesets($artifact);
+        $this->sendAllowHeadersForChangesets();
         Header::sendPaginationHeaders($limit, $offset, $changesets->totalCount(), self::MAX_LIMIT);
         return $changesets->toArray();
     }
