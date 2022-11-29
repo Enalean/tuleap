@@ -78,6 +78,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
             $contact_support_email
         );
     }
+
     private function getRenderer()
     {
         $template_path = MYTULEAP_CONTACT_SUPPORT_BASE_DIR . '/templates/';
