@@ -119,6 +119,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInit
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
+use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -165,53 +166,20 @@ class ArtifactsResource extends AuthenticatedResource
     public const COMPLETE_TRACKER_STRUCTURE = 'complete';
 
     public const EMPTY_TYPE = '';
-    /**
-     * @var PostMoveArticfactRESTAction
-     */
-    private $post_move_action;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var UserDeletionRetriever
-     */
-    private $user_deletion_retriever;
 
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
 
-    /** @var ArtifactRepresentationBuilder */
-    private $builder;
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
-    /** @var MovedArtifactValueBuilder  */
-    private $moved_value_builder;
-
-    /**
-     * @var ArtifactsDeletionManager
-     */
-    private $artifacts_deletion_manager;
-
-    /**
-     * @var ArtifactsDeletionConfig
-     */
-    private $artifacts_deletion_config;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    /**
-     * @var \Tracker_REST_TrackerRestBuilder
-     */
-    private $tracker_rest_builder;
+    private PostMoveArticfactRESTAction $post_move_action;
+    private UserManager $user_manager;
+    private UserDeletionRetriever $user_deletion_retriever;
+    private Tracker_ArtifactFactory $artifact_factory;
+    private ArtifactRepresentationBuilder $builder;
+    private Tracker_FormElementFactory $formelement_factory;
+    private TrackerFactory $tracker_factory;
+    private MovedArtifactValueBuilder $moved_value_builder;
+    private ArtifactsDeletionManager $artifacts_deletion_manager;
+    private ArtifactsDeletionConfig $artifacts_deletion_config;
+    private EventManager $event_manager;
+    private \Tracker_REST_TrackerRestBuilder $tracker_rest_builder;
 
     public function __construct()
     {
@@ -361,7 +329,8 @@ class ArtifactsResource extends AuthenticatedResource
                 $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
                     $user,
                     $artifact,
-                    MinimalTrackerRepresentation::build($artifact->getTracker())
+                    MinimalTrackerRepresentation::build($artifact->getTracker()),
+                    StatusValueRepresentation::buildFromArtifact($artifact, $user)
                 );
             }
         }
@@ -471,11 +440,11 @@ class ArtifactsResource extends AuthenticatedResource
         }
 
         if ($values_format === self::VALUES_DEFAULT || $values_format === self::VALUES_FORMAT_COLLECTION) {
-            $representation = $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation);
+            $representation = $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation, StatusValueRepresentation::buildFromArtifact($artifact, $user));
         } elseif ($values_format === self::VALUES_FORMAT_BY_FIELD) {
-            $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues($user, $artifact, $tracker_representation);
+            $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues($user, $artifact, $tracker_representation, StatusValueRepresentation::buildFromArtifact($artifact, $user));
         } elseif ($values_format === self::VALUES_FORMAT_ALL) {
-            $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact, $tracker_representation);
+            $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact, $tracker_representation, StatusValueRepresentation::buildFromArtifact($artifact, $user));
         }
 
         return $representation;
@@ -580,7 +549,8 @@ class ArtifactsResource extends AuthenticatedResource
             $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
                 $user,
                 $linked_artifact,
-                $tracker_representation
+                $tracker_representation,
+                StatusValueRepresentation::buildFromArtifact($artifact, $user)
             );
         }
 

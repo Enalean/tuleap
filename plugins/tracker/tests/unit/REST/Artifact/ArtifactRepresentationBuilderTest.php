@@ -67,7 +67,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     /**
      * @see ArtifactRepresentationTest
      */
-    public function testGetArtifactRepresentationReturnsArtifactRepresentationWithoutFields()
+    public function testGetArtifactRepresentationReturnsArtifactRepresentationWithoutFields(): void
     {
         $current_user = UserTestBuilder::buildWithDefaults();
 
@@ -75,21 +75,21 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $submitted_by = UserTestBuilder::aUser()->withId(777)->build();
         $artifact->shouldReceive('getSubmittedByUser')->andReturns($submitted_by);
 
-        $representation = $this->builder->getArtifactRepresentation($current_user, $artifact);
+        $representation = $this->builder->getArtifactRepresentation($current_user, $artifact, $this->buildStatusValueRepresentation());
 
         $this->assertSame(self::ARTIFACT_ID, $representation->id);
     }
 
-    public function testGetArtifactRepresentationWithFieldValuesWhenThereAreNoFields()
+    public function testGetArtifactRepresentationWithFieldValuesWhenThereAreNoFields(): void
     {
         $current_user = Mockery::mock(\PFUser::class);
         $artifact     = $this->buildBasicArtifactMock();
         $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->andReturn([])->once();
 
-        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation());
+        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation(), $this->buildStatusValueRepresentation());
     }
 
-    public function testGetArtifactRepresentationWithFieldValuesDoesntIncludeFieldsUserCantRead()
+    public function testGetArtifactRepresentationWithFieldValuesDoesntIncludeFieldsUserCantRead(): void
     {
         $current_user = Mockery::mock(\PFUser::class);
 
@@ -121,10 +121,10 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         );
         $artifact = $this->buildBasicArtifactMock();
 
-        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation());
+        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation(), $this->buildStatusValueRepresentation());
     }
 
-    public function testGetArtifactRepresentationWithFieldValuesReturnsOnlyForFieldsWithValues()
+    public function testGetArtifactRepresentationWithFieldValuesReturnsOnlyForFieldsWithValues(): void
     {
         $first_field  = Mockery::mock(\Tracker_FormElement_Field::class)
             ->shouldReceive('userCanRead')
@@ -133,7 +133,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $second_field = Mockery::mock(\Tracker_FormElement_Field::class);
         $second_field->shouldReceive(
             [
-                'userCanRead'  => true,
+                'userCanRead' => true,
                 'getRESTValue' => 'whatever',
             ]
         );
@@ -152,19 +152,19 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $current_user = Mockery::mock(\PFUser::class);
         $artifact     = $this->buildBasicArtifactMock();
 
-        $representation = $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation());
+        $representation = $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation(), $this->buildStatusValueRepresentation());
 
         $this->assertEquals(['whatever'], $representation->values);
         $this->assertNull($representation->values_by_field);
     }
 
-    public function testGetArtifactRepresentationWithFieldValuesByFieldValuesReturnsSimpleValues()
+    public function testGetArtifactRepresentationWithFieldValuesByFieldValuesReturnsSimpleValues(): void
     {
         $first_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $first_field->shouldReceive(
             [
-                'userCanRead'  => true,
-                'getName'      => 'field01',
+                'userCanRead' => true,
+                'getName' => 'field01',
                 'getRESTValue' => '01',
             ]
         );
@@ -188,20 +188,21 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues(
             $current_user,
             $artifact,
-            self::buildMinimalTrackerRepresentation()
+            self::buildMinimalTrackerRepresentation(),
+            $this->buildStatusValueRepresentation()
         );
 
         $this->assertNull($representation->values);
         $this->assertEquals(['field01' => '01', 'field02' => 'whatever'], $representation->values_by_field);
     }
 
-    public function testGetArtifactRepresentationWithFieldValuesInBothFormat()
+    public function testGetArtifactRepresentationWithFieldValuesInBothFormat(): void
     {
         $first_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $first_field->shouldReceive(
             [
-                'userCanRead'  => true,
-                'getName'      => 'field01',
+                'userCanRead' => true,
+                'getName' => 'field01',
                 'getRESTValue' => '01',
             ]
         );
@@ -225,14 +226,15 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
             $current_user,
             $artifact,
-            self::buildMinimalTrackerRepresentation()
+            self::buildMinimalTrackerRepresentation(),
+            $this->buildStatusValueRepresentation()
         );
 
         $this->assertEquals(['01', 'whatever'], $representation->values);
         $this->assertEquals(['field01' => '01', 'field02' => 'whatever'], $representation->values_by_field);
     }
 
-    public function testGetArtifactChangesetsRepresentationReturnsEmptyArrayWhenNoChanges()
+    public function testGetArtifactChangesetsRepresentationReturnsEmptyArrayWhenNoChanges(): void
     {
         $current_user = Mockery::mock(\PFUser::class);
         $artifact     = $this->buildBasicArtifactMock();
@@ -458,5 +460,10 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         );
         $changeset->setLatestComment($comment);
         return $changeset;
+    }
+
+    private function buildStatusValueRepresentation(): StatusValueRepresentation
+    {
+        return StatusValueRepresentation::buildFromValues("On going", "flamingo-pink");
     }
 }

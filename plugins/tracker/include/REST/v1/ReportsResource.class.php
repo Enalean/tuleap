@@ -44,9 +44,12 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\v1\Report\MatchingArtifactRepresentationBuilder;
+use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
+use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use UserManager;
 
 /**
@@ -191,6 +194,7 @@ class ReportsResource extends AuthenticatedResource
                 $this->report_artifact_factory,
                 new TableRendererForReportRetriever(),
                 new UsedFieldsRetriever(),
+                new StatusColorForChangesetProvider(new StatusValueForChangesetProvider())
             );
 
             $artifact_collection = $builder->buildMatchingArtifactRepresentationCollection(
@@ -254,9 +258,9 @@ class ReportsResource extends AuthenticatedResource
             if ($with_all_field_values) {
                 $tracker_representation = MinimalTrackerRepresentation::build($artifact->getTracker());
 
-                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation);
+                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation, StatusValueRepresentation::buildFromArtifact($artifact, $user));
             } else {
-                return $builder->getArtifactRepresentation($user, $artifact);
+                return $builder->getArtifactRepresentation($user, $artifact, StatusValueRepresentation::buildFromArtifact($artifact, $user));
             }
         };
 
