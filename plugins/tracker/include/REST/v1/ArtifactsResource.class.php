@@ -638,7 +638,7 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @param int $id Id of the artifact
      * @param string $fields Whether you want to fetch all fields or just comments {@from path}{@choice all,comments}
-     * @param int $limit Number of elements displayed per page {@from path}{@min 1}
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      * @param string $order By default the changesets are returned by Changeset Id ASC. Set this parameter to either ASC or DESC {@from path}{@choice asc,desc}
      * @return array {@type Tuleap\Tracker\REST\ChangesetRepresentation}
@@ -648,7 +648,7 @@ class ArtifactsResource extends AuthenticatedResource
     public function getArtifactChangesets(
         $id,
         $fields = Changeset::FIELDS_ALL,
-        $limit = 10,
+        $limit = self::DEFAULT_LIMIT,
         $offset = self::DEFAULT_OFFSET,
         $order = self::ORDER_ASC,
     ) {
