@@ -188,15 +188,13 @@ class ArtifactRepresentationBuilder
         );
     }
 
-    private function mapFilterSlice(array $collection, $offset, $limit, Closure $function, bool $reverse_order)
+    private function sliceMapFilter(array $collection, $offset, $limit, Closure $function, bool $reverse_order): array
     {
-        $filtered_collection = $this->mapAndFilter(
-            $collection,
+        return $this->mapAndFilter(
+            array_slice($collection, $offset, $limit),
             $function,
             $reverse_order
         );
-
-        return array_slice($filtered_collection, $offset, $limit);
     }
 
     private function getFieldsValuesFilter(PFUser $user, Tracker_Artifact_Changeset $changeset)
@@ -224,7 +222,7 @@ class ArtifactRepresentationBuilder
         $all_changesets = $artifact->getChangesets();
 
         return new ChangesetRepresentationCollection(
-            $this->mapFilterSlice(
+            $this->sliceMapFilter(
                 $all_changesets,
                 $offset,
                 $limit,
