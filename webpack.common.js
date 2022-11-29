@@ -27,9 +27,7 @@ module.exports = [
             modal: "./scripts/modal.js",
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "./frontend-assets/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             tlp: "tlp",
         },
