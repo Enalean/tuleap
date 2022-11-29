@@ -22,18 +22,14 @@
     <div class="document-quick-look-document-action">
         <a
             v-if="should_display_open_button"
-            class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+            class="tlp-button-primary tlp-button-small"
             v-bind:href="open_href"
             data-test="document-quick-look-document-cta-open"
         >
             <translate>Open</translate>
             <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
         </a>
-        <download-button
-            class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
-            v-bind:item="item"
-            v-else
-        />
+        <download-button class="tlp-button-primary tlp-button-small" v-bind:item="item" v-else />
         <drop-down-quick-look v-bind:item="item" />
     </div>
 </template>

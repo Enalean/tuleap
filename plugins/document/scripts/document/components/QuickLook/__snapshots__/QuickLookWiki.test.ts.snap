@@ -5,7 +5,7 @@ exports[`QuickLookWiki renders quick look for wiki document 1`] = `
   class="document-quick-look-document-action"
 >
   <button
-    class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+    class="tlp-button-primary tlp-button-small"
     data-test="go-to-the-wiki-page"
     type="button"
   >

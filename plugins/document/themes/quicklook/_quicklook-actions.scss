@@ -19,12 +19,9 @@
 
 .document-quick-look-document-action {
     display: flex;
+    gap: var(--tlp-small-spacing);
 }
 
 .document-quick-look-folder-action-new-folder-button {
-    margin: 0 var(--tlp-small-spacing) 0 0;
-}
-
-.document-quick-look-action-button-margin {
     margin: 0 var(--tlp-small-spacing) 0 0;
 }
