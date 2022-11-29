@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\PreReceive;
+namespace Tuleap\WebAssembly;
 
-abstract class WASMFFICallerStub
+abstract class FFIWASMCallerStub
 {
     final private function __construct()
     {

@@ -24,6 +24,7 @@ namespace Tuleap\Git\Hook\PreReceive;
 
 use Git_Exec;
 use GitRepositoryFactory;
+use Tuleap\WebAssembly\WASMCaller;
 
 final class PreReceiveAnalyzeAction
 {

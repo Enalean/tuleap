@@ -20,21 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\PreReceive;
+namespace Tuleap\WebAssembly;
 
-final class PreReceiveAnalyzeFFI implements WASMCaller
+final class FFIWASMCaller implements WASMCaller
 {
     /**
-     * @var \FFI&WASMFFICallerStub $ffi
+     * @var \FFI&FFIWASMCallerStub $ffi
      */
     private \FFI $ffi;
-    private const HEADER_PATH = __DIR__ . '/../../../additional-packages/wasmtime-wrapper-lib/wasmtimewrapper.h';
-    private const MODULE_PATH = __DIR__ . '/../../../additional-packages/pre-receive-hook-example/target/wasm32-wasi/release/pre-receive-hook-example.wasm';
+    private const HEADER_PATH = __DIR__ . '/../../additional-packages/wasmtime-wrapper-lib/wasmtimewrapper.h';
+    private const MODULE_PATH = __DIR__ . '/../../additional-packages/pre-receive-hook-example/target/wasm32-wasi/release/pre-receive-hook-example.wasm';
 
     public function __construct()
     {
         /**
-         * @var ?(\FFI&WASMFFICallerStub) $ffi_tmp
+         * @var ?(\FFI&FFIWASMCallerStub) $ffi_tmp
          */
         $ffi_tmp = \FFI::load(self::HEADER_PATH);
         if ($ffi_tmp === null) {
