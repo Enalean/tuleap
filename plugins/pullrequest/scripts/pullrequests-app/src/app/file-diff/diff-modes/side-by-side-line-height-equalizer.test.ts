@@ -32,7 +32,7 @@ describe("line-height-equalizer", () => {
     let left_codemirror: Editor, right_codemirror: Editor;
 
     function getLinesHeightsEqualizer(handles: SynchronizedLineHandles): EqualizeLinesHeights {
-        const line = FileLineStub.buildUnMovedFileLine(1, 1);
+        const line = FileLineStub.buildUnMovedFileLine(1, 1, 1);
 
         return SideBySideLinesHeightEqualizer(
             left_codemirror,

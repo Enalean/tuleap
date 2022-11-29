@@ -27,6 +27,7 @@ import { PullRequestCommentControllerStub } from "./PullRequestCommentController
 import { CurrentPullRequestUserPresenterStub } from "./CurrentPullRequestUserPresenterStub";
 import { CurrentPullRequestPresenterStub } from "./CurrentPullRequestPresenterStub";
 import { SaveNewInlineCommentStub } from "./SaveNewInlineCommentStub";
+import type { InlineCommentWidget } from "../../src/app/file-diff/diff-modes/types";
 
 const base_element = document.implementation.createHTMLDocument().createElement("div");
 
@@ -49,7 +50,10 @@ const stubBounding = (height: number) => {
 };
 
 export const FileDiffWidgetStub = {
-    buildInlineCommentWidget: (height = 20): FileDiffCommentWidget => ({
+    buildInlineCommentWidget: (
+        height = 20,
+        data: Partial<InlineCommentWidget> = {}
+    ): InlineCommentWidget => ({
         ...base_element,
         localName: "tuleap-pullrequest-comment",
         getBoundingClientRect: stubBounding(height),
@@ -59,6 +63,7 @@ export const FileDiffWidgetStub = {
         currentUser: CurrentPullRequestUserPresenterStub.withDefault(),
         currentPullRequest: CurrentPullRequestPresenterStub.withDefault(),
         post_rendering_callback: noop,
+        ...data,
     }),
 
     buildNewCommentFormWidget: (height = 20): FileDiffCommentWidget => ({

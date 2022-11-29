@@ -43,10 +43,10 @@ describe("side-by-side-code-mirrors-content-manager", () => {
         const file_lines = [
             FileLineStub.buildRemovedLine(1, 1, "# Project's README"),
             FileLineStub.buildAddedLine(2, 1, "# Guinea Pig"),
-            FileLineStub.buildUnMovedFileLine(3, 2, ""),
-            FileLineStub.buildUnMovedFileLine(4, 3, "This is the project's description"),
-            FileLineStub.buildUnMovedFileLine(5, 4, "You will find interesting stuff inside"),
-            FileLineStub.buildUnMovedFileLine(6, 5, ""),
+            FileLineStub.buildUnMovedFileLine(3, 2, 2, ""),
+            FileLineStub.buildUnMovedFileLine(4, 3, 3, "This is the project's description"),
+            FileLineStub.buildUnMovedFileLine(5, 4, 4, "You will find interesting stuff inside"),
+            FileLineStub.buildUnMovedFileLine(6, 5, 5, ""),
             FileLineStub.buildRemovedLine(7, 6, "Hello world !"),
         ];
 

@@ -48,8 +48,8 @@ describe("side-by-side line mapper", () => {
         describe("Unmoved lines -", () => {
             it(`Given diff lines, a map from line to group and the left and right code mirrors,
                 then it will return a map from line to left-side LineHandle and right-side LineHandle for unmoved lines`, () => {
-                const first_unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1);
-                const second_unmoved_line = FileLineStub.buildUnMovedFileLine(2, 2);
+                const first_unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1, 1);
+                const second_unmoved_line = FileLineStub.buildUnMovedFileLine(2, 2, 2);
                 const lines_mapper = SideBySideLineMapper(
                     [first_unmoved_line, second_unmoved_line],
                     left_code_mirror,
@@ -93,7 +93,7 @@ describe("side-by-side line mapper", () => {
         describe("Added lines -", () => {
             it(`will return a map from line to right-side LineHandle and on the left-side to the first line before the added group
                 so that I can place a line widget there`, () => {
-                const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
+                const first_line = FileLineStub.buildUnMovedFileLine(1, 1, 1);
                 const first_added_line = FileLineStub.buildAddedLine(2, 2);
                 const second_added_line = FileLineStub.buildAddedLine(3, 3);
 
@@ -195,10 +195,10 @@ describe("side-by-side line mapper", () => {
         describe("Deleted lines -", () => {
             it(`will return a map from line to left-side LineHandle and on the right-side to the first line after the deleted group
                 so that I can place a line widget there`, () => {
-                const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
+                const first_line = FileLineStub.buildUnMovedFileLine(1, 1, 1);
                 const second_deleted_line = FileLineStub.buildRemovedLine(2, 2);
                 const third_deleted_line = FileLineStub.buildRemovedLine(3, 3);
-                const fourth_line = FileLineStub.buildUnMovedFileLine(4, 2);
+                const fourth_line = FileLineStub.buildUnMovedFileLine(4, 2, 4);
 
                 const lines_mapper = SideBySideLineMapper(
                     [first_line, second_deleted_line, third_deleted_line, fourth_line],
@@ -252,8 +252,8 @@ describe("side-by-side line mapper", () => {
 
             it(`Given the deleted group is at the end of the file,
                 then the right-side LineHandle will be at the last line of the previous group`, () => {
-                const first_unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1);
-                const second_unmoved_line = FileLineStub.buildUnMovedFileLine(2, 2);
+                const first_unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1, 1);
+                const second_unmoved_line = FileLineStub.buildUnMovedFileLine(2, 2, 2);
                 const third_deleted_line = FileLineStub.buildRemovedLine(3, 3);
                 const fourth_deleted_line = FileLineStub.buildRemovedLine(4, 4);
 

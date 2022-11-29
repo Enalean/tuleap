@@ -23,6 +23,7 @@ import type { PullRequestPresenter } from "../../comments/PullRequestPresenter";
 import type { IRelativeDateHelper } from "../../helpers/date-helpers";
 import type { ControlPullRequestComment } from "../../comments/PullRequestCommentController";
 import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
+import type { MapCommentWidgets } from "./file-diff-comment-widgets-map";
 import type {
     InlineCommentWidgetCreationParams,
     NewInlineCommentFormWidgetCreationParams,
@@ -63,6 +64,7 @@ export const SideBySideCodeMirrorWidgetCreator = (
     relative_dates_helper: IRelativeDateHelper,
     controller: ControlPullRequestComment,
     comments_store: StorePullRequestCommentReplies,
+    comments_widgets_map: MapCommentWidgets,
     pull_request_presenter: PullRequestPresenter,
     current_user_presenter: CurrentPullRequestUserPresenter
 ): CreateFileDiffWidget => {
@@ -85,6 +87,8 @@ export const SideBySideCodeMirrorWidgetCreator = (
             inline_comment_element,
             getWidgetPlacementOptions(widget_params)
         );
+
+        comments_widgets_map.addCommentWidget(inline_comment_element);
     };
 
     return {

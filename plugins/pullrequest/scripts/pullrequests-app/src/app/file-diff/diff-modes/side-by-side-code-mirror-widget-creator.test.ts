@@ -43,6 +43,7 @@ import { TAG_NAME as COMMENT_TAG_NAME } from "../../comments/PullRequestComment"
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "../FileDiffPlaceholder";
 import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
 import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
+import { FileDiffCommentWidgetsMap } from "./file-diff-comment-widgets-map";
 
 type EditorThatCanHaveWidgets = Editor & {
     addLineWidget: jest.SpyInstance;
@@ -65,6 +66,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             relative_date_helper,
             controller,
             comments_store,
+            FileDiffCommentWidgetsMap(),
             pull_request,
             current_user
         );

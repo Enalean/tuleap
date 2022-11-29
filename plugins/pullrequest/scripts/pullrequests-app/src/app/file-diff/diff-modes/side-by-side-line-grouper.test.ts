@@ -29,11 +29,11 @@ describe("Side-by-side line grouper", () => {
 
             beforeEach(() => {
                 line_grouper = SideBySideLineGrouper([
-                    FileLineStub.buildUnMovedFileLine(1, 1),
+                    FileLineStub.buildUnMovedFileLine(1, 1, 1),
                     FileLineStub.buildRemovedLine(2, 2),
                     FileLineStub.buildRemovedLine(3, 3),
                     FileLineStub.buildRemovedLine(4, 4),
-                    FileLineStub.buildUnMovedFileLine(5, 2),
+                    FileLineStub.buildUnMovedFileLine(5, 2, 5),
                     FileLineStub.buildRemovedLine(6, 6),
                     FileLineStub.buildRemovedLine(7, 7),
                 ]);
@@ -91,12 +91,12 @@ describe("Side-by-side line grouper", () => {
 
             beforeEach(() => {
                 line_grouper = SideBySideLineGrouper([
-                    FileLineStub.buildUnMovedFileLine(1, 1),
-                    FileLineStub.buildUnMovedFileLine(2, 2),
+                    FileLineStub.buildUnMovedFileLine(1, 1, 1),
+                    FileLineStub.buildUnMovedFileLine(2, 2, 2),
                     FileLineStub.buildAddedLine(3, 3),
                     FileLineStub.buildAddedLine(4, 4),
                     FileLineStub.buildAddedLine(5, 5),
-                    FileLineStub.buildUnMovedFileLine(6, 6),
+                    FileLineStub.buildUnMovedFileLine(6, 6, 3),
                     FileLineStub.buildAddedLine(7, 7),
                     FileLineStub.buildAddedLine(8, 8),
                 ]);
