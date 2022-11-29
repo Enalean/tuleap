@@ -157,33 +157,33 @@ generate-mo: ## Compile translated strings into binary format
 
 tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mysql80, mariadb103)
 	$(eval PHP_VERSION ?= 80)
-	$(eval DB ?= mysql57)
+	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
 tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mysql80, mariadb103)
 	$(eval PHP_VERSION ?= 80)
-	$(eval DB ?= mysql57)
+	$(eval DB ?= mysql80)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/soap/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
 tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (80). DB to select the database to use (mysql57, mariadb103, mysql80)
 	$(eval PHP_VERSION ?= 80)
-	$(eval DB ?= mysql57)
+	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
 tests-e2e: ## Run E2E tests. DB to select the database to use (mysql57, mysql80).
-	$(eval DB ?= mysql57)
+	$(eval DB ?= mysql80)
 	@tests/e2e/full/wrap.sh "$(DB)"
 
 tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql57, mysql80).
-	$(eval DB ?= mysql57)
+	$(eval DB ?= mysql80)
 	@tests/e2e/full/wrap_for_dev_context.sh "$(DB)"
 
 .PHONY:tests-e2e-svn-distlp
 tests-e2e-svn-distlp: ## Run E2E Tuleap Distributed SVN tests. DB to select the database to use (mysql57, mysql80).
-	$(eval DB ?= mysql57)
+	$(eval DB ?= mysql80)
 	@tests/e2e/distlp/wrap.sh "$(DB)"
 
 tests_cypress:
