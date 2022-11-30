@@ -42,6 +42,8 @@ import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullReque
 import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
 import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
 import { SideBySideCodeMirrorWidgetsCreationManager } from "./side-by-side-code-mirror-widgets-creation-manager";
+import { FileDiffCommentScroller } from "./file-diff-comment-scroller";
+import { FileDiffCommentWidgetsMap } from "./file-diff-comment-widgets-map";
 
 export default {
     template: `
@@ -53,6 +55,7 @@ export default {
         diff: "<",
         filePath: "@",
         pullRequestId: "@",
+        commentId: "@",
     },
 };
 
@@ -112,6 +115,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
             right_code_mirror
         );
 
+        const comment_widgets_map = FileDiffCommentWidgetsMap();
         const widget_creator = SideBySideCodeMirrorWidgetCreator(
             document,
             RelativeDateHelper(
@@ -125,6 +129,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
                 PullRequestCommentNewReplySaver()
             ),
             getStore(),
+            comment_widgets_map,
             PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest()),
             PullRequestCurrentUserPresenter.fromUserInfo(
                 SharedPropertiesService.getUserId(),
@@ -187,6 +192,12 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
                 getLineNumberFromEvent(event)
             );
         });
+
+        FileDiffCommentScroller(
+            getStore(),
+            file_lines,
+            comment_widgets_map
+        ).scrollToSideBySideDiffComment(self.commentId, left_code_mirror, right_code_mirror);
     }
 
     function displayLine(line, left_code_mirror, right_code_mirror) {

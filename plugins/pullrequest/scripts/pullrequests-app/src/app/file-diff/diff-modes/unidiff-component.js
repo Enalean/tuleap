@@ -32,6 +32,8 @@ import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInli
 import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
 import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
 import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
+import { FileDiffCommentScroller } from "./file-diff-comment-scroller";
+import { FileDiffCommentWidgetsMap } from "./file-diff-comment-widgets-map";
 
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,
@@ -40,6 +42,7 @@ export default {
         diff: "<",
         filePath: "@",
         pullRequestId: "@",
+        commentId: "@",
     },
 };
 
@@ -63,6 +66,8 @@ function controller(
     const GUTTER_NEWLINES = "gutter-newlines";
     const GUTTER_OLDLINES = "gutter-oldlines";
 
+    const comment_widgets_map = FileDiffCommentWidgetsMap();
+
     Object.assign(self, {
         $onInit,
         widget_creator: SideBySideCodeMirrorWidgetCreator(
@@ -78,6 +83,7 @@ function controller(
                 PullRequestCommentNewReplySaver()
             ),
             getStore(),
+            comment_widgets_map,
             PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest()),
             PullRequestCurrentUserPresenter.fromUserInfo(
                 SharedPropertiesService.getUserId(),
@@ -124,6 +130,12 @@ function controller(
             });
 
         unidiff_codemirror.on("gutterClick", addNewComment);
+
+        FileDiffCommentScroller(
+            getStore(),
+            self.diff.lines,
+            comment_widgets_map
+        ).scrollToUnifiedDiffComment(self.commentId, unidiff_codemirror);
     }
 
     function getCommentPosition(line_number, gutter) {

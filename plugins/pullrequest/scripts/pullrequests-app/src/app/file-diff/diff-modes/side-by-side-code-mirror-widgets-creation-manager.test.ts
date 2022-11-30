@@ -339,7 +339,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
             };
 
             beforeEach(() => {
-                comment_line = FileLineStub.buildUnMovedFileLine(12, 12);
+                comment_line = FileLineStub.buildUnMovedFileLine(12, 12, 12);
             });
 
             describe("with comments on the LEFT side", () => {
@@ -544,6 +544,7 @@ describe("side-by-side-code-mirror-widgets-creation-manager", () => {
         const file_path = "README.md";
         const code_mirror_line_number = 15;
         const line = FileLineStub.buildUnMovedFileLine(
+            code_mirror_line_number + 1,
             code_mirror_line_number + 1,
             code_mirror_line_number + 1
         );

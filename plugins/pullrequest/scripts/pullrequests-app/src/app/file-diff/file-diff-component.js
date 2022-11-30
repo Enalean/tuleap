@@ -39,6 +39,7 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
         has_potentially_dangerous_bidirectional_unicode_text: false,
         diff: null,
         file_path: $state.params.file_path,
+        comment_id: $state.params.comment_id,
         pull_request_id: SharedPropertiesService.getPullRequest().id,
         shouldShowUnifiedDiff,
         shouldShowSideBySideDiff,

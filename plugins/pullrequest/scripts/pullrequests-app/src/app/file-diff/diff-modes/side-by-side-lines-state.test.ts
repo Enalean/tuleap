@@ -40,7 +40,7 @@ describe("side-by-side lines state", () => {
     describe("initSideBySideFileDiffState()", () => {
         it("Given diff lines, the left and right code mirrors, then it will store the lines and build line maps", () => {
             const lines = [
-                FileLineStub.buildUnMovedFileLine(1, 1),
+                FileLineStub.buildUnMovedFileLine(1, 1, 1),
                 FileLineStub.buildRemovedLine(2, 2),
                 FileLineStub.buildAddedLine(3, 2),
             ];
@@ -62,8 +62,8 @@ describe("side-by-side lines state", () => {
             const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter({
                 unidiff_offset: 2,
             });
-            const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
-            const second_line = FileLineStub.buildUnMovedFileLine(2, 2);
+            const first_line = FileLineStub.buildUnMovedFileLine(1, 1, 1);
+            const second_line = FileLineStub.buildUnMovedFileLine(2, 2, 2);
             const lines = [first_line, second_line];
 
             const state = SideBySideLineState(
@@ -78,8 +78,8 @@ describe("side-by-side lines state", () => {
 
     describe("getGroupLines()", () => {
         it("Given a group, then it will return the group's lines", () => {
-            const first_line = FileLineStub.buildUnMovedFileLine(1, 1);
-            const second_line = FileLineStub.buildUnMovedFileLine(2, 2);
+            const first_line = FileLineStub.buildUnMovedFileLine(1, 1, 1);
+            const second_line = FileLineStub.buildUnMovedFileLine(2, 2, 2);
             const third_line = FileLineStub.buildRemovedLine(3, 3);
 
             const unmoved_lines = GroupOfLinesStub.buildGroupOfUnMovedLines([
@@ -101,7 +101,7 @@ describe("side-by-side lines state", () => {
 
     describe("getLineOfHandle()", () => {
         it("Given handles matching an unmoved line, then it will return the unmoved line", () => {
-            const unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1);
+            const unmoved_line = FileLineStub.buildUnMovedFileLine(1, 1, 1);
             const left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const unmoved_group = GroupOfLinesStub.buildGroupOfUnMovedLines([unmoved_line]);
@@ -128,7 +128,7 @@ describe("side-by-side lines state", () => {
 
         it("Given the left handle of an added line, then it will return the opposite line (not the added line)", () => {
             const added_line = FileLineStub.buildAddedLine(1, 1);
-            const opposite_line = FileLineStub.buildUnMovedFileLine(2, 1);
+            const opposite_line = FileLineStub.buildUnMovedFileLine(2, 2, 1);
             const added_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const opposite_left_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();
             const opposite_right_handle = FileLineHandleStub.buildLineHandleWithNoWidgets();

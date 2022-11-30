@@ -25,7 +25,7 @@ describe("file-line-helper", () => {
         [false, "undefined", undefined],
         [false, "an added line", FileLineStub.buildAddedLine(1, 1)],
         [false, "a removed line", FileLineStub.buildRemovedLine(1, 1)],
-        [true, "an unmoved line", FileLineStub.buildUnMovedFileLine(1, 1)],
+        [true, "an unmoved line", FileLineStub.buildUnMovedFileLine(1, 1, 1)],
     ])(
         "isAnUnmovedLine() should return %s when the line is %s",
         (is_unmoved, line_description, line) => {
@@ -37,7 +37,7 @@ describe("file-line-helper", () => {
         [false, "undefined", undefined],
         [true, "an added line", FileLineStub.buildAddedLine(1, 1)],
         [false, "a removed line", FileLineStub.buildRemovedLine(1, 1)],
-        [false, "an unmoved line", FileLineStub.buildUnMovedFileLine(1, 1)],
+        [false, "an unmoved line", FileLineStub.buildUnMovedFileLine(1, 1, 1)],
     ])(
         "isAnAddedLine() should return %s when the line is %s",
         (is_added, line_description, line) => {
@@ -49,7 +49,7 @@ describe("file-line-helper", () => {
         [false, "undefined", undefined],
         [false, "an added line", FileLineStub.buildAddedLine(1, 1)],
         [true, "a removed line", FileLineStub.buildRemovedLine(1, 1)],
-        [false, "an unmoved line", FileLineStub.buildUnMovedFileLine(1, 1)],
+        [false, "an unmoved line", FileLineStub.buildUnMovedFileLine(1, 1, 1)],
     ])(
         "isARemovedLine() should return %s when the line is %s",
         (is_removed, line_description, line) => {

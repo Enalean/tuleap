@@ -127,6 +127,7 @@ export const PullRequestCommentPresenter = {
                           file_url: $state.href("diff", {
                               id: pull_request.id,
                               file_path: event.file_path,
+                              comment_id: event.id,
                           }),
                           file_path: event.file_path,
                           unidiff_offset: event.unidiff_offset,

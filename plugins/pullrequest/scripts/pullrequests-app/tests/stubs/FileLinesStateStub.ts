@@ -43,7 +43,9 @@ function stubMissingFileLinesAtTheBeginningIfNeeded(file_lines: FileLine[]): UnM
 
     const new_lines: UnMovedFileLine[] = [];
     for (let unidiff_offset = 1; unidiff_offset < file_lines[0].unidiff_offset; unidiff_offset++) {
-        new_lines.push(FileLineStub.buildUnMovedFileLine(unidiff_offset, unidiff_offset));
+        new_lines.push(
+            FileLineStub.buildUnMovedFileLine(unidiff_offset, unidiff_offset, unidiff_offset)
+        );
     }
 
     return new_lines;
