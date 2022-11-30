@@ -33,10 +33,7 @@ class Cardwall_MappingCollection implements IteratorAggregate
      */
     private $mappings_by_field_id = [];
 
-    /**
-     * @return Iterator
-     */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayObject($this->mappings);
     }

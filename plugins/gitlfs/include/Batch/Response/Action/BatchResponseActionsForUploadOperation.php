@@ -37,7 +37,7 @@ final class BatchResponseActionsForUploadOperation implements BatchResponseActio
         $this->verify_operation = $verify_operation;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'upload' => $this->upload_action,

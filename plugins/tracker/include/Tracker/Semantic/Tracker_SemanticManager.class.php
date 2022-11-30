@@ -70,6 +70,9 @@ class Tracker_SemanticManager
         $purifier = Codendi_HTMLPurifier::instance();
         echo '<nav class="tlp-tabs tlp-tabs-vertical tracker-admin-semantics-toc">';
         foreach ($this->getSemantics() as $semantic) {
+            if ($semantic === false) {
+                continue;
+            }
             echo '<a href="#' . $purifier->purify('tracker-admin-semantic-' . $semantic->getShortName()) . '" class="tlp-tab">
                 ' . $purifier->purify($semantic->getLabel()) . '
             </a>';
@@ -79,6 +82,9 @@ class Tracker_SemanticManager
         echo '<div class="tracker-admin-semantics-list">';
 
         foreach ($this->getSemantics() as $semantic) {
+            if ($semantic === false) {
+                continue;
+            }
             $url = TRACKER_BASE_URL . '/?' . http_build_query([
                 'tracker'  => $this->tracker->getId(),
                 'func'     => 'admin-semantic',
@@ -135,7 +141,7 @@ class Tracker_SemanticManager
         $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
 
         foreach ($semantics as $semantic) {
-            if ($semantic->isUsedInSemantics($field)) {
+            if ($semantic !== false && $semantic->isUsedInSemantics($field)) {
                 $semantics_using_field[] = $semantic;
             }
         }
@@ -222,7 +228,9 @@ class Tracker_SemanticManager
     {
         $semantics = $this->getSemantics();
         foreach ($semantics as $semantic) {
-            $semantic->exportToXML($root, $xmlMapping);
+            if ($semantic !== false) {
+                $semantic->exportToXML($root, $xmlMapping);
+            }
         }
     }
 

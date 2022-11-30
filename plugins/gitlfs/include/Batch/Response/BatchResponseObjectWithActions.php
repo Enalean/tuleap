@@ -40,7 +40,7 @@ final class BatchResponseObjectWithActions implements BatchResponseObject
         $this->actions = $actions;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'oid'           => $this->object->getOID()->getValue(),

@@ -50,7 +50,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return int the number of files
      */
-    public function count()
+    public function count(): int
     {
         return count($this->files);
     }
@@ -62,7 +62,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return mixed value at given offset
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->files[$offset];
     }
@@ -72,10 +72,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @param int   $offset to modify
      * @param mixed $value  new value
-     *
-     * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->files[$offset] = $value;
     }
@@ -84,10 +82,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      * spl\ArrayAccess
      *
      * @param int $offset to check
-     *
-     * @return bool wether the offset exists
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->files[$offset]);
     }
@@ -97,9 +93,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @param int $offset to delete
      *
-     * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->files[$offset]);
     }
@@ -117,17 +112,12 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return Tracker_FileInfo the current one
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->files[$this->index];
     }
 
-    /**
-     * spl\Iterator
-     *
-     * @return int the current index
-     */
-    public function key()
+    public function key(): int
     {
         return $this->index;
     }
@@ -136,10 +126,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      * spl\Iterator
      *
      * Jump to the next Tracker_FileInfo
-     *
-     * @return void
      */
-    public function next()
+    public function next(): void
     {
         $this->index++;
     }
@@ -148,20 +136,13 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      * spl\Iterator
      *
      * Reset the pointer to the start of the collection
-     *
-     * @return Tracker_FileInfo the current one
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
     }
 
-    /**
-     * spl\Iterator
-     *
-     * @return bool true if the current pointer is valid
-     */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->files[$this->index]);
     }

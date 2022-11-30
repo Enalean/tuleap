@@ -107,25 +107,25 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetUGroupsByBindingSourceReturnsAnEmptyArrayWhenDARisError(): void
     {
-        $dar = Mockery::spy(LegacyDataAccessResultInterface::class);
+        $dar = $this->createMock(LegacyDataAccessResultInterface::class);
         $this->ugroup_manager->shouldReceive('searchUGroupByBindingSource')
             ->once()
             ->with(200)
             ->andReturn($dar);
-        $dar->shouldReceive('isError')->once()->andReturnTrue();
+        $dar->expects(self::once())->method('isError')->willReturn(true);
 
         $this->assertEmpty($this->binding->getUGroupsByBindingSource(200));
     }
 
     public function testGetUGroupsByBindingSourceReturnsAnArrayOfProjectIdsAndUGroupNames(): void
     {
-        $dar = Mockery::spy(LegacyDataAccessResultInterface::class);
+        $dar = $this->createMock(LegacyDataAccessResultInterface::class);
         $this->ugroup_manager->shouldReceive('searchUGroupByBindingSource')
             ->once()
             ->with(200)
             ->andReturn($dar);
 
-        $dar->shouldReceive('isError')->once()->andReturnFalse();
+        $dar->expects(self::once())->method('isError')->willReturn(false);
         $first_row  = [
             'ugroup_id' => 300,
             'name'      => 'panicmongering',
@@ -136,8 +136,10 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
             'name'      => 'counteraverment',
             'group_id'  => 185,
         ];
-        $dar->shouldReceive('valid')->andReturn(true, true, false);
-        $dar->shouldReceive('current')->andReturn($first_row, $second_row);
+        $dar->method('valid')->willReturn(true, true, false);
+        $dar->method('current')->willReturn($first_row, $second_row);
+        $dar->method('rewind');
+        $dar->method('next');
 
         $result = $this->binding->getUGroupsByBindingSource(200);
 
@@ -169,11 +171,13 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $first_bound_ugroup  = ['ugroup_id' => 400, 'source_id' => 200];
         $second_bound_ugroup = ['ugroup_id' => 500, 'source_id' => 200];
-        $dar                 = Mockery::spy(LegacyDataAccessResultInterface::class);
-        $dar->shouldReceive('current')
-            ->andReturn($first_bound_ugroup, $second_bound_ugroup);
-        $dar->shouldReceive('valid')
-            ->andReturn(true, true, false);
+        $dar                 = $this->createStub(LegacyDataAccessResultInterface::class);
+        $dar->method('current')
+            ->willReturn($first_bound_ugroup, $second_bound_ugroup);
+        $dar->method('valid')
+            ->willReturn(true, true, false);
+        $dar->method('rewind');
+        $dar->method('next');
 
         $project = Mockery::mock(\Project::class);
         $this->ugroup_manager->shouldReceive('searchBindedUgroupsInProject')

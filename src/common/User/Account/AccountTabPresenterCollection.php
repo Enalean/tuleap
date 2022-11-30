@@ -55,42 +55,27 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
         $this->user         = $user;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function current()
+    public function current(): mixed
     {
         return $this->all_tabs[$this->i];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function next()
+    public function next(): void
     {
         $this->i++;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function key()
+    public function key(): int
     {
         return $this->i;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->all_tabs[$this->i]);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function rewind()
+    public function rewind(): void
     {
         $this->i = 0;
     }

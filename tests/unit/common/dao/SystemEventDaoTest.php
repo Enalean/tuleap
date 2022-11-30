@@ -50,9 +50,9 @@ final class SystemEventDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)
                 AND parameters LIKE 'abc%'";
-        $this->da->shouldReceive('query')->with($expected_sql, [])->once()->andReturns(
-            Mockery::spy(LegacyDataAccessResultInterface::class)
-        );
+        $dar          = $this->createStub(LegacyDataAccessResultInterface::class);
+        $dar->method('isError')->willReturn(false);
+        $this->da->shouldReceive('query')->with($expected_sql, [])->once()->andReturns($dar);
 
         $dao->searchWithParam('head', $this->search_term, $this->event_type, $this->status);
     }
@@ -66,9 +66,9 @@ final class SystemEventDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)
                 AND parameters LIKE '%abc'";
-        $this->da->shouldReceive('query')->with($expected_sql, [])->once()->andReturns(
-            Mockery::spy(LegacyDataAccessResultInterface::class)
-        );
+        $dar          = $this->createStub(LegacyDataAccessResultInterface::class);
+        $dar->method('isError')->willReturn(false);
+        $this->da->shouldReceive('query')->with($expected_sql, [])->once()->andReturns($dar);
 
         $dao->searchWithParam('tail', $this->search_term, $this->event_type, $this->status);
     }
@@ -83,9 +83,9 @@ final class SystemEventDaoTest extends \Tuleap\Test\PHPUnit\TestCase
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)
                 AND parameters LIKE abc';
-        $this->da->shouldReceive('query')->with($expected_sql, [])->once()->andReturns(
-            Mockery::spy(LegacyDataAccessResultInterface::class)
-        );
+        $dar          = $this->createStub(LegacyDataAccessResultInterface::class);
+        $dar->method('isError')->willReturn(false);
+        $this->da->shouldReceive('query')->with($expected_sql, [])->once()->andReturns($dar);
 
         $dao->searchWithParam('all', $this->search_term, $this->event_type, $this->status);
     }

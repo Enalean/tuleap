@@ -137,7 +137,7 @@ class SimilarFieldCollection implements \IteratorAggregate
         }
     }
 
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->similar_candidates);
     }

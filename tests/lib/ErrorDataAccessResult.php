@@ -26,12 +26,12 @@ class ErrorDataAccessResult extends DataAccessResult
     {
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return false;
     }
 
-    public function current()
+    public function current(): bool
     {
         return false;
     }

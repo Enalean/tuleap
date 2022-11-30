@@ -73,50 +73,40 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      * @return false|array Return the current element
      * @psalm-ignore-falsable-return
      */
-    public function current();
+    public function current(): mixed;
 
     /**
      * Move forward to next element.
      *
      * @deprecated
-     *
-     * @return void
      */
-    public function next();
+    public function next(): void;
 
     /**
      * Check if there is a current element after calls to rewind() or next().
      *
      * @deprecated
-     *
-     * @return bool
      */
-    public function valid();
+    public function valid(): bool;
 
     /**
      * Rewind the Iterator to the first element.
      *
      * @deprecated
-     *
-     * @return void
      */
-    public function rewind();
+    public function rewind(): void;
 
     /**
      * Return the key of the current element.
      *
      * @deprecated
-     *
-     * @return mixed
      */
-    public function key();
+    public function key(): mixed;
 
     /**
      * @deprecated
-     *
-     * @return int the number the global function count() should show
      */
-    public function count();
+    public function count(): int;
 
     /**
      * @deprecated

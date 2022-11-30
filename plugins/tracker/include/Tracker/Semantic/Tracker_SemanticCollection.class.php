@@ -59,17 +59,17 @@ class Tracker_SemanticCollection implements ArrayAccess, Iterator
         $this->semantics_by_name[$semantic->getShortName()] = $semantic;
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->semantics_by_name[$offset]);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): ?Tracker_Semantic
     {
         return isset($this->semantics_by_name[$offset]) ? $this->semantics_by_name[$offset] : null;
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (is_null($offset) || ! isset($this->semantics_by_name[$offset])) {
             $this->add($value);
@@ -78,7 +78,7 @@ class Tracker_SemanticCollection implements ArrayAccess, Iterator
         }
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->semantics_by_name[$offset]);
 
@@ -90,27 +90,27 @@ class Tracker_SemanticCollection implements ArrayAccess, Iterator
         }
     }
 
-    public function current()
+    public function current(): Tracker_Semantic|false
     {
         return current($this->semantics);
     }
 
-    public function next()
+    public function next(): void
     {
         next($this->semantics);
     }
 
-    public function key()
+    public function key(): ?int
     {
         return key($this->semantics);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return key($this->semantics) !== null;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->semantics);
     }
