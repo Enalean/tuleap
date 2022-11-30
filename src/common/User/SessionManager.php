@@ -60,7 +60,7 @@ class SessionManager
      */
     public function getUser($session_identifier, $current_time, $session_lifetime, string $current_user_agent)
     {
-        list($session_id, $session_token) = $this->getSessionIdentifierParts($session_identifier);
+        list($session_id, $session_token) = $this->getSessionIdentifierParts($session_identifier ?? '');
 
         $session = $this->session_dao->searchById($session_id, $current_time, $session_lifetime);
         if ($session === null) {
@@ -135,10 +135,9 @@ class SessionManager
     }
 
     /**
-     * @return array
      * @throws InvalidSessionException
      */
-    private function getSessionIdentifierParts($session_identifier)
+    private function getSessionIdentifierParts(string $session_identifier): array
     {
         $session_identifier_parts = explode(self::SESSION_IDENTIFIER_SEPARATOR, $session_identifier);
         if (count($session_identifier_parts) !== 2) {

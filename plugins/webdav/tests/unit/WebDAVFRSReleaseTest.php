@@ -69,6 +69,7 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user    = UserTestBuilder::aUser()->build();
         $this->project = ProjectTestBuilder::aProject()->build();
         $this->utils   = Mockery::mock(\WebDAVUtils::class);
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     /**

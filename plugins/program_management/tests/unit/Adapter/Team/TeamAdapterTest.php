@@ -64,6 +64,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retrieve_full_project = RetrieveFullProjectStub::withProject($this->team_project);
 
         $_SERVER['REQUEST_URI'] = '/';
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     protected function tearDown(): void

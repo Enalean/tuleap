@@ -49,6 +49,7 @@ final class WebDAVFRSFileTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user    = UserTestBuilder::aUser()->build();
         $this->project = ProjectTestBuilder::aProject()->build();
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     /**
