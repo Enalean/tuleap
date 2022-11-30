@@ -20,36 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline;
+namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
-use Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenterBuilder;
-use Tuleap\Baseline\Stub\RoleAssignmentRepositoryStub;
-use Tuleap\Test\Helpers\NoopSapiEmitter;
-use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
+use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
+use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
-use User_ForgeUGroup;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
-class ServiceAdministrationControllerTest extends TestCase
+class AdminPermissionsControllerTest extends TestCase
 {
     use \Tuleap\TemporaryTestDirectory;
 
     public function testExceptionWhenProjectIsNotAllowed(): void
     {
-        $controller = new ServiceAdministrationController(
+        $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
             \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsNotAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            new AdminPermissionsPresenterBuilder(
-                $this->createStub(\User_ForgeUserGroupFactory::class),
-                RoleAssignmentRepositoryStub::buildDefault()
-            ),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
+            new AdminPermissionsPresenterBuilder(
+                new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions()),
+                $this->createStub(\User_ForgeUserGroupFactory::class),
+            ),
             new NoopSapiEmitter(),
         );
 
@@ -62,16 +62,16 @@ class ServiceAdministrationControllerTest extends TestCase
 
     public function testExceptionWhenServiceIsNotActivated(): void
     {
-        $controller = new ServiceAdministrationController(
+        $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
             \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            new AdminPermissionsPresenterBuilder(
-                $this->createStub(\User_ForgeUserGroupFactory::class),
-                RoleAssignmentRepositoryStub::buildDefault()
-            ),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
+            new AdminPermissionsPresenterBuilder(
+                new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions()),
+                $this->createStub(\User_ForgeUserGroupFactory::class),
+            ),
             new NoopSapiEmitter(),
         );
 
@@ -95,28 +95,28 @@ class ServiceAdministrationControllerTest extends TestCase
 
         $user_group_factory = $this->createStub(\User_ForgeUserGroupFactory::class);
         $user_group_factory->method('getProjectUGroupsWithMembersWithoutNobody')->willReturn([
-            new User_ForgeUGroup(104, 'Lorem ipsum', ''),
+            new \User_ForgeUGroup(104, 'Lorem ipsum', ''),
         ]);
 
-        $controller = new ServiceAdministrationController(
+        $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
             \Tuleap\Baseline\Support\IsProjectAllowedToUsePluginStub::projectIsAllowed(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            new AdminPermissionsPresenterBuilder(
-                $user_group_factory,
-                RoleAssignmentRepositoryStub::buildDefault()
-            ),
             $token_provider,
+            new AdminPermissionsPresenterBuilder(
+                new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions()),
+                $user_group_factory,
+            ),
             new NoopSapiEmitter(),
         );
 
-        $service = $this->createMock(BaselineTuleapService::class);
+        $service = $this->createMock(MediawikiStandaloneService::class);
         $service->method('displayAdministrationHeader');
         $service->method('displayFooter');
 
         $project = ProjectTestBuilder::aProject()->build();
-        $project->addUsedServices([\baselinePlugin::SERVICE_SHORTNAME, $service]);
+        $project->addUsedServices([MediawikiStandaloneService::SERVICE_SHORTNAME, $service]);
 
         $request = (new NullServerRequest())
             ->withAttribute(\Project::class, $project)

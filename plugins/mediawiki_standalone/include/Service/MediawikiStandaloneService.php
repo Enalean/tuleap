@@ -22,9 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\MediawikiStandalone\Permissions\Admin\AdminPermissionsController;
 use Tuleap\Project\Service\ServiceForCreation;
 
-final class MediawikiStandaloneService extends \Service implements ServiceForCreation
+class MediawikiStandaloneService extends \Service implements ServiceForCreation
 {
     private const ICON_NAME          = 'fas fa-tlp-mediawiki';
     private const SERVICE_URL_PREFIX = '/mediawiki/';
@@ -82,5 +89,39 @@ final class MediawikiStandaloneService extends \Service implements ServiceForCre
     public function urlCanChange(): bool
     {
         return false;
+    }
+
+    public function displayAdministrationHeader(): void
+    {
+        $crumb = new BreadCrumb(
+            new BreadCrumbLink(
+                dgettext('tuleap-mediawiki_standalone', 'MediaWiki'),
+                $this->getUrl()
+            )
+        );
+
+        $sub_items = new BreadCrumbSubItems();
+        $sub_items->addSection(
+            new SubItemsUnlabelledSection(
+                new BreadCrumbLinkCollection(
+                    [
+                        new BreadCrumbLink(
+                            dgettext('tuleap-mediawiki_standalone', 'Administration'),
+                            AdminPermissionsController::getAdminUrl($this->project)
+                        ),
+                    ]
+                )
+            )
+        );
+        $crumb->setSubItems($sub_items);
+
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb($crumb);
+
+        $this->displayHeader(
+            dgettext('tuleap-mediawiki_standalone', 'MediaWiki administration'),
+            $breadcrumbs,
+            []
+        );
     }
 }

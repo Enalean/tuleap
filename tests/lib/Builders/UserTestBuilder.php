@@ -32,6 +32,7 @@ class UserTestBuilder
     private ?bool $is_site_administrator = null;
     private ?array $user_group_data      = null;
     private string $avatar_url           = '';
+    private array $project_ugroups       = [];
 
     public static function aUser(): self
     {
@@ -194,6 +195,17 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withUserGroupMembership(\Project $project, int $ugroup_id, bool $is_member): self
+    {
+        if (! isset($this->project_ugroups[$ugroup_id])) {
+            $this->project_ugroups[$ugroup_id] = [];
+        }
+
+        $this->project_ugroups[$ugroup_id][(int) $project->getID()] = $is_member;
+
+        return $this;
+    }
+
     public function withRow(array $row): self
     {
         $this->params = array_merge($this->params, $row);
@@ -211,6 +223,11 @@ class UserTestBuilder
         }
         if ($this->user_group_data !== null) {
             $user->setUserGroupData($this->user_group_data);
+        }
+        foreach ($this->project_ugroups as $ugroup_id => $member_or_not) {
+            foreach ($member_or_not as $project_id => $is_member) {
+                $user->setCacheUgroupMembership($ugroup_id, $project_id, $is_member);
+            }
         }
         if ($this->is_site_administrator !== null) {
             $user->setIsSuperUser($this->is_site_administrator);

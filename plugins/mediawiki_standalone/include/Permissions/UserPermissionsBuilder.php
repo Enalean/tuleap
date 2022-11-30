@@ -27,14 +27,23 @@ use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\User\ForgePermissionsRetriever;
 
-final class UserPermissionsBuilder
+final class UserPermissionsBuilder implements IBuildUserPermissions
 {
-    public function __construct(private ForgePermissionsRetriever $forge_permissions_retriever, private CheckProjectAccess $check_project_access)
-    {
+    public function __construct(
+        private ForgePermissionsRetriever $forge_permissions_retriever,
+        private CheckProjectAccess $check_project_access,
+        private ReadersRetriever $readers_retriever,
+    ) {
     }
 
     public function getPermissions(\PFUser $user, \Project $project): UserPermissions
     {
+        try {
+            $this->check_project_access->checkUserCanAccessProject($user, $project);
+        } catch (\Project_AccessException) {
+            return UserPermissions::noAccess();
+        }
+
         if (
             $user->isSuperUser() ||
             $this->forge_permissions_retriever->doesUserHavePermission($user, new MediawikiAdminAllProjects()) ||
@@ -47,11 +56,12 @@ final class UserPermissionsBuilder
             return UserPermissions::writer();
         }
 
-        try {
-            $this->check_project_access->checkUserCanAccessProject($user, $project);
-            return UserPermissions::reader();
-        } catch (\Project_AccessException) {
+        foreach ($this->readers_retriever->getReadersUgroupIds($project) as $readers_ugroup_id) {
+            if ($user->isMemberOfUGroup($readers_ugroup_id, (int) $project->getID())) {
+                return UserPermissions::reader();
+            }
         }
+
         return UserPermissions::noAccess();
     }
 }
