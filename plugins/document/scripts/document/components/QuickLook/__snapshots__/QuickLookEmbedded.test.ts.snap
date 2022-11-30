@@ -6,7 +6,7 @@ exports[`QuickLookEmbedded Component can be rendered for embedded 1`] = `
 >
   <router-link-stub
     ariacurrentvalue="page"
-    class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+    class="tlp-button-primary tlp-button-small"
     event="click"
     tag="a"
     to="[object Object]"

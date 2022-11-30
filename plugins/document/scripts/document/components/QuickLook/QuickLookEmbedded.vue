@@ -21,7 +21,7 @@
 <template>
     <div class="document-quick-look-document-action">
         <router-link
-            class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+            class="tlp-button-primary tlp-button-small"
             v-bind:to="{ name: 'item', params: { folder_id: item.parent_id, item_id: item.id } }"
         >
             <translate>Open</translate>

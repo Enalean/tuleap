@@ -22,7 +22,7 @@
     <div class="document-quick-look-document-action">
         <button
             type="button"
-            class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+            class="tlp-button-primary tlp-button-small"
             v-on:click="wikiPageRedirect"
             data-test="go-to-the-wiki-page"
         >

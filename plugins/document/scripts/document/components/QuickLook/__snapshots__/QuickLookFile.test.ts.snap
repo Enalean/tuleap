@@ -5,7 +5,7 @@ exports[`QuickLookFile renders quick look for file document with a CTA to downlo
   class="document-quick-look-document-action"
 >
   <download-button-stub
-    class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+    class="tlp-button-primary tlp-button-small"
     item="[object Object]"
   />
    
