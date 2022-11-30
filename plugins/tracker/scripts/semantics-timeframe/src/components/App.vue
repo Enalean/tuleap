@@ -62,73 +62,35 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-
-import TimeframeBasedOnFieldsConfig from "./TimeframeBasedOnFieldsConfig.vue";
-import TimeframeAdminSubmitButtons from "./TimeframeAdminSubmitButtons.vue";
-import TimeframeImpliedFromAnotherTrackerConfig from "./TimeframeImpliedFromAnotherTrackerConfig.vue";
-import TimeframeConfigModeSelector from "./TimeframeConfigModeSelector.vue";
-
+<script setup lang="ts">
 import type { TrackerField, Tracker } from "../type";
 import { MODE_BASED_ON_TRACKER_FIELDS } from "../constants";
+import { ref } from "vue";
+import TimeframeConfigModeSelector from "./TimeframeConfigModeSelector.vue";
+import TimeframeBasedOnFieldsConfig from "./TimeframeBasedOnFieldsConfig.vue";
+import TimeframeImpliedFromAnotherTrackerConfig from "./TimeframeImpliedFromAnotherTrackerConfig.vue";
+import TimeframeAdminSubmitButtons from "./TimeframeAdminSubmitButtons.vue";
 
-@Component({
-    components: {
-        TimeframeBasedOnFieldsConfig,
-        TimeframeAdminSubmitButtons,
-        TimeframeImpliedFromAnotherTrackerConfig,
-        TimeframeConfigModeSelector,
-    },
-})
-export default class App extends Vue {
-    @Prop({ required: true })
-    readonly usable_date_fields!: TrackerField[];
+defineProps<{
+    usable_date_fields: TrackerField[];
+    usable_numeric_fields: TrackerField[];
+    suitable_trackers: Tracker[];
+    start_date_field_id: number | "";
+    end_date_field_id: number | "";
+    duration_field_id: number | "";
+    implied_from_tracker_id: number | "";
+    current_tracker_id: number;
+    target_url: string;
+    csrf_token: string;
+    has_other_trackers_implying_their_timeframes: boolean;
+    has_tracker_charts: boolean;
+    has_artifact_link_field: boolean;
+    semantic_presentation: string;
+}>();
 
-    @Prop({ required: true })
-    readonly usable_numeric_fields!: TrackerField[];
+const is_based_on_tracker_fields_mode_enabled = ref(true);
 
-    @Prop({ required: true })
-    readonly suitable_trackers!: Tracker[];
-
-    @Prop({ required: true })
-    readonly start_date_field_id!: number | "";
-
-    @Prop({ required: true })
-    readonly end_date_field_id!: number | "";
-
-    @Prop({ required: true })
-    readonly duration_field_id!: number | "";
-
-    @Prop({ required: true })
-    readonly implied_from_tracker_id!: number | "";
-
-    @Prop({ required: true })
-    readonly current_tracker_id!: number;
-
-    @Prop({ required: true })
-    readonly target_url!: string;
-
-    @Prop({ required: true })
-    readonly csrf_token!: string;
-
-    @Prop({ required: true })
-    readonly has_other_trackers_implying_their_timeframes!: boolean;
-
-    @Prop({ required: true })
-    readonly has_tracker_charts!: boolean;
-
-    @Prop({ required: true })
-    readonly has_artifact_link_field!: boolean;
-
-    @Prop({ required: true })
-    readonly semantic_presentation!: string;
-
-    is_based_on_tracker_fields_mode_enabled = true;
-
-    toggleTimeframeConfigs(value: string): void {
-        this.is_based_on_tracker_fields_mode_enabled = value === MODE_BASED_ON_TRACKER_FIELDS;
-    }
+function toggleTimeframeConfigs(value: string): void {
+    is_based_on_tracker_fields_mode_enabled.value = value === MODE_BASED_ON_TRACKER_FIELDS;
 }
 </script>

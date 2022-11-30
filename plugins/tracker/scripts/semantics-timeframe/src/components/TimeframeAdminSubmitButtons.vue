@@ -39,56 +39,46 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
-@Component
-export default class TimeframeAdminSubmitButtons extends Vue {
-    @Prop({ required: true })
-    readonly start_date_field_id!: number | "";
+const props = defineProps<{
+    start_date_field_id: number | "";
+    end_date_field_id: number | "";
+    duration_field_id: number | "";
+    has_other_trackers_implying_their_timeframes: boolean;
+    has_tracker_charts: boolean;
+    implied_from_tracker_id: number | "";
+}>();
 
-    @Prop({ required: true })
-    readonly end_date_field_id!: number | "";
+const gettext_provider = useGettext();
 
-    @Prop({ required: true })
-    readonly duration_field_id!: number | "";
+const is_semantic_configured = computed((): boolean => {
+    return (
+        (props.start_date_field_id !== "" && props.end_date_field_id !== "") ||
+        (props.start_date_field_id !== "" && props.duration_field_id !== "") ||
+        props.implied_from_tracker_id !== ""
+    );
+});
 
-    @Prop({ required: true })
-    readonly has_other_trackers_implying_their_timeframes!: boolean;
+const is_reset_disabled = computed((): boolean => {
+    return props.has_other_trackers_implying_their_timeframes || props.has_tracker_charts;
+});
 
-    @Prop({ required: true })
-    readonly has_tracker_charts!: boolean;
-
-    @Prop({ required: true })
-    readonly implied_from_tracker_id!: number | "";
-
-    get is_semantic_configured(): boolean {
-        return (
-            (this.start_date_field_id !== "" && this.end_date_field_id !== "") ||
-            (this.start_date_field_id !== "" && this.duration_field_id !== "") ||
-            this.implied_from_tracker_id !== ""
+const cannot_reset_message = computed((): string => {
+    if (props.has_other_trackers_implying_their_timeframes) {
+        return gettext_provider.$gettext(
+            "You cannot reset this semantic because some trackers inherit their own semantics timeframe from this one."
         );
     }
 
-    get is_reset_disabled(): boolean {
-        return this.has_other_trackers_implying_their_timeframes || this.has_tracker_charts;
+    if (props.has_tracker_charts) {
+        return gettext_provider.$gettext(
+            "You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin"
+        );
     }
 
-    get cannot_reset_message(): string {
-        if (this.has_other_trackers_implying_their_timeframes) {
-            return this.$gettext(
-                "You cannot reset this semantic because some trackers inherit their own semantics timeframe from this one."
-            );
-        }
-
-        if (this.has_tracker_charts) {
-            return this.$gettext(
-                "You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin"
-            );
-        }
-
-        return "";
-    }
-}
+    return "";
+});
 </script>

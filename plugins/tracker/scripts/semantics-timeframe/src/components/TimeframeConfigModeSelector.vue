@@ -31,7 +31,7 @@
             data-test="timeframe-mode-select-box"
             required
         >
-            <option value="" disabled v-translate>Choose a method...</option>
+            <option value="" disabled>{{ $gettext("Choose a method...") }}</option>
             <option v-for="mode in timeframe_modes" v-bind:value="mode.id" v-bind:key="mode.id">
                 {{ mode.name }}
             </option>
@@ -39,45 +39,45 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import { MODE_BASED_ON_TRACKER_FIELDS, MODE_IMPLIED_FROM_ANOTHER_TRACKER } from "../constants";
 import type { TimeframeMode } from "../type";
+import { useGettext } from "vue3-gettext";
 
-@Component
-export default class TimeframeConfigModeSelector extends Vue {
-    @Prop({ required: true })
-    readonly implied_from_tracker_id!: number | "";
+const props = defineProps<{ implied_from_tracker_id: number | "" }>();
 
-    readonly EVENT_NAME = "timeframe-mode-selected";
+const emit = defineEmits(["timeframe-mode-selected"]);
 
-    mounted(): void {
-        this.active_timeframe_mode =
-            this.implied_from_tracker_id !== ""
-                ? MODE_IMPLIED_FROM_ANOTHER_TRACKER
-                : MODE_BASED_ON_TRACKER_FIELDS;
+const active_timeframe_mode = ref<
+    typeof MODE_IMPLIED_FROM_ANOTHER_TRACKER | typeof MODE_BASED_ON_TRACKER_FIELDS | ""
+>("");
 
-        this.dispatchSelection();
-    }
+onMounted((): void => {
+    active_timeframe_mode.value =
+        props.implied_from_tracker_id !== ""
+            ? MODE_IMPLIED_FROM_ANOTHER_TRACKER
+            : MODE_BASED_ON_TRACKER_FIELDS;
 
-    active_timeframe_mode = "";
+    dispatchSelection();
+});
 
-    dispatchSelection() {
-        this.$emit(this.EVENT_NAME, this.active_timeframe_mode);
-    }
-
-    get timeframe_modes(): TimeframeMode[] {
-        return [
-            {
-                id: MODE_BASED_ON_TRACKER_FIELDS,
-                name: this.$gettext("Based on tracker fields"),
-            },
-            {
-                id: MODE_IMPLIED_FROM_ANOTHER_TRACKER,
-                name: this.$gettext("Inherited from another tracker"),
-            },
-        ];
-    }
+function dispatchSelection(): void {
+    emit("timeframe-mode-selected", active_timeframe_mode.value);
 }
+
+const gettext_provider = useGettext();
+
+const timeframe_modes = computed((): TimeframeMode[] => {
+    return [
+        {
+            id: MODE_BASED_ON_TRACKER_FIELDS,
+            name: gettext_provider.$gettext("Based on tracker fields"),
+        },
+        {
+            id: MODE_IMPLIED_FROM_ANOTHER_TRACKER,
+            name: gettext_provider.$gettext("Inherited from another tracker"),
+        },
+    ];
+});
 </script>

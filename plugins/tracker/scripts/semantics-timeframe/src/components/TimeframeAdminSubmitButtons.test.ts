@@ -18,13 +18,13 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createSemanticTimeframeAdminLocalVue } from "../helpers/local-vue-for-tests";
 import TimeframeAdminSubmitButtons from "./TimeframeAdminSubmitButtons.vue";
+import { createGettext } from "vue3-gettext";
 
 describe("TimeframeAdminSubmitButtons", () => {
-    it("should not render the reset button when the semantic is not configured", async () => {
+    it("should not render the reset button when the semantic is not configured", () => {
         const wrapper = shallowMount(TimeframeAdminSubmitButtons, {
-            localVue: await createSemanticTimeframeAdminLocalVue(),
+            global: { plugins: [createGettext({ silent: true })] },
             propsData: {
                 start_date_field_id: "",
                 end_date_field_id: "",
@@ -38,9 +38,9 @@ describe("TimeframeAdminSubmitButtons", () => {
         expect(wrapper.find("[data-test=reset-button]").exists()).toBe(false);
     });
 
-    it("should disable the reset button when some trackers inherit their own semantic timeframe from the current one", async () => {
+    it("should disable the reset button when some trackers inherit their own semantic timeframe from the current one", () => {
         const wrapper = shallowMount(TimeframeAdminSubmitButtons, {
-            localVue: await createSemanticTimeframeAdminLocalVue(),
+            global: { plugins: [createGettext({ silent: true })] },
             propsData: {
                 start_date_field_id: 1001,
                 end_date_field_id: 1002,
@@ -62,9 +62,9 @@ describe("TimeframeAdminSubmitButtons", () => {
         );
     });
 
-    it("should disable the reset button when some charts are using the semantic", async () => {
+    it("should disable the reset button when some charts are using the semantic", () => {
         const wrapper = shallowMount(TimeframeAdminSubmitButtons, {
-            localVue: await createSemanticTimeframeAdminLocalVue(),
+            global: { plugins: [createGettext({ silent: true })] },
             propsData: {
                 start_date_field_id: 1001,
                 end_date_field_id: 1002,

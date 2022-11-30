@@ -33,7 +33,7 @@
                 v-model="user_selected_start_date_field_id"
                 required
             >
-                <option value="" v-translate>Choose a field...</option>
+                <option value="">{{ $gettext("Choose a field...") }}</option>
                 <option
                     v-for="date_field in suitable_start_date_fields"
                     v-bind:value="date_field.id"
@@ -70,7 +70,7 @@
                 v-bind:required="!is_in_start_date_duration_mode"
                 v-bind:disabled="is_in_start_date_duration_mode"
             >
-                <option value="" v-translate>Choose a field...</option>
+                <option value="">{{ $gettext("Choose a field...") }}</option>
                 <option
                     v-for="date_field in suitable_end_date_fields"
                     v-bind:value="date_field.id"
@@ -107,7 +107,7 @@
                 v-bind:required="is_in_start_date_duration_mode"
                 v-bind:disabled="!is_in_start_date_duration_mode"
             >
-                <option value="" v-translate>Choose a field...</option>
+                <option value="">{{ $gettext("Choose a field...") }}</option>
                 <option
                     v-for="numeric_field in usable_numeric_fields"
                     v-bind:value="numeric_field.id"
@@ -120,60 +120,49 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 
 import type { TrackerField } from "../type";
 
-@Component
-export default class TimeframeBasedOnFieldsConfig extends Vue {
-    @Prop({ required: true })
-    readonly usable_date_fields!: TrackerField[];
+const props = defineProps<{
+    usable_date_fields: TrackerField[];
+    usable_numeric_fields: TrackerField[];
+    selected_start_date_field_id: number | "";
+    selected_end_date_field_id: number | "";
+    selected_duration_field_id: number | "";
+}>();
 
-    @Prop({ required: true })
-    readonly usable_numeric_fields!: TrackerField[];
+const user_selected_start_date_field_id = ref<number | "">("");
+const user_selected_end_date_field_id = ref<number | "">("");
+const user_selected_duration_field_id = ref<number | "">("");
+const is_in_start_date_duration_mode = ref(false);
 
-    @Prop({ required: true })
-    readonly selected_start_date_field_id!: number | "";
+const MODE_START_DATE_END_DATE = "MODE_START_DATE_END_DATE";
+const MODE_START_DATE_DURATION = "MODE_START_DATE_DURATION";
 
-    @Prop({ required: true })
-    readonly selected_end_date_field_id!: number | "";
+onMounted((): void => {
+    user_selected_start_date_field_id.value = props.selected_start_date_field_id;
+    user_selected_end_date_field_id.value = props.selected_end_date_field_id;
+    user_selected_duration_field_id.value = props.selected_duration_field_id;
+    is_in_start_date_duration_mode.value = Boolean(
+        props.selected_start_date_field_id !== "" && props.selected_duration_field_id !== ""
+    );
+});
 
-    @Prop({ required: true })
-    readonly selected_duration_field_id!: number | "";
-
-    user_selected_start_date_field_id: number | "" = "";
-    user_selected_end_date_field_id: number | "" = "";
-    user_selected_duration_field_id: number | "" = "";
-    is_in_start_date_duration_mode = false;
-
-    readonly MODE_START_DATE_END_DATE = "MODE_START_DATE_END_DATE";
-    readonly MODE_START_DATE_DURATION = "MODE_START_DATE_DURATION";
-
-    mounted(): void {
-        this.user_selected_start_date_field_id = this.selected_start_date_field_id;
-        this.user_selected_end_date_field_id = this.selected_end_date_field_id;
-        this.user_selected_duration_field_id = this.selected_duration_field_id;
-        this.is_in_start_date_duration_mode = Boolean(
-            this.selected_start_date_field_id !== "" && this.selected_duration_field_id !== ""
-        );
-    }
-
-    toggleTimeframeMode(mode: string): void {
-        this.is_in_start_date_duration_mode = mode === this.MODE_START_DATE_DURATION;
-    }
-
-    get suitable_start_date_fields(): TrackerField[] {
-        return this.usable_date_fields.filter(
-            (date_field) => date_field.id !== this.user_selected_end_date_field_id
-        );
-    }
-
-    get suitable_end_date_fields(): TrackerField[] {
-        return this.usable_date_fields.filter(
-            (date_field) => date_field.id !== this.user_selected_start_date_field_id
-        );
-    }
+function toggleTimeframeMode(mode: string): void {
+    is_in_start_date_duration_mode.value = mode === MODE_START_DATE_DURATION;
 }
+
+const suitable_start_date_fields = computed((): TrackerField[] => {
+    return props.usable_date_fields.filter(
+        (date_field) => date_field.id !== user_selected_end_date_field_id.value
+    );
+});
+
+const suitable_end_date_fields = computed((): TrackerField[] => {
+    return props.usable_date_fields.filter(
+        (date_field) => date_field.id !== user_selected_start_date_field_id.value
+    );
+});
 </script>
