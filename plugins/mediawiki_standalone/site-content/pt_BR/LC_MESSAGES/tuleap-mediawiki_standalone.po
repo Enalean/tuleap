@@ -18,7 +18,16 @@ msgstr ""
 msgid "MediaWiki administration"
 msgstr ""
 
+msgid "MediaWiki permissions have been saved"
+msgstr ""
+
 msgid "Mediawiki Standalone (read only)"
+msgstr ""
+
+msgid "Permission granted for MediaWiki readers"
+msgstr ""
+
+msgid "Permission reset for MediaWiki readers"
 msgstr ""
 
 msgid "Permissions"

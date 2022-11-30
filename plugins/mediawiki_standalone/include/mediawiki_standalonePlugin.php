@@ -34,9 +34,11 @@ use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
+use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\MediawikiStandalone\Configuration\GenerateLocalSettingsCommand;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsFactory;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
@@ -61,9 +63,15 @@ use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\Permissions\Admin\AdminPermissionsController;
 use Tuleap\MediawikiStandalone\Permissions\Admin\AdminPermissionsPresenterBuilder;
+use Tuleap\MediawikiStandalone\Permissions\Admin\AdminSavePermissionsController;
 use Tuleap\MediawikiStandalone\Permissions\Admin\CSRFSynchronizerTokenProvider;
+use Tuleap\MediawikiStandalone\Permissions\Admin\ProjectPermissionsSaver;
 use Tuleap\MediawikiStandalone\Permissions\Admin\RejectNonMediawikiAdministratorMiddleware;
+use Tuleap\MediawikiStandalone\Permissions\Admin\UserGroupToSaveRetriever;
+use Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao;
+use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
 use Tuleap\MediawikiStandalone\Permissions\RestrictedUserCanAccessMediaWikiVerifier;
+use Tuleap\MediawikiStandalone\Permissions\UserPermissionsBuilder;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
 use Tuleap\MediawikiStandalone\REST\OAuth2\OAuth2MediawikiStandaloneReadScope;
 use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageDao;
@@ -92,6 +100,7 @@ use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
+use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
@@ -168,8 +177,23 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
         $this->addHook(Event::USER_MANAGER_UPDATE_DB);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
+        $this->addHook(GetHistoryKeyLabel::NAME);
+        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
+    {
+        $label = ProjectPermissionsSaver::getLabelFromKey($event->getKey());
+        if ($label) {
+            $event->setLabel($label);
+        }
+    }
+
+    public function fillProjectHistorySubEvents(array $params): void
+    {
+        ProjectPermissionsSaver::fillProjectHistorySubEvents($params);
     }
 
     public function getServiceShortname(): string
@@ -351,12 +375,48 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             '/mediawiki_standalone/admin/{' . AdminPermissionsController::PROJECT_NAME_VARIABLE_NAME . '}/permissions',
             $this->getRouteHandler('routeAdminProjectPermissions')
         );
+        $route_collector->addRoute(
+            'POST',
+            '/mediawiki_standalone/admin/{' . AdminPermissionsController::PROJECT_NAME_VARIABLE_NAME . '}/permissions',
+            $this->getRouteHandler('routeAdminSaveProjectPermissions')
+        );
+    }
+
+    public function routeAdminSaveProjectPermissions(): \Tuleap\Request\DispatchableWithRequest
+    {
+        return new AdminSavePermissionsController(
+            new ProjectPermissionsSaver(new MediawikiPermissionsDao(), new ProjectHistoryDao()),
+            new UserGroupToSaveRetriever(new UGroupManager()),
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao())
+            ),
+            new CSRFSynchronizerTokenProvider(),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(MediawikiStandaloneService::SERVICE_SHORTNAME),
+            new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new RejectNonMediawikiAdministratorMiddleware(
+                UserManager::instance(),
+                new UserPermissionsBuilder(
+                    new \User_ForgeUserGroupPermissionsManager(
+                        new \User_ForgeUserGroupPermissionsDao()
+                    ),
+                    new ProjectAccessChecker(
+                        new RestrictedUserCanAccessMediaWikiVerifier(),
+                        \EventManager::instance(),
+                    ),
+                    new ReadersRetriever(
+                        new MediawikiPermissionsDao()
+                    ),
+                ),
+            )
+        );
     }
 
     public function routeAdminProjectPermissions(): \Tuleap\Request\DispatchableWithRequest
     {
-        $readers_retriever = new \Tuleap\MediawikiStandalone\Permissions\ReadersRetriever(
-            new \Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao()
+        $readers_retriever = new ReadersRetriever(
+            new MediawikiPermissionsDao()
         );
 
         return new AdminPermissionsController(
@@ -374,7 +434,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             new ProjectByNameRetrieverMiddleware(ProjectRetriever::buildSelf()),
             new RejectNonMediawikiAdministratorMiddleware(
                 UserManager::instance(),
-                new \Tuleap\MediawikiStandalone\Permissions\UserPermissionsBuilder(
+                new UserPermissionsBuilder(
                     new \User_ForgeUserGroupPermissionsManager(
                         new \User_ForgeUserGroupPermissionsDao()
                     ),
