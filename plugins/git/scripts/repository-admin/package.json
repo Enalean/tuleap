@@ -6,10 +6,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/user-and-ugroup-autocompleter": "link:../../../../lib/frontend/user-and-ugroup-autocompleter"
+    "@tuleap/user-and-ugroup-autocompleter": "workspace:*"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "build": "vite build",

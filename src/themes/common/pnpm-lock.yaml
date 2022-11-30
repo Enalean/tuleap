@@ -1,9 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/project-background': link:../../../lib/frontend/project-background
-  '@tuleap/project-sidebar-internal': link:../../../lib/frontend/project-sidebar-internal
-  '@tuleap/tlp-swatch-colors': link:../../../lib/frontend/tlp-swatch-colors
+  '@tuleap/project-background': workspace:*
+  '@tuleap/project-sidebar-internal': workspace:*
+  '@tuleap/tlp-swatch-colors': workspace:*
   prismjs: ^1.29.0
 
 dependencies:

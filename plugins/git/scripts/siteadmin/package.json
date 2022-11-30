@@ -6,12 +6,12 @@
   "type": "module",
   "private": true,
   "dependencies": {
-    "@tuleap/autocomplete-for-select2": "link:../../../../lib/frontend/autocomplete-for-select2",
-    "@tuleap/filter-inline-table": "link:../../../../lib/frontend/filter-table",
-    "@tuleap/tlp-modal": "link:../../../../lib/frontend/tlp-modal"
+    "@tuleap/autocomplete-for-select2": "workspace:*",
+    "@tuleap/filter-inline-table": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

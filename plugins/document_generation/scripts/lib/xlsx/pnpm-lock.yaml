@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator': workspace:*
   xlsx: ^0.18.5
 
 dependencies:

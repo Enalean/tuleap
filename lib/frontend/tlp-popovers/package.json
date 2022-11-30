@@ -20,6 +20,6 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   }
 }

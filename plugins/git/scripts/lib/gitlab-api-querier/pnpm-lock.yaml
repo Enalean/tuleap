@@ -1,9 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/fault': link:../../../../../lib/frontend/fault
-  '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/fault': workspace:*
+  '@tuleap/fetch-result': workspace:*
   neverthrow: ^5.0.0
 
 dependencies:

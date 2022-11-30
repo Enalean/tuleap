@@ -6,10 +6,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/html-escaper": "link:../../../../lib/frontend/html-escaper"
+    "@tuleap/html-escaper": "workspace:*"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.mjs",

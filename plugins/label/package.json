@@ -6,17 +6,17 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/burningparrot-theme": "link:../../src/themes/BurningParrot",
-    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
-    "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
+    "@tuleap/burningparrot-theme": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-swatch-colors": "workspace:*",
     "mustache": "^4.2.0",
     "vue": "^2.7.8",
     "vue-dompurify-html": "^2.5.1",
     "vue-gettext": "^2.1.12"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
-    "@tuleap/po-gettext-plugin": "link:../../lib/frontend/po-gettext-plugin"
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*"
   },
   "scripts": {
     "build": "vite build",

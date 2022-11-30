@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/build-system-configurator': workspace:*
   angular: ^1.8.2
   angular-mocks: ^1.8.2
 

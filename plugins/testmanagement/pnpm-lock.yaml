@@ -1,26 +1,26 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/angular-tlp': link:../../lib/frontend/angular-tlp
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
-  '@tuleap/ckeditor-image-upload': link:../../lib/frontend/ckeditor-image-upload
-  '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
-  '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
-  '@tuleap/gettext': link:../../lib/frontend/gettext
-  '@tuleap/keyboard-shortcuts': link:../../lib/frontend/keyboard-shortcuts
-  '@tuleap/list-picker': link:../../lib/frontend/list-picker
-  '@tuleap/plugin-docgen-docx': link:../document_generation/scripts/lib/docx
-  '@tuleap/plugin-tracker-artifact-ckeditor-image-upload': link:../tracker/scripts/lib/artifact-ckeditor-image-upload
-  '@tuleap/plugin-tracker-artifact-modal': link:../tracker/scripts/lib/artifact-modal
-  '@tuleap/plugin-tracker-constants': link:../tracker/scripts/lib/constants
-  '@tuleap/plugin-tracker-rich-text-editor': link:../tracker/scripts/lib/rich-text-editor
-  '@tuleap/project-background': link:../../lib/frontend/project-background
-  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
-  '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
+  '@tuleap/angular-tlp': workspace:*
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/burningparrot-theme': workspace:*
+  '@tuleap/ckeditor-image-upload': workspace:*
+  '@tuleap/concurrency-limit-pool': workspace:*
+  '@tuleap/cypress-configurator': workspace:*
+  '@tuleap/cypress-utilities-support': workspace:*
+  '@tuleap/filter-inline-table': workspace:*
+  '@tuleap/gettext': workspace:*
+  '@tuleap/keyboard-shortcuts': workspace:*
+  '@tuleap/list-picker': workspace:*
+  '@tuleap/plugin-docgen-docx': workspace:*
+  '@tuleap/plugin-tracker-artifact-ckeditor-image-upload': workspace:*
+  '@tuleap/plugin-tracker-artifact-modal': workspace:*
+  '@tuleap/plugin-tracker-constants': workspace:*
+  '@tuleap/plugin-tracker-rich-text-editor': workspace:*
+  '@tuleap/project-background': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/tlp-swatch-colors': workspace:*
+  '@tuleap/vuex-store-wrapper-jest': workspace:*
   '@types/node': ^14.14.31
   '@types/sprintf-js': ^1.1.2
   '@uirouter/angularjs': ^1.0.29

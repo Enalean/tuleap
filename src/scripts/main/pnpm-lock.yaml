@@ -2,35 +2,35 @@ lockfileVersion: 5.4
 
 specifiers:
   '@joeattardi/emoji-button': ^4.6.2
-  '@tuleap/autocomplete-for-select2': link:../../../lib/frontend/autocomplete-for-select2
-  '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
-  '@tuleap/burningparrot-theme': link:../../themes/BurningParrot
-  '@tuleap/common-theme': link:../../themes/common
-  '@tuleap/concurrency-limit-pool': link:../../../lib/frontend/concurrency-limit-pool
-  '@tuleap/copy-to-clipboard': link:../../../lib/frontend/copy-to-clipboard
-  '@tuleap/date-helper': link:../../../lib/frontend/date-helper
-  '@tuleap/filter-inline-table': link:../../../lib/frontend/filter-table
-  '@tuleap/flamingparrot-theme': link:../../themes/FlamingParrot
-  '@tuleap/gettext': link:../../../lib/frontend/gettext
-  '@tuleap/html-escaper': link:../../../lib/frontend/html-escaper
-  '@tuleap/keyboard-shortcuts': link:../../../lib/frontend/keyboard-shortcuts
-  '@tuleap/list-picker': link:../../../lib/frontend/list-picker
-  '@tuleap/mention': link:../../../lib/frontend/mention
-  '@tuleap/pie-chart': link:../../../lib/frontend/pie-chart
-  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../../lib/frontend/potentially-dangerous-bidirectional-characters
-  '@tuleap/project-background': link:../../../lib/frontend/project-background
-  '@tuleap/project-privacy-helper': link:../../../lib/frontend/project-privacy-helper
-  '@tuleap/project-sidebar-internal': link:../../../lib/frontend/project-sidebar-internal
-  '@tuleap/tlp': link:../../themes/tlp
-  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
-  '@tuleap/tlp-fetch': link:../../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
-  '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
-  '@tuleap/tlp-relative-date': link:../../../lib/frontend/tlp-relative-date
-  '@tuleap/tooltip': link:../../../lib/frontend/tooltip
-  '@tuleap/vue-permissions-per-group-badge': link:../../../lib/frontend/vue-permissions-per-group-badge
-  '@tuleap/vue2-gettext-init': link:../../../lib/frontend/vue2-gettext-init
-  '@tuleap/vuex-store-wrapper-jest': link:../../../lib/frontend/vuex-store-wrapper-jest
+  '@tuleap/autocomplete-for-select2': workspace:*
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/burningparrot-theme': workspace:*
+  '@tuleap/common-theme': workspace:*
+  '@tuleap/concurrency-limit-pool': workspace:*
+  '@tuleap/copy-to-clipboard': workspace:*
+  '@tuleap/date-helper': workspace:*
+  '@tuleap/filter-inline-table': workspace:*
+  '@tuleap/flamingparrot-theme': workspace:*
+  '@tuleap/gettext': workspace:*
+  '@tuleap/html-escaper': workspace:*
+  '@tuleap/keyboard-shortcuts': workspace:*
+  '@tuleap/list-picker': workspace:*
+  '@tuleap/mention': workspace:*
+  '@tuleap/pie-chart': workspace:*
+  '@tuleap/potentially-dangerous-bidirectional-characters': workspace:*
+  '@tuleap/project-background': workspace:*
+  '@tuleap/project-privacy-helper': workspace:*
+  '@tuleap/project-sidebar-internal': workspace:*
+  '@tuleap/tlp': workspace:*
+  '@tuleap/tlp-dropdown': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/tlp-modal': workspace:*
+  '@tuleap/tlp-popovers': workspace:*
+  '@tuleap/tlp-relative-date': workspace:*
+  '@tuleap/tooltip': workspace:*
+  '@tuleap/vue-permissions-per-group-badge': workspace:*
+  '@tuleap/vue2-gettext-init': workspace:*
+  '@tuleap/vuex-store-wrapper-jest': workspace:*
   '@types/bootstrap': ^4.5.0
   '@types/ckeditor': ^4.9.10
   '@types/dompurify': ^2.3.2

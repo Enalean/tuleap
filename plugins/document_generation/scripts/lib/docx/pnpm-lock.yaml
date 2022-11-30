@@ -1,11 +1,11 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/concurrency-limit-pool': link:../../../../../lib/frontend/concurrency-limit-pool
-  '@tuleap/plugin-tracker-constants': link:../../../../tracker/scripts/lib/constants
-  '@tuleap/plugin-tracker-rest-api-types': link:../../../../tracker/scripts/lib/rest-api-types
-  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/concurrency-limit-pool': workspace:*
+  '@tuleap/plugin-tracker-constants': workspace:*
+  '@tuleap/plugin-tracker-rest-api-types': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
   '@types/dompurify': ^2.3.2
   '@types/sprintf-js': ^1.1.2
   docx: ^7.3.0

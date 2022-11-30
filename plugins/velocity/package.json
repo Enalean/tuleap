@@ -5,14 +5,14 @@
     "license": "GPL-2.0-or-later",
     "private": true,
     "dependencies": {
-        "@tuleap/chart-builder": "link:../../lib/frontend/chart-builder",
+        "@tuleap/chart-builder": "workspace:*",
         "d3-selection": "^3.0.0",
         "moment": "^2.29.4",
         "node-gettext": "^3.0.0",
         "sprintf-js": "^1.1.2"
     },
     "devDependencies": {
-        "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator"
+        "@tuleap/build-system-configurator": "workspace:*"
     },
     "scripts": {
         "build": "webpack --config webpack.prod.js",

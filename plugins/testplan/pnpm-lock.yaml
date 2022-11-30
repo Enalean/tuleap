@@ -1,20 +1,20 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
-  '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/gettext': link:../../lib/frontend/gettext
-  '@tuleap/plugin-docgen-docx': link:../document_generation/scripts/lib/docx
-  '@tuleap/plugin-docgen-xlsx': link:../document_generation/scripts/lib/xlsx
-  '@tuleap/plugin-testmanagement': link:../testmanagement
-  '@tuleap/plugin-tracker-rest-api-types': link:../tracker/scripts/lib/rest-api-types
-  '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
-  '@tuleap/project-background': link:../../lib/frontend/project-background
-  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
-  '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init
-  '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/concurrency-limit-pool': workspace:*
+  '@tuleap/cypress-configurator': workspace:*
+  '@tuleap/cypress-utilities-support': workspace:*
+  '@tuleap/gettext': workspace:*
+  '@tuleap/plugin-docgen-docx': workspace:*
+  '@tuleap/plugin-docgen-xlsx': workspace:*
+  '@tuleap/plugin-testmanagement': workspace:*
+  '@tuleap/plugin-tracker-rest-api-types': workspace:*
+  '@tuleap/po-gettext-plugin': workspace:*
+  '@tuleap/project-background': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/vue3-gettext-init': workspace:*
+  '@tuleap/vuex-store-wrapper-jest': workspace:*
   '@vue/test-utils': ^2.0.2
   docx: ^7.3.0
   vue: ^3.2.37

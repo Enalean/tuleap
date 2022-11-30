@@ -1,9 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
-  '@tuleap/concurrency-limit-pool': link:../concurrency-limit-pool
-  '@tuleap/fault': link:../fault
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/concurrency-limit-pool': workspace:*
+  '@tuleap/fault': workspace:*
   neverthrow: ^5.0.0
 
 dependencies:

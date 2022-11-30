@@ -16,7 +16,7 @@
     }
   },
   "dependencies": {
-    "@tuleap/gettext": "link:../gettext",
+    "@tuleap/gettext": "workspace:*",
     "d3-array": "3.0.1",
     "d3-axis": "3.0.0",
     "d3-scale": "4.0.0",
@@ -26,8 +26,8 @@
     "sprintf-js": "1.1.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../build-system-configurator",
-    "@tuleap/po-gettext-plugin": "link:../po-gettext-plugin",
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/d3-scale": "4.0.0",
     "@types/d3-selection": "3.0.0",
     "@types/d3-shape": "3.0.1"

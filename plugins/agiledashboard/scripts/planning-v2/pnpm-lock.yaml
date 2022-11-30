@@ -1,11 +1,11 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/plugin-agiledashboard-card-fields': link:../lib/card-fields
-  '@tuleap/plugin-agiledashboard-shared': link:../lib/shared
-  '@tuleap/plugin-tracker-artifact-modal': link:../../../tracker/scripts/lib/artifact-modal
-  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/plugin-agiledashboard-card-fields': workspace:*
+  '@tuleap/plugin-agiledashboard-shared': workspace:*
+  '@tuleap/plugin-tracker-artifact-modal': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
   angular: ^1.8.2
   angular-animate: ^1.8.2
   angular-gettext: ^2.4.2
