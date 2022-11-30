@@ -40,6 +40,10 @@ import type { RetrievePossibleParents } from "../../domain/fields/link-field/Ret
 import { PossibleParentsRetrievalFault } from "../../domain/fields/link-field/PossibleParentsRetrievalFault";
 import type { CreateFileUpload } from "../../domain/fields/file-field/CreateFileUpload";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
+import type { RetrieveUserHistory } from "../../domain/fields/link-field/RetrieveUserHistory";
+import type { UserHistory } from "./user-history/UserHistory";
+import { HISTORY_ENTRY_ARTIFACT } from "./user-history/UserHistory";
+import type { UserIdentifier } from "../../domain/UserIdentifier";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -50,7 +54,8 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveLinkTypes &
     RetrieveLinkedArtifactsByType &
     RetrievePossibleParents &
-    CreateFileUpload;
+    CreateFileUpload &
+    RetrieveUserHistory;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -117,6 +122,17 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
                 file_id: response.id,
                 upload_href: response.upload_href,
             })
+        );
+    },
+    getUserArtifactHistory(
+        user_identifier: UserIdentifier
+    ): ResultAsync<readonly LinkableArtifact[], Fault> {
+        return getJSON<UserHistory>(`/api/v1/users/${user_identifier.id}/history`).map(
+            (history) => {
+                return history.entries
+                    .filter((entry) => entry.type === HISTORY_ENTRY_ARTIFACT)
+                    .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
+            }
         );
     },
 });

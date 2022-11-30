@@ -21,6 +21,7 @@ import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
 import { ArtifactProjectProxy } from "./ArtifactProjectProxy";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
+import type { UserHistoryEntry } from "./user-history/UserHistory";
 
 export const LinkableArtifactProxy = {
     fromAPIArtifact: (artifact: ArtifactWithStatus): LinkableArtifact => ({
@@ -31,5 +32,15 @@ export const LinkableArtifactProxy = {
         status: artifact.status,
         is_open: artifact.is_open,
         project: ArtifactProjectProxy.fromAPIArtifact(artifact),
+    }),
+
+    fromAPIUserHistory: (entry: UserHistoryEntry): LinkableArtifact => ({
+        id: entry.per_type_id,
+        title: entry.title,
+        xref: ArtifactCrossReferenceProxy.fromAPIUserHistory(entry),
+        uri: entry.html_url,
+        status: entry.badges[0] ? entry.badges[0].label : null,
+        is_open: true,
+        project: entry.project,
     }),
 };

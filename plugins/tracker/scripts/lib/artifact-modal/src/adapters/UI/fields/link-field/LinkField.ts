@@ -52,7 +52,9 @@ export interface LinkField {
     allowed_link_types: CollectionOfAllowedLinksTypesPresenters;
     new_links_presenter: NewLinkCollectionPresenter;
     current_link_type: LinkType;
-    dropdown_content: GroupCollection;
+    matching_artifact_section: GroupCollection;
+    recently_viewed_section: GroupCollection;
+    possible_parents_section: GroupCollection;
 }
 export type HostElement = LinkField & HTMLElement;
 
@@ -144,6 +146,43 @@ export const setAllowedTypes = (
     return presenter;
 };
 
+export const setMatchingArtifactSection = (
+    host: LinkField,
+    collection: GroupCollection | undefined
+): GroupCollection => {
+    if (!collection) {
+        return [];
+    }
+    host.link_selector.setDropdownContent([
+        ...collection,
+        ...host.recently_viewed_section,
+        ...host.possible_parents_section,
+    ]);
+    return collection;
+};
+
+export const setRecentlyViewedArtifact = (
+    host: LinkField,
+    collection: GroupCollection | undefined
+): GroupCollection => {
+    if (!collection) {
+        return [];
+    }
+    host.link_selector.setDropdownContent([...host.matching_artifact_section, ...collection]);
+    return collection;
+};
+
+export const setPossibleParentsSection = (
+    host: LinkField,
+    collection: GroupCollection | undefined
+): GroupCollection => {
+    if (!collection) {
+        return [];
+    }
+    host.link_selector.setDropdownContent([...host.matching_artifact_section, ...collection]);
+    return collection;
+};
+
 export const current_link_type_descriptor = {
     set: (host: LinkField, link_type: LinkType | undefined): LinkType => {
         if (!link_type) {
@@ -159,11 +198,6 @@ export const current_link_type_descriptor = {
     observe: (host: LinkField): void => {
         host.controller.autoComplete(host, "");
     },
-};
-
-const setDropdownContent = (host: LinkField, groups: GroupCollection): GroupCollection => {
-    host.link_selector.setDropdownContent(groups);
-    return groups;
 };
 
 export const getLinkFieldCanOnlyHaveOneParentNote = (
@@ -271,8 +305,14 @@ export const LinkField = define<LinkField>({
         set: setNewLinks,
     },
     current_link_type: current_link_type_descriptor,
-    dropdown_content: {
-        set: setDropdownContent,
+    matching_artifact_section: {
+        set: setMatchingArtifactSection,
+    },
+    recently_viewed_section: {
+        set: setRecentlyViewedArtifact,
+    },
+    possible_parents_section: {
+        set: setPossibleParentsSection,
     },
     content: (host) => html`
         <div class="tracker-form-element" data-test="artifact-link-field">

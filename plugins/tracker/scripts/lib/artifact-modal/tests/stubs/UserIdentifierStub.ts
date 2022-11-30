@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,18 +14,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
-import type { ArtifactProject } from "../../ArtifactProject";
+import type { UserIdentifier } from "../../src/domain/UserIdentifier";
 
-export type LinkableArtifact = {
-    readonly id: number;
-    readonly title: string | null;
-    readonly xref: ArtifactCrossReference;
-    readonly uri: string;
-    readonly status: string | null;
-    readonly is_open: boolean;
-    readonly project: ArtifactProject;
+export const UserIdentifierProxyStub = {
+    fromUserId: (user_id: number): UserIdentifier => {
+        return {
+            _type: "UserIdentifier",
+            id: user_id,
+        };
+    },
 };
