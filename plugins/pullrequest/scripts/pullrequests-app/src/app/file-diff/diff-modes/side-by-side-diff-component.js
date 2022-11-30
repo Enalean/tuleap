@@ -170,26 +170,20 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
 
         getStore().getAllRootComments().forEach(widget_creation_manager.displayInlineComment);
 
-        const getLineNumberFromEvent = (gutter_click_event) =>
-            // We need this trick because CodeMirror can sometimes provide the
-            // wrong line number. Hence, we need to parse the content of the gutter
-            // which holds the line number.
-            Number.parseInt(gutter_click_event.target.textContent, 10) - 1;
-
-        left_code_mirror.on("gutterClick", (left_code_mirror, line_number, gutter, event) => {
+        left_code_mirror.on("gutterClick", (left_code_mirror, line_number) => {
             widget_creation_manager.displayNewInlineCommentForm(
                 INLINE_COMMENT_POSITION_LEFT,
                 self.pullRequestId,
                 self.filePath,
-                getLineNumberFromEvent(event)
+                line_number
             );
         });
-        right_code_mirror.on("gutterClick", (right_code_mirror, line_number, gutter, event) => {
+        right_code_mirror.on("gutterClick", (right_code_mirror, line_number) => {
             widget_creation_manager.displayNewInlineCommentForm(
                 INLINE_COMMENT_POSITION_RIGHT,
                 self.pullRequestId,
                 self.filePath,
-                getLineNumberFromEvent(event)
+                line_number
             );
         });
 

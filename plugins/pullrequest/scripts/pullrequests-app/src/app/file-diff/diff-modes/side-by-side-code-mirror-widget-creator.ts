@@ -80,14 +80,17 @@ export const SideBySideCodeMirrorWidgetCreator = (
         inline_comment_element.controller = controller;
         inline_comment_element.currentUser = current_user_presenter;
         inline_comment_element.currentPullRequest = pull_request_presenter;
-        inline_comment_element.post_rendering_callback = widget_params.post_rendering_callback;
 
-        widget_params.code_mirror.addLineWidget(
+        const widget = widget_params.code_mirror.addLineWidget(
             widget_params.line_number,
             inline_comment_element,
             getWidgetPlacementOptions(widget_params)
         );
 
+        inline_comment_element.post_rendering_callback = (): void => {
+            widget_params.post_rendering_callback();
+            widget.changed();
+        };
         comments_widgets_map.addCommentWidget(inline_comment_element);
     };
 
@@ -101,10 +104,18 @@ export const SideBySideCodeMirrorWidgetCreator = (
             placeholder.height = widget_params.widget_height;
             placeholder.isReplacingAComment = widget_params.is_comment_placeholder;
 
-            widget_params.code_mirror.addLineWidget(widget_params.handle, placeholder, {
-                coverGutter: true,
-                above: widget_params.display_above_line,
-            });
+            const widget = widget_params.code_mirror.addLineWidget(
+                widget_params.handle,
+                placeholder,
+                {
+                    coverGutter: true,
+                    above: widget_params.display_above_line,
+                }
+            );
+
+            placeholder.post_rendering_callback = (): void => {
+                widget.changed();
+            };
         },
         displayInlineCommentWidget,
         displayNewInlineCommentFormWidget: (
@@ -116,13 +127,16 @@ export const SideBySideCodeMirrorWidgetCreator = (
             }
 
             new_comment_element.comment_saver = NewInlineCommentSaver(widget_params.context);
-            new_comment_element.post_rendering_callback = widget_params.post_rendering_callback;
-
             const widget = widget_params.code_mirror.addLineWidget(
                 widget_params.line_number,
                 new_comment_element,
                 getWidgetPlacementOptions(widget_params)
             );
+
+            new_comment_element.post_rendering_callback = (): void => {
+                widget_params.post_rendering_callback();
+                widget.changed();
+            };
 
             new_comment_element.post_submit_callback = (comment_presenter): void => {
                 widget.clear();

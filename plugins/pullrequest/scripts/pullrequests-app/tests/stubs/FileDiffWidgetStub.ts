@@ -82,6 +82,7 @@ export const FileDiffWidgetStub = {
         getBoundingClientRect: stubBounding(height),
         isReplacingAComment: true,
         height,
+        post_rendering_callback: noop,
     }),
 
     buildCodePlaceholder: (height = 20): FileDiffPlaceholderWidget => ({
@@ -90,5 +91,6 @@ export const FileDiffWidgetStub = {
         getBoundingClientRect: stubBounding(height),
         isReplacingAComment: false,
         height,
+        post_rendering_callback: noop,
     }),
 };
