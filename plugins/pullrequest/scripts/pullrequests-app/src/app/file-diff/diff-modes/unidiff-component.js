@@ -146,8 +146,12 @@ function controller(
             : INLINE_COMMENT_POSITION_RIGHT;
     }
 
-    function addNewComment(code_mirror, line_number, gutter) {
-        const comment_position = getCommentPosition(line_number, gutter);
+    function addNewComment(code_mirror, line_number, gutter_class, event) {
+        if (event.target.classList.contains(gutter_class)) {
+            return;
+        }
+
+        const comment_position = getCommentPosition(line_number, gutter_class);
 
         self.widget_creator.displayNewInlineCommentFormWidget({
             code_mirror,

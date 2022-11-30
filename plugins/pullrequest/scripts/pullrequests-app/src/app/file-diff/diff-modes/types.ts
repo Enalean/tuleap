@@ -92,6 +92,7 @@ export interface FileDiffPlaceholderWidget extends WidgetElement {
     localName: "tuleap-pullrequest-placeholder";
     isReplacingAComment: boolean;
     height: number;
+    post_rendering_callback: () => void;
 }
 
 export type FileDiffCommentWidget = InlineCommentWidget | NewInlineCommentFormWidget;

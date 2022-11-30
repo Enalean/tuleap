@@ -24,10 +24,11 @@ export const TAG_NAME: FileDiffWidgetType = "tuleap-pullrequest-placeholder";
 
 export type HostElement = FileDiffPlaceholder & HTMLElement;
 
-interface FileDiffPlaceholder {
+export interface FileDiffPlaceholder {
     readonly content: () => HTMLElement;
     readonly isReplacingAComment: boolean;
-    readonly height: number;
+    readonly post_rendering_callback: () => void;
+    height: number;
 }
 
 const getPlaceholderClasses = (host: FileDiffPlaceholder): Record<string, boolean> => ({
@@ -42,7 +43,13 @@ const getStyle = (host: FileDiffPlaceholder): Record<string, string> => ({
 export const FileDiffPlaceholder = define<FileDiffPlaceholder>({
     tag: TAG_NAME,
     isReplacingAComment: false,
-    height: 0,
+    height: {
+        value: 0,
+        observe(host: FileDiffPlaceholder) {
+            host.post_rendering_callback();
+        },
+    },
+    post_rendering_callback: undefined,
     content: (host) => html`
         <div
             class="${getPlaceholderClasses(host)}"

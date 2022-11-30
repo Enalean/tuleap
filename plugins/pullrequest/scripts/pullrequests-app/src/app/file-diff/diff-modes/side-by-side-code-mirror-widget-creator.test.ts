@@ -88,7 +88,9 @@ describe("side-by-side-code-mirror-widget-creator", () => {
     });
 
     describe("displayPlaceholderWidget()", () => {
-        it("should create a tuleap-pullrequest-placeholder and add it to the target codemirror", () => {
+        it(`should create a tuleap-pullrequest-placeholder that:
+            - is added to the target codemirror
+            - notifies codemirror that the widget height has changed when the post_submit_callback is run`, () => {
             const widget_creation_params = {
                 code_mirror,
                 handle: { line_number: 10 } as unknown as FileLineHandle,
@@ -101,6 +103,11 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                 PLACEHOLDER_TAG_NAME
             ) as FileDiffPlaceholderWidget;
             createElement.mockReturnValue(placeholder);
+
+            const line_widget = {
+                changed: jest.fn(),
+            };
+            code_mirror.addLineWidget.mockReturnValueOnce(line_widget);
 
             getWidgetCreator().displayPlaceholderWidget(widget_creation_params);
 
@@ -117,20 +124,28 @@ describe("side-by-side-code-mirror-widget-creator", () => {
                     above: widget_creation_params.display_above_line,
                 }
             );
+
+            placeholder.post_rendering_callback();
+            expect(line_widget.changed).toHaveBeenCalledTimes(1);
         });
     });
 
     describe("displayInlineCommentWidget()", () => {
-        it("should create a tuleap-pull-request-element and add it to the target codemirror", () => {
+        it(`should create a tuleap-pull-request-element that:
+            - is added to the target codemirror
+            - notifies codemirror that the widget height has changed when the post_submit_callback is run`, () => {
             const comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter();
-            const post_rendering_callback = (): void => {
-                // Do nothing
-            };
+            const post_rendering_callback = jest.fn();
 
             const inline_comment_widget = document.createElement(
                 COMMENT_TAG_NAME
             ) as InlineCommentWidget;
             createElement.mockReturnValue(inline_comment_widget);
+
+            const line_widget = {
+                changed: jest.fn(),
+            };
+            code_mirror.addLineWidget.mockReturnValueOnce(line_widget);
 
             getWidgetCreator().displayInlineCommentWidget({
                 code_mirror,
@@ -144,25 +159,26 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             expect(inline_comment_widget.controller).toStrictEqual(controller);
             expect(inline_comment_widget.currentUser).toStrictEqual(current_user);
             expect(inline_comment_widget.currentPullRequest).toStrictEqual(pull_request);
-            expect(inline_comment_widget.post_rendering_callback).toStrictEqual(
-                post_rendering_callback
-            );
+            expect(inline_comment_widget.post_rendering_callback).toBeDefined();
 
             expect(code_mirror.addLineWidget).toHaveBeenCalledWith(12, inline_comment_widget, {
                 coverGutter: true,
             });
+
+            inline_comment_widget.post_rendering_callback();
+            expect(line_widget.changed).toHaveBeenCalledTimes(1);
+            expect(post_rendering_callback).toHaveBeenCalledTimes(1);
         });
     });
 
     describe("displayNewInlineCommentFormWidget", () => {
         it(`should create a tuleap-pullrequest-new-comment-form that:
             - is added to the target codemirror
+            - notifies codemirror that the widget height has changed when the post_submit_callback is run
             - is removed when the new comment has been submitted
             - is replaced by a tuleap-pull-request-element afterwards`, () => {
             const context = InlineCommentContextStub.widthDefaultContext();
-            const post_rendering_callback = (): void => {
-                // Do nothing
-            };
+            const post_rendering_callback = jest.fn();
 
             const new_comment_form = document.createElement(
                 NEW_COMMENT_FORM_TAG_NAME
@@ -176,6 +192,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             const line_widget = {
                 node: new_comment_form,
                 clear: jest.fn(),
+                changed: jest.fn(),
             };
             code_mirror.addLineWidget.mockReturnValueOnce(line_widget);
 
@@ -187,13 +204,17 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             });
 
             expect(new_comment_form.comment_saver).toBeDefined();
-            expect(new_comment_form.post_rendering_callback).toStrictEqual(post_rendering_callback);
+            expect(new_comment_form.post_rendering_callback).toBeDefined();
             expect(new_comment_form.on_cancel_callback).toBeDefined();
             expect(new_comment_form.post_submit_callback).toBeDefined();
 
             expect(code_mirror.addLineWidget).toHaveBeenCalledWith(15, new_comment_form, {
                 coverGutter: true,
             });
+
+            new_comment_form.post_rendering_callback();
+            expect(line_widget.changed).toHaveBeenCalledTimes(1);
+            expect(post_rendering_callback).toHaveBeenCalledTimes(1);
 
             const new_comment = PullRequestCommentPresenterStub.buildFileDiffCommentPresenter();
             new_comment_form.post_submit_callback(new_comment);
