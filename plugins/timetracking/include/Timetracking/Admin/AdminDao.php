@@ -53,7 +53,7 @@ class AdminDao extends DataAccessObject
 
     public function getProjectstWithEnabledTimetracking($limit, $offset)
     {
-        $sql = 'SELECT DISTINCT `groups`.group_id
+        $sql = 'SELECT DISTINCT `groups`.group_id, `groups`.group_name
                 FROM plugin_timetracking_enabled_trackers
                 INNER JOIN tracker AS tracker
                         ON tracker.id = plugin_timetracking_enabled_trackers.tracker_id

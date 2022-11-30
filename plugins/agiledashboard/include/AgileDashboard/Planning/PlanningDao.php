@@ -121,8 +121,7 @@ class PlanningDao extends DataAccessObject
                 FROM plugin_agiledashboard_planning AS planning
                     INNER JOIN plugin_agiledashboard_planning_backlog_tracker AS backlog_trackers
                 ON planning.id = backlog_trackers.planning_id
-                WHERE backlog_trackers.tracker_id = ?
-                GROUP BY planning.id';
+                WHERE backlog_trackers.tracker_id = ?';
         return $this->getDB()->run($sql, $backlog_tracker_id);
     }
 

@@ -36,6 +36,7 @@ class ConnectionManager implements ConnectionManagerInterface
     private const AUTHORISED_SQL_MODES = [
         'NO_AUTO_CREATE_USER' => true,
         'NO_ENGINE_SUBSTITUTION' => true,
+        'ONLY_FULL_GROUP_BY' => true,
     ];
 
     public function getDBWithoutDBName(

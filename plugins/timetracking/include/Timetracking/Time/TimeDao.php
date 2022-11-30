@@ -97,7 +97,7 @@ class TimeDao extends DataAccessObject
                 WHERE user_id = ?
                 AND   day BETWEEN ? AND ?
                 AND projects.status = "A"
-                GROUP BY times.artifact_id
+                GROUP BY times.artifact_id, times.id
                 ORDER BY times.id
                 LIMIT ?, ?
         ';

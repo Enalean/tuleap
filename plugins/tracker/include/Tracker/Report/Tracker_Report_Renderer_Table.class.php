@@ -1630,10 +1630,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $where = " WHERE c.id IN (" . $changeset_ids . ") ";
         if ($aggregates) {
-            $group_by = '';
             $ordering = false;
         } else {
-            $group_by = ' GROUP BY id ';
             $ordering = true;
         }
 
@@ -1694,7 +1692,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
 
             //build the query
-            $sql = $inner_select . $inner_from . $where . $group_by;
+            $sql = $inner_select . $inner_from . $where;
 
             //add it to the pool
             $queries[] = $sql;
@@ -1740,7 +1738,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
 
         if (empty($queries)) {
-            $queries[] = $select . $from . $where . $group_by;
+            $queries[] = $select . $from . $where;
         }
 
         return $queries;
