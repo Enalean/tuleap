@@ -10,6 +10,7 @@
   "dependencies": {
     "@tuleap/angular-tlp": "workspace:*",
     "@tuleap/ckeditor-image-upload": "workspace:*",
+    "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",

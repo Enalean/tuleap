@@ -9,6 +9,7 @@
   "types": "dist/main.d.ts",
   "exports": {
     ".": {
+      "import": "./dist/main.js",
       "require": "./dist/main.js"
     }
   },
