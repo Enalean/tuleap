@@ -25,7 +25,6 @@ import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-fi
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
-import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
@@ -67,7 +66,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         artifact_retriever: RetrieveMatchingArtifact,
         artifact_retriever_async: ResultAsync<LinkableArtifact, never>,
         fault_notifier: NotifyFaultStub,
-        notification_clearer: ClearFaultNotificationStub,
         parents_retriever: RetrievePossibleParents,
         parent_retriever_async: ResultAsync<readonly LinkableArtifact[], never>,
         current_artifact_identifier: CurrentArtifactIdentifier | null,
@@ -98,7 +96,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             RetrieveMatchingArtifactStub.withMatchingArtifact(artifact_retriever_async);
 
         fault_notifier = NotifyFaultStub.withCount();
-        notification_clearer = ClearFaultNotificationStub.withCount();
 
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
 
@@ -121,7 +118,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         const autocompleter = ArtifactLinkSelectorAutoCompleter(
             artifact_retriever,
             fault_notifier,
-            notification_clearer,
             parents_retriever,
             VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
             current_artifact_identifier,
@@ -143,7 +139,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             (query_content_type: string, query: string) => {
                 autocomplete(query);
 
-                expect(notification_clearer.getCallCount()).toBe(1);
                 expect(host.matching_artifact_section).toHaveLength(0);
             }
         );
@@ -152,7 +147,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             then it will display the recently displayed group ONLY`, async () => {
             autocomplete("");
 
-            expect(notification_clearer.getCallCount()).toBe(1);
             const loading_groups = host.recently_viewed_section;
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
@@ -173,7 +167,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         it(`when the query is not empty, it will set an empty group of search results`, () => {
             autocomplete("a");
 
-            expect(notification_clearer.getCallCount()).toBe(1);
             expect(host.search_results_section).toHaveLength(1);
         });
 
@@ -182,7 +175,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             and clear the fault notification`, async () => {
             autocomplete(String(ARTIFACT_ID));
 
-            expect(notification_clearer.getCallCount()).toBe(1);
             const loading_groups = host.matching_artifact_section;
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
@@ -210,7 +202,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             await artifact_retriever_async;
             await artifact_retriever_async; //There are two level of promise
 
-            expect(notification_clearer.getCallCount()).toBe(1);
             expect(fault_notifier.getCallCount()).toBe(1);
             const groups = host.matching_artifact_section;
             expect(groups).toHaveLength(1);
@@ -234,7 +225,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 await artifact_retriever_async;
                 await artifact_retriever_async; //There are two level of promise
 
-                expect(notification_clearer.getCallCount()).toBe(1);
                 expect(fault_notifier.getCallCount()).toBe(0);
                 const groups = host.matching_artifact_section;
                 expect(groups).toHaveLength(1);
@@ -257,7 +247,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         it(`will retrieve the possible parents and set a group holding them
             and clear the fault notification`, async () => {
             autocomplete("");
-            expect(notification_clearer.getCallCount()).toBe(1);
             const loading_groups = host.possible_parents_section;
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);

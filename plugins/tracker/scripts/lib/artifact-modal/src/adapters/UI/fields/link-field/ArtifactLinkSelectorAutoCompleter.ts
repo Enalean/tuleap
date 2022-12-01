@@ -23,7 +23,6 @@ import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-fi
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
-import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { NotifyFault } from "../../../../domain/NotifyFault";
 import { MatchingArtifactRetrievalFault } from "../../../../domain/fields/link-field/MatchingArtifactRetrievalFault";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
@@ -54,7 +53,6 @@ const isParentSelected = (host: LinkField): boolean =>
 export const ArtifactLinkSelectorAutoCompleter = (
     retrieve_matching_artifact: RetrieveMatchingArtifact,
     fault_notifier: NotifyFault,
-    notification_clearer: ClearFaultNotification,
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
@@ -121,8 +119,6 @@ export const ArtifactLinkSelectorAutoCompleter = (
 
     return {
         autoComplete: (host: LinkField, query: string): void => {
-            notification_clearer.clearFaultNotification();
-
             host.matching_artifact_section = [];
             host.recently_viewed_section = [];
             host.search_results_section = [];
