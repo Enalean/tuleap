@@ -55,6 +55,7 @@ export interface LinkField {
     matching_artifact_section: GroupCollection;
     recently_viewed_section: GroupCollection;
     possible_parents_section: GroupCollection;
+    search_results_section: GroupCollection;
 }
 export type HostElement = LinkField & HTMLElement;
 
@@ -146,41 +147,17 @@ export const setAllowedTypes = (
     return presenter;
 };
 
-export const setMatchingArtifactSection = (
-    host: LinkField,
-    collection: GroupCollection | undefined
-): GroupCollection => {
-    if (!collection) {
-        return [];
-    }
-    host.link_selector.setDropdownContent([
-        ...collection,
-        ...host.recently_viewed_section,
-        ...host.possible_parents_section,
-    ]);
-    return collection;
-};
-
-export const setRecentlyViewedArtifact = (
-    host: LinkField,
-    collection: GroupCollection | undefined
-): GroupCollection => {
-    if (!collection) {
-        return [];
-    }
-    host.link_selector.setDropdownContent([...host.matching_artifact_section, ...collection]);
-    return collection;
-};
-
-export const setPossibleParentsSection = (
-    host: LinkField,
-    collection: GroupCollection | undefined
-): GroupCollection => {
-    if (!collection) {
-        return [];
-    }
-    host.link_selector.setDropdownContent([...host.matching_artifact_section, ...collection]);
-    return collection;
+export const dropdown_section_descriptor = {
+    set: (host: LinkField, collection: GroupCollection | undefined): GroupCollection =>
+        collection ?? [],
+    observe: (host: LinkField): void => {
+        host.link_selector.setDropdownContent([
+            ...host.matching_artifact_section,
+            ...host.recently_viewed_section,
+            ...host.search_results_section,
+            ...host.possible_parents_section,
+        ]);
+    },
 };
 
 export const current_link_type_descriptor = {
@@ -305,15 +282,10 @@ export const LinkField = define<LinkField>({
         set: setNewLinks,
     },
     current_link_type: current_link_type_descriptor,
-    matching_artifact_section: {
-        set: setMatchingArtifactSection,
-    },
-    recently_viewed_section: {
-        set: setRecentlyViewedArtifact,
-    },
-    possible_parents_section: {
-        set: setPossibleParentsSection,
-    },
+    matching_artifact_section: dropdown_section_descriptor,
+    recently_viewed_section: dropdown_section_descriptor,
+    possible_parents_section: dropdown_section_descriptor,
+    search_results_section: dropdown_section_descriptor,
     content: (host) => html`
         <div class="tracker-form-element" data-test="artifact-link-field">
             <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
