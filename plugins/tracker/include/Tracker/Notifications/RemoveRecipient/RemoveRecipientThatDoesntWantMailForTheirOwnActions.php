@@ -47,8 +47,8 @@ final class RemoveRecipientThatDoesntWantMailForTheirOwnActions implements Recip
                 continue;
             }
             if (! NotificationOnOwnActionPreference::userWantsNotification($recipient->user)) {
-                $logger->debug('Remove ' . $recipient->user->getUserName() . ', they does not want to receive email for their own actions');
-                unset($recipients[$key]);
+                $logger->debug(self::class . ' remove ' . $recipient->user->getUserName() . ' and ' . $recipient->user->getEmail() . ', they does not want to receive email for their own actions');
+                unset($recipients[$key], $recipients[$recipient->user->getEmail()]);
             }
             break; // There is only one submitter once we are done with them, useless to continue
         }

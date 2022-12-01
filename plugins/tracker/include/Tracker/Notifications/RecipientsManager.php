@@ -112,6 +112,10 @@ class RecipientsManager
         }
 
         foreach ($this->recipient_removal_strategies as $strategy) {
+            if (empty($tablo)) {
+                $logger->debug('Recepient list is empty, skip other removal strategies');
+                break;
+            }
             $tablo = $strategy->removeRecipient($logger, $changeset, $tablo, $is_update);
         }
 
