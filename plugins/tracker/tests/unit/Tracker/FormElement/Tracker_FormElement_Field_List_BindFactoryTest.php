@@ -237,7 +237,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends \Tuleap\Test\
             </bind>'
         );
 
-        $ugroup_manager->shouldReceive('getUGroupByName')->andReturn(false);
+        $ugroup_manager->shouldReceive('getUGroupByName')->andReturn(null);
 
         $bind = $this->getListBindFactory($ugroup_manager, $project, $xml);
 

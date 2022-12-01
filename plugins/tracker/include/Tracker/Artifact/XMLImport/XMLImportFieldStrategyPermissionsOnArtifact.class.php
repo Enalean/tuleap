@@ -48,8 +48,9 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact imp
                     $field->getTracker()->getProject(),
                     (string) $ugroup_xml['ugroup_name']
                 );
-
-                $data['u_groups'][] = $ugroup->getId();
+                if ($ugroup) {
+                    $data['u_groups'][] = $ugroup->getId();
+                }
             }
         }
 

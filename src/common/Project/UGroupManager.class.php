@@ -242,10 +242,7 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
         return $ugroups;
     }
 
-    /**
-     * @return ProjectUGroup
-     */
-    public function getUGroupByName(Project $project, $name)
+    public function getUGroupByName(Project $project, string $name): ?ProjectUGroup
     {
         $row = $this->getDao()->searchByGroupIdAndName($project->getID(), $name)->getRow();
         if (! $row && preg_match('/^ugroup_.*_key$/', $name)) {

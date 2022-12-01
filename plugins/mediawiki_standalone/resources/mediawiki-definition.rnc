@@ -1,0 +1,2 @@
+mediawiki-standalone =
+    element read-access { element ugroup { ugroup_name }+ }?

@@ -168,7 +168,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItImportsProjectDataWithUgroups(): void
     {
         $this->project_manager->shouldReceive('getValidProjectByShortNameOrId')->andReturns($this->project);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')->andReturns(false);
+        $this->ugroup_manager->shouldReceive('getUGroupByName')->andReturns(null);
 
         $user_01 = UserTestBuilder::aUser()->withLdapId('ldap_01')->withUserName('user_01')->withId(101)->build();
         $user_02 = UserTestBuilder::aUser()->withLdapId('ldap_02')->withUserName('user_02')->withId(102)->build();
@@ -202,9 +202,16 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotImportsExistingUgroups(): void
     {
         $this->project_manager->shouldReceive('getValidProjectByShortNameOrId')->andReturns($this->project);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'ug01')->andReturns(false);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'ug02')->andReturns(true);
-        $this->ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'ug03')->andReturns(false);
+        $this->ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'ug01')->andReturns(null);
+        $this->ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'ug03')->andReturns(null);
+        $this->ugroup_manager
+            ->shouldReceive('getUGroupByName')
+            ->with($this->project, 'ug02')
+            ->andReturns(
+                \Tuleap\Test\Builders\ProjectUGroupTestBuilder::aCustomUserGroup(556)
+                    ->withName('ug02')
+                    ->build()
+            );
 
         $user_01 = UserTestBuilder::aUser()->withLdapId('ldap_01')->withUserName('user_01')->withId(101)->build();
         $user_02 = UserTestBuilder::aUser()->withLdapId('ldap_02')->withUserName('user_02')->withId(102)->build();
@@ -238,7 +245,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_01 = UserTestBuilder::aUser()->withLdapId('ldap_01')->withUserName('user_01')->withId(101)->build();
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('ldapId:ldap_01')->andReturns($user_01);
 
-        $this->ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'ug01')->andReturns(false);
+        $this->ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'ug01')->andReturns(null);
         $this->ugroup_manager->shouldReceive('createEmptyUgroup')->with(122, 'ug01', 'descr01')->andReturns(555);
 
         $ug01 = M::spy(\ProjectUGroup::class);

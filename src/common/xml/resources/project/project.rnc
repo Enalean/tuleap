@@ -14,6 +14,7 @@ grammar {
     include "../../../../../plugins/tracker/resources/tracker-definition.rnc"
     include "../../../../../plugins/svn/resources/svn-definition.rnc"
     include "../../../../../plugins/docman/resources/docman-definition.rnc"
+    include "../../../../../plugins/mediawiki_standalone/resources/mediawiki-definition.rnc"
 
     start =
         element project {
@@ -26,6 +27,7 @@ grammar {
             element frs { frs }? &
             element natures { natures }? &
             element mediawiki { mediawiki }? &
+            element mediawiki-standalone { mediawiki-standalone }? &
             element agiledashboard { agiledashboard }? &
             element cardwall { cardwall }? &
             element ugroups { ugroups }? &

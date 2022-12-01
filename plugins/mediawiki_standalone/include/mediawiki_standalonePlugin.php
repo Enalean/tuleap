@@ -33,6 +33,7 @@ use Tuleap\Config\ConfigDao;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\DisableCacheMiddleware;
@@ -81,6 +82,8 @@ use Tuleap\MediawikiStandalone\Service\ServiceActivationHandler;
 use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityHandler;
 use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityProjectServiceBeforeAvailabilityEvent;
 use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityServiceDisabledCollectorEvent;
+use Tuleap\MediawikiStandalone\XML\XMLMediaWikiExporter;
+use Tuleap\MediawikiStandalone\XML\XMLMediaWikiImporter;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2ServerCore\App\AppFactory;
 use Tuleap\OAuth2ServerCore\App\AppMatchingClientIDFilterAppTypeRetriever;
@@ -179,8 +182,47 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(GetHistoryKeyLabel::NAME);
         $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
+        $this->addHook(ExportXmlProject::NAME);
+        $this->addHook(Event::IMPORT_XML_PROJECT);
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function exportXmlProject(ExportXmlProject $event): void
+    {
+        if (! $this->isAllowed($event->getProject()->getID())) {
+            return;
+        }
+
+        $service = $event->getProject()->getService(MediawikiStandaloneService::SERVICE_SHORTNAME);
+        if (! $service instanceof MediawikiStandaloneService) {
+            return;
+        }
+
+        (new XMLMediaWikiExporter(
+            new WrapperLogger($event->getLogger(), 'MediaWiki Standalone'),
+            new ReadersRetriever(
+                new MediawikiPermissionsDao()
+            ),
+            new UGroupManager(),
+        ))->exportToXml(
+            $event->getProject(),
+            $event->getIntoXml(),
+        );
+    }
+
+    /**
+     * @see Event::IMPORT_XML_PROJECT
+     */
+    public function importXmlProject(array $params): void
+    {
+        $importer = new XMLMediaWikiImporter(
+            new WrapperLogger($params['logger'], 'MediaWiki Standalone'),
+            new UGroupManager(),
+            new MediawikiPermissionsDao(),
+        );
+
+        $importer->import($params['project'], $params['xml_content']);
     }
 
     public function getHistoryKeyLabel(GetHistoryKeyLabel $event): void
