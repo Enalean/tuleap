@@ -24,8 +24,17 @@ msgstr "MediaWiki autonome"
 msgid "MediaWiki administration"
 msgstr "Administration de MediaWiki"
 
+msgid "MediaWiki permissions have been saved"
+msgstr "Les permissions MediaWiki ont été sauvegardées"
+
 msgid "Mediawiki Standalone (read only)"
 msgstr "MediaWiki autonome (lecture seule)"
+
+msgid "Permission granted for MediaWiki readers"
+msgstr "Permission accordée pour les lecteurs de MediaWiki"
+
+msgid "Permission reset for MediaWiki readers"
+msgstr "Réinitialisation des permissions pour les lecteurs de MediaWiki"
 
 msgid "Permissions"
 msgstr "Permissions"

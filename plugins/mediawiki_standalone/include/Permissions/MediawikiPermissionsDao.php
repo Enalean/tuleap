@@ -24,7 +24,7 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 
 use Tuleap\DB\DataAccessObject;
 
-final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProjectAndPermission
+final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProjectAndPermission, ISaveProjectPermissions
 {
     /**
      * @return list<array{ ugroup_id: int }>
@@ -38,6 +38,30 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
             AND permission = ?',
             $project->getID(),
             $permission->getName()
+        );
+    }
+
+    /**
+     * @param \ProjectUGroup[] $readers
+     */
+    public function saveProjectPermissions(\Project $project, array $readers): void
+    {
+        $insertions = [];
+        foreach ($readers as $user_group) {
+            $insertions[] = [
+                'project_id' => $project->getID(),
+                'permission' => PermissionRead::NAME,
+                'ugroup_id'  => $user_group->getId(),
+            ];
+        }
+
+        $this->getDB()->tryFlatTransaction(
+            function () use ($project, $insertions) {
+                $this->getDB()->delete('plugin_mediawiki_standalone_permissions', ['project_id' => $project->getID()]);
+                if (! empty($insertions)) {
+                    $this->getDB()->insertMany('plugin_mediawiki_standalone_permissions', $insertions);
+                }
+            }
         );
     }
 }
