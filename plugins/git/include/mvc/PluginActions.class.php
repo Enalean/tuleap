@@ -57,15 +57,13 @@ class PluginActions
         $this->controller->addData($data);
     }
 
-    public function check()
-    {
-        return true;
-    }
-
     public function process($action_name, $params)
     {
-        if ($this->check()) {
-            return call_user_func_array([$this, $action_name], $params);
+        if (str_starts_with($action_name, '__')) {
+            throw new Exception('Unexpected action_name value');
         }
+        /** @psalm-taint-escape callable */
+        $callback = [$this, $action_name];
+        return call_user_func_array($callback, $params);
     }
 }

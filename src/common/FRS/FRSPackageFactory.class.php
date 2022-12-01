@@ -31,7 +31,7 @@ class FRSPackageFactory
     public $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;
     public $STATUS_DELETED = FRSPackage::STATUS_DELETED;
     public $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
-    private static $instance;
+    private static self|null $instance;
 
     public static function instance()
     {
@@ -485,7 +485,7 @@ class FRSPackageFactory
         return UserManager::instance();
     }
 
-    public $dao;
+    public FRSPackageDao|null $dao = null;
     public function _getFRSPackageDao()
     {
         if (! $this->dao) {

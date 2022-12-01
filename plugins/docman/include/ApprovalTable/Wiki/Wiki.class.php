@@ -22,8 +22,8 @@
 
 class Docman_ApprovalTableWiki extends Docman_ApprovalTableVersionned
 {
-    public $itemId        = null;
-    public $wikiVersionId = null;
+    public mixed $itemId        = null;
+    public mixed $wikiVersionId = null;
 
     public function setItemId($v)
     {

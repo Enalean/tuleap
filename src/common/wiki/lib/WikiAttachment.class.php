@@ -79,7 +79,7 @@ class WikiAttachment /* implements UGroupPermission */
 
     public $id;
 
-    public $revisionCounter;
+    public mixed $revisionCounter;
 
     public function __construct($gid = 0)
     {
@@ -663,7 +663,7 @@ class WikiAttachment /* implements UGroupPermission */
             }
         }
         $dao = $this->getDao();
-        if (! $dao->setPurgeDate($this->id, $_SERVER['REQUEST_TIME'])) {
+        if (! $dao->setPurgeDate($this->id, $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp())) {
             return false;
         }
         return true;

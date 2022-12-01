@@ -27,13 +27,13 @@
 */
 class ArtifactRuleFactory
 {
-    public $rules_dao;
-    public $rules;
+    public ArtifactRuleDao $rules_dao;
+    public array $rules;
 
-    public $RULETYPE_HIDDEN;
-    public $RULETYPE_DISABLED;
-    public $RULETYPE_MANDATORY;
-    public $RULETYPE_VALUE;
+    public int $RULETYPE_HIDDEN;
+    public int $RULETYPE_DISABLED;
+    public int $RULETYPE_MANDATORY;
+    public int $RULETYPE_VALUE;
 
     public function __construct(ArtifactRuleDao $rules_dao)
     {

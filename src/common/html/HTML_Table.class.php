@@ -24,10 +24,10 @@
 
 class HTML_Table
 {
-    private $id            = '';
-    private $titles        = [];
-    private $table_classes = [];
-    private $body          = '';
+    private string $id           = '';
+    private array $titles        = [];
+    private array $table_classes = [];
+    private string $body         = '';
 
     public function __construct()
     {
