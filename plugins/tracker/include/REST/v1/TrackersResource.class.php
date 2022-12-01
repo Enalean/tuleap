@@ -501,10 +501,17 @@ class TrackersResource extends AuthenticatedResource
         }
         $nb_matching = $pagination->getTotalSize();
         Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
-        return array_map(
-            static fn($artifact) => ParentArtifactRepresentation::build($artifact),
-            array_values($pagination->getArtifacts())
-        );
+        return array_map([$this, 'getParentArtifactRepresentation'], array_values($pagination->getArtifacts()));
+    }
+
+    private function getParentArtifactRepresentation(Artifact $artifact): ParentArtifactRepresentation
+    {
+        $user                  = $this->user_manager->getCurrentUser();
+        $status_representation = null;
+        if ($artifact->getStatus()) {
+            $status_representation = StatusValueRepresentation::buildFromArtifact($artifact, $user);
+        }
+        return ParentArtifactRepresentation::build($artifact, $status_representation);
     }
 
     /**
