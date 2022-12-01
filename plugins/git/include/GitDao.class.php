@@ -762,7 +762,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
                   git.repository_backup_path,
                   git.remote_server_id,
                   git.remote_server_disconnect_date,
-                  git.remote_project_deleted,
                   git.remote_project_deleted_date,
                   git.remote_server_migration_status,
                   IF(plugin_git_log.push_date, MAX(plugin_git_log.push_date),UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
@@ -788,7 +787,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
                   git.repository_backup_path,
                   git.remote_server_id,
                   git.remote_server_disconnect_date,
-                  git.remote_project_deleted,
                   git.remote_project_deleted_date,
                   git.remote_server_migration_status,
                   plugin_git_log.push_date
