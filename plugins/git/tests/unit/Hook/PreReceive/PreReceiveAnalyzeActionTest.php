@@ -27,6 +27,7 @@ use GitRepositoryFactory;
 use Symfony\Component\Process\Process;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\WebAssembly\WASMCaller;
 
 final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {

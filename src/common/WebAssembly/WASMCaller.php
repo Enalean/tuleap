@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\PreReceive;
+namespace Tuleap\WebAssembly;
 
 interface WASMCaller
 {
