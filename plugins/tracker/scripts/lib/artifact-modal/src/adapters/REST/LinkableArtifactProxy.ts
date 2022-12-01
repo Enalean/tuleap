@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { UserHistoryEntry } from "@tuleap/core-rest-api-types";
 import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
 import { ArtifactProjectProxy } from "./ArtifactProjectProxy";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
-import type { UserHistoryEntry } from "./user-history/UserHistory";
 
 export const LinkableArtifactProxy = {
     fromAPIArtifact: (artifact: ArtifactWithStatus): LinkableArtifact => ({

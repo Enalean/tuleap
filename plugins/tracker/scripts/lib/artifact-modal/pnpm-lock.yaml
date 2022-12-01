@@ -4,6 +4,7 @@ specifiers:
   '@tuleap/angular-tlp': workspace:*
   '@tuleap/build-system-configurator': workspace:*
   '@tuleap/ckeditor-image-upload': workspace:*
+  '@tuleap/core-rest-api-types': workspace:*
   '@tuleap/date-helper': workspace:*
   '@tuleap/dom': workspace:*
   '@tuleap/fault': workspace:*
@@ -34,6 +35,7 @@ specifiers:
 dependencies:
   '@tuleap/angular-tlp': link:../../../../../lib/frontend/angular-tlp
   '@tuleap/ckeditor-image-upload': link:../../../../../lib/frontend/ckeditor-image-upload
+  '@tuleap/core-rest-api-types': link:../../../../../lib/frontend/rest-api-types
   '@tuleap/date-helper': link:../../../../../lib/frontend/date-helper
   '@tuleap/fault': link:../../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result

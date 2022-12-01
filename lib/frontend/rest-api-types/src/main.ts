@@ -17,6 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+type ColorName =
+    | "inca-silver"
+    | "chrome-silver"
+    | "firemist-silver"
+    | "red-wine"
+    | "fiesta-red"
+    | "coral-pink"
+    | "teddy-brown"
+    | "clockwork-orange"
+    | "graffiti-yellow"
+    | "army-green"
+    | "neon-green"
+    | "acid-green"
+    | "sherwood-green"
+    | "ocean-turquoise"
+    | "surf-green"
+    | "deep-blue"
+    | "lake-placid-blue"
+    | "daphne-blue"
+    | "plum-crazy"
+    | "ultra-violet"
+    | "lilac-purple"
+    | "panther-pink"
+    | "peggy-pink"
+    | "flamingo-pink";
+
 export type ProjectReference = {
     readonly id: number;
     readonly label: string;
@@ -30,7 +56,7 @@ export type QuickLink = {
 };
 
 export type Badge = {
-    readonly color: string | null;
+    readonly color: ColorName | null;
     readonly label: string;
 };
 
@@ -42,7 +68,7 @@ export type UserHistoryEntry = {
     readonly xref: string | null;
     readonly html_url: string;
     readonly title: string;
-    readonly color_name: string;
+    readonly color_name: ColorName;
     readonly type: EntryType;
     readonly per_type_id: number;
     readonly icon_name: string;

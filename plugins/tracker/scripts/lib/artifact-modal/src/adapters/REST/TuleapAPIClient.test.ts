@@ -19,6 +19,7 @@
 
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
+import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import * as fetch_result from "@tuleap/fetch-result";
@@ -36,7 +37,6 @@ import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload";
-import { HISTORY_ENTRY_ARTIFACT } from "./user-history/UserHistory";
 import { UserIdentifierProxyStub } from "../../../tests/stubs/UserIdentifierStub";
 
 const FORWARD_DIRECTION = "forward";
@@ -287,13 +287,13 @@ describe(`TuleapAPIClient`, () => {
         it(`will return user history entries which are "artefact" type as linkable artifact`, async () => {
             const first_entry = {
                 per_type_id: ARTIFACT_ID,
-                type: HISTORY_ENTRY_ARTIFACT,
+                type: ARTIFACT_TYPE,
                 badges: [],
             };
 
             const second_entry = {
                 per_type_id: ARTIFACT_2_ID,
-                type: HISTORY_ENTRY_ARTIFACT,
+                type: ARTIFACT_TYPE,
                 badges: [],
             };
 
