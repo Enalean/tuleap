@@ -25,6 +25,8 @@ use Tuleap\Tracker\REST\SemanticStatusRepresentation;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Open\AdminPresenterBuilder;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
+use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
+use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 
 class Tracker_Semantic_Status extends Tracker_Semantic
 {
@@ -561,5 +563,15 @@ class Tracker_Semantic_Status extends Tracker_Semantic
                 dgettext('tuleap-tracker', 'Unable to save the status')
             );
         }
+    }
+
+    public function getColor(?Tracker_Artifact_Changeset $changeset, PFUser $user): ?string
+    {
+        if (! $changeset) {
+            return "";
+        }
+
+        $value_provider = new StatusValueForChangesetProvider();
+        return (new StatusColorForChangesetProvider($value_provider))->provideColor($changeset, $this->tracker, $user);
     }
 }

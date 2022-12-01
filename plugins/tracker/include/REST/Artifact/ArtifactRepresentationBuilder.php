@@ -39,90 +39,51 @@ use Tuleap\Tracker\REST\TrackerRepresentation;
 
 class ArtifactRepresentationBuilder
 {
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var TypeDao
-     */
-    private $nature_dao;
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /**
-     * @var ChangesetRepresentationBuilder
-     */
-    private $changeset_representation_builder;
-
     public function __construct(
-        Tracker_FormElementFactory $formelement_factory,
-        Tracker_ArtifactFactory $artifact_factory,
-        TypeDao $nature_dao,
-        ChangesetRepresentationBuilder $changeset_representation_builder,
+        private Tracker_FormElementFactory $formelement_factory,
+        private Tracker_ArtifactFactory $artifact_factory,
+        private TypeDao $nature_dao,
+        private ChangesetRepresentationBuilder $changeset_representation_builder,
     ) {
-        $this->formelement_factory              = $formelement_factory;
-        $this->artifact_factory                 = $artifact_factory;
-        $this->nature_dao                       = $nature_dao;
-        $this->changeset_representation_builder = $changeset_representation_builder;
     }
 
-    /**
-     * Return an artifact snapshot representation
-     *
-     * @return ArtifactRepresentation
-     */
-    public function getArtifactRepresentationWithFieldValues(PFUser $user, Artifact $artifact, TrackerRepresentation $tracker_representation)
+    public function getArtifactRepresentationWithFieldValues(PFUser $user, Artifact $artifact, TrackerRepresentation $tracker_representation, StatusValueRepresentation $status_value_representation): ArtifactRepresentation
     {
         return ArtifactRepresentation::build(
             $user,
             $artifact,
             $this->getFieldsValues($user, $artifact),
             null,
-            $tracker_representation
+            $tracker_representation,
+            $status_value_representation
         );
     }
 
-    /**
-     * Return an artifact snapshot representation
-     *
-     * @return ArtifactRepresentation
-     */
-    public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Artifact $artifact, TrackerRepresentation $tracker_representation)
+    public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Artifact $artifact, TrackerRepresentation $tracker_representation, StatusValueRepresentation $status_value_representation): ArtifactRepresentation
     {
         return ArtifactRepresentation::build(
             $user,
             $artifact,
             null,
             $this->getFieldValuesIndexedByName($user, $artifact),
-            $tracker_representation
+            $tracker_representation,
+            $status_value_representation
         );
     }
 
-    /**
-     * Return an artifact snapshot representation
-     *
-     * @return ArtifactRepresentation
-     */
-    public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Artifact $artifact, TrackerRepresentation $tracker_representation)
+    public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Artifact $artifact, TrackerRepresentation $tracker_representation, StatusValueRepresentation $status_value_representation): ArtifactRepresentation
     {
         return ArtifactRepresentation::build(
             $user,
             $artifact,
             $this->getFieldsValues($user, $artifact),
             $this->getFieldValuesIndexedByName($user, $artifact),
-            $tracker_representation
+            $tracker_representation,
+            $status_value_representation
         );
     }
 
-    /**
-     * Return an artifact snapshot representation
-     *
-     * @return ArtifactRepresentation
-     */
-    public function getArtifactRepresentation(PFUser $user, Artifact $artifact)
+    public function getArtifactRepresentation(PFUser $user, Artifact $artifact, StatusValueRepresentation $status_value_representation): ArtifactRepresentation
     {
         $tracker_representation = MinimalTrackerRepresentation::build($artifact->getTracker());
 
@@ -131,7 +92,8 @@ class ArtifactRepresentationBuilder
             $artifact,
             null,
             null,
-            $tracker_representation
+            $tracker_representation,
+            $status_value_representation
         );
     }
 
