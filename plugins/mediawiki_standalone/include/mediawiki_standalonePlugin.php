@@ -235,6 +235,13 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         (new ServiceActivationHandler(new EnqueueTask()))->handle(
             ServiceActivationEvent::fromRegisterProjectCreationEvent($event)
         );
+        if ($event->shouldProjectInheritFromTemplate()) {
+            (new MediawikiPermissionsDao())->duplicateProjectPermissions(
+                $event->getTemplateProject(),
+                $event->getJustCreatedProject(),
+                $event->getMappingRegistry()->getUgroupMapping()
+            );
+        }
     }
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
