@@ -67,6 +67,7 @@ class Widget_MyBookmarks extends Widget
         $html_my_bookmarks .= '<div style="text-align:center; font-size:0.8em;"><a href="/my/bookmark_add.php">[' . $GLOBALS['Language']->getText('my_index', 'add_bookmark') . ']</a></div>';
         return $html_my_bookmarks;
     }
+
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_bookmarks', 'description');

@@ -21,7 +21,7 @@
     <div class="tlp-form-element" v-if="is_displayed">
         <label class="tlp-label" for="document-new-file-upload">
             <translate>File</translate>
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <div class="tlp-form-element">
             <input

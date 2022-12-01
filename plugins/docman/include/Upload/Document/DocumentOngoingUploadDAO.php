@@ -97,7 +97,6 @@ class DocumentOngoingUploadDAO extends DataAccessObject
         return $item_id;
     }
 
-
     public function updateDocumentFilenameOngoingUpload(
         int $item_id,
         string $new_filename,

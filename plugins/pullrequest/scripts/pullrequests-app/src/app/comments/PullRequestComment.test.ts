@@ -20,7 +20,11 @@
 import { selectOrThrow } from "@tuleap/dom";
 import * as tooltip from "@tuleap/tooltip";
 import type { HostElement } from "./PullRequestComment";
-import { PullRequestComment } from "./PullRequestComment";
+import {
+    after_render_once_descriptor,
+    element_height_descriptor,
+    PullRequestComment,
+} from "./PullRequestComment";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 import { setCatalog } from "../gettext-catalog";
 import "@tuleap/tlp-relative-date";
@@ -103,57 +107,19 @@ describe("PullRequestComment", () => {
             expect(root.classList).toContain("timeline-event");
         });
 
-        it("should execute the post_rendering_callback each time the component renders", () => {
+        it("should execute the post_rendering_callback each time the component height changes", () => {
             const post_rendering_callback = jest.fn();
-            const host = {
-                comment: PullRequestCommentPresenterStub.buildInlineComment(),
-                relativeDateHelper: RelativeDateHelperStub,
-                replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
-                post_rendering_callback,
-            } as unknown as HostElement;
+            const host = { post_rendering_callback } as unknown as HostElement;
 
-            jest.useFakeTimers();
-
-            const update = PullRequestComment.content(host);
-            update(host, target);
-
-            jest.advanceTimersByTime(1);
+            element_height_descriptor.observe(host);
 
             expect(post_rendering_callback).toHaveBeenCalledTimes(1);
         });
-    });
-
-    describe("loadTooltips()", () => {
-        let host: HostElement;
-
-        beforeEach(() => {
-            jest.useFakeTimers();
-
-            host = {
-                comment: PullRequestCommentPresenterStub.buildInlineComment(),
-                relativeDateHelper: RelativeDateHelperStub,
-                replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
-            } as unknown as HostElement;
-        });
 
         it("should load tooltips when the component has been rendered", () => {
-            const update = PullRequestComment.content(host);
-            update(host, target);
-
-            jest.advanceTimersByTime(1);
+            after_render_once_descriptor.observe();
 
             expect(loadTooltips).toHaveBeenCalledTimes(1);
-        });
-
-        it("should NOT load tooltips when they already have been loaded", () => {
-            host.have_tooltips_been_loaded = true;
-
-            const update = PullRequestComment.content(host);
-            update(host, target);
-
-            jest.advanceTimersByTime(1);
-
-            expect(loadTooltips).toHaveBeenCalledTimes(0);
         });
     });
 });

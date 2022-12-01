@@ -413,7 +413,6 @@ class BindListUserValueGetterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-
     public function testItExtractActiveUserListForStaticUGroup(): void
     {
         $ugroups = ['ugroup_109'];

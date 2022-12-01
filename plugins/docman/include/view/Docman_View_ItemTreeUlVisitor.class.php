@@ -77,6 +77,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
     {
         return true;
     }
+
     public function _canDisplaySubItems($item)
     {
         return true;
@@ -110,6 +111,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         }
         return '';
     }
+
     public function visitDocument($item, $params = [])
     {
         $params['popup_doc'] = true;
@@ -118,18 +120,22 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
             $this->html .= '</li>' . "\n";
         }
     }
+
     public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitFile(Docman_File $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return $this->visitDocument($item, $params);

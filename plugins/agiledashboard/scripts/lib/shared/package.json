@@ -16,10 +16,10 @@
     }
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "dependencies": {
-    "@tuleap/tlp-fetch": "link:../../../../../lib/frontend/tlp-fetch"
+    "@tuleap/tlp-fetch": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

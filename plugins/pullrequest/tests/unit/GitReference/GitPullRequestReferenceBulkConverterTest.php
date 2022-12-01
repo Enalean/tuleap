@@ -118,7 +118,6 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
         $bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }
 
-
     public function testFailureToSetTheGitReferenceDoesNotInterruptTheWholeConversion()
     {
         $bulk_converter = new GitPullRequestReferenceBulkConverter(

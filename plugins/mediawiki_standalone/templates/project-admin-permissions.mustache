@@ -1,0 +1,41 @@
+<h1 class="tlp-framed-horizontally project-administration-title">
+    {{# dgettext }}tuleap-mediawiki_standalone | MediaWiki administration{{/ dgettext }}
+</h1>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    {{# dgettext }}tuleap-mediawiki_standalone | Permissions{{/ dgettext }}
+                </h1>
+            </div>
+            <form class="tlp-pane-section" action="{{ post_url }}" method="post">
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="readers">
+                        {{# dgettext }}
+                            tuleap-mediawiki_standalone |
+                            User groups who can read MediaWiki pages |
+                        {{/ dgettext }}
+                    </label>
+                    <select class="tlp-select tlp-select-adjusted" id="readers" name="readers[]" multiple>
+                        {{# readers }}
+                            <option value="{{ id }}" {{# is_selected }}selected="selected"{{/is_selected}}>
+                                {{ name }}
+                            </option>
+                        {{/ readers }}
+                    </select>
+                </div>
+
+                <div class="tlp-pane-section-submit">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/csrf_token}}
+                    <button type="submit" class="tlp-button-primary">
+                        <i class="fa-regular fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-mediawiki_standalone | Save configuration{{/ dgettext }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>

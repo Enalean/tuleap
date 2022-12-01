@@ -39,7 +39,6 @@ class Gradient
         $this->img = $img;
     }
 
-
     public function SetNumColors($aNum)
     {
         $this->numcolors = $aNum;

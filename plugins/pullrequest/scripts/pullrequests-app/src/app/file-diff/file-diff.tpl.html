@@ -39,9 +39,11 @@
               diff="$ctrl.diff"
               file-path="{{ $ctrl.file_path }}"
               pull-request-id="{{ $ctrl.pull_request_id }}"
+              comment-id="{{ $ctrl.comment_id }}"
 ></file-unidiff>
 <side-by-side-diff ng-if="$ctrl.shouldShowSideBySideDiff()"
                    diff="$ctrl.diff"
                    file-path="{{ $ctrl.file_path }}"
                    pull-request-id="{{ $ctrl.pull_request_id }}"
+                   comment-id="{{ $ctrl.comment_id }}"
 ></side-by-side-diff>

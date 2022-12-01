@@ -163,11 +163,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
      * @return mixed the field data corresponding to the value for artifact submision
      */
     abstract public function getFieldData($submitted_value, $is_multiple);
+
     /**
      * @return array|Tracker_FormElement_Field_List_BindValue|null
      * @throws Tracker_FormElement_InvalidFieldValueException
      */
     abstract public function getValue($value_id);
+
     /**
      * @return array
      */
@@ -209,7 +211,6 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
     {
         return $this->formatChangesetValue($value);
     }
-
 
     /**
      * @return string
@@ -346,7 +347,6 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
         return $this->getQuerySelect();
     }
 
-
     /**
      * Get the "from" statement to retrieve field values
      * You can join on artifact AS a, tracker_changeset AS c
@@ -423,6 +423,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
     }
 
     abstract public function getDao();
+
     abstract public function getValueDao();
 
     /**

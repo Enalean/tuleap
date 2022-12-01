@@ -106,6 +106,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->renderer,
             $this->script_assets
         );
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testProcessThrowsNotFoundWhenReleaseCantBeFound(): void
@@ -135,6 +136,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn(101)
             ->getMock();
         $package = M::spy(\FRSPackage::class);
+        $package->expects('getPackageID')->andReturn(12);
         $release = M::spy(\FRSRelease::class);
         $release->shouldReceive('getProject')->andReturn($project);
         $release->shouldReceive('getNotes')->andReturn('Release notes');

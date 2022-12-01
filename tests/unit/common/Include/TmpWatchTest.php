@@ -80,7 +80,6 @@ class TmpWatchTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFileExists($this->target_dir . '/foo/bar');
     }
 
-
     public function testItRemovesFilesWithLongTimes(): void
     {
         mkdir($this->target_dir . '/foo', 0755, true);

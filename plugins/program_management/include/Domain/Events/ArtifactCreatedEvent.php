@@ -33,8 +33,12 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 interface ArtifactCreatedEvent
 {
     public function getArtifact(): ArtifactIdentifier;
+
     public function getTracker(): TrackerIdentifier;
+
     public function getUser(): UserIdentifier;
+
     public function getChangeset(): ChangesetIdentifier;
+
     public function getOldChangeset(): ChangesetIdentifier;
 }

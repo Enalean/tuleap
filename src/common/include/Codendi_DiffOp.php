@@ -36,10 +36,12 @@ class Codendi_DiffOp // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
         \trigger_error("pure virtual", \E_USER_ERROR);
     }
+
     public function norig()
     {
         return $this->orig ? \sizeof($this->orig) : 0;
     }
+
     public function nfin()
     {
         return $this->fin ? \sizeof($this->fin) : 0;

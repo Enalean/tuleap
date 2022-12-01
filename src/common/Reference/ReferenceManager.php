@@ -645,7 +645,6 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
         return $reference;
     }
 
-
     private function ensureArtifactDataIsCorrect(Reference $ref, $val)
     {
         $group_id = $this->getGroupIdFromArtifactId($val);

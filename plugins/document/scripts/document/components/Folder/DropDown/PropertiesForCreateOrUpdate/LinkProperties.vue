@@ -22,11 +22,11 @@
     <div class="tlp-form-element" v-if="is_displayed">
         <label class="tlp-label" for="document-new-item-link-url">
             <translate>URL</translate>
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
             <span class="tlp-prepend">
-                <i class="fa fa-globe"></i>
+                <i class="fa-solid fa-globe"></i>
             </span>
             <input
                 type="url"

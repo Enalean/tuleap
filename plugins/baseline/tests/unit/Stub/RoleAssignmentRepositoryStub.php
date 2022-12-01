@@ -57,7 +57,6 @@ final class RoleAssignmentRepositoryStub implements RoleAssignmentRepository
         );
     }
 
-
     public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
     {
         return match ($role->getName()) {

@@ -18,14 +18,16 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import { okAsync, errAsync } from "neverthrow";
+import { errAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { LinkableArtifact } from "../../src/domain/fields/link-field/LinkableArtifact";
 import type { RetrieveMatchingArtifact } from "../../src/domain/fields/link-field/RetrieveMatchingArtifact";
 
 export const RetrieveMatchingArtifactStub = {
-    withMatchingArtifact: (artifact: LinkableArtifact): RetrieveMatchingArtifact => ({
-        getMatchingArtifact: (): ResultAsync<LinkableArtifact, Fault> => okAsync(artifact),
+    withMatchingArtifact: (
+        artifact: ResultAsync<LinkableArtifact, never>
+    ): RetrieveMatchingArtifact => ({
+        getMatchingArtifact: (): ResultAsync<LinkableArtifact, Fault> => artifact,
     }),
 
     withFault: (fault: Fault): RetrieveMatchingArtifact => ({

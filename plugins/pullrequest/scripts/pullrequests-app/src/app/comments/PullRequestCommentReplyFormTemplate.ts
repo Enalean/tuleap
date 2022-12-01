@@ -26,6 +26,8 @@ import {
     getCommentTextAreaPlaceholderText,
 } from "../gettext-catalog";
 
+type MapOfClasses = Record<string, boolean>;
+
 export const getReplyFormTemplate = (
     host: PullRequestComment
 ): UpdateFunction<PullRequestComment> => {
@@ -50,6 +52,19 @@ export const getReplyFormTemplate = (
         host.controller.updateCurrentReply(host, textarea.value);
     };
 
+    const getCommentContentClasses = (host: PullRequestComment): MapOfClasses => {
+        const classes: MapOfClasses = {
+            "pull-request-comment-content": true,
+        };
+
+        if (host.comment.color) {
+            classes[`pull-request-comment-content-color`] = true;
+            classes[`tlp-swatch-${host.comment.color}`] = true;
+        }
+
+        return classes;
+    };
+
     return html`
         <div class="pull-request-comment-reply-form" data-test="pull-request-comment-reply-form">
             <div class="pull-request-comment pull-request-comment-follow-up-content">
@@ -60,7 +75,7 @@ export const getReplyFormTemplate = (
                         aria-hidden="true"
                     />
                 </div>
-                <div class="pull-request-comment-content">
+                <div class="${getCommentContentClasses(host)}">
                     <textarea
                         class="pull-request-comment-reply-textarea tlp-textarea"
                         rows="10"

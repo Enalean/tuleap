@@ -121,8 +121,6 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
         return $targets;
     }
 
-
-
     public function displayEditForm($source_field = false, $target_field = false, $source_value = false, $target_value = false)
     {
         $hp = Codendi_HTMLPurifier::instance();
@@ -313,6 +311,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
         $this->_footer();
         exit();
     }
+
     public function _header()
     {
         $params          = [];

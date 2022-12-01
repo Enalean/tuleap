@@ -27,6 +27,7 @@ class Docman_SqlFilterDateAdvanced extends \Docman_SqlFilterDate
     {
         parent::__construct($filter);
     }
+
     public function _getSpecificSearchChunk() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $stmt       = [];

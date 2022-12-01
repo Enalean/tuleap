@@ -32,7 +32,7 @@ final class BatchResponseActionsForDownloadOperation implements BatchResponseAct
         $this->download_action = $download_action;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return ['download' => $this->download_action];
     }

@@ -83,7 +83,6 @@ class MilestoneElementAdder
         $this->artifact_factory                    = $artifact_factory;
     }
 
-
     /**
      * @throws RestException
      * @throws ProvidedAddedIdIsNotInPartOfTopBacklogException

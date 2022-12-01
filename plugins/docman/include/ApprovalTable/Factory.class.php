@@ -197,7 +197,6 @@ abstract class Docman_ApprovalTableFactory
      */
     abstract public function userAccessedSinceLastUpdate($user);
 
-
     public function getReviewStateName($state)
     {
         switch ($state) {

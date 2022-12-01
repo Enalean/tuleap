@@ -53,7 +53,6 @@
                         />
                         <drop-down-button
                             v-bind:is-in-quick-look-mode="true"
-                            v-bind:is-in-folder-empty-state="false"
                             v-bind:is-in-large-mode="false"
                             v-bind:is-appended="true"
                             data-test="dropdown-button"

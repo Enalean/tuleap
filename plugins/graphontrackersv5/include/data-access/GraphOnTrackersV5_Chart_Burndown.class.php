@@ -36,6 +36,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     {
         return $this->start_date;
     }
+
     public function setStartDate($start_date)
     {
         return $this->start_date = $start_date;
@@ -49,6 +50,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     {
         return $this->duration;
     }
+
     public function setDuration($duration)
     {
         return $this->duration = $duration;
@@ -62,6 +64,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     {
         return $this->field_id;
     }
+
     public function setFieldId($field_id)
     {
         return $this->field_id = $field_id;

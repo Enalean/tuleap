@@ -46,6 +46,11 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
+    protected function setUp(): void
+    {
+        $GLOBALS['Language']->method('getText')->willReturn('');
+    }
+
     /**
      * Testing when The project have no packages
      */

@@ -121,7 +121,6 @@ final class OAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
         throw new \LogicException('Not supposed to be called during the tests');
             }
 
-
             public function covers(AuthenticationScope $scope): bool
             {
         return $this->identifier->toString() === $scope->getIdentifier()->toString();

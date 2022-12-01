@@ -43,7 +43,6 @@ class CachedCustomizedLogoDetector implements IDetectIfLogoIsCustomized
         $this->logger   = $logger;
     }
 
-
     public static function invalidateCache(): void
     {
         if (file_exists(self::getCacheFile())) {

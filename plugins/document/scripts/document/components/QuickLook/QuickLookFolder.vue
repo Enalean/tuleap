@@ -20,38 +20,21 @@
 
 <template>
     <div class="document-quick-look-document-action">
-        <button
+        <new-item-dropdown
             v-if="item.user_can_write"
-            type="button"
-            class="tlp-button-primary tlp-button-small document-quick-look-folder-action-new-folder-button"
-            v-on:click.prevent="showNewFolderModal"
+            v-bind:item="item"
+            v-bind:is_in_quicklook="true"
+            class="document-quick-look-folder-action-new-folder-button"
             data-test="create-folder-button"
-        >
-            <i class="far fa-folder-open tlp-button-icon"></i>
-            <translate>New folder</translate>
-        </button>
+        />
         <drop-down-quick-look v-bind:item="item" />
-        <template v-if="can_delete_folder">
-            <div class="document-header-spacer"></div>
-            <quick-look-delete-button v-bind:item="item" data-test="delete-folder-button" />
-        </template>
     </div>
 </template>
 
 <script setup lang="ts">
-import QuickLookDeleteButton from "../Folder/ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
 import type { Item } from "../../type";
-import { computed } from "vue";
-import emitter from "../../helpers/emitter";
+import NewItemDropdown from "../Folder/DropDown/NewDocument/NewItemDropdown.vue";
 
-const props = defineProps<{ item: Item }>();
-
-const can_delete_folder = computed((): boolean => {
-    return props.item.user_can_write;
-});
-
-function showNewFolderModal(): void {
-    emitter.emit("show-new-folder-modal", { detail: { parent: props.item } });
-}
+defineProps<{ item: Item }>();
 </script>

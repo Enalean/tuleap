@@ -646,6 +646,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
             }
         }
     }
+
     public function importValidateChangesetExternalField(ImportValidateChangesetExternalField $validate_external_fields): void
     {
         $xml        = $validate_external_fields->getXml();
@@ -928,7 +929,6 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         );
         $collection->setIconName('fa-check');
         $collection->setMainUri($url);
-        $collection->removeXRef();
     }
 
     public function collectExcludedTrackerFromArtifactHeartbeats(ExcludeTrackersFromArtifactHeartbeats $event): void

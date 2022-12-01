@@ -1065,7 +1065,6 @@ class GitActions extends PluginActions
         }
     }
 
-
     public function _loadRepository($projectId, $repositoryId)
     {
         $repository = $this->getGitRepository($repositoryId);

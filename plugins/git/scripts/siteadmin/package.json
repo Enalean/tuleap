@@ -1,0 +1,21 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-git-site-admin",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@tuleap/autocomplete-for-select2": "workspace:*",
+    "@tuleap/filter-inline-table": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

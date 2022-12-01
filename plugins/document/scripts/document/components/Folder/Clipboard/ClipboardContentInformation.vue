@@ -19,7 +19,7 @@
 
 <template>
     <p class="tlp-text-info" v-if="item_title !== null && !pasting_in_progress">
-        <i class="fa fa-info-circle document-clipboard-content-information-icon"></i>
+        <i class="fa-solid fa-circle-info document-clipboard-content-information-icon"></i>
         <translate
             key="cut-information"
             v-bind:translate-params="{ title: item_title }"
@@ -39,7 +39,7 @@
         </translate>
     </p>
     <p class="tlp-text-info" v-else-if="item_title !== null && pasting_in_progress">
-        <i class="fa fa-spin fa-circle-o-notch document-clipboard-content-information-icon"></i>
+        <i class="fa-solid fa-spin fa-circle-notch document-clipboard-content-information-icon"></i>
         <translate
             key="cut-in-progress-information"
             v-bind:translate-params="{ title: item_title }"

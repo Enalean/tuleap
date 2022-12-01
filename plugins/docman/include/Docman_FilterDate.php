@@ -35,27 +35,33 @@ class Docman_FilterDate extends \Docman_Filter
             $this->field_value_name    = $md->getLabel() . '_value';
         }
     }
+
     public function initFromRow($row)
     {
         $this->setOperator($row['value_date_op']);
         $this->setValue($row['value_date1']);
     }
+
     public function getFieldOperatorName()
     {
         return $this->field_operator_name;
     }
+
     public function getFieldValueName()
     {
         return $this->field_value_name;
     }
+
     public function setOperator($v)
     {
         $this->operator = $v;
     }
+
     public function getOperator()
     {
         return $this->operator;
     }
+
     public function isValidDateFormat($value)
     {
         if (\preg_match('/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/', $value, $d)) {
@@ -63,6 +69,7 @@ class Docman_FilterDate extends \Docman_Filter
         }
         return \false;
     }
+
     public function isValidOperator($op)
     {
         if ($op == 0 || $op == -1 || $op == 1) {
@@ -70,6 +77,7 @@ class Docman_FilterDate extends \Docman_Filter
         }
         return \false;
     }
+
     public function getUrlParameters()
     {
         $param = [];
@@ -81,6 +89,7 @@ class Docman_FilterDate extends \Docman_Filter
         //}
         return $param;
     }
+
     public function _urlMatchUpdate($request) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // Simple date

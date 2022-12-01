@@ -62,8 +62,8 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import GlobalUploadProgressBar from "../Folder/ProgressBar/GlobalUploadProgressBar.vue";
 import { useState } from "vuex-composition-helpers";
 import type { RootState } from "../../type";
-import type { Modal } from "tlp";
-import { createModal, EVENT_TLP_MODAL_HIDDEN } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type { FakeItem, ItemFile } from "../../type";
 
 const { $gettext } = useGettext();

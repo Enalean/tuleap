@@ -154,7 +154,6 @@ class XmlContent
         return trim($val);
     }
 
-
     /**
      * See if element is empty.
      *
@@ -385,12 +384,10 @@ class XmlElement extends XmlContent
         return substr($this->startTag(), 0, -1) . "/>";
     }
 
-
     public function endTag()
     {
         return "</$this->_tag>";
     }
-
 
     public function printXML()
     {

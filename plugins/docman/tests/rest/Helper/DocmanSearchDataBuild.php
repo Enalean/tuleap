@@ -34,6 +34,7 @@ final class DocmanSearchDataBuild
     {
         $this->docman_user_id = $this->common_builder->getUserByName(DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME);
     }
+
     /**
      * To help understand tests structure, below a representation of search hierarchy
      *                                  docman root

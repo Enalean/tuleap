@@ -87,6 +87,7 @@ class SetIntValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->set_int_value_repository->create($transition, $set_int_value);
     }
+
     public function testDeleteAllByTransitionIfNotInDeletesExpectedTransitions()
     {
         $this->set_int_value_dao

@@ -29,6 +29,7 @@ final class FilenamePatternValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertTrue(FilenamePatternValidator::isPatternValid(""));
     }
+
     public function testItReturnTrueWhenThePatternContainsTheTitleVariable(): void
     {
         self::assertTrue(FilenamePatternValidator::isPatternValid("Un gros billet-\${TITLE}-\${STATUS}"));

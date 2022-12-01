@@ -40,6 +40,7 @@ class Cardwall_Column_canContainStatusTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->assertTrue($this->column->canContainStatus('None'));
     }
+
     public function testItReturnsTrueOnNoneColumnIfStatusIsNull(): void
     {
         $this->assertTrue($this->column->canContainStatus(null));

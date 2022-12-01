@@ -25,6 +25,9 @@ class Rule_FRSFileName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclarati
 {
     public function isValid($val)
     {
+        if ($val === null) {
+            $val = '';
+        }
         if (\preg_match("/[`!\"\$%^,&*();=|{}<>?\\/]/", $val)) {
             return \false;
         }

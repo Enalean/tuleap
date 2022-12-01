@@ -49,7 +49,6 @@ final class IterationUpdateEventStub implements IterationUpdateEvent
         return new self($iteration, $user, $changeset);
     }
 
-
     public static function withDefinedValues(int $iteration_id, int $user_id, int $changeset_id): self
     {
         $iteration = IterationIdentifierBuilder::buildWithId($iteration_id);

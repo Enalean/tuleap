@@ -24,7 +24,7 @@
                 class="tlp-pane-title document-quick-look-title"
                 v-bind:title="currently_previewed_item.title"
             >
-                <i class="tlp-pane-title-icon fa" v-bind:class="icon_class"></i>
+                <i class="tlp-pane-title-icon" v-bind:class="icon_class"></i>
                 {{ currently_previewed_item.title }}
             </h2>
             <div class="document-quick-look-close-button" v-on:click="closeQuickLookEvent">×</div>
@@ -123,10 +123,12 @@ const quick_look_component_action = computed(() => {
         case TYPE_LINK:
             return () => import(/* webpackChunkName: "quick-look-link" */ `./QuickLookLink.vue`);
         case TYPE_EMPTY:
+            return () =>
+                import(/* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmpty.vue`);
         case TYPE_EMBEDDED:
             return () =>
                 import(
-                    /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmptyOrEmbedded.vue`
+                    /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmbedded.vue`
                 );
         default:
             return null;

@@ -26,6 +26,7 @@ namespace Tuleap\Config;
 interface ValueValidator
 {
     public static function buildSelf(): self;
+
     /**
      * @throws InvalidConfigKeyValueException
      */

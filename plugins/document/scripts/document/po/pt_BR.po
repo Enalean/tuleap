@@ -154,6 +154,9 @@ msgstr "Conteúdo"
 msgid "Continue"
 msgstr ""
 
+msgid "Convert to…"
+msgstr ""
+
 msgid "Copy"
 msgstr ""
 
@@ -176,6 +179,9 @@ msgid "Create a new folder"
 msgstr ""
 
 msgid "Create a new version of document"
+msgstr ""
+
+msgid "Create and edit document"
 msgstr ""
 
 msgid "Create document"
@@ -289,6 +295,9 @@ msgstr ""
 msgid "Focus the document search bar"
 msgstr ""
 
+msgid "Folder"
+msgstr ""
+
 msgid "Global search"
 msgstr ""
 
@@ -307,9 +316,6 @@ msgid "Go to parent folder"
 msgstr ""
 
 msgid "Go to the last version (%{ version_number })."
-msgstr ""
-
-msgid "Go to the wiki page"
 msgstr ""
 
 msgid "Got it"
@@ -400,6 +406,9 @@ msgid "Narrow view"
 msgstr ""
 
 msgid "Navigation in Documents service"
+msgstr ""
+
+msgid "New"
 msgstr ""
 
 msgid "New document"
@@ -723,6 +732,9 @@ msgid "Upload error"
 msgstr ""
 
 msgid "Uploaded"
+msgstr ""
+
+msgid "Uploaded file"
 msgstr ""
 
 msgid "Uploading documents"

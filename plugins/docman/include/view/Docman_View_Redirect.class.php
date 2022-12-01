@@ -39,10 +39,12 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
 
         $GLOBALS['Response']->redirect($url);
     }
+
     public function visitFolder(&$item, $params = [])
     {
         trigger_error('Redirect view cannot be applied to Folders');
     }
+
     public function visitWiki(&$item, $params = [])
     {
         $project_id = urlencode($item->getGroupId());
@@ -84,6 +86,7 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
     {
         trigger_error('Redirect view cannot be applied to Files');
     }
+
     public function visitEmbeddedFile(&$item, $params = [])
     {
         trigger_error('Redirect view cannot be applied to Embedded Files');

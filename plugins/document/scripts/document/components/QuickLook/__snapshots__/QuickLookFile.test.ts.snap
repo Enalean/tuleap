@@ -5,19 +5,11 @@ exports[`QuickLookFile renders quick look for file document with a CTA to downlo
   class="document-quick-look-document-action"
 >
   <download-button-stub
-    class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+    class="tlp-button-primary tlp-button-small"
     item="[object Object]"
   />
    
   <drop-down-quick-look-stub
-    item="[object Object]"
-  />
-   
-  <div
-    class="document-header-spacer"
-  />
-   
-  <quick-look-delete-button-stub
     item="[object Object]"
   />
 </div>

@@ -385,7 +385,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return null;
     }
 
-
     private function getArtifactsSemantics(PFUser $user, Planning_Milestone $milestone, array $backlog_item_ids, $artifacts)
     {
         if (! $backlog_item_ids) {
@@ -434,7 +433,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
             $semantics[$artifact->getId()][AgileDashBoard_Semantic_InitialEffort::NAME] = $this->getSemanticEffortValue($user, $artifact);
         }
     }
-
 
     /**
      * @return string | float

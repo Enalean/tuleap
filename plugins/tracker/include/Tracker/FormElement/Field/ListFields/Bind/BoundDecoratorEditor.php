@@ -36,6 +36,7 @@ class BoundDecoratorEditor
     {
         $this->decorator_dao = $decorator_dao;
     }
+
     public function update(\Tracker_FormElement_Field $field, int $value_id, string $color, bool $will_be_required): void
     {
         if ($value_id === \Tracker_FormElement_Field_List::NONE_VALUE) {

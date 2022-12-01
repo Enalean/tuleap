@@ -31,6 +31,7 @@ final class VerifyIsOpenStub implements VerifyIsOpen
     private function __construct(private bool $is_open)
     {
     }
+
     public static function withOpen(): self
     {
         return new self(true);

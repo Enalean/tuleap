@@ -22,6 +22,9 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
 import ModalSizeThresholdExceeded from "./ModalMaxArchiveSizeThresholdExceeded.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import * as tlp_modal from "@tuleap/tlp-modal";
+import type { Modal } from "@tuleap/tlp-modal";
+import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 
 describe("ModalSizeThresholdExceeded", () => {
     function getWrapper(): Wrapper<ModalSizeThresholdExceeded> {
@@ -40,10 +43,26 @@ describe("ModalSizeThresholdExceeded", () => {
         });
     }
 
-    it("shows itself when it is mounted", () => {
-        const wrapper = getWrapper();
+    let fake_modal: Modal;
+    let close_callback: () => void;
 
-        expect(wrapper.classes("tlp-modal-shown")).toBe(true);
+    beforeEach(() => {
+        fake_modal = {
+            addEventListener: (event: string, callback: () => void) => {
+                if (event === EVENT_TLP_MODAL_HIDDEN) {
+                    close_callback = callback;
+                }
+            },
+            show: jest.fn(),
+            hide: jest.fn(),
+        } as unknown as Modal;
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue(fake_modal);
+    });
+
+    it("shows itself when it is mounted", () => {
+        getWrapper();
+
+        expect(fake_modal.show).toHaveBeenCalled();
     });
 
     it("displays the size of the folder in MB", () => {
@@ -55,9 +74,12 @@ describe("ModalSizeThresholdExceeded", () => {
     it("Emits an event when it is closed", () => {
         const wrapper = getWrapper();
 
-        wrapper
-            .find("[data-test=close-max-archive-size-threshold-exceeded-modal]")
-            .trigger("click");
+        expect(
+            wrapper
+                .find("[data-test=close-max-archive-size-threshold-exceeded-modal]")
+                .attributes("data-dismiss")
+        ).toBe("modal");
+        close_callback();
 
         expect(wrapper.emitted("download-as-zip-modal-closed")?.length).toBe(1);
     });

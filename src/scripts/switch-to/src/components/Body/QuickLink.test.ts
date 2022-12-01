@@ -32,7 +32,7 @@ describe("QuickLink", () => {
                 icon_name: "fa-columns",
                 title: "Kanban",
                 color_name: "lake-placid-blue",
-                quick_links: [] as QuickLink[],
+                quick_links: [] as ReadonlyArray<QuickLink>,
                 project: {
                     label: "Guinea Pig",
                 },

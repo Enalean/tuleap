@@ -79,6 +79,11 @@ class TimelineInlineCommentRepresentation
      */
     public string $position;
 
+    /**
+     * @var string {@type string}
+     */
+    public $color;
+
     public function __construct(
         string $file_path,
         int $unidiff_offset,
@@ -90,6 +95,7 @@ class TimelineInlineCommentRepresentation
         int $parent_id,
         int $id,
         string $position,
+        string $color,
     ) {
         $this->file_path      = $file_path;
         $this->unidiff_offset = $unidiff_offset;
@@ -101,6 +107,7 @@ class TimelineInlineCommentRepresentation
         $this->parent_id      = $parent_id;
         $this->id             = $id;
         $this->position       = $position;
+        $this->color          = $color;
     }
 
     private static function getPurifiedContent(int $project_id, string $content): string

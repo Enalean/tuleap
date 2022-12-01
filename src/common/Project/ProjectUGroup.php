@@ -208,7 +208,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return $this->name;
     }
 
-
     /**
      * Get the ugroup id
      *

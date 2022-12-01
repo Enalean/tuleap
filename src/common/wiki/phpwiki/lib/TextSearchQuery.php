@@ -119,7 +119,6 @@ class TextSearchQuery
         return preg_match($this->asRegexp(), $string);
     }
 
-
     /**
      * Get a regular expression suitable for highlighting matched words.
      *
@@ -280,22 +279,27 @@ class NullTextSearchQuery extends TextSearchQuery
     public function __construct()
     {
     }
+
     public function asRegexp()
     {
         return '/^(?!a)a/x';
     }
+
     public function match($string)
     {
         return false;
     }
+
     public function getHighlightRegexp()
     {
         return "";
     }
+
     public function makeSqlClause($make_sql_clause_cb)
     {
         return "(1 = 0)";
     }
+
     public function asString()
     {
         return "NullTextSearchQuery";
@@ -360,19 +364,23 @@ class TextSearchQuery_node_word extends TextSearchQuery_node
     {
         $this->word = $word;
     }
+
     public function regexp()
     {
         return '(?=.*' . preg_quote($this->word, '/') . ')';
     }
+
     public function highlight_words($negated = false)
     {
         return $negated ? [] : [$this->word];
     }
+
     public function _sql_quote()
     {
         $word = preg_replace('/(?=[%_\\\\])/', "\\", $this->word);
         return $GLOBALS['request']->_dbi->qstr($word);
     }
+
     public function sql()
     {
         return '%' . $this->_sql_quote($this->word) . '%';
@@ -386,6 +394,7 @@ class TextSearchQuery_node_all extends TextSearchQuery_node
     {
         return '(?=.*)';
     }
+
     public function sql()
     {
         return '%';
@@ -398,6 +407,7 @@ class TextSearchQuery_node_starts_with extends TextSearchQuery_node_word
     {
         return '(?=.*\b' . preg_quote($this->word, '/') . ')';
     }
+
     public function sql()
     {
         return $this->_sql_quote($this->word) . '%';
@@ -411,6 +421,7 @@ class TextSearchQuery_node_ends_with extends TextSearchQuery_node_word
     {
         return '(?=.*' . preg_quote($this->word, '/') . '\b)';
     }
+
     public function sql()
     {
         return '%' . $this->_sql_quote($this->word);
@@ -424,6 +435,7 @@ class TextSearchQuery_node_exact extends TextSearchQuery_node_word
     {
         return '(?=\b' . preg_quote($this->word, '/') . '\b)';
     }
+
     public function sql()
     {
         return $this->_sql_squote($this->word);
@@ -438,6 +450,7 @@ class TextSearchQuery_node_regex extends TextSearchQuery_node_word
     {
         return '(?=.*\b' . $this->word . '\b)';
     }
+
     public function sql()
     {
         return $this->_sql_quote($this->word);
@@ -470,6 +483,7 @@ class TextSearchQuery_node_regex_sql extends TextSearchQuery_node_regex
     {
         return str_replace(["/%/", "/_/"], [".*", "."], $this->word);
     }
+
     public function sql()
     {
         return $this->word;
@@ -785,7 +799,6 @@ class TextSearchQuery_Parser
 
         return $expr;
     }
-
 
     public function get_atom()
     {

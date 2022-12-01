@@ -75,6 +75,7 @@ import { FileUploader } from "./adapters/REST/fields/file-field/FileUploader";
 import { getFileUploadErrorMessage } from "./gettext-catalog";
 import { AllowedLinksTypesCollection } from "./adapters/UI/fields/link-field/AllowedLinksTypesCollection";
 import { TrackerInAHierarchyVerifier } from "./domain/fields/link-field/TrackerInAHierarchyVerifier";
+import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -174,11 +175,13 @@ function ArtifactModalController(
                 ArtifactLinkSelectorAutoCompleter(
                     api_client,
                     fault_feedback_controller,
-                    fault_feedback_controller,
                     possible_parents_cache,
                     already_linked_verifier,
                     current_artifact_identifier,
-                    current_tracker_identifier
+                    current_tracker_identifier,
+                    api_client,
+                    UserIdentifierProxy.fromUserId(modal_model.user_id),
+                    modal_model.is_search_enabled
                 ),
                 new_links_store,
                 new_links_store,

@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",

@@ -24,10 +24,9 @@ class Tracker_NoChangeException extends Tracker_Exception
      * @param int $artifact_id
      * @param string $artifact_xref cross reference text @see Tracker_Artifact::getXRef()
      * @param string $message
-     * @param int $code
      * @param Exception $previous
      */
-    public function __construct($artifact_id, $artifact_xref, $message = null, $code = null)
+    public function __construct($artifact_id, $artifact_xref, $message = null, int $code = 0)
     {
         if ($message === null) {
             $art_link = '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?aid=' . $artifact_id . '">' .

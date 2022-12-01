@@ -37,8 +37,8 @@ final class InsertItemsIntoIndexMetricCollectorTest extends TestCase
         );
 
         $inserter->indexItems(
-            new ItemToIndex('a', 120, 'content', ['A' => 'A']),
-            new ItemToIndex('b', 120, 'content', ['A' => 'A']),
+            new ItemToIndex('a', 120, 'content', 'plaintext', ['A' => 'A']),
+            new ItemToIndex('b', 120, 'content', 'plaintext', ['A' => 'A']),
         );
 
         $this->assertStringContainsString('tuleap_fts_index_requests_total 2', $prometheus->renderText());

@@ -1,0 +1,59 @@
+# This compose file is provided for test purpose as:
+# * the database is part of this compose file and that's not suitable for production
+# * password are either hardcoded to dumb value or not existent (redis)
+services:
+  web:
+    image: docker.tuleap.org/tuleap-enterprise-edition:dev
+    #entrypoint: ["/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run"]
+    #command: ["--no-supervisord", "--exec=sleep 62"]
+    #command: ["--debug"]
+    hostname: ${TULEAP_FQDN}
+    ports:
+      - "443:443"
+    volumes:
+      - ../../../:/usr/share/tuleap:ro,cached
+      - tuleap-data:/data
+#      - ${PWD}/../../../geant_ov_rsa_ca_4_usertrust_rsa_certification_authority.pem:/extra_ca.pem:ro,cached
+    depends_on:
+      - db
+      - redis
+      - mailhog
+    environment:
+      - TULEAP_FQDN=${TULEAP_FQDN}
+      - TULEAP_SYS_DBHOST=db
+      - TULEAP_SYS_DBPORT=3307
+      - TULEAP_SYS_DBPASSWD=${MYSQL_TULEAPADM_PASSWORD}
+      - SITE_ADMINISTRATOR_PASSWORD=${SITE_ADMINISTRATOR_PASSWORD}
+      - TULEAP_SYS_EMAIL_ADMIN=${TULEAP_SYS_EMAIL_ADMIN}
+      - DB_ADMIN_USER=root
+      - DB_ADMIN_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TULEAP_FPM_SESSION_MODE=redis
+      - TULEAP_REDIS_SERVER=redis
+#      - TULEAP_REDIS_PORT=6380
+#      - TULEAP_REDIS_PASSWORD=some_password
+#      - TULEAP_REDIS_USE_TLS=1
+      - TULEAP_EMAIL_RELAYHOST=mailhog:1025
+#      - TULEAP_LOGGER=syslog
+#      - TULEAP_LOG_SERVER=some-server:514
+
+  db:
+    image: mysql:8.0
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--sql-mode=NO_ENGINE_SUBSTITUTION", "--port=3307"]
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - db80-data:/var/lib/mysql
+
+  redis:
+    image: redis:6
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --auto-aof-rewrite-percentage 20 --auto-aof-rewrite-min-size 200kb
+
+  mailhog:
+    image: mailhog/mailhog
+
+volumes:
+  tuleap-data:
+  db80-data:
+  redis-data:

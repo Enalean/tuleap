@@ -69,18 +69,6 @@ describe("DropDownCurrentFolder", () => {
         expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeFalsy();
     });
 
-    it(`Given user has write permission on current folder
-        When we display the dropdown
-        Then user should be able to manipulate folder content`, () => {
-        const wrapper = createWrapper(false, true, false, 3, false, false);
-
-        expect(
-            wrapper.find("[data-test=document-new-folder-creation-button]").exists()
-        ).toBeTruthy();
-        expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeTruthy();
-    });
-
     it(`Given user is docman writer and the current folder is not the root folder
         When we display the menu
         Then the delete button should be available`, () => {

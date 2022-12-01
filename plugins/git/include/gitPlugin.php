@@ -83,7 +83,7 @@ use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
 use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
 use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeCommand;
 use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeAction;
-use Tuleap\Git\Hook\PreReceive\PreReceiveAnalyzeFFI;
+use Tuleap\WebAssembly\FFIWASMCaller;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
@@ -397,7 +397,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         // nothing to do for git
     }
 
-
     public function addMissingService(AddMissingService $event): void
     {
         // nothing to do for git
@@ -500,7 +499,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getIncludeAssets()->getFileURL('default.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getLegacyAssets()->getFileURL('default.css') . '" />';
         }
     }
 
@@ -510,7 +509,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $layout = $params['layout'];
             assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getIncludeAssets(), 'git.js'));
+            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getLegacyAssets(), 'git.js'));
         }
     }
 
@@ -976,7 +975,10 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 $project_manager
             ),
             $this->getBigObjectAuthorizationManager(),
-            $this->getIncludeAssets(),
+            new \Tuleap\Layout\IncludeViteAssets(
+                __DIR__ . '/../scripts/siteadmin/frontend-assets/',
+                '/assets/git/siteadmin'
+            ),
             new VersionDetector()
         );
     }
@@ -1177,6 +1179,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             }
         }
     }
+
     public function permission_get_object_type($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_type']) {
@@ -1185,6 +1188,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             }
         }
     }
+
     public function permission_get_object_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_name']) {
@@ -1553,7 +1557,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     {
         return UserManager::instance()->getUserById($params['user_id']);
     }
-
 
     private function getUGroupFromParams(array $params)
     {
@@ -2361,7 +2364,6 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         }
     }
 
-
     /**
      *
      * @param array $params
@@ -2660,7 +2662,13 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 EventManager::instance(),
                 new ProjectFlagsBuilder(new ProjectFlagsDao()),
             ),
-            $this->getIncludeAssets(),
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../scripts/repositories-list/frontend-assets/',
+                    '/assets/git/repositories-list'
+                ),
+                'src/index.ts'
+            ),
             EventManager::instance(),
         );
     }
@@ -2748,11 +2756,11 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return $header_displayed_builder->build($selected_tab);
     }
 
-    public function getIncludeAssets(): IncludeAssets
+    public function getLegacyAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            "/assets/git"
+            __DIR__ . '/../scripts/legacy/frontend-assets',
+            '/assets/git/legacy'
         );
     }
 
@@ -2878,7 +2886,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     return new PreReceiveAnalyzeCommand(
                         new PreReceiveAnalyzeAction(
                             $this->getRepositoryFactory(),
-                            new PreReceiveAnalyzeFFI()
+                            new FFIWASMCaller()
                         )
                     );
                 }

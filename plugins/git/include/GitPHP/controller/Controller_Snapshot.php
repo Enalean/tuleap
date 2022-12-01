@@ -152,6 +152,10 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
             $commit = $this->project->GetCommit($this->params['hash']);
         }
 
+        if ($commit === null) {
+            throw new NotFoundException();
+        }
+
         $this->archive->SetObject($commit);
     }
 

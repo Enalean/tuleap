@@ -17,7 +17,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     >
       <i
         aria-hidden="true"
-        class="fas tlp-skeleton-icon document-search-result-icon fa-file-alt"
+        class="tlp-skeleton-icon document-search-result-icon fa-regular fa-file-lines"
       />
        
       <span
@@ -38,7 +38,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     >
       <i
         aria-hidden="true"
-        class="fas tlp-skeleton-icon document-search-result-icon fa-user"
+        class="tlp-skeleton-icon document-search-result-icon fa-solid fa-user"
       />
        
       <span
@@ -79,7 +79,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     >
       <i
         aria-hidden="true"
-        class="fas tlp-skeleton-icon document-search-result-icon fa-file-alt"
+        class="tlp-skeleton-icon document-search-result-icon fa-regular fa-file-lines"
       />
        
       <span
@@ -100,7 +100,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     >
       <i
         aria-hidden="true"
-        class="fas tlp-skeleton-icon document-search-result-icon fa-user"
+        class="tlp-skeleton-icon document-search-result-icon fa-solid fa-user"
       />
        
       <span
@@ -141,7 +141,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     >
       <i
         aria-hidden="true"
-        class="fas tlp-skeleton-icon document-search-result-icon fa-file-alt"
+        class="tlp-skeleton-icon document-search-result-icon fa-regular fa-file-lines"
       />
        
       <span
@@ -162,7 +162,7 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     >
       <i
         aria-hidden="true"
-        class="fas tlp-skeleton-icon document-search-result-icon fa-user"
+        class="tlp-skeleton-icon document-search-result-icon fa-solid fa-user"
       />
        
       <span

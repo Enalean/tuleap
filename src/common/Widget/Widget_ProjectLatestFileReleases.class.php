@@ -43,10 +43,12 @@ class Widget_ProjectLatestFileReleases extends Widget
     {
         return $this->content['title'] ?? '';
     }
+
     public function getContent()
     {
         return $this->content['content'] ?? '';
     }
+
     public function isAvailable()
     {
         return isset($this->content['title']);
@@ -61,6 +63,7 @@ class Widget_ProjectLatestFileReleases extends Widget
     {
         return _('Files');
     }
+
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_project_latest_file_releases', 'description');

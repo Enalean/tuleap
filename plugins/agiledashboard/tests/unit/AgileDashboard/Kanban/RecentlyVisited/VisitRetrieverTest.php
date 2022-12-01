@@ -22,185 +22,190 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Kanban\RecentlyVisited;
 
-use AgileDashboard_Kanban;
-use AgileDashboard_KanbanCannotAccessException;
-use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanNotFoundException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Project;
-use Tracker;
-use TrackerFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\User\History\HistoryEntryCollection;
 
-class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const USER_ID    = 101;
+    private const MAX_LENGTH = 10;
+    private const PROJECT_ID = 345;
+
+    private const FIRST_KANBAN_ID              = 1;
+    private const FIRST_KANBAN_NAME            = 'Kanban Tasks';
+    private const FIRST_KANBAN_VISIT_TIMESTAMP = 1491246376;
+    private const FIRST_TRACKER_ID             = 12;
+    private const FIRST_TRACKER_COLOR          = 'chrome-silver';
+
+    private const SECOND_KANBAN_ID              = 2;
+    private const SECOND_KANBAN_NAME            = 'Another Kanban';
+    private const SECOND_KANBAN_VISIT_TIMESTAMP = 1522959274;
+    private const SECOND_TRACKER_ID             = 24;
+    private const SECOND_TRACKER_COLOR          = 'red-wine';
 
     /**
-     * @var VisitRetriever
-     */
-    private $visit_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RecentlyVisitedKanbanDao
+     * @var RecentlyVisitedKanbanDao&MockObject
      */
     private $dao;
     /**
-     * @var AgileDashboard_KanbanFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \AgileDashboard_KanbanFactory&MockObject
      */
     private $kanban_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
+     * @var \TrackerFactory&MockObject
      */
     private $tracker_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
-        $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn(101);
+        $this->user = UserTestBuilder::buildWithId(self::USER_ID);
 
-        $this->dao             = Mockery::mock(RecentlyVisitedKanbanDao::class);
-        $this->kanban_factory  = Mockery::mock(AgileDashboard_KanbanFactory::class);
-        $this->tracker_factory = Mockery::mock(TrackerFactory::class);
-
-        $this->visit_retriever = new VisitRetriever($this->dao, $this->kanban_factory, $this->tracker_factory);
+        $this->dao             = $this->createMock(RecentlyVisitedKanbanDao::class);
+        $this->kanban_factory  = $this->createMock(\AgileDashboard_KanbanFactory::class);
+        $this->tracker_factory = $this->createMock(\TrackerFactory::class);
     }
 
-    public function testItReturnsEmptyCollectionWhenThereIsntAnyEntriesInDb()
+    private function getVisitHistory(HistoryEntryCollection $collection): void
     {
-        $this->dao
-            ->shouldReceive('searchVisitByUserId')
-            ->with(101, 10)
-            ->once()
-            ->andReturn([]);
+        $visit_retriever = new VisitRetriever($this->dao, $this->kanban_factory, $this->tracker_factory);
+
+        $visit_retriever->getVisitHistory($collection, self::MAX_LENGTH);
+    }
+
+    public function testItReturnsEmptyCollectionWhenThereIsntAnyEntriesInDb(): void
+    {
+        $this->dao->method('searchVisitByUserId')
+            ->with(self::USER_ID, self::MAX_LENGTH)
+            ->willReturn([]);
 
         $collection = new HistoryEntryCollection($this->user);
-        $this->visit_retriever->getVisitHistory($collection, 10);
+        $this->getVisitHistory($collection);
 
         $this->assertEmpty($collection->getEntries());
     }
 
-    public function testItIgnoresInvalidKanbanId()
+    public function testItIgnoresInvalidKanbanId(): void
     {
-        $this->dao
-            ->shouldReceive('searchVisitByUserId')
-            ->with(101, 10)
-            ->once()
-            ->andReturn([['kanban_id' => 1]]);
-        $this->kanban_factory
-            ->shouldReceive('getKanban')
-            ->with($this->user, 1)
-            ->once()
-            ->andThrow(AgileDashboard_KanbanNotFoundException::class);
+        $this->dao->method('searchVisitByUserId')
+            ->with(self::USER_ID, self::MAX_LENGTH)
+            ->willReturn([['kanban_id' => self::FIRST_KANBAN_ID, 'created_on' => self::FIRST_KANBAN_VISIT_TIMESTAMP]]);
+        $this->kanban_factory->method('getKanban')
+            ->with($this->user, self::FIRST_KANBAN_ID)
+            ->willThrowException(new \AgileDashboard_KanbanNotFoundException());
 
         $collection = new HistoryEntryCollection($this->user);
-        $this->visit_retriever->getVisitHistory($collection, 10);
+        $this->getVisitHistory($collection);
 
         $this->assertEmpty($collection->getEntries());
     }
 
-    public function testItIgnoresKanbanThatCannotBeAccessed()
+    public function testItIgnoresKanbanThatCannotBeAccessed(): void
     {
-        $this->dao
-            ->shouldReceive('searchVisitByUserId')
-            ->with(101, 10)
-            ->once()
-            ->andReturn([['kanban_id' => 1]]);
-        $this->kanban_factory
-            ->shouldReceive('getKanban')
-            ->with($this->user, 1)
-            ->once()
-            ->andThrow(AgileDashboard_KanbanCannotAccessException::class);
+        $this->dao->method('searchVisitByUserId')
+            ->with(self::USER_ID, self::MAX_LENGTH)
+            ->willReturn([['kanban_id' => self::FIRST_KANBAN_ID, 'created_on' => self::FIRST_KANBAN_VISIT_TIMESTAMP]]);
+        $this->kanban_factory->method('getKanban')
+            ->with($this->user, self::FIRST_KANBAN_ID)
+            ->willThrowException(new \AgileDashboard_KanbanCannotAccessException());
 
         $collection = new HistoryEntryCollection($this->user);
-        $this->visit_retriever->getVisitHistory($collection, 10);
+        $this->getVisitHistory($collection);
 
         $this->assertEmpty($collection->getEntries());
     }
 
-    public function testItIgnoresKanbanOfUnknownTracker()
+    public function testItIgnoresKanbanOfUnknownTracker(): void
     {
-        $kanban = new AgileDashboard_Kanban(1, 12, 'Kanban Tasks');
+        $kanban = new \AgileDashboard_Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
 
-        $this->dao
-            ->shouldReceive('searchVisitByUserId')
-            ->with(101, 10)
-            ->once()
-            ->andReturn([['kanban_id' => 1]]);
-        $this->kanban_factory
-            ->shouldReceive('getKanban')
-            ->with($this->user, 1)
-            ->once()
-            ->andReturn($kanban);
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(12)
-            ->andReturnNull();
+        $this->dao->method('searchVisitByUserId')
+            ->with(self::USER_ID, self::MAX_LENGTH)
+            ->willReturn([['kanban_id' => self::FIRST_KANBAN_ID, 'created_on' => self::FIRST_KANBAN_VISIT_TIMESTAMP]]);
+        $this->kanban_factory->method('getKanban')
+            ->with($this->user, self::FIRST_KANBAN_ID)
+            ->willReturn($kanban);
+        $this->tracker_factory->method('getTrackerById')
+            ->with(self::FIRST_TRACKER_ID)
+            ->willReturn(null);
 
         $collection = new HistoryEntryCollection($this->user);
-        $this->visit_retriever->getVisitHistory($collection, 10);
+        $this->getVisitHistory($collection);
 
         $this->assertEmpty($collection->getEntries());
     }
 
-    public function testItBuildEntries()
+    public function testItBuildEntries(): void
     {
-        $kanban_1 = new AgileDashboard_Kanban(1, 12, 'Kanban Tasks');
-        $kanban_2 = new AgileDashboard_Kanban(2, 24, 'Another Kanban');
+        $kanban_1 = new \AgileDashboard_Kanban(self::FIRST_KANBAN_ID, self::FIRST_TRACKER_ID, self::FIRST_KANBAN_NAME);
+        $kanban_2 = new \AgileDashboard_Kanban(self::SECOND_KANBAN_ID, self::SECOND_TRACKER_ID, self::SECOND_KANBAN_NAME);
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getId')
-            ->andReturn(345);
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
-        $tracker_12 = Mockery::mock(Tracker::class);
-        $tracker_12->shouldReceive([
-            'getName' => 'release',
-            'getProject' => $project,
-            'getColor' => TrackerColor::fromName('chrome-silver'),
-        ]);
-        $tracker_24 = Mockery::mock(Tracker::class);
-        $tracker_24->shouldReceive([
-            'getName' => 'sprint',
-            'getProject' => $project,
-            'getColor' => TrackerColor::fromName('red-wine'),
-        ]);
+        $tracker_12 = TrackerTestBuilder::aTracker()->withName('release')
+            ->withProject($project)
+            ->withColor(TrackerColor::fromName(self::FIRST_TRACKER_COLOR))
+            ->build();
+        $tracker_24 = TrackerTestBuilder::aTracker()->withName('sprint')
+            ->withProject($project)
+            ->withColor(TrackerColor::fromName(self::SECOND_TRACKER_COLOR))
+            ->build();
 
-        $this->dao
-            ->shouldReceive('searchVisitByUserId')
-            ->with(101, 10)
-            ->once()
-            ->andReturn([
-                ['kanban_id' => 1, 'created_on' => 1234],
-                ['kanban_id' => 2, 'created_on' => 6789],
+        $this->dao->method('searchVisitByUserId')
+            ->with(self::USER_ID, self::MAX_LENGTH)
+            ->willReturn([
+                ['kanban_id' => self::FIRST_KANBAN_ID, 'created_on' => self::FIRST_KANBAN_VISIT_TIMESTAMP],
+                ['kanban_id' => self::SECOND_KANBAN_ID, 'created_on' => self::SECOND_KANBAN_VISIT_TIMESTAMP],
             ]);
-        $this->kanban_factory
-            ->shouldReceive('getKanban')
-            ->with($this->user, 1)
-            ->once()
-            ->andReturn($kanban_1);
-        $this->kanban_factory
-            ->shouldReceive('getKanban')
-            ->with($this->user, 2)
-            ->once()
-            ->andReturn($kanban_2);
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(12)
-            ->andReturn($tracker_12);
-        $this->tracker_factory
-            ->shouldReceive('getTrackerById')
-            ->with(24)
-            ->andReturn($tracker_24);
+        $this->kanban_factory->method('getKanban')
+            ->willReturnOnConsecutiveCalls($kanban_1, $kanban_2);
+        $this->tracker_factory->method('getTrackerById')
+            ->willReturnOnConsecutiveCalls($tracker_12, $tracker_24);
 
         $collection = new HistoryEntryCollection($this->user);
-        $this->visit_retriever->getVisitHistory($collection, 10);
+        $this->getVisitHistory($collection);
 
         $this->assertCount(2, $collection->getEntries());
+        foreach ($collection->getEntries() as $entry) {
+            self::assertSame(VisitRetriever::TYPE, $entry->getType());
+            self::assertNull($entry->getXref());
+            self::assertNull($entry->getSmallIcon());
+            self::assertNull($entry->getNormalIcon());
+            self::assertSame('fa-columns', $entry->getIconName());
+            self::assertSame($project, $entry->getProject());
+            self::assertEmpty($entry->getQuickLinks());
+            self::assertEmpty($entry->getBadges());
+        }
+
+        [$first_entry, $second_entry] = $collection->getEntries();
+        self::assertSame(self::FIRST_KANBAN_VISIT_TIMESTAMP, $first_entry->getVisitTime());
+        self::assertSame(
+            sprintf(
+                '/plugins/agiledashboard/?group_id=%d&action=showKanban&id=%d',
+                self::PROJECT_ID,
+                self::FIRST_KANBAN_ID
+            ),
+            $first_entry->getLink()
+        );
+        self::assertSame(self::FIRST_KANBAN_ID, $first_entry->getPerTypeId());
+        self::assertSame(self::FIRST_KANBAN_NAME, $first_entry->getTitle());
+        self::assertSame(self::FIRST_TRACKER_COLOR, $first_entry->getColor());
+
+        self::assertSame(self::SECOND_KANBAN_VISIT_TIMESTAMP, $second_entry->getVisitTime());
+        self::assertSame(
+            sprintf(
+                '/plugins/agiledashboard/?group_id=%d&action=showKanban&id=%d',
+                self::PROJECT_ID,
+                self::SECOND_KANBAN_ID
+            ),
+            $second_entry->getLink()
+        );
+        self::assertSame(self::SECOND_KANBAN_ID, $second_entry->getPerTypeId());
+        self::assertSame(self::SECOND_KANBAN_NAME, $second_entry->getTitle());
+        self::assertSame(self::SECOND_TRACKER_COLOR, $second_entry->getColor());
     }
 }

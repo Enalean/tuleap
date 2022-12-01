@@ -28,7 +28,6 @@
         <modal-header
             v-bind:modal-title="$gettext('Create a new file')"
             v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-header-class="'fa-plus'"
         />
         <modal-feedback />
         <div class="tlp-modal-body">
@@ -47,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Modal } from "tlp";
-import { createModal } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
 import DocumentGlobalPropertyForCreate from "./PropertiesForCreate/DocumentGlobalPropertyForCreate.vue";
 import type { DefaultFileItem, Folder, RootState } from "../../../../type";
 import { TYPE_FILE } from "../../../../constants";

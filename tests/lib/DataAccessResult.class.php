@@ -131,7 +131,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      * @deprecated
      * @return array Return the current element
      */
-    public function current()
+    public function current(): mixed
     {
         if ($this->instance_callback) {
             return call_user_func_array($this->instance_callback, [$this->_row]);
@@ -144,10 +144,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      * Move forward to next element.
      *
      * @deprecated
-     *
-     * @return void
      */
-    public function next()
+    public function next(): void
     {
         $this->_current++;
         $this->_row = $this->daFetch();
@@ -165,10 +163,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      * Check if there is a current element after calls to rewind() or next().
      *
      * @deprecated
-     *
-     * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->_row !== false;
     }
@@ -177,10 +173,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      * Rewind the Iterator to the first element.
      *
      * @deprecated
-     *
-     * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
         if ($this->rowCount() > 0) {
             $this->daSeek();
@@ -202,9 +196,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @deprecated
      *
-     * @return mixed
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->_current;
     }
@@ -213,10 +206,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     // {{{ Countable
     /**
      * @deprecated
-     *
-     * @return int the number the global function count() should show
      */
-    public function count()
+    public function count(): int
     {
         return $this->rowCount();
     }

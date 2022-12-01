@@ -110,6 +110,7 @@ If you consider that the upload has been well done, you can modify the value in 
             return true;
         }
     }
+
     /**
      * Computes the md5sum for a given file
      *
@@ -121,6 +122,7 @@ If you consider that the upload has been well done, you can modify the value in 
     {
         return PHP_BigFile::getMd5Sum($filePath);
     }
+
     /**
      * Inserts the computed md5sum for the uploaded files using ftp
      *

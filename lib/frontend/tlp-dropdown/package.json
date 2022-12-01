@@ -14,7 +14,7 @@
     "@floating-ui/dom": "^0.5.4"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

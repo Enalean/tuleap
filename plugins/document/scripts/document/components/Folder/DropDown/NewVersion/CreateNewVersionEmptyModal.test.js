@@ -23,9 +23,7 @@ import localVue from "../../../../helpers/local-vue";
 import CreateNewVersionEmptyModal from "./CreateNewVersionEmptyModal.vue";
 import { TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../../../../constants";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import * as tlp from "tlp";
-
-jest.mock("tlp");
+import * as tlp_modal from "@tuleap/tlp-modal";
 
 describe("CreateNewVersionEmptyModal", () => {
     let factory, store;
@@ -41,7 +39,7 @@ describe("CreateNewVersionEmptyModal", () => {
             });
         };
 
-        jest.spyOn(tlp, "createModal").mockReturnValue({
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

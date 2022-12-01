@@ -63,6 +63,7 @@ class Docman_Token
             }
         }
     }
+
     public static function retrieveUrl($token)
     {
         $url     = null;
@@ -85,21 +86,25 @@ class Docman_Token
     {
         return $this->tok;
     }
+
     protected function _getDao()
     {
         $d = new Docman_TokenDao(CodendiDataAccess::instance());
         return $d;
     }
+
     public function _getReferer()
     {
         return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
     }
+
     public function _getCurrentUserId()
     {
         $um   = UserManager::instance();
         $user = $um->getCurrentUser();
         return $user->isAnonymous() ? null : $user->getId();
     }
+
     public function _getHTTPRequest()
     {
         return HTTPRequest::instance();

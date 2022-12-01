@@ -29,6 +29,7 @@ use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
 class GitRepositoryHeaderDisplayer
 {
@@ -40,10 +41,7 @@ class GitRepositoryHeaderDisplayer
      * @var RepositoryHeaderPresenterBuilder
      */
     private $header_presenter_builder;
-    /**
-     * @var IncludeAssets
-     */
-    private $include_assets;
+    private JavascriptAssetGeneric $asset;
     /**
      * @var \EventManager
      */
@@ -57,13 +55,13 @@ class GitRepositoryHeaderDisplayer
         HeaderRenderer $header_renderer,
         RepositoryHeaderPresenterBuilder $header_presenter_builder,
         IncludeAssets $core_assets,
-        IncludeAssets $include_assets,
+        JavascriptAssetGeneric $asset,
         \EventManager $event_manager,
     ) {
         $this->header_renderer          = $header_renderer;
         $this->header_presenter_builder = $header_presenter_builder;
         $this->core_assets              = $core_assets;
-        $this->include_assets           = $include_assets;
+        $this->asset                    = $asset;
         $this->event_manager            = $event_manager;
     }
 
@@ -82,8 +80,7 @@ class GitRepositoryHeaderDisplayer
         if (! $request->exist('a') || in_array($request->get('a'), ['blob', 'blame', 'tree'], true)) {
             $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->core_assets, 'syntax-highlight'));
         }
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'bp-style'));
-        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repository.js'));
+        $layout->addJavascriptAsset($this->asset);
 
         $external_assets = new CollectAssets();
         $this->event_manager->processEvent($external_assets);

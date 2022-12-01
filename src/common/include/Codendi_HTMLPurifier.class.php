@@ -276,6 +276,7 @@ class Codendi_HTMLPurifier
      */
     public function purify($html, $level = 0, $groupId = 0)
     {
+        $html = (string) $html;
         switch ($level) {
             case self::CONFIG_DISABLED:
                 $clean = $html;

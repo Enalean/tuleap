@@ -312,10 +312,12 @@ function BacklogController(
         }
 
         NewTuleapArtifactModalService.showCreation(
+            SharedPropertiesService.getUserId(),
             item_type.id,
             null,
             callback,
-            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id)
+            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id),
+            SharedPropertiesService.isSearchEnabled()
         );
     }
 
@@ -336,10 +338,12 @@ function BacklogController(
         }
 
         NewTuleapArtifactModalService.showCreation(
+            SharedPropertiesService.getUserId(),
             item_type.id,
             null,
             callback,
-            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id)
+            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id),
+            SharedPropertiesService.isSearchEnabled()
         );
     }
 

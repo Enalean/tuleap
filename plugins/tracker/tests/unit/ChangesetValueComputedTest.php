@@ -45,7 +45,6 @@ class ChangesetValueComputedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
     }
 
-
     public function testNoDiff(): void
     {
         $float_1 = new ChangesetValueComputed(111, $this->changeset, $this->field, false, 456.789, true);

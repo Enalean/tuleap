@@ -26,44 +26,35 @@
                 'tlp-button-large': isInLargeMode,
                 'tlp-button-small tlp-button-outline': isInQuickLookMode,
                 'tlp-append tlp-dropdown-split-button-caret': isAppended,
+                'tlp-button-ellipsis': !isAppended,
             }"
             ref="dropdownButton"
             type="button"
             data-test="document-drop-down-button"
             v-bind:aria-label="$gettext(`Open dropdown menu`)"
         >
-            <i class="fa fa-ellipsis-h" v-if="!isAppended"></i>
-            <i class="fa fa-caret-down" v-bind:class="{ 'tlp-button-icon-right': !isAppended }"></i>
+            <i v-if="isAppended" class="fa-solid fa-caret-down" aria-hidden="true"></i>
+            <i v-else class="fa-solid fa-ellipsis" aria-hidden="true"></i>
         </button>
-        <div
-            class="tlp-dropdown-menu document-dropdown-menu"
-            v-bind:class="{
-                'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState,
-                'tlp-dropdown-menu-right': isInQuickLookMode,
-            }"
-            role="menu"
-        >
+        <div class="tlp-dropdown-menu document-dropdown-menu" role="menu">
             <slot></slot>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import type { Dropdown } from "tlp";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
 import {
     createDropdown,
     EVENT_TLP_DROPDOWN_SHOWN,
     EVENT_TLP_DROPDOWN_HIDDEN,
-    EVENT_TLP_MODAL_SHOWN,
-} from "tlp";
+} from "@tuleap/tlp-dropdown";
+import { EVENT_TLP_MODAL_SHOWN } from "@tuleap/tlp-modal";
 import emitter from "../../../helpers/emitter";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class DropDownButton extends Vue {
-    @Prop({ required: true })
-    readonly isInFolderEmptyState!: boolean;
-
     @Prop({ required: true })
     readonly isInLargeMode!: boolean;
 

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { UserHistoryEntry } from "@tuleap/core-rest-api-types";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { ArtifactCrossReference } from "../../domain/ArtifactCrossReference";
 
@@ -24,5 +25,10 @@ export const ArtifactCrossReferenceProxy = {
     fromAPIArtifact: (artifact: ArtifactWithStatus): ArtifactCrossReference => ({
         ref: `${artifact.xref}`,
         color: artifact.tracker.color_name,
+    }),
+
+    fromAPIUserHistory: (entry: UserHistoryEntry): ArtifactCrossReference => ({
+        ref: `${entry.xref}`,
+        color: entry.color_name,
     }),
 };

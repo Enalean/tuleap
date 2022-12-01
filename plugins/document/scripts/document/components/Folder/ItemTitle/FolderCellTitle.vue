@@ -22,8 +22,11 @@
 <template>
     <div data-test="folder-title">
         <i
-            class="document-folder-icon-color fa fa-fw document-folder-toggle document-folder-content-icon"
-            v-bind:class="{ 'fa-caret-down': !is_closed, 'fa-caret-right': is_closed }"
+            class="document-folder-icon-color fa-fw document-folder-toggle document-folder-content-icon"
+            v-bind:class="{
+                'fa-solid fa-caret-down': !is_closed,
+                'fa-solid fa-caret-right': is_closed,
+            }"
             v-on:click="toggle"
             v-on:keyup.enter="toggle"
             data-test="toggle"
@@ -31,12 +34,12 @@
             data-shortcut-folder-toggle
         ></i>
         <i
-            class="document-folder-icon-color fa fa-fw document-folder-content-icon"
+            class="document-folder-icon-color fa-fw document-folder-content-icon"
             data-test="document-folder-icon-open"
             v-bind:class="{
-                'fa-folder': is_closed,
-                'fa-folder-open': is_folder_loaded_and_open,
-                'fa-circle-o-notch fa-spin': is_loading,
+                'fa-solid fa-folder': is_closed,
+                'fa-regular fa-folder-open': is_folder_loaded_and_open,
+                'fa-solid fa-circle-notch fa-spin': is_loading,
             }"
         ></i>
         <a

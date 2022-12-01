@@ -29,9 +29,16 @@ type DropdownEventType = "tlp-dropdown-shown" | "tlp-dropdown-hidden";
 export const DROPDOWN_MENU_CLASS_NAME = "tlp-dropdown-menu";
 export const DROPDOWN_SHOWN_CLASS_NAME = "tlp-dropdown-shown";
 
+export const TRIGGER_CLICK = "click";
+export const TRIGGER_HOVER_AND_CLICK = "hover-and-click";
+const TriggerType = [TRIGGER_CLICK, TRIGGER_HOVER_AND_CLICK] as const;
+type TriggerType = typeof TriggerType[number];
+
 export interface DropdownOptions {
     keyboard?: boolean;
+    trigger?: TriggerType;
     dropdown_menu?: Element;
+    anchor?: Element;
 }
 export type DropdownEventHandler = (event: CustomEvent<{ target: HTMLElement }>) => void;
 
@@ -48,7 +55,8 @@ export const createDropdown = (
 
 export class Dropdown {
     private readonly doc: Document;
-    private readonly trigger: Element;
+    private readonly trigger_element: Element;
+    private readonly anchor_element: Element;
     private readonly dropdown_menu: HTMLElement;
     private readonly keyboard: boolean;
     is_shown: boolean;
@@ -57,12 +65,17 @@ export class Dropdown {
     private readonly event_listeners: EventListener[];
     private readonly cleanup: () => void;
 
-    constructor(doc: Document, trigger: Element, options: DropdownOptions = { keyboard: true }) {
+    constructor(doc: Document, trigger_element: Element, options: Partial<DropdownOptions> = {}) {
         this.doc = doc;
-        this.trigger = trigger;
-        this.trigger.setAttribute("data-dropdown", "trigger");
+        this.trigger_element = trigger_element;
+        this.trigger_element.setAttribute("data-dropdown", "trigger");
 
-        const { keyboard = true, dropdown_menu = this.getDropdownMenu() } = options;
+        const {
+            keyboard = true,
+            dropdown_menu = this.getDropdownMenu(),
+            trigger = TRIGGER_CLICK,
+            anchor = null,
+        } = options;
         if (dropdown_menu === null) {
             throw new Error("Could not find .tlp-dropdown-menu");
         }
@@ -70,9 +83,10 @@ export class Dropdown {
             throw new Error("Dropdown menu must be an HTML element");
         }
         this.dropdown_menu = dropdown_menu;
+        this.anchor_element = anchor || this.trigger_element;
         this.is_shown = false;
         this.cleanup = autoUpdate(
-            this.trigger,
+            this.anchor_element,
             this.dropdown_menu,
             this.updatePositionOfMenu.bind(this)
         );
@@ -86,8 +100,8 @@ export class Dropdown {
         });
         this.event_listeners = [];
 
-        this.listenOpenEvents();
-        this.listenCloseEvents();
+        this.listenOpenEvents(trigger);
+        this.listenCloseEvents(trigger);
     }
 
     async updatePositionOfMenu(): Promise<void> {
@@ -97,17 +111,28 @@ export class Dropdown {
 
         const side = this.dropdown_menu.classList.contains("tlp-dropdown-menu-top")
             ? "top"
+            : this.dropdown_menu.classList.contains("tlp-dropdown-menu-side")
+            ? "right"
             : "bottom";
-        const alignment = this.dropdown_menu.classList.contains("tlp-dropdown-menu-right")
-            ? "end"
-            : "start";
+        const alignment = "start";
         const wanted_placement: Placement = `${side}-${alignment}`;
 
-        const { x, y, placement } = await computePosition(this.trigger, this.dropdown_menu, {
+        const { x, y, placement } = await computePosition(this.anchor_element, this.dropdown_menu, {
             placement: wanted_placement,
             middleware: [
                 offset(({ rects, placement }) => {
-                    return (placement.indexOf("top") === 0 ? rects.reference.height / 2 : 0) + 4;
+                    const mainAxis =
+                        (placement.indexOf("top") === 0 ? rects.reference.height / 2 : 0) - 4;
+
+                    if (this.dropdown_menu.classList.contains("tlp-dropdown-menu-side")) {
+                        if (placement.indexOf("end") > 0) {
+                            return { mainAxis, crossAxis: 8 };
+                        }
+
+                        return { mainAxis, crossAxis: -8 };
+                    }
+
+                    return mainAxis;
                 }),
                 flip({ fallbackStrategy: "initialPlacement" }),
                 shift({ padding: 16 }),
@@ -122,7 +147,7 @@ export class Dropdown {
     }
 
     getDropdownMenu(): HTMLElement | null {
-        let dropdown_menu = this.trigger.nextSibling;
+        let dropdown_menu = this.trigger_element.nextSibling;
 
         while (
             dropdown_menu &&
@@ -157,14 +182,24 @@ export class Dropdown {
         }, TRANSITION_DURATION);
     }
 
-    listenOpenEvents(): void {
-        this.trigger.addEventListener("click", (event) => {
+    listenOpenEvents(trigger: TriggerType): void {
+        this.trigger_element.addEventListener("click", (event) => {
             event.preventDefault();
             this.toggle();
         });
+
+        if (trigger === TRIGGER_HOVER_AND_CLICK) {
+            this.trigger_element.addEventListener("mouseenter", () => {
+                if (this.is_shown) {
+                    return;
+                }
+
+                this.show();
+            });
+        }
     }
 
-    listenCloseEvents(): void {
+    listenCloseEvents(trigger: TriggerType): void {
         this.doc.addEventListener("click", (event) => {
             if (!(event.target instanceof Element)) {
                 return;
@@ -172,11 +207,19 @@ export class Dropdown {
             if (
                 this.is_shown &&
                 !this.dropdown_menu.contains(event.target) &&
-                !this.trigger.contains(event.target)
+                !this.trigger_element.contains(event.target)
             ) {
                 this.hide();
             }
         });
+
+        if (trigger === TRIGGER_HOVER_AND_CLICK) {
+            this.trigger_element.addEventListener("mouseleave", () => {
+                if (this.is_shown) {
+                    this.hide();
+                }
+            });
+        }
 
         if (this.keyboard) {
             this.doc.addEventListener("keyup", (event) => {

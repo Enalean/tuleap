@@ -76,14 +76,17 @@ class HudsonTestResult
     {
         return (int) $this->dom_job->failCount;
     }
+
     public function getPassCount()
     {
         return (int) $this->dom_job->passCount;
     }
+
     public function getSkipCount()
     {
         return (int) $this->dom_job->skipCount;
     }
+
     public function getTotalCount()
     {
         return $this->getFailCount() + $this->getPassCount() + $this->getSkipCount();

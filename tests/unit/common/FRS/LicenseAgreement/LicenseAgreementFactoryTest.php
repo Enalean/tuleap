@@ -62,7 +62,6 @@ class LicenseAgreementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->getLicenseAgreementForPackage(new FRSPackage([]));
     }
 
-
     public function testItUpdatePackageWithNoLicenseAgreement(): void
     {
         $this->dao->shouldReceive('resetLicenseAgreementForPackage')->once()->with($this->package);
@@ -264,7 +263,6 @@ class LicenseAgreementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->factory->duplicate(\Mockery::mock(\FRSPackageFactory::class), $this->project, $template_project, []);
     }
-
 
     public function testItDuplicatesLicenseAgreementsFromTemplateWithAgreementsAndDefaultTemplateSiteLicenseAgreement()
     {

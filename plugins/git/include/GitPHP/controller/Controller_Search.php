@@ -119,6 +119,9 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $co = $this->project->GetCommit($this->params['hashbase']);
+        if ($co === null) {
+            throw new NotFoundException();
+        }
         $this->tpl->assign('commit', $co);
         $this->tpl->assign('hashbase', $this->params['hashbase']);
 

@@ -21,7 +21,11 @@ import "../themes/style.scss";
 import type { Dropdown, DropdownOptions } from "./dropdowns";
 import { createDropdown as createDropdownImplementation } from "./dropdowns";
 
-export { EVENT_TLP_DROPDOWN_HIDDEN, EVENT_TLP_DROPDOWN_SHOWN } from "./dropdowns";
+export {
+    EVENT_TLP_DROPDOWN_HIDDEN,
+    EVENT_TLP_DROPDOWN_SHOWN,
+    TRIGGER_HOVER_AND_CLICK,
+} from "./dropdowns";
 export type { Dropdown, DropdownOptions };
 // Apply partially the dropdowns creation function to pass document
 export const createDropdown = (trigger: Element, options?: DropdownOptions): Dropdown =>

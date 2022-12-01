@@ -24,16 +24,44 @@ import { buildBodyForComment } from "./PullRequestCommentBodyTemplate";
 import { buildFooterForComment } from "./PullRequestCommentFooterTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 
+type MapOfClasses = Record<string, boolean>;
+
+const getCommentContentClasses = (host: PullRequestComment): MapOfClasses => {
+    const classes: MapOfClasses = {
+        "pull-request-comment-content": true,
+    };
+
+    if (host.comment.color) {
+        classes[`pull-request-comment-content-color`] = true;
+        classes[`tlp-swatch-${host.comment.color}`] = true;
+    }
+
+    return classes;
+};
+
+const getFollowUpClasses = (host: PullRequestComment): MapOfClasses => {
+    const classes: MapOfClasses = {
+        "pull-request-comment-follow-up": true,
+    };
+
+    if (host.comment.color) {
+        classes[`pull-request-comment-follow-up-color`] = true;
+        classes[`tlp-swatch-${host.comment.color}`] = true;
+    }
+
+    return classes;
+};
+
 export const getCommentReplyTemplate = (
     host: PullRequestComment,
     reply: PullRequestCommentPresenter
 ): UpdateFunction<PullRequestComment> => html`
-    <div class="pull-request-comment-follow-up">
+    <div class="${getFollowUpClasses(host)}">
         <div class="pull-request-comment pull-request-comment-follow-up-content">
             <div class="tlp-avatar-medium">
                 <img src="${reply.user.avatar_url}" class="media-object" aria-hidden="true" />
             </div>
-            <div class="pull-request-comment-content">
+            <div class="${getCommentContentClasses(host)}">
                 ${buildBodyForComment(host, reply)} ${buildFooterForComment(host, reply)}
             </div>
         </div>

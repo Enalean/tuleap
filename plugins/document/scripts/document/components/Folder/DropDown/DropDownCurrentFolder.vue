@@ -25,12 +25,6 @@
             data-test="document-folder-title"
         />
         <template v-if="current_folder.user_can_write">
-            <new-folder-secondary-action
-                v-bind:item="current_folder"
-                slot="new-folder-secondary-action"
-                data-test="document-new-folder-creation-button"
-            />
-
             <update-properties
                 v-bind:item="current_folder"
                 data-test="document-update-properties"
@@ -57,7 +51,6 @@
 
 <script lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
-import NewFolderSecondaryAction from "./NewFolderSecondaryAction.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DeleteItem from "./Delete/DeleteItem.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
@@ -78,7 +71,6 @@ const configuration = namespace("configuration");
         UpdatePermissions,
         DeleteItem,
         DropDownSeparator,
-        NewFolderSecondaryAction,
         DropDownMenu,
     },
 })

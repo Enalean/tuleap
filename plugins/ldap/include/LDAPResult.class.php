@@ -165,32 +165,32 @@ class LDAPResult implements Iterator, Countable // phpcs:ignore PSR1.Classes.Cla
         return ! $this->isEmpty();
     }
 
-    public function count()
+    public function count(): int
     {
         return $this->info['count'];
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->index < $this->info['count'];
     }
 
-    public function next()
+    public function next(): void
     {
         $this->index++;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
     }
 
-    public function current()
+    public function current(): mixed
     {
         return $this->info[$this->index];
     }
 
-    public function key()
+    public function key(): int
     {
         return $this->index;
     }

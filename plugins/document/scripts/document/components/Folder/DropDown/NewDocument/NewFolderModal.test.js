@@ -24,10 +24,8 @@ import localVue from "../../../../helpers/local-vue";
 import NewFolderModal from "./NewFolderModal.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
-import * as tlp from "tlp";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
-
-jest.mock("tlp");
 
 describe("NewFolderModal", () => {
     let factory, store;
@@ -94,7 +92,7 @@ describe("NewFolderModal", () => {
             });
         };
 
-        jest.spyOn(tlp, "createModal").mockReturnValue({
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

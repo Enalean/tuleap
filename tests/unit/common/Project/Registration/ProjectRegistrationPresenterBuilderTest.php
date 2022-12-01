@@ -165,22 +165,22 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
 
         $result = $this->builder->buildPresenter();
 
-        self::assertEquals(
+        self::assertJsonStringEqualsJsonString(
             '[{"title":"project-shortname","description":"My awesome project","id":"101","glyph":"<svg>","is_built_in":false}]',
             $result->company_templates
         );
 
-        self::assertEquals(
+        self::assertJsonStringEqualsJsonString(
             '[{"title":"Scrum","description":"Collect stories, plan releases, monitor sprints with a ready-to-use Scrum area","id":"scrum","glyph":"<svg>","is_built_in":true}]',
             $result->tuleap_templates
         );
 
-        self::assertEquals(
+        self::assertJsonStringEqualsJsonString(
             '[{"template_category":{"shortname":"some-category","label":"Some category"},"title":"External template","description":"It is a template, it is external","id":"external_template","glyph":"","is_built_in":true}]',
             $result->external_templates
         );
 
-        self::assertEquals(
+        self::assertJsonStringEqualsJsonString(
             '[{"group_desc_id":"1","desc_name":"Custom field","desc_type":"text","desc_description":"Custom description","desc_required":"1"}]',
             $result->field_list
         );

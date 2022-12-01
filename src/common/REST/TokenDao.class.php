@@ -41,7 +41,6 @@ class Rest_TokenDao extends DataAccessObject
         return $this->update($sql);
     }
 
-
     public function deleteTokensOlderThan($date_timestamp)
     {
         $date_timestamp = $this->da->escapeInt($date_timestamp);

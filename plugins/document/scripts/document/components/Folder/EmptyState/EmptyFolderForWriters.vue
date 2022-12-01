@@ -26,32 +26,17 @@
             <empty-folder-for-writers-svg />
         </div>
         <h1 class="empty-state-title" v-translate>It's time to add new documents!</h1>
-        <div class="empty-state-action tlp-dropdown">
-            <div class="tlp-dropdown-split-button">
-                <new-item-button
-                    class="tlp-button-primary tlp-dropdown-split-button-main"
-                    v-bind:item="current_folder"
-                />
-                <drop-down-button
-                    v-bind:is-in-large-mode="false"
-                    v-bind:is-in-quick-look-mode="false"
-                    v-bind:is-appended="true"
-                    v-bind:is-in-folder-empty-state="true"
-                >
-                    <drop-down-current-folder />
-                </drop-down-button>
-            </div>
+        <div class="empty-state-action">
+            <new-item-dropdown v-bind:item="current_folder" />
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
 import EmptyFolderForWritersSvg from "../../svg/folder/EmptyFolderForWritersSvg.vue";
-import NewItemButton from "../ActionsButton/NewItemButton.vue";
-import DropDownButton from "../DropDown/DropDownButton.vue";
-import DropDownCurrentFolder from "../DropDown/DropDownCurrentFolder.vue";
 import type { RootState } from "../../../type";
 import { useNamespacedState } from "vuex-composition-helpers";
+import NewItemDropdown from "../DropDown/NewDocument/NewItemDropdown.vue";
 
 const { current_folder } = useNamespacedState<Pick<RootState, "current_folder">>([
     "current_folder",

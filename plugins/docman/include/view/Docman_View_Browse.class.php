@@ -149,6 +149,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     {
         return 'show';
     }
+
     public function getClassForFolderLink()
     {
         return '';
@@ -168,6 +169,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         //List is part of SOAP api
         return in_array($view, array_merge(array_keys(self::getDefaultViews()), ['List']));
     }
+
     public static function getViewForCurrentUser($group_id, $report = '')
     {
         if ($report != '') {

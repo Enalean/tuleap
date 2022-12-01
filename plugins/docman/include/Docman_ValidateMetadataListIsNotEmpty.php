@@ -42,6 +42,7 @@ class Docman_ValidateMetadataListIsNotEmpty extends \Docman_Validator
             $this->addError($msg);
         }
     }
+
     private function metadataIsRequieredAndAtLeastOneValueIsSelected(\Docman_ListMetadata $metadata, array $selectedElements)
     {
         if ($metadata->isEmptyAllowed()) {

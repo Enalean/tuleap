@@ -21,7 +21,8 @@
 
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 
 /**
  * Widget displaying last git pushes for the user
@@ -240,11 +241,11 @@ class Git_Widget_UserPushes extends Widget
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/git'
+        $include_assets = new IncludeViteAssets(
+            __DIR__ . '/../scripts/repository/frontend-assets',
+            '/assets/git/repository'
         );
 
-        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'bp-style')]);
+        return new CssAssetCollection([CssViteAsset::fromFileName($include_assets, 'themes/git.scss')]);
     }
 }

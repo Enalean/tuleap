@@ -126,7 +126,6 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->data_array['type'];
     }
 
-
     public function getUnixBox()
     {
         return $this->data_array['unix_box'];
@@ -384,7 +383,6 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->perm_data_array;
     }
 
-
     /**
      * Return true, if this group is a template to create other groups
      *
@@ -396,7 +394,6 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     {
         return TemplateSingleton::isTemplate($this->data_array['type']);
     }
-
 
     /** return the template id from which this group was built */
     public function getTemplate()

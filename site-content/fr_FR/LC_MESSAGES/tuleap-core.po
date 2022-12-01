@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.1.1\n"
 
 msgid ""
 "       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-"
@@ -947,6 +947,9 @@ msgstr ""
 "Choisissez un forum et vous pourrez le parcourir, effectuer une recherche et "
 "poster un message."
 
+msgid "Choose a timezone"
+msgstr "Sélectionnez un fuseau horaire"
+
 msgid "Clear history"
 msgstr "Effacer l'historique"
 
@@ -1019,6 +1022,9 @@ msgstr "Confirmer"
 
 msgid "Confirm the account creation"
 msgstr "Confirmez la création de compte"
+
+msgid "Confirmation link sent"
+msgstr "Lien de confirmation envoyé"
 
 msgid "Congratulations!"
 msgstr "Félicitations !"
@@ -1261,6 +1267,11 @@ msgstr "Détails"
 
 msgid "Developer Commits (Last 7 days/Total)"
 msgstr "Commits (Derniers 7 jours/Total)"
+
+msgid "Didn't get a confirmation email? Check your spam folder."
+msgstr ""
+"Vous n'avez pas reçu d'e-mail de confirmation ? Vérifiez votre dossier de "
+"courriers indésirables."
 
 msgid "Disallow for all projects"
 msgstr "Restreindre pour tous les projets"
@@ -1529,6 +1540,13 @@ msgstr "Filtrer par nom"
 
 msgid "Flat"
 msgstr "A plat"
+
+msgid ""
+"For all other services, you will receive an email when you are in the "
+"notification list"
+msgstr ""
+"Pour tous les autres services, vous recevrez un courrier électronique "
+"lorsque vous êtes dans la liste de notification"
 
 msgid "Forbidden"
 msgstr "Interdit"
@@ -2336,6 +2354,9 @@ msgstr "Aucun projet à valider"
 msgid "No template information have been provided to create the project"
 msgstr "Aucune information de template a été fournie pour créer le projet"
 
+msgid "No timezone set. Please select one."
+msgstr "Aucun fuseau horaire défini. Merci d'en choisir un."
+
 msgid "No users to validate"
 msgstr "Aucun utilisateur à valider"
 
@@ -2957,6 +2978,10 @@ msgid "Receive emails about site updates, including security notices"
 msgstr ""
 "Recevoir du courrier électronique à propos des mises à jour du site mais "
 "également des informations relatives à la sécurité"
+
+msgid "Receive emails for actions I do on the platform:"
+msgstr ""
+"Recevoir du courrier électronique pour les actions dont je suis à l'origine :"
 
 msgid "Recently"
 msgstr "Récemment"
@@ -4011,13 +4036,6 @@ msgstr ""
 "Pwned est utilisé."
 
 msgid ""
-"To do this click the confirm button in the email. <i class=\"fa fa-envelope-o"
-"\"></i>"
-msgstr ""
-"Pour cela cliquez sur le bouton de confirmation présent dans le mail.<i "
-"class=\"fa fa-envelope-o\"></i>"
-
-msgid ""
 "To proceed with the file download, click on '<b>I accept</b>'. If you do not "
 "want to download the file click on '<b>I decline</b>' and <a href=\"mailto:%s"
 "\"><b>contact us</b></a> if you need clarification or want to explain why "
@@ -4340,6 +4358,11 @@ msgstr "Impossible de trouver comment éditer le widget requis."
 
 msgid "We cannot find any widgets."
 msgstr "Impossible de trouver des widgets."
+
+msgid "We emailed a confirmation link to <strong>%s</strong>,"
+msgstr ""
+"Nous vous avons envoyé un email avec un lien de confirmation à <strong>%s</"
+"strong>,"
 
 msgid "We need at least one email to send an invitation"
 msgstr "Nous avons besoin d'au moins un email pour envoyer une invitation"
@@ -4923,14 +4946,18 @@ msgstr ""
 "sujet, veuillez envoyez un e-mail aux <a href=\"mailto:%s\">administrateurs "
 "du site</a>."
 
-msgid "Your account is created, </br>it now needs to be activated."
-msgstr "Votre compte est créé, </br> il ne reste plus qu'à l'activer."
-
 msgid "Your avatar"
 msgstr "Votre avatar"
 
 msgid "Your catchy headline"
 msgstr "Votre accroche"
+
+msgid ""
+"Your current timezone (%s) is not listed in the available timezones. Please "
+"select a new one."
+msgstr ""
+"Votre fuseau horaire actuel (%s) n'est pas listé dans les fuseaux horaires "
+"disponibles. Merci d'en choisir un nouveau."
 
 #, php-format
 msgid ""
@@ -4985,6 +5012,9 @@ msgstr "actifs le mois dernier"
 
 msgid "active last week"
 msgstr "actifs la semaine dernière"
+
+msgid "check your email for the link to activate your account."
+msgstr "regardez votre e-mail pour le lien permettant d'activer votre compte."
 
 msgid "commits at once"
 msgstr "commits à la fois"

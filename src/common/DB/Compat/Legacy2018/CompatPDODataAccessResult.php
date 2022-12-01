@@ -197,6 +197,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      * Rewind the Iterator to the first element.
      *
      * @deprecated
+     *
      */
     public function rewind(): void
     {

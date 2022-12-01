@@ -18,7 +18,6 @@
  */
 
 import { define, html } from "hybrids";
-import type { UpdateFunction } from "hybrids";
 import { loadTooltips } from "@tuleap/tooltip";
 import type { IRelativeDateHelper } from "../helpers/date-helpers";
 import type { ControlPullRequestComment } from "./PullRequestCommentController";
@@ -31,8 +30,9 @@ import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPr
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 import type { PullRequestPresenter } from "./PullRequestPresenter";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
+import type { FileDiffWidgetType } from "../file-diff/diff-modes/types";
 
-export const TAG_NAME = "tuleap-pullrequest-comment";
+export const TAG_NAME: FileDiffWidgetType = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestComment & HTMLElement;
 
 type MapOfClasses = Record<string, boolean>;
@@ -40,14 +40,15 @@ type MapOfClasses = Record<string, boolean>;
 export interface PullRequestComment {
     readonly comment: PullRequestCommentPresenter;
     readonly content: () => HTMLElement;
-    readonly post_rendering_callback: () => void;
+    readonly after_render_once: unknown;
+    readonly element_height: number;
+    readonly post_rendering_callback: (() => void) | undefined;
     readonly relativeDateHelper: IRelativeDateHelper;
     readonly currentUser: CurrentPullRequestUserPresenter;
     readonly currentPullRequest: PullRequestPresenter;
     readonly controller: ControlPullRequestComment;
     replies: PullRequestCommentRepliesCollectionPresenter;
     reply_comment_presenter: ReplyCommentFormPresenter | null;
-    have_tooltips_been_loaded: boolean;
 }
 
 const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
@@ -56,6 +57,19 @@ const getCommentClasses = (host: PullRequestComment): MapOfClasses => {
     };
 
     classes[host.comment.type] = true;
+
+    return classes;
+};
+
+const getCommentContentClasses = (host: PullRequestComment): MapOfClasses => {
+    const classes: MapOfClasses = {
+        "pull-request-comment-content": true,
+    };
+
+    if (host.comment.color) {
+        classes[`pull-request-comment-content-color`] = true;
+        classes[`tlp-swatch-${host.comment.color}`] = true;
+    }
 
     return classes;
 };
@@ -82,22 +96,19 @@ export const setNewCommentState = (
     return presenter;
 };
 
-function renderFactory(fn: (host: HostElement) => UpdateFunction<PullRequestComment>) {
-    return (host: HostElement): UpdateFunction<PullRequestComment> => {
-        const component = fn(host);
-        if (host.post_rendering_callback) {
-            // Wait for component to be returned to trigger the callback
-            setTimeout(() => host.post_rendering_callback());
-        }
+export const after_render_once_descriptor = {
+    get: (host: PullRequestComment): unknown => host.content(),
+    observe(): void {
+        loadTooltips();
+    },
+};
 
-        if (!host.have_tooltips_been_loaded) {
-            host.have_tooltips_been_loaded = true;
-            setTimeout(() => loadTooltips());
-        }
-
-        return component;
-    };
-}
+export const element_height_descriptor = {
+    get: (host: PullRequestComment): number => host.content().getBoundingClientRect().height,
+    observe(host: PullRequestComment): void {
+        host.post_rendering_callback?.();
+    },
+};
 
 export const PullRequestComment = define<PullRequestComment>({
     tag: TAG_NAME,
@@ -106,7 +117,8 @@ export const PullRequestComment = define<PullRequestComment>({
     relativeDateHelper: undefined,
     currentUser: undefined,
     currentPullRequest: undefined,
-    have_tooltips_been_loaded: false,
+    after_render_once: after_render_once_descriptor,
+    element_height: element_height_descriptor,
     controller: {
         set: (host, controller) => {
             if (host.comment) {
@@ -122,30 +134,28 @@ export const PullRequestComment = define<PullRequestComment>({
     reply_comment_presenter: {
         set: setNewCommentState,
     },
-    content: renderFactory(
-        (host) => html`
-            <div class="pull-request-comment-component">
-                <div class="${getCommentClasses(host)}" data-test="pullrequest-comment">
-                    <div class="tlp-avatar-medium">
-                        <img
-                            src="${host.comment.user.avatar_url}"
-                            class="media-object"
-                            aria-hidden="true"
-                        />
-                    </div>
-
-                    <div class="pull-request-comment-content">
-                        ${getCommentBody(host)} ${getCommentFooter(host)}
-                    </div>
+    content: (host) => html`
+        <div class="pull-request-comment-component">
+            <div class="${getCommentClasses(host)}" data-test="pullrequest-comment">
+                <div class="tlp-avatar-medium">
+                    <img
+                        src="${host.comment.user.avatar_url}"
+                        class="media-object"
+                        aria-hidden="true"
+                    />
                 </div>
 
-                <div class="pull-request-comment-follow-ups">
-                    ${host.replies.map((reply: PullRequestCommentPresenter) =>
-                        getCommentReplyTemplate(host, reply)
-                    )}
-                    ${getReplyFormTemplate(host)}
+                <div class="${getCommentContentClasses(host)}">
+                    ${getCommentBody(host)} ${getCommentFooter(host)}
                 </div>
             </div>
-        `
-    ),
+
+            <div class="pull-request-comment-follow-ups">
+                ${host.replies.map((reply: PullRequestCommentPresenter) =>
+                    getCommentReplyTemplate(host, reply)
+                )}
+                ${getReplyFormTemplate(host)}
+            </div>
+        </div>
+    `,
 });

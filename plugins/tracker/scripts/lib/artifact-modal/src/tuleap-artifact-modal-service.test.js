@@ -45,6 +45,8 @@ describe("NewTuleapArtifactModalService", () => {
         wrapPromise,
         getSelectedValues;
 
+    const user_id = 103;
+
     beforeEach(() => {
         angular.mock.module(artifact_modal_module);
 
@@ -107,6 +109,7 @@ describe("NewTuleapArtifactModalService", () => {
             updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
 
             const promise = NewTuleapArtifactModalService.initCreationModalModel(
+                user_id,
                 tracker_id,
                 parent_artifact_id,
                 false
@@ -120,15 +123,16 @@ describe("NewTuleapArtifactModalService", () => {
             expect(buildFormTree).toHaveBeenCalledWith(tracker);
             const model = promise.$$state.value;
             expect(setCreationMode).toHaveBeenCalledWith(true);
-            expect(model.tracker_id).toEqual(tracker_id);
-            expect(model.parent_artifact_id).toEqual(parent_artifact_id);
-            expect(model.tracker).toEqual(tracker);
+            expect(model.tracker_id).toBe(tracker_id);
+            expect(model.parent_artifact_id).toBe(parent_artifact_id);
+            expect(model.tracker).toBe(tracker);
             expect(model.title).toBe("preinvest");
             expect(model.color).toBe("importer");
             expect(model.values).toBeDefined();
             expect(model.ordered_fields).toBeDefined();
             expect(model.parent_artifacts).toBeUndefined();
             expect(model.artifact_id).toBeUndefined();
+            expect(model.user_id).toBe(103);
         });
 
         it("Given that I could not get the tracker structure, then a promise will be rejected", async () => {

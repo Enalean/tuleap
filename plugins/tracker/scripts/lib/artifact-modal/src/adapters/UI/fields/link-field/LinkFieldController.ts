@@ -69,6 +69,7 @@ export type LinkFieldControllerType = {
     initPopovers: (popover_elements: LinkedArtifactPopoverElement[]) => void;
     retrievePossibleParentsGroups(): PromiseLike<GroupCollection>;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
+    clearFaultNotification(): void;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -157,6 +158,8 @@ export const LinkFieldController = (
     },
 
     autoComplete: links_autocompleter.autoComplete,
+
+    clearFaultNotification: notification_clearer.clearFaultNotification,
 
     addNewLink(artifact, type): NewLinkCollectionPresenter {
         new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));

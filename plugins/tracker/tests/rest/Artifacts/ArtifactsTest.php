@@ -94,6 +94,7 @@ final class ArtifactsTest extends TrackerBase
         $this->assertEquals($this->base_tracker_id, $json['tracker']['id']);
         $this->assertTrue(isset($json['tracker']['fields']));
     }
+
     public function testItSavesTheUserDefaultFormatIfTheTextFieldFormatIsInvalidWhenTheArtifactIsCreated(): int
     {
         $description_field_id = $this->getAUsedFieldId($this->tracker_all_fields_tracker_id, 'description');

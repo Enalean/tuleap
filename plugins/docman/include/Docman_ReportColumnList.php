@@ -28,6 +28,7 @@ class Docman_ReportColumnList extends \Docman_ReportColumn
     {
         parent::__construct($md);
     }
+
     public function getTableBox($item, $view, $params)
     {
         $mdHtml = $this->_getMdHtml($item);

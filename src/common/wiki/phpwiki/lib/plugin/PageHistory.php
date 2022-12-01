@@ -75,7 +75,6 @@ class _PageHistory_PageRevisionIter extends WikiDB_PageRevisionIterator
         return false;
     }
 
-
     public function free()
     {
         if ($this->_iter) {
@@ -123,7 +122,6 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
 
         return IfJavaScript($js_desc, $no_js_desc);
     }
-
 
     public function format($changes)
     {
@@ -264,7 +262,6 @@ class _PageHistory_RssFormatter extends _RecentChanges_RssFormatter
             'dc:date'        => Iso8601DateTime(time()),
         ];
     }
-
 
     public function item_properties($rev)
     {

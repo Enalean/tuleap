@@ -50,7 +50,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     {
     }
 
-
     /**
      * The field is permanently deleted from the db
      * This hooks is here to delete specific properties,
@@ -795,7 +794,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
     }
 
-
     /**
      * @return bool
      */
@@ -828,6 +826,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     {
         return $visitor->visitPermissionsOnArtifact($this);
     }
+
     /**
      * Return REST value of a field for a given changeset
      *

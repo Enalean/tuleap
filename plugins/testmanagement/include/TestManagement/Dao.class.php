@@ -37,7 +37,6 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-
     public function countTestsExecutionsArtifacts(): int
     {
         $sql  = "SELECT count(*) AS nb

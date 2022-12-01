@@ -30,6 +30,7 @@ final class RetrieveUriStub implements \Tuleap\ProgramManagement\Domain\Program\
     private function __construct(private string $uri)
     {
     }
+
     public static function withDefault(): self
     {
         return new self("/plugins/tracker/?aid=1");

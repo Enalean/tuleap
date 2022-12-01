@@ -476,6 +476,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
             $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $this->previous_value, $new_value)
         );
     }
+
     public function testItReturnsValueItSelfIfItWellFormatted(): void
     {
         $value = [

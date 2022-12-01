@@ -41,6 +41,7 @@ class Docman_MetadataHtml
         $this->hp         = \Codendi_HTMLPurifier::instance();
         $this->formParams = $formParams;
     }
+
     /**
      * Return end user field title.
      *
@@ -88,6 +89,7 @@ class Docman_MetadataHtml
         $html .= '</span>';
         return $html;
     }
+
     /**
      * Return HTML field name.
      *
@@ -103,6 +105,7 @@ class Docman_MetadataHtml
         }
         return $name;
     }
+
     /**
      * Return HTML form element corresponding to the metadata.
      *
@@ -117,6 +120,7 @@ class Docman_MetadataHtml
         }
         return $html;
     }
+
     /**
      * Return metadata value.
      *
@@ -126,6 +130,7 @@ class Docman_MetadataHtml
     {
         return $this->md->getValue();
     }
+
     /**
      * Return field input validator.
      *

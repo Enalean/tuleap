@@ -17,13 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+jest.mock("@tuleap/tlp-modal", () => {
+    return {
+        createModal: () => ({
+            addEventListener: jest.fn(),
+            show: jest.fn(),
+        }),
+    };
+});
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
 
 import FolderHeader from "./FolderHeader.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { TYPE_EMPTY } from "../../constants";
+import { TYPE_EMPTY, TYPE_LINK } from "../../constants";
 import emitter from "../../helpers/emitter";
 
 describe("FolderHeader", () => {
@@ -111,8 +119,22 @@ describe("FolderHeader", () => {
             const wrapper = factory();
             expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(false);
 
-            const event = { detail: { current_item: { type: TYPE_EMPTY } } };
+            const event = { detail: { current_item: { type: TYPE_LINK } } };
             wrapper.vm.showCreateNewItemVersionModal(event);
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.shown_new_version_modal();
+            expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(true);
+        });
+
+        it(`Loads new empty version modal`, async () => {
+            store.state.is_loading_ascendant_hierarchy = false;
+            store.state.current_folder = { id: 20 };
+
+            const wrapper = factory();
+            expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(false);
+
+            const event = { item: { type: TYPE_EMPTY }, type: TYPE_LINK };
+            wrapper.vm.showCreateNewVersionModalForEmpty(event);
             await wrapper.vm.$nextTick();
             await wrapper.vm.shown_new_version_modal();
             expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(true);

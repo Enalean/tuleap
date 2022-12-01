@@ -39,6 +39,7 @@ class Codendi_BlockDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignore 
         $this->leading_context_lines  = $context_lines;
         $this->trailing_context_lines = $context_lines;
     }
+
     public function _lines($lines, $prefix = '')
     {
         if (! $prefix == '') {
@@ -51,18 +52,22 @@ class Codendi_BlockDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignore 
             echo "{$prefix}\n";
         }
     }
+
     public function _added($lines)
     {
         $this->_lines($lines, ">>>>>>>");
     }
+
     public function _deleted($lines)
     {
         $this->_lines($lines, "<<<<<<<");
     }
+
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
         return "";
     }
+
     public function _changed($orig, $fin)
     {
         $this->_deleted($orig);

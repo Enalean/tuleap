@@ -32,6 +32,7 @@ class Codendi_DiffOp_Copy extends \Codendi_DiffOp // phpcs:ignore PSR1.Classes.C
         $this->orig = $orig;
         $this->fin  = $fin;
     }
+
     public function reverse()
     {
         return new \Codendi_DiffOp_Copy($this->fin, $this->orig);

@@ -29,7 +29,6 @@ class HTTPRequest extends Codendi_Request
         parent::__construct($_REQUEST);
     }
 
-
     /**
      * Get the value of $variable in $this->params (server side values).
      *

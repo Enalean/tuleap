@@ -62,9 +62,8 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return bool
      */
-    public function current()
+    public function current(): bool
     {
         return false;
     }
@@ -72,18 +71,16 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return void
      */
-    public function next()
+    public function next(): void
     {
     }
 
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return false;
     }
@@ -91,18 +88,16 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
     }
 
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return bool
      */
-    public function key()
+    public function key(): bool
     {
         return false;
     }
@@ -110,9 +105,8 @@ class DataAccessResultEmpty implements IProvideDataAccessResult
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return int
      */
-    public function count()
+    public function count(): int
     {
         return 0;
     }

@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPane;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2Presenter;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\Tracker\Milestone\PaneInfo;
@@ -186,10 +187,10 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         return new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $info,
-            new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
+            new PlanningV2Presenter(
                 $this->request->getCurrentUser(),
                 $project,
-                (int) $milestone->getArtifactId(),
+                (string) $milestone->getArtifactId(),
                 false,
                 $allowed_additional_panes_to_display_collector->getIdentifiers()
             )

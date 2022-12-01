@@ -28,6 +28,7 @@ class Docman_SqlFilterOwner extends \Docman_SqlFilter
         parent::__construct($filter);
         $this->field = 'user.user_name';
     }
+
     public function getFrom()
     {
         $tables = [];

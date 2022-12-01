@@ -419,7 +419,6 @@ class DateScale extends LinearScale
         $this->ticks->AdjustForDST($aFlg);
     }
 
-
     public function SetDateAlign($aStartAlign, $aEndAlign = false)
     {
         if ($aEndAlign === false) {
@@ -437,7 +436,6 @@ class DateScale extends LinearScale
         $this->iStartTimeAlign = $aStartAlign;
         $this->iEndTimeAlign   = $aEndAlign;
     }
-
 
     public function AutoScale($img, $aStartTime, $aEndTime, $aNumSteps, $_adummy = false)
     {

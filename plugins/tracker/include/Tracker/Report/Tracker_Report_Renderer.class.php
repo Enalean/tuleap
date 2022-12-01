@@ -122,6 +122,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     abstract public function getType();
 
     abstract public function initiateSession();
+
     /**
      * Update the renderer
      *
@@ -285,7 +286,6 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
         $html .= '>' . $msg . '</a>';
         return $html;
     }
-
 
     /**
      * Transforms Tracker_Renderer into a SimpleXMLElement

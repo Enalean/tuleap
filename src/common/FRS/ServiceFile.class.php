@@ -52,6 +52,7 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $html   .= '</p>';
         return $html;
     }
+
     /**
     * getSummaryPageContent
     *

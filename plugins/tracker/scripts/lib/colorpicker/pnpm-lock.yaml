@@ -1,9 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/po-gettext-plugin': link:../../../../../lib/frontend/po-gettext-plugin
-  '@tuleap/tlp-swatch-colors': link:../../../../../lib/frontend/tlp-swatch-colors
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/po-gettext-plugin': workspace:*
+  '@tuleap/tlp-swatch-colors': workspace:*
   vue: ^2.7.8
   vue-gettext: ^2.1.12
 

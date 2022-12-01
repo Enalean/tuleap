@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/chart-builder': workspace:*
   d3-selection: ^3.0.0
   moment: ^2.29.4
   node-gettext: ^3.0.0

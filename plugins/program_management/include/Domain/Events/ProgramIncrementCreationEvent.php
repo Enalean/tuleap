@@ -31,6 +31,8 @@ interface ProgramIncrementCreationEvent
 {
     public const TOPIC = 'tuleap.program_management.program_increment.creation';
     public function getArtifactId(): int;
+
     public function getUser(): UserIdentifier;
+
     public function getChangesetId(): int;
 }

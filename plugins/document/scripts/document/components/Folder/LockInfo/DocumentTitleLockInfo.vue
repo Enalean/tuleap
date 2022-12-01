@@ -24,7 +24,7 @@
         v-bind:title="document_lock_info_title"
         data-test="document-lock-information"
     >
-        <i class="fa fa-lock" v-bind:class="get_icon_additional_classes"></i>
+        <i class="fa-solid fa-lock" v-bind:class="get_icon_additional_classes"></i>
     </span>
 </template>
 

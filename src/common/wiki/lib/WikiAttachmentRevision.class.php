@@ -160,7 +160,6 @@ class WikiAttachmentRevision
         }
     }
 
-
     public function htmlDump()
     {
         if ($this->exist()) {
@@ -186,14 +185,12 @@ class WikiAttachmentRevision
         return $this->basedir . '/' . $this->filename . '/' . $this->revision;
     }
 
-
     public function exist()
     {
         $this->getFilename();
 
         return is_file($this->basedir . '/' . $this->filename . '/' . $this->revision);
     }
-
 
     public function log($userId)
     {
@@ -206,7 +203,6 @@ class WikiAttachmentRevision
             time()
         );
     }
-
 
     public function setFromRow($row)
     {
@@ -250,7 +246,6 @@ class WikiAttachmentRevision
         $this->size = (int) $s;
         return true;
     }
-
 
     public function setMimeType($m)
     {
@@ -306,24 +301,20 @@ class WikiAttachmentRevision
         return $this->displayFilename;
     }
 
-
     public function getOwnerId()
     {
         return $this->owner_id;
     }
-
 
     public function getSize()
     {
         return $this->size;
     }
 
-
     public function getMimeType()
     {
         return trim($this->mimeType, "'");
     }
-
 
     public function getDate()
     {

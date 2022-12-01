@@ -30,9 +30,9 @@ function MainCtrl(
         SharedPropertiesService.setKanban(kanban_representation);
         const dashboard_dropdown_representation = JSON.parse(kanban_init_data.dashboardDropdown);
         SharedPropertiesService.setDashboardDropdown(dashboard_dropdown_representation);
-        const user_is_admin = Boolean(JSON.parse(kanban_init_data.userIsAdmin));
+        const user_is_admin = kanban_init_data.userIsAdmin === "1";
         SharedPropertiesService.setUserIsAdmin(user_is_admin);
-        const widget_id = JSON.parse(kanban_init_data.widgetId);
+        const widget_id = Number.parseInt(kanban_init_data.widgetId, 10);
         SharedPropertiesService.setWidgetId(widget_id);
         const project_id = kanban_init_data.projectId;
         SharedPropertiesService.setProjectId(project_id);
@@ -62,9 +62,10 @@ function MainCtrl(
         const nodejs_server = kanban_init_data.nodejsServer;
         SharedPropertiesService.setNodeServerAddress(nodejs_server);
 
-        const is_list_picker_enabled = Boolean(JSON.parse(kanban_init_data.isListPickerEnabled));
+        const is_list_picker_enabled = kanban_init_data.isListPickerEnabled === "1";
         SharedPropertiesService.setIsListPickerEnabled(is_list_picker_enabled);
+        SharedPropertiesService.setSearchEnabled(kanban_init_data.isSearchEnabled === "1");
 
-        setAccessibilityMode(JSON.parse(kanban_init_data.userAccessibilityMode));
+        setAccessibilityMode(kanban_init_data.userAccessibilityMode === "1");
     }
 }

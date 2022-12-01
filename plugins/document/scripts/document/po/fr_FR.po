@@ -171,6 +171,9 @@ msgstr "Contenu"
 msgid "Continue"
 msgstr "Continuer"
 
+msgid "Convert to…"
+msgstr "Convertir en…"
+
 msgid "Copy"
 msgstr "Copier"
 
@@ -194,6 +197,9 @@ msgstr "Créer un nouveau dossier"
 
 msgid "Create a new version of document"
 msgstr "Créer une nouvelle version du document"
+
+msgid "Create and edit document"
+msgstr "Créer et éditer le document"
 
 msgid "Create document"
 msgstr "Créer le document"
@@ -314,6 +320,9 @@ msgstr "Date fixe"
 msgid "Focus the document search bar"
 msgstr "Se placer dans la barre de recherche"
 
+msgid "Folder"
+msgstr "Dossier"
+
 msgid "Global search"
 msgstr "Recherche globale"
 
@@ -335,9 +344,6 @@ msgstr "Aller au dossier parent"
 
 msgid "Go to the last version (%{ version_number })."
 msgstr "Aller à la dernière version (%{ version_number })."
-
-msgid "Go to the wiki page"
-msgstr "Aller à la page wiki"
 
 msgid "Got it"
 msgstr "J'ai compris"
@@ -429,6 +435,9 @@ msgstr "Vue étroite"
 
 msgid "Navigation in Documents service"
 msgstr "Navigation dans le service Documents"
+
+msgid "New"
+msgstr "Nouveau"
 
 msgid "New document"
 msgstr "Nouveau document"
@@ -781,6 +790,9 @@ msgstr "Erreur de téléversement"
 
 msgid "Uploaded"
 msgstr "Téléversé"
+
+msgid "Uploaded file"
+msgstr "Fichier téléversé"
 
 msgid "Uploading documents"
 msgstr "Documents en cours de téléversement"

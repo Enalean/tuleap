@@ -354,7 +354,6 @@ class LegendStyle
         $this->iCircleFontSize   = $aFontSize;
     }
 
-
     public function SetFontColor($aColor)
     {
         $this->iTxtFontColor    = $aColor;
@@ -1350,7 +1349,6 @@ class WindrosePlot
             }
         }
     }
-
 
     public function getWidth($aImg)
     {

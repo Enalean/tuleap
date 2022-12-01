@@ -112,6 +112,7 @@ class SVN_AccessFile_DAO extends DataAccessObject
 
         return $result;
     }
+
     public function getAllVersions($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);

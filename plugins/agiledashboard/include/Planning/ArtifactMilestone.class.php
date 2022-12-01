@@ -181,7 +181,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return $this->artifact->getXRef();
     }
 
-
     /**
      * @return Planning
      */

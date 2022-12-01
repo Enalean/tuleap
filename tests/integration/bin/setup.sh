@@ -28,7 +28,7 @@ setup_database() {
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
-    MYSQL_CLI="/opt/rh/rh-mysql57/root/usr/bin/mysql"
+    MYSQL_CLI="/opt/rh/rh-mysql80/root/usr/bin/mysql"
     MYSQL="$MYSQL_CLI -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
     echo "Use remote db $DB_HOST"
@@ -68,6 +68,7 @@ seed_data() {
         oauth2_server \
         program_management \
         onlyoffice \
+        mediawiki_standalone \
         hudson_git \
         fts_db \
         fts_meilisearch \

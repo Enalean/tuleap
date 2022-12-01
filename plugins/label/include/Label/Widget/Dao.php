@@ -79,7 +79,6 @@ class Dao extends \DataAccessObject
         return $this->update($sql);
     }
 
-
     public function mergeLabelInTransaction($label_to_edit_id, array $label_ids_to_remove)
     {
         $label_to_edit_id    = $this->da->escapeInt($label_to_edit_id);

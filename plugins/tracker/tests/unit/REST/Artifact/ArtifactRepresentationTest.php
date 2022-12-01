@@ -50,6 +50,7 @@ final class ArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
     private const EXPECTED_HTML_URI         = '/plugins/tracker/?aid=' . self::ARTIFACT_ID;
     private const EXPECTED_REST_URI         = ArtifactRepresentation::ROUTE . '/' . self::ARTIFACT_ID;
     private const EXPECTED_CHANGESETS_URI   = ArtifactRepresentation::ROUTE . '/' . self::ARTIFACT_ID . '/' . ChangesetRepresentation::ROUTE;
+    private const EXPECTED_COLOR            = "flamingo-pink";
 
     private function getRepresentationWithoutFields(): ArtifactRepresentation
     {
@@ -90,8 +91,9 @@ final class ArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->method('isOpen')->willReturn(true);
         $artifact->method('getTitle')->willReturn(self::TITLE);
 
-        $tracker_representation = MinimalTrackerRepresentation::build($tracker);
-        return ArtifactRepresentation::build($user, $artifact, null, null, $tracker_representation);
+        $tracker_representation      = MinimalTrackerRepresentation::build($tracker);
+        $value_status_representation = StatusValueRepresentation::buildFromValues(self::STATUS, self::EXPECTED_COLOR);
+        return ArtifactRepresentation::build($user, $artifact, null, null, $tracker_representation, $value_status_representation);
     }
 
     public function testItBuildsFromArtifact(): void
@@ -114,6 +116,6 @@ final class ArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::PROJECT_ID, $representation->project->id);
         [$first_assignee] = $representation->assignees;
         self::assertSame(self::ASSIGNED_ID, $first_assignee->id);
-        self::assertSame(self::ASSIGNED_NAME, $first_assignee->username);
+        self::assertSame(self::EXPECTED_COLOR, $representation->full_status->color);
     }
 }

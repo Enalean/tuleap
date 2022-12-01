@@ -35,6 +35,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $this->force = $force;
         $this->token = $token;
     }
+
     public function getContent($params = [])
     {
         return $this->item->accept($this);
@@ -72,10 +73,12 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     {
         return "";
     }
+
     public function visitDocument($item, $params = [])
     {
         return "";
     }
+
     public function visitWiki($item, $params = [])
     {
         return $this->visitDocument($item, $params);

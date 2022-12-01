@@ -117,7 +117,6 @@ class WikiPlugin_Calendar extends WikiPlugin
         );
     }
 
-
     private function daynames($start_wday)
     {
         $time  = mktime(12, 0, 0, 1, 1, 2001);

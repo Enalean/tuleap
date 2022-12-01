@@ -432,7 +432,6 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         return $data;
     }
 
-
     /**
      * Create a new revision of a page.
      */
@@ -782,12 +781,14 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         // http://bugs.mysql.com/bug.php?id=1491
         return "LOWER(pagename) LIKE '%$word%'";
     }
+
     public function _sql_casematch_clause($word)
     {
         $word = preg_replace('/(?=[%_\\\\])/', "\\", $word);
         $word = $this->_dbh->escapeSimple($word);
         return "pagename LIKE '%$word%'";
     }
+
     public function _fullsearch_sql_match_clause($word)
     {
         $word = preg_replace('/(?=[%_\\\\])/', "\\", $word);
@@ -796,6 +797,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         //Mysql 4.1.1 has a bug which fails here if word is lowercased.
         return "LOWER(pagename) LIKE '%$word%' OR content LIKE '%$word%'";
     }
+
     public function _fullsearch_sql_casematch_clause($word)
     {
         $word = preg_replace('/(?=[%_\\\\])/', "\\", $word);
@@ -1041,7 +1043,6 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         $this->unlock();
     }
 
-
     /**
      * Grab a write lock on the tables in the SQL database.
      *
@@ -1093,7 +1094,6 @@ class WikiDB_backend_PearDB extends WikiDB_backend
     {
         trigger_error("virtual", E_USER_ERROR);
     }
-
 
     /**
      * Serialize data
@@ -1228,14 +1228,17 @@ class WikiDB_backend_PearDB extends WikiDB_backend
     {
         return $this->_dbh->dsn['database'];
     }
+
     public function backendType()
     {
         return $this->_dbh->phptype;
     }
+
     public function connection()
     {
         return $this->_dbh->connection;
     }
+
     public function getRow($query)
     {
         return $this->_dbh->getRow($query);

@@ -17,23 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import GlobalErrorModal from "./GlobalErrorModal.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Modal } from "tlp";
-
-jest.mock("tlp", () => {
-    return {
-        __esModule: true,
-        createModal: jest.fn().mockImplementation(() => ({
-            show: jest.fn(),
-            addEventListener: jest.fn(),
-        })),
-    };
-});
+import type { Modal } from "@tuleap/tlp-modal";
 
 function createWrapper(error_message: string): Wrapper<GlobalErrorModal> {
     return shallowMount(GlobalErrorModal, {
@@ -49,7 +39,7 @@ function createWrapper(error_message: string): Wrapper<GlobalErrorModal> {
 describe(`GlobalErrorModal`, () => {
     it(`shows the modal when mounted`, () => {
         const modal_show = jest.fn();
-        jest.spyOn(tlp, "createModal").mockImplementation(() => {
+        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
                 show: modal_show,
                 addEventListener: jest.fn(),
@@ -60,6 +50,13 @@ describe(`GlobalErrorModal`, () => {
     });
 
     it(`displays more details when user clicks on show error`, async () => {
+        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+            return {
+                show: jest.fn(),
+                addEventListener: jest.fn(),
+            } as unknown as Modal;
+        });
+
         const error_message = "Full error message with details";
         const wrapper = createWrapper(error_message);
 
@@ -71,13 +68,20 @@ describe(`GlobalErrorModal`, () => {
     });
 
     it(`warns user that something is wrong without any details`, () => {
+        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+            return {
+                show: jest.fn(),
+                addEventListener: jest.fn(),
+            } as unknown as Modal;
+        });
+
         const wrapper = createWrapper("");
         expect(wrapper.find("[data-test=show-details]").exists()).toBe(false);
         expect(wrapper.find("[data-test=details]").exists()).toBe(false);
     });
 
     it(`when I hide the modal, it resets the error`, () => {
-        jest.spyOn(tlp, "createModal").mockImplementation(() => {
+        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
             return {
                 show: jest.fn(),
                 addEventListener: (event_name: string, handler: () => void) => handler(),
@@ -90,6 +94,13 @@ describe(`GlobalErrorModal`, () => {
     });
 
     it(`when I click on the "reload" button, it reloads the page`, () => {
+        jest.spyOn(tlp_modal, "createModal").mockImplementation(() => {
+            return {
+                show: jest.fn(),
+                addEventListener: jest.fn(),
+            } as unknown as Modal;
+        });
+
         const location = window.location;
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

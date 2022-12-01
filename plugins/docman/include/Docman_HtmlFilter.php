@@ -31,11 +31,13 @@ class Docman_HtmlFilter
         $this->filter = $filter;
         $this->hp     = \Codendi_HTMLPurifier::instance();
     }
+
     public function _fieldName()
     {
         $html = $this->hp->purify($this->filter->md->getName());
         return $html;
     }
+
     public function _valueSelectorHtml($formName)
     {
         $html  = '';
@@ -46,6 +48,7 @@ class Docman_HtmlFilter
         }
         return $html;
     }
+
     public function toHtml($formName, $trashLinkBase)
     {
         $trashLink = '';

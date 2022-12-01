@@ -31,6 +31,7 @@ class TroveCatDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDecl
                 ORDER BY trove_cat.fullpath";
         return $this->retrieve($sql);
     }
+
     public function getMandatoryParentCategoriesUnderRoot()
     {
         $root_id = $this->da->escapeInt(TroveCat::ROOT_ID);

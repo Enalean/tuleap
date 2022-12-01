@@ -17,99 +17,162 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Project;
-use Tracker;
-use Tracker_ArtifactFactory;
+use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\Glyph\Glyph;
+use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\User\History\HistoryEntryCollection;
 
-class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const USER_ID = 101;
+
+    private const FIRST_ARTIFACT_ID              = 1;
+    private const FIRST_ARTIFACT_VISIT_TIMESTAMP = 1584987154;
+    private const FIRST_ARTIFACT_TITLE           = 'Random title';
+    private const FIRST_TRACKER_COLOR            = 'fiesta-red';
+    private const FIRST_TRACKER_SHORTNAME        = 'bug';
+
+    private const SECOND_ARTIFACT_ID              = 2;
+    private const SECOND_ARTIFACT_VISIT_TIMESTAMP = 1844678754;
+    private const SECOND_ARTIFACT_TITLE           = 'lowland';
+    private const SECOND_TRACKER_COLOR            = 'deep-blue';
+    private const SECOND_TRACKER_SHORTNAME        = 'story';
+
+    private \PFUser $user;
+    /**
+     * @var GlyphFinder&Stub
+     */
+    private $glyph_finder;
+    /**
+     * @var \Tracker_Semantic_StatusFactory&Stub
+     */
+    private $status_factory;
+    /**
+     * @var \Tracker_ArtifactFactory&Stub
+     */
+    private $artifact_factory;
+    /**
+     * @var RecentlyVisitedDao&Stub
+     */
+    private $recently_visited_dao;
+
+    protected function setUp(): void
+    {
+        $this->user         = UserTestBuilder::buildWithId(self::USER_ID);
+        $this->glyph_finder = $this->createStub(\Tuleap\Glyph\GlyphFinder::class);
+        $this->glyph_finder->method('get')->willReturn(new Glyph('<svg>icon</svg>'));
+        $this->status_factory = $this->createStub(\Tracker_Semantic_StatusFactory::class);
+        $semantic_status      = $this->createStub(\Tracker_Semantic_Status::class);
+        $semantic_status->method('getField')->willReturn(null);
+        $this->status_factory->method('getByTracker')->willReturn($semantic_status);
+        $this->artifact_factory     = $this->createStub(\Tracker_ArtifactFactory::class);
+        $this->recently_visited_dao = $this->createStub(RecentlyVisitedDao::class);
+    }
+
+    private function getVisitHistory(HistoryEntryCollection $collection, int $max_length_history): void
+    {
+        $visit_retriever = new VisitRetriever(
+            $this->recently_visited_dao,
+            $this->artifact_factory,
+            $this->glyph_finder,
+            new StatusBadgeBuilder($this->status_factory),
+            EventDispatcherStub::withIdentityCallback(),
+        );
+
+        $visit_retriever->getVisitHistory($collection, $max_length_history, $this->user);
+    }
 
     public function testItRetrievesHistory(): void
     {
-        $recently_visited_dao = Mockery::mock(\Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao::class);
-        $recently_visited_dao->shouldReceive('searchVisitByUserId')->andReturns(
+        $this->recently_visited_dao->method('searchVisitByUserId')->willReturn(
             [
-                ['artifact_id' => 1, 'created_on' => 1],
-                ['artifact_id' => 2, 'created_on' => 2],
+                ['artifact_id' => self::FIRST_ARTIFACT_ID, 'created_on' => self::FIRST_ARTIFACT_VISIT_TIMESTAMP],
+                ['artifact_id' => self::SECOND_ARTIFACT_ID, 'created_on' => self::SECOND_ARTIFACT_VISIT_TIMESTAMP],
             ]
         );
-        $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
-        $artifact         = Mockery::mock(Artifact::class);
-        $artifact_factory->shouldReceive('getArtifactById')->andReturns($artifact);
-        $tracker = Mockery::mock(Tracker::class);
-        $artifact->shouldReceive(
-            [
-                'getTracker' => $tracker,
-                'getXRef'    => 'bug #xxx',
-                'getUri'     => '/whatever',
-                'getTitle'   => 'Random title',
-            ]
+
+        $project = ProjectTestBuilder::aProject()->withId(208)->build();
+
+        $first_tracker  = TrackerTestBuilder::aTracker()
+            ->withProject($project)
+            ->withShortName(self::FIRST_TRACKER_SHORTNAME)
+            ->withColor(TrackerColor::fromName(self::FIRST_TRACKER_COLOR))
+            ->build();
+        $first_artifact = ArtifactTestBuilder::anArtifact(self::FIRST_ARTIFACT_ID)
+            ->inTracker($first_tracker)
+            ->withTitle(self::FIRST_ARTIFACT_TITLE)
+            ->build();
+
+        $second_tracker  = TrackerTestBuilder::aTracker()
+            ->withProject($project)
+            ->withShortName(self::SECOND_TRACKER_SHORTNAME)
+            ->withColor(TrackerColor::fromName(self::SECOND_TRACKER_COLOR))
+            ->build();
+        $second_artifact = ArtifactTestBuilder::anArtifact(self::SECOND_ARTIFACT_ID)
+            ->inTracker($second_tracker)
+            ->withTitle(self::SECOND_ARTIFACT_TITLE)
+            ->build();
+
+        $this->artifact_factory->method('getArtifactById')->willReturnOnConsecutiveCalls(
+            $first_artifact,
+            $second_artifact
         );
-        $tracker->shouldReceive(
-            [
-                'getProject' => Mockery::mock(Project::class),
-                'getColor'   => TrackerColor::default(),
-                'getName'    => 'bug',
-                'getUri'     => 'whatever',
-            ]
-        );
-        $glyph_finder = Mockery::mock(\Tuleap\Glyph\GlyphFinder::class);
-        $glyph_finder->shouldReceive('get')->andReturns(Mockery::mock(\Tuleap\Glyph\Glyph::class));
-
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
-        $semantic_status->method('getField')->willReturn(null);
-
-        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
-        $status_factory->method('getByTracker')->willReturn($semantic_status);
-
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
-        $visit_retriever    = new VisitRetriever($recently_visited_dao, $artifact_factory, $glyph_finder, new StatusBadgeBuilder($status_factory));
         $max_length_history = 2;
-        $collection         = new HistoryEntryCollection($user);
-        $visit_retriever->getVisitHistory($collection, $max_length_history, UserTestBuilder::anActiveUser()->build());
+        $collection         = new HistoryEntryCollection($this->user);
+        $this->getVisitHistory($collection, $max_length_history);
 
-        $history = $collection->getEntries();
-        $this->assertCount($max_length_history, $history);
-        $this->assertEquals(1, $history[0]->getVisitTime());
-        $this->assertEquals(2, $history[1]->getVisitTime());
+        $this->assertCount($max_length_history, $collection->getEntries());
+        foreach ($collection->getEntries() as $entry) {
+            self::assertSame(VisitRetriever::TYPE, $entry->getType());
+            self::assertNotNull($entry->getSmallIcon());
+            self::assertNotNull($entry->getNormalIcon());
+            self::assertSame('fa-solid fa-list-ol', $entry->getIconName());
+            self::assertSame($project, $entry->getProject());
+            self::assertEmpty($entry->getQuickLinks());
+            self::assertEmpty($entry->getBadges());
+        }
+
+        [$first_entry, $second_entry] = $collection->getEntries();
+        $this->assertSame(self::FIRST_ARTIFACT_VISIT_TIMESTAMP, $first_entry->getVisitTime());
+        self::assertSame(self::FIRST_ARTIFACT_ID, $first_entry->getPerTypeId());
+        self::assertSame(self::FIRST_ARTIFACT_TITLE, $first_entry->getTitle());
+        self::assertSame(self::FIRST_TRACKER_COLOR, $first_entry->getColor());
+        self::assertSame(sprintf('/plugins/tracker/?aid=%d', self::FIRST_ARTIFACT_ID), $first_entry->getLink());
+        self::assertSame(sprintf('%s #%d', self::FIRST_TRACKER_SHORTNAME, self::FIRST_ARTIFACT_ID), $first_entry->getXref());
+
+        $this->assertSame(self::SECOND_ARTIFACT_VISIT_TIMESTAMP, $second_entry->getVisitTime());
+        self::assertSame(self::SECOND_ARTIFACT_ID, $second_entry->getPerTypeId());
+        self::assertSame(self::SECOND_ARTIFACT_TITLE, $second_entry->getTitle());
+        self::assertSame(self::SECOND_TRACKER_COLOR, $second_entry->getColor());
+        self::assertSame(sprintf('/plugins/tracker/?aid=%d', self::SECOND_ARTIFACT_ID), $second_entry->getLink());
+        self::assertSame(sprintf('%s #%d', self::SECOND_TRACKER_SHORTNAME, self::SECOND_ARTIFACT_ID), $second_entry->getXref());
     }
 
-    public function testItExpectsBrokenHistory()
+    public function testItExpectsBrokenHistory(): void
     {
-        $recently_visited_dao = Mockery::mock(\Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao::class);
-        $recently_visited_dao->shouldReceive('searchVisitByUserId')->andReturns(
+        $this->recently_visited_dao->method('searchVisitByUserId')->willReturn(
             [
-                ['artifact_id' => 1, 'created_on' => 1],
-                ['artifact_id' => 2, 'created_on' => 2],
+                ['artifact_id' => self::FIRST_ARTIFACT_ID, 'created_on' => self::FIRST_ARTIFACT_VISIT_TIMESTAMP],
+                ['artifact_id' => self::SECOND_ARTIFACT_ID, 'created_on' => self::SECOND_ARTIFACT_VISIT_TIMESTAMP],
             ]
         );
-        $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
-        $artifact_factory->shouldReceive('getArtifactById')->andReturns(null);
-        $glyph_finder = Mockery::mock(\Tuleap\Glyph\GlyphFinder::class);
+        $this->artifact_factory->method('getArtifactById')->willReturn(null);
 
-        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
-
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
-        $visit_retriever    = new VisitRetriever($recently_visited_dao, $artifact_factory, $glyph_finder, new StatusBadgeBuilder($status_factory));
         $max_length_history = 30;
-
-        $collection = new HistoryEntryCollection($user);
-        $visit_retriever->getVisitHistory($collection, $max_length_history, UserTestBuilder::anActiveUser()->build());
+        $collection         = new HistoryEntryCollection($this->user);
+        $this->getVisitHistory($collection, $max_length_history);
 
         $this->assertCount(0, $collection->getEntries());
     }

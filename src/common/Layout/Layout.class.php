@@ -691,7 +691,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         echo "\n</body></html>";
     }
 
-
     /**
      * This method generates header for pages embbeded in overlay like LiteWindow
      */

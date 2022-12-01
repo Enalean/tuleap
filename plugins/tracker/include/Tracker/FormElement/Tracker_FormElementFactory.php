@@ -675,7 +675,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         return $date_field;
     }
 
-
     /**
      * @param Tracker $tracker
      * @return array All int formElements used by the tracker
@@ -1707,6 +1706,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         }
         return false;
     }
+
     /**
      * This function process formelement data
      * @param Array $form_element_data

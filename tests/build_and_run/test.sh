@@ -25,7 +25,7 @@ if [ "$OS" == "centos7" ]; then
     docker pull ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-installrpms:ci-centos7
     docker run -t --name "$UNIQUE_NAME-rpm-installer" --volumes-from "$UNIQUE_NAME-rpm-builder" -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
         -v /dev/null:/etc/yum.repos.d/tuleap.repo:ro \
-        --mount type=tmpfs,destination=/run ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-installrpms:ci-centos7
+        --mount type=tmpfs,destination=/run --cap-add=sys_nice ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-installrpms:ci-centos7
 else
     >&2 echo "OS environment variable value does not have a valid value"
     exit 1

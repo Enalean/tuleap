@@ -68,10 +68,12 @@ class _CodendiPassUser extends _PassUser
     {
         return ! empty($this->_userid);
     }
+
     public function checkPass($submitted_password)
     {
         return $this->userExists() and $this->_level > -1;
     }
+
     public function mayChangePass()
     {
         return false;

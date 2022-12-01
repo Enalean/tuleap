@@ -244,7 +244,6 @@ class PageType_interwikimap extends PageType
         return $link;
     }
 
-
     public function _parseMap($text)
     {
         if (
@@ -553,6 +552,7 @@ class PageFormatter_html extends PageFormatter
     {
         return $text;
     }
+
     public function format($text)
     {
         return $text;

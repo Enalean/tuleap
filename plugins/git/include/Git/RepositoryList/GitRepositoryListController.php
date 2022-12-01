@@ -27,8 +27,7 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request;
 
 class GitRepositoryListController implements Request\DispatchableWithRequest, Request\DispatchableWithProject, Request\DispatchableWithBurningParrot
@@ -41,10 +40,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      * @var Project
      */
     private $project;
-    /**
-     * @var IncludeAssets
-     */
-    private $include_assets;
+    private JavascriptViteAsset $asset;
     /**
      * @var ListPresenterBuilder
      */
@@ -58,12 +54,12 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
     public function __construct(
         \ProjectManager $project_manager,
         ListPresenterBuilder $list_presenter_builder,
-        IncludeAssets $include_assets,
+        JavascriptViteAsset $asset,
         EventManager $event_manager,
     ) {
         $this->project_manager        = $project_manager;
         $this->list_presenter_builder = $list_presenter_builder;
-        $this->include_assets         = $include_assets;
+        $this->asset                  = $asset;
         $this->event_manager          = $event_manager;
     }
 
@@ -103,9 +99,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
         $event = new ProjectProviderEvent($this->project);
         $this->event_manager->processEvent($event);
 
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'bp-style'));
-
-        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repositories-list.js'));
+        $layout->addJavascriptAsset($this->asset);
         $this->displayHeader(dgettext('tuleap-git', 'Git repositories'), $this->project);
         $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
 

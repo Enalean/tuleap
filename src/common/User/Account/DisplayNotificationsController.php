@@ -76,7 +76,8 @@ final class DisplayNotificationsController implements DispatchableWithRequest, D
             throw new ForbiddenException();
         }
 
-        $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
+        $tabs                         = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, self::URL));
+        $notifications_on_own_actions = $this->dispatcher->dispatch(new NotificationsOnOwnActionsCollection($user));
 
         (new UserPreferencesHeader())->display(_('Notifications'), $layout);
         $this->renderer->renderToPage(
@@ -84,6 +85,7 @@ final class DisplayNotificationsController implements DispatchableWithRequest, D
             new NotificationsPresenter(
                 $this->csrf_token,
                 $tabs,
+                $notifications_on_own_actions,
                 $user,
                 $this->mail_manager->getMailPreferencesByUser($user),
             )

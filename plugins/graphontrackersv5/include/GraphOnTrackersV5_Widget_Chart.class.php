@@ -194,6 +194,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             $this->content_id  = $id;
         }
     }
+
     public function create(Codendi_Request $request)
     {
         $content_id = false;
@@ -208,6 +209,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         }
         return $content_id;
     }
+
     public function updatePreferences(Codendi_Request $request)
     {
         $done       = false;
@@ -236,11 +238,13 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         }
         return $done;
     }
+
     public function destroy($id)
     {
         $sql = 'DELETE FROM plugin_graphontrackersv5_widget_chart WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
         db_query($sql);
     }
+
     public function isUnique()
     {
         return false;

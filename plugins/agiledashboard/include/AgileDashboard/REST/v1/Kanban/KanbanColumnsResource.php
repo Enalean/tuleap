@@ -300,7 +300,6 @@ class KanbanColumnsResource
         return $this->getKanbanProject($kanban)->getGroupId();
     }
 
-
     private function getKanbanProject(AgileDashboard_Kanban $kanban)
     {
         $kanban_tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());

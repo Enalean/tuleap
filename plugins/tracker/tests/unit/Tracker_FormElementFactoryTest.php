@@ -56,15 +56,9 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $factory;
 
-    /**
-     * @var array
-     */
-    private $backup_globals;
-
     protected function setUp(): void
     {
-        $this->backup_globals = array_merge([], $GLOBALS);
-        $GLOBALS['HTML']      = Mockery::spy(Layout::class);
+        $GLOBALS['HTML'] = Mockery::spy(Layout::class);
 
         $this->dao = Mockery::spy(FieldDao::class);
 
@@ -83,9 +77,8 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function tearDown(): void
     {
-        $GLOBALS = $this->backup_globals;
+        unset($GLOBALS['HTML']);
     }
-
 
     public function testSaveObject(): void
     {
@@ -244,7 +237,6 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(['date' => true, 'text' => true], $found_fields);
     }
-
 
     private function thenICompareProjectSharedFieldsWithExpectedResult($project_id, $expectedResult): void
     {
@@ -411,18 +403,18 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->dao->shouldReceive('searchProjectSharedFieldsTargets')->with($this->project_id)
-            ->andReturns($new_project_shared_fields)->atLeast()->once();
+            ->andReturns($new_project_shared_fields);
         $this->dao->shouldReceive('searchFieldIdsByGroupId')->with($this->template_id)
-            ->andReturns($template_project_field_ids)->atLeast()->once();
+            ->andReturns($template_project_field_ids);
 
-        $this->dao->shouldReceive('updateOriginalFieldId')->with(234, 777)->ordered()->atLeast()->once();
-        $this->dao->shouldReceive('updateOriginalFieldId')->with(567, 888)->ordered()->atLeast()->once();
+        $this->dao->shouldReceive('updateOriginalFieldId')->with(234, 777)->ordered();
+        $this->dao->shouldReceive('updateOriginalFieldId')->with(567, 888)->ordered();
 
         $field_234 = \Mockery::spy(\Tracker_FormElement_Field_Shareable::class);
-        $this->factory->shouldReceive('getShareableFieldById')->with(234)->andReturns($field_234)->atLeast()->once();
+        $this->factory->shouldReceive('getShareableFieldById')->with(234)->andReturns($field_234);
 
         $field_567 = \Mockery::spy(\Tracker_FormElement_Field_Shareable::class);
-        $this->factory->shouldReceive('getShareableFieldById')->with(567)->andReturns($field_567)->atLeast()->once();
+        $this->factory->shouldReceive('getShareableFieldById')->with(567)->andReturns($field_567);
 
         $field_234->shouldReceive('fixOriginalValueIds')->with([3 => 4, 5 => 6])->ordered()->atLeast()->once();
         $field_567->shouldReceive('fixOriginalValueIds')->with([1 => 2])->ordered()->atLeast()->once();

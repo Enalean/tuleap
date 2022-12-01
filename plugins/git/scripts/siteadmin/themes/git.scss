@@ -1,0 +1,159 @@
+/**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "./gitolite";
+
+.form-element-group {
+    display: flex;
+
+    > .form-element-item:not(:last-child) {
+        margin-right: calc(var(--tlp-medium-spacing) * 2);
+    }
+
+    > .form-element-item:not(:first-child) {
+        flex: 0 0 auto;
+    }
+
+    > .form-element-item:first-child {
+        flex: 1 1 auto;
+    }
+}
+
+/* -------------------- MIRROR ---------------------- */
+
+.mirror-global-action-container {
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.mirror-info {
+    display: flex;
+}
+
+.mirror-info-two {
+    margin: 0 0 0 calc(var(--tlp-medium-spacing) * 2);
+}
+
+.mirror-info-two-ssh-key {
+    word-break: break-all;
+}
+
+.mirror-info-two-ssh-key-icon {
+    margin: 0 5px;
+}
+
+.mirror-action-container {
+    display: flex;
+    flex: 0 1 auto;
+    justify-content: center;
+}
+
+.mirror-action {
+    display: flex;
+    align-items: center;
+}
+
+.mirror-action-delete-button,
+.mirror-action-restrict-button {
+    margin: 0 0 0 calc(var(--tlp-medium-spacing) / 2);
+}
+
+.mirror-configuration {
+    line-height: 30px;
+}
+
+.mirror-repo-list-for-project:not(:last-child) {
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.mirror-repo-list-for-project-reponame {
+    width: 100%;
+}
+
+/* -------------------- GERRIT ---------------------- */
+
+.add-gerrit-server-button {
+    margin-bottom: var(--tlp-medium-spacing);
+}
+
+#gerrit-servers-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.gerrit-server-info-row {
+    display: flex;
+    flex-wrap: wrap;
+
+    &:last-child {
+        margin: 0;
+    }
+
+    > .tlp-property {
+        margin: 0 var(--tlp-x-large-spacing) var(--tlp-medium-spacing) 0;
+    }
+}
+
+.git-info-two-ssh-key {
+    word-break: break-all;
+}
+
+.git-info-two-ssh-key-icon {
+    margin: 0 5px 0 0;
+}
+
+.gerrit-server-action-container {
+    display: flex;
+    flex: 0 1 auto;
+    justify-content: center;
+}
+
+.gerrit-server-action {
+    display: flex;
+    align-items: center;
+
+    .action-item {
+        margin-right: 10px;
+    }
+}
+
+.gerrit-action-restrict-button {
+    margin: 0 calc(var(--tlp-medium-spacing) / 2) 0 0;
+}
+
+.gerrit-server-deprecated-configuration {
+    margin-right: var(--tlp-small-spacing);
+}
+
+/* -------------------- MEDIA QUERIES ---------------------- */
+
+@media screen and (max-width: 1300px) {
+    .tlp-pane {
+        flex-direction: column;
+    }
+
+    .mirror-action-container {
+        align-items: flex-end;
+        border-top: 1px solid var(--tlp-neutral-light-color);
+    }
+
+    .gerrit-server-action-container {
+        align-items: flex-end;
+        border-top: 1px solid var(--tlp-neutral-light-color);
+    }
+}

@@ -225,7 +225,6 @@ class SvnRouter implements DispatchableWithRequest
         }
     }
 
-
     private function checkUserCanAdministrateARepository(HTTPRequest $request)
     {
         if (! $this->permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser())) {

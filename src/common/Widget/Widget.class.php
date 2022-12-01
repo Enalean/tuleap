@@ -100,6 +100,7 @@ use Tuleap\Project\MappingRegistry;
     {
         return false;
     }
+
     public function getRssUrl($owner_id, $owner_type)
     {
         if ($this->hasRss()) {
@@ -116,25 +117,31 @@ use Tuleap\Project\MappingRegistry;
             return false;
         }
     }
+
     public function isUnique()
     {
         return true;
     }
+
     public function isAvailable()
     {
         return true;
     }
+
     public function isAjax()
     {
         return false;
     }
+
     public function getInstanceId()
     {
         return $this->content_id;
     }
+
     public function loadContent($id)
     {
     }
+
     public function setOwner($owner_id, $owner_type)
     {
         $this->owner_id   = $owner_id;

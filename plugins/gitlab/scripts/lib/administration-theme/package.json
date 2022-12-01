@@ -7,6 +7,6 @@
   "main": "themes/main.scss",
   "style": "themes/main.scss",
   "dependencies": {
-    "@tuleap/project-background": "link:../../../../../lib/frontend/project-background"
+    "@tuleap/project-background": "workspace:*"
   }
 }

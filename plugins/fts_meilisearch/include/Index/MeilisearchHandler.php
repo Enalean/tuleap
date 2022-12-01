@@ -25,13 +25,13 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Search\SearchResult;
 use Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems;
-use Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex;
+use Tuleap\FullTextSearchCommon\Index\InsertPlaintextItemsIntoIndex;
+use Tuleap\FullTextSearchCommon\Index\PlaintextItemToIndex;
 use Tuleap\FullTextSearchCommon\Index\SearchIndexedItem;
 use Tuleap\FullTextSearchCommon\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemsToRemove;
-use Tuleap\Search\ItemToIndex;
 
-final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoIndex, DeleteIndexedItems
+final class MeilisearchHandler implements SearchIndexedItem, InsertPlaintextItemsIntoIndex, DeleteIndexedItems
 {
     private const ID_FIELD      = 'id';
     private const CONTENT_FIELD = 'content';
@@ -40,7 +40,7 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoInde
     {
     }
 
-    public function indexItems(ItemToIndex ...$items): void
+    public function indexItems(PlaintextItemToIndex ...$items): void
     {
         $documents_to_add    = [];
         $documents_to_remove = [];
@@ -63,7 +63,7 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertItemsIntoInde
     /**
      * @return array{id:int,content:string}
      */
-    private function mapItemToIndexToMeilisearchDocument(ItemToIndex $item): array
+    private function mapItemToIndexToMeilisearchDocument(PlaintextItemToIndex $item): array
     {
         return [
             self::ID_FIELD      => $this->metadata_dao->saveItemMetadata($item),

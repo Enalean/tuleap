@@ -55,12 +55,15 @@ describe("Keyboard navigation store", () => {
                     const entry = {
                         html_url: "/first",
                         title: "a",
-                        quick_links: [first_quick_link, second_quick_link],
+                        quick_links: [
+                            first_quick_link,
+                            second_quick_link,
+                        ] as ReadonlyArray<QuickLink>,
                     } as ItemDefinition;
                     const next_entry = {
                         html_url: "/second",
                         title: "b",
-                        quick_links: [] as QuickLink[],
+                        quick_links: [] as ReadonlyArray<QuickLink>,
                     } as ItemDefinition;
 
                     const root_store = useRootStore();
@@ -136,12 +139,15 @@ describe("Keyboard navigation store", () => {
                     const entry = {
                         html_url: "/first",
                         title: "a",
-                        quick_links: [first_quick_link, second_quick_link],
+                        quick_links: [
+                            first_quick_link,
+                            second_quick_link,
+                        ] as ReadonlyArray<QuickLink>,
                     } as ItemDefinition;
                     const previous_entry = {
                         html_url: "/second",
                         title: "b",
-                        quick_links: [] as QuickLink[],
+                        quick_links: [] as ReadonlyArray<QuickLink>,
                     } as ItemDefinition;
 
                     const store = useRootStore();
@@ -217,7 +223,10 @@ describe("Keyboard navigation store", () => {
                     const entry = {
                         html_url: "/first",
                         title: "a",
-                        quick_links: [first_quick_link, second_quick_link],
+                        quick_links: [
+                            first_quick_link,
+                            second_quick_link,
+                        ] as ReadonlyArray<QuickLink>,
                     } as ItemDefinition;
 
                     const store = useRootStore();
@@ -251,7 +260,10 @@ describe("Keyboard navigation store", () => {
                         const entry = {
                             html_url: "/first",
                             title: "a",
-                            quick_links: [first_quick_link, second_quick_link],
+                            quick_links: [
+                                first_quick_link,
+                                second_quick_link,
+                            ] as ReadonlyArray<QuickLink>,
                         } as ItemDefinition;
 
                         const store = useRootStore();
@@ -357,7 +369,10 @@ describe("Keyboard navigation store", () => {
                     const entry = {
                         html_url: "/first",
                         title: "a",
-                        quick_links: [first_quick_link, second_quick_link],
+                        quick_links: [
+                            first_quick_link,
+                            second_quick_link,
+                        ] as ReadonlyArray<QuickLink>,
                     } as ItemDefinition;
 
                     const store = useRootStore();
@@ -425,7 +440,10 @@ describe("Keyboard navigation store", () => {
                         const entry = {
                             html_url: "/first",
                             title: "a",
-                            quick_links: [first_quick_link, second_quick_link],
+                            quick_links: [
+                                first_quick_link,
+                                second_quick_link,
+                            ] as ReadonlyArray<QuickLink>,
                         } as ItemDefinition;
 
                         const store = useRootStore();
@@ -921,7 +939,7 @@ describe("Keyboard navigation store", () => {
                     const entry = {
                         html_url: "/first",
                         title: "a",
-                        quick_links: [] as QuickLink[],
+                        quick_links: [] as ReadonlyArray<QuickLink>,
                     } as ItemDefinition;
 
                     const store = useRootStore();
@@ -950,7 +968,10 @@ describe("Keyboard navigation store", () => {
                     const entry = {
                         html_url: "/first",
                         title: "a",
-                        quick_links: [first_quick_link, second_quick_link],
+                        quick_links: [
+                            first_quick_link,
+                            second_quick_link,
+                        ] as ReadonlyArray<QuickLink>,
                     } as ItemDefinition;
 
                     const store = useRootStore();

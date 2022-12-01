@@ -189,6 +189,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
 
         return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
     }
+
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
     public function getOpenArtifactsForSubmilestonesForMonoMilestoneConfiguration(PFUser $user, $sub_milestone_ids)
     {

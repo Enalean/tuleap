@@ -14,22 +14,27 @@ class Docman_View_ToolbarNewDocumentVisitor /* implements Visitor*/
     {
         return $item->getId();
     }
+
     public function visitDocument(&$item, $params = [])
     {
         return $item->getParentId();
     }
+
     public function visitWiki(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitLink(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitEmbeddedFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);

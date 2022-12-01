@@ -1,18 +1,18 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/angular-tlp': link:../../../../lib/frontend/angular-tlp
-  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/core': link:../../../../src/scripts/main
-  '@tuleap/date-helper': link:../../../../lib/frontend/date-helper
-  '@tuleap/dom': link:../../../../lib/frontend/dom
-  '@tuleap/fault': link:../../../../lib/frontend/fault
-  '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
-  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../../../lib/frontend/potentially-dangerous-bidirectional-characters
-  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-relative-date': link:../../../../lib/frontend/tlp-relative-date
-  '@tuleap/tooltip': link:../../../../lib/frontend/tooltip
-  '@types/codemirror': ^5.60.1
+  '@tuleap/angular-tlp': workspace:*
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/core': workspace:*
+  '@tuleap/date-helper': workspace:*
+  '@tuleap/dom': workspace:*
+  '@tuleap/fault': workspace:*
+  '@tuleap/fetch-result': workspace:*
+  '@tuleap/potentially-dangerous-bidirectional-characters': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/tlp-relative-date': workspace:*
+  '@tuleap/tooltip': workspace:*
+  '@types/codemirror': ^5.60.5
   '@types/dompurify': ^2.3.4
   '@uirouter/angularjs': ^1.0.29
   angular: ^1.8.2
@@ -22,7 +22,7 @@ specifiers:
   angular-sanitize: ^1.8.2
   codemirror: ^5.62.0
   dompurify: ^2.3.6
-  hybrids: ^8.0.2
+  hybrids: ^8.1.8
   jquery: ^3.6.0
   moment: ^2.29.4
   neverthrow: 5.0.0
@@ -47,7 +47,7 @@ dependencies:
   angular-sanitize: 1.8.3
   codemirror: 5.65.9
   dompurify: 2.4.0
-  hybrids: 8.1.5
+  hybrids: 8.1.8
   moment: 2.29.4
   neverthrow: 5.0.0
   sprintf-js: 1.1.2
@@ -297,8 +297,8 @@ packages:
     resolution: {integrity: sha512-WdZTbAByD+pHfl/g9QSsBIIwy8IT+EsPiKDs0KNX+zSHhdDLFKdZu0BQHljvO+0QI/BasbMSUa8wYNCZTvhslg==}
     dev: true
 
-  /hybrids/8.1.5:
-    resolution: {integrity: sha512-jdYIwTb7fKC9RD/sEobu1qeTtHZEYRXEVLdnztEyP1Yq8uZUXKrx+/lS3pbjFt13qmuZSu6RzR59H2hFPafuMQ==}
+  /hybrids/8.1.8:
+    resolution: {integrity: sha512-L17oEEwS8KYh13QnohZhwbnnTFq1fvl6uxoA7DM56/gdFNgYSaaphWpab6PgF+fYTP1AQlfj9bv6Dnc2sQ+Clw==}
     hasBin: true
     dev: false
 

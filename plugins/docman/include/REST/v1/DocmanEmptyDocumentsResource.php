@@ -483,7 +483,6 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         }
     }
 
-
     /**
      * @url OPTIONS {id}/metadata
      */

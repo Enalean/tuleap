@@ -197,7 +197,6 @@ class SemanticConvertorTest extends TestCase
         );
     }
 
-
     public function testItBuildsCardFieldsSemantic(): void
     {
         $xml = simplexml_load_string(<<<EOS

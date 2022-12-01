@@ -19,7 +19,9 @@
  */
 
 import mitt from "mitt";
-import type { Item, ListValue } from "../type";
+import type { Empty, Item, ListValue } from "../type";
+import type { ItemType } from "../type";
+import type { NewItemAlternative } from "../type";
 
 export interface DeleteItemEvent {
     item: Item;
@@ -54,6 +56,10 @@ export interface UpdateCustomEvent {
     readonly value: string;
 }
 
+export interface ItemHasJustBeenUpdatedEvent {
+    readonly item: Item;
+}
+
 export type Events = {
     "update-status-property": string;
     "update-status-recursion": boolean;
@@ -66,6 +72,7 @@ export type Events = {
     "show-update-item-properties-modal": UpdatePropertiesEvent;
     "show-update-permissions-modal": UpdatePermissionsEvent;
     "show-create-new-item-version-modal": NewVersionEvent;
+    "show-create-new-version-modal-for-empty": { item: Empty; type: ItemType };
     "set-dropdown-shown": { is_dropdown_shown: boolean };
     "show-max-archive-size-threshold-exceeded-modal": MaxArchiveSizeThresholdExceededEvent;
     "show-archive-size-warning-modal": ArchiveSizeWarningModalEvent;
@@ -74,13 +81,13 @@ export type Events = {
     "update-multiple-properties-list-value": {
         detail: { value: number[] | [] | ListValue[] | null; id: string };
     };
-    createItem: { item: Item };
+    createItem: { item: Item; type: ItemType; from_alternative?: NewItemAlternative };
     deleteItem: DeleteItemEvent;
-    "new-item-has-just-been-created": void;
+    "new-item-has-just-been-created": { id: number };
     "item-properties-have-just-been-updated": void;
     "item-permissions-have-just-been-updated": void;
     "item-has-just-been-deleted": void;
-    "item-has-just-been-updated": void;
+    "item-has-just-been-updated": ItemHasJustBeenUpdatedEvent;
     "item-is-being-uploaded": void;
     "update-lock": boolean;
     "update-custom-property": UpdateCustomEvent;

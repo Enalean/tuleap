@@ -359,7 +359,6 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return $item;
     }
 
-
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         // do nothing

@@ -71,15 +71,18 @@ class Docman_Actions extends Actions
         $folderFactory = new Docman_FolderFactory();
         $folderFactory->expand($this->_getFolderFromRequest());
     }
+
     public function expandAll($params)
     {
         $params['hierarchy']->accept(new Docman_ExpandAllHierarchyVisitor(), ['folderFactory' => new Docman_FolderFactory()]);
     }
+
     public function collapseFolder()
     {
         $folderFactory = new Docman_FolderFactory();
         $folderFactory->collapse($this->_getFolderFromRequest());
     }
+
     private function _getFolderFromRequest()
     {
         $request = HTTPRequest::instance();
@@ -1402,7 +1405,6 @@ class Docman_Actions extends Actions
             $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'An error occured on property creation'));
         }
     }
-
 
     public function admin_delete_metadata()
     {

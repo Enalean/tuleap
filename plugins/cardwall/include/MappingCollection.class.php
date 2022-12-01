@@ -33,10 +33,7 @@ class Cardwall_MappingCollection implements IteratorAggregate
      */
     private $mappings_by_field_id = [];
 
-    /**
-     * @return Iterator
-     */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayObject($this->mappings);
     }
@@ -46,7 +43,6 @@ class Cardwall_MappingCollection implements IteratorAggregate
         $this->mappings[]                                 = $mapping;
         $this->mappings_by_field_id[$mapping->field_id][] = $mapping;
     }
-
 
     /**
      * Returns the list of static field values of the swimline

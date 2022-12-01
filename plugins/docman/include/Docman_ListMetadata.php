@@ -41,6 +41,7 @@ class Docman_ListMetadata extends \Docman_Metadata
         parent::__construct();
         $this->defaultValue = [];
     }
+
     /**
      * @param array of Docman_MetadataListOfValuesElements
      */
@@ -48,6 +49,7 @@ class Docman_ListMetadata extends \Docman_Metadata
     {
         $this->listOfValue = $l;
     }
+
     /**
      * @return iterator of Docman_MetadataListOfValuesElements
      */
@@ -56,6 +58,7 @@ class Docman_ListMetadata extends \Docman_Metadata
         $i = new \ArrayIterator($this->listOfValue);
         return $i;
     }
+
     public function setDefaultValue($v)
     {
         if ($v instanceof \Iterator) {

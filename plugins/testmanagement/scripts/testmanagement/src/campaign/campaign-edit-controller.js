@@ -207,16 +207,20 @@ function CampaignEditCtrl(
     }
 
     function showAddTestModal() {
-        var callback = function (definition_id) {
+        const callback = function (definition_id) {
             DefinitionService.getDefinitionById(definition_id).then(addTest);
         };
 
+        const current_user = SharedPropertiesService.getCurrentUser();
+
         const definition_tracker_id = SharedPropertiesService.getDefinitionTrackerId();
         NewTuleapArtifactModalService.showCreation(
+            current_user.id,
             definition_tracker_id,
             null,
             callback,
-            SharedPropertiesService.isListPickerUsedByTracker(definition_tracker_id)
+            SharedPropertiesService.isListPickerUsedByTracker(definition_tracker_id),
+            SharedPropertiesService.isSearchEnabled()
         );
     }
 

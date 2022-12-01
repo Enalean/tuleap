@@ -39,7 +39,6 @@ class FRSPermissionDao extends DataAccessObject
         return $this->update($sql);
     }
 
-
     public function searchPermissionsForProjectbyType($project_id, $permission_type)
     {
         $project_id      = $this->da->escapeInt($project_id);

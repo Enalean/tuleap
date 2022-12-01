@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_backup_path` text NULL,
   `remote_server_id` INT(11) UNSIGNED NULL,
   `remote_server_disconnect_date` INT(11) NULL,
-  `remote_project_deleted` TINYINT DEFAULT '0',
   `remote_project_deleted_date` INT(11) NULL,
   `remote_server_migration_status` ENUM("QUEUE", "DONE", "ERROR") NULL,
   `ci_token` TEXT NULL,

@@ -305,6 +305,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             }
         }
     }
+
     /**
      * Duplicate the renderer
      */

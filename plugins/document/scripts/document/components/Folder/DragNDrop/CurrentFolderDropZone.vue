@@ -28,7 +28,7 @@
             class="document-upload-to-current-folder-message"
             data-test="document-current-folder-success-dropzone"
         >
-            <i class="fa fa-rotate-90 fa-mail-forward document-upload-to-current-folder-icon"></i>
+            <i class="fa-solid fa-rotate-90 fa-share document-upload-to-current-folder-icon"></i>
             <p>{{ success_message }}</p>
         </div>
         <div
@@ -36,7 +36,7 @@
             class="document-upload-to-current-folder-message"
             data-test="document-current-folder-error-dropzone"
         >
-            <i class="fa fa-ban document-upload-to-current-folder-icon"></i>
+            <i class="fa-solid fa-ban document-upload-to-current-folder-icon"></i>
             <p data-test="document-current-folder-error-dropzone-message">{{ error_reason }}</p>
         </div>
     </div>

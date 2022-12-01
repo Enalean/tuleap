@@ -25,8 +25,12 @@ namespace Tuleap\Tus;
 interface TusDataStore
 {
     public function getFileInformationProvider(): TusFileInformationProvider;
+
     public function getWriter(): TusWriter;
+
     public function getFinisher(): ?TusFinisherDataStore;
+
     public function getTerminater(): ?TusTerminaterDataStore;
+
     public function getLocker(): ?TusLocker;
 }

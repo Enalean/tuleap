@@ -24,7 +24,7 @@
             class="document-switch-to-docman-link"
             data-test="document-switch-to-old-ui"
         >
-            <i class="fa fa-random document-switch-to-docman-icon"></i>
+            <i class="fa-solid fa-shuffle document-switch-to-docman-icon"></i>
             <!--
             -->
             <translate>Switch to old user interface</translate>

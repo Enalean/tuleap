@@ -26,14 +26,17 @@ class Docman_View_NewDocument extends Docman_View_New
     {
         return dgettext('tuleap-docman', 'New document');
     }
+
     public function _getEnctype()
     {
         return ' enctype="multipart/form-data" ';
     }
+
     public function _getAction()
     {
         return 'createDocument';
     }
+
     public function _getActionText()
     {
         return dgettext('tuleap-docman', 'Create document');

@@ -27,10 +27,12 @@ final class b202101131515_add_scaled_agile_service extends \Tuleap\ForgeUpgrade\
     {
         return 'Add the scaled agile service in projects';
     }
+
     public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
+
     public function up(): void
     {
         $sql = "INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, `rank`)

@@ -22,84 +22,55 @@ declare(strict_types=1);
 
 namespace Tuleap\User\History;
 
-use Mockery;
+use Tuleap\Test\Builders\HistoryEntryBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
-class HistoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HistoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    /**
+     * @param HistoryEntry[] $entries
+     * @return HistoryEntry[]
+     */
+    private function getHistory(array $entries): array
+    {
+        $event_manager = EventDispatcherStub::withCallback(
+            static function (HistoryEntryCollection $event) use ($entries) {
+                foreach ($entries as $entry) {
+                    $event->addEntry($entry);
+                }
+                return $event;
+            }
+        );
+        $retriever     = new HistoryRetriever($event_manager);
+        return $retriever->getHistory(UserTestBuilder::buildWithDefaults());
+    }
 
-    public function testItRetrievesHistorySortedByVisitTime()
+    public function testItRetrievesHistorySortedByVisitTime(): void
     {
         $entries = [
-            $this->getHistoryEntryAt(300),
-            $this->getHistoryEntryAt(100),
-            $this->getHistoryEntryAt(200),
+            HistoryEntryBuilder::anEntryVisitedAt(300)->build(),
+            HistoryEntryBuilder::anEntryVisitedAt(100)->build(),
+            HistoryEntryBuilder::anEntryVisitedAt(200)->build(),
         ];
 
-        $history = $this
-            ->buildHistoryRetriever($entries)
-            ->getHistory(Mockery::mock(\PFUser::class));
+        $history = $this->getHistory($entries);
 
         $this->assertCount(3, $history);
-        $this->assertEquals(300, $history[0]->getVisitTime());
-        $this->assertEquals(200, $history[1]->getVisitTime());
-        $this->assertEquals(100, $history[2]->getVisitTime());
+        $this->assertSame(300, $history[0]->getVisitTime());
+        $this->assertSame(200, $history[1]->getVisitTime());
+        $this->assertSame(100, $history[2]->getVisitTime());
     }
 
     public function testItTruncatesHistoryToTheMaxLength(): void
     {
         $entries = [];
         foreach (range(1, HistoryRetriever::MAX_LENGTH_HISTORY * 2) as $n) {
-            $entries[] = $this->getHistoryEntryAt($n);
+            $entries[] = HistoryEntryBuilder::anEntryVisitedAt($n)->build();
         }
 
-        $history = $this
-            ->buildHistoryRetriever($entries)
-            ->getHistory(Mockery::mock(\PFUser::class));
+        $history = $this->getHistory($entries);
 
         $this->assertCount(HistoryRetriever::MAX_LENGTH_HISTORY, $history);
-    }
-
-    private function getHistoryEntryAt($visit_time): HistoryEntry
-    {
-        return new HistoryEntry(
-            $visit_time,
-            '',
-            '',
-            '',
-            '',
-            Mockery::mock(\Tuleap\Glyph\Glyph::class),
-            Mockery::mock(\Tuleap\Glyph\Glyph::class),
-            '',
-            Mockery::mock(\Project::class),
-            [],
-            [],
-        );
-    }
-
-    private function buildHistoryRetriever(array $entries): HistoryRetriever
-    {
-        $event_manager = new class ($entries) extends \EventManager
-        {
-            /**
-             * @var HistoryEntry[]
-             */
-            private $entries;
-
-            public function __construct(array $entries)
-            {
-                $this->entries = $entries;
-            }
-
-            public function processEvent($event, $params = [])
-            {
-                assert($event instanceof HistoryEntryCollection);
-                foreach ($this->entries as $entry) {
-                    $event->addEntry($entry);
-                }
-            }
-        };
-
-        return new HistoryRetriever($event_manager);
     }
 }

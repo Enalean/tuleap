@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
 
 dependencies:
   '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch

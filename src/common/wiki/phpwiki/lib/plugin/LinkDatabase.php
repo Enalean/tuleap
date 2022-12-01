@@ -41,14 +41,17 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
     {
         return _("LinkDatabase");
     }
+
     public function getPluginType()
     {
         return PLUGIN_CACHED_HTML;
     }
+
     public function getDescription()
     {
         return _("List all pages with all links in various formats for some Java Visualization tools");
     }
+
     public function getVersion()
     {
         return preg_replace(
@@ -57,6 +60,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             "\$Revision: 1.7 $"
         );
     }
+
     public function getExpire($dbi, $argarray, $request)
     {
         return '+900'; // 15 minutes

@@ -44,6 +44,7 @@ describe("PullRequestCommentController", () => {
         new_comment_reply_payload = {
             id: 13,
             content: "Please don't",
+            color: "",
         } as CommentReplyPayload;
 
         focus_helper = FocusTextReplyToCommentAreaStub();
@@ -66,6 +67,7 @@ describe("PullRequestCommentController", () => {
     });
 
     it("should hide the reply to comment form", () => {
+        new_comment_saver = SaveNewCommentStub.withResponsePayload(new_comment_reply_payload);
         const host = {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
         } as unknown as PullRequestComment;
@@ -118,7 +120,35 @@ describe("PullRequestCommentController", () => {
         ]);
     });
 
-    it("should display the replies associated to the comment", () => {
+    it(`Given a root comment with no answer yet
+        When a reply has been added to this comment
+        Then the root comment is assigned the color provided in the response payload`, async () => {
+        const new_comment_reply_payload = {
+            id: 13,
+            content: "Please don't",
+            color: "flamingo-pink",
+        } as CommentReplyPayload;
+        new_comment_saver = SaveNewCommentStub.withResponsePayload(new_comment_reply_payload);
+
+        const comment = PullRequestCommentPresenterStub.buildGlobalComment();
+        const host = {
+            currentPullRequest: CurrentPullRequestUserPresenterStub.withDefault(),
+            comment,
+            reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
+            replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
+        } as unknown as HostElement;
+
+        await PullRequestCommentController(
+            focus_helper,
+            replies_store,
+            new_comment_saver
+        ).saveReply(host);
+
+        expect(host.reply_comment_presenter).toBeNull();
+        expect(host.comment.color).toBe("flamingo-pink");
+    });
+
+    it(`should display the replies associated to the comment`, () => {
         const host = {
             replies: [],
             comment: PullRequestCommentPresenterStub.buildWithData({

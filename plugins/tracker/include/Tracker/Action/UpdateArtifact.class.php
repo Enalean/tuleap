@@ -65,7 +65,10 @@ class Tracker_Action_UpdateArtifact
          //TODO : check permissions on this action?
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
 
-        $fields_data                          = $request->get('artifact');
+        $fields_data = $request->get('artifact');
+        if ($fields_data === false) {
+            $fields_data = [];
+        }
         $fields_data['request_method_called'] = 'artifact-update';
         $this->artifact->getTracker()->augmentDataFromRequest($fields_data);
         unset($fields_data['request_method_called']);
@@ -166,7 +169,6 @@ class Tracker_Action_UpdateArtifact
 
         $GLOBALS['Response']->sendJSON($cards_info);
     }
-
 
     private function getCardUpdateInfo(Artifact $artifact, PFUser $current_user)
     {

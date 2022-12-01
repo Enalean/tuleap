@@ -33,7 +33,7 @@
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
             >
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
         <div class="tlp-modal-body">
@@ -102,8 +102,8 @@
     </div>
 </template>
 <script lang="ts">
-import type { Modal } from "tlp";
-import { createModal } from "tlp";
+import type { Modal } from "@tuleap/tlp-modal";
+import { createModal } from "@tuleap/tlp-modal";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { namespace } from "vuex-class";
 

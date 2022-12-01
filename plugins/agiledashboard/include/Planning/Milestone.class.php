@@ -69,7 +69,6 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
      */
     public function getXRef();
 
-
     /**
      * @return Planning
      */
@@ -186,6 +185,8 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
     public function getBurndownData(PFUser $user);
 
     public function setTimePeriod(TimePeriodWithoutWeekEnd $time_period);
+
     public function setCapacity($capacity);
+
     public function setRemainingEffort($remaining_effort);
 }

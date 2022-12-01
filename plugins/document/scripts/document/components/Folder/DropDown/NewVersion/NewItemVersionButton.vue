@@ -30,7 +30,7 @@
         <i
             v-if="is_loading_item"
             v-bind:class="iconClasses"
-            class="fa fa-spin fa-circle-o-notch"
+            class="fa-solid fa-spin fa-circle-notch"
         ></i>
         <i v-else v-bind:class="iconClasses"></i>
         <translate>Create new version</translate>

@@ -46,7 +46,8 @@ class Tracker_Migration_V3_FieldsetsDao extends DataAccessObject
         $sql = "INSERT INTO tracker_fieldset_$tv5_id(tracker_id, name, description, `rank`)
                 SELECT DISTINCT T1.id, 'CC List', 'Dependency links from an artifact to one or several other artifacts', max(`rank`)+1
                 FROM tracker AS T1
-                     INNER JOIN (SELECT max(`rank`)+1 as `rank`, tracker_id FROM tracker_fieldset_$tv5_id GROUP BY tracker_id) AS S1 ON (T1.id = S1.tracker_id)";
+                INNER JOIN (SELECT max(`rank`)+1 as `rank`, tracker_id FROM tracker_fieldset_$tv5_id GROUP BY tracker_id) AS S1 ON (T1.id = S1.tracker_id)
+                GROUP BY T1.id, 'CC List', 'Dependency links from an artifact to one or several other artifacts'";
         $this->update($sql);
 
         // Add attachments fieldset

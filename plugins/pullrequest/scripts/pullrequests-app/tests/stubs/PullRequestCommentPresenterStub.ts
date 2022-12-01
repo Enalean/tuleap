@@ -26,8 +26,9 @@ import {
     TYPE_EVENT_COMMENT,
     TYPE_GLOBAL_COMMENT,
     TYPE_INLINE_COMMENT,
-    INLINE_COMMENT_POSITION_RIGHT,
 } from "../../src/app/comments/PullRequestCommentPresenter";
+
+import { INLINE_COMMENT_POSITION_RIGHT } from "../../src/app/comments/types";
 
 const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     id: 12,
@@ -43,6 +44,7 @@ const comment_presenter_base: PullRequestGlobalCommentPresenter = {
     parent_id: 0,
     type: TYPE_GLOBAL_COMMENT,
     is_file_diff_comment: false,
+    color: "",
 };
 
 const file = {
@@ -87,7 +89,9 @@ export const PullRequestCommentPresenterStub = {
         ...data,
     }),
 
-    buildFileDiffCommentPresenter: (): PullRequestInlineCommentPresenter => ({
+    buildFileDiffCommentPresenter: (
+        data: Partial<PullRequestInlineCommentPresenter> = {}
+    ): PullRequestInlineCommentPresenter => ({
         ...comment_presenter_base,
         type: TYPE_INLINE_COMMENT,
         is_inline_comment: true,
@@ -95,5 +99,6 @@ export const PullRequestCommentPresenterStub = {
         file_path: "README.md",
         position: INLINE_COMMENT_POSITION_RIGHT,
         is_file_diff_comment: true,
+        ...data,
     }),
 };

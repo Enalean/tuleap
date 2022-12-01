@@ -20,25 +20,22 @@
 
 <template>
     <div class="document-header-actions">
-        <div class="tlp-dropdown document-dropdown-menu-button">
-            <div class="tlp-dropdown-split-button">
-                <create-new-item-version-button
-                    class="tlp-button-primary tlp-dropdown-split-button-main"
-                    v-bind:item="item"
-                    button-classes=""
-                    icon-classes="fas fa-share tlp-button-icon"
-                    data-test="item-action-create-new-version-button"
-                    v-if="item.user_can_write"
-                />
-                <drop-down-button
-                    v-bind:is-in-large-mode="false"
-                    v-bind:is-appended="item.user_can_write"
-                    v-bind:is-in-quick-look-mode="false"
-                    v-bind:is-in-folder-empty-state="false"
-                >
-                    <drop-down-displayed-embedded />
-                </drop-down-button>
-            </div>
+        <div class="document-dropdown-menu-button">
+            <create-new-item-version-button
+                class="tlp-button-primary"
+                v-bind:item="item"
+                button-classes=""
+                icon-classes="fa-solid fa-share tlp-button-icon"
+                data-test="item-action-create-new-version-button"
+                v-if="item.user_can_write"
+            />
+            <drop-down-button
+                v-bind:is-in-large-mode="false"
+                v-bind:is-appended="false"
+                v-bind:is-in-quick-look-mode="false"
+            >
+                <drop-down-displayed-embedded />
+            </drop-down-button>
         </div>
     </div>
 </template>

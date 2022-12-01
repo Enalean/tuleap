@@ -115,7 +115,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         return $anonymous_user;
     }
 
-
     /**
      * @param int the user_id of the user to find
      * @return PFUser|null if the user is not found
@@ -160,7 +159,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     {
         return $this->getDao()->countAllAliveUsers();
     }
-
 
     public function countAliveRegisteredUsersBefore($timestamp)
     {

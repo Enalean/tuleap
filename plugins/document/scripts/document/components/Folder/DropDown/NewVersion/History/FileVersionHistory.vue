@@ -25,7 +25,7 @@
             <translate>Only the last 5 versions are displayed.</translate>
             <a v-bind:href="history_url" target="_blank" rel="noopener noreferrer">
                 <translate>View all versions</translate>
-                <i class="fas fa-long-arrow-alt-right"></i>
+                <i class="fa-solid fa-right-long"></i>
             </a>
         </p>
         <table class="tlp-table" v-if="!has_error">

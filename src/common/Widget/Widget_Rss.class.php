@@ -45,6 +45,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
     {
         return $this->rss_title ?: 'RSS Reader';
     }
+
     public function getContent()
     {
         if (! $this->rss_url) {
@@ -71,6 +72,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
 
         return $content . '</table>';
     }
+
     public function isAjax()
     {
         return true;
@@ -157,6 +159,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
         $res = db_query($sql);
         return db_insertid($res);
     }
+
     public function loadContent($id)
     {
         $sql = "SELECT * FROM widget_rss WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_es($id);
@@ -193,6 +196,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
         }
         return $content_id;
     }
+
     public function updatePreferences(Codendi_Request $request)
     {
         $done       = false;
@@ -221,11 +225,13 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
         }
         return $done;
     }
+
     public function destroy($id)
     {
         $sql = 'DELETE FROM widget_rss WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
         db_query($sql);
     }
+
     public function isUnique()
     {
         return false;

@@ -65,7 +65,6 @@ class UserGroupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-
     /**
      * return users count, members of given project
      *

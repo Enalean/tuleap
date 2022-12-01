@@ -88,6 +88,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
     {
         return (float) $value;
     }
+
     protected function buildMatchExpression($field_name, $criteria_value)
     {
         return parent::buildMatchExpression($field_name, $criteria_value);
@@ -120,6 +121,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
     {
         return new FloatValueDao();
     }
+
     protected function getDao()
     {
         return new FloatFieldDao();

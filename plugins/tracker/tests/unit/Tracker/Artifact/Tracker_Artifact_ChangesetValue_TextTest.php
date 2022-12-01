@@ -112,7 +112,6 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \Tuleap\Test\PHPUni
         $this->assertEquals('Problems with my code: &lt;b&gt;example&lt;/b&gt;', $text->getTextWithReferences(101));
     }
 
-
     /**
      * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Text
      */

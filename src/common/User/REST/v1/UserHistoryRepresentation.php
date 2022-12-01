@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\REST\v1;
 
 use Tuleap\User\History\HistoryEntry;
@@ -25,33 +27,21 @@ use Tuleap\User\History\HistoryEntry;
 /**
  * @psalm-immutable
  */
-class UserHistoryRepresentation
+final class UserHistoryRepresentation
 {
-    /**
-     * @var UserHistoryEntryRepresentation[]
-     */
-    public $entries;
-
     /**
      * @param UserHistoryEntryRepresentation[] $entries
      */
-    private function __construct(array $entries)
+    private function __construct(public array $entries)
     {
-        $this->entries = $entries;
     }
 
-    /**
-     * @param HistoryEntry[] $history
-     */
-    public static function build(array $history): self
+    public static function build(HistoryEntry ...$history): self
     {
         $entries = [];
         foreach ($history as $history_entry) {
-            $history_entry_representation = UserHistoryEntryRepresentation::build($history_entry);
-
-            $entries[] = $history_entry_representation;
+            $entries[] = UserHistoryEntryRepresentation::build($history_entry);
         }
-
         return new self($entries);
     }
 }

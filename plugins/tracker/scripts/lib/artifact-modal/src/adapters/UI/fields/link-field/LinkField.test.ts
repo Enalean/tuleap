@@ -20,11 +20,12 @@
 import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement, LinkField } from "./LinkField";
 import {
+    current_link_type_descriptor,
+    dropdown_section_descriptor,
     getEmptyStateIfNeeded,
     getLinkFieldCanOnlyHaveOneParentNote,
     getSkeletonIfNeeded,
     setAllowedTypes,
-    setCurrentLinkType,
     setLinkedArtifacts,
     setNewLinks,
 } from "./LinkField";
@@ -38,17 +39,19 @@ import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
-import type { LinkSelector, GroupCollection } from "@tuleap/link-selector";
-import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
+import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { selectOrThrow } from "@tuleap/dom";
-import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
+import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
+import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
+import { PossibleParentsGroup } from "./PossibleParentsGroup";
+import { SearchResultsGroup } from "./SearchResultsGroup";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -161,27 +164,67 @@ describe("LinkField", () => {
     });
 
     describe(`setters`, () => {
-        describe(`setCurrentLinkType()`, () => {
+        describe("dropdown_section_descriptor", () => {
             let link_selector: LinkSelectorStub, host: LinkField;
-
             beforeEach(() => {
                 link_selector = LinkSelectorStub.build();
 
                 const initial_dropdown_content: GroupCollection = [];
                 host = {
                     controller: {
-                        retrievePossibleParentsGroups(): PromiseLike<GroupCollection> {
-                            return Promise.resolve([PossibleParentsGroup.buildEmpty()]);
+                        autoComplete(): void {
+                            //Do nothing
                         },
-                    } as LinkFieldControllerType,
+                    } as unknown as LinkFieldControllerType,
                     link_selector: link_selector as LinkSelector,
                     current_link_type: LinkTypeStub.buildUntyped(),
-                    dropdown_content: initial_dropdown_content,
+                    matching_artifact_section: initial_dropdown_content,
+                    possible_parents_section: initial_dropdown_content,
+                    recently_viewed_section: initial_dropdown_content,
+                    search_results_section: initial_dropdown_content,
+                } as LinkField;
+            });
+
+            it(`defaults property value to empty array`, () => {
+                expect(dropdown_section_descriptor.set(host, undefined)).toStrictEqual([]);
+            });
+
+            it(`sets the link selector dropdown with the sections in the expected order when a section changes`, () => {
+                const setDropdown = jest.spyOn(link_selector, "setDropdownContent");
+                host.matching_artifact_section = [MatchingArtifactsGroup.buildEmpty()];
+                host.recently_viewed_section = [RecentlyViewedArtifactGroup.buildEmpty()];
+                host.search_results_section = [SearchResultsGroup.buildEmpty()];
+                host.possible_parents_section = [PossibleParentsGroup.buildEmpty()];
+
+                dropdown_section_descriptor.observe(host);
+
+                expect(setDropdown).toHaveBeenCalledWith([
+                    ...host.matching_artifact_section,
+                    ...host.recently_viewed_section,
+                    ...host.search_results_section,
+                    ...host.possible_parents_section,
+                ]);
+            });
+        });
+        describe(`current_link_type_descriptor`, () => {
+            let link_selector: LinkSelectorStub, host: LinkField;
+
+            beforeEach(() => {
+                link_selector = LinkSelectorStub.build();
+
+                host = {
+                    controller: {
+                        autoComplete(): void {
+                            //Do nothing
+                        },
+                    } as unknown as LinkFieldControllerType,
+                    link_selector: link_selector as LinkSelector,
+                    current_link_type: LinkTypeStub.buildUntyped(),
                 } as LinkField;
             });
 
             const setType = (new_link_type: LinkType | undefined): LinkType => {
-                return setCurrentLinkType(host, new_link_type);
+                return current_link_type_descriptor.set(host, new_link_type);
             };
 
             it(`defaults to Untyped link`, () => {
@@ -191,26 +234,33 @@ describe("LinkField", () => {
             });
 
             it(`when the type is changed to reverse _is_child (Parent),
-                it will retrieve the possible parents and set the dropdown content with them`, async () => {
+                it will set a special placeholder in link selector`, () => {
                 host.current_link_type = LinkTypeStub.buildReverseCustom();
+                const setPlaceholder = jest.spyOn(link_selector, "setPlaceholder");
 
                 const link_type = LinkTypeStub.buildParentLinkType();
                 const result = setType(link_type);
                 expect(result).toBe(link_type);
-                expect(host.dropdown_content).toHaveLength(1);
-                expect(host.dropdown_content[0].is_loading).toBe(true);
-
-                await result; // wait for the promise
-                expect(host.dropdown_content).toHaveLength(1);
-                expect(host.dropdown_content[0].is_loading).toBe(false);
+                expect(setPlaceholder).toHaveBeenCalled();
             });
 
             it(`when the type is changed to another type,
-                it will clear the dropdown content`, () => {
+                it will set the default placeholder in link selector`, () => {
+                const setPlaceholder = jest.spyOn(link_selector, "setPlaceholder");
+
                 const link_type = setType(LinkTypeStub.buildUntyped());
                 const result = setType(link_type);
                 expect(result).toBe(link_type);
-                expect(host.dropdown_content).toHaveLength(0);
+                expect(setPlaceholder).toHaveBeenCalled();
+            });
+
+            it(`when the current type is changed,
+                it will call the autocompleter with an empty string`, () => {
+                const autoComplete = jest.spyOn(host.controller, "autoComplete");
+
+                current_link_type_descriptor.observe(host);
+
+                expect(autoComplete).toHaveBeenCalledWith(host, "");
             });
         });
 

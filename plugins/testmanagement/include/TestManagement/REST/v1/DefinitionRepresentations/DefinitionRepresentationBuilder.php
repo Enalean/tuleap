@@ -31,6 +31,7 @@ use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepres
 use Tuleap\TestManagement\REST\v1\RequirementRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class DefinitionRepresentationBuilder
@@ -85,7 +86,8 @@ class DefinitionRepresentationBuilder
                 $requirement,
                 [],
                 [],
-                MinimalTrackerRepresentation::build($requirement->getTracker())
+                MinimalTrackerRepresentation::build($requirement->getTracker()),
+                StatusValueRepresentation::buildFromArtifact($definition_artifact, $user)
             ),
             $this->requirement_retriever->getAllRequirementsForDefinition($definition_artifact, $user)
         );
@@ -177,7 +179,6 @@ class DefinitionRepresentationBuilder
 
         return $artifact->getValue($field, $changeset);
     }
-
 
     public static function getTextChangesetValue(
         Tracker_FormElementFactory $form_element_factory,

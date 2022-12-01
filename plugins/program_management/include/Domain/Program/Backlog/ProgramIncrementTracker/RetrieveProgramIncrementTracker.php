@@ -27,5 +27,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 interface RetrieveProgramIncrementTracker
 {
     public function getProgramIncrementTrackerId(int $project_id): ?int;
+
     public function getProgramIncrementTrackerIdFromProgramIncrement(ProgramIncrementIdentifier $program_increment): int;
 }

@@ -154,8 +154,7 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject  // phpcs:ignor
                   INNER JOIN tracker_field_list_bind_static_value                  field_value ON (field_value.id = cvl.bindvalue_id)
                   INNER JOIN tracker_workflow_trigger_rule_trg_field_static_value  trig        ON (trig.value_id = field_value.id)
 
-                WHERE parent_art.id = $parent_id
-                GROUP BY trig.rule_id";
+                WHERE parent_art.id = $parent_id";
         return $this->retrieve($sql);
     }
 }

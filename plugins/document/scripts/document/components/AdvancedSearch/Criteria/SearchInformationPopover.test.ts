@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
 import localVue from "../../../helpers/local-vue";
 
-jest.mock("tlp");
+jest.mock("@tuleap/tlp-popovers");
 
 describe("SearchInformationPopover", () => {
     it("should display a popover content", () => {

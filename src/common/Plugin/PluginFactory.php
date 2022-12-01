@@ -338,6 +338,7 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         unset($this->retrieved_plugins['disabled'][$plugin->getId()]);
         $plugin->postEnable();
     }
+
     /**
      * disabled plugin
      */

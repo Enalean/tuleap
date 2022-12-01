@@ -30,6 +30,7 @@ final class VerifyFeaturePlannedStub implements VerifyFeaturePlanned
     private function __construct(private bool $is_planned)
     {
     }
+
     public static function isPlanned(): self
     {
         return new self(true);
@@ -39,6 +40,7 @@ final class VerifyFeaturePlannedStub implements VerifyFeaturePlanned
     {
         return new self(false);
     }
+
     public function isFeaturePlannedInAProgramIncrement(int $feature_id): bool
     {
         return $this->is_planned;

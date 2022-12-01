@@ -118,18 +118,22 @@ class Docman_NotificationsManager
     {
         return new Docman_ItemFactory();
     }
+
     public function _getUserManager()
     {
         return UserManager::instance();
     }
+
     public function _getPermissionsManager()
     {
         return Docman_PermissionsManager::instance($this->project->getID());
     }
+
     public function _getDocmanPath()
     {
         return new Docman_Path();
     }
+
     public function somethingHappen($event, $params)
     {
         $um             = $this->_getUserManager();
@@ -152,6 +156,7 @@ class Docman_NotificationsManager
             }
         }
     }
+
     public function _getListeningUsersItemId($params)
     {
         return $params['item']->getId();

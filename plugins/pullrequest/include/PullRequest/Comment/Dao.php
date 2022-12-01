@@ -22,7 +22,7 @@ namespace Tuleap\PullRequest\Comment;
 
 use Tuleap\DB\DataAccessObject;
 
-class Dao extends DataAccessObject
+class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater
 {
     public function save(int $pull_request_id, int $user_id, int $post_date, string $content, int $parent_id): int
     {
@@ -51,11 +51,11 @@ class Dao extends DataAccessObject
     /**
      * @return array|null
      *
-     * @psalm-return array{id:int, pull_request_id:int, user_id:int, post_date:int, content:string, parent_id: int}|null
+     * @psalm-return array{id:int, pull_request_id:int, user_id:int, post_date:int, content:string, parent_id: int, color:string}|null
      */
     public function searchByCommentID(int $comment_id): ?array
     {
-        $sql = 'SELECT id, pull_request_id, user_id, post_date, content, parent_id
+        $sql = 'SELECT id, pull_request_id, user_id, post_date, content, parent_id, color
                 FROM plugin_pullrequest_comments
                 WHERE id = ?';
 
@@ -69,5 +69,11 @@ class Dao extends DataAccessObject
                 WHERE pull_request_id = ?';
 
         return $this->getDB()->run($sql, $pull_request_id);
+    }
+
+    public function setThreadColor(int $pull_request_id, string $color): void
+    {
+        $sql = 'UPDATE plugin_pullrequest_comments SET color = ? WHERE id= ?';
+        $this->getDB()->run($sql, $color, $pull_request_id);
     }
 }

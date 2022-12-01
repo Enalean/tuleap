@@ -227,7 +227,6 @@ class WikiPage
         }
     }
 
-
     private function initFromDb()
     {
         $res = db_query(' SELECT id, pagename, group_id FROM wiki_page' .
@@ -248,7 +247,6 @@ class WikiPage
             $this->pagename =  $row['pagename'];
         }
     }
-
 
     /**
      * @todo transfer to Wrapper
@@ -442,7 +440,6 @@ class WikiPage
         return $allPages;
     }
 
-
     /**
      * @return string[] List of pagename
      */
@@ -466,7 +463,6 @@ class WikiPage
 
         return $allPages;
     }
-
 
     /**
      * @return string[] List of pagename

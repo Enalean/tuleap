@@ -41,7 +41,6 @@ class ForgeUpgradeConfig
         $this->forge_upgrade->recordOnlyPlugin($path);
     }
 
-
     public function isSystemUpToDate(): bool
     {
         return $this->forge_upgrade->isSystemUpToDate();

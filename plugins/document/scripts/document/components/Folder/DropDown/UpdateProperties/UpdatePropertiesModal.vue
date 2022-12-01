@@ -43,14 +43,14 @@
             v-bind:is-loading="is_loading"
             v-bind:submit-button-label="submit_button_label"
             v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-submit-button-class="'fa-pencil'"
+            v-bind:icon-submit-button-class="'solid fa-pencil'"
             data-test="document-modal-submit-update-properties"
         />
     </form>
 </template>
 
 <script>
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";

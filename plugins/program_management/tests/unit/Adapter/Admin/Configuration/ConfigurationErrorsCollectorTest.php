@@ -134,7 +134,6 @@ final class ConfigurationErrorsCollectorTest extends TestCase
         self::assertCount(1, $this->collector->getTeamsWithError());
     }
 
-
     public function testItDoesNotHaveAnyError(): void
     {
         self::assertFalse($this->collector->hasError());

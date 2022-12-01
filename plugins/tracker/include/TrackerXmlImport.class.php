@@ -892,6 +892,7 @@ class TrackerXmlImport
 
         return $form_element;
     }
+
     /**
      *
      * @param array $hierarchy

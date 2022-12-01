@@ -39,6 +39,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 
 /**
  * @psalm-immutable
@@ -195,7 +196,7 @@ final class ReleaseRepresentation
             return null;
         }
 
-        return $tracker_artifact_builder->getArtifactRepresentation($user, $artifact);
+        return $tracker_artifact_builder->getArtifactRepresentation($user, $artifact, StatusValueRepresentation::buildFromArtifact($artifact, $user));
     }
 
     private static function getPackageRepresentation(FRSRelease $release): PackageMinimalRepresentation

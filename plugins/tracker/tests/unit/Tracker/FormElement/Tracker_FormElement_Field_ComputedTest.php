@@ -754,7 +754,6 @@ final class Tracker_FormElement_Field_ComputedTest extends \Tuleap\Test\PHPUnit\
         );
     }
 
-
     private function getComputedFieldForManualValueRetrievement($value_dao, $user, $changeset)
     {
         $field = $this->getComputedField();

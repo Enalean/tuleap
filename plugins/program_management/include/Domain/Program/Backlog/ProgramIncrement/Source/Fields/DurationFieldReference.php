@@ -30,5 +30,6 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Sourc
 interface DurationFieldReference
 {
     public function getId(): int;
+
     public function getLabel(): string;
 }

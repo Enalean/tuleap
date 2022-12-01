@@ -78,7 +78,7 @@ export function uploadFile(
                     }
                     context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
                     context.commit("removeFileFromUploadsList", fake_item);
-                    emitter.emit("new-item-has-just-been-created");
+                    emitter.emit("new-item-has-just-been-created", file);
                 }
             } catch (exception) {
                 fake_item.upload_error = FILE_UPLOAD_UNKNOWN_ERROR;
@@ -142,7 +142,7 @@ export function uploadVersion(
                 new_version: new_item_version,
             });
             context.commit("replaceUploadingFileWithActualFile", [updated_file, new_item_version]);
-            emitter.emit("item-has-just-been-updated");
+            emitter.emit("item-has-just-been-updated", { item: new_item_version });
         },
         onError: (error: Error | DetailedError): void => {
             updated_file.upload_error = getMessageFromError(error);
@@ -189,7 +189,7 @@ export function uploadVersionFromEmpty(
             context.commit("addJustCreatedItemToFolderContent", new_item_version);
             context.commit("updateCurrentItemForQuickLokDisplay", new_item_version);
             context.commit("replaceUploadingFileWithActualFile", [updated_empty, new_item_version]);
-            emitter.emit("item-has-just-been-updated");
+            emitter.emit("item-has-just-been-updated", { item: new_item_version });
         },
         onError: (error: Error | DetailedError): void => {
             updated_empty.upload_error = getMessageFromError(error);

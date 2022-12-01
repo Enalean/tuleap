@@ -76,6 +76,7 @@ final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager = $this->createMock(EventManager::class);
 
         EventManager::setInstance($this->event_manager);
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     protected function tearDown(): void

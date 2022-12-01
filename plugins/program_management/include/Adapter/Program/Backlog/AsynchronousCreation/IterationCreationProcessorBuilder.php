@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Codendi_HTMLPurifier;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
@@ -204,7 +203,6 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                 new ChangesetCommentIndexer(
                     new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
-                    Codendi_HTMLPurifier::instance(),
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )

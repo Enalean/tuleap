@@ -26,10 +26,10 @@ abstract class Theme
     {
         $this->color_index = 0;
     }
+
     abstract public function GetColorList();
 
     abstract public function ApplyPlot($plot);
-
 
     public function SetupPlot($plot)
     {

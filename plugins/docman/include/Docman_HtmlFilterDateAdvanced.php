@@ -28,6 +28,7 @@ class Docman_HtmlFilterDateAdvanced extends \Docman_HtmlFilterDate
     {
         parent::__construct($filter);
     }
+
     public function _valueSelectorHtml($formName)
     {
         $html  = '';

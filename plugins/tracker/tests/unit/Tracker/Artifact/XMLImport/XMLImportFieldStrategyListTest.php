@@ -321,7 +321,6 @@ class XMLImportFieldStrategyListTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull($result[0]);
     }
 
-
     public function testGetFieldDataUserListValueReturnUserId(): void
     {
         $user = Mockery::mock(PFUser::class);

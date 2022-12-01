@@ -22,7 +22,9 @@
 $GLOBALS['wgGroupPermissions']['user']['editmyprivateinfo'] = false;
 $GLOBALS['wgPasswordResetRoutes']                           = ['username' => false, 'email' => false];
 // Block the createaccount page, users are expected to use their Tuleap accounts
-$GLOBALS['wgGroupPermissions']['*']['createaccount'] = false;
+// Reference: https://www.mediawiki.org/wiki/Manual:Preventing_access#Restrict_account_creation
+$GLOBALS['wgGroupPermissions']['*']['createaccount']     = false;
+$GLOBALS['wgGroupPermissions']['sysop']['createaccount'] = false;
 // Disable patrolling
 $GLOBALS['wgGroupPermissions']['sysop']['autopatrol'] = false;
 $GLOBALS['wgGroupPermissions']['sysop']['patrol']     = false;
@@ -79,9 +81,8 @@ $GLOBALS['wgMathoidCli']                 = [
 ];
 
 // MediaWiki Core default settings - START ###
-$GLOBALS['wgExternalLinkTarget'] = '_blank';
-$GLOBALS['wgUrlProtocols'][]     = 'file://';
-$GLOBALS['wgUrlProtocols'][]     = 'redis://'; // From old MediaWiki 1.23
+$GLOBALS['wgUrlProtocols'][] = 'file://';
+$GLOBALS['wgUrlProtocols'][] = 'redis://'; // From old MediaWiki 1.23
 
 $GLOBALS['wgEnableUploads'] = true;
 

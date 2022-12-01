@@ -24,6 +24,11 @@ import localVue from "../../../../helpers/local-vue";
 import type { Item, ItemSearchResult } from "../../../../type";
 import DropDownMenuTreeView from "../../../Folder/DropDown/DropDownMenuTreeView.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
+import * as tlp_dropdown from "@tuleap/tlp-dropdown";
+import { EVENT_TLP_DROPDOWN_SHOWN } from "@tuleap/tlp-dropdown";
+
+jest.mock("@tuleap/tlp-dropdown");
 
 const observe = jest.fn();
 
@@ -35,13 +40,26 @@ window.ResizeObserver =
     }));
 
 describe("SearchItemDropdown", () => {
+    let fake_dropdown_object: Dropdown;
     let wrapper: Wrapper<SearchItemDropdown>;
     let $store = {
         dispatch: jest.fn(),
     };
     let parent_container: HTMLElement;
+    let dropdown_shown_callback: () => Promise<void>;
 
     beforeEach(() => {
+        fake_dropdown_object = {
+            listeners: [],
+            addEventListener: (event: string, callback: () => Promise<void>) => {
+                if (event === EVENT_TLP_DROPDOWN_SHOWN) {
+                    dropdown_shown_callback = callback;
+                }
+            },
+            removeEventListener: jest.fn(),
+        } as unknown as Dropdown;
+        jest.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
+
         $store = createStoreMock({});
         $store.dispatch.mockImplementation((action) => {
             if (action === "loadDocument") {
@@ -85,15 +103,10 @@ describe("SearchItemDropdown", () => {
         expect(wrapper.findComponent(DropDownMenuTreeView).exists()).toBe(false);
     });
 
-    it("should display the menu as soon as the user click on the trigger and the real item is loaded", () => {
-        return new Promise((done) => {
-            wrapper.find("[data-test=trigger").trigger("click");
+    it("should display the menu as soon as the user open the dropdown and the real item is loaded", async () => {
+        await dropdown_shown_callback();
 
-            process.nextTick(() => {
-                expect(wrapper.find("[data-test=spinner]").exists()).toBe(false);
-                expect(wrapper.findComponent(DropDownMenuTreeView).exists()).toBe(true);
-                done(null);
-            });
-        });
+        expect(wrapper.find("[data-test=spinner]").exists()).toBe(false);
+        expect(wrapper.findComponent(DropDownMenuTreeView).exists()).toBe(true);
     });
 });

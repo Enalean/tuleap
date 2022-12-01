@@ -28,5 +28,6 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 interface RetrieveIterationTracker
 {
     public function getIterationTrackerId(ProgramIdentifier $program_identifier): ?int;
+
     public function getIterationTrackerIdFromIteration(IterationIdentifier $iteration): int;
 }

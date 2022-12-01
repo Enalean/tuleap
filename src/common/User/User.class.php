@@ -163,7 +163,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * The dao used to retrieve preferences
      */
-    public $preferencesdao;
+    public ?\Tuleap\User\StoreUserPreference $preferencesdao = null;
 
     /**
      * The dao used to retrieve user-group info
@@ -258,8 +258,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->session_id   = false;
     }
 
-
-
     /**
      * Return associative array of data from db
      *
@@ -304,6 +302,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         unset($this->group_data);
         $this->group_data = null;
     }
+
     /**
      * clear: clear the cached tracker data
      */
@@ -418,6 +417,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         }
 
         return $this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id];
+    }
+
+    public function setCacheUgroupMembership(int $ugroup_id, int $group_id, bool $is_member): void
+    {
+        $this->cache_ugroup_membership[$ugroup_id][$group_id][0] = $is_member;
     }
 
     public function isNone()
@@ -602,6 +606,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->id;
     }
+
     /**
      * @psalm-taint-escape file
      */
@@ -614,6 +619,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->realname ?? 'User #' . $this->getId();
     }
+
     /**
      * @return string the email adress of the user
      */
@@ -638,6 +644,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->status;
     }
+
     /**
      * @return string ldap identifier of the user
      */
@@ -653,6 +660,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->getLdapId() != null;
     }
+
     /**
      * @return string the registration date of the user (timestamp format)
      */
@@ -660,6 +668,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->add_date;
     }
+
     /**
      * @return string the last time the user has changed her password
      */
@@ -680,6 +689,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->mail_siteupdates;
     }
+
     /**
      * @return int 1 if the user accept to receive additional mails from the community, 0 if he does'nt
      */
@@ -687,6 +697,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->mail_va;
     }
+
     /**
      * @return int 0 or 1
      */
@@ -694,6 +705,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->sticky_login;
     }
+
     /**
      * @return string the Status of the user
      * '0' = (number zero) special value for the site admin
@@ -754,6 +766,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->unix_box;
     }
+
     /**
      * @return real unix ID of the user (not the one in the DB!)
      */
@@ -783,6 +796,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->language_id;
     }
+
     /**
      * @return string|null hash of user pwd
      */
@@ -1036,6 +1050,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->user_name = $name;
     }
+
     /**
      * @param string the real name of the user
      */
@@ -1043,6 +1058,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->realname = $name;
     }
+
     /**
      * @param string the email adress of the user
      */
@@ -1076,6 +1092,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             $this->status = $status;
         }
     }
+
     /**
      * @param string ldap identifier of the user
      */
@@ -1083,6 +1100,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->ldap_id = $ldapId;
     }
+
     /**
      * @param string the registration date of the user (timestamp format)
      */
@@ -1090,6 +1108,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->add_date = $addDate;
     }
+
     /**
      * @param string the timezone of the user (GMT, Europe/Paris, etc ...)
      */
@@ -1097,6 +1116,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->timezone = $timezone;
     }
+
     /**
      * @param int 1 if the user accept to receive site mail updates, 0 if he does'nt
      */
@@ -1104,6 +1124,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->mail_siteupdates = $mailSiteUpdate;
     }
+
     /**
      * @param int 1 if the user accept to receive additional mails from the community, 0 if he does'nt
      */
@@ -1111,6 +1132,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->mail_va = $mailVa;
     }
+
     /**
      * @param int 0 or 1
      */
@@ -1118,6 +1140,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->sticky_login = $stickyLogin;
     }
+
     /**
      * @param string the Status of the user
      * '0' = (number zero) special value for the site admin
@@ -1155,6 +1178,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->unix_box = $unixBox;
     }
+
     /**
      * @param string authorized keys of the user
      */

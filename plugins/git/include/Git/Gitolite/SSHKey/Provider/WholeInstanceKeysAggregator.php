@@ -35,30 +35,27 @@ class WholeInstanceKeysAggregator implements IProvideKey
         $this->iterator->append($user_keys);
     }
 
-    /**
-     * @return \Tuleap\Git\Gitolite\SSHKey\Key
-     */
-    public function current()
+    public function current(): \Tuleap\Git\Gitolite\SSHKey\Key
     {
         return $this->iterator->current();
     }
 
-    public function next()
+    public function next(): void
     {
         $this->iterator->next();
     }
 
-    public function key()
+    public function key(): string|int|bool|null|float
     {
         return $this->iterator->key();
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->iterator->valid();
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->iterator->rewind();
     }

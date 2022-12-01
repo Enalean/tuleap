@@ -37,6 +37,7 @@ class Docman_MetadataHtmlOwner extends \Docman_MetadataHtmlString
             return '';
         }
     }
+
     public function _getField()
     {
         $name  = $this->_getFieldName();

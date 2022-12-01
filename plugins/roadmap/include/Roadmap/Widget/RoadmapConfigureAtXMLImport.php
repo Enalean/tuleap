@@ -40,7 +40,6 @@ final class RoadmapConfigureAtXMLImport
         $event->setWidgetIsConfigured();
     }
 
-
     private function getRequest(ConfigureAtXMLImport $event): Codendi_Request
     {
         return new Codendi_Request(

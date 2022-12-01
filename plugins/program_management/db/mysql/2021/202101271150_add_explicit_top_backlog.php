@@ -27,10 +27,12 @@ final class b202101271150_add_explicit_top_backlog extends \Tuleap\ForgeUpgrade\
     {
         return 'Add the scaled agile service in projects';
     }
+
     public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
+
     public function up(): void
     {
         $sql = 'CREATE TABLE plugin_scaled_agile_explicit_top_backlog(

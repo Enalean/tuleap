@@ -30,6 +30,7 @@ use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Docman\FilenamePattern\FilenamePattern;
 use Tuleap\Document\Config\FileDownloadLimits;
+use Tuleap\Document\Tree\Create\NewItemAlternativeSection;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 
@@ -151,7 +152,11 @@ class DocumentTreePresenter
     public bool $is_filename_pattern_enforced;
     public bool $can_user_switch_to_old_ui;
     public bool $should_display_history_in_document;
+    public string $create_new_item_alternatives;
 
+    /**
+     * @param NewItemAlternativeSection[] $create_new_item_alternatives
+     */
     public function __construct(
         \Project $project,
         int $root_id,
@@ -170,6 +175,7 @@ class DocumentTreePresenter
         array $columns,
         FilenamePattern $filename_pattern,
         public bool $should_display_source_column,
+        array $create_new_item_alternatives,
     ) {
         $this->project_id                         = $project->getID();
         $this->root_id                            = $root_id;
@@ -206,5 +212,7 @@ class DocumentTreePresenter
         $this->can_user_switch_to_old_ui = SwitchToOldUi::isAllowed($user, $project);
 
         $this->should_display_history_in_document = (int) \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_HISTORY) === 1;
+
+        $this->create_new_item_alternatives = json_encode($create_new_item_alternatives, JSON_THROW_ON_ERROR);
     }
 }

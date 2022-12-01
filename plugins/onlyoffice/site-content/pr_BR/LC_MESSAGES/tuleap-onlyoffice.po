@@ -16,6 +16,9 @@ msgstr ""
 msgid "Current secret not displayed"
 msgstr ""
 
+msgid "Document"
+msgstr ""
+
 msgid "Document server URL"
 msgstr ""
 
@@ -37,5 +40,14 @@ msgstr ""
 msgid "ONLYOFFICE settings"
 msgstr ""
 
+msgid "Online office files"
+msgstr ""
+
+msgid "Presentation"
+msgstr ""
+
 msgid "Save"
+msgstr ""
+
+msgid "Spreadsheet"
 msgstr ""

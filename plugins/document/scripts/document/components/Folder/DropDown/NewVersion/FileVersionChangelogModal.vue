@@ -39,14 +39,14 @@
             v-bind:is-loading="is_loading"
             v-bind:submit-button-label="$gettext('Create new version')"
             v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-submit-button-class="'fa-plus'"
+            v-bind:icon-submit-button-class="'fa-solid fa-plus'"
             data-test="document-modal-submit-button-create-version-changelog"
         />
     </form>
 </template>
 
 <script>
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";

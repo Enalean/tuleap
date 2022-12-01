@@ -31,6 +31,7 @@ class FRSFileFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         ForgeConfig::set('ftp_frs_dir_prefix', $this->getTmpDir());
         ForgeConfig::set('ftp_incoming_dir', $this->getTmpDir());
         copy(__DIR__ . '/_fixtures/file_sample', ForgeConfig::get('ftp_incoming_dir') . '/file_sample');
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testgetUploadSubDirectory()
@@ -997,7 +998,6 @@ class FRSFileFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
 
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
-
 
     public function testCreateFileNotYetIncoming()
     {

@@ -46,13 +46,10 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         $this->ldapParams = $ldapParams;
     }
 
-
     /**
      * Return the number of entries in a result set.
-     *
-     * @return int
      */
-    public function count()
+    public function count(): int
     {
         if ($this->list && array_key_exists('count', $this->list)) {
             return $this->list['count'];
@@ -60,7 +57,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
             return 0;
         }
     }
-
 
     /**
      * Return true if there is no entries in the result set.
@@ -72,13 +68,12 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         return empty($this->list);
     }
 
-
     /**
      * Move key to the position given in parameter.
      *
      * @param $pos int
      */
-    public function seek($pos)
+    public function seek($pos): void
     {
         $this->key   = $pos;
         $this->valid = true;
@@ -89,7 +84,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
             $this->valid = false;
         }
     }
-
 
     /**
      * Move key to the position given in parameter.
@@ -106,7 +100,6 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         }
     }
 
-
     /**
      * Return true if result set is not empty.
      *
@@ -117,64 +110,53 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
         return ! $this->isEmpty();
     }
 
-
     /**
      * Return the current element.
      *
      * Standard function implemented from Iterator interface
-     *
-     * @return LDAPResult
      */
-    public function current()
+    public function current(): LDAPResult
     {
         return new LDAPResult($this->list[$this->key], $this->ldapParams);
     }
-
 
     /**
      * Return the key of the current element.
      *
      * Standard function implemented from Iterator interface
-     *
-     * @return int
      */
-    public function key()
+    public function key(): int
     {
         return $this->key;
     }
-
 
     /**
      * Move forward to next element.
      *
      * Standard function implemented from Iterator interface
      */
-    public function next()
+    public function next(): void
     {
         $this->valid = (++$this->key < $this->count());
     }
-
 
     /**
      * Rewind the Iterator to the first element.
      *
      * Standard function implemented from Iterator interface
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->valid = true;
         $this->key   = 0;
     }
 
-
     /**
      * Check if there is a current element after calls to rewind() or next().
      *
      * Standard function implemented from Iterator interface
-     *
-     * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->valid;
     }

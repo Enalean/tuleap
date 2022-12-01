@@ -36,7 +36,7 @@ class InlineCommentRetriever
 
     public function getInlineCommentByID(int $inline_comment_id): ?InlineComment
     {
-        $row = $this->dao->searchByID($inline_comment_id);
+        $row = $this->dao->searchByCommentID($inline_comment_id);
         if ($row === null) {
             return null;
         }

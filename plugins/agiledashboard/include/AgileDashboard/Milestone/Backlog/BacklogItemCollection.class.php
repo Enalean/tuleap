@@ -59,32 +59,32 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
         return isset($this->index[$id]);
     }
 
-    public function current()
+    public function current(): mixed
     {
         return current($this->rows);
     }
 
-    public function key()
+    public function key(): mixed
     {
         return key($this->rows);
     }
 
-    public function next()
+    public function next(): void
     {
         next($this->rows);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->rows);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return current($this->rows) !== false;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->rows);
     }

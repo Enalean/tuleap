@@ -95,7 +95,7 @@ class FilesHeaderPresenterBuilder
         }
 
         list($head_name, $is_tag) = $commit ? $this->getHeadNameForCurrentCommit($request, $commit) : ['', false];
-        $committer_epoch          = $commit ? $commit->GetCommitterEpoch() : '';
+        $committer_epoch          = $commit ? ($commit->GetCommitterEpoch() ?? '') : '';
 
         return new FilesHeaderPresenter(
             $repository,

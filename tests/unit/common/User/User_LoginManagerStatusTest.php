@@ -32,6 +32,7 @@ final class User_LoginManagerStatusTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
         $this->user_status_manager = new User_UserStatusManager();
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testItSucceedsIfUserIsActive(): void

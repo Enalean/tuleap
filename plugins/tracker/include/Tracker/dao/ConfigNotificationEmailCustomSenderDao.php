@@ -40,7 +40,6 @@ class ConfigNotificationEmailCustomSenderDao extends DataAccessObject
         return $this->getDB()->run($sql, $tracker_id);
     }
 
-
     public function create($tracker_id, $format, $enabled)
     {
         $sql = "INSERT INTO plugin_tracker_notification_email_custom_sender_format(tracker_id,format,enabled) VALUES (?,?,?)

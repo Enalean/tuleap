@@ -274,6 +274,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
 
         return $field;
     }
+
     /**
      * Export semantic to XML
      *

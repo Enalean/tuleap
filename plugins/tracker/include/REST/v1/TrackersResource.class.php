@@ -66,6 +66,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactRepresentation;
+use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
@@ -107,26 +108,13 @@ class TrackersResource extends AuthenticatedResource
     public const ORDER_DESC           = 'desc';
     public const DEFAULT_EXPERT_QUERY = '';
 
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /** @var Tracker_ReportFactory */
-    private $report_factory;
-
-    /** @var PermissionsManager */
-    private $permission_manager;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
-
-    /** @var Tracker_ArtifactFactory */
-    private $tracker_artifact_factory;
-
-    /** @var  ReportArtifactFactory */
-    private $report_artifact_factory;
+    private UserManager $user_manager;
+    private Tracker_FormElementFactory $formelement_factory;
+    private Tracker_ReportFactory $report_factory;
+    private PermissionsManager $permission_manager;
+    private TrackerFactory $tracker_factory;
+    private Tracker_ArtifactFactory $tracker_artifact_factory;
+    private ReportArtifactFactory $report_artifact_factory;
 
     public function __construct()
     {
@@ -140,7 +128,6 @@ class TrackersResource extends AuthenticatedResource
             $this->tracker_artifact_factory
         );
     }
-
 
     /**
      * @url OPTIONS
@@ -455,9 +442,9 @@ class TrackersResource extends AuthenticatedResource
             if ($with_all_field_values) {
                 $tracker_representation = MinimalTrackerRepresentation::build($artifact->getTracker());
 
-                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation);
+                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation, StatusValueRepresentation::buildFromArtifact($artifact, $user));
             } else {
-                return $builder->getArtifactRepresentation($user, $artifact);
+                return $builder->getArtifactRepresentation($user, $artifact, StatusValueRepresentation::buildFromArtifact($artifact, $user));
             }
         };
 
@@ -514,10 +501,17 @@ class TrackersResource extends AuthenticatedResource
         }
         $nb_matching = $pagination->getTotalSize();
         Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
-        return array_map(
-            static fn($artifact) => ParentArtifactRepresentation::build($artifact),
-            array_values($pagination->getArtifacts())
-        );
+        return array_map([$this, 'getParentArtifactRepresentation'], array_values($pagination->getArtifacts()));
+    }
+
+    private function getParentArtifactRepresentation(Artifact $artifact): ParentArtifactRepresentation
+    {
+        $user                  = $this->user_manager->getCurrentUser();
+        $status_representation = null;
+        if ($artifact->getStatus()) {
+            $status_representation = StatusValueRepresentation::buildFromArtifact($artifact, $user);
+        }
+        return ParentArtifactRepresentation::build($artifact, $status_representation);
     }
 
     /**

@@ -28,6 +28,7 @@ use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use UserManager;
@@ -71,7 +72,7 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->user_manager                    = Mockery::spy(UserManager::class);
+        $this->user_manager                    = Mockery::mock(UserManager::class);
         $this->formelement_factory             = Mockery::spy(Tracker_FormElementFactory::class);
         $this->unsubscribers_notification_dao  = Mockery::mock(UnsubscribersNotificationDAO::class);
         $this->notification_settings_retriever = Mockery::spy(UserNotificationSettingsRetriever::class);
@@ -644,6 +645,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset->shouldReceive('getTracker')->andReturns($tracker);
 
         $changeset->shouldReceive('getComment')->andReturns(Mockery::spy(\Tracker_Artifact_Changeset_Comment::class)->shouldReceive('hasEmptyBody')->andReturns($has_empty_body)->getMock());
+
+        $changeset->shouldReceive('getSubmitter')->andReturn(UserTestBuilder::aRandomActiveUser()->build());
+
         return $changeset;
     }
 

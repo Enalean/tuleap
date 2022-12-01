@@ -35,6 +35,7 @@ class Widget_ProjectPublicAreas extends Widget
     {
         return $GLOBALS['Language']->getText('include_project_home', 'public_areas');
     }
+
     public function getContent()
     {
         $purifier = Codendi_HTMLPurifier::instance();

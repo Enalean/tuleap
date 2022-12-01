@@ -25,13 +25,13 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\FullTextSearchCommon\Index\PlaintextItemToIndex;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
-use Tuleap\Search\ItemToIndex;
 
 class MeilisearchMetadataDAO extends DataAccessObject
 {
-    public function saveItemMetadata(ItemToIndex $item): int
+    public function saveItemMetadata(PlaintextItemToIndex $item): int
     {
         $existing_entries = $this->searchMatchingEntries($item);
 
@@ -61,7 +61,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
     /**
      * @return int[]
      */
-    public function searchMatchingEntries(ItemToIndex|IndexedItemsToRemove $item): array
+    public function searchMatchingEntries(PlaintextItemToIndex|IndexedItemsToRemove $item): array
     {
         $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($item->metadata);
 
@@ -100,7 +100,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
         return $metadata_statement_filter;
     }
 
-    private function createNewEntry(ItemToIndex $item): int
+    private function createNewEntry(PlaintextItemToIndex $item): int
     {
         $id                 = $this->getDB()->insertReturnId('plugin_fts_meilisearch_item', ['type' => $item->type, 'project_id' => $item->project_id]);
         $metadata_to_insert = [];

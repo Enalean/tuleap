@@ -23,7 +23,6 @@ import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-fi
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
-import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { NotifyFault } from "../../../../domain/NotifyFault";
 import { MatchingArtifactRetrievalFault } from "../../../../domain/fields/link-field/MatchingArtifactRetrievalFault";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
@@ -35,6 +34,10 @@ import { LinkableArtifactFilter } from "../../../../domain/fields/link-field/Lin
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
 import type { LinkField } from "./LinkField";
+import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
+import type { RetrieveUserHistory } from "../../../../domain/fields/link-field/RetrieveUserHistory";
+import type { UserIdentifier } from "../../../../domain/UserIdentifier";
+import { SearchResultsGroup } from "./SearchResultsGroup";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
@@ -50,13 +53,29 @@ const isParentSelected = (host: LinkField): boolean =>
 export const ArtifactLinkSelectorAutoCompleter = (
     retrieve_matching_artifact: RetrieveMatchingArtifact,
     fault_notifier: NotifyFault,
-    notification_clearer: ClearFaultNotification,
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
-    current_tracker_identifier: CurrentTrackerIdentifier
+    current_tracker_identifier: CurrentTrackerIdentifier,
+    user_history_retriever: RetrieveUserHistory,
+    user: UserIdentifier,
+    is_search_feature_flag_enabled: boolean
 ): ArtifactLinkSelectorAutoCompleterType => {
-    let loaded_possible_parents_cache: GroupCollection = [PossibleParentsGroup.buildLoadingState()];
+    const getRecentlyViewedItems = (query: string): PromiseLike<GroupOfItems> => {
+        const filter = LinkableArtifactFilter(query);
+        return user_history_retriever
+            .getUserArtifactHistory(user)
+            .map((artifacts) => artifacts.filter(filter.matchesQuery))
+            .match(
+                (artifacts) =>
+                    RecentlyViewedArtifactGroup.fromUserHistory(link_verifier, artifacts),
+                (fault) => {
+                    // eslint-disable-next-line no-console
+                    console.log(fault.valueOf());
+                    return RecentlyViewedArtifactGroup.buildEmpty();
+                }
+            );
+    };
 
     const getMatchingArtifactsGroup = (
         linkable_number: LinkableNumber
@@ -92,46 +111,50 @@ export const ArtifactLinkSelectorAutoCompleter = (
     const getFilteredPossibleParentsGroups = async (query: string): Promise<GroupCollection> => {
         const matching_parents = await getPossibleParentsGroup(query);
         if (matching_parents.length === 0) {
-            const empty_possible_parents_group = [PossibleParentsGroup.buildEmpty()];
-            loaded_possible_parents_cache = empty_possible_parents_group;
-            return empty_possible_parents_group;
+            return [PossibleParentsGroup.buildEmpty()];
         }
-
-        loaded_possible_parents_cache = matching_parents;
 
         return matching_parents;
     };
 
     return {
-        autoComplete: async (host: LinkField, query: string): Promise<void> => {
-            notification_clearer.clearFaultNotification();
+        autoComplete: (host: LinkField, query: string): void => {
+            host.matching_artifact_section = [];
+            host.recently_viewed_section = [];
+            host.search_results_section = [];
+            host.possible_parents_section = [];
+
+            const is_parent_selected = isParentSelected(host);
 
             const linkable_number = LinkableNumberProxy.fromQueryString(
                 query,
                 current_artifact_identifier
             );
-            const is_parent_selected = isParentSelected(host);
-            if (!linkable_number && !is_parent_selected) {
-                host.dropdown_content = [];
-                return;
-            }
-            let loading_groups = [];
             if (linkable_number) {
-                loading_groups.push(MatchingArtifactsGroup.buildLoadingState());
+                host.matching_artifact_section = [MatchingArtifactsGroup.buildLoadingState()];
+                getMatchingArtifactsGroup(linkable_number).then((group) => {
+                    host.matching_artifact_section = [group];
+                });
+            }
+            if (is_search_feature_flag_enabled && !is_parent_selected) {
+                host.recently_viewed_section = [RecentlyViewedArtifactGroup.buildLoadingState()];
+                getRecentlyViewedItems(query).then((group) => {
+                    if (!isParentSelected(host)) {
+                        host.recently_viewed_section = [group];
+                    }
+                });
+                if (query.length > 0) {
+                    host.search_results_section = [SearchResultsGroup.buildEmpty()];
+                }
             }
             if (is_parent_selected) {
-                loading_groups = loading_groups.concat(loaded_possible_parents_cache);
+                host.possible_parents_section = [PossibleParentsGroup.buildLoadingState()];
+                getFilteredPossibleParentsGroups(query).then((groups) => {
+                    if (isParentSelected(host)) {
+                        host.possible_parents_section = groups;
+                    }
+                });
             }
-            host.dropdown_content = loading_groups;
-
-            let groups = [];
-            if (linkable_number) {
-                groups.push(await getMatchingArtifactsGroup(linkable_number));
-            }
-            if (is_parent_selected) {
-                groups = groups.concat(await getFilteredPossibleParentsGroups(query));
-            }
-            host.dropdown_content = groups;
         },
     };
 };

@@ -214,7 +214,7 @@ class RouteCollector
 
     public static function getOrPostProjectHome()
     {
-        return new Home();
+        return new Home(\ProjectManager::instance());
     }
 
     public static function getAdminSiteContentCustomisation()
@@ -479,6 +479,7 @@ class RouteCollector
         return new UpdateNotificationsPreferences(
             DisplayNotificationsController::getCSRFToken(),
             \UserManager::instance(),
+            EventManager::instance(),
         );
     }
 

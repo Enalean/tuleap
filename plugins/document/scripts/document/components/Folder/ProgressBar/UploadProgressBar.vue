@@ -37,7 +37,7 @@
             v-on:click.prevent="cancel"
             data-test="cancel-upload"
         >
-            <i class="fa fa-times-circle"></i>
+            <i class="fa-solid fa-circle-xmark"></i>
         </a>
     </div>
 </template>

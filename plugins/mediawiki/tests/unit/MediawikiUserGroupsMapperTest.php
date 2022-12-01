@@ -27,8 +27,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-require_once 'bootstrap.php';
-
 final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -347,10 +345,9 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsRightMediawikiGroupsFromDatabase(): void
     {
-        $dar = Mockery::spy(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsForUser')
             ->with($this->tuleap_user, $this->project)
-            ->andReturn($dar);
+            ->andReturn(\TestHelper::emptyDar());
 
         $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
             ->with($this->tuleap_user, $this->project)
@@ -377,10 +374,9 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSetsAnonymousUsersAsAnonymous(): void
     {
         $this->tuleap_user->shouldReceive('isAnonymous')->andReturnTrue();
-        $dar = Mockery::spy(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsForUser')
             ->with($this->tuleap_user, $this->project)
-            ->andReturn($dar);
+            ->andReturn(\TestHelper::emptyDar());
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
@@ -395,15 +391,13 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSetsAnonymousWhenNothingIsAvailable(): void
     {
-        $dar = Mockery::spy(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsForUser')
             ->with($this->tuleap_user, $this->project)
-            ->andReturn($dar);
+            ->andReturn(\TestHelper::emptyDar());
 
-        $dar = Mockery::spy(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
             ->with($this->tuleap_user, $this->project)
-            ->andReturn($dar);
+            ->andReturn(\TestHelper::emptyDar());
 
         $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
 
@@ -423,19 +417,20 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
         $this->tuleap_user->shouldReceive('isMember')->with(202, 'A')->andReturnTrue();
 
-        $dar = Mockery::spy(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
             ->with($this->tuleap_user, $this->project)
-            ->andReturn($dar);
+            ->andReturn(\TestHelper::emptyDar());
 
-        $groups_dar = Mockery::spy(LegacyDataAccessResultInterface::class);
+        $groups_dar = $this->createStub(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsForUser')
             ->with($this->tuleap_user, $this->project)
             ->andReturn($groups_dar);
 
         $first_row = ['ug_group' => 'ForgeRole:forge_admin'];
-        $groups_dar->shouldReceive('valid')->andReturn(true, false);
-        $groups_dar->shouldReceive('current')->andReturn($first_row);
+        $groups_dar->method('valid')->willReturn(true, false);
+        $groups_dar->method('current')->willReturn($first_row);
+        $groups_dar->method('rewind');
+        $groups_dar->method('next');
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
@@ -447,19 +442,20 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
         $this->tuleap_user->shouldReceive('isMember')->with(202, 'A')->andReturnTrue();
 
-        $groups_dar = Mockery::spy(LegacyDataAccessResultInterface::class);
+        $groups_dar = $this->createStub(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsForUser')
             ->with($this->tuleap_user, $this->project)
             ->andReturn($groups_dar);
 
         $first_row = ['ug_group' => 'bureaucrat'];
-        $groups_dar->shouldReceive('valid')->andReturn(true, false);
-        $groups_dar->shouldReceive('current')->andReturn($first_row);
+        $groups_dar->method('valid')->willReturn(true, false);
+        $groups_dar->method('current')->willReturn($first_row);
+        $groups_dar->method('rewind');
+        $groups_dar->method('next');
 
-        $dar = Mockery::spy(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
             ->with($this->tuleap_user, $this->project)
-            ->andReturn($dar);
+            ->andReturn(\TestHelper::emptyDar());
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
@@ -471,23 +467,27 @@ final class MediawikiUserGroupsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tuleap_user->shouldReceive('isAnonymous')->andReturnFalse();
         $this->tuleap_user->shouldReceive('isMember')->with(202, 'A')->andReturnTrue();
 
-        $groups_dar = Mockery::spy(LegacyDataAccessResultInterface::class);
+        $groups_dar = $this->createStub(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsForUser')
             ->with($this->tuleap_user, $this->project)
             ->andReturn($groups_dar);
 
         $first_row = ['ug_group' => '*'];
-        $groups_dar->shouldReceive('valid')->andReturn(true, false);
-        $groups_dar->shouldReceive('current')->andReturn($first_row);
+        $groups_dar->method('valid')->willReturn(true, false);
+        $groups_dar->method('current')->willReturn($first_row);
+        $groups_dar->method('rewind');
+        $groups_dar->method('next');
 
-        $mapped_dar = Mockery::spy(LegacyDataAccessResultInterface::class);
+        $mapped_dar = $this->createStub(LegacyDataAccessResultInterface::class);
         $this->dao->shouldReceive('getMediawikiGroupsMappedForUGroups')
             ->with($this->tuleap_user, $this->project)
             ->andReturn($mapped_dar);
 
         $first_row = ['real_name' => '*'];
-        $mapped_dar->shouldReceive('valid')->andReturn(true, false);
-        $mapped_dar->shouldReceive('current')->andReturn($first_row);
+        $mapped_dar->method('valid')->willReturn(true, false);
+        $mapped_dar->method('current')->willReturn($first_row);
+        $mapped_dar->method('rewind');
+        $mapped_dar->method('next');
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 

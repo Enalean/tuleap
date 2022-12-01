@@ -20,25 +20,30 @@
 import CodeMirror from "codemirror";
 import "codemirror/addon/scroll/simplescrollbars.js";
 import { getStore } from "../comments-store.ts";
-import {
-    initDataAndCodeMirrors,
-    isFirstLineOfGroup,
-    getCommentLine,
-    getLineHandles,
-    getRightLine,
-    getLeftLine,
-} from "./side-by-side-lines-state.js";
-import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-builder.js";
-import { buildCommentsPlaceholderWidget } from "./side-by-side-comment-placeholder-builder.js";
-import { synchronize } from "./side-by-side-scroll-synchronizer.js";
+import { SideBySideLineState } from "./side-by-side-lines-state.ts";
+import { SideBySideCodePlaceholderCreationManager } from "./side-by-side-code-placeholder-creation-manager.ts";
+import { synchronize } from "./side-by-side-scroll-synchronizer.ts";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/collaspible-code-sections-builder.ts";
-import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
+import { SideBySideLinesHeightEqualizer } from "./side-by-side-line-height-equalizer.ts";
 
-import { POSITION_LEFT, POSITION_RIGHT } from "../inline-comment-positions.js";
+import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
 
-import "./modes.js";
+import "./modes.ts";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
-import { NAME as INLINE_COMMENT_NAME } from "../new-inline-comment-component";
+import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
+import { SideBySideLineMapper } from "./side-by-side-line-mapper";
+import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors-content-manager";
+import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
+import { SideBySideCodeMirrorWidgetCreator } from "./side-by-side-code-mirror-widget-creator";
+import { RelativeDateHelper } from "../../helpers/date-helpers";
+import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
+import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
+import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
+import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
+import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
+import { SideBySideCodeMirrorWidgetsCreationManager } from "./side-by-side-code-mirror-widgets-creation-manager";
+import { FileDiffCommentScroller } from "./file-diff-comment-scroller";
+import { FileDiffCommentWidgetsMap } from "./file-diff-comment-widgets-map";
 
 export default {
     template: `
@@ -50,16 +55,26 @@ export default {
         diff: "<",
         filePath: "@",
         pullRequestId: "@",
+        commentId: "@",
     },
 };
 
-controller.$inject = ["$element", "$scope", "$q", "CodeMirrorHelperService"];
+controller.$inject = [
+    "$element",
+    "$scope",
+    "$q",
+    "CodeMirrorHelperService",
+    "SharedPropertiesService",
+];
 
-function controller($element, $scope, $q, CodeMirrorHelperService) {
+function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropertiesService) {
     const self = this;
-    self.$onInit = init;
 
-    function init() {
+    Object.assign(self, {
+        $onInit,
+    });
+
+    function $onInit() {
         const [left_element, right_element] = $element[0].querySelectorAll(
             ".pull-request-side-by-side-diff"
         );
@@ -94,209 +109,89 @@ function controller($element, $scope, $q, CodeMirrorHelperService) {
     }
 
     function displaySideBySideDiff(file_lines, left_code_mirror, right_code_mirror) {
-        initDataAndCodeMirrors(file_lines, left_code_mirror, right_code_mirror);
-
-        const code_placeholders = file_lines.map((line) => {
-            displayLine(line, left_code_mirror, right_code_mirror);
-            return addCodePlaceholder(line, left_code_mirror, right_code_mirror);
-        });
-
-        code_placeholders.forEach((widget_params) => {
-            if (!widget_params) {
-                return;
-            }
-            CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
-        });
-
-        file_lines.forEach((line) => {
-            addCommentsPlaceholder(line, left_code_mirror, right_code_mirror);
-        });
-
-        getStore()
-            .getAllRootComments()
-            .forEach((comment) => {
-                displayInlineComment(comment, left_code_mirror, right_code_mirror);
-            });
-
-        handleCodeMirrorEvents(left_code_mirror, right_code_mirror);
-    }
-
-    function displayInlineComment(comment, left_code_mirror, right_code_mirror) {
-        const comment_line = getCommentLine(comment);
-
-        if (comment_line.new_offset === null) {
-            CodeMirrorHelperService.displayInlineComment(
-                left_code_mirror,
-                comment,
-                comment_line.old_offset - 1
-            ).node.post_rendering_callback = () => {
-                recomputeCommentPlaceholderHeight(
-                    left_code_mirror,
-                    right_code_mirror,
-                    getLeftLine(comment_line.old_offset - 1)
-                );
-            };
-
-            return addCommentsPlaceholder(comment_line, left_code_mirror, right_code_mirror);
-        }
-
-        if (comment_line.old_offset === null) {
-            CodeMirrorHelperService.displayInlineComment(
-                right_code_mirror,
-                comment,
-                comment_line.new_offset - 1
-            ).node.post_rendering_callback = () => {
-                recomputeCommentPlaceholderHeight(
-                    left_code_mirror,
-                    right_code_mirror,
-                    getRightLine(comment_line.new_offset - 1)
-                );
-            };
-
-            return addCommentsPlaceholder(comment_line, left_code_mirror, right_code_mirror);
-        }
-
-        const target_code_mirror =
-            comment.position === POSITION_LEFT ? left_code_mirror : right_code_mirror;
-        const line_number =
-            comment.position === POSITION_LEFT
-                ? comment_line.old_offset - 1
-                : comment_line.new_offset - 1;
-
-        CodeMirrorHelperService.displayInlineComment(
-            target_code_mirror,
-            comment,
-            line_number
-        ).node.post_rendering_callback = () => {
-            recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
-                comment.position === POSITION_LEFT
-                    ? getLeftLine(line_number)
-                    : getRightLine(line_number)
-            );
-        };
-
-        return addCommentsPlaceholder(comment_line, left_code_mirror, right_code_mirror);
-    }
-
-    function recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line) {
-        const placeholder_to_create = equalizeSides(
-            left_code_mirror,
-            right_code_mirror,
-            getLineHandles(line)
-        );
-
-        if (placeholder_to_create) {
-            CodeMirrorHelperService.displayPlaceholderWidget(placeholder_to_create);
-        }
-    }
-
-    function handleCodeMirrorEvents(left_code_mirror, right_code_mirror) {
-        left_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
-            if (line_widget.node.localName !== INLINE_COMMENT_NAME) {
-                return;
-            }
-
-            recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
-                getLeftLine(line_number)
-            );
-        });
-        right_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
-            if (line_widget.node.localName !== INLINE_COMMENT_NAME) {
-                return;
-            }
-
-            recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
-                getRightLine(line_number)
-            );
-        });
-        left_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
-            recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
-                getLeftLine(line_number)
-            );
-        });
-        right_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
-            recomputeCommentPlaceholderHeight(
-                left_code_mirror,
-                right_code_mirror,
-                getRightLine(line_number)
-            );
-        });
-
-        left_code_mirror.on("gutterClick", (left_code_mirror, line_number) =>
-            addCommentOnLeftCodeMirror(left_code_mirror, right_code_mirror, line_number)
-        );
-        right_code_mirror.on("gutterClick", (right_code_mirror, line_number) =>
-            addCommentOnRightCodeMirror(left_code_mirror, right_code_mirror, line_number)
-        );
-    }
-
-    function addCommentOnLeftCodeMirror(left_code_mirror, right_code_mirror, line_number) {
-        const line = getLeftLine(line_number);
-        if (!line) {
-            return;
-        }
-
-        CodeMirrorHelperService.showCommentForm(
-            left_code_mirror,
-            line.unidiff_offset,
-            line_number,
-            self.filePath,
-            self.pullRequestId,
-            POSITION_LEFT,
-            () => recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line)
-        );
-    }
-
-    function addCommentOnRightCodeMirror(left_code_mirror, right_code_mirror, line_number) {
-        const line = getRightLine(line_number);
-        if (!line) {
-            return;
-        }
-
-        CodeMirrorHelperService.showCommentForm(
-            right_code_mirror,
-            line.unidiff_offset,
-            line_number,
-            self.filePath,
-            self.pullRequestId,
-            POSITION_RIGHT,
-            () => recomputeCommentPlaceholderHeight(left_code_mirror, right_code_mirror, line)
-        );
-    }
-
-    function addCodePlaceholder(line, left_code_mirror, right_code_mirror) {
-        if (lineIsUnmoved(line) || !isFirstLineOfGroup(line)) {
-            return null;
-        }
-        return buildCodePlaceholderWidget(line, left_code_mirror, right_code_mirror);
-    }
-
-    function addCommentsPlaceholder(line, left_code_mirror, right_code_mirror) {
-        if (!lineIsUnmoved(line) && !isFirstLineOfGroup(line)) {
-            return;
-        }
-        const widget_params = buildCommentsPlaceholderWidget(
-            line,
+        const code_mirrors_content_manager = SideBySideCodeMirrorsContentManager(
+            file_lines,
             left_code_mirror,
             right_code_mirror
         );
-        if (!widget_params) {
-            return;
-        }
 
-        CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
-    }
+        const comment_widgets_map = FileDiffCommentWidgetsMap();
+        const widget_creator = SideBySideCodeMirrorWidgetCreator(
+            document,
+            RelativeDateHelper(
+                SharedPropertiesService.getDateTimeFormat(),
+                SharedPropertiesService.getRelativeDateDisplay(),
+                SharedPropertiesService.getUserLocale()
+            ),
+            PullRequestCommentController(
+                PullRequestCommentReplyFormFocusHelper(),
+                getStore(),
+                PullRequestCommentNewReplySaver()
+            ),
+            getStore(),
+            comment_widgets_map,
+            PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest()),
+            PullRequestCurrentUserPresenter.fromUserInfo(
+                SharedPropertiesService.getUserId(),
+                SharedPropertiesService.getUserAvatarUrl()
+            )
+        );
 
-    function lineIsUnmoved(line) {
-        return line.new_offset !== null && line.old_offset !== null;
+        const file_lines_state = SideBySideLineState(
+            file_lines,
+            SideBySideLineGrouper(file_lines),
+            SideBySideLineMapper(file_lines, left_code_mirror, right_code_mirror)
+        );
+
+        const code_placeholder_creation_manager = SideBySideCodePlaceholderCreationManager(
+            code_mirrors_content_manager,
+            file_lines_state,
+            widget_creator
+        );
+
+        const widget_creation_manager = SideBySideCodeMirrorWidgetsCreationManager(
+            file_lines_state,
+            SideBySideLinesHeightEqualizer(
+                left_code_mirror,
+                right_code_mirror,
+                SideBySidePlaceholderPositioner(file_lines_state)
+            ),
+            code_mirrors_content_manager,
+            widget_creator,
+            widget_creator,
+            widget_creator
+        );
+
+        file_lines.forEach((line) => {
+            displayLine(line, left_code_mirror, right_code_mirror);
+
+            code_placeholder_creation_manager.displayCodePlaceholderIfNeeded(line);
+        });
+
+        getStore().getAllRootComments().forEach(widget_creation_manager.displayInlineComment);
+
+        left_code_mirror.on("gutterClick", (left_code_mirror, line_number) => {
+            widget_creation_manager.displayNewInlineCommentForm(
+                INLINE_COMMENT_POSITION_LEFT,
+                self.pullRequestId,
+                self.filePath,
+                line_number
+            );
+        });
+        right_code_mirror.on("gutterClick", (right_code_mirror, line_number) => {
+            widget_creation_manager.displayNewInlineCommentForm(
+                INLINE_COMMENT_POSITION_RIGHT,
+                self.pullRequestId,
+                self.filePath,
+                line_number
+            );
+        });
+
+        FileDiffCommentScroller(
+            getStore(),
+            file_lines,
+            comment_widgets_map
+        ).scrollToSideBySideDiffComment(self.commentId, left_code_mirror, right_code_mirror);
     }
 
     function displayLine(line, left_code_mirror, right_code_mirror) {

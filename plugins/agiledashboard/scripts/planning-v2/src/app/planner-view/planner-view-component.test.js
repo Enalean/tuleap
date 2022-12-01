@@ -38,6 +38,8 @@ describe("PlannerView", () => {
         BacklogItemSelectedService,
         ItemAnimatorService;
 
+    const user_id = 102;
+
     beforeEach(() => {
         angular.mock.module(planning_module);
 
@@ -59,7 +61,7 @@ describe("PlannerView", () => {
             $q = _$q_;
 
             SharedPropertiesService = _SharedPropertiesService_;
-            jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(102);
+            jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(user_id);
             jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
             jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
             jest.spyOn(SharedPropertiesService, "getViewMode").mockImplementation(() => {});
@@ -477,6 +479,7 @@ describe("PlannerView", () => {
                 30,
                 651,
                 expect.any(Function),
+                false,
                 false
             );
             expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(8541);
@@ -539,10 +542,11 @@ describe("PlannerView", () => {
             PlanningController.showEditSubmilestoneModal(event, item);
 
             expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(
-                102,
+                user_id,
                 12,
                 9040,
                 expect.any(Function),
+                false,
                 false
             );
             expect(PlanningController.refreshSubmilestone).toHaveBeenCalledWith(9040);
@@ -554,8 +558,8 @@ describe("PlannerView", () => {
         beforeEach(() => {
             submilestone_type = { id: 82 };
             event = { preventDefault: jest.fn() };
-            NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
-                callback(1668)
+            NewTuleapArtifactModalService.showCreation.mockImplementation(
+                (user_id, a, b, callback) => callback(1668)
             );
         });
 
@@ -563,9 +567,11 @@ describe("PlannerView", () => {
             PlanningController.showAddSubmilestoneModal(event, submilestone_type);
 
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
+                102,
                 82,
                 PlanningController.milestone_id,
                 expect.any(Function),
+                false,
                 false
             );
         });
@@ -657,8 +663,8 @@ describe("PlannerView", () => {
         let item_type, artifact, submilestone;
 
         beforeEach(() => {
-            NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
-                callback(7488)
+            NewTuleapArtifactModalService.showCreation.mockImplementation(
+                (user_id, a, b, callback) => callback(7488)
             );
             artifact = {
                 backlog_item: {
@@ -674,9 +680,11 @@ describe("PlannerView", () => {
             PlanningController.showAddItemToSubMilestoneModal(item_type, submilestone);
 
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
+                user_id,
                 94,
                 null,
                 expect.any(Function),
+                false,
                 false
             );
         });

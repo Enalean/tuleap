@@ -21,12 +21,12 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import DropDownButton from "./DropDownButton.vue";
-import * as tlp from "tlp";
+import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import emitter from "../../../helpers/emitter";
-import type { Dropdown } from "tlp";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
 
 jest.mock("../../../helpers/emitter");
-jest.mock("tlp");
+jest.mock("@tuleap/tlp-dropdown");
 
 describe("DropDownButton", () => {
     let fake_dropdown_object: Dropdown;
@@ -38,7 +38,7 @@ describe("DropDownButton", () => {
 
         jest.spyOn(document, "addEventListener");
         jest.spyOn(document, "removeEventListener");
-        jest.spyOn(tlp, "createDropdown").mockReturnValue(fake_dropdown_object);
+        jest.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
     });
 
     function createWrapper(
@@ -63,7 +63,7 @@ describe("DropDownButton", () => {
 
         expect(wrapper.find(".tlp-append").exists()).toBeTruthy();
         expect(wrapper.find(".tlp-button-icon-right").exists()).toBeFalsy();
-        expect(wrapper.find(".fa-ellipsis-h").exists()).toBeFalsy();
+        expect(wrapper.find(".fa-ellipsis").exists()).toBeFalsy();
     });
 
     it(`Given drop down button is not appended (aka user has read permissions)
@@ -75,8 +75,7 @@ describe("DropDownButton", () => {
         expect(document.addEventListener).toHaveBeenCalledTimes(1);
 
         expect(wrapper.find(".tlp-append").exists()).toBeFalsy();
-        expect(wrapper.find(".fa-ellipsis-h").exists()).toBeTruthy();
-        expect(wrapper.find(".tlp-button-icon-right").exists()).toBeTruthy();
+        expect(wrapper.find(".fa-ellipsis").exists()).toBeTruthy();
     });
 
     it(`Given drop down button is in quick look mode

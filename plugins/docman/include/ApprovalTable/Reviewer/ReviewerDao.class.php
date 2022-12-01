@@ -247,7 +247,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
             ' AND t.status IN (' . PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED . ', ' . PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED . ')' .
             ' AND ' . Docman_ItemDao::getCommonExcludeStmt('i') .
             ' AND g.status = \'A\'' .
-            ' GROUP BY ' . parent::getTableStatusGroupBy('t');
+            ' GROUP BY ' . parent::getTableStatusGroupBy('t') . ', t.table_id, i.item_id, i.group_id, t.date, i.title, g.group_name, t.status';
 
         // Version
         $sql_ver = 'SELECT t.table_id, i.item_id, i.group_id, t.date, i.title, g.group_name, t.status' .
@@ -264,7 +264,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
             ' AND t.status IN (' . PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED . ', ' . PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED . ')' .
             ' AND ' . Docman_ItemDao::getCommonExcludeStmt('i') .
             ' AND g.status = \'A\'' .
-            ' GROUP BY ' . parent::getTableStatusGroupBy('t');
+            ' GROUP BY ' . parent::getTableStatusGroupBy('t') . ',  t.table_id, i.item_id, i.group_id, t.date, i.title, g.group_name, t.status ';
 
         $sql = '(' . $sql_item . ') UNION ALL (' . $sql_ver . ') ORDER BY group_name ASC, date ASC';
         //echo $sql;

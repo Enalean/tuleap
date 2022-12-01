@@ -28,8 +28,9 @@ use Tuleap\Git\CommonMarkExtension\LinkToGitFileExtension;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Git\Unicode\DangerousUnicodeText;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 
@@ -165,6 +166,9 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $commit = $this->project->GetCommit($this->params['hashbase']);
+        if ($commit === null) {
+            throw new NotFoundException();
+        }
         $this->tpl->assign('commit', $commit);
 
         if ((! isset($this->params['hash'])) && (isset($this->params['file']))) {
@@ -265,7 +269,10 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
             $this->tpl->assign('bloblines', $blob->GetData(true));
         }
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));
-        $git_assets = new IncludeAssets(__DIR__ . '/../../../frontend-assets', '/assets/git');
-        $GLOBALS['Response']->addJavascriptAsset(new JavascriptAsset($git_assets, 'line-highlight.js'));
+        $git_assets = new IncludeViteAssets(
+            __DIR__ . '/../../../scripts/repository/frontend-assets',
+            '/assets/git/repository'
+        );
+        $GLOBALS['Response']->includeFooterJavascriptFile((new JavascriptViteAsset($git_assets, 'src/file/line-highlight.ts'))->getFileURL());
     }
 }

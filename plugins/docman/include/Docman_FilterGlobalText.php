@@ -29,6 +29,7 @@ class Docman_FilterGlobalText extends \Docman_FilterText
         parent::__construct($md);
         $this->dynTextFields = $dynTextFields;
     }
+
     public function initFromRow($row)
     {
         $this->setValue($row['value_string']);

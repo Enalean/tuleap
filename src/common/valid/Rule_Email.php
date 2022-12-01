@@ -38,6 +38,7 @@ class Rule_Email extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         parent::__construct();
         $this->separator = $separator;
     }
+
     public function isValid($val): bool
     {
         if ($this->separator !== \null) {
@@ -53,6 +54,7 @@ class Rule_Email extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         // $val must contains only one email address
         return (bool) $this->validEmail($val);
     }
+
     /**
      * Check email validity
      *

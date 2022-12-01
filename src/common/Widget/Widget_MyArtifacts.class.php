@@ -113,6 +113,7 @@ class Widget_MyArtifacts extends Widget
     {
         return true;
     }
+
     public function getContent()
     {
         $html_my_artifacts = '<table style="width:100%">';
@@ -320,10 +321,12 @@ class Widget_MyArtifacts extends Widget
 
         return $ajax_url;
     }
+
     public function getCategory()
     {
         return _('Trackers');
     }
+
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_artifacts', 'description');

@@ -128,7 +128,6 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertCount(0, $date_rule);
     }
 
-
     public function testSearchByTrackerIdReturnsAnArrayOfASingleObjectIfOneEntryIsFoundByTheDao(): void
     {
         $data = [

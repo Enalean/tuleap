@@ -27,7 +27,7 @@ use Tuleap\PullRequest\Timeline\TimelineEvent;
  */
 final class Comment implements TimelineEvent
 {
-    public function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private string $content, private int $parent_id)
+    public function __construct(private int $id, private int $pull_request_id, private int $user_id, private int $post_date, private string $content, private int $parent_id, private string $color)
     {
     }
 
@@ -59,5 +59,10 @@ final class Comment implements TimelineEvent
     public function getParentId(): int
     {
         return $this->parent_id;
+    }
+
+    public function getColor(): string
+    {
+        return $this->color;
     }
 }

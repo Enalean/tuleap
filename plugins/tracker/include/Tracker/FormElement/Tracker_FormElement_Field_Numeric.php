@@ -286,7 +286,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         return $output;
     }
 
-
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
@@ -387,6 +386,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         }
         return true;
     }
+
     /**
      * @return string the i18n error message to display if the value submitted by the user is not valid
      */

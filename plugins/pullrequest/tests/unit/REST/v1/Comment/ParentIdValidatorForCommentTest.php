@@ -57,7 +57,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "My content",
-            1234
+            1234,
+            "graffiti-yellow"
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 
@@ -75,7 +76,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "My content",
-            0
+            0,
+            "graffiti-yellow"
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 
@@ -83,7 +85,6 @@ final class ParentIdValidatorForCommentTest extends TestCase
         $this->expectDeprecationMessage("must be the same than provided comment");
         $this->validator->checkParentValidity($parent_id, self::PULL_REQUEST_ID);
     }
-
 
     public function testItDoesNotThrowIfParentIdIsValidForComment(): void
     {
@@ -94,7 +95,8 @@ final class ParentIdValidatorForCommentTest extends TestCase
             UserTestBuilder::anActiveUser()->build()->getId(),
             time(),
             "My content",
-            0
+            0,
+            "graffiti-yellow"
         );
         $this->comment_factory->method('getCommentByID')->willReturn($comment);
 

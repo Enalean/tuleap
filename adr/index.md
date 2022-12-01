@@ -21,6 +21,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0015](0015-mercure-realtime.md) - Replacing NodeJs realtime server with Mercure
 * [ADR-0016](0016-frontend-libraries.md) - Independent libraries for shared frontend code
 * [ADR-0017](0017-multiple-apps-per-context.md) - Multiple independent apps per context
+* [ADR-0018](0018-js-bundler.md) - Choice of JavaScript Bundler
 
 <!-- adrlogstop -->
 

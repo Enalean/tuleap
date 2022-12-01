@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+import { env } from "node:process";
+
+env.DISABLE_TS_TYPECHECK = "true";
 
 const jest_base_config = defineJestConfiguration();
-module.exports = {
+export default {
     ...jest_base_config,
     displayName: "git-repository",
 };

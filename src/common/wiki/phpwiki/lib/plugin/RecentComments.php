@@ -17,6 +17,7 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
     {
         return _("RecentComments");
     }
+
     public function getVersion()
     {
         return preg_replace(
@@ -25,6 +26,7 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
             "\$Revision: 1.3 $"
         );
     }
+
     public function getDefaultArguments()
     {
         $args               = WikiPlugin_RecentChanges::getDefaultArguments();

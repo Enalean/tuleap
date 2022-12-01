@@ -30,6 +30,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         $this->params = $params;
         $this->token  = $token;
     }
+
     public function getContent($params = [])
     {
         $content  = '';
@@ -60,6 +61,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         $content .= '</dd></dl>';
         return $content;
     }
+
     /* protected */ public function _getJSDocmanParameters()
     {
         return ['action' => 'move'];

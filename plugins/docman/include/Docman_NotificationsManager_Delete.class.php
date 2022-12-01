@@ -32,6 +32,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
             $this->_storeEvents($params['item']->getParentId(), self::MESSAGE_REMOVED_FROM, $params);
         }
     }
+
     public function sendNotifications($event, $params)
     {
         $path = $this->_getDocmanPath();
@@ -115,6 +116,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
             parent::sendNotifications($event, $params);
         }
     }
+
     public function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';

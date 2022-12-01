@@ -199,6 +199,7 @@ class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->method->exportToREST(\Mockery::mock(\PFUser::class))
         );
     }
+
     public function testItExportsItsConfigurationToXml(): void
     {
         $xml_data = '<?xml version="1.0" encoding="UTF-8"?><semantics/>';

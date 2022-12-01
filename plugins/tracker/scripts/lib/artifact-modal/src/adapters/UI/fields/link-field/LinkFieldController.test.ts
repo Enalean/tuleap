@@ -68,6 +68,9 @@ import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import { ParentArtifactIdentifierStub } from "../../../../../tests/stubs/ParentArtifactIdentifierStub";
+import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
+import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
+import { okAsync } from "neverthrow";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -89,6 +92,8 @@ describe(`LinkFieldController`, () => {
         allowed_link_types: AllowedLinkTypeRepresentation[],
         parent_identifier: ParentArtifactIdentifier | null,
         verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy;
+
+    const is_search_feature_flag_enabled = true;
 
     beforeEach(() => {
         setCatalog({
@@ -133,14 +138,16 @@ describe(`LinkFieldController`, () => {
             notification_clearer,
             ArtifactLinkSelectorAutoCompleter(
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
-                    LinkableArtifactStub.withDefaults()
+                    okAsync(LinkableArtifactStub.withDefaults())
                 ),
                 fault_notifier,
-                notification_clearer,
                 parents_retriever,
                 link_verifier,
                 current_artifact_identifier,
-                current_tracker_identifier
+                current_tracker_identifier,
+                RetrieveUserHistoryStub.withoutUserHistory(),
+                UserIdentifierProxyStub.fromUserId(101),
+                is_search_feature_flag_enabled
             ),
             new_link_adder,
             new_link_remover,
@@ -347,8 +354,7 @@ describe(`LinkFieldController`, () => {
             const first_parent = LinkableArtifactStub.withDefaults({ id: FIRST_PARENT_ID });
             const second_parent = LinkableArtifactStub.withDefaults({ id: SECOND_PARENT_ID });
             parents_retriever = RetrievePossibleParentsStub.withParents(
-                first_parent,
-                second_parent
+                okAsync([first_parent, second_parent])
             );
         });
 

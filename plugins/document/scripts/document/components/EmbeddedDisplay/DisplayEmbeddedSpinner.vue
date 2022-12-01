@@ -27,7 +27,7 @@
         </p>
 
         <p>
-            <i class="fa fa-folder tlp-skeleton-text-icon tlp-skeleton-icon"></i>
+            <i class="fa-solid fa-folder tlp-skeleton-text-icon tlp-skeleton-icon"></i>
             <span class="tlp-skeleton-text"></span>
         </p>
     </div>

@@ -29,13 +29,17 @@
         data-shortcut-paste
     >
         <i
-            class="fa tlp-dropdown-menu-item-icon document-clipboard-paste-icon-status"
-            v-bind:class="[pasting_in_progress ? ' fa-spin fa-circle-o-notch' : 'fa-fw fa-paste']"
+            class="tlp-dropdown-menu-item-icon document-clipboard-paste-icon-status"
+            v-bind:class="[
+                pasting_in_progress
+                    ? 'fa-regular fa-spin fa-circle-o-notch'
+                    : 'fa-solid fa-fw fa-paste',
+            ]"
         ></i>
         <div class="document-clipboard-item-to-paste-container">
             <translate>Paste</translate>
             <span class="document-clipboard-item-to-paste">
-                <i class="far fa-file"></i>
+                <i class="fa-regular fa-file"></i>
                 {{ item_title }}
             </span>
         </div>

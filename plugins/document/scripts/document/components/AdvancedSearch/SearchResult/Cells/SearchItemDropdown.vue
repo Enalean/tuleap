@@ -28,18 +28,18 @@
             v-bind:aria-label="button_label"
             v-bind:id="button_id"
         >
-            <i class="fa fa-ellipsis-h"></i>
-            <i class="fa fa-caret-down tlp-button-icon-right"></i>
+            <i class="fa-solid fa-ellipsis"></i>
+            <i class="fa-solid fa-caret-down tlp-button-icon-right"></i>
         </button>
         <div
-            class="tlp-dropdown-menu document-dropdown-menu tlp-dropdown-menu-right"
+            class="tlp-dropdown-menu document-dropdown-menu"
             role="menu"
             ref="dropdown_menu"
             v-bind:data-triggered-by="button_id"
         >
             <drop-down-menu-tree-view v-if="should_menu_be_displayed" v-bind:item="real_item" />
             <div class="document-search-dropdown-spinner" data-test="spinner" v-else>
-                <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+                <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>
             </div>
         </div>
     </div>
@@ -50,8 +50,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Item, ItemSearchResult } from "../../../../type";
 import { useActions } from "vuex-composition-helpers";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
-import type { Dropdown } from "tlp";
-import { createDropdown, EVENT_TLP_DROPDOWN_HIDDEN, EVENT_TLP_DROPDOWN_SHOWN } from "tlp";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
+import {
+    createDropdown,
+    EVENT_TLP_DROPDOWN_HIDDEN,
+    EVENT_TLP_DROPDOWN_SHOWN,
+} from "@tuleap/tlp-dropdown";
 import emitter from "../../../../helpers/emitter";
 import DropDownMenuTreeView from "../../../Folder/DropDown/DropDownMenuTreeView.vue";
 import type { RootActionsRetrieve } from "../../../../store/actions-retrieve";

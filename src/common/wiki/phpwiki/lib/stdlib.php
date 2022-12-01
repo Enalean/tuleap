@@ -559,6 +559,7 @@ class Stack
         $this->items = [];
         $this->size  = 0;
     }
+
     public function push($item)
     {
         $this->items[$this->size] = $item;
@@ -848,7 +849,6 @@ class WikiPageName
         $this->_errors[] = sprintf(_("Leading %s not allowed"), SUBPAGE_SEPARATOR);
         return substr($name, 1);
     }
-
 
     public function _check($pagename)
     {
@@ -1638,6 +1638,7 @@ class ListRegexExpand
         $this->case_sensitive = $case_sensitive;
         //$this->index = false;
     }
+
     public function listMatchCallback($item, $key)
     {
         $quoted = str_replace('/', '\/', $item);
@@ -1651,6 +1652,7 @@ class ListRegexExpand
             $this->list[] = $item;
         }
     }
+
     public function expandRegex($index, &$pages)
     {
         $this->index = $index;
@@ -1915,7 +1917,6 @@ class Alert
         $tmpl->printXML();
         $request->finish();
     }
-
 
     public function _getButtons()
     {

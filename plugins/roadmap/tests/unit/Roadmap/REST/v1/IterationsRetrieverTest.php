@@ -122,7 +122,6 @@ class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, 1, 0, 10);
     }
 
-
     public function test404IfProjectNotFound(): void
     {
         $this->mockRoadmapConfig(
@@ -374,7 +373,6 @@ class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-
     /**
      * @testWith [1]
      *           [2]
@@ -429,7 +427,6 @@ class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
-
 
     /**
      * @testWith [1]

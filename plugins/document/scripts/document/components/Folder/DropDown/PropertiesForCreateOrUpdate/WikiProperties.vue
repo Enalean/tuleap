@@ -22,11 +22,11 @@
     <div class="tlp-form-element" v-if="is_displayed">
         <label class="tlp-label" for="document-new-item-wiki-page-name">
             <translate>Wiki page</translate>
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
             <span class="tlp-prepend">
-                <i class="fa fa-wikipedia-w"></i>
+                <i class="fa-brands fa-wikipedia-w"></i>
             </span>
             <input
                 type="text"

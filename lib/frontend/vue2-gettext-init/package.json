@@ -15,13 +15,13 @@
     }
   },
   "dependencies": {
-    "@tuleap/gettext": "link:../gettext"
+    "@tuleap/gettext": "workspace:*"
   },
   "peerDependencies": {
     "vue": "<3.0.0"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../build-system-configurator",
+    "@tuleap/build-system-configurator": "workspace:*",
     "vue": "^2.7.8",
     "vue-gettext": "^2.1.12"
   },

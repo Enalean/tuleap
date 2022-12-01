@@ -23,14 +23,12 @@ import {
     getUserRebasePullRequest,
     getUserUpdatePullRequest,
 } from "../gettext-catalog";
+import type { FileDiffCommentPayload, InlineCommentPosition, PullRequestUser } from "./types";
 
 export type CommentType = "inline-comment" | "comment" | "timeline-event";
 export const TYPE_INLINE_COMMENT: CommentType = "inline-comment";
 export const TYPE_GLOBAL_COMMENT: CommentType = "comment";
 export const TYPE_EVENT_COMMENT: CommentType = "timeline-event";
-
-type InlineCommentPosition = "left" | "right";
-export const INLINE_COMMENT_POSITION_RIGHT: InlineCommentPosition = "right";
 
 export interface State {
     readonly href: (name: string, url_parameters: Record<string, unknown>) => string;
@@ -38,23 +36,6 @@ export interface State {
 
 export interface PullRequestData {
     readonly id: number;
-}
-
-export interface PullRequestUser {
-    readonly avatar_url: string;
-    readonly display_name: string;
-    readonly user_url: string;
-}
-
-export interface FileDiffCommentPayload {
-    readonly id: number;
-    readonly content: string;
-    readonly user: PullRequestUser;
-    readonly post_date: string;
-    readonly unidiff_offset: number;
-    readonly position: InlineCommentPosition;
-    readonly file_path: string;
-    readonly parent_id: number;
 }
 
 export interface TimelineEventPayload {
@@ -70,6 +51,7 @@ export interface TimelineEventPayload {
     readonly file_path?: string;
     readonly position?: InlineCommentPosition;
     readonly unidiff_offset?: number;
+    readonly color: string;
 }
 
 export interface CommentReplyPayload {
@@ -78,6 +60,7 @@ export interface CommentReplyPayload {
     readonly user: PullRequestUser;
     readonly post_date: string;
     readonly parent_id: number;
+    readonly color: string;
 }
 
 interface PullRequestCommentFile {
@@ -97,6 +80,7 @@ interface CommonComment {
     readonly post_date: string;
     readonly file?: PullRequestCommentFile;
     readonly parent_id: number;
+    color: string;
 }
 
 export interface PullRequestGlobalCommentPresenter extends CommonComment {
@@ -128,6 +112,7 @@ export const PullRequestCommentPresenter = {
         file_path: comment.file_path,
         parent_id: comment.parent_id,
         is_file_diff_comment: true,
+        color: comment.color,
     }),
     fromTimelineEvent: (
         $state: State,
@@ -142,6 +127,7 @@ export const PullRequestCommentPresenter = {
                           file_url: $state.href("diff", {
                               id: pull_request.id,
                               file_path: event.file_path,
+                              comment_id: event.id,
                           }),
                           file_path: event.file_path,
                           unidiff_offset: event.unidiff_offset,
@@ -161,6 +147,7 @@ export const PullRequestCommentPresenter = {
             parent_id: event.parent_id,
             ...file,
             is_file_diff_comment: false,
+            color: event.color,
         };
     },
     fromCommentReply: (
@@ -176,6 +163,7 @@ export const PullRequestCommentPresenter = {
         is_inline_comment: parent_comment.is_inline_comment,
         parent_id: reply.parent_id,
         is_file_diff_comment: false,
+        color: "",
     }),
 };
 

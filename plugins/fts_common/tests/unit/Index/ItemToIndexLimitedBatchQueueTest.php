@@ -46,9 +46,9 @@ final class ItemToIndexLimitedBatchQueueTest extends TestCase
 
         $batch_queue->startBatchingItemsIntoQueue(
             function (ItemToIndexQueue $queue): void {
-                $queue->addItemToQueue(new ItemToIndex('type', 102, 'content1', ['A' => 'A']));
-                $queue->addItemToQueue(new ItemToIndex('type', 102, 'content2', ['A' => 'A']));
-                $queue->addItemToQueue(new ItemToIndex('type', 102, 'content3', ['A' => 'A']));
+                $queue->addItemToQueue(new ItemToIndex('type', 102, 'content1', 'plaintext', ['A' => 'A']));
+                $queue->addItemToQueue(new ItemToIndex('type', 102, 'content2', 'plaintext', ['A' => 'A']));
+                $queue->addItemToQueue(new ItemToIndex('type', 102, 'content3', 'plaintext', ['A' => 'A']));
             }
         );
 

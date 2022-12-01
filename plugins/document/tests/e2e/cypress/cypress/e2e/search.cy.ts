@@ -73,10 +73,9 @@ describe("Document search", () => {
 
         cy.get("[data-test=document-header-actions]").within(() => {
             cy.get("[data-test=document-item-action-new-button]").click();
+            cy.get("[data-test=document-new-empty-creation-button]").click();
         });
         cy.get("[data-test=document-new-item-modal]").within(() => {
-            cy.get("[data-test=empty]").click();
-
             cy.get("[data-test=document-new-item-title]").type(title);
 
             cy.get("[data-test=document-modal-submit-button-create-item]").click();

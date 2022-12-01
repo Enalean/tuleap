@@ -26,7 +26,7 @@
     >
         <label class="tlp-label" for="document-obsolescence-date-update">
             <translate>Obsolescence date</translate>
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <div class="tlp-form-element document-obsolescence-date-properties-fields">
             <select
@@ -45,7 +45,7 @@
                 <option name="today" value="today" v-translate>Obsolete today</option>
             </select>
             <div class="tlp-form-element tlp-form-element-prepend">
-                <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
+                <span class="tlp-prepend"><i class="fa-regular fa-calendar"></i></span>
                 <date-flat-picker
                     v-bind:id="'document-obsolescence-date-update'"
                     v-bind:required="selected_value === 'fixed'"

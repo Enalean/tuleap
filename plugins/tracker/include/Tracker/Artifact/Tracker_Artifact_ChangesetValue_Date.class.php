@@ -82,7 +82,6 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
         return $this->getFullRESTValue($user);
     }
 
-
     public function getFullRESTValue(PFUser $user)
     {
         $date = null;

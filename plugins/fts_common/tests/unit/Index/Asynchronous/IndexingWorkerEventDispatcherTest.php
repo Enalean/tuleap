@@ -52,7 +52,7 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
 
         $dispatcher = self::buildIndexingWorkerEventDispatcher($inserter, $this->createStub(DeleteIndexedItems::class));
 
-        $task = IndexItemTask::fromItemToIndex(new ItemToIndex('type', 102, 'content', ['A' => 'A']));
+        $task = IndexItemTask::fromItemToIndex(new ItemToIndex('type', 102, 'content', 'plaintext', ['A' => 'A']));
 
         $dispatcher->process(new WorkerEvent(new NullLogger(), ['event_name' => $task->getTopic(), 'payload' => $task->getPayload()]));
 

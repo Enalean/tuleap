@@ -103,8 +103,6 @@ class Tracker_Chart_Data_Burndown
         return $remaining_effort;
     }
 
-
-
     /**
      * Returns the Burndown dates in a human readable fashion
      *

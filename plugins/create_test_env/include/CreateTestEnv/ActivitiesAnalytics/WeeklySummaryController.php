@@ -52,6 +52,7 @@ class WeeklySummaryController implements DispatchableWithRequest, DispatchableWi
         $this->activity_logger_dao                  = $activity_logger_dao;
         $this->forge_user_group_permissions_manager = $forge_user_group_permissions_manager;
     }
+
     /**
      * @inheritDoc
      */

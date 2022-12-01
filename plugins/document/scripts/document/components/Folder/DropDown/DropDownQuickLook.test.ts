@@ -28,7 +28,9 @@ import type { ConfigurationState } from "../../../store/configuration";
 describe("DropDownQuickLook", () => {
     function createWrapper(
         item: Item,
-        forbid_writers_to_update: boolean
+        forbid_writers_to_update: boolean,
+        forbid_writers_to_delete: boolean,
+        is_deletion_allowed: boolean
     ): Wrapper<DropDownQuickLook> {
         return shallowMount(DropDownQuickLook, {
             localVue,
@@ -38,6 +40,8 @@ describe("DropDownQuickLook", () => {
                     state: {
                         configuration: {
                             forbid_writers_to_update,
+                            forbid_writers_to_delete,
+                            is_deletion_allowed,
                         } as ConfigurationState,
                     },
                 }),
@@ -55,11 +59,11 @@ describe("DropDownQuickLook", () => {
                 type: "file",
                 user_can_write: true,
             } as ItemFile,
+            false,
+            false,
             false
         );
 
-        expect(wrapper.find("[data-test=dropdown-menu-folder-creation]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=dropdown-menu-file-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
     });
 
@@ -73,6 +77,8 @@ describe("DropDownQuickLook", () => {
                 type: "file",
                 user_can_write: false,
             } as ItemFile,
+            false,
+            false,
             false
         );
 
@@ -92,7 +98,9 @@ describe("DropDownQuickLook", () => {
                 user_can_write: true,
                 can_user_manage: false,
             } as ItemFile,
-            true
+            true,
+            false,
+            false
         );
 
         expect(
@@ -112,7 +120,9 @@ describe("DropDownQuickLook", () => {
                 user_can_write: true,
                 can_user_manage: true,
             } as ItemFile,
-            true
+            true,
+            false,
+            false
         );
 
         expect(
@@ -130,12 +140,11 @@ describe("DropDownQuickLook", () => {
                     type: "folder",
                     user_can_write: true,
                 } as Folder,
+                false,
+                false,
                 false
             );
 
-            expect(
-                wrapper.find("[data-test=document-quicklook-action-button-new-item]").exists()
-            ).toBeTruthy();
             expect(
                 wrapper.find("[data-test=document-quicklook-action-button-new-version]").exists()
             ).toBeFalsy();
@@ -156,11 +165,11 @@ describe("DropDownQuickLook", () => {
                     type: "folder",
                     user_can_write: false,
                 } as Folder,
+                false,
+                false,
                 false
             );
 
-            expect(wrapper.find("[data-test=dropdown-menu-folder-creation]").exists()).toBeFalsy();
-            expect(wrapper.find("[data-test=dropdown-menu-file-creation]").exists()).toBeFalsy();
             expect(
                 wrapper.find("[data-test=document-dropdown-menu-update-properties]").exists()
             ).toBeFalsy();
@@ -169,4 +178,37 @@ describe("DropDownQuickLook", () => {
             ).toBeFalsy();
         });
     });
+
+    it.each([
+        [false, false, false, false],
+        [false, false, true, false],
+        [false, true, false, false],
+        [false, true, true, false],
+        [true, false, false, false],
+        [true, false, true, true],
+        [true, true, false, false],
+        [true, true, true, false],
+    ])(
+        `Given is_deletion_allowed=%s
+        And forbid_writers_to_delete=%s
+        And item.user_can_write=%s
+        Then presence of delete is %s`,
+        function (is_deletion_allowed, forbid_writers_to_delete, user_can_write, expected) {
+            const wrapper = createWrapper(
+                {
+                    id: 1,
+                    title: "my folder",
+                    type: "folder",
+                    user_can_write,
+                } as Folder,
+                false,
+                forbid_writers_to_delete,
+                is_deletion_allowed
+            );
+
+            expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBe(
+                expected
+            );
+        }
+    );
 });

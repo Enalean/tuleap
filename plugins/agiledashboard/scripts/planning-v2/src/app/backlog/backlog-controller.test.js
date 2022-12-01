@@ -55,6 +55,8 @@ describe("BacklogController -", () => {
         NewTuleapArtifactModalService,
         ItemAnimatorService;
 
+    const user_id = 102;
+
     beforeEach(() => {
         angular.mock.module(planning_module);
 
@@ -165,6 +167,7 @@ describe("BacklogController -", () => {
             SharedPropertiesService = _SharedPropertiesService_;
             jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
             jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
+            jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(user_id);
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});
@@ -457,17 +460,19 @@ describe("BacklogController -", () => {
             BacklogController.showAddBacklogItemParentModal(item_type);
 
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
+                user_id,
                 50,
                 null,
                 expect.any(Function),
+                false,
                 false
             );
         });
 
         describe("callback -", () => {
             beforeEach(() => {
-                NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
-                    callback(5202)
+                NewTuleapArtifactModalService.showCreation.mockImplementation(
+                    (user_id, a, b, callback) => callback(5202)
                 );
             });
 
@@ -514,9 +519,11 @@ describe("BacklogController -", () => {
 
             expect(event.preventDefault).toHaveBeenCalled();
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
+                user_id,
                 50,
                 null,
                 expect.any(Function),
+                false,
                 false
             );
         });
@@ -524,8 +531,8 @@ describe("BacklogController -", () => {
         describe("callback -", () => {
             let artifact;
             beforeEach(() => {
-                NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
-                    callback(5202)
+                NewTuleapArtifactModalService.showCreation.mockImplementation(
+                    (user_id, a, b, callback) => callback(5202)
                 );
                 artifact = {
                     backlog_item: {

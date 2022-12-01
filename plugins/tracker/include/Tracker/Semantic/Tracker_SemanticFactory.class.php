@@ -141,7 +141,6 @@ class Tracker_SemanticFactory
         return $semantic;
     }
 
-
     /**
      * Returns an instance of Tracker_Semantic_TitleFactory
      *
@@ -171,6 +170,7 @@ class Tracker_SemanticFactory
     {
         return Tracker_Semantic_StatusFactory::instance();
     }
+
     /**
      * Returns an instance of Tracker_TooltipFactory
      *

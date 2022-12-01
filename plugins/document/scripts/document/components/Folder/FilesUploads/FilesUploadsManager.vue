@@ -35,7 +35,7 @@
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import FilesUploadsModal from "./FilesUploadsModal.vue";
 import GlobalUploadProgressBar from "../ProgressBar/GlobalUploadProgressBar.vue";
 

@@ -19,7 +19,7 @@
  *
  */
 
-namespace TuleapCodingStandard\User\Account;
+namespace Tuleap\User\Account;
 
 use Codendi_Mail_Interface;
 use CSRFSynchronizerToken;
@@ -28,7 +28,6 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
-use Tuleap\User\Account\UpdateNotificationsPreferences;
 use UserManager;
 
 class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -60,7 +59,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager = M::mock(UserManager::class);
         $this->csrf_token   = M::mock(CSRFSynchronizerToken::class);
-        $this->controller   = new UpdateNotificationsPreferences($this->csrf_token, $this->user_manager);
+        $this->controller   = new UpdateNotificationsPreferences($this->csrf_token, $this->user_manager, new \EventManager());
     }
 
     public function testItCannotUpdateWhenUserIsAnonymous(): void
@@ -309,7 +308,6 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
     }
-
 
     public function testItUpdatesEmailFormatPreferenceToHtml(): void
     {

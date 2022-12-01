@@ -81,6 +81,7 @@ class ProjectCreationTemplatePresenter
     {
         return $GLOBALS['Language']->getText('register_project_one_step', 'services_used');
     }
+
     /**
      *
      * @return string

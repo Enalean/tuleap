@@ -76,6 +76,7 @@ class DocmanFolderDataBuild
         $this->createGetROFolder($folder_file_id);
         $this->createDeleteFolder($folder_file_id);
     }
+
     /**
      * To help understand tests structure, below a representation of folder 1 hierarchy
      *

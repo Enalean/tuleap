@@ -109,6 +109,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
         $this->graph->SetMargin(50, $right_margin, $this->graph->getTopMargin() + 40, 100);
         return $this->graph;
     }
+
     public function sort($a, $b)
     {
         $search_a = array_search($a, $this->keys);
@@ -118,7 +119,6 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
         }
         return $search_a - $search_b;
     }
-
 
     public function getBarPlot($data, $color)
     {

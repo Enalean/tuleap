@@ -43,10 +43,7 @@ class GerritServer implements IProvideKey
         }
     }
 
-    /**
-     * @return Key
-     */
-    public function current()
+    public function current(): Key
     {
         $row             = $this->gerrit_server_access_result->current();
         $replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
@@ -54,22 +51,22 @@ class GerritServer implements IProvideKey
         return new Key($replication_key->getUserName(), $replication_key->getValue());
     }
 
-    public function next()
+    public function next(): void
     {
         $this->gerrit_server_access_result->next();
     }
 
-    public function key()
+    public function key(): mixed
     {
         return $this->gerrit_server_access_result->key();
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->gerrit_server_access_result->valid();
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->gerrit_server_access_result->rewind();
     }

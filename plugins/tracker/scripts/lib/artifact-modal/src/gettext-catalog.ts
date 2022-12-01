@@ -109,3 +109,6 @@ export const getOpenArtifactToUnlinkTextEnd = (): string =>
     gettextCatalog.getString("to remove link");
 export const getFileUploadErrorMessage = (): string =>
     gettextCatalog.getString("Error while uploading %(file_name)s: %(error)s");
+export const getRecentlyViewedArtifactGroupLabel = (): string =>
+    gettextCatalog.getString("Recently viewed artifacts");
+export const getSearchResultsGroupLabel = (): string => gettextCatalog.getString("Search results");

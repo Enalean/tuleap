@@ -32,7 +32,6 @@ class Git_Driver_Gerrit_UserFinder
         $this->permissions_manager = $permissions_manager;
     }
 
-
     /** @return bool */
     public function areRegisteredUsersAllowedTo($permission_type, GitRepository $repository)
     {

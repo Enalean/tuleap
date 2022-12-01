@@ -50,7 +50,7 @@ class PaginatedCommentsRepresentationsBuilder
             }
             $user_representation = MinimalUserRepresentation::build($user);
 
-            $comment_representation     = new CommentRepresentation($comment->getId(), $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId());
+            $comment_representation     = new CommentRepresentation($comment->getId(), $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId(), $comment->getColor());
             $comments_representations[] = $comment_representation;
         }
 

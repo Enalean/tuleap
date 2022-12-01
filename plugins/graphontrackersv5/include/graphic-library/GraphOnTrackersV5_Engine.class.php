@@ -43,7 +43,6 @@ abstract class GraphOnTrackersV5_Engine
         return $this->data;
     }
 
-
     /**
      * @return array of hexa colors
      */

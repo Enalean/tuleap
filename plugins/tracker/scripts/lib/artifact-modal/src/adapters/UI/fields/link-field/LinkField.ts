@@ -40,7 +40,6 @@ import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { LinkedArtifactPopoverElement } from "./LinkedArtifactsPopoversController";
-import { PossibleParentsGroup } from "./PossibleParentsGroup";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
@@ -53,7 +52,10 @@ export interface LinkField {
     allowed_link_types: CollectionOfAllowedLinksTypesPresenters;
     new_links_presenter: NewLinkCollectionPresenter;
     current_link_type: LinkType;
-    dropdown_content: GroupCollection;
+    matching_artifact_section: GroupCollection;
+    recently_viewed_section: GroupCollection;
+    possible_parents_section: GroupCollection;
+    search_results_section: GroupCollection;
 }
 export type HostElement = LinkField & HTMLElement;
 
@@ -145,27 +147,34 @@ export const setAllowedTypes = (
     return presenter;
 };
 
-export const setCurrentLinkType = (host: LinkField, link_type: LinkType | undefined): LinkType => {
-    if (!link_type) {
-        return LinkType.buildUntyped();
-    }
-
-    if (!LinkType.isReverseChild(link_type)) {
-        host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
-        host.dropdown_content = [];
-        return link_type;
-    }
-    host.link_selector.setPlaceholder(getParentLinkSelectorPlaceholderText());
-    host.dropdown_content = [PossibleParentsGroup.buildLoadingState()];
-    host.controller.retrievePossibleParentsGroups().then((groups) => {
-        host.dropdown_content = groups;
-    });
-    return link_type;
+export const dropdown_section_descriptor = {
+    set: (host: LinkField, collection: GroupCollection | undefined): GroupCollection =>
+        collection ?? [],
+    observe: (host: LinkField): void => {
+        host.link_selector.setDropdownContent([
+            ...host.matching_artifact_section,
+            ...host.recently_viewed_section,
+            ...host.search_results_section,
+            ...host.possible_parents_section,
+        ]);
+    },
 };
 
-const setDropdownContent = (host: LinkField, groups: GroupCollection): GroupCollection => {
-    host.link_selector.setDropdownContent(groups);
-    return groups;
+export const current_link_type_descriptor = {
+    set: (host: LinkField, link_type: LinkType | undefined): LinkType => {
+        if (!link_type) {
+            return LinkType.buildUntyped();
+        }
+        if (!LinkType.isReverseChild(link_type)) {
+            host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
+            return link_type;
+        }
+        host.link_selector.setPlaceholder(getParentLinkSelectorPlaceholderText());
+        return link_type;
+    },
+    observe: (host: LinkField): void => {
+        host.controller.autoComplete(host, "");
+    },
 };
 
 export const getLinkFieldCanOnlyHaveOneParentNote = (
@@ -237,8 +246,10 @@ export const LinkField = define<LinkField>({
             });
 
             host.link_selector = createLinkSelector(host.artifact_link_select, {
-                search_field_callback: (link_selector, query) =>
-                    controller.autoComplete(host, query),
+                search_field_callback: (link_selector, query) => {
+                    host.controller.clearFaultNotification();
+                    return controller.autoComplete(host, query);
+                },
                 templating_callback: getLinkableArtifactTemplate,
                 selection_callback: (value) => {
                     const artifact = getLinkableArtifact(value);
@@ -254,10 +265,8 @@ export const LinkField = define<LinkField>({
 
             controller.retrievePossibleParentsGroups().then((groups) => {
                 host.current_link_type = controller.getCurrentLinkType(groups.length > 0);
-                host.dropdown_content = groups;
                 host.allowed_link_types = controller.displayAllowedTypes();
             });
-
             return controller;
         },
     },
@@ -274,12 +283,11 @@ export const LinkField = define<LinkField>({
     new_links_presenter: {
         set: setNewLinks,
     },
-    current_link_type: {
-        set: setCurrentLinkType,
-    },
-    dropdown_content: {
-        set: setDropdownContent,
-    },
+    current_link_type: current_link_type_descriptor,
+    matching_artifact_section: dropdown_section_descriptor,
+    recently_viewed_section: dropdown_section_descriptor,
+    possible_parents_section: dropdown_section_descriptor,
+    search_results_section: dropdown_section_descriptor,
     content: (host) => html`
         <div class="tracker-form-element" data-test="artifact-link-field">
             <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">

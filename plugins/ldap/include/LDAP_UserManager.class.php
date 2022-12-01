@@ -268,7 +268,7 @@ class LDAP_UserManager
         $user->setStatus($this->getLdap()->getLDAPParam('default_user_status'));
         $user->setRegisterPurpose('LDAP');
         $user->setUnixStatus('S');
-        $user->setTimezone('GMT');
+        $user->setTimezone('UTC');
         $user->setLanguageID(ForgeConfig::get(BaseLanguage::CONFIG_KEY, BaseLanguage::DEFAULT_LANG));
 
         $um   = $this->getUserManager();
@@ -493,7 +493,6 @@ class LDAP_UserManager
             return false;
         }
     }
-
 
     /**
      * Return true if user is deleted from ldap server

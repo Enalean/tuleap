@@ -38,6 +38,7 @@
                 <create-new-item-version-modal
                     v-bind:is="shown_new_version_modal"
                     v-bind:item="updated_item"
+                    v-bind:type="updated_empty_new_type"
                     data-test="document-new-version-modal"
                 />
                 <update-properties-modal
@@ -96,7 +97,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants";
+import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./DropDown/NewDocument/NewItemModal.vue";
@@ -157,6 +158,7 @@ export default {
             folder_above_warning_threshold_props: null,
             file_changelog_properties: null,
             file_creation_properties: null,
+            updated_empty_new_type: null,
         };
     },
     computed: {
@@ -180,6 +182,10 @@ export default {
     created() {
         emitter.on("deleteItem", this.showDeleteItemModal);
         emitter.on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
+        emitter.on(
+            "show-create-new-version-modal-for-empty",
+            this.showCreateNewVersionModalForEmpty
+        );
         emitter.on("show-update-item-properties-modal", this.showUpdateItemPropertiesModal);
         emitter.on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         emitter.on(
@@ -193,6 +199,10 @@ export default {
     beforeDestroy() {
         emitter.off("deleteItem", this.showDeleteItemModal);
         emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
+        emitter.off(
+            "show-create-new-version-modal-for-empty",
+            this.showCreateNewVersionModalForEmpty
+        );
         emitter.off("show-update-item-properties-modal", this.showUpdateItemPropertiesModal);
         emitter.off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
         emitter.off(
@@ -204,6 +214,14 @@ export default {
         emitter.off("show-file-creation-modal", this.showFileCreationModal);
     },
     methods: {
+        showCreateNewVersionModalForEmpty(event) {
+            this.updated_item = event.item;
+            this.updated_empty_new_type = event.type;
+            this.shown_new_version_modal = () =>
+                import(
+                    /* webpackChunkName: "document-new-empty-version-modal" */ "./DropDown/NewVersion/CreateNewVersionEmptyModal.vue"
+                );
+        },
         showCreateNewItemVersionModal(event) {
             this.updated_item = event.detail.current_item;
 
@@ -230,12 +248,6 @@ export default {
                     this.shown_new_version_modal = () =>
                         import(
                             /* webpackChunkName: "document-new-link-version-modal" */ "./DropDown/NewVersion/CreateNewVersionLinkModal.vue"
-                        );
-                    break;
-                case TYPE_EMPTY:
-                    this.shown_new_version_modal = () =>
-                        import(
-                            /* webpackChunkName: "document-new-empty-version-modal" */ "./DropDown/NewVersion/CreateNewVersionEmptyModal.vue"
                         );
                     break;
                 default: //nothing

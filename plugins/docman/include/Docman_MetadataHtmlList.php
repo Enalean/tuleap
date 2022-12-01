@@ -107,6 +107,7 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
         $html .= '</select>' . "\n";
         return $html;
     }
+
     public function &getValidator()
     {
         $validator = \null;

@@ -78,7 +78,7 @@ class KanbanXMLExporter
             $kanban_node = $kanban_list_node->addChild(self::NODE_KANBAN);
             $kanban_node->addAttribute('tracker_id', $this->getFormattedTrackerId($tracker_id));
             $kanban_node->addAttribute('name', $kanban->getName());
-            $kanban_node->addAttribute('ID', $this->getFormattedKanbanId((int) $kanban->getId()));
+            $kanban_node->addAttribute('ID', $this->getFormattedKanbanId($kanban->getId()));
         }
     }
 
@@ -87,8 +87,8 @@ class KanbanXMLExporter
         return self::TRACKER_ID_PREFIX . $tracker_id;
     }
 
-    private function getFormattedKanbanId(int $kanabn_id): string
+    private function getFormattedKanbanId(int $kanban_id): string
     {
-        return self::KANBAN_ID_PREFIX . $kanabn_id;
+        return self::KANBAN_ID_PREFIX . $kanban_id;
     }
 }

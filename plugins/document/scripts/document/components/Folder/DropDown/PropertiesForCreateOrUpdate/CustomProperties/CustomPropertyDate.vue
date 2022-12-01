@@ -27,13 +27,13 @@
         <label class="tlp-label" v-bind:for="`document-${currentlyUpdatedItemProperty.short_name}`">
             {{ currentlyUpdatedItemProperty.name }}
             <i
-                class="fa fa-asterisk"
+                class="fa-solid fa-asterisk"
                 v-if="currentlyUpdatedItemProperty.is_required"
                 data-test="document-custom-property-is-required"
             ></i>
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
-            <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
+            <span class="tlp-prepend"><i class="fa-regular fa-calendar"></i></span>
             <date-flat-picker
                 v-bind:id="`${currentlyUpdatedItemProperty.short_name}`"
                 v-bind:required="currentlyUpdatedItemProperty.is_required"

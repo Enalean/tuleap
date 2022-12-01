@@ -30,7 +30,11 @@
                     v-bind:key="cell_index"
                     v-bind:class="getCellClassname(cell_index)"
                 >
-                    <i class="fa tlp-skeleton-icon" v-bind:class="cell.icon" v-if="cell.icon"></i>
+                    <i
+                        class="fa-fw tlp-skeleton-icon"
+                        v-bind:class="cell.icon"
+                        v-if="cell.icon"
+                    ></i>
                     <span class="tlp-skeleton-text" v-bind:style="{ width: cell.width }"></span>
                 </td>
             </tr>

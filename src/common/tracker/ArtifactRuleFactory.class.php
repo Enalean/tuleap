@@ -120,6 +120,7 @@ class ArtifactRuleFactory
         $this->rules_dao->deleteRuleState($group_artifact_id, $source, $source_value, $target, [$this->RULETYPE_HIDDEN, $this->RULETYPE_DISABLED, $this->RULETYPE_MANDATORY]);
         $this->rules_dao->create($group_artifact_id, $source, $source_value, $target, $rule_type);
     }
+
     public function saveRuleHidden($group_artifact_id, $source, $source_value, $target)
     {
         $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_HIDDEN);
@@ -146,6 +147,7 @@ class ArtifactRuleFactory
         $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($artifact_type, $source, $source_value, $target, $this->RULETYPE_VALUE);
         return $deleted;
     }
+
     public function deleteRuleValueByTarget($artifact_type, $source, $target, $target_value)
     {
         $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($artifact_type, $source, $target, $target_value, $this->RULETYPE_VALUE);
@@ -160,6 +162,7 @@ class ArtifactRuleFactory
         $deleted = $this->rules_dao->deleteRulesByGroupArtifactId($artifact_type);
         return $deleted;
     }
+
     /**
     * Delete all rules related to a field
     */
@@ -168,6 +171,7 @@ class ArtifactRuleFactory
         $deleted = $this->rules_dao->deleteByField($artifact_type, $field_id);
         return $deleted;
     }
+
     /**
     * Delete all rules related to a field value
     */
@@ -176,6 +180,7 @@ class ArtifactRuleFactory
         $deleted = $this->rules_dao->deleteByFieldValue($artifact_type, $field_id, $value_id);
         return $deleted;
     }
+
     /**
     * copy rules from a tracker to another
     */

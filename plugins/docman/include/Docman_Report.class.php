@@ -65,6 +65,7 @@ class Docman_Report
     {
         $this->id = $i;
     }
+
     public function getId()
     {
         return $this->id;
@@ -74,6 +75,7 @@ class Docman_Report
     {
         $this->name = $v;
     }
+
     public function getName()
     {
         return $this->name;
@@ -83,6 +85,7 @@ class Docman_Report
     {
         $this->title = $v;
     }
+
     public function getTitle()
     {
         return $this->title;
@@ -92,6 +95,7 @@ class Docman_Report
     {
         $this->groupId = $g;
     }
+
     public function getGroupId()
     {
         return $this->groupId;
@@ -101,6 +105,7 @@ class Docman_Report
     {
         $this->userId = $v;
     }
+
     public function getUserId()
     {
         return $this->userId;
@@ -110,6 +115,7 @@ class Docman_Report
     {
         $this->itemId = $v;
     }
+
     public function getItemId()
     {
         return $this->itemId;
@@ -119,6 +125,7 @@ class Docman_Report
     {
         $this->scope = $v;
     }
+
     public function getScope()
     {
         return $this->scope;
@@ -128,6 +135,7 @@ class Docman_Report
     {
         $this->isDefault = $v;
     }
+
     public function getIsDefault()
     {
         return $this->isDefault;
@@ -137,6 +145,7 @@ class Docman_Report
     {
         $this->advancedSearch = $v;
     }
+
     public function getAdvancedSearch()
     {
         return $this->advancedSearch;
@@ -146,6 +155,7 @@ class Docman_Report
     {
         $this->description = $v;
     }
+
     public function getDescription()
     {
         return $this->description;
@@ -155,6 +165,7 @@ class Docman_Report
     {
         $this->image = $v;
     }
+
     public function getImage()
     {
         return $this->image;

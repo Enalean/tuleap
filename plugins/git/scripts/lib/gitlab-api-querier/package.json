@@ -15,12 +15,12 @@
     }
   },
   "dependencies": {
-    "@tuleap/fault": "link:../../../../../lib/frontend/fault",
-    "@tuleap/fetch-result": "link:../../../../../lib/frontend/fetch-result",
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
     "neverthrow": "^5.0.0"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

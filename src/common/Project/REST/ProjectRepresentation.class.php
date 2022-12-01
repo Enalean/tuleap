@@ -64,7 +64,6 @@ class ProjectRepresentation extends MinimalProjectRepresentation
         $this->description             = $description;
     }
 
-
     public static function build(Project $project, PFUser $user, array $resources, array $informations, array $project_field_representations): self
     {
         return new self(

@@ -47,7 +47,6 @@ class User_PasswordExpirationChecker
         }
     }
 
-
     private function userPasswordHasExpired(PFUser $user)
     {
         $expiration_date = $this->getPasswordExpirationDate();

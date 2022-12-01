@@ -25,7 +25,7 @@
     >
         <translate v-if="is_folder">The folder has been created below.</translate>
         <translate v-else>The document has been created below.</translate>
-        <i class="fa fa-arrow-down document-new-item-under-the-fold-notification-icon"></i>
+        <i class="fa-solid fa-arrow-down document-new-item-under-the-fold-notification-icon"></i>
     </div>
 </template>
 

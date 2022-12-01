@@ -74,102 +74,127 @@ class Docman_Metadata
     {
         $this->id = $v;
     }
+
     public function getId()
     {
         return $this->id;
     }
+
     public function setGroupId($v)
     {
         $this->groupId = $v;
     }
+
     public function getGroupId()
     {
         return $this->groupId;
     }
+
     public function setName($v)
     {
         $this->name = $v;
     }
+
     public function getName()
     {
         return $this->name;
     }
+
     public function setType($v)
     {
         $this->type = $v;
     }
+
     public function getType()
     {
         return $this->type;
     }
+
     public function setLabel($v)
     {
         $this->label = $v;
     }
+
     public function getLabel()
     {
         return $this->label;
     }
+
     public function setDescription($v)
     {
         $this->description = $v;
     }
+
     public function getDescription()
     {
         return $this->description;
     }
+
     public function setIsRequired($v)
     {
         $this->isRequired = $v;
     }
+
     public function getIsRequired()
     {
         return $this->isRequired;
     }
+
     public function setIsEmptyAllowed($v)
     {
         $this->isEmptyAllowed = $v;
     }
+
     public function getIsEmptyAllowed()
     {
         return $this->isEmptyAllowed;
     }
+
     public function setIsMultipleValuesAllowed($v)
     {
         $this->isMultipleValuesAllowed = $v;
     }
+
     public function getIsMultipleValuesAllowed()
     {
         return $this->isMultipleValuesAllowed;
     }
+
     public function setKeepHistory($v)
     {
         $this->keepHistory = $v;
     }
+
     public function getKeepHistory()
     {
         return $this->keepHistory;
     }
+
     public function setSpecial($v)
     {
         $this->special = $v;
     }
+
     public function getSpecial()
     {
         return $this->special;
     }
+
     public function setDefaultValue($v)
     {
         $this->defaultValue = $v;
     }
+
     public function getDefaultValue()
     {
         return $this->defaultValue;
     }
+
     public function setUseIt($v)
     {
         $this->useIt = $v;
     }
+
     public function getUseIt()
     {
         return $this->useIt;
@@ -184,6 +209,7 @@ class Docman_Metadata
             return \false;
         }
     }
+
     public function isMultipleValuesAllowed()
     {
         if ($this->isMultipleValuesAllowed == \PLUGIN_DOCMAN_DB_TRUE) {
@@ -192,6 +218,7 @@ class Docman_Metadata
             return \false;
         }
     }
+
     public function isRequired()
     {
         if ($this->isRequired == \PLUGIN_DOCMAN_DB_TRUE) {
@@ -200,6 +227,7 @@ class Docman_Metadata
             return \false;
         }
     }
+
     public function isUsed()
     {
         if ($this->useIt == \PLUGIN_DOCMAN_METADATA_USED) {
@@ -208,6 +236,7 @@ class Docman_Metadata
             return \false;
         }
     }
+
     public function isSpecial()
     {
         if ($this->special > 0) {
@@ -223,6 +252,7 @@ class Docman_Metadata
     {
         $this->canChangeName = $v;
     }
+
     public function canChangeName()
     {
         return $this->canChangeName;
@@ -232,6 +262,7 @@ class Docman_Metadata
     {
         $this->canChangeType = $v;
     }
+
     public function canChangeType()
     {
         return $this->canChangeType;
@@ -241,6 +272,7 @@ class Docman_Metadata
     {
         $this->canChangeDescription = $v;
     }
+
     public function canChangeDescription()
     {
         return $this->canChangeDescription;
@@ -250,6 +282,7 @@ class Docman_Metadata
     {
         $this->canChangeIsEmptyAllowed = $v;
     }
+
     public function canChangeIsEmptyAllowed()
     {
         return $this->canChangeIsEmptyAllowed;
@@ -259,6 +292,7 @@ class Docman_Metadata
     {
         $this->canChangeIsMultipleValuesAllowed = $v;
     }
+
     public function canChangeIsMultipleValuesAllowed()
     {
         return $this->canChangeIsMultipleValuesAllowed;
@@ -268,6 +302,7 @@ class Docman_Metadata
     {
         $this->canChangeValue = $v;
     }
+
     public function canChangeValue()
     {
         return $this->canChangeValue;
@@ -277,10 +312,12 @@ class Docman_Metadata
     {
         $this->value = $v;
     }
+
     public function getValue()
     {
         return $this->value;
     }
+
     public function initFromRow($row)
     {
         if (isset($row['field_id'])) {
@@ -318,6 +355,7 @@ class Docman_Metadata
         }
         $this->setCanChangeValue(\true);
     }
+
     /**
      * Check if the metadata in argument can be the same.
      */
@@ -325,6 +363,7 @@ class Docman_Metadata
     {
         return $md->getName() == $this->getName() && $md->getType() == $this->getType();
     }
+
     /**
      * Check if 2 metadata are the same.
      * This check neither the 'label' nor the 'group_id'
@@ -333,22 +372,27 @@ class Docman_Metadata
     {
         return $this->equivalent($md) && $this->sameDescription($md) && $this->sameIsEmptyAllowed($md) && $this->sameIsMultipleValuesAllowed($md) && $this->sameUseIt($md);
     }
+
     public function sameDescription($md)
     {
         return $md->getDescription() == $this->getDescription();
     }
+
     public function sameIsEmptyAllowed($md)
     {
         return $md->getIsEmptyAllowed() == $this->getIsEmptyAllowed();
     }
+
     public function sameIsMultipleValuesAllowed($md)
     {
         return $md->getIsMultipleValuesAllowed() == $this->getIsMultipleValuesAllowed();
     }
+
     public function sameUseIt($md)
     {
         return $md->getUseIt() == $this->getUseIt();
     }
+
     /**
      * Update current metadata based on the one passed in param
      */

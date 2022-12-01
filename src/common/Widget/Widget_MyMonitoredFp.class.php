@@ -37,6 +37,7 @@ class Widget_MyMonitoredFp extends Widget
     {
         return $GLOBALS['Language']->getText('my_index', 'my_files');
     }
+
     public function getContent()
     {
         $purifier             = Codendi_HTMLPurifier::instance();
@@ -125,10 +126,12 @@ class Widget_MyMonitoredFp extends Widget
     {
         return _('Files');
     }
+
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_monitored_fp', 'description');
     }
+
     public function isAjax()
     {
         return true;

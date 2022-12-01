@@ -28,12 +28,14 @@ class Docman_HtmlFilterList extends \Docman_HtmlFilter
     {
         parent::__construct($filter);
     }
+
     public function buildSelectBox($vals, $txts)
     {
         // Purifying is disabled as $txts already contains purified strings
         $html = \html_build_select_box_from_arrays($vals, $txts, $this->filter->md->getLabel(), $this->filter->getValue(), \false, '', \true, $GLOBALS['Language']->getText('global', 'any'), \false, '', \CODENDI_PURIFIER_DISABLED);
         return $html;
     }
+
     public function _valueSelectorHtml($formName = 0)
     {
         $vIter = $this->filter->md->getListOfValueIterator();

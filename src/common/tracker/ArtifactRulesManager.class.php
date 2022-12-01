@@ -78,11 +78,13 @@ class ArtifactRulesManager
         $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRulesByArtifactType($artifact_type_id);
     }
+
     public function deleteRulesByFieldId($artifact_type_id, $field_id)
     {
         $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRulesByFieldId($artifact_type_id, $field_id);
     }
+
     public function deleteRulesByValueId($artifact_type_id, $field_id, $value_id)
     {
         $fact = $this->_getArtifactRuleFactory();

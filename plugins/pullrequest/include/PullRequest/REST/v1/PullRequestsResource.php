@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use BackendLogger;
 use EventManager;
-use Git_Command_Exception;
 use Git_GitRepositoryUrlManager;
 use GitDao;
 use GitPlugin;
@@ -64,6 +63,7 @@ use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
+use Tuleap\PullRequest\Comment\ThreadCommentDao;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Events\PullRequestDiffRepresentationBuild;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
@@ -73,7 +73,6 @@ use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestTargetException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
-use Tuleap\PullRequest\Exception\UnknownReferenceException;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\FileUniDiff;
@@ -100,6 +99,8 @@ use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestCreatorChecker;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorAssigner;
+use Tuleap\PullRequest\REST\v1\Comment\ThreadCommentColorRetriever;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForComment;
 use Tuleap\PullRequest\REST\v1\Comment\ParentIdValidatorForInlineComment;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
@@ -265,7 +266,9 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $dao                          = new \Tuleap\PullRequest\InlineComment\Dao();
-        $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher);
+        $color_retriever              = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
+        $color_assigner               = new ThreadCommentColorAssigner($dao, $dao);
+        $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher, $color_retriever, $color_assigner);
 
         $this->access_control_verifier = new AccessControlVerifier(
             new FineGrainedRetriever(new FineGrainedDao()),
@@ -408,19 +411,15 @@ class PullRequestsResource extends AuthenticatedResource
             $this->commit_representation_builder
         );
 
-        try {
-            $commit_representation = $commit_factory->getPullRequestCommits(
-                $pull_requests_with_git_reference->getPullRequest(),
-                $limit,
-                $offset
-            );
+        $commit_representation = $commit_factory->getPullRequestCommits(
+            $pull_requests_with_git_reference->getPullRequest(),
+            $limit,
+            $offset
+        );
 
-            Header::sendPaginationHeaders($limit, $offset, $commit_representation->getSize(), self::MAX_LIMIT);
+        Header::sendPaginationHeaders($limit, $offset, $commit_representation->getSize(), self::MAX_LIMIT);
 
-            return $commit_representation->getCommitsCollection();
-        } catch (Git_Command_Exception $exception) {
-            throw new RestException(500, $exception->getMessage());
-        }
+        return $commit_representation->getCommitsCollection();
     }
 
     /**
@@ -430,7 +429,6 @@ class PullRequestsResource extends AuthenticatedResource
     {
         $this->sendAllowHeadersForCommits();
     }
-
 
     /**
      * @url OPTIONS {id}/labels
@@ -601,11 +599,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $file_representation_factory = new PullRequestFileRepresentationFactory($executor);
 
-        try {
-            $modified_files = $file_representation_factory->getModifiedFilesRepresentations($pull_request);
-        } catch (UnknownReferenceException $exception) {
-            throw new RestException(404, $exception->getMessage());
-        }
+        $modified_files = $file_representation_factory->getModifiedFilesRepresentations($pull_request);
 
         return $modified_files;
     }
@@ -743,7 +737,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $post_date = time();
 
-        $id = $this->inline_comment_creator->insert(
+        $inserted_inline_comment = $this->inline_comment_creator->insert(
             $pull_request,
             $user,
             $comment_data,
@@ -761,8 +755,9 @@ class PullRequestsResource extends AuthenticatedResource
             $git_repository_source->getProjectId(),
             $comment_data->position,
             (int) $comment_data->parent_id,
-            $id,
-            $comment_data->file_path
+            $inserted_inline_comment->id,
+            $comment_data->file_path,
+            $inserted_inline_comment->color
         );
     }
 
@@ -1120,16 +1115,21 @@ class PullRequestsResource extends AuthenticatedResource
             $git_repository->getProject()
         );
 
+        $dao                 = new CommentDao();
+        $color_retriever     = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
+        $color_assigner      = new ThreadCommentColorAssigner($dao, $dao);
         $parent_id_validator = new ParentIdValidatorForComment($this->comment_factory);
         $current_time        = time();
-        $comment             = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id);
+        $comment             = new Comment(0, $id, (int) $user->getId(), $current_time, $comment_data->content, (int) $comment_data->parent_id, '');
+        $color               = $color_retriever->retrieveColor($id, (int) $comment_data->parent_id);
+        $color_assigner->assignColor((int) $comment_data->parent_id, $color);
 
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $id);
         $new_comment_id = $this->comment_factory->save($comment, $user, $project_id);
 
         $user_representation = MinimalUserRepresentation::build($user);
 
-        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId());
+        return new CommentRepresentation($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent(), $comment->getParentId(), $color);
     }
 
     /**
@@ -1357,7 +1357,6 @@ class PullRequestsResource extends AuthenticatedResource
     {
         Header::allowOptionsGet();
     }
-
 
     private function sendAllowHeadersForLabels()
     {

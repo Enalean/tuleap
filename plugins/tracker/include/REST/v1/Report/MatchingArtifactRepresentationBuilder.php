@@ -32,8 +32,10 @@ use Tracker_Report_Renderer_Table;
 use Tuleap\Tracker\Report\Renderer\Table\TableRendererForReportRetriever;
 use Tuleap\Tracker\Report\Renderer\Table\UsedFieldsRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
+use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
 
 class MatchingArtifactRepresentationBuilder
 {
@@ -41,6 +43,7 @@ class MatchingArtifactRepresentationBuilder
         private ReportArtifactFactory $report_artifact_factory,
         private TableRendererForReportRetriever $table_renderer_retriever,
         private UsedFieldsRetriever $used_fields_retriever,
+        private StatusColorForChangesetProvider $status_value_for_changeset_provider,
     ) {
     }
 
@@ -88,7 +91,11 @@ class MatchingArtifactRepresentationBuilder
                     $renderer_table_fields
                 ),
                 null,
-                $minimal_tracker_representation
+                $minimal_tracker_representation,
+                StatusValueRepresentation::buildFromValues(
+                    $matching_artifact->getStatus(),
+                    $this->status_value_for_changeset_provider->provideColor($last_changeset, $matching_artifact->getTracker(), $current_user)
+                )
             );
         }
 

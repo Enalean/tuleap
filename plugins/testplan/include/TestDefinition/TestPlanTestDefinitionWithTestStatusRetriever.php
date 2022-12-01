@@ -51,7 +51,6 @@ class TestPlanTestDefinitionWithTestStatusRetriever
         $this->user_manager                                                    = $user_manager;
     }
 
-
     /**
      * @param Artifact[] $test_definitions
      *

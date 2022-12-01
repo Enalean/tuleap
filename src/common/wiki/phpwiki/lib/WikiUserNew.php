@@ -1195,7 +1195,6 @@ class _PassUser extends _AnonUser
         }
     }
 
-
     public function _checkPassLength($submitted_password)
     {
         if (strlen($submitted_password) < PASSWORD_LENGTH_MINIMUM) {
@@ -1302,6 +1301,7 @@ class _AdminUser extends _PassUser
     {
         return false;
     }
+
     public function checkPass($submitted_password)
     {
         if ($this->_userid == ADMIN_USER) {
@@ -1907,6 +1907,7 @@ class UserPreferences
         $this->_prefs[$name] = $pref;
         return true;
     }
+
     /**
      * use init to avoid update on set
      */

@@ -48,6 +48,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     {
         return PLUGIN_CACHED_HTML;
     }
+
     public function getName()
     {
         return _("SystemInfo");
@@ -76,10 +77,12 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     {
         return true;
     }
+
     public function getExpire($dbi, $argarray, $request)
     {
         return '+1800'; // 30 minutes
     }
+
     public function getHtml($dbi, $argarray, $request, $basepage)
     {
         $loader = new WikiPluginLoader();
@@ -110,6 +113,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         //$s .= ", cache misses: ?";
         return $s;
     }
+
     public function ExpireParams()
     {
         global $ExpireParams;
@@ -136,6 +140,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         );
         return $s;
     }
+
     public function pagestats()
     {
         global $request;
@@ -272,14 +277,17 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     {
         return implode(' ', explode('|', INLINE_IMAGES));
     }
+
     public function wikinameregexp()
     {
         return $GLOBALS['WikiNameRegexp'];
     }
+
     public function allowedprotocols()
     {
         return implode(' ', explode('|', ALLOWED_PROTOCOLS));
     }
+
     public function available_plugins()
     {
         $fileset = new fileSet(FindFile('lib/plugin'), '*.php');
@@ -292,6 +300,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
             },
                                       $list));
     }
+
     public function supported_languages()
     {
         $available_languages = listAvailableLanguages();

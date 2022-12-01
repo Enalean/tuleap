@@ -56,6 +56,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $this->token                          = $token;
         $this->ugroups_to_be_notified_builder = $ugroups_to_be_notified_builder;
     }
+
     public function getContent($params = [])
     {
         $content  = '<dl><fieldset><legend>' . dgettext('tuleap-docman', 'Notifications') . '</legend>';
@@ -121,26 +122,32 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitWiki(&$item, $params)
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitLink(&$item, $params)
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitEmbeddedFile(&$item, $params)
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitFile(&$item, $params)
     {
         return $this->visitDocument($item, $params);
     }
+
     public function visitDocument(&$item, $params)
     {
         return '';
     }
+
     public function visitFolder(&$item, $params)
     {
         $content  = '<blockquote>';

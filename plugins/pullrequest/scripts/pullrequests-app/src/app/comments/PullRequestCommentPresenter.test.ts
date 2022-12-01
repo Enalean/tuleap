@@ -24,13 +24,12 @@ import {
     TYPE_INLINE_COMMENT,
 } from "./PullRequestCommentPresenter";
 import type {
-    FileDiffCommentPayload,
     PullRequestData,
     State,
     CommentReplyPayload,
     TimelineEventPayload,
 } from "./PullRequestCommentPresenter";
-import type { PullRequestUser } from "./PullRequestCommentPresenter";
+import type { FileDiffCommentPayload, PullRequestUser } from "./types";
 import { setCatalog } from "../gettext-catalog";
 import { PullRequestCommentPresenterStub } from "../../../tests/stubs/PullRequestCommentPresenterStub";
 
@@ -114,6 +113,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
             unidiff_offset: 8,
             position: "right",
             parent_id: 0,
+            color: "graffiti-yellow",
         };
         const result = PullRequestCommentPresenter.fromFileDiffComment(event);
         expect(result.type).toBe("inline-comment");
@@ -132,6 +132,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
             content: "",
             user: {} as PullRequestUser,
             parent_id: 12,
+            color: "",
         };
 
         const presenter = PullRequestCommentPresenter.fromCommentReply(

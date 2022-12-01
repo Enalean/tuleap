@@ -70,6 +70,7 @@ class BackendSVN extends Backend
     {
         return new ProjectUGroup($row);
     }
+
     /**
      * For mocking (unit tests)
      *
@@ -819,7 +820,6 @@ class BackendSVN extends Backend
         $svnroot = $project->getSVNRootPath();
         return is_dir($svnroot) && $this->chmod($svnroot, $perms);
     }
-
 
     /**
      * Check ownership/mode/privacy of repository

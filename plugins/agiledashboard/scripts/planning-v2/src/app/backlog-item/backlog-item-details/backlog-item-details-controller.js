@@ -50,10 +50,12 @@ function BacklogItemDetailsController(
         }
 
         NewTuleapArtifactModalService.showCreation(
+            SharedPropertiesService.getUserId(),
             item_type.id,
             self.backlog_item.id,
             callback,
-            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id)
+            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id),
+            SharedPropertiesService.isSearchEnabled()
         );
     }
 

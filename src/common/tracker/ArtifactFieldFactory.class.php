@@ -323,7 +323,6 @@ class ArtifactFieldFactory
         }
     }
 
-
     /**
      * return all the fields (+ their default value)
      * of this tracker that have not been showed to the user
@@ -368,7 +367,6 @@ class ArtifactFieldFactory
         return $fields_contained_in_fieldset;
     }
 
-
     /**
      * param $ug: the ugroup that we are searching for
      * param $atid_dest: all groups that do not have this tracker are foreign groups
@@ -386,7 +384,6 @@ class ArtifactFieldFactory
             return false;
         }
     }
-
 
     /**
      *
@@ -497,7 +494,6 @@ class ArtifactFieldFactory
 
         return true;
     }
-
 
     /**
      *

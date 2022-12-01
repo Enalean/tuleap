@@ -50,7 +50,6 @@ final class Tracker_XML_Updater_TemporaryFileCreatorTest extends \Tuleap\Test\PH
         unset($this->creator);
     }
 
-
     public function testItCreatesTemporaryFile(): void
     {
         $copy = $this->creator->createTemporaryFile($this->initial);

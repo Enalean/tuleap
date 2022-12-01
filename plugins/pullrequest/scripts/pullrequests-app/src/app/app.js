@@ -29,7 +29,6 @@ import angular_tlp from "@tuleap/angular-tlp";
 
 import MainController from "./app-controller.js";
 
-import NewInlineCommentComponent from "./file-diff/new-inline-comment-component.js";
 import FileDiffComponent from "./file-diff/file-diff-component.js";
 import UnidiffComponent from "./file-diff/diff-modes/unidiff-component.js";
 import SideBySideDiffComponent from "./file-diff/diff-modes/side-by-side-diff-component.js";
@@ -48,7 +47,6 @@ import PullRequestDirective from "./pull-request/pull-request-directive.js";
 import PullRequestHeaderDirective from "./pull-request/header/header-directive.js";
 import PullRequestRefsDirective from "./pull-request-refs/pull-request-refs.directive.js";
 import TuleapUsernameDirective from "./tuleap-username/tuleap-username-directive.js";
-import AutofocusInputDirective from "./autofocus-input-directive.js";
 
 import UserRestService from "./user-rest-service.js";
 import TooltipService from "./tooltip-service.js";
@@ -82,6 +80,8 @@ import PullRequestConfig from "./pull-request/pull-request-config.js";
 
 import angular_custom_elements_module from "angular-custom-elements";
 import "./comments/PullRequestComment.ts";
+import "./file-diff/FileDiffPlaceholder.ts";
+import "./comments/new-comment-form/NewInlineCommentForm.ts";
 
 export default angular
     .module("tuleap.pull-request", [
@@ -95,7 +95,6 @@ export default angular
     ])
     .controller("MainController", MainController)
 
-    .component("newInlineComment", NewInlineCommentComponent)
     .component("fileDiff", FileDiffComponent)
     .component("fileUnidiff", UnidiffComponent)
     .component("sideBySideDiff", SideBySideDiffComponent)
@@ -114,7 +113,6 @@ export default angular
     .directive("pullRequestHeader", PullRequestHeaderDirective)
     .directive("pullRequestRefs", PullRequestRefsDirective)
     .directive("tuleapUsername", TuleapUsernameDirective)
-    .directive("autofocusInput", AutofocusInputDirective)
 
     .service("UserRestService", UserRestService)
     .service("ErrorModalService", ErrorModalService)

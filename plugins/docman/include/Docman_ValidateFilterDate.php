@@ -27,6 +27,7 @@ class Docman_ValidateFilterDate extends \Docman_ValidateFilter
     {
         parent::__construct($filter);
     }
+
     public function validate()
     {
         if ($this->isValid === \null) {

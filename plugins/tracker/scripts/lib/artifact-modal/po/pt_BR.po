@@ -153,6 +153,9 @@ msgstr ""
 msgid "Preview"
 msgstr "Pré-visualização"
 
+msgid "Recently viewed artifacts"
+msgstr ""
+
 msgid "References list is empty."
 msgstr ""
 
@@ -169,6 +172,9 @@ msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
 
 msgid "Save changes"
+msgstr ""
+
+msgid "Search results"
 msgstr ""
 
 msgid "Size: %s"

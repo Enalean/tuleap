@@ -93,7 +93,6 @@ class LDAP_SyncReminderNotificationManager
         return new LDAP_DirectoryCleanUpDao(CodendiDataAccess::instance());
     }
 
-
     /**
      * Prepare the body of the notification mail
      *

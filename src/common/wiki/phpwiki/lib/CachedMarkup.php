@@ -558,7 +558,6 @@ class Cached_PluginInvocation extends Cached_DynamicContent
         return $this->_pi;
     }
 
-
     public function getWikiPageLinks($basepage)
     {
         $loader = $this->_getLoader();

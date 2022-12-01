@@ -34,6 +34,7 @@ class MapTest extends \Tuleap\Test\PHPUnit\TestCase
         $m = new Map();
         $this->assertTrue($m->isEmpty());
     }
+
     public function testNonEmptyMap(): void
     {
         $key   = 'key';
@@ -42,6 +43,7 @@ class MapTest extends \Tuleap\Test\PHPUnit\TestCase
         $m->put($key, $value);
         $this->assertFalse($m->isEmpty());
     }
+
     public function testOneValue(): void
     {
         $key   = 'key';
@@ -50,6 +52,7 @@ class MapTest extends \Tuleap\Test\PHPUnit\TestCase
         $m->put($key, $value);
         $this->assertEquals($value, $m->get($key));
     }
+
     public function testNoValue(): void
     {
         $key       = 'key';
@@ -59,6 +62,7 @@ class MapTest extends \Tuleap\Test\PHPUnit\TestCase
         $m->put($key, $value);
         $this->assertFalse($m->get($false_key));
     }
+
     public function testTwoValues(): void
     {
         $key1   = 'key1';
@@ -71,6 +75,7 @@ class MapTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($value1, $m->get($key1));
         $this->assertEquals($value2, $m->get($key2));
     }
+
     public function testSize(): void
     {
         $key1   = 'key1';
@@ -82,6 +87,7 @@ class MapTest extends \Tuleap\Test\PHPUnit\TestCase
         $m->put($key2, $value2);
         $this->assertEquals($m->size(), 2);
     }
+
     public function testGetKeys(): void
     {
         $key1   = 'key1';
@@ -97,6 +103,7 @@ class MapTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected->add($key2);
         $this->assertTrue($keys->equals($expected));
     }
+
     public function testContains(): void
     {
         $key            = 'key';
@@ -109,6 +116,7 @@ class MapTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($m->containsKey($does_not_exist));
         $this->assertFalse($m->containsValue($does_not_exist));
     }
+
     public function testEquals(): void
     {
         $key   = 'key';
@@ -125,6 +133,7 @@ class MapTest extends \Tuleap\Test\PHPUnit\TestCase
         $m2->put($key2, $value);
         $this->assertTrue($m1->equals($m2));
     }
+
     public function testRemove(): void
     {
         $key   = 'key';

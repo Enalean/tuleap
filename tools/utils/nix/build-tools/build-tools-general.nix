@@ -11,8 +11,8 @@
     pkgs.bash
     pkgs.coreutils
     pkgs.which
-    pkgs.gzip
-    pkgs.cpio
     pkgs.cosign
     pkgs.cachix
+    pkgs.cpio
+    pkgs.gzip
 ] ++ pkgs.lib.optionals (! pkgs.stdenv.isDarwin) [ pkgs.glibc ]

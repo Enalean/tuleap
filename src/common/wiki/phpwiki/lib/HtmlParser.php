@@ -291,10 +291,12 @@ class HtmlParser_PhpWiki2 extends HtmlParser
         $this->ident = '';
         return "| \n" . $this->elem_contents($node) . "|\n\n";
     }
+
     public function wikify_tr($node)
     {
         return "\n| " . $this->elem_contents($node);
     }
+
     public function wikify_th($node)
     {
         $ident   = empty($this->ident) ? '' : $this->ident;

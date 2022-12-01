@@ -27,12 +27,24 @@ import type { Folder, Item, ItemFile, State, Wiki } from "../../../../type";
 import ModalConfirmDeletion from "./ModalConfirmDeletion.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ErrorState } from "../../../../store/error/module";
+import * as tlp_modal from "@tuleap/tlp-modal";
+import type { Modal } from "@tuleap/tlp-modal";
 
 describe("ModalConfirmDeletion", () => {
     let store = {
         dispatch: jest.fn(),
         commit: jest.fn(),
     };
+
+    beforeEach(() => {
+        const fake_modal = {
+            addEventListener: jest.fn(),
+            show: jest.fn(),
+            hide: jest.fn(),
+        } as unknown as Modal;
+        jest.spyOn(tlp_modal, "createModal").mockReturnValue(fake_modal);
+    });
+
     function createWrapper(
         item: Item,
         currently_previewed_item: Item | null

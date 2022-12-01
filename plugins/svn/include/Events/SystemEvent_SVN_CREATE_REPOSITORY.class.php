@@ -87,7 +87,6 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
         return $txt;
     }
 
-
     public function process()
     {
         $system_path    = $this->getRequiredParameter(0);

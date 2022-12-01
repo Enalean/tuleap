@@ -373,6 +373,32 @@ import { createLinkSelector } from "@tuleap/link-selector";
                 });
             }
 
+            var dropdown_trigger_options_submenu_1 = document.getElementById(
+                "dropdown-menu-example-options-submenu-1"
+            );
+            if (dropdown_trigger_options_submenu_1) {
+                createDropdown(dropdown_trigger_options_submenu_1, {
+                    keyboard: false,
+                    trigger: "hover-and-click",
+                    dropdown_menu: document.getElementById(
+                        "dropdown-menu-example-options-submenu-options-1"
+                    ),
+                });
+            }
+
+            var dropdown_trigger_options_submenu_2 = document.getElementById(
+                "dropdown-menu-example-options-submenu-2"
+            );
+            if (dropdown_trigger_options_submenu_2) {
+                createDropdown(dropdown_trigger_options_submenu_2, {
+                    keyboard: false,
+                    trigger: "hover-and-click",
+                    dropdown_menu: document.getElementById(
+                        "dropdown-menu-example-options-submenu-options-2"
+                    ),
+                });
+            }
+
             var dropdown_trigger_disabled_options = document.getElementById(
                 "dropdown-disable-options"
             );
@@ -408,22 +434,9 @@ import { createLinkSelector } from "@tuleap/link-selector";
                 });
             }
 
-            var dropdown_trigger_large_split_example_right_options = document.getElementById(
-                "dropdown-large-split-example-right"
-            );
-            if (dropdown_trigger_large_split_example_right_options) {
-                createDropdown(dropdown_trigger_large_split_example_right_options, {
-                    dropdown_menu: document.getElementById(
-                        "dropdown-large-split-example-right-menu"
-                    ),
-                });
-            }
-
             [
                 "dropdown-example",
-                "dropdown-right-example",
                 "dropdown-top-example",
-                "dropdown-top-right-example",
                 "dropdown-icon-right-example",
                 "dropdown-with-tabs-example",
             ]

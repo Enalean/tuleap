@@ -18,21 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Glyph\GlyphNotFoundException;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryEntryBadge;
 use Tuleap\User\History\HistoryEntryCollection;
 
-class VisitRetriever
+final class VisitRetriever
 {
+    public const TYPE = 'artifact';
+
     public function __construct(
         private RecentlyVisitedDao $dao,
         private \Tracker_ArtifactFactory $artifact_factory,
         private GlyphFinder $glyph_finder,
         private StatusBadgeBuilder $status_badge_builder,
+        private EventDispatcherInterface $event_manager,
     ) {
     }
 
@@ -40,7 +47,7 @@ class VisitRetriever
      * @return \Tuleap\Tracker\Artifact\Artifact[]
      * @throws \DataAccessException
      */
-    public function getMostRecentlySeenArtifacts(\PFUser $user, $nb_maximum_artifacts)
+    public function getMostRecentlySeenArtifacts(\PFUser $user, int $nb_maximum_artifacts): array
     {
         $user_id               = $user->getId();
         $recently_visited_rows = $this->dao->searchVisitByUserId($user_id, $nb_maximum_artifacts);
@@ -57,6 +64,7 @@ class VisitRetriever
 
     /**
      * @throws \DataAccessException
+     * @throws GlyphNotFoundException
      */
     public function getVisitHistory(HistoryEntryCollection $entry_collection, int $max_length_history, \PFUser $user): void
     {
@@ -76,16 +84,18 @@ class VisitRetriever
             }
 
             $collection = new SwitchToLinksCollection($artifact, $entry_collection->getUser());
-            \EventManager::instance()->processEvent($collection);
+            $this->event_manager->dispatch($collection);
             $tracker = $artifact->getTracker();
 
             $entry_collection->addEntry(
                 new HistoryEntry(
-                    $recently_visited_row['created_on'],
+                    (int) $recently_visited_row['created_on'],
                     $collection->getXRef(),
                     $collection->getMainUri(),
                     $artifact->getTitle() ?? '',
                     $tracker->getColor()->getName(),
+                    self::TYPE,
+                    $artifact->getId(),
                     $this->glyph_finder->get('tuleap-tracker-small'),
                     $this->glyph_finder->get('tuleap-tracker'),
                     $collection->getIconName(),

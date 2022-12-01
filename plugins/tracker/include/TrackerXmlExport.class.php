@@ -174,8 +174,6 @@ class TrackerXmlExport
         return $child;
     }
 
-
-
     private function exportTriggers(SimpleXMLElement $xml_trackers, $xml_field_mapping, $exported_trackers)
     {
         // Cross tracker stuff needs to be exported after to ensure all references exists

@@ -158,7 +158,6 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
 
-
     public function testItAbortsWhenGivenLicenseIdIsNotValid(): void
     {
         $this->request->set('id', '1');
@@ -206,7 +205,6 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
 
-
     public function testItRaisesAnExceptionWhenTryingToDeleteUnknownCustomLicense(): void
     {
         $this->request->set('id', '1');
@@ -218,7 +216,6 @@ final class SaveLicenseAgreementControllerTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
-
 
     public function testItRaisesAnExceptionWhenTryingToDeleteWithoutId(): void
     {

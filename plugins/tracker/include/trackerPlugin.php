@@ -132,6 +132,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
@@ -231,7 +232,6 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Search\IndexAllArtifactsProcessor;
-use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -240,6 +240,7 @@ use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\ServiceActivator;
+use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
 use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
@@ -263,6 +264,8 @@ use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
+use Tuleap\User\Account\NotificationsOnOwnActionsCollection;
+use Tuleap\User\Account\NotificationsOnOwnActionsUpdate;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
@@ -403,6 +406,9 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(DefineIssueTemplateEvent::NAME);
         $this->addHook(IssuesTemplateDashboardDefinition::NAME);
 
+        $this->addHook(NotificationsOnOwnActionsCollection::NAME);
+        $this->addHook(NotificationsOnOwnActionsUpdate::NAME);
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -413,7 +419,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         }
         return $this->pluginInfo;
     }
-
 
     /**
      * @see Event::PROCCESS_SYSTEM_CHECK
@@ -1283,6 +1288,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $params['user'] = new Tracker_Workflow_WorkflowUser($params['row']);
         }
     }
+
     public function plugin_statistics_service_usage($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $dao = $this->getArtifactDao();
@@ -1413,6 +1419,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE, "\"|$command\"");
         }
     }
+
     public function get_projectid_from_url($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $url = $params['url'];
@@ -1449,7 +1456,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $params['types'][] = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME;
         $params['types'][] = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME;
     }
-
 
     /** @see Event::SERVICES_TRUNCATED_EMAILS */
     public function services_truncated_emails(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1705,11 +1711,13 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function getHistoryEntryCollection(HistoryEntryCollection $collection)
     {
+        $event_manager   = \EventManager::instance();
         $visit_retriever = new \Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever(
             new RecentlyVisitedDao(),
             $this->getArtifactFactory(),
-            new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
+            new \Tuleap\Glyph\GlyphFinder($event_manager),
             new StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
+            $event_manager
         );
         $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY, $collection->getUser());
     }
@@ -2475,6 +2483,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(ListPickerIncluder::class);
         $event->addConfigClass(Tracker_FormElement_Field_ArtifactLink::class);
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
+        $event->addConfigClass(\Tuleap\Tracker\Artifact\Renderer\HistoryAndSearchFeatureFlag::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder
@@ -2630,7 +2639,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 new ChangesetCommentIndexer(
                     new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
-                    Codendi_HTMLPurifier::instance(),
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )
@@ -2672,7 +2680,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     new ChangesetCommentIndexer(
                         $index_queue,
                         EventManager::instance(),
-                        Codendi_HTMLPurifier::instance(),
                         new \Tracker_Artifact_Changeset_CommentDao(),
                     )
                 ))->queueAllPendingArtifactsIntoIndexQueue(
@@ -2685,5 +2692,20 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function identifyAllItemsToIndex(): void
     {
         (new \Tuleap\Tracker\Search\IndexArtifactDAO())->markExistingArtifactsAsPending();
+    }
+
+    public function notificationsOnOwnActionsCollection(NotificationsOnOwnActionsCollection $notifications_on_own_actions_collection): void
+    {
+        $notifications_on_own_actions_collection->add(
+            NotificationOnOwnActionPreference::getPresenter($notifications_on_own_actions_collection->user)
+        );
+    }
+
+    public function notificationsOnOwnActionsUpdate(NotificationsOnOwnActionsUpdate $event): void
+    {
+        $something_changed = NotificationOnOwnActionPreference::updatePreference($event->request, $event->user);
+        if ($something_changed) {
+            $event->something_has_changed = true;
+        }
     }
 }

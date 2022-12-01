@@ -87,8 +87,6 @@ class ArtifactCannedHtml extends ArtifactCanned
          echo '</FORM>';
     }
 
-
-
     /**
      *  Display the different Canned Responses associated to this tracker
      *

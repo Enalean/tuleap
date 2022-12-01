@@ -102,7 +102,6 @@ final class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest ext
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-
     public function testItWarnsTwiceWhenAnonymousHaveFullAccess(): void
     {
         $request = new Tracker_Permission_PermissionRequest(

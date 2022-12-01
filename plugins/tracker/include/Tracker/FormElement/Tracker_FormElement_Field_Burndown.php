@@ -359,7 +359,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $this->getBurndownData($artifact, $user, $time_period);
     }
 
-
     private function getSystemEventManager()
     {
         return SystemEventManager::instance();
@@ -596,6 +595,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         return new BurndownFieldDao();
     }
+
     /**
      * Return the Field_Date_Dao
      *

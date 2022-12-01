@@ -78,10 +78,10 @@ export const pasteItem = async (
                 );
         }
         context.commit("emptyClipboard");
-        emitter.emit("new-item-has-just-been-created");
         if (!pasted_item_id) {
             throw new Error("Paste item id is unknown");
         }
+        emitter.emit("new-item-has-just-been-created", { id: pasted_item_id });
         adjustItemToContentAfterItemCreationInAFolder(
             payload.global_context,
             payload.destination_folder,

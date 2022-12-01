@@ -27,7 +27,7 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess
     private $conditions = [];
 
     // {{{ ArrayAccess
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (is_null($offset)) {
             $this->conditions[] = $value;
@@ -36,17 +36,17 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess
         }
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->conditions[$offset]);
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->conditions[$offset]);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): ?Workflow_Transition_Condition
     {
         return isset($this->conditions[$offset]) ? $this->conditions[$offset] : null;
     }

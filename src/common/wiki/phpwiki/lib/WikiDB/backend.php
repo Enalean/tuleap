@@ -102,7 +102,6 @@ class WikiDB_backend
         trigger_error("virtual", E_USER_ERROR);
     }
 
-
     /**
      * Get the current version number for a page.
      *
@@ -449,7 +448,6 @@ class WikiDB_backend
     {
     }
 
-
     /**
      * Close database.
      */
@@ -671,6 +669,7 @@ class WikiDB_backend_search
         $this->_stoplist   = $search->_stoplist;
         $this->_stoplisted = [];
     }
+
     public function _quote($word)
     {
         return preg_quote($word, "/");
@@ -680,18 +679,22 @@ class WikiDB_backend_search
     {
         return "^" . $this->_quote($word) . "$";
     }
+
     public function STARTS_WITH($word)
     {
         return "^" . $this->_quote($word);
     }
+
     public function ENDS_WITH($word)
     {
         return $this->_quote($word) . "$";
     }
+
     public function WORD($word)
     {
         return $this->_quote($word);
     }
+
     public function REGEX($word)
     {
         return $word;
@@ -717,6 +720,7 @@ class WikiDB_backend_search
         }
         return false;
     }
+
     public function getStoplisted($word)
     {
         return $this->_stoplisted;
@@ -740,6 +744,7 @@ class WikiDB_backend_search_sql extends WikiDB_backend_search
                     : "LOWER(pagename) LIKE '$word'");
         }
     }
+
     public function _fulltext_match_clause($node)
     {
         // force word-style %word% for fulltext search

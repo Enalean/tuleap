@@ -221,6 +221,7 @@ class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->admin_trackers_retriever->retrieveAvailableTrackersForDefinition($this->project)
         );
     }
+
     public function testGetAvailableTrackersForIssue(): void
     {
         $tracker_issue = Mockery::mock(Tracker::class);

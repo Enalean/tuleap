@@ -96,7 +96,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         return ['tracker'];
     }
 
-
     /**
      * This hook ask to create a new instance of a renderer
      *
@@ -146,7 +145,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
             $event->setRowKey('mapping', $event->getXmlMapping());
         }
     }
-
 
     /**
      * This hook says that a new renderer has been added to a report session
@@ -210,7 +208,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
         }
     }
 
-
     /**
      * Search for an instance of a specific widget
      *
@@ -243,7 +240,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     {
         $this->removeOrphanWidgets(['my_plugin_graphontrackersv5_chart', 'project_plugin_graphontrackersv5_chart']);
     }
-
 
     /**
      * function to get plugin info

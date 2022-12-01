@@ -34,10 +34,11 @@ final class ParentArtifactRepresentation
         public string $xref,
         public string $uri,
         public MinimalTrackerRepresentation $tracker,
+        public ?StatusValueRepresentation $full_status,
     ) {
     }
 
-    public static function build(Artifact $artifact): ParentArtifactRepresentation
+    public static function build(Artifact $artifact, ?StatusValueRepresentation $status_value_representation): ParentArtifactRepresentation
     {
         $artifact_id = $artifact->getId();
         return new self(
@@ -45,7 +46,8 @@ final class ParentArtifactRepresentation
             $artifact->getCachedTitle(),
             $artifact->getXRef(),
             ArtifactRepresentation::ROUTE . '/' . $artifact_id,
-            MinimalTrackerRepresentation::build($artifact->getTracker())
+            MinimalTrackerRepresentation::build($artifact->getTracker()),
+            $status_value_representation
         );
     }
 }

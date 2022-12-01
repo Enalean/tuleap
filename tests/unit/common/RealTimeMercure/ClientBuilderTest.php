@@ -44,6 +44,7 @@ class ClientBuilderTest extends TestCase
         $mercure_client = ClientBuilder::build($root->url() . '/mercure.env');
         $this->assertInstanceOf(NullClient::class, $mercure_client);
     }
+
     public function testMalformedFileError()
     {
         $structure      = [
@@ -55,6 +56,7 @@ class ClientBuilderTest extends TestCase
         $mercure_client = ClientBuilder::build($root->url() . '/env/mercure.env');
         $this->assertInstanceOf(NullClient::class, $mercure_client);
     }
+
     public function testInvalidKeyError()
     {
         $structure      = [

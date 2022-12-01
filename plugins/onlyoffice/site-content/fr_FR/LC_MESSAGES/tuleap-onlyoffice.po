@@ -22,6 +22,9 @@ msgstr "Retour vers les documents de %s"
 msgid "Current secret not displayed"
 msgstr "Le secret actuel n'est pas affiché"
 
+msgid "Document"
+msgstr "Document"
+
 msgid "Document server URL"
 msgstr "URL du serveur de document"
 
@@ -43,5 +46,14 @@ msgstr "Intégration avec ONLYOFFICE"
 msgid "ONLYOFFICE settings"
 msgstr "Paramètres de ONLYOFFICE"
 
+msgid "Online office files"
+msgstr "Fichier office en ligne"
+
+msgid "Presentation"
+msgstr "Présentation"
+
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Spreadsheet"
+msgstr "Tableur"

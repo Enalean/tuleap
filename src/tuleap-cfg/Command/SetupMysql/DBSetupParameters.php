@@ -49,7 +49,6 @@ final class DBSetupParameters
         return new self($admin_user, $admin_password);
     }
 
-
     public function withSiteAdminPassword(?ConcealedString $password): self
     {
         $new = clone $this;

@@ -29,7 +29,7 @@ export interface LinkedArtifact {
     readonly title: string | null;
     readonly xref: ArtifactCrossReference;
     readonly uri: string;
-    readonly status: string;
+    readonly status: string | null;
     readonly is_open: boolean;
     readonly link_type: LinkType;
 }

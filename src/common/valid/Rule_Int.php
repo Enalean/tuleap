@@ -39,6 +39,7 @@ class Rule_Int extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
             return \false;
         }
     }
+
     public function isValid($val)
     {
         // Need to check with the regexp because of octal form '0123' that is

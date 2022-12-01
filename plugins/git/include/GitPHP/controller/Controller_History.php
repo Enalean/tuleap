@@ -108,6 +108,9 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
     protected function LoadData() // @codingStandardsIgnoreLine
     {
         $co = $this->project->GetCommit($this->params['hashbase']);
+        if ($co === null) {
+            throw new NotFoundException();
+        }
         if ((! isset($this->params['hash'])) && (isset($this->params['file']))) {
             $this->params['hash'] = $co->PathToHash($this->params['file']);
         }

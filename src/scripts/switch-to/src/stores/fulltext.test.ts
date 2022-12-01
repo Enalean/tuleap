@@ -365,7 +365,7 @@ describe("FullText Store", () => {
                 const first_search_result = {
                     title: "first search result",
                     html_url: "/first-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
 
                 const fts = useFullTextStore();
@@ -397,7 +397,7 @@ describe("FullText Store", () => {
                 const first_search_result = {
                     title: "first search result",
                     html_url: "/first-search-result",
-                    quick_links: [quick_link],
+                    quick_links: [quick_link] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
 
                 const fts = useFullTextStore();
@@ -428,12 +428,12 @@ describe("FullText Store", () => {
                 const first_search_result = {
                     title: "first search result",
                     html_url: "/first-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
                 const second_search_result = {
                     title: "second search result",
                     html_url: "/second-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
 
                 const fts = useFullTextStore();
@@ -483,12 +483,12 @@ describe("FullText Store", () => {
                 const first_search_result = {
                     title: "first search result",
                     html_url: "/first-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
                 const second_search_result = {
                     title: "second search result",
                     html_url: "/second-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
 
                 const fts = useFullTextStore();
@@ -537,12 +537,12 @@ describe("FullText Store", () => {
                 const first_search_result = {
                     title: "first search result",
                     html_url: "/first-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
                 const second_search_result = {
                     title: "second search result",
                     html_url: "/second-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
 
                 const fts = useFullTextStore();
@@ -582,12 +582,12 @@ describe("FullText Store", () => {
                 const first_search_result = {
                     title: "first search result",
                     html_url: "/first-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
                 const second_search_result = {
                     title: "second search result",
                     html_url: "/second-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
 
                 const fts = useFullTextStore();
@@ -627,12 +627,12 @@ describe("FullText Store", () => {
                 const first_search_result = {
                     title: "first search result",
                     html_url: "/first-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
                 const second_search_result = {
                     title: "second search result",
                     html_url: "/second-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
 
                 const fts = useFullTextStore();
@@ -664,12 +664,12 @@ describe("FullText Store", () => {
                 const first_search_result = {
                     title: "first search result",
                     html_url: "/first-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
                 const second_search_result = {
                     title: "second search result",
                     html_url: "/second-search-result",
-                    quick_links: [] as QuickLink[],
+                    quick_links: [] as ReadonlyArray<QuickLink>,
                 } as ItemDefinition;
 
                 const fts = useFullTextStore();
@@ -704,12 +704,12 @@ describe("FullText Store", () => {
             const first_search_result = {
                 title: "first search result",
                 html_url: "/first-search-result",
-                quick_links: [] as QuickLink[],
+                quick_links: [] as ReadonlyArray<QuickLink>,
             } as ItemDefinition;
             const second_search_result = {
                 title: "second search result",
                 html_url: "/second-search-result",
-                quick_links: [] as QuickLink[],
+                quick_links: [] as ReadonlyArray<QuickLink>,
             } as ItemDefinition;
 
             const fts = useFullTextStore();

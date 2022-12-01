@@ -38,6 +38,7 @@ use Tuleap\Tracker\Report\Renderer\Table\UsedFieldsRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
+use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
 use Tuleap\Tracker\TrackerColor;
 
 final class MatchingArtifactRepresentationBuilderTest extends TestCase
@@ -65,11 +66,14 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $this->report_artifact_factory  = $this->createMock(ReportArtifactFactory::class);
         $this->table_renderer_retriever = $this->createMock(TableRendererForReportRetriever::class);
         $this->used_fields_retriever    = $this->createMock(UsedFieldsRetriever::class);
+        $color_provider                 = $this->createMock(StatusColorForChangesetProvider::class);
+        $color_provider->method('provideColor')->willReturn("flamingo-pink");
 
         $this->representation_builder = new MatchingArtifactRepresentationBuilder(
             $this->report_artifact_factory,
             $this->table_renderer_retriever,
             $this->used_fields_retriever,
+            $color_provider
         );
     }
 
@@ -176,7 +180,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $artifact->method('getSubmittedOn')->willReturn(1646007489);
         $artifact->method('getUri')->willReturn('uri');
         $artifact->method('getLastUpdateDate')->willReturn(1647007489);
-        $artifact->method('getStatus')->willReturn(null);
+        $artifact->method('getStatus')->willReturn("");
         $artifact->method('isOpen')->willReturn(false);
         $artifact->method('getTitle')->willReturn("Artifact 01");
 

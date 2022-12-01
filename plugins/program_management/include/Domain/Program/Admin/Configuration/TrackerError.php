@@ -126,7 +126,6 @@ final class TrackerError
         return self::fromAlreadyCollectedErrors($errors_collector);
     }
 
-
     public static function buildPlannableError(
         RetrievePlannableTrackers $plannable_trackers_retriever,
         VerifyTrackerSemantics $verify_tracker_semantics,

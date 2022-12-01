@@ -34,6 +34,7 @@ class Widget_ProjectDescription extends Widget // phpcs:ignore PSR1.Classes.Clas
     {
         return $GLOBALS['Language']->getText('include_project_home', 'project_description');
     }
+
     public function getContent()
     {
         $request  = HTTPRequest::instance();

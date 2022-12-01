@@ -16,6 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { Modal } from "@tuleap/tlp-modal";
+
+jest.mock("@tuleap/tlp-modal", () => {
+    return {
+        createModal: (): Modal =>
+            ({
+                addEventListener: jest.fn(),
+            } as unknown as Modal),
+    };
+});
+
 const deleteFileVersion = jest.fn();
 jest.mock("../../api/version-rest-querier", () => {
     return {

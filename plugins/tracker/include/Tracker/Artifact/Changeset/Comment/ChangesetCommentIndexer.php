@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_CommentDao;
+use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -35,7 +35,6 @@ class ChangesetCommentIndexer
     public function __construct(
         private ItemToIndexQueue $index_queue,
         private EventDispatcherInterface $event_dispatcher,
-        private \Codendi_HTMLPurifier $purifier,
         private Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
     ) {
     }
@@ -68,12 +67,14 @@ class ChangesetCommentIndexer
 
     private function indexComment(Artifact $artifact, string $changeset_id, string $comment_body, CommentFormatIdentifier $comment_format): void
     {
-        $tracker = $artifact->getTracker();
+        $tracker                   = $artifact->getTracker();
+        $comment_format_identifier = (string) $comment_format;
         $this->index_queue->addItemToQueue(
             new \Tuleap\Search\ItemToIndex(
                 self::INDEX_TYPE_CHANGESET_COMMENT,
                 (int) $tracker->getGroupId(),
-                Tracker_Artifact_Changeset_Comment::getCommentInPlaintext($this->purifier, $comment_body, $comment_format),
+                $comment_body,
+                in_array($comment_format_identifier, ItemToIndex::ALL_CONTENT_TYPES, true) ? $comment_format_identifier : ItemToIndex::CONTENT_TYPE_PLAINTEXT,
                 [
                     'changeset_id' => $changeset_id,
                     'artifact_id'  => (string) $artifact->getId(),

@@ -24,8 +24,8 @@ namespace Tuleap\Baseline;
 
 use Tuleap\Baseline\Adapter\Administration\AdminPermissionsPresenterBuilder;
 use Tuleap\Baseline\Stub\RoleAssignmentRepositoryStub;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
-use Tuleap\Baseline\Support\NoopSapiEmitter;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\Builders\LayoutBuilder;

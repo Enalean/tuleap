@@ -84,7 +84,6 @@ class MediawikiSiteAdminAllowedProjectsPresenter
         return dgettext('tuleap-mediawiki', 'Migrate');
     }
 
-
     public function resource_allowed_project_list_id()
     {
         return dgettext('tuleap-mediawiki', 'Id');

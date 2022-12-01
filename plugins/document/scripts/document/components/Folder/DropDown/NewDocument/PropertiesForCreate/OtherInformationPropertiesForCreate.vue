@@ -30,7 +30,7 @@
                 class="document-modal-other-information-title-container-spinner"
                 data-test="document-other-information-spinner"
             >
-                <i class="fa fa-spin fa-circle-o-notch"></i>
+                <i class="fa-solid fa-spin fa-circle-notch"></i>
             </div>
             <h2 class="tlp-modal-subtitle" v-translate>Other information</h2>
         </div>

@@ -21,16 +21,18 @@
 namespace Tuleap\PullRequest\InlineComment;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\PullRequest\Comment\ParentCommentSearcher;
+use Tuleap\PullRequest\Comment\ThreadColorUpdater;
 
-class Dao extends DataAccessObject
+class Dao extends DataAccessObject implements ParentCommentSearcher, ThreadColorUpdater
 {
     /**
-     * @psalm-return array{id:int,pull_request_id:int,user_id:int,post_date:int,file_path:string,unidiff_offset:int,content:string,is_outdated:0|1,parent_id:int,position:string}|null
+     * @psalm-return array{id:int,pull_request_id:int,user_id:int,post_date:int,file_path:string,unidiff_offset:int,content:string,is_outdated:0|1,parent_id:int,position:string, color: string}|null
      */
-    public function searchByID(int $inline_comment_id): ?array
+    public function searchByCommentID(int $inline_comment_id): ?array
     {
         return $this->getDB()->row(
-            'SELECT id, pull_request_id, user_id, post_date, file_path, unidiff_offset, content, is_outdated, parent_id, position
+            'SELECT id, pull_request_id, user_id, post_date, file_path, unidiff_offset, content, is_outdated, parent_id, position, color
             FROM plugin_pullrequest_inline_comments
             WHERE id = ?',
             $inline_comment_id
@@ -89,5 +91,14 @@ class Dao extends DataAccessObject
             WHERE id=?';
 
         $this->getDB()->run($sql, $unidiff_offset, $is_outdated, $comment_id);
+    }
+
+    public function setThreadColor(int $id, string $color): void
+    {
+        $sql = 'UPDATE plugin_pullrequest_inline_comments
+            SET color=?
+            WHERE id=?';
+
+        $this->getDB()->run($sql, $color, $id);
     }
 }

@@ -51,7 +51,6 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         return new RichTextFieldDao();
     }
 
-
     protected function fetchReadOnly()
     {
         $html  = '';

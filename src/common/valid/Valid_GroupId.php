@@ -31,6 +31,7 @@ class Valid_GroupId extends \Valid // phpcs:ignore PSR1.Classes.ClassDeclaration
         parent::__construct('group_id');
         //$this->setErrorMessage($GLOBALS['Language']->getText('include_exit','no_gid_err'));
     }
+
     public function validate($value)
     {
         $this->addRule(new \Rule_Int());

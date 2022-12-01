@@ -33,18 +33,18 @@
                             >
                                 {{ column.label }}
                                 <i
-                                    class="fas fa-file-alt tlp-skeleton-icon document-search-result-icon document-search-result-title-header-icon"
+                                    class="fa-solid fa-file-lines tlp-skeleton-icon document-search-result-icon document-search-result-title-header-icon"
                                     aria-hidden="true"
                                     v-if="column.name === 'title'"
                                 ></i>
                                 <i
-                                    class="fas fa-caret-down"
+                                    class="fa-solid fa-caret-down"
                                     v-if="hasAscSort(column)"
                                     role="img"
                                     v-bind:title="getAscendingSortMessage(column)"
                                 ></i>
                                 <i
-                                    class="fas fa-caret-up"
+                                    class="fa-solid fa-caret-up"
                                     v-if="hasDescSort(column)"
                                     role="img"
                                     v-bind:title="getDescendingSortMessage(column)"

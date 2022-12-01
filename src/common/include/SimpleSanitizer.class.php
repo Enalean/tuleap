@@ -30,7 +30,7 @@ class SimpleSanitizer
     {
         $pattern     = ['@<@', '@>@'];
         $replacement = ['&lt;', '&gt;'];
-        return preg_replace($pattern, $replacement, $html);
+        return preg_replace($pattern, $replacement, $html ?? '');
     }
 
     /**

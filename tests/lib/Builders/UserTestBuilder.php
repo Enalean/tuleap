@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Builders;
 
+use Tuleap\Test\User\StoreUserPreferenceStub;
+
 class UserTestBuilder
 {
     private array $params                = ['language_id' => 'en_US'];
@@ -30,10 +32,24 @@ class UserTestBuilder
     private ?bool $is_site_administrator = null;
     private ?array $user_group_data      = null;
     private string $avatar_url           = '';
+    private array $project_ugroups       = [];
 
     public static function aUser(): self
     {
         return new self();
+    }
+
+    public static function aRandomActiveUser(): self
+    {
+        $rand_id = random_int(0, PHP_INT_MAX);
+        return (new self())
+            ->withStatus(\PFUser::STATUS_ACTIVE)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects()
+            ->withId($rand_id)
+            ->withUserName('user_' . $rand_id)
+            ->withRealName('User ' . $rand_id)
+            ->withEmail('user_' . $rand_id . '@example.com');
     }
 
     public static function anActiveUser(): self
@@ -179,6 +195,17 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withUserGroupMembership(\Project $project, int $ugroup_id, bool $is_member): self
+    {
+        if (! isset($this->project_ugroups[$ugroup_id])) {
+            $this->project_ugroups[$ugroup_id] = [];
+        }
+
+        $this->project_ugroups[$ugroup_id][(int) $project->getID()] = $is_member;
+
+        return $this;
+    }
+
     public function withRow(array $row): self
     {
         $this->params = array_merge($this->params, $row);
@@ -197,9 +224,15 @@ class UserTestBuilder
         if ($this->user_group_data !== null) {
             $user->setUserGroupData($this->user_group_data);
         }
+        foreach ($this->project_ugroups as $ugroup_id => $member_or_not) {
+            foreach ($member_or_not as $project_id => $is_member) {
+                $user->setCacheUgroupMembership($ugroup_id, $project_id, $is_member);
+            }
+        }
         if ($this->is_site_administrator !== null) {
             $user->setIsSuperUser($this->is_site_administrator);
         }
+        $user->preferencesdao = new StoreUserPreferenceStub();
         return $user;
     }
 

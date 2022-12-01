@@ -29,6 +29,7 @@ class Rule_File extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         $this->maxSize = \ForgeConfig::get('sys_max_size_upload');
     }
+
     /**
      * Check file upload validity
      *

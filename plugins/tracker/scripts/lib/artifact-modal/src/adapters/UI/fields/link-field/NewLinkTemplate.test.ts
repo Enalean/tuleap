@@ -49,6 +49,9 @@ import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/C
 import { selectOrThrow } from "@tuleap/dom";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
+import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
+import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
+import { okAsync } from "neverthrow";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -128,6 +131,7 @@ describe(`NewLinkTemplate`, () => {
                     reverse_label: "Parent",
                 },
             ];
+            const is_search_feature_flag_enabled = true;
 
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
@@ -139,14 +143,16 @@ describe(`NewLinkTemplate`, () => {
                 notification_clearer,
                 ArtifactLinkSelectorAutoCompleter(
                     RetrieveMatchingArtifactStub.withMatchingArtifact(
-                        LinkableArtifactStub.withDefaults()
+                        okAsync(LinkableArtifactStub.withDefaults())
                     ),
                     fault_notifier,
-                    notification_clearer,
                     parents_retriever,
                     link_verifier,
                     current_artifact_identifier,
-                    current_tracker_identifier
+                    current_tracker_identifier,
+                    RetrieveUserHistoryStub.withoutUserHistory(),
+                    UserIdentifierProxyStub.fromUserId(101),
+                    is_search_feature_flag_enabled
                 ),
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),

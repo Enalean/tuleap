@@ -21,7 +21,7 @@
 <template>
     <div class="popover-information">
         <span ref="popover_icon">
-            <i class="fas fa-question-circle popover-search-icon"></i>
+            <i class="fa-solid fa-question-circle popover-search-icon"></i>
         </span>
         <section class="tlp-popover popover-search" ref="popover_content">
             <div class="tlp-popover-arrow"></div>
@@ -43,8 +43,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Popover } from "tlp";
-import { createPopover } from "tlp";
+import type { Popover } from "@tuleap/tlp-popovers";
+import { createPopover } from "@tuleap/tlp-popovers";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 

@@ -21,6 +21,7 @@
 
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
+use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -182,6 +183,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     {
         return new TextValueDao();
     }
+
     protected function getDao()
     {
         return new TextFieldDao();
@@ -656,10 +658,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         (new FieldContentIndexer($index_queue, $event_dispatcher))->indexFieldContent(
             $artifact,
             $this,
-            Tracker_Artifact_ChangesetValue_Text::getContentHasTextFromRawInfo(
-                $content,
-                $body_format ?? Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
-            ),
+            $content,
+            in_array($body_format, ItemToIndex::ALL_CONTENT_TYPES, true) ? $body_format : ItemToIndex::CONTENT_TYPE_PLAINTEXT,
         );
     }
 

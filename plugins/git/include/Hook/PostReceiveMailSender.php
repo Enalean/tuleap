@@ -134,7 +134,6 @@ class PostReceiveMailSender
         return $body;
     }
 
-
     private function warnSiteAdministratorOfAMisuseOfAGitRepo(
         GitRepository $repository,
         $oldrev,

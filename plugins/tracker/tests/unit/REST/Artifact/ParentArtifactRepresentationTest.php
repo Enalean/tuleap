@@ -38,6 +38,8 @@ final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCa
     private const TRACKER_COLOR            = 'clockwork-orange';
     private const ARTIFACT_ID              = 251;
     private const ARTIFACT_TITLE           = 'irisroot';
+    private const STATUS_VALUE             = 'On going';
+    private const STATUS_COLOR             = 'flamingo-pink';
     private const ARTIFACT_CROSS_REFERENCE = self::TRACKER_SHORTNAME . ' #' . self::ARTIFACT_ID;
 
     public function testItBuildsFromArtifact(): void
@@ -59,7 +61,7 @@ final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCa
             ->withTitle(self::ARTIFACT_TITLE)
             ->build();
 
-        $representation = ParentArtifactRepresentation::build($artifact);
+        $representation = ParentArtifactRepresentation::build($artifact, StatusValueRepresentation::buildFromValues(self::STATUS_VALUE, self::STATUS_COLOR));
 
         self::assertSame(self::ARTIFACT_ID, $representation->id);
         self::assertSame(self::ARTIFACT_TITLE, $representation->title);
@@ -77,5 +79,9 @@ final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertSame(self::PROJECT_LABEL, $project_representation->label);
         self::assertSame(self::PROJECT_ICON, $project_representation->icon);
         self::assertSame('projects/' . self::PROJECT_ID, $project_representation->uri);
+
+        $status_representation = $representation->full_status;
+        self::assertSame(self::STATUS_VALUE, $status_representation->value);
+        self::assertSame(self::STATUS_COLOR, $status_representation->color);
     }
 }

@@ -4,26 +4,22 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/plugin-tracker-rest-api-types.js",
-  "main": "dist/plugin-tracker-rest-api-types.umd.cjs",
+  "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/plugin-tracker-rest-api-types.js",
-      "require": "./dist/plugin-tracker-rest-api-types.umd.cjs"
+      "import": "./dist/main.js",
+      "require": "./dist/main.js"
     }
   },
   "dependencies": {
-    "@tuleap/plugin-tracker-constants": "link:../constants"
+    "@tuleap/core-rest-api-types": "workspace:*",
+    "@tuleap/plugin-tracker-constants": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false"
-  },
-  "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator"
+    "build": "rm -rf dist/ && tsc --project tsconfig-build.json",
+    "watch": "rm -rf dist/ && tsc --watch --project tsconfig-build.json"
   }
 }

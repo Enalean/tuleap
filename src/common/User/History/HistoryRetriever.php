@@ -18,20 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\History;
 
-class HistoryRetriever
+use Psr\EventDispatcher\EventDispatcherInterface;
+
+final class HistoryRetriever
 {
     public const MAX_LENGTH_HISTORY = 30;
 
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-
-    public function __construct(\EventManager $event_manager)
+    public function __construct(private EventDispatcherInterface $event_manager)
     {
-        $this->event_manager = $event_manager;
     }
 
     /**
@@ -41,7 +39,7 @@ class HistoryRetriever
     {
         $collection = new HistoryEntryCollection($user);
 
-        $this->event_manager->processEvent($collection);
+        $this->event_manager->dispatch($collection);
         $history = $collection->getEntries();
 
         $this->sortHistoryByVisitTime($history);
@@ -51,7 +49,7 @@ class HistoryRetriever
 
     private function sortHistoryByVisitTime(array &$history): void
     {
-        usort($history, function (HistoryEntry $a, HistoryEntry $b) {
+        usort($history, static function (HistoryEntry $a, HistoryEntry $b) {
             if ($a->getVisitTime() === $b->getVisitTime()) {
                 return 0;
             }

@@ -27,6 +27,7 @@ final class b202105260845_move_program_increment_label_in_program_table extends 
     {
         return 'Moved to 202105250900_move_program_increment_tracker_id_in_program_table.php';
     }
+
     public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');

@@ -28,6 +28,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetector;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetectorImpl;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatCannotReadAnything;
+use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatDoesntWantMailForTheirOwnActions;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatHaveUnsubscribedFromNotification;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientWhenTheyAreInCreationOnlyMode;
@@ -52,6 +53,7 @@ class RecipientsManager
     ) {
         $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
         $this->recipient_removal_strategies = [
+            new RemoveRecipientThatDoesntWantMailForTheirOwnActions(),
             new RemoveRecipientThatCannotReadAnything($this->form_element_factory),
             new RemoveRecipientThatHaveUnsubscribedFromNotification($this->unsubscribers_notification_dao),
             new RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode($this->user_status_change_only_dao, $this->status_change_detector),
@@ -110,6 +112,10 @@ class RecipientsManager
         }
 
         foreach ($this->recipient_removal_strategies as $strategy) {
+            if (empty($tablo)) {
+                $logger->debug('Recepient list is empty, skip other removal strategies');
+                break;
+            }
             $tablo = $strategy->removeRecipient($logger, $changeset, $tablo, $is_update);
         }
 

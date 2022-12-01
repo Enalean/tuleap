@@ -26,14 +26,14 @@
                 data-test="begin-disabled"
                 v-bind:title="begin_title"
             >
-                <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+                <i class="fa-solid fa-angle-double-left" aria-hidden="true"></i>
             </span>
             <span
                 class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
                 data-test="previous-disabled"
                 v-bind:title="previous_title"
             >
-                <i class="fas fa-angle-left" aria-hidden="true"></i>
+                <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
             </span>
         </template>
         <template v-else>
@@ -44,7 +44,7 @@
                 data-test="begin"
                 v-bind:title="begin_title"
             >
-                <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+                <i class="fa-solid fa-angle-double-left" aria-hidden="true"></i>
             </router-link>
             <router-link
                 v-bind:to="to_previous"
@@ -53,7 +53,7 @@
                 data-test="previous"
                 v-bind:title="previous_title"
             >
-                <i class="fas fa-angle-left" aria-hidden="true"></i>
+                <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
             </router-link>
         </template>
 
@@ -65,14 +65,14 @@
                 data-test="next-disabled"
                 v-bind:title="next_title"
             >
-                <i class="fas fa-angle-right" aria-hidden="true"></i>
+                <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
             </span>
             <span
                 class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
                 data-test="end-disabled"
                 v-bind:title="end_title"
             >
-                <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+                <i class="fa-solid fa-angle-double-right" aria-hidden="true"></i>
             </span>
         </template>
         <template v-else>
@@ -83,7 +83,7 @@
                 data-test="next"
                 v-bind:title="next_title"
             >
-                <i class="fas fa-angle-right" aria-hidden="true"></i>
+                <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
             </router-link>
             <router-link
                 v-bind:to="to_end"
@@ -92,7 +92,7 @@
                 data-test="end"
                 v-bind:title="end_title"
             >
-                <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+                <i class="fa-solid fa-angle-double-right" aria-hidden="true"></i>
             </router-link>
         </template>
     </div>

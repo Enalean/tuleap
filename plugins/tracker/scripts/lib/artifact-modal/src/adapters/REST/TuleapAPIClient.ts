@@ -21,6 +21,8 @@ import { getJSON, getAllJSON, postJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type { PostFileResponse } from "@tuleap/plugin-tracker-rest-api-types";
+import type { UserHistoryResponse } from "@tuleap/core-rest-api-types";
+import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field/RetrieveMatchingArtifact";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field/RetrieveLinkTypes";
@@ -40,6 +42,8 @@ import type { RetrievePossibleParents } from "../../domain/fields/link-field/Ret
 import { PossibleParentsRetrievalFault } from "../../domain/fields/link-field/PossibleParentsRetrievalFault";
 import type { CreateFileUpload } from "../../domain/fields/file-field/CreateFileUpload";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
+import type { RetrieveUserHistory } from "../../domain/fields/link-field/RetrieveUserHistory";
+import type { UserIdentifier } from "../../domain/UserIdentifier";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -50,7 +54,8 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveLinkTypes &
     RetrieveLinkedArtifactsByType &
     RetrievePossibleParents &
-    CreateFileUpload;
+    CreateFileUpload &
+    RetrieveUserHistory;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -117,6 +122,17 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
                 file_id: response.id,
                 upload_href: response.upload_href,
             })
+        );
+    },
+    getUserArtifactHistory(
+        user_identifier: UserIdentifier
+    ): ResultAsync<readonly LinkableArtifact[], Fault> {
+        return getJSON<UserHistoryResponse>(`/api/v1/users/${user_identifier.id}/history`).map(
+            (history) => {
+                return history.entries
+                    .filter((entry) => entry.type === ARTIFACT_TYPE)
+                    .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
+            }
         );
     },
 });

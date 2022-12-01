@@ -23,9 +23,6 @@ import QuickLookFolder from "./QuickLookFolder.vue";
 import localVue from "../../helpers/local-vue";
 import { TYPE_FOLDER } from "../../constants";
 import type { Item } from "../../type";
-import emitter from "../../helpers/emitter";
-
-jest.mock("../../helpers/emitter");
 
 describe("QuickLookFolder", () => {
     it("User can create/remove folder when he can write", () => {
@@ -40,38 +37,5 @@ describe("QuickLookFolder", () => {
         });
 
         expect(wrapper.find("[data-test=create-folder-button]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=delete-folder-button]").exists()).toBeTruthy();
-    });
-
-    it("User can NOT create/remove folder when he can write", () => {
-        const item = {
-            type: TYPE_FOLDER,
-            user_can_write: false,
-        } as Item;
-
-        const wrapper = shallowMount(QuickLookFolder, {
-            localVue,
-            propsData: { item: item },
-        });
-
-        expect(wrapper.find("[data-test=create-folder-button]").exists()).toBeFalsy();
-        expect(wrapper.find("[data-test=delete-folder-button]").exists()).toBeFalsy();
-    });
-
-    it("trigger open modal event when user click on new folder", () => {
-        const item = {
-            type: TYPE_FOLDER,
-            user_can_write: true,
-        } as Item;
-
-        const wrapper = shallowMount(QuickLookFolder, {
-            localVue,
-            propsData: { item: item },
-        });
-
-        wrapper.get("[data-test=create-folder-button]").trigger("click");
-        expect(emitter.emit).toHaveBeenCalledWith("show-new-folder-modal", {
-            detail: { parent: item },
-        });
     });
 });

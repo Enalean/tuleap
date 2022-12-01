@@ -260,7 +260,6 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('file_admin_editreleases', 'move_event'));
     }
 
-
     public function create($data_array)
     {
         $dao = $this->_getFRSFileDao();
@@ -809,7 +808,6 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         }
         return true;
     }
-
 
     /**
      * List all files deleted but not already purged

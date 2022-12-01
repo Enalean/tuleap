@@ -32,6 +32,7 @@ class MercureJWTGenerator
         private UserManager $user_manager,
     ) {
     }
+
     /**
      * Generate a json web token
      * for the current user
@@ -86,6 +87,7 @@ class MercureJWTGenerator
 
         return $token->toString();
     }
+
     private function getExpireDate(): \DateTimeImmutable
     {
         return (new \DateTimeImmutable())->modify('+30 minutes');

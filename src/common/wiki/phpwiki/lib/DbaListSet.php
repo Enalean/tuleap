@@ -66,7 +66,6 @@ class DbaListSet
         return intval($prev);
     }
 
-
     public function next($i)
     {
         list( , $next, ) = explode(':', $this->_dbh->fetch(intval($i)), 3);

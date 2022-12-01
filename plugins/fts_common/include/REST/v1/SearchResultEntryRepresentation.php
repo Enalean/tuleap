@@ -40,8 +40,10 @@ final class SearchResultEntryRepresentation
     private function __construct(
         public ?string $xref,
         public string $html_url,
-        public ?string $title,
+        public string $title,
         public string $color_name,
+        public string $type,
+        public int $per_type_id,
         public string $icon_name,
         public ?string $small_icon,
         public ?string $icon,
@@ -55,7 +57,7 @@ final class SearchResultEntryRepresentation
     public static function fromSearchResultEntry(SearchResultEntry $entry): self
     {
         $quick_links = array_map(
-            static fn (SwitchToQuickLink $quick_link): SwitchToQuickLinkRepresentation => SwitchToQuickLinkRepresentation::build($quick_link),
+            static fn (SwitchToQuickLink $quick_link) => SwitchToQuickLinkRepresentation::build($quick_link),
             $entry->quick_links
         );
 
@@ -64,6 +66,8 @@ final class SearchResultEntryRepresentation
             $entry->link,
             $entry->title,
             $entry->color,
+            $entry->type,
+            $entry->per_type_id,
             $entry->icon_name,
             $entry->small_icon?->getInlineString(),
             $entry->normal_icon?->getInlineString(),

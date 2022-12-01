@@ -90,7 +90,6 @@ class TreeNode /*implements Visitable*/
         $this->data = $d;
     }
 
-
     /**
      * Return a reference on data of current node.
      *
@@ -100,7 +99,6 @@ class TreeNode /*implements Visitable*/
     {
         return $this->data;
     }
-
 
     /**
      * Set current node parent.
@@ -117,7 +115,6 @@ class TreeNode /*implements Visitable*/
         }
     }
 
-
     /**
      * Return a reference on current node parent.
      *
@@ -127,7 +124,6 @@ class TreeNode /*implements Visitable*/
     {
         return $this->parentNode;
     }
-
 
     /**
      * Add a new TreeNode as next child.
@@ -179,7 +175,6 @@ class TreeNode /*implements Visitable*/
         }
     }
 
-
     /**
      * Return reference on asked child.
      *
@@ -195,7 +190,6 @@ class TreeNode /*implements Visitable*/
         }
     }
 
-
     /**
      * Get children
      *
@@ -205,7 +199,6 @@ class TreeNode /*implements Visitable*/
     {
         return $this->children;
     }
-
 
     /**
      * Set children.

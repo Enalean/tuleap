@@ -69,7 +69,6 @@ class TrackerFormElementFieldStringTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($this->string->hasDefaultValue());
     }
 
-
     public function testDefaultValue()
     {
         $this->string->shouldReceive('getProperty')->with('default_value')->andReturns('foo');

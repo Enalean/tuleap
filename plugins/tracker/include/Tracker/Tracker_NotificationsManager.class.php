@@ -637,7 +637,6 @@ class Tracker_NotificationsManager
         );
     }
 
-
     private function getNotificationLevelLabel($notification_level)
     {
         switch ($notification_level) {

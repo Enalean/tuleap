@@ -28,5 +28,6 @@ namespace Tuleap\Authentication\Scope;
 interface AuthenticationScopeDefinition
 {
     public function getName(): string;
+
     public function getDescription(): string;
 }

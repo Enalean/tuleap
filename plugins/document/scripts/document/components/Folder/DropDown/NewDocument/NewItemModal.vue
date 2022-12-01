@@ -27,11 +27,17 @@
         enctype="multipart/form-data"
         data-test="document-new-item-modal"
     >
-        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
+        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by">
+            <span
+                class="tlp-badge-primary tlp-badge-outline"
+                v-bind:class="alternative_badge_class"
+                v-if="from_alternative_extension.length > 0"
+            >
+                .{{ from_alternative_extension }}
+            </span>
+        </modal-header>
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
-            <type-selector v-model="item.type" />
-
             <document-global-property-for-create
                 v-bind:currently-updated-item="item"
                 v-bind:parent="parent"
@@ -55,6 +61,7 @@
                     v-model="item.file_properties"
                     v-bind:item="item"
                     name="properties"
+                    v-if="!is_from_alternative"
                 />
             </document-global-property-for-create>
             <other-information-properties-for-create
@@ -72,7 +79,7 @@
             v-bind:is-loading="is_loading"
             v-bind:submit-button-label="submit_button_label"
             v-bind:aria-labelled-by="aria_labelled_by"
-            v-bind:icon-submit-button-class="'fa-plus'"
+            v-bind:icon-submit-button-class="'fa-solid fa-plus'"
             data-test="document-modal-submit-button-create-item"
         />
     </form>
@@ -80,12 +87,11 @@
 
 <script>
 import { mapState } from "vuex";
-import { createModal } from "tlp";
+import { createModal } from "@tuleap/tlp-modal";
 import { TYPE_FILE } from "../../../../constants";
 import DocumentGlobalPropertyForCreate from "./PropertiesForCreate/DocumentGlobalPropertyForCreate.vue";
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 import WikiProperties from "../PropertiesForCreateOrUpdate/WikiProperties.vue";
-import TypeSelector from "./TypeSelector.vue";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
@@ -100,6 +106,8 @@ import {
     transformStatusPropertyForItemCreation,
 } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
+import { isFile } from "../../../../helpers/type-check-helper";
+import { getEmptyOfficeFileFromMimeType } from "../../../../helpers/office/get-empty-office-file";
 
 export default {
     name: "NewItemModal",
@@ -112,7 +120,6 @@ export default {
         ModalHeader,
         LinkProperties,
         WikiProperties,
-        TypeSelector,
         CreationModalPermissionsSection,
         ModalFeedback,
     },
@@ -123,6 +130,9 @@ export default {
             is_loading: false,
             modal: null,
             parent: {},
+            is_from_alternative: false,
+            from_alternative_extension: "",
+            alternative_badge_class: "",
         };
     },
     computed: {
@@ -135,6 +145,10 @@ export default {
         ...mapState("error", ["has_modal_error"]),
         ...mapState("permissions", ["project_ugroups"]),
         submit_button_label() {
+            if (this.is_from_alternative) {
+                return this.$gettext("Create and edit document");
+            }
+
             return this.$gettext("Create document");
         },
         modal_title() {
@@ -198,6 +212,21 @@ export default {
         },
         async show(event) {
             this.item = this.getDefaultItem();
+            this.item.type = event.type;
+
+            this.is_from_alternative = false;
+            this.from_alternative_extension = "";
+            this.alternative_badge_class = "";
+            if (event.from_alternative) {
+                const office_file = await getEmptyOfficeFileFromMimeType(
+                    event.from_alternative.mime_type
+                );
+                this.item.file_properties.file = office_file.file;
+                this.from_alternative_extension = office_file.extension;
+                this.alternative_badge_class = office_file.badge_class;
+                this.is_from_alternative = true;
+            }
+
             this.parent = event.item;
             this.addParentPropertiesToDefaultItem();
             this.item.permissions_for_groups = JSON.parse(
@@ -232,16 +261,36 @@ export default {
             this.is_displayed = false;
             this.is_loading = false;
             this.item = this.getDefaultItem();
+            this.is_from_alternative = false;
+            this.from_alternative_extension = "";
+            this.alternative_badge_class = "";
         },
         async addDocument(event) {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
-            await this.$store.dispatch("createNewItem", [
+            const created_item = await this.$store.dispatch("createNewItem", [
                 this.item,
                 this.parent,
                 this.current_folder,
             ]);
+
+            if (this.is_from_alternative) {
+                const redirectToEditor = async ({ id }) => {
+                    if (created_item.id === id) {
+                        emitter.off("new-item-has-just-been-created", redirectToEditor);
+                        const item = await this.$store.dispatch("loadDocument", id);
+                        if (
+                            isFile(item) &&
+                            item.file_properties &&
+                            item.file_properties.open_href
+                        ) {
+                            window.location.href = item.file_properties.open_href;
+                        }
+                    }
+                };
+                emitter.on("new-item-has-just-been-created", redirectToEditor);
+            }
 
             this.is_loading = false;
             if (this.has_modal_error === false) {
@@ -272,6 +321,13 @@ export default {
         },
         updateTitleValue(title) {
             this.item.title = title;
+            if (this.is_from_alternative) {
+                this.item.file_properties.file = new File(
+                    [this.item.file_properties.file],
+                    this.item.title + "." + this.from_alternative_extension,
+                    { type: this.item.file_properties.file.type }
+                );
+            }
         },
         updateDescriptionValue(description) {
             this.item.description = description;

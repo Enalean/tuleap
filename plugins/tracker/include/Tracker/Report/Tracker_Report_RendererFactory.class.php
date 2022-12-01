@@ -221,7 +221,6 @@ class Tracker_Report_RendererFactory
         return $renderer_id;
     }
 
-
     public function duplicate($from_report, $to_report, $field_mapping, MappingRegistry $mapping_registry)
     {
         foreach ($this->getDao()->searchByReportId($from_report->id) as $row) {
@@ -336,7 +335,6 @@ class Tracker_Report_RendererFactory
         );
     }
 
-
     public function getTypes()
     {
         $types = [Tracker_Report_Renderer::TABLE => dgettext('tuleap-tracker', 'Table')];
@@ -347,6 +345,7 @@ class Tracker_Report_RendererFactory
                     );
         return $types;
     }
+
     /**
      * Force the order of renderers for a report
      *

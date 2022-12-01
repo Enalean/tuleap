@@ -35,6 +35,7 @@ class Docman_Wiki extends Docman_Document
     {
         return $this->pagename;
     }
+
     public function setPagename($pagename)
     {
         $this->pagename = $pagename;
@@ -50,6 +51,7 @@ class Docman_Wiki extends Docman_Document
         parent::initFromRow($row);
         $this->setPagename($row['wiki_page']);
     }
+
     public function toRow()
     {
         $row              = parent::toRow();

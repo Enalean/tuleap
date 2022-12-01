@@ -488,7 +488,6 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         return $html;
     }
 
-
     public function getContent($params = [])
     {
         $html = '';

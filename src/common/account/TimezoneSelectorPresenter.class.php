@@ -23,10 +23,7 @@ class Account_TimezoneSelectorPresenter
     public string $placeholder;
     public array $list_of_timezones;
 
-    /**
-     * @param string|false|null $current_timezone falsy if no current timezone
-     */
-    public function __construct($current_timezone)
+    public function __construct(?string $current_timezone)
     {
         $this->placeholder = _('Timezone');
 

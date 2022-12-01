@@ -46,7 +46,6 @@ class AccessKeyHeaderExtractor
         $this->server_information                 = $server_information;
     }
 
-
     public function isAccessKeyHeaderPresent(): bool
     {
         return isset($this->server_information[self::PHP_HTTP_ACCESS_KEY_HEADER]);

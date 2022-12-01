@@ -1174,8 +1174,6 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-
-
     /**
      * @depends testGetRootIdWithUserRESTReadOnlyAdmin
      */
@@ -1243,7 +1241,6 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         return $created_file_json['id'];
     }
-
 
     /**
      * @depends testGetDocumentItemsForAdminUser

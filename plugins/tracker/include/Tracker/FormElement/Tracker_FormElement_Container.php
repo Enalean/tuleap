@@ -451,7 +451,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
         return $form_elements === null || count($form_elements) === 0;
     }
 
-
     /**
      * return true if user has Read or Update permission on this field
      *
@@ -465,10 +464,12 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement // phpc
     }
 
     abstract protected function fetchArtifactPrefix();
-    abstract protected function fetchArtifactSuffix();
-    abstract protected function fetchMailArtifactPrefix($format);
-    abstract protected function fetchMailArtifactSuffix($format);
 
+    abstract protected function fetchArtifactSuffix();
+
+    abstract protected function fetchMailArtifactPrefix($format);
+
+    abstract protected function fetchMailArtifactSuffix($format);
 
     protected function fetchMailArtifactContent($format, array $content)
     {

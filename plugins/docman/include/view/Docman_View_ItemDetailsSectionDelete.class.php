@@ -29,6 +29,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         parent::__construct($item, $url, false, true, $controller);
         $this->token = $token;
     }
+
     public function getContent($params = [])
     {
         $folder_or_document = $this->item instanceof \Docman_Folder ? 'folder' : ($this->item instanceof \Docman_File ? 'file' : 'document');

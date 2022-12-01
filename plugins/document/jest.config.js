@@ -31,6 +31,7 @@ module.exports = {
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,
         "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
+        ".(docx|pptx|xlsx)$": "identity-obj-proxy",
     },
     displayName: "document",
 };

@@ -40,7 +40,6 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
         $this->project = $project;
     }
 
-
     public function get_title()
     {
         return $GLOBALS['Language']->getText('mail_register_project_one_step', 'title');

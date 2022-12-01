@@ -68,18 +68,22 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
     {
         return $this->visitItem($item, $params);
     }
+
     public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
+
     public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
+
     public function visitFile(Docman_File $item, $params = [])
     {
         return $this->visitItem($item, $params);
     }
+
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return $this->visitItem($item, $params);

@@ -27,7 +27,7 @@
         v-on:click.prevent="unlockDocument"
         data-shortcut-lock-document
     >
-        <i class="fa fa-fw fa-unlock tlp-dropdown-menu-item-icon"></i>
+        <i class="fa-solid fa-fw fa-unlock tlp-dropdown-menu-item-icon"></i>
         <translate>Unlock</translate>
     </button>
 </template>

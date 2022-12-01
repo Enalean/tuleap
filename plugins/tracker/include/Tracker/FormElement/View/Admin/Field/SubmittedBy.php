@@ -45,6 +45,7 @@ class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormEleme
         // Don't display the values because this is a special field
         return '';
     }
+
     /**
      * Fetch additionnal stuff to display below the edit form
      *

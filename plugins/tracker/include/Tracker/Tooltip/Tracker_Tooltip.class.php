@@ -102,6 +102,7 @@ class Tracker_Tooltip extends Tracker_Semantic
     {
         return 'tooltip';
     }
+
     /**
      * The label of the semantic: Tooltip, ...
      *
@@ -121,7 +122,6 @@ class Tracker_Tooltip extends Tracker_Semantic
     {
         return dgettext('tuleap-tracker', 'Manage tooltip');
     }
-
 
     /**
      * Display the form to let the admin change the semantic

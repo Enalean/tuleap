@@ -132,7 +132,6 @@ class ArtifactImport
         $this->dsc_list['cc_comment']      = $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_dsc');
     }
 
-
     public function getUsedFields()
     {
         $fields =  $this->art_field_fact->getAllUsedFields();
@@ -176,8 +175,6 @@ class ArtifactImport
         }
         return $used_fields;
     }
-
-
 
   /** parse the first line of the csv file containing all the labels of the fields that are
    * used in the following of the file
@@ -310,7 +307,6 @@ class ArtifactImport
         return true;
     }
 
-
   /** check if all the values correspond to predefined values of the corresponding fields
    * @param data (IN + OUT !): for date fields we transform the given format (accepted by util_date_to_unixtime)
    *                           into format "Y-m-d"
@@ -433,7 +429,6 @@ class ArtifactImport
         return true;
     }
 
-
   /**
    * @param $from_update: take into account special case where column artifact_id is specified but
    *                      for this concrete artifact no aid is given
@@ -478,8 +473,6 @@ class ArtifactImport
         return $this->checkValues($row, $data, true, $from_update);
     }
 
-
-
   /** check if all the values correspond to predefined values of the corresponding fields */
     public function checkUpdateArtifact($row, &$data, $aid)
     {
@@ -499,8 +492,6 @@ class ArtifactImport
 
         return $this->checkValues($row, $data, false);
     }
-
-
 
   /** parse a file in csv format containing artifacts to be imported into the db
    * @param $csv_filename (IN): the complete file name of the cvs file to be parsed
@@ -607,8 +598,6 @@ class ArtifactImport
         return true;
     }
 
-
-
     public function mandatoryFields()
     {
         $fields =  $this->art_field_fact->getAllUsedFields();
@@ -620,8 +609,6 @@ class ArtifactImport
         return $mand_fields;
     }
 
-
-
     public function getImportUser(&$sub_user_id, &$sub_user_name)
     {
         $sub_user_id = $GLOBALS['user_id'];
@@ -632,7 +619,6 @@ class ArtifactImport
             $sub_user_name = user_getname();
         }
     }
-
 
     public function getPredefinedValues()
     {
@@ -670,7 +656,6 @@ class ArtifactImport
             }
         }
     }
-
 
   /**
    * Check if the given string can be converted using htmlspecialchar
@@ -781,6 +766,7 @@ class ArtifactImport
     {
         return UserManager::instance();
     }
+
   /** assume that the
    * @param followup_comments (IN): comments have the form that we get when exporting follow-up comments in csv format
    *                      (see ArtifactHtml->showFollowUpComments($output == OUTPUT_EXPORT))
@@ -949,7 +935,6 @@ class ArtifactImport
         return $comment_type_id;
     }
 
-
   /** assume that the details input format is
    * ==================================================
    * [Type:<type>] By:<by> On:<date>
@@ -1046,8 +1031,6 @@ class ArtifactImport
 
         return true;
     }
-
-
 
   /**
    * prepare our $data record so that we can use standard artifact methods to create, update, ...
@@ -1163,8 +1146,6 @@ class ArtifactImport
         return $vfl;
     }
 
-
-
   /** check if all the values correspond to predefined values of the corresponding fields */
     public function insertArtifact($row, $data, &$errors, $notify = false)
     {
@@ -1226,9 +1207,6 @@ class ArtifactImport
         return true;
     }
 
-
-
-
     public function updateArtifact($row, $data, $aid, &$errors, $notify = false)
     {
         global $Language;
@@ -1286,7 +1264,6 @@ class ArtifactImport
         }
         return true;
     }
-
 
   /**
    * Insert or update the imported artifacts into the db

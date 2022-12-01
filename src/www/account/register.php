@@ -20,7 +20,9 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
@@ -339,8 +341,6 @@ if ($request->isPost() && $request->exist('Register')) {
                 $email_presenter = $presenter->createMailAccountPresenter($request->getCurrentUser(), $user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
             }
 
-            $title = _('Your account is created, </br>it now needs to be activated.');
-
             if ($admin_creation) {
                 $title            = _('The user account was created.');
                 $content          = sprintf(_('Please note the login <span class="confirmation-user">%3$s</span> and password <span class="confirmation-user">%4$s</span>'), $hp->purify($request->get('form_realname')), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $hp->purify($request->get('form_loginname')), $hp->purify($request->get('form_pw')));
@@ -350,9 +350,33 @@ if ($request->isPost() && $request->exist('Register')) {
                 $redirect_content = _('Go to the admin page');
                 $displayed_image  = false;
             } else {
-                $content          = _('To do this click the confirm button in the email. <i class="fa fa-envelope-o"></i>');
-                $redirect_url     = '/';
-                $redirect_content = _('Go to the home page');
+                $theme_manager    = new ThemeManager(
+                    new \Tuleap\BurningParrotCompatiblePageDetector(
+                        new \Tuleap\Request\CurrentPage(),
+                        new User_ForgeUserGroupPermissionsManager(
+                            new User_ForgeUserGroupPermissionsDao()
+                        )
+                    )
+                );
+                $user_manager     = UserManager::instance();
+                $renderer_factory = TemplateRendererFactory::build();
+                $assets           = new \Tuleap\Layout\IncludeCoreAssets();
+
+                $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
+
+                $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
+                if ($layout === null) {
+                    throw new \Exception("Could not load BurningParrot theme");
+                }
+                $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
+                $layout->header(
+                    HeaderConfigurationBuilder::get(_('Register'))->build()
+                );
+                $renderer->renderToPage("confirmation-link-sent", [
+                    'email' => $request->get('form_email'),
+                ]);
+                $layout->footer(FooterConfiguration::withoutContent());
+                exit;
             }
         } else {
             // Registration requires approval

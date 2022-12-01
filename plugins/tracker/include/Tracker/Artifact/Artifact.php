@@ -732,7 +732,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $status_value->getLabel();
     }
 
-
     /**
      * @param String $status
      */
@@ -2014,7 +2013,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $this->hierarchy_factory;
     }
 
-
     public function setHierarchyFactory($hierarchy = null)
     {
         $this->hierarchy_factory = $hierarchy;
@@ -2210,7 +2208,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 new ChangesetCommentIndexer(
                     new ItemToIndexQueueEventBased($event_dispatcher),
                     $event_dispatcher,
-                    Codendi_HTMLPurifier::instance(),
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
             )

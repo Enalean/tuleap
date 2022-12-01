@@ -31,6 +31,7 @@ class SystemEventProcessCustomQueue implements SystemEventProcess
     {
         $this->queue = $queue;
     }
+
     /**
      * @see SystemEventProcess::getLockName()
      */

@@ -152,7 +152,6 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         return '<div class="tracker-string-field-value">' . $value . '</div>';
     }
 
-
     /**
      * Fetch the html code to display the field value in artifact
      *
@@ -350,7 +349,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         (new FieldContentIndexer($index_queue, $event_dispatcher))->indexFieldContent(
             $artifact,
             $this,
-            $content
+            $content,
+            \Tuleap\Search\ItemToIndex::CONTENT_TYPE_PLAINTEXT,
         );
     }
 

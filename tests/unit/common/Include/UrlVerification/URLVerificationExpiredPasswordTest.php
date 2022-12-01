@@ -53,6 +53,7 @@ final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\Test
         $GLOBALS['Response'] = M::mock(\Response::class);
 
         $this->url_verification = new \URLVerification();
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     protected function tearDown(): void

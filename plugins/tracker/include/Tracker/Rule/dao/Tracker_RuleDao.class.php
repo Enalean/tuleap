@@ -28,6 +28,7 @@ class Tracker_RuleDao extends DataAccessObject
         parent::__construct();
         $this->table_name = 'tracker_rule_list';
     }
+
     /**
     * Gets all tables of the db
     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface

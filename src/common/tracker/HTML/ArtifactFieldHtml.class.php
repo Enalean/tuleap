@@ -162,6 +162,7 @@ class ArtifactFieldHtml extends ArtifactField
     {
         return (is_array($default_value) && in_array($value, $default_value)) || $value == $default_value;
     }
+
     /**
      * _getValuesAsJavascript
      *
@@ -197,6 +198,7 @@ class ArtifactFieldHtml extends ArtifactField
         }
             return $output;
     }
+
     /**
      *
      *  Returns a select box populated with field values for this project

@@ -19,6 +19,7 @@
 
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
+import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import * as fetch_result from "@tuleap/fetch-result";
@@ -36,6 +37,7 @@ import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload";
+import { UserIdentifierProxyStub } from "../../../tests/stubs/UserIdentifierStub";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -51,6 +53,8 @@ const PROJECT = {
     label: "Guinea Pig",
     icon: "🐹",
 };
+const ARTIFACT_2_ID = 10;
+const ARTIFACT_3_ID = 1158;
 
 describe(`TuleapAPIClient`, () => {
     describe(`getParent()`, () => {
@@ -272,6 +276,48 @@ describe(`TuleapAPIClient`, () => {
                 file_type: FILE_TYPE,
                 description: DESCRIPTION,
             });
+        });
+    });
+    describe("getUserArtifactHistory()", () => {
+        const USER_ID = 102;
+        const getUserArtifactHistory = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
+            const client = TuleapAPIClient();
+            return client.getUserArtifactHistory(UserIdentifierProxyStub.fromUserId(USER_ID));
+        };
+        it(`will return user history entries which are "artefact" type as linkable artifact`, async () => {
+            const first_entry = {
+                per_type_id: ARTIFACT_ID,
+                type: ARTIFACT_TYPE,
+                badges: [],
+            };
+
+            const second_entry = {
+                per_type_id: ARTIFACT_2_ID,
+                type: ARTIFACT_TYPE,
+                badges: [],
+            };
+
+            const third_entry = {
+                per_type_id: ARTIFACT_3_ID,
+                type: "kanban",
+                badges: [],
+            };
+
+            const history = { entries: [first_entry, second_entry, third_entry] };
+
+            const getSpy = jest.spyOn(fetch_result, "getJSON");
+            getSpy.mockReturnValue(okAsync(history));
+
+            const result = await getUserArtifactHistory();
+
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_returned_artifact, second_returned_artifact] = result.value;
+            expect(first_returned_artifact.id).toBe(ARTIFACT_ID);
+            expect(second_returned_artifact.id).toBe(ARTIFACT_2_ID);
+            expect(getSpy).toHaveBeenCalledWith(`/api/v1/users/${USER_ID}/history`);
         });
     });
 });

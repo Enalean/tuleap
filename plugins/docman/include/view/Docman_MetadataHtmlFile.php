@@ -25,16 +25,19 @@ class Docman_MetadataHtmlFile extends \Docman_MetadataHtml
     public function __construct()
     {
     }
+
     public function getLabel($show_mandatory_information = \true)
     {
         return \dgettext('tuleap-docman', 'Content:');
     }
+
     public function getField()
     {
         $html  = '<input type="file" name="file" />';
         $html .= '<br /><em>' . \sprintf(\dgettext('tuleap-docman', '(The maximum upload file size is %1$s MByte)'), \formatByteToMb((int) \ForgeConfig::get(\DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING))) . '</em>';
         return $html;
     }
+
     public function &getValidator($request = \null)
     {
         if ($request === \null) {

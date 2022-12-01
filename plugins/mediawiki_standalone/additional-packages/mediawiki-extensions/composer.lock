@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "43b5396e20ce2e558e50ea6a813ecd52",
+    "content-hash": "45fe659c54c1c0d280130cb2ed6654f0",
     "packages": [
         {
             "name": "composer/installers",
@@ -325,16 +325,16 @@
         },
         {
             "name": "mediawiki/tuleap-integration",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "1e91d6f527ffb2ba83167182a0f704ff1cfa53fa"
+                "reference": "0fa69e5805bd29690988ceb9ee46ead18828823a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/1e91d6f527ffb2ba83167182a0f704ff1cfa53fa",
-                "reference": "1e91d6f527ffb2ba83167182a0f704ff1cfa53fa",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/0fa69e5805bd29690988ceb9ee46ead18828823a",
+                "reference": "0fa69e5805bd29690988ceb9ee46ead18828823a",
                 "shasum": ""
             },
             "require": {
@@ -374,22 +374,22 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.0"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.1"
             },
-            "time": "2022-11-08T14:36:41+00:00"
+            "time": "2022-12-01T07:46:42+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "6046e8f322a6afaf4c0c69504ce1ca103b04f194"
+                "reference": "0e7607a4564b253fc8f54016bca1cd31993a971d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/6046e8f322a6afaf4c0c69504ce1ca103b04f194",
-                "reference": "6046e8f322a6afaf4c0c69504ce1ca103b04f194",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/0e7607a4564b253fc8f54016bca1cd31993a971d",
+                "reference": "0e7607a4564b253fc8f54016bca1cd31993a971d",
                 "shasum": ""
             },
             "require": {
@@ -424,22 +424,22 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.1"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.2"
             },
-            "time": "2022-11-08T14:35:06+00:00"
+            "time": "2022-12-01T07:13:03+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "b8417e2bc6e7b4cc27f210778d6a0b5f7fd1cfa7"
+                "reference": "0203383e8ac387de2d4186b976709c60508200fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/b8417e2bc6e7b4cc27f210778d6a0b5f7fd1cfa7",
-                "reference": "b8417e2bc6e7b4cc27f210778d6a0b5f7fd1cfa7",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/0203383e8ac387de2d4186b976709c60508200fd",
+                "reference": "0203383e8ac387de2d4186b976709c60508200fd",
                 "shasum": ""
             },
             "require": {
@@ -477,9 +477,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.0.1"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.1.0"
             },
-            "time": "2022-11-08T14:36:04+00:00"
+            "time": "2022-12-01T07:42:38+00:00"
         },
         {
             "name": "mwstake/mediawiki-component-thirdpartyresources",
@@ -693,16 +693,16 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.26.0",
+            "version": "v1.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4"
+                "reference": "5bbc823adecdae860bb64756d639ecfec17b050a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4",
-                "reference": "6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/5bbc823adecdae860bb64756d639ecfec17b050a",
+                "reference": "5bbc823adecdae860bb64756d639ecfec17b050a",
                 "shasum": ""
             },
             "require": {
@@ -717,7 +717,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.26-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -755,7 +755,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.26.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.27.0"
             },
             "funding": [
                 {
@@ -771,7 +771,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-24T11:49:31+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "symfony/process",
@@ -850,5 +850,5 @@
         "ext-intl": "7",
         "ext-pdo_sqlite": "7"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }

@@ -110,7 +110,6 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
         return false;
     }
 
-
     public function _itemIsWritable($item, $params)
     {
         return $this->dpm->userCanWrite($this->user, $item->getId());
@@ -135,6 +134,7 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
     {
         return $this->docCounter;
     }
+
     public function getFolderCounter()
     {
         return $this->fldCounter;

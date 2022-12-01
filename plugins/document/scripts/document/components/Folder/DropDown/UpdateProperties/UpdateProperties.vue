@@ -26,7 +26,7 @@
         data-test="document-dropdown-update-properties"
         data-shortcut-update-properties
     >
-        <i class="fa fa-fw fa-pencil tlp-dropdown-menu-item-icon"></i>
+        <i class="fa-solid fa-fw fa-pencil tlp-dropdown-menu-item-icon"></i>
         <translate>Update properties</translate>
     </button>
 </template>

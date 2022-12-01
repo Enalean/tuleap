@@ -209,7 +209,6 @@ class PiePlot
         }
     }
 
-
     public function SetTheme($aTheme)
     {
 //        JpGraphError::RaiseL(15012,$aTheme);
@@ -433,7 +432,6 @@ class PiePlot
         }
         return $result;
     }
-
 
     public function Stroke($img, $aaoption = 0)
     {
@@ -1267,7 +1265,6 @@ class PiePlotC extends PiePlot
         }
     }
 
-
     public function Stroke($img, $aaoption = 0)
     {
         // Stroke the pie but don't stroke values
@@ -1407,7 +1404,6 @@ class PieGraph extends Graph
     {
         $this->SetMarginColor($c);
     }
-
 
     public function DisplayCSIMAreas()
     {

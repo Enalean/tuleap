@@ -556,7 +556,6 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
     }
 
-
     public function testInAnonymousForgeThatActiveNotProjectMemberIsNotMemberOfStaticUgroup()
     {
         $response = $this->getResponseByName(
@@ -614,7 +613,6 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
     }
-
 
     public function testInRegularForgeThatActiveNotProjectMemberIsNotMemberOfStaticUgroup()
     {

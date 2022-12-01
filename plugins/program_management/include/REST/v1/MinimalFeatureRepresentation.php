@@ -49,6 +49,7 @@ final class MinimalFeatureRepresentation
         $this->title = $title;
         $this->uri   = $uri;
     }
+
     public static function fromFeature(Feature $feature): self
     {
         return new self(

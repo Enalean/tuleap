@@ -61,7 +61,6 @@ class TrackerDateReminder_ArtifactField
         $result = db_query($rem);
     }
 
-
     public function populateProcessingForField(ArtifactType $at, $field_id, $group_artifact_id)
     {
         //Now populate the 'artifact_date_reminder_processing' table with concerned artifacts

@@ -20,6 +20,9 @@
 
 declare(strict_types=1);
 
+use Tuleap\FullTextSearchCommon\Index\ItemToIndexPlaintextTransformer;
+use Tuleap\Markdown\CommonMarkInterpreter;
+
 require_once __DIR__ . '/../../fts_common/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -58,7 +61,12 @@ final class fts_dbPlugin extends \Tuleap\FullTextSearchCommon\FullTextSearchBack
 
     protected function getItemInserter(): \Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex
     {
-        return new \Tuleap\FullTextSearchDB\Index\SearchDAO();
+        $html_purifier = Codendi_HTMLPurifier::instance();
+        return new ItemToIndexPlaintextTransformer(
+            new \Tuleap\FullTextSearchDB\Index\SearchDAO(),
+            $html_purifier,
+            CommonMarkInterpreter::build($html_purifier)
+        );
     }
 
     protected function getItemRemover(): \Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems

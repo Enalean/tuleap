@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/build-system-configurator': workspace:*
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator

@@ -22,7 +22,7 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="document-item-owner">
             <translate>Owner</translate>
-            <i class="fa fa-asterisk"></i>
+            <i class="fa-solid fa-asterisk"></i>
         </label>
         <people-picker v-bind:currently_selected_user="value" id="document-item-owner" />
     </div>

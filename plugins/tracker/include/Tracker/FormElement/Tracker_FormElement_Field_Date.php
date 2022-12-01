@@ -428,6 +428,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                     INNER JOIN tracker_changeset_value_date AS $R2 ON ($R2.changeset_value_id = $R1.id)
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
     }
+
     /**
      * Get the "group by" statement to retrieve field values
      */
@@ -996,8 +997,23 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
         if (strpos($value, '-') !== false) {
             // Assume the format is YYYY-mm-dd
-            $date_array = explode('-', $value);
-            if (count($date_array) == 3 && checkdate($date_array[1], $date_array[2], $date_array[0]) && $this->_nbDigits($date_array[0])) {
+            $first_space_position = strpos($value, " ");
+            if ($first_space_position !== false) {
+                $value_without_time = substr(
+                    $value,
+                    0,
+                    $first_space_position,
+                );
+            } else {
+                $value_without_time = $value;
+            }
+
+            $date_array = explode('-', $value_without_time);
+            $year       = (int) $date_array[0];
+            $month      = (int) $date_array[1];
+            $day        = (int) $date_array[2];
+
+            if (count($date_array) === 3 && checkdate($month, $day, $year) && $this->_nbDigits($year)) {
                 return $value;
             }
 

@@ -456,7 +456,6 @@ class BackendSystem extends Backend
         return true;
     }
 
-
     /**
      * Archive the project directory
      *
@@ -656,7 +655,6 @@ class BackendSystem extends Backend
         $path = ForgeConfig::get('homedir_prefix') . "/" . $name;
         return (! $this->fileExists($path));
     }
-
 
     /**
      * Rename project home directory (following project unix_name change)

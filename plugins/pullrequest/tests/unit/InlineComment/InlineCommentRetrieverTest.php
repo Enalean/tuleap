@@ -47,17 +47,18 @@ final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testInlineCommentCanBeRetrievedWhenItExists(): void
     {
-        $this->dao->shouldReceive('searchByID')->andReturn([
-            'id'              => 12,
+        $this->dao->shouldReceive('searchByCommentID')->andReturn([
+            'id' => 12,
             'pull_request_id' => 147,
-            'user_id'         => 102,
-            'post_date'       => 10,
-            'file_path'       => 'path',
-            'unidiff_offset'  => 2,
-            'content'         => 'My comment',
-            'is_outdated'     => 0,
+            'user_id' => 102,
+            'post_date' => 10,
+            'file_path' => 'path',
+            'unidiff_offset' => 2,
+            'content' => 'My comment',
+            'is_outdated' => 0,
             'parent_id' => 0,
             'position' => 'right',
+            "color" => '',
         ]);
 
         $this->assertNotNull($this->retriever->getInlineCommentByID(12));
@@ -65,7 +66,7 @@ final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testInlineCommentCannotBeRetrievedWhenItDoesNotExist(): void
     {
-        $this->dao->shouldReceive('searchByID')->andReturn(null);
+        $this->dao->shouldReceive('searchByCommentID')->andReturn(null);
 
         $this->assertNull($this->retriever->getInlineCommentByID(404));
     }
