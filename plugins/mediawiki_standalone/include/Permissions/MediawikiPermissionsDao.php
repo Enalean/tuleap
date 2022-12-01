@@ -64,4 +64,41 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
             }
         );
     }
+
+    public function duplicateProjectPermissions(\Project $from_project, \Project $to_project, array $ugroup_mapping): void
+    {
+        $this->getDB()->tryFlatTransaction(
+            function () use ($from_project, $to_project, $ugroup_mapping) {
+                // Dynamic ugroups
+                $this->getDB()->run(
+                    <<<EOS
+                        INSERT INTO plugin_mediawiki_standalone_permissions(project_id, permission, ugroup_id)
+                        SELECT ?, permission, ugroup_id
+                        FROM plugin_mediawiki_standalone_permissions
+                        WHERE project_id = ?
+                          AND ugroup_id < 100
+                    EOS,
+                    $to_project->getID(),
+                    $from_project->getID(),
+                );
+
+                // Static ugroups
+                foreach ($ugroup_mapping as $from_ugroup_id => $to_ugroup_id) {
+                    $this->getDB()->run(
+                        <<<EOS
+                            INSERT INTO plugin_mediawiki_standalone_permissions(project_id, permission, ugroup_id)
+                            SELECT ?, permission, ?
+                            FROM plugin_mediawiki_standalone_permissions
+                            WHERE project_id = ?
+                              AND ugroup_id = ?
+                        EOS,
+                        $to_project->getID(),
+                        $to_ugroup_id,
+                        $from_project->getID(),
+                        $from_ugroup_id
+                    );
+                }
+            }
+        );
+    }
 }
