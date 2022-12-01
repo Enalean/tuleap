@@ -38,6 +38,7 @@ import type { LinkField } from "./LinkField";
 import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
 import type { RetrieveUserHistory } from "../../../../domain/fields/link-field/RetrieveUserHistory";
 import type { UserIdentifier } from "../../../../domain/UserIdentifier";
+import { SearchResultsGroup } from "./SearchResultsGroup";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
@@ -122,15 +123,17 @@ export const ArtifactLinkSelectorAutoCompleter = (
         autoComplete: (host: LinkField, query: string): void => {
             notification_clearer.clearFaultNotification();
 
+            host.matching_artifact_section = [];
+            host.recently_viewed_section = [];
+            host.search_results_section = [];
+            host.possible_parents_section = [];
+
+            const is_parent_selected = isParentSelected(host);
+
             const linkable_number = LinkableNumberProxy.fromQueryString(
                 query,
                 current_artifact_identifier
             );
-            const is_parent_selected = isParentSelected(host);
-
-            host.matching_artifact_section = [];
-            host.recently_viewed_section = [];
-            host.possible_parents_section = [];
             if (linkable_number) {
                 host.matching_artifact_section = [MatchingArtifactsGroup.buildLoadingState()];
                 getMatchingArtifactsGroup(linkable_number).then((group) => {
@@ -144,6 +147,9 @@ export const ArtifactLinkSelectorAutoCompleter = (
                         host.recently_viewed_section = [group];
                     }
                 });
+                if (query.length > 0) {
+                    host.search_results_section = [SearchResultsGroup.buildEmpty()];
+                }
             }
             if (is_parent_selected) {
                 host.possible_parents_section = [PossibleParentsGroup.buildLoadingState()];

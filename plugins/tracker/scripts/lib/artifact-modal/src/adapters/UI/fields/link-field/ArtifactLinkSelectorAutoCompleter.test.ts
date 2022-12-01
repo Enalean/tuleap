@@ -138,36 +138,43 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             ["an empty string", ""],
             ["not a number", "I know I'm supposed to enter a number but I don't care"],
         ])(
-            `when the query is %s, it will set an empty group collection in link-selector
+            `when the query is %s, then it will set an empty matching artifact section
             and will clear the fault notification`,
             (query_content_type: string, query: string) => {
                 autocomplete(query);
 
                 expect(notification_clearer.getCallCount()).toBe(1);
                 expect(host.matching_artifact_section).toHaveLength(0);
-                expect(host.possible_parents_section).toHaveLength(0);
-                expect(host.recently_viewed_section).toHaveLength(1);
             }
         );
 
         it(`when the query of the autocomplete is empty and the user has already seen some artifacts,
-                  then it will display the recently displayed group ONLY`, async () => {
+            then it will display the recently displayed group ONLY`, async () => {
             autocomplete("");
+
+            expect(notification_clearer.getCallCount()).toBe(1);
             const loading_groups = host.recently_viewed_section;
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
             await user_history_async;
-            await user_history_async;
+            await user_history_async; //There are two level of promise
 
-            const groups = host.recently_viewed_section;
-            expect(groups[0].items).toHaveLength(2);
+            expect(host.matching_artifact_section).toHaveLength(0);
+            expect(host.search_results_section).toHaveLength(0);
+            expect(host.possible_parents_section).toHaveLength(0);
+            const group = host.recently_viewed_section[0];
+            expect(group.items).toHaveLength(2);
 
-            const recently_viewed_artifact_dropdown_1 = groups[0].items[0];
-            expect(recently_viewed_artifact_dropdown_1.value).toBe(recently_viewed_artifact);
+            expect(group.items[0].value).toBe(recently_viewed_artifact);
+            expect(group.items[1].value).toBe(artifact);
+        });
 
-            const recently_viewed_artifact_dropdown_2 = groups[0].items[1];
-            expect(recently_viewed_artifact_dropdown_2.value).toBe(artifact);
+        it(`when the query is not empty, it will set an empty group of search results`, () => {
+            autocomplete("a");
+
+            expect(notification_clearer.getCallCount()).toBe(1);
+            expect(host.search_results_section).toHaveLength(1);
         });
 
         it(`when an artifact is returned by the artifact api,
@@ -193,7 +200,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         });
 
         it(`when an unexpected error is returned by the api (not code 403 or 404),
-            then it will set a matching artifact and recently viewed artifacts groups with zero items so that link-selector can show the empty state message
+            then it will set a matching artifact with zero items so that link-selector can show the empty state message
             and notify the fault`, async () => {
             const fault = Fault.fromMessage("Nope");
             artifact_retriever = RetrieveMatchingArtifactStub.withFault(fault);
@@ -216,7 +223,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             ["404 Not Found error code", NotFoundFault()],
         ])(
             `when the API responds %s,
-            it will set a matching artifact so that link-selector can show the empty state message
+            it will set an empty matching artifact group so that link-selector can show the empty state message
             and will not notify the fault as it is expected that it can fail
             (maybe the linkable number does not match any artifact)`,
             async (_type_of_error, fault) => {
