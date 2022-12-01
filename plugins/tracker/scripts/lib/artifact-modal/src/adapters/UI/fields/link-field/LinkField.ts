@@ -246,8 +246,10 @@ export const LinkField = define<LinkField>({
             });
 
             host.link_selector = createLinkSelector(host.artifact_link_select, {
-                search_field_callback: (link_selector, query) =>
-                    controller.autoComplete(host, query),
+                search_field_callback: (link_selector, query) => {
+                    host.controller.clearFaultNotification();
+                    return controller.autoComplete(host, query);
+                },
                 templating_callback: getLinkableArtifactTemplate,
                 selection_callback: (value) => {
                     const artifact = getLinkableArtifact(value);

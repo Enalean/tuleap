@@ -175,7 +175,6 @@ function ArtifactModalController(
                 ArtifactLinkSelectorAutoCompleter(
                     api_client,
                     fault_feedback_controller,
-                    fault_feedback_controller,
                     possible_parents_cache,
                     already_linked_verifier,
                     current_artifact_identifier,

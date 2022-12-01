@@ -141,7 +141,6 @@ describe(`LinkFieldController`, () => {
                     okAsync(LinkableArtifactStub.withDefaults())
                 ),
                 fault_notifier,
-                notification_clearer,
                 parents_retriever,
                 link_verifier,
                 current_artifact_identifier,
