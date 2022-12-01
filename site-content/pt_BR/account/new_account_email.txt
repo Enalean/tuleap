@@ -1,28 +1,28 @@
 <?php
-// Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+// Copyright (c) Enalean, 2015 - Presente. Todos os Direitos Reservados.
 //
 // Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. Todos os Direitos Reservados.
 // http://www.codendi.com
 //
 //
 //
-$title = "Bem vindo à ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)."!";
+$title = "Bem vindo Ã  ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)."!";
 
-$section_one = "Você é agora um usuário registrado com o login: ";
+$section_one = "VocÃª Ã© agora um usuÃ¡rio registrado com o login: ";
 
-$section_two = "Como usuário registrado, você agora pode participar das atividades do Web Site de ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME).". "
-               ."Você pode usar fóruns, assinar lista de emails, navegar pela lista de projetos hospedados, ou até mesmo começar seu próprio "
+$section_two = "Como usuÃ¡rio registrado, vocÃª agora pode participar das atividades do Web Site de ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME).". "
+               ."VocÃª pode usar fÃ³runs, assinar lista de emails, navegar pela lista de projetos hospedados, ou atÃ© mesmo comeÃ§ar seu prÃ³prio "
                ."projeto.";
 
-$section_three = "** OBSERVAÇÕES IMPORTANTES **\n\nEmbora sua conta Web já esteja disponível, leva ainda algum tempo para ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
-                   ." criar sua conta Shell. O acesso à algumas funcionalidades como CVS e SVN depende disso. Sua conta Shell estará ativada em menos de duas"
-                   ." horas a partir de agora. \n\n\nEnquanto isso recomendamos fortemente que você navegue pelo site, leia "
-                   ." a documentação do mesmo e finalize a configuração do seu Perfil de Usuário"
-                   ."(Defina suas preferências, etc.)\n\n\nAproveite o site e nos passe um feedback de como podemos melhorar "
-                   .\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." e também divulgue ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." para todos.";
+$section_three = "** OBSERVAÃ‡Ã•ES IMPORTANTES **\n\nEmbora sua conta Web jÃ¡ esteja disponÃ­vel, leva ainda algum tempo para ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
+                   ." criar sua conta Shell. O acesso Ã  algumas funcionalidades como CVS e SVN depende disso. Sua conta Shell estarÃ¡ ativada em menos de duas"
+                   ." horas a partir de agora. \n\n\nEnquanto isso recomendamos fortemente que vocÃª navegue pelo site, leia "
+                   ." a documentaÃ§Ã£o do mesmo e finalize a configuraÃ§Ã£o do seu Perfil de UsuÃ¡rio"
+                   ."(Defina suas preferÃªncias, etc.)\n\n\nAproveite o site e nos passe um feedback de como podemos melhorar "
+                   .\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." e tambÃ©m divulgue ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." para todos.";
 
-$section_after_login = "\nA senha deve ter lhe sido informada por um dos administradores do site. Por favor altere-a no seu primeiro acesso ao web site. Se você ainda não foi informado sobre a sua senha, você pode utilizar o procedimento de senha perdida para gerar uma nova.";
+$section_after_login = "\nA senha deve ter lhe sido informada por um dos administradores do site. Por favor altere-a no seu primeiro acesso ao web site. Se vocÃª ainda nÃ£o foi informado sobre a sua senha, vocÃª pode utilizar o procedimento de senha perdida para gerar uma nova.";
 
 $thanks = "Obrigado!";
 
