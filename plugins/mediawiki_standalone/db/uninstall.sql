@@ -17,4 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+DROP TABLE IF EXISTS plugin_mediawiki_standalone_permissions;
+
 DELETE FROM service WHERE short_name = 'plugin_mediawiki_standalone';

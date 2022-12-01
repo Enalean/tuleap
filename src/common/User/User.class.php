@@ -419,6 +419,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id];
     }
 
+    public function setCacheUgroupMembership(int $ugroup_id, int $group_id, bool $is_member): void
+    {
+        $this->cache_ugroup_membership[$ugroup_id][$group_id][0] = $is_member;
+    }
+
     public function isNone()
     {
         return $this->getId() == 100;

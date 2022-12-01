@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Metadata\Owner;
 
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Project;
 use Project_AccessRestrictedException;
-use Psr\Http\Message\ResponseInterface;
 use Tuleap\Document\Tree\IExtractProjectFromVariables;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
@@ -33,6 +31,7 @@ use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\BuildDisplayNameStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
@@ -71,12 +70,7 @@ final class OwnerRequestHandlerTest extends TestCase
             $response_factory,
             $stream_factory,
             new JSONResponseBuilder($response_factory, $stream_factory),
-            new class implements EmitterInterface {
-                public function emit(ResponseInterface $response): bool
-                {
-                    return true;
-                }
-            }
+            new NoopSapiEmitter(),
         );
 
         $response = $owner_sender->handle(new NullServerRequest());
@@ -117,12 +111,7 @@ final class OwnerRequestHandlerTest extends TestCase
             $response_factory,
             $stream_factory,
             new JSONResponseBuilder($response_factory, $stream_factory),
-            new class implements EmitterInterface {
-                public function emit(ResponseInterface $response): bool
-                {
-                    return true;
-                }
-            }
+            new NoopSapiEmitter(),
         );
 
         $request  = (new NullServerRequest())->withQueryParams(['town' => 'test']);
@@ -160,12 +149,7 @@ final class OwnerRequestHandlerTest extends TestCase
             $response_factory,
             $stream_factory,
             new JSONResponseBuilder($response_factory, $stream_factory),
-            new class implements EmitterInterface {
-                public function emit(ResponseInterface $response): bool
-                {
-                    return true;
-                }
-            }
+            new NoopSapiEmitter(),
         );
 
         $request  = (new NullServerRequest())->withQueryParams(['name' => '']);
@@ -226,12 +210,7 @@ final class OwnerRequestHandlerTest extends TestCase
             $response_factory,
             $stream_factory,
             new JSONResponseBuilder($response_factory, $stream_factory),
-            new class implements EmitterInterface {
-                public function emit(ResponseInterface $response): bool
-                {
-                    return true;
-                }
-            }
+            new NoopSapiEmitter(),
         );
 
         $request  = (new NullServerRequest())->withQueryParams(["name" => 'o']);

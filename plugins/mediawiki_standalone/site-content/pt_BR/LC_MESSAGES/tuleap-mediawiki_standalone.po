@@ -6,13 +6,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Administration"
+msgstr ""
+
+msgid "MediaWiki"
+msgstr ""
+
 msgid "MediaWiki Standalone"
+msgstr ""
+
+msgid "MediaWiki administration"
 msgstr ""
 
 msgid "Mediawiki Standalone (read only)"
 msgstr ""
 
+msgid "Permissions"
+msgstr ""
+
 msgid "Read only access to information about Mediawiki Standalone"
+msgstr ""
+
+msgid "Save configuration"
 msgstr ""
 
 msgid "Standalone MediaWiki instances integration with Tuleap"
@@ -36,4 +51,7 @@ msgstr ""
 msgid ""
 "The Mediawiki service cannot activated when there are still MediaWiki "
 "standalone data"
+msgstr ""
+
+msgid "User groups who can read MediaWiki pages"
 msgstr ""

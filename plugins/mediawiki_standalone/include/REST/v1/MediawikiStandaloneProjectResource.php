@@ -66,7 +66,10 @@ final class MediawikiStandaloneProjectResource
                 new ProjectAccessChecker(
                     new RestrictedUserCanAccessMediaWikiVerifier(),
                     \EventManager::instance(),
-                )
+                ),
+                new \Tuleap\MediawikiStandalone\Permissions\ReadersRetriever(
+                    new \Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao()
+                ),
             );
 
             return new GetPermissionsRepresentation($permissions_builder->getPermissions($user, $project));

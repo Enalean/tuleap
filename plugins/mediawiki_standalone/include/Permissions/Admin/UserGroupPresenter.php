@@ -20,15 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Support;
+namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Psr\Http\Message\ResponseInterface;
-
-class NoopSapiEmitter implements EmitterInterface
+/**
+ * @psalm-immutable
+ */
+final class UserGroupPresenter
 {
-    public function emit(ResponseInterface $response): bool
+    public function __construct(public int $id, public string $name, public bool $is_selected)
     {
-        return true;
     }
 }
