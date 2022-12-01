@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Notifications\RemoveRecipient;
 
+use PFUser;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -32,16 +33,22 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\User\NotificationOnOwnActionPreference;
 
-final class RemoveRecipientThatDoesntWantMailForThereOwnActionsTest extends TestCase
+final class RemoveRecipientThatDoesntWantMailForTheirOwnActionsTest extends TestCase
 {
+    private PFUser $john;
+    private PFUser $jane;
+
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->john = UserTestBuilder::anActiveUser()->withUserName('john_doe')->withEmail('john@example.com')->withId(120)->build();
+        $this->jane = UserTestBuilder::anActiveUser()->withUserName('jane_biz')->withEmail('jane@example.com')->withId(125)->build();
+
         $user_manager = $this->createStub(\UserManager::class);
         $user_manager->method('getUserById')->willReturnMap([
-            [120, UserTestBuilder::anActiveUser()->withUserName('john_doe')->withId(120)->build()],
-            [125, UserTestBuilder::anActiveUser()->withUserName('jane_biz')->withId(125)->build()],
+            [$this->john->getId(), $this->john],
+            [$this->jane->getId(), $this->jane],
         ]);
 
         \UserManager::setInstance($user_manager);
@@ -55,13 +62,12 @@ final class RemoveRecipientThatDoesntWantMailForThereOwnActionsTest extends Test
 
     public function testRemoveUserWhoIsAuthorOfChange(): void
     {
-        $user = UserTestBuilder::anActiveUser()->withUserName('john_doe')->withId(120)->build();
-        NotificationOnOwnActionPreference::updateUserDoesNotWantNotification($user);
+        NotificationOnOwnActionPreference::updateUserDoesNotWantNotification($this->john);
 
         $strategy = new RemoveRecipientThatDoesntWantMailForTheirOwnActions();
 
         $changeset = ChangesetTestBuilder::aChangeset('1234')
-            ->submittedBy($user->getId())
+            ->submittedBy($this->john->getId())
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(345)
                     ->inTracker(
@@ -75,21 +81,18 @@ final class RemoveRecipientThatDoesntWantMailForThereOwnActionsTest extends Test
 
         self::assertEquals(
             [],
-            $strategy->removeRecipient(new NullLogger(), $changeset, [$user->getUserName() => Recipient::fromUser($user)], true),
+            $strategy->removeRecipient(new NullLogger(), $changeset, [$this->john->getUserName() => Recipient::fromUser($this->john)], true),
         );
     }
 
-    public function testDoNotRemoveUserWhoIsNotAuthorOfChange(): void
+    public function testRemoveUserWhoIsRecepientByEmailLikeWhenUsingGlobalNotification(): void
     {
-        $subscriber = UserTestBuilder::anActiveUser()->withUserName('john_doe')->withId(120)->build();
-        NotificationOnOwnActionPreference::updateUserDoesNotWantNotification($subscriber);
-
-        $change_author = UserTestBuilder::anActiveUser()->withUserName('jane_biz')->withId(125)->build();
+        NotificationOnOwnActionPreference::updateUserDoesNotWantNotification($this->john);
 
         $strategy = new RemoveRecipientThatDoesntWantMailForTheirOwnActions();
 
         $changeset = ChangesetTestBuilder::aChangeset('1234')
-            ->submittedBy($change_author->getId())
+            ->submittedBy($this->john->getId())
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(345)
                     ->inTracker(
@@ -102,24 +105,24 @@ final class RemoveRecipientThatDoesntWantMailForThereOwnActionsTest extends Test
             ->build();
 
         $recipients = [
-            $subscriber->getUserName() => Recipient::fromUser($subscriber),
-            $change_author->getUserName() => Recipient::fromUser($change_author),
-        ];
+            $this->john->getUserName() => Recipient::fromUser($this->john),
+            $this->john->getEmail()    => Recipient::fromUser($this->john),
 
+        ];
         self::assertEquals(
-            $recipients,
+            [],
             $strategy->removeRecipient(new NullLogger(), $changeset, $recipients, true),
         );
     }
 
-    public function testDoNotRemoveUserWhoIsAuthorOfChangeWhenNoPreference(): void
+    public function testDoNotRemoveUserWhoIsNotAuthorOfChange(): void
     {
-        $user = UserTestBuilder::anActiveUser()->withUserName('john_doe')->withId(120)->build();
+        NotificationOnOwnActionPreference::updateUserDoesNotWantNotification($this->john);
 
         $strategy = new RemoveRecipientThatDoesntWantMailForTheirOwnActions();
 
         $changeset = ChangesetTestBuilder::aChangeset('1234')
-            ->submittedBy($user->getId())
+            ->submittedBy($this->jane->getId())
             ->ofArtifact(
                 ArtifactTestBuilder::anArtifact(345)
                     ->inTracker(
@@ -131,7 +134,35 @@ final class RemoveRecipientThatDoesntWantMailForThereOwnActionsTest extends Test
             )
             ->build();
 
-        $recipients = [$user->getUserName() => Recipient::fromUser($user)];
+        $recipients = [
+            $this->john->getUserName() => Recipient::fromUser($this->john),
+            $this->jane->getUserName() => Recipient::fromUser($this->jane),
+        ];
+
+        self::assertEquals(
+            $recipients,
+            $strategy->removeRecipient(new NullLogger(), $changeset, $recipients, true),
+        );
+    }
+
+    public function testDoNotRemoveUserWhoIsAuthorOfChangeWhenNoPreference(): void
+    {
+        $strategy = new RemoveRecipientThatDoesntWantMailForTheirOwnActions();
+
+        $changeset = ChangesetTestBuilder::aChangeset('1234')
+            ->submittedBy($this->john->getId())
+            ->ofArtifact(
+                ArtifactTestBuilder::anArtifact(345)
+                    ->inTracker(
+                        TrackerTestBuilder::aTracker()
+                            ->withId(120)
+                            ->build()
+                    )
+                    ->build()
+            )
+            ->build();
+
+        $recipients = [$this->john->getUserName() => Recipient::fromUser($this->john)];
         self::assertEquals(
             $recipients,
             $strategy->removeRecipient(new NullLogger(), $changeset, $recipients, true),

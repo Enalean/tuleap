@@ -94,20 +94,26 @@ final class EmailNotificationTask implements PostCreationTask
         $this->config_notification_custom_sender = $config_notification_custom_sender;
     }
 
-    public function execute(Tracker_Artifact_Changeset $changeset, bool $send_notifications)
+    public function execute(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
     {
         $tracker = $changeset->getTracker();
         if ($tracker->isNotificationStopped() || ! $send_notifications) {
             return;
         }
-        $this->logger->debug('Start mail notification');
+        $logger = new \WrapperLogger($this->logger, sprintf('%d, %d', $changeset->getArtifact()->getId(), $changeset->getId()));
+        $logger->debug('Start mail notification');
 
         // 0. Is update
         $is_update = ! $changeset->getArtifact()->isFirstChangeset($changeset);
 
         // 1. Get the recipients list
-        $recipients = $this->recipients_manager->getRecipients($changeset, $is_update, $this->logger);
-        $this->logger->debug('Recipients ' . implode(', ', array_keys($recipients)));
+        $recipients = $this->recipients_manager->getRecipients($changeset, $is_update, $logger);
+        if (empty($recipients)) {
+            $logger->debug('No recipients found');
+            $logger->debug('End mail notification');
+            return;
+        }
+        $logger->debug('Recipient list: ' . implode(', ', array_keys($recipients)));
 
         // 2. Compute the body of the message + headers
         $messages = [];
@@ -120,7 +126,7 @@ final class EmailNotificationTask implements PostCreationTask
 
         // 3. Send the notification
         foreach ($messages as $message) {
-            $this->logger->debug('Notify ' . implode(', ', $message['recipients']));
+            $logger->debug('Notify ' . implode(', ', $message['recipients']));
             $this->mail_sender->send(
                 $changeset,
                 $message['recipients'],
@@ -132,7 +138,7 @@ final class EmailNotificationTask implements PostCreationTask
                 $message['message-id']
             );
         }
-        $this->logger->debug('End mail notification');
+        $logger->debug('End mail notification');
     }
 
     /**
