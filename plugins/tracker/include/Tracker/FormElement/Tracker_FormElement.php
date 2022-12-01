@@ -146,7 +146,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @param int|string    $id                          The id of the field
      * @param int|string    $tracker_id                  The id of the tracker this field belongs to
      * @param int|string    $parent_id                   The id of the parent element
-     * @param string $name                        The short name of the field
+     * @param ?string $name                        The short name of the field
      * @param string $label                       The label of the element
      * @param string $description                 The description of the element
      * @param int|bool|null|string $use_it        Is the element used?
@@ -162,7 +162,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $this->id          = (int) $id;
         $this->tracker_id  = (int) $tracker_id;
         $this->parent_id   = (int) $parent_id;
-        $this->name        = trim($name);
+        $this->name        = $name === null ? '' : trim($name);
         $this->label       = $label;
         $this->description = $description;
         $this->use_it      = false;

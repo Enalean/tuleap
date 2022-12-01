@@ -67,6 +67,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->password_expiration_checker,
             $this->password_handler
         );
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testItDelegatesAuthenticationToPlugin(): void

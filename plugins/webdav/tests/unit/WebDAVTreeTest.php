@@ -65,6 +65,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $docman_item_factory = \Mockery::spy(\Docman_ItemFactory::class)->shouldReceive('getItemFromDb')->with()->andReturns(\Mockery::spy(\Docman_Item::class));
         Docman_ItemFactory::setInstance(101, $docman_item_factory);
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     protected function tearDown(): void

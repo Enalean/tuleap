@@ -41,6 +41,11 @@ class WebDAVFRSPackageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
+    protected function setUp(): void
+    {
+        $GLOBALS['Language']->method('getText')->willReturn('');
+    }
+
     /**
      * Testing when The package have no releases
      */

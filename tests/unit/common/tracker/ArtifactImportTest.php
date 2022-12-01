@@ -433,15 +433,12 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;this is 'my test'&lt;/p&gt;"));
         $this->assertTrue($ai->canApplyHtmlSpecialChars("<p>this is 'my test'</p>"));
-        $this->assertEquals("&lt;p&gt;this is 'my test'&lt;/p&gt;", htmlspecialchars("<p>this is 'my test'</p>"));
 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;"));
         $this->assertTrue($ai->canApplyHtmlSpecialChars("<p>&lt;toto&gt;</p>"));
-        $this->assertEquals("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;", htmlspecialchars("<p>&lt;toto&gt;</p>"));
 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("test&lt;br/&gt;"));
         $this->assertTrue($ai->canApplyHtmlSpecialChars("test<br/>"));
-        $this->assertEquals("test&lt;br/&gt;", htmlspecialchars("test<br/>"));
     }
 
     /**
@@ -456,7 +453,6 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&amp;lt;"));
-        $this->assertEquals("Test&amp;lt;", htmlspecialchars("Test&lt;"));
         // Should be assertTrue here
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&lt;"));
     }

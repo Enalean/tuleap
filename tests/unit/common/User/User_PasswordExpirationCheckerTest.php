@@ -31,6 +31,7 @@ final class User_PasswordExpirationCheckerTest extends \Tuleap\Test\PHPUnit\Test
     {
         parent::setUp();
         $this->password_expiration_checker = new User_PasswordExpirationChecker();
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testItRaisesAnExceptionWhenPasswordExpired(): void
