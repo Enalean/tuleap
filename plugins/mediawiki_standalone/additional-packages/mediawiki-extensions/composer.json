@@ -71,9 +71,9 @@
     "mediawiki/labeled-section-transclusion": "^1.35.8",
     "mediawiki/math": "^1.35.8",
     "mediawiki/pdf-book": "^2.0.5",
-    "mediawiki/tuleap-integration": "1.0.0",
-    "mediawiki/tuleap-skin": "1.0.1",
-    "mediawiki/tuleap-wiki-farm": "1.0.1"
+    "mediawiki/tuleap-integration": "1.0.1",
+    "mediawiki/tuleap-skin": "1.0.2",
+    "mediawiki/tuleap-wiki-farm": "1.1.0"
   },
   "replace": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0",
