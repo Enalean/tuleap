@@ -209,6 +209,24 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(groups[0].empty_message).not.toBe("");
         });
 
+        it(`when an unexpected error is returned by the api,
+            then it will set the recently viewed artifact with zero items so that link-selector can show the empty state message
+            and notify the fault`, async () => {
+            const fault = Fault.fromMessage("Nope");
+            user_history_retriever = RetrieveUserHistoryStub.withFault(fault);
+
+            autocomplete("");
+
+            await user_history_async;
+            await user_history_async; //There are two level of promise
+
+            expect(fault_notifier.getCallCount()).toBe(1);
+            const groups = host.recently_viewed_section;
+            expect(groups).toHaveLength(1);
+            expect(groups[0].items).toHaveLength(0);
+            expect(groups[0].empty_message).not.toBe("");
+        });
+
         it.each([
             ["403 Forbidden error code", ForbiddenFault()],
             ["404 Not Found error code", NotFoundFault()],

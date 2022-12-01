@@ -17,24 +17,9 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ResultAsync } from "neverthrow";
-import type { LinkableArtifact } from "../../src/domain/fields/link-field/LinkableArtifact";
-import type { RetrieveUserHistory } from "../../src/domain/fields/link-field/RetrieveUserHistory";
-import { errAsync, okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 
-export const RetrieveUserHistoryStub = {
-    withUserHistory: (
-        entries: ResultAsync<readonly LinkableArtifact[], never>
-    ): RetrieveUserHistory => ({
-        getUserArtifactHistory: () => entries,
-    }),
-
-    withoutUserHistory: (): RetrieveUserHistory => ({
-        getUserArtifactHistory: () => okAsync([]),
-    }),
-
-    withFault: (fault: Fault): RetrieveUserHistory => ({
-        getUserArtifactHistory: () => errAsync(fault),
-    }),
-};
+export const UserHistoryRetrievalFault = (previous: Fault): Fault => ({
+    isUserHistoryRetrieval: () => true,
+    ...previous,
+});

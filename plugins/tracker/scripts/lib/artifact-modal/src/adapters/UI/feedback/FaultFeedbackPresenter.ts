@@ -24,6 +24,7 @@ import {
     getMatchingArtifactErrorMessage,
     getParentFetchErrorMessage,
     getPossibleParentErrorMessage,
+    getUserHistoryErrorMessage,
 } from "../../../gettext-catalog";
 
 export type FaultFeedbackPresenter = {
@@ -38,6 +39,8 @@ const isMatchingArtifactRetrievalFault = (fault: Fault): boolean =>
     "isMatchingArtifactRetrieval" in fault && fault.isMatchingArtifactRetrieval() === true;
 const isPossibleParentsRetrievalFault = (fault: Fault): boolean =>
     "isPossibleParentsRetrieval" in fault && fault.isPossibleParentsRetrieval() === true;
+const isUserHistoryFault = (fault: Fault): boolean =>
+    "isUserHistoryRetrieval" in fault && fault.isUserHistoryRetrieval() === true;
 
 export const FaultFeedbackPresenter = {
     buildEmpty: (): FaultFeedbackPresenter => ({ message: "" }),
@@ -53,6 +56,9 @@ export const FaultFeedbackPresenter = {
         }
         if (isPossibleParentsRetrievalFault(fault)) {
             return { message: sprintf(getPossibleParentErrorMessage(), fault) };
+        }
+        if (isUserHistoryFault(fault)) {
+            return { message: sprintf(getUserHistoryErrorMessage(), fault) };
         }
         return { message: String(fault) };
     },

@@ -38,6 +38,7 @@ import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
 import type { RetrieveUserHistory } from "../../../../domain/fields/link-field/RetrieveUserHistory";
 import type { UserIdentifier } from "../../../../domain/UserIdentifier";
 import { SearchResultsGroup } from "./SearchResultsGroup";
+import { UserHistoryRetrievalFault } from "../../../../domain/fields/link-field/UserHistoryRetrievalFault";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
@@ -70,8 +71,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 (artifacts) =>
                     RecentlyViewedArtifactGroup.fromUserHistory(link_verifier, artifacts),
                 (fault) => {
-                    // eslint-disable-next-line no-console
-                    console.log(fault.valueOf());
+                    fault_notifier.onFault(UserHistoryRetrievalFault(fault));
                     return RecentlyViewedArtifactGroup.buildEmpty();
                 }
             );

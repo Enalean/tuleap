@@ -60,6 +60,9 @@ msgstr ""
 msgid "Empty"
 msgstr "Vazio"
 
+msgid "Error while retrieving recently viewed artifacts: %s"
+msgstr ""
+
 msgid "Error while retrieving the artifact to link: %s"
 msgstr ""
 
