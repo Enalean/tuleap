@@ -112,3 +112,5 @@ export const getFileUploadErrorMessage = (): string =>
 export const getRecentlyViewedArtifactGroupLabel = (): string =>
     gettextCatalog.getString("Recently viewed artifacts");
 export const getSearchResultsGroupLabel = (): string => gettextCatalog.getString("Search results");
+export const getUserHistoryErrorMessage = (): string =>
+    gettextCatalog.getString("Error while retrieving recently viewed artifacts: %s");

@@ -70,6 +70,9 @@ msgstr "Modifié par"
 msgid "Empty"
 msgstr "Aucun(e)"
 
+msgid "Error while retrieving recently viewed artifacts: %s"
+msgstr "Erreur pendant la récupération des artéfacts vus récemment : %s"
+
 msgid "Error while retrieving the artifact to link: %s"
 msgstr "Erreur pendant la récupération de l'artéfact à lier : %s"
 
