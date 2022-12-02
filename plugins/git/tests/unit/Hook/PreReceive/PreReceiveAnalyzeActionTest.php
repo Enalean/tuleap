@@ -24,15 +24,10 @@ namespace Tuleap\Git\Hook\PreReceive;
 
 use GitRepository;
 use GitRepositoryFactory;
-use Symfony\Component\Process\Process;
-use Tuleap\PullRequest\GitExec;
-use Tuleap\TemporaryTestDirectory;
 use Tuleap\WebAssembly\WASMCaller;
 
 final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use TemporaryTestDirectory;
-
     private \PHPUnit\Framework\MockObject\MockObject|GitRepositoryFactory $git_repository_factory;
 
     protected function setUp(): void
@@ -60,10 +55,10 @@ final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_repository_factory->method('getRepositoryById')->with(666)->willReturn(null);
 
         $this->expectException(PreReceiveRepositoryNotFoundException::class);
-        $action->preReceiveAnalyse('666', 'aaaaaaa');
+        $action->preReceiveAnalyse('666', ['aaaaaaa', 'aaaaaaa', 'refs/heads/master']);
     }
 
-    public function testReferenceDoesNotExist(): void
+    public function testNormalBehaviour(): void
     {
         $ffi = new class implements WASMCaller {
             public bool $has_been_called = false;
@@ -78,61 +73,10 @@ final class PreReceiveAnalyzeActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $action = new PreReceiveAnalyzeAction($this->git_repository_factory, $ffi);
 
-        $remote_repo = $this->getTmpDir() . '/some_git_repo.git';
-        mkdir($remote_repo);
-        (new Process([GitExec::getGitCommand(), '-C', $remote_repo, 'init', '--bare']))->mustRun();
-
-        $working_copy = $this->getTmpDir() . '/some_git_repo_wc';
-        (new Process([GitExec::getGitCommand(), 'clone', $remote_repo, $working_copy]))->mustRun();
-        file_put_contents($working_copy . '/Readme.mkd', 'foo');
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'config', 'user.email', 'test@test.fr']))->mustRun();
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'config', 'user.name', 'test']))->mustRun();
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'add', $working_copy . '/Readme.mkd']))->mustRun();
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'commit', '-m', 'Add readme']))->mustRun();
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'push']))->mustRun();
-
         $git_repository = $this->createMock(GitRepository::class);
-        $git_repository->method('getFullPath')->willReturn($remote_repo);
         $this->git_repository_factory->method('getRepositoryById')->with(42)->willReturn($git_repository);
 
-        $this->expectException(PreReceiveCannotRetrieveReferenceException::class);
-        $action->preReceiveAnalyse('42', '469eaa9');
-    }
-
-    public function testNormalBehavior(): void
-    {
-        $ffi = new class implements WASMCaller {
-            public bool $has_been_called = false;
-            public string $output        = "testoutput";
-
-            public function call(string $json_input): string
-            {
-                $this->has_been_called = true;
-                return $this->output;
-            }
-        };
-
-        $action = new PreReceiveAnalyzeAction($this->git_repository_factory, $ffi);
-
-        $remote_repo = $this->getTmpDir() . '/some_git_repo.git';
-        mkdir($remote_repo);
-        (new Process([GitExec::getGitCommand(), '-C', $remote_repo, 'init', '--bare']))->mustRun();
-
-        $working_copy = $this->getTmpDir() . '/some_git_repo_wc';
-        (new Process([GitExec::getGitCommand(), 'clone', $remote_repo, $working_copy]))->mustRun();
-        file_put_contents($working_copy . '/Readme.mkd', 'foo');
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'config', 'user.email', 'test@test.fr']))->mustRun();
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'config', 'user.name', 'test']))->mustRun();
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'add', $working_copy . '/Readme.mkd']))->mustRun();
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'commit', '-m', 'Add readme']))->mustRun();
-        (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'push']))->mustRun();
-
-        $sha1           = (new Process([GitExec::getGitCommand(), '-C', $working_copy, 'rev-parse', 'HEAD']))->mustRun()->getOutput();
-        $git_repository = $this->createMock(GitRepository::class);
-        $git_repository->method('getFullPath')->willReturn($remote_repo);
-        $this->git_repository_factory->method('getRepositoryById')->with(42)->willReturn($git_repository);
-
-        $output = $action->preReceiveAnalyse('42', trim($sha1));
+        $output = $action->preReceiveAnalyse('42', ["0000000000000000000000000000000000000000", "193e60ca836ae22a0545d55c5e06cfc48dccd23d", 'refs/heads/master']);
 
         self::assertTrue($ffi->has_been_called);
         self::assertEquals($output, $ffi->output);

@@ -144,7 +144,14 @@ mod tests {
         let wasm_c_str = CString::new(wasm_module_path).unwrap();
         let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
 
-        let json = r#"{"obj_type":"commit","content":"tree 33a2d661f62e986b3678ed8f074214aaeae47a53\nparent e966c3507a6b884d66aaacdaa7ea8ee643b3fa7d\nauthor Thomas PIRAS <thomas.piras@enalean.com> 1663938895 +0200\ncommitter Thomas PIRAS <thomas.piras@enalean.com> 1663938895 +0200\n\nInitialize Tuleap"}"#;
+        let json = r#"{
+            "updated_references": {
+                "refs\/heads\/master": {
+                    "old_value": "c8ee0a8bcf3f185a272a04d6493456b3562f5050",
+                    "new_value": "e6ecbb16e4e9792fa8c5824204e1a58f2007dc31"
+                }
+            }
+        }"#;
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
@@ -153,7 +160,7 @@ mod tests {
         let str_out: &str = cstr_out.to_str().unwrap();
 
         assert_eq!(
-            r#"{"rejection_message":"the git object content contains the string Tuleap"}"#,
+            r#"{"rejection_message":"the following reference refs/heads/master does not start by refs/heads/tuleap-..."}"#,
             str_out
         );
     }
@@ -165,7 +172,18 @@ mod tests {
         let wasm_c_str = CString::new(wasm_module_path).unwrap();
         let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
 
-        let json = r#"{"obj_type":"commit","content":"tree 6f4bc3560dbb87a9fa79b0defe6f503c8626f51c\nauthor Thomas PIRAS <thomas.piras@enalean.com> 1663936581 +0200\ncommitter Thomas PIRAS <thomas.piras@enalean.com> 1663936581 +0200\n\nNumber One"}"#;
+        let json = r#"{
+            "updated_references": {
+                "refs\/heads\/tuleap-master": {
+                    "old_value": "c8ee0a8bcf3f185a272a04d6493456b3562f5050",
+                    "new_value": "e6ecbb16e4e9792fa8c5824204e1a58f2007dc31"
+                },
+                "refs\/heads\/tuleap-hello": {
+                    "old_value": "0000000000000000000000000000000000000000",
+                    "new_value": "0066b8447a411086ecd19210dd3f5df818056f47"
+                }
+            }
+        }"#;
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 

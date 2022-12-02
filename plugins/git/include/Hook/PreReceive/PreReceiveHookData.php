@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,21 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
-#[derive(Debug, Deserialize)]
-pub struct HookData {
-    pub updated_references: HashMap<String, UpdatedReferences>,
-}
+namespace Tuleap\Git\Hook\PreReceive;
 
-#[derive(Debug, Deserialize)]
-pub struct UpdatedReferences {
-    pub old_value: String,
-    pub new_value: String,
-}
+final class PreReceiveHookData
+{
+    /**
+     * @var array<string,PreReceiveHookUpdatedReference>
+     */
+    public array $updated_references;
 
-#[derive(Serialize)]
-pub struct JsonResult {
-    pub result: Option<String>,
+    public function __construct()
+    {
+        $this->updated_references = [];
+    }
+
+    public function addNewRev(string $ref_name, PreReceiveHookUpdatedReference $oldnew_values): void
+    {
+        $this->updated_references[$ref_name] = $oldnew_values;
+    }
 }
