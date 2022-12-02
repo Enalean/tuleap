@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Admin\PermissionsPerGroup;
+declare(strict_types=1);
 
-use ProjectUGroup;
+namespace Tuleap\MediawikiStandalone\Permissions;
 
-class PermissionPerGroupPanePresenter
+/**
+ * @psalm-immutable
+ */
+final class PermissionAdmin implements Permission
 {
-    public bool $has_permissions;
-    public string $user_group_name;
+    public const NAME = 'ADMIN';
 
-    public function __construct(
-        public array $permissions,
-        ?ProjectUGroup $selected_ugroup = null,
-    ) {
-        $this->permissions     = $permissions;
-        $this->has_permissions = count($permissions) > 0;
-        $this->user_group_name = ($selected_ugroup)
-            ? $selected_ugroup->getTranslatedName()
-            : '';
+    public function getName(): string
+    {
+        return self::NAME;
     }
 }

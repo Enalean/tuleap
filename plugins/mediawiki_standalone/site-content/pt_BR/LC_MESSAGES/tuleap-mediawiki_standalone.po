@@ -9,6 +9,12 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
+msgid "Global permissions"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
 msgid "MediaWiki"
 msgstr ""
 
@@ -18,10 +24,19 @@ msgstr ""
 msgid "MediaWiki administration"
 msgstr ""
 
+msgid "MediaWiki administrators"
+msgstr ""
+
 msgid "MediaWiki permissions have been saved"
 msgstr ""
 
+msgid "MediaWiki readers"
+msgstr ""
+
 msgid "Mediawiki Standalone (read only)"
+msgstr ""
+
+msgid "Permission"
 msgstr ""
 
 msgid "Permission granted for MediaWiki readers"
@@ -63,4 +78,7 @@ msgid ""
 msgstr ""
 
 msgid "User groups who can read MediaWiki pages"
+msgstr ""
+
+msgid "{{ user_group_name }} has no global permission"
 msgstr ""

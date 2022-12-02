@@ -66,6 +66,7 @@ use Tuleap\MediawikiStandalone\Permissions\Admin\AdminPermissionsController;
 use Tuleap\MediawikiStandalone\Permissions\Admin\AdminPermissionsPresenterBuilder;
 use Tuleap\MediawikiStandalone\Permissions\Admin\AdminSavePermissionsController;
 use Tuleap\MediawikiStandalone\Permissions\Admin\CSRFSynchronizerTokenProvider;
+use Tuleap\MediawikiStandalone\Permissions\Admin\PermissionPerGroupServicePaneBuilder;
 use Tuleap\MediawikiStandalone\Permissions\Admin\ProjectPermissionsSaver;
 use Tuleap\MediawikiStandalone\Permissions\Admin\RejectNonMediawikiAdministratorMiddleware;
 use Tuleap\MediawikiStandalone\Permissions\Admin\UserGroupToSaveRetriever;
@@ -106,6 +107,8 @@ use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEve
 use Tuleap\Project\Admin\History\GetHistoryKeyLabel;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
@@ -165,6 +168,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     public function getHooksAndCallbacks(): Collection
     {
+        $this->addHook(PermissionPerGroupPaneCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(OAuth2ScopeBuilderCollector::NAME);
@@ -659,5 +663,39 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                 AdminPermissionsController::getAdminUrl($project),
             )
         );
+    }
+
+    public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event): void
+    {
+        $project = $event->getProject();
+        $service = $project->getService(MediawikiStandaloneService::SERVICE_SHORTNAME);
+        if (! $service instanceof MediawikiStandaloneService) {
+            return;
+        }
+
+        if (! $this->isAllowed($project->getID())) {
+            return;
+        }
+
+        $ugroup_manager = new UGroupManager();
+
+        $service_pane_builder = new PermissionPerGroupServicePaneBuilder(
+            new PermissionPerGroupUGroupFormatter($ugroup_manager),
+            new ReadersRetriever(
+                new MediawikiPermissionsDao()
+            ),
+            $ugroup_manager,
+        );
+
+        $template_factory      = TemplateRendererFactory::build();
+        $admin_permission_pane = $template_factory
+            ->getRenderer(__DIR__ . '/../templates')
+            ->renderToString(
+                'project-admin-permission-per-group',
+                $service_pane_builder->buildPresenter($event)
+            );
+
+        $rank_in_project = $service->getRank();
+        $event->addPane($admin_permission_pane, $rank_in_project);
     }
 }
