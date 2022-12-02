@@ -20,6 +20,7 @@
 import type {
     ArtifactLinkFieldIdentifier,
     CheckBoxFieldIdentifier,
+    ColorName,
     ColumnIdentifier,
     DateFieldIdentifier,
     FieldSetIdentifier,
@@ -29,7 +30,6 @@ import type {
     RadioButtonFieldIdentifier,
     SelectBoxFieldIdentifier,
     SubmissionDateFieldIdentifier,
-    TrackerColorName,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -110,7 +110,7 @@ export interface MinimalTrackerResponse {
 export type TrackerProjectRepresentation = ProjectReference;
 
 export interface TrackerResponseWithColor extends MinimalTrackerResponse {
-    readonly color_name: TrackerColorName;
+    readonly color_name: ColorName;
 }
 
 /**

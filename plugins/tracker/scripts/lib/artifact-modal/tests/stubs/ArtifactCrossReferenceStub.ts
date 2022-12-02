@@ -18,7 +18,7 @@
  */
 
 import type { ArtifactCrossReference } from "../../src/domain/ArtifactCrossReference";
-import type { TrackerColorName } from "@tuleap/plugin-tracker-constants";
+import type { ColorName } from "@tuleap/plugin-tracker-constants";
 
 export const ArtifactCrossReferenceStub = {
     withRef: (ref: string): ArtifactCrossReference => ({
@@ -26,7 +26,7 @@ export const ArtifactCrossReferenceStub = {
         color: "lake-placid-blue",
     }),
 
-    withRefAndColor: (ref: string, color: TrackerColorName): ArtifactCrossReference => ({
+    withRefAndColor: (ref: string, color: ColorName): ArtifactCrossReference => ({
         ref,
         color,
     }),

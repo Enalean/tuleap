@@ -19,18 +19,18 @@
 
 import type { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
 import type { TrackerShortname } from "./TrackerShortname";
-import type { TrackerColorName } from "@tuleap/plugin-tracker-constants";
+import type { ColorName } from "@tuleap/plugin-tracker-constants";
 
 export type ArtifactCrossReference = {
     readonly ref: string;
-    readonly color: TrackerColorName;
+    readonly color: ColorName;
 };
 
 export const ArtifactCrossReference = {
     fromCurrentArtifact: (
         current_artifact_identifier: CurrentArtifactIdentifier | null,
         tracker_shortname: TrackerShortname,
-        tracker_color_name: TrackerColorName
+        tracker_color_name: ColorName
     ): ArtifactCrossReference | null => {
         if (current_artifact_identifier === null) {
             return null;
