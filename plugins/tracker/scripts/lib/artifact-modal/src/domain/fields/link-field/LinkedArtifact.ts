@@ -24,12 +24,17 @@ import type { LinkType } from "./LinkType";
 // I identify an artifact linked to the current artifact under edition
 export type LinkedArtifactIdentifier = Identifier<"LinkedArtifactIdentifier">;
 
+type Status = {
+    readonly value: string;
+    readonly color: string | null;
+};
+
 export interface LinkedArtifact {
     readonly identifier: LinkedArtifactIdentifier;
     readonly title: string | null;
     readonly xref: ArtifactCrossReference;
     readonly uri: string;
-    readonly status: string | null;
+    readonly status: Status | null;
     readonly is_open: boolean;
     readonly link_type: LinkType;
 }

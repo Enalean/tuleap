@@ -194,6 +194,11 @@ export interface CrossReferenceChangesetValue extends BaseChangesetValue {
     }>;
 }
 
+export interface Status {
+    value: string;
+    color: ColorName | null;
+}
+
 export type ChangesetValue =
     | UnknownChangesetValue
     | NumericChangesetValue
@@ -225,4 +230,5 @@ export interface ArtifactResponseNoInstance {
     readonly status: string;
     readonly is_open: boolean;
     readonly values: ReadonlyArray<ChangesetValue>;
+    readonly full_status: Status | null;
 }

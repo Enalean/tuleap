@@ -82,7 +82,7 @@ export const getNewLinkTemplate = (link: NewLink): UpdateFunction<LinkField> => 
                 ${link.status &&
                 html`
                     <span class="${getArtifactStatusBadgeClasses(link)}" data-test="link-status">
-                        ${link.status}
+                        ${link.status.value}
                     </span>
                 `}
             </td>
