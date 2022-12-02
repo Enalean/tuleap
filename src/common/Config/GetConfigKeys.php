@@ -33,6 +33,7 @@ use Tuleap\Event\Dispatchable;
 use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\HomePage\NewsCollectionBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
@@ -75,6 +76,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         ProjectExportController::class,
         MailTransportBuilder::class,
         MercureClient::class,
+        BaseLayout::class,
     ];
 
     /**
