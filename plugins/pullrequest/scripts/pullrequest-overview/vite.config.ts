@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineCustomElement } from "vue";
-import OverviewApp from "./OverviewApp.vue";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import vue from "@vitejs/plugin-vue";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-export default {
-    template: `<tuleap-overview-app></tuleap-overview-app>`,
-    controller,
-};
-
-function controller() {
-    const self = this;
-
-    Object.assign(self, {
-        $onInit: onInit,
-    });
-
-    function onInit() {
-        window.customElements.define("tuleap-overview-app", defineCustomElement(OverviewApp));
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "pullrequest-overview": path.resolve(__dirname, "src/index.ts"),
+                },
+            },
+        },
     }
-}
+);

@@ -11,5 +11,11 @@
             "src": "scripts/pullrequests-app/src/app",
             "po": "scripts/pullrequests-app/po"
         }
+    },
+    "gettext-vue3": {
+        "tuleap-pullrequest-overview": {
+            "src": "scripts/pullrequest-overview/src",
+            "po": "scripts/pullrequest-overview/po"
+        }
     }
 }
