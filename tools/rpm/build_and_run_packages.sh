@@ -33,6 +33,8 @@ if [ -z "$OS" ]; then
     exit 1
 fi
 
+export DOCKER_BUILDKIT=1
+
 docker build -t tuleap-generated-files-builder -f "$SRC_DIR"/tools/utils/nix/build-tools.dockerfile "$SRC_DIR"/tools/utils/nix/
 
 clean_tuleap_sources="$(mktemp -d)"
@@ -56,20 +58,22 @@ nix-shell --run "$clean_tuleap_sources/tools/utils/scripts/generated-files-build
 docker run -i --name rpm-builder -e "EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0}" -e "OS=${OS}" -v /rpms -v "$clean_tuleap_sources":/tuleap:ro -w /tuleap tuleap-generated-files-builder tools/rpm/build_rpm_inside_container.sh
 
 if [ "$OS" == "centos7" ]; then
-    docker pull ghcr.io/enalean/tuleap-installrpms:centos7
-    cosign verify -key "$SRC_DIR"/tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/tuleap-installrpms:centos7
-    docker run -t -d --rm --name rpm-installer --volumes-from rpm-builder -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-        -v /dev/null:/etc/yum.repos.d/tuleap.repo:ro \
-        --mount type=tmpfs,destination=/run --cap-add=sys_nice ghcr.io/enalean/tuleap-installrpms:centos7
-    docker logs -f rpm-installer | tee >( grep -q 'Started Install and run Tuleap.' ) || true
-    docker exec -ti rpm-installer bash
+    INSTALL_IMAGE=tuleap-installrpms:centos7
+    docker build --target interactive --tag $INSTALL_IMAGE -f "$SRC_DIR/tools/docker/install-rpms/centos7.dockerfile" "$SRC_DIR/tools/docker/install-rpms/"
 elif [ "$OS" == "el9" ]; then
-    docker build -t tuleap-installrpms:el9 "$SRC_DIR/tools/docker/install-rpms/"
-    docker run -t -d --rm --name rpm-installer --volumes-from rpm-builder -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-            --mount type=tmpfs,destination=/run --cap-add=sys_nice tuleap-installrpms:el9
-    docker logs -f rpm-installer | tee >( grep -q 'Started Install and run Tuleap.' ) || true
-    docker exec -ti rpm-installer bash
+    INSTALL_IMAGE=tuleap-installrpms:el9
+    docker build --target interactive --tag $INSTALL_IMAGE -f "$SRC_DIR/tools/docker/install-rpms/rockylinux9.dockerfile" "$SRC_DIR/tools/docker/install-rpms/"
 else
     >&2 echo "OS environment variable does not have a valid value"
     exit 1
 fi
+
+docker run -t -d --rm \
+    --name rpm-installer \
+    --volumes-from rpm-builder \
+    -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+    --mount type=tmpfs,destination=/run \
+    --cap-add=sys_nice \
+    $INSTALL_IMAGE
+docker logs -f rpm-installer | tee >( grep -q 'Started Install and run Tuleap.' ) || true
+docker exec -ti rpm-installer bash

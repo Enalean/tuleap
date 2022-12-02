@@ -1,10 +1,8 @@
-FROM rockylinux:9
+FROM rockylinux:9 AS tuleap-installrpms-base
 
 ENV container docker
 
 STOPSIGNAL SIGRTMIN+3
-
-COPY install-and-run.service /etc/systemd/system
 
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
     systemd-tmpfiles-setup.service ] || rm -f $i; done); \
@@ -22,13 +20,21 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
         https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
         https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
     dnf clean all && \
-    rm -rf /var/cache/yum && \
-    systemctl enable install-and-run.service
+    rm -rf /var/cache/yum
 
 COPY tuleap-local.repo /etc/yum.repos.d/
-COPY install.sh /install.sh
+COPY install.el9.sh /install.sh
 COPY run.sh /run.sh
 COPY sql-mode.cnf /etc/my.cnf.d/sql-mode.cnf
 
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
+
+FROM tuleap-installrpms-base AS ci
+COPY install-and-run.ci.service /etc/systemd/system/install-and-run.service
+RUN systemctl enable install-and-run.service && \
+    echo "Storage=persistent" >> /etc/systemd/journald.conf
+
+FROM tuleap-installrpms-base AS interactive
+COPY install-and-run.service /etc/systemd/system/install-and-run.service
+RUN systemctl enable install-and-run.service
