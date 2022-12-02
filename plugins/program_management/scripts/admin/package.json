@@ -1,0 +1,28 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-program-management-admin",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/burningparrot-theme": "workspace:*",
+    "@tuleap/gettext": "workspace:*",
+    "@tuleap/list-picker": "workspace:*",
+    "@tuleap/project-background": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
+    "sprintf-js": "^1.1.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*",
+    "@types/sprintf-js": "^1.1.2"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

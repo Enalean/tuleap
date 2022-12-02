@@ -17,21 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/project-background";
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+import { env } from "node:process";
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
-.project-with-background {
-    .program-management-title-header {
-        @include project-background.title-header-typography;
-
-        margin: 0 0 var(--tlp-medium-spacing);
-    }
-}
-
-body {
-    @include project-background.apply-background(
-        ".program-management-title-header",
-        global-variables.$sidebar-expanded-width,
-        global-variables.$sidebar-collapsed-width
-    );
-}
+env.DISABLE_TS_TYPECHECK = "true";
+export default {
+    ...defineJestConfiguration(),
+    displayName: "program-management-artifact-action",
+};

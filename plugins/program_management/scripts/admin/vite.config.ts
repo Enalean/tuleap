@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/project-background";
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-.project-with-background {
-    .program-management-title-header {
-        @include project-background.title-header-typography;
-
-        margin: 0 0 var(--tlp-medium-spacing);
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        plugins: [POGettextPlugin.vite()],
+        build: {
+            rollupOptions: {
+                input: {
+                    program_management_admin: path.resolve(__dirname, "src/index.ts"),
+                },
+            },
+        },
     }
-}
-
-body {
-    @include project-background.apply-background(
-        ".program-management-title-header",
-        global-variables.$sidebar-expanded-width,
-        global-variables.$sidebar-collapsed-width
-    );
-}
+);

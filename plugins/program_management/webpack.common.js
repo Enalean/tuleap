@@ -22,8 +22,6 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
 const entry_points = {
     program_management: "./scripts/program_management/index.ts",
-    artifact_additional_action: "./scripts/artifact-additional-action/src/index.ts",
-    program_management_admin: "./scripts/admin/src/index.ts",
     "program-management-style": "./themes/program_management.scss",
     "planned-iterations": "./scripts/planned-iterations/index.ts",
     "planned-iterations-style": "./themes/planned-iterations.scss",
@@ -49,17 +47,9 @@ module.exports = [
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
-                {
-                    ...webpack_configurator.rule_po_files,
-                    exclude: /program_management\/po\//,
-                },
-                {
-                    test: /\.po$/,
-                    include: /program_management\/po\//,
-                    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
-                },
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
+                webpack_configurator.rule_easygettext_loader,
             ],
         },
         plugins: [

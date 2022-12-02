@@ -2,14 +2,12 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/burningparrot-theme': workspace:*
   '@tuleap/cypress-configurator': workspace:*
   '@tuleap/cypress-utilities-support': workspace:*
   '@tuleap/date-helper': workspace:*
   '@tuleap/dom': workspace:*
   '@tuleap/drag-and-drop': workspace:*
-  '@tuleap/fp-feedback': workspace:*
-  '@tuleap/gettext': workspace:*
-  '@tuleap/list-picker': workspace:*
   '@tuleap/project-background': workspace:*
   '@tuleap/project-privacy-helper': workspace:*
   '@tuleap/tlp': workspace:*
@@ -29,11 +27,10 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
+  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/dom': link:../../lib/frontend/dom
   '@tuleap/drag-and-drop': link:../../lib/frontend/drag-and-drop
-  '@tuleap/fp-feedback': link:../../lib/frontend/fp-feedback
-  '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
@@ -49,7 +46,6 @@ devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/sprintf-js': 1.1.2

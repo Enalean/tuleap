@@ -6,8 +6,6 @@
     },
     "include": [
         "scripts/program_management/**/*",
-        "scripts/artifact-additional-action/**/*",
-        "scripts/admin/**/*",
         "scripts/planned-iterations/**/*"
     ]
 }
