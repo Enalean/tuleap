@@ -25,6 +25,7 @@ import { ParentRetrievalFault } from "../../../domain/parent/ParentRetrievalFaul
 import { MatchingArtifactRetrievalFault } from "../../../domain/fields/link-field/MatchingArtifactRetrievalFault";
 import { PossibleParentsRetrievalFault } from "../../../domain/fields/link-field/PossibleParentsRetrievalFault";
 import { UserHistoryRetrievalFault } from "../../../domain/fields/link-field/UserHistoryRetrievalFault";
+import { SearchArtifactsFault } from "../../../domain/fields/link-field/SearchArtifactsFault";
 
 const FAULT_MESSAGE = "An error occurred";
 
@@ -56,6 +57,7 @@ describe(`FaultFeedbackPresenter`, () => {
             PossibleParentsRetrievalFault(Fault.fromMessage(FAULT_MESSAGE)),
         ],
         ["UserHistoryRetrievalFault", UserHistoryRetrievalFault(Fault.fromMessage(FAULT_MESSAGE))],
+        ["SearchArtifactsFault", SearchArtifactsFault(Fault.fromMessage(FAULT_MESSAGE))],
     ])(`translates a message for %s`, (fault_name, fault) => {
         const presenter = FaultFeedbackPresenter.fromFault(fault);
         expect(presenter.message).toContain(FAULT_MESSAGE);
