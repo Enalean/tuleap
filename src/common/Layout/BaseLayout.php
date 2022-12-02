@@ -29,6 +29,7 @@ use Project;
 use ProjectManager;
 use Response;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -59,6 +60,9 @@ use Widget_Static;
 
 abstract class BaseLayout extends Response
 {
+    #[FeatureFlagConfigKey("Feature flag to show a footer on some pages. ⚠️ The footer will soon be removed definitively.")]
+    public const FEATURE_FLAG_SHOW_FOOTER = 'show_footer';
+
     /**
      * The root location for the current theme : '/themes/Tuleap/'
      */

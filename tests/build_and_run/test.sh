@@ -25,6 +25,7 @@ if [ "$OS" == "centos7" ]; then
     docker pull ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-installrpms:ci-centos7
     docker run -t --name "$UNIQUE_NAME-rpm-installer" --volumes-from "$UNIQUE_NAME-rpm-builder" -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
         -v /dev/null:/etc/yum.repos.d/tuleap.repo:ro \
+        -v "$WORKSPACE"/sources/tests/build_and_run/run.sh:/run.sh:ro \
         --mount type=tmpfs,destination=/run --cap-add=sys_nice ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-installrpms:ci-centos7
 else
     >&2 echo "OS environment variable value does not have a valid value"
@@ -37,5 +38,5 @@ docker cp "$UNIQUE_NAME-rpm-installer":/var/log/nginx "$WORKSPACE/results/build-
 docker cp "$UNIQUE_NAME-rpm-installer":/var/opt/remi/php80/log/php-fpm "$WORKSPACE/results/build-and-run-$OS/fpm" || true
 docker cp "$UNIQUE_NAME-rpm-installer":/var/log/tuleap "$WORKSPACE/results/build-and-run-$OS/tuleap" || true
 
-docker cp "$UNIQUE_NAME-rpm-installer":/output/index.html "$WORKSPACE/results/build-and-run-$OS"
-grep "Dev Build $(cat "$WORKSPACE"/sources/VERSION)" "$WORKSPACE/results/build-and-run-$OS/index.html"
+docker cp "$UNIQUE_NAME-rpm-installer":/output/api-version.json "$WORKSPACE/results/build-and-run-$OS"
+grep "$(cat "$WORKSPACE"/sources/VERSION)" "$WORKSPACE/results/build-and-run-$OS/api-version.json"

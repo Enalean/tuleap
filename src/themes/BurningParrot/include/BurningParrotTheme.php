@@ -375,6 +375,9 @@ class BurningParrotTheme extends BaseLayout
      */
     private function canShowFooter($params): bool
     {
+        if (\ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_SHOW_FOOTER) !== 'contact_the_dev_team_if_you_enable_this') {
+            return false;
+        }
         if ($params instanceof FooterConfiguration) {
             return $params->without_content === false;
         }
