@@ -80,7 +80,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     title: "A parent",
                     xref: ArtifactCrossReferenceStub.withRefAndColor("art #123", "red-wine"),
                     uri: "/url/to/artifact/123",
-                    status: { value: "Open", color: null },
+                    status: { value: "Open", color: "flamingo-pink" },
                     is_open: true,
                     link_type: LinkTypeStub.buildParentLinkType(),
                 }),
@@ -95,7 +95,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     title: "A child",
                     xref: ArtifactCrossReferenceStub.withRefAndColor("art #234", "surf-green"),
                     uri: "/url/to/artifact/234",
-                    status: { value: "Closed", color: null },
+                    status: { value: "Closed", color: "flamingo-pink" },
                     is_open: false,
                     link_type: LinkTypeStub.buildUntyped(),
                 }),
@@ -135,6 +135,7 @@ describe(`LinkedArtifactTemplate`, () => {
         expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(!presenter.is_open);
         expect(status.classList.contains("tlp-badge-success")).toBe(presenter.is_open);
+        expect(status.classList.contains("tlp-badge-flamingo-pink")).toBe(true);
     });
 
     describe(`getActionButton`, () => {
