@@ -37,6 +37,7 @@ use User_ForgeUserGroupPermission;
 final class UserPermissionsBuilderTest extends TestCase
 {
     private const READER_UGROUP_ID = 103;
+    private const WRITER_UGROUP_ID = 104;
 
     /**
      * @dataProvider getAdminTestData
@@ -62,10 +63,13 @@ final class UserPermissionsBuilderTest extends TestCase
             }
         };
 
+        $dao = ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions();
+
         $permission_builder = new UserPermissionsBuilder(
             $forge_permissions_retriever,
             CheckProjectAccessStub::withValidAccess(),
-            new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions())
+            new ReadersRetriever($dao),
+            new WritersRetriever($dao),
         );
 
         $user_permissions = $permission_builder->getPermissions($user, $project);
@@ -125,29 +129,6 @@ final class UserPermissionsBuilderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getWriterTestData
-     */
-    public function testGetPermissionsForWriters(PFUser $user, Project $project, bool $is_writer): void
-    {
-        $forge_permissions_retriever = new class implements ForgePermissionsRetriever {
-            public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool
-            {
-                return false;
-            }
-        };
-
-        $permission_builder = new UserPermissionsBuilder(
-            $forge_permissions_retriever,
-            CheckProjectAccessStub::withValidAccess(),
-            new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions())
-        );
-
-        $user_permissions = $permission_builder->getPermissions($user, $project);
-
-        self::assertEquals($is_writer, $user_permissions->is_writer);
-    }
-
     public function getWriterTestData(): iterable
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
@@ -186,6 +167,7 @@ final class UserPermissionsBuilderTest extends TestCase
         Project $project,
         CheckProjectAccess $check_project_access,
         bool $is_reader,
+        bool $is_writer,
     ): void {
         $forge_permissions_retriever = new class implements ForgePermissionsRetriever {
             public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool
@@ -194,15 +176,21 @@ final class UserPermissionsBuilderTest extends TestCase
             }
         };
 
+        $dao                = ISearchByProjectAndPermissionStub::buildWithPermissions(
+            [self::READER_UGROUP_ID],
+            [self::WRITER_UGROUP_ID],
+        );
         $permission_builder = new UserPermissionsBuilder(
             $forge_permissions_retriever,
             $check_project_access,
-            new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithPermissions([self::READER_UGROUP_ID]))
+            new ReadersRetriever($dao),
+            new WritersRetriever($dao),
         );
 
         $user_permissions = $permission_builder->getPermissions($user, $project);
 
         self::assertEquals($is_reader, $user_permissions->is_reader);
+        self::assertEquals($is_writer, $user_permissions->is_writer);
     }
 
     public function getReadersTestData(): iterable
@@ -213,40 +201,57 @@ final class UserPermissionsBuilderTest extends TestCase
             'when user is member of allowed ugroup, they can read'      => [
                 'user'         => UserTestBuilder::anActiveUser()
                     ->withUserGroupMembership($project, self::READER_UGROUP_ID, true)
+                    ->withUserGroupMembership($project, self::WRITER_UGROUP_ID, false)
                     ->build(),
                 'project'      => $project,
                 'check_access' => CheckProjectAccessStub::withValidAccess(),
                 'is_reader'    => true,
+                'is_writer'    => false,
             ],
-            'when project is suspended, they cannot read'               => [
+            'when user is member of allowed ugroup, they can write (and read)'      => [
+                'user'         => UserTestBuilder::anActiveUser()
+                    ->withUserGroupMembership($project, self::READER_UGROUP_ID, false)
+                    ->withUserGroupMembership($project, self::WRITER_UGROUP_ID, true)
+                    ->build(),
+                'project'      => $project,
+                'check_access' => CheckProjectAccessStub::withValidAccess(),
+                'is_reader'    => true,
+                'is_writer'    => true,
+            ],
+            'when project is suspended, they cannot read nor write'               => [
                 'user'         => UserTestBuilder::anAnonymousUser()->build(),
                 'project'      => $project,
                 'check_access' => CheckProjectAccessStub::withSuspendedProject(),
                 'is_reader'    => false,
+                'is_writer'    => false,
             ],
-            'when project is deleted, they cannot read'                 => [
+            'when project is deleted, they cannot read nor write'                 => [
                 'user'         => UserTestBuilder::anAnonymousUser()->build(),
                 'project'      => $project,
                 'check_access' => CheckProjectAccessStub::withDeletedProject(),
                 'is_reader'    => false,
+                'is_writer'    => false,
             ],
-            'when user cannot access private project, they cannot read' => [
+            'when user cannot access private project, they cannot read nor write' => [
                 'user'         => UserTestBuilder::anAnonymousUser()->build(),
                 'project'      => $project,
                 'check_access' => CheckProjectAccessStub::withPrivateProjectWithoutAccess(),
                 'is_reader'    => false,
+                'is_writer'    => false,
             ],
-            'when restricted user cannot access, they cannot read'      => [
+            'when restricted user cannot access, they cannot read nor write'      => [
                 'user'         => UserTestBuilder::anAnonymousUser()->build(),
                 'project'      => $project,
                 'check_access' => CheckProjectAccessStub::withNotValidProject(),
                 'is_reader'    => false,
+                'is_writer'    => false,
             ],
-            'when project is not found, they cannot read'               => [
+            'when project is not found, they cannot read nor write'               => [
                 'user'         => UserTestBuilder::anAnonymousUser()->build(),
                 'project'      => $project,
                 'check_access' => CheckProjectAccessStub::withRestrictedUserWithoutAccess(),
                 'is_reader'    => false,
+                'is_writer'    => false,
             ],
         ];
     }

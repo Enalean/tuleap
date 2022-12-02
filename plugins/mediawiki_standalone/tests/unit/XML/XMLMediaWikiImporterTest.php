@@ -35,12 +35,13 @@ final class XMLMediaWikiImporterTest extends TestCase
     {
         $project_members = ProjectUGroupTestBuilder::buildProjectMembers();
         $developers      = ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('Developers')->build();
+        $integrators     = ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('Integrators')->build();
 
         $permissions_saver = ISaveProjectPermissionsStub::buildSelf();
 
         $importer = new XMLMediaWikiImporter(
             new NullLogger(),
-            UGroupRetrieverStub::buildWithUserGroups($project_members, $developers),
+            UGroupRetrieverStub::buildWithUserGroups($project_members, $developers, $integrators),
             $permissions_saver,
         );
 
@@ -52,6 +53,10 @@ final class XMLMediaWikiImporterTest extends TestCase
                             <ugroup><![CDATA[project_members]]></ugroup>
                             <ugroup><![CDATA[Developers]]></ugroup>
                         </read-access>
+                        <write-access>
+                            <ugroup><![CDATA[project_members]]></ugroup>
+                            <ugroup><![CDATA[Integrators]]></ugroup>
+                        </write-access>
                     </mediawiki-standalone>
                  </project>
                  '
@@ -64,6 +69,10 @@ final class XMLMediaWikiImporterTest extends TestCase
         self::assertEquals(
             [3, 101],
             $permissions_saver->getCapturedReadersUgroupIds(),
+        );
+        self::assertEquals(
+            [3, 102],
+            $permissions_saver->getCapturedWritersUgroupIds(),
         );
     }
 }

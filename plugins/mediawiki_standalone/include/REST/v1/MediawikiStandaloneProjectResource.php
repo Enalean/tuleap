@@ -59,6 +59,8 @@ final class MediawikiStandaloneProjectResource
         try {
             $project = \ProjectManager::instance()->getValidProject($id);
 
+            $dao = new \Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao();
+
             $permissions_builder = new UserPermissionsBuilder(
                 new \User_ForgeUserGroupPermissionsManager(
                     new \User_ForgeUserGroupPermissionsDao()
@@ -67,9 +69,8 @@ final class MediawikiStandaloneProjectResource
                     new RestrictedUserCanAccessMediaWikiVerifier(),
                     \EventManager::instance(),
                 ),
-                new \Tuleap\MediawikiStandalone\Permissions\ReadersRetriever(
-                    new \Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao()
-                ),
+                new \Tuleap\MediawikiStandalone\Permissions\ReadersRetriever($dao),
+                new \Tuleap\MediawikiStandalone\Permissions\WritersRetriever($dao),
             );
 
             return new GetPermissionsRepresentation($permissions_builder->getPermissions($user, $project));

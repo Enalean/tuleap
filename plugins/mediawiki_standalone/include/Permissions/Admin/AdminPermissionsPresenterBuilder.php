@@ -23,12 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
+use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final class AdminPermissionsPresenterBuilder
 {
     public function __construct(
         private ReadersRetriever $readers_retriever,
+        private WritersRetriever $writers_retriever,
         private \User_ForgeUserGroupFactory $user_group_factory,
     ) {
     }
@@ -43,17 +45,22 @@ final class AdminPermissionsPresenterBuilder
             $token,
             $this->getUserGroupsPresenter(
                 $this->readers_retriever->getReadersUgroupIds($project),
-                $project,
+                $this->user_group_factory->getAllForProjectWithoutNobody($project),
+            ),
+            $this->getUserGroupsPresenter(
+                $this->writers_retriever->getWritersUgroupIds($project),
+                $this->user_group_factory->getAllForProjectWithoutNobodyNorAnonymous($project),
             ),
         );
     }
 
     /**
      * @param int[] $ugroup_ids
+     * @param \User_ForgeUGroup[] $allowed_ugroups
      *
      * @return UserGroupPresenter[]
      */
-    private function getUserGroupsPresenter(array $ugroup_ids, \Project $project): array
+    private function getUserGroupsPresenter(array $ugroup_ids, array $allowed_ugroups): array
     {
         return array_map(
             static fn(\User_ForgeUGroup $ugroup) => new UserGroupPresenter(
@@ -61,7 +68,7 @@ final class AdminPermissionsPresenterBuilder
                 $ugroup->getName(),
                 in_array($ugroup->getId(), $ugroup_ids, true)
             ),
-            $this->user_group_factory->getAllForProjectWithoutNobody($project)
+            $allowed_ugroups
         );
     }
 }

@@ -29,8 +29,9 @@ final class PermissionsFromRequestExtractor
 {
     /**
      * @param int[] $readers_ugroup_ids
+     * @param int[] $writers_ugroup_ids
      */
-    public function __construct(private array $readers_ugroup_ids)
+    public function __construct(private array $readers_ugroup_ids, private array $writers_ugroup_ids)
     {
     }
 
@@ -41,6 +42,7 @@ final class PermissionsFromRequestExtractor
     {
         return new self(
             self::extractFromRequest($request, 'readers'),
+            self::extractFromRequest($request, 'writers'),
         );
     }
 
@@ -70,5 +72,13 @@ final class PermissionsFromRequestExtractor
     public function getReadersUgroupIds(): array
     {
         return $this->readers_ugroup_ids;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getWritersUgroupIds(): array
+    {
+        return $this->writers_ugroup_ids;
     }
 }

@@ -22,11 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-interface ISaveProjectPermissions
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+class WritersRetrieverTest extends TestCase
 {
-    /**
-     * @param \ProjectUGroup[] $readers
-     * @param \ProjectUGroup[] $writers
-     */
-    public function saveProjectPermissions(\Project $project, array $readers, array $writers): void;
+    public function testGetWritersUgroupIds(): void
+    {
+        $retriever = new WritersRetriever(ISearchByProjectAndPermissionStub::buildWithPermissions([], [103, 104]));
+
+        self::assertEquals(
+            [103, 104],
+            $retriever->getWritersUgroupIds(ProjectTestBuilder::aProject()->build())
+        );
+    }
+
+    public function testItDefaultsToProjectMembers(): void
+    {
+        $retriever = new WritersRetriever(ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions());
+
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS],
+            $retriever->getWritersUgroupIds(ProjectTestBuilder::aProject()->build())
+        );
+    }
 }

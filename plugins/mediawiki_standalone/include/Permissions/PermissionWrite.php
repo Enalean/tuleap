@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-interface ISaveProjectPermissions
+/**
+ * @psalm-immutable
+ */
+final class PermissionWrite implements Permission
 {
-    /**
-     * @param \ProjectUGroup[] $readers
-     * @param \ProjectUGroup[] $writers
-     */
-    public function saveProjectPermissions(\Project $project, array $readers, array $writers): void;
+    public const NAME = 'WRITE';
+
+    public function getName(): string
+    {
+        return self::NAME;
+    }
 }

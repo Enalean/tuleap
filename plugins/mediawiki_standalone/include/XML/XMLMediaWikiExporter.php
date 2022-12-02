@@ -24,6 +24,7 @@ namespace Tuleap\MediawikiStandalone\XML;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
+use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\Project\UGroupRetriever;
 
 final class XMLMediaWikiExporter
@@ -31,6 +32,7 @@ final class XMLMediaWikiExporter
     public function __construct(
         private LoggerInterface $logger,
         private ReadersRetriever $readers_retriever,
+        private WritersRetriever $writers_retriever,
         private UGroupRetriever $ugroup_retriever,
     ) {
     }
@@ -48,17 +50,37 @@ final class XMLMediaWikiExporter
 
     private function exportMediawikiPermissions(\Project $project, \SimpleXMLElement $xml_content): void
     {
-        $cdata   = new \XML_SimpleXMLCDATAFactory();
+        $this->exportReadPermissions($project, $xml_content);
+        $this->exportWritePermissions($project, $xml_content);
+    }
+
+    private function exportReadPermissions(\Project $project, \SimpleXMLElement $xml_content): void
+    {
         $readers = $this->readers_retriever->getReadersUgroupIds($project);
         if (empty($readers)) {
             return;
         }
 
-        $reader_node = $xml_content->addChild('read-access');
-        foreach ($readers as $reader_ugroup_id) {
-            $ugroup = $this->ugroup_retriever->getUGroup($project, $reader_ugroup_id);
+        $this->addUGroupChildren($project, $xml_content->addChild('read-access'), $readers);
+    }
+
+    private function exportWritePermissions(\Project $project, \SimpleXMLElement $xml_content): void
+    {
+        $writers = $this->writers_retriever->getWritersUgroupIds($project);
+        if (empty($writers)) {
+            return;
+        }
+
+        $this->addUGroupChildren($project, $xml_content->addChild('write-access'), $writers);
+    }
+
+    private function addUGroupChildren(\Project $project, \SimpleXMLElement $xml_content, array $ugroup_ids): void
+    {
+        $cdata = new \XML_SimpleXMLCDATAFactory();
+        foreach ($ugroup_ids as $ugroup_id) {
+            $ugroup = $this->ugroup_retriever->getUGroup($project, $ugroup_id);
             if ($ugroup) {
-                $cdata->insert($reader_node, 'ugroup', $ugroup->getNormalizedName());
+                $cdata->insert($xml_content, 'ugroup', $ugroup->getNormalizedName());
             }
         }
     }
