@@ -735,7 +735,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
 
         $limit_parameters = [$limit, $offset];
         $limit_statement  = "LIMIT ? OFFSET ?";
-        $order            = "plugin_git_log.push_date DESC";
+        $order            = "push_date DESC";
         if ($order_by === self::ORDER_BY_PATH) {
             $order            = "git.repository_name ASC";
             $limit_parameters = [];
@@ -788,8 +788,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
                   git.remote_server_id,
                   git.remote_server_disconnect_date,
                   git.remote_project_deleted_date,
-                  git.remote_server_migration_status,
-                  plugin_git_log.push_date
+                  git.remote_server_migration_status
                 ORDER BY $order
                 $limit_statement";
 
