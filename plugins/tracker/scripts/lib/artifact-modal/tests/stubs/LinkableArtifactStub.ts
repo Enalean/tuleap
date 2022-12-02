@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerColorName } from "@tuleap/plugin-tracker-constants";
+import type { ColorName } from "@tuleap/plugin-tracker-constants";
 import type { LinkableArtifact } from "../../src/domain/fields/link-field/LinkableArtifact";
 import { ArtifactCrossReferenceStub } from "./ArtifactCrossReferenceStub";
 
@@ -29,11 +29,7 @@ export const LinkableArtifactStub = {
         uri: "/plugins/tracker/?aid=456",
         status: "Ongoing",
         is_open: true,
-        project: {
-            id: 10,
-            icon: "🐹",
-            label: "Guinea Pig",
-        },
+        project: { id: 104, icon: "🐹", label: "Guinea Pig" },
         ...data,
     }),
 
@@ -41,7 +37,7 @@ export const LinkableArtifactStub = {
         id: number,
         title: string,
         xref: string,
-        color: TrackerColorName
+        color: ColorName
     ): LinkableArtifact => ({
         id,
         title,
@@ -49,10 +45,6 @@ export const LinkableArtifactStub = {
         uri: "/plugins/tracker/?aid=" + id,
         status: "Ongoing",
         is_open: true,
-        project: {
-            id: 10,
-            icon: "",
-            label: "Project X",
-        },
+        project: { id: 147, icon: "", label: "Project X" },
     }),
 };

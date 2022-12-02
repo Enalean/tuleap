@@ -18,13 +18,13 @@
  */
 
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import type { TrackerColorName } from "@tuleap/plugin-tracker-constants/src/constants";
+import type { ColorName } from "@tuleap/plugin-tracker-constants";
 import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
 
 const ARTIFACT_ID = 801;
 const TITLE = "chigger";
 const CROSS_REFERENCE = `bugs #${ARTIFACT_ID}`;
-const COLOR: TrackerColorName = "flamingo-pink";
+const COLOR: ColorName = "flamingo-pink";
 const STATUS = "Review";
 const HTML_URI = "/plugins/tracker/?aid=" + ARTIFACT_ID;
 const PROJECT = {

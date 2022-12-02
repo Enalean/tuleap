@@ -22,6 +22,7 @@ import type {
     ArtifactIdInTrackerFieldIdentifier,
     ArtifactLinkFieldIdentifier,
     CheckBoxFieldIdentifier,
+    ColorName,
     ComputedFieldIdentifier,
     CrossReferenceFieldIdentifier,
     DateFieldIdentifier,
@@ -56,7 +57,7 @@ export interface StaticValueRepresentation {
     readonly id: string;
     readonly label: string;
     readonly color: RedGreenBlueColor | null;
-    readonly tlp_color: string | null;
+    readonly tlp_color: ColorName | null;
 }
 
 export interface UserGroupRepresentation {
