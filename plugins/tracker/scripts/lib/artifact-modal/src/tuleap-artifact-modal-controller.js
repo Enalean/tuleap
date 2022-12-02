@@ -76,6 +76,7 @@ import { getFileUploadErrorMessage } from "./gettext-catalog";
 import { AllowedLinksTypesCollection } from "./adapters/UI/fields/link-field/AllowedLinksTypesCollection";
 import { TrackerInAHierarchyVerifier } from "./domain/fields/link-field/TrackerInAHierarchyVerifier";
 import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
+import { UserHistoryCache } from "./adapters/Memory/UserHistoryCache";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -124,6 +125,7 @@ function ArtifactModalController(
         modal_model.tracker_id
     );
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
+    const user_history_cache = UserHistoryCache(api_client);
 
     Object.assign(self, {
         $onInit: init,
@@ -179,7 +181,7 @@ function ArtifactModalController(
                     already_linked_verifier,
                     current_artifact_identifier,
                     current_tracker_identifier,
-                    api_client,
+                    user_history_cache,
                     UserIdentifierProxy.fromUserId(modal_model.user_id),
                     modal_model.is_search_enabled
                 ),
