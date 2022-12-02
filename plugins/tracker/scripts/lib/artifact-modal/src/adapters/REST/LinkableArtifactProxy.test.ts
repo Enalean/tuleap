@@ -19,6 +19,8 @@
 
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
+import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
+import type { UserHistoryEntry } from "@tuleap/core-rest-api-types";
 import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
 
 const ARTIFACT_ID = 801;
@@ -27,11 +29,7 @@ const CROSS_REFERENCE = `bugs #${ARTIFACT_ID}`;
 const COLOR: ColorName = "flamingo-pink";
 const STATUS = "Review";
 const HTML_URI = "/plugins/tracker/?aid=" + ARTIFACT_ID;
-const PROJECT = {
-    id: 100,
-    label: "Guinea Pig",
-    icon: "🐹",
-};
+const PROJECT = { id: 115, label: "Guinea Pig", icon: "🐹" };
 
 describe(`LinkableArtifactProxy`, () => {
     it(`builds a LinkableArtifact from an Artifact representation from the API`, () => {
@@ -56,6 +54,34 @@ describe(`LinkableArtifactProxy`, () => {
         expect(artifact.xref.color).toBe(COLOR);
         expect(artifact.status).toBe(STATUS);
         expect(artifact.is_open).toBe(false);
+        expect(artifact.uri).toBe(HTML_URI);
+        expect(artifact.project.id).toBe(PROJECT.id);
+        expect(artifact.project.label).toBe(PROJECT.label);
+        expect(artifact.project.icon).toBe(PROJECT.icon);
+    });
+
+    it(`builds a LinkableArtifact from a History entry representation from the API`, () => {
+        const api_entry: UserHistoryEntry = {
+            type: ARTIFACT_TYPE,
+            per_type_id: ARTIFACT_ID,
+            title: TITLE,
+            project: PROJECT,
+            xref: CROSS_REFERENCE,
+            color_name: COLOR,
+            html_url: HTML_URI,
+            icon_name: "",
+            badges: [{ label: STATUS, color: null }],
+            quick_links: [],
+        };
+
+        const artifact = LinkableArtifactProxy.fromAPIUserHistory(api_entry);
+
+        expect(artifact.id).toBe(ARTIFACT_ID);
+        expect(artifact.title).toBe(TITLE);
+        expect(artifact.xref.ref).toBe(CROSS_REFERENCE);
+        expect(artifact.xref.color).toBe(COLOR);
+        expect(artifact.status).toBe(STATUS);
+        expect(artifact.is_open).toBe(true);
         expect(artifact.uri).toBe(HTML_URI);
         expect(artifact.project.id).toBe(PROJECT.id);
         expect(artifact.project.label).toBe(PROJECT.label);

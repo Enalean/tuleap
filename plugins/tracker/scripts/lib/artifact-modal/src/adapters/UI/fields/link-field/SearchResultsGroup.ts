@@ -22,6 +22,9 @@ import {
     getNoResultFoundEmptyState,
     getSearchResultsGroupLabel,
 } from "../../../../gettext-catalog";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
+import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
+import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 
 export const SearchResultsGroup = {
     buildEmpty: (): GroupOfItems => ({
@@ -29,6 +32,27 @@ export const SearchResultsGroup = {
         icon: "",
         empty_message: getNoResultFoundEmptyState(),
         items: [],
+        is_loading: false,
+    }),
+
+    buildLoadingState: (): GroupOfItems => ({
+        label: getSearchResultsGroupLabel(),
+        icon: "",
+        empty_message: "",
+        items: [],
+        is_loading: true,
+    }),
+
+    fromSearchResults: (
+        link_verifier: VerifyIsAlreadyLinked,
+        search_results: readonly LinkableArtifact[]
+    ): GroupOfItems => ({
+        label: getSearchResultsGroupLabel(),
+        icon: "",
+        empty_message: getNoResultFoundEmptyState(),
+        items: search_results.map((artifact) =>
+            LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
+        ),
         is_loading: false,
     }),
 };

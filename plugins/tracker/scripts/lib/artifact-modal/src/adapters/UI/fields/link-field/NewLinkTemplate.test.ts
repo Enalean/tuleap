@@ -52,6 +52,7 @@ import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/Veri
 import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
+import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -148,9 +149,10 @@ describe(`NewLinkTemplate`, () => {
                     fault_notifier,
                     parents_retriever,
                     link_verifier,
+                    RetrieveUserHistoryStub.withoutUserHistory(),
+                    SearchArtifactsStub.withoutResults(),
                     current_artifact_identifier,
                     current_tracker_identifier,
-                    RetrieveUserHistoryStub.withoutUserHistory(),
                     UserIdentifierProxyStub.fromUserId(101),
                     is_search_feature_flag_enabled
                 ),

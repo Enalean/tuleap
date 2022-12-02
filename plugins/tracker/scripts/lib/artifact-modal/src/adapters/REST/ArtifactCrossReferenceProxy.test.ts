@@ -19,16 +19,31 @@
 
 import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
+import type { UserHistoryEntry } from "@tuleap/core-rest-api-types";
+
+const CROSS_REFERENCE = "bug #247";
+const COLOR = "coral-pink";
 
 describe(`ArtifactCrossReferenceProxy`, () => {
     it(`builds from an artifact JSON payload from the REST API`, () => {
         const response = {
-            xref: "bug #247",
-            tracker: { color_name: "coral-pink" },
+            xref: CROSS_REFERENCE,
+            tracker: { color_name: COLOR },
         } as ArtifactWithStatus;
         const reference = ArtifactCrossReferenceProxy.fromAPIArtifact(response);
 
-        expect(reference.ref).toBe("bug #247");
-        expect(reference.color).toBe("coral-pink");
+        expect(reference.ref).toBe(CROSS_REFERENCE);
+        expect(reference.color).toBe(COLOR);
+    });
+
+    it(`builds from a History entry representation from the API`, () => {
+        const entry = {
+            xref: CROSS_REFERENCE,
+            color_name: COLOR,
+        } as UserHistoryEntry;
+        const reference = ArtifactCrossReferenceProxy.fromAPIUserHistory(entry);
+
+        expect(reference.ref).toBe(CROSS_REFERENCE);
+        expect(reference.color).toBe(COLOR);
     });
 });

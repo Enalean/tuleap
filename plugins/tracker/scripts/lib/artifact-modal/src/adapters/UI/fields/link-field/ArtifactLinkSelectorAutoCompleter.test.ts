@@ -39,16 +39,17 @@ import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUser
 import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
+import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
+import type { SearchArtifacts } from "../../../../domain/fields/link-field/SearchArtifacts";
 
-const ARTIFACT_ID = 1621;
+const FIRST_ARTIFACT_ID = 1621;
+const SECOND_ARTIFACT_ID = 15;
 const TRACKER_ID = 978;
 const FIRST_PARENT_ID = 429;
 const FIRST_TITLE = "vancourier";
 const SECOND_PARENT_ID = 748;
 const SECOND_TITLE = "muriti";
 const USER_ID = 102;
-
-const RECENTLY_VIEWED_ARTIFACT_ID = 15;
 
 const ForbiddenFault = (): Fault => ({
     isForbidden: () => true,
@@ -61,49 +62,43 @@ const NotFoundFault = (): Fault => ({
 });
 
 describe("ArtifactLinkSelectorAutoCompleter", () => {
-    let artifact: LinkableArtifact,
-        recently_viewed_artifact: LinkableArtifact,
+    let first_artifact: LinkableArtifact,
+        second_artifact: LinkableArtifact,
         artifact_retriever: RetrieveMatchingArtifact,
         artifact_retriever_async: ResultAsync<LinkableArtifact, never>,
         fault_notifier: NotifyFaultStub,
         parents_retriever: RetrievePossibleParents,
-        parent_retriever_async: ResultAsync<readonly LinkableArtifact[], never>,
         current_artifact_identifier: CurrentArtifactIdentifier | null,
         current_tracker_identifier: CurrentTrackerIdentifier,
         user_history_retriever: RetrieveUserHistory,
         host: LinkField,
-        user_history_async: ResultAsync<readonly LinkableArtifact[], never>;
+        artifacts_searcher: SearchArtifacts;
 
     const is_search_feature_flag_enabled = true;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
-        artifact = LinkableArtifactStub.withCrossReference(
-            ARTIFACT_ID,
+        first_artifact = LinkableArtifactStub.withCrossReference(
+            FIRST_ARTIFACT_ID,
             "Do some stuff",
-            `story #${ARTIFACT_ID}`,
+            `story #${FIRST_ARTIFACT_ID}`,
             "army-green"
         );
-        recently_viewed_artifact = LinkableArtifactStub.withCrossReference(
-            RECENTLY_VIEWED_ARTIFACT_ID,
+        second_artifact = LinkableArtifactStub.withCrossReference(
+            SECOND_ARTIFACT_ID,
             "A110",
-            `alp #${RECENTLY_VIEWED_ARTIFACT_ID}`,
+            `alp #${SECOND_ARTIFACT_ID}`,
             "daphne-blue"
         );
 
-        artifact_retriever_async = okAsync(artifact);
-        artifact_retriever =
-            RetrieveMatchingArtifactStub.withMatchingArtifact(artifact_retriever_async);
-
         fault_notifier = NotifyFaultStub.withCount();
-
+        artifact_retriever = RetrieveMatchingArtifactStub.withFault(NotFoundFault());
+        user_history_retriever = RetrieveUserHistoryStub.withoutUserHistory();
+        artifacts_searcher = SearchArtifactsStub.withoutResults();
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
 
         current_artifact_identifier = null;
         current_tracker_identifier = CurrentTrackerIdentifierStub.withId(TRACKER_ID);
-
-        user_history_async = okAsync([recently_viewed_artifact, artifact]);
-        user_history_retriever = RetrieveUserHistoryStub.withUserHistory(user_history_async);
 
         const initial_dropdown_content: GroupCollection = [];
         host = {
@@ -111,6 +106,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             recently_viewed_section: initial_dropdown_content,
             matching_artifact_section: initial_dropdown_content,
             possible_parents_section: initial_dropdown_content,
+            search_results_section: initial_dropdown_content,
         } as LinkField;
     });
 
@@ -120,9 +116,10 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             fault_notifier,
             parents_retriever,
             VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
+            user_history_retriever,
+            artifacts_searcher,
             current_artifact_identifier,
             current_tracker_identifier,
-            user_history_retriever,
             UserIdentifierProxyStub.fromUserId(USER_ID),
             is_search_feature_flag_enabled
         );
@@ -145,6 +142,9 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
         it(`when the query of the autocomplete is empty and the user has already seen some artifacts,
             then it will display the recently displayed group ONLY`, async () => {
+            const user_history_async = okAsync([first_artifact, second_artifact]);
+            user_history_retriever = RetrieveUserHistoryStub.withUserHistory(user_history_async);
+
             autocomplete("");
 
             const loading_groups = host.recently_viewed_section;
@@ -160,20 +160,36 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             const group = host.recently_viewed_section[0];
             expect(group.items).toHaveLength(2);
 
-            expect(group.items[0].value).toBe(recently_viewed_artifact);
-            expect(group.items[1].value).toBe(artifact);
+            expect(group.items[0].value).toBe(first_artifact);
+            expect(group.items[1].value).toBe(second_artifact);
         });
 
-        it(`when the query is not empty, it will set an empty group of search results`, () => {
-            autocomplete("a");
+        it(`when the query has at least 3 characters,
+            it will display the search results section`, async () => {
+            const search_async = okAsync([first_artifact, second_artifact]);
+            artifacts_searcher = SearchArtifactsStub.withResults(search_async);
+
+            autocomplete("abc");
+
+            await search_async;
+            await search_async; //There are two level of promise
 
             expect(host.search_results_section).toHaveLength(1);
+            const group = host.search_results_section[0];
+            expect(group.items).toHaveLength(2);
+
+            expect(group.items[0].value).toBe(first_artifact);
+            expect(group.items[1].value).toBe(second_artifact);
         });
 
         it(`when an artifact is returned by the artifact api,
             it will be added to the matching artifact section,
             and clear the fault notification`, async () => {
-            autocomplete(String(ARTIFACT_ID));
+            const artifact_retriever_async = okAsync(first_artifact);
+            artifact_retriever =
+                RetrieveMatchingArtifactStub.withMatchingArtifact(artifact_retriever_async);
+
+            autocomplete(String(FIRST_ARTIFACT_ID));
 
             const loading_groups = host.matching_artifact_section;
             expect(loading_groups).toHaveLength(1);
@@ -188,7 +204,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(groups[0].items).toHaveLength(1);
 
             const matching_artifact = groups[0].items[0];
-            expect(matching_artifact.value).toBe(artifact);
+            expect(matching_artifact.value).toBe(first_artifact);
         });
 
         it(`when an unexpected error is returned by the api (not code 403 or 404),
@@ -197,7 +213,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             const fault = Fault.fromMessage("Nope");
             artifact_retriever = RetrieveMatchingArtifactStub.withFault(fault);
 
-            autocomplete(String(ARTIFACT_ID));
+            autocomplete(String(FIRST_ARTIFACT_ID));
 
             await artifact_retriever_async;
             await artifact_retriever_async; //There are two level of promise
@@ -212,6 +228,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         it(`when an unexpected error is returned by the api,
             then it will set the recently viewed artifact with zero items so that link-selector can show the empty state message
             and notify the fault`, async () => {
+            const user_history_async = okAsync([second_artifact, first_artifact]);
+            user_history_retriever = RetrieveUserHistoryStub.withUserHistory(user_history_async);
             const fault = Fault.fromMessage("Nope");
             user_history_retriever = RetrieveUserHistoryStub.withFault(fault);
 
@@ -253,6 +271,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
     });
 
     describe(`given the selected type is reverse _is_child`, () => {
+        let parent_retriever_async: ResultAsync<readonly LinkableArtifact[], never>;
         beforeEach(() => {
             host.current_link_type = LinkTypeStub.buildParentLinkType();
             parent_retriever_async = okAsync([
@@ -345,7 +364,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         it(`when the query is a number, it will retrieve a matching artifact
                 and also retrieve possible parents
                 and it will set two groups holding each`, async () => {
-            autocomplete(String(ARTIFACT_ID));
+            autocomplete(String(FIRST_ARTIFACT_ID));
 
             await parent_retriever_async;
             await parent_retriever_async; //There are two level of promise

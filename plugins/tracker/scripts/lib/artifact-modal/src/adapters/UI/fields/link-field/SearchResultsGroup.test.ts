@@ -19,6 +19,8 @@
 
 import { setCatalog } from "../../../../gettext-catalog";
 import { SearchResultsGroup } from "./SearchResultsGroup";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 
 describe(`SearchResultsGroup`, () => {
     beforeEach(() => {
@@ -31,5 +33,31 @@ describe(`SearchResultsGroup`, () => {
         expect(group.icon).toBe("");
         expect(group.items).toHaveLength(0);
         expect(group.is_loading).toBe(false);
+    });
+
+    it(`builds an empty loading group so that Link-selector will show a spinner`, () => {
+        const group = SearchResultsGroup.buildLoadingState();
+        expect(group.label).toBe("Search results");
+        expect(group.icon).toBe("");
+        expect(group.items).toHaveLength(0);
+        expect(group.is_loading).toBe(true);
+        expect(group.empty_message).toBe("");
+    });
+
+    it(`builds from an array of Linkable Artifacts`, () => {
+        const first_artifact = LinkableArtifactStub.withDefaults({ id: 718 });
+        const second_artifact = LinkableArtifactStub.withDefaults({ id: 457 });
+        const group = SearchResultsGroup.fromSearchResults(
+            VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
+            [first_artifact, second_artifact]
+        );
+
+        expect(group.label).toBe("Search results");
+        expect(group.icon).toBe("");
+        expect(group.is_loading).toBe(false);
+        expect(group.items).toHaveLength(2);
+        const values = group.items.map((item) => item.value);
+        expect(values).toContain(first_artifact);
+        expect(values).toContain(second_artifact);
     });
 });

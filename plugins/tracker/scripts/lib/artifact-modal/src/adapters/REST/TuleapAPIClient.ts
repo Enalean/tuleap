@@ -21,7 +21,7 @@ import { getJSON, getAllJSON, postJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type { PostFileResponse } from "@tuleap/plugin-tracker-rest-api-types";
-import type { UserHistoryResponse } from "@tuleap/core-rest-api-types";
+import type { UserHistoryResponse, SearchResultEntry } from "@tuleap/core-rest-api-types";
 import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field/RetrieveMatchingArtifact";
@@ -44,6 +44,7 @@ import type { CreateFileUpload } from "../../domain/fields/file-field/CreateFile
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { RetrieveUserHistory } from "../../domain/fields/link-field/RetrieveUserHistory";
 import type { UserIdentifier } from "../../domain/UserIdentifier";
+import type { SearchArtifacts } from "../../domain/fields/link-field/SearchArtifacts";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -55,7 +56,8 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveLinkedArtifactsByType &
     RetrievePossibleParents &
     CreateFileUpload &
-    RetrieveUserHistory;
+    RetrieveUserHistory &
+    SearchArtifacts;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -124,6 +126,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
             })
         );
     },
+
     getUserArtifactHistory(
         user_identifier: UserIdentifier
     ): ResultAsync<readonly LinkableArtifact[], Fault> {
@@ -134,5 +137,15 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
                     .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
             }
         );
+    },
+
+    searchArtifacts(query): ResultAsync<readonly LinkableArtifact[], Fault> {
+        return postJSON<readonly SearchResultEntry[]>(`/api/search?limit=50`, {
+            keywords: query,
+        }).map((results) => {
+            return results
+                .filter((entry) => entry.type === ARTIFACT_TYPE)
+                .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
+        });
     },
 });
