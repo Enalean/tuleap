@@ -31,4 +31,6 @@ interface UGroupRetriever
      * @param string|int $ugroup_id
      */
     public function getUGroup(Project $project, $ugroup_id): ?ProjectUGroup;
+
+    public function getUGroupByName(Project $project, string $name): ?ProjectUGroup;
 }

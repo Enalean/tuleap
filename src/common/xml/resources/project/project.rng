@@ -3080,6 +3080,19 @@
     <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
   </define>
 </div></div>
+  <div><div xmlns="http://relaxng.org/ns/structure/1.0">
+  <define name="mediawiki-standalone">
+    <optional>
+      <element name="read-access">
+        <oneOrMore>
+          <element name="ugroup">
+            <ref name="ugroup_name"/>
+          </element>
+        </oneOrMore>
+      </element>
+    </optional>
+  </define>
+</div></div>
   <start>
     <element name="project">
       <interleave>
@@ -3118,6 +3131,11 @@
         <optional>
           <element name="mediawiki">
             <ref name="mediawiki"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="mediawiki-standalone">
+            <ref name="mediawiki-standalone"/>
           </element>
         </optional>
         <optional>
