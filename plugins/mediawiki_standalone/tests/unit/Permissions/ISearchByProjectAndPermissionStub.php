@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-class ISearchByProjectAndPermissionStub implements ISearchByProjectAndPermission
+final class ISearchByProjectAndPermissionStub implements ISearchByProjectAndPermission
 {
     private function __construct(private array $readers_ugroup_ids)
     {

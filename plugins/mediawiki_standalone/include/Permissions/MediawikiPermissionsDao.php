@@ -24,7 +24,7 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 
 use Tuleap\DB\DataAccessObject;
 
-final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProjectAndPermission, ISaveProjectPermissions
+final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProjectAndPermission, ISaveProjectPermissions, IUpdatePermissionsFollowingSiteAccessChange
 {
     /**
      * @return list<array{ ugroup_id: int }>
@@ -99,6 +99,24 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
                     );
                 }
             }
+        );
+    }
+
+    public function updateAllAnonymousAccessToRegistered(): void
+    {
+        $this->getDB()->update(
+            'plugin_mediawiki_standalone_permissions',
+            ['ugroup_id' => \ProjectUGroup::REGISTERED],
+            ['ugroup_id' => \ProjectUGroup::ANONYMOUS]
+        );
+    }
+
+    public function updateAllAuthenticatedAccessToRegistered(): void
+    {
+        $this->getDB()->update(
+            'plugin_mediawiki_standalone_permissions',
+            ['ugroup_id' => \ProjectUGroup::REGISTERED],
+            ['ugroup_id' => \ProjectUGroup::AUTHENTICATED]
         );
     }
 }

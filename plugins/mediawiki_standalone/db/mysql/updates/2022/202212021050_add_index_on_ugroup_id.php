@@ -20,37 +20,20 @@
 
 declare(strict_types=1);
 
-
-namespace Tuleap\MediawikiStandalone\Permissions;
-
-final class IBuildUserPermissionsStub implements IBuildUserPermissions
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202212021050_add_index_on_ugroup_id extends \Tuleap\ForgeUpgrade\Bucket
 {
-    private function __construct(private UserPermissions $permissions)
+    public function description(): string
     {
+        return 'Add index on ugroup_id to mediawiki standalone permissions table';
     }
 
-    public static function buildWithFullAccess(): self
+    public function up(): void
     {
-        return new self(UserPermissions::fullAccess());
-    }
-
-    public static function buildWithWriter(): self
-    {
-        return new self(UserPermissions::writer());
-    }
-
-    public static function buildWithReader(): self
-    {
-        return new self(UserPermissions::reader());
-    }
-
-    public static function buildWithNoAccess(): self
-    {
-        return new self(UserPermissions::noAccess());
-    }
-
-    public function getPermissions(\PFUser $user, \Project $project): UserPermissions
-    {
-        return $this->permissions;
+        $this->api->addIndex(
+            'plugin_mediawiki_standalone_permissions',
+            'idx_ugroup',
+            'ALTER TABLE plugin_mediawiki_standalone_permissions ADD INDEX idx_ugroup(ugroup_id)'
+        );
     }
 }

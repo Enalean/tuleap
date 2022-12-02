@@ -71,6 +71,7 @@ use Tuleap\MediawikiStandalone\Permissions\Admin\ProjectPermissionsSaver;
 use Tuleap\MediawikiStandalone\Permissions\Admin\RejectNonMediawikiAdministratorMiddleware;
 use Tuleap\MediawikiStandalone\Permissions\Admin\UserGroupToSaveRetriever;
 use Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao;
+use Tuleap\MediawikiStandalone\Permissions\PermissionsFollowingSiteAccessChangeUpdater;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
 use Tuleap\MediawikiStandalone\Permissions\RestrictedUserCanAccessMediaWikiVerifier;
 use Tuleap\MediawikiStandalone\Permissions\UserPermissionsBuilder;
@@ -357,6 +358,9 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         (new \Tuleap\MediawikiStandalone\Instance\SiteAccessHandler(
             new EnqueueTask()
         ))->process();
+
+        (new PermissionsFollowingSiteAccessChangeUpdater(new MediawikiPermissionsDao()))
+            ->updatePermissionsFollowingSiteAccessChange($params['old_value']);
     }
 
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
