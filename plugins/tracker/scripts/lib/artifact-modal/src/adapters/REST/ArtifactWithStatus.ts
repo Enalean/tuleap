@@ -25,7 +25,7 @@ import type {
 
 export type ArtifactWithStatus = Pick<
     ArtifactResponseNoInstance,
-    "id" | "xref" | "title" | "html_url" | "status" | "is_open"
+    "id" | "xref" | "title" | "html_url" | "is_open" | "full_status"
 > & {
     readonly tracker: Pick<TrackerResponseWithColor, "color_name"> & {
         readonly project: Pick<TrackerProjectRepresentation, "id" | "label" | "icon">;

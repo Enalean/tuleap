@@ -27,6 +27,7 @@ const STATUS = "Ongoing";
 const HTML_URI = "/plugins/tracker/?aid=" + ARTIFACT_ID;
 const TRACKER_SHORTNAME = "story";
 const COLOR = "neon-green";
+const STATUS_COLOR = "daphne-blue";
 const CROSS_REFERENCE = `${TRACKER_SHORTNAME} #${ARTIFACT_ID}`;
 
 describe(`LinkedArtifactProxy`, () => {
@@ -34,7 +35,7 @@ describe(`LinkedArtifactProxy`, () => {
         const api_artifact: ArtifactWithStatus = {
             id: ARTIFACT_ID,
             title: TITLE,
-            status: STATUS,
+            full_status: { value: STATUS, color: STATUS_COLOR },
             is_open: true,
             html_url: HTML_URI,
             xref: CROSS_REFERENCE,
@@ -53,7 +54,8 @@ describe(`LinkedArtifactProxy`, () => {
 
         expect(linked_artifact.identifier.id).toBe(ARTIFACT_ID);
         expect(linked_artifact.title).toBe(TITLE);
-        expect(linked_artifact.status).toBe(STATUS);
+        expect(linked_artifact.status?.value).toBe(STATUS);
+        expect(linked_artifact.status?.color).toBe(STATUS_COLOR);
         expect(linked_artifact.is_open).toBe(true);
         expect(linked_artifact.uri).toBe(HTML_URI);
         expect(linked_artifact.xref.ref).toBe(CROSS_REFERENCE);

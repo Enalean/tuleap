@@ -47,7 +47,7 @@ const getStatusBadgeClassesWithRemoval = (artifact: LinkedArtifactPresenter): Ma
 
 const getArtifactTableRowClasses = (artifact: LinkedArtifactPresenter): MapOfClasses => ({
     "link-field-table-row": true,
-    "link-field-table-row-muted": artifact.status !== "" && !artifact.is_open,
+    "link-field-table-row-muted": artifact.status !== null && !artifact.is_open,
 });
 
 const getRemoveClass = (artifact: LinkedArtifactPresenter): string =>
@@ -185,7 +185,7 @@ export const getLinkedArtifactTemplate = (
                     class="${getStatusBadgeClassesWithRemoval(artifact)}"
                     data-test="artifact-status"
                 >
-                    ${artifact.status}
+                    ${artifact.status.value}
                 </span>
             `}
         </td>

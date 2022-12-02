@@ -26,6 +26,7 @@ const TITLE = "chigger";
 const CROSS_REFERENCE = `bugs #${ARTIFACT_ID}`;
 const COLOR: ColorName = "flamingo-pink";
 const STATUS = "Review";
+const COLOR_STATUS = "daphne-blue";
 const HTML_URI = "/plugins/tracker/?aid=" + ARTIFACT_ID;
 const PROJECT = {
     id: 100,
@@ -43,7 +44,7 @@ describe(`LinkableArtifactProxy`, () => {
                 color_name: COLOR,
                 project: PROJECT,
             },
-            status: STATUS,
+            full_status: { value: STATUS, color: COLOR_STATUS },
             is_open: false,
             html_url: HTML_URI,
         };
@@ -54,7 +55,8 @@ describe(`LinkableArtifactProxy`, () => {
         expect(artifact.title).toBe(TITLE);
         expect(artifact.xref.ref).toBe(CROSS_REFERENCE);
         expect(artifact.xref.color).toBe(COLOR);
-        expect(artifact.status).toBe(STATUS);
+        expect(artifact.status?.value).toBe(STATUS);
+        expect(artifact.status?.color).toBe(COLOR_STATUS);
         expect(artifact.is_open).toBe(false);
         expect(artifact.uri).toBe(HTML_URI);
         expect(artifact.project.id).toBe(PROJECT.id);

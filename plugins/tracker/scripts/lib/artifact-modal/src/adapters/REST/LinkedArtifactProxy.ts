@@ -30,7 +30,7 @@ export const LinkedArtifactProxy = {
     ): LinkedArtifact => ({
         identifier: LinkedArtifactIdentifierProxy.fromAPIArtifact(artifact),
         title: artifact.title,
-        status: artifact.status,
+        status: artifact.full_status,
         xref: ArtifactCrossReferenceProxy.fromAPIArtifact(artifact),
         uri: artifact.html_url,
         is_open: artifact.is_open,

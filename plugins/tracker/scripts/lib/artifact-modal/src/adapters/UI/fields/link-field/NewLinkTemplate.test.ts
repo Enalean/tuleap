@@ -76,7 +76,7 @@ describe(`NewLinkTemplate`, () => {
                 title: "brangle",
                 xref: ArtifactCrossReferenceStub.withRefAndColor("release #196", "plum-crazy"),
                 uri: "/plugins/tracker/?aid=196",
-                status: "On Going",
+                status: { value: "On Going", color: null },
                 is_open: true,
                 link_type: LinkTypeStub.buildUntyped(),
             }),
@@ -87,7 +87,7 @@ describe(`NewLinkTemplate`, () => {
                 title: "catoptrite",
                 xref: ArtifactCrossReferenceStub.withRefAndColor("release #246", "plum-crazy"),
                 uri: "/plugins/tracker/?aid=246",
-                status: "Delivered",
+                status: { value: "Delivered", color: null },
                 is_open: false,
                 link_type: LinkTypeStub.buildParentLinkType(),
             }),
@@ -108,7 +108,7 @@ describe(`NewLinkTemplate`, () => {
         expect(xref.classList.contains(`tlp-swatch-${new_link.xref.color}`)).toBe(true);
         expect(xref.textContent?.trim()).toBe(new_link.xref.ref);
         expect(title.textContent?.trim()).toBe(new_link.title);
-        expect(status.textContent?.trim()).toBe(new_link.status);
+        expect(status.textContent?.trim()).toBe(new_link.status?.value);
         expect(type.textContent?.trim()).toBe(expected_type);
 
         expect(row.classList.contains("link-field-table-row-new")).toBe(true);

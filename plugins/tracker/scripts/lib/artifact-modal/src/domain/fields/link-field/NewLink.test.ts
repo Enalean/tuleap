@@ -36,7 +36,7 @@ describe(`NewLink`, () => {
             title: TITLE,
             xref: ArtifactCrossReferenceStub.withRefAndColor(CROSS_REFERENCE, COLOR),
             uri: HTML_URI,
-            status: STATUS,
+            status: { value: STATUS, color: null },
             is_open: true,
         });
 
@@ -53,7 +53,8 @@ describe(`NewLink`, () => {
         expect(new_link.xref.ref).toBe(CROSS_REFERENCE);
         expect(new_link.xref.color).toBe(COLOR);
         expect(new_link.uri).toBe(HTML_URI);
-        expect(new_link.status).toBe(STATUS);
+        expect(new_link.status?.value).toBe(STATUS);
+        expect(new_link.status?.color).toBeNull();
         expect(new_link.is_open).toBe(true);
         expect(new_link.link_type).toStrictEqual(link_type);
     });

@@ -79,7 +79,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     title: "A parent",
                     xref: ArtifactCrossReferenceStub.withRefAndColor("art #123", "red-wine"),
                     uri: "/url/to/artifact/123",
-                    status: "Open",
+                    status: { value: "Open", color: null },
                     is_open: true,
                     link_type: LinkTypeStub.buildParentLinkType(),
                 }),
@@ -94,7 +94,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     title: "A child",
                     xref: ArtifactCrossReferenceStub.withRefAndColor("art #234", "surf-green"),
                     uri: "/url/to/artifact/234",
-                    status: "Closed",
+                    status: { value: "Closed", color: null },
                     is_open: false,
                     link_type: LinkTypeStub.buildUntyped(),
                 }),
@@ -128,7 +128,7 @@ describe(`LinkedArtifactTemplate`, () => {
         expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
         expect(xref.textContent?.trim()).toBe(presenter.xref.ref);
         expect(title.textContent?.trim()).toBe(presenter.title);
-        expect(status.textContent?.trim()).toBe(presenter.status);
+        expect(status.textContent?.trim()).toBe(presenter.status?.value);
         expect(type.textContent?.trim()).toBe(expected_type);
 
         expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
