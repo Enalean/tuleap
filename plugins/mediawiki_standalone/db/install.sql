@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS plugin_mediawiki_standalone_permissions (
     project_id INT NOT NULL,
     permission VARCHAR(10),
     ugroup_id INT NOT NULL,
-    INDEX idx_project(project_id, permission(10))
+    INDEX idx_project(project_id, permission(10)),
+    INDEX idx_ugroup(ugroup_id)
 );
 
 INSERT INTO service(`group_id`, `label`, `description`, `short_name`, `link`, `is_active`, `is_used`, `scope`, `rank`)

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-class ISaveProjectPermissionsStub implements ISaveProjectPermissions
+final class ISaveProjectPermissionsStub implements ISaveProjectPermissions
 {
     /**
      * @var int[]

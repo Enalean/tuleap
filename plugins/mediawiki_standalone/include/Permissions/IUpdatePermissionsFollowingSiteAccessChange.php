@@ -20,37 +20,11 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-final class IBuildUserPermissionsStub implements IBuildUserPermissions
+interface IUpdatePermissionsFollowingSiteAccessChange
 {
-    private function __construct(private UserPermissions $permissions)
-    {
-    }
+    public function updateAllAnonymousAccessToRegistered(): void;
 
-    public static function buildWithFullAccess(): self
-    {
-        return new self(UserPermissions::fullAccess());
-    }
-
-    public static function buildWithWriter(): self
-    {
-        return new self(UserPermissions::writer());
-    }
-
-    public static function buildWithReader(): self
-    {
-        return new self(UserPermissions::reader());
-    }
-
-    public static function buildWithNoAccess(): self
-    {
-        return new self(UserPermissions::noAccess());
-    }
-
-    public function getPermissions(\PFUser $user, \Project $project): UserPermissions
-    {
-        return $this->permissions;
-    }
+    public function updateAllAuthenticatedAccessToRegistered(): void;
 }

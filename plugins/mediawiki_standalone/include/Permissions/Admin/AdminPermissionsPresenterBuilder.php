@@ -61,7 +61,7 @@ final class AdminPermissionsPresenterBuilder
                 $ugroup->getName(),
                 in_array($ugroup->getId(), $ugroup_ids, true)
             ),
-            $this->user_group_factory->getProjectUGroupsWithMembersWithoutNobody($project)
+            $this->user_group_factory->getAllForProjectWithoutNobody($project)
         );
     }
 }

@@ -35,6 +35,9 @@ final class MediawikiPermissionsDaoTest extends TestCase
 
     private MediawikiPermissionsDao $dao;
     private \Project $project;
+    private \ProjectUGroup $anonymous;
+    private \ProjectUGroup $registered;
+    private \ProjectUGroup $authenticated;
     private \ProjectUGroup $project_members;
     private \ProjectUGroup $developers_ugroup;
     private \ProjectUGroup $qa_ugroup;
@@ -44,6 +47,9 @@ final class MediawikiPermissionsDaoTest extends TestCase
         $this->dao = new MediawikiPermissionsDao();
 
         $this->project           = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $this->anonymous         = ProjectUGroupTestBuilder::buildAnonymous();
+        $this->registered        = ProjectUGroupTestBuilder::buildRegistered();
+        $this->authenticated     = ProjectUGroupTestBuilder::buildAuthenticated();
         $this->project_members   = ProjectUGroupTestBuilder::buildProjectMembers();
         $this->developers_ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(self::DEVELOPERS_ID)->build();
         $this->qa_ugroup         = ProjectUGroupTestBuilder::aCustomUserGroup(self::QA_ID)->build();
@@ -67,7 +73,7 @@ final class MediawikiPermissionsDaoTest extends TestCase
 
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
-            array_column($this->dao->searchByProjectAndPermission($this->project, new PermissionRead()), 'ugroup_id'),
+            $this->getReadersUgroupIds($this->project)
         );
     }
 
@@ -85,7 +91,70 @@ final class MediawikiPermissionsDaoTest extends TestCase
 
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, 201],
-            array_column($this->dao->searchByProjectAndPermission($just_created_project, new PermissionRead()), 'ugroup_id'),
+            $this->getReadersUgroupIds($just_created_project)
+        );
+    }
+
+    public function testUpdateAllAnonymousAccessToRegistered(): void
+    {
+        $this->dao->saveProjectPermissions($this->project, [$this->registered]);
+
+        $another_project = ProjectTestBuilder::aProject()->withId(1002)->build();
+        $this->dao->saveProjectPermissions($another_project, [$this->anonymous]);
+
+        $yet_another_project = ProjectTestBuilder::aProject()->withId(1003)->build();
+        $this->dao->saveProjectPermissions($yet_another_project, [$this->project_members, $this->developers_ugroup]);
+
+        $this->dao->updateAllAnonymousAccessToRegistered();
+
+        self::assertEquals(
+            [\ProjectUGroup::REGISTERED],
+            $this->getReadersUgroupIds($this->project)
+        );
+        self::assertEquals(
+            [\ProjectUGroup::REGISTERED],
+            $this->getReadersUgroupIds($another_project)
+        );
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
+            $this->getReadersUgroupIds($yet_another_project)
+        );
+    }
+
+    public function testUpdateAllAuthenticatedAccessToRegistered(): void
+    {
+        $this->dao->saveProjectPermissions($this->project, [$this->registered]);
+
+        $another_project = ProjectTestBuilder::aProject()->withId(1002)->build();
+        $this->dao->saveProjectPermissions($another_project, [$this->authenticated]);
+
+        $yet_another_project = ProjectTestBuilder::aProject()->withId(1003)->build();
+        $this->dao->saveProjectPermissions($yet_another_project, [$this->project_members, $this->developers_ugroup]);
+
+        $this->dao->updateAllAuthenticatedAccessToRegistered();
+
+        self::assertEquals(
+            [\ProjectUGroup::REGISTERED],
+            $this->getReadersUgroupIds($this->project)
+        );
+        self::assertEquals(
+            [\ProjectUGroup::REGISTERED],
+            $this->getReadersUgroupIds($another_project)
+        );
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
+            $this->getReadersUgroupIds($yet_another_project)
+        );
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getReadersUgroupIds(\Project $project): array
+    {
+        return array_column(
+            $this->dao->searchByProjectAndPermission($project, new PermissionRead()),
+            'ugroup_id'
         );
     }
 }

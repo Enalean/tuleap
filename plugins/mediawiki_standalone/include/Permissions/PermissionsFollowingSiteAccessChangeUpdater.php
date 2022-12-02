@@ -20,37 +20,23 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-final class IBuildUserPermissionsStub implements IBuildUserPermissions
+final class PermissionsFollowingSiteAccessChangeUpdater
 {
-    private function __construct(private UserPermissions $permissions)
+    public function __construct(private IUpdatePermissionsFollowingSiteAccessChange $dao)
     {
     }
 
-    public static function buildWithFullAccess(): self
+    /**
+     * @param \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED $old_access
+     */
+    public function updatePermissionsFollowingSiteAccessChange(string $old_access): void
     {
-        return new self(UserPermissions::fullAccess());
-    }
-
-    public static function buildWithWriter(): self
-    {
-        return new self(UserPermissions::writer());
-    }
-
-    public static function buildWithReader(): self
-    {
-        return new self(UserPermissions::reader());
-    }
-
-    public static function buildWithNoAccess(): self
-    {
-        return new self(UserPermissions::noAccess());
-    }
-
-    public function getPermissions(\PFUser $user, \Project $project): UserPermissions
-    {
-        return $this->permissions;
+        if ($old_access === \ForgeAccess::ANONYMOUS) {
+            $this->dao->updateAllAnonymousAccessToRegistered();
+        } elseif ($old_access === \ForgeAccess::RESTRICTED) {
+            $this->dao->updateAllAuthenticatedAccessToRegistered();
+        }
     }
 }

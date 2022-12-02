@@ -94,7 +94,7 @@ class AdminPermissionsControllerTest extends TestCase
             ->willReturn($token);
 
         $user_group_factory = $this->createStub(\User_ForgeUserGroupFactory::class);
-        $user_group_factory->method('getProjectUGroupsWithMembersWithoutNobody')->willReturn([
+        $user_group_factory->method('getAllForProjectWithoutNobody')->willReturn([
             new \User_ForgeUGroup(104, 'Lorem ipsum', ''),
         ]);
 
