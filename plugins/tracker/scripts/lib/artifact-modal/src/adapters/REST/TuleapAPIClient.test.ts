@@ -19,9 +19,11 @@
 
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
+import { okAsync } from "neverthrow";
 import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
+import type { GetAllOptions } from "@tuleap/fetch-result";
 import * as fetch_result from "@tuleap/fetch-result";
 import type { LinkedArtifact } from "../../domain/fields/link-field/LinkedArtifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
@@ -31,8 +33,6 @@ import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableAr
 import { LinkableNumberStub } from "../../../tests/stubs/LinkableNumberStub";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkType } from "../../domain/fields/link-field/LinkType";
-import { okAsync } from "neverthrow";
-import type { GetAllOptions } from "@tuleap/fetch-result";
 import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
@@ -42,19 +42,14 @@ import { UserIdentifierProxyStub } from "../../../tests/stubs/UserIdentifierStub
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
 const ARTIFACT_ID = 90;
+const ARTIFACT_2_ID = 10;
 const FIRST_LINKED_ARTIFACT_ID = 40;
 const SECOND_LINKED_ARTIFACT_ID = 60;
 const ARTIFACT_TITLE = "thio";
 const ARTIFACT_XREF = `story #${ARTIFACT_ID}`;
 const COLOR = "deep-blue";
 const TRACKER_ID = 36;
-const PROJECT = {
-    id: 100,
-    label: "Guinea Pig",
-    icon: "🐹",
-};
-const ARTIFACT_2_ID = 10;
-const ARTIFACT_3_ID = 1158;
+const PROJECT = { id: 179, label: "Guinea Pig", icon: "🐹" };
 
 describe(`TuleapAPIClient`, () => {
     describe(`getParent()`, () => {
@@ -278,35 +273,20 @@ describe(`TuleapAPIClient`, () => {
             });
         });
     });
+
     describe("getUserArtifactHistory()", () => {
         const USER_ID = 102;
         const getUserArtifactHistory = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
             const client = TuleapAPIClient();
             return client.getUserArtifactHistory(UserIdentifierProxyStub.fromUserId(USER_ID));
         };
-        it(`will return user history entries which are "artefact" type as linkable artifact`, async () => {
-            const first_entry = {
-                per_type_id: ARTIFACT_ID,
-                type: ARTIFACT_TYPE,
-                badges: [],
-            };
-
-            const second_entry = {
-                per_type_id: ARTIFACT_2_ID,
-                type: ARTIFACT_TYPE,
-                badges: [],
-            };
-
-            const third_entry = {
-                per_type_id: ARTIFACT_3_ID,
-                type: "kanban",
-                badges: [],
-            };
-
-            const history = { entries: [first_entry, second_entry, third_entry] };
+        it(`will return user history entries which are "artifact" type as linkable artifact`, async () => {
+            const first_entry = { per_type_id: ARTIFACT_ID, type: ARTIFACT_TYPE, badges: [] };
+            const second_entry = { per_type_id: ARTIFACT_2_ID, type: ARTIFACT_TYPE, badges: [] };
+            const third_entry = { per_type_id: 1158, type: "kanban", badges: [] };
 
             const getSpy = jest.spyOn(fetch_result, "getJSON");
-            getSpy.mockReturnValue(okAsync(history));
+            getSpy.mockReturnValue(okAsync({ entries: [first_entry, second_entry, third_entry] }));
 
             const result = await getUserArtifactHistory();
 
@@ -318,6 +298,38 @@ describe(`TuleapAPIClient`, () => {
             expect(first_returned_artifact.id).toBe(ARTIFACT_ID);
             expect(second_returned_artifact.id).toBe(ARTIFACT_2_ID);
             expect(getSpy).toHaveBeenCalledWith(`/api/v1/users/${USER_ID}/history`);
+        });
+    });
+
+    describe(`searchArtifacts()`, () => {
+        const SEARCH_QUERY = "bookwright";
+
+        const searchArtifacts = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
+            const client = TuleapAPIClient();
+            return client.searchArtifacts(SEARCH_QUERY);
+        };
+
+        it(`will return search results with type "artifact" as linkable artifacts`, async () => {
+            const first_entry = { per_type_id: ARTIFACT_ID, type: ARTIFACT_TYPE, badges: [] };
+            const second_entry = { per_type_id: ARTIFACT_2_ID, type: ARTIFACT_TYPE, badges: [] };
+            const third_entry = { per_type_id: 84, type: "kanban", badges: [] };
+
+            const postSpy = jest
+                .spyOn(fetch_result, "postJSON")
+                .mockReturnValue(okAsync([first_entry, second_entry, third_entry]));
+
+            const result = await searchArtifacts();
+
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_artifact, second_artifact] = result.value;
+            expect(first_artifact.id).toBe(ARTIFACT_ID);
+            expect(second_artifact.id).toBe(ARTIFACT_2_ID);
+            expect(postSpy).toHaveBeenCalledWith(`/api/search?limit=50`, {
+                keywords: SEARCH_QUERY,
+            });
         });
     });
 });

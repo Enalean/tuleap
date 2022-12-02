@@ -179,9 +179,10 @@ function ArtifactModalController(
                     fault_feedback_controller,
                     possible_parents_cache,
                     already_linked_verifier,
+                    user_history_cache,
+                    api_client,
                     current_artifact_identifier,
                     current_tracker_identifier,
-                    user_history_cache,
                     UserIdentifierProxy.fromUserId(modal_model.user_id),
                     modal_model.is_search_enabled
                 ),

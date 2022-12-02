@@ -39,6 +39,7 @@ import type { RetrieveUserHistory } from "../../../../domain/fields/link-field/R
 import type { UserIdentifier } from "../../../../domain/UserIdentifier";
 import { SearchResultsGroup } from "./SearchResultsGroup";
 import { UserHistoryRetrievalFault } from "../../../../domain/fields/link-field/UserHistoryRetrievalFault";
+import type { SearchArtifacts } from "../../../../domain/fields/link-field/SearchArtifacts";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
@@ -51,14 +52,17 @@ const isExpectedFault = (fault: Fault): boolean =>
 const isParentSelected = (host: LinkField): boolean =>
     LinkType.isReverseChild(host.current_link_type);
 
+const SEARCH_QUERY_MINIMUM_LENGTH = 3;
+
 export const ArtifactLinkSelectorAutoCompleter = (
     retrieve_matching_artifact: RetrieveMatchingArtifact,
     fault_notifier: NotifyFault,
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
+    user_history_retriever: RetrieveUserHistory,
+    artifacts_searcher: SearchArtifacts,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
-    user_history_retriever: RetrieveUserHistory,
     user: UserIdentifier,
     is_search_feature_flag_enabled: boolean
 ): ArtifactLinkSelectorAutoCompleterType => {
@@ -76,6 +80,16 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 }
             );
     };
+
+    const getSearchResults = (query: string): PromiseLike<GroupOfItems> =>
+        artifacts_searcher.searchArtifacts(query).match(
+            (artifacts) => SearchResultsGroup.fromSearchResults(link_verifier, artifacts),
+            (fault) => {
+                // eslint-disable-next-line no-console
+                console.log(String(fault));
+                return SearchResultsGroup.buildEmpty();
+            }
+        );
 
     const getMatchingArtifactsGroup = (
         linkable_number: LinkableNumber
@@ -143,8 +157,13 @@ export const ArtifactLinkSelectorAutoCompleter = (
                         host.recently_viewed_section = [group];
                     }
                 });
-                if (query.length > 0) {
-                    host.search_results_section = [SearchResultsGroup.buildEmpty()];
+                if (query.length >= SEARCH_QUERY_MINIMUM_LENGTH) {
+                    host.search_results_section = [SearchResultsGroup.buildLoadingState()];
+                    getSearchResults(query).then((group) => {
+                        if (!isParentSelected(host)) {
+                            host.search_results_section = [group];
+                        }
+                    });
                 }
             }
             if (is_parent_selected) {
