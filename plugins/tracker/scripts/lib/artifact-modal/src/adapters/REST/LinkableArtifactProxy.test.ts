@@ -82,7 +82,7 @@ describe(`LinkableArtifactProxy`, () => {
         expect(artifact.title).toBe(TITLE);
         expect(artifact.xref.ref).toBe(CROSS_REFERENCE);
         expect(artifact.xref.color).toBe(COLOR);
-        expect(artifact.status).toBe(STATUS);
+        expect(artifact.status).toStrictEqual({ value: STATUS, color: null });
         expect(artifact.is_open).toBe(true);
         expect(artifact.uri).toBe(HTML_URI);
         expect(artifact.project.id).toBe(PROJECT.id);
