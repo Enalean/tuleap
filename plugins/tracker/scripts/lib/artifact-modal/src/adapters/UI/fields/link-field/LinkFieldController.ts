@@ -70,6 +70,7 @@ export type LinkFieldControllerType = {
     retrievePossibleParentsGroups(): PromiseLike<GroupCollection>;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
     clearFaultNotification(): void;
+    is_search_feature_flag_enabled: boolean;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -111,8 +112,11 @@ export const LinkFieldController = (
     current_artifact_reference: ArtifactCrossReference | null,
     control_popovers: ControlLinkedArtifactsPopovers,
     allowed_links_types_collection: CollectAllowedLinksTypes,
-    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy
+    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy,
+    is_search_feature_flag_enabled: boolean
 ): LinkFieldControllerType => ({
+    is_search_feature_flag_enabled,
+
     displayField: () =>
         LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
 

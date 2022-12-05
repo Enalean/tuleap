@@ -44,6 +44,7 @@ describe("KeyboardNavigationManager", () => {
         const { dropdown_list_element } = new BaseComponentRenderer(
             doc,
             source_select_box,
+            "",
             ""
         ).renderBaseComponent();
         dropdown_list = dropdown_list_element;

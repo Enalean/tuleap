@@ -50,6 +50,7 @@ describe("SelectionManager", () => {
             new BaseComponentRenderer(
                 document.implementation.createHTMLDocument(),
                 source_select_box,
+                "",
                 ""
             ).renderBaseComponent();
 

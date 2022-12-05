@@ -46,6 +46,7 @@ describe("DropDownContentRenderer", () => {
             const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
                 document.implementation.createHTMLDocument(),
                 select,
+                "",
                 ""
             ).renderBaseComponent();
 

@@ -173,7 +173,8 @@ describe(`NewLinkTemplate`, () => {
                 ArtifactCrossReferenceStub.withRef("bug #22"),
                 ControlLinkedArtifactsPopoversStub.build(),
                 AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types),
-                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
+                is_search_feature_flag_enabled
             );
 
             return {

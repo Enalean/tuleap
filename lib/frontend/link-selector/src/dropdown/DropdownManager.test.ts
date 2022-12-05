@@ -25,7 +25,7 @@ import type { ScrollingManager } from "../events/ScrollingManager";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 describe("dropdown-manager", () => {
-    let doc: HTMLDocument,
+    let doc: Document,
         wrapper: HTMLElement,
         link_selector: Element,
         dropdown: HTMLElement,
@@ -56,7 +56,7 @@ describe("dropdown-manager", () => {
             dropdown_element,
             dropdown_list_element,
             selection_element,
-        } = new BaseComponentRenderer(doc, source_select_box, "").renderBaseComponent();
+        } = new BaseComponentRenderer(doc, source_select_box, "", "").renderBaseComponent();
 
         scroll_manager = {
             lockScrolling: vi.fn(),

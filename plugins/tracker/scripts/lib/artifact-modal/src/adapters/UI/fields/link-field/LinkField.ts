@@ -25,7 +25,9 @@ import {
     getLinkFieldNoteText,
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
-    getParentLinkSelectorPlaceholderText,
+    getLinkSelectorSearchPlaceholderText,
+    getOldLinkSelectorPlaceholderText,
+    getOldParentLinkSelectorPlaceholderText,
 } from "../../../../gettext-catalog";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
@@ -165,11 +167,14 @@ export const current_link_type_descriptor = {
         if (!link_type) {
             return LinkType.buildUntyped();
         }
-        if (!LinkType.isReverseChild(link_type)) {
-            host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
+        if (!host.controller.is_search_feature_flag_enabled) {
+            if (!LinkType.isReverseChild(link_type)) {
+                host.link_selector.setPlaceholder(getOldLinkSelectorPlaceholderText());
+                return link_type;
+            }
+            host.link_selector.setPlaceholder(getOldParentLinkSelectorPlaceholderText());
             return link_type;
         }
-        host.link_selector.setPlaceholder(getParentLinkSelectorPlaceholderText());
         return link_type;
     },
     observe: (host: LinkField): void => {
@@ -246,7 +251,9 @@ export const LinkField = define<LinkField>({
             });
 
             host.link_selector = createLinkSelector(host.artifact_link_select, {
-                search_field_callback: (link_selector, query) => {
+                placeholder: getLinkSelectorPlaceholderText(),
+                search_input_placeholder: getLinkSelectorSearchPlaceholderText(),
+                search_field_callback: (query) => {
                     host.controller.clearFaultNotification();
                     return controller.autoComplete(host, query);
                 },
