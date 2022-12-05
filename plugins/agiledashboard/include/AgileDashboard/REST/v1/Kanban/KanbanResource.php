@@ -1217,7 +1217,7 @@ class KanbanResource extends AuthenticatedResource
         }
         if (\ForgeConfig::getFeatureFlag('enable_mercure_dev')) {
             $mercure_message = new MercureMessageDataPresenter(
-                'kanban/' . $kanban->getId() . '/',
+                'kanban/' . $kanban->getId(),
                 '{"cmd":[{"kanban":"delete"}]}'
             );
             $this->mercure_client->sendMessage($mercure_message);

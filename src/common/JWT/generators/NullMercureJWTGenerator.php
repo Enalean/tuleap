@@ -22,11 +22,20 @@ namespace Tuleap\JWT\generators;
 
 use Tuleap\Cryptography\ConcealedString;
 
-interface MercureJWTGenerator
+class NullMercureJWTGenerator implements MercureJWTGenerator
 {
-    public function getTokenWithSubscription(string $app_name, int $id, \PFUser $user): ?ConcealedString;
+    public function getTokenWithSubscription(string $app_name, int $id, \PFUser $user): ?ConcealedString
+    {
+        return null;
+    }
 
-    public function getTokenWithoutSubscription(string $app_name, int $id, \PFUser $user): ?ConcealedString;
+    public function getTokenWithoutSubscription(string $app_name, int $id, \PFUser $user): ?ConcealedString
+    {
+        return null;
+    }
 
-    public function getTokenBackend(): ?ConcealedString;
+    public function getTokenBackend(): ?ConcealedString
+    {
+        return null;
+    }
 }

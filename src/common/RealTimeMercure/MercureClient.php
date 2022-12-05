@@ -58,9 +58,13 @@ class MercureClient implements Client
             'private' => 'on',
         ];
         $auth_string   = $this->jwt_generator->getTokenBackend();
-        $request_body  = $this->stream_factory->createStream(http_build_query($request_table));
-        $request       = $this->request_factory->createRequest('POST', self::MERCURE_LOCAL_URL)
-            ->withHeader('Authorization', 'Bearer ' . $auth_string)
+        if ($auth_string === null) {
+            $this->logger->error('Error while generating mercure authentication token generation');
+            return;
+        }
+        $request_body = $this->stream_factory->createStream(http_build_query($request_table));
+        $request      = $this->request_factory->createRequest('POST', self::MERCURE_LOCAL_URL)
+            ->withHeader('Authorization', 'Bearer ' . $auth_string->getString())
             ->withHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8')
             ->withBody($request_body);
         try {

@@ -29,7 +29,8 @@ use Psr\Log\Test\TestLogger;
 use Psr\Http\Client\ClientExceptionInterface;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\JWT\generators\MercureJWTGenerator;
+use Tuleap\JWT\generators\MercureJWTGeneratorImpl;
+use Tuleap\JWT\generators\NullMercureJWTGenerator;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
@@ -42,7 +43,7 @@ final class MercureClientTest extends TestCase
 
     /** @var UGroupLiteralizer */
 
-    /** @var  MercureJWTGenerator */
+    /** @var  MercureJWTGeneratorImpl */
     private $mercure_jwt_generator;
 
     /**
@@ -60,7 +61,7 @@ final class MercureClientTest extends TestCase
 
 
         $this->jwt_configuration     = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
-        $this->mercure_jwt_generator = new MercureJWTGenerator($this->jwt_configuration, $this->user_manager);
+        $this->mercure_jwt_generator = new MercureJWTGeneratorImpl($this->jwt_configuration);
     }
 
     public function testMessageIsTransmittedToRealTimeMercureServer(): void
@@ -133,5 +134,28 @@ final class MercureClientTest extends TestCase
             )
         );
         $this->assertTrue($logger->hasError(sprintf('Mercure server has not processed a message: %d %s', $http_response->getStatusCode(), $http_response->getReasonPhrase())));
+    }
+
+    public function testNoMercureGenerator(): void
+    {
+        $http_client           = new \Http\Mock\Client();
+        $logger                = new TestLogger();
+        $mercure_jwt_generator = new NullMercureJWTGenerator();
+        $mercure_client        = new MercureClient(
+            $http_client,
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            $logger,
+            $mercure_jwt_generator
+        );
+        $http_response         = HTTPFactoryBuilder::responseFactory()->createResponse(403);
+        $http_client->addResponse($http_response);
+        $mercure_client->sendMessage(
+            new MercureMessageDataPresenter(
+                'test/test',
+                'test_test_test_test_test'
+            )
+        );
+        $this->assertTrue($logger->hasError('Error while generating mercure authentication token generation'));
     }
 }
