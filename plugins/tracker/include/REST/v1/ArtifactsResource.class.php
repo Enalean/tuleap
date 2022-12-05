@@ -550,7 +550,7 @@ class ArtifactsResource extends AuthenticatedResource
                 $user,
                 $linked_artifact,
                 $tracker_representation,
-                StatusValueRepresentation::buildFromArtifact($artifact, $user)
+                StatusValueRepresentation::buildFromArtifact($linked_artifact, $user)
             );
         }
 
