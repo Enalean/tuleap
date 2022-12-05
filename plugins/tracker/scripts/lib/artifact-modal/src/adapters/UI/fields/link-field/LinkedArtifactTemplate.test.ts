@@ -19,7 +19,7 @@
 
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import type { HostElement } from "./LinkField";
-import { getLinkedArtifactTemplate, getActionButton } from "./LinkedArtifactTemplate";
+import { getActionButton, getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { setCatalog } from "../../../../gettext-catalog";
@@ -54,6 +54,7 @@ import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifi
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
+import { selectOrThrow } from "@tuleap/dom";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -105,25 +106,14 @@ describe(`LinkedArtifactTemplate`, () => {
     ])(`will render a linked artifact`, (_type_of_presenter, presenter) => {
         render(presenter);
 
-        const row = target.querySelector("[data-test=artifact-row]");
-        const link = target.querySelector("[data-test=artifact-link]");
-        const xref = target.querySelector("[data-test=artifact-xref]");
-        const title = target.querySelector("[data-test=artifact-title]");
-        const status = target.querySelector("[data-test=artifact-status]");
-        const type = target.querySelector("[data-test=artifact-link-type]");
+        const row = selectOrThrow(target, "[data-test=artifact-row]");
+        const link = selectOrThrow(target, "[data-test=artifact-link]", HTMLAnchorElement);
+        const xref = selectOrThrow(target, "[data-test=artifact-xref]");
+        const title = selectOrThrow(target, "[data-test=artifact-title]");
+        const status = selectOrThrow(target, "[data-test=artifact-status]");
+        const type = selectOrThrow(target, "[data-test=artifact-link-type]");
         const expected_type =
             presenter.link_type.shortname === "" ? "Linked to" : presenter.link_type.label;
-
-        if (
-            !(row instanceof HTMLElement) ||
-            !(link instanceof HTMLAnchorElement) ||
-            !(xref instanceof HTMLElement) ||
-            !(title instanceof HTMLElement) ||
-            !(status instanceof HTMLElement) ||
-            !(type instanceof HTMLElement)
-        ) {
-            throw new Error("An expected element has not been found in template");
-        }
 
         expect(link.href).toBe(presenter.uri);
         expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
@@ -152,32 +142,19 @@ describe(`LinkedArtifactTemplate`, () => {
         );
         render(presenter);
 
-        const row = target.querySelector("[data-test=artifact-row]");
-        const link = target.querySelector("[data-test=artifact-link]");
-        const xref = target.querySelector("[data-test=artifact-xref]");
-        const title = target.querySelector("[data-test=artifact-title]");
-        const status = target.querySelector("[data-test=artifact-status]");
-        const type = target.querySelector("[data-test=artifact-link-type]");
-        const expected_type =
-            presenter.link_type.shortname === "" ? "Linked to" : presenter.link_type.label;
-
-        if (
-            !(row instanceof HTMLElement) ||
-            !(link instanceof HTMLAnchorElement) ||
-            !(xref instanceof HTMLElement) ||
-            !(title instanceof HTMLElement) ||
-            !(status instanceof HTMLElement) ||
-            !(type instanceof HTMLElement)
-        ) {
-            throw new Error("An expected element has not been found in template");
-        }
+        const row = selectOrThrow(target, "[data-test=artifact-row]");
+        const link = selectOrThrow(target, "[data-test=artifact-link]", HTMLAnchorElement);
+        const xref = selectOrThrow(target, "[data-test=artifact-xref]");
+        const title = selectOrThrow(target, "[data-test=artifact-title]");
+        const status = selectOrThrow(target, "[data-test=artifact-status]");
+        const type = selectOrThrow(target, "[data-test=artifact-link-type]");
 
         expect(link.href).toBe(presenter.uri);
         expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
         expect(xref.textContent?.trim()).toBe(presenter.xref.ref);
         expect(title.textContent?.trim()).toBe(presenter.title);
         expect(status.textContent?.trim()).toBe(presenter.status?.value);
-        expect(type.textContent?.trim()).toBe(expected_type);
+        expect(type.textContent?.trim()).toBe(presenter.link_type.label);
 
         expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
@@ -198,7 +175,6 @@ describe(`LinkedArtifactTemplate`, () => {
             const notification_clearer = ClearFaultNotificationStub.withCount();
             const parents_retriever = RetrievePossibleParentsStub.withoutParents();
             const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
-            const is_search_feature_flag_enabled = true;
 
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
@@ -219,8 +195,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     SearchArtifactsStub.withoutResults(),
                     current_artifact_identifier,
                     current_tracker_identifier,
-                    UserIdentifierProxyStub.fromUserId(101),
-                    is_search_feature_flag_enabled
+                    UserIdentifierProxyStub.fromUserId(101)
                 ),
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
@@ -239,8 +214,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 ArtifactCrossReferenceStub.withRef("story #72"),
                 ControlLinkedArtifactsPopoversStub.build(),
                 AllowedLinksTypesCollection.buildFromTypesRepresentations([]),
-                VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
-                is_search_feature_flag_enabled
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
             );
 
             return {

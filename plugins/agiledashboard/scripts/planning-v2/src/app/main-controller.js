@@ -55,7 +55,6 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
             planning_init_data.trackersIdsHavingListPickerDisabled
         );
         SharedPropertiesService.setTrackersDisablingListPicker(trackers_disabling_list_picker);
-        SharedPropertiesService.setSearchEnabled(planning_init_data.isSearchEnabled === "1");
 
         const language = planning_init_data.language;
         initLocale(language);

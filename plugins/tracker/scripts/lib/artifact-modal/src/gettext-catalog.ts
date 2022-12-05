@@ -88,10 +88,6 @@ export const getParentFetchErrorMessage = (): string =>
     gettextCatalog.getString("Unable to retrieve the parent artifact: %s");
 export const getMatchingArtifactLabel = (): string => gettextCatalog.getString("Matching artifact");
 export const getNoResultFoundEmptyState = (): string => gettextCatalog.getString("No result found");
-export const getOldLinkSelectorPlaceholderText = (): string =>
-    gettextCatalog.getString("Artifact id");
-export const getOldParentLinkSelectorPlaceholderText = (): string =>
-    gettextCatalog.getString("Artifact id or title");
 export const getLinkSelectorPlaceholderText = (): string =>
     gettextCatalog.getString("Search for an artifact...");
 export const getLinkSelectorSearchPlaceholderText = (): string =>
