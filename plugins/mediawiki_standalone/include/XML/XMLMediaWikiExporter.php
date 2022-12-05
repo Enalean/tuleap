@@ -53,6 +53,7 @@ final class XMLMediaWikiExporter
 
         $this->exportReadPermissions($project, $xml_content, $project_permissions);
         $this->exportWritePermissions($project, $xml_content, $project_permissions);
+        $this->exportAdminPermissions($project, $xml_content, $project_permissions);
     }
 
     private function exportReadPermissions(\Project $project, \SimpleXMLElement $xml_content, ProjectPermissions $project_permissions): void
@@ -71,6 +72,15 @@ final class XMLMediaWikiExporter
         }
 
         $this->addUGroupChildren($project, $xml_content->addChild('write-access'), $project_permissions->writers);
+    }
+
+    private function exportAdminPermissions(\Project $project, \SimpleXMLElement $xml_content, ProjectPermissions $project_permissions): void
+    {
+        if (empty($project_permissions->admins)) {
+            return;
+        }
+
+        $this->addUGroupChildren($project, $xml_content->addChild('admin-access'), $project_permissions->admins);
     }
 
     private function addUGroupChildren(\Project $project, \SimpleXMLElement $xml_content, array $ugroup_ids): void

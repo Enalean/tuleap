@@ -24,6 +24,7 @@ namespace Tuleap\MediawikiStandalone\XML;
 
 use Psr\Log\NullLogger;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\MediawikiStandalone\Permissions\AdminsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
@@ -58,6 +59,9 @@ final class XMLMediaWikiExporterTest extends TestCase
             [
                 $developers->getId(),
             ],
+            [
+                $project_members->getId(),
+            ],
         );
 
         $exporter = new XMLMediaWikiExporter(
@@ -65,6 +69,7 @@ final class XMLMediaWikiExporterTest extends TestCase
             new ProjectPermissionsRetriever(
                 new ReadersRetriever($dao),
                 new WritersRetriever($dao),
+                new AdminsRetriever($dao),
             ),
             UGroupRetrieverStub::buildWithUserGroups($project_members, $developers)
         );
@@ -84,5 +89,8 @@ final class XMLMediaWikiExporterTest extends TestCase
 
         self::assertCount(1, $xml->{'mediawiki-standalone'}->{'write-access'}->ugroup);
         self::assertEquals('Developers', (string) $xml->{'mediawiki-standalone'}->{'write-access'}->ugroup[0]);
+
+        self::assertCount(1, $xml->{'mediawiki-standalone'}->{'admin-access'}->ugroup);
+        self::assertEquals('project_members', (string) $xml->{'mediawiki-standalone'}->{'admin-access'}->ugroup[0]);
     }
 }

@@ -49,9 +49,10 @@ final class XMLMediaWikiImporter
     {
         $readers = $this->getReaders($project, $xml_mediawiki);
         $writers = $this->getWriters($project, $xml_mediawiki);
+        $admins  = $this->getAdmins($project, $xml_mediawiki);
 
         if (count($readers) > 0 || count($writers) > 0) {
-            $this->permissions_saver->saveProjectPermissions($project, $readers, $writers);
+            $this->permissions_saver->saveProjectPermissions($project, $readers, $writers, $admins);
         }
     }
 
@@ -87,6 +88,23 @@ final class XMLMediaWikiImporter
         $this->logFoundUGroups($project, $writers);
 
         return $writers;
+    }
+
+    /**
+     * @return \ProjectUGroup[]
+     */
+    private function getAdmins(\Project $project, \SimpleXMLElement $xml_mediawiki): array
+    {
+        $admins = [];
+
+        if ($xml_mediawiki->{'admin-access'}) {
+            $this->logger->info("Importing admin access rights for {$project->getUnixName()}");
+            $admins = $this->getUgroupsForPermissions($project, $xml_mediawiki->{'admin-access'});
+        }
+
+        $this->logFoundUGroups($project, $admins);
+
+        return $admins;
     }
 
     private function logFoundUGroups(\Project $project, array $ugroups): void

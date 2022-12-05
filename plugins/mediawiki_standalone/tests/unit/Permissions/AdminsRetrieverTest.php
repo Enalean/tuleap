@@ -22,21 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-final class WritersRetriever
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+class AdminsRetrieverTest extends TestCase
 {
-    public function __construct(private ISearchByProjectAndPermission $dao)
+    public function testGetAdminsUgroupIdsAlwaysIncludesProjectAdmin(): void
     {
-    }
+        $retriever = new AdminsRetriever(
+            ISearchByProjectAndPermissionStub::buildWithPermissions(
+                [],
+                [],
+                [103, 104],
+            )
+        );
 
-    /**
-     * @return int[]
-     */
-    public function getWritersUgroupIds(\Project $project): array
-    {
-        $writers = array_column($this->dao->searchByProjectAndPermission($project, new PermissionWrite()), 'ugroup_id');
-
-        return empty($writers)
-            ? [\ProjectUGroup::PROJECT_MEMBERS]
-            : $writers;
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_ADMIN, 103, 104],
+            $retriever->getAdminsUgroupIds(ProjectTestBuilder::aProject()->build())
+        );
     }
 }

@@ -51,6 +51,10 @@ final class AdminPermissionsPresenterBuilder
                 $project_permissions->writers,
                 $this->user_group_factory->getAllForProjectWithoutNobodyNorAnonymous($project),
             ),
+            $this->getUserGroupsPresenter(
+                $project_permissions->admins,
+                $this->user_group_factory->getProjectUGroupsWithMembersWithoutNobody($project),
+            ),
         );
     }
 

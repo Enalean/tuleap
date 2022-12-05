@@ -27,6 +27,7 @@ final class ProjectPermissionsRetriever
     public function __construct(
         private ReadersRetriever $readers_retriever,
         private WritersRetriever $writers_retriever,
+        private AdminsRetriever $admins_retriever,
     ) {
     }
 
@@ -35,6 +36,7 @@ final class ProjectPermissionsRetriever
         return new ProjectPermissions(
             $this->readers_retriever->getReadersUgroupIds($project),
             $this->writers_retriever->getWritersUgroupIds($project),
+            $this->admins_retriever->getAdminsUgroupIds($project),
         );
     }
 }

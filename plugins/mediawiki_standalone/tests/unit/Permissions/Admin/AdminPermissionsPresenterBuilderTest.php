@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
+use Tuleap\MediawikiStandalone\Permissions\AdminsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
@@ -36,7 +37,6 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
     {
         $project = ProjectTestBuilder::aProject()->build();
         $ugroups = [
-            new \User_ForgeUGroup(\ProjectUGroup::REGISTERED, 'Registered users', ''),
             new \User_ForgeUGroup(\ProjectUGroup::PROJECT_MEMBERS, 'Project members', ''),
             new \User_ForgeUGroup(104, 'Developers', ''),
             new \User_ForgeUGroup(105, 'Integrators', ''),
@@ -48,21 +48,30 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
             ->method('getAllForProjectWithoutNobody')
             ->willReturn([
                 new \User_ForgeUGroup(\ProjectUGroup::ANONYMOUS, 'All users', ''),
+                new \User_ForgeUGroup(\ProjectUGroup::REGISTERED, 'Registered users', ''),
                 ...$ugroups,
             ]);
         $ugroup_factory
             ->method('getAllForProjectWithoutNobodyNorAnonymous')
+            ->willReturn([
+                new \User_ForgeUGroup(\ProjectUGroup::REGISTERED, 'Registered users', ''),
+                ...$ugroups,
+            ]);
+        $ugroup_factory
+            ->method('getProjectUGroupsWithMembersWithoutNobody')
             ->willReturn($ugroups);
 
         $dao = ISearchByProjectAndPermissionStub::buildWithPermissions(
             [104, 105],
-            [\ProjectUGroup::PROJECT_MEMBERS, 106]
+            [\ProjectUGroup::PROJECT_MEMBERS, 106],
+            [105],
         );
 
         $builder = new AdminPermissionsPresenterBuilder(
             new ProjectPermissionsRetriever(
                 new ReadersRetriever($dao),
                 new WritersRetriever($dao),
+                new AdminsRetriever($dao),
             ),
             $ugroup_factory,
         );
@@ -100,6 +109,21 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
             array_map(
                 static fn(UserGroupPresenter $presenter) => $presenter->is_selected,
                 $presenter->writers
+            )
+        );
+
+        self::assertSame(
+            [\ProjectUGroup::PROJECT_MEMBERS, 104, 105, 106],
+            array_map(
+                static fn(UserGroupPresenter $presenter) => $presenter->id,
+                $presenter->admins
+            )
+        );
+        self::assertSame(
+            [false, false, true, false],
+            array_map(
+                static fn(UserGroupPresenter $presenter) => $presenter->is_selected,
+                $presenter->admins
             )
         );
     }

@@ -46,9 +46,12 @@ class ProjectPermissionsSaverTest extends TestCase
         $writers = [
             ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('Developers')->build(),
         ];
+        $admins  = [
+            ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('Developers')->build(),
+        ];
 
         $history_dao
-            ->expects(self::exactly(2))
+            ->expects(self::exactly(3))
             ->method('groupAddHistory')
             ->withConsecutive(
                 [
@@ -61,12 +64,18 @@ class ProjectPermissionsSaverTest extends TestCase
                     'Developers',
                     self::PROJECT_ID,
                 ],
+                [
+                    'perm_granted_for_mediawiki_standalone_admins',
+                    'Developers',
+                    self::PROJECT_ID,
+                ],
             );
 
         $saver->save(
             ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build(),
             $readers,
             $writers,
+            $admins,
         );
 
         self::assertEquals(
@@ -77,6 +86,11 @@ class ProjectPermissionsSaverTest extends TestCase
         self::assertEquals(
             [102],
             $permissions_dao->getCapturedWritersUgroupIds()
+        );
+
+        self::assertEquals(
+            [102],
+            $permissions_dao->getCapturedAdminsUgroupIds()
         );
     }
 }

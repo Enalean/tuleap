@@ -29,7 +29,13 @@ class WritersRetrieverTest extends TestCase
 {
     public function testGetWritersUgroupIds(): void
     {
-        $retriever = new WritersRetriever(ISearchByProjectAndPermissionStub::buildWithPermissions([], [103, 104]));
+        $retriever = new WritersRetriever(
+            ISearchByProjectAndPermissionStub::buildWithPermissions(
+                [],
+                [103, 104],
+                [],
+            )
+        );
 
         self::assertEquals(
             [103, 104],

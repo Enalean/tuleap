@@ -70,6 +70,7 @@ use Tuleap\MediawikiStandalone\Permissions\Admin\PermissionPerGroupServicePaneBu
 use Tuleap\MediawikiStandalone\Permissions\Admin\ProjectPermissionsSaver;
 use Tuleap\MediawikiStandalone\Permissions\Admin\RejectNonMediawikiAdministratorMiddleware;
 use Tuleap\MediawikiStandalone\Permissions\Admin\UserGroupToSaveRetriever;
+use Tuleap\MediawikiStandalone\Permissions\AdminsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao;
 use Tuleap\MediawikiStandalone\Permissions\PermissionsFollowingSiteAccessChangeUpdater;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
@@ -212,6 +213,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             new ProjectPermissionsRetriever(
                 new ReadersRetriever($dao),
                 new WritersRetriever($dao),
+                new AdminsRetriever($dao),
             ),
             new UGroupManager(),
         ))->exportToXml(
@@ -471,6 +473,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                     new ProjectPermissionsRetriever(
                         new ReadersRetriever($dao),
                         new WritersRetriever($dao),
+                        new AdminsRetriever($dao),
                     )
                 ),
             )
@@ -484,6 +487,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $permissions_retriever = new ProjectPermissionsRetriever(
             new ReadersRetriever($dao),
             new WritersRetriever($dao),
+            new AdminsRetriever($dao),
         );
 
         return new AdminPermissionsController(
@@ -699,6 +703,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             new ProjectPermissionsRetriever(
                 new ReadersRetriever($dao),
                 new WritersRetriever($dao),
+                new AdminsRetriever($dao),
             ),
             $ugroup_manager,
         );

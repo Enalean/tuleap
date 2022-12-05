@@ -57,6 +57,10 @@ final class XMLMediaWikiImporterTest extends TestCase
                             <ugroup><![CDATA[project_members]]></ugroup>
                             <ugroup><![CDATA[Integrators]]></ugroup>
                         </write-access>
+                        <admin-access>
+                            <ugroup><![CDATA[project_members]]></ugroup>
+                            <ugroup><![CDATA[Integrators]]></ugroup>
+                        </admin-access>
                     </mediawiki-standalone>
                  </project>
                  '
@@ -73,6 +77,10 @@ final class XMLMediaWikiImporterTest extends TestCase
         self::assertEquals(
             [3, 102],
             $permissions_saver->getCapturedWritersUgroupIds(),
+        );
+        self::assertEquals(
+            [3, 102],
+            $permissions_saver->getCapturedAdminsUgroupIds(),
         );
     }
 }

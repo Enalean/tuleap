@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-final class WritersRetriever
+final class AdminsRetriever
 {
     public function __construct(private ISearchByProjectAndPermission $dao)
     {
@@ -31,12 +31,14 @@ final class WritersRetriever
     /**
      * @return int[]
      */
-    public function getWritersUgroupIds(\Project $project): array
+    public function getAdminsUgroupIds(\Project $project): array
     {
-        $writers = array_column($this->dao->searchByProjectAndPermission($project, new PermissionWrite()), 'ugroup_id');
+        $admins = array_column($this->dao->searchByProjectAndPermission($project, new PermissionAdmin()), 'ugroup_id');
 
-        return empty($writers)
-            ? [\ProjectUGroup::PROJECT_MEMBERS]
-            : $writers;
+        if (! in_array(\ProjectUGroup::PROJECT_ADMIN, $admins, true)) {
+            array_unshift($admins, \ProjectUGroup::PROJECT_ADMIN);
+        }
+
+        return $admins;
     }
 }
