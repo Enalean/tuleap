@@ -30,7 +30,6 @@ export const LinkSelectorStub = {
         return {
             resetSelection: noop,
             setDropdownContent: noop,
-            setPlaceholder: noop,
             destroy: noop,
         };
     },

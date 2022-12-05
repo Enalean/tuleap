@@ -464,7 +464,6 @@ describe("BacklogController -", () => {
                 50,
                 null,
                 expect.any(Function),
-                false,
                 false
             );
         });
@@ -523,7 +522,6 @@ describe("BacklogController -", () => {
                 50,
                 null,
                 expect.any(Function),
-                false,
                 false
             );
         });
