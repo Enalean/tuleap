@@ -3101,6 +3101,15 @@
           </oneOrMore>
         </element>
       </optional>
+      <optional>
+        <element name="admin-access">
+          <oneOrMore>
+            <element name="ugroup">
+              <ref name="ugroup_name"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
     </interleave>
   </define>
 </div></div>

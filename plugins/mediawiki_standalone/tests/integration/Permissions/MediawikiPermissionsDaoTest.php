@@ -80,6 +80,7 @@ final class MediawikiPermissionsDaoTest extends TestCase
             $this->project,
             [$this->project_members, $this->developers_ugroup],
             [$this->project_members, $this->qa_ugroup],
+            [$this->project_members, $this->developers_ugroup],
         );
 
         self::assertEquals(
@@ -91,6 +92,11 @@ final class MediawikiPermissionsDaoTest extends TestCase
             [\ProjectUGroup::PROJECT_MEMBERS, self::QA_ID],
             $this->getWritersUgroupIds($this->project)
         );
+
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
+            $this->getAdminsUgroupIds($this->project)
+        );
     }
 
     public function testDuplicatePermissions(): void
@@ -99,11 +105,13 @@ final class MediawikiPermissionsDaoTest extends TestCase
             $this->project,
             [$this->project_members, $this->developers_ugroup],
             [$this->project_members, $this->integrators_ugroup],
+            [$this->project_members, $this->developers_ugroup],
         );
 
         $another_project = ProjectTestBuilder::aProject()->withId(1002)->build();
         $this->dao->saveProjectPermissions(
             $another_project,
+            [$this->qa_ugroup],
             [$this->qa_ugroup],
             [$this->qa_ugroup],
         );
@@ -123,6 +131,11 @@ final class MediawikiPermissionsDaoTest extends TestCase
             [\ProjectUGroup::PROJECT_MEMBERS, 203],
             $this->getWritersUgroupIds($just_created_project)
         );
+
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS, 201],
+            $this->getAdminsUgroupIds($just_created_project)
+        );
     }
 
     public function testUpdateAllAnonymousAccessToRegistered(): void
@@ -131,6 +144,7 @@ final class MediawikiPermissionsDaoTest extends TestCase
             $this->project,
             [$this->registered],
             [$this->registered],
+            [$this->project_members],
         );
 
         $another_project = ProjectTestBuilder::aProject()->withId(1002)->build();
@@ -138,11 +152,13 @@ final class MediawikiPermissionsDaoTest extends TestCase
             $another_project,
             [$this->anonymous],
             [$this->registered],
+            [$this->project_members],
         );
 
         $yet_another_project = ProjectTestBuilder::aProject()->withId(1003)->build();
         $this->dao->saveProjectPermissions(
             $yet_another_project,
+            [$this->project_members, $this->developers_ugroup],
             [$this->project_members, $this->developers_ugroup],
             [$this->project_members, $this->developers_ugroup],
         );
@@ -174,12 +190,26 @@ final class MediawikiPermissionsDaoTest extends TestCase
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
             $this->getWritersUgroupIds($yet_another_project)
         );
+
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS],
+            $this->getAdminsUgroupIds($this->project)
+        );
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS],
+            $this->getAdminsUgroupIds($another_project)
+        );
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
+            $this->getAdminsUgroupIds($yet_another_project)
+        );
     }
 
     public function testUpdateAllAuthenticatedAccessToRegistered(): void
     {
         $this->dao->saveProjectPermissions(
             $this->project,
+            [$this->registered],
             [$this->registered],
             [$this->registered],
         );
@@ -189,11 +219,13 @@ final class MediawikiPermissionsDaoTest extends TestCase
             $another_project,
             [$this->authenticated],
             [$this->authenticated],
+            [$this->authenticated],
         );
 
         $yet_another_project = ProjectTestBuilder::aProject()->withId(1003)->build();
         $this->dao->saveProjectPermissions(
             $yet_another_project,
+            [$this->project_members, $this->developers_ugroup],
             [$this->project_members, $this->developers_ugroup],
             [$this->project_members, $this->developers_ugroup],
         );
@@ -225,6 +257,19 @@ final class MediawikiPermissionsDaoTest extends TestCase
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
             $this->getWritersUgroupIds($yet_another_project)
         );
+
+        self::assertEquals(
+            [\ProjectUGroup::REGISTERED],
+            $this->getAdminsUgroupIds($this->project)
+        );
+        self::assertEquals(
+            [\ProjectUGroup::REGISTERED],
+            $this->getAdminsUgroupIds($another_project)
+        );
+        self::assertEquals(
+            [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
+            $this->getAdminsUgroupIds($yet_another_project)
+        );
     }
 
     /**
@@ -245,6 +290,17 @@ final class MediawikiPermissionsDaoTest extends TestCase
     {
         return array_column(
             $this->dao->searchByProjectAndPermission($project, new PermissionWrite()),
+            'ugroup_id'
+        );
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getAdminsUgroupIds(\Project $project): array
+    {
+        return array_column(
+            $this->dao->searchByProjectAndPermission($project, new PermissionAdmin()),
             'ugroup_id'
         );
     }

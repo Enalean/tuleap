@@ -29,7 +29,13 @@ class ReadersRetrieverTest extends TestCase
 {
     public function testGetReadersUgroupIds(): void
     {
-        $retriever = new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithPermissions([103, 104], []));
+        $retriever = new ReadersRetriever(
+            ISearchByProjectAndPermissionStub::buildWithPermissions(
+                [103, 104],
+                [],
+                [],
+            )
+        );
 
         self::assertEquals(
             [103, 104],

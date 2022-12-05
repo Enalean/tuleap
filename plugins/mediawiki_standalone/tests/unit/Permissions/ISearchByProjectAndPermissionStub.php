@@ -24,21 +24,28 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 
 final class ISearchByProjectAndPermissionStub implements ISearchByProjectAndPermission
 {
-    private function __construct(private array $readers_ugroup_ids, private array $writers_ugroup_ids)
-    {
+    private function __construct(
+        private array $readers_ugroup_ids,
+        private array $writers_ugroup_ids,
+        private array $admins_ugroup_ids,
+    ) {
     }
 
-    public static function buildWithPermissions(array $readers_ugroup_ids, array $writers_ugroup_ids): self
-    {
+    public static function buildWithPermissions(
+        array $readers_ugroup_ids,
+        array $writers_ugroup_ids,
+        array $admins_ugroup_ids,
+    ): self {
         return new self(
-            array_map(static fn ($id): array => ['ugroup_id' => $id], $readers_ugroup_ids),
-            array_map(static fn ($id): array => ['ugroup_id' => $id], $writers_ugroup_ids),
+            array_map(static fn($id): array => ['ugroup_id' => $id], $readers_ugroup_ids),
+            array_map(static fn($id): array => ['ugroup_id' => $id], $writers_ugroup_ids),
+            array_map(static fn($id): array => ['ugroup_id' => $id], $admins_ugroup_ids),
         );
     }
 
     public static function buildWithoutSpecificPermissions(): self
     {
-        return new self([], []);
+        return new self([], [], []);
     }
 
     public function searchByProjectAndPermission(\Project $project, Permission $permission): array
@@ -49,6 +56,10 @@ final class ISearchByProjectAndPermissionStub implements ISearchByProjectAndPerm
 
         if ($permission->getName() === PermissionWrite::NAME) {
             return $this->writers_ugroup_ids;
+        }
+
+        if ($permission->getName() === PermissionAdmin::NAME) {
+            return $this->admins_ugroup_ids;
         }
 
         return [];

@@ -27,6 +27,7 @@ interface ISaveProjectPermissions
     /**
      * @param \ProjectUGroup[] $readers
      * @param \ProjectUGroup[] $writers
+     * @param \ProjectUGroup[] $admins
      */
-    public function saveProjectPermissions(\Project $project, array $readers, array $writers): void;
+    public function saveProjectPermissions(\Project $project, array $readers, array $writers, array $admins): void;
 }

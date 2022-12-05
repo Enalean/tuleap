@@ -76,11 +76,12 @@ class AdminSavePermissionsControllerTest extends TestCase
                 [
                     'readers' => ['102', '103'],
                     'writers' => ['103'],
+                    'admins'  => ['102'],
                 ]
             );
 
         $history_dao
-            ->expects(self::exactly(2))
+            ->expects(self::exactly(3))
             ->method('groupAddHistory')
             ->withConsecutive(
                 [
@@ -91,6 +92,11 @@ class AdminSavePermissionsControllerTest extends TestCase
                 [
                     'perm_granted_for_mediawiki_standalone_writers',
                     'QA',
+                    self::PROJECT_ID,
+                ],
+                [
+                    'perm_granted_for_mediawiki_standalone_admins',
+                    'Developers',
                     self::PROJECT_ID,
                 ]
             );

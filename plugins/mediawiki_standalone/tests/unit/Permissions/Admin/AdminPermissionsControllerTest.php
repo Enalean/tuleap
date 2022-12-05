@@ -24,6 +24,7 @@ namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\MediawikiStandalone\Permissions\AdminsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
@@ -54,6 +55,7 @@ class AdminPermissionsControllerTest extends TestCase
                 new ProjectPermissionsRetriever(
                     new ReadersRetriever($dao),
                     new WritersRetriever($dao),
+                    new AdminsRetriever($dao),
                 ),
                 $this->createStub(\User_ForgeUserGroupFactory::class),
             ),
@@ -81,6 +83,7 @@ class AdminPermissionsControllerTest extends TestCase
                 new ProjectPermissionsRetriever(
                     new ReadersRetriever($dao),
                     new WritersRetriever($dao),
+                    new AdminsRetriever($dao),
                 ),
                 $this->createStub(\User_ForgeUserGroupFactory::class),
             ),
@@ -109,6 +112,7 @@ class AdminPermissionsControllerTest extends TestCase
         $ugroups            = [new \User_ForgeUGroup(104, 'Lorem ipsum', '')];
         $user_group_factory->method('getAllForProjectWithoutNobody')->willReturn($ugroups);
         $user_group_factory->method('getAllForProjectWithoutNobodyNorAnonymous')->willReturn($ugroups);
+        $user_group_factory->method('getProjectUGroupsWithMembersWithoutNobody')->willReturn($ugroups);
 
         $dao = ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions();
 
@@ -122,6 +126,7 @@ class AdminPermissionsControllerTest extends TestCase
                 new ProjectPermissionsRetriever(
                     new ReadersRetriever($dao),
                     new WritersRetriever($dao),
+                    new AdminsRetriever($dao),
                 ),
                 $user_group_factory,
             ),

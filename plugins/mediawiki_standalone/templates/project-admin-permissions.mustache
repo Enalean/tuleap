@@ -14,7 +14,7 @@
                     <label class="tlp-label" for="readers">
                         {{# dgettext }}
                             tuleap-mediawiki_standalone |
-                            User groups who can read MediaWiki pages |
+                            User groups who can read
                         {{/ dgettext }}
                     </label>
                     <select class="tlp-select tlp-select-adjusted" id="readers" name="readers[]" size="7" multiple>
@@ -30,7 +30,7 @@
                     <label class="tlp-label" for="writers">
                         {{# dgettext }}
                             tuleap-mediawiki_standalone |
-                            User groups who can write MediaWiki pages |
+                            User groups who can write
                         {{/ dgettext }}
                     </label>
                     <select class="tlp-select tlp-select-adjusted" id="writers" name="writers[]" size="7" multiple>
@@ -40,6 +40,29 @@
                             </option>
                         {{/ writers }}
                     </select>
+                </div>
+
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="writers">
+                        {{# dgettext }}
+                            tuleap-mediawiki_standalone |
+                            User groups who can administrate
+                        {{/ dgettext }}
+                    </label>
+                    <select class="tlp-select tlp-select-adjusted" id="admins" name="admins[]" size="7" multiple>
+                        {{# admins }}
+                            <option value="{{ id }}" {{# is_selected }}selected="selected"{{/is_selected}}>
+                                {{ name }}
+                            </option>
+                        {{/ admins }}
+                    </select>
+                    <p class="tlp-text-info">
+                        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                        {{# dgettext }}
+                            tuleap-mediawiki_standalone |
+                            Project administrators are de facto administrators of MediaWiki
+                        {{/ dgettext }}
+                    </p>
                 </div>
 
                 <div class="tlp-pane-section-submit">

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
 use Tuleap\GlobalLanguageMock;
+use Tuleap\MediawikiStandalone\Permissions\AdminsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
@@ -84,6 +85,7 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
         $dao = ISearchByProjectAndPermissionStub::buildWithPermissions(
             [$this->project_members->getId(), $this->developers->getId()],
             [$this->project_admins->getId(), $this->developers->getId()],
+            [$this->project_admins->getId(), $this->developers->getId()],
         );
 
         $this->ugroup_retriever = UGroupRetrieverStub::buildWithUserGroups(
@@ -97,6 +99,7 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
             new ProjectPermissionsRetriever(
                 new ReadersRetriever($dao),
                 new WritersRetriever($dao),
+                new AdminsRetriever($dao),
             ),
             $this->ugroup_retriever,
         );
@@ -110,6 +113,15 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
 
         self::assertEquals(
             [
+                [
+                    'name'   => 'MediaWiki administrators',
+                    'groups' => [
+                        [
+                            'name' => 'Developers',
+                        ],
+                    ],
+                    'url'    => '/mediawiki_standalone/admin/TestProject/permissions',
+                ],
                 [
                     'name'   => 'MediaWiki writers',
                     'groups' => [
@@ -164,6 +176,9 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
                     'groups' => [
                         [
                             'name' => 'Project administrators',
+                        ],
+                        [
+                            'name' => 'Developers',
                         ],
                     ],
                     'url'    => '/mediawiki_standalone/admin/TestProject/permissions',

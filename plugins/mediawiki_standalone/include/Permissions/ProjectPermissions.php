@@ -30,8 +30,9 @@ final class ProjectPermissions
     /**
      * @param int[] $readers
      * @parm int[] $writers
+     * @parm int[] $admins
      */
-    public function __construct(public array $readers, public array $writers)
+    public function __construct(public array $readers, public array $writers, public array $admins)
     {
     }
 }

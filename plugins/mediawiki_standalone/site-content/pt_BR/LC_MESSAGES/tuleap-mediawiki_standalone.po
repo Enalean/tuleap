@@ -42,10 +42,16 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
+msgid "Permission granted for MediaWiki administrators"
+msgstr ""
+
 msgid "Permission granted for MediaWiki readers"
 msgstr ""
 
 msgid "Permission granted for MediaWiki writers"
+msgstr ""
+
+msgid "Permission reset for MediaWiki administrators"
 msgstr ""
 
 msgid "Permission reset for MediaWiki readers"
@@ -55,6 +61,9 @@ msgid "Permission reset for MediaWiki writers"
 msgstr ""
 
 msgid "Permissions"
+msgstr ""
+
+msgid "Project administrators are de facto administrators of MediaWiki"
 msgstr ""
 
 msgid "Read only access to information about Mediawiki Standalone"
@@ -86,10 +95,13 @@ msgid ""
 "standalone data"
 msgstr ""
 
-msgid "User groups who can read MediaWiki pages"
+msgid "User groups who can administrate"
 msgstr ""
 
-msgid "User groups who can write MediaWiki pages"
+msgid "User groups who can read"
+msgstr ""
+
+msgid "User groups who can write"
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"

@@ -48,11 +48,17 @@ msgstr "MediaWiki autonome (lecture seule)"
 msgid "Permission"
 msgstr "Permission"
 
+msgid "Permission granted for MediaWiki administrators"
+msgstr "Permission accordée pour les administrateurs MediaWiki"
+
 msgid "Permission granted for MediaWiki readers"
 msgstr "Permission accordée pour les lecteurs de MediaWiki"
 
 msgid "Permission granted for MediaWiki writers"
 msgstr "Permission accordée pour les écrivains de MediaWiki"
+
+msgid "Permission reset for MediaWiki administrators"
+msgstr "Réinitialisation des permissions pour les administrateurs de MediaWiki"
 
 msgid "Permission reset for MediaWiki readers"
 msgstr "Réinitialisation des permissions pour les lecteurs de MediaWiki"
@@ -62,6 +68,10 @@ msgstr "Réinitialisation des permissions pour les écrivains de MediaWiki"
 
 msgid "Permissions"
 msgstr "Permissions"
+
+msgid "Project administrators are de facto administrators of MediaWiki"
+msgstr ""
+"Les administrateurs de projets sont de facto administrateurs de MediaWiki"
 
 msgid "Read only access to information about Mediawiki Standalone"
 msgstr "Accès en lecture seule aux informations Mediawiki Autonome"
@@ -100,11 +110,14 @@ msgstr ""
 "Le service Mediawiki ne peut pas être activé quand il y a encore des données "
 "du service MediaWiki autonome"
 
-msgid "User groups who can read MediaWiki pages"
-msgstr "Groupes d'utilisateurs qui peuvent lire les pages MediaWiki"
+msgid "User groups who can administrate"
+msgstr "Groupes d'utilisateurs qui peuvent administrer"
 
-msgid "User groups who can write MediaWiki pages"
-msgstr "Groupes d'utilisateurs qui peuvent modifier les pages MediaWiki"
+msgid "User groups who can read"
+msgstr "Groupes d'utilisateurs qui peuvent lire"
+
+msgid "User groups who can write"
+msgstr "Groupes d'utilisateurs qui peuvent écrire"
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

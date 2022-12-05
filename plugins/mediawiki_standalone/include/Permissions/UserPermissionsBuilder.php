@@ -44,14 +44,20 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
             return UserPermissions::noAccess();
         }
 
-        $project_permissions = $this->permissions_retriever->getProjectPermissions($project);
-
         if (
             $user->isSuperUser() ||
             $this->forge_permissions_retriever->doesUserHavePermission($user, new MediawikiAdminAllProjects()) ||
             $user->isAdmin((int) $project->getID())
         ) {
             return UserPermissions::fullAccess();
+        }
+
+        $project_permissions = $this->permissions_retriever->getProjectPermissions($project);
+
+        foreach ($project_permissions->admins as $admins_ugroup_id) {
+            if ($user->isMemberOfUGroup($admins_ugroup_id, (int) $project->getID())) {
+                return UserPermissions::fullAccess();
+            }
         }
 
         foreach ($project_permissions->writers as $writers_ugroup_id) {

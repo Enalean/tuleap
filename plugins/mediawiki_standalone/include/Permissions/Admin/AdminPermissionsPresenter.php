@@ -38,6 +38,7 @@ final class AdminPermissionsPresenter
         public CSRFSynchronizerTokenInterface $csrf_token,
         public array $readers,
         public array $writers,
+        public array $admins,
     ) {
     }
 }
