@@ -68,8 +68,10 @@ final class UserPermissionsBuilderTest extends TestCase
         $permission_builder = new UserPermissionsBuilder(
             $forge_permissions_retriever,
             CheckProjectAccessStub::withValidAccess(),
-            new ReadersRetriever($dao),
-            new WritersRetriever($dao),
+            new ProjectPermissionsRetriever(
+                new ReadersRetriever($dao),
+                new WritersRetriever($dao),
+            ),
         );
 
         $user_permissions = $permission_builder->getPermissions($user, $project);
@@ -183,8 +185,10 @@ final class UserPermissionsBuilderTest extends TestCase
         $permission_builder = new UserPermissionsBuilder(
             $forge_permissions_retriever,
             $check_project_access,
-            new ReadersRetriever($dao),
-            new WritersRetriever($dao),
+            new ProjectPermissionsRetriever(
+                new ReadersRetriever($dao),
+                new WritersRetriever($dao),
+            ),
         );
 
         $user_permissions = $permission_builder->getPermissions($user, $project);
@@ -198,7 +202,7 @@ final class UserPermissionsBuilderTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
         return [
-            'when user is member of allowed ugroup, they can read'      => [
+            'when user is member of allowed ugroup, they can read'                => [
                 'user'         => UserTestBuilder::anActiveUser()
                     ->withUserGroupMembership($project, self::READER_UGROUP_ID, true)
                     ->withUserGroupMembership($project, self::WRITER_UGROUP_ID, false)
@@ -208,7 +212,7 @@ final class UserPermissionsBuilderTest extends TestCase
                 'is_reader'    => true,
                 'is_writer'    => false,
             ],
-            'when user is member of allowed ugroup, they can write (and read)'      => [
+            'when user is member of allowed ugroup, they can write (and read)'    => [
                 'user'         => UserTestBuilder::anActiveUser()
                     ->withUserGroupMembership($project, self::READER_UGROUP_ID, false)
                     ->withUserGroupMembership($project, self::WRITER_UGROUP_ID, true)

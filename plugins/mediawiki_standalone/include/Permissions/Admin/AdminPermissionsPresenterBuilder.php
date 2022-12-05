@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
-use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
-use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final class AdminPermissionsPresenterBuilder
 {
     public function __construct(
-        private ReadersRetriever $readers_retriever,
-        private WritersRetriever $writers_retriever,
+        private ProjectPermissionsRetriever $permissions_retriever,
         private \User_ForgeUserGroupFactory $user_group_factory,
     ) {
     }
@@ -40,15 +38,17 @@ final class AdminPermissionsPresenterBuilder
         string $post_url,
         CSRFSynchronizerTokenInterface $token,
     ): AdminPermissionsPresenter {
+        $project_permissions = $this->permissions_retriever->getProjectPermissions($project);
+
         return new AdminPermissionsPresenter(
             $post_url,
             $token,
             $this->getUserGroupsPresenter(
-                $this->readers_retriever->getReadersUgroupIds($project),
+                $project_permissions->readers,
                 $this->user_group_factory->getAllForProjectWithoutNobody($project),
             ),
             $this->getUserGroupsPresenter(
-                $this->writers_retriever->getWritersUgroupIds($project),
+                $project_permissions->writers,
                 $this->user_group_factory->getAllForProjectWithoutNobodyNorAnonymous($project),
             ),
         );

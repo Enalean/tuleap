@@ -72,6 +72,7 @@ use Tuleap\MediawikiStandalone\Permissions\Admin\RejectNonMediawikiAdministrator
 use Tuleap\MediawikiStandalone\Permissions\Admin\UserGroupToSaveRetriever;
 use Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao;
 use Tuleap\MediawikiStandalone\Permissions\PermissionsFollowingSiteAccessChangeUpdater;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
 use Tuleap\MediawikiStandalone\Permissions\RestrictedUserCanAccessMediaWikiVerifier;
 use Tuleap\MediawikiStandalone\Permissions\UserPermissionsBuilder;
@@ -208,8 +209,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $dao = new MediawikiPermissionsDao();
         (new XMLMediaWikiExporter(
             new WrapperLogger($event->getLogger(), 'MediaWiki Standalone'),
-            new ReadersRetriever($dao),
-            new WritersRetriever($dao),
+            new ProjectPermissionsRetriever(
+                new ReadersRetriever($dao),
+                new WritersRetriever($dao),
+            ),
             new UGroupManager(),
         ))->exportToXml(
             $event->getProject(),
@@ -465,8 +468,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                         new RestrictedUserCanAccessMediaWikiVerifier(),
                         \EventManager::instance(),
                     ),
-                    new ReadersRetriever($dao),
-                    new WritersRetriever($dao),
+                    new ProjectPermissionsRetriever(
+                        new ReadersRetriever($dao),
+                        new WritersRetriever($dao),
+                    )
                 ),
             )
         );
@@ -476,8 +481,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     {
         $dao = new MediawikiPermissionsDao();
 
-        $readers_retriever = new ReadersRetriever($dao);
-        $writers_retriever = new WritersRetriever($dao);
+        $permissions_retriever = new ProjectPermissionsRetriever(
+            new ReadersRetriever($dao),
+            new WritersRetriever($dao),
+        );
 
         return new AdminPermissionsController(
             HTTPFactoryBuilder::responseFactory(),
@@ -486,8 +493,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             TemplateRendererFactory::build(),
             new CSRFSynchronizerTokenProvider(),
             new AdminPermissionsPresenterBuilder(
-                $readers_retriever,
-                $writers_retriever,
+                $permissions_retriever,
                 new User_ForgeUserGroupFactory(new UserGroupDao()),
             ),
             new SapiEmitter(),
@@ -503,8 +509,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                         new RestrictedUserCanAccessMediaWikiVerifier(),
                         \EventManager::instance(),
                     ),
-                    $readers_retriever,
-                    $writers_retriever,
+                    $permissions_retriever,
                 ),
             )
         );
@@ -691,8 +696,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $dao                  = new MediawikiPermissionsDao();
         $service_pane_builder = new PermissionPerGroupServicePaneBuilder(
             new PermissionPerGroupUGroupFormatter($ugroup_manager),
-            new ReadersRetriever($dao),
-            new WritersRetriever($dao),
+            new ProjectPermissionsRetriever(
+                new ReadersRetriever($dao),
+                new WritersRetriever($dao),
+            ),
             $ugroup_manager,
         );
 

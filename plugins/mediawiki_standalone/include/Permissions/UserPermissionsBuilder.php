@@ -32,8 +32,7 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
     public function __construct(
         private ForgePermissionsRetriever $forge_permissions_retriever,
         private CheckProjectAccess $check_project_access,
-        private ReadersRetriever $readers_retriever,
-        private WritersRetriever $writers_retriever,
+        private ProjectPermissionsRetriever $permissions_retriever,
     ) {
     }
 
@@ -45,6 +44,8 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
             return UserPermissions::noAccess();
         }
 
+        $project_permissions = $this->permissions_retriever->getProjectPermissions($project);
+
         if (
             $user->isSuperUser() ||
             $this->forge_permissions_retriever->doesUserHavePermission($user, new MediawikiAdminAllProjects()) ||
@@ -53,13 +54,13 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
             return UserPermissions::fullAccess();
         }
 
-        foreach ($this->writers_retriever->getWritersUgroupIds($project) as $writers_ugroup_id) {
+        foreach ($project_permissions->writers as $writers_ugroup_id) {
             if ($user->isMemberOfUGroup($writers_ugroup_id, (int) $project->getID())) {
                 return UserPermissions::writer();
             }
         }
 
-        foreach ($this->readers_retriever->getReadersUgroupIds($project) as $readers_ugroup_id) {
+        foreach ($project_permissions->readers as $readers_ugroup_id) {
             if ($user->isMemberOfUGroup($readers_ugroup_id, (int) $project->getID())) {
                 return UserPermissions::reader();
             }

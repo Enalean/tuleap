@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\RestrictedUserCanAccessMediaWikiVerifier;
 use Tuleap\MediawikiStandalone\Permissions\UserPermissionsBuilder;
 use Tuleap\Project\ProjectAccessChecker;
@@ -69,8 +70,10 @@ final class MediawikiStandaloneProjectResource
                     new RestrictedUserCanAccessMediaWikiVerifier(),
                     \EventManager::instance(),
                 ),
-                new \Tuleap\MediawikiStandalone\Permissions\ReadersRetriever($dao),
-                new \Tuleap\MediawikiStandalone\Permissions\WritersRetriever($dao),
+                new ProjectPermissionsRetriever(
+                    new \Tuleap\MediawikiStandalone\Permissions\ReadersRetriever($dao),
+                    new \Tuleap\MediawikiStandalone\Permissions\WritersRetriever($dao),
+                ),
             );
 
             return new GetPermissionsRepresentation($permissions_builder->getPermissions($user, $project));

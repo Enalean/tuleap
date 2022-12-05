@@ -24,6 +24,7 @@ namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
 use Tuleap\GlobalLanguageMock;
 use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
 use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -44,8 +45,6 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
     private \ProjectUGroup $developers;
     private \Project $project;
     private UGroupRetriever $ugroup_retriever;
-    private ReadersRetriever $readers_retriever;
-    private WritersRetriever $writers_retriever;
     private PermissionPerGroupServicePaneBuilder $builder;
 
     protected function setUp(): void
@@ -87,9 +86,6 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
             [$this->project_admins->getId(), $this->developers->getId()],
         );
 
-        $this->readers_retriever = new ReadersRetriever($dao);
-        $this->writers_retriever = new WritersRetriever($dao);
-
         $this->ugroup_retriever = UGroupRetrieverStub::buildWithUserGroups(
             $this->project_admins,
             $this->project_members,
@@ -98,8 +94,10 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
 
         $this->builder = new PermissionPerGroupServicePaneBuilder(
             $this->formatter,
-            $this->readers_retriever,
-            $this->writers_retriever,
+            new ProjectPermissionsRetriever(
+                new ReadersRetriever($dao),
+                new WritersRetriever($dao),
+            ),
             $this->ugroup_retriever,
         );
 
