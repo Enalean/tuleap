@@ -42,6 +42,9 @@ export const LINKED_ARTIFACT_POPOVER_CLASS = "link-field-linked-artifact-popover
 const getStatusBadgeClassesWithRemoval = (artifact: LinkedArtifactPresenter): MapOfClasses => {
     const classes = getArtifactStatusBadgeClasses(artifact);
     classes["link-field-link-to-remove"] = artifact.is_marked_for_removal;
+    if (artifact.status && artifact.status.color) {
+        classes[`tlp-badge-${artifact.status.color}`] = true;
+    }
     return classes;
 };
 
