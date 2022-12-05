@@ -95,7 +95,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     title: "A child",
                     xref: ArtifactCrossReferenceStub.withRefAndColor("art #234", "surf-green"),
                     uri: "/url/to/artifact/234",
-                    status: { value: "Closed", color: "flamingo-pink" },
+                    status: { value: "Open", color: "flamingo-pink" },
                     is_open: false,
                     link_type: LinkTypeStub.buildUntyped(),
                 }),
@@ -133,9 +133,54 @@ describe(`LinkedArtifactTemplate`, () => {
         expect(type.textContent?.trim()).toBe(expected_type);
 
         expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
-        expect(status.classList.contains("tlp-badge-secondary")).toBe(!presenter.is_open);
-        expect(status.classList.contains("tlp-badge-success")).toBe(presenter.is_open);
+        expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
         expect(status.classList.contains("tlp-badge-flamingo-pink")).toBe(true);
+    });
+
+    it(`will render a linked artifact with no color`, () => {
+        const presenter = LinkedArtifactPresenter.fromLinkedArtifact(
+            LinkedArtifactStub.withDefaults({
+                identifier: LinkedArtifactIdentifierStub.withId(123),
+                title: "A parent",
+                xref: ArtifactCrossReferenceStub.withRefAndColor("art #123", "red-wine"),
+                uri: "/url/to/artifact/123",
+                status: { value: "Open", color: null },
+                is_open: true,
+                link_type: LinkTypeStub.buildParentLinkType(),
+            }),
+            false
+        );
+        render(presenter);
+
+        const row = target.querySelector("[data-test=artifact-row]");
+        const link = target.querySelector("[data-test=artifact-link]");
+        const xref = target.querySelector("[data-test=artifact-xref]");
+        const title = target.querySelector("[data-test=artifact-title]");
+        const status = target.querySelector("[data-test=artifact-status]");
+        const type = target.querySelector("[data-test=artifact-link-type]");
+        const expected_type =
+            presenter.link_type.shortname === "" ? "Linked to" : presenter.link_type.label;
+
+        if (
+            !(row instanceof HTMLElement) ||
+            !(link instanceof HTMLAnchorElement) ||
+            !(xref instanceof HTMLElement) ||
+            !(title instanceof HTMLElement) ||
+            !(status instanceof HTMLElement) ||
+            !(type instanceof HTMLElement)
+        ) {
+            throw new Error("An expected element has not been found in template");
+        }
+
+        expect(link.href).toBe(presenter.uri);
+        expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
+        expect(xref.textContent?.trim()).toBe(presenter.xref.ref);
+        expect(title.textContent?.trim()).toBe(presenter.title);
+        expect(status.textContent?.trim()).toBe(presenter.status?.value);
+        expect(type.textContent?.trim()).toBe(expected_type);
+
+        expect(row.classList.contains("link-field-table-row-muted")).toBe(!presenter.is_open);
+        expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
     });
 
     describe(`getActionButton`, () => {
