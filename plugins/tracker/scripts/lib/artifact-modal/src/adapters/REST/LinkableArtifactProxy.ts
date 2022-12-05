@@ -39,7 +39,9 @@ export const LinkableArtifactProxy = {
         title: entry.title,
         xref: ArtifactCrossReferenceProxy.fromAPIUserHistory(entry),
         uri: entry.html_url,
-        status: entry.badges[0] ? { value: entry.badges[0].label, color: null } : null,
+        status: entry.badges[0]
+            ? { value: entry.badges[0].label, color: entry.badges[0].color }
+            : null,
         is_open: true,
         project: entry.project,
     }),

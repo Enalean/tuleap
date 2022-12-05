@@ -77,7 +77,7 @@ describe(`NewLinkTemplate`, () => {
                 title: "brangle",
                 xref: ArtifactCrossReferenceStub.withRefAndColor("release #196", "plum-crazy"),
                 uri: "/plugins/tracker/?aid=196",
-                status: { value: "On Going", color: null },
+                status: { value: "On Going", color: "daphne-blue" },
                 is_open: true,
                 link_type: LinkTypeStub.buildUntyped(),
             }),
@@ -88,7 +88,7 @@ describe(`NewLinkTemplate`, () => {
                 title: "catoptrite",
                 xref: ArtifactCrossReferenceStub.withRefAndColor("release #246", "plum-crazy"),
                 uri: "/plugins/tracker/?aid=246",
-                status: { value: "Delivered", color: null },
+                status: { value: "Delivered", color: "daphne-blue" },
                 is_open: false,
                 link_type: LinkTypeStub.buildParentLinkType(),
             }),
@@ -113,8 +113,39 @@ describe(`NewLinkTemplate`, () => {
         expect(type.textContent?.trim()).toBe(expected_type);
 
         expect(row.classList.contains("link-field-table-row-new")).toBe(true);
-        expect(status.classList.contains("tlp-badge-secondary")).toBe(!new_link.is_open);
-        expect(status.classList.contains("tlp-badge-success")).toBe(new_link.is_open);
+        expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
+        expect(status.classList.contains("tlp-badge-daphne-blue")).toBe(true);
+    });
+
+    it(`will render an artifact without color`, () => {
+        const new_link = NewLinkStub.withDefaults(246, {
+            title: "catoptrite",
+            xref: ArtifactCrossReferenceStub.withRefAndColor("release #246", "plum-crazy"),
+            uri: "/plugins/tracker/?aid=246",
+            status: { value: "Delivered", color: null },
+            is_open: false,
+            link_type: LinkTypeStub.buildParentLinkType(),
+        });
+        render(new_link);
+
+        const row = selectOrThrow(target, "[data-test=link-row]");
+        const link = selectOrThrow(target, "[data-test=link-link]", HTMLAnchorElement);
+        const xref = selectOrThrow(target, "[data-test=link-xref]");
+        const title = selectOrThrow(target, "[data-test=link-title]");
+        const status = selectOrThrow(target, "[data-test=link-status]");
+        const type = selectOrThrow(target, "[data-test=link-type]");
+        const expected_type =
+            new_link.link_type.shortname === UNTYPED_LINK ? "Linked to" : new_link.link_type.label;
+
+        expect(link.href).toBe(new_link.uri);
+        expect(xref.classList.contains(`tlp-swatch-${new_link.xref.color}`)).toBe(true);
+        expect(xref.textContent?.trim()).toBe(new_link.xref.ref);
+        expect(title.textContent?.trim()).toBe(new_link.title);
+        expect(status.textContent?.trim()).toBe(new_link.status?.value);
+        expect(type.textContent?.trim()).toBe(expected_type);
+
+        expect(row.classList.contains("link-field-table-row-new")).toBe(true);
+        expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
     });
 
     describe(`action button`, () => {
