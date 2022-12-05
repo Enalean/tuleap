@@ -32,6 +32,8 @@ final class LinkedArtifactsTest extends TrackerBase
     private const PROJECT_SHORTNAME = 'linked-artifacts';
     private const TRACKER_SHORTNAME = 'linked_artifacts';
     private const FIELD_SHORTNAME   = 'link';
+    private int $status_value_id    = 0;
+
 
     public function testLinkedArtifacts(): void
     {
@@ -39,9 +41,17 @@ final class LinkedArtifactsTest extends TrackerBase
         $tracker_id = $this->tracker_ids[$project_id][self::TRACKER_SHORTNAME];
         $field_id   = $this->getAUsedFieldId($tracker_id, self::FIELD_SHORTNAME);
 
-        $artifact_id_1 = $this->createArtifact($tracker_id, $field_id);
-        $artifact_id_2 = $this->createArtifact($tracker_id, $field_id);
-        $artifact_id_3 = $this->createArtifact($tracker_id, $field_id, $artifact_id_1, $artifact_id_2);
+        $tracker = $this->tracker_representations[$tracker_id];
+        foreach ($tracker['fields'] as $field) {
+            if ($field['name'] === 'status') {
+                $status_field_id       = $field['field_id'];
+                $this->status_value_id = $field['values'][0]['id'];
+            }
+        }
+
+        $artifact_id_1 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
+        $artifact_id_2 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
+        $artifact_id_3 = $this->createArtifact($tracker_id, $field_id, $status_field_id, $artifact_id_1, $artifact_id_2);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward')
@@ -55,11 +65,11 @@ final class LinkedArtifactsTest extends TrackerBase
         $this->assertArtifactLinks($response_with_read_only_user, $artifact_id_1, $artifact_id_2);
     }
 
-    private function createArtifact(int $tracker_id, int $art_link_field_id, int ...$linked_artifacts): int
+    private function createArtifact(int $tracker_id, int $art_link_field_id, int $status_field_id, int ...$linked_artifacts): int
     {
         $payload = [
             'tracker' => ['id' => $tracker_id],
-            'values'  => [
+            'values' => [
                 [
                     'field_id' => $art_link_field_id,
                     'links' => (static function (int ...$linked_artifacts): array {
@@ -71,6 +81,10 @@ final class LinkedArtifactsTest extends TrackerBase
 
                         return $representations;
                     })(...$linked_artifacts),
+                ],
+                [
+                    'field_id' => $status_field_id,
+                    'bind_value_ids' => [$this->status_value_id],
                 ],
             ],
         ];
@@ -99,11 +113,14 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $linked_artifacts_collection = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $linked_artifacts_id = [];
+        $linked_artifacts_id     = [];
+        $linked_artifacts_status = [];
         foreach ($linked_artifacts_collection['collection'] as $linked_artifact) {
-            $linked_artifacts_id[] = $linked_artifact['id'];
+            $linked_artifacts_id[]     = $linked_artifact['id'];
+            $linked_artifacts_status[] = $linked_artifact['status'];
         }
 
         $this->assertEqualsCanonicalizing([$artifact_id_1, $artifact_id_2], $linked_artifacts_id);
+        $this->assertEqualsCanonicalizing(["To be done", "To be done"], $linked_artifacts_status);
     }
 }
