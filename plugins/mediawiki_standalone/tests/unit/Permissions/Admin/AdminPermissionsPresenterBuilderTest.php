@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
 use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
 use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
@@ -59,8 +60,10 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
         );
 
         $builder = new AdminPermissionsPresenterBuilder(
-            new ReadersRetriever($dao),
-            new WritersRetriever($dao),
+            new ProjectPermissionsRetriever(
+                new ReadersRetriever($dao),
+                new WritersRetriever($dao),
+            ),
             $ugroup_factory,
         );
 

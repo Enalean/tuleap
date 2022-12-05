@@ -26,8 +26,8 @@ use Tuleap\MediawikiStandalone\Permissions\Permission;
 use Tuleap\MediawikiStandalone\Permissions\PermissionAdmin;
 use Tuleap\MediawikiStandalone\Permissions\PermissionRead;
 use Tuleap\MediawikiStandalone\Permissions\PermissionWrite;
-use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
-use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissions;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
@@ -37,8 +37,7 @@ class PermissionPerGroupServicePaneBuilder
 {
     public function __construct(
         private PermissionPerGroupUGroupFormatter $formatter,
-        private ReadersRetriever $readers_retriever,
-        private WritersRetriever $writers_retriever,
+        private ProjectPermissionsRetriever $permissions_retriever,
         private UGroupRetriever $ugroup_retriever,
     ) {
     }
@@ -62,16 +61,19 @@ class PermissionPerGroupServicePaneBuilder
 
     private function getAllPermissions(\Project $project): array
     {
+        $project_permissions = $this->permissions_retriever->getProjectPermissions($project);
+
         return [
-            $this->getAdministrators($project),
-            $this->getWriters($project),
-            $this->getReaders($project),
+            $this->getAdministrators($project, $project_permissions),
+            $this->getWriters($project, $project_permissions),
+            $this->getReaders($project, $project_permissions),
         ];
     }
 
-    private function getAdministrators(\Project $project): array
+    private function getAdministrators(\Project $project, ProjectPermissions $project_permissions): array
     {
         $admins = $this->getPermissionsFor(
+            $project_permissions,
             new PermissionAdmin(),
             dgettext('tuleap-mediawiki_standalone', 'MediaWiki administrators'),
             $project
@@ -85,32 +87,38 @@ class PermissionPerGroupServicePaneBuilder
         return $admins;
     }
 
-    private function getWriters(\Project $project): array
+    private function getWriters(\Project $project, ProjectPermissions $project_permissions): array
     {
         return $this->getPermissionsFor(
+            $project_permissions,
             new PermissionWrite(),
             dgettext('tuleap-mediawiki_standalone', 'MediaWiki writers'),
             $project
         );
     }
 
-    private function getReaders(\Project $project): array
+    private function getReaders(\Project $project, ProjectPermissions $project_permissions): array
     {
         return $this->getPermissionsFor(
+            $project_permissions,
             new PermissionRead(),
             dgettext('tuleap-mediawiki_standalone', 'MediaWiki readers'),
             $project
         );
     }
 
-    private function getPermissionsFor(Permission $permission, string $name, \Project $project): array
-    {
+    private function getPermissionsFor(
+        ProjectPermissions $project_permissions,
+        Permission $permission,
+        string $name,
+        \Project $project,
+    ): array {
         $user_groups = [];
 
         $ugroup_ids = match ($permission->getName()) {
             PermissionAdmin::NAME => [],
-            PermissionWrite::NAME => $this->writers_retriever->getWritersUgroupIds($project),
-            PermissionRead::NAME => $this->readers_retriever->getReadersUgroupIds($project),
+            PermissionWrite::NAME => $project_permissions->writers,
+            PermissionRead::NAME => $project_permissions->readers,
             default => []
         };
         foreach ($ugroup_ids as $ugroup_id) {
@@ -127,15 +135,17 @@ class PermissionPerGroupServicePaneBuilder
     {
         $is_administrator = $selected_ugroup->getId() === \ProjectUGroup::PROJECT_ADMIN;
 
+        $project_permissions = $this->permissions_retriever->getProjectPermissions($project);
+
         $is_reader = in_array(
             $selected_ugroup->getId(),
-            $this->readers_retriever->getReadersUgroupIds($project),
+            $project_permissions->readers,
             true
         );
 
         $is_writer = in_array(
             $selected_ugroup->getId(),
-            $this->writers_retriever->getWritersUgroupIds($project),
+            $project_permissions->writers,
             true
         );
 
@@ -169,9 +179,9 @@ class PermissionPerGroupServicePaneBuilder
     private function getPresenter(\Project $project, string $name, array $ugroups): array
     {
         return [
-            "name"   => $name,
+            "name" => $name,
             "groups" => $ugroups,
-            "url"    => AdminPermissionsController::getAdminUrl($project),
+            "url" => AdminPermissionsController::getAdminUrl($project),
         ];
     }
 }

@@ -23,16 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\XML;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
-use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissions;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\Project\UGroupRetriever;
 
 final class XMLMediaWikiExporter
 {
     public function __construct(
         private LoggerInterface $logger,
-        private ReadersRetriever $readers_retriever,
-        private WritersRetriever $writers_retriever,
+        private ProjectPermissionsRetriever $permissions_retriever,
         private UGroupRetriever $ugroup_retriever,
     ) {
     }
@@ -50,28 +49,28 @@ final class XMLMediaWikiExporter
 
     private function exportMediawikiPermissions(\Project $project, \SimpleXMLElement $xml_content): void
     {
-        $this->exportReadPermissions($project, $xml_content);
-        $this->exportWritePermissions($project, $xml_content);
+        $project_permissions = $this->permissions_retriever->getProjectPermissions($project);
+
+        $this->exportReadPermissions($project, $xml_content, $project_permissions);
+        $this->exportWritePermissions($project, $xml_content, $project_permissions);
     }
 
-    private function exportReadPermissions(\Project $project, \SimpleXMLElement $xml_content): void
+    private function exportReadPermissions(\Project $project, \SimpleXMLElement $xml_content, ProjectPermissions $project_permissions): void
     {
-        $readers = $this->readers_retriever->getReadersUgroupIds($project);
-        if (empty($readers)) {
+        if (empty($project_permissions->readers)) {
             return;
         }
 
-        $this->addUGroupChildren($project, $xml_content->addChild('read-access'), $readers);
+        $this->addUGroupChildren($project, $xml_content->addChild('read-access'), $project_permissions->readers);
     }
 
-    private function exportWritePermissions(\Project $project, \SimpleXMLElement $xml_content): void
+    private function exportWritePermissions(\Project $project, \SimpleXMLElement $xml_content, ProjectPermissions $project_permissions): void
     {
-        $writers = $this->writers_retriever->getWritersUgroupIds($project);
-        if (empty($writers)) {
+        if (empty($project_permissions->writers)) {
             return;
         }
 
-        $this->addUGroupChildren($project, $xml_content->addChild('write-access'), $writers);
+        $this->addUGroupChildren($project, $xml_content->addChild('write-access'), $project_permissions->writers);
     }
 
     private function addUGroupChildren(\Project $project, \SimpleXMLElement $xml_content, array $ugroup_ids): void
