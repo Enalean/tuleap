@@ -23,6 +23,7 @@ namespace Tuleap\Plugin;
 
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\ConfigValueDefaultValueAttributeProvider;
+use Tuleap\Config\ConfigValueEnvironmentProvider;
 
 class SerializedPluginProxy implements ConfigClassProvider
 {
@@ -92,8 +93,9 @@ class SerializedPluginProxy implements ConfigClassProvider
      */
     public function addConfigClass(string $class_name): void
     {
-        $default_values_provider = new ConfigValueDefaultValueAttributeProvider($class_name);
-        $this->default_variables = array_merge($this->default_variables, $default_values_provider->getVariables());
+        $default_values_provider     = new ConfigValueDefaultValueAttributeProvider($class_name);
+        $environment_values_provider = new ConfigValueEnvironmentProvider($class_name);
+        $this->default_variables     = array_merge($this->default_variables, $default_values_provider->getVariables(), $environment_values_provider->getVariables());
     }
 
     /**

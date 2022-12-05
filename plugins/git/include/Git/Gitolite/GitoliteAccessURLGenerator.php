@@ -21,26 +21,44 @@
 namespace Tuleap\Git\Gitolite;
 
 use GitRepository;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyHelp;
+use Tuleap\Config\ConfigKeyString;
 use Tuleap\ServerHostname;
 
+#[ConfigKeyCategory('Git')]
 class GitoliteAccessURLGenerator
 {
-    /**
-     * @var \GitPluginInfo
-     */
-    private $git_plugin_info;
+    #[ConfigKey('Define a custom SSH URL to get access to the sources')]
+    #[ConfigKeyHelp(<<<EOT
+    This is mainly useful when SSH doesn't run on the default port (22)
 
-    public function __construct(\GitPluginInfo $git_plugin_info)
+    For convenience, you can either hardcode the URLs or you can use `%server_name%`
+    variable that will be replace automatically by the value of `sys_default_domain`
+
+    Exemple if your SSH server runs on port 2222:
+    ssh://gitolite@%server_name%:2222/
+
+    You can disable display of this url by activating this variable and setting '' (empty string)
+    EOT)]
+    public const SSH_URL = 'git_ssh_url';
+
+    #[ConfigKey('Define a custom HTTPS URL to get access to the sources')]
+    #[ConfigKeyString('https://%server_name%/plugins/git')]
+    #[ConfigKeyHelp(<<<EOT
+    For convenience, you can either hardcode the URLs or you can use `%server_name%`
+    variable that will be replace automatically by the value of `sys_default_domain`
+    EOT)]
+    public const HTTP_URL = 'git_http_url';
+
+    public function __construct(private \GitPluginInfo $git_plugin_info)
     {
-        $this->git_plugin_info = $git_plugin_info;
     }
 
-    /**
-     * @return string
-     */
-    public function getSSHURL(GitRepository $repository)
+    public function getSSHURL(GitRepository $repository): string
     {
-        $ssh_url = $this->getConfigurationParameter('git_ssh_url');
+        $ssh_url = $this->getConfigurationParameter(self::SSH_URL);
         if ($ssh_url === '') {
             return '';
         } elseif (! $ssh_url) {
@@ -49,12 +67,9 @@ class GitoliteAccessURLGenerator
         return $ssh_url . '/' . $repository->getProject()->getUnixName() . '/' . $repository->getFullName() . '.git';
     }
 
-    /**
-     * @return string
-     */
-    public function getHTTPURL(GitRepository $repository)
+    public function getHTTPURL(GitRepository $repository): string
     {
-        $http_url = $this->getConfigurationParameter('git_http_url');
+        $http_url = $this->getConfigurationParameter(self::HTTP_URL);
         if ($http_url) {
             return $http_url . '/' . $repository->getProject()->getUnixName() . '/' . $repository->getFullName() . '.git';
         }
@@ -65,7 +80,7 @@ class GitoliteAccessURLGenerator
     {
         $value = $this->git_plugin_info->getPropertyValueForName($key);
         if ($value !== false && $value !== null) {
-            $value = str_replace('%server_name%', ServerHostname::hostnameWithHTTPSPort(), $value);
+            $value = trim(str_replace('%server_name%', ServerHostname::hostnameWithHTTPSPort(), $value), '/');
         }
         return $value;
     }

@@ -33,13 +33,20 @@ final class SerializedPluginProxyTest extends TestCase
     /**
      * @dataProvider getDataForCaptureDefaultConfigValues
      */
-    public function testCaptureDefaultConfigValues(object $class, array $expected_value): void
+    public function testCaptureDefaultConfigValues(object $class, array $environment, array $expected_value): void
     {
-        $proxy = new SerializedPluginProxy(new EventPluginCache());
+        foreach ($environment as $env => $value) {
+            putenv("$env=$value");
+        }
 
+        $proxy = new SerializedPluginProxy(new EventPluginCache());
         $proxy->addConfigClass($class::class);
 
         self::assertEquals($expected_value, $proxy->getDefaultVariables());
+
+        foreach ($environment as $env => $value) {
+            putenv("$env");
+        }
     }
 
     public function getDataForCaptureDefaultConfigValues(): iterable
@@ -50,6 +57,7 @@ final class SerializedPluginProxyTest extends TestCase
                     #[ConfigKey('Some key')]
                     public const SOME_KEY = 'some_key';
                 },
+                'environment' => [],
                 'expected_value' => [],
             ],
             'It captures variable default value' => [
@@ -58,6 +66,7 @@ final class SerializedPluginProxyTest extends TestCase
                     #[ConfigKeyString('foo_bar')]
                     public const SOME_KEY = 'some_key';
                 },
+                'environment' => [],
                 'expected_value' => [
                     'some_key' => 'foo_bar',
                 ],
@@ -68,8 +77,59 @@ final class SerializedPluginProxyTest extends TestCase
                     #[ConfigKeyString('foo_bar')]
                     public const SOME_KEY = 'some_key';
                 },
+                'environment' => [],
                 'expected_value' => [
                     \ForgeConfig::FEATURE_FLAG_PREFIX . 'some_key' => 'foo_bar',
+                ],
+            ],
+            'It captures variable from environment' => [
+                'class' => new class {
+                    #[ConfigKey('Some key')]
+                    public const SOME_KEY = 'some_key';
+                },
+                'environment' => [
+                    'TULEAP_SOME_KEY' => 'foo',
+                ],
+                'expected_value' => [
+                    'some_key' => 'foo',
+                ],
+            ],
+            'It captures variable from environment with empty value' => [
+                'class' => new class {
+                    #[ConfigKey('Some key')]
+                    public const SOME_KEY = 'some_key';
+                },
+                'environment' => [
+                    'TULEAP_SOME_KEY' => '',
+                ],
+                'expected_value' => [
+                    'some_key' => '',
+                ],
+            ],
+            'Environment overrides default value' => [
+                'class' => new class {
+                    #[ConfigKey('Some key')]
+                    #[ConfigKeyString('foo_bar')]
+                    public const SOME_KEY = 'some_key';
+                },
+                'environment' => [
+                    'TULEAP_SOME_KEY' => 'foo',
+                ],
+                'expected_value' => [
+                    'some_key' => 'foo',
+                ],
+            ],
+            'Environment with empty value overrides default value' => [
+                'class' => new class {
+                    #[ConfigKey('Some key')]
+                    #[ConfigKeyString('foo_bar')]
+                    public const SOME_KEY = 'some_key';
+                },
+                'environment' => [
+                    'TULEAP_SOME_KEY' => '',
+                ],
+                'expected_value' => [
+                    'some_key' => '',
                 ],
             ],
         ];
