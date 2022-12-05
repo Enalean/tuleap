@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
+import "../themes/admin.scss";
+import { getPOFileFromLocaleWithoutExtension, initGettext } from "@tuleap/gettext";
 import { removeTeam } from "./teams/remove-team";
 import { displayTeamsToAggregate } from "./teams/display-teams-to-aggregate";
 import { addTeamInProgram } from "./teams/add-team";
@@ -36,11 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gettext_provider = await initGettext(
         language,
         "program_management_admin",
-        (locale) =>
-            import(
-                /* webpackChunkName: "program_management_admin-po-" */ "../po/" +
-                    getPOFileFromLocale(locale)
-            )
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
 
     const app = document.getElementById("program-management-administration");

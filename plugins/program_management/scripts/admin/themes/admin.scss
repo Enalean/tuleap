@@ -17,7 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/project-background";
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
 @use "@tuleap/list-picker";
+
+.project-with-background {
+    .program-management-title-header {
+        @include project-background.title-header-typography;
+
+        margin: 0 0 var(--tlp-medium-spacing);
+    }
+}
+
+body {
+    @include project-background.apply-background(
+        ".program-management-title-header",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
+}
+
+.program-management-title-header {
+    margin: 0;
+    padding: var(--tlp-medium-spacing);
+}
 
 .program-management-configuration-incorrect {
     margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing);

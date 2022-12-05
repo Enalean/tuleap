@@ -25,8 +25,8 @@ namespace Tuleap\ProgramManagement;
 use HTTPRequest;
 use Project;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
@@ -132,15 +132,19 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
 
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
-        $assets = $this->getAssets();
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'program-management-style'));
+        $layout->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../scripts/admin/frontend-assets', '/assets/program_management/admin'),
+                'src/index.ts'
+            )
+        );
 
         $layout->addBreadcrumbs(
             $this->breadcrumbs_builder->build($project, $user)
         );
 
         $this->includeHeaderAndNavigationBar($layout, $project);
-        $layout->includeFooterJavascriptFile($assets->getFileURL('program_management_admin.js'));
+
 
         try {
             $aggregated_teams = TeamProjectsCollection::fromProgramForAdministration(
@@ -204,14 +208,6 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         }
 
         return $project;
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/program_management'
-        );
     }
 
     private function includeHeaderAndNavigationBar(BaseLayout $layout, Project $project): void

@@ -31,7 +31,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
@@ -1156,9 +1155,9 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
-        $assets                  = new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/program_management'
+        $assets                  = new \Tuleap\Layout\IncludeViteAssets(
+            __DIR__ . '/../scripts/artifact-additional-action/frontend-assets',
+            '/assets/program_management/artifact-additional-action'
         );
         $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());
         $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
@@ -1174,7 +1173,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new PlanDao(),
             new ArtifactsExplicitTopBacklogDAO(),
             new PlannedFeatureDAO(),
-            new \Tuleap\Layout\JavascriptAsset($assets, 'artifact_additional_action.js'),
+            new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/index.ts'),
             new \Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics(TrackerFactory::instance())
         );
 
