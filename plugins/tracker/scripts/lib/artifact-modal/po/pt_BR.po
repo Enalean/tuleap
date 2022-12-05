@@ -69,6 +69,9 @@ msgstr ""
 msgid "Error while retrieving the possible parents: %s"
 msgstr ""
 
+msgid "Error while searching for artifacts: %s"
+msgstr ""
+
 msgid "Error while uploading %(file_name)s: %(error)s"
 msgstr ""
 

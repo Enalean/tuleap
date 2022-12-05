@@ -40,6 +40,7 @@ import type { UserIdentifier } from "../../../../domain/UserIdentifier";
 import { SearchResultsGroup } from "./SearchResultsGroup";
 import { UserHistoryRetrievalFault } from "../../../../domain/fields/link-field/UserHistoryRetrievalFault";
 import type { SearchArtifacts } from "../../../../domain/fields/link-field/SearchArtifacts";
+import { SearchArtifactsFault } from "../../../../domain/fields/link-field/SearchArtifactsFault";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
@@ -48,6 +49,9 @@ export type ArtifactLinkSelectorAutoCompleterType = {
 const isExpectedFault = (fault: Fault): boolean =>
     ("isForbidden" in fault && fault.isForbidden() === true) ||
     ("isNotFound" in fault && fault.isNotFound() === true);
+
+const isSearchBackendUnavailable = (fault: Fault): boolean =>
+    "isNotFound" in fault && fault.isNotFound() === true;
 
 const isParentSelected = (host: LinkField): boolean =>
     LinkType.isReverseChild(host.current_link_type);
@@ -81,13 +85,17 @@ export const ArtifactLinkSelectorAutoCompleter = (
             );
     };
 
-    const getSearchResults = (query: string): PromiseLike<GroupOfItems> =>
+    const getSearchResults = (query: string): PromiseLike<GroupCollection> =>
         artifacts_searcher.searchArtifacts(query).match(
-            (artifacts) => SearchResultsGroup.fromSearchResults(link_verifier, artifacts),
+            (artifacts) => {
+                return [SearchResultsGroup.fromSearchResults(link_verifier, artifacts)];
+            },
             (fault) => {
-                // eslint-disable-next-line no-console
-                console.log(String(fault));
-                return SearchResultsGroup.buildEmpty();
+                if (isSearchBackendUnavailable(fault)) {
+                    return [];
+                }
+                fault_notifier.onFault(SearchArtifactsFault(fault));
+                return [SearchResultsGroup.buildEmpty()];
             }
         );
 
@@ -159,9 +167,9 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 });
                 if (query.length >= SEARCH_QUERY_MINIMUM_LENGTH) {
                     host.search_results_section = [SearchResultsGroup.buildLoadingState()];
-                    getSearchResults(query).then((group) => {
+                    getSearchResults(query).then((groups) => {
                         if (!isParentSelected(host)) {
-                            host.search_results_section = [group];
+                            host.search_results_section = groups;
                         }
                     });
                 }

@@ -17,22 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { okAsync, errAsync } from "neverthrow";
-import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { SearchArtifacts } from "../../src/domain/fields/link-field/SearchArtifacts";
-import type { LinkableArtifact } from "../../src/domain/fields/link-field/LinkableArtifact";
 
-export const SearchArtifactsStub = {
-    withoutResults: (): SearchArtifacts => ({
-        searchArtifacts: () => okAsync([]),
-    }),
-
-    withResults: (entries: ResultAsync<readonly LinkableArtifact[], never>): SearchArtifacts => ({
-        searchArtifacts: () => entries,
-    }),
-
-    withFault: (fault: Fault): SearchArtifacts => ({
-        searchArtifacts: () => errAsync(fault),
-    }),
-};
+export const SearchArtifactsFault = (previous: Fault): Fault => ({
+    isSearchArtifacts: () => true,
+    ...previous,
+});

@@ -182,6 +182,31 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(group.items[1].value).toBe(second_artifact);
         });
 
+        it(`when the Search API responds 404 Not Found error code,
+            it will not notify the fault as it means there is no Search backend installed
+            and it will clear the search group so that the section does not appear at all`, async () => {
+            artifacts_searcher = SearchArtifactsStub.withFault(NotFoundFault());
+
+            await await autocomplete("abc");
+
+            expect(fault_notifier.getCallCount()).toBe(0);
+            expect(host.search_results_section).toHaveLength(0);
+        });
+
+        it(`when an unexpected error is returned by the API,
+            then it will set the search results section with zero items so that link-selector can show the empty state message
+            and will notify the fault`, async () => {
+            artifacts_searcher = SearchArtifactsStub.withFault(Fault.fromMessage("Ooops"));
+
+            await await autocomplete("abc");
+
+            expect(fault_notifier.getCallCount()).toBe(1);
+            expect(host.search_results_section).toHaveLength(1);
+            const group = host.search_results_section[0];
+            expect(group.items).toHaveLength(0);
+            expect(group.empty_message).not.toBe("");
+        });
+
         it(`when an artifact is returned by the artifact api,
             it will be added to the matching artifact section,
             and clear the fault notification`, async () => {
