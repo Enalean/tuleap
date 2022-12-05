@@ -40,7 +40,7 @@ export class EventManager {
     private has_keyboard_selection_occurred = false;
 
     constructor(
-        private readonly doc: HTMLDocument,
+        private readonly doc: Document,
         private readonly wrapper_element: Element,
         private readonly link_selector_element: Element,
         private readonly dropdown_element: Element,

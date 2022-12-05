@@ -19,27 +19,19 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { SearchFieldEventCallbackHandler } from "./SearchFieldEventCallbackHandler";
-import { LinkSelectorStub } from "../../tests/stubs/LinkSelectorStub";
-import type { LinkSelector, LinkSelectorSearchFieldCallback } from "../type";
+import type { LinkSelectorSearchFieldCallback } from "../type";
 
 describe("SearchFieldEventCallbackHandler", () => {
-    let search_field_element: HTMLInputElement,
-        link_selector: LinkSelector,
-        callback: LinkSelectorSearchFieldCallback;
+    let search_field_element: HTMLInputElement, callback: LinkSelectorSearchFieldCallback;
 
     const init = (callback: LinkSelectorSearchFieldCallback): void => {
-        const handler = SearchFieldEventCallbackHandler(
-            link_selector,
-            search_field_element,
-            callback
-        );
+        const handler = SearchFieldEventCallbackHandler(search_field_element, callback);
         return handler.init();
     };
 
     beforeEach(() => {
         const doc = document.implementation.createHTMLDocument();
         search_field_element = doc.createElement("input");
-        link_selector = LinkSelectorStub.build();
 
         callback = vi.fn();
         vi.useFakeTimers();
@@ -57,7 +49,7 @@ describe("SearchFieldEventCallbackHandler", () => {
 
         vi.advanceTimersByTime(1); // 250 ms elapsed
 
-        expect(callback).toHaveBeenCalledWith(link_selector, "a query");
+        expect(callback).toHaveBeenCalledWith("a query");
     });
 
     it("should not execute the callback when the user it still typing", () => {
@@ -69,7 +61,7 @@ describe("SearchFieldEventCallbackHandler", () => {
         vi.advanceTimersByTime(250);
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith(link_selector, "nana nana nana BATMAN");
+        expect(callback).toHaveBeenCalledWith("nana nana nana BATMAN");
     });
 
     it("When the query has been cleared, then it should trigger the callback immediately", () => {
@@ -78,6 +70,6 @@ describe("SearchFieldEventCallbackHandler", () => {
 
         vi.advanceTimersByTime(0); // 0 ms elapsed
 
-        expect(callback).toHaveBeenCalledWith(link_selector, "");
+        expect(callback).toHaveBeenCalledWith("");
     });
 });

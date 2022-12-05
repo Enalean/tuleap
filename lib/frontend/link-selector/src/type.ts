@@ -28,7 +28,7 @@ export interface LinkSelector {
     destroy: () => void;
 }
 
-export type LinkSelectorSearchFieldCallback = (link_selector: LinkSelector, query: string) => void;
+export type LinkSelectorSearchFieldCallback = (query: string) => void;
 
 export type LinkSelectorSelectionCallback = (selected_value: unknown | null) => void;
 
@@ -38,9 +38,11 @@ export type LinkSelectorTemplatingCallback = (
 ) => HTMLTemplateResult;
 
 export interface LinkSelectorOptions {
-    templating_callback: LinkSelectorTemplatingCallback;
-    selection_callback: LinkSelectorSelectionCallback;
-    search_field_callback: LinkSelectorSearchFieldCallback;
+    readonly placeholder: string;
+    readonly search_input_placeholder: string;
+    readonly templating_callback: LinkSelectorTemplatingCallback;
+    readonly selection_callback: LinkSelectorSelectionCallback;
+    readonly search_field_callback: LinkSelectorSearchFieldCallback;
 }
 
 export type RenderedItemMap = Map<string, RenderedItem>;

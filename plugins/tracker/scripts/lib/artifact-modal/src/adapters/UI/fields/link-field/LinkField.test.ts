@@ -233,25 +233,31 @@ describe("LinkField", () => {
                 expect(link_type.shortname).toBe(UNTYPED_LINK);
             });
 
-            it(`when the type is changed to reverse _is_child (Parent),
+            describe(`when the feature flag is not active`, () => {
+                beforeEach(() => {
+                    host.controller.is_search_feature_flag_enabled = false;
+                });
+
+                it(`when the type is changed to reverse _is_child (Parent),
                 it will set a special placeholder in link selector`, () => {
-                host.current_link_type = LinkTypeStub.buildReverseCustom();
-                const setPlaceholder = jest.spyOn(link_selector, "setPlaceholder");
+                    host.current_link_type = LinkTypeStub.buildReverseCustom();
+                    const setPlaceholder = jest.spyOn(link_selector, "setPlaceholder");
 
-                const link_type = LinkTypeStub.buildParentLinkType();
-                const result = setType(link_type);
-                expect(result).toBe(link_type);
-                expect(setPlaceholder).toHaveBeenCalled();
-            });
+                    const link_type = LinkTypeStub.buildParentLinkType();
+                    const result = setType(link_type);
+                    expect(result).toBe(link_type);
+                    expect(setPlaceholder).toHaveBeenCalled();
+                });
 
-            it(`when the type is changed to another type,
+                it(`when the type is changed to another type,
                 it will set the default placeholder in link selector`, () => {
-                const setPlaceholder = jest.spyOn(link_selector, "setPlaceholder");
+                    const setPlaceholder = jest.spyOn(link_selector, "setPlaceholder");
 
-                const link_type = setType(LinkTypeStub.buildUntyped());
-                const result = setType(link_type);
-                expect(result).toBe(link_type);
-                expect(setPlaceholder).toHaveBeenCalled();
+                    const link_type = setType(LinkTypeStub.buildUntyped());
+                    const result = setType(link_type);
+                    expect(result).toBe(link_type);
+                    expect(setPlaceholder).toHaveBeenCalled();
+                });
             });
 
             it(`when the current type is changed,

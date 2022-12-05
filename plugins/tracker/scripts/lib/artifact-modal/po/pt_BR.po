@@ -99,6 +99,9 @@ msgstr "Ajuda"
 msgid "Hidden fieldsets:"
 msgstr ""
 
+msgid "Id, title..."
+msgstr ""
+
 msgid "Keep the file"
 msgstr ""
 
@@ -178,6 +181,9 @@ msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
 
 msgid "Save changes"
+msgstr ""
+
+msgid "Search for an artifact..."
 msgstr ""
 
 msgid "Search results"

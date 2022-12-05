@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkSelector, LinkSelectorSearchFieldCallback } from "../type";
+import type { LinkSelectorSearchFieldCallback } from "../type";
 
 const TRIGGER_CALLBACK_DELAY_IN_MS = 250;
 
@@ -26,7 +26,6 @@ export interface SearchFieldEventCallbackHandlerType {
 }
 
 export const SearchFieldEventCallbackHandler = (
-    link_selector: LinkSelector,
     search_field_element: HTMLInputElement,
     callback: LinkSelectorSearchFieldCallback
 ): SearchFieldEventCallbackHandlerType => ({
@@ -40,11 +39,11 @@ export const SearchFieldEventCallbackHandler = (
             const query = search_field_element.value;
             if (query === "") {
                 // The query has been cleared, no need to wait
-                callback(link_selector, query);
+                callback(query);
             }
 
             timeout_id = window.setTimeout(() => {
-                callback(link_selector, query);
+                callback(query);
             }, TRIGGER_CALLBACK_DELAY_IN_MS);
         });
     },
