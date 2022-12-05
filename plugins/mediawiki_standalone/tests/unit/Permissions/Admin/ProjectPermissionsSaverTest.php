@@ -43,24 +43,40 @@ class ProjectPermissionsSaverTest extends TestCase
             ProjectUGroupTestBuilder::buildProjectMembers(),
             ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('Developers')->build(),
         ];
+        $writers = [
+            ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('Developers')->build(),
+        ];
 
         $history_dao
-            ->expects(self::once())
+            ->expects(self::exactly(2))
             ->method('groupAddHistory')
-            ->with(
-                'perm_granted_for_mediawiki_standalone_readers',
-                'ugroup_project_members_name_key,Developers',
-                self::PROJECT_ID,
+            ->withConsecutive(
+                [
+                    'perm_granted_for_mediawiki_standalone_readers',
+                    'ugroup_project_members_name_key,Developers',
+                    self::PROJECT_ID,
+                ],
+                [
+                    'perm_granted_for_mediawiki_standalone_writers',
+                    'Developers',
+                    self::PROJECT_ID,
+                ],
             );
 
         $saver->save(
             ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build(),
-            $readers
+            $readers,
+            $writers,
         );
 
         self::assertEquals(
             [3, 102],
             $permissions_dao->getCapturedReadersUgroupIds()
+        );
+
+        self::assertEquals(
+            [102],
+            $permissions_dao->getCapturedWritersUgroupIds()
         );
     }
 }

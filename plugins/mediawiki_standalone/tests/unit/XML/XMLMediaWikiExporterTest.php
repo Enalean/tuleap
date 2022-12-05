@@ -26,6 +26,7 @@ use Psr\Log\NullLogger;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
+use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -48,16 +49,20 @@ final class XMLMediaWikiExporterTest extends TestCase
         $project_members = ProjectUGroupTestBuilder::buildProjectMembers();
         $developers      = ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('Developers')->build();
 
+        $dao = ISearchByProjectAndPermissionStub::buildWithPermissions(
+            [
+                $project_members->getId(),
+                $developers->getId(),
+            ],
+            [
+                $developers->getId(),
+            ],
+        );
+
         $exporter = new XMLMediaWikiExporter(
             new NullLogger(),
-            new ReadersRetriever(
-                ISearchByProjectAndPermissionStub::buildWithPermissions(
-                    [
-                        $project_members->getId(),
-                        $developers->getId(),
-                    ]
-                )
-            ),
+            new ReadersRetriever($dao),
+            new WritersRetriever($dao),
             UGroupRetrieverStub::buildWithUserGroups($project_members, $developers)
         );
 
@@ -73,5 +78,8 @@ final class XMLMediaWikiExporterTest extends TestCase
         self::assertCount(2, $xml->{'mediawiki-standalone'}->{'read-access'}->ugroup);
         self::assertEquals('project_members', (string) $xml->{'mediawiki-standalone'}->{'read-access'}->ugroup[0]);
         self::assertEquals('Developers', (string) $xml->{'mediawiki-standalone'}->{'read-access'}->ugroup[1]);
+
+        self::assertCount(1, $xml->{'mediawiki-standalone'}->{'write-access'}->ugroup);
+        self::assertEquals('Developers', (string) $xml->{'mediawiki-standalone'}->{'write-access'}->ugroup[0]);
     }
 }

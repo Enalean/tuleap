@@ -43,14 +43,22 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
 
     /**
      * @param \ProjectUGroup[] $readers
+     * @param \ProjectUGroup[] $writers
      */
-    public function saveProjectPermissions(\Project $project, array $readers): void
+    public function saveProjectPermissions(\Project $project, array $readers, array $writers): void
     {
         $insertions = [];
         foreach ($readers as $user_group) {
             $insertions[] = [
                 'project_id' => $project->getID(),
                 'permission' => PermissionRead::NAME,
+                'ugroup_id'  => $user_group->getId(),
+            ];
+        }
+        foreach ($writers as $user_group) {
+            $insertions[] = [
+                'project_id' => $project->getID(),
+                'permission' => PermissionWrite::NAME,
                 'ugroup_id'  => $user_group->getId(),
             ];
         }

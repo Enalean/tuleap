@@ -75,6 +75,7 @@ use Tuleap\MediawikiStandalone\Permissions\PermissionsFollowingSiteAccessChangeU
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
 use Tuleap\MediawikiStandalone\Permissions\RestrictedUserCanAccessMediaWikiVerifier;
 use Tuleap\MediawikiStandalone\Permissions\UserPermissionsBuilder;
+use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
 use Tuleap\MediawikiStandalone\REST\OAuth2\OAuth2MediawikiStandaloneReadScope;
 use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageDao;
@@ -204,11 +205,11 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             return;
         }
 
+        $dao = new MediawikiPermissionsDao();
         (new XMLMediaWikiExporter(
             new WrapperLogger($event->getLogger(), 'MediaWiki Standalone'),
-            new ReadersRetriever(
-                new MediawikiPermissionsDao()
-            ),
+            new ReadersRetriever($dao),
+            new WritersRetriever($dao),
             new UGroupManager(),
         ))->exportToXml(
             $event->getProject(),
@@ -441,8 +442,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     public function routeAdminSaveProjectPermissions(): \Tuleap\Request\DispatchableWithRequest
     {
+        $dao = new MediawikiPermissionsDao();
+
         return new AdminSavePermissionsController(
-            new ProjectPermissionsSaver(new MediawikiPermissionsDao(), new ProjectHistoryDao()),
+            new ProjectPermissionsSaver($dao, new ProjectHistoryDao()),
             new UserGroupToSaveRetriever(new UGroupManager()),
             new RedirectWithFeedbackFactory(
                 HTTPFactoryBuilder::responseFactory(),
@@ -462,9 +465,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                         new RestrictedUserCanAccessMediaWikiVerifier(),
                         \EventManager::instance(),
                     ),
-                    new ReadersRetriever(
-                        new MediawikiPermissionsDao()
-                    ),
+                    new ReadersRetriever($dao),
+                    new WritersRetriever($dao),
                 ),
             )
         );
@@ -472,9 +474,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     public function routeAdminProjectPermissions(): \Tuleap\Request\DispatchableWithRequest
     {
-        $readers_retriever = new ReadersRetriever(
-            new MediawikiPermissionsDao()
-        );
+        $dao = new MediawikiPermissionsDao();
+
+        $readers_retriever = new ReadersRetriever($dao);
+        $writers_retriever = new WritersRetriever($dao);
 
         return new AdminPermissionsController(
             HTTPFactoryBuilder::responseFactory(),
@@ -484,6 +487,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             new CSRFSynchronizerTokenProvider(),
             new AdminPermissionsPresenterBuilder(
                 $readers_retriever,
+                $writers_retriever,
                 new User_ForgeUserGroupFactory(new UserGroupDao()),
             ),
             new SapiEmitter(),
@@ -500,6 +504,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                         \EventManager::instance(),
                     ),
                     $readers_retriever,
+                    $writers_retriever,
                 ),
             )
         );
@@ -683,11 +688,11 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
         $ugroup_manager = new UGroupManager();
 
+        $dao                  = new MediawikiPermissionsDao();
         $service_pane_builder = new PermissionPerGroupServicePaneBuilder(
             new PermissionPerGroupUGroupFormatter($ugroup_manager),
-            new ReadersRetriever(
-                new MediawikiPermissionsDao()
-            ),
+            new ReadersRetriever($dao),
+            new WritersRetriever($dao),
             $ugroup_manager,
         );
 

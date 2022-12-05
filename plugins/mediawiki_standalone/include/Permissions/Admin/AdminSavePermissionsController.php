@@ -56,6 +56,7 @@ class AdminSavePermissionsController extends DispatchablePSR15Compatible
             $this->permissions_saver->save(
                 $project,
                 $this->user_group_to_save_retriever->getUserGroups($project, $permissions->getReadersUgroupIds()),
+                $this->user_group_to_save_retriever->getUserGroups($project, $permissions->getWritersUgroupIds()),
             );
         } catch (InvalidRequestException | UnknownUserGroupException $exception) {
             throw new ForbiddenException();

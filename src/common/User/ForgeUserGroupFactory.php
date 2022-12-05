@@ -109,6 +109,20 @@ class User_ForgeUserGroupFactory
         if (ForgeConfig::areAnonymousAllowed() && $project->isPublic()) {
             $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::ANON);
         }
+
+        return array_merge(
+            $user_groups,
+            $this->getAllForProjectWithoutNobodyNorAnonymous($project)
+        );
+    }
+
+    /**
+     * @return User_ForgeUGroup[]
+     */
+    public function getAllForProjectWithoutNobodyNorAnonymous(Project $project): array
+    {
+        $user_groups = [];
+
         if (ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted()) {
             $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::AUTHENTICATED);
         }

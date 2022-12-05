@@ -47,16 +47,55 @@ final class XMLMediaWikiImporter
 
     private function importPermissions(\Project $project, \SimpleXMLElement $xml_mediawiki): void
     {
+        $readers = $this->getReaders($project, $xml_mediawiki);
+        $writers = $this->getWriters($project, $xml_mediawiki);
+
+        if (count($readers) > 0 || count($writers) > 0) {
+            $this->permissions_saver->saveProjectPermissions($project, $readers, $writers);
+        }
+    }
+
+    /**
+     * @return \ProjectUGroup[]
+     */
+    private function getReaders(\Project $project, \SimpleXMLElement $xml_mediawiki): array
+    {
+        $readers = [];
+
         if ($xml_mediawiki->{'read-access'}) {
             $this->logger->info("Importing read access rights for {$project->getUnixName()}");
             $readers = $this->getUgroupsForPermissions($project, $xml_mediawiki->{'read-access'});
-            if (count($readers) > 0) {
-                $this->logger->info(
-                    "Found the following ugroups: " .
-                    implode(', ', array_map(static fn(\ProjectUGroup $ugroup) => $ugroup->getNormalizedName(), $readers))
-                );
-                $this->permissions_saver->saveProjectPermissions($project, $readers);
-            }
+        }
+
+        $this->logFoundUGroups($project, $readers);
+
+        return $readers;
+    }
+
+    /**
+     * @return \ProjectUGroup[]
+     */
+    private function getWriters(\Project $project, \SimpleXMLElement $xml_mediawiki): array
+    {
+        $writers = [];
+
+        if ($xml_mediawiki->{'write-access'}) {
+            $this->logger->info("Importing write access rights for {$project->getUnixName()}");
+            $writers = $this->getUgroupsForPermissions($project, $xml_mediawiki->{'write-access'});
+        }
+
+        $this->logFoundUGroups($project, $writers);
+
+        return $writers;
+    }
+
+    private function logFoundUGroups(\Project $project, array $ugroups): void
+    {
+        if (count($ugroups) > 0) {
+            $this->logger->info(
+                "Found the following ugroups: " .
+                implode(', ', array_map(static fn(\ProjectUGroup $ugroup) => $ugroup->getNormalizedName(), $ugroups))
+            );
         }
     }
 

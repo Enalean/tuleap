@@ -26,6 +26,22 @@
                     </select>
                 </div>
 
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="writers">
+                        {{# dgettext }}
+                            tuleap-mediawiki_standalone |
+                            User groups who can write MediaWiki pages |
+                        {{/ dgettext }}
+                    </label>
+                    <select class="tlp-select tlp-select-adjusted" id="writers" name="writers[]" size="7" multiple>
+                        {{# writers }}
+                            <option value="{{ id }}" {{# is_selected }}selected="selected"{{/is_selected}}>
+                                {{ name }}
+                            </option>
+                        {{/ writers }}
+                    </select>
+                </div>
+
                 <div class="tlp-pane-section-submit">
                     {{# csrf_token }}
                         {{> csrf_token_input }}

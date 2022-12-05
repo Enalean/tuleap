@@ -22,11 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-interface ISaveProjectPermissions
+final class WritersRetriever
 {
+    public function __construct(private ISearchByProjectAndPermission $dao)
+    {
+    }
+
     /**
-     * @param \ProjectUGroup[] $readers
-     * @param \ProjectUGroup[] $writers
+     * @return int[]
      */
-    public function saveProjectPermissions(\Project $project, array $readers, array $writers): void;
+    public function getWritersUgroupIds(\Project $project): array
+    {
+        $readers = array_column($this->dao->searchByProjectAndPermission($project, new PermissionWrite()), 'ugroup_id');
+
+        return empty($readers)
+            ? [\ProjectUGroup::PROJECT_MEMBERS]
+            : $readers;
+    }
 }

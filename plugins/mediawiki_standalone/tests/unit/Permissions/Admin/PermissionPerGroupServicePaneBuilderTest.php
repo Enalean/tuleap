@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
+use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\UGroupRetriever;
@@ -44,6 +45,7 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
     private \Project $project;
     private UGroupRetriever $ugroup_retriever;
     private ReadersRetriever $readers_retriever;
+    private WritersRetriever $writers_retriever;
     private PermissionPerGroupServicePaneBuilder $builder;
 
     protected function setUp(): void
@@ -80,18 +82,25 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
                 ],
             ]);
 
-        $this->readers_retriever = new ReadersRetriever(
-            ISearchByProjectAndPermissionStub::buildWithPermissions(
-                [$this->project_members->getId(), $this->developers->getId()],
-            )
+        $dao = ISearchByProjectAndPermissionStub::buildWithPermissions(
+            [$this->project_members->getId(), $this->developers->getId()],
+            [$this->project_admins->getId(), $this->developers->getId()],
         );
 
-        $this->ugroup_retriever = UGroupRetrieverStub::buildWithUserGroups($this->project_admins, $this->project_members, $this->developers);
+        $this->readers_retriever = new ReadersRetriever($dao);
+        $this->writers_retriever = new WritersRetriever($dao);
+
+        $this->ugroup_retriever = UGroupRetrieverStub::buildWithUserGroups(
+            $this->project_admins,
+            $this->project_members,
+            $this->developers
+        );
 
         $this->builder = new PermissionPerGroupServicePaneBuilder(
             $this->formatter,
             $this->readers_retriever,
-            $this->ugroup_retriever
+            $this->writers_retriever,
+            $this->ugroup_retriever,
         );
 
         $GLOBALS['Language']->method('getText')->willReturn('');
@@ -103,6 +112,15 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
 
         self::assertEquals(
             [
+                [
+                    'name'   => 'MediaWiki writers',
+                    'groups' => [
+                        [
+                            'name' => 'Developers',
+                        ],
+                    ],
+                    'url'    => '/mediawiki_standalone/admin/TestProject/permissions',
+                ],
                 [
                     'name'   => 'MediaWiki readers',
                     'groups' => [
@@ -148,6 +166,18 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
                     'groups' => [
                         [
                             'name' => 'Project administrators',
+                        ],
+                    ],
+                    'url'    => '/mediawiki_standalone/admin/TestProject/permissions',
+                ],
+                [
+                    'name'   => 'MediaWiki writers',
+                    'groups' => [
+                        [
+                            'name' => 'Project administrators',
+                        ],
+                        [
+                            'name' => 'Developers',
                         ],
                     ],
                     'url'    => '/mediawiki_standalone/admin/TestProject/permissions',

@@ -31,11 +31,13 @@ final class AdminPermissionsPresenter
 {
     /**
      * @param UserGroupPresenter[] $readers
+     * @param UserGroupPresenter[] $writers
      */
     public function __construct(
         public string $post_url,
         public CSRFSynchronizerTokenInterface $csrf_token,
         public array $readers,
+        public array $writers,
     ) {
     }
 }

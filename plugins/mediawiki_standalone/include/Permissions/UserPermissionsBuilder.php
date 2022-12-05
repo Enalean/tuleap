@@ -33,6 +33,7 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
         private ForgePermissionsRetriever $forge_permissions_retriever,
         private CheckProjectAccess $check_project_access,
         private ReadersRetriever $readers_retriever,
+        private WritersRetriever $writers_retriever,
     ) {
     }
 
@@ -52,8 +53,10 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
             return UserPermissions::fullAccess();
         }
 
-        if ($user->isMember($project->getID())) {
-            return UserPermissions::writer();
+        foreach ($this->writers_retriever->getWritersUgroupIds($project) as $writers_ugroup_id) {
+            if ($user->isMemberOfUGroup($writers_ugroup_id, (int) $project->getID())) {
+                return UserPermissions::writer();
+            }
         }
 
         foreach ($this->readers_retriever->getReadersUgroupIds($project) as $readers_ugroup_id) {

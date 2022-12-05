@@ -75,16 +75,24 @@ class AdminSavePermissionsControllerTest extends TestCase
             ->withParsedBody(
                 [
                     'readers' => ['102', '103'],
+                    'writers' => ['103'],
                 ]
             );
 
         $history_dao
-            ->expects(self::once())
+            ->expects(self::exactly(2))
             ->method('groupAddHistory')
-            ->with(
-                'perm_granted_for_mediawiki_standalone_readers',
-                'Developers,QA',
-                self::PROJECT_ID,
+            ->withConsecutive(
+                [
+                    'perm_granted_for_mediawiki_standalone_readers',
+                    'Developers,QA',
+                    self::PROJECT_ID,
+                ],
+                [
+                    'perm_granted_for_mediawiki_standalone_writers',
+                    'QA',
+                    self::PROJECT_ID,
+                ]
             );
 
         $response = $controller->handle($request);
@@ -95,6 +103,10 @@ class AdminSavePermissionsControllerTest extends TestCase
         self::assertEquals(
             [102, 103],
             $permissions_dao->getCapturedReadersUgroupIds()
+        );
+        self::assertEquals(
+            [103],
+            $permissions_dao->getCapturedWritersUgroupIds()
         );
     }
 }

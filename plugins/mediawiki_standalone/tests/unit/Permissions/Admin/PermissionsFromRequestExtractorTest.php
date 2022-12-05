@@ -28,20 +28,25 @@ use Tuleap\Test\PHPUnit\TestCase;
 class PermissionsFromRequestExtractorTest extends TestCase
 {
     /**
-     * @testWith [{"readers": ["102", "103"]}, ["102", "103"]]
-     *           [{"keys_not_found": []}, []]
+     * @testWith [{"readers": ["102", "103"], "writers": ["103"]}, ["102", "103"], ["103"]]
+     *           [{"keys_not_found": []}, [], []]
      */
-    public function testExtractPermissionsFromRequest(array $params, array $expected_readers_ugroup_ids): void
-    {
+    public function testExtractPermissionsFromRequest(
+        array $params,
+        array $expected_readers_ugroup_ids,
+        array $expected_writers_ugroup_ids,
+    ): void {
         $request = (new NullServerRequest())->withParsedBody($params);
 
         $permissions = PermissionsFromRequestExtractor::extractPermissionsFromRequest($request);
 
         self::assertEquals($expected_readers_ugroup_ids, $permissions->getReadersUgroupIds());
+        self::assertEquals($expected_writers_ugroup_ids, $permissions->getWritersUgroupIds());
     }
 
     /**
      * @testWith [{"readers": "123"}]
+     *           [{"writers": "123"}]
      *           ["invalid body"]
      */
     public function testInvalidRequest(mixed $params): void

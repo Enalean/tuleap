@@ -33,6 +33,9 @@ msgstr ""
 msgid "MediaWiki readers"
 msgstr ""
 
+msgid "MediaWiki writers"
+msgstr ""
+
 msgid "Mediawiki Standalone (read only)"
 msgstr ""
 
@@ -42,7 +45,13 @@ msgstr ""
 msgid "Permission granted for MediaWiki readers"
 msgstr ""
 
+msgid "Permission granted for MediaWiki writers"
+msgstr ""
+
 msgid "Permission reset for MediaWiki readers"
+msgstr ""
+
+msgid "Permission reset for MediaWiki writers"
 msgstr ""
 
 msgid "Permissions"
@@ -78,6 +87,9 @@ msgid ""
 msgstr ""
 
 msgid "User groups who can read MediaWiki pages"
+msgstr ""
+
+msgid "User groups who can write MediaWiki pages"
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"

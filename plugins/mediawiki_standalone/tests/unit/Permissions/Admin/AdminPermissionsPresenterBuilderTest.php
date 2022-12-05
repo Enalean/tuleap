@@ -24,6 +24,7 @@ namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
 use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
 use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
+use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -33,23 +34,33 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
     public function testGetPresenter(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
+        $ugroups = [
+            new \User_ForgeUGroup(\ProjectUGroup::REGISTERED, 'Registered users', ''),
+            new \User_ForgeUGroup(\ProjectUGroup::PROJECT_MEMBERS, 'Project members', ''),
+            new \User_ForgeUGroup(104, 'Developers', ''),
+            new \User_ForgeUGroup(105, 'Integrators', ''),
+            new \User_ForgeUGroup(106, 'QA', ''),
+        ];
 
         $ugroup_factory = $this->createMock(\User_ForgeUserGroupFactory::class);
         $ugroup_factory
             ->method('getAllForProjectWithoutNobody')
             ->willReturn([
                 new \User_ForgeUGroup(\ProjectUGroup::ANONYMOUS, 'All users', ''),
-                new \User_ForgeUGroup(\ProjectUGroup::REGISTERED, 'Registered users', ''),
-                new \User_ForgeUGroup(\ProjectUGroup::PROJECT_MEMBERS, 'Project members', ''),
-                new \User_ForgeUGroup(104, 'Developers', ''),
-                new \User_ForgeUGroup(105, 'Integrators', ''),
-                new \User_ForgeUGroup(106, 'QA', ''),
+                ...$ugroups,
             ]);
+        $ugroup_factory
+            ->method('getAllForProjectWithoutNobodyNorAnonymous')
+            ->willReturn($ugroups);
+
+        $dao = ISearchByProjectAndPermissionStub::buildWithPermissions(
+            [104, 105],
+            [\ProjectUGroup::PROJECT_MEMBERS, 106]
+        );
 
         $builder = new AdminPermissionsPresenterBuilder(
-            new ReadersRetriever(
-                ISearchByProjectAndPermissionStub::buildWithPermissions([104, 105]),
-            ),
+            new ReadersRetriever($dao),
+            new WritersRetriever($dao),
             $ugroup_factory,
         );
 
@@ -58,6 +69,7 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
 
         self::assertEquals('/admin/url', $presenter->post_url);
         self::assertSame($csrf_token, $presenter->csrf_token);
+
         self::assertSame(
             [\ProjectUGroup::ANONYMOUS, \ProjectUGroup::REGISTERED, \ProjectUGroup::PROJECT_MEMBERS, 104, 105, 106],
             array_map(
@@ -70,6 +82,21 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
             array_map(
                 static fn(UserGroupPresenter $presenter) => $presenter->is_selected,
                 $presenter->readers
+            )
+        );
+
+        self::assertSame(
+            [\ProjectUGroup::REGISTERED, \ProjectUGroup::PROJECT_MEMBERS, 104, 105, 106],
+            array_map(
+                static fn(UserGroupPresenter $presenter) => $presenter->id,
+                $presenter->writers
+            )
+        );
+        self::assertSame(
+            [false, true, false, false, true],
+            array_map(
+                static fn(UserGroupPresenter $presenter) => $presenter->is_selected,
+                $presenter->writers
             )
         );
     }

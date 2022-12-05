@@ -28,6 +28,8 @@ final class ProjectPermissionsSaver
 {
     private const PERM_RESET_FOR_READERS   = 'perm_reset_for_mediawiki_standalone_readers';
     private const PERM_GRANTED_FOR_READERS = 'perm_granted_for_mediawiki_standalone_readers';
+    private const PERM_RESET_FOR_WRITERS   = 'perm_reset_for_mediawiki_standalone_writers';
+    private const PERM_GRANTED_FOR_WRITERS = 'perm_granted_for_mediawiki_standalone_writers';
 
     public function __construct(
         private ISaveProjectPermissions $permissions_dao,
@@ -46,6 +48,14 @@ final class ProjectPermissionsSaver
                 'tuleap-mediawiki_standalone',
                 'Permission granted for MediaWiki readers'
             ),
+            self::PERM_RESET_FOR_WRITERS => dgettext(
+                'tuleap-mediawiki_standalone',
+                'Permission reset for MediaWiki writers'
+            ),
+            self::PERM_GRANTED_FOR_WRITERS => dgettext(
+                'tuleap-mediawiki_standalone',
+                'Permission granted for MediaWiki writers'
+            ),
             default => null,
         };
     }
@@ -56,19 +66,26 @@ final class ProjectPermissionsSaver
             $params['subEvents']['event_permission'],
             self::PERM_GRANTED_FOR_READERS,
             self::PERM_RESET_FOR_READERS,
+            self::PERM_GRANTED_FOR_WRITERS,
+            self::PERM_RESET_FOR_WRITERS,
         );
     }
 
     /**
      * @param \ProjectUGroup[] $readers
      */
-    public function save(\Project $project, array $readers): void
+    public function save(\Project $project, array $readers, array $writers): void
     {
-        $this->permissions_dao->saveProjectPermissions($project, $readers);
+        $this->permissions_dao->saveProjectPermissions($project, $readers, $writers);
         $this->saveHistory(
             $project,
             $readers,
             empty($readers) ? self::PERM_RESET_FOR_READERS : self::PERM_GRANTED_FOR_READERS
+        );
+        $this->saveHistory(
+            $project,
+            $writers,
+            empty($writers) ? self::PERM_RESET_FOR_WRITERS : self::PERM_GRANTED_FOR_WRITERS
         );
     }
 
