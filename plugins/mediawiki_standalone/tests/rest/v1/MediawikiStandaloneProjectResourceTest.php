@@ -76,7 +76,7 @@ final class MediawikiStandaloneProjectResourceTest extends \RestBase
                 'expected' => [
                     'is_reader' => true,
                     'is_writer' => true,
-                    'is_bot'    => true,
+                    'is_bot'    => false,
                     'is_admin'  => true,
                 ],
             ],
