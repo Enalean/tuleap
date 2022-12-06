@@ -35,7 +35,10 @@ final class InsertItemsIntoIndexMetricCollector implements InsertItemsIntoIndex
 
     public function indexItems(ItemToIndex ...$items): void
     {
-        $this->prometheus->incrementBy('fts_index_requests_total', 'Total number of full-text index requests', count($items));
+        $nb_items = count($items);
+        if ($nb_items > 0) {
+            $this->prometheus->incrementBy('fts_index_requests_total', 'Total number of full-text index requests', $nb_items);
+        }
         $this->index_inserter->indexItems(...$items);
     }
 }
