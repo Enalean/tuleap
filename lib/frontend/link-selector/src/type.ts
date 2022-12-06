@@ -23,6 +23,7 @@ import type { HTMLTemplateStringProcessor } from "./index";
 
 export interface LinkSelector {
     setDropdownContent: (groups: GroupCollection) => void;
+    setPlaceholder: (placeholder: string) => void;
     resetSelection: () => void;
     destroy: () => void;
 }

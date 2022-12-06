@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\Milestone\Pane\Planning;
 
 use PFUser;
 use Project;
+use Tuleap\Tracker\Artifact\Renderer\HistoryAndSearchFeatureFlag;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 
 final class PlanningV2Presenter
@@ -36,6 +37,7 @@ final class PlanningV2Presenter
     public string $allowed_additional_panes_to_display;
     public bool $is_list_picker_enabled;
     public string $trackers_ids_having_list_picker_disabled;
+    public bool $is_search_enabled;
 
     /**
      * @param string[] $allowed_additional_panes_to_display
@@ -65,6 +67,8 @@ final class PlanningV2Presenter
             JSON_THROW_ON_ERROR
         );
         $this->is_list_picker_enabled                   = ListPickerIncluder::isListPickerEnabledOnPlatform();
+
+        $this->is_search_enabled = (int) \ForgeConfig::getFeatureFlag(HistoryAndSearchFeatureFlag::FEATURE_FLAG_KEY) === 1;
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

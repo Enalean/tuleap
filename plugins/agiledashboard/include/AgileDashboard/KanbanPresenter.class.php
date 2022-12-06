@@ -26,6 +26,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Tracker\Artifact\Renderer\HistoryAndSearchFeatureFlag;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Widget\WidgetFactory;
 
@@ -49,6 +50,7 @@ final class KanbanPresenter
     public string $kanban_url;
     public bool $user_accessibility_mode;
     public bool $is_list_picker_enabled;
+    public bool $is_search_enabled;
 
     public function __construct(
         AgileDashboard_Kanban $kanban,
@@ -125,5 +127,7 @@ final class KanbanPresenter
         $this->is_list_picker_enabled            = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(
             $kanban->getTrackerId()
         );
+
+        $this->is_search_enabled = (int) \ForgeConfig::getFeatureFlag(HistoryAndSearchFeatureFlag::FEATURE_FLAG_KEY) === 1;
     }
 }

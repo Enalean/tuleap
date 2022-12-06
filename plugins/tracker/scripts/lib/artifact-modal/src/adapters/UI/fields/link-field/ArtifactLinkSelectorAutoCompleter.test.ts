@@ -74,6 +74,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         host: LinkField,
         artifacts_searcher: SearchArtifacts;
 
+    const is_search_feature_flag_enabled = true;
+
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
         first_artifact = LinkableArtifactStub.withCrossReference(
@@ -118,7 +120,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             artifacts_searcher,
             current_artifact_identifier,
             current_tracker_identifier,
-            UserIdentifierProxyStub.fromUserId(USER_ID)
+            UserIdentifierProxyStub.fromUserId(USER_ID),
+            is_search_feature_flag_enabled
         );
         autocompleter.autoComplete(host, query);
     };

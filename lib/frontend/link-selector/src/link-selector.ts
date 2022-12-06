@@ -136,6 +136,9 @@ export function createLinkSelector(
         setDropdownContent: (groups): void => {
             dropdown_content_refresher.refresh(groups);
         },
+        setPlaceholder: (placeholder: string): void => {
+            placeholder_element.replaceChildren(document.createTextNode(placeholder));
+        },
         resetSelection: (): void => {
             search_field_clearer.clearSearchField();
             selection_manager.clearSelection();

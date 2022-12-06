@@ -183,7 +183,8 @@ function ArtifactModalController(
                     api_client,
                     current_artifact_identifier,
                     current_tracker_identifier,
-                    UserIdentifierProxy.fromUserId(modal_model.user_id)
+                    UserIdentifierProxy.fromUserId(modal_model.user_id),
+                    modal_model.is_search_enabled
                 ),
                 new_links_store,
                 new_links_store,
@@ -201,7 +202,8 @@ function ArtifactModalController(
                 ),
                 LinkedArtifactsPopoversController(),
                 AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
-                TrackerInAHierarchyVerifier(modal_model.tracker.parent)
+                TrackerInAHierarchyVerifier(modal_model.tracker.parent),
+                modal_model.is_search_enabled
             );
         },
         getFileFieldController: (field) => {

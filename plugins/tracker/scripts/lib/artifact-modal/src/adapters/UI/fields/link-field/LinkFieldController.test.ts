@@ -94,6 +94,8 @@ describe(`LinkFieldController`, () => {
         parent_identifier: ParentArtifactIdentifier | null,
         verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy;
 
+    const is_search_feature_flag_enabled = true;
+
     beforeEach(() => {
         setCatalog({
             getString: (msgid) => msgid,
@@ -146,7 +148,8 @@ describe(`LinkFieldController`, () => {
                 SearchArtifactsStub.withoutResults(),
                 current_artifact_identifier,
                 current_tracker_identifier,
-                UserIdentifierProxyStub.fromUserId(101)
+                UserIdentifierProxyStub.fromUserId(101),
+                is_search_feature_flag_enabled
             ),
             new_link_adder,
             new_link_remover,
@@ -165,7 +168,8 @@ describe(`LinkFieldController`, () => {
             cross_reference,
             ControlLinkedArtifactsPopoversStub.build(),
             AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_link_types),
-            verify_is_tracker_in_a_hierarchy
+            verify_is_tracker_in_a_hierarchy,
+            is_search_feature_flag_enabled
         );
     };
 

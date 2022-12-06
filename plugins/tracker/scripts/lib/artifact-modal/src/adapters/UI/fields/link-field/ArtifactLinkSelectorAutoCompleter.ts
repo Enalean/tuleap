@@ -66,7 +66,8 @@ export const ArtifactLinkSelectorAutoCompleter = (
     artifacts_searcher: SearchArtifacts,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
-    user: UserIdentifier
+    user: UserIdentifier,
+    is_search_feature_flag_enabled: boolean
 ): ArtifactLinkSelectorAutoCompleterType => {
     const getRecentlyViewedItems = (query: string): PromiseLike<GroupOfItems> => {
         const filter = LinkableArtifactFilter(query);
@@ -131,6 +132,8 @@ export const ArtifactLinkSelectorAutoCompleter = (
             host.search_results_section = [];
             host.possible_parents_section = [];
 
+            const is_parent_selected = isParentSelected(host);
+
             const linkable_number = LinkableNumberProxy.fromQueryString(
                 query,
                 current_artifact_identifier
@@ -141,7 +144,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
                     host.matching_artifact_section = [group];
                 });
             }
-            if (!isParentSelected(host)) {
+            if (is_search_feature_flag_enabled && !is_parent_selected) {
                 host.recently_viewed_section = [RecentlyViewedArtifactGroup.buildLoadingState()];
                 getRecentlyViewedItems(query).then((group) => {
                     if (!isParentSelected(host)) {
@@ -157,7 +160,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
                     });
                 }
             }
-            if (isParentSelected(host)) {
+            if (is_parent_selected) {
                 host.possible_parents_section = [PossibleParentsGroup.buildLoadingState()];
                 getPossibleParentsGroup(query).then((group) => {
                     if (isParentSelected(host)) {

@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,21 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkSelector } from "@tuleap/link-selector";
+declare(strict_types=1);
 
-export type LinkSelectorStub = LinkSelector;
+namespace Tuleap\Tracker\Artifact\Renderer;
 
-const noop = (): void => {
-    // Do nothing
-};
+use Tuleap\Config\ConfigKeyHidden;
+use Tuleap\Config\ConfigKeyInt;
+use Tuleap\Config\FeatureFlagConfigKey;
 
-export const LinkSelectorStub = {
-    build: (): LinkSelectorStub => {
-        return {
-            resetSelection: noop,
-            setDropdownContent: noop,
-            setPlaceholder: noop,
-            destroy: noop,
-        };
-    },
-};
+final class HistoryAndSearchFeatureFlag
+{
+    #[FeatureFlagConfigKey('Allow to pick artifact links from history and search artifacts in the artifact modal')]
+    #[ConfigKeyInt(0)]
+    #[ConfigKeyHidden]
+    public const FEATURE_FLAG_KEY = 'history_and_search_in_modal';
+}
