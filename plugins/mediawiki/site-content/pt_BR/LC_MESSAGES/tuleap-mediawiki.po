@@ -38,9 +38,6 @@ msgstr ""
 msgid "Currently, there are no projects that uses Mediawiki 1.23."
 msgstr ""
 
-msgid "Global Mediawiki Administrator"
-msgstr ""
-
 msgid "Granted groups"
 msgstr ""
 
@@ -157,11 +154,6 @@ msgid ""
 "\"Nobody\" and \"Registered users\". In this project (private) it means that "
 "only project members can access the wiki and they will be able to edit and "
 "create pages (see the detailed list of permissions in the User Rights page)."
-msgstr ""
-
-msgid ""
-"This permission grants mediawiki administration rights for each mediawiki of "
-"every project"
 msgstr ""
 
 msgid ""

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
 class ServiceMediawiki extends Service
 {

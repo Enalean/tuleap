@@ -28,7 +28,7 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
-use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 use Tuleap\Mediawiki\MediawikiDataDir;
@@ -58,10 +58,10 @@ use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
-use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../mediawiki_standalone/vendor/autoload.php';
 
 class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -115,7 +115,6 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
 
         $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(UserBecomesProjectAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(UserIsNoLongerProjectAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
@@ -142,6 +141,11 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
     public function getServiceShortname()
     {
         return self::SERVICE_SHORTNAME;
+    }
+
+    public function getDependencies(): array
+    {
+        return ['mediawiki_standalone'];
     }
 
     public function burning_parrot_get_javascript_files($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -819,13 +823,6 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
             EventManager::instance()
         );
         $importer->import($params['configuration'], $params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
-    }
-
-    public function get_permission_delegation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $permission = new MediawikiAdminAllProjects();
-
-        $params['plugins_permission'][MediawikiAdminAllProjects::ID] = $permission;
     }
 
     public function getCleanUnused(\Psr\Log\LoggerInterface $logger)
