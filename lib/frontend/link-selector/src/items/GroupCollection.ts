@@ -24,7 +24,6 @@ export type LinkSelectorItem = {
 
 export type GroupOfItems = {
     readonly label: string;
-    readonly icon: string;
     readonly empty_message: string;
     readonly items: ReadonlyArray<LinkSelectorItem>;
     readonly is_loading: boolean;

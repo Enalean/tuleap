@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getLinkableArtifact } from "./LinkableArtifactTemplate";
+import { getLinkableArtifact, getStatusClasses } from "./LinkableArtifactTemplate";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 
 describe(`LinkableArtifactTemplate`, () => {
@@ -30,6 +30,20 @@ describe(`LinkableArtifactTemplate`, () => {
         it(`will return the item when it looks like a Linkable Artifact`, () => {
             const item = LinkableArtifactStub.withDefaults();
             expect(getLinkableArtifact(item)).toBe(item);
+        });
+    });
+
+    describe(`getStatusClasses()`, () => {
+        it(`will set the badge to the status color`, () => {
+            expect(getStatusClasses({ value: "On going", color: "coral-pink" })).toContain(
+                "tlp-badge-coral-pink"
+            );
+        });
+
+        it(`will default to the secondary badge when there is no color`, () => {
+            expect(getStatusClasses({ value: "In Review", color: null })).toContain(
+                "tlp-badge-secondary"
+            );
         });
     });
 });

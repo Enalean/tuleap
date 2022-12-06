@@ -29,7 +29,6 @@ export const MatchingArtifactsGroup = {
         artifact: LinkableArtifact
     ): GroupOfItems => ({
         label: getMatchingArtifactLabel(),
-        icon: "",
         empty_message: getNoResultFoundEmptyState(),
         items: [LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)],
         is_loading: false,
@@ -37,7 +36,6 @@ export const MatchingArtifactsGroup = {
 
     buildEmpty: (): GroupOfItems => ({
         label: getMatchingArtifactLabel(),
-        icon: "",
         empty_message: getNoResultFoundEmptyState(),
         items: [],
         is_loading: false,
@@ -45,7 +43,6 @@ export const MatchingArtifactsGroup = {
 
     buildLoadingState: (): GroupOfItems => ({
         label: getMatchingArtifactLabel(),
-        icon: "",
         empty_message: "",
         items: [],
         is_loading: true,

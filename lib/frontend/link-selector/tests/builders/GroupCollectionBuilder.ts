@@ -21,13 +21,12 @@ import type { GroupCollection } from "../../src";
 
 export const GroupCollectionBuilder = {
     withEmptyGroup: (): GroupCollection => [
-        { label: "", icon: "", empty_message: "irrelevant", items: [], is_loading: false },
+        { label: "", empty_message: "irrelevant", items: [], is_loading: false },
     ],
 
     withSingleGroup: (): GroupCollection => [
         {
             label: "",
-            icon: "",
             empty_message: "irrelevant",
             items: [
                 { value: { id: 0 }, is_disabled: false },
@@ -42,7 +41,6 @@ export const GroupCollectionBuilder = {
     withTwoGroups: (): GroupCollection => [
         {
             label: "Group 1",
-            icon: "🐹",
             empty_message: "irrelevant",
             items: [
                 { value: { id: 0 }, is_disabled: false },
@@ -53,7 +51,6 @@ export const GroupCollectionBuilder = {
         },
         {
             label: "Group 2",
-            icon: "🦏",
             empty_message: "irrelevant",
             items: [
                 { value: { id: 3 }, is_disabled: false },

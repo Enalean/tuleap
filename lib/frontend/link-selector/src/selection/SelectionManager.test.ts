@@ -210,7 +210,6 @@ describe("SelectionManager", () => {
             const groups: GroupCollection = [
                 {
                     label: "",
-                    icon: "",
                     empty_message: "irrelevant",
                     items: [
                         { value: { id: 0 }, is_disabled: false },

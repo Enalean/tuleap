@@ -270,8 +270,8 @@ export const LinkField = define<LinkField>({
                 },
             });
 
-            controller.retrievePossibleParentsGroups().then((groups) => {
-                host.current_link_type = controller.getCurrentLinkType(groups.length > 0);
+            controller.retrievePossibleParentsGroups().then((group) => {
+                host.current_link_type = controller.getCurrentLinkType(group.items.length > 0);
                 host.allowed_link_types = controller.displayAllowedTypes();
             });
             return controller;
