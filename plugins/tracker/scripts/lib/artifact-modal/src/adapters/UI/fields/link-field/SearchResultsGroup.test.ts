@@ -30,7 +30,6 @@ describe(`SearchResultsGroup`, () => {
     it(`builds an empty group so that Link-selector will show an empty state message`, () => {
         const group = SearchResultsGroup.buildEmpty();
         expect(group.label).toBe("Search results");
-        expect(group.icon).toBe("");
         expect(group.items).toHaveLength(0);
         expect(group.is_loading).toBe(false);
     });
@@ -38,7 +37,6 @@ describe(`SearchResultsGroup`, () => {
     it(`builds an empty loading group so that Link-selector will show a spinner`, () => {
         const group = SearchResultsGroup.buildLoadingState();
         expect(group.label).toBe("Search results");
-        expect(group.icon).toBe("");
         expect(group.items).toHaveLength(0);
         expect(group.is_loading).toBe(true);
         expect(group.empty_message).toBe("");
@@ -53,7 +51,6 @@ describe(`SearchResultsGroup`, () => {
         );
 
         expect(group.label).toBe("Search results");
-        expect(group.icon).toBe("");
         expect(group.is_loading).toBe(false);
         expect(group.items).toHaveLength(2);
         const values = group.items.map((item) => item.value);

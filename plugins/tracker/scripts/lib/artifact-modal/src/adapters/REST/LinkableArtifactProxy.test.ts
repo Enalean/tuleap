@@ -30,7 +30,8 @@ const COLOR: ColorName = "flamingo-pink";
 const STATUS = "Review";
 const COLOR_STATUS = "daphne-blue";
 const HTML_URI = "/plugins/tracker/?aid=" + ARTIFACT_ID;
-const PROJECT = { id: 115, label: "Guinea Pig", icon: "🐹" };
+const PROJECT_ID = 115;
+const PROJECT_LABEL = "🐹 Guinea Pig";
 
 describe(`LinkableArtifactProxy`, () => {
     it(`builds a LinkableArtifact from an Artifact representation from the API`, () => {
@@ -40,7 +41,7 @@ describe(`LinkableArtifactProxy`, () => {
             xref: CROSS_REFERENCE,
             tracker: {
                 color_name: COLOR,
-                project: PROJECT,
+                project: { id: PROJECT_ID, label: PROJECT_LABEL, icon: "" },
             },
             full_status: { value: STATUS, color: COLOR_STATUS },
             is_open: false,
@@ -57,9 +58,8 @@ describe(`LinkableArtifactProxy`, () => {
         expect(artifact.status?.color).toBe(COLOR_STATUS);
         expect(artifact.is_open).toBe(false);
         expect(artifact.uri).toBe(HTML_URI);
-        expect(artifact.project.id).toBe(PROJECT.id);
-        expect(artifact.project.label).toBe(PROJECT.label);
-        expect(artifact.project.icon).toBe(PROJECT.icon);
+        expect(artifact.project.id).toBe(PROJECT_ID);
+        expect(artifact.project.label).toBe(PROJECT_LABEL);
     });
 
     it(`builds a LinkableArtifact from a History entry representation from the API`, () => {
@@ -67,7 +67,7 @@ describe(`LinkableArtifactProxy`, () => {
             type: ARTIFACT_TYPE,
             per_type_id: ARTIFACT_ID,
             title: TITLE,
-            project: PROJECT,
+            project: { id: PROJECT_ID, label: PROJECT_LABEL, icon: "" },
             xref: CROSS_REFERENCE,
             color_name: COLOR,
             html_url: HTML_URI,
@@ -85,8 +85,7 @@ describe(`LinkableArtifactProxy`, () => {
         expect(artifact.status).toStrictEqual({ value: STATUS, color: null });
         expect(artifact.is_open).toBe(true);
         expect(artifact.uri).toBe(HTML_URI);
-        expect(artifact.project.id).toBe(PROJECT.id);
-        expect(artifact.project.label).toBe(PROJECT.label);
-        expect(artifact.project.icon).toBe(PROJECT.icon);
+        expect(artifact.project.id).toBe(PROJECT_ID);
+        expect(artifact.project.label).toBe(PROJECT_LABEL);
     });
 });

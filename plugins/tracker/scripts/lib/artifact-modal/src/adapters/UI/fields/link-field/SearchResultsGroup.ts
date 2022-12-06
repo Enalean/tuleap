@@ -29,7 +29,6 @@ import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 export const SearchResultsGroup = {
     buildEmpty: (): GroupOfItems => ({
         label: getSearchResultsGroupLabel(),
-        icon: "",
         empty_message: getNoResultFoundEmptyState(),
         items: [],
         is_loading: false,
@@ -37,7 +36,6 @@ export const SearchResultsGroup = {
 
     buildLoadingState: (): GroupOfItems => ({
         label: getSearchResultsGroupLabel(),
-        icon: "",
         empty_message: "",
         items: [],
         is_loading: true,
@@ -48,7 +46,6 @@ export const SearchResultsGroup = {
         search_results: readonly LinkableArtifact[]
     ): GroupOfItems => ({
         label: getSearchResultsGroupLabel(),
-        icon: "",
         empty_message: getNoResultFoundEmptyState(),
         items: search_results.map((artifact) =>
             LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ColorName } from "@tuleap/plugin-tracker-constants";
 import type { Identifier } from "../../Identifier";
 import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
 import type { LinkType } from "./LinkType";
@@ -26,7 +27,7 @@ export type LinkedArtifactIdentifier = Identifier<"LinkedArtifactIdentifier">;
 
 type Status = {
     readonly value: string;
-    readonly color: string | null;
+    readonly color: ColorName | null;
 };
 
 export interface LinkedArtifact {

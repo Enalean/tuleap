@@ -29,14 +29,12 @@ import type { LinkableArtifact } from "../../../../domain/fields/link-field/Link
 export const RecentlyViewedArtifactGroup = {
     buildEmpty: (): GroupOfItems => ({
         label: getRecentlyViewedArtifactGroupLabel(),
-        icon: "",
         empty_message: getNoResultFoundEmptyState(),
         items: [],
         is_loading: false,
     }),
     buildLoadingState: (): GroupOfItems => ({
         label: getRecentlyViewedArtifactGroupLabel(),
-        icon: "",
         empty_message: "",
         items: [],
         is_loading: true,
@@ -47,7 +45,6 @@ export const RecentlyViewedArtifactGroup = {
         linkable_artifacts: readonly LinkableArtifact[]
     ): GroupOfItems => ({
         label: getRecentlyViewedArtifactGroupLabel(),
-        icon: "",
         empty_message: getNoResultFoundEmptyState(),
         items: linkable_artifacts.map((artifact) =>
             LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)

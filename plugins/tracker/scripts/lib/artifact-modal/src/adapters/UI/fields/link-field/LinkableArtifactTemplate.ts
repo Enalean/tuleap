@@ -22,7 +22,10 @@ import type {
     LinkSelectorItem,
     HTMLTemplateResult,
 } from "@tuleap/link-selector";
-import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
+import type {
+    LinkableArtifact,
+    Status,
+} from "../../../../domain/fields/link-field/LinkableArtifact";
 import { getAlreadyLinkedTextTooltip, getAlreadyLinkedInfo } from "../../../../gettext-catalog";
 
 const isLinkableArtifact = (item: unknown): item is LinkableArtifact =>
@@ -35,6 +38,13 @@ export const getLinkableArtifact = (item: unknown): LinkableArtifact | null => {
     return item;
 };
 
+export const getStatusClasses = (status: Status): string => {
+    if (!status.color) {
+        return "link-field-item-status tlp-badge-outline tlp-badge-secondary";
+    }
+    return `link-field-item-status tlp-badge-outline tlp-badge-${status.color}`;
+};
+
 export const getLinkableArtifactTemplate = (
     lit_html: typeof HTMLTemplateStringProcessor,
     item: LinkSelectorItem
@@ -45,52 +55,31 @@ export const getLinkableArtifactTemplate = (
     }
 
     const item_classes = `tlp-swatch-${artifact.xref.color} cross-ref-badge link-field-xref-badge`;
-    let status_classes = "";
-
-    if (artifact.status && artifact.status.color) {
-        status_classes = `link-field-status tlp-badge-outline tlp-badge-${artifact.status.color}`;
-    } else {
-        status_classes = "link-field-status tlp-badge-outline tlp-badge-secondary";
-    }
 
     if (item.is_disabled) {
-        return lit_html`
-            <span class="link-field-item" title="${getAlreadyLinkedTextTooltip()}">
-                <span class="${item_classes}">${artifact.xref.ref}</span>
-                <span class="link-field-item-title">${artifact.title}</span>
-                <span class="link-field-disabled-item-already-linked-info">
-                    ${getAlreadyLinkedInfo()}
-                </span>
-                ${
-                    artifact.status &&
-                    lit_html`
-                    <span
-                        class="${status_classes}"
-                        data-test="artifact-status"
-                    >
-                        ${artifact.status.value}
-                    </span>
-                `
-                }
-            </span>
-        `;
+        return lit_html`<span class="link-field-item" title="${getAlreadyLinkedTextTooltip()}">
+            <span class="${item_classes}">${artifact.xref.ref}</span>
+            <span class="link-field-item-title">${artifact.title}</span>
+            <span class="link-field-disabled-item-already-linked-info">${getAlreadyLinkedInfo()}</span>
+            ${
+                artifact.status &&
+                lit_html`<span class="${getStatusClasses(artifact.status)}">${
+                    artifact.status.value
+                }</span>`
+            }
+            <span class="link-field-item-project">${artifact.project.label}</span>
+        </span>`;
     }
 
-    return lit_html`
-        <span class="link-field-item">
+    return lit_html`<span class="link-field-item">
             <span class="${item_classes}">${artifact.xref.ref}</span>
             <span class="link-field-item-title">${artifact.title}</span>
             ${
                 artifact.status &&
-                lit_html`
-                <span
-                    class="${status_classes}"
-                    data-test="artifact-status"
-                >
-                    ${artifact.status.value}
-                </span>
-            `
+                lit_html`<span class="${getStatusClasses(artifact.status)}">${
+                    artifact.status.value
+                }</span>`
             }
-        </span>
-    `;
+            <span class="link-field-item-project">${artifact.project.label}</span>
+        </span>`;
 };

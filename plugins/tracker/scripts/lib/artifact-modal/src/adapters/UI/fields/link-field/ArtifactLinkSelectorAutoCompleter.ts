@@ -32,7 +32,6 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { LinkableArtifactFilter } from "../../../../domain/fields/link-field/LinkableArtifactFilter";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
-import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
 import type { LinkField } from "./LinkField";
 import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
 import type { RetrieveUserHistory } from "../../../../domain/fields/link-field/RetrieveUserHistory";
@@ -112,31 +111,18 @@ export const ArtifactLinkSelectorAutoCompleter = (
             }
         );
 
-    const getPossibleParentsGroup = (query: string): PromiseLike<GroupCollection> => {
+    const getPossibleParentsGroup = (query: string): PromiseLike<GroupOfItems> => {
         const filter = LinkableArtifactFilter(query);
         return parents_retriever
             .getPossibleParents(current_tracker_identifier)
             .map((artifacts) => artifacts.filter(filter.matchesQuery))
             .match(
-                (artifacts) =>
-                    LinkFieldPossibleParentsGroupsByProjectBuilder.buildGroupsSortedByProject(
-                        link_verifier,
-                        artifacts
-                    ),
+                (artifacts) => PossibleParentsGroup.fromPossibleParents(link_verifier, artifacts),
                 (fault) => {
                     fault_notifier.onFault(fault);
-                    return [PossibleParentsGroup.buildEmpty()];
+                    return PossibleParentsGroup.buildEmpty();
                 }
             );
-    };
-
-    const getFilteredPossibleParentsGroups = async (query: string): Promise<GroupCollection> => {
-        const matching_parents = await getPossibleParentsGroup(query);
-        if (matching_parents.length === 0) {
-            return [PossibleParentsGroup.buildEmpty()];
-        }
-
-        return matching_parents;
     };
 
     return {
@@ -176,9 +162,9 @@ export const ArtifactLinkSelectorAutoCompleter = (
             }
             if (is_parent_selected) {
                 host.possible_parents_section = [PossibleParentsGroup.buildLoadingState()];
-                getFilteredPossibleParentsGroups(query).then((groups) => {
+                getPossibleParentsGroup(query).then((group) => {
                     if (isParentSelected(host)) {
-                        host.possible_parents_section = groups;
+                        host.possible_parents_section = [group];
                     }
                 });
             }
