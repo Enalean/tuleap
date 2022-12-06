@@ -28,27 +28,28 @@ namespace Tuleap\MediawikiStandalone\Permissions;
  */
 final class UserPermissions
 {
-    private function __construct(public bool $is_reader, public bool $is_writer, public bool $is_admin, public bool $is_bot)
+    public bool $is_bot = false;
+    private function __construct(public bool $is_reader, public bool $is_writer, public bool $is_admin)
     {
     }
 
     public static function noAccess(): self
     {
-        return new self(false, false, false, false);
+        return new self(false, false, false);
     }
 
     public static function fullAccess(): self
     {
-        return new self(true, true, true, true);
+        return new self(true, true, true);
     }
 
     public static function writer(): self
     {
-        return new self(true, true, false, false);
+        return new self(true, true, false);
     }
 
     public static function reader(): self
     {
-        return new self(true, false, false, false);
+        return new self(true, false, false);
     }
 }
