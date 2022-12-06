@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-final class ISearchByProjectAndPermissionStub implements ISearchByProjectAndPermission
+final class ISearchByProjectStub implements ISearchByProject
 {
     private function __construct(
-        private array $readers_ugroup_ids,
-        private array $writers_ugroup_ids,
-        private array $admins_ugroup_ids,
+        private array $permissions,
     ) {
     }
 
@@ -37,31 +35,21 @@ final class ISearchByProjectAndPermissionStub implements ISearchByProjectAndPerm
         array $admins_ugroup_ids,
     ): self {
         return new self(
-            array_map(static fn($id): array => ['ugroup_id' => $id], $readers_ugroup_ids),
-            array_map(static fn($id): array => ['ugroup_id' => $id], $writers_ugroup_ids),
-            array_map(static fn($id): array => ['ugroup_id' => $id], $admins_ugroup_ids),
+            array_merge(
+                array_map(static fn($id): array => ['ugroup_id' => $id, 'permission' => PermissionRead::NAME], $readers_ugroup_ids),
+                array_map(static fn($id): array => ['ugroup_id' => $id, 'permission' => PermissionWrite::NAME], $writers_ugroup_ids),
+                array_map(static fn($id): array => ['ugroup_id' => $id, 'permission' => PermissionAdmin::NAME], $admins_ugroup_ids),
+            )
         );
     }
 
     public static function buildWithoutSpecificPermissions(): self
     {
-        return new self([], [], []);
+        return new self([]);
     }
 
-    public function searchByProjectAndPermission(\Project $project, Permission $permission): array
+    public function searchByProject(\Project $project): array
     {
-        if ($permission->getName() === PermissionRead::NAME) {
-            return $this->readers_ugroup_ids;
-        }
-
-        if ($permission->getName() === PermissionWrite::NAME) {
-            return $this->writers_ugroup_ids;
-        }
-
-        if ($permission->getName() === PermissionAdmin::NAME) {
-            return $this->admins_ugroup_ids;
-        }
-
-        return [];
+        return $this->permissions;
     }
 }

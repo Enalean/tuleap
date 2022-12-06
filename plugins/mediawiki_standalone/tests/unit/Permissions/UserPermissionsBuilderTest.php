@@ -64,16 +64,12 @@ final class UserPermissionsBuilderTest extends TestCase
             }
         };
 
-        $dao = ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions();
+        $dao = ISearchByProjectStub::buildWithoutSpecificPermissions();
 
         $permission_builder = new UserPermissionsBuilder(
             $forge_permissions_retriever,
             CheckProjectAccessStub::withValidAccess(),
-            new ProjectPermissionsRetriever(
-                new ReadersRetriever($dao),
-                new WritersRetriever($dao),
-                new AdminsRetriever($dao),
-            ),
+            new ProjectPermissionsRetriever($dao),
         );
 
         $user_permissions = $permission_builder->getPermissions($user, $project);
@@ -191,7 +187,7 @@ final class UserPermissionsBuilderTest extends TestCase
             }
         };
 
-        $dao = ISearchByProjectAndPermissionStub::buildWithPermissions(
+        $dao = ISearchByProjectStub::buildWithPermissions(
             [self::READER_UGROUP_ID],
             [self::WRITER_UGROUP_ID],
             [self::ADMIN_UGROUP_ID],
@@ -200,11 +196,7 @@ final class UserPermissionsBuilderTest extends TestCase
         $permission_builder = new UserPermissionsBuilder(
             $forge_permissions_retriever,
             $check_project_access,
-            new ProjectPermissionsRetriever(
-                new ReadersRetriever($dao),
-                new WritersRetriever($dao),
-                new AdminsRetriever($dao),
-            ),
+            new ProjectPermissionsRetriever($dao),
         );
 
         $user_permissions = $permission_builder->getPermissions($user, $project);
