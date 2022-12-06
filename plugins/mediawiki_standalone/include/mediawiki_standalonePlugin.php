@@ -70,6 +70,7 @@ use Tuleap\MediawikiStandalone\Permissions\Admin\PermissionPerGroupServicePaneBu
 use Tuleap\MediawikiStandalone\Permissions\Admin\ProjectPermissionsSaver;
 use Tuleap\MediawikiStandalone\Permissions\Admin\RejectNonMediawikiAdministratorMiddleware;
 use Tuleap\MediawikiStandalone\Permissions\Admin\UserGroupToSaveRetriever;
+use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao;
 use Tuleap\MediawikiStandalone\Permissions\PermissionsFollowingSiteAccessChangeUpdater;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
@@ -125,9 +126,9 @@ use Tuleap\Templating\TemplateCache;
 use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
 use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
+use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../../mediawiki/vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class mediawiki_standalonePlugin extends Plugin implements PluginWithService, PluginWithConfigKeys
@@ -155,11 +156,6 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         }
 
         return $this->pluginInfo;
-    }
-
-    public function getDependencies(): array
-    {
-        return ['mediawiki'];
     }
 
     public function getInstallRequirements(): array
@@ -192,8 +188,14 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
         $this->addHook(ExportXmlProject::NAME);
         $this->addHook(Event::IMPORT_XML_PROJECT);
+        $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function getPermissionDelegation(array $params): void
+    {
+        $params['plugins_permission'][MediawikiAdminAllProjects::ID] = new MediawikiAdminAllProjects();
     }
 
     public function exportXmlProject(ExportXmlProject $event): void

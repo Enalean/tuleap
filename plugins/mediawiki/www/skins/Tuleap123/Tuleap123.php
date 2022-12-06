@@ -10,7 +10,7 @@
  * @ingroup Skins
  */
 
-use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
 require_once MEDIAWIKI_BASE_DIR . '/MediawikiManager.class.php';
 

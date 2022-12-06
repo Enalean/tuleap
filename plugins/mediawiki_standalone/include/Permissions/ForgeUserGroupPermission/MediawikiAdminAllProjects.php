@@ -18,11 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Mediawiki\ForgeUserGroupPermission;
+namespace Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission;
 
 use User_ForgeUserGroupPermission;
 
-class MediawikiAdminAllProjects extends User_ForgeUserGroupPermission
+/**
+ * @psalm-immutable
+ */
+final class MediawikiAdminAllProjects extends User_ForgeUserGroupPermission
 {
     public const ID = 3;
 
@@ -33,11 +36,11 @@ class MediawikiAdminAllProjects extends User_ForgeUserGroupPermission
 
     public function getName()
     {
-        return dgettext('tuleap-mediawiki', 'Global Mediawiki Administrator');
+        return dgettext('tuleap-mediawiki_standalone', 'Global MediaWiki Administrator');
     }
 
     public function getDescription()
     {
-        return dgettext('tuleap-mediawiki', 'This permission grants mediawiki administration rights for each mediawiki of every project');
+        return dgettext('tuleap-mediawiki_standalone', 'This permission grants MediaWiki administration rights for each MediaWiki of every project');
     }
 }

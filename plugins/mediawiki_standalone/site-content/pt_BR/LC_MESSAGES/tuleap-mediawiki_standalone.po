@@ -9,6 +9,9 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
+msgid "Global MediaWiki Administrator"
+msgstr ""
+
 msgid "Global permissions"
 msgstr ""
 
@@ -93,6 +96,11 @@ msgstr ""
 msgid ""
 "The Mediawiki service cannot activated when there are still MediaWiki "
 "standalone data"
+msgstr ""
+
+msgid ""
+"This permission grants MediaWiki administration rights for each MediaWiki of "
+"every project"
 msgstr ""
 
 msgid "User groups who can administrate"
