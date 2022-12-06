@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
+use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -153,6 +154,7 @@ final class MediaWikiInstallAndUpdateScriptCallerTest extends TestCase
         );
         return new MediaWikiInstallAndUpdateScriptCaller(
             $command_factory,
+            new MainpageDeployer(vfsStream::setup()->url()),
             new LocalSettingsInstantiator(
                 new LocalSettingsRepresentationForTestBuilder(),
                 new LocalSettingsPersistStub(),
