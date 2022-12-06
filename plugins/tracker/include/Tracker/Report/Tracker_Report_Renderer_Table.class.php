@@ -1640,7 +1640,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $already_seen       = [];
 
         foreach ($columns as $column) {
-            if (! $column['field']->isUsed()) {
+            if (! $column['field']->isUsed() || $column['field']->isMultiple()) {
                 continue;
             }
 

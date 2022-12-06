@@ -44,10 +44,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         ],
     ];
 
-    /**
-     * @return bool
-     */
-    public function isMultiple()
+    public function isMultiple(): bool
     {
         return true;
     }
