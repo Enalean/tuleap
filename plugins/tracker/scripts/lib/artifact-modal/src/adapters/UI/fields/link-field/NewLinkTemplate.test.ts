@@ -134,15 +134,13 @@ describe(`NewLinkTemplate`, () => {
         const title = selectOrThrow(target, "[data-test=link-title]");
         const status = selectOrThrow(target, "[data-test=link-status]");
         const type = selectOrThrow(target, "[data-test=link-type]");
-        const expected_type =
-            new_link.link_type.shortname === UNTYPED_LINK ? "Linked to" : new_link.link_type.label;
 
         expect(link.href).toBe(new_link.uri);
         expect(xref.classList.contains(`tlp-swatch-${new_link.xref.color}`)).toBe(true);
         expect(xref.textContent?.trim()).toBe(new_link.xref.ref);
         expect(title.textContent?.trim()).toBe(new_link.title);
         expect(status.textContent?.trim()).toBe(new_link.status?.value);
-        expect(type.textContent?.trim()).toBe(expected_type);
+        expect(type.textContent?.trim()).toBe(new_link.link_type.label);
 
         expect(row.classList.contains("link-field-table-row-new")).toBe(true);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
@@ -163,7 +161,6 @@ describe(`NewLinkTemplate`, () => {
                     reverse_label: "Parent",
                 },
             ];
-            const is_search_feature_flag_enabled = true;
 
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
@@ -184,8 +181,7 @@ describe(`NewLinkTemplate`, () => {
                     SearchArtifactsStub.withoutResults(),
                     current_artifact_identifier,
                     current_tracker_identifier,
-                    UserIdentifierProxyStub.fromUserId(101),
-                    is_search_feature_flag_enabled
+                    UserIdentifierProxyStub.fromUserId(101)
                 ),
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
@@ -204,8 +200,7 @@ describe(`NewLinkTemplate`, () => {
                 ArtifactCrossReferenceStub.withRef("bug #22"),
                 ControlLinkedArtifactsPopoversStub.build(),
                 AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types),
-                VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
-                is_search_feature_flag_enabled
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
             );
 
             return {

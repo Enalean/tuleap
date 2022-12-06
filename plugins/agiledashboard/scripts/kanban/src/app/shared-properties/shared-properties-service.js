@@ -17,7 +17,6 @@ function SharedPropertiesService() {
         widget_id: 0,
         kanban_url: "",
         is_list_picker_enabled: false,
-        is_search_enabled: false,
     };
 
     return {
@@ -119,9 +118,5 @@ function SharedPropertiesService() {
         isListPickerEnabled() {
             return property.is_list_picker_enabled;
         },
-        setSearchEnabled(is_search_enabled) {
-            property.is_search_enabled = is_search_enabled;
-        },
-        isSearchEnabled: () => property.is_search_enabled,
     };
 }
