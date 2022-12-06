@@ -22,11 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
-use Tuleap\MediawikiStandalone\Permissions\AdminsRetriever;
-use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
+use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectStub;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
-use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
-use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -61,18 +58,14 @@ class AdminPermissionsPresenterBuilderTest extends TestCase
             ->method('getProjectUGroupsWithMembersWithoutNobody')
             ->willReturn($ugroups);
 
-        $dao = ISearchByProjectAndPermissionStub::buildWithPermissions(
+        $dao = ISearchByProjectStub::buildWithPermissions(
             [104, 105],
             [\ProjectUGroup::PROJECT_MEMBERS, 106],
             [105],
         );
 
         $builder = new AdminPermissionsPresenterBuilder(
-            new ProjectPermissionsRetriever(
-                new ReadersRetriever($dao),
-                new WritersRetriever($dao),
-                new AdminsRetriever($dao),
-            ),
+            new ProjectPermissionsRetriever($dao),
             $ugroup_factory,
         );
 

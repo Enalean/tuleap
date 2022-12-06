@@ -24,11 +24,8 @@ namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\MediawikiStandalone\Permissions\AdminsRetriever;
-use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
+use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectStub;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
-use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
-use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -43,7 +40,7 @@ class AdminPermissionsControllerTest extends TestCase
 
     public function testExceptionWhenProjectIsNotAllowed(): void
     {
-        $dao = ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions();
+        $dao = ISearchByProjectStub::buildWithoutSpecificPermissions();
 
         $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
@@ -52,11 +49,7 @@ class AdminPermissionsControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
             new AdminPermissionsPresenterBuilder(
-                new ProjectPermissionsRetriever(
-                    new ReadersRetriever($dao),
-                    new WritersRetriever($dao),
-                    new AdminsRetriever($dao),
-                ),
+                new ProjectPermissionsRetriever($dao),
                 $this->createStub(\User_ForgeUserGroupFactory::class),
             ),
             new NoopSapiEmitter(),
@@ -71,7 +64,7 @@ class AdminPermissionsControllerTest extends TestCase
 
     public function testExceptionWhenServiceIsNotActivated(): void
     {
-        $dao = ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions();
+        $dao = ISearchByProjectStub::buildWithoutSpecificPermissions();
 
         $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
@@ -80,11 +73,7 @@ class AdminPermissionsControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
             new AdminPermissionsPresenterBuilder(
-                new ProjectPermissionsRetriever(
-                    new ReadersRetriever($dao),
-                    new WritersRetriever($dao),
-                    new AdminsRetriever($dao),
-                ),
+                new ProjectPermissionsRetriever($dao),
                 $this->createStub(\User_ForgeUserGroupFactory::class),
             ),
             new NoopSapiEmitter(),
@@ -114,7 +103,7 @@ class AdminPermissionsControllerTest extends TestCase
         $user_group_factory->method('getAllForProjectWithoutNobodyNorAnonymous')->willReturn($ugroups);
         $user_group_factory->method('getProjectUGroupsWithMembersWithoutNobody')->willReturn($ugroups);
 
-        $dao = ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions();
+        $dao = ISearchByProjectStub::buildWithoutSpecificPermissions();
 
         $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
@@ -123,11 +112,7 @@ class AdminPermissionsControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $token_provider,
             new AdminPermissionsPresenterBuilder(
-                new ProjectPermissionsRetriever(
-                    new ReadersRetriever($dao),
-                    new WritersRetriever($dao),
-                    new AdminsRetriever($dao),
-                ),
+                new ProjectPermissionsRetriever($dao),
                 $user_group_factory,
             ),
             new NoopSapiEmitter(),

@@ -69,11 +69,11 @@ final class MediawikiPermissionsDaoTest extends TestCase
     {
         self::assertEquals(
             [],
-            $this->dao->searchByProjectAndPermission($this->project, new PermissionRead())
+            $this->dao->searchByProject($this->project, new PermissionRead())
         );
         self::assertEquals(
             [],
-            $this->dao->searchByProjectAndPermission($this->project, new PermissionWrite())
+            $this->dao->searchByProject($this->project, new PermissionWrite())
         );
 
         $this->dao->saveProjectPermissions(
@@ -85,17 +85,17 @@ final class MediawikiPermissionsDaoTest extends TestCase
 
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
-            $this->getReadersUgroupIds($this->project)
+            $this->getUgroupIds($this->project, new PermissionRead())
         );
 
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::QA_ID],
-            $this->getWritersUgroupIds($this->project)
+            $this->getUgroupIds($this->project, new PermissionWrite())
         );
 
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
-            $this->getAdminsUgroupIds($this->project)
+            $this->getUgroupIds($this->project, new PermissionAdmin())
         );
     }
 
@@ -124,17 +124,17 @@ final class MediawikiPermissionsDaoTest extends TestCase
 
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, 201],
-            $this->getReadersUgroupIds($just_created_project)
+            $this->getUgroupIds($just_created_project, new PermissionRead())
         );
 
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, 203],
-            $this->getWritersUgroupIds($just_created_project)
+            $this->getUgroupIds($just_created_project, new PermissionWrite())
         );
 
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, 201],
-            $this->getAdminsUgroupIds($just_created_project)
+            $this->getUgroupIds($just_created_project, new PermissionAdmin())
         );
     }
 
@@ -167,41 +167,41 @@ final class MediawikiPermissionsDaoTest extends TestCase
 
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getReadersUgroupIds($this->project)
+            $this->getUgroupIds($this->project, new PermissionRead())
         );
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getReadersUgroupIds($another_project)
+            $this->getUgroupIds($another_project, new PermissionRead())
         );
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
-            $this->getReadersUgroupIds($yet_another_project)
+            $this->getUgroupIds($yet_another_project, new PermissionRead())
         );
 
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getWritersUgroupIds($this->project)
+            $this->getUgroupIds($this->project, new PermissionWrite())
         );
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getWritersUgroupIds($another_project)
+            $this->getUgroupIds($another_project, new PermissionWrite())
         );
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
-            $this->getWritersUgroupIds($yet_another_project)
+            $this->getUgroupIds($yet_another_project, new PermissionWrite())
         );
 
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS],
-            $this->getAdminsUgroupIds($this->project)
+            $this->getUgroupIds($this->project, new PermissionAdmin())
         );
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS],
-            $this->getAdminsUgroupIds($another_project)
+            $this->getUgroupIds($another_project, new PermissionAdmin())
         );
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
-            $this->getAdminsUgroupIds($yet_another_project)
+            $this->getUgroupIds($yet_another_project, new PermissionAdmin())
         );
     }
 
@@ -234,74 +234,58 @@ final class MediawikiPermissionsDaoTest extends TestCase
 
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getReadersUgroupIds($this->project)
+            $this->getUgroupIds($this->project, new PermissionRead())
         );
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getReadersUgroupIds($another_project)
+            $this->getUgroupIds($another_project, new PermissionRead())
         );
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
-            $this->getReadersUgroupIds($yet_another_project)
+            $this->getUgroupIds($yet_another_project, new PermissionRead())
         );
 
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getWritersUgroupIds($this->project)
+            $this->getUgroupIds($this->project, new PermissionWrite())
         );
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getWritersUgroupIds($another_project)
+            $this->getUgroupIds($another_project, new PermissionWrite())
         );
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
-            $this->getWritersUgroupIds($yet_another_project)
+            $this->getUgroupIds($yet_another_project, new PermissionWrite())
         );
 
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getAdminsUgroupIds($this->project)
+            $this->getUgroupIds($this->project, new PermissionAdmin())
         );
         self::assertEquals(
             [\ProjectUGroup::REGISTERED],
-            $this->getAdminsUgroupIds($another_project)
+            $this->getUgroupIds($another_project, new PermissionAdmin())
         );
         self::assertEquals(
             [\ProjectUGroup::PROJECT_MEMBERS, self::DEVELOPERS_ID],
-            $this->getAdminsUgroupIds($yet_another_project)
+            $this->getUgroupIds($yet_another_project, new PermissionAdmin())
         );
     }
 
     /**
      * @return int[]
      */
-    private function getReadersUgroupIds(\Project $project): array
+    private function getUgroupIds(\Project $project, Permission $permission): array
     {
-        return array_column(
-            $this->dao->searchByProjectAndPermission($project, new PermissionRead()),
-            'ugroup_id'
-        );
-    }
-
-    /**
-     * @return int[]
-     */
-    private function getWritersUgroupIds(\Project $project): array
-    {
-        return array_column(
-            $this->dao->searchByProjectAndPermission($project, new PermissionWrite()),
-            'ugroup_id'
-        );
-    }
-
-    /**
-     * @return int[]
-     */
-    private function getAdminsUgroupIds(\Project $project): array
-    {
-        return array_column(
-            $this->dao->searchByProjectAndPermission($project, new PermissionAdmin()),
-            'ugroup_id'
+        return array_reduce(
+            $this->dao->searchByProject($project),
+            static function (array $accumulator, array $perm) use ($permission): array {
+                if ($perm['permission'] === $permission->getName()) {
+                    $accumulator[] = $perm['ugroup_id'];
+                }
+                return $accumulator;
+            },
+            []
         );
     }
 }

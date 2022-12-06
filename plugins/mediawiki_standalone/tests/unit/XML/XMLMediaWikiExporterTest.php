@@ -24,11 +24,8 @@ namespace Tuleap\MediawikiStandalone\XML;
 
 use Psr\Log\NullLogger;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\MediawikiStandalone\Permissions\AdminsRetriever;
-use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
+use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectStub;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
-use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
-use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -51,7 +48,7 @@ final class XMLMediaWikiExporterTest extends TestCase
         $project_members = ProjectUGroupTestBuilder::buildProjectMembers();
         $developers      = ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('Developers')->build();
 
-        $dao = ISearchByProjectAndPermissionStub::buildWithPermissions(
+        $dao = ISearchByProjectStub::buildWithPermissions(
             [
                 $project_members->getId(),
                 $developers->getId(),
@@ -66,11 +63,7 @@ final class XMLMediaWikiExporterTest extends TestCase
 
         $exporter = new XMLMediaWikiExporter(
             new NullLogger(),
-            new ProjectPermissionsRetriever(
-                new ReadersRetriever($dao),
-                new WritersRetriever($dao),
-                new AdminsRetriever($dao),
-            ),
+            new ProjectPermissionsRetriever($dao),
             UGroupRetrieverStub::buildWithUserGroups($project_members, $developers)
         );
 

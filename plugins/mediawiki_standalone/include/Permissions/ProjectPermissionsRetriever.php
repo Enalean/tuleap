@@ -24,19 +24,74 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 
 final class ProjectPermissionsRetriever
 {
-    public function __construct(
-        private ReadersRetriever $readers_retriever,
-        private WritersRetriever $writers_retriever,
-        private AdminsRetriever $admins_retriever,
-    ) {
+    public function __construct(private ISearchByProject $dao)
+    {
     }
 
     public function getProjectPermissions(\Project $project): ProjectPermissions
     {
+        $readers = [];
+        $writers = [];
+        $admins  = [];
+        foreach ($this->dao->searchByProject($project) as $perm) {
+            if ($perm['permission'] === PermissionRead::NAME) {
+                $readers[] = $perm['ugroup_id'];
+                continue;
+            }
+
+            if ($perm['permission'] === PermissionWrite::NAME) {
+                $writers[] = $perm['ugroup_id'];
+                continue;
+            }
+
+            if ($perm['permission'] === PermissionAdmin::NAME) {
+                $admins[] = $perm['ugroup_id'];
+                continue;
+            }
+        }
+
         return new ProjectPermissions(
-            $this->readers_retriever->getReadersUgroupIds($project),
-            $this->writers_retriever->getWritersUgroupIds($project),
-            $this->admins_retriever->getAdminsUgroupIds($project),
+            $this->getReadersUgroupIds($readers),
+            $this->getWritersUgroupIds($writers),
+            $this->getAdminsUgroupIds($admins),
         );
+    }
+
+    /**
+     * @param int[] $readers
+     *
+     * @return int[]
+     */
+    private function getReadersUgroupIds(array $readers): array
+    {
+        return empty($readers)
+            ? [\ProjectUGroup::PROJECT_MEMBERS]
+            : $readers;
+    }
+
+    /**
+     * @param int[] $writers
+     *
+     * @return int[]
+     */
+    private function getWritersUgroupIds(array $writers): array
+    {
+        return empty($writers)
+            ? [\ProjectUGroup::PROJECT_MEMBERS]
+            : $writers;
+    }
+
+    /**
+     * @param int[] $admins
+     *
+     * @return int[]
+     */
+    private function getAdminsUgroupIds(array $admins): array
+    {
+        if (! in_array(\ProjectUGroup::PROJECT_ADMIN, $admins, true)) {
+            array_unshift($admins, \ProjectUGroup::PROJECT_ADMIN);
+        }
+
+        return $admins;
     }
 }

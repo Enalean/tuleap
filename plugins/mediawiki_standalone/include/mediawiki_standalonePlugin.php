@@ -70,14 +70,11 @@ use Tuleap\MediawikiStandalone\Permissions\Admin\PermissionPerGroupServicePaneBu
 use Tuleap\MediawikiStandalone\Permissions\Admin\ProjectPermissionsSaver;
 use Tuleap\MediawikiStandalone\Permissions\Admin\RejectNonMediawikiAdministratorMiddleware;
 use Tuleap\MediawikiStandalone\Permissions\Admin\UserGroupToSaveRetriever;
-use Tuleap\MediawikiStandalone\Permissions\AdminsRetriever;
 use Tuleap\MediawikiStandalone\Permissions\MediawikiPermissionsDao;
 use Tuleap\MediawikiStandalone\Permissions\PermissionsFollowingSiteAccessChangeUpdater;
 use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
-use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
 use Tuleap\MediawikiStandalone\Permissions\RestrictedUserCanAccessMediaWikiVerifier;
 use Tuleap\MediawikiStandalone\Permissions\UserPermissionsBuilder;
-use Tuleap\MediawikiStandalone\Permissions\WritersRetriever;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
 use Tuleap\MediawikiStandalone\REST\OAuth2\OAuth2MediawikiStandaloneReadScope;
 use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageDao;
@@ -167,7 +164,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     public function getInstallRequirements(): array
     {
-        return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(new \Tuleap\Queue\WorkerAvailability())];
+        return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(
+            new \Tuleap\Queue\WorkerAvailability()
+        ),
+        ];
     }
 
     public function getHooksAndCallbacks(): Collection
@@ -210,11 +210,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $dao = new MediawikiPermissionsDao();
         (new XMLMediaWikiExporter(
             new WrapperLogger($event->getLogger(), 'MediaWiki Standalone'),
-            new ProjectPermissionsRetriever(
-                new ReadersRetriever($dao),
-                new WritersRetriever($dao),
-                new AdminsRetriever($dao),
-            ),
+            new ProjectPermissionsRetriever($dao),
             new UGroupManager(),
         ))->exportToXml(
             $event->getProject(),
@@ -299,17 +295,22 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
-        (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(new ServiceAvailabilityProjectServiceBeforeAvailabilityEvent($event));
+        (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(
+            new ServiceAvailabilityProjectServiceBeforeAvailabilityEvent($event)
+        );
     }
 
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
-        (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(new ServiceAvailabilityServiceDisabledCollectorEvent($event));
+        (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(
+            new ServiceAvailabilityServiceDisabledCollectorEvent($event)
+        );
     }
 
     /**
-     * @see Event::PROJECT_ACCESS_CHANGE
      * @param array{project_id: int} $params
+     *
+     * @see Event::PROJECT_ACCESS_CHANGE
      */
     public function projectAccessChange(array $params): void
     {
@@ -356,8 +357,9 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     }
 
     /**
-     * @see Event::SITE_ACCESS_CHANGE
      * @param array{old_value: \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED, new_value: \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED} $params
+     *
+     * @see Event::SITE_ACCESS_CHANGE
      */
     public function siteAccessChange(array $params): void
     {
@@ -432,7 +434,11 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     {
         $route_collector = $event->getRouteCollector();
 
-        $route_collector->addRoute(['GET', 'POST'], '/mediawiki_standalone/oauth2_authorize', $this->getRouteHandler('routeAuthorizationEndpoint'));
+        $route_collector->addRoute(
+            ['GET', 'POST'],
+            '/mediawiki_standalone/oauth2_authorize',
+            $this->getRouteHandler('routeAuthorizationEndpoint')
+        );
         $route_collector->addRoute(
             'GET',
             '/mediawiki_standalone/admin/{' . AdminPermissionsController::PROJECT_NAME_VARIABLE_NAME . '}/permissions',
@@ -470,11 +476,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
                         new RestrictedUserCanAccessMediaWikiVerifier(),
                         \EventManager::instance(),
                     ),
-                    new ProjectPermissionsRetriever(
-                        new ReadersRetriever($dao),
-                        new WritersRetriever($dao),
-                        new AdminsRetriever($dao),
-                    )
+                    new ProjectPermissionsRetriever($dao)
                 ),
             )
         );
@@ -484,11 +486,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     {
         $dao = new MediawikiPermissionsDao();
 
-        $permissions_retriever = new ProjectPermissionsRetriever(
-            new ReadersRetriever($dao),
-            new WritersRetriever($dao),
-            new AdminsRetriever($dao),
-        );
+        $permissions_retriever = new ProjectPermissionsRetriever($dao);
 
         return new AdminPermissionsController(
             HTTPFactoryBuilder::responseFactory(),
@@ -528,7 +526,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $url_redirect               = new \URLRedirect(\EventManager::instance());
         $scope_builder              = AggregateAuthenticationScopeBuilder::fromBuildersList(
             CoreOAuth2ScopeBuilderFactory::buildCoreOAuth2ScopeBuilder(),
-            AggregateAuthenticationScopeBuilder::fromEventDispatcher(\EventManager::instance(), new OAuth2ScopeBuilderCollector())
+            AggregateAuthenticationScopeBuilder::fromEventDispatcher(
+                \EventManager::instance(),
+                new OAuth2ScopeBuilderCollector()
+            )
         );
         $authorization_code_creator = new OAuth2AuthorizationCodeCreator(
             new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
@@ -540,6 +541,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         );
 
         $logger = \Tuleap\OAuth2ServerCore\OAuth2ServerRoutes::getOAuth2ServerLogger();
+
         return new AuthorizationEndpointController(
             new RejectAuthorizationRequiringConsent(
                 new AuthorizationCodeResponseFactory(
@@ -637,6 +639,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     {
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         $hasher               = new SplitTokenVerificationStringHasher();
+
         return new LocalSettingsInstantiator(
             new LocalSettingsFactory(
                 new MediaWikiOAuth2AppSecretGeneratorDBStore(
@@ -700,11 +703,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $dao                  = new MediawikiPermissionsDao();
         $service_pane_builder = new PermissionPerGroupServicePaneBuilder(
             new PermissionPerGroupUGroupFormatter($ugroup_manager),
-            new ProjectPermissionsRetriever(
-                new ReadersRetriever($dao),
-                new WritersRetriever($dao),
-                new AdminsRetriever($dao),
-            ),
+            new ProjectPermissionsRetriever($dao),
             $ugroup_manager,
         );
 

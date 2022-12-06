@@ -24,20 +24,18 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 
 use Tuleap\DB\DataAccessObject;
 
-final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProjectAndPermission, ISaveProjectPermissions, IUpdatePermissionsFollowingSiteAccessChange
+final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProject, ISaveProjectPermissions, IUpdatePermissionsFollowingSiteAccessChange
 {
     /**
-     * @return list<array{ ugroup_id: int }>
+     * @return list<array{ ugroup_id: int, permission: string }>
      */
-    public function searchByProjectAndPermission(\Project $project, Permission $permission): array
+    public function searchByProject(\Project $project): array
     {
         return $this->getDB()->run(
-            'SELECT ugroup_id
+            'SELECT ugroup_id, permission
             FROM plugin_mediawiki_standalone_permissions
-            WHERE project_id = ?
-            AND permission = ?',
-            $project->getID(),
-            $permission->getName()
+            WHERE project_id = ?',
+            $project->getID()
         );
     }
 
