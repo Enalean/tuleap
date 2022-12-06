@@ -16,6 +16,7 @@ services:
     hostname: ${TULEAP_FQDN}
     ports:
       - "443:443"
+      - "3939:22"
     volumes:
       # For Tuleap devs, un-comment if you want to test stuff with your own code base
       - ../../../:/usr/share/tuleap:ro,cached
@@ -35,6 +36,8 @@ services:
       - TULEAP_REDIS_SERVER=redis
       #- TULEAP_REDIS_PASSWORD=${REDIS_PASSWORD}
       - TULEAP_EMAIL_RELAYHOST=mailhog:1025
+      - TULEAP_GIT_SSH_URL=ssh://gitolite@%server_name%:3939/
+      #- TULEAP_GIT_SSH_URL=
 
   # This is for test purpose only. It's not advised to run a production database as a docker container
   db:

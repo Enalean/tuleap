@@ -27,8 +27,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\FeatureFlagConfigKey;
 
+#[ConfigKeyCategory('Git')]
 final class PreReceiveAnalyzeCommand extends Command
 {
     #[FeatureFlagConfigKey("Feature flag to enable the git:pre-receive-analyze command")]
