@@ -614,14 +614,14 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $this->warnUserAboutAuthenticationAttempts($user);
             $this->warnUserAboutAdminReadOnlyPermission($user);
 
-            $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME']);
+            $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp());
 
             \Tuleap\User\LoginInstrumentation::increment('success');
             $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
             return $user;
         } catch (User_InvalidPasswordWithUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME']);
+            $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp());
         } catch (User_InvalidPasswordException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (User_PasswordExpiredException $exception) {
