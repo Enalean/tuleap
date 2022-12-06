@@ -555,6 +555,11 @@ msgstr ""
 "les outils de suivi suivant utilisent au moins une action de workflow de "
 "type \"Ajouter à la planification générale\" : %s"
 
+msgid "The backlog trackers cannot have hierarchical links."
+msgstr ""
+"Les outils de suivi définissant le backlog ne peuvent pas avoir de lien "
+"hiérarchique."
+
 msgid "The configuration has been successfully imported!"
 msgstr "La configuration a été importée !"
 
