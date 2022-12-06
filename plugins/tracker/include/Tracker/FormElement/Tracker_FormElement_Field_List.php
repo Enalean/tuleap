@@ -114,14 +114,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return [];
     }
 
-    /**
-     * @return bool
-     */
-    public function isMultiple()
-    {
-        return false;
-    }
-
     public function canBeUsedToSortReport()
     {
         return ! $this->isMultiple();
