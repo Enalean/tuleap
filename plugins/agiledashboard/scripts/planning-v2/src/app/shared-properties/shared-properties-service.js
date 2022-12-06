@@ -26,7 +26,6 @@ export default function SharedPropertiesService() {
         is_in_explicit_top_backlog: undefined,
         allowed_additional_panes_to_display: [],
         is_list_picker_enabled: false,
-        is_search_enabled: false,
         trackers_disabling_list_picker: [],
     };
 
@@ -46,10 +45,6 @@ export default function SharedPropertiesService() {
         setEnableListPicker,
         isListPickerEnabledForTracker,
         setTrackersDisablingListPicker,
-        setSearchEnabled: (search_enabled) => {
-            property.is_search_enabled = search_enabled;
-        },
-        isSearchEnabled: () => property.is_search_enabled,
     };
 
     function getUserId() {

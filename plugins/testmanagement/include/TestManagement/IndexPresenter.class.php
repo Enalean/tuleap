@@ -26,7 +26,6 @@ use PFUser;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
-use Tuleap\Tracker\Artifact\Renderer\HistoryAndSearchFeatureFlag;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\User\REST\UserRepresentation;
@@ -116,7 +115,6 @@ class IndexPresenter
      * @var string
      */
     public $trackers_ids_using_list_picker;
-    public bool $is_search_enabled;
     /**
      * @var string
      */
@@ -215,8 +213,6 @@ class IndexPresenter
             $test_definition_tracker_id,
             $issue_tracker_id
         );
-
-        $this->is_search_enabled = (int) \ForgeConfig::getFeatureFlag(HistoryAndSearchFeatureFlag::FEATURE_FLAG_KEY) === 1;
 
         $this->csrf_token_campaign_status = $csrf_token->getToken();
 

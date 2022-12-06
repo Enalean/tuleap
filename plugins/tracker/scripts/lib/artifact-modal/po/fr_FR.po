@@ -34,12 +34,6 @@ msgstr "Ajouter un autre fichier"
 msgid "An error occurred while saving the artifact."
 msgstr "Une erreur s'est produite pendant la sauvegarde de cet artéfact."
 
-msgid "Artifact id"
-msgstr "Id d'artéfact"
-
-msgid "Artifact id or title"
-msgstr "Id ou titre de l'artéfact"
-
 msgid "Auto-compute"
 msgstr "Calcul automatique"
 

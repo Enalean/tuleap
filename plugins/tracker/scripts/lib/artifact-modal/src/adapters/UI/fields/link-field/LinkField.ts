@@ -26,8 +26,6 @@ import {
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
     getLinkSelectorSearchPlaceholderText,
-    getOldLinkSelectorPlaceholderText,
-    getOldParentLinkSelectorPlaceholderText,
 } from "../../../../gettext-catalog";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
@@ -166,14 +164,6 @@ export const current_link_type_descriptor = {
     set: (host: LinkField, link_type: LinkType | undefined): LinkType => {
         if (!link_type) {
             return LinkType.buildUntyped();
-        }
-        if (!host.controller.is_search_feature_flag_enabled) {
-            if (!LinkType.isReverseChild(link_type)) {
-                host.link_selector.setPlaceholder(getOldLinkSelectorPlaceholderText());
-                return link_type;
-            }
-            host.link_selector.setPlaceholder(getOldParentLinkSelectorPlaceholderText());
-            return link_type;
         }
         return link_type;
     },
