@@ -529,8 +529,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
             $status = false;
             \Tuleap\Mail\MailInstrumentation::incrementFailure();
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'mail_failed', ForgeConfig::get('sys_email_admin')), CODENDI_PURIFIER_DISABLED);
-            $this->logger->debug("Mail notification failed");
-            $this->logger->debug("Laminas mail Exception: " . $e->getMessage());
+            $this->logger->error("Mail notification failed. Laminas mail Exception: " . $e->getMessage());
 
             $to_header = $this->message->getHeaders()->get('to');
             if ($to_header) {
