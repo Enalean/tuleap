@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
+use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Permissions\ISaveProjectPermissions;
+use Tuleap\Queue\EnqueueTaskInterface;
 
 final class ProjectPermissionsSaver
 {
@@ -36,6 +38,7 @@ final class ProjectPermissionsSaver
     public function __construct(
         private ISaveProjectPermissions $permissions_dao,
         private \ProjectHistoryDao $history_dao,
+        private EnqueueTaskInterface $enqueue_task,
     ) {
     }
 
@@ -102,6 +105,11 @@ final class ProjectPermissionsSaver
             $admins,
             empty($admins) ? self::PERM_RESET_FOR_ADMINS : self::PERM_GRANTED_FOR_ADMINS
         );
+
+        $event = LogUsersOutInstanceTask::logsOutUserOfAProject($project);
+        if ($event) {
+            $this->enqueue_task->enqueue($event);
+        }
     }
 
     /**

@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
+use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Permissions\ISaveProjectPermissionsStub;
+use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 
 class ProjectPermissionsSaverTest extends TestCase
 {
@@ -33,11 +36,22 @@ class ProjectPermissionsSaverTest extends TestCase
 
     public function testSave(): void
     {
+        $project = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->withUsedService(MediawikiStandaloneService::SERVICE_SHORTNAME)
+            ->build();
+
         $history_dao = $this->createMock(\ProjectHistoryDao::class);
 
         $permissions_dao = ISaveProjectPermissionsStub::buildSelf();
 
-        $saver = new ProjectPermissionsSaver($permissions_dao, $history_dao);
+        $enqueue_task = new EnqueueTaskStub();
+
+        $saver = new ProjectPermissionsSaver(
+            $permissions_dao,
+            $history_dao,
+            $enqueue_task,
+        );
 
         $readers = [
             ProjectUGroupTestBuilder::buildProjectMembers(),
@@ -72,7 +86,7 @@ class ProjectPermissionsSaverTest extends TestCase
             );
 
         $saver->save(
-            ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build(),
+            $project,
             $readers,
             $writers,
             $admins,
@@ -92,5 +106,7 @@ class ProjectPermissionsSaverTest extends TestCase
             [102],
             $permissions_dao->getCapturedAdminsUgroupIds()
         );
+
+        self::assertInstanceOf(LogUsersOutInstanceTask::class, $enqueue_task->queue_task);
     }
 }

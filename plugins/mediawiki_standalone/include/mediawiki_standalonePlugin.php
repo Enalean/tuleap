@@ -456,7 +456,11 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $dao = new MediawikiPermissionsDao();
 
         return new AdminSavePermissionsController(
-            new ProjectPermissionsSaver($dao, new ProjectHistoryDao()),
+            new ProjectPermissionsSaver(
+                $dao,
+                new ProjectHistoryDao(),
+                new EnqueueTask(),
+            ),
             new UserGroupToSaveRetriever(new UGroupManager()),
             new RedirectWithFeedbackFactory(
                 HTTPFactoryBuilder::responseFactory(),
