@@ -26,7 +26,6 @@ import { ItemsMapManager } from "../items/ItemsMapManager";
 import type { LinkSelectorSelectionCallback, RenderedItem } from "../type";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
-import type { GroupCollection } from "../items/GroupCollection";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 import { ClearSearchFieldStub } from "../../tests/stubs/ClearSearchFieldStub";
 
@@ -72,7 +71,16 @@ describe("SelectionManager", () => {
             selection_callback,
             clear_search_field
         );
-        items_map_manager.refreshItemsMap(GroupCollectionBuilder.withSingleGroup());
+        items_map_manager.refreshItemsMap(
+            GroupCollectionBuilder.withSingleGroup({
+                items: [
+                    { value: { id: 0 }, is_disabled: false },
+                    { value: { id: 1 }, is_disabled: false },
+                    { value: { id: 2 }, is_disabled: false },
+                    { value: { id: 3 }, is_disabled: false },
+                ],
+            })
+        );
         item_1 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-1");
         item_2 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-2");
     });
@@ -207,17 +215,12 @@ describe("SelectionManager", () => {
         it(`when an item has been selected, and is still available in the new items, then it should keep it selected`, () => {
             manager.processSelection(item_1.element);
 
-            const groups: GroupCollection = [
-                {
-                    label: "",
-                    empty_message: "irrelevant",
-                    items: [
-                        { value: { id: 0 }, is_disabled: false },
-                        { value: item_1.value, is_disabled: false },
-                    ],
-                    is_loading: false,
-                },
-            ];
+            const groups = GroupCollectionBuilder.withSingleGroup({
+                items: [
+                    { value: { id: 0 }, is_disabled: false },
+                    { value: item_1.value, is_disabled: false },
+                ],
+            });
             items_map_manager.refreshItemsMap(groups);
             manager.resetAfterDependenciesUpdate();
 

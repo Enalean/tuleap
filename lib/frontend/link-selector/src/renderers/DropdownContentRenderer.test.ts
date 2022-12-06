@@ -61,14 +61,10 @@ describe("DropDownContentRenderer", () => {
 
         it("renders empty option groups when they have a placeholder", () => {
             const empty_state_text = "No results found on the server";
-            const groups: GroupCollection = [
-                {
-                    label: "Group 1",
-                    empty_message: empty_state_text,
-                    items: [],
-                    is_loading: false,
-                },
-            ];
+            const groups = GroupCollectionBuilder.withSingleGroup({
+                empty_message: empty_state_text,
+                items: [],
+            });
 
             render(groups);
 
@@ -81,16 +77,30 @@ describe("DropDownContentRenderer", () => {
             expect(empty_state.textContent?.trim()).toBe(empty_state_text);
         });
 
+        it(`renders group footer message below the list of items`, () => {
+            const footer_message = "Maybe there are more results";
+            const groups = GroupCollectionBuilder.withSingleGroup({
+                items: [
+                    { value: { id: 1 }, is_disabled: false },
+                    { value: { id: 2 }, is_disabled: false },
+                ],
+                footer_message,
+            });
+
+            render(groups);
+
+            const footer = dropdown_list.querySelector("[data-test=link-selector-group-footer]");
+            expect(footer?.textContent?.trim()).toBe(footer_message);
+        });
+
         it("renders a spinner next to the group title when it is loading", () => {
             const empty_state_text = "I am loading, wait a second!";
-            const groups: GroupCollection = [
-                {
-                    label: "A group still loading",
-                    empty_message: empty_state_text,
-                    items: [],
-                    is_loading: true,
-                },
-            ];
+            const groups = GroupCollectionBuilder.withSingleGroup({
+                label: "A group still loading",
+                empty_message: empty_state_text,
+                items: [],
+                is_loading: true,
+            });
 
             render(groups);
 

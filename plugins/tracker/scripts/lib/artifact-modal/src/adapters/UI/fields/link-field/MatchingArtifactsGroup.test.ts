@@ -24,9 +24,7 @@ import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAl
 
 describe(`MatchingArtifactsGroup`, () => {
     beforeEach(() => {
-        setCatalog({
-            getString: (msgid) => msgid,
-        });
+        setCatalog({ getString: (msgid) => msgid });
     });
 
     it(`builds from a Linkable Artifact`, () => {
@@ -36,15 +34,17 @@ describe(`MatchingArtifactsGroup`, () => {
             artifact
         );
 
-        expect(group.items).toHaveLength(1);
-        expect(group.items[0].value).toBe(artifact);
         expect(group.is_loading).toBe(false);
+        expect(group.items).toHaveLength(1);
+        expect(group.empty_message).not.toBe("");
+        expect(group.items[0].value).toBe(artifact);
     });
 
     it(`builds an empty group so that Link-selector will show an empty state message`, () => {
         const group = MatchingArtifactsGroup.buildEmpty();
         expect(group.items).toHaveLength(0);
         expect(group.is_loading).toBe(false);
+        expect(group.empty_message).not.toBe("");
     });
 
     it(`builds an empty loading group so that Link-selector will show a spinner`, () => {

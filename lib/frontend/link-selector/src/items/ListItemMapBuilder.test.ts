@@ -32,7 +32,16 @@ describe("ListItemBuilder", () => {
 
     it(`flattens a single group and builds a RenderedItem for each item
         and returns a map containing all items`, () => {
-        const map = buildMap(GroupCollectionBuilder.withSingleGroup());
+        const map = buildMap(
+            GroupCollectionBuilder.withSingleGroup({
+                items: [
+                    { value: { id: 0 }, is_disabled: false },
+                    { value: { id: 1 }, is_disabled: false },
+                    { value: { id: 2 }, is_disabled: false },
+                    { value: { id: 3 }, is_disabled: false },
+                ],
+            })
+        );
 
         expect(map.size).toBe(4);
 

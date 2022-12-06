@@ -27,6 +27,7 @@ export type GroupOfItems = {
     readonly empty_message: string;
     readonly items: ReadonlyArray<LinkSelectorItem>;
     readonly is_loading: boolean;
+    readonly footer_message: string;
 };
 
 export type GroupCollection = ReadonlyArray<GroupOfItems>;

@@ -32,12 +32,15 @@ export const RecentlyViewedArtifactGroup = {
         empty_message: getNoResultFoundEmptyState(),
         items: [],
         is_loading: false,
+        footer_message: "",
     }),
+
     buildLoadingState: (): GroupOfItems => ({
         label: getRecentlyViewedArtifactGroupLabel(),
         empty_message: "",
         items: [],
         is_loading: true,
+        footer_message: "",
     }),
 
     fromUserHistory: (
@@ -50,5 +53,6 @@ export const RecentlyViewedArtifactGroup = {
             LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
         ),
         is_loading: false,
+        footer_message: "",
     }),
 };

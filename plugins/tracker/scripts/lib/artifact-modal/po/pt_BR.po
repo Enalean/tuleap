@@ -147,6 +147,9 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
+msgid "Please refine your search if you did not find what you are looking for."
+msgstr ""
+
 msgid "Please select a date"
 msgstr ""
 
