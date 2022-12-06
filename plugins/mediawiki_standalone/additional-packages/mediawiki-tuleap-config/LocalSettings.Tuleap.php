@@ -28,6 +28,20 @@ $GLOBALS['wgGroupPermissions']['sysop']['createaccount'] = false;
 // Disable patrolling
 $GLOBALS['wgGroupPermissions']['sysop']['autopatrol'] = false;
 $GLOBALS['wgGroupPermissions']['sysop']['patrol']     = false;
+// Make sure people can always access this page, so that OAuth2 flow can kick-off
+$GLOBALS['wgWhitelistRead'][] = 'Special:TuleapLogin';
+// As far as this plugin is concerned, there is no difference between an "*" group user (=anon)
+// and logged in "user" without any additional groups. Whether user will be anon or logged in
+// depends on private/public setting in Tuleap project. In both cases, "read" access is controlled
+// by the "is_reader" attribute send from Tuleap, which is handled in a hook, within
+// "Extension:TuleapIntegration".
+// However, in normal MediaWiki, users with no additional groups behave same as "editors" in Tuleap
+// Therefore, we assign all default "user" permissions to our new "editor" group, and assign anon
+// permissions to "user".
+$GLOBALS['wgGroupPermissions']['*']['edit'] = false;
+$GLOBALS['wgGroupPermissions']['editor']    = $GLOBALS['wgGroupPermissions']['user'];
+$GLOBALS['wgGroupPermissions']['user']      = $GLOBALS['wgGroupPermissions']['*'];
+
 // Disable email features
 $GLOBALS['wgEnableEmail']         = false;
 $GLOBALS['wgEnableUserEmail']     = false;
