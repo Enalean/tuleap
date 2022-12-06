@@ -45,6 +45,13 @@ export const getLinkableArtifactTemplate = (
     }
 
     const item_classes = `tlp-swatch-${artifact.xref.color} cross-ref-badge link-field-xref-badge`;
+    let status_classes = "";
+
+    if (artifact.status && artifact.status.color) {
+        status_classes = `link-field-status tlp-badge-outline tlp-badge-${artifact.status.color}`;
+    } else {
+        status_classes = "link-field-status tlp-badge-outline tlp-badge-secondary";
+    }
 
     if (item.is_disabled) {
         return lit_html`
@@ -54,6 +61,17 @@ export const getLinkableArtifactTemplate = (
                 <span class="link-field-disabled-item-already-linked-info">
                     ${getAlreadyLinkedInfo()}
                 </span>
+                ${
+                    artifact.status &&
+                    lit_html`
+                    <span
+                        class="${status_classes}"
+                        data-test="artifact-status"
+                    >
+                        ${artifact.status.value}
+                    </span>
+                `
+                }
             </span>
         `;
     }
@@ -62,6 +80,17 @@ export const getLinkableArtifactTemplate = (
         <span class="link-field-item">
             <span class="${item_classes}">${artifact.xref.ref}</span>
             <span class="link-field-item-title">${artifact.title}</span>
+            ${
+                artifact.status &&
+                lit_html`
+                <span
+                    class="${status_classes}"
+                    data-test="artifact-status"
+                >
+                    ${artifact.status.value}
+                </span>
+            `
+            }
         </span>
     `;
 };
