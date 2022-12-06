@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TreeNode.class.php';
-
 class TreeNode_GetStateVisitor
 {
     public const STATE_NODE  = 0;
@@ -27,7 +25,7 @@ class TreeNode_GetStateVisitor
     public const STATE_BLANK = 2;
     public const STATE_PIPE  = 3;
 
-    private $states = [];
+    private array $states = [];
 
     public function getState(TreeNode $node)
     {

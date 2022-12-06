@@ -405,7 +405,7 @@ class WikiServiceAdminViews extends WikiViews
     {
         $purifier = Codendi_HTMLPurifier::instance();
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikiperm', [$purifier->purify($this->wikiname), $purifier->purify($this->wikiname)]);
-        $postUrl = '/wiki/admin/index.php?group_id=' . $purifier->purify(urlencode($this->gid)) . '&action=setWikiPerms';
+        $postUrl = '/wiki/admin/index.php?group_id=' . $purifier->purify(urlencode((string) $this->gid)) . '&action=setWikiPerms';
         permission_display_selection_form("WIKI_READ", $this->gid, $this->gid, $postUrl);
 
         print '<hr/><p><a href="' . $this->wikiAdminLink . '">' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin') . '</a></p>' . "\n";

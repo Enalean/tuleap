@@ -326,6 +326,7 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     /**
      * @psalm-taint-escape file
+     * @psalm-taint-escape text
      */
     private function getValidatedName(string $name): string
     {

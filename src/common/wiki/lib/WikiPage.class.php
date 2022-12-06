@@ -40,10 +40,10 @@ require_once __DIR__ . '/../../../www/project/admin/permissions.php';
  */
 class WikiPage
 {
- /* private int */   public $id;       /* wiki_page.id */
- /* private string*/ public $pagename; /* wiki_page.pagename */
- /* private int */   public static $gid;      /* wiki_page.group_id */
- /* private bool */  public $empty;
+    public $id;       /* wiki_page.id */
+    public $pagename; /* wiki_page.pagename */
+    public static $gid;      /* wiki_page.group_id */
+    public bool|null $empty;
 
     /** @var WikiPageWrapper */
     private $wrapper;

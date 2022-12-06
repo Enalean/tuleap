@@ -30,7 +30,7 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
      * @var HudsonJob
      */
     private $job;
-    private $test_result;
+    private HudsonTestResult|null $test_result;
     /**
      * @var HudsonJobBuilder
      */

@@ -27,7 +27,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollect
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Statistics_DiskUsageManager
 {
-    private $services = [];
+    private array $services = [];
 
     public const SVN           = 'svn';
     public const CVS           = 'cvs';

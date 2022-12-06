@@ -4,19 +4,16 @@
  * and open the template in the editor.
  */
 
-require __DIR__ . '/Docman_XMLExport.class.php';
-require __DIR__ . '/Docman_ExportException.class.php';
-
 /**
  * Description of XMLExportclass
  */
 class XMLExport
 {
-    protected $archiveName;
-    protected $groupId;
-    protected $dataPath;
-    protected $packagePath;
-    protected $logger;
+    protected mixed $archiveName;
+    protected mixed $groupId;
+    protected mixed $dataPath;
+    protected mixed $packagePath;
+    protected \Psr\Log\LoggerInterface $logger;
 
     public function __construct(\Psr\Log\LoggerInterface $logger)
     {

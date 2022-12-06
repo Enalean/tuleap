@@ -30,13 +30,13 @@ use Tuleap\PHPWiki\WikiPage;
 
 class Docman_ItemFactory
 {
-    public $rootItems;
-    public $onlyOneChildForRoot;
-    public $copiedItem;
-    public $groupId;
-    private $cutItem;
+    public array $rootItems;
+    public array $onlyOneChildForRoot;
+    public array $copiedItem;
+    public mixed $groupId;
+    private array $cutItem;
 
-    private static $instance;
+    private static array $instance;
 
     public function __construct($groupId = null)
     {
@@ -839,7 +839,7 @@ class Docman_ItemFactory
         return $ii;
     }
 
-    public $dao;
+    public Docman_ItemDao|null $dao = null;
     /**
      * @return Docman_ItemDao
      */
@@ -1684,6 +1684,6 @@ class Docman_ItemFactory
     {
         $link_version_factory = new Docman_LinkVersionFactory();
 
-        return $link_version_factory->create($link, $version_data['label'], $version_data['changelog'], $_SERVER['REQUEST_TIME']);
+        return $link_version_factory->create($link, $version_data['label'], $version_data['changelog'], $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp());
     }
 }

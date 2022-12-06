@@ -19,13 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'XMLDocmanImport.class.php';
-require_once 'Trees.class.php';
-
 class XMLDocmanUpdate extends XMLDocmanImport
 {
-    private $remoteItems = [];
-    private $continue    = false;
+    private array $remoteItems = [];
+    private bool $continue     = false;
 
     public function updatePath($xmlDoc, $parentId, $path)
     {

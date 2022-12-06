@@ -102,10 +102,10 @@ function wiki_display_footer()
  */
 class WikiViews extends Views
 {
-  /* protected int    */ public $gid;
-  /* protected string */ public $wikiname;
-  /* protected string */ public $wikiLink;
-  /* protected string */ public $wikiAdminLink;
+    public int $gid;
+    public string $wikiname;
+    public string $wikiLink;
+    public string $wikiAdminLink;
 
   /**
    * WikiView - Constructor
@@ -151,7 +151,7 @@ class WikiViews extends Views
         $GLOBALS['HTML']->addBreadcrumbs([
             [
                 'title' => _('Wiki'),
-                'url' => '/wiki/?group_id=' . (int) $this->gid,
+                'url' => '/wiki/?group_id=' . $this->gid,
             ],
         ]);
 

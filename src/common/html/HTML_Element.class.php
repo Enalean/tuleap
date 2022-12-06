@@ -25,13 +25,13 @@
  */
 abstract class HTML_Element
 {
-    protected $params;
+    protected array $params;
     protected $name;
     protected $value;
     protected $label;
     protected $desc;
-    protected $id;
-    protected static $last_id = 0;
+    protected string $id;
+    protected static int $last_id = 0;
 
     public function __construct($label, $name, $value, $desc = '')
     {

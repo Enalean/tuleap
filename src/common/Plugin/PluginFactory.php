@@ -198,6 +198,7 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *
      * @psalm-taint-escape include
      * @psalm-taint-escape shell
+     * @psalm-taint-escape callable
      * @psalm-pure
      */
     private static function verifyPluginName(string $name): string
