@@ -143,11 +143,6 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         return self::SERVICE_SHORTNAME;
     }
 
-    public function getDependencies(): array
-    {
-        return ['mediawiki_standalone'];
-    }
-
     public function burning_parrot_get_javascript_files($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
