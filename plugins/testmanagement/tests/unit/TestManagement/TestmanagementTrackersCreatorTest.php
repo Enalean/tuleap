@@ -67,7 +67,7 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCreateFromXml(): void
     {
-        $expected_path = (string) realpath(__DIR__ . '/../../../resources/Tracker_campaign.xml');
+        $expected_path = (string) realpath(__DIR__ . '/../../../resources/templates/Tracker_campaign.xml');
 
         $this->xml_import->shouldReceive("createFromXMLFile")
             ->withArgs([$this->project, $expected_path])

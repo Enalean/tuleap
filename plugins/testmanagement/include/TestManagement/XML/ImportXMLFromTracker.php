@@ -45,7 +45,7 @@ class ImportXMLFromTracker
     {
         $this->rng_validator->validate(
             $xml,
-            realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement_external_fields.rng')
+            realpath(__DIR__ . '/../../../resources/testmanagement_external_fields.rng')
         );
     }
 
@@ -53,7 +53,7 @@ class ImportXMLFromTracker
     {
         $this->rng_validator->validate(
             $xml,
-            realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement_external_changeset.rng')
+            realpath(__DIR__ . '/../../../resources/testmanagement_external_changeset.rng')
         );
     }
 
