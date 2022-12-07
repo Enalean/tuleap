@@ -81,7 +81,7 @@ const scrollToCommentWidget = (
     }
 
     setTimeout(() => {
-        codemirror.scrollIntoView({ line: line_number, ch: 0 });
+        codemirror.scrollIntoView({ line: line_number - 1, ch: 0 });
         codemirror.refresh();
         widget.scrollIntoView();
     });
