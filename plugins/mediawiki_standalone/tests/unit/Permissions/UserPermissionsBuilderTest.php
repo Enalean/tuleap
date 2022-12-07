@@ -46,6 +46,7 @@ final class UserPermissionsBuilderTest extends TestCase
     public function testGetPermissionsForAdmin(
         PFUser $user,
         Project $project,
+        CheckProjectAccess $check_access,
         bool $is_site_mediawiki_admin,
         bool $is_admin,
     ): void {
@@ -68,7 +69,7 @@ final class UserPermissionsBuilderTest extends TestCase
 
         $permission_builder = new UserPermissionsBuilder(
             $forge_permissions_retriever,
-            CheckProjectAccessStub::withValidAccess(),
+            $check_access,
             new ProjectPermissionsRetriever($dao),
         );
 
@@ -85,18 +86,56 @@ final class UserPermissionsBuilderTest extends TestCase
             'site administrator has all permissions '                => [
                 'user'                    => UserTestBuilder::buildSiteAdministrator(),
                 'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withValidAccess(),
                 'is_site_mediawiki_admin' => false,
                 'is_admin'                => true,
             ],
             'site wide mediawiki administrators has all permissions' => [
                 'user'                    => UserTestBuilder::anActiveUser()->build(),
                 'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withValidAccess(),
                 'is_site_mediawiki_admin' => true,
                 'is_admin'                => true,
+            ],
+            'site wide mediawiki administrators has all permissions even on a private project' => [
+                'user'                    => UserTestBuilder::anActiveUser()->build(),
+                'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withPrivateProjectWithoutAccess(),
+                'is_site_mediawiki_admin' => true,
+                'is_admin'                => true,
+            ],
+            'site wide mediawiki administrators has all permissions even if restricted' => [
+                'user'                    => UserTestBuilder::anActiveUser()->build(),
+                'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withRestrictedUserWithoutAccess(),
+                'is_site_mediawiki_admin' => true,
+                'is_admin'                => true,
+            ],
+            'site wide mediawiki administrators has no permission if project is deleted' => [
+                'user'                    => UserTestBuilder::anActiveUser()->build(),
+                'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withDeletedProject(),
+                'is_site_mediawiki_admin' => true,
+                'is_admin'                => false,
+            ],
+            'site wide mediawiki administrators has no permission if project is suspended' => [
+                'user'                    => UserTestBuilder::anActiveUser()->build(),
+                'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withSuspendedProject(),
+                'is_site_mediawiki_admin' => true,
+                'is_admin'                => false,
+            ],
+            'site wide mediawiki administrators has no permission if project is not valid' => [
+                'user'                    => UserTestBuilder::anActiveUser()->build(),
+                'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withNotValidProject(),
+                'is_site_mediawiki_admin' => true,
+                'is_admin'                => false,
             ],
             'project administrator has all permissions'              => [
                 'user'                    => UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build(),
                 'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withValidAccess(),
                 'is_site_mediawiki_admin' => false,
                 'is_admin'                => true,
             ],
@@ -115,6 +154,7 @@ final class UserPermissionsBuilderTest extends TestCase
                     )
                     ->build(),
                 'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withValidAccess(),
                 'is_site_mediawiki_admin' => false,
                 'is_admin'                => false,
             ],
@@ -133,6 +173,7 @@ final class UserPermissionsBuilderTest extends TestCase
                     )
                     ->build(),
                 'project'                 => $project,
+                'check_access'            => CheckProjectAccessStub::withValidAccess(),
                 'is_site_mediawiki_admin' => false,
                 'is_admin'                => false,
             ],

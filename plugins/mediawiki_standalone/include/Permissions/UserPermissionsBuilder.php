@@ -40,6 +40,11 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
     {
         try {
             $this->check_project_access->checkUserCanAccessProject($user, $project);
+        } catch (\Project_AccessPrivateException | \Project_AccessRestrictedException) {
+            if ($this->forge_permissions_retriever->doesUserHavePermission($user, new MediawikiAdminAllProjects())) {
+                return UserPermissions::fullAccess();
+            }
+            return UserPermissions::noAccess();
         } catch (\Project_AccessException) {
             return UserPermissions::noAccess();
         }
