@@ -58,6 +58,7 @@ use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
+use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -92,6 +93,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $this->addHook(DelegatedUserAccessForProject::NAME);
         $this->addHook(RestrictedUsersAreHandledByPluginEvent::NAME);
         $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
+        $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
 
         // Search
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -136,6 +138,11 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
 
         bindtextdomain('tuleap-mediawiki', __DIR__ . '/../site-content');
+    }
+
+    public function getPermissionDelegation(array $params): void
+    {
+        $params['plugins_permission'][MediawikiAdminAllProjects::ID] = new MediawikiAdminAllProjects();
     }
 
     public function getServiceShortname()
