@@ -30,7 +30,7 @@ export class DropdownManager implements ManageDropdown {
     private is_dropdown_placed_above: boolean;
 
     constructor(
-        private readonly doc: HTMLDocument,
+        private readonly doc: Document,
         private readonly wrapper_element: HTMLElement,
         private readonly link_selector_element: Element,
         private readonly dropdown_element: HTMLElement,
@@ -74,7 +74,6 @@ export class DropdownManager implements ManageDropdown {
         this.scrolling_manager.unlockScrolling();
 
         this.dropdown_element.classList.remove("link-selector-dropdown-shown");
-        this.dropdown_element.removeAttribute("data-test-link-selector-dropdown-open");
         this.link_selector_element.classList.remove("link-selector-with-open-dropdown");
         this.setAriaExpandedAttribute(this.dropdown_list_element, false);
         this.field_focus_manager.applyFocusOnLinkSelector();
@@ -91,7 +90,6 @@ export class DropdownManager implements ManageDropdown {
 
         this.scrolling_manager.lockScrolling();
         this.dropdown_element.classList.add("link-selector-dropdown-shown");
-        this.dropdown_element.setAttribute("data-test-link-selector-dropdown-open", "");
         this.link_selector_element.classList.add("link-selector-with-open-dropdown");
         this.resizeAndMoveDropdownUnderWrapperElement(false);
         this.setAriaExpandedAttribute(this.dropdown_list_element, true);
@@ -109,31 +107,36 @@ export class DropdownManager implements ManageDropdown {
     }
 
     private resizeAndMoveDropdownUnderWrapperElement(is_list_being_filtered: boolean): void {
-        const list_picker_boundaries = this.wrapper_element.getBoundingClientRect();
-        const x_coordinate = list_picker_boundaries.left + window.scrollX;
-        const y_coordinate = list_picker_boundaries.bottom + window.scrollY;
-        const { height } = this.dropdown_element.getBoundingClientRect();
-        const has_enough_room_below =
-            list_picker_boundaries.bottom + height <= this.doc.documentElement.clientHeight;
+        window.requestAnimationFrame(() => {
+            const list_picker_boundaries = this.wrapper_element.getBoundingClientRect();
+            const x_coordinate = list_picker_boundaries.left + window.scrollX;
+            const y_coordinate = list_picker_boundaries.bottom + window.scrollY;
+            const { height } = this.dropdown_element.getBoundingClientRect();
+            const has_enough_room_below =
+                list_picker_boundaries.bottom + height <= this.doc.documentElement.clientHeight;
 
-        this.dropdown_element.style.width = list_picker_boundaries.width + "px";
-        this.dropdown_element.style.left = x_coordinate + "px";
+            this.dropdown_element.style.width = list_picker_boundaries.width + "px";
+            this.dropdown_element.style.left = x_coordinate + "px";
 
-        this.dropdown_element.classList.remove("link-selector-dropdown-above");
-        this.link_selector_element.classList.remove("link-selector-with-dropdown-above");
+            this.dropdown_element.classList.remove("link-selector-dropdown-above");
+            this.link_selector_element.classList.remove("link-selector-with-dropdown-above");
 
-        if (!has_enough_room_below || (this.is_dropdown_placed_above && is_list_being_filtered)) {
-            const pos = y_coordinate - height - list_picker_boundaries.height;
-            this.dropdown_element.style.top = pos + "px";
+            if (
+                !has_enough_room_below ||
+                (this.is_dropdown_placed_above && is_list_being_filtered)
+            ) {
+                const pos = y_coordinate - height - list_picker_boundaries.height;
+                this.dropdown_element.style.top = pos + "px";
 
-            this.dropdown_element.classList.add("link-selector-dropdown-above");
-            this.link_selector_element.classList.add("link-selector-with-dropdown-above");
-            this.is_dropdown_placed_above = true;
-            return;
-        }
+                this.dropdown_element.classList.add("link-selector-dropdown-above");
+                this.link_selector_element.classList.add("link-selector-with-dropdown-above");
+                this.is_dropdown_placed_above = true;
+                return;
+            }
 
-        this.dropdown_element.style.top = Math.ceil(y_coordinate) + "px";
-        this.is_dropdown_placed_above = false;
+            this.dropdown_element.style.top = Math.ceil(y_coordinate) + "px";
+            this.is_dropdown_placed_above = false;
+        });
     }
 
     private setAriaExpandedAttribute(element: Element, is_expanded: boolean): void {

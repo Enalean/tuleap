@@ -450,9 +450,10 @@ function selectLabelInLinkSelectorDropdown(
         .parents("body")
         .within(() => {
             cy.get("[data-test=link-selector-search-field]").type(String(artifact_link_id));
-            cy.get("[data-test-link-selector-dropdown-open]").within(() => {
-                cy.get("[data-test=link-selector-item]").contains(label).click();
-            });
+            cy.get("[data-test=link-selector-dropdown]")
+                .find("[data-test=link-selector-item]")
+                .contains(label)
+                .click();
         });
 }
 
