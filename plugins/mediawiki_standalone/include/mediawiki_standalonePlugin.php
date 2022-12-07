@@ -21,6 +21,11 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Admin\PermissionDelegation\ForgeUserGroupDeletedEvent;
+use Tuleap\admin\PermissionDelegation\PermissionDelegationsAddedToForgeUserGroupEvent;
+use Tuleap\Admin\PermissionDelegation\PermissionDelegationsRemovedForForgeUserGroupEvent;
+use Tuleap\Admin\PermissionDelegation\UserAddedToForgeUserGroupEvent;
+use Tuleap\Admin\PermissionDelegation\UsersRemovedFromForgeUserGroupEvent;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScope;
@@ -189,8 +194,66 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(ExportXmlProject::NAME);
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
+        $this->addHook(ForgeUserGroupDeletedEvent::NAME);
+        $this->addHook(PermissionDelegationsAddedToForgeUserGroupEvent::NAME);
+        $this->addHook(PermissionDelegationsRemovedForForgeUserGroupEvent::NAME);
+        $this->addHook(UserAddedToForgeUserGroupEvent::NAME);
+        $this->addHook(UsersRemovedFromForgeUserGroupEvent::NAME);
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function forgeUserGroupDeletedEvent(ForgeUserGroupDeletedEvent $event): void
+    {
+        $this->logsForgeUserGroupMembersOutOfAllProjects($event->getUserGroup());
+    }
+
+    public function permissionDelegationsAddedToForgeUserGroupEvent(PermissionDelegationsAddedToForgeUserGroupEvent $event): void
+    {
+        foreach ($event->getPermissions() as $permission) {
+            if ($permission->getId() === MediawikiAdminAllProjects::ID) {
+                $this->logsForgeUserGroupMembersOutOfAllProjects($event->getUserGroup());
+                break;
+            }
+        }
+    }
+
+    public function permissionDelegationsRemovedForForgeUserGroupEvent(PermissionDelegationsRemovedForForgeUserGroupEvent $event): void
+    {
+        foreach ($event->getPermissions() as $permission) {
+            if ($permission->getId() === MediawikiAdminAllProjects::ID) {
+                $this->logsForgeUserGroupMembersOutOfAllProjects($event->getUserGroup());
+                break;
+            }
+        }
+    }
+
+    private function logsForgeUserGroupMembersOutOfAllProjects(\User_ForgeUGroup $user_group): void
+    {
+        $enqueue_task = new EnqueueTask();
+        $users        = (new User_ForgeUserGroupUsersFactory(new User_ForgeUserGroupUsersDao()))->getAllUsersFromForgeUserGroup($user_group);
+        foreach ($users as $user) {
+            $enqueue_task->enqueue(
+                LogUsersOutInstanceTask::logsSpecificUserOutOfAllProjects((int) $user->getId())
+            );
+        }
+    }
+
+    public function userAddedToForgeUserGroupEvent(UserAddedToForgeUserGroupEvent $event): void
+    {
+        (new EnqueueTask())->enqueue(
+            LogUsersOutInstanceTask::logsSpecificUserOutOfAllProjects((int) $event->getUser()->getId())
+        );
+    }
+
+    public function usersRemovedFromForgeUserGroupEvent(UsersRemovedFromForgeUserGroupEvent $event): void
+    {
+        $enqueue_task = new EnqueueTask();
+        foreach ($event->getUsers() as $user) {
+            $enqueue_task->enqueue(
+                LogUsersOutInstanceTask::logsSpecificUserOutOfAllProjects((int) $user->getId())
+            );
+        }
     }
 
     public function getPermissionDelegation(array $params): void
@@ -353,9 +416,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             (int) $params['new_user']->getId(),
         );
 
-        if ($task !== null) {
-            (new EnqueueTask())->enqueue($task);
-        }
+        (new EnqueueTask())->enqueue($task);
     }
 
     /**
