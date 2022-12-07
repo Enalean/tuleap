@@ -82,6 +82,7 @@ export class BaseComponentRenderer {
     private createDropdownElement(): HTMLElement {
         const dropdown_element = document.createElement("span");
         dropdown_element.classList.add("link-selector-dropdown");
+        dropdown_element.setAttribute("data-test", "link-selector-dropdown");
         return dropdown_element;
     }
 

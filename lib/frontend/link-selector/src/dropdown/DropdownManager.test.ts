@@ -45,9 +45,11 @@ describe("dropdown-manager", () => {
                 disconnect,
             };
         });
-    });
+        vi.spyOn(window, "requestAnimationFrame").mockImplementation((callback): number => {
+            callback(1);
+            return 1;
+        });
 
-    beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         const source_select_box = document.createElement("select");
         const {
@@ -162,7 +164,7 @@ describe("dropdown-manager", () => {
                     clientHeight: document_client_height,
                 },
                 body: document.createElement("body"),
-            } as unknown as HTMLDocument;
+            } as unknown as Document;
 
             return new DropdownManager(
                 mocked_doc,
