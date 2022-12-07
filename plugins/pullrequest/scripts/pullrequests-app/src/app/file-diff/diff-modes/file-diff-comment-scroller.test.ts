@@ -88,7 +88,7 @@ describe("file-diff-comment-scroller", () => {
             jest.advanceTimersByTime(1);
 
             expect(right_code_mirror.scrollIntoView).toHaveBeenCalledWith({
-                line: comment.unidiff_offset,
+                line: comment.unidiff_offset - 1,
                 ch: 0,
             });
             expect(right_code_mirror.refresh).toHaveBeenCalledTimes(1);
@@ -112,7 +112,7 @@ describe("file-diff-comment-scroller", () => {
             jest.advanceTimersByTime(1);
 
             expect(left_code_mirror.scrollIntoView).toHaveBeenCalledWith({
-                line: 1,
+                line: comment.unidiff_offset - 1,
                 ch: 0,
             });
             expect(left_code_mirror.refresh).toHaveBeenCalledTimes(1);
@@ -134,7 +134,7 @@ describe("file-diff-comment-scroller", () => {
             jest.advanceTimersByTime(1);
 
             expect(right_code_mirror.scrollIntoView).toHaveBeenCalledWith({
-                line: 1,
+                line: comment.unidiff_offset - 1,
                 ch: 0,
             });
             expect(right_code_mirror.refresh).toHaveBeenCalledTimes(1);
