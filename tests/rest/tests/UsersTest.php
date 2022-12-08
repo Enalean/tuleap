@@ -727,6 +727,24 @@ final class UsersTest extends RestBase // phpcs:ignore
         self::assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json[0]['id']);
     }
 
+    public function testGetUserWithExactSearchOnEmail(): void
+    {
+        $search = urlencode(
+            json_encode(
+                [
+                    'email' => REST_TestDataBuilder::TEST_USER_1_EMAIL,
+                ],
+                JSON_THROW_ON_ERROR
+            )
+        );
+
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "users?query=$search&limit=10"));
+        self::assertEquals(200, $response->getStatusCode());
+
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME], $json[0]['id']);
+    }
+
     public function testGetUserWithExactSearchWithoutResult()
     {
         $search = urlencode(
