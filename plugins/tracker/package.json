@@ -4,7 +4,6 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "dependencies": {
     "@tuleap/chart-builder": "workspace:*",
     "@tuleap/copy-to-clipboard": "workspace:*",
@@ -42,12 +41,12 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/core-constants": "workspace:*",
     "@tuleap/cypress-configurator": "workspace:*",
     "@tuleap/cypress-utilities-support": "workspace:*",
     "@tuleap/tlp": "workspace:*",
-    "@tuleap/user-group-constants": "workspace:*",
-    "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "@tuleap/vue2-gettext-composition-helper": "workspace:*",
+    "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "@types/bootstrap": "^4.5.1",
     "@types/ckeditor": "^4.9.10",
     "@types/dompurify": "^2.3.2",

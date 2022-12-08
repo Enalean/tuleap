@@ -4,7 +4,6 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "module": "dist/date-helper.js",
   "main": "dist/date-helper.umd.cjs",
@@ -14,6 +13,9 @@
       "import": "./dist/date-helper.js",
       "require": "./dist/date-helper.umd.cjs"
     }
+  },
+  "dependencies": {
+    "@tuleap/core-constants": "workspace:*"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
