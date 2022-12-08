@@ -1,0 +1,9 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@tuleap/list-picker': workspace:*
+  '@tuleap/tlp-popovers': workspace:*
+
+dependencies:
+  '@tuleap/list-picker': link:../../../lib/frontend/list-picker
+  '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers

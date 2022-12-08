@@ -62,7 +62,7 @@ function toggleErrorMessages(data: number[]): boolean {
 
                     [...element.getElementsByTagName("i")].forEach(
                         (icon_element: Element): void => {
-                            icon_element.classList.add("fa-times", "password-strategy-bad");
+                            icon_element.classList.add("fa-xmark", "password-strategy-bad");
                             icon_element.classList.remove("fa-check", "password-strategy-good");
                         }
                     );
@@ -73,7 +73,7 @@ function toggleErrorMessages(data: number[]): boolean {
                     [...element.getElementsByTagName("i")].forEach(
                         (icon_element: Element): void => {
                             icon_element.classList.add("fa-check", "password-strategy-good");
-                            icon_element.classList.remove("fa-times", "password-strategy-bad");
+                            icon_element.classList.remove("fa-xmark", "password-strategy-bad");
                         }
                     );
                 }
@@ -103,11 +103,9 @@ function setRobustnessToBad(): void {
 }
 
 function removeInProgressRobustnessComputation(): void {
-    document
-        .querySelectorAll(".robustness .fa-circle-o-notch")
-        .forEach((element: Element): void => {
-            element.classList.remove("fa-circle-o-notch", "fa-spin");
-        });
+    document.querySelectorAll(".robustness .fa-circle-notch").forEach((element: Element): void => {
+        element.classList.remove("fa-circle-notch", "fa-spin");
+    });
 }
 
 // We are wrapping a function that could use anything
@@ -149,10 +147,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const check_password_action = async (): Promise<void> => {
         document
-            .querySelectorAll(".robustness .fa-times, .robustness .fa-check")
+            .querySelectorAll(".robustness .fa-xmark, .robustness .fa-check")
             .forEach((element: Element): void => {
-                element.classList.remove("fa-times", "fa-check");
-                element.classList.add("fa-circle-o-notch", "fa-spin");
+                element.classList.remove("fa-xmark", "fa-check");
+                element.classList.add("fa-circle-notch", "fa-spin");
             });
 
         await debouncedCheckPassword(form_password_element.value);
@@ -160,6 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form_password_element.addEventListener("keyup", check_password_action);
     form_password_element.addEventListener("paste", check_password_action);
+    form_password_element.addEventListener("change", check_password_action);
 
     form_password_element.addEventListener("focus", (): void => {
         [...document.getElementsByClassName("account-security-password-robustness")].forEach(

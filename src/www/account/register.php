@@ -23,7 +23,8 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -172,15 +173,15 @@ function getFieldError($field_key, array $errors)
     return null;
 }
 
-
-function display_account_form(bool $is_password_needed, $register_error, array $errors): void
+/**
+ * @return Closure(): void
+ */
+function display_account_form(\Tuleap\Layout\BaseLayout $layout, bool $is_password_needed, array $errors): Closure
 {
     $request = HTTPRequest::instance();
 
     $page = $request->get('page');
-    if ($register_error) {
-        print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
-    }
+
     $form_loginname       = $request->exist('form_loginname') ? $request->get('form_loginname') : '';
     $form_loginname_error = getFieldError('form_loginname', $errors);
 
@@ -212,14 +213,10 @@ function display_account_form(bool $is_password_needed, $register_error, array $
     $form_register_purpose       = $request->exist('form_register_purpose') ? $request->get('form_register_purpose') : '';
     $form_register_purpose_error = getFieldError('form_register_purpose', $errors);
 
-    $extra_plugin_field = '';
-    EventManager::instance()->processEvent(
-        Event::USER_REGISTER_ADDITIONAL_FIELD,
-        [
-            'request' => $request,
-            'field'   => &$extra_plugin_field,
-        ]
-    );
+    $extra_plugin_field = EventManager::instance()
+        ->dispatch(new \Tuleap\User\Account\Register\AddAdditionalFieldUserRegistration($layout, $request))
+        ->getAdditionalFieldsInHtml();
+
 
     if ($page == "admin_creation") {
         $prefill   = new Account_RegisterAdminPrefillValuesPresenter(
@@ -232,7 +229,7 @@ function display_account_form(bool $is_password_needed, $register_error, array $
             new Account_RegisterField($timezone, $timezone_error),
             new Account_RegisterField($form_restricted, $form_restricted_error),
             new Account_RegisterField($form_send_email, $form_send_email_error),
-            $form_restricted
+            ForgeConfig::areRestrictedUsersAllowed()
         );
         $presenter = new Account_RegisterByAdminPresenter($prefill, $extra_plugin_field);
         $template  = 'register-admin';
@@ -255,7 +252,10 @@ function display_account_form(bool $is_password_needed, $register_error, array $
         $template  = 'register-user';
     }
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
-    $renderer->renderToPage($template, $presenter);
+
+    return static function () use ($renderer, $template, $presenter): void {
+        $renderer->renderToPage($template, $presenter);
+    };
 }
 
 $is_password_needed = true;
@@ -398,30 +398,44 @@ if ($request->isPost() && $request->exist('Register')) {
     }
 }
 
-$core_assets = new \Tuleap\Layout\IncludeCoreAssets();
-$body_class  = ['register-page'];
-if ($page === 'admin_creation') {
-    $body_class[] = 'admin_register';
-    $GLOBALS['Response']->addJavascriptAsset(
-        new JavascriptAsset(
-            $core_assets,
-            'account/generate-pw.js'
+
+$theme_manager    = new ThemeManager(
+    new \Tuleap\BurningParrotCompatiblePageDetector(
+        new \Tuleap\Request\CurrentPage(),
+        new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
         )
-    );
+    )
+);
+$user_manager     = UserManager::instance();
+$renderer_factory = TemplateRendererFactory::build();
+$assets           = new \Tuleap\Layout\IncludeCoreAssets();
+
+$layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
+if ($layout === null) {
+    throw new \Exception("Could not load BurningParrot theme");
 }
 
-// not valid registration, or first time to page
-$GLOBALS['Response']->addJavascriptAsset(
-    new JavascriptAsset(
-        $core_assets,
+$render = display_account_form($layout, $is_password_needed, $errors);
+
+$layout->addJavascriptAsset(new JavascriptViteAsset(
+    new IncludeViteAssets(
+        __DIR__ . '/../../scripts/register/frontend-assets',
+        '/assets/core/register'
+    ),
+    'src/index.ts'
+));
+
+$layout->addJavascriptAsset(
+    new \Tuleap\Layout\JavascriptAsset(
+        $assets,
         'account/check-pw.js'
     )
 );
-$GLOBALS['Response']->includeFooterJavascriptFile('/scripts/register.js');
-$GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
-$GLOBALS['Response']->header(['title' => _('Register'), 'body_class' => $body_class]);
 
-$reg_err = isset($GLOBALS['register_error']) ? $GLOBALS['register_error'] : '';
-display_account_form($is_password_needed, $reg_err, $errors);
-
-$GLOBALS['Response']->footer(FooterConfiguration::withoutContent());
+$layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
+$layout->header(
+    HeaderConfigurationBuilder::get(_('Register'))->build()
+);
+$render();
+$layout->footer(FooterConfiguration::withoutContent());

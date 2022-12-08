@@ -213,7 +213,6 @@ const webpack_config_for_burning_parrot_code = {
         "account/appearance": "./src/account/appearance.ts",
         "account/avatar": "./src/account/avatar.ts",
         "account/check-pw": "./src/account/check-pw.ts",
-        "account/generate-pw": "./src/account/generate-pw.ts",
         "account/keys-tokens": "./src/account/keys-tokens.ts",
         "account/security": "./src/account/security.ts",
         "account/timezone": "./src/account/timezone.ts",
