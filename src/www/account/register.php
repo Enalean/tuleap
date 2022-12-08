@@ -341,53 +341,70 @@ if ($request->isPost() && $request->exist('Register')) {
                 $email_presenter = $presenter->createMailAccountPresenter($request->getCurrentUser(), $user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
             }
 
-            if ($admin_creation) {
-                $title            = _('The user account was created.');
-                $content          = sprintf(_('Please note the login <span class="confirmation-user">%3$s</span> and password <span class="confirmation-user">%4$s</span>'), $hp->purify($request->get('form_realname')), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $hp->purify($request->get('form_loginname')), $hp->purify($request->get('form_pw')));
-                $thanks           = '';
-                $is_thanks        = false;
-                $redirect_url     = '/admin';
-                $redirect_content = _('Go to the admin page');
-                $displayed_image  = false;
-            } else {
-                $theme_manager    = new ThemeManager(
-                    new \Tuleap\BurningParrotCompatiblePageDetector(
-                        new \Tuleap\Request\CurrentPage(),
-                        new User_ForgeUserGroupPermissionsManager(
-                            new User_ForgeUserGroupPermissionsDao()
-                        )
+            $theme_manager    = new ThemeManager(
+                new \Tuleap\BurningParrotCompatiblePageDetector(
+                    new \Tuleap\Request\CurrentPage(),
+                    new User_ForgeUserGroupPermissionsManager(
+                        new User_ForgeUserGroupPermissionsDao()
                     )
-                );
-                $user_manager     = UserManager::instance();
-                $renderer_factory = TemplateRendererFactory::build();
-                $assets           = new \Tuleap\Layout\IncludeCoreAssets();
+                )
+            );
+            $user_manager     = UserManager::instance();
+            $renderer_factory = TemplateRendererFactory::build();
+            $assets           = new \Tuleap\Layout\IncludeCoreAssets();
 
-                $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
+            $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
 
-                $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
-                if ($layout === null) {
-                    throw new \Exception("Could not load BurningParrot theme");
-                }
-                $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
-                $layout->header(
-                    HeaderConfigurationBuilder::get(_('Register'))->build()
-                );
+            $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
+            if ($layout === null) {
+                throw new \Exception("Could not load BurningParrot theme");
+            }
+            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
+            $layout->header(
+                HeaderConfigurationBuilder::get(_('Register'))->build()
+            );
+            if ($admin_creation) {
+                $renderer->renderToPage("confirmation-admin-creation", [
+                    'login'    => $request->get('form_loginname'),
+                    'password' => $request->get('form_pw'),
+                ]);
+            } else {
                 $renderer->renderToPage("confirmation-link-sent", [
                     'email' => $request->get('form_email'),
                 ]);
-                $layout->footer(FooterConfiguration::withoutContent());
-                exit;
             }
+            $layout->footer(FooterConfiguration::withoutContent());
+            exit;
         } else {
             // Registration requires approval
             // inform the user that approval is required
-            $href_approval    = \Tuleap\ServerHostname::HTTPSUrl() . '/admin/approve_pending_users.php?page=pending';
-            $title            = _('Your account has been created,</br> it must be approved by an administrator.');
-            $content          = _('Once approved click the confirm button in this email.<i class="fa fa-envelope-o"></i>');
-            $redirect_url     = '/';
-            $redirect_content = _('Go to the home page');
-            $presenter        = new MailPresenterFactory();
-            $email_presenter  = $presenter->createMailAccountPresenter($request->getCurrentUser(), $user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
+            $theme_manager    = new ThemeManager(
+                new \Tuleap\BurningParrotCompatiblePageDetector(
+                    new \Tuleap\Request\CurrentPage(),
+                    new User_ForgeUserGroupPermissionsManager(
+                        new User_ForgeUserGroupPermissionsDao()
+                    )
+                )
+            );
+            $user_manager     = UserManager::instance();
+            $renderer_factory = TemplateRendererFactory::build();
+            $assets           = new \Tuleap\Layout\IncludeCoreAssets();
+
+            $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
+
+            $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
+            if ($layout === null) {
+                throw new \Exception("Could not load BurningParrot theme");
+            }
+            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
+            $layout->header(
+                HeaderConfigurationBuilder::get(_('Register'))->build()
+            );
+            $renderer->renderToPage("waiting-for-approval", [
+                'email' => $request->get('form_email'),
+            ]);
+            $layout->footer(FooterConfiguration::withoutContent());
+            exit;
         }
         $presenter = new Account_ConfirmationPresenter(
             $title,

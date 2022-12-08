@@ -713,6 +713,9 @@ msgstr "O Avatar mudou!"
 msgid "Back"
 msgstr "Voltar"
 
+msgid "Back to the administration"
+msgstr ""
+
 msgid "Background"
 msgstr "Imagem de Fundo"
 
@@ -1624,12 +1627,6 @@ msgstr "Utilidades globais"
 msgid "Go to my home page"
 msgstr "Ir para minha página inicial"
 
-msgid "Go to the admin page"
-msgstr "Ir para a página de administração"
-
-msgid "Go to the home page"
-msgstr "Ir para a página inicial"
-
 msgid "Go up"
 msgstr "Subir"
 
@@ -1767,6 +1764,9 @@ msgstr "Importar"
 
 msgid "Import members"
 msgstr "Importar membros"
+
+msgid "In the meantime, you can get %sback to the homepage%s."
+msgstr ""
 
 msgid "Inactive service cannot be enabled."
 msgstr "O serviço inativo não pode ser ativado."
@@ -2387,11 +2387,8 @@ msgid "Ok, got it"
 msgstr "Ok, entendido"
 
 msgid ""
-"Once approved click the confirm button in this email.<i class=\"fa fa-"
-"envelope-o\"></i>"
+"Once approved, you will receive a confirmation email to <strong>%s</strong>"
 msgstr ""
-"Uma vez aprovado clique no botão confirmar neste email.<i class=\"fa fa-"
-"envelope-o\"></i>"
 
 msgid "Once you add a forum, it cannot be modified or deleted!"
 msgstr "Uma vez adicionado um Fórum, ele não pode ser modificado ou excluído!"
@@ -2520,6 +2517,9 @@ msgstr "Controle de Acesso da Plataforma"
 msgid "Platform administration"
 msgstr "Administração da plataforma"
 
+msgid "Platform administrators have been notified."
+msgstr ""
+
 msgid "Platform banner"
 msgstr "Banner da plataforma"
 
@@ -2578,13 +2578,8 @@ msgstr ""
 "Por favor, note que podem existir permissões mais restritivas em alguns "
 "itens."
 
-#, php-format
-msgid ""
-"Please note the login <span class=\"confirmation-user\">%3$s</span> and "
-"password <span class=\"confirmation-user\">%4$s</span>"
+msgid "Please note the login <code>%s</code> and the password <code>%s</code>"
 msgstr ""
-"Por favor anote o login <span class=\"confirmation-user\">%3$s</span> e "
-"senha <span class=\"confirmation-user\">%4$s</span>"
 
 msgid "Please select a file to upload"
 msgstr "Por favor escolha um arquivo para upload"
@@ -3694,9 +3689,6 @@ msgstr ""
 msgid "The submitted language is not supported."
 msgstr "O idioma escolhido não é suportado."
 
-msgid "The user account was created."
-msgstr "A conta de usuário foi criada."
-
 msgid "The user will automatically be added as project member."
 msgstr "O usuário será automaticamente adicionado como membro do projeto."
 
@@ -4181,6 +4173,9 @@ msgstr "Usuário #%d não é administrador do projeto #%d"
 #, php-format
 msgid "User '%s' does not exist"
 msgstr "Usuário '%s' não existe"
+
+msgid "User account created"
+msgstr ""
 
 msgid "User added"
 msgstr "Usuário adicionado"
@@ -4857,13 +4852,12 @@ msgstr "Você não receberá mais emails deste fórum."
 msgid "You will now be emailed followups to this entire forum."
 msgstr "Agora você receberá por email todos os acompanhamentos deste Fórum."
 
+msgid "Your account has been created"
+msgstr ""
+
 #, php-format
 msgid "Your account has been created on %s"
 msgstr "A sua conta foi criada em %s"
-
-msgid ""
-"Your account has been created,</br> it must be approved by an administrator."
-msgstr "Sua conta foi criada,</br> ela deve ser aprovada por um administrador."
 
 #, php-format
 msgid ""
@@ -4949,6 +4943,9 @@ msgstr "ativo no mês passado"
 
 msgid "active last week"
 msgstr "ativo na semana passada"
+
+msgid "but it must be approved by an administrator"
+msgstr ""
 
 msgid "check your email for the link to activate your account."
 msgstr ""
@@ -5046,6 +5043,9 @@ msgstr "ver"
 
 msgid "waiting"
 msgstr "aguardando"
+
+msgid "with a link to activate your account."
+msgstr ""
 
 msgid "your account will be automatically suspended on {{suspension_date}}."
 msgstr "sua conta será suspensa automaticamente em {{suspension_date}}."

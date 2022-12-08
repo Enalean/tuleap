@@ -35,6 +35,17 @@
     }
 }
 
+.account-registration-content-title {
+    margin: 0 0 var(--tlp-medium-spacing);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.875rem;
+}
+
+.account-registration-content-cta {
+    margin: var(--tlp-large-spacing) 0 0;
+}
+
 .account-registration-background {
     position: fixed;
     z-index: -1;
