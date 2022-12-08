@@ -133,14 +133,26 @@ async function retrieveLinkedArtifactsData(
                         matching_representation
                     );
                 }
-                linked_artifacts_maps.set(
-                    artifact_id,
-                    matching_following_level_representations.map(
-                        (representation: ArtifactForCrossReportDocGen) => {
-                            return representation.id;
-                        }
-                    )
-                );
+                const linked_artifacts_maps_for_artifact = linked_artifacts_maps.get(artifact_id);
+                if (linked_artifacts_maps_for_artifact === undefined) {
+                    linked_artifacts_maps.set(
+                        artifact_id,
+                        matching_following_level_representations.map(
+                            (representation: ArtifactForCrossReportDocGen) => {
+                                return representation.id;
+                            }
+                        )
+                    );
+                } else {
+                    linked_artifacts_maps.set(
+                        artifact_id,
+                        matching_following_level_representations
+                            .map((representation: ArtifactForCrossReportDocGen) => {
+                                return representation.id;
+                            })
+                            .concat(linked_artifacts_maps_for_artifact)
+                    );
+                }
             }
         }
     });
