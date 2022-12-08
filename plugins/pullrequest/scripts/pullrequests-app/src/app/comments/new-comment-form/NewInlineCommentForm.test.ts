@@ -29,7 +29,7 @@ describe("NewInlineCommentForm", () => {
     let target: ShadowRoot;
 
     beforeEach(() => {
-        setCatalog({ getString: (msgid) => msgid });
+        setCatalog({ getString: (msgid) => msgid, getPlural: (nb, msgid) => msgid });
 
         target = document.implementation
             .createHTMLDocument()

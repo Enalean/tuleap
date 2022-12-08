@@ -66,7 +66,6 @@ import TimelineService from "./overview/timeline/timeline-service.js";
 import CommitsRestService from "./commits/commits-rest-service.js";
 import PullRequestRestService from "./pull-request/pull-request-rest-service.js";
 import PullRequestService from "./pull-request/pull-request-service.js";
-import CodeMirrorHelperService from "./file-diff/codemirror-helper-service.js";
 
 import MainConfig from "./app-config.js";
 import TuleapResize from "./resize/resize.js";
@@ -132,7 +131,6 @@ export default angular
     .service("CommitsRestService", CommitsRestService)
     .service("PullRequestRestService", PullRequestRestService)
     .service("PullRequestService", PullRequestService)
-    .service("CodeMirrorHelperService", CodeMirrorHelperService)
 
     .config(MainConfig)
     .config(DashboardConfig)
