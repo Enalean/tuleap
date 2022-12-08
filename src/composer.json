@@ -59,7 +59,7 @@
     "league/commonmark": "^2.0",
     "luracast/restler": "dev-master-tuleap#20220617",
     "monolog/monolog": "^2.0",
-    "mustache/mustache": "dev-master-tuleap#master-tuleap-20191219",
+    "mustache/mustache": "dev-main-tuleap#main-tuleap-20221202",
     "nikic/fast-route": "^1.2",
     "paragonie/easydb": "^2",
     "php-http/client-common": "^2.0",
