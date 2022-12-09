@@ -21,8 +21,6 @@ import type { Editor } from "codemirror";
 import type { CreateFileDiffWidget } from "./side-by-side-code-mirror-widget-creator";
 import type { IRelativeDateHelper } from "../../helpers/date-helpers";
 import type { ControlPullRequestComment } from "../../comments/PullRequestCommentController";
-import type { CurrentPullRequestUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
-import type { PullRequestPresenter } from "../../comments/PullRequestPresenter";
 import type { FileLineHandle } from "./types-codemirror-overriden";
 import type {
     InlineCommentWidget,
@@ -33,8 +31,6 @@ import type {
 import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
 import { RelativeDateHelperStub } from "../../../../tests/stubs/RelativeDateHelperStub";
 import { PullRequestCommentControllerStub } from "../../../../tests/stubs/PullRequestCommentControllerStub";
-import { CurrentPullRequestUserPresenterStub } from "../../../../tests/stubs/CurrentPullRequestUserPresenterStub";
-import { CurrentPullRequestPresenterStub } from "../../../../tests/stubs/CurrentPullRequestPresenterStub";
 import { SideBySideCodeMirrorWidgetCreator } from "./side-by-side-code-mirror-widget-creator";
 import { InlineCommentContextStub } from "../../../../tests/stubs/InlineCommentContextStub";
 
@@ -56,9 +52,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
         code_mirror: EditorThatCanHaveWidgets,
         relative_date_helper: IRelativeDateHelper,
         controller: ControlPullRequestComment,
-        comments_store: StorePullRequestCommentReplies,
-        pull_request: PullRequestPresenter,
-        current_user: CurrentPullRequestUserPresenter;
+        comments_store: StorePullRequestCommentReplies;
 
     const getWidgetCreator = (): CreateFileDiffWidget =>
         SideBySideCodeMirrorWidgetCreator(
@@ -66,9 +60,7 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             relative_date_helper,
             controller,
             comments_store,
-            FileDiffCommentWidgetsMap(),
-            pull_request,
-            current_user
+            FileDiffCommentWidgetsMap()
         );
 
     beforeEach(() => {
@@ -83,8 +75,6 @@ describe("side-by-side-code-mirror-widget-creator", () => {
         relative_date_helper = RelativeDateHelperStub;
         controller = PullRequestCommentControllerStub();
         comments_store = PullRequestCommentRepliesStore([]);
-        current_user = CurrentPullRequestUserPresenterStub.withDefault();
-        pull_request = CurrentPullRequestPresenterStub.withDefault();
     });
 
     describe("displayPlaceholderWidget()", () => {
@@ -157,8 +147,6 @@ describe("side-by-side-code-mirror-widget-creator", () => {
             expect(inline_comment_widget.comment).toStrictEqual(comment);
             expect(inline_comment_widget.relativeDateHelper).toStrictEqual(relative_date_helper);
             expect(inline_comment_widget.controller).toStrictEqual(controller);
-            expect(inline_comment_widget.currentUser).toStrictEqual(current_user);
-            expect(inline_comment_widget.currentPullRequest).toStrictEqual(pull_request);
             expect(inline_comment_widget.post_rendering_callback).toBeDefined();
 
             expect(code_mirror.addLineWidget).toHaveBeenCalledWith(12, inline_comment_widget, {

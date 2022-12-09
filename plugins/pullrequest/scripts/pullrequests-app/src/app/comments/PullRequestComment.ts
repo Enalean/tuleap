@@ -26,9 +26,7 @@ import { getCommentFooter } from "./PullRequestCommentFooterTemplate";
 import { getReplyFormTemplate } from "./PullRequestCommentReplyFormTemplate";
 import { getCommentReplyTemplate } from "./PullRequestCommentReplyTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
-import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPresenter";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
-import type { PullRequestPresenter } from "./PullRequestPresenter";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import type { FileDiffWidgetType } from "../file-diff/diff-modes/types";
 
@@ -44,8 +42,6 @@ export interface PullRequestComment {
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;
     readonly relativeDateHelper: IRelativeDateHelper;
-    readonly currentUser: CurrentPullRequestUserPresenter;
-    readonly currentPullRequest: PullRequestPresenter;
     readonly controller: ControlPullRequestComment;
     replies: PullRequestCommentRepliesCollectionPresenter;
     reply_comment_presenter: ReplyCommentFormPresenter | null;
@@ -115,12 +111,10 @@ export const PullRequestComment = define<PullRequestComment>({
     comment: undefined,
     post_rendering_callback: undefined,
     relativeDateHelper: undefined,
-    currentUser: undefined,
-    currentPullRequest: undefined,
     after_render_once: after_render_once_descriptor,
     element_height: element_height_descriptor,
     controller: {
-        set: (host, controller) => {
+        set: (host, controller: ControlPullRequestComment) => {
             if (host.comment) {
                 controller.displayReplies(host);
             }

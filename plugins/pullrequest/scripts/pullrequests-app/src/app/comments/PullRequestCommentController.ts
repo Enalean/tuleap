@@ -24,6 +24,8 @@ import type { SaveNewComment } from "./PullRequestCommentReplySaver";
 import { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
 import type { CommentReplyPayload } from "./PullRequestCommentPresenter";
 import { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
+import type { CurrentPullRequestUserPresenter } from "./PullRequestCurrentUserPresenter";
+import type { PullRequestPresenter } from "./PullRequestPresenter";
 
 export interface ControlPullRequestComment {
     showReplyForm: (host: PullRequestComment) => void;
@@ -36,12 +38,14 @@ export interface ControlPullRequestComment {
 export const PullRequestCommentController = (
     focus_helper: FocusReplyToCommentTextArea,
     replies_store: StorePullRequestCommentReplies,
-    new_comment_saver: SaveNewComment
+    new_comment_saver: SaveNewComment,
+    current_user: CurrentPullRequestUserPresenter,
+    current_pull_request: PullRequestPresenter
 ): ControlPullRequestComment => ({
     showReplyForm: (host: PullRequestComment): void => {
         host.reply_comment_presenter = ReplyCommentFormPresenter.buildEmpty(
-            host.currentUser,
-            host.currentPullRequest
+            current_user,
+            current_pull_request
         );
 
         focus_helper.focusFormReplyToCommentTextArea(host);

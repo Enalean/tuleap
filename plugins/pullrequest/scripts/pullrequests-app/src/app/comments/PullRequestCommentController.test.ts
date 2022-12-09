@@ -18,6 +18,7 @@
  */
 
 import type { HostElement, PullRequestComment } from "./PullRequestComment";
+import type { ControlPullRequestComment } from "./PullRequestCommentController";
 import { PullRequestCommentController } from "./PullRequestCommentController";
 import { setCatalog } from "../gettext-catalog";
 import { FocusTextReplyToCommentAreaStub } from "../../../tests/stubs/FocusTextReplyToCommentAreaStub";
@@ -31,6 +32,7 @@ import { ReplyCommentFormPresenterStub } from "../../../tests/stubs/ReplyComment
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 import { PullRequestCommentPresenter, TYPE_INLINE_COMMENT } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
+import { CurrentPullRequestPresenterStub } from "../../../tests/stubs/CurrentPullRequestPresenterStub";
 
 describe("PullRequestCommentController", () => {
     let focus_helper: FocusReplyToCommentTextArea,
@@ -52,15 +54,21 @@ describe("PullRequestCommentController", () => {
         new_comment_saver = SaveNewCommentStub.withResponsePayload(new_comment_reply_payload);
     });
 
+    const getController = (): ControlPullRequestComment =>
+        PullRequestCommentController(
+            focus_helper,
+            replies_store,
+            new_comment_saver,
+            CurrentPullRequestUserPresenterStub.withDefault(),
+            CurrentPullRequestPresenterStub.withDefault()
+        );
+
     it("should show the reply to comment form and sets the focus on the textarea", () => {
         const host = {
-            currentPullRequest: CurrentPullRequestUserPresenterStub.withDefault(),
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
         } as unknown as HostElement;
 
-        PullRequestCommentController(focus_helper, replies_store, new_comment_saver).showReplyForm(
-            host
-        );
+        getController().showReplyForm(host);
 
         expect(host.reply_comment_presenter).not.toBeNull();
         expect(focus_helper.focusFormReplyToCommentTextArea).toHaveBeenCalledTimes(1);
@@ -72,25 +80,18 @@ describe("PullRequestCommentController", () => {
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
         } as unknown as PullRequestComment;
 
-        PullRequestCommentController(focus_helper, replies_store, new_comment_saver).hideReplyForm(
-            host
-        );
+        getController().hideReplyForm(host);
 
         expect(host.reply_comment_presenter).toBeNull();
     });
 
     it("Should update the host reply_comment_presenter content", () => {
         const host = {
-            currentPullRequest: CurrentPullRequestUserPresenterStub.withDefault(),
             comment: PullRequestCommentPresenterStub.buildGlobalComment(),
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildEmpty(),
         } as unknown as HostElement;
 
-        PullRequestCommentController(
-            focus_helper,
-            replies_store,
-            new_comment_saver
-        ).updateCurrentReply(host, "Please rebase");
+        getController().updateCurrentReply(host, "Please rebase");
 
         expect(host.reply_comment_presenter?.comment_content).toBe("Please rebase");
     });
@@ -98,17 +99,12 @@ describe("PullRequestCommentController", () => {
     it("Should save the new comment, hide the form and add the new comment reply in the collection of replies", async () => {
         const comment = PullRequestCommentPresenterStub.buildGlobalComment();
         const host = {
-            currentPullRequest: CurrentPullRequestUserPresenterStub.withDefault(),
             comment,
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
         } as unknown as HostElement;
 
-        await PullRequestCommentController(
-            focus_helper,
-            replies_store,
-            new_comment_saver
-        ).saveReply(host);
+        await getController().saveReply(host);
 
         expect(new_comment_saver.getNbCalls()).toBe(1);
         expect(new_comment_saver.getLastCallParams()).toStrictEqual(
@@ -132,17 +128,12 @@ describe("PullRequestCommentController", () => {
 
         const comment = PullRequestCommentPresenterStub.buildGlobalComment();
         const host = {
-            currentPullRequest: CurrentPullRequestUserPresenterStub.withDefault(),
             comment,
             reply_comment_presenter: ReplyCommentFormPresenterStub.buildWithContent("Please don't"),
             replies: PullRequestCommentRepliesCollectionPresenter.fromReplies([]),
         } as unknown as HostElement;
 
-        await PullRequestCommentController(
-            focus_helper,
-            replies_store,
-            new_comment_saver
-        ).saveReply(host);
+        await getController().saveReply(host);
 
         expect(host.reply_comment_presenter).toBeNull();
         expect(host.comment.color).toBe("flamingo-pink");
@@ -157,24 +148,22 @@ describe("PullRequestCommentController", () => {
             }),
         } as unknown as PullRequestComment;
 
-        PullRequestCommentController(
-            focus_helper,
-            PullRequestCommentRepliesStore([
-                PullRequestCommentPresenterStub.buildWithData({
-                    parent_id: 12,
-                    type: TYPE_INLINE_COMMENT,
-                }),
-                PullRequestCommentPresenterStub.buildWithData({
-                    parent_id: 12,
-                    type: TYPE_INLINE_COMMENT,
-                }),
-                PullRequestCommentPresenterStub.buildWithData({
-                    parent_id: 12,
-                    type: TYPE_INLINE_COMMENT,
-                }),
-            ]),
-            new_comment_saver
-        ).displayReplies(host);
+        replies_store = PullRequestCommentRepliesStore([
+            PullRequestCommentPresenterStub.buildWithData({
+                parent_id: 12,
+                type: TYPE_INLINE_COMMENT,
+            }),
+            PullRequestCommentPresenterStub.buildWithData({
+                parent_id: 12,
+                type: TYPE_INLINE_COMMENT,
+            }),
+            PullRequestCommentPresenterStub.buildWithData({
+                parent_id: 12,
+                type: TYPE_INLINE_COMMENT,
+            }),
+        ]);
+
+        getController().displayReplies(host);
 
         expect(host.replies).toHaveLength(3);
     });
