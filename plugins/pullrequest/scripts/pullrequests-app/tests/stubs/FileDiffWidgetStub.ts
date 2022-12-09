@@ -20,14 +20,14 @@
 import type {
     FileDiffCommentWidget,
     FileDiffPlaceholderWidget,
-} from "../../src/app/file-diff/diff-modes/types";
+} from "../../src/app/file-diff/types";
 import { PullRequestCommentPresenterStub } from "./PullRequestCommentPresenterStub";
 import { RelativeDateHelperStub } from "./RelativeDateHelperStub";
 import { PullRequestCommentControllerStub } from "./PullRequestCommentControllerStub";
 import { CurrentPullRequestUserPresenterStub } from "./CurrentPullRequestUserPresenterStub";
 import { CurrentPullRequestPresenterStub } from "./CurrentPullRequestPresenterStub";
 import { SaveNewInlineCommentStub } from "./SaveNewInlineCommentStub";
-import type { InlineCommentWidget } from "../../src/app/file-diff/diff-modes/types";
+import type { InlineCommentWidget } from "../../src/app/file-diff/types";
 
 const base_element = document.implementation.createHTMLDocument().createElement("div");
 

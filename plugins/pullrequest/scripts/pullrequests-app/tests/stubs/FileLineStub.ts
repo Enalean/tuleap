@@ -21,7 +21,7 @@ import type {
     AddedFileLine,
     RemovedFileLine,
     UnMovedFileLine,
-} from "../../src/app/file-diff/diff-modes/types";
+} from "../../src/app/file-diff/types";
 
 export const FileLineStub = {
     buildAddedLine: (unidiff_offset: number, new_offset: number, content = ""): AddedFileLine => ({

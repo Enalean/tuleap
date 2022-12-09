@@ -20,8 +20,8 @@
 import type {
     MapSideBySideLines,
     SynchronizedLineHandles,
-} from "../../src/app/file-diff/diff-modes/side-by-side-line-mapper";
-import type { FileLine } from "../../src/app/file-diff/diff-modes/types";
+} from "../../src/app/file-diff/file-lines/side-by-side-line-mapper";
+import type { FileLine } from "../../src/app/file-diff/types";
 
 export interface StubSideBySideLineMapper {
     withSideBySideLineMap: (map: Map<FileLine, SynchronizedLineHandles>) => MapSideBySideLines;

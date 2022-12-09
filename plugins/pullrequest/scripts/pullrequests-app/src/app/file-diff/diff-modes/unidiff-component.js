@@ -18,13 +18,13 @@
  */
 
 import CodeMirror from "codemirror";
-import { getStore } from "../comments-store.ts";
-import { getCollapsibleCodeSections } from "../../code-collapse/collaspible-code-sections-builder.ts";
+import { getStore } from "../editors/comments-store.ts";
+import { getCollapsibleCodeSections } from "../code-collapse/collaspible-code-sections-builder.ts";
 
-import "./modes.ts";
+import "../editors/modes.ts";
 import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
-import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../diff-bidirectional-unicode-text";
-import { SideBySideCodeMirrorWidgetCreator } from "./side-by-side-code-mirror-widget-creator";
+import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../editors/diff-bidirectional-unicode-text";
+import { SideBySideCodeMirrorWidgetCreator } from "../widgets/side-by-side-code-mirror-widget-creator";
 import { RelativeDateHelper } from "../../helpers/date-helpers";
 import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
 import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
@@ -32,9 +32,9 @@ import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInli
 import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
 import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
 import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
-import { FileDiffCommentScroller } from "./file-diff-comment-scroller";
-import { FileDiffCommentWidgetsMap } from "./file-diff-comment-widgets-map";
-import { collapseCommonSectionsUnidiff } from "../code-mirror-common-sections-collapse";
+import { FileDiffCommentScroller } from "../scroll-to-comment/file-diff-comment-scroller";
+import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/file-diff-comment-widgets-map";
+import { collapseCommonSectionsUnidiff } from "../code-collapse/code-mirror-common-sections-collapse";
 
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,

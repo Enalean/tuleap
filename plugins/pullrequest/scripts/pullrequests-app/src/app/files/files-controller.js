@@ -5,7 +5,7 @@ import {
     setMode,
     isUnifiedMode,
     isSideBySideMode,
-} from "../file-diff/diff-mode-state.ts";
+} from "../file-diff/diff-modes/diff-mode-state.ts";
 
 export default FilesController;
 
