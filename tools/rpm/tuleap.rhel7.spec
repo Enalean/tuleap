@@ -43,7 +43,7 @@ Group: Development/Tools
 URL: http://tuleap.net
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Packager: Manuel VACELET <manuel.vacelet@enalean.com>
+Packager: Tuleap team <security@tuleap.org>
 
 AutoReqProv: no
 
@@ -53,7 +53,11 @@ Requires: php80-php, php80-php-mysql, php80-php-xml, php80-php-mbstring, php80-p
 Requires: php80-php-intl, php80-php-process, php80-php-opcache, php80-php-fpm, php80-php-pecl-redis5, php80-php-sodium
 Requires: php80-php-pecl-zip
 Requires: php80-php-ffi
+%if "%{?dist}" == ".el9"
+Requires: mysql
+%else
 Requires: rh-mysql80-mysql
+%endif
 
 Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, perl-JSON, sudo, openssh
 Requires: highlight, nginx, logrotate

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 TULEAP_BUILD_TMP_FOLDER='/tmp/tuleap_build'
 
@@ -13,7 +13,7 @@ create_tuleap_build_folders() {
 build_generated_files() {
     # Setting the HOME environment variable is crappy but it seems that is the
     # only way to prevent npm and node-gyp to put their files everywhere
-    TMPDIR="$TULEAP_BUILD_TMP_FOLDER" TMP="$TULEAP_BUILD_TMP_FOLDER" HOME="$TULEAP_BUILD_TMP_FOLDER" OS='rhel7' make -C "$ROOT_DIR/tools/rpm" tarball
+    TMPDIR="$TULEAP_BUILD_TMP_FOLDER" TMP="$TULEAP_BUILD_TMP_FOLDER" HOME="$TULEAP_BUILD_TMP_FOLDER" OS=${OS:-centos7} make -C "$ROOT_DIR/tools/rpm" tarball
     if [ "$1" = "dev" ]; then
         TMPDIR="$TULEAP_BUILD_TMP_FOLDER" TMP="$TULEAP_BUILD_TMP_FOLDER" HOME="$TULEAP_BUILD_TMP_FOLDER" make composer generate-po
     fi

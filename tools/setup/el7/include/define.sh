@@ -16,9 +16,21 @@ declare -r ln="/usr/bin/ln"
 declare -r ls="/usr/bin/ls"
 declare -r mkdir="/bin/mkdir"
 declare -r mv="/usr/bin/mv"
-declare -r mysql="/opt/rh/rh-mysql80/root/usr/bin/mysql"
-declare -r mysqladmin="/opt/rh/rh-mysql80/root/usr/bin/mysqladmin"
-declare -r mysqldump="/opt/rh/rh-mysql80/root/usr/bin/mysqldump"
+if [ -f "/opt/rh/rh-mysql80/root/usr/bin/mysql" ]; then
+    declare -r mysql="/opt/rh/rh-mysql80/root/usr/bin/mysql"
+else
+    declare -r mysql="/usr/bin/mysql"
+fi
+if [ -f "/opt/rh/rh-mysql80/root/usr/bin/mysqladmin" ]; then
+    declare -r mysqladmin="/opt/rh/rh-mysql80/root/usr/bin/mysqladmin"
+else
+    declare -r mysqladmin="/usr/bin/mysqladmin"
+fi
+if [ -f "/opt/rh/rh-mysql80/root/usr/bin/mysqldump" ]; then
+    declare -r mysqldump="/opt/rh/rh-mysql80/root/usr/bin/mysqldump"
+else
+    declare -r mysqldump="/usr/bin/mysqldump"
+fi
 declare -r php="/opt/remi/php80/root/usr/bin/php"
 declare -r php_launcher="/usr/share/tuleap/src/utils/php-launcher.sh"
 declare -r printf="/usr/bin/printf"
@@ -77,7 +89,7 @@ declare -a timers=("tuleap-process-system-events-default.timer"
 
 assumeyes="false"
 db_exist="false"
-long_org_name="Tuleap ALM"
+long_org_name="Tuleap"
 mysql_user="root"
 new_db="true"
 org_name="Tuleap"
