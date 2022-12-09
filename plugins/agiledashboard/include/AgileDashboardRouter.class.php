@@ -39,6 +39,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
+use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
@@ -212,6 +213,7 @@ class AgileDashboardRouter
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
         UpdateRequestValidator $update_request_validator,
         NewDropdownCurrentContextSectionForKanbanProvider $current_context_section_for_kanban_provider,
+        private BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
     ) {
         $this->plugin                             = $plugin;
         $this->milestone_factory                  = $milestone_factory;
@@ -520,7 +522,8 @@ class AgileDashboardRouter
             $this->planning_request_validator,
             $this->root_planning_update_checker,
             $this->planning_edition_presenter_builder,
-            $this->update_request_validator
+            $this->update_request_validator,
+            $this->backlog_trackers_update_checker,
         );
     }
 

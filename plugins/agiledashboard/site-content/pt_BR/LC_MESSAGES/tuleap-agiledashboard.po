@@ -488,6 +488,9 @@ msgid ""
 "at least one \"Add to top backlog\" workflow post action: %s"
 msgstr ""
 
+msgid "The backlog trackers cannot have hierarchical links."
+msgstr ""
+
 msgid "The configuration has been successfully imported!"
 msgstr ""
 
