@@ -59,7 +59,7 @@ class XML_SimpleXMLCDATAFactory
         if ($document === null) {
             return;
         }
-        $value = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($node_value);
+        $value = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($node_value ?? '');
         $cdata = $document->createCDATASection($value);
         $dom_node->appendChild($cdata);
     }

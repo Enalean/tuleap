@@ -560,9 +560,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     public function previewAttachment($attachment_id)
     {
         if ($fileinfo = $this->getTrackerFileInfoFactory()->getById($attachment_id)) {
-            if ($fileinfo->isImage() && file_exists($fileinfo->getThumbnailPath())) {
+            $thumbnail_path = $fileinfo->getThumbnailPath();
+            if ($fileinfo->isImage() && $thumbnail_path !== null && file_exists($thumbnail_path)) {
                 header('Content-type: ' . $fileinfo->getFiletype());
-                readfile($fileinfo->getThumbnailPath());
+                readfile($thumbnail_path);
             }
         }
         exit();

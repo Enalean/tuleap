@@ -315,7 +315,7 @@ abstract class LDAP_GroupManager
 
     private function canUseObjectClassToDistinguishUsersAndGroups()
     {
-        return trim($this->ldap->getLDAPParam('grp_oc')) && trim($this->ldap->getLDAPParam('user_oc'));
+        return trim($this->ldap->getLDAPParam('grp_oc') ?? '') && trim($this->ldap->getLDAPParam('user_oc') ?? '');
     }
 
     private function getUserIdsWithObjectClass(LDAPResultIterator $group_definition, array &$ldap_ids)

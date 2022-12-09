@@ -193,8 +193,9 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             define('GET_GROUP_FAULT', '3000');
         }
         $pm      = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('isError')->andReturns(true);
+        $project = $this->createStub(\Project::class);
+        $project->method('isError')->willReturn(true);
+        $project->method('getErrorMessage')->willReturn('');
         $pm->shouldReceive('getProject')->andReturns($project);
         $this->expectException(\SoapFault::class);
         $pm->getGroupByIdForSoap(1, '');
