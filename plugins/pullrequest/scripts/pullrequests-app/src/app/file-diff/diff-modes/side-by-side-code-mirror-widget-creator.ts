@@ -18,8 +18,6 @@
  */
 
 import type { PlaceholderCreationParams } from "./types-codemirror-overriden";
-import type { CurrentPullRequestUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
-import type { PullRequestPresenter } from "../../comments/PullRequestPresenter";
 import type { IRelativeDateHelper } from "../../helpers/date-helpers";
 import type { ControlPullRequestComment } from "../../comments/PullRequestCommentController";
 import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
@@ -64,9 +62,7 @@ export const SideBySideCodeMirrorWidgetCreator = (
     relative_dates_helper: IRelativeDateHelper,
     controller: ControlPullRequestComment,
     comments_store: StorePullRequestCommentReplies,
-    comments_widgets_map: MapCommentWidgets,
-    pull_request_presenter: PullRequestPresenter,
-    current_user_presenter: CurrentPullRequestUserPresenter
+    comments_widgets_map: MapCommentWidgets
 ): CreateFileDiffWidget => {
     const displayInlineCommentWidget = (widget_params: InlineCommentWidgetCreationParams): void => {
         const inline_comment_element = doc.createElement(COMMENT_TAG_NAME);
@@ -78,8 +74,6 @@ export const SideBySideCodeMirrorWidgetCreator = (
         inline_comment_element.comment = widget_params.comment;
         inline_comment_element.relativeDateHelper = relative_dates_helper;
         inline_comment_element.controller = controller;
-        inline_comment_element.currentUser = current_user_presenter;
-        inline_comment_element.currentPullRequest = pull_request_presenter;
 
         const widget = widget_params.code_mirror.addLineWidget(
             widget_params.line_number,

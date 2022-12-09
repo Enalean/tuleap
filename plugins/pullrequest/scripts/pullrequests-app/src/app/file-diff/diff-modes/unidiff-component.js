@@ -80,15 +80,15 @@ function controller(
             PullRequestCommentController(
                 PullRequestCommentReplyFormFocusHelper(),
                 getStore(),
-                PullRequestCommentNewReplySaver()
+                PullRequestCommentNewReplySaver(),
+                PullRequestCurrentUserPresenter.fromUserInfo(
+                    SharedPropertiesService.getUserId(),
+                    SharedPropertiesService.getUserAvatarUrl()
+                ),
+                PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest())
             ),
             getStore(),
-            comment_widgets_map,
-            PullRequestPresenter.fromPullRequest(SharedPropertiesService.getPullRequest()),
-            PullRequestCurrentUserPresenter.fromUserInfo(
-                SharedPropertiesService.getUserId(),
-                SharedPropertiesService.getUserAvatarUrl()
-            )
+            comment_widgets_map
         ),
     });
 
