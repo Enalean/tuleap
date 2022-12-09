@@ -15,13 +15,13 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
     rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
     rm -f /lib/systemd/system/basic.target.wants/*;\
     rm -f /lib/systemd/system/anaconda.target.wants/* && \
-    yum install -y \
+    dnf install -y \
         openssh-server \
         createrepo \
         mysql-server \
         https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
         https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
-    yum clean all && \
+    dnf clean all && \
     rm -rf /var/cache/yum && \
     systemctl enable install-and-run.service
 
