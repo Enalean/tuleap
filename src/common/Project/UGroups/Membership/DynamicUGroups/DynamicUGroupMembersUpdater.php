@@ -141,16 +141,17 @@ class DynamicUGroupMembersUpdater
      */
     private function removeProjectAdministrator(Project $project, PFUser $user)
     {
-        $this->transaction_executor->execute(
-            function () use ($project, $user) {
+        $event = $this->transaction_executor->execute(
+            function () use ($project, $user): UserIsNoLongerProjectAdmin {
                 if (! $this->user_permissions_dao->isThereOtherProjectAdmin($project->getID(), $user->getId())) {
                     throw new CannotRemoveLastProjectAdministratorException($user, $project);
                 }
                 $this->event_manager->processEvent(new ApproveProjectAdministratorRemoval($project, $user));
                 $this->user_permissions_dao->removeUserFromProjectAdmin($project->getID(), $user->getId());
+                return new UserIsNoLongerProjectAdmin($project, $user);
             }
         );
-        $this->event_manager->processEvent(new UserIsNoLongerProjectAdmin($project, $user));
+        $this->event_manager->processEvent($event);
     }
 
     private function addWikiAdministrator(Project $project, PFUser $user)
