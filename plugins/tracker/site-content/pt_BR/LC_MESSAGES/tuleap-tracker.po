@@ -9,6 +9,9 @@ msgstr ""
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
 
+msgid "\"None\" value cannot be hidden"
+msgstr ""
+
 msgid "\"duration\" field is empty or invalid"
 msgstr ""
 
