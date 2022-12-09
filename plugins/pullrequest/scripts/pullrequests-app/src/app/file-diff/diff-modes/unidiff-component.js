@@ -34,6 +34,7 @@ import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullReque
 import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
 import { FileDiffCommentScroller } from "./file-diff-comment-scroller";
 import { FileDiffCommentWidgetsMap } from "./file-diff-comment-widgets-map";
+import { collapseCommonSectionsUnidiff } from "../code-mirror-common-sections-collapse";
 
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,
@@ -46,21 +47,9 @@ export default {
     },
 };
 
-controller.$inject = [
-    "$element",
-    "$scope",
-    "FileDiffRestService",
-    "CodeMirrorHelperService",
-    "SharedPropertiesService",
-];
+controller.$inject = ["$element", "$scope", "SharedPropertiesService"];
 
-function controller(
-    $element,
-    $scope,
-    FileDiffRestService,
-    CodeMirrorHelperService,
-    SharedPropertiesService
-) {
+function controller($element, $scope, SharedPropertiesService) {
     const self = this;
 
     const GUTTER_NEWLINES = "gutter-newlines";
@@ -111,10 +100,7 @@ function controller(
             getStore().getAllRootComments()
         );
 
-        CodeMirrorHelperService.collapseCommonSectionsUnidiff(
-            unidiff_codemirror,
-            collapsible_sections
-        );
+        collapseCommonSectionsUnidiff(document, unidiff_codemirror, collapsible_sections);
 
         getStore()
             .getAllRootComments()

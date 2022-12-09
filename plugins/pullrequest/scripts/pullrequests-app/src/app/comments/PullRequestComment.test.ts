@@ -35,7 +35,7 @@ describe("PullRequestComment", () => {
     let target: ShadowRoot, loadTooltips: jest.SpyInstance;
 
     beforeEach(() => {
-        setCatalog({ getString: (msgid) => msgid });
+        setCatalog({ getString: (msgid) => msgid, getPlural: (nb, msgid) => msgid });
 
         loadTooltips = jest.spyOn(tooltip, "loadTooltips").mockImplementation();
         target = document.implementation

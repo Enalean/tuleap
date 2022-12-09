@@ -41,7 +41,7 @@ describe("PullRequestCommentController", () => {
         new_comment_reply_payload: CommentReplyPayload;
 
     beforeEach(() => {
-        setCatalog({ getString: (msgid) => msgid });
+        setCatalog({ getString: (msgid) => msgid, getPlural: (nb, msgid) => msgid });
 
         new_comment_reply_payload = {
             id: 13,

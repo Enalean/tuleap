@@ -23,12 +23,12 @@ import { isAnUnmovedLine } from "../file-diff/diff-modes/file-line-helper";
 
 const COLLAPSE_THRESHOLD = 10;
 
-interface CollapsibleSection {
+export interface CollapsibleSection {
     readonly start: number;
     readonly end: number;
 }
 
-interface SynchronizedCollapsibleSections {
+export interface SynchronizedCollapsibleSections {
     readonly left: CollapsibleSection;
     readonly right: CollapsibleSection;
 }

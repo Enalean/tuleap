@@ -37,7 +37,7 @@ describe("PullRequestCommentPresenterBuilder", () => {
     const $state: State = { href: jest.fn().mockReturnValue("url/to/file") };
 
     beforeEach(() => {
-        setCatalog({ getString: (msgid: string) => msgid });
+        setCatalog({ getString: (msgid) => msgid, getPlural: (nb, msgid) => msgid });
     });
 
     it("Builds a presenter from timeline payload for comment", () => {

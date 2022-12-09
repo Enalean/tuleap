@@ -44,6 +44,7 @@ import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
 import { SideBySideCodeMirrorWidgetsCreationManager } from "./side-by-side-code-mirror-widgets-creation-manager";
 import { FileDiffCommentScroller } from "./file-diff-comment-scroller";
 import { FileDiffCommentWidgetsMap } from "./file-diff-comment-widgets-map";
+import { collapseCommonSectionsSideBySide } from "../code-mirror-common-sections-collapse";
 
 export default {
     template: `
@@ -59,15 +60,9 @@ export default {
     },
 };
 
-controller.$inject = [
-    "$element",
-    "$scope",
-    "$q",
-    "CodeMirrorHelperService",
-    "SharedPropertiesService",
-];
+controller.$inject = ["$element", "$scope", "SharedPropertiesService"];
 
-function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropertiesService) {
+function controller($element, $scope, SharedPropertiesService) {
     const self = this;
 
     Object.assign(self, {
@@ -101,7 +96,9 @@ function controller($element, $scope, $q, CodeMirrorHelperService, SharedPropert
             file_lines,
             getStore().getAllRootComments()
         );
-        CodeMirrorHelperService.collapseCommonSectionsSideBySide(
+
+        collapseCommonSectionsSideBySide(
+            document,
             left_code_mirror,
             right_code_mirror,
             collapsible_sections
