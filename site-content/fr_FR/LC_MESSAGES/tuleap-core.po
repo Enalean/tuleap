@@ -3525,9 +3525,6 @@ msgstr "Conditions"
 msgid "Text"
 msgstr "Texte"
 
-msgid "Thank you for using Tuleap"
-msgstr "Nous vous remercions d'utiliser Tuleap"
-
 msgid "Thanks!"
 msgstr "Merci !"
 

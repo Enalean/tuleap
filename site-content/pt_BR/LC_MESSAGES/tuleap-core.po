@@ -3498,9 +3498,6 @@ msgstr "Termos"
 msgid "Text"
 msgstr "Texto"
 
-msgid "Thank you for using Tuleap"
-msgstr "Obrigado por usar o Tuleap"
-
 msgid "Thanks!"
 msgstr "Obrigado!"
 
