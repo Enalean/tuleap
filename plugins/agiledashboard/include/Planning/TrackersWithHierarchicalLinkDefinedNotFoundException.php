@@ -20,20 +20,14 @@
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Exception;
-
-class TrackersHaveAtLeastOneHierarchicalLinkException extends Exception
+class TrackersWithHierarchicalLinkDefinedNotFoundException extends \LogicException
 {
-    public function __construct(string $parent_tracker_name, string $child_tracker_name)
+    public function __construct()
     {
         parent::__construct(
-            sprintf(
-                dgettext(
-                    'tuleap-agiledashboard',
-                    'You cannot have parent and child as backlog trackers (%s, %s). Please choose only one.'
-                ),
-                $parent_tracker_name,
-                $child_tracker_name,
+            dgettext(
+                'tuleap-agiledashboard',
+                'Something went wrong while updating the planning. Please contact your administrator.'
             )
         );
     }

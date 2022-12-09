@@ -519,6 +519,13 @@ msgstr "Le service des tableaux de bords agile est désactivé."
 msgid "Some items are not linked to this milestone."
 msgstr "Certains éléments n'ont pas été liés à ce jalon."
 
+msgid ""
+"Something went wrong while updating the planning. Please contact your "
+"administrator."
+msgstr ""
+"Une erreur est survenue lors de la mise à jour du planning. Merci de "
+"contacter votre administrateur."
+
 msgid "Start Kanban"
 msgstr "Démarrez Kanban"
 
@@ -554,11 +561,6 @@ msgstr ""
 "Les outils de suivi définissant le backlog ne peuvent être mis à jour car "
 "les outils de suivi suivant utilisent au moins une action de workflow de "
 "type \"Ajouter à la planification générale\" : %s"
-
-msgid "The backlog trackers cannot have hierarchical links."
-msgstr ""
-"Les outils de suivi définissant le backlog ne peuvent pas avoir de lien "
-"hiérarchique."
 
 msgid "The configuration has been successfully imported!"
 msgstr "La configuration a été importée !"
@@ -764,6 +766,15 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas définir la sémantique <em>effort estimé</em> car il n'y a "
 "aucun champ numérique dans votre outil de suivi"
+
+#, php-format
+msgid ""
+"You cannot have parent and child as backlog trackers (%s, %s). Please choose "
+"only one."
+msgstr ""
+"Vous ne pouvez pas choisir à la fois des outils de suivi parent et enfant en "
+"tant qu'outils de suivi définissant le backlog (%s, %s). Merci de n'en "
+"sélectionner qu'un seul."
 
 msgid ""
 "You cannot import more than one planning in scrum V2, please check your XML."

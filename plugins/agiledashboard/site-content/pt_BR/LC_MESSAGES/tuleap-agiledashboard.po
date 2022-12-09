@@ -457,6 +457,11 @@ msgstr ""
 msgid "Some items are not linked to this milestone."
 msgstr ""
 
+msgid ""
+"Something went wrong while updating the planning. Please contact your "
+"administrator."
+msgstr ""
+
 msgid "Start Kanban"
 msgstr ""
 
@@ -486,9 +491,6 @@ msgstr ""
 msgid ""
 "The backlog trackers cannot be updated because the following trackers have "
 "at least one \"Add to top backlog\" workflow post action: %s"
-msgstr ""
-
-msgid "The backlog trackers cannot have hierarchical links."
 msgstr ""
 
 msgid "The configuration has been successfully imported!"
@@ -664,6 +666,12 @@ msgstr ""
 msgid ""
 "You cannot define the <em>initial effort</em> semantic since there aren't "
 "any numeric fields in the tracker"
+msgstr ""
+
+#, php-format
+msgid ""
+"You cannot have parent and child as backlog trackers (%s, %s). Please choose "
+"only one."
 msgstr ""
 
 msgid ""

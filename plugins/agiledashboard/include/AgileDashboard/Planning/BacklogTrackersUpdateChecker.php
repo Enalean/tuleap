@@ -23,24 +23,50 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use PlanningParameters;
+use Psr\Log\LoggerInterface;
 use Tracker_HierarchyFactory;
+use TrackerFactory;
 
 class BacklogTrackersUpdateChecker
 {
-    public function __construct(private Tracker_HierarchyFactory $tracker_hierarchy_factory)
-    {
+    public function __construct(
+        private Tracker_HierarchyFactory $tracker_hierarchy_factory,
+        private TrackerFactory $tracker_factory,
+        private LoggerInterface $logger,
+    ) {
     }
 
     /**
      * @throws TrackersHaveAtLeastOneHierarchicalLinkException
+     * @throws TrackersWithHierarchicalLinkDefinedNotFoundException
      */
     public function checkProvidedBacklogTrackersAreValid(PlanningParameters $updated_planning): void
     {
         $updated_backlog_trackers_ids = $updated_planning->backlog_tracker_ids;
         $hierarchy                    = $this->tracker_hierarchy_factory->getHierarchy($updated_backlog_trackers_ids);
         foreach ($updated_backlog_trackers_ids as $backlog_tracker_id) {
-            if (in_array($hierarchy->getParent($backlog_tracker_id), $updated_backlog_trackers_ids)) {
-                throw new TrackersHaveAtLeastOneHierarchicalLinkException();
+            $parent_id = $hierarchy->getParent($backlog_tracker_id);
+            if ($parent_id === null) {
+                continue;
+            }
+
+            if (in_array($parent_id, $updated_backlog_trackers_ids)) {
+                $parent_tracker = $this->tracker_factory->getTrackerById($parent_id);
+                if ($parent_tracker === null) {
+                    $this->logger->error("Error with tracker #$parent_id: the tracker is not found but a hierarchy is defined.");
+                    throw new TrackersWithHierarchicalLinkDefinedNotFoundException();
+                }
+
+                $child_tracker = $this->tracker_factory->getTrackerById($backlog_tracker_id);
+                if ($child_tracker === null) {
+                    $this->logger->error("Error with tracker #$backlog_tracker_id: the tracker is not found but a hierarchy is defined.");
+                    throw new TrackersWithHierarchicalLinkDefinedNotFoundException();
+                }
+
+                throw new TrackersHaveAtLeastOneHierarchicalLinkException(
+                    $parent_tracker->getName(),
+                    $child_tracker->getName(),
+                );
             }
         }
     }

@@ -231,7 +231,11 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                     Tracker_FormElementFactory::instance()
                 )
             ),
-            (new BacklogTrackersUpdateChecker(Tracker_HierarchyFactory::instance()))
+            new BacklogTrackersUpdateChecker(
+                Tracker_HierarchyFactory::instance(),
+                TrackerFactory::instance(),
+                BackendLogger::getDefaultLogger(),
+            )
         );
     }
 
