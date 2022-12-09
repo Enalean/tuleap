@@ -291,6 +291,130 @@ describe("organize-reports-data", () => {
             },
         });
     });
+    it("organizes the reports data with the 2 first levels that will be used to create the XLSX document with multiple link types", async (): Promise<void> => {
+        const artifacts_first_report_response: ArtifactForCrossReportDocGen[] = [
+            {
+                id: 74,
+            } as ArtifactForCrossReportDocGen,
+            {
+                id: 4,
+            } as ArtifactForCrossReportDocGen,
+        ];
+
+        const linked_child_artifacts_collection: LinkedArtifactsResponse[] = [
+            {
+                collection: [
+                    {
+                        id: 75,
+                    } as ArtifactForCrossReportDocGen,
+                    {
+                        id: 750,
+                    } as ArtifactForCrossReportDocGen,
+                ],
+            },
+        ];
+
+        const linked_another_artifacts_collection: LinkedArtifactsResponse[] = [
+            {
+                collection: [
+                    {
+                        id: 76,
+                    } as ArtifactForCrossReportDocGen,
+                ],
+            },
+        ];
+
+        const artifacts_second_report_response: ArtifactForCrossReportDocGen[] = [
+            {
+                id: 75,
+            } as ArtifactForCrossReportDocGen,
+            {
+                id: 76,
+            } as ArtifactForCrossReportDocGen,
+        ];
+
+        const getReportArtifactsMock = vi.spyOn(rest_querier, "getReportArtifacts");
+        getReportArtifactsMock.mockImplementation(
+            (report_id: number): Promise<ArtifactForCrossReportDocGen[]> => {
+                if (report_id === 1) {
+                    return Promise.resolve(artifacts_first_report_response);
+                }
+                if (report_id === 2) {
+                    return Promise.resolve(artifacts_second_report_response);
+                }
+                throw Error("Unknown report id");
+            }
+        );
+
+        const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifacts");
+        getLinkedArtifactsMock.mockImplementation(
+            (
+                artifact_id: number,
+                artifact_link_type: string
+            ): Promise<LinkedArtifactsResponse[]> => {
+                if (artifact_id === 74 && artifact_link_type === "_is_child") {
+                    return Promise.resolve(linked_child_artifacts_collection);
+                }
+                if (artifact_id === 74 && artifact_link_type === "another") {
+                    return Promise.resolve(linked_another_artifacts_collection);
+                }
+                if (artifact_id === 4) {
+                    return Promise.resolve([]);
+                }
+                throw Error("Unknown artifact id");
+            }
+        );
+
+        const organized_reports_data: OrganizedReportsData = await organizeReportsData({
+            first_level: {
+                tracker_name: "tracker01",
+                report_id: 1,
+                report_name: "report01",
+                artifact_link_types: ["_is_child", "another"],
+            },
+            second_level: {
+                tracker_name: "tracker02",
+                report_id: 2,
+                report_name: "report02",
+                artifact_link_types: [],
+            },
+        });
+
+        const expected_first_level_artifact_representations_map: Map<
+            number,
+            ArtifactForCrossReportDocGen
+        > = new Map();
+        expected_first_level_artifact_representations_map.set(74, {
+            id: 74,
+        } as ArtifactForCrossReportDocGen);
+        expected_first_level_artifact_representations_map.set(4, {
+            id: 4,
+        } as ArtifactForCrossReportDocGen);
+
+        const expected_second_level_artifact_representations_map: Map<
+            number,
+            ArtifactForCrossReportDocGen
+        > = new Map();
+        expected_second_level_artifact_representations_map.set(75, {
+            id: 75,
+        } as ArtifactForCrossReportDocGen);
+        expected_second_level_artifact_representations_map.set(76, {
+            id: 76,
+        } as ArtifactForCrossReportDocGen);
+
+        expect(organized_reports_data).toStrictEqual({
+            first_level: {
+                tracker_name: "tracker01",
+                artifact_representations: expected_first_level_artifact_representations_map,
+                linked_artifacts: new Map([[74, [76, 75]]]),
+            },
+            second_level: {
+                tracker_name: "tracker02",
+                artifact_representations: expected_second_level_artifact_representations_map,
+                linked_artifacts: new Map(),
+            },
+        });
+    });
     it("generates empty organized data if no artifact found", async (): Promise<void> => {
         const artifacts_report_response: ArtifactForCrossReportDocGen[] = [];
         vi.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
