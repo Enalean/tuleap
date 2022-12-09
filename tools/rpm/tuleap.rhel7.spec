@@ -699,10 +699,6 @@ done
 %{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
 
-# ForgeUpgrade
-%{__install} -m 755 -d $RPM_BUILD_ROOT/usr/lib/forgeupgrade/bin
-%{__install} -m 755 src/forgeupgrade/forgeupgrade $RPM_BUILD_ROOT/usr/lib/forgeupgrade/bin
-
 # Special custom include script
 %{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
 %{__sed} -i "s~%include_path%~%{APP_PHP_INCLUDE_PATH}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
@@ -1146,10 +1142,6 @@ fi
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
-
-# ForgeUpgrade
-%attr(00755,root,root) %dir /usr/lib/forgeupgrade/bin
-%attr(00755,root,root) /usr/lib/forgeupgrade/bin/forgeupgrade
 
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
