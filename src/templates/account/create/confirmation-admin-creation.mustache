@@ -1,0 +1,34 @@
+<section class="account-registration">
+    <svg width="259" height="145" viewBox="0 0 259 145" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_491_15185)">
+            <path d="M234 105C234 162.99 186.99 210 129 210C71.0101 210 24 162.99 24 105C24 47.0101 71.0101 7.62939e-06 129 7.62939e-06C186.99 7.62939e-06 234 47.0101 234 105Z" fill="url(#paint0_linear_491_15185)"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M113.576 90.2812H130.259C130.519 90.2812 130.779 90.2847 131.037 90.2914C127.867 94.7169 126 100.14 126 106C126 112.915 128.6 119.223 132.875 124H90.6161C87.4777 124 85 121.568 85 118.488C85 102.926 97.7187 90.2812 113.576 90.2812ZM143.143 61.75C143.143 73.2598 133.562 82.5 122 82.5C110.272 82.5 100.857 73.2598 100.857 61.75C100.857 50.4023 110.272 41 122 41C133.562 41 143.143 50.4023 143.143 61.75Z" fill="var(--tlp-illustration-main-color)"/>
+            <path d="M131 106C131 93.8828 140.797 84 153 84C165.117 84 175 93.8828 175 106C175 118.203 165.117 128 153 128C140.797 128 131 118.203 131 106ZM162.883 102.219C163.828 101.273 163.828 99.8125 162.883 98.8672C161.938 97.9219 160.477 97.9219 159.531 98.8672L150.25 108.148L146.383 104.367C145.438 103.422 143.977 103.422 143.031 104.367C142.086 105.312 142.086 106.773 143.031 107.719L148.531 113.219C149.477 114.164 150.938 114.164 151.883 113.219L162.883 102.219Z" fill="var(--tlp-illustration-main-color)"/>
+        </g>
+        <defs>
+            <linearGradient id="paint0_linear_491_15185" x1="129" y1="0" x2="129" y2="124.408" gradientUnits="userSpaceOnUse">
+                <stop offset="0.416" stop-color="var(--tlp-illustration-grey-on-background)"/>
+                <stop offset="1" stop-color="var(--tlp-illustration-grey-on-background)" stop-opacity="0"/>
+            </linearGradient>
+            <clipPath id="clip0_491_15185">
+                <rect width="259" height="145" fill="white"/>
+            </clipPath>
+        </defs>
+    </svg>
+
+    <div class="account-registration-content">
+        <h1 class="account-registration-content-title">{{# gettext }}User account created{{/ gettext }}</h1>
+
+        <p class="tlp-text-muted">
+            {{# gettext }}Please note the login <code>%s</code> and the password <code>%s</code> | {{ login }} | {{ password }}{{/ gettext }}<br>
+        </p>
+        <a href="/admin/" class="tlp-button-primary tlp-button-large account-registration-content-cta">
+            {{# gettext }}Back to the administration{{/ gettext }}
+            <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
+        </a>
+    </div>
+</section>
+
+<div class="account-registration-background">
+    {{> homepage-background }}
+</div>
