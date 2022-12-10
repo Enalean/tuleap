@@ -23,68 +23,74 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-require_once __DIR__ . '/bootstrap.php';
-
-/**
- * This is the unit test of WebDAVUtils
- */
-class WebDAVUtilsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebDAVUtilsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    /**
+     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $user;
+    /**
+     * @var \Project&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $project;
+    /**
+     * @var \WebDAVUtils&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $utils;
+    /**
+     * @var \Tuleap\FRS\FRSPermissionManager&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $frs_permission_manager;
+    /**
+     * @var \ProjectManager&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $project_manager;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user                   = \Mockery::spy(\PFUser::class);
-        $this->project                = \Mockery::spy(\Project::class);
-        $this->utils                  = \Mockery::mock(\WebDAVUtils::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->frs_permission_manager = \Mockery::spy(\Tuleap\FRS\FRSPermissionManager::class);
-        $this->project_manager        = \Mockery::spy(\ProjectManager::class);
+        $this->user                   = $this->createMock(\PFUser::class);
+        $this->project                = $this->createMock(\Project::class);
+        $this->utils                  = $this->createPartialMock(\WebDAVUtils::class, ['getFRSPermissionManager', 'getProjectManager']);
+        $this->frs_permission_manager = $this->createMock(\Tuleap\FRS\FRSPermissionManager::class);
+        $this->project_manager        = $this->createMock(\ProjectManager::class);
 
-        $this->utils->shouldReceive('getFRSPermissionManager')->andReturn($this->frs_permission_manager);
-        $this->utils->shouldReceive('getProjectManager')->andReturn($this->project_manager);
+        $this->utils->method('getFRSPermissionManager')->willReturn($this->frs_permission_manager);
+        $this->utils->method('getProjectManager')->willReturn($this->project_manager);
 
-        $this->project_manager->shouldReceive('getProject')->with(101)->andReturn($this->project);
+        $this->project_manager->method('getProject')->with(101)->willReturn($this->project);
     }
 
     public function testUserIsAdminNotSuperUserNotmember(): void
     {
-        $this->user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->user->shouldReceive('isMember')->andReturns(false);
-        $this->frs_permission_manager->shouldReceive('isAdmin')->with($this->project, $this->user)->andReturn(false);
+        $this->user->method('isSuperUser')->willReturn(false);
+        $this->user->method('isMember')->willReturn(false);
+        $this->frs_permission_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(false);
 
-        $this->assertFalse($this->utils->userIsAdmin($this->user, 101));
+        self::assertFalse($this->utils->userIsAdmin($this->user, 101));
     }
 
     public function testUserIsAdminSuperUser(): void
     {
-        $this->user->shouldReceive('isSuperUser')->andReturns(true);
-        $this->user->shouldReceive('isMember')->andReturns(false);
+        $this->user->method('isSuperUser')->willReturn(true);
+        $this->user->method('isMember')->willReturn(false);
 
-        $this->assertTrue($this->utils->userIsAdmin($this->user, 101));
+        self::assertTrue($this->utils->userIsAdmin($this->user, 101));
     }
 
     public function testUserIsAdminFRSAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->frs_permission_manager->shouldReceive('isAdmin')->with($this->project, $this->user)->andReturn(true);
+        $this->user->method('isSuperUser')->willReturn(false);
+        $this->frs_permission_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->assertTrue($this->utils->userIsAdmin($this->user, 101));
+        self::assertTrue($this->utils->userIsAdmin($this->user, 101));
     }
 
     public function testUserIsAdminSuperuserFRSAdmin(): void
     {
-        $this->user->shouldReceive('isSuperUser')->andReturns(true);
-        $this->frs_permission_manager->shouldReceive('isAdmin')->with($this->project, $this->user)->andReturn(true);
+        $this->user->method('isSuperUser')->willReturn(true);
+        $this->frs_permission_manager->method('isAdmin')->with($this->project, $this->user)->willReturn(true);
 
-        $this->assertTrue($this->utils->userIsAdmin($this->user, 101));
+        self::assertTrue($this->utils->userIsAdmin($this->user, 101));
     }
 }
