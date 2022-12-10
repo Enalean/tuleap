@@ -18,19 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Enalean\LicenseManager;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
-class LicenseManagerComputedMetricsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LicenseManagerComputedMetricsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testComputedMetricsAreSet()
+    public function testComputedMetricsAreSet(): void
     {
-        $prometheus = \Mockery::mock(Prometheus::class);
-        $prometheus->shouldReceive('gaugeSet')->atLeast()->once();
+        $prometheus = $this->createMock(Prometheus::class);
+        $prometheus->expects(self::atLeast(1))->method('gaugeSet');
 
         $collector = new LicenseManagerComputedMetricsCollector($prometheus, 10);
         $collector->collect();
