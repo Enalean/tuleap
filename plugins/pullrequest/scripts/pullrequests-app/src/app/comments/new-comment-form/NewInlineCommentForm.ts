@@ -19,7 +19,7 @@
 
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { FileDiffWidgetType } from "../../file-diff/diff-modes/types";
+import type { FileDiffWidgetType } from "../../file-diff/types";
 import type { PullRequestInlineCommentPresenter } from "../PullRequestCommentPresenter";
 import type { SaveNewInlineComment } from "./NewInlineCommentSaver";
 import { getCancelButtonText, getNewInlineCommentSubmitButtonText } from "../../gettext-catalog";

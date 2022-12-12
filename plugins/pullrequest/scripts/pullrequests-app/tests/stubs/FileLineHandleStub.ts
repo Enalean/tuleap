@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FileDiffWidget } from "../../src/app/file-diff/diff-modes/types";
+import type { FileDiffWidget } from "../../src/app/file-diff/types";
 import type {
     FileLineHandle,
     LineHandleWithWidgets,
-} from "../../src/app/file-diff/diff-modes/types-codemirror-overriden";
-import type { LineWidgetWithNode } from "../../src/app/file-diff/diff-modes/types-codemirror-overriden";
+} from "../../src/app/file-diff/types-codemirror-overriden";
+import type { LineWidgetWithNode } from "../../src/app/file-diff/types-codemirror-overriden";
 
 const noop = (): void => {
     // Do nothing

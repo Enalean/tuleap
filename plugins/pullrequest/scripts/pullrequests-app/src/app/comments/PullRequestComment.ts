@@ -28,7 +28,7 @@ import { getCommentReplyTemplate } from "./PullRequestCommentReplyTemplate";
 import type { PullRequestCommentPresenter } from "./PullRequestCommentPresenter";
 import { PullRequestCommentRepliesCollectionPresenter } from "./PullRequestCommentRepliesCollectionPresenter";
 import type { ReplyCommentFormPresenter } from "./ReplyCommentFormPresenter";
-import type { FileDiffWidgetType } from "../file-diff/diff-modes/types";
+import type { FileDiffWidgetType } from "../file-diff/types";
 
 export const TAG_NAME: FileDiffWidgetType = "tuleap-pullrequest-comment";
 export type HostElement = PullRequestComment & HTMLElement;
