@@ -1,18 +1,17 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/user-group-constants",
+  "name": "@tuleap/core-constants",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/user-group-constants.js",
-  "main": "dist/user-group-constants.umd.cjs",
-  "types": "dist/index.d.ts",
+  "module": "dist/core-constants.js",
+  "main": "dist/core-constants.umd.cjs",
+  "types": "dist/main.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/user-group-constants.js",
-      "require": "./dist/user-group-constants.umd.cjs"
+      "import": "./dist/core-constants.js",
+      "require": "./dist/core-constants.umd.cjs"
     }
   },
   "devDependencies": {
