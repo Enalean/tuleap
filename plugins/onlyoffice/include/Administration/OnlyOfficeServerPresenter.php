@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,22 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Administration;
 
-use Tuleap\CSRFSynchronizerTokenPresenter;
-
 /**
  * @psalm-immutable
  */
-final class OnlyOfficeAdminSettingsPresenter
+final class OnlyOfficeServerPresenter
 {
-    public bool $has_servers;
-
-    /**
-     * @param OnlyOfficeServerPresenter[] $servers
-     */
-    public function __construct(
-        public array $servers,
-        public CSRFSynchronizerTokenPresenter $csrf_token,
-    ) {
-        $this->has_servers = count($this->servers) > 0;
+    public function __construct(public int $id, public string $server_url, public bool $has_existing_secret)
+    {
     }
 }

@@ -6,6 +6,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Add document server"
+msgstr ""
+
 msgid "Allow to open documents into ONLYOFFICE"
 msgstr ""
 
@@ -14,6 +17,9 @@ msgid "Back to %s documents"
 msgstr ""
 
 msgid "Current secret not displayed"
+msgstr ""
+
+msgid "Delete"
 msgstr ""
 
 msgid "Document"
@@ -25,13 +31,25 @@ msgstr ""
 msgid "Document server settings have been saved"
 msgstr ""
 
+msgid "Edit"
+msgstr ""
+
+msgid "Edit document server settings"
+msgstr ""
+
+msgid "Has secret"
+msgstr ""
+
+msgid "Has secret?"
+msgstr ""
+
 msgid "JWT secret"
 msgstr ""
 
 msgid "ONLYOFFICE"
 msgstr ""
 
-msgid "ONLYOFFICE document server settings"
+msgid "ONLYOFFICE document servers"
 msgstr ""
 
 msgid "ONLYOFFICE integration"
@@ -50,4 +68,7 @@ msgid "Save"
 msgstr ""
 
 msgid "Spreadsheet"
+msgstr ""
+
+msgid "There isn't any document servers configured"
 msgstr ""

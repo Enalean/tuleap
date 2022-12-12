@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,26 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 
-namespace Tuleap\OnlyOffice\Administration;
-
-use Tuleap\CSRFSynchronizerTokenPresenter;
-
-/**
- * @psalm-immutable
- */
-final class OnlyOfficeAdminSettingsPresenter
-{
-    public bool $has_servers;
-
-    /**
-     * @param OnlyOfficeServerPresenter[] $servers
-     */
-    public function __construct(
-        public array $servers,
-        public CSRFSynchronizerTokenPresenter $csrf_token,
-    ) {
-        $this->has_servers = count($this->servers) > 0;
-    }
-}
+document.addEventListener("DOMContentLoaded", () => {
+    openAllTargetModalsOnClick(
+        document,
+        ".onlyoffice-admin-edit-server-button, .onlyoffice-admin-add-server-button"
+    );
+});

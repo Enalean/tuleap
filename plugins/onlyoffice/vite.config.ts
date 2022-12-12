@@ -26,6 +26,10 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
+                    "onlyoffice-siteadmin": path.resolve(
+                        __dirname,
+                        "scripts/onlyoffice-siteadmin.ts"
+                    ),
                     "onlyoffice-editor": path.resolve(__dirname, "scripts/onlyoffice-editor.ts"),
                     "open-in-onlyoffice": path.resolve(__dirname, "scripts/open-in-onlyoffice.ts"),
                 },

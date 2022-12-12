@@ -10,6 +10,7 @@
     "watch": "vite build --watch"
   },
   "dependencies": {
+    "@tuleap/tlp-modal": "workspace:*"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
