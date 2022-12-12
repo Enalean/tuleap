@@ -28,7 +28,6 @@
     </label>
     <select id="{{ ('tracker_field_' + list_picker_multiple_field.field.field_id) }}"
             multiple
-            ng-class="{'tlp-select': !list_picker_multiple_field.is_list_picker_enabled}"
             ng-model="list_picker_multiple_field.value_model.bind_value_ids"
             ng-options="field_value.id as field_value.label for field_value in list_picker_multiple_field.options_value"
             ng-required="{{ list_picker_multiple_field.field.required }}"

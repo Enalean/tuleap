@@ -379,7 +379,7 @@ describe("BacklogController -", () => {
 
             await expect(wrapPromise(promise)).resolves.toBe(34);
             expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(736, 60, 25);
-            expect(BacklogController.all_backlog_items).toEqual({
+            expect(BacklogController.all_backlog_items).toStrictEqual({
                 7: { id: 7 },
                 734: { id: 734 },
             });
@@ -407,7 +407,7 @@ describe("BacklogController -", () => {
 
             await expect(wrapPromise(promise)).resolves.toBe(85);
             expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(592, 60, 25);
-            expect(BacklogController.all_backlog_items).toEqual({
+            expect(BacklogController.all_backlog_items).toStrictEqual({
                 7: { id: 7 },
                 836: { id: 836 },
             });
@@ -464,7 +464,7 @@ describe("BacklogController -", () => {
                 50,
                 null,
                 expect.any(Function),
-                false
+                []
             );
         });
 
@@ -522,7 +522,7 @@ describe("BacklogController -", () => {
                 50,
                 null,
                 expect.any(Function),
-                false
+                []
             );
         });
 
@@ -568,12 +568,12 @@ describe("BacklogController -", () => {
                         }
                     );
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect(BacklogController.all_backlog_items[5202]).toEqual({ id: 5202 });
-                    expect(BacklogController.backlog_items.content).toEqual([
+                    expect(BacklogController.all_backlog_items[5202]).toStrictEqual({ id: 5202 });
+                    expect(BacklogController.backlog_items.content).toStrictEqual([
                         { id: 5202 },
                         { id: 3894 },
                     ]);
-                    expect(BacklogController.backlog_items.filtered_content).toEqual([
+                    expect(BacklogController.backlog_items.filtered_content).toStrictEqual([
                         { id: 5202 },
                         { id: 3894 },
                     ]);
@@ -589,11 +589,11 @@ describe("BacklogController -", () => {
                     BacklogController.showAddBacklogItemModal(event, item_type);
                     $scope.$apply();
 
-                    expect(BacklogController.backlog_items.content).toEqual([
+                    expect(BacklogController.backlog_items.content).toStrictEqual([
                         { id: 5202 },
                         { id: 7453 },
                     ]);
-                    expect(BacklogController.backlog_items.filtered_content).toEqual([]);
+                    expect(BacklogController.backlog_items.filtered_content).toStrictEqual([]);
                 });
 
                 it("and given that the backlog_items collection was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the backlog_items collection", () => {
@@ -608,7 +608,7 @@ describe("BacklogController -", () => {
                         5202,
                     ]);
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect(BacklogController.backlog_items.content).toEqual([{ id: 5202 }]);
+                    expect(BacklogController.backlog_items.content).toStrictEqual([{ id: 5202 }]);
                 });
             });
 
@@ -638,8 +638,8 @@ describe("BacklogController -", () => {
                         }
                     );
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect(BacklogController.all_backlog_items[5202]).toEqual({ id: 5202 });
-                    expect(BacklogController.backlog_items.content).toEqual([
+                    expect(BacklogController.all_backlog_items[5202]).toStrictEqual({ id: 5202 });
+                    expect(BacklogController.backlog_items.content).toStrictEqual([
                         { id: 5202 },
                         { id: 6240 },
                     ]);
@@ -659,7 +659,7 @@ describe("BacklogController -", () => {
                         [5202]
                     );
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
-                    expect(BacklogController.backlog_items.content).toEqual([{ id: 5202 }]);
+                    expect(BacklogController.backlog_items.content).toStrictEqual([{ id: 5202 }]);
                 });
             });
         });

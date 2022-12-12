@@ -74,7 +74,7 @@ final class ListPickerIncluder
     /**
      * @return string[]
      */
-    public static function getTrackersHavingListPickerDisabled(): array
+    private static function getTrackersHavingListPickerDisabled(): array
     {
         $config_value               = \ForgeConfig::getFeatureFlag(self::FORGE_CONFIG_KEY);
         $tracker_id_prefix_position = strpos($config_value, "t:");
@@ -94,6 +94,6 @@ final class ListPickerIncluder
 
     private static function isFeatureDisabledForCurrentTracker(int $tracker_id): bool
     {
-        return array_search($tracker_id, self::getTrackersHavingListPickerDisabled()) !== false;
+        return in_array((string) $tracker_id, self::getTrackersHavingListPickerDisabled(), true);
     }
 }

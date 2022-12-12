@@ -37,10 +37,7 @@ function EditItemService(
                 SharedPropertiesService.getUserId(),
                 backlog_item.artifact.tracker.id,
                 backlog_item.artifact.id,
-                callback,
-                SharedPropertiesService.isListPickerEnabledForTracker(
-                    backlog_item.artifact.tracker.id
-                )
+                callback
             );
         }
     }

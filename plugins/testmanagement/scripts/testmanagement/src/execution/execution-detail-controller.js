@@ -231,7 +231,6 @@ function ExecutionDetailCtrl(
             issue_tracker_id,
             null,
             callback,
-            SharedPropertiesService.isListPickerUsedByTracker(issue_tracker_id),
             prefill_values
         );
     }
@@ -311,8 +310,7 @@ function ExecutionDetailCtrl(
                     current_user_id,
                     artifact.tracker.id,
                     artifact.id,
-                    callback,
-                    SharedPropertiesService.isListPickerUsedByTracker(artifact.tracker.id)
+                    callback
                 );
             });
         }

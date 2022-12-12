@@ -66,12 +66,6 @@ final class ListPickerIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(true, $will_include_assets);
     }
 
-    public function testItReturnsTheTrackerIdsHavingListPickerDisabled(): void
-    {
-        \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
-        $this->assertEquals([1, 2, 3], ListPickerIncluder::getTrackersHavingListPickerDisabled());
-    }
-
     public function testItReturnsTrueWhenListPickerIsEnabledOnPlatform(): void
     {
         \ForgeConfig::set(\ForgeConfig::FEATURE_FLAG_PREFIX . ListPickerIncluder::FORGE_CONFIG_KEY, "1");

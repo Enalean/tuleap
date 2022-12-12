@@ -26,7 +26,6 @@ use PFUser;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
-use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\User\REST\UserRepresentation;
 
@@ -111,10 +110,6 @@ class IndexPresenter
      */
     public $ttm_admin_url = '';
 
-    /**
-     * @var string
-     */
-    public $trackers_ids_using_list_picker;
     /**
      * @var string
      */
@@ -205,14 +200,10 @@ class IndexPresenter
 
         $this->current_milestone = json_encode($milestone_representation, JSON_THROW_ON_ERROR);
 
-        $this->privacy                        = ProjectPrivacyPresenter::fromProject($project);
-        $this->project_flags                  = $project_flags;
-        $this->json_encoded_project_flags     = json_encode($project_flags, JSON_THROW_ON_ERROR);
-        $this->has_project_flags              = count($project_flags) > 0;
-        $this->trackers_ids_using_list_picker = $this->getTrackersUsingListPicker(
-            $test_definition_tracker_id,
-            $issue_tracker_id
-        );
+        $this->privacy                    = ProjectPrivacyPresenter::fromProject($project);
+        $this->project_flags              = $project_flags;
+        $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->has_project_flags          = count($project_flags) > 0;
 
         $this->csrf_token_campaign_status = $csrf_token->getToken();
 
@@ -226,24 +217,5 @@ class IndexPresenter
         [$lang, $country] = explode('_', $current_user->getLocale());
 
         return $lang;
-    }
-
-    /**
-     * @param int|false      $test_definition_tracker_id
-     * @param int|false|null $issue_tracker_id
-     */
-    private function getTrackersUsingListPicker($test_definition_tracker_id, $issue_tracker_id): string
-    {
-        $trackers_using_list_picker = [];
-
-        if ($test_definition_tracker_id && ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($test_definition_tracker_id)) {
-            $trackers_using_list_picker[] = $test_definition_tracker_id;
-        }
-
-        if ($issue_tracker_id && ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($issue_tracker_id)) {
-            $trackers_using_list_picker[] = $issue_tracker_id;
-        }
-
-        return json_encode($trackers_using_list_picker);
     }
 }
