@@ -22,10 +22,21 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+msgid "Delete document server"
+msgstr ""
+
+msgid ""
+"Deleting a document server will induce loosing of modifications for users "
+"that are currently using it."
+msgstr ""
+
 msgid "Document"
 msgstr ""
 
 msgid "Document server URL"
+msgstr ""
+
+msgid "Document server have been deleted"
 msgstr ""
 
 msgid "Document server settings have been saved"
@@ -61,6 +72,9 @@ msgstr ""
 msgid "Online office files"
 msgstr ""
 
+msgid "Please confirm your action."
+msgstr ""
+
 msgid "Presentation"
 msgstr ""
 
@@ -71,4 +85,7 @@ msgid "Spreadsheet"
 msgstr ""
 
 msgid "There isn't any document servers configured"
+msgstr ""
+
+msgid "You're about to delete the document server."
 msgstr ""
