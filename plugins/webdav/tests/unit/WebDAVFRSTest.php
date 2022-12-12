@@ -25,15 +25,13 @@ namespace Tuleap\WebDAV;
 
 use FRSPackage;
 use FRSPackageFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
-use PFUser;
-use Project;
 use Sabre\DAV\Exception\Forbidden;
 use Sabre\DAV\Exception\MethodNotAllowed;
 use Sabre\DAV\Exception\NotFound;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use WebDAVFRS;
 use WebDAVFRSPackage;
 use WebDAVUtils;
@@ -43,7 +41,6 @@ use WebDAVUtils;
  */
 final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     protected function setUp(): void
@@ -56,8 +53,8 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenNoPackages(): void
     {
-        $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFRS->shouldReceive('getPackageList')->andReturns([]);
+        $webDAVFRS = $this->createPartialMock(WebDAVFRS::class, ['getPackageList']);
+        $webDAVFRS->method('getPackageList')->willReturn([]);
 
         $this->assertSame([], $webDAVFRS->getChildren());
     }
@@ -67,14 +64,14 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenUserCanNotRead(): void
     {
-        $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVFRS = $this->createPartialMock(WebDAVFRS::class, ['getPackageList', 'getWebDAVPackage']);
 
-        $package = Mockery::spy(WebDAVFRSPackage::class);
-        $package->shouldReceive('userCanRead')->andReturns(false);
-        $webDAVFRS->shouldReceive('getWebDAVPackage')->andReturns($package);
+        $package = $this->createMock(WebDAVFRSPackage::class);
+        $package->method('userCanRead')->willReturn(false);
+        $webDAVFRS->method('getWebDAVPackage')->willReturn($package);
 
-        $FRSPackage = Mockery::spy(FRSPackage::class);
-        $webDAVFRS->shouldReceive('getPackageList')->andReturns([$FRSPackage]);
+        $FRSPackage = $this->createMock(FRSPackage::class);
+        $webDAVFRS->method('getPackageList')->willReturn([$FRSPackage]);
 
         $this->assertSame([], $webDAVFRS->getChildren());
     }
@@ -84,15 +81,15 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenUserCanRead(): void
     {
-        $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVFRS = $this->createPartialMock(WebDAVFRS::class, ['getPackageList', 'getWebDAVPackage']);
 
-        $package = Mockery::spy(WebDAVFRSPackage::class);
-        $package->shouldReceive('userCanRead')->andReturns(true);
+        $package = $this->createMock(WebDAVFRSPackage::class);
+        $package->method('userCanRead')->willReturn(true);
 
-        $webDAVFRS->shouldReceive('getWebDAVPackage')->andReturns($package);
+        $webDAVFRS->method('getWebDAVPackage')->willReturn($package);
 
-        $FRSPackage = Mockery::spy(FRSPackage::class);
-        $webDAVFRS->shouldReceive('getPackageList')->andReturns([$FRSPackage]);
+        $FRSPackage = $this->createMock(FRSPackage::class);
+        $webDAVFRS->method('getPackageList')->willReturn([$FRSPackage]);
 
         $this->assertSame([$package], $webDAVFRS->getChildren());
     }
@@ -102,18 +99,19 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildFailWithNotExist(): void
     {
-        $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVFRS = $this->createPartialMock(WebDAVFRS::class, ['getFRSPackageFromName', 'getWebDAVPackage', 'getUtils']);
 
-        $FRSPackage    = Mockery::spy(FRSPackage::class);
-        $WebDAVPackage = Mockery::spy(WebDAVFRSPackage::class);
-        $WebDAVPackage->shouldReceive('exist')->andReturns(false);
-        $webDAVFRS->shouldReceive('getFRSPackageFromName')->andReturns($FRSPackage);
-        $webDAVFRS->shouldReceive('getWebDAVPackage')->andReturns($WebDAVPackage);
+        $FRSPackage    = $this->createMock(FRSPackage::class);
+        $WebDAVPackage = $this->createMock(WebDAVFRSPackage::class);
+        $WebDAVPackage->method('exist')->willReturn(false);
+        $WebDAVPackage->method('getPackageId')->willReturn(1);
+
+        $webDAVFRS->method('getFRSPackageFromName')->willReturn($FRSPackage);
+        $webDAVFRS->method('getWebDAVPackage')->willReturn($WebDAVPackage);
 
         $this->expectException(NotFound::class);
 
-        $utils = Mockery::spy(WebDAVUtils::class);
-        $webDAVFRS->shouldReceive('getUtils')->andReturns($utils);
+        $webDAVFRS->method('getUtils')->willReturn(new WebDAVUtils());
         $webDAVFRS->getChild($WebDAVPackage->getPackageId());
     }
 
@@ -122,20 +120,20 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildFailWithUserCanNotRead(): void
     {
-        $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVFRS = $this->createPartialMock(WebDAVFRS::class, ['getFRSPackageFromName', 'getWebDAVPackage', 'getUtils']);
 
-        $FRSPackage    = Mockery::spy(FRSPackage::class);
-        $WebDAVPackage = Mockery::spy(WebDAVFRSPackage::class);
-        $WebDAVPackage->shouldReceive('exist')->andReturns(true);
-        $WebDAVPackage->shouldReceive('userCanRead')->andReturns(false);
+        $FRSPackage    = $this->createMock(FRSPackage::class);
+        $WebDAVPackage = $this->createMock(WebDAVFRSPackage::class);
+        $WebDAVPackage->method('exist')->willReturn(true);
+        $WebDAVPackage->method('userCanRead')->willReturn(false);
+        $WebDAVPackage->method('getPackageId')->willReturn(1);
 
-        $webDAVFRS->shouldReceive('getFRSPackageFromName')->andReturns($FRSPackage);
-        $webDAVFRS->shouldReceive('getWebDAVPackage')->andReturns($WebDAVPackage);
+        $webDAVFRS->method('getFRSPackageFromName')->willReturn($FRSPackage);
+        $webDAVFRS->method('getWebDAVPackage')->willReturn($WebDAVPackage);
 
         $this->expectException(Forbidden::class);
 
-        $utils = Mockery::spy(WebDAVUtils::class);
-        $webDAVFRS->shouldReceive('getUtils')->andReturns($utils);
+        $webDAVFRS->method('getUtils')->willReturn(new WebDAVUtils());
         $webDAVFRS->getChild($WebDAVPackage->getPackageId());
     }
 
@@ -144,18 +142,18 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testSucceedGetChild(): void
     {
-        $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVFRS = $this->createPartialMock(WebDAVFRS::class, ['getFRSPackageFromName', 'getWebDAVPackage', 'getUtils']);
 
-        $FRSPackage    = Mockery::spy(FRSPackage::class);
-        $WebDAVPackage = Mockery::spy(WebDAVFRSPackage::class);
-        $WebDAVPackage->shouldReceive('exist')->andReturns(true);
-        $WebDAVPackage->shouldReceive('userCanRead')->andReturns(true);
+        $FRSPackage    = $this->createMock(FRSPackage::class);
+        $WebDAVPackage = $this->createMock(WebDAVFRSPackage::class);
+        $WebDAVPackage->method('exist')->willReturn(true);
+        $WebDAVPackage->method('userCanRead')->willReturn(true);
+        $WebDAVPackage->method('getPackageId')->willReturn(1);
 
-        $webDAVFRS->shouldReceive('getFRSPackageFromName')->andReturns($FRSPackage);
-        $webDAVFRS->shouldReceive('getWebDAVPackage')->andReturns($WebDAVPackage);
+        $webDAVFRS->method('getFRSPackageFromName')->willReturn($FRSPackage);
+        $webDAVFRS->method('getWebDAVPackage')->willReturn($WebDAVPackage);
 
-        $utils = Mockery::spy(WebDAVUtils::class);
-        $webDAVFRS->shouldReceive('getUtils')->andReturns($utils);
+        $webDAVFRS->method('getUtils')->willReturn(new WebDAVUtils());
         $this->assertEquals($webDAVFRS->getChild($WebDAVPackage->getPackageId()), $WebDAVPackage);
     }
 
@@ -164,9 +162,9 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testCreateDirectoryFailWithUserNotAdmin(): void
     {
-        $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVFRS = $this->createPartialMock(WebDAVFRS::class, ['userCanWrite']);
 
-        $webDAVFRS->shouldReceive('userCanWrite')->andReturns(false);
+        $webDAVFRS->method('userCanWrite')->willReturn(false);
         $this->expectException(Forbidden::class);
 
         $webDAVFRS->createDirectory('pkg');
@@ -177,17 +175,21 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testCreateDirectoryFailWithNameExist(): void
     {
-        $webDAVFRS = Mockery::mock(
-            WebDAVFRS::class,
-            [new PFUser(['language_id' => 'en_US']), new Project(['group_id' => 101]), 1]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVFRS = $this->getMockBuilder(WebDAVFRS::class)
+            ->setConstructorArgs([
+                UserTestBuilder::anActiveUser()->build(),
+                ProjectTestBuilder::aProject()->build(),
+                1,
+            ])
+            ->onlyMethods(['userCanWrite', 'getUtils'])
+            ->getMock();
 
-        $webDAVFRS->shouldReceive('userCanWrite')->andReturns(true);
-        $frspf = Mockery::spy(FRSPackageFactory::class);
-        $frspf->shouldReceive('isPackageNameExist')->andReturns(true);
-        $utils = Mockery::spy(WebDAVUtils::class);
-        $utils->shouldReceive('getPackageFactory')->andReturns($frspf);
-        $webDAVFRS->shouldReceive('getUtils')->andReturns($utils);
+        $webDAVFRS->method('userCanWrite')->willReturn(true);
+        $frspf = $this->createMock(FRSPackageFactory::class);
+        $frspf->method('isPackageNameExist')->willReturn(true);
+        $utils = $this->createMock(WebDAVUtils::class);
+        $utils->method('getPackageFactory')->willReturn($frspf);
+        $webDAVFRS->method('getUtils')->willReturn($utils);
         $this->expectException(MethodNotAllowed::class);
 
         $webDAVFRS->createDirectory('pkg');
@@ -198,19 +200,24 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testCreateDirectorysucceed(): void
     {
-        $webDAVFRS = Mockery::mock(
-            WebDAVFRS::class,
-            [new PFUser(['language_id' => 'en_US']), new Project(['group_id' => 101]), 1]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVFRS = $this->getMockBuilder(WebDAVFRS::class)
+            ->setConstructorArgs([
+                UserTestBuilder::anActiveUser()->build(),
+                ProjectTestBuilder::aProject()->build(),
+                1,
+            ])
+            ->onlyMethods(['userCanWrite', 'getUtils'])
+            ->getMock();
 
-        $webDAVFRS->shouldReceive('userCanWrite')->andReturns(true);
-        $frspf = Mockery::spy(FRSPackageFactory::class);
-        $frspf->shouldReceive('isPackageNameExist')->andReturns(false);
-        $utils = Mockery::spy(WebDAVUtils::class);
-        $utils->shouldReceive('getPackageFactory')->andReturns($frspf);
-        $pm = Mockery::spy(PermissionsManager::class);
-        $utils->shouldReceive('getPermissionsManager')->andReturns($pm);
-        $webDAVFRS->shouldReceive('getUtils')->andReturns($utils);
+        $webDAVFRS->method('userCanWrite')->willReturn(true);
+        $frspf = $this->createMock(FRSPackageFactory::class);
+        $frspf->method('isPackageNameExist')->willReturn(false);
+        $frspf->method('create');
+        $utils = $this->createMock(WebDAVUtils::class);
+        $utils->method('getPackageFactory')->willReturn($frspf);
+        $pm = $this->createMock(PermissionsManager::class);
+        $utils->method('getPermissionsManager')->willReturn($pm);
+        $webDAVFRS->method('getUtils')->willReturn($utils);
 
         $this->expectNotToPerformAssertions();
 

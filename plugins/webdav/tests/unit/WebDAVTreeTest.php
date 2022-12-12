@@ -26,11 +26,10 @@ namespace Tuleap\WebDAV;
 use Docman_ItemFactory;
 use FRSPackage;
 use FRSRelease;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Sabre\DAV\Exception\MethodNotAllowed;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
 use WebDAVDocmanFolder;
 use WebDAVFRSFile;
@@ -42,29 +41,39 @@ require_once __DIR__ . '/bootstrap.php';
 
 final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    private $user;
-    private $project;
-    private $package;
+    private \PFUser $user;
+    private \Project $project;
+    private FRSPackage $package;
+    /**
+     * @var FRSRelease&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $release;
+    /**
+     * @var \FRSFile&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $file;
+    /**
+     * @var \Docman_Folder&\PHPUnit\Framework\MockObject\MockObject
+     */
     private $docman_folder;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user          = \Mockery::spy(\PFUser::class);
-        $this->project       = \Mockery::spy(\Project::class)->shouldReceive('getID')->with()->andReturns(101)->getMock();
+        $this->user          = UserTestBuilder::anActiveUser()->build();
+        $this->project       = ProjectTestBuilder::aProject()->withId(101)->build();
         $this->package       = new FRSPackage();
-        $this->release       = \Mockery::spy(FRSRelease::class);
-        $this->file          = \Mockery::spy(\FRSFile::class);
-        $this->docman_folder = \Mockery::spy(\Docman_Folder::class);
+        $this->release       = $this->createMock(FRSRelease::class);
+        $this->file          = $this->createMock(\FRSFile::class);
+        $this->docman_folder = $this->createMock(\Docman_Folder::class);
 
-        $docman_item_factory = \Mockery::spy(\Docman_ItemFactory::class)->shouldReceive('getItemFromDb')->with()->andReturns(\Mockery::spy(\Docman_Item::class));
+        $docman_item_factory = $this->createMock(\Docman_ItemFactory::class);
+        $docman_item_factory->method('getItemFromDb')->willReturn($this->createMock(\Docman_Item::class));
         Docman_ItemFactory::setInstance(101, $docman_item_factory);
+
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
@@ -80,7 +89,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = null;
         $tree        = $this->getTestTree();
 
-        $this->assertFalse($tree->canBeMoved($source, $destination));
+        self::assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceNotReleaseDestinationPackage(): void
@@ -89,7 +98,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = $this->getTestPackage();
         $tree        = $this->getTestTree();
 
-        $this->assertFalse($tree->canBeMoved($source, $destination));
+        self::assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceNotFileDestinationRelease(): void
@@ -98,7 +107,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = $this->getTestRelease();
         $tree        = $this->getTestTree();
 
-        $this->assertFalse($tree->canBeMoved($source, $destination));
+        self::assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceReleaseDestinationNotPackage(): void
@@ -107,7 +116,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = null;
         $tree        = $this->getTestTree();
 
-        $this->assertFalse($tree->canBeMoved($source, $destination));
+        self::assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceFileDestinationNotRelease(): void
@@ -116,7 +125,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = null;
         $tree        = $this->getTestTree();
 
-        $this->assertFalse($tree->canBeMoved($source, $destination));
+        self::assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceReleaseDestinationPackageNotSameProject(): void
@@ -125,7 +134,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = $this->getTestPackage();
         $tree        = $this->getTestTree();
 
-        $this->assertFalse($tree->canBeMoved($source, $destination));
+        self::assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceFileDestinationReleaseNotSameProject(): void
@@ -134,7 +143,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = $this->getTestRelease2();
         $tree        = $this->getTestTree();
 
-        $this->assertFalse($tree->canBeMoved($source, $destination));
+        self::assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedSucceedeSourceReleaseDestinationPackage(): void
@@ -143,49 +152,49 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destination = $this->getTestPackage();
         $tree        = $this->getTestTree();
 
-        $this->assertTrue($tree->canBeMoved($source, $destination));
+        self::assertTrue($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedSucceedeSourceFileDestinationRelease(): void
     {
-        $source = new WebDAVFRSFile($this->user, $this->project, $this->file, Mockery::mock(\WebDAVUtils::class));
-
-        $this->project->shouldReceive('getGroupId')->andReturns(1);
+        $source = new WebDAVFRSFile($this->user, ProjectTestBuilder::aProject()->withId(1)->build(), $this->file, $this->createMock(\WebDAVUtils::class));
 
         $destination = $this->getTestRelease();
         $tree        = $this->getTestTree();
 
-        $this->assertTrue($tree->canBeMoved($source, $destination));
+        self::assertTrue($tree->canBeMoved($source, $destination));
     }
 
     public function testMoveOnlyRename(): void
     {
-        $node = \Mockery::spy(\WebDAVFRSRelease::class);
-        $tree = Mockery::mock(WebDAVTree::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tree->shouldReceive('canBeMoved')->andReturns(true);
-        $tree->shouldReceive('getNodeForPath')->andReturns($node);
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $node = $this->createMock(\WebDAVFRSRelease::class);
+        $tree = $this->createPartialMock(WebDAVTree::class, ['canBeMoved', 'getNodeForPath', 'getUtils']);
+        $tree->method('canBeMoved')->willReturn(true);
+        $tree->method('getNodeForPath')->willReturn($node);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->method('getDocmanItemFactory')->willReturn(null);
+        $tree->method('getUtils')->willReturn($utils);
 
-        $node->shouldReceive('setName')->once();
-        $node->shouldReceive('move')->never();
+        $node->expects(self::once())->method('setName');
+        $node->expects(self::never())->method('move');
 
         $tree->move('project1/package1/release1', 'project1/package1/release2');
     }
 
     public function testMoveCanNotMove(): void
     {
-        $node = \Mockery::spy(\WebDAVFRSRelease::class);
-        $tree = $this->getTestTree();
-        $tree->shouldReceive('canBeMoved')->andReturns(false);
-        $tree->shouldReceive('getNodeForPath')->andReturns($node);
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $node = $this->createMock(\WebDAVFRSRelease::class);
+        $tree = $this->createPartialMock(WebDAVTree::class, ['getNodeForPath', 'canBeMoved', 'getUtils']);
+        $tree->method('canBeMoved')->willReturn(false);
+        $tree->method('getNodeForPath')->willReturn($node);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->method('getDocmanItemFactory')->willReturn(null);
+        $tree->method('getUtils')->willReturn($utils);
 
-        $node->shouldReceive('setName')->never();
-        $node->shouldReceive('move')->never();
+        $node->expects(self::never())->method('setName');
+        $node->expects(self::never())->method('move');
         $this->expectException(MethodNotAllowed::class);
 
         $tree->move('project1/package1/release1', 'project1/package2/release2');
@@ -193,15 +202,16 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testMoveSucceed(): void
     {
-        $node = \Mockery::spy(\WebDAVFRSRelease::class);
-        $tree = $this->getTestTree();
-        $tree->shouldReceive('canBeMoved')->andReturns(true);
-        $tree->shouldReceive('getNodeForPath')->andReturns($node);
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $node = $this->createMock(\WebDAVFRSRelease::class);
+        $tree = $this->createPartialMock(WebDAVTree::class, ['getNodeForPath', 'canBeMoved', 'getUtils']);
+        $tree->method('canBeMoved')->willReturn(true);
+        $tree->method('getNodeForPath')->willReturn($node);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->method('getDocmanItemFactory')->willReturn(null);
+        $tree->method('getUtils')->willReturn($utils);
 
-        $node->shouldReceive('setName')->never();
+        $node->expects(self::never())->method('setName');
         //$node->expectOnce('move');
         $this->expectException(MethodNotAllowed::class);
 
@@ -211,9 +221,9 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCopyNoWriteEnabled(): void
     {
         $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(false);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(false);
+        $tree->method('getUtils')->willReturn($utils);
 
         $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
@@ -225,13 +235,13 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCopyWrongDestination(): void
     {
         $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestRelease();
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
+        $tree->method('getNodeForPath')->with('destination')->willReturn($destination);
         $source = $this->getTestFolder($this->docman_folder);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($source);
+        $tree->method('getNodeForPath')->with('destination')->willReturn($source);
 
         $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
@@ -243,13 +253,13 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCopyWrongSource(): void
     {
         $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($this->docman_folder);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
+        $tree->method('getNodeForPath')->with('destination')->willReturn($destination);
         $source = $this->getTestRelease();
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($source);
+        $tree->method('getNodeForPath')->with('destination')->willReturn($source);
 
         $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
@@ -261,13 +271,13 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destinationItem = new \Docman_Folder(['group_id' => 2]);
 
         $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($destinationItem);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
+        $tree->method('getNodeForPath')->with('destination')->willReturn($destination);
         $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
+        $tree->method('getNodeForPath')->with('source')->willReturn($source);
 
         $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
@@ -279,18 +289,18 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destinationItem = new \Docman_Folder(['group_id' => 2]);
 
         $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($destinationItem);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
+        $tree->method('getNodeForPath')->with('destination')->willReturn($destination);
         $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
+        $tree->method('getNodeForPath')->with('source')->willReturn($source);
 
-        $dpm = \Mockery::spy(\Docman_PermissionsManager::class);
-        $dpm->shouldReceive('userCanAccess')->andReturns(false);
-        $dpm->shouldReceive('userCanWrite')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
+        $dpm = $this->createMock(\Docman_PermissionsManager::class);
+        $dpm->method('userCanAccess')->willReturn(false);
+        $dpm->method('userCanWrite')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($dpm);
 
         $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
@@ -302,18 +312,18 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destinationItem = new \Docman_Folder(['group_id' => 2]);
 
         $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($destinationItem);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
+        $tree->method('getNodeForPath')->with('destination')->willReturn($destination);
         $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
+        $tree->method('getNodeForPath')->with('source')->willReturn($source);
 
-        $dpm = \Mockery::spy(\Docman_PermissionsManager::class);
-        $dpm->shouldReceive('userCanAccess')->andReturns(true);
-        $dpm->shouldReceive('userCanWrite')->andReturns(false);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
+        $dpm = $this->createMock(\Docman_PermissionsManager::class);
+        $dpm->method('userCanAccess')->willReturn(true);
+        $dpm->method('userCanWrite')->willReturn(false);
+        $utils->method('getDocmanPermissionsManager')->willReturn($dpm);
 
         $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
@@ -325,22 +335,22 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $destinationItem = new \Docman_Folder(['group_id' => 1]);
 
         $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($destinationItem);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
+        $tree->method('getNodeForPath')->with('destination')->willReturn($destination);
         $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
+        $tree->method('getNodeForPath')->with('source')->willReturn($source);
 
-        $dpm = \Mockery::spy(\Docman_PermissionsManager::class);
-        $dpm->shouldReceive('userCanAccess')->andReturns(true);
-        $dpm->shouldReceive('userCanWrite')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
-        $dif = \Mockery::spy(\Docman_ItemFactory::class);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($dif);
+        $dpm = $this->createMock(\Docman_PermissionsManager::class);
+        $dpm->method('userCanAccess')->willReturn(true);
+        $dpm->method('userCanWrite')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($dpm);
+        $dif = $this->createMock(\Docman_ItemFactory::class);
+        $utils->method('getDocmanItemFactory')->willReturn($dif);
 
-        //$this->assertNoErrors();
+        //self::assertNoErrors();
         $this->expectException(MethodNotAllowed::class);
         $tree->copy('source', 'destination/item');
     }
@@ -350,57 +360,61 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $sourceItem      = new \Docman_Folder(['item_id' => 128, 'group_id' => 1]);
         $destinationItem = new \Docman_Folder(['item_id' => 256, 'group_id' => 1]);
 
-        $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $tree  = $this->createPartialMock(WebDAVTree::class, ['getNodeForPath', 'getUtils']);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($destinationItem);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
-        $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
+        $source      = $this->getTestFolder($sourceItem);
+        $tree->method('getNodeForPath')->willReturnMap([
+            ['destination', $destination],
+            ['source', $source],
+        ]);
 
-        $dpm = \Mockery::spy(\Docman_PermissionsManager::class);
-        $dpm->shouldReceive('userCanAccess')->andReturns(true);
-        $dpm->shouldReceive('userCanWrite')->andReturns(true);
-        $dpm->shouldReceive('currentUserCanWriteSubItems')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
-        $dif = \Mockery::spy(\Docman_ItemFactory::class);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($dif);
+        $dpm = $this->createMock(\Docman_PermissionsManager::class);
+        $dpm->method('userCanAccess')->willReturn(true);
+        $dpm->method('userCanWrite')->willReturn(true);
+        $dpm->method('currentUserCanWriteSubItems')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($dpm);
+        $dif = $this->createMock(\Docman_ItemFactory::class);
+        $utils->method('getDocmanItemFactory')->willReturn($dif);
 
         //$dif->expectOnce('setNewParent', array(128, 256, 'beginning'));
         //$sourceItem->expectOnce('fireEvent', array('plugin_docman_event_move', $source->getUser(), $destinationItem));
 
-        //$this->assertNoErrors();
+        //self::assertNoErrors();
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
     public function testMoveDocmanNoWriteOnSubItems(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Folder::class);
-        $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem = \Mockery::spy(\Docman_Folder::class);
-        $destinationItem->shouldReceive('getGroupId')->andReturns(1);
+        $sourceItem = $this->createMock(\Docman_Folder::class);
+        $sourceItem->method('getGroupId')->willReturn(1);
+        $destinationItem = $this->createMock(\Docman_Folder::class);
+        $destinationItem->method('getGroupId')->willReturn(1);
 
-        $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $tree  = $this->createPartialMock(WebDAVTree::class, ['getNodeForPath', 'getUtils']);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($destinationItem);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
-        $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
+        $source      = $this->getTestFolder($sourceItem);
+        $tree->method('getNodeForPath')->willReturnMap([
+            ['destination', $destination],
+            ['source', $source],
+        ]);
 
-        $dpm = \Mockery::spy(\Docman_PermissionsManager::class);
-        $dpm->shouldReceive('userCanAccess')->andReturns(true);
-        $dpm->shouldReceive('userCanWrite')->andReturns(true);
-        $dpm->shouldReceive('currentUserCanWriteSubItems')->andReturns(false);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
-        $dif = \Mockery::spy(\Docman_ItemFactory::class);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($dif);
+        $dpm = $this->createMock(\Docman_PermissionsManager::class);
+        $dpm->method('userCanAccess')->willReturn(true);
+        $dpm->method('userCanWrite')->willReturn(true);
+        $dpm->method('currentUserCanWriteSubItems')->willReturn(false);
+        $utils->method('getDocmanPermissionsManager')->willReturn($dpm);
+        $dif = $this->createMock(\Docman_ItemFactory::class);
+        $utils->method('getDocmanItemFactory')->willReturn($dif);
 
-        $dif->shouldReceive('setNewParent')->never();
-        $sourceItem->shouldReceive('fireEvent')->never();
+        $dif->expects(self::never())->method('setNewParent');
+        $sourceItem->expects(self::never())->method('fireEvent');
 
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
@@ -409,9 +423,10 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testMoveDocmanNoWriteEnabled(): void
     {
         $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(false);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(false);
+        $tree->method('getUtils')->willReturn($utils);
+        $utils->method('getDocmanItemFactory')->willReturn(null);
 
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
@@ -422,15 +437,17 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 11]);
 
-        $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $tree  = $this->createPartialMock(WebDAVTree::class, ['getNodeForPath', 'getUtils']);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->method('getDocmanItemFactory')->willReturn(null);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($destinationItem);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
-        $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
-
+        $source      = $this->getTestFolder($sourceItem);
+        $tree->method('getNodeForPath')->willReturnMap([
+            ['destination', $destination],
+            ['source', $source],
+        ]);
 
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
@@ -441,20 +458,23 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 1]);
 
-        $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $tree  = $this->createPartialMock(WebDAVTree::class, ['getNodeForPath', 'getUtils']);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->method('getDocmanItemFactory')->willReturn(null);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($destinationItem);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
-        $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
+        $source      = $this->getTestFolder($sourceItem);
+        $tree->method('getNodeForPath')->willReturnMap([
+            ['destination', $destination],
+            ['source', $source],
+        ]);
 
-        $dpm = \Mockery::spy(\Docman_PermissionsManager::class);
-        $dpm->shouldReceive('userCanAccess')->andReturns(false);
-        $dpm->shouldReceive('userCanWrite')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
-        $dpm->shouldReceive('currentUserCanWriteSubItems')->never();
+        $dpm = $this->createMock(\Docman_PermissionsManager::class);
+        $dpm->method('userCanAccess')->willReturn(false);
+        $dpm->method('userCanWrite')->willReturn(true);
+        $utils->method('getDocmanPermissionsManager')->willReturn($dpm);
+        $dpm->expects(self::never())->method('currentUserCanWriteSubItems');
 
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
@@ -465,20 +485,23 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 1]);
 
-        $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
+        $tree  = $this->createPartialMock(WebDAVTree::class, ['getNodeForPath', 'getUtils']);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->method('getDocmanItemFactory')->willReturn(null);
+        $tree->method('getUtils')->willReturn($utils);
         $destination = $this->getTestFolder($destinationItem);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
-        $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
+        $source      = $this->getTestFolder($sourceItem);
+        $tree->method('getNodeForPath')->willReturnMap([
+            ['destination', $destination],
+            ['source', $source],
+        ]);
 
-        $dpm = \Mockery::spy(\Docman_PermissionsManager::class);
-        $dpm->shouldReceive('userCanAccess')->andReturns(true);
-        $dpm->shouldReceive('userCanWrite')->andReturns(false);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($dpm);
-        $dpm->shouldReceive('currentUserCanWriteSubItems')->never();
+        $dpm = $this->createMock(\Docman_PermissionsManager::class);
+        $dpm->method('userCanAccess')->willReturn(true);
+        $dpm->method('userCanWrite')->willReturn(false);
+        $utils->method('getDocmanPermissionsManager')->willReturn($dpm);
+        $dpm->expects(self::never())->method('currentUserCanWriteSubItems');
 
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
@@ -488,24 +511,29 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $sourceItem = new \Docman_Folder(['group_id' => 1]);
 
-        $tree  = $this->getTestTree();
-        $utils = \Mockery::spy(\WebDAVUtils::class);
-        $utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $tree->shouldReceive('getUtils')->andReturns($utils);
-        $destination = new \WebDAVDocmanFile($this->user, $this->project, new \Docman_File(), Mockery::mock(DocumentDownloader::class), $utils);
-        $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
-        $source = $this->getTestFolder($sourceItem);
-        $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
-
+        $tree  = $this->createPartialMock(WebDAVTree::class, ['getNodeForPath', 'getUtils']);
+        $utils = $this->createMock(\WebDAVUtils::class);
+        $utils->method('isWriteEnabled')->willReturn(true);
+        $utils->method('getDocmanItemFactory')->willReturn(null);
+        $tree->method('getUtils')->willReturn($utils);
+        $destination = new \WebDAVDocmanFile($this->user, $this->project, new \Docman_File(), $this->createMock(DocumentDownloader::class), $utils);
+        $source      = $this->getTestFolder($sourceItem);
+        $tree->method('getNodeForPath')->willReturnMap([
+            ['destination', $destination],
+            ['source', $source],
+        ]);
 
         $this->expectException(MethodNotAllowed::class);
         $tree->move('source', 'destination/item');
     }
 
+    /**
+     * @return WebDAVTree&\PHPUnit\Framework\MockObject\MockObject
+     */
     private function getTestTree()
     {
-        $tree = Mockery::mock(WebDAVTree::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tree->shouldReceive('getNodeForPath')->andReturn(\Mockery::spy(\WebDAVFRSFile::class));
+        $tree = $this->createPartialMock(WebDAVTree::class, ['getNodeForPath', 'getUtils']);
+        $tree->method('getNodeForPath')->willReturn($this->createMock(\WebDAVFRSFile::class));
 
         return $tree;
     }
@@ -516,57 +544,62 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user,
             ProjectTestBuilder::aProject()->withId(1)->build(),
             new \FRSFile([]),
-            Mockery::mock(\WebDAVUtils::class)
+            $this->createMock(\WebDAVUtils::class)
         );
     }
 
+    /**
+     * @return WebDAVFRSRelease&\PHPUnit\Framework\MockObject\MockObject
+     */
     private function getTestRelease()
     {
-        $release = Mockery::mock(
-            WebDAVFRSRelease::class,
-            [$this->user, $this->project, $this->package, $this->release, 0]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getGroupId')->andReturns(1);
-        $release->shouldReceive('getProject')->andReturn($project);
-
-        return $release;
+        return $this->getMockBuilder(WebDAVFRSRelease::class)
+            ->setConstructorArgs([
+                $this->user,
+                ProjectTestBuilder::aProject()->withId(1)->build(),
+                $this->package,
+                $this->release,
+                0,
+            ])
+            ->onlyMethods([])
+            ->getMock();
     }
 
+    /**
+     * @return WebDAVFRSRelease&\PHPUnit\Framework\MockObject\MockObject
+     */
     private function getTestRelease2()
     {
-        $release = Mockery::mock(
-            WebDAVFRSRelease::class,
-            [$this->user, $this->project, $this->package, $this->release, 0]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getGroupId')->andReturns(2);
-        $release->shouldReceive('getProject')->andReturn($project);
-
-        return $release;
+        return $this->getMockBuilder(WebDAVFRSRelease::class)
+            ->setConstructorArgs([
+                $this->user,
+                ProjectTestBuilder::aProject()->withId(2)->build(),
+                $this->package,
+                $this->release,
+                0,
+            ])
+            ->onlyMethods([])
+            ->getMock();
     }
 
-    private function getTestFolder(\Docman_Folder $item)
+    private function getTestFolder(\Docman_Folder $item): WebDAVDocmanFolder
     {
         return new WebDAVDocmanFolder($this->user, $this->project, $item, \WebDAVUtils::getInstance());
     }
 
+    /**
+     * @return WebDAVFRSPackage&\PHPUnit\Framework\MockObject\MockObject
+     */
     private function getTestPackage()
     {
-        $package = Mockery::mock(
-            WebDAVFRSPackage::class,
-            [$this->user, $this->project, $this->package, 0]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getGroupId')->andReturns(1);
-        $package->shouldReceive('getProject')->andReturn($project);
-
-        return $package;
+        return $this->getMockBuilder(\WebDAVFRSPackage::class)
+            ->setConstructorArgs([
+                $this->user,
+                ProjectTestBuilder::aProject()->withId(1)->build(),
+                $this->package,
+                0,
+            ])
+            ->onlyMethods(['getReleaseList'])
+            ->getMock();
     }
 }
