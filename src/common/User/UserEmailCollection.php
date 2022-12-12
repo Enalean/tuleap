@@ -30,18 +30,15 @@ class UserEmailCollection
     public function __construct(\PFUser ...$users)
     {
         foreach ($users as $user) {
-            $this->users_indexed_by_email[$user->getEmail()] = $user;
+            $this->users_indexed_by_email[strtolower($user->getEmail())] = $user;
         }
     }
 
-    /**
-     * @return null|\PFUser
-     */
-    public function getUserByEmail($email)
+    public function getUserByEmail(string $email): ?\PFUser
     {
-        if (! isset($this->users_indexed_by_email[$email])) {
+        if (! isset($this->users_indexed_by_email[strtolower($email)])) {
             return null;
         }
-        return $this->users_indexed_by_email[$email];
+        return $this->users_indexed_by_email[strtolower($email)];
     }
 }
