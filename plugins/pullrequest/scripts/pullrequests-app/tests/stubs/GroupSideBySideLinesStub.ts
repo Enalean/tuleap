@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GroupSideBySideLines } from "../../src/app/file-diff/file-lines/side-by-side-line-grouper";
+import type { GroupSideBySideLines } from "../../src/app/file-diff/file-lines/SideBySideLineGrouper";
 import type { GroupOfLines } from "../../src/app/file-diff/types";
 
 export interface StubGroupSideBySideLines {

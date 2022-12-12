@@ -18,7 +18,7 @@
  */
 
 import { DELETED_GROUP } from "../../types";
-import type { FileLinesState } from "../../file-lines/side-by-side-lines-state";
+import type { FileLinesState } from "../../file-lines/SideBySideLineState";
 import type { FileLineHandle } from "../../types-codemirror-overriden";
 
 export interface PositionPlaceholder {

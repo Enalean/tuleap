@@ -21,7 +21,7 @@ import type { PlaceholderCreationParams } from "../types-codemirror-overriden";
 import type { IRelativeDateHelper } from "../../helpers/date-helpers";
 import type { ControlPullRequestComment } from "../../comments/PullRequestCommentController";
 import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
-import type { MapCommentWidgets } from "../scroll-to-comment/file-diff-comment-widgets-map";
+import type { MapCommentWidgets } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import type {
     InlineCommentWidgetCreationParams,
     NewInlineCommentFormWidgetCreationParams,

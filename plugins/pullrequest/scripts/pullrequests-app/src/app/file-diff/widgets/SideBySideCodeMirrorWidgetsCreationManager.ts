@@ -21,12 +21,12 @@ import type {
     CreateInlineCommentWidget,
     CreatePlaceholderWidget,
     CreateNewInlineCommentFormWidget,
-} from "./side-by-side-code-mirror-widget-creator";
+} from "./SideBySideCodeMirrorWidgetCreator";
 import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
 import type { FileLine } from "../types";
-import type { FileLinesState } from "../file-lines/side-by-side-lines-state";
-import type { EqualizeLinesHeights } from "./placeholders/side-by-side-line-height-equalizer";
-import type { ManageCodeMirrorsContent } from "../editors/side-by-side-code-mirrors-content-manager";
+import type { FileLinesState } from "../file-lines/SideBySideLineState";
+import type { EqualizeLinesHeights } from "./placeholders/SideBySideLinesHeightEqualizer";
+import type { ManageCodeMirrorsContent } from "../editors/SideBySideCodeMirrorsContentManager";
 import type { InlineCommentPosition } from "../../comments/types";
 
 import { isAnAddedLine, isARemovedLine } from "../file-lines/file-line-helper";

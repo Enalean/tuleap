@@ -20,10 +20,10 @@
 import type { Editor } from "codemirror";
 import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
 import type { InlineCommentWidget } from "../types";
-import type { ScrollToFileDiffComment } from "./file-diff-comment-scroller";
-import { FileDiffCommentScroller, getLineNumberFromComment } from "./file-diff-comment-scroller";
+import type { ScrollToFileDiffComment } from "./FileDiffCommentScroller";
+import { FileDiffCommentScroller, getLineNumberFromComment } from "./FileDiffCommentScroller";
 import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
-import { FileDiffCommentWidgetsMap } from "./file-diff-comment-widgets-map";
+import { FileDiffCommentWidgetsMap } from "./FileDiffCommentWidgetsMap";
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
 import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";

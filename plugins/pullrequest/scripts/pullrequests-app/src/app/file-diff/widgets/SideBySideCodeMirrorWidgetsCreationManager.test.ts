@@ -18,11 +18,11 @@
  */
 
 import type { Editor } from "codemirror";
-import type { ManageCodeMirrorWidgetsCreation } from "./side-by-side-code-mirror-widgets-creation-manager";
+import type { ManageCodeMirrorWidgetsCreation } from "./SideBySideCodeMirrorWidgetsCreationManager";
 import type { StubCreateInlineCommentWidget } from "../../../../tests/stubs/CreateInlineCommentWidgetStub";
 import type { StubCreatePlaceholderWidget } from "../../../../tests/stubs/CreatePlaceholderWidgetStub";
 import type { StubCreateNewInlineCommentFormWidget } from "../../../../tests/stubs/CreateNewInlineCommentFormWidgetStub";
-import type { SynchronizedLineHandles } from "../file-lines/side-by-side-line-mapper";
+import type { SynchronizedLineHandles } from "../file-lines/SideBySideLineMapper";
 import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
 import type { InlineCommentPosition } from "../../comments/types";
 import type { CommentWidgetCreationParams } from "../types-codemirror-overriden";
@@ -44,10 +44,10 @@ import { FileLinesStateStub } from "../../../../tests/stubs/FileLinesStateStub";
 import { CreatePlaceholderWidgetStub } from "../../../../tests/stubs/CreatePlaceholderWidgetStub";
 import { CreateInlineCommentWidgetStub } from "../../../../tests/stubs/CreateInlineCommentWidgetStub";
 import { CreateNewInlineCommentFormWidgetStub } from "../../../../tests/stubs/CreateNewInlineCommentFormWidgetStub";
-import { SideBySideCodeMirrorWidgetsCreationManager } from "./side-by-side-code-mirror-widgets-creation-manager";
-import { SideBySideCodeMirrorsContentManager } from "../editors/side-by-side-code-mirrors-content-manager";
-import { SideBySideLinesHeightEqualizer } from "./placeholders/side-by-side-line-height-equalizer";
-import { SideBySidePlaceholderPositioner } from "./placeholders/side-by-side-placeholder-positioner";
+import { SideBySideCodeMirrorWidgetsCreationManager } from "./SideBySideCodeMirrorWidgetsCreationManager";
+import { SideBySideCodeMirrorsContentManager } from "../editors/SideBySideCodeMirrorsContentManager";
+import { SideBySideLinesHeightEqualizer } from "./placeholders/SideBySideLinesHeightEqualizer";
+import { SideBySidePlaceholderPositioner } from "./placeholders/SideBySidePlaceholderPositioner";
 import { INLINE_COMMENT_POSITION_LEFT, INLINE_COMMENT_POSITION_RIGHT } from "../../comments/types";
 import { NewInlineCommentContext } from "../../comments/new-comment-form/NewInlineCommentContext";
 

@@ -19,7 +19,7 @@
 
 import type { Editor } from "codemirror";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
-import { SideBySideCodeMirrorsContentManager } from "./side-by-side-code-mirrors-content-manager";
+import { SideBySideCodeMirrorsContentManager } from "./SideBySideCodeMirrorsContentManager";
 
 describe("side-by-side-code-mirrors-content-manager", () => {
     it(`Given the lines of a file and the two codemirror editors

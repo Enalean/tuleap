@@ -26,8 +26,8 @@ import { GroupOfLinesStub } from "../../../../../tests/stubs/GroupOfLinesStub";
 import { FileLineHandleStub } from "../../../../../tests/stubs/FileLineHandleStub";
 import { FileLinesStateStub } from "../../../../../tests/stubs/FileLinesStateStub";
 
-import { SideBySideCodePlaceholderCreationManager } from "./side-by-side-code-placeholder-creation-manager";
-import { SideBySideCodeMirrorsContentManager } from "../../editors/side-by-side-code-mirrors-content-manager";
+import { SideBySideCodePlaceholderCreationManager } from "./SideBySideCodePlaceholderCreationManager";
+import { SideBySideCodeMirrorsContentManager } from "../../editors/SideBySideCodeMirrorsContentManager";
 import { CreatePlaceholderWidgetStub } from "../../../../../tests/stubs/CreatePlaceholderWidgetStub";
 
 describe("side-by-side-code-placeholder-creation-manager", () => {

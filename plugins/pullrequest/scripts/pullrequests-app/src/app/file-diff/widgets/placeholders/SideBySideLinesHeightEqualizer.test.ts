@@ -18,15 +18,15 @@
  */
 
 import type { Editor } from "codemirror";
-import type { SynchronizedLineHandles } from "../../file-lines/side-by-side-line-mapper";
-import type { EqualizeLinesHeights } from "./side-by-side-line-height-equalizer";
+import type { SynchronizedLineHandles } from "../../file-lines/SideBySideLineMapper";
+import type { EqualizeLinesHeights } from "./SideBySideLinesHeightEqualizer";
 import { FileDiffWidgetStub } from "../../../../../tests/stubs/FileDiffWidgetStub";
 import { FileLineHandleStub } from "../../../../../tests/stubs/FileLineHandleStub";
 import { FileLinesStateStub } from "../../../../../tests/stubs/FileLinesStateStub";
 import { FileLineStub } from "../../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../../tests/stubs/GroupOfLinesStub";
-import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
-import { SideBySideLinesHeightEqualizer } from "./side-by-side-line-height-equalizer";
+import { SideBySidePlaceholderPositioner } from "./SideBySidePlaceholderPositioner";
+import { SideBySideLinesHeightEqualizer } from "./SideBySideLinesHeightEqualizer";
 
 describe("line-height-equalizer", () => {
     let left_codemirror: Editor, right_codemirror: Editor;

@@ -19,8 +19,8 @@
 
 import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "../types";
 import type { FileLine, GroupOfLines } from "../types";
-import type { GroupSideBySideLines } from "./side-by-side-line-grouper";
-import type { MapSideBySideLines, SynchronizedLineHandles } from "./side-by-side-line-mapper";
+import type { GroupSideBySideLines } from "./SideBySideLineGrouper";
+import type { MapSideBySideLines, SynchronizedLineHandles } from "./SideBySideLineMapper";
 import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
 import type { FileLineHandle } from "../types-codemirror-overriden";
 
