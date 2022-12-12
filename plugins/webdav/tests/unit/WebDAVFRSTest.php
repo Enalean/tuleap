@@ -112,7 +112,7 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(NotFound::class);
 
         $webDAVFRS->method('getUtils')->willReturn(new WebDAVUtils());
-        $webDAVFRS->getChild($WebDAVPackage->getPackageId());
+        $webDAVFRS->getChild((string) $WebDAVPackage->getPackageId());
     }
 
     /**
@@ -134,7 +134,7 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(Forbidden::class);
 
         $webDAVFRS->method('getUtils')->willReturn(new WebDAVUtils());
-        $webDAVFRS->getChild($WebDAVPackage->getPackageId());
+        $webDAVFRS->getChild((string) $WebDAVPackage->getPackageId());
     }
 
     /**
@@ -154,7 +154,7 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVFRS->method('getWebDAVPackage')->willReturn($WebDAVPackage);
 
         $webDAVFRS->method('getUtils')->willReturn(new WebDAVUtils());
-        $this->assertEquals($webDAVFRS->getChild($WebDAVPackage->getPackageId()), $WebDAVPackage);
+        $this->assertEquals($webDAVFRS->getChild((string) $WebDAVPackage->getPackageId()), $WebDAVPackage);
     }
 
     /**

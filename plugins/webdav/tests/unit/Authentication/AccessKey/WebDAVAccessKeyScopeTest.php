@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV\Authentication\AccessKey;
 
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
-use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
-use Tuleap\Authentication\Scope\AuthenticationTestScopeIdentifier;
-use Tuleap\Git\User\AccessKey\Scope\GitRepositoryAccessKeyScope;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 
 final class WebDAVAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
@@ -36,8 +35,9 @@ final class WebDAVAccessKeyScopeTest extends AuthenticationScopeTestCase
 
     public function testDoesNotCoversAllTheScopes(): void
     {
-        $scope = AuthenticationTestCoveringScope::fromIdentifier(AuthenticationTestScopeIdentifier::fromIdentifierKey('test:webdav'));
+        $scope = $this->createMock(AuthenticationScope::class);
+        $scope->method('getIdentifier')->willReturn(AccessKeyScopeIdentifier::fromIdentifierKey('test:webdav'));
 
-        self::assertFalse(GitRepositoryAccessKeyScope::fromItself()->covers($scope));
+        self::assertFalse(WebDAVAccessKeyScope::fromItself()->covers($scope));
     }
 }

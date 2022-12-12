@@ -26,8 +26,6 @@ namespace Tuleap\WebDAV;
 use FRSFileFactory;
 use FRSPackage;
 use FRSRelease;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use Sabre\DAV\Exception;
@@ -45,7 +43,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
  */
 class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
@@ -58,7 +55,7 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\WebDAVUtils
+     * @var \WebDAVUtils&\PHPUnit\Framework\MockObject\MockObject
      */
     private $utils;
 

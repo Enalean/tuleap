@@ -60,7 +60,6 @@
             <directory name="plugins/testmanagement/tests/unit/"/>
             <directory name="plugins/tracker/tests/unit/"/>
             <directory name="plugins/velocity/tests/unit/"/>
-            <directory name="plugins/webdav/tests/unit/"/>
         </ignoreFiles>
     </projectFiles>
 
