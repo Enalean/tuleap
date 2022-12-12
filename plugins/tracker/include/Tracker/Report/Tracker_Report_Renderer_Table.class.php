@@ -2118,7 +2118,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public function exportToXml(SimpleXMLElement $root, array $xmlMapping)
     {
         parent::exportToXml($root, $xmlMapping);
-        $root->addAttribute('chunksz', $this->chunksz);
+        $root->addAttribute('chunksz', $this->chunksz ?? '');
         if ($this->multisort) {
             $root->addAttribute('multisort', $this->multisort);
         }

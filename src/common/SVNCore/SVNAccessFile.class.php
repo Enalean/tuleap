@@ -296,9 +296,8 @@ class SVNAccessFile
      *
      * @param String $project_svnroot
      *
-     * @return String
      */
-    protected function getPlatformBlock($project_svnroot)
+    protected function getPlatformBlock($project_svnroot): string
     {
         if (! $this->platformBlock) {
             $this->platformBlock = svn_utils_read_svn_access_file_defaults($project_svnroot, true);

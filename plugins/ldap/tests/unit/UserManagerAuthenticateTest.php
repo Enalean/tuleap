@@ -117,6 +117,8 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldAllowMockingProtectedMethods();
 
         $this->ldap_user_manager->shouldReceive('getUserManager')->andReturns($this->user_manager);
+
+        $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
     public function testItDelegatesAuthenticateToLDAP(): void

@@ -128,6 +128,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $system_event->shouldReceive('done')->once();
         $system_event->shouldReceive('getRequiredParameter')->andReturn(1);
+        $system_event->shouldReceive('getParameters')->andReturn('');
 
         $system_event->process();
     }
@@ -153,6 +154,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\TestCas
         $system_event->shouldReceive('error')->once();
         $system_event->shouldReceive('done')->never();
         $system_event->shouldReceive('getRequiredParameter')->andReturn([]);
+        $system_event->shouldReceive('getParameters')->andReturn('');
 
         $system_event->process();
     }
@@ -176,6 +178,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\TestCas
         $system_event->shouldReceive('warning')->once();
         $system_event->shouldReceive('done')->never();
         $system_event->shouldReceive('getRequiredParameter')->andReturn([]);
+        $system_event->shouldReceive('getParameters')->andReturn('');
 
         $system_event->process();
     }

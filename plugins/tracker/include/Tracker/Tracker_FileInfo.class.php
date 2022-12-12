@@ -191,10 +191,7 @@ class Tracker_FileInfo
         return $this->getRootPath() . '/' . $this->id;
     }
 
-    /**
-     * @return string the filesystem path to the file
-     */
-    public function getThumbnailPath()
+    public function getThumbnailPath(): ?string
     {
         if ($this->isImage()) {
             return $this->getRootPath() . '/thumbnails/' . $this->id;
@@ -289,7 +286,10 @@ class Tracker_FileInfo
                 return false;
         }
         imagecopyresized($destination, $source, 0, 0, 0, 0, (int) $thumbnail_width, (int) $thumbnail_height, $size[0], $size[1]);
-        $store($destination, $this->getThumbnailPath());
+        $thumbnail_path = $this->getThumbnailPath();
+        if ($thumbnail_path !== null) {
+            $store($destination, $thumbnail_path);
+        }
         imagedestroy($source);
         imagedestroy($destination);
     }
@@ -326,8 +326,9 @@ class Tracker_FileInfo
         if (file_exists($this->getPath())) {
             unlink($this->getPath());
         }
-        if (file_exists($this->getThumbnailPath())) {
-            unlink($this->getThumbnailPath());
+        $thumbnail_path = $this->getThumbnailPath();
+        if ($thumbnail_path !== null && file_exists($thumbnail_path)) {
+            unlink($thumbnail_path);
         }
     }
 }

@@ -193,7 +193,7 @@ abstract class SystemEvent
 
     public function getParametersAsArray()
     {
-        return explode(self::PARAMETER_SEPARATOR, $this->parameters);
+        return explode(self::PARAMETER_SEPARATOR, $this->parameters ?? '');
     }
 
     public function getPriority()
