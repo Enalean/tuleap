@@ -25,7 +25,6 @@ import pt_BR from "../po/pt_BR.po";
 
 import angular_custom_elements_module from "angular-custom-elements";
 
-import "@tuleap/tlp-relative-date";
 import { STRUCTURAL_FIELDS } from "@tuleap/plugin-tracker-constants";
 import { setCatalog } from "./gettext-catalog";
 
@@ -56,9 +55,9 @@ import "./adapters/UI/fields/date-readonly-field/DateReadonlyField";
 import "./adapters/UI/fields/file-field/FileField";
 import "./adapters/UI/fields/permission-field/PermissionField";
 import "./adapters/UI/fields/checkbox-field/CheckboxField";
-import "./followups/FollowupEditor";
 import "./adapters/UI/feedback/ModalFeedback";
 import "./adapters/UI/footer/FileUploadQuota";
+import "./adapters/UI/comments/ModalCommentsSection";
 
 export default angular
     .module("tuleap.artifact-modal", ["gettext", angular_tlp, angular_custom_elements_module])

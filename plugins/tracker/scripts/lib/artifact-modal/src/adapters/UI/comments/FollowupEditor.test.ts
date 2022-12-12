@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setCatalog } from "../gettext-catalog";
+import { setCatalog } from "../../../gettext-catalog";
 import type { HostElement } from "./FollowupEditor";
 import { FollowupEditor } from "./FollowupEditor";
 

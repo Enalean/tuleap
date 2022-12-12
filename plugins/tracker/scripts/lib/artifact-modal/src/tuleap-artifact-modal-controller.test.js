@@ -31,6 +31,8 @@ import * as field_dependencies_helper from "./field-dependencies-helper.js";
 import { getTargetFieldPossibleValues } from "./field-dependencies-helper.js";
 import * as fields_validator from "./validate-artifact-field-value.js";
 
+const PROJECT_ID = 133;
+
 describe("TuleapArtifactModalController", () => {
     let $scope,
         $q,
@@ -96,6 +98,7 @@ describe("TuleapArtifactModalController", () => {
                     color: "inca_silver",
                     tracker: {
                         item_name: "story",
+                        project: { id: PROJECT_ID },
                     },
                 },
                 TuleapArtifactModalLoading,
@@ -123,6 +126,7 @@ describe("TuleapArtifactModalController", () => {
         it("when I load the controller, then field dependencies watchers will be set once for each different source field which are submittable", function () {
             jest.spyOn(field_dependencies_helper, "setUpFieldDependenciesActions");
             controller_params.modal_model.tracker = {
+                project: { id: PROJECT_ID },
                 fields: [{ field_id: 22 }],
                 workflow: {
                     rules: {
@@ -372,6 +376,7 @@ describe("TuleapArtifactModalController", () => {
             ]);
             var modal_model = controller_params.modal_model;
             modal_model.tracker = {
+                project: { id: PROJECT_ID },
                 fields: [target_field],
                 workflow: {
                     rules: {
@@ -433,6 +438,7 @@ describe("TuleapArtifactModalController", () => {
 
             var modal_model = controller_params.modal_model;
             modal_model.tracker = {
+                project: { id: PROJECT_ID },
                 fields: [target_field],
                 workflow: {
                     rules: {
@@ -567,7 +573,6 @@ describe("TuleapArtifactModalController", () => {
 
             it("Given the modal is not in creation mode, when I open it then there are hidden fieldsets defined", () => {
                 isInCreationMode.mockReturnValue(false);
-                jest.spyOn(rest_service, "getFollowupsComments").mockResolvedValue([]);
                 ArtifactModalController = $controller(BaseModalController, controller_params);
                 ArtifactModalController.$onInit();
 

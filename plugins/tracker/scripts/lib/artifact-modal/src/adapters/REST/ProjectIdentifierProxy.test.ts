@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerShortname } from "../../domain/TrackerShortname";
 import type { TrackerWithChangesetValues } from "./TrackerWithChangesetValues";
+import { ProjectIdentifierProxy } from "./ProjectIdentifierProxy";
 
-export const TrackerShortnameProxy = {
-    fromTrackerModel: (tracker: TrackerWithChangesetValues): TrackerShortname => ({
-        shortname: tracker.item_name,
-    }),
-};
+const PROJECT_ID = 161;
+
+describe(`ProjectIdentifierProxy`, () => {
+    it(`builds from the current tracker's REST representation`, () => {
+        const tracker = {
+            project: { id: PROJECT_ID, label: "", icon: "" },
+        } as TrackerWithChangesetValues;
+        const identifier = ProjectIdentifierProxy.fromTrackerModel(tracker);
+        expect(identifier.id).toBe(PROJECT_ID);
+    });
+});

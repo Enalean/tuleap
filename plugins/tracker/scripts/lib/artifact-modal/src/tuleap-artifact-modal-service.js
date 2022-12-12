@@ -145,6 +145,8 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             tracker_id,
             parent_artifact_id,
             is_list_picker_enabled,
+            user_date_time_format: document.body.dataset.dateTimeFormat,
+            user_locale: document.body.dataset.userLocale,
         };
 
         const creation_mode = true;
@@ -186,6 +188,8 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             tracker_id,
             artifact_id,
             is_list_picker_enabled,
+            user_date_time_format: document.body.dataset.dateTimeFormat,
+            user_locale: document.body.dataset.userLocale,
         };
 
         const creation_mode = false;
@@ -244,7 +248,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         var preference_key = "tracker_comment_invertorder_" + tracker_id;
 
         return $q.when(getUserPreference(user_id, preference_key)).then(function (data) {
-            modal_model.invert_followups_comments_order = Boolean(data.value);
+            modal_model.invert_followups_comments_order = data.value === "0";
         });
     }
 

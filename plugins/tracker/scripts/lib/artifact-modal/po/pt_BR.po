@@ -48,7 +48,7 @@ msgstr ""
 msgid "Edit"
 msgstr "Editar"
 
-msgid "Edited by"
+msgid "Edited by %(user)s"
 msgstr ""
 
 msgid "Empty"
@@ -58,6 +58,9 @@ msgid "Error while retrieving recently viewed artifacts: %s"
 msgstr ""
 
 msgid "Error while retrieving the artifact to link: %s"
+msgstr ""
+
+msgid "Error while retrieving the comments: %s"
 msgstr ""
 
 msgid "Error while retrieving the possible parents: %s"

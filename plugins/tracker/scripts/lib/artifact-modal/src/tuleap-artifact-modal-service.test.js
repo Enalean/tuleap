@@ -30,6 +30,9 @@ import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/d
 import * as field_values_formatter from "./model/field-values-formatter.js";
 import * as tracker_transformer from "./model/tracker-transformer.js";
 
+const USER_LOCALE = "fr_FR";
+const USER_DATE_TIME_FORMAT = "d/m/Y H:i";
+
 describe("NewTuleapArtifactModalService", () => {
     let NewTuleapArtifactModalService,
         $q,
@@ -86,7 +89,15 @@ describe("NewTuleapArtifactModalService", () => {
             .spyOn(field_values_formatter, "getSelectedValues")
             .mockReturnValue({});
 
+        document.body.dataset.userLocale = USER_LOCALE;
+        document.body.dataset.dateTimeFormat = USER_DATE_TIME_FORMAT;
+
         wrapPromise = createAngularPromiseWrapper($rootScope);
+    });
+
+    afterEach(() => {
+        document.body.dataset.userLocale = undefined;
+        document.body.dataset.dateTimeFormat = undefined;
     });
 
     describe("initCreationModalModel() -", () => {
@@ -97,7 +108,9 @@ describe("NewTuleapArtifactModalService", () => {
             parent_artifact_id = 581;
         });
 
-        it("Given a tracker id and a parent artifact id, then the tracker's structure will be retrieved and a promise will be resolved with the modal's model object", async () => {
+        it(`Given a tracker id and a parent artifact id,
+            then the tracker's structure will be retrieved
+            and a promise will be resolved with the modal's model object`, async () => {
             tracker = {
                 id: tracker_id,
                 color_name: "importer",
@@ -133,6 +146,8 @@ describe("NewTuleapArtifactModalService", () => {
             expect(model.parent_artifacts).toBeUndefined();
             expect(model.artifact_id).toBeUndefined();
             expect(model.user_id).toBe(103);
+            expect(model.user_locale).toBe(USER_LOCALE);
+            expect(model.user_date_time_format).toBe(USER_DATE_TIME_FORMAT);
         });
 
         it("Given that I could not get the tracker structure, then a promise will be rejected", async () => {
@@ -344,7 +359,7 @@ describe("NewTuleapArtifactModalService", () => {
                 );
                 expect(buildFormTree).toHaveBeenCalledWith(tracker);
                 var model = promise.$$state.value;
-                expect(model.invert_followups_comments_order).toBeTruthy();
+                expect(model.invert_followups_comments_order).toBe(false);
                 expect(model.text_fields_format).toBe("html");
                 expect(model.tracker_id).toEqual(tracker_id);
                 expect(model.artifact_id).toEqual(artifact_id);
@@ -356,6 +371,8 @@ describe("NewTuleapArtifactModalService", () => {
                 expect(model.title).toBe("onomatomania");
                 expect(model.etag).toBe("etag");
                 expect(model.last_modified).toBe(1629097552);
+                expect(model.user_locale).toBe(USER_LOCALE);
+                expect(model.user_date_time_format).toBe(USER_DATE_TIME_FORMAT);
             });
 
             it(`Given that the user didn't have a preference set for text fields format,

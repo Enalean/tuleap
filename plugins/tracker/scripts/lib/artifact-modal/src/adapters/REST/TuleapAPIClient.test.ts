@@ -20,11 +20,11 @@
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
+import * as fetch_result from "@tuleap/fetch-result";
+import type { GetAllOptions } from "@tuleap/fetch-result";
 import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
-import type { GetAllOptions } from "@tuleap/fetch-result";
-import * as fetch_result from "@tuleap/fetch-result";
 import type { LinkedArtifact } from "../../domain/fields/link-field/LinkedArtifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
@@ -38,6 +38,8 @@ import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTracke
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload";
 import { UserIdentifierProxyStub } from "../../../tests/stubs/UserIdentifierStub";
+import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
+import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -329,6 +331,67 @@ describe(`TuleapAPIClient`, () => {
             expect(second_artifact.id).toBe(ARTIFACT_2_ID);
             expect(postSpy).toHaveBeenCalledWith(`/api/search?limit=50`, {
                 keywords: SEARCH_QUERY,
+            });
+        });
+    });
+
+    describe(`getComments()`, () => {
+        const FIRST_COMMENT_BODY = "<p>An HTML comment</p>",
+            SECOND_COMMENT_BODY = "Plain text comment";
+        let is_order_inverted: boolean;
+
+        beforeEach(() => {
+            is_order_inverted = true;
+        });
+
+        const getComments = (): ResultAsync<readonly FollowUpComment[], Fault> => {
+            const client = TuleapAPIClient();
+            return client.getComments(
+                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
+                is_order_inverted
+            );
+        };
+
+        it(`will return an array of comments`, async () => {
+            const first_comment = ChangesetWithCommentRepresentationBuilder.aComment(100)
+                .withPostProcessedBody(FIRST_COMMENT_BODY, "html")
+                .build();
+            const second_comment = ChangesetWithCommentRepresentationBuilder.aComment(101)
+                .withPostProcessedBody(SECOND_COMMENT_BODY, "text")
+                .build();
+
+            const getAllSpy = jest
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(okAsync([first_comment, second_comment]));
+
+            const result = await getComments();
+
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_returned_comment, second_returned_comment] = result.value;
+            expect(first_returned_comment.body).toBe(FIRST_COMMENT_BODY);
+            expect(second_returned_comment.body).toBe(SECOND_COMMENT_BODY);
+
+            expect(getAllSpy).toHaveBeenCalledWith(`/api/v1/artifacts/${ARTIFACT_ID}/changesets`, {
+                params: {
+                    limit: 50,
+                    fields: "comments",
+                    order: "desc",
+                },
+            });
+        });
+
+        it(`will pass "asc" order when the order of comments is inverted`, async () => {
+            is_order_inverted = false;
+
+            const getAllSpy = jest.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync([]));
+
+            await getComments();
+
+            expect(getAllSpy).toHaveBeenCalledWith(expect.anything(), {
+                params: expect.objectContaining({ order: "asc" }),
             });
         });
     });
