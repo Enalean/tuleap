@@ -393,14 +393,25 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeGetAdminSettings(): OnlyOfficeAdminSettingsController
     {
+        $servers = [];
+
+        $server_url = ForgeConfig::get(OnlyOfficeDocumentServerSettings::URL, '');
+        if ($server_url) {
+            $servers[] = new \Tuleap\OnlyOffice\Administration\OnlyOfficeServerPresenter(
+                1,
+                $server_url,
+                ForgeConfig::exists(OnlyOfficeDocumentServerSettings::SECRET),
+            );
+        }
+
         return new OnlyOfficeAdminSettingsController(
             new AdminPageRenderer(),
             UserManager::instance(),
             new OnlyOfficeAdminSettingsPresenter(
-                ForgeConfig::get(OnlyOfficeDocumentServerSettings::URL, ''),
-                ForgeConfig::exists(OnlyOfficeDocumentServerSettings::SECRET),
+                $servers,
                 CSRFSynchronizerTokenPresenter::fromToken(self::buildCSRFTokenAdmin()),
-            )
+            ),
+            self::getAssets(),
         );
     }
 

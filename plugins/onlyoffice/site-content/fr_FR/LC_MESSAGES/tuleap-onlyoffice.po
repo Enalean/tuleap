@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.3\n"
 
+msgid "Add document server"
+msgstr "Ajouter un serveur de document"
+
 msgid "Allow to open documents into ONLYOFFICE"
 msgstr "Permet d'ouvrir des documents dans ONLYOFFICE"
 
@@ -22,6 +25,9 @@ msgstr "Retour vers les documents de %s"
 msgid "Current secret not displayed"
 msgstr "Le secret actuel n'est pas affiché"
 
+msgid "Delete"
+msgstr "Supprimer"
+
 msgid "Document"
 msgstr "Document"
 
@@ -31,14 +37,26 @@ msgstr "URL du serveur de document"
 msgid "Document server settings have been saved"
 msgstr "Les paramètres du serveur de document ont été sauvegardés"
 
+msgid "Edit"
+msgstr "Éditer"
+
+msgid "Edit document server settings"
+msgstr "Éditer les paramètres du serveur de document"
+
+msgid "Has secret"
+msgstr "Secret configuré"
+
+msgid "Has secret?"
+msgstr "Secret configuré?"
+
 msgid "JWT secret"
 msgstr "Secret JWT"
 
 msgid "ONLYOFFICE"
 msgstr "ONLYOFFICE"
 
-msgid "ONLYOFFICE document server settings"
-msgstr "Paramètres du serveur de document ONLYOFFICE"
+msgid "ONLYOFFICE document servers"
+msgstr "Serveurs de document ONLYOFFICE"
 
 msgid "ONLYOFFICE integration"
 msgstr "Intégration avec ONLYOFFICE"
@@ -57,3 +75,6 @@ msgstr "Sauvegarder"
 
 msgid "Spreadsheet"
 msgstr "Tableur"
+
+msgid "There isn't any document servers configured"
+msgstr "Aucun serveurs n'est actuellement configuré"

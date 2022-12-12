@@ -24,6 +24,7 @@ namespace Tuleap\OnlyOffice\Administration;
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -56,7 +57,11 @@ final class OnlyOfficeAdminSettingsControllerTest extends TestCase
         return new OnlyOfficeAdminSettingsController(
             $admin_page_renderer,
             ProvideCurrentUserStub::buildWithUser($current_user),
-            new OnlyOfficeAdminSettingsPresenter('https://onlyoffice.example.com/', true, CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', $csrf_store)))
+            new OnlyOfficeAdminSettingsPresenter(
+                [new OnlyOfficeServerPresenter(1, 'https://onlyoffice.example.com/', true)],
+                CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', $csrf_store)),
+            ),
+            new IncludeViteAssets(__DIR__ . '/../frontend-assets/', '/assets/onlyoffice'),
         );
     }
 }

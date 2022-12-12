@@ -25,6 +25,8 @@ namespace Tuleap\OnlyOffice\Administration;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -38,6 +40,7 @@ final class OnlyOfficeAdminSettingsController implements DispatchableWithRequest
         private AdminPageRenderer $admin_page_renderer,
         private ProvideCurrentUser $current_user_provider,
         private OnlyOfficeAdminSettingsPresenter $admin_settings_presenter,
+        private IncludeViteAssets $assets,
     ) {
     }
 
@@ -47,6 +50,8 @@ final class OnlyOfficeAdminSettingsController implements DispatchableWithRequest
         if (! $current_user->isSuperUser()) {
             throw new ForbiddenException();
         }
+
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/onlyoffice-siteadmin.ts'));
 
         $this->admin_page_renderer->renderAPresenter(
             dgettext('tuleap-onlyoffice', 'ONLYOFFICE settings'),

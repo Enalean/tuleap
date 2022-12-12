@@ -2,6 +2,10 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/tlp-modal': workspace:*
+
+dependencies:
+  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
