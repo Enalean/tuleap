@@ -23,10 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use org\bovigo\vfs\vfsStream;
 use Tuleap\Config\ConfigDao;
-use Tuleap\Config\ConfigSet;
-use Tuleap\Config\GetConfigKeys;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -35,7 +32,6 @@ use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
 {
@@ -88,23 +84,13 @@ final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
         $csrf_token = $this->createStub(\CSRFSynchronizerToken::class);
         $csrf_token->method('check');
 
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            function (GetConfigKeys $event): GetConfigKeys {
-                $event->addConfigClass(OnlyOfficeDocumentServerSettings::class);
-                return $event;
-            }
-        );
-
         $feedback_serializer = $this->createStub(FeedbackSerializer::class);
         $feedback_serializer->method('serialize');
 
-        $root = vfsStream::setup()->url();
-        \ForgeConfig::set('sys_custom_dir', $root);
-        mkdir($root . '/conf/');
 
         return new OnlyOfficeSaveAdminSettingsController(
             $csrf_token,
-            new ConfigSet($event_dispatcher, $config_dao),
+            $config_dao,
             OnlyOfficeServerUrlValidator::buildSelf(),
             OnlyOfficeSecretKeyValidator::buildSelf(),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
