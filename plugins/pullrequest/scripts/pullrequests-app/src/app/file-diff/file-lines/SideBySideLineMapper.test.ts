@@ -21,7 +21,7 @@ import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 import { GroupOfLinesStub } from "../../../../tests/stubs/GroupOfLinesStub";
 import { GroupSideBySideLinesStub } from "../../../../tests/stubs/GroupSideBySideLinesStub";
 import type { Editor } from "codemirror";
-import { SideBySideLineMapper } from "./side-by-side-line-mapper";
+import { SideBySideLineMapper } from "./SideBySideLineMapper";
 
 type EditorWithLineHandles = Editor & {
     getLineHandle: jest.SpyInstance;

@@ -21,7 +21,7 @@ import type { Editor } from "codemirror";
 import type { PullRequestInlineCommentPresenter } from "../../comments/PullRequestCommentPresenter";
 import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
 import type { FileLine } from "../types";
-import type { MapCommentWidgets } from "./file-diff-comment-widgets-map";
+import type { MapCommentWidgets } from "./FileDiffCommentWidgetsMap";
 import { INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
 import { isAnAddedLine, isAnUnmovedLine } from "../file-lines/file-line-helper";
 

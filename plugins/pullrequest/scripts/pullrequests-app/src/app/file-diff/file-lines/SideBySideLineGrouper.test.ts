@@ -18,8 +18,8 @@
  */
 
 import { UNMOVED_GROUP, DELETED_GROUP, ADDED_GROUP } from "../types";
-import type { GroupSideBySideLines } from "./side-by-side-line-grouper";
-import { SideBySideLineGrouper } from "./side-by-side-line-grouper";
+import type { GroupSideBySideLines } from "./SideBySideLineGrouper";
+import { SideBySideLineGrouper } from "./SideBySideLineGrouper";
 import { FileLineStub } from "../../../../tests/stubs/FileLineStub";
 
 describe("Side-by-side line grouper", () => {

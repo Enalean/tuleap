@@ -22,7 +22,7 @@ import { GroupOfLinesStub } from "../../../../../tests/stubs/GroupOfLinesStub";
 import { FileLineHandleStub } from "../../../../../tests/stubs/FileLineHandleStub";
 import { FileLinesStateStub } from "../../../../../tests/stubs/FileLinesStateStub";
 import type { FileLine } from "../../types";
-import { SideBySidePlaceholderPositioner } from "./side-by-side-placeholder-positioner";
+import { SideBySidePlaceholderPositioner } from "./SideBySidePlaceholderPositioner";
 
 describe("placeholder positioner", () => {
     describe("getDisplayAboveLineForWidget()", () => {

@@ -18,7 +18,7 @@
  */
 
 import type { Editor } from "codemirror";
-import type { CreateFileDiffWidget } from "./side-by-side-code-mirror-widget-creator";
+import type { CreateFileDiffWidget } from "./SideBySideCodeMirrorWidgetCreator";
 import type { IRelativeDateHelper } from "../../helpers/date-helpers";
 import type { ControlPullRequestComment } from "../../comments/PullRequestCommentController";
 import type { FileLineHandle } from "../types-codemirror-overriden";
@@ -31,7 +31,7 @@ import type {
 import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
 import { RelativeDateHelperStub } from "../../../../tests/stubs/RelativeDateHelperStub";
 import { PullRequestCommentControllerStub } from "../../../../tests/stubs/PullRequestCommentControllerStub";
-import { SideBySideCodeMirrorWidgetCreator } from "./side-by-side-code-mirror-widget-creator";
+import { SideBySideCodeMirrorWidgetCreator } from "./SideBySideCodeMirrorWidgetCreator";
 import { InlineCommentContextStub } from "../../../../tests/stubs/InlineCommentContextStub";
 
 import { TAG_NAME as NEW_COMMENT_FORM_TAG_NAME } from "../../comments/new-comment-form/NewInlineCommentForm";
@@ -39,7 +39,7 @@ import { TAG_NAME as COMMENT_TAG_NAME } from "../../comments/PullRequestComment"
 import { TAG_NAME as PLACEHOLDER_TAG_NAME } from "./placeholders/FileDiffPlaceholder";
 import type { StorePullRequestCommentReplies } from "../../comments/PullRequestCommentRepliesStore";
 import { PullRequestCommentRepliesStore } from "../../comments/PullRequestCommentRepliesStore";
-import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/file-diff-comment-widgets-map";
+import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 
 type EditorThatCanHaveWidgets = Editor & {
     addLineWidget: jest.SpyInstance;

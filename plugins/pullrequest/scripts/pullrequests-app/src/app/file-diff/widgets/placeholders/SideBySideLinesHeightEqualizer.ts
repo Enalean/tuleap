@@ -24,8 +24,8 @@ import {
     isCommentWidget,
     isCodeCommentPlaceholderWidget,
 } from "../side-by-side-line-widgets-helper";
-import type { SynchronizedLineHandles } from "../../file-lines/side-by-side-line-mapper";
-import type { PositionPlaceholder } from "./side-by-side-placeholder-positioner";
+import type { SynchronizedLineHandles } from "../../file-lines/SideBySideLineMapper";
+import type { PositionPlaceholder } from "./SideBySidePlaceholderPositioner";
 import type {
     FileLineHandle,
     LineWidgetWithNode,

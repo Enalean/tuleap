@@ -20,30 +20,30 @@
 import CodeMirror from "codemirror";
 import "codemirror/addon/scroll/simplescrollbars.js";
 import { getStore } from "../editors/comments-store.ts";
-import { SideBySideLineState } from "../file-lines/side-by-side-lines-state.ts";
-import { SideBySideCodePlaceholderCreationManager } from "../widgets/placeholders/side-by-side-code-placeholder-creation-manager.ts";
+import { SideBySideLineState } from "../file-lines/SideBySideLineState.ts";
+import { SideBySideCodePlaceholderCreationManager } from "../widgets/placeholders/SideBySideCodePlaceholderCreationManager.ts";
 import { synchronize } from "../editors/side-by-side-scroll-synchronizer.ts";
 import { getCollapsibleSectionsSideBySide } from "../code-collapse/collaspible-code-sections-builder.ts";
-import { SideBySideLinesHeightEqualizer } from "../widgets/placeholders/side-by-side-line-height-equalizer.ts";
+import { SideBySideLinesHeightEqualizer } from "../widgets/placeholders/SideBySideLinesHeightEqualizer.ts";
 
 import { INLINE_COMMENT_POSITION_RIGHT, INLINE_COMMENT_POSITION_LEFT } from "../../comments/types";
 
 import "../editors/modes.ts";
 import { getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectionalCharactersVisible } from "../editors/diff-bidirectional-unicode-text";
-import { SideBySideLineGrouper } from "../file-lines/side-by-side-line-grouper";
-import { SideBySideLineMapper } from "../file-lines/side-by-side-line-mapper";
-import { SideBySideCodeMirrorsContentManager } from "../editors/side-by-side-code-mirrors-content-manager";
-import { SideBySidePlaceholderPositioner } from "../widgets/placeholders/side-by-side-placeholder-positioner";
-import { SideBySideCodeMirrorWidgetCreator } from "../widgets/side-by-side-code-mirror-widget-creator";
+import { SideBySideLineGrouper } from "../file-lines/SideBySideLineGrouper";
+import { SideBySideLineMapper } from "../file-lines/SideBySideLineMapper";
+import { SideBySideCodeMirrorsContentManager } from "../editors/SideBySideCodeMirrorsContentManager";
+import { SideBySidePlaceholderPositioner } from "../widgets/placeholders/SideBySidePlaceholderPositioner";
+import { SideBySideCodeMirrorWidgetCreator } from "../widgets/SideBySideCodeMirrorWidgetCreator";
 import { RelativeDateHelper } from "../../helpers/date-helpers";
 import { PullRequestCurrentUserPresenter } from "../../comments/PullRequestCurrentUserPresenter";
 import { PullRequestCommentController } from "../../comments/PullRequestCommentController";
 import { PullRequestCommentReplyFormFocusHelper } from "../../comments/PullRequestCommentReplyFormFocusHelper";
 import { PullRequestCommentNewReplySaver } from "../../comments/PullRequestCommentReplySaver";
 import { PullRequestPresenter } from "../../comments/PullRequestPresenter";
-import { SideBySideCodeMirrorWidgetsCreationManager } from "../widgets/side-by-side-code-mirror-widgets-creation-manager";
-import { FileDiffCommentScroller } from "../scroll-to-comment/file-diff-comment-scroller";
-import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/file-diff-comment-widgets-map";
+import { SideBySideCodeMirrorWidgetsCreationManager } from "../widgets/SideBySideCodeMirrorWidgetsCreationManager";
+import { FileDiffCommentScroller } from "../scroll-to-comment/FileDiffCommentScroller";
+import { FileDiffCommentWidgetsMap } from "../scroll-to-comment/FileDiffCommentWidgetsMap";
 import { collapseCommonSectionsSideBySide } from "../code-collapse/code-mirror-common-sections-collapse";
 
 export default {

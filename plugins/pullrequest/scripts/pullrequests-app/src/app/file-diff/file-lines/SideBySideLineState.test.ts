@@ -26,7 +26,7 @@ import type { StubSideBySideLineMapper } from "../../../../tests/stubs/MapSideBy
 import { FileLineHandleStub } from "../../../../tests/stubs/FileLineHandleStub";
 import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
 import type { FileLine } from "../types";
-import { SideBySideLineState } from "./side-by-side-lines-state";
+import { SideBySideLineState } from "./SideBySideLineState";
 
 describe("side-by-side lines state", () => {
     let side_by_side_line_grouper: StubGroupSideBySideLines,

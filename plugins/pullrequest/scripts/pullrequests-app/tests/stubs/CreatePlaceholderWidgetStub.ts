@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CreatePlaceholderWidget } from "../../src/app/file-diff/widgets/side-by-side-code-mirror-widget-creator";
+import type { CreatePlaceholderWidget } from "../../src/app/file-diff/widgets/SideBySideCodeMirrorWidgetCreator";
 import type { PlaceholderCreationParams } from "../../src/app/file-diff/types-codemirror-overriden";
 
 export interface StubCreatePlaceholderWidget {

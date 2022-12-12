@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CreateInlineCommentWidget } from "../../src/app/file-diff/widgets/side-by-side-code-mirror-widget-creator";
+import type { CreateInlineCommentWidget } from "../../src/app/file-diff/widgets/SideBySideCodeMirrorWidgetCreator";
 import type { InlineCommentWidgetCreationParams } from "../../src/app/file-diff/types-codemirror-overriden";
 
 export interface StubCreateInlineCommentWidget {

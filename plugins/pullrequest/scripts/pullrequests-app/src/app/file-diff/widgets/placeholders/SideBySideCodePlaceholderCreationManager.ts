@@ -19,10 +19,10 @@
 
 import type { Editor } from "codemirror";
 import type { FileLineHandle, LineHandleWithAHeight } from "../../types-codemirror-overriden";
-import type { FileLinesState } from "../../file-lines/side-by-side-lines-state";
+import type { FileLinesState } from "../../file-lines/SideBySideLineState";
 import type { FileLine, GroupOfLines } from "../../types";
-import type { ManageCodeMirrorsContent } from "../../editors/side-by-side-code-mirrors-content-manager";
-import type { CreatePlaceholderWidget } from "../side-by-side-code-mirror-widget-creator";
+import type { ManageCodeMirrorsContent } from "../../editors/SideBySideCodeMirrorsContentManager";
+import type { CreatePlaceholderWidget } from "../SideBySideCodeMirrorWidgetCreator";
 import { ADDED_GROUP, DELETED_GROUP } from "../../types";
 import { isAnUnmovedLine } from "../../file-lines/file-line-helper";
 

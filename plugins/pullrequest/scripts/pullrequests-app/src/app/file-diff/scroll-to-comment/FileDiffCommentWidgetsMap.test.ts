@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FileDiffCommentWidgetsMap } from "./file-diff-comment-widgets-map";
+import { FileDiffCommentWidgetsMap } from "./FileDiffCommentWidgetsMap";
 import { FileDiffWidgetStub } from "../../../../tests/stubs/FileDiffWidgetStub";
 import { PullRequestCommentPresenterStub } from "../../../../tests/stubs/PullRequestCommentPresenterStub";
 
