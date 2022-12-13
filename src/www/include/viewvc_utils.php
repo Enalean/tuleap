@@ -24,9 +24,9 @@ function viewvc_utils_track_browsing($group_id, $type)
         }
 
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-        $year               = strftime("%Y");
-        $mon                = strftime("%m");
-        $day                = strftime("%d");
+        $year               = date("Y");
+        $mon                = date("m");
+        $day                = date("d");
         $db_day             = $year . $mon . $day;
 
         $sql = "SELECT " . $browse_column . " FROM " . $table . " WHERE group_id = " . db_ei($group_id) . " AND user_id = " . $db_escaped_user_id . " AND day = '" . $db_day . "'";
