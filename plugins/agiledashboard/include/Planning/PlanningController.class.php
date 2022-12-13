@@ -39,6 +39,7 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActionException;
 use Tuleap\AgileDashboard\Planning\TrackersHaveAtLeastOneHierarchicalLinkException;
+use Tuleap\AgileDashboard\Planning\TrackersWithHierarchicalLinkDefinedNotFoundException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
@@ -658,7 +659,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 );
             } catch (
                 TrackerHaveAtLeastOneAddToTopBacklogPostActionException |
-                TrackersHaveAtLeastOneHierarchicalLinkException $exception
+                TrackersHaveAtLeastOneHierarchicalLinkException |
+                TrackersWithHierarchicalLinkDefinedNotFoundException $exception
             ) {
                 $this->addFeedback(Feedback::ERROR, $exception->getMessage());
             } catch (TrackerNotFoundException $exception) {

@@ -21,63 +21,125 @@
 namespace Tuleap\AgileDashboard\Planning;
 
 use PlanningParameters;
+use Psr\Log\NullLogger;
+use TrackerFactory;
 use Tracker_Hierarchy;
 use Tracker_HierarchyFactory;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class BacklogTrackersUpdateCheckerTest extends TestCase
 {
+    private BacklogTrackersUpdateChecker $checker;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
+    /**
+     * @var TrackerFactory&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $tracker_factory;
+
+    protected function setUp(): void
+    {
+        $this->hierarchy_factory = $this->createMock(Tracker_HierarchyFactory::class);
+        $this->tracker_factory   = $this->createMock(TrackerFactory::class);
+        $this->checker           = new BacklogTrackersUpdateChecker(
+            $this->hierarchy_factory,
+            $this->tracker_factory,
+            new NullLogger(),
+        );
+    }
+
     public function testItReturnsVoidIfNoHierarchicalLinksExistBetweenBacklogTrackers(): void
     {
         $this->expectNotToPerformAssertions();
 
-        $hierarchy_factory = $this->createMock(Tracker_HierarchyFactory::class);
-        $checker           = new BacklogTrackersUpdateChecker($hierarchy_factory);
-
-        $hierarchy_factory->method('getHierarchy')->willReturn(
+        $this->hierarchy_factory->method('getHierarchy')->willReturn(
             new Tracker_Hierarchy()
         );
 
         $planning_parameters = PlanningParameters::fromArray([
             'backlog_tracker_ids' => [4, 101, 59],
         ]);
-        $checker->checkProvidedBacklogTrackersAreValid($planning_parameters);
+        $this->checker->checkProvidedBacklogTrackersAreValid($planning_parameters);
     }
 
     public function testItReturnsVoidIfNoHierarchicalLinksFoundBetweenBacklogTrackers(): void
     {
         $this->expectNotToPerformAssertions();
 
-        $hierarchy_factory = $this->createMock(Tracker_HierarchyFactory::class);
-        $checker           = new BacklogTrackersUpdateChecker($hierarchy_factory);
-
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(4, 102);
         $hierarchy->addRelationship(61, 78);
-        $hierarchy_factory->method('getHierarchy')->willReturn($hierarchy);
+        $this->hierarchy_factory->method('getHierarchy')->willReturn($hierarchy);
 
         $planning_parameters = PlanningParameters::fromArray([
             'backlog_tracker_ids' => [4, 101, 59],
         ]);
-        $checker->checkProvidedBacklogTrackersAreValid($planning_parameters);
+        $this->checker->checkProvidedBacklogTrackersAreValid($planning_parameters);
     }
 
     public function testItThrowsAnExceptionIfHierarchicalLinksFoundBetweenBacklogTrackers(): void
     {
-        $hierarchy_factory = $this->createMock(Tracker_HierarchyFactory::class);
-        $checker           = new BacklogTrackersUpdateChecker($hierarchy_factory);
-
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(61, 78);
         $hierarchy->addRelationship(4, 101);
-        $hierarchy_factory->method('getHierarchy')->willReturn($hierarchy);
+        $this->hierarchy_factory->method('getHierarchy')->willReturn($hierarchy);
 
         $planning_parameters = PlanningParameters::fromArray([
             'backlog_tracker_ids' => [4, 101, 59],
         ]);
 
+        $this->tracker_factory->method("getTrackerById")->willReturnMap([
+            [4, TrackerTestBuilder::aTracker()->withName("tracker01")->build()],
+            [101, TrackerTestBuilder::aTracker()->withName("tracker02")->build()],
+        ]);
+
         $this->expectException(TrackersHaveAtLeastOneHierarchicalLinkException::class);
 
-        $checker->checkProvidedBacklogTrackersAreValid($planning_parameters);
+        $this->checker->checkProvidedBacklogTrackersAreValid($planning_parameters);
+    }
+
+    public function testItThrowsAnExceptionIfHierarchicalLinksFoundBetweenBacklogTrackersAndParentTrackerNotFound(): void
+    {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(61, 78);
+        $hierarchy->addRelationship(4, 101);
+        $this->hierarchy_factory->method('getHierarchy')->willReturn($hierarchy);
+
+        $planning_parameters = PlanningParameters::fromArray([
+            'backlog_tracker_ids' => [4, 101, 59],
+        ]);
+
+        $this->tracker_factory->method("getTrackerById")->willReturnMap([
+            [4, null],
+            [101, TrackerTestBuilder::aTracker()->withName("tracker02")->build()],
+        ]);
+
+        $this->expectException(TrackersWithHierarchicalLinkDefinedNotFoundException::class);
+
+        $this->checker->checkProvidedBacklogTrackersAreValid($planning_parameters);
+    }
+
+    public function testItThrowsAnExceptionIfHierarchicalLinksFoundBetweenBacklogTrackersAndChildTrackerNotFound(): void
+    {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(61, 78);
+        $hierarchy->addRelationship(4, 101);
+        $this->hierarchy_factory->method('getHierarchy')->willReturn($hierarchy);
+
+        $planning_parameters = PlanningParameters::fromArray([
+            'backlog_tracker_ids' => [4, 101, 59],
+        ]);
+
+        $this->tracker_factory->method("getTrackerById")->willReturnMap([
+            [4, TrackerTestBuilder::aTracker()->withName("tracker01")->build()],
+            [101, null],
+        ]);
+
+        $this->expectException(TrackersWithHierarchicalLinkDefinedNotFoundException::class);
+
+        $this->checker->checkProvidedBacklogTrackersAreValid($planning_parameters);
     }
 }

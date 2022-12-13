@@ -313,7 +313,7 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
         $this->backlog_trackers_update_checker->method("checkProvidedBacklogTrackersAreValid")->willThrowException(
-            new TrackersHaveAtLeastOneHierarchicalLinkException()
+            new TrackersHaveAtLeastOneHierarchicalLinkException("tracker01", "tracker02")
         );
         $this->root_planning_update_checker->shouldNotReceive('checkUpdateIsAllowed');
 
