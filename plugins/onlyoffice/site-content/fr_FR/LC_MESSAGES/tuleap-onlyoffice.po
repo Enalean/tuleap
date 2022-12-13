@@ -28,11 +28,24 @@ msgstr "Le secret actuel n'est pas affiché"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Delete document server"
+msgstr "Supprimer le serveur de document"
+
+msgid ""
+"Deleting a document server will induce loosing of modifications for users "
+"that are currently using it."
+msgstr ""
+"Supprimer un serveur de document provoquera la perte des modifications pour "
+"les utilisateurs en train de l'utiliser."
+
 msgid "Document"
 msgstr "Document"
 
 msgid "Document server URL"
 msgstr "URL du serveur de document"
+
+msgid "Document server have been deleted"
+msgstr "Le serveur de document a été supprimé"
 
 msgid "Document server settings have been saved"
 msgstr "Les paramètres du serveur de document ont été sauvegardés"
@@ -67,6 +80,9 @@ msgstr "Paramètres de ONLYOFFICE"
 msgid "Online office files"
 msgstr "Fichier office en ligne"
 
+msgid "Please confirm your action."
+msgstr "Veuillez confirmer votre action."
+
 msgid "Presentation"
 msgstr "Présentation"
 
@@ -78,3 +94,6 @@ msgstr "Tableur"
 
 msgid "There isn't any document servers configured"
 msgstr "Aucun serveurs n'est actuellement configuré"
+
+msgid "You're about to delete the document server."
+msgstr "Vous êtes sur le point de supprimer un serveur de document."

@@ -22,6 +22,6 @@ import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 document.addEventListener("DOMContentLoaded", () => {
     openAllTargetModalsOnClick(
         document,
-        ".onlyoffice-admin-edit-server-button, .onlyoffice-admin-add-server-button"
+        ".onlyoffice-admin-edit-server-button, .onlyoffice-admin-add-server-button, .onlyoffice-admin-delete-server-button"
     );
 });

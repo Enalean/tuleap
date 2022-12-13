@@ -27,7 +27,10 @@ namespace Tuleap\OnlyOffice\Administration;
  */
 final class OnlyOfficeServerPresenter
 {
+    public string $delete_url;
+
     public function __construct(public int $id, public string $server_url, public bool $has_existing_secret)
     {
+        $this->delete_url = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
     }
 }

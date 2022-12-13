@@ -51,6 +51,7 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenter;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker;
+use Tuleap\OnlyOffice\Administration\OnlyOfficeDeleteAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
@@ -176,6 +177,7 @@ final class onlyofficePlugin extends Plugin
         $route_collector->post(OnlyOfficeSaveCallbackURLGenerator::CALLBACK_SAVE_URL, $this->getRouteHandler('routePostDocumentSave'));
         $route_collector->get(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routeGetAdminSettings'));
         $route_collector->post(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routePostAdminSettings'));
+        $route_collector->post(OnlyOfficeDeleteAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeDeleteAdminSettings'));
     }
 
     public function routePostDocumentSave(): OnlyOfficeSaveController
@@ -415,6 +417,17 @@ final class onlyofficePlugin extends Plugin
             new \Tuleap\Config\ConfigDao(),
             \Tuleap\OnlyOffice\Administration\OnlyOfficeServerUrlValidator::buildSelf(),
             \Tuleap\OnlyOffice\Administration\OnlyOfficeSecretKeyValidator::buildSelf(),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
+            new SapiEmitter(),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
+        );
+    }
+
+    public function routeDeleteAdminSettings(): \Tuleap\Request\DispatchableWithRequest
+    {
+        return new OnlyOfficeDeleteAdminSettingsController(
+            self::buildCSRFTokenAdmin(),
+            new \Tuleap\Config\ConfigDao(),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
             new SapiEmitter(),
             new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
