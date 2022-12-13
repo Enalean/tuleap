@@ -27,7 +27,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Config\ConfigSet;
+use Tuleap\Config\ConfigDao;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
@@ -39,7 +39,7 @@ final class OnlyOfficeSaveAdminSettingsController extends DispatchablePSR15Compa
 {
     public function __construct(
         private CSRFSynchronizerToken $csrf_token,
-        private ConfigSet $config_set,
+        private ConfigDao $config_dao,
         private OnlyOfficeServerUrlValidator $server_url_validator,
         private OnlyOfficeSecretKeyValidator $secret_key_validator,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
@@ -64,8 +64,8 @@ final class OnlyOfficeSaveAdminSettingsController extends DispatchablePSR15Compa
             throw new ForbiddenException();
         }
 
-        $this->config_set->set(OnlyOfficeDocumentServerSettings::URL, $server_url);
-        $this->config_set->set(OnlyOfficeDocumentServerSettings::SECRET, $server_key);
+        $this->config_dao->save(OnlyOfficeDocumentServerSettings::URL, $server_url);
+        $this->config_dao->save(OnlyOfficeDocumentServerSettings::SECRET, $server_key->getString());
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);

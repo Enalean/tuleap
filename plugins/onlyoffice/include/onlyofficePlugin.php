@@ -27,8 +27,6 @@ use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\Config\ConfigClassProvider;
-use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -78,7 +76,7 @@ require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
+final class onlyofficePlugin extends Plugin
 {
     private const LOG_IDENTIFIER              = 'onlyoffice_syslog';
     private const DELAY_SAVE_TOKEN_EXPIRATION = 'PT15M';
@@ -161,11 +159,6 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     public function shouldDisplaySourceColumnForFileVersions(ShouldDisplaySourceColumnForFileVersions $event): void
     {
         $event->enableDisplayOfSourceColumn();
-    }
-
-    public function getConfigKeys(ConfigClassProvider $event): void
-    {
-        $event->addConfigClass(OnlyOfficeDocumentServerSettings::class);
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $routes): void
@@ -419,7 +412,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     {
         return new \Tuleap\OnlyOffice\Administration\OnlyOfficeSaveAdminSettingsController(
             self::buildCSRFTokenAdmin(),
-            new \Tuleap\Config\ConfigSet(EventManager::instance(), new \Tuleap\Config\ConfigDao()),
+            new \Tuleap\Config\ConfigDao(),
             \Tuleap\OnlyOffice\Administration\OnlyOfficeServerUrlValidator::buildSelf(),
             \Tuleap\OnlyOffice\Administration\OnlyOfficeSecretKeyValidator::buildSelf(),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
