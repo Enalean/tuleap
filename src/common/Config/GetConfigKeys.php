@@ -43,6 +43,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\ServerHostname;
 use Tuleap\System\ServiceControl;
+use Tuleap\SystemEvent\Massmail;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
 use User_UserStatusManager;
@@ -77,6 +78,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         MailTransportBuilder::class,
         MercureClient::class,
         BaseLayout::class,
+        Massmail::class,
     ];
 
     /**
