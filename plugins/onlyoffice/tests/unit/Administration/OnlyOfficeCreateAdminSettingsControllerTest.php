@@ -23,35 +23,35 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\Config\ConfigDao;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
+use Tuleap\OnlyOffice\DocumentServer\ICreateDocumentServer;
+use Tuleap\OnlyOffice\Stubs\ICreateDocumentServerStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
+final class OnlyOfficeCreateAdminSettingsControllerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testSaveSettings(): void
+    public function testUpdateSettings(): void
     {
-        $config_dao = $this->createMock(ConfigDao::class);
+        $creator = ICreateDocumentServerStub::buildSelf();
 
-        $controller = $this->buildController($config_dao);
+        $controller = $this->buildController($creator);
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
             ->withParsedBody(['server_url' => 'https://example.com', 'server_key' => 'some_secret_that_is_long_enough_to_pass_the_requirement']);
 
-        $config_dao->expects($this->atLeastOnce())->method('save');
-
         $response = $controller->handle($request);
 
         self::assertEquals(302, $response->getStatusCode());
+        self::assertTrue($creator->hasBeenCreated());
     }
 
     /**
@@ -59,7 +59,7 @@ final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
      */
     public function testRejectsInvalidSettings(array $body): void
     {
-        $controller = $this->buildController($this->createStub(ConfigDao::class));
+        $controller = $this->buildController(ICreateDocumentServerStub::buildSelf());
 
         $request = (new NullServerRequest())
             ->withParsedBody($body);
@@ -79,7 +79,7 @@ final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
         ];
     }
 
-    private function buildController(ConfigDao $config_dao): OnlyOfficeSaveAdminSettingsController
+    private function buildController(ICreateDocumentServer $creator): OnlyOfficeCreateAdminSettingsController
     {
         $csrf_token = $this->createStub(\CSRFSynchronizerToken::class);
         $csrf_token->method('check');
@@ -88,9 +88,9 @@ final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
         $feedback_serializer->method('serialize');
 
 
-        return new OnlyOfficeSaveAdminSettingsController(
+        return new OnlyOfficeCreateAdminSettingsController(
             $csrf_token,
-            $config_dao,
+            $creator,
             OnlyOfficeServerUrlValidator::buildSelf(),
             OnlyOfficeSecretKeyValidator::buildSelf(),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),

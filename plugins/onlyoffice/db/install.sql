@@ -32,3 +32,9 @@ CREATE TABLE plugin_onlyoffice_save_document_token(
     user_id INT(11) NOT NULL,
     document_id INT(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_onlyoffice_document_server(
+    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    url VARCHAR(255) NOT NULL,
+    secret_key TEXT NOT NULL
+) ENGINE=InnoDB;

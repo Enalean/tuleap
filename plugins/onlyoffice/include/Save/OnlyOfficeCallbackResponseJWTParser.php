@@ -36,7 +36,8 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
+use Tuleap\OnlyOffice\DocumentServer\IRetrieveDocumentServers;
 
 final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackResponseParser
 {
@@ -45,6 +46,8 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
         private Validator $jwt_validator,
         private ValidAt $jwt_valid_at_constraint,
         private Signer $jwt_signer,
+        private IRetrieveDocumentServers $servers_retriever,
+        private DocumentServerKeyEncryption $encryption,
     ) {
     }
 
@@ -107,7 +110,16 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
      */
     private function validateJWT(UnencryptedToken $token): Ok|Err
     {
-        $key = Signer\Key\InMemory::plainText(\ForgeConfig::getSecretAsClearText(OnlyOfficeDocumentServerSettings::SECRET)->getString());
+        $servers = $this->servers_retriever->retrieveAll();
+        if (empty($servers) || $servers[0]->has_existing_secret === false) {
+            return Result::err(
+                Fault::fromMessage('No document server is configured')
+            );
+        }
+
+        $key = Signer\Key\InMemory::plainText(
+            $this->encryption->decryptValue($servers[0]->encrypted_secret_key->getString())->getString()
+        );
         try {
             $this->jwt_validator->assert(
                 $token,

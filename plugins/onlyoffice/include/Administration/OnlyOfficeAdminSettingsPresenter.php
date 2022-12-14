@@ -30,6 +30,7 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
 final class OnlyOfficeAdminSettingsPresenter
 {
     public bool $has_servers;
+    public string $create_url;
 
     /**
      * @param OnlyOfficeServerPresenter[] $servers
@@ -39,5 +40,6 @@ final class OnlyOfficeAdminSettingsPresenter
         public CSRFSynchronizerTokenPresenter $csrf_token,
     ) {
         $this->has_servers = count($this->servers) > 0;
+        $this->create_url  = OnlyOfficeCreateAdminSettingsController::URL;
     }
 }

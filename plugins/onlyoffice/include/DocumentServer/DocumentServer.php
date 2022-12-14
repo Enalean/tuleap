@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,42 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap;
+namespace Tuleap\OnlyOffice\DocumentServer;
 
-use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\Cryptography\ConcealedString;
 
 /**
  * @psalm-immutable
  */
-final class CSRFSynchronizerTokenPresenter
+final class DocumentServer
 {
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $token;
+    public bool $has_existing_secret;
 
-    private function __construct(string $name, string $token)
+    public function __construct(public int $id, public string $url, public ConcealedString $encrypted_secret_key)
     {
-        $this->name  = $name;
-        $this->token = $token;
-    }
-
-    public static function fromToken(CSRFSynchronizerTokenInterface $token): self
-    {
-        return new self($token->getTokenName(), $token->getToken());
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    public function getTokenName(): string
-    {
-        return $this->name;
+        $this->has_existing_secret = $this->encrypted_secret_key->getString() !== '';
     }
 }

@@ -27,19 +27,21 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Config\ConfigDao;
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\OnlyOffice\DocumentServer\IUpdateDocumentServer;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
 
-final class OnlyOfficeSaveAdminSettingsController extends DispatchablePSR15Compatible
+final class OnlyOfficeUpdateAdminSettingsController extends DispatchablePSR15Compatible
 {
+    public const URL = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '/update';
+
     public function __construct(
         private CSRFSynchronizerToken $csrf_token,
-        private ConfigDao $config_dao,
+        private IUpdateDocumentServer $updater,
         private OnlyOfficeServerUrlValidator $server_url_validator,
         private OnlyOfficeSecretKeyValidator $secret_key_validator,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
@@ -64,8 +66,7 @@ final class OnlyOfficeSaveAdminSettingsController extends DispatchablePSR15Compa
             throw new ForbiddenException();
         }
 
-        $this->config_dao->save(OnlyOfficeDocumentServerSettings::URL, $server_url);
-        $this->config_dao->save(OnlyOfficeDocumentServerSettings::SECRET, $server_key->getString());
+        $this->updater->update((int) $request->getAttribute('id'), $server_url, $server_key);
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);

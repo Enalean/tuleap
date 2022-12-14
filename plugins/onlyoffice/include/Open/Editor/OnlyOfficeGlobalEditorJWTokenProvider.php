@@ -30,7 +30,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveCallbackURLGenerator;
 
 final class OnlyOfficeGlobalEditorJWTokenProvider implements ProvideOnlyOfficeGlobalEditorJWToken
@@ -40,6 +40,7 @@ final class OnlyOfficeGlobalEditorJWTokenProvider implements ProvideOnlyOfficeGl
         private OnlyOfficeSaveCallbackURLGenerator $office_save_callback_url_generator,
         private JwtFacade $jwt_facade,
         private Signer $signer,
+        private DocumentServerKeyEncryption $encryption,
     ) {
     }
 
@@ -53,7 +54,7 @@ final class OnlyOfficeGlobalEditorJWTokenProvider implements ProvideOnlyOfficeGl
                 /** @psalm-return Ok<string> */
                 function (OnlyOfficeDocumentConfig $document_config) use ($user, $now): Ok {
                     $callback_url = $this->office_save_callback_url_generator->getCallbackURL($user, $document_config, $now);
-                    $signing_key  = \ForgeConfig::getSecretAsClearText(OnlyOfficeDocumentServerSettings::SECRET);
+                    $signing_key  = $this->encryption->decryptValue($document_config->getAssociatedDocument()->document_server->encrypted_secret_key->getString());
                     $jwt          = $this->jwt_facade->issue(
                         $this->signer,
                         Signer\Key\InMemory::plainText($signing_key->getString()),

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+
 /**
  * @psalm-immutable
  */
@@ -33,6 +35,7 @@ final class OnlyOfficeDocument
         public int $version_id,
         public string $filename,
         public bool $can_be_edited,
+        public DocumentServer $document_server,
     ) {
     }
 }
