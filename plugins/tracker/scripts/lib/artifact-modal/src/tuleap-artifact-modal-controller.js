@@ -26,10 +26,7 @@ import {
     editArtifact,
     editArtifactWithConcurrencyChecking,
 } from "./rest/rest-service";
-import {
-    getAllFileFields,
-    isThereAtLeastOneFileField,
-} from "./fields/file-field/file-field-detector";
+import { getAllFileFields } from "./fields/file-field/file-field-detector";
 import {
     isUploadingInCKEditor,
     setIsNotUploadingInCKEditor,
@@ -75,6 +72,8 @@ import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
 import { UserHistoryCache } from "./adapters/Memory/UserHistoryCache";
 import { CommentsController } from "./domain/comments/CommentsController";
 import { ProjectIdentifierProxy } from "./adapters/REST/ProjectIdentifierProxy";
+import { EventDispatcher } from "./domain/EventDispatcher";
+import { DidCheckFileFieldIsPresent } from "./domain/DidCheckFileFieldIsPresent";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -124,6 +123,7 @@ function ArtifactModalController(
     const project_identifier = ProjectIdentifierProxy.fromTrackerModel(modal_model.tracker);
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
     const user_history_cache = UserHistoryCache(api_client);
+    const event_dispatcher = EventDispatcher();
 
     Object.assign(self, {
         $onInit: init,
@@ -211,7 +211,7 @@ function ArtifactModalController(
             );
         },
         getFileFieldController: (field) => {
-            return FileFieldController(field, self.values[field.field_id]);
+            return FileFieldController(field, self.values[field.field_id], event_dispatcher);
         },
         getPermissionFieldController: (field) => {
             return PermissionFieldController(
@@ -234,7 +234,11 @@ function ArtifactModalController(
         hasRestError: hasError,
         isDisabled,
         isUploadingInCKEditor,
-        isThereAtLeastOneFileField: () => isThereAtLeastOneFileField(Object.values(self.values)),
+        isThereAtLeastOneFileField: () => {
+            const event = DidCheckFileFieldIsPresent();
+            event_dispatcher.dispatch(event);
+            return event.is_there_at_least_one_file_field;
+        },
         setupTooltips,
         submit,
         reopenFieldsetsWithInvalidInput,

@@ -31,6 +31,7 @@ import { NewFileToAttach } from "../../../../domain/fields/file-field/NewFileToA
 import type { FileFieldType } from "../../../../domain/fields/file-field/FileFieldType";
 import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
 import { FileFieldController } from "./FileFieldController";
+import { EventDispatcher } from "../../../../domain/EventDispatcher";
 
 jest.mock("pretty-kibibytes", () => {
     return {
@@ -61,7 +62,7 @@ describe(`FileField`, () => {
                 value: [],
             } as unknown as FileFieldValueModel;
             const host = {
-                controller: FileFieldController(field, value_model),
+                controller: FileFieldController(field, value_model, EventDispatcher()),
             } as unknown as HostElement;
 
             const target = doc.createElement("div") as unknown as ShadowRoot;
@@ -173,7 +174,7 @@ describe(`FileField`, () => {
             const host = {
                 field,
                 disabled,
-                controller: FileFieldController(field, value_model),
+                controller: FileFieldController(field, value_model, EventDispatcher()),
             } as unknown as HostElement;
 
             const render = getAddNewFileToAttachButtonTemplate(host);
@@ -215,7 +216,7 @@ describe(`FileField`, () => {
             const host = {
                 field,
                 disabled: false,
-                controller: FileFieldController(field, value_model),
+                controller: FileFieldController(field, value_model, EventDispatcher()),
                 new_files: value_model.temporary_files,
                 attached_files: undefined,
             } as unknown as HostElement;
