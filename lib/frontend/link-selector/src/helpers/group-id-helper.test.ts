@@ -28,6 +28,7 @@ describe(`group-id-helper`, () => {
             empty_message: "irrelevant",
             items: [],
             is_loading: false,
+            footer_message: "",
         };
         expect(getGroupId(group)).toBe("matchingitems");
     });

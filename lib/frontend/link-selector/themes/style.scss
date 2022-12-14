@@ -207,9 +207,16 @@
 }
 
 .link-selector-dropdown-option-group {
+    margin: 0;
     padding: 0;
     list-style: none;
     user-select: none;
+}
+
+.link-selector-group-footer {
+    padding: 2px var(--tlp-form-element-padding-horizontal);
+    color: var(--tlp-dimmed-color);
+    font-size: var(--tlp-form-element-small-font-size);
 }
 
 .link-selector-selected-value-remove-button {

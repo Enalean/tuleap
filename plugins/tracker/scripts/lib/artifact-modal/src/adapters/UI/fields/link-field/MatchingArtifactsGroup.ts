@@ -32,6 +32,7 @@ export const MatchingArtifactsGroup = {
         empty_message: getNoResultFoundEmptyState(),
         items: [LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)],
         is_loading: false,
+        footer_message: "",
     }),
 
     buildEmpty: (): GroupOfItems => ({
@@ -39,6 +40,7 @@ export const MatchingArtifactsGroup = {
         empty_message: getNoResultFoundEmptyState(),
         items: [],
         is_loading: false,
+        footer_message: "",
     }),
 
     buildLoadingState: (): GroupOfItems => ({
@@ -46,5 +48,6 @@ export const MatchingArtifactsGroup = {
         empty_message: "",
         items: [],
         is_loading: true,
+        footer_message: "",
     }),
 };

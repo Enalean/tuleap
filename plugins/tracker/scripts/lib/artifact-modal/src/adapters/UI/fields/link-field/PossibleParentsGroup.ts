@@ -29,6 +29,7 @@ export const PossibleParentsGroup = {
         empty_message: "",
         items: [],
         is_loading: true,
+        footer_message: "",
     }),
 
     fromPossibleParents: (
@@ -41,6 +42,7 @@ export const PossibleParentsGroup = {
             LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
         ),
         is_loading: false,
+        footer_message: "",
     }),
 
     buildEmpty: (): GroupOfItems => ({
@@ -48,5 +50,6 @@ export const PossibleParentsGroup = {
         empty_message: getPossibleParentsEmptyState(),
         items: [],
         is_loading: false,
+        footer_message: "",
     }),
 };

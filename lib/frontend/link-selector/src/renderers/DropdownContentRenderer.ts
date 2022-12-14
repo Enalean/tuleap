@@ -86,6 +86,13 @@ const getGroupLabel = (group: GroupOfItems): HTMLTemplateResult => {
     return html`<strong class="link-selector-group-label">${group.label}</strong>`;
 };
 
+const getGroupFooter = (group: GroupOfItems): HTMLTemplateResult =>
+    group.footer_message !== "" && group.items.length > 0
+        ? html`<p class="link-selector-group-footer" data-test="link-selector-group-footer">
+              ${group.footer_message}
+          </p>`
+        : html``;
+
 export class DropdownContentRenderer {
     constructor(
         private readonly dropdown_list_element: HTMLElement,
@@ -114,6 +121,7 @@ export class DropdownContentRenderer {
                     >
                         ${items_template}
                     </ul>
+                    ${getGroupFooter(group)}
                 </li>
             `;
         });

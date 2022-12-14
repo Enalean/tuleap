@@ -20,6 +20,7 @@
 import type { GroupOfItems } from "@tuleap/link-selector";
 import {
     getNoResultFoundEmptyState,
+    getSearchResultsGroupFootMessage,
     getSearchResultsGroupLabel,
 } from "../../../../gettext-catalog";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
@@ -32,6 +33,7 @@ export const SearchResultsGroup = {
         empty_message: getNoResultFoundEmptyState(),
         items: [],
         is_loading: false,
+        footer_message: "",
     }),
 
     buildLoadingState: (): GroupOfItems => ({
@@ -39,6 +41,7 @@ export const SearchResultsGroup = {
         empty_message: "",
         items: [],
         is_loading: true,
+        footer_message: "",
     }),
 
     fromSearchResults: (
@@ -51,5 +54,6 @@ export const SearchResultsGroup = {
             LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
         ),
         is_loading: false,
+        footer_message: getSearchResultsGroupFootMessage(),
     }),
 };

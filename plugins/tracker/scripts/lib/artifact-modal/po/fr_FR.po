@@ -157,6 +157,11 @@ msgstr "Seuls les commentaires sont affichés"
 msgid "Open"
 msgstr "Ouvrez"
 
+msgid "Please refine your search if you did not find what you are looking for."
+msgstr ""
+"Veuillez préciser votre recherche si vous n'avez pas trouvé ce que vous "
+"cherchez."
+
 msgid "Please select a date"
 msgstr "Veuillez choisir une date"
 
