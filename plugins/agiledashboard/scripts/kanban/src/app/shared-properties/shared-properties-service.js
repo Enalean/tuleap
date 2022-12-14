@@ -16,7 +16,6 @@ function SharedPropertiesService() {
         dashboard_dropdown: undefined,
         widget_id: 0,
         kanban_url: "",
-        is_list_picker_enabled: false,
     };
 
     return {
@@ -111,12 +110,6 @@ function SharedPropertiesService() {
         },
         getSelectedTrackerReportId() {
             return property.selected_tracker_report_id;
-        },
-        setIsListPickerEnabled(is_list_picker_enabled) {
-            property.is_list_picker_enabled = is_list_picker_enabled;
-        },
-        isListPickerEnabled() {
-            return property.is_list_picker_enabled;
         },
     };
 }

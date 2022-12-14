@@ -136,7 +136,7 @@ describe("KanbanCtrl", function () {
                 });
                 $scope.$apply();
 
-                expect(KanbanCtrl.archive.content).toEqual([{ id: 88 }, { id: 40 }]);
+                expect(KanbanCtrl.archive.content).toStrictEqual([{ id: 88 }, { id: 40 }]);
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.archive);
                 expect(KanbanCtrl.archive.loading_items).toBeFalsy();
                 expect(KanbanCtrl.archive.fully_loaded).toBeTruthy();
@@ -175,7 +175,7 @@ describe("KanbanCtrl", function () {
                 });
                 $scope.$apply();
 
-                expect(KanbanCtrl.backlog.content).toEqual([{ id: 69 }, { id: 16 }]);
+                expect(KanbanCtrl.backlog.content).toStrictEqual([{ id: 69 }, { id: 16 }]);
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.backlog);
                 expect(KanbanCtrl.backlog.loading_items).toBeFalsy();
                 expect(KanbanCtrl.backlog.fully_loaded).toBeTruthy();
@@ -213,8 +213,8 @@ describe("KanbanCtrl", function () {
                 KanbanCtrl.$onInit();
 
                 var column = kanban.columns[0];
-                expect(column.content).toEqual([]);
-                expect(column.filtered_content).toEqual([]);
+                expect(column.content).toStrictEqual([]);
+                expect(column.filtered_content).toStrictEqual([]);
                 expect(column.filtered_content).not.toBe(column.content);
                 expect(column.loading_items).toBeTruthy();
                 expect(column.nb_items_at_kanban_init).toBe(0);
@@ -231,7 +231,7 @@ describe("KanbanCtrl", function () {
                 });
                 $scope.$apply();
 
-                expect(column.content).toEqual([{ id: 981 }, { id: 331 }]);
+                expect(column.content).toStrictEqual([{ id: 981 }, { id: 331 }]);
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(column);
                 expect(column.loading_items).toBeFalsy();
                 expect(column.fully_loaded).toBeTruthy();
@@ -251,8 +251,8 @@ describe("KanbanCtrl", function () {
                 KanbanCtrl.$onInit();
 
                 var column = kanban.columns[0];
-                expect(column.content).toEqual([]);
-                expect(column.filtered_content).toEqual([]);
+                expect(column.content).toStrictEqual([]);
+                expect(column.filtered_content).toStrictEqual([]);
                 expect(column.filtered_content).not.toBe(column.content);
                 expect(column.loading_items).toBeTruthy();
                 expect(column.nb_items_at_kanban_init).toBe(0);
@@ -286,7 +286,7 @@ describe("KanbanCtrl", function () {
 
             KanbanCtrl.toggleArchive();
 
-            expect(KanbanCtrl.archive.filtered_content).toEqual([]);
+            expect(KanbanCtrl.archive.filtered_content).toStrictEqual([]);
             expect(KanbanService.collapseArchive).toHaveBeenCalledWith(kanban.id);
             expect(KanbanCtrl.archive.is_open).toBeFalsy();
         });
@@ -326,7 +326,7 @@ describe("KanbanCtrl", function () {
 
             KanbanCtrl.toggleBacklog();
 
-            expect(KanbanCtrl.backlog.filtered_content).toEqual([]);
+            expect(KanbanCtrl.backlog.filtered_content).toStrictEqual([]);
             expect(KanbanService.collapseBacklog).toHaveBeenCalledWith(kanban.id);
             expect(KanbanCtrl.backlog.is_open).toBeFalsy();
         });
@@ -369,7 +369,7 @@ describe("KanbanCtrl", function () {
 
             KanbanCtrl.toggleColumn(column);
 
-            expect(column.filtered_content).toEqual([]);
+            expect(column.filtered_content).toStrictEqual([]);
             expect(KanbanService.collapseColumn).toHaveBeenCalledWith(kanban.id, column.id);
             expect(column.is_open).toBeFalsy();
         });
@@ -420,7 +420,7 @@ describe("KanbanCtrl", function () {
             };
 
             KanbanCtrl.createItemInPlace(item, column);
-            expect(column.content).toEqual([
+            expect(column.content).toStrictEqual([
                 { id: 97 },
                 { id: 69 },
                 {
@@ -429,7 +429,7 @@ describe("KanbanCtrl", function () {
                     is_collapsed: true,
                 },
             ]);
-            expect(column.filtered_content).toEqual([
+            expect(column.filtered_content).toStrictEqual([
                 { id: 69 },
                 {
                     label: "photothermic",
@@ -468,7 +468,7 @@ describe("KanbanCtrl", function () {
             };
 
             KanbanCtrl.createItemInPlaceInBacklog(item);
-            expect(KanbanCtrl.backlog.content).toEqual([
+            expect(KanbanCtrl.backlog.content).toStrictEqual([
                 { id: 91 },
                 { id: 85 },
                 {
@@ -477,7 +477,7 @@ describe("KanbanCtrl", function () {
                     is_collapsed: true,
                 },
             ]);
-            expect(KanbanCtrl.backlog.filtered_content).toEqual([
+            expect(KanbanCtrl.backlog.filtered_content).toStrictEqual([
                 { id: 91 },
                 {
                     label: "unbeautifully",
@@ -594,8 +594,7 @@ describe("KanbanCtrl", function () {
                 102,
                 56,
                 4288,
-                expect.any(Function),
-                false
+                expect.any(Function)
             );
         });
 
@@ -702,7 +701,7 @@ describe("KanbanCtrl", function () {
                 56,
                 null,
                 expect.any(Function),
-                false
+                []
             );
         });
         describe("callback -", function () {

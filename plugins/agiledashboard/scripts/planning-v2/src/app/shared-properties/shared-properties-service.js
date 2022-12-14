@@ -25,8 +25,6 @@ export default function SharedPropertiesService() {
         milestone_id: undefined,
         is_in_explicit_top_backlog: undefined,
         allowed_additional_panes_to_display: [],
-        is_list_picker_enabled: false,
-        trackers_disabling_list_picker: [],
     };
 
     return {
@@ -42,9 +40,6 @@ export default function SharedPropertiesService() {
         setIsInExplicitTopBacklogManagement,
         setAllowedAdditionalPanesToDisplay,
         getAllowedAdditionalPanesToDisplay,
-        setEnableListPicker,
-        isListPickerEnabledForTracker,
-        setTrackersDisablingListPicker,
     };
 
     function getUserId() {
@@ -93,21 +88,5 @@ export default function SharedPropertiesService() {
 
     function getAllowedAdditionalPanesToDisplay() {
         return property.allowed_additional_panes_to_display;
-    }
-
-    function setEnableListPicker(is_list_picker_enabled) {
-        property.is_list_picker_enabled = is_list_picker_enabled;
-    }
-
-    function isListPickerEnabledForTracker(tracker_id) {
-        if (property.is_list_picker_enabled === false) {
-            return false;
-        }
-
-        return property.trackers_disabling_list_picker.includes(tracker_id.toString()) === false;
-    }
-
-    function setTrackersDisablingListPicker(trackers_disabling_list_picker) {
-        property.trackers_disabling_list_picker = trackers_disabling_list_picker;
     }
 }

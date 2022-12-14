@@ -316,7 +316,7 @@ function BacklogController(
             item_type.id,
             null,
             callback,
-            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id)
+            []
         );
     }
 
@@ -341,7 +341,7 @@ function BacklogController(
             item_type.id,
             null,
             callback,
-            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id)
+            []
         );
     }
 

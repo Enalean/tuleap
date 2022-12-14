@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\Milestone\Pane\Planning;
 
 use PFUser;
 use Project;
-use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 
 final class PlanningV2Presenter
 {
@@ -34,8 +33,6 @@ final class PlanningV2Presenter
     public bool $user_accessibility_mode;
     public bool $is_in_explicit_top_backlog;
     public string $allowed_additional_panes_to_display;
-    public bool $is_list_picker_enabled;
-    public string $trackers_ids_having_list_picker_disabled;
 
     /**
      * @param string[] $allowed_additional_panes_to_display
@@ -47,24 +44,19 @@ final class PlanningV2Presenter
         bool $is_in_explicit_top_backlog,
         array $allowed_additional_panes_to_display,
     ) {
-        $this->user_id                                  = (int) $current_user->getId();
-        $this->lang                                     = $this->getLanguageAbbreviation($current_user);
-        $this->project_id                               = (int) $project->getId();
-        $this->milestone_id                             = $milestone_id;
-        $this->view_mode                                = (string) $current_user->getPreference(
+        $this->user_id                             = (int) $current_user->getId();
+        $this->lang                                = $this->getLanguageAbbreviation($current_user);
+        $this->project_id                          = (int) $project->getId();
+        $this->milestone_id                        = $milestone_id;
+        $this->view_mode                           = (string) $current_user->getPreference(
             'agiledashboard_planning_item_view_mode_' . $this->project_id
         );
-        $this->is_in_explicit_top_backlog               = $is_in_explicit_top_backlog;
-        $this->user_accessibility_mode                  = (bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE);
-        $this->allowed_additional_panes_to_display      = json_encode(
+        $this->is_in_explicit_top_backlog          = $is_in_explicit_top_backlog;
+        $this->user_accessibility_mode             = (bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE);
+        $this->allowed_additional_panes_to_display = json_encode(
             $allowed_additional_panes_to_display,
             JSON_THROW_ON_ERROR
         );
-        $this->trackers_ids_having_list_picker_disabled = json_encode(
-            ListPickerIncluder::getTrackersHavingListPickerDisabled(),
-            JSON_THROW_ON_ERROR
-        );
-        $this->is_list_picker_enabled                   = ListPickerIncluder::isListPickerEnabledOnPlatform();
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

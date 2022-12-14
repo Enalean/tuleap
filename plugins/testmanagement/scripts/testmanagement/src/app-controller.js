@@ -60,11 +60,6 @@ function TestManagementCtrl(
         const ttm_admin_url = testmanagement_init_data.ttmAdminUrl;
         const ttm_admin_label = testmanagement_init_data.ttmAdminLabel;
 
-        const trackers_ids_using_list_picker = JSON.parse(
-            testmanagement_init_data.trackersUsingListPicker
-        );
-        SharedPropertiesService.setTrackersUsingListPicker(trackers_ids_using_list_picker);
-
         const csrf_token = testmanagement_init_data.csrfTokenCampaignStatus;
         SharedPropertiesService.setCSRFTokenCampaignStatus(csrf_token);
 

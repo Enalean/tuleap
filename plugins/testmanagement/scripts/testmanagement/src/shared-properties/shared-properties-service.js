@@ -58,8 +58,6 @@ function SharedPropertiesService() {
         getIssueTrackerConfig,
         getCurrentMilestone,
         setCurrentMilestone,
-        isListPickerUsedByTracker,
-        setTrackersUsingListPicker,
         getCSRFTokenCampaignStatus,
         setCSRFTokenCampaignStatus,
         setFileUploadMaxSize,
@@ -210,14 +208,6 @@ function SharedPropertiesService() {
 
     function setCurrentMilestone(milestone) {
         property.milestone = milestone;
-    }
-
-    function isListPickerUsedByTracker(tracker_id) {
-        return property.trackers_using_list_picker.includes(tracker_id);
-    }
-
-    function setTrackersUsingListPicker(trackers_using_list_picker) {
-        property.trackers_using_list_picker = trackers_using_list_picker;
     }
 
     function getCSRFTokenCampaignStatus() {
