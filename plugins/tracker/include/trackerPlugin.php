@@ -166,6 +166,7 @@ use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreator;
@@ -2483,6 +2484,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(ListPickerIncluder::class);
         $event->addConfigClass(Tracker_FormElement_Field_ArtifactLink::class);
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
+        $event->addConfigClass(ReverseLinksFeatureFlag::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder

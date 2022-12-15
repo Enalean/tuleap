@@ -27,11 +27,13 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 
 final class NewArtifactLinkChangesetValueBuilder
 {
-    private const PARENT_KEY = 'parent';
-    private const LINKS_KEY  = 'links';
+    private const PARENT_KEY    = 'parent';
+    private const LINKS_KEY     = 'links';
+    private const ALL_LINKS_KEY = 'all_links';
 
     public function __construct(
         private RetrieveForwardLinks $forward_links_retriever,
@@ -47,6 +49,13 @@ final class NewArtifactLinkChangesetValueBuilder
         \PFUser $submitter,
         array $payload,
     ): NewArtifactLinkChangesetValue {
+        $payload_has_all_links_key = $this->doesPayloadHaveAllLinksKey($payload);
+        if ($payload_has_all_links_key && (int) \ForgeConfig::get(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY) !== 1) {
+            throw new \Tracker_FormElement_InvalidFieldValueException(
+                'All links is not supported yet'
+            );
+        }
+
         $payload_has_parent_key = $this->doesPayloadHaveAParentKey($payload);
         $payload_has_links_key  = $this->doesPayloadHaveALinksKey($payload);
 
@@ -101,5 +110,11 @@ final class NewArtifactLinkChangesetValueBuilder
                 $payload[self::LINKS_KEY]
             )
         );
+    }
+
+    private function doesPayloadHaveAllLinksKey(array $payload): bool
+    {
+        return array_key_exists(self::ALL_LINKS_KEY, $payload)
+            && is_array($payload[self::ALL_LINKS_KEY]);
     }
 }

@@ -20,14 +20,19 @@
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
+use Tracker_FormElement_InvalidFieldValueException;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 
 final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     private const REMOVED_ARTIFACT_ID          = 103;
     private const ADDED_ARTIFACT_ID            = 106;
     private const SECOND_UNCHANGED_ARTIFACT_ID = 102;
@@ -130,12 +135,36 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         self::assertSame('_depends_on', $third_link->getType());
     }
 
+    public function testItThrowsWhenAllLinkIsUsedAndFeatureFlagIsDisabled(): void
+    {
+        $payload = [
+            'all_links' => [],
+        ];
+
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+        $this->build($payload);
+    }
+
+    public function testItDoesNothingWhenFeatureFlagIsSet(): void
+    {
+        \ForgeConfig::set(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+        $payload = [
+            'all_links' => [],
+            'links' => [
+                ['id' => self::FIRST_UNCHANGED_ARTIFACT_ID],
+            ],
+        ];
+
+        $this->build($payload);
+        $this->addToAssertionCount(1);
+    }
+
     public function dataProviderInvalidPayloads(): array
     {
         return [
-            'Payload is empty'                                  => [[]],
-            'Payload has none of the required keys'             => [['invalid_key' => []]],
-            'Links key does not contain an array'               => [['links' => null]],
+            'Payload is empty' => [[]],
+            'Payload has none of the required keys' => [['invalid_key' => []]],
+            'Links key does not contain an array' => [['links' => null]],
         ];
     }
 
