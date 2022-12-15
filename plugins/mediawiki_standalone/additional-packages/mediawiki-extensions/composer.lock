@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45fe659c54c1c0d280130cb2ed6654f0",
+    "content-hash": "512e56e043f4509fe56a684c95c0a8e6",
     "packages": [
         {
             "name": "composer/installers",
@@ -325,16 +325,16 @@
         },
         {
             "name": "mediawiki/tuleap-integration",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "0fa69e5805bd29690988ceb9ee46ead18828823a"
+                "reference": "b283e338b29c0769b6959edf3b0485715784e035"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/0fa69e5805bd29690988ceb9ee46ead18828823a",
-                "reference": "0fa69e5805bd29690988ceb9ee46ead18828823a",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/b283e338b29c0769b6959edf3b0485715784e035",
+                "reference": "b283e338b29c0769b6959edf3b0485715784e035",
                 "shasum": ""
             },
             "require": {
@@ -374,9 +374,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.1"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.2"
             },
-            "time": "2022-12-01T07:46:42+00:00"
+            "time": "2022-12-06T12:05:48+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
@@ -430,16 +430,16 @@
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "0203383e8ac387de2d4186b976709c60508200fd"
+                "reference": "998fada29062d7c65f9678a9f70b6c09cc5aaf6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/0203383e8ac387de2d4186b976709c60508200fd",
-                "reference": "0203383e8ac387de2d4186b976709c60508200fd",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/998fada29062d7c65f9678a9f70b6c09cc5aaf6e",
+                "reference": "998fada29062d7c65f9678a9f70b6c09cc5aaf6e",
                 "shasum": ""
             },
             "require": {
@@ -477,9 +477,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.1.0"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.1.1"
             },
-            "time": "2022-12-01T07:42:38+00:00"
+            "time": "2022-12-06T12:12:16+00:00"
         },
         {
             "name": "mwstake/mediawiki-component-thirdpartyresources",
@@ -850,5 +850,5 @@
         "ext-intl": "7",
         "ext-pdo_sqlite": "7"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -694,8 +694,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     private function buildUpdateScriptCaller(\Psr\Log\LoggerInterface $logger): MediaWikiInstallAndUpdateScriptCaller
     {
+        $settings_directory_path = $this->buildSettingDirectoryPath();
         return new MediaWikiInstallAndUpdateScriptCaller(
-            new MediaWikiManagementCommandProcessFactory($logger, $this->buildSettingDirectoryPath()),
+            new MediaWikiManagementCommandProcessFactory($logger, $settings_directory_path),
+            new \Tuleap\MediawikiStandalone\Configuration\MainpageDeployer($settings_directory_path),
             $this->buildLocalSettingsInstantiator(),
             new ProjectMediaWikiServiceDAO(),
             $logger
