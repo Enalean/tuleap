@@ -40,6 +40,7 @@ import { SearchResultsGroup } from "./SearchResultsGroup";
 import { UserHistoryRetrievalFault } from "../../../../domain/fields/link-field/UserHistoryRetrievalFault";
 import type { SearchArtifacts } from "../../../../domain/fields/link-field/SearchArtifacts";
 import { SearchArtifactsFault } from "../../../../domain/fields/link-field/SearchArtifactsFault";
+import { ArtifactLinkListDuplicateRemover } from "./ArtifactLinkListDuplicateRemover";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
@@ -86,7 +87,12 @@ export const ArtifactLinkSelectorAutoCompleter = (
     const getSearchResults = (query: string): PromiseLike<GroupCollection> =>
         artifacts_searcher.searchArtifacts(query).match(
             (artifacts) => {
-                return [SearchResultsGroup.fromSearchResults(link_verifier, artifacts)];
+                return [
+                    SearchResultsGroup.fromSearchResults(
+                        link_verifier,
+                        ArtifactLinkListDuplicateRemover.removeDuplicateArtifact(artifacts)
+                    ),
+                ];
             },
             (fault) => {
                 if (isSearchBackendUnavailable(fault)) {
