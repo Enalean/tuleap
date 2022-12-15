@@ -10,7 +10,8 @@ systemctl start mysqld
 yum install -y tuleap-plugin-agiledashboard \
   tuleap-plugin-graphontrackers \
   tuleap-theme-burningparrot \
-  tuleap-theme-flamingparrot
+  tuleap-theme-flamingparrot \
+  tuleap-plugin-svn
 
 /usr/share/tuleap/tools/setup.el7.sh \
     --assumeyes \

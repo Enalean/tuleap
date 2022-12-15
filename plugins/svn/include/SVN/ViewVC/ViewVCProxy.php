@@ -176,15 +176,15 @@ class ViewVCProxy
         return $event->getUsername();
     }
 
-    /**
-     * @return string
-     */
-    private function getPythonLauncher()
+    private function getPythonLauncher(): string
     {
-        if (file_exists('/opt/rh/python27/root/usr/bin/python')) {
-            return "LD_LIBRARY_PATH='/opt/rh/python27/root/usr/lib64' /opt/rh/python27/root/usr/bin/python";
+        if (file_exists('/usr/lib/python3.9/site-packages/viewvc/lib')) {
+            return '/usr/bin/python3 ' . __DIR__ . '/../../../bin/viewvc-master.cgi';
         }
-        return '/usr/bin/python';
+        if (file_exists('/opt/rh/python27/root/usr/bin/python')) {
+            return "LD_LIBRARY_PATH='/opt/rh/python27/root/usr/lib64' /opt/rh/python27/root/usr/bin/python " . __DIR__ . '/../../../bin/viewvc-epel.cgi';
+        }
+        return '/usr/bin/python ' . __DIR__ . '/../../../bin/viewvc-epel.cgi';
     }
 
     public function getContent(HTTPRequest $request, CurrentUserWithLoggedInInformation $current_user, Repository $repository, string $path)
@@ -219,7 +219,7 @@ class ViewVCProxy
             'TULEAP_REPO_PATH=' . escapeshellarg($repository->getSystemPath()) . ' ' .
             'TULEAP_FULL_REPO_NAME=' . escapeshellarg($repository->getFullName()) . ' ' .
             'TULEAP_USER_IS_SUPER_USER=' . escapeshellarg($current_user->user->isSuperUser() ? '1' : '0') . ' ' .
-            $this->getPythonLauncher() . ' ' . __DIR__ . '/../../../bin/viewvc-epel.cgi 2>&1';
+            $this->getPythonLauncher() . ' 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
 

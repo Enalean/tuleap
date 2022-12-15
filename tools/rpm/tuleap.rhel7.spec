@@ -100,15 +100,18 @@ Requires: perl-Text-Iconv
 %description core-cvs
 Manage dependencies for Tuleap CVS integration
 
-
 %package core-subversion
 Summary: Subversion component for Tuleap
 Group: Development/Tools
 Version: 1.2
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
-Requires: viewvc, viewvc-theme-tuleap >= 1.0.8
-Requires: python
+%if "%{?dist}" == ".el9"
+Requires: viewvc-tuleap, httpd, glibc-langpack-en
+%else
+Requires: viewvc, python
+%endif
+Requires: viewvc-theme-tuleap >= 1.0.8
 Requires: perl-libwww-perl, perl-LWP-Protocol-https
 Requires: tuleap-theme-flamingparrot
 Requires: sha1collisiondetector
