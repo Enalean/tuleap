@@ -12,7 +12,7 @@ fi
 
 export DOCKER_BUILDKIT=1
 
-UNIQUE_NAME="$JOB_NAME-$BUILD_NUMBER-$OS"
+UNIQUE_NAME=$(echo "$JOB_NAME-$BUILD_NUMBER-$OS" | tr '[:upper:]' '[:lower:]')
 
 function cleanup {
     docker rm -fv "$UNIQUE_NAME-rpm-builder" || true
