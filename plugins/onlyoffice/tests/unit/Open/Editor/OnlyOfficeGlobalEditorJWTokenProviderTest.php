@@ -105,10 +105,11 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
         );
         self::assertEquals(
             [
-                'lang'        => 'en',
-                'region'      => 'en-US',
-                'user'        => ['id' => '110', 'name' => 'User #110'],
-                'callbackUrl' => 'https://example.com/onlyoffice/document_save?token=save_token',
+                'lang'          => 'en',
+                'region'        => 'en-US',
+                'user'          => ['id' => '110', 'name' => 'User #110'],
+                'callbackUrl'   => 'https://example.com/onlyoffice/document_save?token=save_token',
+                'customization' => ['macros' => false, 'macrosMode' => 'disable', 'plugins' => false],
             ],
             $parsed_token->claims()->get('editorConfig')
         );
