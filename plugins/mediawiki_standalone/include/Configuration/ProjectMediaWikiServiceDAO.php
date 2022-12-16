@@ -37,6 +37,7 @@ class ProjectMediaWikiServiceDAO extends DataAccessObject
             'SELECT unix_group_name AS project_name
                        FROM `groups`
                        JOIN service ON (service.group_id = `groups`.group_id)
+                       AND status != "D"
                        WHERE service.is_used = 1 AND service.short_name = ?',
             MediawikiStandaloneService::SERVICE_SHORTNAME
         );
