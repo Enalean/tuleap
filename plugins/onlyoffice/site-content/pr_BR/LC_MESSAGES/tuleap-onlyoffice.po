@@ -36,6 +36,9 @@ msgstr ""
 msgid "Document server URL"
 msgstr ""
 
+msgid "Document server has been created"
+msgstr ""
+
 msgid "Document server have been deleted"
 msgstr ""
 

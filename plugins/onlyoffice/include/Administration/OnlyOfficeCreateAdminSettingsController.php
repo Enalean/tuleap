@@ -27,18 +27,23 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Config\InvalidConfigKeyValueException;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
-use Tuleap\OnlyOffice\DocumentServer\IDeleteDocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\ICreateDocumentServer;
 use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\Request\ForbiddenException;
 
-final class OnlyOfficeDeleteAdminSettingsController extends DispatchablePSR15Compatible
+final class OnlyOfficeCreateAdminSettingsController extends DispatchablePSR15Compatible
 {
-    public const URL = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '/delete';
+    public const URL = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '/create';
 
     public function __construct(
         private CSRFSynchronizerToken $csrf_token,
-        private IDeleteDocumentServer $deletor,
+        private ICreateDocumentServer $creator,
+        private OnlyOfficeServerUrlValidator $server_url_validator,
+        private OnlyOfficeSecretKeyValidator $secret_key_validator,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
@@ -50,7 +55,18 @@ final class OnlyOfficeDeleteAdminSettingsController extends DispatchablePSR15Com
     {
         $this->csrf_token->check();
 
-        $this->deletor->delete((int) $request->getAttribute('id'));
+        $body       = $request->getParsedBody();
+        $server_url = (string) ($body['server_url'] ?? '');
+        $server_key = new ConcealedString((string) ($body['server_key'] ?? ''));
+
+        try {
+            $this->server_url_validator->checkIsValid($server_url);
+            $this->secret_key_validator->checkIsValid($server_key);
+        } catch (InvalidConfigKeyValueException $exception) {
+            throw new ForbiddenException();
+        }
+
+        $this->creator->create($server_url, $server_key);
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);
@@ -58,7 +74,7 @@ final class OnlyOfficeDeleteAdminSettingsController extends DispatchablePSR15Com
         return $this->redirect_with_feedback_factory->createResponseForUser(
             $user,
             OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL,
-            new NewFeedback(\Feedback::INFO, dgettext('tuleap-onlyoffice', 'Document server have been deleted')),
+            new NewFeedback(\Feedback::INFO, dgettext('tuleap-onlyoffice', 'Document server has been created')),
         );
     }
 }

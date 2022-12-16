@@ -27,6 +27,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\Administration\CheckOnlyOfficeIsAvailable;
+use Tuleap\OnlyOffice\DocumentServer\IRetrieveDocumentServers;
 use Tuleap\Project\ProjectByIDFactory;
 
 class DocmanFileLastVersionToOnlyOfficeDocumentTransformer implements TransformDocmanFileLastVersionToOnlyOfficeDocument
@@ -34,6 +35,7 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformer implements TransformD
     public function __construct(
         private CheckOnlyOfficeIsAvailable $check_only_office_is_available,
         private ProjectByIDFactory $project_factory,
+        private IRetrieveDocumentServers $servers_retriever,
     ) {
     }
 
@@ -42,6 +44,13 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformer implements TransformD
      */
     public function transformToOnlyOfficeDocument(DocmanFileLastVersion $file_last_version): Ok|Err
     {
+        $servers = $this->servers_retriever->retrieveAll();
+        if (empty($servers) || $servers[0]->has_existing_secret === false) {
+            return Result::err(
+                Fault::fromMessage('No document server is configured')
+            );
+        }
+
         $project = $this->project_factory->getProjectById((int) $file_last_version->item->getGroupId());
         if (! $this->check_only_office_is_available->isOnlyOfficeIntegrationAvailableForProject($project)) {
             return Result::err(
@@ -66,7 +75,8 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformer implements TransformD
                 $file_last_version->item,
                 (int) $file_last_version->version->getId(),
                 $filename,
-                $file_last_version->can_be_edited && AllowedFileExtensions::isFilenameAllowedToBeEditedInOnlyOffice($filename)
+                $file_last_version->can_be_edited && AllowedFileExtensions::isFilenameAllowedToBeEditedInOnlyOffice($filename),
+                $servers[0],
             )
         );
     }

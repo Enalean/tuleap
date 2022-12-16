@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,42 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap;
+namespace Tuleap\OnlyOffice\Administration;
 
+use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\OnlyOffice\DocumentServer\IRetrieveDocumentServers;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
-/**
- * @psalm-immutable
- */
-final class CSRFSynchronizerTokenPresenter
+final class OnlyOfficeAdminSettingsPresenterBuilder
 {
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $token;
-
-    private function __construct(string $name, string $token)
+    public function __construct(private IRetrieveDocumentServers $retriever)
     {
-        $this->name  = $name;
-        $this->token = $token;
     }
 
-    public static function fromToken(CSRFSynchronizerTokenInterface $token): self
+    public function getPresenter(CSRFSynchronizerTokenInterface $token): OnlyOfficeAdminSettingsPresenter
     {
-        return new self($token->getTokenName(), $token->getToken());
-    }
+        $servers = [];
+        foreach ($this->retriever->retrieveAll() as $server) {
+            $servers[] = OnlyOfficeServerPresenter::fromServer($server);
+        }
 
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    public function getTokenName(): string
-    {
-        return $this->name;
+        return new OnlyOfficeAdminSettingsPresenter(
+            $servers,
+            CSRFSynchronizerTokenPresenter::fromToken($token),
+        );
     }
 }

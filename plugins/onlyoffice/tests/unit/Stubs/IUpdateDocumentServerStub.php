@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Administration;
+namespace Tuleap\OnlyOffice\Stubs;
 
-final class OnlyOfficeDocumentServerSettings
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OnlyOffice\DocumentServer\IUpdateDocumentServer;
+
+final class IUpdateDocumentServerStub implements IUpdateDocumentServer
 {
-    public const URL    = 'onlyoffice_document_server_url';
-    public const SECRET = 'onlyoffice_document_server_secret';
+    private bool $has_been_updated = false;
 
     private function __construct()
     {
+    }
+
+    public static function buildSelf(): self
+    {
+        return new self();
+    }
+
+    public function update(int $id, string $url, ConcealedString $secret_key): void
+    {
+        $this->has_been_updated = true;
+    }
+
+    public function hasBeenUpdated(): bool
+    {
+        return $this->has_been_updated;
     }
 }

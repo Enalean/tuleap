@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,42 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap;
+namespace Tuleap\OnlyOffice\Stubs;
 
-use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\IRetrieveDocumentServers;
 
-/**
- * @psalm-immutable
- */
-final class CSRFSynchronizerTokenPresenter
+final class IRetrieveDocumentServersStub implements IRetrieveDocumentServers
 {
     /**
-     * @var string
+     * @param list<DocumentServer> ...$servers
      */
-    private $name;
+    private function __construct(private array $servers)
+    {
+    }
+
+    public static function buildWith(DocumentServer ...$servers): self
+    {
+        return new self($servers);
+    }
+
+    public static function buildWithoutServer(): self
+    {
+        return new self([]);
+    }
+
     /**
-     * @var string
+     * @return list<DocumentServer>
      */
-    private $token;
-
-    private function __construct(string $name, string $token)
+    public function retrieveAll(): array
     {
-        $this->name  = $name;
-        $this->token = $token;
-    }
-
-    public static function fromToken(CSRFSynchronizerTokenInterface $token): self
-    {
-        return new self($token->getTokenName(), $token->getToken());
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    public function getTokenName(): string
-    {
-        return $this->name;
+        return $this->servers;
     }
 }

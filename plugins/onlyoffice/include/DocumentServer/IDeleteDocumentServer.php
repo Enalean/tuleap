@@ -20,30 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Administration;
+namespace Tuleap\OnlyOffice\DocumentServer;
 
-use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
-
-/**
- * @psalm-immutable
- */
-final class OnlyOfficeServerPresenter
+interface IDeleteDocumentServer
 {
-    public string $delete_url;
-    public string $update_url;
-
-    private function __construct(public int $id, public string $server_url, public bool $has_existing_secret)
-    {
-        $this->delete_url = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
-        $this->update_url = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $id;
-    }
-
-    public static function fromServer(DocumentServer $server): self
-    {
-        return new self(
-            $server->id,
-            $server->url,
-            $server->has_existing_secret,
-        );
-    }
+    public function delete(int $id): void;
 }

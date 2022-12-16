@@ -25,6 +25,8 @@ namespace Tuleap\OnlyOffice\Save;
 use DateInterval;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -53,9 +55,19 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
     {
         $user                 = UserTestBuilder::buildWithDefaults();
         $item                 = new \Docman_Item(['item_id' => 258]);
-        $only_office_document = new OnlyOfficeDocument(ProjectTestBuilder::aProject()->build(), $item, 123, 'document.docx', true);
+        $only_office_document = new OnlyOfficeDocument(
+            ProjectTestBuilder::aProject()->build(),
+            $item,
+            123,
+            'document.docx',
+            true,
+            new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret')),
+        );
 
-        $this->dao->expects(self::once())->method('create')->with($user->getId(), $item->getId(), self::anything(), 70)->willReturn(147);
+        $this->dao->expects(self::once())
+            ->method('create')
+            ->with($user->getId(), $item->getId(), self::anything(), 70)
+            ->willReturn(147);
 
         $token = $this->token_generator->generateSaveToken(
             $user,
@@ -71,7 +83,14 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
     {
         $user                 = UserTestBuilder::buildWithDefaults();
         $item                 = new \Docman_Item(['item_id' => 403]);
-        $only_office_document = new OnlyOfficeDocument(ProjectTestBuilder::aProject()->build(), $item, 123, 'document.docx', false);
+        $only_office_document = new OnlyOfficeDocument(
+            ProjectTestBuilder::aProject()->build(),
+            $item,
+            123,
+            'document.docx',
+            false,
+            new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret')),
+        );
 
         $token = $this->token_generator->generateSaveToken(
             $user,

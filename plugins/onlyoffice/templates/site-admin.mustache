@@ -19,6 +19,7 @@
                 </button>
 
                 <form method="post"
+                      action="{{ create_url }}"
                       class="tlp-modal"
                       role="dialog"
                       id="onlyoffice-admin-add-server-modal"
@@ -35,7 +36,7 @@
                     <div class="tlp-modal-body">
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="server-url">{{# dgettext }} tuleap-onlyoffice | Document server URL {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
-                            <input type="url" pattern="https://.*" class="tlp-input" id="server-url" name="server_url" placeholder="https://…" required>
+                            <input type="url" autocomplete="url" pattern="https://.*" class="tlp-input" id="server-url" name="server_url" placeholder="https://…" required>
                         </div>
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="server-key">{{# dgettext }} tuleap-onlyoffice | JWT secret {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
@@ -103,6 +104,7 @@
                                 </button>
 
                                 <form method="post"
+                                      action="{{ update_url }}"
                                       class="tlp-modal"
                                       role="dialog"
                                       id="onlyoffice-admin-edit-server-modal-{{ id }}"
@@ -119,7 +121,7 @@
                                     <div class="tlp-modal-body">
                                         <div class="tlp-form-element">
                                             <label class="tlp-label" for="server-url">{{# dgettext }} tuleap-onlyoffice | Document server URL {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
-                                            <input type="url" pattern="https://.*" class="tlp-input" id="server-url" name="server_url" placeholder="https://…" required value="{{ server_url }}">
+                                            <input type="url" autocomplete="url" pattern="https://.*" class="tlp-input" id="server-url" name="server_url" placeholder="https://…" required value="{{ server_url }}">
                                         </div>
                                         <div class="tlp-form-element">
                                             <label class="tlp-label" for="server-key">{{# dgettext }} tuleap-onlyoffice | JWT secret {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>

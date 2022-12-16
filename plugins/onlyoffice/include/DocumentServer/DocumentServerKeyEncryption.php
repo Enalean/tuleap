@@ -20,30 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Administration;
 
-use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+namespace Tuleap\OnlyOffice\DocumentServer;
 
-/**
- * @psalm-immutable
- */
-final class OnlyOfficeServerPresenter
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+
+class DocumentServerKeyEncryption
 {
-    public string $delete_url;
-    public string $update_url;
-
-    private function __construct(public int $id, public string $server_url, public bool $has_existing_secret)
+    public function __construct(private KeyFactory $key_factory)
     {
-        $this->delete_url = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
-        $this->update_url = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $id;
     }
 
-    public static function fromServer(DocumentServer $server): self
+    public function encryptValue(ConcealedString $value): string
     {
-        return new self(
-            $server->id,
-            $server->url,
-            $server->has_existing_secret,
+        return \sodium_bin2base64(
+            SymmetricCrypto::encrypt($value, $this->key_factory->getEncryptionKey()),
+            SODIUM_BASE64_VARIANT_ORIGINAL
+        );
+    }
+
+    public function decryptValue(string $value): ConcealedString
+    {
+        return SymmetricCrypto::decrypt(
+            \sodium_base642bin($value, SODIUM_BASE64_VARIANT_ORIGINAL),
+            $this->key_factory->getEncryptionKey(),
         );
     }
 }

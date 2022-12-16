@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,42 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap;
+namespace Tuleap\OnlyOffice\Stubs;
 
-use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\OnlyOffice\DocumentServer\IDeleteDocumentServer;
 
-/**
- * @psalm-immutable
- */
-final class CSRFSynchronizerTokenPresenter
+final class IDeleteDocumentServerStub implements IDeleteDocumentServer
 {
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $token;
+    private bool $has_been_deleted = false;
 
-    private function __construct(string $name, string $token)
+    private function __construct()
     {
-        $this->name  = $name;
-        $this->token = $token;
     }
 
-    public static function fromToken(CSRFSynchronizerTokenInterface $token): self
+    public static function buildSelf(): self
     {
-        return new self($token->getTokenName(), $token->getToken());
+        return new self();
     }
 
-    public function getToken(): string
+    public function delete(int $id): void
     {
-        return $this->token;
+        $this->has_been_deleted = true;
     }
 
-    public function getTokenName(): string
+    public function hasBeenDeleted(): bool
     {
-        return $this->name;
+        return $this->has_been_deleted;
     }
 }

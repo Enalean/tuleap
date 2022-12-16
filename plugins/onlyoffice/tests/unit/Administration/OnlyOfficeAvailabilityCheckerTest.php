@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Administration;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -41,47 +44,45 @@ class OnlyOfficeAvailabilityCheckerTest extends TestCase
             $this->createMock(\PluginManager::class),
             new \onlyofficePlugin(null),
             $logger,
+            IRetrieveDocumentServersStub::buildWithoutServer(),
         );
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
         $logger->expects(self::once())
             ->method('debug')
-            ->with("Settings onlyoffice_document_server_url does not seem to be defined");
+            ->with('No document server with existing secret key has been defined');
 
         self::assertFalse($checker->isOnlyOfficeIntegrationAvailableForProject($project));
     }
 
     public function testItLogsThatServerSecretIsNotConfigured(): void
     {
-        \ForgeConfig::set(OnlyOfficeDocumentServerSettings::URL, 'https://example.com');
-
         $logger = $this->createMock(LoggerInterface::class);
 
         $checker = new OnlyOfficeAvailabilityChecker(
             $this->createMock(\PluginManager::class),
             new \onlyofficePlugin(null),
             $logger,
+            IRetrieveDocumentServersStub::buildWith(new DocumentServer(1, 'https://example.com', new ConcealedString(''))),
         );
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
         $logger->expects(self::once())
             ->method('debug')
-            ->with("Settings onlyoffice_document_server_secret does not seem to be defined");
+            ->with('No document server with existing secret key has been defined');
 
         self::assertFalse($checker->isOnlyOfficeIntegrationAvailableForProject($project));
     }
 
     public function testItReturnFalseIfProjectDoesNotUseDocman(): void
     {
-        \ForgeConfig::set(OnlyOfficeDocumentServerSettings::URL, 'https://example.com');
-        \ForgeConfig::set(OnlyOfficeDocumentServerSettings::SECRET, 'very_secret');
-
         $checker = new OnlyOfficeAvailabilityChecker(
             $this->createMock(\PluginManager::class),
             new \onlyofficePlugin(null),
             $this->createMock(LoggerInterface::class),
+            IRetrieveDocumentServersStub::buildWith(new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret'))),
         );
 
         $project = ProjectTestBuilder::aProject()
@@ -94,15 +95,13 @@ class OnlyOfficeAvailabilityCheckerTest extends TestCase
 
     public function testItReturnFalseIfProjectIsNotAllowedToUseOnlyOffice(): void
     {
-        \ForgeConfig::set(OnlyOfficeDocumentServerSettings::URL, 'https://example.com');
-        \ForgeConfig::set(OnlyOfficeDocumentServerSettings::SECRET, 'very_secret');
-
         $plugin_manager    = $this->createMock(\PluginManager::class);
         $onlyoffice_plugin = new \onlyofficePlugin(null);
         $checker           = new OnlyOfficeAvailabilityChecker(
             $plugin_manager,
             $onlyoffice_plugin,
             $this->createMock(LoggerInterface::class),
+            IRetrieveDocumentServersStub::buildWith(new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret'))),
         );
 
         $project = ProjectTestBuilder::aProject()
@@ -121,15 +120,13 @@ class OnlyOfficeAvailabilityCheckerTest extends TestCase
 
     public function testHappyPath(): void
     {
-        \ForgeConfig::set(OnlyOfficeDocumentServerSettings::URL, 'https://example.com');
-        \ForgeConfig::set(OnlyOfficeDocumentServerSettings::SECRET, 'very_secret');
-
         $plugin_manager    = $this->createMock(\PluginManager::class);
         $onlyoffice_plugin = new \onlyofficePlugin(null);
         $checker           = new OnlyOfficeAvailabilityChecker(
             $plugin_manager,
             $onlyoffice_plugin,
             $this->createMock(LoggerInterface::class),
+            IRetrieveDocumentServersStub::buildWith(new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret'))),
         );
 
         $project = ProjectTestBuilder::aProject()

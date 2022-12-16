@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 
 /**
  * @psalm-immutable
@@ -46,7 +48,18 @@ final class ProvideOnlyOfficeDocumentStub implements ProvideOnlyOfficeDocument
 
     public static function buildWithDocmanFile(\Project $project, \Docman_File $item): self
     {
-        return new self(Result::ok(new OnlyOfficeDocument($project, $item, 123, 'document.docx', true)));
+        return new self(
+            Result::ok(
+                new OnlyOfficeDocument(
+                    $project,
+                    $item,
+                    123,
+                    'document.docx',
+                    true,
+                    new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret')),
+                )
+            )
+        );
     }
 
     public function getDocument(\PFUser $user, int $item_id): Ok|Err

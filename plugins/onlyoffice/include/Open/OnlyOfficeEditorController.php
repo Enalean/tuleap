@@ -34,7 +34,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
+use Tuleap\OnlyOffice\DocumentServer\IRetrieveDocumentServers;
 use Tuleap\OnlyOffice\Open\Editor\ProvideOnlyOfficeGlobalEditorJWToken;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\NotFoundException;
@@ -46,6 +46,7 @@ final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
         private LoggerInterface $logger,
         private ProvideOnlyOfficeGlobalEditorJWToken $onlyoffice_global_editor_jwt_provider,
         private ProvideCurrentUser $current_user_provider,
+        private IRetrieveDocumentServers $servers_retriever,
         private \TemplateRenderer $template_renderer,
         private IncludeViteAssets $assets,
         private ResponseFactoryInterface $response_factory,
@@ -62,9 +63,14 @@ final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
         assert($layout instanceof BaseLayout);
         $csp_nonce = $layout->getCSPNonce();
 
-        $document_server_url = \ForgeConfig::get(OnlyOfficeDocumentServerSettings::URL, null);
+        $document_server_url = null;
+
+        $servers = $this->servers_retriever->retrieveAll();
+        if (count($servers) > 0) {
+            $document_server_url = $servers[0]->url;
+        }
         if ($document_server_url === null) {
-            $this->logger->debug(sprintf('Settings %s does not seem to be defined', OnlyOfficeDocumentServerSettings::URL));
+            $this->logger->debug('No document server is configured');
             throw new NotFoundException();
         }
 

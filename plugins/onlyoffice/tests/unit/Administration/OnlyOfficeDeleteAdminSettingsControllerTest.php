@@ -23,12 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\Config\ConfigDao;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
+use Tuleap\OnlyOffice\DocumentServer\IDeleteDocumentServer;
+use Tuleap\OnlyOffice\Stubs\IDeleteDocumentServerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -38,21 +39,20 @@ final class OnlyOfficeDeleteAdminSettingsControllerTest extends TestCase
 
     public function testSaveSettings(): void
     {
-        $config_dao = $this->createMock(ConfigDao::class);
+        $deletor = IDeleteDocumentServerStub::buildSelf();
 
-        $controller = $this->buildController($config_dao);
+        $controller = $this->buildController($deletor);
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build());
 
-        $config_dao->expects($this->atLeastOnce())->method('save');
-
         $response = $controller->handle($request);
 
         self::assertEquals(302, $response->getStatusCode());
+        self::assertTrue($deletor->hasBeenDeleted());
     }
 
-    private function buildController(ConfigDao $config_dao): OnlyOfficeDeleteAdminSettingsController
+    private function buildController(IDeleteDocumentServer $deletor): OnlyOfficeDeleteAdminSettingsController
     {
         $csrf_token = $this->createStub(\CSRFSynchronizerToken::class);
         $csrf_token->method('check');
@@ -63,7 +63,7 @@ final class OnlyOfficeDeleteAdminSettingsControllerTest extends TestCase
 
         return new OnlyOfficeDeleteAdminSettingsController(
             $csrf_token,
-            $config_dao,
+            $deletor,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             new SapiEmitter()
         );
