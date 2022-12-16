@@ -135,6 +135,42 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         self::assertSame('_depends_on', $third_link->getType());
     }
 
+    public function testItThrowsWhenAllLinkAndLinksAreUsedInTheSameTime(): void
+    {
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+        $payload = [
+            'all_links' => [],
+            'links' => [],
+        ];
+
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectExceptionMessage("cannot be used at the same time");
+        $this->build($payload);
+    }
+
+    public function testItThrowsWhenNeitherLinksOrAllLinksAreUsed(): void
+    {
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+        $payload = [];
+
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectExceptionMessage("links and/or parent or all_links key must be defined");
+        $this->build($payload);
+    }
+
+    public function testItThrowsWhenAllLinksIsUsedWithParent(): void
+    {
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+        $payload = [
+            'all_links' => [],
+            "parent" => ['id' => self::PARENT_ARTIFACT_ID],
+        ];
+
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectExceptionMessage("cannot be used at the same time");
+        $this->build($payload);
+    }
+
     public function testItThrowsWhenAllLinkIsUsedAndFeatureFlagIsDisabled(): void
     {
         $payload = [
@@ -145,18 +181,15 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         $this->build($payload);
     }
 
-    public function testItDoesNothingWhenFeatureFlagIsSet(): void
+    public function testItThrowsWhenFeatureFlagIsSet(): void
     {
-        \ForgeConfig::set(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
         $payload = [
             'all_links' => [],
-            'links' => [
-                ['id' => self::FIRST_UNCHANGED_ARTIFACT_ID],
-            ],
         ];
 
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $this->build($payload);
-        $this->addToAssertionCount(1);
     }
 
     public function dataProviderInvalidPayloads(): array
