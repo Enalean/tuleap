@@ -55,6 +55,7 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStore implements OnlyOfficeSav
             $document->item->getId(),
             $this->hasher->computeHash($secret),
             $now->add($this->expiration_delay)->getTimestamp(),
+            $document->document_server->id,
         );
 
         return $this->split_token_formatter->getIdentifier(

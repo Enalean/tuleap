@@ -46,10 +46,13 @@ final class OnlyOfficeSaveDocumentTokenDAOTest extends TestCase
         $current_time    = 10;
         $expiration_time = 20;
 
-        $key_id = $this->dao->create(102, 11, 'verification_string', $expiration_time);
+        $key_id = $this->dao->create(102, 11, 'verification_string', $expiration_time, 1);
 
         $row = $this->dao->searchTokenVerificationAndAssociatedData($key_id, $current_time);
-        self::assertEqualsCanonicalizing(['verifier' => 'verification_string', 'user_id' => 102, 'document_id' => 11], $row);
+        self::assertEqualsCanonicalizing(
+            ['verifier' => 'verification_string', 'user_id' => 102, 'document_id' => 11, 'server_id' => 1],
+            $row
+        );
     }
 
     public function testDoesNotFoundAnExpiredToken(): void
@@ -57,14 +60,14 @@ final class OnlyOfficeSaveDocumentTokenDAOTest extends TestCase
         $current_time    = 20;
         $expiration_time = 10;
 
-        $key_id = $this->dao->create(102, 11, 'verification_string', $expiration_time);
+        $key_id = $this->dao->create(102, 11, 'verification_string', $expiration_time, 1);
 
         self::assertNull($this->dao->searchTokenVerificationAndAssociatedData($key_id, $current_time));
     }
 
     public function testCanUpdateExpirationTimeOfAToken(): void
     {
-        $key_id = $this->dao->create(102, 11, 'verification_string', 10);
+        $key_id = $this->dao->create(102, 11, 'verification_string', 10, 1);
         self::assertEquals(10, $this->getExpirationDateOfAToken($key_id));
 
         $this->dao->updateTokenExpirationDate($key_id, 1, 20);

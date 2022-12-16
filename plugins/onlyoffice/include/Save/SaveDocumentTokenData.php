@@ -27,7 +27,7 @@ namespace Tuleap\OnlyOffice\Save;
  */
 final class SaveDocumentTokenData
 {
-    public function __construct(public int $token_id, public int $user_id, public int $document_id)
+    public function __construct(public int $token_id, public int $user_id, public int $document_id, public int $server_id)
     {
     }
 }

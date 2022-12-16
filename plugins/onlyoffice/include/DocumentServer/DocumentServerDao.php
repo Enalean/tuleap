@@ -43,6 +43,19 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
         );
     }
 
+    /**
+     * @throws DocumentServerNotFoundException
+     */
+    public function retrieveById(int $id): DocumentServer
+    {
+        $row = $this->getDB()->row('SELECT * FROM plugin_onlyoffice_document_server WHERE id = ?', $id);
+        if (! $row) {
+            throw new DocumentServerNotFoundException();
+        }
+
+        return new DocumentServer($row['id'], $row['url'], new ConcealedString($row['secret_key']));
+    }
+
     public function delete(int $id): void
     {
         $this->getDB()->delete('plugin_onlyoffice_document_server', ['id' => $id]);

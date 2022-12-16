@@ -59,6 +59,7 @@ use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
 use Tuleap\OnlyOffice\Save\CallbackURLSaveTokenIdentifierExtractor;
+use Tuleap\OnlyOffice\Save\DocumentServerForSaveDocumentTokenRetriever;
 use Tuleap\OnlyOffice\Save\OnlyOfficeRefreshCallbackURLTokenController;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenDAO;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenGeneratorDBStore;
@@ -204,7 +205,7 @@ final class onlyofficePlugin extends Plugin
                     new DateInterval('PT2M'),
                 ),
                 new \Lcobucci\JWT\Signer\Hmac\Sha256(),
-                new DocumentServerDao($encryption),
+                new DocumentServerForSaveDocumentTokenRetriever(new DocumentServerDao($encryption)),
                 $encryption,
             ),
             new \Tuleap\OnlyOffice\Save\OnlyOfficeCallbackDocumentSaver(

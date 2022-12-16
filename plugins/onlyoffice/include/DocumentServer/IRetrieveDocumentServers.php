@@ -28,4 +28,9 @@ interface IRetrieveDocumentServers
      * @return list<DocumentServer>
      */
     public function retrieveAll(): array;
+
+    /**
+     * @throws DocumentServerNotFoundException
+     */
+    public function retrieveById(int $id): DocumentServer;
 }
