@@ -44,6 +44,11 @@ class ArtifactValuesRepresentation
     public $links;
 
     /**
+     * @var array | null {@required false}
+     */
+    public array|null $all_links = null;
+
+    /**
      * @var array {@required false}
      */
     public $parent;
@@ -77,6 +82,10 @@ class ArtifactValuesRepresentation
 
         if ($this->links !== null) {
             $array_representation['links'] = $this->links;
+        }
+
+        if ($this->all_links !== null) {
+            $array_representation['all_links'] = $this->all_links;
         }
 
         if ($this->parent !== null) {
