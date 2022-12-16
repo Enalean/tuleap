@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -44,8 +45,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
+#[ConfigKeyCategory('Tracker')]
+class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     #[FeatureFlagConfigKey("Feature flag to hide by default reverse links in artifact view (legacy behaviour)")]
     public const HIDE_REVERSE_LINKS_KEY = 'hide_reverse_links_by_default';

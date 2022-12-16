@@ -3448,6 +3448,12 @@ msgid "Tracker %1$s not duplicated"
 msgstr ""
 
 #, php-format
+msgid ""
+"Tracker %d has too many artifacts (%d) while limit was set to %d. Please "
+"refine your query"
+msgstr ""
+
+#, php-format
 msgid "Tracker %s : field %s (%s) has no permission"
 msgstr ""
 

@@ -2485,6 +2485,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(Tracker_FormElement_Field_ArtifactLink::class);
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
         $event->addConfigClass(ReverseLinksFeatureFlag::class);
+        $event->addConfigClass(Tracker_ReportDao::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder

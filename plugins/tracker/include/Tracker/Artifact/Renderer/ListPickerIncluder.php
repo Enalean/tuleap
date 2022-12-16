@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Renderer;
 
+use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\FeatureFlagConfigKey;
 
+#[ConfigKeyCategory('Tracker')]
 final class ListPickerIncluder
 {
     #[FeatureFlagConfigKey("Feature flag to have list pickers in lieu of <select> in artifact views")]
