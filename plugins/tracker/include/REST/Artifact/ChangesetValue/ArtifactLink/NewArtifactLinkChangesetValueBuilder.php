@@ -27,6 +27,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewParentLink;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 
 final class NewArtifactLinkChangesetValueBuilder
@@ -35,9 +36,8 @@ final class NewArtifactLinkChangesetValueBuilder
     private const LINKS_KEY     = 'links';
     private const ALL_LINKS_KEY = 'all_links';
 
-    public function __construct(
-        private RetrieveForwardLinks $forward_links_retriever,
-    ) {
+    public function __construct(private RetrieveForwardLinks $forward_links_retriever)
+    {
     }
 
     /**
@@ -74,8 +74,12 @@ final class NewArtifactLinkChangesetValueBuilder
         }
 
         if ($payload_has_all_links_key && $is_all_links_supported) {
-            throw new \Tracker_FormElement_InvalidFieldValueException(
-                'all_links is not supported yet'
+            return NewArtifactLinkChangesetValue::fromParts(
+                $link_field->getId(),
+                $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
+                $this->buildFromLinksKey($payload_has_links_key, $payload),
+                $this->buildParent($payload_has_parent_key, $payload),
+                $this->buildReverse($payload_has_all_links_key, $payload)
             );
         }
 
@@ -90,6 +94,7 @@ final class NewArtifactLinkChangesetValueBuilder
             $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
             $this->buildFromLinksKey($payload_has_links_key, $payload),
             $this->buildParent($payload_has_parent_key, $payload),
+            new CollectionOfReverseLinks([])
         );
     }
 
@@ -130,6 +135,18 @@ final class NewArtifactLinkChangesetValueBuilder
                 $payload[self::LINKS_KEY]
             )
         );
+    }
+
+    /**
+     * @throws \Tracker_FormElement_InvalidFieldValueException
+     */
+    private function buildReverse(bool $payload_has_all_links_key, array $payload): CollectionOfReverseLinks
+    {
+        if (! $payload_has_all_links_key) {
+            return new CollectionOfReverseLinks([]);
+        }
+
+        return AllLinkPayloadParser::buildLinksToUpdate($payload[self::ALL_LINKS_KEY]);
     }
 
     private function doesPayloadHaveAllLinksKey(array $payload): bool

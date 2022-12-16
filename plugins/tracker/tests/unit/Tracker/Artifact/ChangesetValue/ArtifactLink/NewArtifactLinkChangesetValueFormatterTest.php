@@ -45,7 +45,8 @@ final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPU
             self::FIELD_ID,
             $this->already_linked,
             $this->submitted_links,
-            $this->parent
+            $this->parent,
+            new CollectionOfReverseLinks([])
         );
         return NewArtifactLinkChangesetValueFormatter::formatForWebUI($value);
     }

@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
+use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -56,7 +58,11 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
             self::ARTIFACT_LINK_FIELD_ID,
             $already_linked,
             $submitted_links,
-            null
+            null,
+            new CollectionOfReverseLinks([
+                ReverseLinkStub::build(195),
+                ReverseLinkStub::build(196),
+            ])
         );
         $changeset_values    = new ChangesetValuesContainer($fields_data, $artifact_link_value);
 

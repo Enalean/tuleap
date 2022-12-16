@@ -44,7 +44,7 @@ class ArtifactValuesRepresentation
     public $links;
 
     /**
-     * @var array | null {@required false}
+     * @var LinkToUpdateRepresentation[] | null {@required false}
      */
     public array|null $all_links = null;
 

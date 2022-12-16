@@ -33,6 +33,7 @@ final class NewArtifactLinkChangesetValue
         private ?ArtifactLinksDiff $artifact_links_diff,
         private ?CollectionOfForwardLinks $submitted_values,
         private ?NewParentLink $parent,
+        private CollectionOfReverseLinks $submitted_reverse_links,
     ) {
     }
 
@@ -41,13 +42,15 @@ final class NewArtifactLinkChangesetValue
         CollectionOfForwardLinks $existing_links,
         ?CollectionOfForwardLinks $submitted_values,
         ?NewParentLink $parent,
+        CollectionOfReverseLinks $submitted_reverse_links,
     ): self {
         $diff = $submitted_values !== null ? ArtifactLinksDiff::build($submitted_values, $existing_links) : null;
         return new self(
             $field_id,
             $diff,
             $submitted_values,
-            $parent
+            $parent,
+            $submitted_reverse_links
         );
     }
 
@@ -69,5 +72,10 @@ final class NewArtifactLinkChangesetValue
     public function getSubmittedValues(): ?CollectionOfForwardLinks
     {
         return $this->submitted_values;
+    }
+
+    public function getSubmittedReverseLinks(): CollectionOfReverseLinks
+    {
+        return $this->submitted_reverse_links;
     }
 }
