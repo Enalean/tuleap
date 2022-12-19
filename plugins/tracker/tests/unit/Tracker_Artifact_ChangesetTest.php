@@ -191,6 +191,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->shouldReceive('getId')->andReturns(2);
         $field->shouldReceive('getChangesetValue')->once()->andReturns($value);
 
+        $this->changeset->shouldReceive('getId')->andReturns(12);
         $this->changeset->shouldReceive('getValueDao')->once()->andReturns($this->dao);
 
         $this->assertInstanceOf(Tracker_Artifact_ChangesetValue_Date::class, $this->changeset->getValue($field));
@@ -268,7 +269,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $value2_current->shouldReceive('hasChanged')->once()->andReturns(false);
         $value2_current->shouldReceive('diff')->never();
 
-        $current_changeset->shouldReceive('getId')->once()->andReturns(66);
+        $current_changeset->shouldReceive('getId')->andReturns(66);
         $current_changeset->shouldReceive('getValueDao')->once()->andReturns($this->dao);
         $current_changeset->shouldReceive('getFormElementFactory')->andReturns($fact);
         $current_changeset->shouldReceive('getArtifact')->once()->andReturns($artifact);
@@ -288,7 +289,7 @@ final class Tracker_Artifact_ChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
         $field  = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
         $field->shouldReceive('getLabel')->andReturns('Summary');
 
-        $changeset = new Tracker_Artifact_Changeset(null, null, null, null, null);
+        $changeset = new Tracker_Artifact_Changeset(1, null, null, null, null);
         $result    = $changeset->displayDiff($diff, $format, $field);
         $this->assertMatchesRegularExpression('%Quelle est la couleur <b> du <i> <s> cheval blanc%', $result);
         $this->assertMatchesRegularExpression('%Summary%', $result);
