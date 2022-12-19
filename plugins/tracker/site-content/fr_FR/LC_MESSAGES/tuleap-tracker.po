@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -3923,6 +3923,14 @@ msgstr "Outil de suivi"
 #, php-format
 msgid "Tracker %1$s not duplicated"
 msgstr "L'outil de suivi %1$s n'a pas été copié"
+
+#, php-format
+msgid ""
+"Tracker %d has too many artifacts (%d) while limit was set to %d. Please "
+"refine your query"
+msgstr ""
+"L'outil de suivi %d contient trop d'artefacts (%d) alors que la limite a été "
+"fixée à %d. Merci de raffiner votre requête."
 
 #, php-format
 msgid "Tracker %s : field %s (%s) has no permission"
