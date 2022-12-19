@@ -21,6 +21,8 @@ import type { FileFieldValueModel } from "../../../../domain/fields/file-field/F
 import { NewFileToAttach } from "../../../../domain/fields/file-field/NewFileToAttach";
 import type { AttachedFileDescription } from "../../../../domain/fields/file-field/AttachedFileDescription";
 import type { FileFieldType } from "../../../../domain/fields/file-field/FileFieldType";
+import type { EventDispatcher } from "../../../../domain/EventDispatcher";
+import { TYPE } from "../../../../domain/DidCheckFileFieldIsPresent";
 
 export type NewFileToAttachCollection = ReadonlyArray<NewFileToAttach>;
 export type AttachedFileCollection = ReadonlyArray<AttachedFileDescription> | undefined;
@@ -41,9 +43,13 @@ export interface FileFieldControllerType {
 
 export const FileFieldController = (
     field: FileFieldType,
-    value_model: FileFieldValueModel
+    value_model: FileFieldValueModel,
+    event_dispatcher: EventDispatcher
 ): FileFieldControllerType => {
     let attached_files: AttachedFileCollection = field.file_descriptions;
+    event_dispatcher.addObserver(TYPE, (event) => {
+        event.is_there_at_least_one_file_field = true;
+    });
 
     return {
         getNewFilesToAttach: (): NewFileToAttachCollection => value_model.temporary_files,

@@ -18,13 +18,42 @@
  */
 
 import { NewFileToAttach } from "../../../../domain/fields/file-field/NewFileToAttach";
-import type { AttachedFileCollection, NewFileToAttachCollection } from "./FileFieldController";
+import type {
+    AttachedFileCollection,
+    FileFieldControllerType,
+    NewFileToAttachCollection,
+} from "./FileFieldController";
 import { FileFieldController } from "./FileFieldController";
 import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
 import type { FileFieldType } from "../../../../domain/fields/file-field/FileFieldType";
 import type { AttachedFileDescription } from "../../../../domain/fields/file-field/AttachedFileDescription";
+import { EventDispatcher } from "../../../../domain/EventDispatcher";
+import { DidCheckFileFieldIsPresent } from "../../../../domain/DidCheckFileFieldIsPresent";
 
 describe(`FileFieldController`, () => {
+    describe(`Events`, () => {
+        let event_dispatcher: EventDispatcher;
+
+        beforeEach(() => {
+            event_dispatcher = EventDispatcher();
+        });
+
+        const getController = (): FileFieldControllerType => {
+            const field = {} as FileFieldType;
+            const value_model = {} as FileFieldValueModel;
+            return FileFieldController(field, value_model, event_dispatcher);
+        };
+
+        it(`marks file field as present`, () => {
+            getController();
+
+            const event = DidCheckFileFieldIsPresent();
+            event_dispatcher.dispatch(event);
+
+            expect(event.is_there_at_least_one_file_field).toBe(true);
+        });
+    });
+
     describe(`setDescriptionOfNewFileToAttach()`, () => {
         const DESCRIPTION = "Palaeonemertinea";
 
@@ -34,7 +63,7 @@ describe(`FileFieldController`, () => {
                 temporary_files: [{ file: undefined, description: "should not change" }, file],
             } as unknown as FileFieldValueModel;
 
-            const controller = FileFieldController(field, value_model);
+            const controller = FileFieldController(field, value_model, EventDispatcher());
             return controller.setDescriptionOfNewFileToAttach(file, DESCRIPTION);
         };
 
@@ -59,7 +88,7 @@ describe(`FileFieldController`, () => {
                 ],
             } as unknown as FileFieldValueModel;
 
-            const controller = FileFieldController(field, value_model);
+            const controller = FileFieldController(field, value_model, EventDispatcher());
             return controller.setFileOfNewFileToAttach(file_to_attach, file);
         };
 
@@ -85,7 +114,7 @@ describe(`FileFieldController`, () => {
                 ],
             } as unknown as FileFieldValueModel;
 
-            const controller = FileFieldController(field, value_model);
+            const controller = FileFieldController(field, value_model, EventDispatcher());
             return controller.reset(file);
         };
 
@@ -104,7 +133,7 @@ describe(`FileFieldController`, () => {
                 temporary_files: [],
             } as unknown as FileFieldValueModel;
 
-            const controller = FileFieldController(field, value_model);
+            const controller = FileFieldController(field, value_model, EventDispatcher());
             return controller.addNewFileToAttach();
         };
 
@@ -125,7 +154,7 @@ describe(`FileFieldController`, () => {
 
         const markFileForRemoval = (file: AttachedFileDescription): AttachedFileCollection => {
             const field = { file_descriptions: [{ id: 799 }, file] } as FileFieldType;
-            const controller = FileFieldController(field, value_model);
+            const controller = FileFieldController(field, value_model, EventDispatcher());
             return controller.markFileForRemoval(file);
         };
 
@@ -151,7 +180,7 @@ describe(`FileFieldController`, () => {
 
         const cancelFileRemoval = (file: AttachedFileDescription): AttachedFileCollection => {
             const field = { file_descriptions: [{ id: 447 }, file] } as FileFieldType;
-            const controller = FileFieldController(field, value_model);
+            const controller = FileFieldController(field, value_model, EventDispatcher());
             return controller.cancelFileRemoval(file);
         };
 
