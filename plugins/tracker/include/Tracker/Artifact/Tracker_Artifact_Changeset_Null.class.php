@@ -36,7 +36,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
     public function __construct()
     {
         /** @psalm-suppress NullArgument */
-        parent::__construct(null, null, null, null, null);
+        parent::__construct(0, null, null, null, null);
     }
 
     /**

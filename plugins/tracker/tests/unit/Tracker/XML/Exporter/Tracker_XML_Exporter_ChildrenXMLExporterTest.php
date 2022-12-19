@@ -69,7 +69,7 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
             ->getMock();
 
         $this->last_changeset_1 = new Tracker_Artifact_Changeset(
-            null,
+            1,
             $artifact_1,
             null,
             null,
@@ -77,7 +77,7 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \Tuleap\Test\PHPUnit\
         );
 
         $this->last_changeset_2 = new Tracker_Artifact_Changeset(
-            null,
+            2,
             $artifact_2,
             null,
             null,

@@ -39,7 +39,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public const FIELDS_ALL      = 'all';
     public const FIELDS_COMMENTS = 'comments';
 
-    public $id;
     public $artifact;
     public $submitted_by;
     public $submitted_on;
@@ -55,15 +54,14 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Constructor
      *
-     * @param int|string      $id           The changeset Id
+     * @param int|numeric-string $id           The changeset Id
      * @param Artifact        $artifact     The artifact
      * @param int|string      $submitted_by The id of the owner of this changeset
      * @param string|int      $submitted_on The timestamp
      * @param string|null     $email        The email of the submitter if anonymous mode
      */
-    public function __construct($id, $artifact, $submitted_by, $submitted_on, $email)
+    public function __construct(public int|string $id, $artifact, $submitted_by, $submitted_on, $email)
     {
-        $this->id           = $id;
         $this->artifact     = $artifact;
         $this->submitted_by = $submitted_by;
         $this->submitted_on = $submitted_on;
@@ -114,7 +112,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
     private function getChangesetValueFromDB(Tracker_FormElement_Field $field)
     {
-        $row = $this->getValueDao()->searchByFieldId($this->id, $field->getId());
+        $row = $this->getValueDao()->searchByFieldId($this->getId(), $field->getId());
         if ($row !== null) {
             return $field->getChangesetValue($this, $row['id'], (bool) $row['has_changed']);
         }
@@ -178,7 +176,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     {
         $this->values = [];
         $factory      = $this->getFormElementFactory();
-        foreach ($this->getValueDao()->searchById($this->id) as $row) {
+        foreach ($this->getValueDao()->searchById($this->getId()) as $row) {
             if ($field = $factory->getFieldById($row['field_id'])) {
                 $this->values[$field->getId()] = $field->getChangesetValue($this, $row['id'], (bool) $row['has_changed']);
             }
@@ -873,11 +871,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Returns the Id of this changeset
      *
-     * @return string The Id of this changeset
+     * @return numeric-string|int
      *
      * @psalm-mutation-free
      */
-    public function getId()
+    public function getId(): string|int
     {
         return $this->id;
     }
