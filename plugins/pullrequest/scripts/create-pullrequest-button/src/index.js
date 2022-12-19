@@ -19,10 +19,9 @@
 
 import Vue from "vue";
 import App from "./components/App.vue";
-import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr_FR.po";
+import { initVueGettextFromPoGettextPlugin, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const is_anonymous = document.body.dataset.userId === "0";
     if (is_anonymous) {
         return;
@@ -43,14 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const mount_point = document.createElement("div");
     container.appendChild(mount_point);
 
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
-
-    Vue.config.language = document.body.dataset.userLocale;
+    await initVueGettextFromPoGettextPlugin(Vue, (locale) =>
+        import(`../po/${getPOFileFromLocale(locale)}`)
+    );
 
     const RootComponent = Vue.extend(App);
 
