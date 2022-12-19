@@ -60,6 +60,10 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->create('https://example.com/1', new ConcealedString('much_secret'));
 
         // Retrieve
+        $server = $this->dao->retrieveById(1);
+        self::assertEquals('https://example.com', $server->url);
+        self::assertEquals('very_secret', $this->decrypt($server->encrypted_secret_key));
+
         $servers = $this->dao->retrieveAll();
         self::assertCount(2, $servers);
         self::assertEquals('https://example.com', $servers[0]->url);

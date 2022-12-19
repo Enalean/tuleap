@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Save;
+namespace Tuleap\OnlyOffice\DocumentServer;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-
-interface OnlyOfficeCallbackResponseParser
+class DocumentServerNotFoundException extends \Exception
 {
-    /**
-     * @psalm-return Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
-     */
-    public function parseCallbackResponseContent(
-        string $response_content,
-        SaveDocumentTokenData $save_token_information,
-    ): Ok|Err;
 }

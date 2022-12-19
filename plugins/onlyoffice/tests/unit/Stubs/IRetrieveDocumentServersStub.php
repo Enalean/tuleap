@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Stubs;
 
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServerNotFoundException;
 use Tuleap\OnlyOffice\DocumentServer\IRetrieveDocumentServers;
 
 final class IRetrieveDocumentServersStub implements IRetrieveDocumentServers
@@ -50,5 +51,16 @@ final class IRetrieveDocumentServersStub implements IRetrieveDocumentServers
     public function retrieveAll(): array
     {
         return $this->servers;
+    }
+
+    public function retrieveById(int $id): DocumentServer
+    {
+        foreach ($this->servers as $server) {
+            if ($server->id === $id) {
+                return $server;
+            }
+        }
+
+        throw new DocumentServerNotFoundException();
     }
 }

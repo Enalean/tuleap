@@ -66,7 +66,7 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
 
         $this->dao->expects(self::once())
             ->method('create')
-            ->with($user->getId(), $item->getId(), self::anything(), 70)
+            ->with($user->getId(), $item->getId(), self::anything(), 70, 1)
             ->willReturn(147);
 
         $token = $this->token_generator->generateSaveToken(
