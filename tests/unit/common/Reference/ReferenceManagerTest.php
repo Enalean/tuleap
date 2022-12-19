@@ -217,19 +217,14 @@ final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->rm->updateProjectReferenceShortName($group_id, $from, $to);
     }
 
-    public function testInsertReferencesConvertsToUTF8(): void
+    public function testInsertReferencesPlayWellWithUTF8(): void
     {
-        $html    = 'g&=+}éàùœ';
-        $encoded = htmlentities($html, ENT_IGNORE, 'UTF-8');
-        $decoded = html_entity_decode($encoded, ENT_IGNORE, 'ISO-8859-15');
+        $initial_string = 'g&=+}éàùœ🐰';
+        $html           = $initial_string;
 
-        $pre_encoding = mb_detect_encoding($decoded, 'UTF-8,ISO-8859-15');
-        $this->assertEquals('ISO-8859-15', $pre_encoding);
+        $this->rm->insertReferences($html, 45);
 
-        $this->rm->insertReferences($decoded, 45);
-
-        $post_encoding = mb_detect_encoding($decoded, 'UTF-8,ISO-8859-15');
-        $this->assertEquals('UTF-8', $post_encoding);
+        self::assertEquals($initial_string, $html);
     }
 
     public function testItInsertsLinkForReferences(): void
