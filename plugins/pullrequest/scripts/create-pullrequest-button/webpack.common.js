@@ -17,15 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const entry_points = {
     "create-pullrequest-button": "./src/index.js",
     "repository-style": "../../themes/repository.scss",
 };
 
-module.exports = [
+export default [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
@@ -37,18 +42,15 @@ module.exports = [
             rules: [
                 webpack_configurator.rule_scss_loader,
                 webpack_configurator.rule_css_assets,
-                webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
             ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            POGettextPlugin.webpack(),
             ...webpack_configurator.getCSSExtractionPlugins(),
             webpack_configurator.getVueLoaderPlugin(),
         ],
-        resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias,
-        },
     },
 ];
