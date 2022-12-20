@@ -199,24 +199,48 @@ Cypress.Commands.add("switchProjectVisibility", (visibility: string): void => {
 });
 
 Cypress.Commands.add(
-    "createNewIssueProject",
-    (project_short_name: string, project_public_name: string): void => {
-        cy.visit("/project/new");
-        cy.get(
-            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
-        ).click();
-        cy.get("[data-test=project-registration-next-button]").click();
+    "createNewPublicProject",
+    (project_name: string, xml_template: string): void => {
+        const payload = {
+            shortname: project_name,
+            description: "",
+            label: project_name,
+            is_public: true,
+            categories: [],
+            fields: [],
+            xml_template_name: xml_template,
+            allow_restricted: false,
+        };
 
-        cy.get("[data-test=new-project-name]").type(project_public_name);
-        cy.get("[data-test=project-shortname-slugified-section]").click();
-        cy.get("[data-test=new-project-shortname]").type("{selectall}" + project_short_name);
-        cy.get("[data-test=approve_tos]").click();
-        cy.get("[data-test=project-registration-next-button]").click();
-        cy.get("[data-test=start-working]").click({
-            timeout: 20000,
-        });
+        cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
     }
 );
+
+Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => {
+    const payload = {
+        shortname: project_name,
+        description: "",
+        label: project_name,
+        is_public: false,
+        categories: [],
+        fields: [],
+        xml_template_name: "issues",
+        allow_restricted: true,
+    };
+
+    cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
+});
+
+Cypress.Commands.add("addUser", (user_name: string): void => {
+    cy.visitProjectAdministrationInCurrentProject();
+    cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
+    // ignore rule for select2
+
+    cy.get(".select2-search__field").type(`${user_name}{enter}`);
+
+    cy.get(".select2-result-user").click();
+    cy.get('[data-test="project-admin-submit-add-member"]').click();
+});
 
 const MAX_ATTEMPTS = 10;
 

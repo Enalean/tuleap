@@ -24,6 +24,7 @@ describe("Git", function () {
         before(() => {
             cy.clearSessionCookie();
             cy.projectAdministratorLogin();
+            cy.createNewPublicProject("git-project", "agile_alm");
             cy.getProjectId("git-project").as("project_id");
             now = Date.now();
         });

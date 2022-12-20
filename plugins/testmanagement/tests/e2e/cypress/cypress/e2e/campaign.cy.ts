@@ -18,7 +18,7 @@
  */
 
 describe("TTM campaign", () => {
-    let ttm_project_name: string, ttm_project_public_name: string, now: number;
+    let ttm_project_name: string, now: number;
 
     before(() => {
         cy.clearSessionCookie();
@@ -29,7 +29,6 @@ describe("TTM campaign", () => {
         cy.preserveSessionCookies();
 
         ttm_project_name = "test-ttm-" + now;
-        ttm_project_public_name = "Test TTM " + now;
     });
 
     context("As project administrator", () => {
@@ -41,40 +40,10 @@ describe("TTM campaign", () => {
             cy.userLogout();
         });
 
-        it("Creates a project with TTM", () => {
-            cy.visit("/project/new");
-            cy.get(
-                "[data-test=project-registration-card-label][for=project-registration-tuleap-template-agile_alm]"
-            ).click();
-            cy.get("[data-test=project-registration-next-button]").click();
-
-            cy.get("[data-test=new-project-name]").type(ttm_project_public_name);
-            cy.get("[data-test=project-shortname-slugified-section]").click();
-            cy.get("[data-test=new-project-shortname]").type("{selectall}" + ttm_project_name);
-            cy.get("[data-test=approve_tos]").click();
-            cy.get("[data-test=project-registration-next-button]").click();
-            cy.get("[data-test=start-working]").click({
-                timeout: 20000,
-            });
-        });
-
-        it("Adds user to project members", () => {
-            cy.visitProjectAdministrationInCurrentProject();
-            cy.get("[data-test=admin-nav-members]").click();
-
-            cy.get(
-                "[data-test=project-admin-members-add-user-select] + .select2-container"
-            ).click();
-
-            // ignore rule for select2
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".select2-search__field").type("ProjectMember{enter}");
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".select2-result-user").click();
-
-            cy.get('[data-test="project-admin-submit-add-member"]').click();
-
-            cy.get("[data-test=project-admin-submit-add-member]").click();
+        it("Creates a project with TTM with users", () => {
+            cy.createNewPublicProject(ttm_project_name, "agile_alm");
+            cy.visitProjectService(ttm_project_name, "Test Management");
+            cy.addUser("projectMember");
         });
 
         it("Create a campaign", () => {
