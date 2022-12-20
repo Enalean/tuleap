@@ -2,8 +2,6 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/cypress-configurator': workspace:*
-  '@tuleap/cypress-utilities-support': workspace:*
   '@tuleap/date-helper': workspace:*
   '@tuleap/plugin-tracker-tql-codemirror': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
@@ -32,8 +30,6 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
-  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@vue/test-utils': 1.3.0_vue@2.7.8
