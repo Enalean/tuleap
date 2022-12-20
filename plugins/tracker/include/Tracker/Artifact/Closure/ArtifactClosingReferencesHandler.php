@@ -107,6 +107,13 @@ final class ArtifactClosingReferencesHandler
         if (! $artifact) {
             return;
         }
+        $tracker = $artifact->getTracker();
+        if ((int) $tracker->getGroupId() !== (int) $event->project->getID()) {
+            return;
+        }
+        if ($tracker->isDeleted()) {
+            return;
+        }
         if ($this->closed_cache->isClosed($artifact)) {
             return;
         }

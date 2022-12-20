@@ -177,7 +177,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
-    public function testItSkipsReferencesToArtifactsFromADifferentProjectThanTheEvent(): void
+    public function testItSkipsReferencesToArtifactReferencesFromADifferentProjectThanTheEvent(): void
     {
         $other_project             = ProjectTestBuilder::aProject()->withId(113)->build();
         $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
@@ -192,6 +192,36 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
     public function testItSkipsArtifactsUserCannotSee(): void
     {
         $this->artifact_retriever = RetrieveArtifactStub::withNoArtifact();
+
+        $this->handlePotentialReferencesReceived();
+        self::assertFalse($this->logger->hasDebugRecords());
+    }
+
+    public function testItSkipsArtifactsWithoutArtifactReferenceInATrackerFromADifferentProjectThanTheEvent(): void
+    {
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts(
+            $this->mockArtifactInAnotherProject('bug', self::FIRST_ARTIFACT_ID),
+        );
+
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+            [$this->getArtifactReferenceInstance('fix', 'art', self::SECOND_ARTIFACT_ID, $this->project)],
+        );
+
+        $this->handlePotentialReferencesReceived();
+        self::assertFalse($this->logger->hasDebugRecords());
+    }
+
+    public function testItSkipsArtifactsInDeletedTrackers(): void
+    {
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts(
+            $this->mockArtifactInDeletedTracker('bug', self::FIRST_ARTIFACT_ID),
+        );
+
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+            [$this->getArtifactReferenceInstance('fix', 'art', self::SECOND_ARTIFACT_ID, $this->project)],
+        );
 
         $this->handlePotentialReferencesReceived();
         self::assertFalse($this->logger->hasDebugRecords());
@@ -307,7 +337,40 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
      */
     private function mockArtifact(string $tracker_shortname, int $artifact_id)
     {
-        $tracker  = TrackerTestBuilder::aTracker()->withShortName($tracker_shortname)->build();
+        $tracker  = TrackerTestBuilder::aTracker()->withShortName($tracker_shortname)->withProject($this->project)->build();
+        $artifact = $this->createStub(Artifact::class);
+        $artifact->method('getId')->willReturn($artifact_id);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('isOpen')->willReturn(true);
+        return $artifact;
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\Stub & Artifact
+     */
+    private function mockArtifactInDeletedTracker(string $tracker_shortname, int $artifact_id)
+    {
+        $tracker  = TrackerTestBuilder::aTracker()
+            ->withShortName($tracker_shortname)
+            ->withProject($this->project)
+            ->withDeletionDate((new \DateTimeImmutable())->getTimestamp())
+            ->build();
+        $artifact = $this->createStub(Artifact::class);
+        $artifact->method('getId')->willReturn($artifact_id);
+        $artifact->method('getTracker')->willReturn($tracker);
+        $artifact->method('isOpen')->willReturn(true);
+        return $artifact;
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\Stub & Artifact
+     */
+    private function mockArtifactInAnotherProject(string $tracker_shortname, int $artifact_id)
+    {
+        $tracker  = TrackerTestBuilder::aTracker()
+            ->withShortName($tracker_shortname)
+            ->withProject(ProjectTestBuilder::aProject()->withId(999)->build())
+            ->build();
         $artifact = $this->createStub(Artifact::class);
         $artifact->method('getId')->willReturn($artifact_id);
         $artifact->method('getTracker')->willReturn($tracker);
