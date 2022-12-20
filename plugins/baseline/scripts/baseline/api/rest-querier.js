@@ -115,15 +115,21 @@ async function getBaselineArtifacts(baseline_id) {
 }
 
 async function getBaselineArtifactsByIds(baseline_id, artifact_ids) {
-    const query = JSON.stringify({
-        ids: artifact_ids,
-    });
-    const response = await get(
-        `/api/baselines/${baseline_id}/artifacts?query=${encodeURIComponent(query)}`
-    );
+    let artifacts = [];
+    const limit = 100;
+    for (let i = 0; i < artifact_ids.length; i += limit) {
+        const query = JSON.stringify({
+            ids: artifact_ids.slice(i, i + (limit - 1)),
+        });
+        const response = await get(
+            `/api/baselines/${baseline_id}/artifacts?query=${encodeURIComponent(query)}`
+        );
 
-    let json_response = await response.json();
-    return json_response.artifacts;
+        let json_response = await response.json();
+        artifacts = artifacts.concat(json_response.artifacts);
+    }
+
+    return artifacts;
 }
 
 async function getComparisons(project_id) {
