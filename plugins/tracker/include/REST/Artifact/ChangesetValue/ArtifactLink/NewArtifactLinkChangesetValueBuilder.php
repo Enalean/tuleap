@@ -50,16 +50,36 @@ final class NewArtifactLinkChangesetValueBuilder
         array $payload,
     ): NewArtifactLinkChangesetValue {
         $payload_has_all_links_key = $this->doesPayloadHaveAllLinksKey($payload);
-        if ($payload_has_all_links_key && (int) \ForgeConfig::get(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY) !== 1) {
+        $payload_has_links_key     = $this->doesPayloadHaveALinksKey($payload);
+        $payload_has_parent_key    = $this->doesPayloadHaveAParentKey($payload);
+
+        $is_all_links_supported = (int) \ForgeConfig::getFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY) === 1;
+
+        if ($this->isUsingAllLinksWithLink($payload_has_all_links_key, $payload_has_links_key)) {
             throw new \Tracker_FormElement_InvalidFieldValueException(
-                'All links is not supported yet'
+                'all_links key and link key cannot be used at the same time'
             );
         }
 
-        $payload_has_parent_key = $this->doesPayloadHaveAParentKey($payload);
-        $payload_has_links_key  = $this->doesPayloadHaveALinksKey($payload);
+        if ($this->isUsingAllLinksWithParent($payload_has_all_links_key, $payload_has_parent_key)) {
+            throw new \Tracker_FormElement_InvalidFieldValueException(
+                'all_links key and parent key cannot be used at the same time'
+            );
+        }
 
-        if (! $payload_has_parent_key && ! $payload_has_links_key) {
+        if (! $payload_has_all_links_key && $this->hasNotDefinedLinksOrParent($payload_has_parent_key, $payload_has_links_key)) {
+            throw new \Tracker_FormElement_InvalidFieldValueException(
+                'links and/or parent or all_links key must be defined'
+            );
+        }
+
+        if ($payload_has_all_links_key && $is_all_links_supported) {
+            throw new \Tracker_FormElement_InvalidFieldValueException(
+                'all_links is not supported yet'
+            );
+        }
+
+        if ($this->hasNotDefinedLinksOrParent($payload_has_parent_key, $payload_has_links_key)) {
             throw new \Tracker_FormElement_InvalidFieldValueException(
                 'Value should be \'links\' and an array of {"id": integer, ["type": string]} and/or \'parent\' with {"id": integer}'
             );
@@ -116,5 +136,20 @@ final class NewArtifactLinkChangesetValueBuilder
     {
         return array_key_exists(self::ALL_LINKS_KEY, $payload)
             && is_array($payload[self::ALL_LINKS_KEY]);
+    }
+
+    private function isUsingAllLinksWithLink(bool $payload_has_all_links_key, bool $payload_has_links_key): bool
+    {
+        return $payload_has_all_links_key && $payload_has_links_key;
+    }
+
+    private function isUsingAllLinksWithParent(bool $payload_has_all_links_key, bool $payload_has_parent_key): bool
+    {
+        return $payload_has_all_links_key && $payload_has_parent_key;
+    }
+
+    private function hasNotDefinedLinksOrParent(bool $payload_has_parent_key, bool $payload_has_links_key): bool
+    {
+        return ! $payload_has_parent_key && ! $payload_has_links_key;
     }
 }
