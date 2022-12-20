@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.1.0@4defa177c89397c5e14737a80fe4896584130674">
+<files psalm-version="5.4.0@62db5d4f6a7ae0a20f7cc5a4952d730272fc0863">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$project-&gt;getID()</code>
@@ -214,11 +214,17 @@
       <code>$artifacts_for_planning</code>
       <code>$artifacts_for_planning</code>
     </DeprecatedMethod>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$children</code>
+    </LessSpecificReturnStatement>
     <MissingReturnType occurrences="3">
       <code>filterBacklogIds</code>
       <code>getMatchingIdsForMilestone</code>
       <code>getMatchingIdsForTopBacklog</code>
     </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>list&lt;array{tracker_id: int, id: int}&gt;</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItemDao.class.php">
     <DeprecatedMethod occurrences="35">
@@ -1908,6 +1914,16 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Planning/PlanningDao.php">
+    <LessSpecificReturnStatement occurrences="3">
+      <code>$ids</code>
+      <code>$ids</code>
+      <code>$this-&gt;getDB()-&gt;safeQuery($sql, $in_statement-&gt;values())</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="3">
+      <code>list&lt;array{id:int, name:string, group_id:int, planning_tracker_id:int, backlog_title:string, plan_title:string}&gt;</code>
+      <code>list&lt;int&gt;</code>
+      <code>list&lt;int&gt;</code>
+    </MoreSpecificReturnType>
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $backlog_tracker_id</code>
     </RedundantCastGivenDocblockType>
@@ -2981,9 +2997,6 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$params</code>
     </PossiblyUndefinedVariable>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>dom_import_simplexml($xml_element)-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/XMLImporter.class.php">
     <InvalidArgument occurrences="2">
@@ -3389,6 +3402,9 @@
       <code>$rows</code>
       <code>$rows</code>
     </DeprecatedMethod>
+    <InvalidArgument occurrences="1">
+      <code>array_keys($tracker_mapping)</code>
+    </InvalidArgument>
     <InvalidOperand occurrences="1">
       <code>$key</code>
     </InvalidOperand>
@@ -4161,6 +4177,12 @@
       <code>$_SERVER['REQUEST_URI']</code>
       <code>$_SERVER['REQUEST_URI']</code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/baseline/include/Adapter/Administration/AdminPermissionsPresenterBuilder.php">
+    <ArgumentTypeCoercion occurrences="2">
+      <code>$this-&gt;getUserGroupsPresenter($administrators_ugroup_id, $project)</code>
+      <code>$this-&gt;getUserGroupsPresenter($readers_ugroup_id, $project)</code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/baseline/include/Adapter/ArtifactLinkRepository.php">
     <DeprecatedMethod occurrences="1">
@@ -6183,9 +6205,6 @@
       <code>addCData</code>
       <code>assertEmailUnique</code>
     </MissingReturnType>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$dom-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/create_test_env/include/CreateTestEnv/Exception/InvalidPasswordException.php">
     <MissingPropertyType occurrences="1">
@@ -7064,6 +7083,9 @@
       <code>setDataPath</code>
       <code>visitDocument</code>
     </MissingReturnType>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$this-&gt;statistics['nb_version']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/docman/bin/DocmanExport/XMLExport.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -7087,9 +7109,6 @@
       <code>setGroupId</code>
       <code>setPackagePath</code>
     </MissingReturnType>
-    <UndefinedPropertyAssignment occurrences="1">
-      <code>$doc-&gt;formatOutput</code>
-    </UndefinedPropertyAssignment>
   </file>
   <file src="plugins/docman/bin/DocmanExport/export.php">
     <MissingReturnType occurrences="1">
@@ -7166,8 +7185,7 @@
       <code>migrate</code>
       <code>removeTemporaryDirectory</code>
     </MissingReturnType>
-    <PossiblyUndefinedArrayOffset occurrences="2">
-      <code>$_SERVER['REQUEST_TIME']</code>
+    <PossiblyUndefinedArrayOffset occurrences="1">
       <code>$_SERVER['REQUEST_TIME']</code>
     </PossiblyUndefinedArrayOffset>
   </file>
@@ -7400,9 +7418,6 @@
     <UndefinedDocblockClass occurrences="1">
       <code>The</code>
     </UndefinedDocblockClass>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$domNode-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/docman/bin/DocmanImport/XMLDocmanUpdate.class.php">
     <InvalidPassByReference occurrences="2">
@@ -12383,6 +12398,14 @@
       <code>$value</code>
     </MissingParamType>
   </file>
+  <file src="plugins/docman/include/Metadata/Owner/OwnerDao.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;getDB()-&gt;safeQuery($sql, [(int) $project-&gt;getID(), '%' . $name . '%', '%' . $name . '%', self::LIMIT_OF_AUTOCOMPLETE])</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>null|array{array{user_id: string,user_name: string, realname: string, has_custom_avatar: bool}}</code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="plugins/docman/include/Notifications/CollectionOfUgroupMonitoredItemsBuilder.php">
     <MissingParamType occurrences="1">
       <code>$monitored_items</code>
@@ -15338,6 +15361,10 @@
       <code>db_result($result, 0, 'id_header')</code>
       <code>db_result($result, 0, 'id_header')</code>
     </DeprecatedFunction>
+    <InvalidArrayOffset occurrences="2">
+      <code>$arr[count($headers["in-reply-to"]) - 1]</code>
+      <code>$ref_arr[count($headers["references"]) - 1]</code>
+    </InvalidArrayOffset>
     <MissingParamType occurrences="13">
       <code>$content_id</code>
       <code>$date</code>
@@ -15754,6 +15781,11 @@
       <code>$progress_queue-&gt;iterate(['a'])</code>
       <code>$progress_queue-&gt;iterate([])</code>
     </InvalidOperand>
+  </file>
+  <file src="plugins/fts_common/tests/unit/REST/v1/SearchResultEntryRepresentationTest.php">
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$first_badge_representation</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/AccessRightsPresenterOptionsBuilder.php">
     <MissingParamType occurrences="3">
@@ -17466,8 +17498,7 @@
       <code>isInPrivateProject</code>
       <code>updateLastAccessDateForUser</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="2">
-      <code>$_SERVER['PHP_AUTH_PW'] == ''</code>
+    <TypeDoesNotContainType occurrences="1">
       <code>$_SERVER['PHP_AUTH_USER'] == ''</code>
     </TypeDoesNotContainType>
   </file>
@@ -19737,6 +19768,10 @@
     <PossiblyNullReference occurrences="1">
       <code>PathToHash</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="2">
+      <code>$this-&gt;params['file']</code>
+      <code>$this-&gt;params['hash']</code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Blobdiff.php">
     <MissingReturnType occurrences="2">
@@ -21333,9 +21368,6 @@
     <PossiblyNullReference occurrences="1">
       <code>userCanRead</code>
     </PossiblyNullReference>
-    <PossiblyUndefinedArrayOffset occurrences="1">
-      <code>$_SERVER['REQUEST_TIME']</code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/git/include/Git_LogDao.class.php">
     <InvalidReturnStatement occurrences="2">
@@ -21442,6 +21474,11 @@
     <PossiblyUndefinedArrayOffset occurrences="1">
       <code>$_SERVER['REQUEST_TIME']</code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/git/include/Hook/DefaultBranchPush/PushAnalyzer.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$hashes</code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/git/include/Hook/LogPushes.php">
     <PossiblyInvalidArgument occurrences="1">
@@ -22160,6 +22197,11 @@
   </file>
   <file src="plugins/gitlab/include/Admin/LinkedGroupPresenter.php">
     <DeprecatedMethod occurrences="1"/>
+  </file>
+  <file src="plugins/gitlab/include/Repository/Webhook/WebhookTuleapReferenceCollection.php">
+    <NamedArgumentNotAllowed occurrences="1">
+      <code>$references_collections</code>
+    </NamedArgumentNotAllowed>
   </file>
   <file src="plugins/gitlfs/include/Admin/AdminDao.php">
     <MissingParamType occurrences="1">
@@ -25258,11 +25300,9 @@
       <code>setGroupName</code>
       <code>setId</code>
     </MissingReturnType>
-    <PossiblyNullArgument occurrences="5">
+    <PossiblyNullArgument occurrences="3">
       <code>$this-&gt;ldap-&gt;getLDAPParam('grp_dn')</code>
       <code>$this-&gt;ldap-&gt;getLDAPParam('grp_oc')</code>
-      <code>$this-&gt;ldap-&gt;getLDAPParam('grp_oc')</code>
-      <code>$this-&gt;ldap-&gt;getLDAPParam('user_oc')</code>
       <code>$this-&gt;ldap-&gt;getLDAPParam('user_oc')</code>
     </PossiblyNullArgument>
     <UndefinedMethod occurrences="5">
@@ -26840,7 +26880,7 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>'MediaWikiPluginInfo'</code>
     </ArgumentTypeCoercion>
-    <MissingParamType occurrences="31">
+    <MissingParamType occurrences="30">
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$id</code>
@@ -26869,11 +26909,10 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$type_of_search</code>
       <code>$words</code>
     </MissingParamType>
-    <MissingReturnType occurrences="49">
+    <MissingReturnType occurrences="48">
       <code>burningParrotCompatiblePage</code>
       <code>clearMediawikiCache</code>
       <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
@@ -26892,7 +26931,6 @@
       <code>getProjectManager</code>
       <code>getSystemEventClass</code>
       <code>getUserFromParams</code>
-      <code>get_permission_delegation</code>
       <code>get_projectid_from_url</code>
       <code>get_services_allowed_for_restricted</code>
       <code>importXmlProject</code>
@@ -26956,6 +26994,14 @@
     <InvalidReturnType occurrences="1">
       <code>?self</code>
     </InvalidReturnType>
+  </file>
+  <file src="plugins/mediawiki_standalone/tests/unit/Permissions/ISearchByProjectStub.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;permissions</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>array</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="plugins/mfa/include/Enrollment/EnrollmentDisplayController.php">
     <NullReference occurrences="1">
@@ -27051,6 +27097,33 @@
     <InvalidReturnType occurrences="1">
       <code>array{redirect_uri:string, app_identifier:mixed, scope:string[]}</code>
     </InvalidReturnType>
+  </file>
+  <file src="plugins/oauth2_server/include/OpenIDConnect/Discovery/ConfigurationResponseRepresentationBuilder.php">
+    <ArgumentTypeCoercion occurrences="2">
+      <code>$this-&gt;getSupportedLanguages()</code>
+      <code>$this-&gt;getSupportedScopeIdentifiers()</code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/oauth2_server/tests/unit/User/AuthorizationComparatorTest.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$requested_scopes</code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/onlyoffice/include/DocumentServer/DocumentServerDao.php">
+    <LessSpecificReturnStatement occurrences="1"/>
+    <MoreSpecificReturnType occurrences="1">
+      <code>list&lt;DocumentServer&gt;</code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="plugins/onlyoffice/include/Save/OnlyOfficeCallbackDocumentSaver.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$co_authors</code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/onlyoffice/tests/unit/Stubs/IRetrieveDocumentServersStub.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$servers</code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/AccountLinker/Controller.php">
     <InvalidScalarArgument occurrences="1">
@@ -28349,6 +28422,48 @@
       <code>'ProftpdPluginInfo'</code>
     </UndefinedClass>
   </file>
+  <file src="plugins/program_management/include/Adapter/Program/Feature/FeaturesDao.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;getDB()-&gt;safeQuery($sql, array_merge($project_ids_condition-&gt;values(), [\Project::STATUS_ACTIVE], $limit_parameters))</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>array</code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="plugins/program_management/include/Adapter/XML/ProgramManagementConfigXMLImporter.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$xml_config-&gt;ugroups_that_can_prioritize_increments</code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/program_management/include/Domain/Program/Plan/Plan.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;can_prioritize-&gt;getUserGroups()</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>non-empty-list&lt;ProgramUserGroup&gt;</code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="plugins/program_management/tests/unit/Stub/GatherSynchronizedFieldsStub.php">
+    <InvalidArgument occurrences="1">
+      <code>$artifact_links</code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/program_management/tests/unit/Stub/SearchByWorkflowStub.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;transitions</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>array</code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="plugins/program_management/tests/unit/Stub/SearchOpenFeaturesStub.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;open_features</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>array</code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="plugins/project_ownership/include/Notification/Sender.php">
     <MissingParamType occurrences="3">
       <code>$project_id</code>
@@ -28601,9 +28716,11 @@
       <code>parseAdditionalParams</code>
       <code>update_database</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="8">
+    <TypeDoesNotContainType occurrences="10">
       <code>$gFormGroupLevel &lt; 0</code>
+      <code>$gFormGroupLevel &gt; 0</code>
       <code>$gFormSectionLevel &lt; 0</code>
+      <code>$gFormSectionLevel &gt; 0</code>
       <code>$gInForm</code>
       <code>$gInForm</code>
       <code>$gInForm</code>
@@ -29672,6 +29789,17 @@
     <RedundantCast occurrences="1">
       <code>(int) $this-&gt;pull_request_dao-&gt;foundRows()</code>
     </RedundantCast>
+  </file>
+  <file src="plugins/pullrequest/include/PullRequest/REST/v1/Reviewer/ReviewerChangeTimelineEventRepresentation.php">
+    <PropertyTypeCoercion occurrences="2">
+      <code>self::transformToMinimalUserRepresentations(...$added_reviewers)</code>
+      <code>self::transformToMinimalUserRepresentations(...$removed_reviewers)</code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="plugins/pullrequest/include/PullRequest/REST/v1/Reviewer/ReviewersRepresentation.php">
+    <PropertyTypeCoercion occurrences="1">
+      <code>$user_representations</code>
+    </PropertyTypeCoercion>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/StatusPatcher.php">
     <MissingParamType occurrences="3">
@@ -32076,6 +32204,11 @@
       <code>$this-&gt;logger</code>
     </UndefinedThisPropertyAssignment>
   </file>
+  <file src="plugins/svn/include/SVN/Admin/AdminGroupsPresenter.php">
+    <PropertyTypeCoercion occurrences="1">
+      <code>$ugroups</code>
+    </PropertyTypeCoercion>
+  </file>
   <file src="plugins/svn/include/SVN/Admin/BaseAdminPresenter.php">
     <MissingPropertyType occurrences="5">
       <code>$access_control_active</code>
@@ -33837,10 +33970,14 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/taskboard/include/REST/v1/CardRepresentationBuilder.php">
+    <LessSpecificReturnStatement occurrences="1"/>
     <MissingReturnType occurrences="2">
       <code>getInitialEffort</code>
       <code>getListFieldFirstValue</code>
     </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>list&lt;MinimalUserRepresentation&gt;</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="plugins/taskboard/include/REST/v1/Cell/CardMappedFieldUpdater.php">
     <MissingReturnType occurrences="1">
@@ -33930,6 +34067,12 @@
     <InvalidReturnType occurrences="1">
       <code>process</code>
     </InvalidReturnType>
+  </file>
+  <file src="plugins/testmanagement/include/TestManagement/Campaign/Execution/ExecutionDao.php">
+    <LessSpecificReturnStatement occurrences="1"/>
+    <MoreSpecificReturnType occurrences="1">
+      <code>list&lt;array{id:int, tracker_id: int, last_changeset_id: int, submitted_by:int, submitted_on: int, use_artifact_permissions: bool, per_tracker_id: int, last_update_date: int, last_updated_by_id:int}&gt;</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Campaign/InformationNeededToRetrieveTestStatusOfACampaign.php">
     <RedundantCastGivenDocblockType occurrences="3">
@@ -34167,9 +34310,6 @@
       <code>! $dom</code>
       <code>$dom</code>
     </TypeDoesNotContainType>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$dom-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/testplan/include/REST/v1/BacklogItemRepresentation.php">
     <DeprecatedMethod occurrences="1">
@@ -35545,9 +35685,6 @@
     <PossiblyUndefinedArrayOffset occurrences="1">
       <code>$_SERVER['REQUEST_TIME']</code>
     </PossiblyUndefinedArrayOffset>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$dom-&gt;childNodes</code>
-    </UndefinedPropertyFetch>
     <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;children_xml_exporter</code>
       <code>$this-&gt;tracker_factory</code>
@@ -36419,10 +36556,9 @@
       <code>$is_update</code>
       <code>$is_update</code>
     </MissingParamType>
-    <MissingReturnType occurrences="6">
+    <MissingReturnType occurrences="5">
       <code>buildAMessagePerRecipient</code>
       <code>buildOneMessageForMultipleRecipients</code>
-      <code>execute</code>
       <code>getCustomReplyToHeader</code>
       <code>getMessageContent</code>
       <code>getMessageId</code>
@@ -36568,9 +36704,6 @@
       <code>$pos_subject</code>
       <code>$pos_to</code>
     </PossiblyFalseArgument>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$node-&gt;parentNode</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/IncomingMail.php">
     <MissingParamType occurrences="4">
@@ -37111,12 +37244,6 @@
       <code>$result</code>
       <code>$result</code>
     </FalseOperand>
-    <InvalidReturnStatement occurrences="1">
-      <code>$has_changed_changeset</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Tracker_Artifact_ChangesetValue[]</code>
-    </InvalidReturnType>
     <MissingParamType occurrences="18">
       <code>$body</code>
       <code>$changes</code>
@@ -37137,10 +37264,9 @@
       <code>$user</code>
       <code>$user</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="6">
+    <MissingPropertyType occurrences="5">
       <code>$artifact</code>
       <code>$email</code>
-      <code>$id</code>
       <code>$submitted_by</code>
       <code>$submitted_on</code>
       <code>$values</code>
@@ -38681,6 +38807,12 @@
       <code>(string) $attachment-&gt;getMimeType()</code>
     </RedundantCast>
   </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Changelog/CreationStateListValueFormatter.php">
+    <LessSpecificReturnStatement occurrences="1"/>
+    <MoreSpecificReturnType occurrences="1">
+      <code>non-empty-list&lt;array{id: string}&gt;</code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Changelog/ListFieldChangeInitialValueRetriever.php">
     <InvalidArgument occurrences="1">
       <code>$selected_users_ids</code>
@@ -38693,6 +38825,12 @@
     <RedundantCast occurrences="1">
       <code>(int) TrackerImporterUser::ID</code>
     </RedundantCast>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Snapshot/ArtifactLinkValue.php">
+    <PropertyTypeCoercion occurrences="2">
+      <code>$issuelinks</code>
+      <code>$subtasks</code>
+    </PropertyTypeCoercion>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Snapshot/ChangelogSnapshotBuilder.php">
     <InvalidArgument occurrences="1">
@@ -38718,10 +38856,6 @@
       <code>$dom_tracker</code>
       <code>$dom_trackers</code>
     </TypeDoesNotContainType>
-    <UndefinedPropertyFetch occurrences="2">
-      <code>$dom_tracker-&gt;ownerDocument</code>
-      <code>$dom_trackers-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Semantic/SemanticsXMLExporter.php">
     <RedundantCast occurrences="1">
@@ -39351,10 +39485,6 @@
       <code>groupPerTypeWithPresenter</code>
       <code>hasArtifactLinksToDisplay</code>
     </MissingReturnType>
-    <PossiblyUndefinedArrayOffset occurrences="2">
-      <code>$ids[$artifact_link_tracker_id]['id']</code>
-      <code>$ids[$artifact_link_tracker_id]['last_changeset_id']</code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/FieldDataBuilder.php">
     <MissingParamType occurrences="1">
@@ -42359,8 +42489,7 @@
       <code>$value_id</code>
       <code>$value_to_match</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="7">
-      <code>$artifact-&gt;getLastChangeset()-&gt;id</code>
+    <MissingPropertyType occurrences="6">
       <code>$artifact-&gt;id</code>
       <code>$bind</code>
       <code>$criteria-&gt;id</code>
@@ -42681,9 +42810,8 @@
     <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
     </UndefinedDocblockClass>
-    <UndefinedMethod occurrences="2">
+    <UndefinedMethod occurrences="1">
       <code>getListValues</code>
-      <code>isMultiple</code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_StaticValue.php">
@@ -42780,9 +42908,8 @@
     <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
     </UndefinedDocblockClass>
-    <UndefinedMethod occurrences="2">
+    <UndefinedMethod occurrences="1">
       <code>getListValues</code>
-      <code>isMultiple</code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UgroupsValue.php">
@@ -42879,11 +43006,10 @@
     <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
     </UndefinedDocblockClass>
-    <UndefinedMethod occurrences="5">
+    <UndefinedMethod occurrences="4">
       <code>getListValues</code>
       <code>getUser</code>
       <code>getUsername</code>
-      <code>isMultiple</code>
       <code>testImport</code>
     </UndefinedMethod>
   </file>
@@ -43125,7 +43251,11 @@
       <code>escapeIntImplode</code>
       <code>getRow</code>
     </DeprecatedMethod>
-    <InvalidReturnType occurrences="1">
+    <InvalidReturnStatement occurrences="1">
+      <code>$project_groups</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="2">
+      <code>int[]</code>
       <code>mixed</code>
     </InvalidReturnType>
     <MissingParamType occurrences="23">
@@ -47774,6 +47904,14 @@
       <code>hasKeyInParameters</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Report/Renderer/Table/TableRendererForReportRetriever.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$table_renderers</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>list&lt;Tracker_Report_Renderer_Table&gt;</code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="plugins/tracker/include/Tracker/Report/ResultJoiner.class.php">
     <MissingReturnType occurrences="1">
       <code>joinResults</code>
@@ -48264,7 +48402,14 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_Renderer_Table.class.php">
-    <DeprecatedMethod occurrences="13">
+    <ArgumentTypeCoercion occurrences="5">
+      <code>$this-&gt;getSort($store_in_session)</code>
+      <code>$this-&gt;getSort($store_in_session)</code>
+      <code>$this-&gt;getSort($store_in_session)</code>
+      <code>$this-&gt;getSort()</code>
+      <code>$this-&gt;getSort()</code>
+    </ArgumentTypeCoercion>
+    <DeprecatedMethod occurrences="15">
       <code>$first_result</code>
       <code>$first_result</code>
       <code>$first_result</code>
@@ -48272,6 +48417,8 @@
       <code>$result</code>
       <code>$result</code>
       <code>escapeIntImplode</code>
+      <code>getRow</code>
+      <code>getRow</code>
       <code>getRow</code>
       <code>getRow</code>
       <code>retrieve</code>
@@ -48428,16 +48575,12 @@
       <code>setSort</code>
       <code>storeColumnsInSession</code>
     </MissingReturnType>
-    <NoValue occurrences="2">
-      <code>$result</code>
-      <code>$result</code>
-    </NoValue>
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($key, $xmlMapping)</code>
     </PossiblyFalseArgument>
-    <PossiblyInvalidOperand occurrences="1">
+    <PossiblyUndefinedArrayOffset occurrences="1">
       <code>$queries[0]</code>
-    </PossiblyInvalidOperand>
+    </PossiblyUndefinedArrayOffset>
     <RedundantPropertyInitializationCheck occurrences="3">
       <code>isset($this-&gt;report_session)</code>
       <code>isset($this-&gt;report_session)</code>
@@ -48447,10 +48590,6 @@
       <code>buildOrderedQuery</code>
       <code>fetchAdditionnalButton</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="2">
-      <code>$result === false</code>
-      <code>$result === false</code>
-    </TypeDoesNotContainType>
     <UndefinedMethod occurrences="3">
       <code>getAggregates</code>
       <code>getSort</code>
@@ -50229,9 +50368,6 @@
     <UndefinedMethod occurrences="1">
       <code>getFieldDataFromCSVValue</code>
     </UndefinedMethod>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>dom_import_simplexml($xmlElem)-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/TrackerFactory.class.php">
     <DeprecatedMethod occurrences="6">
@@ -50390,9 +50526,6 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>void</code>
     </InvalidFalsableReturnType>
-    <InvalidNullableReturnType occurrences="1">
-      <code>string</code>
-    </InvalidNullableReturnType>
     <InvalidOperand occurrences="1">
       <code>$this-&gt;getFilesize()</code>
     </InvalidOperand>
@@ -50422,9 +50555,6 @@
       <code>postUploadActions</code>
       <code>setOwnershipToHttpUser</code>
     </MissingReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>null</code>
-    </NullableReturnStatement>
   </file>
   <file src="plugins/tracker/include/Tracker/Tracker_GlobalNotification.class.php">
     <MissingParamType occurrences="5">
@@ -51319,11 +51449,6 @@
     <MissingReturnType occurrences="1">
       <code>update</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/XML/XMLTracker.php">
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$dom_tracker-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/colorpicker/ColorpickerMountPointPresenter.php">
     <MissingParamType occurrences="4">
@@ -53962,6 +54087,12 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/tuleap_synchro/include/Tuleap_Synchro/ListEndpoints/ListEndpointsPresenterBuilder.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$endpoints</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>ListEndpointsPresenter[]</code>
+    </InvalidReturnType>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$endpoints</code>
     </PossiblyUndefinedVariable>
@@ -54756,9 +54887,8 @@
       <code>getSuperPublicProjectsFromRestrictedFile</code>
       <code>load</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="2">
+    <TypeDoesNotContainType occurrences="1">
       <code>! count(self::$conf_stack)</code>
-      <code>count(self::$conf_stack)</code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/common/Config/LocalIncFinder.php">
@@ -55004,10 +55134,6 @@
       <code>! $dom</code>
       <code>$dom</code>
     </TypeDoesNotContainType>
-    <UndefinedPropertyFetch occurrences="2">
-      <code>$column_dom-&gt;ownerDocument</code>
-      <code>$line_dom-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="src/common/Dashboard/Project/ProjectDashboard.php">
     <MissingParamType occurrences="3">
@@ -58864,6 +58990,11 @@
       <code>array{id:int, project_id:int|null, name:string, redirect_endpoint: string, use_pkce:0|1}</code>
     </InvalidReturnType>
   </file>
+  <file src="src/common/OAuth2ServerCore/OpenIDConnect/JWK/JSONWebKeySet.php">
+    <PropertyTypeCoercion occurrences="1">
+      <code>$keys</code>
+    </PropertyTypeCoercion>
+  </file>
   <file src="src/common/OpenGraph/OpenGraphPresenter.php">
     <MissingParamType occurrences="3">
       <code>$description</code>
@@ -59542,13 +59673,6 @@
     <MissingReturnType occurrences="1">
       <code>addPane</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/Project/Admin/PermissionPerGroup/PermissionPerGroupPanePresenter.php">
-    <MissingPropertyType occurrences="3">
-      <code>$has_permissions</code>
-      <code>$permissions</code>
-      <code>$user_group_name</code>
-    </MissingPropertyType>
   </file>
   <file src="src/common/Project/Admin/PermissionPerGroup/PermissionPerGroupPresenter.php">
     <MissingPropertyType occurrences="1">
@@ -61533,9 +61657,6 @@
       <code>exportProjectUgroup</code>
       <code>exportProjectUgroups</code>
     </MissingReturnType>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>dom_import_simplexml($xml_element)-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="src/common/Project/ProjectXMLImporter.class.php">
     <MissingDocblockType occurrences="1">
@@ -61763,6 +61884,14 @@
     <PossiblyNullArgument occurrences="1">
       <code>$query</code>
     </PossiblyNullArgument>
+  </file>
+  <file src="src/common/Project/Registration/ProjectRegistrationErrorsCollection.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;errors</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>list&lt;RegistrationErrorException&gt;</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="src/common/Project/Registration/Template/AgileALMTemplate.php">
     <MissingPropertyType occurrences="1">
@@ -62059,9 +62188,8 @@
     <InvalidReturnType occurrences="1">
       <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="9">
+    <MissingParamType occurrences="8">
       <code>$group_id</code>
-      <code>$name</code>
       <code>$name</code>
       <code>$name</code>
       <code>$name</code>
@@ -62082,8 +62210,7 @@
       <code>removeUserFromUserGroup</code>
       <code>syncUgroupMembers</code>
     </MissingReturnType>
-    <NullableReturnStatement occurrences="2">
-      <code>null</code>
+    <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
     <PossiblyInvalidArgument occurrences="1">
@@ -63004,9 +63131,6 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Reference/Reference.php">
-    <InvalidArgument occurrences="1">
-      <code>$this-&gt;group_id</code>
-    </InvalidArgument>
     <MissingParamType occurrences="14">
       <code>$link</code>
       <code>$my_description</code>
@@ -63076,11 +63200,14 @@
       <code>rowCount</code>
       <code>rowCount</code>
     </DeprecatedMethod>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$referencesInstances</code>
+    </LessSpecificReturnStatement>
     <MissingClosureReturnType occurrences="2">
       <code>function ($m) use ($self, $group_id, $reftype) {</code>
       <code>function ($match) {</code>
     </MissingClosureReturnType>
-    <MissingParamType occurrences="74">
+    <MissingParamType occurrences="73">
       <code>$artifact_id</code>
       <code>$force</code>
       <code>$force</code>
@@ -63144,7 +63271,6 @@
       <code>$row</code>
       <code>$short_name</code>
       <code>$short_name</code>
-      <code>$string</code>
       <code>$template_id</code>
       <code>$template_id</code>
       <code>$template_id</code>
@@ -63156,13 +63282,12 @@
       <code>$value</code>
       <code>$value</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="4">
+    <MissingPropertyType occurrences="3">
       <code>$groupIdByName</code>
-      <code>$php_supported_encoding_types</code>
       <code>$referenceDao</code>
       <code>$tmpGroupIdForCallbackFunction</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="42">
+    <MissingReturnType occurrences="41">
       <code>_extractMatches</code>
       <code>_getCrossReferenceDao</code>
       <code>_initProjectReferences</code>
@@ -63173,7 +63298,6 @@
       <code>addSystemReferencesForService</code>
       <code>addSystemReferencesWithoutService</code>
       <code>checkKeyword</code>
-      <code>convertToUTF8</code>
       <code>createReference</code>
       <code>createSystemReference</code>
       <code>createSystemReferenceGroup</code>
@@ -63206,6 +63330,9 @@
       <code>updateProjectReferenceShortName</code>
       <code>updateReference</code>
     </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>array</code>
+    </MoreSpecificReturnType>
     <NullableReturnStatement occurrences="2">
       <code>null</code>
       <code>null</code>
@@ -64625,6 +64752,11 @@
       <code>process</code>
     </InvalidReturnType>
   </file>
+  <file src="src/common/User/Account/UpdatePasswordSanityCheckerException.php">
+    <PropertyTypeCoercion occurrences="1">
+      <code>$errors</code>
+    </PropertyTypeCoercion>
+  </file>
   <file src="src/common/User/Account/UpdateSessionPreferencesController.php">
     <InvalidReturnType occurrences="1">
       <code>process</code>
@@ -65788,11 +65920,6 @@
       <code>getUser</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/User/UserEmailCollection.php">
-    <MissingParamType occurrences="1">
-      <code>$email</code>
-    </MissingParamType>
-  </file>
   <file src="src/common/User/UserGroup/NameTranslator.php">
     <MissingPropertyType occurrences="1">
       <code>$names</code>
@@ -65912,8 +66039,7 @@
       <code>$user-&gt;getId()</code>
       <code>$user-&gt;getId()</code>
     </PossiblyInvalidArgument>
-    <PossiblyUndefinedArrayOffset occurrences="2">
-      <code>$_SERVER['REQUEST_TIME']</code>
+    <PossiblyUndefinedArrayOffset occurrences="1">
       <code>$_SERVER['REQUEST_TIME']</code>
     </PossiblyUndefinedArrayOffset>
     <TooManyArguments occurrences="1">
@@ -66226,9 +66352,6 @@
     <MissingReturnType occurrences="1">
       <code>add</code>
     </MissingReturnType>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>dom_import_simplexml($xml_element)-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="src/common/User/XML/UserXMLExporter.class.php">
     <MissingParamType occurrences="5">
@@ -66569,10 +66692,8 @@
       <code>$widget_id</code>
       <code>$widget_id</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="4">
+    <MissingPropertyType occurrences="2">
       <code>$image_title</code>
-      <code>$image_title</code>
-      <code>$image_url</code>
       <code>$image_url</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="10">
@@ -66667,8 +66788,7 @@
       <code>isAjax</code>
       <code>updatePreferences</code>
     </MissingReturnType>
-    <PossiblyUndefinedArrayOffset occurrences="2">
-      <code>$artifact_types[$group_id][$atid]['user_can_view_at']</code>
+    <PossiblyUndefinedArrayOffset occurrences="1">
       <code>$artifact_types[$group_id][$atid]['user_can_view_summary_or_aid']</code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="4">
@@ -66892,9 +67012,6 @@
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
-    <TypeDoesNotContainType occurrences="1">
-      <code>count($at_arr) &lt; 1</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/common/Widget/Widget_ProjectRss.class.php">
     <MissingReturnType occurrences="1">
@@ -67030,30 +67147,6 @@
       <code>$error</code>
       <code>$has_error</code>
       <code>$value</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/account/ConfirmationPresenter.class.php">
-    <MissingParamType occurrences="9">
-      <code>$content</code>
-      <code>$displayed_image</code>
-      <code>$email_presenter</code>
-      <code>$image_url</code>
-      <code>$is_thanks</code>
-      <code>$redirect_content</code>
-      <code>$redirect_url</code>
-      <code>$thanks</code>
-      <code>$title</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="9">
-      <code>$content</code>
-      <code>$displayed_image</code>
-      <code>$email_presenter</code>
-      <code>$image_url</code>
-      <code>$is_thanks</code>
-      <code>$redirect_content</code>
-      <code>$redirect_url</code>
-      <code>$thanks</code>
-      <code>$title</code>
     </MissingPropertyType>
   </file>
   <file src="src/common/account/RegisterAdminPrefillValuesPresenter.class.php">
@@ -71096,6 +71189,9 @@
       <code>count</code>
       <code>getRow</code>
     </PossiblyFalseReference>
+    <PossiblyUndefinedArrayOffset occurrences="1">
+      <code>$trace[$i]</code>
+    </PossiblyUndefinedArrayOffset>
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $id</code>
     </RedundantCastGivenDocblockType>
@@ -71210,9 +71306,6 @@
       <code>dump</code>
       <code>dumpPackage</code>
     </MissingReturnType>
-    <UndefinedPropertyAssignment occurrences="1">
-      <code>$doc-&gt;formatOutput</code>
-    </UndefinedPropertyAssignment>
   </file>
   <file src="src/common/docmanv1/XMLExportDao.class.php">
     <DeprecatedMethod occurrences="8">
@@ -71300,16 +71393,12 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/common/encoding/SupportedXmlCharEncoding.class.php">
-    <MissingParamType occurrences="2">
-      <code>$string</code>
+    <MissingParamType occurrences="1">
       <code>$string</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$php_supported_encoding_types</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>getXMLCompatibleString</code>
-    </MissingReturnType>
   </file>
   <file src="src/common/html/HTML_Element.class.php">
     <MissingParamType occurrences="7">
@@ -71674,9 +71763,6 @@
       <code>_shift_boundaries</code>
       <code>diff</code>
     </MissingReturnType>
-    <PossiblyInvalidArrayOffset occurrences="1">
-      <code>$changed[$start - 1]</code>
-    </PossiblyInvalidArrayOffset>
     <PossiblyUndefinedVariable occurrences="12">
       <code>$k</code>
       <code>$k</code>
@@ -72369,11 +72455,6 @@
       <code>$allowedAnonymous</code>
     </PossiblyUndefinedVariable>
     <TooManyArguments occurrences="1"/>
-  </file>
-  <file src="src/common/include/XMLConvertor.php">
-    <UndefinedPropertyFetch occurrences="1">
-      <code>dom_import_simplexml($xml_element)-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="src/common/include/lib/PHP_BigFile.class.php">
     <ForbiddenCode occurrences="5">
@@ -73396,26 +73477,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/system_event/include/Massmail.php">
-    <DeprecatedFunction occurrences="3">
-      <code>db_numrows($recipients)</code>
-      <code>db_query($sql)</code>
-      <code>db_result($recipients, $i - 1, 'email')</code>
-    </DeprecatedFunction>
-    <MissingParamType occurrences="6">
+    <MissingParamType occurrences="1">
       <code>$destination</code>
-      <code>$destination</code>
-      <code>$errors</code>
-      <code>$has_success</code>
-      <code>$parameters</code>
-      <code>$recipients</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
-      <code>buildMail</code>
-      <code>flood</code>
-      <code>getDestinationLabel</code>
-      <code>parseParamaters</code>
-      <code>searchRecipients</code>
-    </MissingReturnType>
   </file>
   <file src="src/common/system_event/include/SystemEventProjectActive.php">
     <MissingReturnType occurrences="2">
@@ -75258,6 +75322,10 @@
       <code>true</code>
       <code>true</code>
     </InvalidReturnType>
+    <LessSpecificReturnStatement occurrences="2">
+      <code>$result_fields</code>
+      <code>$result_fields</code>
+    </LessSpecificReturnStatement>
     <MissingParamType occurrences="6">
       <code>$description</code>
       <code>$group_artifact_id</code>
@@ -75270,6 +75338,10 @@
       <code>setArtifactFields</code>
       <code>userCanSubmit</code>
     </MissingReturnType>
+    <MoreSpecificReturnType occurrences="2">
+      <code>array{ArtifactField}</code>
+      <code>array{ArtifactField}</code>
+    </MoreSpecificReturnType>
     <PossiblyNullReference occurrences="1">
       <code>isSuperUser</code>
     </PossiblyNullReference>
@@ -75329,9 +75401,14 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>array</code>
     </InvalidFalsableReturnType>
-    <InvalidNullableReturnType occurrences="1">
+    <InvalidReturnType occurrences="1">
       <code>bool</code>
-    </InvalidNullableReturnType>
+    </InvalidReturnType>
+    <LessSpecificReturnStatement occurrences="3">
+      <code>$this-&gt;ArtifactFieldSets</code>
+      <code>$unused_fieldsets</code>
+      <code>$used_fieldsets</code>
+    </LessSpecificReturnStatement>
     <MissingParamType occurrences="6">
       <code>$atid_dest</code>
       <code>$atid_source</code>
@@ -75345,6 +75422,11 @@
       <code>getArtifactFieldSetsFromId</code>
       <code>setError</code>
     </MissingReturnType>
+    <MoreSpecificReturnType occurrences="3">
+      <code>array{ArtifactFieldSet}</code>
+      <code>array{ArtifactFieldSet}</code>
+      <code>array{ArtifactFieldSet}</code>
+    </MoreSpecificReturnType>
     <UndefinedVariable occurrences="1">
       <code>$field_id</code>
     </UndefinedVariable>
@@ -76759,11 +76841,10 @@
       <code>cutExportQuery</code>
       <code>db_error($res)</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="4">
+    <TypeDoesNotContainType occurrences="3">
       <code>! $afh</code>
       <code>! $afh</code>
       <code>! is_object($afh)</code>
-      <code>count($arr_notif) == 0</code>
     </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="3">
       <code>database</code>
@@ -77111,9 +77192,6 @@
       <code>getDateNodeFromTimestamp</code>
       <code>getNodeWithValue</code>
     </MissingReturnType>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$node-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="src/common/tracker/Exception/TV3XMLAttachmentNotFoundException.class.php">
     <MissingParamType occurrences="1">
@@ -78721,8 +78799,7 @@
       <code>$userfile_tmpname</code>
       <code>$userfile_type</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$id</code>
+    <MissingPropertyType occurrences="1">
       <code>$id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="24">
@@ -79517,9 +79594,6 @@
     <MissingReturnType occurrences="1">
       <code>merge</code>
     </MissingReturnType>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$dom_project-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="src/common/xml/SimpleXMLCDATAFactory.class.php">
     <MissingParamType occurrences="2">
@@ -79530,9 +79604,6 @@
       <code>(string) $name</code>
       <code>(string) $value</code>
     </RedundantCastGivenDocblockType>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$dom_node-&gt;ownerDocument</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="src/common/xml/XMLImportHelper.php">
     <MissingReturnType occurrences="1">
@@ -80090,9 +80161,6 @@
     <PossiblyFalseOperand occurrences="1">
       <code>date("YmdHis", (gmdate('U') - $period))</code>
     </PossiblyFalseOperand>
-    <PossiblyUndefinedArrayOffset occurrences="1">
-      <code>$cvshist[$user]['last']</code>
-    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="5">
       <code>$arr</code>
       <code>$arr</code>
@@ -80337,6 +80405,11 @@
     <PossiblyNullReference occurrences="1">
       <code>getRealName</code>
     </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset occurrences="3">
+      <code>$proj_stats['downloads']</code>
+      <code>$proj_stats['files']</code>
+      <code>$proj_stats['releases']</code>
+    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedGlobalVariable occurrences="3">
       <code>$file_type</code>
       <code>$processor</code>
@@ -81486,12 +81559,13 @@
       <code>$this-&gt;message[$kv[2]]</code>
       <code>$this-&gt;messages[$name . 'Response'][$pName]</code>
     </PossiblyInvalidArrayOffset>
-    <PossiblyUndefinedArrayOffset occurrences="5">
+    <PossiblyUndefinedArrayOffset occurrences="6">
       <code>$_SERVER['SCRIPT_NAME']</code>
       <code>$_SERVER['SCRIPT_NAME']</code>
       <code>$_SERVER['SERVER_NAME']</code>
       <code>$_SERVER['SERVER_NAME']</code>
       <code>$_SERVER['SERVER_PORT']</code>
+      <code>$digestRequest['realm']</code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="50">
       <code>$HTTPS</code>
@@ -81664,10 +81738,6 @@
       <code>session_redirect</code>
       <code>session_require</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="2">
-      <code>! $req['group']</code>
-      <code>! $req['group']</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/www/include/timezones.php">
     <MissingParamType occurrences="1">
@@ -84428,9 +84498,6 @@
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
     </PossiblyNullReference>
-    <PossiblyUndefinedArrayOffset occurrences="1">
-      <code>$svnhist[$user]['last']</code>
-    </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="7">
       <code>$arr</code>
       <code>$arr</code>
@@ -84481,6 +84548,12 @@
       <code>[$_GET['section'] =&gt; true]</code>
       <code>[$current_section =&gt; $sections[$current_section]]</code>
     </InvalidArrayOffset>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$discovery</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>list&lt;mixed&gt;</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="src/www/tos/privacy.php">
     <UndefinedGlobalVariable occurrences="2">
@@ -85021,7 +85094,7 @@
       <code>$data</code>
       <code>$params</code>
     </PossiblyUndefinedGlobalVariable>
-    <TypeDoesNotContainType occurrences="62">
+    <TypeDoesNotContainType occurrences="61">
       <code>! $afh</code>
       <code>! $afh</code>
       <code>! $afh</code>
@@ -85083,7 +85156,6 @@
       <code>$report = $arf-&gt;getArtifactReportHtml($report_id, $atid)</code>
       <code>$report = $arf-&gt;getArtifactReportHtml($report_id, $atid)</code>
       <code>$report = $arf-&gt;getArtifactReportHtml($report_id, $atid)</code>
-      <code>count($at_arr) &lt; 1</code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/www/tracker/invert_comments_order.php">
@@ -85132,10 +85204,24 @@
       <code>$request</code>
     </UndefinedGlobalVariable>
   </file>
+  <file src="src/www/user/autocomplete.php">
+    <RedundantCast occurrences="1">
+      <code>(int) ($limit - count($userList))</code>
+    </RedundantCast>
+  </file>
   <file src="src/www/wiki/uploads.php">
     <PossiblyUndefinedArrayOffset occurrences="1">
       <code>$_SERVER['REQUEST_URI']</code>
     </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="tests/lib/Stubs/ExtractReferencesStub.php">
+    <LessSpecificReturnStatement occurrences="2">
+      <code>$this-&gt;return_values[0]</code>
+      <code>array_shift($this-&gt;return_values)</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>array</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="tests/lib/Stubs/RetrieveUserByIdStub.php">
     <MissingParamType occurrences="1">
