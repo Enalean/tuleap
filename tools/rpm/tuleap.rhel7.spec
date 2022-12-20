@@ -80,6 +80,8 @@ Tuleap is a web based application that address all the aspects of product develo
 ## Core component definitions
 #
 
+%if "%{?dist}" == ".el7"
+
 %package core-mailman
 Summary: Mailman component for Tuleap
 Group: Development/Tools
@@ -99,6 +101,8 @@ Requires: libnss-mysql, nss, nscd
 Requires: perl-Text-Iconv
 %description core-cvs
 Manage dependencies for Tuleap CVS integration
+
+%endif
 
 %package core-subversion
 Summary: Subversion component for Tuleap
@@ -122,6 +126,7 @@ Manage dependencies for Tuleap Subversion integration
 ## Plugins
 #
 
+%if "%{?dist}" == ".el7"
 %package plugin-forumml
 Summary: ForumML plugin for Tuleap
 Group: Development/Tools
@@ -130,6 +135,7 @@ Requires: tuleap-core-mailman
 %description plugin-forumml
 ForumML brings to Tuleap a very nice mail archive viewer and the possibility
 to send mails through the web interface. It can replace the forums.
+%endif
 
 %package plugin-svn
 Summary: Subversion plugin for Tuleap
@@ -603,6 +609,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
+
 %if %{with enterprise}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
@@ -627,9 +634,15 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
 %endif
+
+%if "%{?dist}" == ".el9"
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml
+%endif
+
 %if %{with experimental}
 %else
 %endif
+
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/css
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/images
@@ -683,8 +696,10 @@ done
 # Install system tmpfiles
 %{__install} -d $RPM_BUILD_ROOT/%{_tmpfilesdir}
 %{__install} src/utils/systemd/tmpfiles/tuleap.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
+%if "%{?dist}" == ".el7"
 %{__install} src/utils/systemd/tmpfiles/tuleap-cvs.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
 %{__install} src/utils/systemd/tmpfiles/tuleap-forumml.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}
+%endif
 
 # Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{_bindir}
@@ -693,6 +708,7 @@ done
 
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%if "%{?dist}" == ".el7"
 %{__install} src/utils/cvs1/log_accum $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/cvs1/commit_prep $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/cvs1/cvssh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -700,6 +716,7 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/cvsroot
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/cvslocks
 %{__install} -d $RPM_BUILD_ROOT/var/run/log_accum
+%endif
 %{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -722,7 +739,9 @@ done
 
 # Log dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}
+%if "%{?dist}" == ".el7"
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}/cvslog
+%endif
 
 # Run dir
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/tuleap
@@ -730,8 +749,9 @@ done
 # Sudoers directory
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 %{__install} src/utils/sudoers.d/tuleap_fileforge $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_fileforge
+%if "%{?dist}" == ".el7"
 %{__install} src/utils/sudoers.d/tuleap_cvs_log_accum $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_cvs_log_accum
-
+%endif
 
 ## plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -740,9 +760,10 @@ done
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_webdav
 
 ## plugin forumml
+%if "%{?dist}" == ".el7"
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
 %{__install} plugins/forumml/etc/sudoers.d/tuleap_plugin_forumml $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
-
+%endif
 
 # plugin-git
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite
@@ -959,8 +980,10 @@ fi
 
 chmod 750 /var/lib/gitolite
 
+%if "%{?dist}" == ".el7"
 %pre core-cvs
 /usr/bin/rm -rf /var/lock/cvs
+%endif
 
 #
 #
@@ -977,6 +1000,7 @@ fi
 # Clean old tuleap cache file
 /usr/bin/rm -rf %{APP_CACHE_DIR}/tuleap_hooks_cache
 
+%if "%{?dist}" == ".el7"
 %post core-cvs
 /usr/bin/ln -s %{APP_DATA_DIR}/cvslocks /var/lock/cvs
 if [ ! -f %{_sysconfdir}/shells ] ; then
@@ -986,6 +1010,7 @@ else
     grep -q "^%{APP_LIBBIN_DIR}/cvssh$" %{_sysconfdir}/shells || echo "%{APP_LIBBIN_DIR}/cvssh" >> %{_sysconfdir}/shells
     grep -q "^%{APP_LIBBIN_DIR}/cvssh-restricted$" %{_sysconfdir}/shells || echo "%{APP_LIBBIN_DIR}/cvssh-restricted" >> %{_sysconfdir}/shells
 fi
+%endif
 
 %post core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
@@ -1031,11 +1056,13 @@ fi
 /usr/bin/systemctl unmask php80-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
+%if "%{?dist}" == ".el7"
 %postun core-cvs
 if [ "$1" = 0 ] && [ -f %{_sysconfdir}/shells ] ; then
     sed -i '\!^%{APP_LIBBIN_DIR}/cvssh$!d' %{_sysconfdir}/shells
     sed -i '\!^%{APP_LIBBIN_DIR}/cvssh-restricted$!d' %{_sysconfdir}/shells
 fi
+%endif
 
 %postun core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
@@ -1137,10 +1164,12 @@ fi
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
+%if "%{?dist}" == ".el7"
 %attr(0755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit_prep
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
+%endif
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/env.inc.php
@@ -1152,11 +1181,15 @@ fi
 
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
+%if "%{?dist}" == ".el7"
 %attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
+%endif
 
 # Sudoers
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_fileforge
+%if "%{?dist}" == ".el7"
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_cvs_log_accum
+%endif
 
 # Run dir
 %attr(00755,%{APP_USER},%{APP_USER}) %dir %{_localstatedir}/run/tuleap
@@ -1186,12 +1219,9 @@ fi
 #
 # Core
 #
+%if "%{?dist}" == ".el7"
 %files core-mailman
 %defattr(-,root,root,-)
-
-%files core-subversion
-%defattr(-,root,root,-)
-%attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
 
 %files core-cvs
 %defattr(-,root,root,-)
@@ -1200,16 +1230,23 @@ fi
 %attr(00777,root,root) /var/run/log_accum
 # Systemd tmpfiles
 %attr(00644,root,root) %{_tmpfilesdir}/tuleap-cvs.conf
+%endif
+
+%files core-subversion
+%defattr(-,root,root,-)
+%attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
 
 #
 # Plugins
 #
+%if "%{?dist}" == ".el7"
 %files plugin-forumml
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/forumml
 %attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
 %attr(00644,root,root) %{_tmpfilesdir}/tuleap-forumml.conf
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
+%endif
 
 %files plugin-git
 %defattr(-,root,root,-)
