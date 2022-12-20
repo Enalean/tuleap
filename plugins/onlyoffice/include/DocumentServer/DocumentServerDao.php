@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\DocumentServer;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DataAccessObject;
 
@@ -37,10 +38,38 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
      */
     public function retrieveAll(): array
     {
-        return array_map(
-            static fn (array $row): DocumentServer => new DocumentServer($row['id'], $row['url'], new ConcealedString($row['secret_key'])),
-            $this->getDB()->run('SELECT * FROM plugin_onlyoffice_document_server ORDER BY url')
+        $document_servers = [];
+
+        $server_restrictions = $this->getDB()->safeQuery(
+            'SELECT server_id, project_id
+            FROM plugin_onlyoffice_document_server_project_restriction',
+            [],
+            \PDO::FETCH_GROUP | \PDO::FETCH_COLUMN
         );
+        $server_rows         = $this->getDB()->run('SELECT id, url, secret_key, is_project_restricted FROM plugin_onlyoffice_document_server ORDER BY url');
+
+        foreach ($server_rows as $server_row) {
+            $server_id  = $server_row['id'];
+            $secret_key = new ConcealedString($server_row['secret_key']);
+            sodium_memzero($server_row['secret_key']);
+
+            if ($server_row['is_project_restricted'] || count($server_rows) > 1) {
+                $document_servers[] = DocumentServer::withProjectRestrictions(
+                    $server_id,
+                    $server_row['url'],
+                    $secret_key,
+                    $server_restrictions[$server_id] ?? []
+                );
+            } else {
+                $document_servers[] = DocumentServer::withoutProjectRestrictions(
+                    $server_id,
+                    $server_row['url'],
+                    $secret_key,
+                );
+            }
+        }
+
+        return $document_servers;
     }
 
     /**
@@ -48,24 +77,62 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
      */
     public function retrieveById(int $id): DocumentServer
     {
-        $row = $this->getDB()->row('SELECT * FROM plugin_onlyoffice_document_server WHERE id = ?', $id);
+        $row = $this->getDB()->row('SELECT url, secret_key, is_project_restricted FROM plugin_onlyoffice_document_server WHERE id = ?', $id);
         if (! $row) {
             throw new DocumentServerNotFoundException();
         }
 
-        return new DocumentServer($row['id'], $row['url'], new ConcealedString($row['secret_key']));
+        $secret_key = new ConcealedString($row['secret_key']);
+        sodium_memzero($row['secret_key']);
+
+        if ($row['is_project_restricted'] || $this->isThereMultipleServers()) {
+            $project_restrictions = $this->getDB()->safeQuery(
+                'SELECT project_id
+                        FROM plugin_onlyoffice_document_server_project_restriction
+                        WHERE server_id=?',
+                [$id],
+                \PDO::FETCH_COLUMN
+            );
+
+            return DocumentServer::withProjectRestrictions(
+                $id,
+                $row['url'],
+                $secret_key,
+                $project_restrictions
+            );
+        }
+
+        return DocumentServer::withoutProjectRestrictions($id, $row['url'], $secret_key);
+    }
+
+    private function isThereMultipleServers(): bool
+    {
+        return $this->getDB()->cell('SELECT COUNT(id) FROM plugin_onlyoffice_document_server') > 1;
     }
 
     public function delete(int $id): void
     {
-        $this->getDB()->delete('plugin_onlyoffice_document_server', ['id' => $id]);
+        $this->getDB()->run(
+            'DELETE plugin_onlyoffice_document_server.*, plugin_onlyoffice_document_server_project_restriction.*
+            FROM plugin_onlyoffice_document_server
+            LEFT JOIN plugin_onlyoffice_document_server_project_restriction ON (plugin_onlyoffice_document_server.id = plugin_onlyoffice_document_server_project_restriction.server_id)
+            WHERE plugin_onlyoffice_document_server.id = ?',
+            $id
+        );
     }
 
     public function create(string $url, ConcealedString $secret_key): void
     {
-        $this->getDB()->insert(
-            'plugin_onlyoffice_document_server',
-            ['url' => $url, 'secret_key' => $this->encryption->encryptValue($secret_key)]
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($url, $secret_key): void {
+                $db->insert(
+                    'plugin_onlyoffice_document_server',
+                    ['url' => $url, 'secret_key' => $this->encryption->encryptValue($secret_key), 'is_project_restricted' => false]
+                );
+                if ($this->isThereMultipleServers()) {
+                    $db->run('UPDATE plugin_onlyoffice_document_server SET is_project_restricted = TRUE');
+                }
+            }
         );
     }
 

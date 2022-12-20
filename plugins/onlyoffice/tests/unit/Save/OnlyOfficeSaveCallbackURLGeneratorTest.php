@@ -89,7 +89,7 @@ final class OnlyOfficeSaveCallbackURLGeneratorTest extends TestCase
                     852,
                     'doc.docx',
                     true,
-                    new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret')),
+                    DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
                 ),
                 new ConcealedString('download_token')
             ),

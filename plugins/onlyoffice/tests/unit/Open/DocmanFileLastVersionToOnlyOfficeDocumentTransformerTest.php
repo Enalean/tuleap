@@ -125,7 +125,7 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
                 }
             },
             ProjectByIDFactoryStub::buildWith($this->project),
-            IRetrieveDocumentServersStub::buildWith(new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret'))),
+            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'))),
         );
     }
 }

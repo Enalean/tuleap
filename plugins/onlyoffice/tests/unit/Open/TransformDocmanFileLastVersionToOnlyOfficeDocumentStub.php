@@ -57,7 +57,7 @@ class TransformDocmanFileLastVersionToOnlyOfficeDocumentStub implements Transfor
                     $version_id,
                     $filename,
                     true,
-                    new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret')),
+                    DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
                 )
             )
         );

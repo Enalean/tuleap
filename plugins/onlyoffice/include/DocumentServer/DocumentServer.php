@@ -31,8 +31,42 @@ final class DocumentServer
 {
     public bool $has_existing_secret;
 
-    public function __construct(public int $id, public string $url, public ConcealedString $encrypted_secret_key)
+
+    /**
+     * @param list<int> $project_restrictions
+     */
+    private function __construct(
+        public int $id,
+        public string $url,
+        public ConcealedString $encrypted_secret_key,
+        private bool $is_project_restricted,
+        private array $project_restrictions,
+    ) {
+        $this->has_existing_secret = ! $this->encrypted_secret_key->isIdenticalTo(new ConcealedString(''));
+    }
+
+    /**
+     * @param list<int> $project_restrictions
+     */
+    public static function withProjectRestrictions(
+        int $id,
+        string $url,
+        ConcealedString $encrypted_secret_key,
+        array $project_restrictions,
+    ): self {
+        return new self($id, $url, $encrypted_secret_key, true, $project_restrictions);
+    }
+
+    public static function withoutProjectRestrictions(
+        int $id,
+        string $url,
+        ConcealedString $encrypted_secret_key,
+    ): self {
+        return new self($id, $url, $encrypted_secret_key, false, []);
+    }
+
+    public function isProjectAllowed(\Project $project): bool
     {
-        $this->has_existing_secret = $this->encrypted_secret_key->getString() !== '';
+        return ! $this->is_project_restricted || in_array((int) $project->getID(), $this->project_restrictions, true);
     }
 }

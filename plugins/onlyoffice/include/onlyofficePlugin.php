@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
@@ -55,6 +56,7 @@ use Tuleap\OnlyOffice\Administration\OnlyOfficeDeleteAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeUpdateAdminSettingsController;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerDao;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServerProjectRestrictionDAO;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
@@ -120,6 +122,7 @@ final class onlyofficePlugin extends Plugin
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(ShouldDisplaySourceColumnForFileVersions::NAME);
         $this->addHook(NewItemAlternativeCollector::NAME);
+        $this->addHook(ProjectStatusUpdate::NAME);
         return parent::getHooksAndCallbacks();
     }
 
@@ -471,6 +474,13 @@ final class onlyofficePlugin extends Plugin
                 OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL
             )
         );
+    }
+
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
+    {
+        if ($event->status === \Project::STATUS_DELETED) {
+            (new DocumentServerProjectRestrictionDAO())->removeProjectFromRestriction($event->project);
+        }
     }
 
     private static function getLogger(): \Psr\Log\LoggerInterface

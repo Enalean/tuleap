@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_onlyoffice_download_document_token;
-DROP TABLE IF EXISTS plugin_onlyoffice_save_document_token;
-DROP TABLE IF EXISTS plugin_onlyoffice_document_server;
-DROP TABLE IF EXISTS plugin_onlyoffice_document_server_project_restriction;
-DELETE FROM forgeconfig WHERE name = 'onlyoffice_document_server_url';
-DELETE FROM forgeconfig WHERE name = 'onlyoffice_document_server_secret';
+declare(strict_types=1);
+
+namespace Tuleap\OnlyOffice\DocumentServer;
+
+use Tuleap\DB\DataAccessObject;
+
+class DocumentServerProjectRestrictionDAO extends DataAccessObject
+{
+    public function removeProjectFromRestriction(\Project $project): void
+    {
+        $this->getDB()->delete('plugin_onlyoffice_document_server_project_restriction', ['project_id' => $project->getID()]);
+    }
+}

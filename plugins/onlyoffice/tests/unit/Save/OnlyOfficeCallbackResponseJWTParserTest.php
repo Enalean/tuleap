@@ -251,12 +251,12 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             new Signer\Hmac\Sha256(),
             new DocumentServerForSaveDocumentTokenRetriever(
                 IRetrieveDocumentServersStub::buildWith(
-                    new DocumentServer(
+                    DocumentServer::withoutProjectRestrictions(
                         1,
                         'https://example.com/1',
                         new ConcealedString($this->encrypted_secret_server_1)
                     ),
-                    new DocumentServer(
+                    DocumentServer::withoutProjectRestrictions(
                         2,
                         'https://example.com/2',
                         new ConcealedString($this->encrypted_secret_server_2)

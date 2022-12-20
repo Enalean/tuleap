@@ -37,5 +37,14 @@ CREATE TABLE plugin_onlyoffice_save_document_token(
 CREATE TABLE plugin_onlyoffice_document_server(
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     url VARCHAR(255) NOT NULL,
-    secret_key TEXT NOT NULL
+    secret_key TEXT NOT NULL,
+    is_project_restricted BOOLEAN NOT NULL DEFAULT FALSE
+) ENGINE=InnoDB;
+
+
+CREATE TABLE plugin_onlyoffice_document_server_project_restriction(
+    project_id INT(11) NOT NULL,
+    server_id INT(11) NOT NULL,
+    PRIMARY KEY (project_id, server_id),
+    UNIQUE idx_project_id(project_id)
 ) ENGINE=InnoDB;

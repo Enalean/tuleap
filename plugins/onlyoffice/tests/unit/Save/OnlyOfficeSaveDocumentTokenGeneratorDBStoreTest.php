@@ -61,7 +61,7 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
             123,
             'document.docx',
             true,
-            new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret')),
+            DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
         );
 
         $this->dao->expects(self::once())
@@ -89,7 +89,7 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
             123,
             'document.docx',
             false,
-            new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret')),
+            DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
         );
 
         $token = $this->token_generator->generateSaveToken(
