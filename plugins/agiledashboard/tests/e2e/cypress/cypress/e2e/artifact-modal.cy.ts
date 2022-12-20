@@ -20,11 +20,11 @@
 const LINKABLE_ARTIFACT_TITLE = "Linked Artifact";
 
 describe(`Artifact Modal`, function () {
-    const now: number = Date.now();
-    before(function () {
-        cy.clearSessionCookie();
-        cy.projectMemberLogin();
+    let now: number;
 
+    before(function () {
+        now = Date.now();
+        cy.projectMemberSession();
         cy.getProjectId("kanban-artifact-modal")
             .as("project_id")
             .then((project_id) => getTrackerIdFromREST(project_id).as("tracker_id"))
@@ -37,11 +37,9 @@ describe(`Artifact Modal`, function () {
         findKanbanIdFromURL().as("kanban_id");
     });
 
-    beforeEach(function () {
-        cy.preserveSessionCookies();
-    });
-
     it(`can create an artifact with all fields`, function () {
+        cy.projectMemberSession();
+        visitKanban(this.project_id, this.kanban_id);
         cy.get("[data-test=kanban-add-artifact]").click();
 
         cy.get("[data-test=artifact-modal-form]").within(() => {
@@ -202,6 +200,9 @@ describe(`Artifact Modal`, function () {
     });
 
     it(`can edit an artifact with all fields`, function () {
+        cy.projectMemberSession();
+        visitKanban(this.project_id, this.kanban_id);
+
         getKanbanCard("Editable Artifact").within(() => {
             cy.get("[data-test=edit-link]").click();
         });
@@ -371,6 +372,7 @@ describe(`Artifact Modal`, function () {
     it(`can link artifacts from user's history`, function () {
         const HISTORY_ARTIFACT_TITLE = "History Artifact";
 
+        cy.projectMemberSession();
         cy.log(`Visit History Artifact to ensure it is in history`);
         cy.visit(`/plugins/tracker/?tracker=${this.tracker_id}`);
         cy.get("[data-test=tracker-report-table-results-artifact]")
@@ -380,9 +382,7 @@ describe(`Artifact Modal`, function () {
             .click();
 
         cy.log("Edit Editable Artifact");
-        cy.visit(
-            `/plugins/agiledashboard/?group_id=${this.project_id}&action=showKanban&id=${this.kanban_id}`
-        );
+        visitKanban(this.project_id, this.kanban_id);
         getKanbanCard("Editable Artifact").within(() => {
             cy.get("[data-test=edit-link]").click();
         });
@@ -517,6 +517,10 @@ function selectLabelInSelect2Dropdown(label: string): Cypress.Chainable<JQuery<H
 function clearSelect2(): void {
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".select2-selection__clear").click();
+}
+
+function visitKanban(project_id: number, kanban_id: number): void {
+    cy.visit(`/plugins/agiledashboard/?group_id=${project_id}&action=showKanban&id=${kanban_id}`);
 }
 
 function getKanbanCard(label: string): CypressWrapper {

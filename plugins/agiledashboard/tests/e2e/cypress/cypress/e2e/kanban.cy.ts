@@ -19,13 +19,8 @@
 
 describe("Kanban for the Agile Dashboard service", () => {
     context("As Project Admin", function () {
-        before(function () {
-            cy.clearSessionCookie();
-            cy.projectAdministratorLogin();
-            cy.preserveSessionCookies();
-        });
-
         it(`kanban administration modal still works`, function () {
+            cy.projectAdministratorSession();
             cy.log("administrator can reorder column");
             cy.visitProjectService("kanban-project", "Agile Dashboard");
             cy.get('[data-test="go-to-kanban"]').click();
@@ -66,14 +61,12 @@ describe("Kanban for the Agile Dashboard service", () => {
     });
     context("As Project member", function () {
         before(function () {
-            cy.clearSessionCookie();
-            cy.projectMemberLogin();
-            cy.preserveSessionCookies();
-
+            cy.projectMemberSession();
             cy.getProjectId("kanban-project").as("project_id");
         });
 
         it(`I can use the kanban`, function () {
+            cy.projectMemberSession();
             cy.visitProjectService("kanban-project", "Agile Dashboard");
             cy.get('[data-test="go-to-kanban"]').click();
 
@@ -174,6 +167,7 @@ describe("Kanban for the Agile Dashboard service", () => {
         });
 
         it("can not access to administration page", function () {
+            cy.projectMemberSession();
             cy.visit("/plugins/agiledashboard/?group_id=" + this.project_id + "&action=admin");
             cy.get("[data-test=main-content]").contains("Kanban");
         });

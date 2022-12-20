@@ -27,60 +27,61 @@ Cypress.Commands.add("preserveSessionCookies", () => {
     Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
 });
 
+Cypress.Commands.add("projectAdministratorSession", () => {
+    sessionThroughWebUI("ProjectAdministrator", "Correct Horse Battery Staple");
+});
+
+Cypress.Commands.add("projectMemberSession", () => {
+    sessionThroughWebUI("ProjectMember", "Correct Horse Battery Staple");
+});
+
 Cypress.Commands.add("projectAdministratorLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("ProjectAdministrator");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("ProjectAdministrator", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("projectMemberLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("ProjectMember");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("ProjectMember", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("platformAdminLogin", () => {
-    cy.visit("/");
-
-    cy.get("[data-test=form_loginname]").type("admin");
-    cy.get("[data-test=form_pw]").type("welcome0{enter}");
+    loginThroughWebUI("admin", "welcome0");
 });
 
 Cypress.Commands.add("restrictedMemberLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("RestrictedMember");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("RestrictedMember", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("restrictedRegularUserLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("RestrictedRegularUser");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("RestrictedRegularUser", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("permissionDelegationLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("PermissionDelegation");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("PermissionDelegation", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("regularUserLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("RegularUser");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("RegularUser", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("heisenbergLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("heisenberg");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("heisenberg", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("secondProjectAdministratorLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("SecondProjectAdministrator");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("SecondProjectAdministrator", "Correct Horse Battery Staple");
 });
+
+function loginThroughWebUI(username: string, password: string): void {
+    cy.visit("/");
+    cy.get("[data-test=form_loginname]").type(username);
+    cy.get("[data-test=form_pw]").type(`${password}{enter}`);
+}
+
+function sessionThroughWebUI(username: string, password: string): void {
+    cy.session(["WebUI", username], () => {
+        loginThroughWebUI(username, password);
+    });
+}
 
 Cypress.Commands.add("userLogout", () => {
     cy.get("[data-test=user_logout]").click({ force: true });

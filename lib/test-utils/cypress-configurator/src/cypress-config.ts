@@ -32,5 +32,6 @@ export const cypress_config = {
     trashAssetsBeforeRuns: false,
     e2e: {
         baseUrl: "https://tuleap",
+        experimentalSessionAndOrigin: false,
     },
 };

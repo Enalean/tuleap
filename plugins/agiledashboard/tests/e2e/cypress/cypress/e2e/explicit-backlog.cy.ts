@@ -18,14 +18,8 @@
  */
 
 describe(`Planning view Explicit Backlog`, function () {
-    before(function () {
-        cy.clearSessionCookie();
-
-        cy.projectMemberLogin();
-    });
-
     beforeEach(function () {
-        cy.preserveSessionCookies();
+        cy.projectMemberSession();
         cy.visitProjectService("explicit-backlog", "Agile Dashboard");
         // eslint-disable-next-line cypress/require-data-selectors
         cy.get("body").as("body");
@@ -120,20 +114,15 @@ describe(`Planning view Explicit Backlog`, function () {
         let now: number;
 
         before(function () {
-            cy.clearSessionCookie();
-
-            cy.projectMemberLogin();
-
             now = Date.now();
         });
 
         beforeEach(function () {
-            cy.preserveSessionCookies();
-
             project_name = "ad-" + now;
             project_public_name = "Ad " + now;
         });
         it(`Scrum template can be used in explicit mode`, function () {
+            cy.projectMemberSession();
             cy.log("Create a new project");
             cy.visit("/project/new");
             cy.get(
