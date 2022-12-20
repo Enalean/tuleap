@@ -49,7 +49,9 @@ mkdir -p "$test_results_folder" || true
 rm -rf "$test_results_folder/*" || true
 clean_env
 
-TEST_RESULT_OUTPUT="$test_results_folder" CYPRESS_VERSION="$cypress_version" $DOCKERCOMPOSE up -d --build
+export TEST_RESULT_OUTPUT="$test_results_folder"
+export CYPRESS_VERSION="$cypress_version"
+$DOCKERCOMPOSE up -d --build
 
 wait_until_tests_are_executed
 

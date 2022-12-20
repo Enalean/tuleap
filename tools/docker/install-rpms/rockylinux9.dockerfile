@@ -1,12 +1,10 @@
-FROM rockylinux:9 AS tuleap-installrpms-base
+FROM rockylinux@sha256:99376f245b2d13d273260654d3b769918aa8af29b04f771add8ea0c9bf40a66c AS tuleap-installrpms-base
 
 ENV container docker
 
 STOPSIGNAL SIGRTMIN+3
 
-RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
-    systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-    rm -f /lib/systemd/system/multi-user.target.wants/*;\
+RUN rm -f /lib/systemd/system/multi-user.target.wants/*;\
     rm -f /etc/systemd/system/*.wants/*;\
     rm -f /lib/systemd/system/local-fs.target.wants/*; \
     rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
