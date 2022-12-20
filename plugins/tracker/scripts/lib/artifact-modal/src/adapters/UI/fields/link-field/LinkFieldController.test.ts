@@ -68,7 +68,7 @@ import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import { ParentArtifactIdentifierStub } from "../../../../../tests/stubs/ParentArtifactIdentifierStub";
-import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
+import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
@@ -146,7 +146,7 @@ describe(`LinkFieldController`, () => {
                 SearchArtifactsStub.withoutResults(),
                 current_artifact_identifier,
                 current_tracker_identifier,
-                UserIdentifierProxyStub.fromUserId(101)
+                UserIdentifierStub.fromUserId(101)
             ),
             new_link_adder,
             new_link_remover,

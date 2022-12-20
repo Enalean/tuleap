@@ -49,7 +49,7 @@ import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/C
 import { selectOrThrow } from "@tuleap/dom";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
-import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
+import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
@@ -181,7 +181,7 @@ describe(`NewLinkTemplate`, () => {
                     SearchArtifactsStub.withoutResults(),
                     current_artifact_identifier,
                     current_tracker_identifier,
-                    UserIdentifierProxyStub.fromUserId(101)
+                    UserIdentifierStub.fromUserId(101)
                 ),
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),

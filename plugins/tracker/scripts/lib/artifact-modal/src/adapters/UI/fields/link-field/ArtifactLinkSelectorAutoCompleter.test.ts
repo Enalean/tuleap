@@ -36,7 +36,7 @@ import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAl
 import type { LinkField } from "./LinkField";
 import type { RetrieveUserHistory } from "../../../../domain/fields/link-field/RetrieveUserHistory";
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
-import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
+import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
@@ -118,7 +118,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             artifacts_searcher,
             current_artifact_identifier,
             current_tracker_identifier,
-            UserIdentifierProxyStub.fromUserId(USER_ID)
+            UserIdentifierStub.fromUserId(USER_ID)
         );
         autocompleter.autoComplete(host, query);
     };

@@ -20,7 +20,7 @@
 import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
 import { LinkableArtifactStub } from "../../../tests/stubs/LinkableArtifactStub";
 import type { UserIdentifier } from "../../domain/UserIdentifier";
-import { UserIdentifierProxyStub } from "../../../tests/stubs/UserIdentifierStub";
+import { UserIdentifierStub } from "../../../tests/stubs/UserIdentifierStub";
 import type { RetrieveUserHistory } from "../../domain/fields/link-field/RetrieveUserHistory";
 import { RetrieveUserHistoryStub } from "../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
@@ -34,7 +34,7 @@ describe(`UserHistoryCache`, () => {
     beforeEach(() => {
         first_entry = LinkableArtifactStub.withDefaults({ id: 867 });
         second_entry = LinkableArtifactStub.withDefaults({ id: 628 });
-        user_identifier = UserIdentifierProxyStub.fromUserId(125);
+        user_identifier = UserIdentifierStub.fromUserId(125);
     });
 
     const getCache = (): RetrieveUserHistory => {

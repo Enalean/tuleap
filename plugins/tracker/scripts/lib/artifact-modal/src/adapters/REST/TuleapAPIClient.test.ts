@@ -37,7 +37,7 @@ import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload";
-import { UserIdentifierProxyStub } from "../../../tests/stubs/UserIdentifierStub";
+import { UserIdentifierStub } from "../../../tests/stubs/UserIdentifierStub";
 import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
 import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
 
@@ -280,7 +280,7 @@ describe(`TuleapAPIClient`, () => {
         const USER_ID = 102;
         const getUserArtifactHistory = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
             const client = TuleapAPIClient();
-            return client.getUserArtifactHistory(UserIdentifierProxyStub.fromUserId(USER_ID));
+            return client.getUserArtifactHistory(UserIdentifierStub.fromUserId(USER_ID));
         };
         it(`will return user history entries which are "artifact" type as linkable artifact`, async () => {
             const first_entry = { per_type_id: ARTIFACT_ID, type: ARTIFACT_TYPE, badges: [] };

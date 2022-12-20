@@ -19,11 +19,6 @@
 
 import type { UserIdentifier } from "../../src/domain/UserIdentifier";
 
-export const UserIdentifierProxyStub = {
-    fromUserId: (user_id: number): UserIdentifier => {
-        return {
-            _type: "UserIdentifier",
-            id: user_id,
-        };
-    },
+export const UserIdentifierStub = {
+    fromUserId: (user_id: number): UserIdentifier => ({ _type: "UserIdentifier", id: user_id }),
 };
