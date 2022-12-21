@@ -53,14 +53,14 @@ class ProjectComparisonsResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the project
-     * @param int $limit  Number of elements to fetch (not authorized element are hidden, so you may get less element than requested) {@from path}
+     * @param int $limit  Number of elements to fetch (not authorized element are hidden, so you may get less element than requested) {@from path} {@min 1} {@max 50}
      * @param int $offset Position of the first element to display (first position is 0). Comparisons are sorted by creation date (most recent first) {@from path}
      *
      * @return ComparisonsPageRepresentation {@type Tuleap\Baseline\REST\ComparisonsPageRepresentation}
      * @throws RestException
      * @throws ForbiddenRestException
      */
-    public function getComparisons(int $id, int $limit = 10, int $offset = 0): ComparisonsPageRepresentation
+    public function getComparisons(int $id, int $limit = self::MAX_PAGINATION_LIMIT, int $offset = 0): ComparisonsPageRepresentation
     {
         $this->checkAccess();
 
