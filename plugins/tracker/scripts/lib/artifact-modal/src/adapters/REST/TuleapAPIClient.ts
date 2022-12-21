@@ -32,14 +32,14 @@ import type { RetrieveLinkTypes } from "../../domain/fields/link-field/RetrieveL
 import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field/RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact } from "../../domain/fields/link-field/LinkedArtifact";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
+import { LinkedArtifactProxy } from "./fields/link-field/LinkedArtifactProxy";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
 import type { LinkableNumber } from "../../domain/fields/link-field/LinkableNumber";
 import { ParentRetrievalFault } from "../../domain/parent/ParentRetrievalFault";
 import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
-import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
+import { LinkableArtifactProxy } from "./fields/link-field/LinkableArtifactProxy";
 import type { LinkType } from "../../domain/fields/link-field/LinkType";
 import type { RetrievePossibleParents } from "../../domain/fields/link-field/RetrievePossibleParents";
 import { PossibleParentsRetrievalFault } from "../../domain/fields/link-field/PossibleParentsRetrievalFault";

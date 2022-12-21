@@ -48,10 +48,10 @@ import type { LinkFieldControllerType } from "./LinkFieldController";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { selectOrThrow } from "@tuleap/dom";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
-import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
-import { RecentlyViewedArtifactGroup } from "./RecentlyViewedArtifactGroup";
-import { PossibleParentsGroup } from "./PossibleParentsGroup";
-import { SearchResultsGroup } from "./SearchResultsGroup";
+import { MatchingArtifactsGroup } from "./dropdown/MatchingArtifactsGroup";
+import { RecentlyViewedArtifactGroup } from "./dropdown/RecentlyViewedArtifactGroup";
+import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
+import { SearchResultsGroup } from "./dropdown/SearchResultsGroup";
 
 describe("LinkField", () => {
     beforeEach(() => {

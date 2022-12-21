@@ -34,7 +34,7 @@ import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/Retr
 import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
 import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
-import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
+import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";

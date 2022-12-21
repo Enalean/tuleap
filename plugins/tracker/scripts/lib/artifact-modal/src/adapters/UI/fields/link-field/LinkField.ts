@@ -34,7 +34,10 @@ import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
 import { createLinkSelector } from "@tuleap/link-selector";
-import { getLinkableArtifact, getLinkableArtifactTemplate } from "./LinkableArtifactTemplate";
+import {
+    getLinkableArtifact,
+    getLinkableArtifactTemplate,
+} from "./dropdown/LinkableArtifactTemplate";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getNewLinkTemplate } from "./NewLinkTemplate";

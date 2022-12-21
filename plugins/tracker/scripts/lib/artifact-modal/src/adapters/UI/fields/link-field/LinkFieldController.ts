@@ -32,7 +32,7 @@ import { LinkRetrievalFault } from "../../../../domain/fields/link-field/LinkRet
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
-import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
+import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import type { GroupOfItems } from "@tuleap/link-selector";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
@@ -45,7 +45,7 @@ import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLi
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
-import { PossibleParentsGroup } from "./PossibleParentsGroup";
+import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import type {
