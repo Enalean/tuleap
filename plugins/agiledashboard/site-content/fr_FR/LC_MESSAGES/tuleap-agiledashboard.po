@@ -670,6 +670,14 @@ msgstr "Planification Générale"
 msgid "Top backlog"
 msgstr "Planification générale"
 
+#, php-format
+msgid ""
+"Tracker %s cannot be defined as child of tracker %s because they are part of "
+"the same backlog (%s)"
+msgstr ""
+"L'outil de suivi %s ne peut être défini en tant qu'enfant de l'outil de "
+"suivi %s car ils font partis de la même planification (%s)"
+
 msgid "Tracker already used by another Kanban."
 msgstr "Le tracker est déjà utilisé par un autre Kanban."
 

@@ -583,6 +583,12 @@ msgstr ""
 msgid "Top backlog"
 msgstr ""
 
+#, php-format
+msgid ""
+"Tracker %s cannot be defined as child of tracker %s because they are part of "
+"the same backlog (%s)"
+msgstr ""
+
 msgid "Tracker already used by another Kanban."
 msgstr ""
 
