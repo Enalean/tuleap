@@ -33,7 +33,7 @@ import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStu
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
-import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
+import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
