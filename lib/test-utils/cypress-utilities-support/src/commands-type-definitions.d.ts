@@ -31,14 +31,27 @@ declare global {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface Chainable<Subject> {
             clearSessionCookie(): void;
+
             preserveSessionCookies(): void;
+
             projectAdministratorLogin(): void;
+
+            projectAdministratorSession(): void;
+
+            projectMemberSession(): void;
+
             secondProjectAdministratorLogin(): void;
+
             projectMemberLogin(): void;
+
             permissionDelegationLogin(): void;
+
             platformAdminLogin(): void;
+
             restrictedMemberLogin(): void;
+
             restrictedRegularUserLogin(): void;
+
             regularUserLogin(): void;
 
             heisenbergLogin(): void;
