@@ -77,7 +77,7 @@ class WikiAttachment /* implements UGroupPermission */
      */
     public $revision;
 
-    public $id;
+    public ?int $id = null;
 
     public mixed $revisionCounter;
 
@@ -506,8 +506,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function count()
     {
         if ($this->revisionCounter === null) {
-            $this->getId();
-            $waIter                = WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
+            $waIter                = WikiAttachmentRevision::getRevisionIterator($this->gid, (int) $this->getId());
             $this->revisionCounter = $waIter->count();
         }
         return $this->revisionCounter;

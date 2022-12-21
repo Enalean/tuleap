@@ -21,8 +21,6 @@
 
 use Tuleap\Project\MappingRegistry;
 
-require_once('Widget.class.php');
-
 /**
 * Widget_ImageViewer
 *
@@ -31,8 +29,8 @@ require_once('Widget.class.php');
 */
 class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public $image_title;
-    public $image_url;
+    public ?string $image_title = null;
+    public ?string $image_url   = null;
     public function __construct($id, $owner_id, $owner_type)
     {
         parent::__construct($id);
