@@ -24,11 +24,13 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
+use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
 final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID = 989;
     private ?CollectionOfForwardLinks $submitted_links;
+    private CollectionOfReverseLinks $submitted_reverse_links;
 
     protected function setUp(): void
     {
@@ -36,6 +38,8 @@ final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestC
             ForwardLinkStub::withNoType(5),
             ForwardLinkStub::withType(99, 'custom_type'),
         ]);
+
+        $this->submitted_reverse_links = new CollectionOfReverseLinks([ReverseLinkStub::build(200)]);
     }
 
     private function build(?NewParentLink $parent): NewArtifactLinkChangesetValue
@@ -49,7 +53,8 @@ final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestC
             self::FIELD_ID,
             $existing_links,
             $this->submitted_links,
-            $parent
+            $parent,
+            $this->submitted_reverse_links
         );
     }
 
@@ -60,11 +65,11 @@ final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertSame(self::FIELD_ID, $value->getFieldId());
         self::assertNotNull($value->getSubmittedValues());
         self::assertSame($this->submitted_links, $value->getSubmittedValues());
+        self::assertSame($this->submitted_reverse_links, $value->getSubmittedReverseLinks());
         $diff = $value->getArtifactLinksDiff();
         self::assertNotNull($diff);
         self::assertCount(2, $diff->getNewValues());
         self::assertCount(2, $diff->getRemovedValues());
-        self::assertNull($value->getParent());
     }
 
     public function testItSetsDiffToNullToAvoidRemovingValuesWhenSubmittedValuesAreNull(): void

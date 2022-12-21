@@ -49,7 +49,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
                     ForwardLinkStub::withType(self::SECOND_UNCHANGED_ARTIFACT_ID, '_is_child'),
                     ForwardLinkStub::withType(self::REMOVED_ARTIFACT_ID, '_is_child'),
                 ])
-            )
+            ),
         );
 
         $link_field = new \Tracker_FormElement_Field_ArtifactLink(
@@ -163,7 +163,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
         $payload = [
             'all_links' => [],
-            "parent" => ['id' => self::PARENT_ARTIFACT_ID],
+            'parent'    => ['id' => self::PARENT_ARTIFACT_ID],
         ];
 
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
@@ -181,24 +181,27 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         $this->build($payload);
     }
 
-    public function testItThrowsWhenFeatureFlagIsSet(): void
+    public function testItBuildsWhenFeatureFlagIsSet(): void
     {
         \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
         $payload = [
-            'all_links' => [],
+            'all_links' =>
+                [
+                    ['direction' => 'reverse', 'id' => 1],
+                ],
         ];
 
-        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-        $this->build($payload);
+        $update_value = $this->build($payload);
+
+        $this->assertSame($payload['all_links'][0]['id'], $update_value->getSubmittedReverseLinks()->links[0]->getSourceArtifactId());
     }
 
-    public function dataProviderInvalidPayloads(): array
+    public function dataProviderInvalidPayloads(): iterable
     {
-        return [
-            'Payload is empty' => [[]],
-            'Payload has none of the required keys' => [['invalid_key' => []]],
-            'Links key does not contain an array' => [['links' => null]],
-        ];
+        yield 'Payload is empty' => [[]];
+        yield 'Payload has none of the required keys' => [['invalid_key' => []]];
+        yield 'Links key does not contain an array' => [['links' => null]];
+        yield 'All links key does not contain an array' => [['all_links' => null]];
     }
 
     /**
