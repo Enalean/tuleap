@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { select2, createModal, datePicker, createPopover, createDropdown } from "tlp";
+import { select2, datePicker } from "tlp";
+import { createPopover } from "@tuleap/tlp-popovers";
+import { createModal } from "@tuleap/tlp-modal";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import CodeMirror from "codemirror";
 import "codemirror/mode/htmlmixed/htmlmixed";
 import "codemirror/addon/scroll/simplescrollbars";

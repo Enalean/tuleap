@@ -11,6 +11,7 @@
     "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
     "@tuleap/plugin-tracker-color-picker": "workspace:*",
     "@tuleap/project-background": "workspace:*",
+    "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue-permissions-per-group-badge": "workspace:*",

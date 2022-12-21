@@ -18,6 +18,7 @@ specifiers:
   '@tuleap/plugin-tracker-constants': workspace:*
   '@tuleap/plugin-tracker-rich-text-editor': workspace:*
   '@tuleap/project-background': workspace:*
+  '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-fetch': workspace:*
   '@tuleap/tlp-swatch-colors': workspace:*
   '@tuleap/vuex-store-wrapper-jest': workspace:*
@@ -72,6 +73,7 @@ dependencies:
   '@tuleap/plugin-tracker-constants': link:../tracker/scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': link:../tracker/scripts/lib/rich-text-editor
   '@tuleap/project-background': link:../../lib/frontend/project-background
+  '@tuleap/tlp-dropdown': link:../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@uirouter/angularjs': 1.0.29_angular@1.8.2

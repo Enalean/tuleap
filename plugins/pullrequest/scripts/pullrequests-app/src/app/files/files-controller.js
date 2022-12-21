@@ -1,4 +1,4 @@
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import {
     SIDE_BY_SIDE_DIFF,
     UNIFIED_DIFF,

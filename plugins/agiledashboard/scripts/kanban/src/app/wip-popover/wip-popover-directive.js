@@ -1,6 +1,6 @@
 import "./wip-popover.tpl.html";
 import angular from "angular";
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 
 export default WipPopover;
 

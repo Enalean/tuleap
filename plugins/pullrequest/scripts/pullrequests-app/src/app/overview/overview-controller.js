@@ -1,4 +1,4 @@
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import { RelativeDateHelper } from "../helpers/date-helpers.ts";
 
 export default OverviewController;

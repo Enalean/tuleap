@@ -68,7 +68,7 @@ import type { State } from "../../store/type";
 import type { BacklogItemState } from "../../store/backlog-item/type";
 import type { CampaignState } from "../../store/campaign/type";
 import { computed, onMounted, ref } from "vue";
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import { useGettext } from "vue3-gettext";
 
 const {
