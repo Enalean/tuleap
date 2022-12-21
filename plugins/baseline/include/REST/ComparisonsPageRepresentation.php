@@ -44,7 +44,7 @@ class ComparisonsPageRepresentation
         $this->total_count = $total_count;
     }
 
-    public static function build(ComparisonsPage $comparisons_page)
+    public static function build(ComparisonsPage $comparisons_page): self
     {
         $comparison_representations = array_map(
             function (Comparison $comparison) {

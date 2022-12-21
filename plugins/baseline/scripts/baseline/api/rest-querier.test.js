@@ -45,7 +45,7 @@ describe("Rest queries:", () => {
         it("calls projects API to get opened milestones", () =>
             expect(get).toHaveBeenCalledWith('/api/projects/1/milestones?query={"status":"open"}'));
 
-        it("returns open milestones", () => expect(result).toEqual(simplified_milestone));
+        it("returns open milestones", () => expect(result).toStrictEqual(simplified_milestone));
     });
 
     describe("getBaselines()", () => {
@@ -62,26 +62,30 @@ describe("Rest queries:", () => {
         it("calls projects API to get baselines", () =>
             expect(get).toHaveBeenCalledWith("/api/projects/1/baselines?limit=1000&offset=0"));
 
-        it("returns baselines", () => expect(result).toEqual([baseline]));
+        it("returns baselines", () => expect(result).toStrictEqual([baseline]));
     });
 
     describe("getComparisons()", () => {
-        let get;
-
+        let recursive_get_mock;
         const comparison = create("comparison");
 
         beforeEach(async () => {
-            get = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(get, { return_json: { comparisons: [comparison] } });
+            recursive_get_mock = jest.spyOn(tlp_fetch, "recursiveGet");
+            recursive_get_mock.mockResolvedValue({ comparisons: [comparison] });
             result = await getComparisons(1);
         });
 
-        it("calls projects API to get comparisons", () =>
-            expect(get).toHaveBeenCalledWith(
-                "/api/projects/1/baselines_comparisons?limit=1000&offset=0"
-            ));
-
-        it("returns comparisons", () => expect(result).toEqual([comparison]));
+        it("calls projects API to get comparisons", () => {
+            expect(recursive_get_mock).toHaveBeenCalledWith(
+                "/api/projects/1/baselines_comparisons",
+                expect.objectContaining({
+                    params: {
+                        limit: 50,
+                        offset: 0,
+                    },
+                })
+            );
+        });
     });
 
     describe("createBaseline()", () => {
@@ -111,7 +115,7 @@ describe("Rest queries:", () => {
         it("calls baselines API to create baseline", () =>
             expect(post).toHaveBeenCalledWith("/api/baselines/", { headers, body }));
 
-        it("returns created baseline", () => expect(result).toEqual(baseline));
+        it("returns created baseline", () => expect(result).toStrictEqual(baseline));
     });
 
     describe("getBaselineArtifactsByIds()", () => {

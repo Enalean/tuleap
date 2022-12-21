@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post, del } from "@tuleap/tlp-fetch";
+import { get, post, del, recursiveGet } from "@tuleap/tlp-fetch";
 import DateUtils from "../support/date-utils";
 
 export {
@@ -132,12 +132,16 @@ async function getBaselineArtifactsByIds(baseline_id, artifact_ids) {
     return artifacts;
 }
 
-async function getComparisons(project_id) {
-    const response = await get(
-        `/api/projects/${project_id}/baselines_comparisons?limit=1000&offset=0`
-    );
-    const comparisons_with_total_count = await response.json();
-    return comparisons_with_total_count.comparisons;
+function getComparisons(project_id) {
+    return recursiveGet(`/api/projects/${encodeURIComponent(project_id)}/baselines_comparisons`, {
+        params: {
+            limit: 50,
+            offset: 0,
+        },
+        getCollectionCallback: (collection) => {
+            return collection.comparisons;
+        },
+    });
 }
 
 async function createComparison(name, comment, base_baseline_id, compared_to_baseline_id) {
