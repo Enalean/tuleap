@@ -33,7 +33,7 @@ use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 
 final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -109,14 +109,12 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getStepResultRepresentation(2, 'blocked'),
         ];
 
-        $value_representation           = new ArtifactValuesRepresentation();
-        $value_representation->field_id = $this->execution_field->getId();
-        $value_representation->value    = [
-            'steps_results' => [
+        $value_representation = ArtifactValuesRepresentationBuilder::aRepresentation($this->execution_field->getId())
+            ->withValue(['steps_results' => [
                 1 => 'passed',
                 2 => 'blocked',
             ],
-        ];
+            ])->build();
 
         $expected = [$value_representation];
         $this->assertEquals($expected, $this->getChanges($submitted_steps_results));
@@ -187,14 +185,12 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->getStepResultRepresentation(3, 'blocked'),
         ];
 
-        $value_representation           = new ArtifactValuesRepresentation();
-        $value_representation->field_id = $this->execution_field->getId();
-        $value_representation->value    = [
-            'steps_results' => [
+        $value_representation = ArtifactValuesRepresentationBuilder::aRepresentation($this->execution_field->getId())
+            ->withValue(['steps_results' => [
                 1 => 'passed',
                 2 => 'blocked',
             ],
-        ];
+            ])->build();
 
         $expected = [$value_representation];
         $this->assertEquals($expected, $this->getChanges($submitted_steps_results));
@@ -228,14 +224,12 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->setUpExistingStepResult($step1, 'passed');
 
-        $value_representation           = new ArtifactValuesRepresentation();
-        $value_representation->field_id = $this->execution_field->getId();
-        $value_representation->value    = [
-            'steps_results' => [
+        $value_representation = ArtifactValuesRepresentationBuilder::aRepresentation($this->execution_field->getId())
+            ->withValue(['steps_results' => [
                 1 => 'passed',
                 2 => 'blocked',
             ],
-        ];
+            ])->build();
 
         $expected = [$value_representation];
         $this->assertEquals($expected, $this->getChanges($submitted_steps_results));

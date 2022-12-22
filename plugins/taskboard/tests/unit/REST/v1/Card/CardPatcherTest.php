@@ -36,6 +36,7 @@ use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 
 class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -122,9 +123,7 @@ class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $field = Mockery::mock(Tracker_FormElement_Field_Float::class);
 
-        $expected_value           = new ArtifactValuesRepresentation();
-        $expected_value->field_id = 1001;
-        $expected_value->value    = 3.14;
+        $expected_value = ArtifactValuesRepresentationBuilder::aRepresentation(1001)->withValue(3.14)->build();
 
         $this->assertUpdateIsCalledWithExpectedValue($field, $expected_value);
     }
@@ -133,9 +132,7 @@ class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
 
-        $expected_value           = new ArtifactValuesRepresentation();
-        $expected_value->field_id = 1001;
-        $expected_value->value    = 3.14;
+        $expected_value = ArtifactValuesRepresentationBuilder::aRepresentation(1001)->withValue(3.14)->build();
 
         $this->assertUpdateIsCalledWithExpectedValue($field, $expected_value);
     }
@@ -144,10 +141,7 @@ class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $field = Mockery::mock(Tracker_FormElement_Field_Computed::class);
 
-        $expected_value                  = new ArtifactValuesRepresentation();
-        $expected_value->field_id        = 1001;
-        $expected_value->manual_value    = 3.14;
-        $expected_value->is_autocomputed = false;
+        $expected_value = ArtifactValuesRepresentationBuilder::aRepresentation(1001)->withManualValue(3.14)->build();
 
         $this->assertUpdateIsCalledWithExpectedValue($field, $expected_value);
     }

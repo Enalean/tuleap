@@ -24,7 +24,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker;
 use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 
 class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -77,9 +77,7 @@ class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $values = $this->builder->getValues($this->artifact, $this->tracker);
 
-        $representation           = new ArtifactValuesRepresentation();
-        $representation->field_id = 101;
-        $representation->value    = "title";
+        $representation = ArtifactValuesRepresentationBuilder::aRepresentation(101)->withValue('title')->build();
 
         $expected = [
             $representation,
