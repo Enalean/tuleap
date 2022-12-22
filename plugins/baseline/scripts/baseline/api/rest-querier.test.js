@@ -49,20 +49,26 @@ describe("Rest queries:", () => {
     });
 
     describe("getBaselines()", () => {
-        let get;
-
+        let recursive_get_mock;
         const baseline = create("baseline");
 
         beforeEach(async () => {
-            get = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(get, { return_json: { baselines: [baseline] } });
+            recursive_get_mock = jest.spyOn(tlp_fetch, "recursiveGet");
+            recursive_get_mock.mockResolvedValue({ baselines: [baseline] });
             result = await getBaselines(1);
         });
 
-        it("calls projects API to get baselines", () =>
-            expect(get).toHaveBeenCalledWith("/api/projects/1/baselines?limit=1000&offset=0"));
-
-        it("returns baselines", () => expect(result).toStrictEqual([baseline]));
+        it("calls projects API to get baselines", () => {
+            expect(recursive_get_mock).toHaveBeenCalledWith(
+                "/api/projects/1/baselines",
+                expect.objectContaining({
+                    params: {
+                        limit: 50,
+                        offset: 0,
+                    },
+                })
+            );
+        });
     });
 
     describe("getComparisons()", () => {
