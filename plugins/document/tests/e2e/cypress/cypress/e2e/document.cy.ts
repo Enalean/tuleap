@@ -23,13 +23,12 @@ describe("Document new UI", () => {
     const now = Date.now();
     context("Project Administrators", function () {
         context("Project administrators", function () {
-            const project_unixname = `docman-${now}`,
-                public_name = `Docman${now}`;
+            const project_unixname = `docman-${now}`;
             before(() => {
                 cy.clearSessionCookie();
 
                 cy.projectAdministratorLogin();
-                cy.createNewIssueProject(project_unixname, public_name);
+                cy.createNewPublicProject(project_unixname, "issues");
             });
 
             beforeEach(() => {
@@ -140,8 +139,10 @@ describe("Document new UI", () => {
     context("Project members", function () {
         before(() => {
             cy.clearSessionCookie();
-            cy.projectMemberLogin();
-            cy.visitProjectService("document-project", "Documents");
+            cy.projectAdministratorLogin();
+            cy.createNewPublicProject(`document-project-${now}`, "issues");
+            cy.visitProjectService(`document-project-${now}`, "Documents");
+            cy.addUser("projectMember");
         });
 
         beforeEach(() => {
@@ -150,18 +151,23 @@ describe("Document new UI", () => {
 
         context("docman permissions", function () {
             it("should raise an error when user try to access to document admin page", function () {
+                cy.userLogout();
+                cy.projectMemberLogin();
                 cy.request({
-                    url: "/plugins/document/document-project/admin-search",
+                    url: `/plugins/document/document-project-${now}/admin-search`,
                     failOnStatusCode: false,
                 }).then((response) => {
                     expect(response.status).to.eq(404);
                 });
+
+                cy.userLogout();
+                cy.projectAdministratorLogin();
             });
         });
 
         context("Item manipulation", () => {
             before(() => {
-                cy.visitProjectService("document-project", "Documents");
+                cy.visitProjectService(`document-project-${now}`, "Documents");
             });
 
             beforeEach(() => {
@@ -348,7 +354,7 @@ describe("Document new UI", () => {
                     cy.get("[data-test=document-modal-submit-button-create-item]").click();
                 });
 
-                cy.visitProjectService("document-project", "Documents");
+                cy.visitProjectService(`document-project-${now}`, "Documents");
 
                 cy.get("[data-test=document-tree-content]")
                     .contains("tr", "Folder download")
@@ -362,7 +368,7 @@ describe("Document new UI", () => {
                         if (folder_id === undefined) {
                             throw new Error("Could not retrieve the folder id from its <tr>");
                         }
-                        const download_uri = `/plugins/document/document-project/folders/${encodeURIComponent(
+                        const download_uri = `/plugins/document/document-project-${now}/folders/${encodeURIComponent(
                             folder_id
                         )}/download-folder-as-zip`;
 
@@ -396,8 +402,7 @@ describe("Document new UI", () => {
             cy.clearSessionCookie();
             cy.projectAdministratorLogin();
             const project_name = `document-perm-${now}`;
-            const project_public_name = `Document permission${now}`;
-            cy.createNewIssueProject(project_name, project_public_name);
+            cy.createNewPublicProject(project_name, "issues");
             cy.visitProjectService(project_name, "Documents");
 
             const document_name = `Document ${now}`;
