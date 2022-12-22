@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields;
 
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class FormElementFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -51,7 +52,7 @@ final class FormElementFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheArtifactLinkField(): void
     {
-        $field = $this->getArtifactLinkField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(204)->build();
         $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([$field]);
 
         $result = $this->getAdapter()->getArtifactLinkField($this->tracker_identifier);
@@ -63,22 +64,5 @@ final class FormElementFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory->method('getUsedArtifactLinkFields')->willReturn([]);
 
         self::assertNull($this->getAdapter()->getArtifactLinkField($this->tracker_identifier));
-    }
-
-    private function getArtifactLinkField(): \Tracker_FormElement_Field_ArtifactLink
-    {
-        return new \Tracker_FormElement_Field_ArtifactLink(
-            204,
-            76,
-            1,
-            'irrelevant',
-            'Irrelevant',
-            'Irrelevant',
-            true,
-            'P',
-            true,
-            '',
-            1
-        );
     }
 }

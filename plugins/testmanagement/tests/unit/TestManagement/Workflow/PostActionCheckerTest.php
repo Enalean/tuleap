@@ -25,6 +25,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
@@ -98,7 +99,7 @@ final class PostActionCheckerTest extends TestCase
         $collection->method('getHiddenFieldsetsPostActions')->willReturn([]);
 
         $this->form_element_factory->method('getFieldById')->willReturn(
-            new \Tracker_FormElement_Field_ArtifactLink(1412, self::TRACKER_ID, 1000, 'artifact link', 'Links', 'Irrelevant', true, 'P', false, '', 3)
+            ArtifactLinkFieldBuilder::anArtifactLinkField(1412)->withTrackerId(self::TRACKER_ID)->build()
         );
         $this->checker->checkPostActions($event);
 

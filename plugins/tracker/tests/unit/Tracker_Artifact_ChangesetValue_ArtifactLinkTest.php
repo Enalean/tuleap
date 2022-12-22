@@ -35,6 +35,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 
 class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -220,7 +221,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \Tuleap\Test\PHPU
 
     public function testBuildsFieldValueRESTRepresentation(): void
     {
-        $field = new Tracker_FormElement_Field_ArtifactLink(1, 100, null, 'Name', 'Label', 'Description', true, 'P', true, false, 1);
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->withLabel('Label')->build();
 
         $artifact_direct_link  = $this->buildArtifact(12);
         $artifact_reverse_link = $this->buildArtifact(13);

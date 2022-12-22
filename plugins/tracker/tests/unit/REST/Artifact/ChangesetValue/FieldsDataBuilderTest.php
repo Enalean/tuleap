@@ -27,6 +27,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -171,20 +172,11 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsArtifactLinkChangesetValueSeparatelyFromRESTUpdatePayload(): void
     {
-        $link_field             = new \Tracker_FormElement_Field_ArtifactLink(
-            self::LINK_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'irrelevant',
-            'Irrelevant',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            1
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::LINK_FIELD_ID)
+                ->withTrackerId(self::TRACKER_ID)
+                ->build()
         );
-        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($link_field);
 
         $first_linked_artifact_id  = 40;
         $second_linked_artifact_id = 87;
@@ -300,20 +292,11 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsArtifactLinkChangesetValueSeparatelyFromRESTCreatePayload(): void
     {
-        $link_field             = new \Tracker_FormElement_Field_ArtifactLink(
-            self::LINK_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'irrelevant',
-            'Irrelevant',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            1
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::LINK_FIELD_ID)
+                ->withTrackerId(self::TRACKER_ID)
+                ->build()
         );
-        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($link_field);
 
         $first_linked_artifact_id  = 41;
         $second_linked_artifact_id = 78;

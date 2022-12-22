@@ -30,6 +30,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchArtifactsLinksStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 
@@ -76,9 +77,9 @@ final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCas
         $mirrored_program_increment = MirroredProgramIncrementIdentifierBuilder::buildWithId(2);
         $feature_change             = FeaturePlanChange::fromRaw(SearchArtifactsLinksStub::build(), [], [], 9);
 
-        $field_artifact_link = new \Tracker_FormElement_Field_ArtifactLink(1, 1, 123, 'artifactlink', 'Artifact Link', '', 1, 'P', 0, 0, 1);
-
-        $this->form_element_factory->method('getAnArtifactLinkField')->willReturn($field_artifact_link);
+        $this->form_element_factory->method('getAnArtifactLinkField')->willReturn(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build()
+        );
 
         $this->planner->planInOneMirror($program_identifier, $mirrored_program_increment, $feature_change, UserIdentifierStub::withId(666));
 

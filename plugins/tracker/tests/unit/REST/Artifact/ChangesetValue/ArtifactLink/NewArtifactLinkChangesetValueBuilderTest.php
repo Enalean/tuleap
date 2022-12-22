@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
@@ -55,23 +56,9 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
             ),
         );
 
-        $link_field = new \Tracker_FormElement_Field_ArtifactLink(
-            self::FIELD_ID,
-            55,
-            1,
-            'irrelevant',
-            'Irrelevant',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            1
-        );
-
         return $builder->buildFromPayload(
             ArtifactTestBuilder::anArtifact(1060)->build(),
-            $link_field,
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::FIELD_ID)->build(),
             UserTestBuilder::buildWithDefaults(),
             $payload
         );
