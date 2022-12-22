@@ -32,6 +32,7 @@ use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 final class PUTHandler
 {
@@ -42,6 +43,7 @@ final class PUTHandler
     }
 
     /**
+     * @param ArtifactValuesRepresentation[] $values
      * @throws RestException
      */
     public function handle(array $values, Artifact $artifact, \PFUser $submitter, ?NewChangesetCommentRepresentation $comment): void
@@ -50,8 +52,11 @@ final class PUTHandler
             $changeset_values        = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
             $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getSubmittedReverseLinks();
             if ($reverse_link_collection !== null && count($reverse_link_collection->links) > 0) {
-                $ids = array_map(static fn($link) => $link->getSourceArtifactId(), $reverse_link_collection->links);
-                echo sprintf('{"Parents to update": "%s"}', implode(',', $ids));
+                $links_to_json = array_map(
+                    static fn($link) => sprintf('Link from %s with type `%s`', $link->getSourceArtifactId(), $link->getType() ?? ''),
+                    $reverse_link_collection->links
+                );
+                echo sprintf('{"Reverse links": "%s"}', implode(', ', $links_to_json));
             } else {
                 $this->artifact_updater->update($submitter, $artifact, $values, $comment);
             }
