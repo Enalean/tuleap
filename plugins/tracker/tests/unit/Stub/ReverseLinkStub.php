@@ -29,17 +29,27 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLink;
  */
 final class ReverseLinkStub implements ReverseLink
 {
-    private function __construct(private int $id)
+    private function __construct(private int $id, private ?string $type)
     {
     }
 
-    public static function build(int $id): self
+    public static function withNoType(int $id): self
     {
-        return new self($id);
+        return new self($id, null);
+    }
+
+    public static function withType(int $id, string $type): self
+    {
+        return new self($id, $type);
     }
 
     public function getSourceArtifactId(): int
     {
         return $this->id;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
     }
 }

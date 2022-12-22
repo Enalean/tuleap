@@ -22,48 +22,49 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
-use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLink;
+use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
 /**
  * @psalm-immutable
  */
 final class RESTReverseLinkProxy implements ReverseLink
 {
-    private const PAYLOAD_KEY_ID = 'id';
-
-    private function __construct(private int $id)
+    private function __construct(private int $id, private ?string $type)
     {
     }
 
     /**
-     * @param array $link_payload
-     * @throws Tracker_FormElement_InvalidFieldValueException
+     * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    public static function fromPayload(array $link_payload): self
+    public static function fromPayload(LinkWithDirectionRepresentation $link_payload): self
     {
-        self::checkLinkPayloadStructure($link_payload);
-
-        return new self($link_payload[self::PAYLOAD_KEY_ID]);
+        return new self($link_payload->id, self::getLinkType($link_payload));
     }
 
     /**
-     * @throws Tracker_FormElement_InvalidFieldValueException
+     * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    private static function checkLinkPayloadStructure(array $link_payload): void
+    private static function getLinkType(LinkWithDirectionRepresentation $link_payload): ?string
     {
-        if (! array_key_exists(self::PAYLOAD_KEY_ID, $link_payload)) {
-            throw new Tracker_FormElement_InvalidFieldValueException(
-                'Artifact links must have an id'
+        if (! is_string($link_payload->type)) {
+            throw new \Tracker_FormElement_InvalidFieldValueException(
+                'Artifact links "type" must be a string, use empty string for no type'
             );
         }
-        if (! is_int($link_payload[self::PAYLOAD_KEY_ID])) {
-            throw new Tracker_FormElement_InvalidFieldValueException('Artifact link id must be an integer');
+        if ($link_payload->type === '') {
+            return null;
         }
+        return $link_payload->type;
     }
 
     public function getSourceArtifactId(): int
     {
         return $this->id;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
     }
 }

@@ -25,15 +25,20 @@ namespace Tuleap\Tracker\REST\v1;
 /**
  * @psalm-immutable
  */
-final class LinkToUpdateRepresentation
+final class LinkWithDirectionRepresentation
 {
     /**
-     * @var int {@required true}
+     * @var int $id {@min 1}
      */
     public int $id;
 
     /**
-     * @var string {@required true}
+     * @var string $direction {@choice reverse,forward}
      */
     public string $direction;
+
+    /**
+     * @var string | null {@required false}
+     */
+    public string | null $type = null;
 }

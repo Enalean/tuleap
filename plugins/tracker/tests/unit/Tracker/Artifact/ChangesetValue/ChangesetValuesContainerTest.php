@@ -60,8 +60,8 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
             $submitted_links,
             null,
             new CollectionOfReverseLinks([
-                ReverseLinkStub::build(195),
-                ReverseLinkStub::build(196),
+                ReverseLinkStub::withNoType(195),
+                ReverseLinkStub::withNoType(196),
             ])
         );
         $changeset_values    = new ChangesetValuesContainer($fields_data, $artifact_link_value);

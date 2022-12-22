@@ -23,15 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 
 final class AllLinkPayloadParserTest extends TestCase
 {
     public function testItBuildsACollectionOfReverseLinks(): void
     {
         $all_links = [
-            ['direction' => 'reverse', 'id' => 1],
-            ['direction' => 'forward', 'id' => 2],
-            ['direction' => 'reverse', 'id' => 3],
+            LinkWithDirectionRepresentationBuilder::aReverseLink(1)->build(),
+            LinkWithDirectionRepresentationBuilder::aForwardLink(2)->build(),
+            LinkWithDirectionRepresentationBuilder::aReverseLink(3)->withType('_is_child')->build(),
         ];
 
         $collection = AllLinkPayloadParser::buildLinksToUpdate($all_links);

@@ -671,6 +671,7 @@ class ArtifactsResource extends AuthenticatedResource
      * @param array                             $values  Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
      * @param NewChangesetCommentRepresentation $comment Comment about update {body, format} {@from body}
      *
+     * @throws RestException 400
      * @throws RestException 403
      */
     protected function putId($id, array $values, ?NewChangesetCommentRepresentation $comment = null)

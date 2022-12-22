@@ -23,42 +23,31 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 
 final class RESTReverseLinkProxyTest extends TestCase
 {
     public function testItBuildsFromPayload(): void
     {
-        $reverse = RESTReverseLinkProxy::fromPayload(['id' => 101]);
+        $reverse = RESTReverseLinkProxy::fromPayload(
+            LinkWithDirectionRepresentationBuilder::aReverseLink(101)->withType('_is_child')->build()
+        );
         self::assertSame(101, $reverse->getSourceArtifactId());
+        self::assertSame('_is_child', $reverse->getType());
     }
 
-    public function dataProviderRejectedPayloads(): iterable
+    public function testItDefaultsEmptyTypeToNull(): void
     {
-        yield "Missing 'id' key" => [[]];
-        yield 'id is an integer cast to string' => [['id' => '29']];
+        $link = RESTReverseLinkProxy::fromPayload(
+            LinkWithDirectionRepresentationBuilder::aReverseLink(49)->withType('')->build()
+        );
+        self::assertSame(49, $link->getSourceArtifactId());
+        self::assertNull($link->getType());
     }
 
-    /**
-     * @dataProvider dataProviderRejectedPayloads
-     */
-    public function testItThrowsWhenPayloadIsInvalid(array $payload): void
+    public function testItThrowsWhenTypeIsNull(): void
     {
         $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
-        RESTReverseLinkProxy::fromPayload($payload);
-    }
-
-    public function dataProviderInvalidIds(): iterable
-    {
-        yield [['id' => 0]];
-        yield [['id' => -1]];
-    }
-
-    /**
-     * @dataProvider dataProviderInvalidIds
-     */
-    public function testItDoesNotForbidInvalidArtifactIds(array $payload): void
-    {
-        $reverse = RESTReverseLinkProxy::fromPayload($payload);
-        self::assertSame($payload['id'], $reverse->getSourceArtifactId());
+        RESTReverseLinkProxy::fromPayload(LinkWithDirectionRepresentationBuilder::aReverseLinkWithNullType(74));
     }
 }

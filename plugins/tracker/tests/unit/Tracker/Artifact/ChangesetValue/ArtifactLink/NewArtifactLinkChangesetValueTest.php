@@ -39,7 +39,7 @@ final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestC
             ForwardLinkStub::withType(99, 'custom_type'),
         ]);
 
-        $this->submitted_reverse_links = new CollectionOfReverseLinks([ReverseLinkStub::build(200)]);
+        $this->submitted_reverse_links = new CollectionOfReverseLinks([ReverseLinkStub::withNoType(200)]);
     }
 
     private function build(?NewParentLink $parent): NewArtifactLinkChangesetValue

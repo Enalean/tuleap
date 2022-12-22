@@ -44,9 +44,10 @@ class ArtifactValuesRepresentation
     public $links;
 
     /**
-     * @var LinkToUpdateRepresentation[] | null {@required false}
+     * @var array | null {@required false} {@type \Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation}
+     * @psalm-var LinkWithDirectionRepresentation[] | null
      */
-    public array|null $all_links = null;
+    public ?array $all_links = null;
 
     /**
      * @var array {@required false}
@@ -82,10 +83,6 @@ class ArtifactValuesRepresentation
 
         if ($this->links !== null) {
             $array_representation['links'] = $this->links;
-        }
-
-        if ($this->all_links !== null) {
-            $array_representation['all_links'] = $this->all_links;
         }
 
         if ($this->parent !== null) {

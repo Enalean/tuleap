@@ -82,7 +82,7 @@ final class FieldsDataBuilder
                     $artifact,
                     $field,
                     $submitter,
-                    $array_representation
+                    $value
                 );
                 continue;
             }
