@@ -354,7 +354,7 @@ final class TrackerCreationDataCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $template_id = 101;
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(false);
+        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Invalid tracker template.');
