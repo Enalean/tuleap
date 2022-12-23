@@ -92,10 +92,16 @@ async function getTracker(id) {
     return response.json();
 }
 
-async function getBaselines(project_id) {
-    const response = await get(`/api/projects/${project_id}/baselines?limit=1000&offset=0`);
-    const baselines_with_total_count = await response.json();
-    return baselines_with_total_count.baselines;
+function getBaselines(project_id) {
+    return recursiveGet(`/api/projects/${encodeURIComponent(project_id)}/baselines`, {
+        params: {
+            limit: 50,
+            offset: 0,
+        },
+        getCollectionCallback: (collection) => {
+            return collection.baselines;
+        },
+    });
 }
 
 async function getUser(user_id) {

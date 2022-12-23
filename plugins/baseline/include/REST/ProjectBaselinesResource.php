@@ -53,7 +53,7 @@ class ProjectBaselinesResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the project
-     * @param int $limit  Number of elements to fetch (not authorized element are hidden, so you may get less element than requested) {@from path}
+     * @param int $limit  Number of elements to fetch (not authorized element are hidden, so you may get less element than requested) {@from path} {@min 1} {@max 50}
      * @param int $offset Position of the first element to display (first position is 0). Baselines are sorted by snapshot date (most recent first) {@from path}
      *
      * @return BaselinesPageRepresentation {@type Tuleap\Baseline\REST\BaselinesPageRepresentation}
