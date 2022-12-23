@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
+
 final class ArtifactLinkFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID    = 157;
@@ -29,25 +31,10 @@ final class ArtifactLinkFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testItBuildsFromTrackerField(): void
     {
-        $field = ArtifactLinkFieldReferenceProxy::fromTrackerField($this->getArtifactLinkField());
+        $field = ArtifactLinkFieldReferenceProxy::fromTrackerField(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::FIELD_ID)->withLabel(self::FIELD_LABEL)->build()
+        );
         self::assertSame(self::FIELD_ID, $field->getId());
         self::assertSame(self::FIELD_LABEL, $field->getLabel());
-    }
-
-    private function getArtifactLinkField(): \Tracker_FormElement_Field_ArtifactLink
-    {
-        return new \Tracker_FormElement_Field_ArtifactLink(
-            self::FIELD_ID,
-            76,
-            1,
-            'irrelevant',
-            self::FIELD_LABEL,
-            'Irrelevant',
-            true,
-            'P',
-            true,
-            '',
-            1
-        );
     }
 }

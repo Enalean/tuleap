@@ -42,6 +42,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 
 final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -107,10 +108,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $required_title->method('isRequired')->willReturn(true);
         $required_title->method('getId')->willReturn(self::TITLE_FIELD_ID);
         $required_title->method('getLabel')->willReturn("Title");
-        $non_required_artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $non_required_artifact_link->method('isRequired')->willReturn(false);
-        $non_required_artifact_link->method('getId')->willReturn(self::ARTIFACT_LINK_FIELD_ID);
-        $non_required_artifact_link->method('getLabel')->willReturn("artlink");
+        $non_required_artifact_link = ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->withLabel('artlink')->build();
 
         $tracker = $this->createMock(\Tracker::class);
         $tracker->method('getFormElementFields')->willReturn([$required_title, $non_required_artifact_link]);
@@ -158,11 +156,11 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $required_title->method('getId')->willReturn(self::TITLE_FIELD_ID);
         $required_title->method('getLabel')->willReturn("Title");
         $required_title->method('getTrackerId')->willReturn(412);
-        $required_artifact_link = $this->createMock(\Tracker_FormElement_Field_ArtifactLink::class);
-        $required_artifact_link->method('isRequired')->willReturn(true);
-        $required_artifact_link->method('getId')->willReturn(790);
-        $required_artifact_link->method('getLabel')->willReturn("artlink");
-        $required_artifact_link->method('getTrackerId')->willReturn(412);
+        $required_artifact_link = ArtifactLinkFieldBuilder::anArtifactLinkField(790)
+            ->withTrackerId(412)
+            ->withLabel('artlink')
+            ->thatIsRequired()
+            ->build();
 
         $other_required_field = $this->createMock(\Tracker_FormElement_Field_String::class);
         $other_required_field->method('isRequired')->willReturn(true);

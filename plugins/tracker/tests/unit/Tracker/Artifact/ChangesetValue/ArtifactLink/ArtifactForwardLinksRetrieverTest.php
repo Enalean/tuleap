@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
@@ -50,27 +51,16 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
 
     private function retrieve(Artifact $artifact): CollectionOfForwardLinks
     {
-        $link_field = new \Tracker_FormElement_Field_ArtifactLink(
-            453,
-            69,
-            1,
-            'irrelevant',
-            'Irrelevant',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            1
-        );
-
-        $user      = UserTestBuilder::buildWithDefaults();
         $retriever = new ArtifactForwardLinksRetriever(
             $this->cache,
             $this->dao,
             $this->artifact_retriever
         );
-        return $retriever->retrieve($user, $link_field, $artifact);
+        return $retriever->retrieve(
+            UserTestBuilder::buildWithDefaults(),
+            ArtifactLinkFieldBuilder::anArtifactLinkField(453)->build(),
+            $artifact
+        );
     }
 
     public function testItReturnsAnEmptyCollectionWhenArtifactHasNoLastChangeset(): void

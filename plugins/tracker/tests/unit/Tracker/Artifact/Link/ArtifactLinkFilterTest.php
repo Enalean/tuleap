@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Artifact\Link;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 
 final class ArtifactLinkFilterTest extends TestCase
 {
@@ -42,19 +42,7 @@ final class ArtifactLinkFilterTest extends TestCase
     {
         $artifact = self::createMock(Artifact::class);
         $artifact->method("getLastChangeset")->willReturn(null);
-        $artifact_link_field = new Tracker_FormElement_Field_ArtifactLink(
-            15,
-            100,
-            18,
-            'name',
-            'label',
-            '',
-            true,
-            'P',
-            false,
-            false,
-            1,
-        );
+        $artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build();
         $linked_artifact_id  = "36";
 
         $result = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($artifact, $artifact_link_field, $linked_artifact_id);
@@ -69,19 +57,7 @@ final class ArtifactLinkFilterTest extends TestCase
         $artifact = self::createMock(Artifact::class);
         $artifact->method("getLastChangeset")->willReturn($changeset);
 
-        $artifact_link_field = new Tracker_FormElement_Field_ArtifactLink(
-            15,
-            100,
-            18,
-            'name',
-            'label',
-            '',
-            true,
-            'P',
-            false,
-            false,
-            1,
-        );
+        $artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build();
 
         $linked_artifact_id = "36";
 
@@ -91,19 +67,7 @@ final class ArtifactLinkFilterTest extends TestCase
 
     public function testItReturnsTheIdsOfTheLinkedArtifactsIfTheLinkedArtifactWasNotAlreadyLinkedWithTheCurrentOne(): void
     {
-        $artifact_link_field = new Tracker_FormElement_Field_ArtifactLink(
-            15,
-            100,
-            18,
-            'name',
-            'label',
-            '',
-            true,
-            'P',
-            false,
-            false,
-            1,
-        );
+        $artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build();
         $artifact            = self::createMock(Artifact::class);
         $artifact->method("getId")->willReturn(15);
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 
 final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,22 +35,10 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
     private function build(array $payload): NewArtifactLinkInitialChangesetValue
     {
         $builder = new NewArtifactLinkInitialChangesetValueBuilder();
-
-        $link_field = new \Tracker_FormElement_Field_ArtifactLink(
-            self::FIELD_ID,
-            55,
-            1,
-            'irrelevant',
-            'Irrelevant',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            1
+        return $builder->buildFromPayload(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::FIELD_ID)->build(),
+            $payload
         );
-
-        return $builder->buildFromPayload($link_field, $payload);
     }
 
     public function dataProviderInvalidPayloads(): array

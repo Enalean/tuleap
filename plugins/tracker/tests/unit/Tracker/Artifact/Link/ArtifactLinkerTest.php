@@ -25,11 +25,11 @@ namespace Tuleap\Tracker\Artifact\Link;
 use RuntimeException;
 use Tracker;
 use Tracker_Exception;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_NoChangeException;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -53,19 +53,7 @@ final class ArtifactLinkerTest extends TestCase
     {
         $this->user = UserTestBuilder::aUser()->build();
 
-        $artifact_link_field        = new Tracker_FormElement_Field_ArtifactLink(
-            15,
-            100,
-            18,
-            'name',
-            'label',
-            '',
-            true,
-            'P',
-            false,
-            false,
-            1,
-        );
+        $artifact_link_field        = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build();
         $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::buildWithArtifactLinkFields([$artifact_link_field]);
         $this->tracker_factory      = RetrieveTrackerStub::withDefaultTracker();
         $this->changeset_creator    = CreateNewChangesetStub::withNullReturnChangeset();
