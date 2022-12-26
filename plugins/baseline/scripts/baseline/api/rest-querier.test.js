@@ -32,20 +32,28 @@ describe("Rest queries:", () => {
     let result;
 
     describe("getOpenMilestones()", () => {
-        let get;
+        let recursive_get_mock;
 
         const simplified_milestone = createList("milestone", 1);
 
         beforeEach(async () => {
-            get = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(get, { return_json: simplified_milestone });
+            recursive_get_mock = jest.spyOn(tlp_fetch, "recursiveGet");
+            recursive_get_mock.mockResolvedValue(simplified_milestone);
             result = await getOpenMilestones(1);
         });
 
-        it("calls projects API to get opened milestones", () =>
-            expect(get).toHaveBeenCalledWith('/api/projects/1/milestones?query={"status":"open"}'));
-
-        it("returns open milestones", () => expect(result).toStrictEqual(simplified_milestone));
+        it("calls projects API to get opened milestones", () => {
+            expect(recursive_get_mock).toHaveBeenCalledWith(
+                "/api/projects/1/milestones",
+                expect.objectContaining({
+                    params: {
+                        query: '{"status":"open"}',
+                        limit: 10,
+                        offset: 0,
+                    },
+                })
+            );
+        });
     });
 
     describe("getBaselines()", () => {

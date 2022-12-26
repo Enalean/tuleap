@@ -45,9 +45,14 @@ const JSON_HEADERS = {
     "content-type": "application/json",
 };
 
-async function getOpenMilestones(project_id) {
-    const response = await get(`/api/projects/${project_id}/milestones?query={"status":"open"}`);
-    return response.json();
+function getOpenMilestones(project_id) {
+    return recursiveGet(`/api/projects/${encodeURIComponent(project_id)}/milestones`, {
+        params: {
+            query: JSON.stringify({ status: "open" }),
+            limit: 10,
+            offset: 0,
+        },
+    });
 }
 
 async function createBaseline(name, milestone, snapshot_date) {
