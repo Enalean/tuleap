@@ -75,6 +75,8 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
 use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
 use Tuleap\AgileDashboard\Semantic\XML\SemanticsExporter;
+use Tuleap\AgileDashboard\Tracker\TrackerHierarchyUpdateChecker;
+use Tuleap\AgileDashboard\Tracker\TrackersCannotBeLinkedWithHierarchyException;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanConfigDAO;
@@ -134,6 +136,7 @@ use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
+use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -279,6 +282,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(JiraImporterExternalPluginsEvent::NAME);
             $this->addHook(GetSemanticProgressUsageEvent::NAME);
             $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
+            $this->addHook(TrackerHierarchyUpdateEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2177,5 +2181,26 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 dgettext('tuleap-agiledashboard', 'burnup and velocity charts')
             )
         );
+    }
+
+    public function trackerHierarchyUpdateEvent(TrackerHierarchyUpdateEvent $event): void
+    {
+        $user = UserManager::instance()->getCurrentUser();
+
+        $checker = new TrackerHierarchyUpdateChecker(
+            $this->getPlanningFactory(),
+            TrackerFactory::instance(),
+        );
+
+        try {
+            $checker->canTrackersBeLinkedWithHierarchy(
+                $user,
+                $event->getParentTracker(),
+                $event->getChildrenTrackersIds()
+            );
+        } catch (TrackersCannotBeLinkedWithHierarchyException $exception) {
+            $event->setHierarchyCannotBeUpdated();
+            $event->setErrorMessage($exception->getMessage());
+        }
     }
 }

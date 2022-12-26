@@ -952,7 +952,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             $factory,
             $dao,
             new Tracker_Workflow_Trigger_RulesDao(),
-            new ArtifactLinksUsageDao()
+            new ArtifactLinksUsageDao(),
+            EventManager::instance(),
         );
 
         return $controller;
