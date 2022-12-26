@@ -16,15 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
+use std::sync::Arc;
 use wasi_common::pipe::{ReadPipe, WritePipe};
 use wasmtime::*;
 use wasmtime_wasi::sync::WasiCtxBuilder;
 use wire::{InternalErrorJson, RejectionMessageJson, UserErrorJson, WasmExpectedOutputJson};
 
 mod wire;
+
+const MAX_EXEC_TIME_IN_MS: u64 = 80;
 
 #[no_mangle]
 pub extern "C" fn callWasmModule(
@@ -50,14 +53,20 @@ pub extern "C" fn callWasmModule(
                     let c_str = CString::new(serde_json::to_string(&msg).unwrap()).unwrap();
                     return CString::into_raw(c_str);
                 }
-                Err(err) => {
-                    println!("{}", err);
+                Err(_err) => {
                     return user_error("The wasm module did not return valid JSON".to_owned());
                 }
             };
         }
-        Err(_e) => {
-            return internal_error("Unexpected error".to_owned());
+        Err(e) => {
+            return match e.downcast_ref::<Trap>() {
+                Some(&Trap::Interrupt) => user_error(format!(
+                    "The module has exceeded the {} ms of allowed computation time",
+                    MAX_EXEC_TIME_IN_MS
+                )),
+                None => internal_error(format!("{}", e.to_string())),
+                _ => user_error(format!("{}", e.root_cause())),
+            };
         }
     };
 }
@@ -98,35 +107,54 @@ fn compile_and_exec(filename: String, input: String) -> Result<String, anyhow::E
         .stdout(Box::new(stdout.clone()))
         .build();
 
-    let engine = Engine::default();
+    let mut config = Config::new();
+    config.epoch_interruption(true);
+    let engine = Arc::new(Engine::new(&config)?);
 
     let mut linker = Linker::new(&engine);
-    wasmtime_wasi::add_to_linker(&mut linker, |s| s)?;
 
     let mut store = Store::new(&engine, wasi);
+    wasmtime_wasi::add_to_linker(&mut linker, |s| s)?;
+
+    store.epoch_deadline_trap();
+    store.set_epoch_deadline(1);
 
     let module = load_module(&engine, &filename)?;
 
     linker
         .module(&mut store, "", &module)
         .expect("linking the function");
-    linker
+
+    let run = linker
         .get_default(&mut store, "")
         .expect("should get the wasi runtime")
         .typed::<(), (), _>(&store)
-        .expect("should type the function")
-        .call(&mut store, ())
-        .expect("should call the function");
+        .expect("should type the function");
 
+    std::thread::spawn(move || {
+        std::thread::sleep(std::time::Duration::from_millis(MAX_EXEC_TIME_IN_MS));
+        engine.increment_epoch();
+    });
+
+    let res = run.call(&mut store, ());
     drop(store);
 
-    let contents: Vec<u8> = stdout
-        .try_into_inner()
-        .map_err(|_err| anyhow::Error::msg("sole remaining reference"))?
-        .into_inner();
-    let str: String = String::from_utf8(contents).unwrap();
+    match res {
+        Ok(_) => {
+            let raw_output: Vec<u8> = stdout
+                .try_into_inner()
+                .expect("stdout reference still exists")
+                .into_inner();
 
-    Ok(str.to_string())
+            let str = match String::from_utf8(raw_output) {
+                Ok(s) => s.to_owned(),
+                Err(e) => return Err(anyhow!(e)),
+            };
+
+            Ok(str)
+        }
+        Err(e) => return Err(e),
+    }
 }
 
 #[cfg(test)]
@@ -135,7 +163,7 @@ mod tests {
     use std::os::raw::c_char;
     use std::ptr;
 
-    use crate::callWasmModule;
+    use crate::{callWasmModule, MAX_EXEC_TIME_IN_MS};
 
     #[test]
     fn expected_output_rejection() {
@@ -198,7 +226,18 @@ mod tests {
     fn filename_ptr_is_null_error() {
         let wasm_c_world = ptr::null();
 
-        let json = r#"{"obj_type":"commit","content":"tree 6f4bc3560dbb87a9fa79b0defe6f503c8626f51c\nauthor Thomas PIRAS <thomas.piras@enalean.com> 1663936581 +0200\ncommitter Thomas PIRAS <thomas.piras@enalean.com> 1663936581 +0200\n\nNumber One"}"#;
+        let json = r#"{
+            "updated_references": {
+                "refs\/heads\/tuleap-master": {
+                    "old_value": "c8ee0a8bcf3f185a272a04d6493456b3562f5050",
+                    "new_value": "e6ecbb16e4e9792fa8c5824204e1a58f2007dc31"
+                },
+                "refs\/heads\/tuleap-hello": {
+                    "old_value": "0000000000000000000000000000000000000000",
+                    "new_value": "0066b8447a411086ecd19210dd3f5df818056f47"
+                }
+            }
+        }"#;
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
@@ -227,6 +266,50 @@ mod tests {
 
         assert_eq!(
             r#"{"internal_error":"json_ptr is null in callWasmModule"}"#,
+            str_out
+        );
+    }
+
+    #[test]
+    fn module_exceeding_max_running_time_gets_killed() {
+        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/running-time.wasm";
+        let wasm_c_str = CString::new(wasm_module_path).unwrap();
+        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+
+        let json = "";
+        let json_c_str = CString::new(json).unwrap();
+        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+
+        let c_out = callWasmModule(wasm_c_world, json_c_world);
+        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
+        let str_out: &str = cstr_out.to_str().unwrap();
+
+        assert_eq!(
+            format!(
+                r#"{{"error":"The module has exceeded the {} ms of allowed computation time"}}"#,
+                MAX_EXEC_TIME_IN_MS
+            ),
+            str_out
+        );
+    }
+
+    #[test]
+    fn module_returns_broken_json() {
+        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/wrong-json.wasm";
+        let wasm_c_str = CString::new(wasm_module_path).unwrap();
+        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+
+        let json = "";
+        let json_c_str = CString::new(json).unwrap();
+        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+
+        let c_out = callWasmModule(wasm_c_world, json_c_world);
+
+        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
+        let str_out: &str = cstr_out.to_str().unwrap();
+
+        assert_eq!(
+            r#"{"error":"The wasm module did not return valid JSON"}"#,
             str_out
         );
     }
