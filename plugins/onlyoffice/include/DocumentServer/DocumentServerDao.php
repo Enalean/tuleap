@@ -86,12 +86,11 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
         sodium_memzero($row['secret_key']);
 
         if ($row['is_project_restricted'] || $this->isThereMultipleServers()) {
-            $project_restrictions = $this->getDB()->safeQuery(
+            $project_restrictions = $this->getDB()->column(
                 'SELECT project_id
                         FROM plugin_onlyoffice_document_server_project_restriction
                         WHERE server_id=?',
                 [$id],
-                \PDO::FETCH_COLUMN
             );
 
             return DocumentServer::withProjectRestrictions(
