@@ -40,13 +40,31 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
     {
         $document_servers = [];
 
-        $server_restrictions = $this->getDB()->safeQuery(
-            'SELECT server_id, project_id
-            FROM plugin_onlyoffice_document_server_project_restriction',
-            [],
-            \PDO::FETCH_GROUP | \PDO::FETCH_COLUMN
+        $server_restrictions = array_reduce(
+            $this->getDB()->run(
+                'SELECT R.server_id, R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label
+                FROM plugin_onlyoffice_document_server_project_restriction AS R
+                INNER JOIN `groups` ON (R.project_id = `groups`.group_id AND `groups`.status = "A")',
+            ),
+            static function (array $server_restrictions, array $row) {
+                if (! isset($server_restrictions[$row['server_id']])) {
+                    $server_restrictions[$row['server_id']] = [];
+                }
+
+                $server_restrictions[$row['server_id']][] = new RestrictedProject(
+                    $row['project_id'],
+                    $row['name'],
+                    $row['label']
+                );
+
+                return $server_restrictions;
+            },
+            []
         );
-        $server_rows         = $this->getDB()->run('SELECT id, url, secret_key, is_project_restricted FROM plugin_onlyoffice_document_server ORDER BY url');
+
+        $server_rows = $this->getDB()->run(
+            'SELECT id, url, secret_key, is_project_restricted FROM plugin_onlyoffice_document_server ORDER BY url'
+        );
 
         foreach ($server_rows as $server_row) {
             $server_id  = $server_row['id'];
@@ -77,7 +95,10 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
      */
     public function retrieveById(int $id): DocumentServer
     {
-        $row = $this->getDB()->row('SELECT url, secret_key, is_project_restricted FROM plugin_onlyoffice_document_server WHERE id = ?', $id);
+        $row = $this->getDB()->row(
+            'SELECT url, secret_key, is_project_restricted FROM plugin_onlyoffice_document_server WHERE id = ?',
+            $id
+        );
         if (! $row) {
             throw new DocumentServerNotFoundException();
         }
@@ -86,11 +107,19 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
         sodium_memzero($row['secret_key']);
 
         if ($row['is_project_restricted'] || $this->isThereMultipleServers()) {
-            $project_restrictions = $this->getDB()->column(
-                'SELECT project_id
-                        FROM plugin_onlyoffice_document_server_project_restriction
+            $project_restrictions = array_map(
+                static fn(array $row) => new RestrictedProject(
+                    $row['project_id'],
+                    $row['name'],
+                    $row['group_name']
+                ),
+                $this->getDB()->column(
+                    'SELECT R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label
+                        FROM plugin_onlyoffice_document_server_project_restriction AS R
+                        INNER JOIN `groups` ON (R.project_id = `groups`.group_id AND `groups`.status <> "D")
                         WHERE server_id=?',
-                [$id],
+                    [$id],
+                )
             );
 
             return DocumentServer::withProjectRestrictions(
@@ -126,7 +155,10 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
             function (EasyDB $db) use ($url, $secret_key): void {
                 $db->insert(
                     'plugin_onlyoffice_document_server',
-                    ['url' => $url, 'secret_key' => $this->encryption->encryptValue($secret_key), 'is_project_restricted' => false]
+                    ['url'                   => $url,
+                        'secret_key'            => $this->encryption->encryptValue($secret_key),
+                        'is_project_restricted' => false,
+                    ]
                 );
                 if ($this->isThereMultipleServers()) {
                     $db->run('UPDATE plugin_onlyoffice_document_server SET is_project_restricted = TRUE');

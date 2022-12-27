@@ -46,7 +46,14 @@ final class DocumentServerTest extends TestCase
         $allowed_project     = ProjectTestBuilder::aProject()->withId(102)->build();
         $not_allowed_project = ProjectTestBuilder::aProject()->withId(403)->build();
 
-        $document_server = DocumentServer::withProjectRestrictions(3, 'https://example.com', new ConcealedString('something_secret'), [(int) $allowed_project->getID()]);
+        $document_server = DocumentServer::withProjectRestrictions(
+            3,
+            'https://example.com',
+            new ConcealedString('something_secret'),
+            [
+                (int) $allowed_project->getID() => new RestrictedProject((int) $allowed_project->getID(), $allowed_project->getUnixNameMixedCase(), $allowed_project->getPublicName()),
+            ],
+        );
 
         self::assertTrue($document_server->isProjectAllowed($allowed_project));
         self::assertFalse($document_server->isProjectAllowed($not_allowed_project));

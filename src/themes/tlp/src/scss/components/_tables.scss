@@ -170,6 +170,10 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
     white-space: nowrap;
 }
 
+.tlp-table-cell-main-content {
+    width: 100%;
+}
+
 .tlp-button-primary,
 .tlp-button-secondary,
 .tlp-button-info,

@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+declare(strict_types=1);
 
-document.addEventListener("DOMContentLoaded", () => {
-    openAllTargetModalsOnClick(document, ".onlyoffice-admin-modal-server-button");
-});
+namespace Tuleap\OnlyOffice\DocumentServer;
+
+/**
+ * @psalm-immutable
+ */
+final class RestrictedProject
+{
+    public function __construct(public int $id, public string $name, public string $label)
+    {
+    }
+}
