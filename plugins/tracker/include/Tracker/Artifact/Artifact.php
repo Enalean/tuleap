@@ -1715,9 +1715,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * User want to link an artifact to the current one
      *
+     * @deprecated use ArtifactLinker::linkArtifact() instead
      * @param int    $linked_artifact_id The id of the artifact to link
      * @param PFUser $current_user       The user who made the link
-     *
      */
     public function linkArtifact(
         $linked_artifact_id,
@@ -1738,6 +1738,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * User want to link an artifact to the current one
      *
+     * @deprecated use ArtifactLinker::linkArtifact() instead
      * @param array  $linked_artifact_ids The ids of the artifacts to link
      * @param PFUser $current_user        The user who made the link
      *
