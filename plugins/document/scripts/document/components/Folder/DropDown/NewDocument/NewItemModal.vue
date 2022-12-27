@@ -141,6 +141,7 @@ export default {
             "project_id",
             "is_status_property_used",
             "is_obsolescence_date_property_used",
+            "user_locale",
         ]),
         ...mapState("error", ["has_modal_error"]),
         ...mapState("permissions", ["project_ugroups"]),
@@ -219,6 +220,7 @@ export default {
             this.alternative_badge_class = "";
             if (event.from_alternative) {
                 const office_file = await getEmptyOfficeFileFromMimeType(
+                    this.user_locale,
                     event.from_alternative.mime_type
                 );
                 this.item.file_properties.file = office_file.file;

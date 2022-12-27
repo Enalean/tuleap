@@ -50,7 +50,7 @@ module.exports = [
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
                 {
-                    test: /empty\.(docx|xlsx|pptx)/,
+                    test: /new\.(docx|xlsx|pptx)/,
                     type: "asset/resource",
                 },
             ],
