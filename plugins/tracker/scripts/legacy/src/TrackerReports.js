@@ -670,4 +670,14 @@ document.observe("dom:loaded", function () {
             }
         });
     }
+
+    if ($("tracker_renderer_add_handle")) {
+        $("tracker_renderer_add_handle").observe("click", function () {
+            if ($("tracker_renderer_add_type")) {
+                $("tracker_renderer_add_type").observe("click", function (event_add_type) {
+                    event_add_type.stopPropagation();
+                });
+            }
+        });
+    }
 });
