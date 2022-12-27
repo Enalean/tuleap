@@ -38,8 +38,8 @@ final class DocumentServerForSaveDocumentTokenRetrieverTest extends TestCase
     {
         $retriever = new DocumentServerForSaveDocumentTokenRetriever(
             IRetrieveDocumentServersStub::buildWith(
-                new DocumentServer(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret')),
-                new DocumentServer(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret')),
+                DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret')),
+                DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret')),
             )
         );
 
@@ -54,8 +54,8 @@ final class DocumentServerForSaveDocumentTokenRetrieverTest extends TestCase
     {
         $retriever = new DocumentServerForSaveDocumentTokenRetriever(
             IRetrieveDocumentServersStub::buildWith(
-                new DocumentServer(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret')),
-                new DocumentServer(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString(''))
+                DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret')),
+                DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString(''))
             ),
         );
 
@@ -68,8 +68,8 @@ final class DocumentServerForSaveDocumentTokenRetrieverTest extends TestCase
 
     public function testItReturnsTheServer(): void
     {
-        $server_1  = new DocumentServer(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret'));
-        $server_2  = new DocumentServer(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret'));
+        $server_1  = DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret'));
+        $server_2  = DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret'));
         $retriever = new DocumentServerForSaveDocumentTokenRetriever(
             IRetrieveDocumentServersStub::buildWith($server_1, $server_2),
         );
@@ -84,8 +84,8 @@ final class DocumentServerForSaveDocumentTokenRetrieverTest extends TestCase
 
     public function testItReturnsTheFirstServerIfSaveTokenHasBeenCreatedWhenForgeconfigWereStoringJwtKey(): void
     {
-        $server_1  = new DocumentServer(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret'));
-        $server_2  = new DocumentServer(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret'));
+        $server_1  = DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret'));
+        $server_2  = DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret'));
         $retriever = new DocumentServerForSaveDocumentTokenRetriever(
             IRetrieveDocumentServersStub::buildWith($server_1, $server_2),
         );
@@ -100,8 +100,8 @@ final class DocumentServerForSaveDocumentTokenRetrieverTest extends TestCase
 
     public function testThrowsExceptionIfTheFirstServerHasNoKeyAndSaveTokenHasBeenCreatedWhenForgeconfigWereStoringJwtKey(): void
     {
-        $server_1  = new DocumentServer(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString(''));
-        $server_2  = new DocumentServer(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret'));
+        $server_1  = DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString(''));
+        $server_2  = DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret'));
         $retriever = new DocumentServerForSaveDocumentTokenRetriever(
             IRetrieveDocumentServersStub::buildWith($server_1, $server_2),
         );

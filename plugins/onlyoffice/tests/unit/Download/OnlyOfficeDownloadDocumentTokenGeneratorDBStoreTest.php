@@ -57,7 +57,7 @@ final class OnlyOfficeDownloadDocumentTokenGeneratorDBStoreTest extends TestCase
                 123,
                 'document.docx',
                 true,
-                new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret')),
+                DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
             ),
             new \DateTimeImmutable('@10'),
         );

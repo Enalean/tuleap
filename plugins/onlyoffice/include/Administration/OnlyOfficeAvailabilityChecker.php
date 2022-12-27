@@ -59,6 +59,12 @@ final class OnlyOfficeAvailabilityChecker implements CheckOnlyOfficeIsAvailable
             return false;
         }
 
-        return true;
+        foreach ($servers as $server) {
+            if ($server->isProjectAllowed($project)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

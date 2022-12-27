@@ -64,7 +64,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
             410,
             'Doc.docx',
             true,
-            new DocumentServer(
+            DocumentServer::withoutProjectRestrictions(
                 1,
                 'https://example.com',
                 new ConcealedString(

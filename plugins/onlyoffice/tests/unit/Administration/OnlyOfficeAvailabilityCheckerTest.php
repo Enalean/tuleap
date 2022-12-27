@@ -24,16 +24,13 @@ namespace Tuleap\OnlyOffice\Administration;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class OnlyOfficeAvailabilityCheckerTest extends TestCase
+final class OnlyOfficeAvailabilityCheckerTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     private const PROJECT_ID = 101;
 
     public function testItLogsThatServerUrlIsNotConfigured(): void
@@ -64,7 +61,7 @@ class OnlyOfficeAvailabilityCheckerTest extends TestCase
             $this->createMock(\PluginManager::class),
             new \onlyofficePlugin(null),
             $logger,
-            IRetrieveDocumentServersStub::buildWith(new DocumentServer(1, 'https://example.com', new ConcealedString(''))),
+            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString(''))),
         );
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
@@ -82,7 +79,7 @@ class OnlyOfficeAvailabilityCheckerTest extends TestCase
             $this->createMock(\PluginManager::class),
             new \onlyofficePlugin(null),
             $this->createMock(LoggerInterface::class),
-            IRetrieveDocumentServersStub::buildWith(new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret'))),
+            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'))),
         );
 
         $project = ProjectTestBuilder::aProject()
@@ -101,7 +98,7 @@ class OnlyOfficeAvailabilityCheckerTest extends TestCase
             $plugin_manager,
             $onlyoffice_plugin,
             $this->createMock(LoggerInterface::class),
-            IRetrieveDocumentServersStub::buildWith(new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret'))),
+            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'))),
         );
 
         $project = ProjectTestBuilder::aProject()
@@ -122,11 +119,12 @@ class OnlyOfficeAvailabilityCheckerTest extends TestCase
     {
         $plugin_manager    = $this->createMock(\PluginManager::class);
         $onlyoffice_plugin = new \onlyofficePlugin(null);
+        $document_server   = DocumentServer::withProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'), [self::PROJECT_ID]);
         $checker           = new OnlyOfficeAvailabilityChecker(
             $plugin_manager,
             $onlyoffice_plugin,
             $this->createMock(LoggerInterface::class),
-            IRetrieveDocumentServersStub::buildWith(new DocumentServer(1, 'https://example.com', new ConcealedString('very_secret'))),
+            IRetrieveDocumentServersStub::buildWith($document_server),
         );
 
         $project = ProjectTestBuilder::aProject()

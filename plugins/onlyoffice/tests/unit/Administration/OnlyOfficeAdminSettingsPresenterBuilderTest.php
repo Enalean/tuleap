@@ -33,8 +33,8 @@ class OnlyOfficeAdminSettingsPresenterBuilderTest extends TestCase
     public function testGetPresenter(): void
     {
         $retriever = IRetrieveDocumentServersStub::buildWith(
-            new DocumentServer(1, 'https://example.com/1', new ConcealedString('')),
-            new DocumentServer(2, 'https://example.com/2', new ConcealedString('123456')),
+            DocumentServer::withoutProjectRestrictions(1, 'https://example.com/1', new ConcealedString('')),
+            DocumentServer::withoutProjectRestrictions(2, 'https://example.com/2', new ConcealedString('123456')),
         );
 
         $presenter = (new OnlyOfficeAdminSettingsPresenterBuilder($retriever))

@@ -57,10 +57,15 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // Create
         $this->dao->create('https://example.com', new ConcealedString('very_secret'));
+
+        $servers = $this->dao->retrieveAll();
+        self::assertCount(1, $servers);
+        $server = $this->dao->retrieveById($servers[0]->id);
+        self::assertEquals([0], $this->getServerProjectRestrictions());
+
         $this->dao->create('https://example.com/1', new ConcealedString('much_secret'));
 
         // Retrieve
-        $server = $this->dao->retrieveById(1);
         self::assertEquals('https://example.com', $server->url);
         self::assertEquals('very_secret', $this->decrypt($server->encrypted_secret_key));
 
@@ -70,6 +75,7 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('very_secret', $this->decrypt($servers[0]->encrypted_secret_key));
         self::assertEquals('https://example.com/1', $servers[1]->url);
         self::assertEquals('much_secret', $this->decrypt($servers[1]->encrypted_secret_key));
+        self::assertEquals([1, 1], $this->getServerProjectRestrictions());
 
         // Update
         $this->dao->update($servers[0]->id, $servers[0]->url, new ConcealedString('new_secret'));
@@ -88,5 +94,10 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     private function decrypt(ConcealedString $secret): string
     {
         return $this->encryption->decryptValue($secret->getString())->getString();
+    }
+
+    private function getServerProjectRestrictions(): array
+    {
+        return DBFactory::getMainTuleapDBConnection()->getDB()->col('SELECT is_project_restricted FROM plugin_onlyoffice_document_server');
     }
 }

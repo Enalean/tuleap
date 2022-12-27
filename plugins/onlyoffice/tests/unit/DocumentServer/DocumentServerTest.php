@@ -1,0 +1,54 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\OnlyOffice\DocumentServer;
+
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class DocumentServerTest extends TestCase
+{
+    public function testDetectsWhenASecretKeyIsAvailable(): void
+    {
+        self::assertTrue(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('something_secret'))->has_existing_secret);
+        self::assertFalse(DocumentServer::withoutProjectRestrictions(2, 'https://example.com', new ConcealedString(''))->has_existing_secret);
+    }
+
+    public function testAllowsProjectWhenNoProjectRestrictionsAreSet(): void
+    {
+        $document_server = DocumentServer::withoutProjectRestrictions(3, 'https://example.com', new ConcealedString('something_secret'));
+
+        self::assertTrue($document_server->isProjectAllowed(ProjectTestBuilder::aProject()->build()));
+    }
+
+    public function testOnlyAllowsSpecificProjectWhenProjectRestrictionsAreSet(): void
+    {
+        $allowed_project     = ProjectTestBuilder::aProject()->withId(102)->build();
+        $not_allowed_project = ProjectTestBuilder::aProject()->withId(403)->build();
+
+        $document_server = DocumentServer::withProjectRestrictions(3, 'https://example.com', new ConcealedString('something_secret'), [(int) $allowed_project->getID()]);
+
+        self::assertTrue($document_server->isProjectAllowed($allowed_project));
+        self::assertFalse($document_server->isProjectAllowed($not_allowed_project));
+    }
+}
