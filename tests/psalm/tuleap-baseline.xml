@@ -1616,6 +1616,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneParentLinker.php">
+    <DeprecatedMethod occurrences="1">
+      <code>linkArtifact</code>
+    </DeprecatedMethod>
     <MissingReturnType occurrences="3">
       <code>getBacklogTrackers</code>
       <code>isParentLinkedToParentMilestone</code>
@@ -3104,7 +3107,16 @@
       <code>getPlanningAdminQuickLink</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/agiledashboard/include/Planning/ArtifactLinker.class.php">
+    <DeprecatedMethod occurrences="2">
+      <code>linkArtifact</code>
+      <code>linkArtifact</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/agiledashboard/include/Planning/ArtifactMilestone.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>linkArtifacts</code>
+    </DeprecatedMethod>
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;project-&gt;getID()</code>
     </InvalidReturnStatement>
@@ -4310,11 +4322,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>JsonCast::fromDateTimeToDate($comparison-&gt;getCreationDate())</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/baseline/include/REST/ComparisonsPageRepresentation.php">
-    <MissingReturnType occurrences="1">
-      <code>build</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/baseline/include/REST/ComparisonsResource.php">
     <MissingReturnType occurrences="2">
@@ -34215,6 +34222,9 @@
     </RedundantCast>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/ExecutionsResource.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>linkArtifact</code>
+    </DeprecatedMethod>
     <TypeDoesNotContainType occurrences="4">
       <code>! $execution_artifact</code>
       <code>! $execution_artifact</code>
@@ -34797,19 +34807,13 @@
       <code>! is_object($tv3)</code>
     </TypeDoesNotContainType>
   </file>
-  <file src="plugins/tracker/bin/import_artifacts_xml.php">
-    <InvalidArgument occurrences="1">
-      <code>$argv[2]</code>
-    </InvalidArgument>
-  </file>
   <file src="plugins/tracker/bin/remove_multiple_artifacts.php">
     <ForbiddenCode occurrences="2">
       <code>shell_exec('stty -echo')</code>
       <code>shell_exec('stty echo')</code>
     </ForbiddenCode>
-    <InvalidArgument occurrences="2">
+    <InvalidArgument occurrences="1">
       <code>$current_artifact_id</code>
-      <code>$tracker_id</code>
     </InvalidArgument>
     <PossiblyFalseOperand occurrences="1">
       <code>$sys_user</code>
@@ -35696,7 +35700,8 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Action/CreateArtifact.class.php">
-    <DeprecatedMethod occurrences="1">
+    <DeprecatedMethod occurrences="2">
+      <code>linkArtifact</code>
       <code>userCanSubmitArtifact</code>
     </DeprecatedMethod>
     <MissingParamType occurrences="6">
@@ -35720,6 +35725,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Action/CreateArtifactFromModal.class.php">
+    <DeprecatedMethod occurrences="1">
+      <code>linkArtifact</code>
+    </DeprecatedMethod>
     <MissingReturnType occurrences="4">
       <code>createArtifact</code>
       <code>linkArtifact</code>
@@ -36008,16 +36016,12 @@
       <code>db_fetch_array($res)</code>
       <code>db_numrows($res)</code>
     </DeprecatedFunction>
-    <DeprecatedMethod occurrences="5">
-      <code>createNewChangeset</code>
+    <DeprecatedMethod occurrences="4">
       <code>getAnArtifactLinkField</code>
       <code>getAnArtifactLinkField</code>
       <code>permission_db_authorized_ugroups</code>
       <code>userCanSubmitArtifact</code>
     </DeprecatedMethod>
-    <InvalidArgument occurrences="1">
-      <code>$linked_artifact_ids</code>
-    </InvalidArgument>
     <InvalidNullableReturnType occurrences="3">
       <code>Artifact</code>
       <code>Tracker_Artifact_Changeset</code>
@@ -36036,15 +36040,13 @@
     <LessSpecificReturnStatement occurrences="1">
       <code>TemplateRendererFactory::build()-&gt;getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')</code>
     </LessSpecificReturnStatement>
-    <MissingParamType occurrences="14">
+    <MissingParamType occurrences="12">
       <code>$comment</code>
       <code>$comment_format</code>
       <code>$comment_format_field_name</code>
       <code>$fields_data</code>
       <code>$format</code>
       <code>$hierarchy</code>
-      <code>$linked_artifact_id</code>
-      <code>$linked_artifact_id</code>
       <code>$parent</code>
       <code>$permission_type</code>
       <code>$prefix</code>
@@ -36061,7 +36063,7 @@
       <code>$tracker_id</code>
       <code>$use_artifact_permissions</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="47">
+    <MissingReturnType occurrences="46">
       <code>addChangeset</code>
       <code>clearChangesets</code>
       <code>doesUserHaveUnsubscribedFromArtifactNotification</code>
@@ -36071,7 +36073,6 @@
       <code>fetchHiddenTrackerId</code>
       <code>fetchTitleContent</code>
       <code>fetchTitleWithoutUnsubscribeButton</code>
-      <code>filterArtifactIdsIAmAlreadyLinkedTo</code>
       <code>flattenChangesetArray</code>
       <code>forceFetchAllChangesets</code>
       <code>getArtifactlinkDao</code>
@@ -39509,8 +39510,9 @@
     </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ParentLinkAction.php">
-    <DeprecatedMethod occurrences="1">
+    <DeprecatedMethod occurrences="2">
       <code>getAnArtifactLinkField</code>
+      <code>linkArtifact</code>
     </DeprecatedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetCommand.php">
