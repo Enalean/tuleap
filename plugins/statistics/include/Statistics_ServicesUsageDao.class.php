@@ -195,7 +195,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
 
     private function formatDateForCVS($timestamp)
     {
-        return strftime("%Y%m%d", $timestamp);
+        return date("Ymd", $timestamp);
     }
 
     public function getSVNActivities()

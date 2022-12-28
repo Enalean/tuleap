@@ -244,7 +244,7 @@ function prepare_access_logs_record($group_id, &$record)
     if (isset($record['time'])) {
         $time                 = $record['time'];
         $record['time']       = format_date('Y-m-d', $time);
-        $record['local_time'] = strftime("%H:%M", $time);
+        $record['local_time'] = date("H:i", $time);
     }
     $um   = UserManager::instance();
     $user = $um->getUserByUserName($record['user_name']);

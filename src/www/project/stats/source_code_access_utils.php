@@ -85,7 +85,7 @@ function logs_display($sql, int $span, $field, $title = '')
         $i = 0;
         do {
             print '<tr class="' . util_get_alt_row_color($i++) . '">'
-            . ' <td>' . strftime("%e %b %Y", $row['time']) . '</td>';
+            . ' <td>' . (string) date("j M Y", $row['time']) . '</td>';
             if (isset($row['type'])) {
                 print ' <td>' . $hp->purify($row['type']) . '</td>';
             }
@@ -98,7 +98,7 @@ function logs_display($sql, int $span, $field, $title = '')
             if (isset($row['local_time'])) {
                 print ' <td align="right">' . $hp->purify($row['local_time']) . '</td>';
             } else {
-                print ' <td align="right">' . strftime("%H:%M", $row["time"]) . '</td>';
+                print ' <td align="right">' . (string) date("H:i", $row["time"]) . '</td>';
             }
 
             print '</tr>' . "\n";
@@ -244,7 +244,7 @@ function cvsaccess_logs_extract($project, int $span, $who)
     $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
     $begin_date          = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"] + 1, $time_back["tm_mday"], $time_back["tm_year"] + 1900);
 
-    $begin_day = strftime("%Y%m%d", $begin_date);
+    $begin_day = date("Ymd", $begin_date);
 
     // For Debug
     // print join(" ",localtime($begin_date,0))."<BR>";
@@ -332,7 +332,7 @@ function svnaccess_logs_extract($project, int $span, $who)
     $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
     $begin_date          = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"] + 1, $time_back["tm_mday"], $time_back["tm_year"] + 1900);
 
-    $begin_day = strftime("%Y%m%d", $begin_date);
+    $begin_day = date("Ymd", $begin_date);
 
     // For Debug
     // print join(" ",localtime($begin_date,0))."<BR>";
