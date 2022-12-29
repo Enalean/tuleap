@@ -19,10 +19,8 @@
 
 import type { DomainEvent } from "./DomainEvent";
 
-export const TYPE = "DidChangeListFieldValue";
-
 export type DidChangeListFieldValue = DomainEvent<"DidChangeListFieldValue">;
 
 export const DidChangeListFieldValue = (): DidChangeListFieldValue => ({
-    type: TYPE,
+    type: "DidChangeListFieldValue",
 });

@@ -22,7 +22,6 @@ import { NewFileToAttach } from "./NewFileToAttach";
 import type { AttachedFileDescription } from "./AttachedFileDescription";
 import type { FileFieldType } from "./FileFieldType";
 import type { EventDispatcher } from "../../EventDispatcher";
-import { TYPE } from "../../DidCheckFileFieldIsPresent";
 
 export type NewFileToAttachCollection = ReadonlyArray<NewFileToAttach>;
 export type AttachedFileCollection = ReadonlyArray<AttachedFileDescription> | undefined;
@@ -47,7 +46,7 @@ export const FileFieldController = (
     event_dispatcher: EventDispatcher
 ): FileFieldControllerType => {
     let attached_files: AttachedFileCollection = field.file_descriptions;
-    event_dispatcher.addObserver(TYPE, (event) => {
+    event_dispatcher.addObserver("DidCheckFileFieldIsPresent", (event) => {
         event.is_there_at_least_one_file_field = true;
     });
 

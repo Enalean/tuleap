@@ -17,20 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DidCheckFileFieldIsPresent } from "./DidCheckFileFieldIsPresent";
-import type { DidChangeListFieldValue } from "./DidChangeListFieldValue";
-import type { WillDisableSubmit } from "./submit/WillDisableSubmit";
-import type { WillEnableSubmit } from "./submit/WillEnableSubmit";
+import type { DomainEvent } from "../DomainEvent";
 
-export type AllEvents = {
-    DidCheckFileFieldIsPresent: DidCheckFileFieldIsPresent;
-    DidChangeListFieldValue: DidChangeListFieldValue;
-    WillDisableSubmit: WillDisableSubmit;
-    WillEnableSubmit: WillEnableSubmit;
-};
+export type WillEnableSubmit = DomainEvent<"WillEnableSubmit">;
 
-export type EventType = keyof AllEvents;
-
-export type DomainEvent<TypeOfEvent extends EventType> = {
-    readonly type: TypeOfEvent;
-};
+export const WillEnableSubmit = (): WillEnableSubmit => ({
+    type: "WillEnableSubmit",
+});

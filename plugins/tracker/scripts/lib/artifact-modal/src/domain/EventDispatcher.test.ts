@@ -18,8 +18,11 @@
  */
 
 import { EventDispatcher } from "./EventDispatcher";
-import { DidCheckFileFieldIsPresent, TYPE as FIRST_EVENT_TYPE } from "./DidCheckFileFieldIsPresent";
-import { DidChangeListFieldValue, TYPE as SECOND_EVENT_TYPE } from "./DidChangeListFieldValue";
+import { DidCheckFileFieldIsPresent } from "./DidCheckFileFieldIsPresent";
+import { DidChangeListFieldValue } from "./DidChangeListFieldValue";
+
+const FIRST_EVENT_TYPE = "DidCheckFileFieldIsPresent",
+    SECOND_EVENT_TYPE = "DidChangeListFieldValue";
 
 describe(`EventDispatcher`, () => {
     let first_event: DidCheckFileFieldIsPresent,
