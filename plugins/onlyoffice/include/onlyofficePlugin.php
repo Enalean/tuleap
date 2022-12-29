@@ -335,7 +335,7 @@ final class onlyofficePlugin extends Plugin
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
             $logger,
-            new \Tuleap\Layout\JavascriptViteAsset(self::getAssets(), 'scripts/open-in-onlyoffice.ts'),
+            new \Tuleap\Layout\JavascriptViteAsset(self::getOpenAssets(), 'src/open-in-onlyoffice.ts'),
             Prometheus::instance(),
             \Tuleap\ServerHostname::HTTPSUrl(),
         );
@@ -383,7 +383,7 @@ final class onlyofficePlugin extends Plugin
             UserManager::instance(),
             $servers_retriever,
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
-            self::getAssets(),
+            self::getOpenAssets(),
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             new SapiEmitter()
@@ -402,11 +402,11 @@ final class onlyofficePlugin extends Plugin
         );
     }
 
-    private static function getAssets(): IncludeViteAssets
+    private static function getOpenAssets(): IncludeViteAssets
     {
         return new IncludeViteAssets(
-            __DIR__ . '/../frontend-assets/',
-            '/assets/onlyoffice'
+            __DIR__ . '/../scripts/open-in-onlyoffice/frontend-assets',
+            '/assets/onlyoffice/open-in-onlyoffice'
         );
     }
 
@@ -420,7 +420,10 @@ final class onlyofficePlugin extends Plugin
             new AdminPageRenderer(),
             UserManager::instance(),
             $builder->getPresenter(self::buildCSRFTokenAdmin()),
-            self::getAssets(),
+            new IncludeViteAssets(
+                __DIR__ . '/../scripts/siteadmin/frontend-assets/',
+                '/assets/onlyoffice/siteadmin'
+            ),
         );
     }
 

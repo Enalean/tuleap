@@ -1,0 +1,9 @@
+{
+    "name": "onlyoffice",
+    "gettext-vue3": {
+        "onlyoffice-siteadmin": {
+            "src": "scripts/siteadmin/src",
+            "po": "scripts/siteadmin/po"
+        }
+    }
+}

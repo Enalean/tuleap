@@ -1,6 +1,6 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-onlyoffice",
+  "name": "@tuleap/plugin-onlyoffice-open",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
@@ -9,9 +9,7 @@
     "build": "vite build",
     "watch": "vite build --watch"
   },
-  "dependencies": {
-    "@tuleap/tlp-modal": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
   }

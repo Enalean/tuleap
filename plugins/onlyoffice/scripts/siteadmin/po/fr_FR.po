@@ -1,0 +1,110 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.3\n"
+
+msgid "%{ nb } project can use the server"
+msgid_plural "%{ nb } projects can use the server"
+msgstr[0] "%{ nb } projet peut utiliser le serveur"
+msgstr[1] "%{ nb } projets peuvent utiliser le serveur"
+
+msgid "Add document server"
+msgstr "Ajouter un serveur de document"
+
+msgid "All projects can use the server"
+msgstr "Tous les projets peuvent utiliser le serveur"
+
+msgid "Allow all projects to use this server"
+msgstr "Autoriser tous les projets à utiliser ce serveur"
+
+msgid "Allow project"
+msgstr "Autoriser le projet"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Current secret not displayed"
+msgstr "Le secret actuel n'est pas affiché"
+
+msgid "Define which projects will be able to use the server:"
+msgstr "Définissez quels projets seront autorisés à utiliser le serveur :"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete document server"
+msgstr "Supprimer le serveur de document"
+
+msgid ""
+"Deleting a document server will induce loosing of modifications for users "
+"that are currently using it."
+msgstr ""
+"Supprimer un serveur de document provoquera la perte des modifications pour "
+"les utilisateurs en train de l'utiliser."
+
+msgid "Document server URL"
+msgstr "URL du serveur de document"
+
+msgid "Edit"
+msgstr "Éditer"
+
+msgid "Edit document server settings"
+msgstr "Éditer les paramètres du serveur de document"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "JWT secret"
+msgstr "Secret JWT"
+
+msgid "No project can use this server."
+msgstr "Aucun projet ne peut utiliser ce serveur."
+
+msgid "ONLYOFFICE"
+msgstr "ONLYOFFICE"
+
+msgid "ONLYOFFICE document servers"
+msgstr "Serveurs de document ONLYOFFICE"
+
+msgid "Please confirm your action."
+msgstr "Veuillez confirmer votre action."
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Project name"
+msgstr "Nom du projet"
+
+msgid "Projects restriction"
+msgstr "Restriction de projets"
+
+msgid "Restrict"
+msgstr "Restreindre"
+
+msgid "Save"
+msgstr "Sauvegarder"
+
+msgid "Secret is missing"
+msgstr "Le secret est manquant"
+
+msgid "There isn't any document servers configured"
+msgstr "Aucun serveurs n'est actuellement configuré"
+
+msgid "Under construction, you cannot set restrictions yet."
+msgstr ""
+"En construction, vous ne pouvez définir les restrictions pour l'instant."
+
+msgid "You're about to delete the following document server:"
+msgstr "Vous êtes sur le point de supprimer le serveur de document :"
