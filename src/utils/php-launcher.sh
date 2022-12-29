@@ -25,6 +25,11 @@
 set -e
 
 function findPHPCLI() {
+    local php81_remi_scl='/opt/remi/php81/root/usr/bin/php'
+    if [ -x "$php81_remi_scl" ]; then
+        echo "$php81_remi_scl"
+        return
+    fi
     local php80_remi_scl='/opt/remi/php80/root/usr/bin/php'
     if [ -x "$php80_remi_scl" ]; then
         echo "$php80_remi_scl"
