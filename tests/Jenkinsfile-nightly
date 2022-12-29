@@ -158,6 +158,11 @@ pipeline {
                     steps { script { actions.runPHPUnitTests('81', false) } }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
+
+                stage('DB/Integration') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '81') }) } }
+                    post { always { junit 'results/db/*/db_tests.xml' } }
+                }
             }
         }
     }
