@@ -389,12 +389,16 @@ describe(`Artifact Modal`, function () {
 
         cy.get("[data-test=artifact-modal-form]").within(() => {
             getFieldWithLabel("Artifact link", "[data-test=artifact-link-field]").within(() => {
-                selectLabelInLinkSelectorDropdown(HISTORY_ARTIFACT_TITLE, HISTORY_ARTIFACT_TITLE);
+                cy.get("[data-test=link-selector-selection]").click();
             });
-
-            cy.log("Close the modal");
-            cy.get("[data-test=artifact-modal-cancel-button]").click();
         });
+        cy.get("[data-test=link-selector-search-field]").type(HISTORY_ARTIFACT_TITLE);
+        cy.get("[data-test=link-selector-dropdown]")
+            .find("[data-test=link-selector-item]")
+            .should("contain", HISTORY_ARTIFACT_TITLE);
+
+        cy.log("Close the modal");
+        cy.get("[data-test=artifact-modal-cancel-button]").click();
     });
 });
 
