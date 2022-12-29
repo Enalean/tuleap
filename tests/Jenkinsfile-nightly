@@ -151,6 +151,15 @@ pipeline {
                 }
             }
         }
+
+        stage ('PHP 8.1') {
+            stages {
+                stage('Unit tests') {
+                    steps { script { actions.runPHPUnitTests('81', false) } }
+                    post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
+                }
+            }
+        }
     }
     post {
         always {
