@@ -17,29 +17,46 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 use std::{error::Error, io::stdin};
-use wire::{JsonData, JsonResult};
+use wire::{HookData, JsonResult};
 
 mod wire;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let json: JsonData = serde_json::from_reader(stdin()).map_err(|e| {
+    let json: HookData = serde_json::from_reader(stdin()).map_err(|e| {
         eprintln!("ser: {e}");
         e
     })?;
 
-    let content = json.content;
 
-    if content.contains("Tuleap") {
-        let res = JsonResult {
-            result: Some("the git object content contains the string Tuleap".to_owned()),
-        };
+    let mut ref_name_vec = Vec::new();
+    for keys in json.updated_references.keys() {
+        if !keys.starts_with("refs/heads/tuleap-") {
+            ref_name_vec.push(keys);
+        }
+    }
+
+    let vec_len = ref_name_vec.len();
+    if vec_len == 0 {
+        let res = JsonResult { result: None };
         print!("{}", serde_json::to_string(&res).unwrap());
     } else {
+        let mut full_err_str = format!(
+            "the following reference {} does not start by refs/heads/tuleap-...",
+            ref_name_vec[0]
+        )
+        .to_owned();
+        if vec_len > 1 {
+            full_err_str = format!(
+                "the following references {:?} do not start by refs/heads/tuleap-...",
+                ref_name_vec
+            )
+            .to_owned();
+        }
+
         let res = JsonResult {
-            result: None,
+            result: Some(full_err_str),
         };
         print!("{}", serde_json::to_string(&res).unwrap());
     }
-
     Ok(())
 }

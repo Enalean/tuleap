@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\PreReceive;
 
-use Git_Exec;
 use GitRepositoryFactory;
 use Tuleap\WebAssembly\WASMCaller;
 
@@ -38,23 +37,22 @@ final class PreReceiveAnalyzeAction
      * @throws PreReceiveRepositoryNotFoundException
      * @throws PreReceiveCannotRetrieveReferenceException
      */
-    public function preReceiveAnalyse(string $repository_id, string $git_reference): string
+    public function preReceiveAnalyse(string $repository_id, array $pre_receive_args): string
     {
         $repository = $this->git_repository_factory->getRepositoryById((int) $repository_id);
         if ($repository === null) {
             throw new PreReceiveRepositoryNotFoundException();
         }
 
-        $git_exec = Git_Exec::buildFromRepository($repository);
-
-        try {
-            $arr      = ["obj_type" => $git_exec->getObjectType($git_reference), "content" => $git_exec->catFile($git_reference)];
-            $json_in  = json_encode($arr, JSON_THROW_ON_ERROR);
-            $json_out = $this->wasm_caller->call($json_in);
-        } catch (\Git_Command_Exception $e) {
-            throw new PreReceiveCannotRetrieveReferenceException();
+        $hook_data = new PreReceiveHookData();
+        $i         = 0;
+        while ($i <= (count($pre_receive_args) - 3)) {
+            $hook_data->addNewRev($pre_receive_args[$i + 2], new PreReceiveHookUpdatedReference($pre_receive_args[$i], $pre_receive_args[$i + 1]));
+            $i += 3;
         }
 
-        return $json_out;
+        $json_in = json_encode($hook_data, JSON_THROW_ON_ERROR);
+
+        return $this->wasm_caller->call($json_in);
     }
 }

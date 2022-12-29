@@ -46,24 +46,30 @@ final class PreReceiveAnalyzeCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Does nothing as of yet')
+        $this->setDescription('This command simulate a git pre-receive hook, it takes the same input as a real hook and decide whether or not the revisions should be accepted.')
         ->addArgument(
             'repository_id',
             InputArgument::REQUIRED,
             'A git repository ID'
         )
         ->addArgument(
-            'git_reference',
-            InputArgument::REQUIRED,
-            'A reference to a git object'
+            'pre-receive-args',
+            InputArgument::IS_ARRAY | InputArgument::REQUIRED,
+            'Accept multiple trios of the form: <old-value new-value ref-name>'
         )
         ->setHidden(true);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $pre_receive_args = $input->getArgument('pre-receive-args');
+        if ((count($pre_receive_args) % 3) !== 0) {
+            $output->writeln("<error>Wrong number of arguments !\nUsage: git:pre-receive-analyze <repository_id> <old-value new-value ref-name>...</error>");
+            return self::FAILURE;
+        }
+
         try {
-            $output->writeln(OutputFormatter::escape($this->action->preReceiveAnalyse($input->getArgument('repository_id'), $input->getArgument('git_reference'))));
+            $output->writeln(OutputFormatter::escape($this->action->preReceiveAnalyse($input->getArgument('repository_id'), $pre_receive_args)));
             return self::SUCCESS;
         } catch (PreReceiveRepositoryNotFoundException $e) {
             $output->writeln(sprintf('<error>The ID "%s" does not correspond to any repository.</error>', OutputFormatter::escape($input->getArgument('repository_id'))));
