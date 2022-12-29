@@ -12,8 +12,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.3\n"
 
+msgid "%s project can use the server"
+msgid_plural "%s projects can use the server"
+msgstr[0] "%s projet peut utiliser le serveur"
+msgstr[1] "%s projets peuvent utiliser le serveur"
+
 msgid "Add document server"
 msgstr "Ajouter un serveur de document"
+
+msgid "All projects can use the server"
+msgstr "Tous les projets peuvent utiliser le serveur"
+
+msgid "Allow all projects to use this server"
+msgstr "Autoriser tous les projets à utiliser ce serveur"
 
 msgid "Allow to open documents into ONLYOFFICE"
 msgstr "Permet d'ouvrir des documents dans ONLYOFFICE"
@@ -24,6 +35,9 @@ msgstr "Retour vers les documents de %s"
 
 msgid "Current secret not displayed"
 msgstr "Le secret actuel n'est pas affiché"
+
+msgid "Define which projects will be able to use %s."
+msgstr "Définissez quels projets seront autorisés à utiliser %s."
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -59,14 +73,14 @@ msgstr "Éditer"
 msgid "Edit document server settings"
 msgstr "Éditer les paramètres du serveur de document"
 
-msgid "Has secret"
-msgstr "Secret configuré"
-
-msgid "Has secret?"
-msgstr "Secret configuré?"
+msgid "Id"
+msgstr "Id"
 
 msgid "JWT secret"
 msgstr "Secret JWT"
+
+msgid "No project can use this server."
+msgstr "Aucun projet ne peut utiliser ce serveur."
 
 msgid "ONLYOFFICE"
 msgstr "ONLYOFFICE"
@@ -89,14 +103,30 @@ msgstr "Veuillez confirmer votre action."
 msgid "Presentation"
 msgstr "Présentation"
 
+msgid "Project"
+msgstr "Projet"
+
+msgid "Projects restriction"
+msgstr "Restriction de projets"
+
+msgid "Restrict"
+msgstr "Restreindre"
+
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Secret is missing"
+msgstr "Le secret est manquant"
 
 msgid "Spreadsheet"
 msgstr "Tableur"
 
 msgid "There isn't any document servers configured"
 msgstr "Aucun serveurs n'est actuellement configuré"
+
+msgid "Under construction, you cannot set restrictions yet."
+msgstr ""
+"En construction, vous ne pouvez définir les restrictions pour l'instant."
 
 msgid "You're about to delete the document server."
 msgstr "Vous êtes sur le point de supprimer un serveur de document."

@@ -33,20 +33,20 @@ final class DocumentServer
 
 
     /**
-     * @param list<int> $project_restrictions
+     * @param array<int, RestrictedProject> $project_restrictions
      */
     private function __construct(
         public int $id,
         public string $url,
         public ConcealedString $encrypted_secret_key,
-        private bool $is_project_restricted,
-        private array $project_restrictions,
+        public bool $is_project_restricted,
+        public array $project_restrictions,
     ) {
         $this->has_existing_secret = ! $this->encrypted_secret_key->isIdenticalTo(new ConcealedString(''));
     }
 
     /**
-     * @param list<int> $project_restrictions
+     * @param array<int, RestrictedProject> $project_restrictions
      */
     public static function withProjectRestrictions(
         int $id,
@@ -67,6 +67,6 @@ final class DocumentServer
 
     public function isProjectAllowed(\Project $project): bool
     {
-        return ! $this->is_project_restricted || in_array((int) $project->getID(), $this->project_restrictions, true);
+        return ! $this->is_project_restricted || isset($this->project_restrictions[(int) $project->getID()]);
     }
 }

@@ -6,7 +6,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%s project can use the server"
+msgid_plural "%s projects can use the server"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Add document server"
+msgstr ""
+
+msgid "All projects can use the server"
+msgstr ""
+
+msgid "Allow all projects to use this server"
 msgstr ""
 
 msgid "Allow to open documents into ONLYOFFICE"
@@ -17,6 +28,9 @@ msgid "Back to %s documents"
 msgstr ""
 
 msgid "Current secret not displayed"
+msgstr ""
+
+msgid "Define which projects will be able to use %s."
 msgstr ""
 
 msgid "Delete"
@@ -51,13 +65,13 @@ msgstr ""
 msgid "Edit document server settings"
 msgstr ""
 
-msgid "Has secret"
-msgstr ""
-
-msgid "Has secret?"
+msgid "Id"
 msgstr ""
 
 msgid "JWT secret"
+msgstr ""
+
+msgid "No project can use this server."
 msgstr ""
 
 msgid "ONLYOFFICE"
@@ -81,13 +95,28 @@ msgstr ""
 msgid "Presentation"
 msgstr ""
 
+msgid "Project"
+msgstr ""
+
+msgid "Projects restriction"
+msgstr ""
+
+msgid "Restrict"
+msgstr ""
+
 msgid "Save"
+msgstr ""
+
+msgid "Secret is missing"
 msgstr ""
 
 msgid "Spreadsheet"
 msgstr ""
 
 msgid "There isn't any document servers configured"
+msgstr ""
+
+msgid "Under construction, you cannot set restrictions yet."
 msgstr ""
 
 msgid "You're about to delete the document server."

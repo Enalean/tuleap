@@ -25,6 +25,7 @@ namespace Tuleap\OnlyOffice\Administration;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\RestrictedProject;
 use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -145,7 +146,14 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
     {
         $plugin_manager    = $this->createMock(\PluginManager::class);
         $onlyoffice_plugin = new \onlyofficePlugin(null);
-        $document_server   = DocumentServer::withProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'), [self::PROJECT_ID]);
+        $document_server   = DocumentServer::withProjectRestrictions(
+            1,
+            'https://example.com',
+            new ConcealedString('very_secret'),
+            [
+                self::PROJECT_ID => new RestrictedProject(self::PROJECT_ID, 'blah', 'Blah'),
+            ],
+        );
         $checker           = new OnlyOfficeAvailabilityChecker(
             $plugin_manager,
             $onlyoffice_plugin,

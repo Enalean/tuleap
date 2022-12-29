@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Administration;
 
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\RestrictedProject;
 
 /**
  * @psalm-immutable
@@ -31,11 +32,22 @@ final class OnlyOfficeServerPresenter
 {
     public string $delete_url;
     public string $update_url;
+    public int $nb_project_restrictions;
 
-    private function __construct(public int $id, public string $server_url, public bool $has_existing_secret)
-    {
+    /**
+     * @param array<int, RestrictedProjectPresenter> $project_restrictions
+     */
+    private function __construct(
+        public int $id,
+        public string $server_url,
+        public bool $has_existing_secret,
+        public bool $is_project_restricted,
+        public array $project_restrictions,
+    ) {
         $this->delete_url = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
         $this->update_url = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $id;
+
+        $this->nb_project_restrictions = count($this->project_restrictions);
     }
 
     public static function fromServer(DocumentServer $server): self
@@ -44,6 +56,11 @@ final class OnlyOfficeServerPresenter
             $server->id,
             $server->url,
             $server->has_existing_secret,
+            $server->is_project_restricted,
+            array_map(
+                static fn(RestrictedProject $project) => RestrictedProjectPresenter::fromRestrictedProject($project),
+                $server->project_restrictions,
+            ),
         );
     }
 }

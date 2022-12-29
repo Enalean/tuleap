@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,28 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Administration;
 
-use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\OnlyOffice\DocumentServer\RestrictedProject;
 
 /**
  * @psalm-immutable
  */
-final class OnlyOfficeAdminSettingsPresenter
+final class RestrictedProjectPresenter
 {
-    public bool $has_servers;
-    public bool $has_more_than_one_server;
-    public string $create_url;
+    private function __construct(public int $id, public string $label, public string $url)
+    {
+    }
 
-    /**
-     * @param OnlyOfficeServerPresenter[] $servers
-     */
-    public function __construct(
-        public array $servers,
-        public CSRFSynchronizerTokenPresenter $csrf_token,
-    ) {
-        $nb_servers                     = count($this->servers);
-        $this->has_servers              = $nb_servers > 0;
-        $this->has_more_than_one_server = $nb_servers > 1;
-
-        $this->create_url = OnlyOfficeCreateAdminSettingsController::URL;
+    public static function fromRestrictedProject(RestrictedProject $project): self
+    {
+        return new self(
+            $project->id,
+            $project->label,
+            '/projects/' . urlencode($project->name),
+        );
     }
 }
