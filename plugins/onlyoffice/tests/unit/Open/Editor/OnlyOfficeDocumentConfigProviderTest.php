@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenGenerator;
 use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\OnlyOffice\Open\ProvideOnlyOfficeDocument;
@@ -53,6 +54,7 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
             963,
             'something.docx',
             $can_be_edited,
+            DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
         );
         $provider = self::buildProvider(Result::ok($document));
 

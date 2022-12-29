@@ -33,7 +33,7 @@ import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStu
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
-import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
+import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
@@ -57,7 +57,7 @@ import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/Retrieve
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import { setCatalog } from "../../../../gettext-catalog";
-import type { GroupCollection } from "@tuleap/link-selector";
+import type { GroupOfItems } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
@@ -68,9 +68,10 @@ import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
 import { ParentArtifactIdentifierStub } from "../../../../../tests/stubs/ParentArtifactIdentifierStub";
-import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
+import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
+import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -92,8 +93,6 @@ describe(`LinkFieldController`, () => {
         allowed_link_types: AllowedLinkTypeRepresentation[],
         parent_identifier: ParentArtifactIdentifier | null,
         verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy;
-
-    const is_search_feature_flag_enabled = true;
 
     beforeEach(() => {
         setCatalog({
@@ -143,11 +142,11 @@ describe(`LinkFieldController`, () => {
                 fault_notifier,
                 parents_retriever,
                 link_verifier,
+                RetrieveUserHistoryStub.withoutUserHistory(),
+                SearchArtifactsStub.withoutResults(),
                 current_artifact_identifier,
                 current_tracker_identifier,
-                RetrieveUserHistoryStub.withoutUserHistory(),
-                UserIdentifierProxyStub.fromUserId(101),
-                is_search_feature_flag_enabled
+                UserIdentifierStub.fromUserId(101)
             ),
             new_link_adder,
             new_link_remover,
@@ -358,17 +357,16 @@ describe(`LinkFieldController`, () => {
             );
         });
 
-        const retrieveParents = (): PromiseLike<GroupCollection> => {
+        const retrieveParents = (): PromiseLike<GroupOfItems> => {
             return getController().retrievePossibleParentsGroups();
         };
 
-        it(`will return the groups of possible parents for this tracker`, async () => {
-            const groups = await retrieveParents();
+        it(`will return the group of possible parents for this tracker`, async () => {
+            const group = await retrieveParents();
 
             expect(notification_clearer.getCallCount()).toBe(1);
-            expect(groups).toHaveLength(1);
-            expect(groups[0].is_loading).toBe(false);
-            const parent_ids = groups[0].items.map((item) => {
+            expect(group.is_loading).toBe(false);
+            const parent_ids = group.items.map((item) => {
                 const linkable_artifact = item.value as LinkableArtifact;
                 return linkable_artifact.id;
             });
@@ -382,12 +380,11 @@ describe(`LinkFieldController`, () => {
             and will return an empty group`, async () => {
             parents_retriever = RetrievePossibleParentsStub.withFault(Fault.fromMessage("Ooops"));
 
-            const groups = await retrieveParents();
+            const group = await retrieveParents();
 
             expect(fault_notifier.getCallCount()).toBe(1);
-            expect(groups).toHaveLength(1);
-            expect(groups[0].is_loading).toBe(false);
-            expect(groups[0].items).toHaveLength(0);
+            expect(group.is_loading).toBe(false);
+            expect(group.items).toHaveLength(0);
         });
     });
 });

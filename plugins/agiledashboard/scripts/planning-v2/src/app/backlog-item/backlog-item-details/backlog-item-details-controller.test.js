@@ -83,8 +83,7 @@ describe("BacklogItemDetailsController -", function () {
                 7,
                 BacklogItemDetailsController.backlog_item.id,
                 expect.any(Function),
-                false,
-                false
+                []
             );
         });
 
@@ -120,7 +119,7 @@ describe("BacklogItemDetailsController -", function () {
                 const children_ids = BacklogItemDetailsController.backlog_item.children.data.map(
                     ({ id }) => id
                 );
-                expect(children_ids).toEqual([352, 207]);
+                expect(children_ids).toStrictEqual([352, 207]);
             });
 
             it("Given that the current backlog item did not have children, when the new artifact modal calls its callback, then the artifact will be appended to the current backlog item's children and the children will be marked as loaded", () => {
@@ -138,7 +137,7 @@ describe("BacklogItemDetailsController -", function () {
                 const children_ids = BacklogItemDetailsController.backlog_item.children.data.map(
                     ({ id }) => id
                 );
-                expect(children_ids).toEqual([207]);
+                expect(children_ids).toStrictEqual([207]);
                 expect(BacklogItemDetailsController.backlog_item.children.loaded).toBeTruthy();
             });
         });

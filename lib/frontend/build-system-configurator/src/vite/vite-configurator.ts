@@ -42,7 +42,13 @@ type OverloadedUserConfig = UserConfigWithoutBuildAndServerAndTest & {
 } & { css?: OverloadedCSSOptions };
 
 export function defineLibConfig(config: OverloadedUserConfig): UserConfigExport {
-    return defineBaseConfig(config);
+    const overloaded_build = { ...config.build };
+    overloaded_build.rollupOptions = {
+        ...overloaded_build.rollupOptions,
+        // Force output of __esModule property, otherwise Jest mocks of libs are broken
+        output: { esModule: true },
+    };
+    return defineBaseConfig({ ...config, build: overloaded_build });
 }
 
 type OverloadedBuildAppOptions = Omit<
@@ -153,6 +159,7 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
                 junit: TEST_OUTPUT_DIRECTORY + "/junit.xml",
             },
             coverage: test_coverage,
+            threads: !test_coverage.enabled,
         },
     });
 }

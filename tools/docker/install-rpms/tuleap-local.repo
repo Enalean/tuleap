@@ -1,0 +1,6 @@
+[local]
+name=Tuleap locally builded packages
+baseurl=file:///rpms/RPMS/noarch/
+enabled=1
+gpgcheck=0
+protect=1

@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarnings
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
+use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\Configuration\ScrumConfiguration;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
@@ -37,6 +38,8 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Planning\TrackerHaveAtLeastOneAddToTopBacklogPostActionException;
+use Tuleap\AgileDashboard\Planning\TrackersHaveAtLeastOneHierarchicalLinkException;
+use Tuleap\AgileDashboard\Planning\TrackersWithHierarchicalLinkDefinedNotFoundException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
@@ -104,6 +107,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         UpdateIsAllowedChecker $root_planning_update_checker,
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
         UpdateRequestValidator $update_request_validator,
+        private BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -645,6 +649,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         } else {
             $user = $this->request->getCurrentUser();
             try {
+                $this->backlog_trackers_update_checker->checkProvidedBacklogTrackersAreValid($validated_parameters);
                 $this->root_planning_update_checker->checkUpdateIsAllowed($original_planning, $validated_parameters, $user);
                 $this->planning_updater->update($user, $this->project, $updated_planning_id, $validated_parameters);
 
@@ -652,7 +657,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                     Feedback::INFO,
                     dgettext('tuleap-agiledashboard', 'Planning succesfully updated.')
                 );
-            } catch (TrackerHaveAtLeastOneAddToTopBacklogPostActionException $exception) {
+            } catch (
+                TrackerHaveAtLeastOneAddToTopBacklogPostActionException |
+                TrackersHaveAtLeastOneHierarchicalLinkException |
+                TrackersWithHierarchicalLinkDefinedNotFoundException $exception
+            ) {
                 $this->addFeedback(Feedback::ERROR, $exception->getMessage());
             } catch (TrackerNotFoundException $exception) {
                 $this->addFeedback(

@@ -22,6 +22,7 @@ import type {
     ArtifactIdInTrackerFieldIdentifier,
     ArtifactLinkFieldIdentifier,
     CheckBoxFieldIdentifier,
+    ColorName,
     ComputedFieldIdentifier,
     CrossReferenceFieldIdentifier,
     DateFieldIdentifier,
@@ -56,7 +57,7 @@ export interface StaticValueRepresentation {
     readonly id: string;
     readonly label: string;
     readonly color: RedGreenBlueColor | null;
-    readonly tlp_color: string | null;
+    readonly tlp_color: ColorName | null;
 }
 
 export interface UserGroupRepresentation {
@@ -193,6 +194,11 @@ export interface CrossReferenceChangesetValue extends BaseChangesetValue {
     }>;
 }
 
+export interface Status {
+    value: string;
+    color: ColorName | null;
+}
+
 export type ChangesetValue =
     | UnknownChangesetValue
     | NumericChangesetValue
@@ -224,4 +230,5 @@ export interface ArtifactResponseNoInstance {
     readonly status: string;
     readonly is_open: boolean;
     readonly values: ReadonlyArray<ChangesetValue>;
+    readonly full_status: Status | null;
 }

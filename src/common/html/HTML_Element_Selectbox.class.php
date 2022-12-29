@@ -27,6 +27,9 @@ require_once('HTML_Element_Option.class.php');
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class HTML_Element_Selectbox extends HTML_Element
 {
+    /**
+     * @var list<HTML_Element_Option>
+     */
     protected $options;
     protected $onchange;
     public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc = "")

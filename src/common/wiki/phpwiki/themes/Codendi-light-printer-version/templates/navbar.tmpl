@@ -9,7 +9,7 @@ _("TitleSearch"))?>" target="_top"
 <?php if (ENABLE_DISCUSSION_LINK) { ?>
 <?php // This requires Talk: map to end in "/Discussion"
   if (!string_ends_with($page->getName(), _("Discussion"))) { ?>
-    <?=$SEP?><?= WikiLink(new WikiPagename('Talk:'.$page->getName(), $page->getName()), 
+    <?=$SEP?><?= WikiLink(new WikiPagename('Talk:'.$page->getName(), $page->getName()),
                'button', _("Discussion")) ?>
   <?php } else { ?>
     <?=$SEP?><?= Button(array(),_("Article"),$page->getName()) ?>
@@ -30,8 +30,8 @@ _("Quick Search")?>'
 _("Quick Search")?>'; return true;"
        onmouseout="window.status=''; return true;" />
 <?php if (!empty($revision)) { ?>
-<?=$SEP?><?= $WikiTheme->makeLinkButton($revision,_("LikePages"),_("LikePages")) 
-?><?=$SEP?><?= $WikiTheme->makeLinkButton($revision,_("BackLinks"),_("BackLinks")) 
+<?=$SEP?><?= $WikiTheme->makeLinkButton($revision,_("LikePages"),_("LikePages"))
+?><?=$SEP?><?= $WikiTheme->makeLinkButton($revision,_("BackLinks"),_("BackLinks"))
 ?><?php
   $links = $page->getPageLinks();
   if ($links->count() > 1) { ?><?=$SEP?><?= $WikiTheme->makeLinkButton($revision,_("RelatedChanges"),_("RelatedChanges")) ?><?php } ?>
@@ -45,7 +45,7 @@ _("Quick Search")?>'; return true;"
       $UserCalPageTitle = $user->getId() . SUBPAGE_SEPARATOR . _("Calendar");
       $dbi = $request->getDbh();
       if ($dbi->isWikiPage($UserCalPageTitle)) {
-        $UserCalPageTodayTitle = $UserCalPageTitle . SUBPAGE_SEPARATOR . strftime("%Y-%m-%d", time());
+        $UserCalPageTodayTitle = $UserCalPageTitle . SUBPAGE_SEPARATOR . date("Y-m-d");
         //$UserCalPageTodayUrl = WikiURL($UserCalPageTodayTitle);
         ?>
 <?=$SEP?><?= WikiLink($UserCalPageTodayTitle, "button", _("Today")) ?>

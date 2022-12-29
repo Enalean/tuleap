@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
+use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Permissions\ISaveProjectPermissionsStub;
+use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 
 class ProjectPermissionsSaverTest extends TestCase
 {
@@ -33,34 +36,77 @@ class ProjectPermissionsSaverTest extends TestCase
 
     public function testSave(): void
     {
+        $project = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->withUsedService(MediawikiStandaloneService::SERVICE_SHORTNAME)
+            ->build();
+
         $history_dao = $this->createMock(\ProjectHistoryDao::class);
 
         $permissions_dao = ISaveProjectPermissionsStub::buildSelf();
 
-        $saver = new ProjectPermissionsSaver($permissions_dao, $history_dao);
+        $enqueue_task = new EnqueueTaskStub();
+
+        $saver = new ProjectPermissionsSaver(
+            $permissions_dao,
+            $history_dao,
+            $enqueue_task,
+        );
 
         $readers = [
             ProjectUGroupTestBuilder::buildProjectMembers(),
             ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('Developers')->build(),
         ];
+        $writers = [
+            ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('Developers')->build(),
+        ];
+        $admins  = [
+            ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('Developers')->build(),
+        ];
 
         $history_dao
-            ->expects(self::once())
+            ->expects(self::exactly(3))
             ->method('groupAddHistory')
-            ->with(
-                'perm_granted_for_mediawiki_standalone_readers',
-                'ugroup_project_members_name_key,Developers',
-                self::PROJECT_ID,
+            ->withConsecutive(
+                [
+                    'perm_granted_for_mediawiki_standalone_readers',
+                    'ugroup_project_members_name_key,Developers',
+                    self::PROJECT_ID,
+                ],
+                [
+                    'perm_granted_for_mediawiki_standalone_writers',
+                    'Developers',
+                    self::PROJECT_ID,
+                ],
+                [
+                    'perm_granted_for_mediawiki_standalone_admins',
+                    'Developers',
+                    self::PROJECT_ID,
+                ],
             );
 
         $saver->save(
-            ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build(),
-            $readers
+            $project,
+            $readers,
+            $writers,
+            $admins,
         );
 
         self::assertEquals(
             [3, 102],
             $permissions_dao->getCapturedReadersUgroupIds()
         );
+
+        self::assertEquals(
+            [102],
+            $permissions_dao->getCapturedWritersUgroupIds()
+        );
+
+        self::assertEquals(
+            [102],
+            $permissions_dao->getCapturedAdminsUgroupIds()
+        );
+
+        self::assertInstanceOf(LogUsersOutInstanceTask::class, $enqueue_task->queue_task);
     }
 }

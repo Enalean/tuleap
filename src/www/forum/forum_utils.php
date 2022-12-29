@@ -661,7 +661,7 @@ function show_post_form($forum_id, $thread_id = 0, $is_followup_to = 0, $subject
         <?php
     } else {
         echo "<CENTER>";
-        echo "\n\n<H3>" . sprintf(_('<A HREF="%1$s"><u>Log in first</u></A><span class="highlight"> to post messages</span>'), "/account/login.php?return_to=" . urlencode($_SERVER['REQUEST_URI'])) . '</H3>';
+        echo "\n\n<H3>" . sprintf(_('<A HREF="%1$s"><u>Log in first</u></A><span class="highlight"> to post messages</span>'), "/account/login.php?return_to=" . urlencode($_SERVER['REQUEST_URI'] ?? '')) . '</H3>';
         echo "</CENTER>";
     }
 }

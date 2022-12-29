@@ -53,7 +53,6 @@ NewTuleapArtifactModalService.showCreation(
     tracker_id,
     parent_item,
     callback,
-    true | false, //enable or not the list picker
     prefill_values
 );
 ```
@@ -67,7 +66,6 @@ NewTuleapArtifactModalService.showEdition(
     tracker_id,
     artifact_id,
     callback,
-    true | false, //enable or not the list picker
 );
 ```
 

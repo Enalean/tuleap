@@ -36,7 +36,9 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServerNotFoundException;
 
 final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackResponseParser
 {
@@ -45,15 +47,20 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
         private Validator $jwt_validator,
         private ValidAt $jwt_valid_at_constraint,
         private Signer $jwt_signer,
+        private DocumentServerForSaveDocumentTokenRetriever $server_retriever,
+        private DocumentServerKeyEncryption $encryption,
     ) {
     }
 
     /**
      * @psalm-return Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
      */
-    public function parseCallbackResponseContent(string $response_content): Ok|Err
-    {
-        return $this->decodeJSON($response_content)
+    public function parseCallbackResponseContent(
+        string $response_content,
+        SaveDocumentTokenData $save_token_information,
+    ): Ok|Err {
+        return $this->retrieveServer($response_content, $save_token_information)
+            ->andThen(\Closure::fromCallable([$this, 'decodeJSON']))
             ->andThen(\Closure::fromCallable([$this, 'extractTokenFromJSONContent']))
             ->andThen(\Closure::fromCallable([$this, 'parseJWT']))
             ->andThen(\Closure::fromCallable([$this, 'validateJWT']))
@@ -61,36 +68,86 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
     }
 
     /**
-     * @psalm-return Ok<array>|Err<Fault>
+     * @return Ok<array{json: string, server: DocumentServer}>|Err
      */
-    private function decodeJSON(string $response_content): Ok|Err
+    private function retrieveServer(string $response_content, SaveDocumentTokenData $save_token_information): Ok|Err
     {
         try {
-            return Result::ok(json_decode($response_content, true, 128, JSON_THROW_ON_ERROR));
-        } catch (\JsonException $e) {
-            return Result::err(Fault::fromThrowableWithMessage($e, 'Cannot parse ONLYOFFICE callback content response as JSON'));
+            return Result::ok([
+                'json'   => $response_content,
+                'server' => $this->server_retriever->getServerFromSaveToken($save_token_information),
+            ]);
+        } catch (DocumentServerNotFoundException $e) {
+            return Result::err(
+                Fault::fromMessage(
+                    'Unable to find the document server information for document, maybe it has been removed?'
+                )
+            );
+        } catch (DocumentServerHasNoExistingSecretException $e) {
+            return Result::err(
+                Fault::fromMessage(
+                    'Document server does not have a JWT secret key'
+                )
+            );
+        } catch (NoDocumentServerException $e) {
+            return Result::err(
+                Fault::fromMessage('No document server is configured')
+            );
         }
     }
 
     /**
-     * @psalm-return Ok<string>|Err<Fault>
+     * @param array{json: string, server: DocumentServer} $content
+     *
+     * @psalm-return Ok<array{json_content: array, server: DocumentServer}>|Err<Fault>
      */
-    private function extractTokenFromJSONContent(array $json_content): Ok|Err
+    private function decodeJSON(array $content): Ok|Err
     {
-        if (isset($json_content['token']) && is_string($json_content['token'])) {
-            return Result::ok($json_content['token']);
+        try {
+            $json_content = json_decode($content['json'], true, 128, JSON_THROW_ON_ERROR);
+            if (! is_array($json_content)) {
+                return Result::err(
+                    Fault::fromMessage('ONLYOFFICE JSON content should be an array')
+                );
+            }
+
+            return Result::ok([
+                'json_content' => $json_content,
+                'server'       => $content['server'],
+            ]);
+        } catch (\JsonException $e) {
+            return Result::err(
+                Fault::fromThrowableWithMessage($e, 'Cannot parse ONLYOFFICE callback content response as JSON')
+            );
+        }
+    }
+
+    /**
+     * @param array{json_content: array, server: DocumentServer} $content
+     *
+     * @psalm-return Ok<array{jwt: string, server: DocumentServer}>|Err<Fault>
+     */
+    private function extractTokenFromJSONContent(array $content): Ok|Err
+    {
+        if (isset($content['json_content']['token']) && is_string($content['json_content']['token'])) {
+            return Result::ok([
+                'jwt'    => $content['json_content']['token'],
+                'server' => $content['server'],
+            ]);
         }
 
         return Result::err(Fault::fromMessage('Cannot find the `token` key in the ONLYOFFICE callback JSON'));
     }
 
     /**
-     * @psalm-return Ok<UnencryptedToken>|Err<Fault>
+     * @param array{jwt: string, server: DocumentServer} $jwt
+     *
+     * @psalm-return Ok<array{unencrypted_token: UnencryptedToken, server: DocumentServer}>|Err<Fault>
      */
-    private function parseJWT(string $jwt): Ok|Err
+    private function parseJWT(array $jwt): Ok|Err
     {
         try {
-            $token = $this->jwt_parser->parse($jwt);
+            $token = $this->jwt_parser->parse($jwt['jwt']);
         } catch (InvalidTokenStructure | UnsupportedHeaderFound $ex) {
             return Result::err(
                 Fault::fromThrowableWithMessage($ex, 'Cannot parse the JWT found in the ONLYOFFICE callback')
@@ -99,18 +156,25 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
 
         assert($token instanceof UnencryptedToken);
 
-        return Result::ok($token);
+        return Result::ok([
+            'unencrypted_token' => $token,
+            'server'            => $jwt['server'],
+        ]);
     }
 
     /**
+     * @param array{unencrypted_token: UnencryptedToken, server: DocumentServer} $token
+     *
      * @psalm-return Ok<Token\DataSet>|Err<Fault>
      */
-    private function validateJWT(UnencryptedToken $token): Ok|Err
+    private function validateJWT(array $token): Ok|Err
     {
-        $key = Signer\Key\InMemory::plainText(\ForgeConfig::getSecretAsClearText(OnlyOfficeDocumentServerSettings::SECRET)->getString());
+        $key = Signer\Key\InMemory::plainText(
+            $this->encryption->decryptValue($token['server']->encrypted_secret_key->getString())->getString()
+        );
         try {
             $this->jwt_validator->assert(
-                $token,
+                $token['unencrypted_token'],
                 new SignedWith($this->jwt_signer, $key),
                 $this->jwt_valid_at_constraint,
             );
@@ -119,7 +183,8 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
                 Fault::fromThrowableWithMessage($ex, 'Cannot validate the JWT found in the ONLYOFFICE callback')
             );
         }
-        return Result::ok($token->claims());
+
+        return Result::ok($token['unencrypted_token']->claims());
     }
 
     /**
@@ -129,7 +194,9 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
     {
         return match ($claims->get('status')) {
             null => Result::err(Fault::fromMessage('No `status` key found in the ONLYOFFICE JWT callback')),
-            OnlyOfficeDocumentStatusCallback::STATUS_SAVE, OnlyOfficeDocumentStatusCallback::STATUS_SAVE_CORRUPTED => $this->parseJWTClaimsOfSaveRequest($claims),
+            OnlyOfficeDocumentStatusCallback::STATUS_SAVE, OnlyOfficeDocumentStatusCallback::STATUS_SAVE_CORRUPTED => $this->parseJWTClaimsOfSaveRequest(
+                $claims
+            ),
             default => Result::ok(OptionalValue::nothing(OnlyOfficeCallbackSaveResponseData::class)),
         };
     }
@@ -143,7 +210,10 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
         if (! is_string($download_url)) {
             return Result::err(
                 Fault::fromMessage(
-                    sprintf('Invalid or missing `url` key (got "%s") in the ONLYOFFICE JWT callback claims', var_export($download_url, true))
+                    sprintf(
+                        'Invalid or missing `url` key (got "%s") in the ONLYOFFICE JWT callback claims',
+                        var_export($download_url, true)
+                    )
                 )
             );
         }
@@ -151,7 +221,10 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
         if (! is_array($history) || ! isset($history['serverVersion']) || ! is_string($history['serverVersion'])) {
             return Result::err(
                 Fault::fromMessage(
-                    sprintf('Invalid or missing `history` key (got "%s") in the ONLYOFFICE JWT callback claims', var_export($history, true))
+                    sprintf(
+                        'Invalid or missing `history` key (got "%s") in the ONLYOFFICE JWT callback claims',
+                        var_export($history, true)
+                    )
                 )
             );
         }
@@ -161,7 +234,10 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
                 if (! isset($change['user']['id']) || ! ctype_digit($change['user']['id'])) {
                     return Result::err(
                         Fault::fromMessage(
-                            sprintf('Invalid `history.changes` key (got "%s") in the ONLYOFFICE JWT callback claims', var_export($history['changes'], true))
+                            sprintf(
+                                'Invalid `history.changes` key (got "%s") in the ONLYOFFICE JWT callback claims',
+                                var_export($history['changes'], true)
+                            )
                         )
                     );
                 }
@@ -170,7 +246,9 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
         }
 
         return Result::ok(
-            OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData($download_url, $history['serverVersion'], $author_identifiers))
+            OptionalValue::fromValue(
+                new OnlyOfficeCallbackSaveResponseData($download_url, $history['serverVersion'], $author_identifiers)
+            )
         );
     }
 }

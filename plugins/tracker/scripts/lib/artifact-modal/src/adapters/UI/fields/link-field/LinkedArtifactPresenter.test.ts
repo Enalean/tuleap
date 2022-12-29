@@ -41,7 +41,7 @@ describe(`LinkedArtifactPresenter`, () => {
         const linked_artifact = LinkedArtifactStub.withDefaults({
             identifier: LinkedArtifactIdentifierStub.withId(ARTIFACT_ID),
             title: TITLE,
-            status: STATUS,
+            status: { value: STATUS, color: null },
             is_open: true,
             uri: URI,
             xref: ArtifactCrossReferenceStub.withRefAndColor(CROSS_REFERENCE, COLOR),
@@ -52,12 +52,12 @@ describe(`LinkedArtifactPresenter`, () => {
 
         expect(presenter.identifier.id).toBe(ARTIFACT_ID);
         expect(presenter.title).toBe(TITLE);
-        expect(presenter.status).toBe(STATUS);
+        expect(presenter.status?.value).toBe(STATUS);
         expect(presenter.is_open).toBe(true);
         expect(presenter.uri).toBe(URI);
         expect(presenter.xref.ref).toBe(CROSS_REFERENCE);
         expect(presenter.xref.color).toBe(COLOR);
-        expect(presenter.link_type).toEqual(link_type);
+        expect(presenter.link_type).toStrictEqual(link_type);
         expect(presenter.is_marked_for_removal).toBe(true);
     });
 });

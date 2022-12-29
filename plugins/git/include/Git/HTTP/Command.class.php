@@ -27,8 +27,8 @@ abstract class Git_HTTP_Command
         $this->env = [
             'GIT_PROJECT_ROOT'    => ForgeConfig::get('sys_data_dir') . "/gitolite/repositories",
             'GIT_HTTP_EXPORT_ALL' => "1",
-            'QUERY_STRING'        => $_SERVER['QUERY_STRING'],
-            'REQUEST_METHOD'      => $_SERVER['REQUEST_METHOD'],
+            'QUERY_STRING'        => $_SERVER['QUERY_STRING'] ?? '',
+            'REQUEST_METHOD'      => $_SERVER['REQUEST_METHOD'] ?? '',
         ];
         if (isset($_SERVER['HTTP_GIT_PROTOCOL'])) {
             $this->env['GIT_PROTOCOL'] = $_SERVER['HTTP_GIT_PROTOCOL'];

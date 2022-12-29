@@ -31,14 +31,27 @@ declare global {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface Chainable<Subject> {
             clearSessionCookie(): void;
+
             preserveSessionCookies(): void;
+
             projectAdministratorLogin(): void;
+
+            projectAdministratorSession(): void;
+
+            projectMemberSession(): void;
+
             secondProjectAdministratorLogin(): void;
+
             projectMemberLogin(): void;
+
             permissionDelegationLogin(): void;
+
             platformAdminLogin(): void;
+
             restrictedMemberLogin(): void;
+
             restrictedRegularUserLogin(): void;
+
             regularUserLogin(): void;
 
             heisenbergLogin(): void;
@@ -61,8 +74,6 @@ declare global {
 
             visitServiceInCurrentProject(service_label: string): void;
 
-            createNewIssueProject(project_short_name: string, project_public_name: string): void;
-
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getFromTuleapAPI(url: string): Chainable<Response<any>>;
 
@@ -76,6 +87,12 @@ declare global {
                 max_attempts_reached_message: string,
                 number_of_attempts?: number
             ): PromiseLike<void>;
+
+            createNewPublicProject(project_name: string, xml_template: string): void;
+
+            createNewPrivateProject(project_name: string): void;
+
+            addUser(user_name: string): void;
         }
     }
 }

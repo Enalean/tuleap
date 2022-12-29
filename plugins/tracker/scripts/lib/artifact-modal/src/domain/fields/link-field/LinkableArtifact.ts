@@ -17,15 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ColorName } from "@tuleap/plugin-tracker-constants";
 import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
 import type { ArtifactProject } from "../../ArtifactProject";
+
+export type Status = {
+    readonly value: string;
+    readonly color: ColorName | null;
+};
 
 export type LinkableArtifact = {
     readonly id: number;
     readonly title: string | null;
     readonly xref: ArtifactCrossReference;
     readonly uri: string;
-    readonly status: string | null;
+    readonly status: Status | null;
     readonly is_open: boolean;
     readonly project: ArtifactProject;
 };

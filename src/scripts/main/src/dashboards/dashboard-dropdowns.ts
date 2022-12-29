@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import { applyLayout } from "./dashboard-layout";
 
 export { init as default, addLayoutDropdown };
@@ -27,9 +27,9 @@ function init(): void {
         ".dashboard-widget-actions, #dashboard-tabs-dropdown-trigger"
     );
 
-    [].forEach.call(cogs, function (cog) {
+    for (const cog of cogs) {
         createDropdown(cog);
-    });
+    }
 
     const template_dropdown = document.getElementById("dashboard-layout-dropdown-template");
 

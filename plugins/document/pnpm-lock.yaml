@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/autocomplete-for-select2': workspace:*
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/core-constants': workspace:*
   '@tuleap/cypress-configurator': workspace:*
   '@tuleap/cypress-utilities-support': workspace:*
   '@tuleap/date-helper': workspace:*
@@ -18,7 +19,6 @@ specifiers:
   '@tuleap/tlp-popovers': workspace:*
   '@tuleap/tlp-relative-date': workspace:*
   '@tuleap/tlp-swatch-colors': workspace:*
-  '@tuleap/user-group-constants': workspace:*
   '@tuleap/vue-breadcrumb-privacy': workspace:*
   '@tuleap/vue2-gettext-composition-helper': workspace:*
   '@tuleap/vue2-gettext-init': workspace:*
@@ -49,6 +49,7 @@ specifiers:
 
 dependencies:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
+  '@tuleap/core-constants': link:../../lib/frontend/constants
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/fault': link:../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../lib/frontend/fetch-result
@@ -62,7 +63,6 @@ dependencies:
   '@tuleap/tlp-popovers': link:../../lib/frontend/tlp-popovers
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
-  '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue2-gettext-composition-helper': link:../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init

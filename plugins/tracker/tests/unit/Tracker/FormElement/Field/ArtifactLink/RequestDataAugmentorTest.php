@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 
 final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -58,19 +59,7 @@ final class RequestDataAugmentorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->art_link_id = 555;
         $this->tracker     = \Mockery::spy(\Tracker::class);
 
-        $this->field = new Tracker_FormElement_Field_ArtifactLink(
-            $this->art_link_id,
-            101,
-            null,
-            'field_artlink',
-            'Field ArtLink',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
+        $this->field = ArtifactLinkFieldBuilder::anArtifactLinkField($this->art_link_id)->build();
         $this->field->setTracker($this->tracker);
 
         $this->event_manager = Mockery::mock(\EventManager::class);

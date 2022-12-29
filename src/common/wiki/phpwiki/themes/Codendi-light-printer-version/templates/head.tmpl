@@ -98,7 +98,7 @@ _("UserPreferences"))?>" />
 <link rel="bookmark" title="<?= $UserCalPageTitle ?>" href="<?= $UserCalPageUrl ?>" />
 <?php /* Today's calendar page for the user if it exists
        */
-      $UserCalPageTodayTitle = $UserCalPageTitle . SUBPAGE_SEPARATOR . strftime("%Y-%m-%d", time()); //FIXME
+      $UserCalPageTodayTitle = $UserCalPageTitle . SUBPAGE_SEPARATOR . date("Y-m-d"); //FIXME
       $dbi = $request->getDbh();
       if ($dbi->isWikiPage($UserCalPageTodayTitle)) {
           $UserCalPageTodayUrl = WikiURL($UserCalPageTodayTitle);
@@ -117,7 +117,7 @@ _("UserPreferences"))?>" />
 <?= $WikiTheme->getMoreHeaders() ?>
 </head>
 <?php
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -                         
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // $Log: head.tmpl,v $
 // Revision 1.22  2005/01/25 07:15:47  rurban
 // fix ROBOTS_META warning, break xgettext strings, add log as comment

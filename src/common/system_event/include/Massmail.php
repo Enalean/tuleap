@@ -22,12 +22,20 @@ use Codendi_HTMLPurifier;
 use Codendi_Mail;
 use ForgeConfig;
 use SystemEvent;
+use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Mail\MailLogger;
+use Tuleap\Massmail\RecipientUser;
+use Tuleap\Massmail\RecipientUserDAO;
+use Tuleap\Massmail\RecipientUsersRetriever;
 
 /**
  * Send a massmail
  */
 class Massmail extends SystemEvent
 {
+    #[FeatureFlagConfigKey("Feature flag to allow massmail feature to send each mails one by one.")]
+    public const FEATURE_FLAG_KEY = 'send_massmail_one_by_one';
+
     /**
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications
@@ -41,8 +49,8 @@ class Massmail extends SystemEvent
     {
         $parameters = $this->parseParamaters();
 
-        return 'Destination: ' . $this->getDestinationLabel($parameters->destination) .
-            ', Subject: ' . Codendi_HTMLPurifier::instance()->purify($parameters->subject);
+        return 'Destination: ' . $this->getDestinationLabel($parameters['destination']) .
+            ', Subject: ' . Codendi_HTMLPurifier::instance()->purify($parameters['subject']);
     }
 
     /**
@@ -51,10 +59,12 @@ class Massmail extends SystemEvent
      *    'message'     => <string>,
      *    'subject'     => <string>
      * }
+     *
+     * @psalm-return array{destination:string, message:string, subject:string}
      */
-    private function parseParamaters()
+    private function parseParamaters(): array
     {
-        return json_decode($this->parameters);
+        return json_decode($this->parameters, true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -65,7 +75,7 @@ class Massmail extends SystemEvent
     public function process()
     {
         $parameters = $this->parseParamaters();
-        $recipients = $this->searchRecipients($parameters->destination);
+        $recipients = $this->searchRecipients($parameters['destination']);
         if (! $recipients) {
             $this->error('Unknown destination');
 
@@ -76,7 +86,12 @@ class Massmail extends SystemEvent
         $errors      = '';
         $mail        = $this->buildMail($parameters);
 
-        $this->flood($mail, $recipients, $errors, $has_success);
+        $mail_logger = new MailLogger();
+        if (ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)) {
+            $this->sendOneByOne($mail_logger, $parameters, $recipients, $errors, $has_success);
+        } else {
+            $this->flood($mail_logger, $mail, $recipients, $errors, $has_success);
+        }
 
         if ($has_success && $errors) {
             $this->warning('Some failed: ' . $errors);
@@ -95,35 +110,74 @@ class Massmail extends SystemEvent
         return true;
     }
 
-    private function buildMail($parameters)
+    /**
+     * @psalm-param array{destination:string, message:string, subject:string} $parameters
+     */
+    private function buildMail(array $parameters): Codendi_Mail
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $title    = $purifier->purify($parameters->subject, CODENDI_PURIFIER_CONVERT_HTML);
+        $title    = $purifier->purify($parameters['subject'], CODENDI_PURIFIER_CONVERT_HTML);
 
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->getLookAndFeelTemplate()->set('title', $title);
-        $mail->setBodyHtml($parameters->message);
-        $mail->setSubject($parameters->subject);
+        $mail->setBodyHtml($parameters['message']);
+        $mail->setSubject($parameters['subject']);
 
         return $mail;
     }
 
-    private function flood(Codendi_Mail $mail, $recipients, &$errors, &$has_success)
-    {
-        $nb_rows = db_numrows($recipients);
+    /**
+     * @param RecipientUser[] $recipients
+     * @psalm-param array{destination:string, message:string, subject:string} $parameters
+     */
+    private function sendOneByOne(
+        MailLogger $mail_logger,
+        array $parameters,
+        array $recipients,
+        string &$errors,
+        bool &$has_success,
+    ): void {
+        $mail_logger->info("Send Massmail one by one");
+        foreach ($recipients as $recipient) {
+            $to_mail = $recipient->email;
+            $mail_logger->debug("user email: " . $to_mail);
+            $mail = $this->buildMail($parameters);
+            $mail->setTo($to_mail, true);
+            if ($mail->send()) {
+                $has_success = true;
+            } else {
+                $mail_logger->error("Error while sending massmail to $to_mail");
+                $errors .= $to_mail;
+            }
+        }
+    }
+
+    /**
+     * @param RecipientUser[] $recipients
+     */
+    private function flood(
+        MailLogger $mail_logger,
+        Codendi_Mail $mail,
+        array $recipients,
+        string &$errors,
+        bool &$has_success,
+    ): void {
+        $mail_logger->info("Send Massmail in batch");
+        $nb_rows = count($recipients);
         $tolist  = [];
 
         for ($i = 1; $i <= $nb_rows; $i++) {
-            $tolist[] = db_result($recipients, $i - 1, 'email');
+            $tolist[] = $recipients[$i - 1]->email;
             if ($i % 25 == 0) {
+                $mail_logger->debug("batch of emails: " . implode(', ', $tolist));
                 foreach ($tolist as $to) {
                     $mail->setBcc($to, true);
                 }
                 if ($mail->send()) {
                     $has_success = true;
                 } else {
-                    $errors .= $tolist;
+                    $errors .= implode(', ', $tolist);
                 }
                 usleep(2000000);
                 $tolist = [];
@@ -132,6 +186,7 @@ class Massmail extends SystemEvent
 
         //send the last of the messages.
         if (count($tolist) > 0) {
+            $mail_logger->debug("batch of emails: " . implode(', ', $tolist));
             foreach ($tolist as $to) {
                 $mail->setBcc($to, true);
             }
@@ -143,47 +198,19 @@ class Massmail extends SystemEvent
         }
     }
 
-    private function searchRecipients($destination)
+    /**
+     * @return RecipientUser[]
+     */
+    private function searchRecipients($destination): array
     {
-        switch ($destination) {
-            case 'comm':
-                $sql = "SELECT email,user_name FROM user WHERE ( status='A' OR status='R' ) AND mail_va=1 GROUP BY lcase(email)";
-                break;
-            case 'sf':
-                $sql = "SELECT email,user_name FROM user WHERE ( status='A' OR status='R' ) AND mail_siteupdates=1 GROUP BY lcase(email)";
-                break;
-            case 'all':
-                $sql = "SELECT email,user_name FROM user WHERE ( status='A' OR status='R' ) GROUP BY lcase(email)";
-                break;
-            case 'admin':
-                $sql = "SELECT user.email AS email,user.user_name AS user_name "
-                    . "FROM user,user_group WHERE "
-                    . "user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) AND user_group.admin_flags='A' "
-                    . "GROUP by lcase(email)";
-                break;
-            case 'sfadmin':
-                $sql = "SELECT user.email AS email,user.user_name AS user_name "
-                    . "FROM user,user_group WHERE "
-                    . "user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) AND user_group.group_id=1 "
-                    . "GROUP by lcase(email)";
-                break;
-            case 'devel':
-                $sql = "SELECT user.email AS email,user.user_name AS user_name "
-                    . "FROM user,user_group WHERE "
-                    . "user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) GROUP BY lcase(email)";
-                break;
-            default:
-                return null;
-        }
-
-        return db_query($sql);
+        return (new RecipientUsersRetriever(new RecipientUserDAO()))->getRecipientUsers($destination);
     }
 
-    private function getDestinationLabel($destination)
+    private function getDestinationLabel(string $destination): string
     {
         $labels = [
-            'comm'    => 'Additional Community Mailings Subcribers',
-            'sf'      => 'Site Updates Subcribers',
+            'comm'    => 'Additional Community Mailings Subscribers',
+            'sf'      => 'Site Updates Subscribers',
             'all'     => 'All Users',
             'admin'   => 'Project Administrators',
             'sfadmin' => ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' Administrators',

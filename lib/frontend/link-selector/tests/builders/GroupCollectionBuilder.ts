@@ -17,32 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GroupCollection } from "../../src";
+import type { GroupCollection, GroupOfItems } from "../../src";
 
 export const GroupCollectionBuilder = {
     withEmptyGroup: (): GroupCollection => [
-        { label: "", icon: "", empty_message: "irrelevant", items: [], is_loading: false },
-    ],
-
-    withSingleGroup: (): GroupCollection => [
         {
             label: "",
-            icon: "",
             empty_message: "irrelevant",
-            items: [
-                { value: { id: 0 }, is_disabled: false },
-                { value: { id: 1 }, is_disabled: false },
-                { value: { id: 2 }, is_disabled: false },
-                { value: { id: 3 }, is_disabled: false },
-            ],
+            items: [],
             is_loading: false,
+            footer_message: "",
+        },
+    ],
+
+    withSingleGroup: (group: Partial<GroupOfItems>): GroupCollection => [
+        {
+            label: "",
+            empty_message: "",
+            items: [],
+            is_loading: false,
+            footer_message: "",
+            ...group,
         },
     ],
 
     withTwoGroups: (): GroupCollection => [
         {
             label: "Group 1",
-            icon: "🐹",
             empty_message: "irrelevant",
             items: [
                 { value: { id: 0 }, is_disabled: false },
@@ -50,10 +51,10 @@ export const GroupCollectionBuilder = {
                 { value: { id: 2 }, is_disabled: false },
             ],
             is_loading: false,
+            footer_message: "",
         },
         {
             label: "Group 2",
-            icon: "🦏",
             empty_message: "irrelevant",
             items: [
                 { value: { id: 3 }, is_disabled: false },
@@ -61,6 +62,7 @@ export const GroupCollectionBuilder = {
                 { value: { id: 5 }, is_disabled: true },
             ],
             is_loading: false,
+            footer_message: "",
         },
     ],
 };

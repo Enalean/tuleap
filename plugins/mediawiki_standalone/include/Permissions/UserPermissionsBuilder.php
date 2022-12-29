@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+use Tuleap\MediawikiStandalone\Permissions\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\User\ForgePermissionsRetriever;
 
@@ -32,7 +32,7 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
     public function __construct(
         private ForgePermissionsRetriever $forge_permissions_retriever,
         private CheckProjectAccess $check_project_access,
-        private ReadersRetriever $readers_retriever,
+        private ProjectPermissionsRetriever $permissions_retriever,
     ) {
     }
 
@@ -40,6 +40,11 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
     {
         try {
             $this->check_project_access->checkUserCanAccessProject($user, $project);
+        } catch (\Project_AccessPrivateException | \Project_AccessRestrictedException) {
+            if ($this->forge_permissions_retriever->doesUserHavePermission($user, new MediawikiAdminAllProjects())) {
+                return UserPermissions::fullAccess();
+            }
+            return UserPermissions::noAccess();
         } catch (\Project_AccessException) {
             return UserPermissions::noAccess();
         }
@@ -52,11 +57,21 @@ final class UserPermissionsBuilder implements IBuildUserPermissions
             return UserPermissions::fullAccess();
         }
 
-        if ($user->isMember($project->getID())) {
-            return UserPermissions::writer();
+        $project_permissions = $this->permissions_retriever->getProjectPermissions($project);
+
+        foreach ($project_permissions->admins as $admins_ugroup_id) {
+            if ($user->isMemberOfUGroup($admins_ugroup_id, (int) $project->getID())) {
+                return UserPermissions::fullAccess();
+            }
         }
 
-        foreach ($this->readers_retriever->getReadersUgroupIds($project) as $readers_ugroup_id) {
+        foreach ($project_permissions->writers as $writers_ugroup_id) {
+            if ($user->isMemberOfUGroup($writers_ugroup_id, (int) $project->getID())) {
+                return UserPermissions::writer();
+            }
+        }
+
+        foreach ($project_permissions->readers as $readers_ugroup_id) {
             if ($user->isMemberOfUGroup($readers_ugroup_id, (int) $project->getID())) {
                 return UserPermissions::reader();
             }

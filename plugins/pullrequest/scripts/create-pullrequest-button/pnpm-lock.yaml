@@ -2,19 +2,23 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/po-gettext-plugin': workspace:*
   '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/vue2-gettext-init': workspace:*
   vue: ^2.7.8
   vue-gettext: ^2.1.12
   vuex: ^3.6.2
 
 dependencies:
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init': link:../../../../lib/frontend/vue2-gettext-init
   vue: 2.7.8
   vue-gettext: 2.1.12
   vuex: 3.6.2_vue@2.7.8
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
 
 packages:
 

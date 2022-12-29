@@ -946,7 +946,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 EventManager::instance()->processEvent('tracker_report_followup_warning', $params);
                 $html .= $fts_warning;
 
-                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
+                try {
+                    $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
+                } catch (\Tuleap\Tracker\Report\dao\TooManyMatchingArtifactsException $exception) {
+                    BackendLogger::getDefaultLogger()->error('Report failure', ['exception' => $exception]);
+                    $html .= '<br><div class="alert alert-error">' . $exception->getMessage() . '</div>';
+                }
                 $html .= '</div>';
             }
             $html .= '</div>';

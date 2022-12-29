@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-12-01 12:32+0100\n"
+"PO-Revision-Date: 2022-12-08 15:28+0100\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -34,12 +34,6 @@ msgstr "Ajouter un autre fichier"
 msgid "An error occurred while saving the artifact."
 msgstr "Une erreur s'est produite pendant la sauvegarde de cet artéfact."
 
-msgid "Artifact id"
-msgstr "Id d'artéfact"
-
-msgid "Artifact id or title"
-msgstr "Id ou titre de l'artéfact"
-
 msgid "Auto-compute"
 msgstr "Calcul automatique"
 
@@ -64,17 +58,26 @@ msgstr "Créer un nouveau {{ modal.title }}"
 msgid "Edit"
 msgstr "Editer"
 
-msgid "Edited by"
-msgstr "Modifié par"
+msgid "Edited by %(user)s"
+msgstr "Modifié par %(user)s"
 
 msgid "Empty"
 msgstr "Aucun(e)"
 
+msgid "Error while retrieving recently viewed artifacts: %s"
+msgstr "Erreur pendant la récupération des artéfacts vus récemment : %s"
+
 msgid "Error while retrieving the artifact to link: %s"
 msgstr "Erreur pendant la récupération de l'artéfact à lier : %s"
 
+msgid "Error while retrieving the comments: %s"
+msgstr "Erreur pendant la récupération des commentaires : %s"
+
 msgid "Error while retrieving the possible parents: %s"
 msgstr "Erreur pendant la récupération des parents possibles : %s"
+
+msgid "Error while searching for artifacts: %s"
+msgstr "Erreur pendant la recherche d'artéfacts : %s"
 
 msgid "Error while uploading %(file_name)s: %(error)s"
 msgstr "Erreur pendant le téléversement de %(file_name)s: %(error)s"
@@ -102,6 +105,9 @@ msgstr "Aide"
 
 msgid "Hidden fieldsets:"
 msgstr "Groupes de champs cachés :"
+
+msgid "Id, title..."
+msgstr "Id, titre..."
 
 msgid "Keep the file"
 msgstr "Garder le fichier"
@@ -151,6 +157,11 @@ msgstr "Seuls les commentaires sont affichés"
 msgid "Open"
 msgstr "Ouvrez"
 
+msgid "Please refine your search if you did not find what you are looking for."
+msgstr ""
+"Veuillez préciser votre recherche si vous n'avez pas trouvé ce que vous "
+"cherchez."
+
 msgid "Please select a date"
 msgstr "Veuillez choisir une date"
 
@@ -184,6 +195,9 @@ msgstr ""
 
 msgid "Save changes"
 msgstr "Enregistrer les changements"
+
+msgid "Search for an artifact..."
+msgstr "Rechercher un artéfact..."
 
 msgid "Search results"
 msgstr "Résultats de recherche"

@@ -27,7 +27,9 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -133,19 +135,20 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTellsEachFieldToBuildFieldsDataFromRESTUpdatePayload(): void
     {
-        $int_representation              = new ArtifactValuesRepresentation();
-        $int_representation->field_id    = self::INT_FIELD_ID;
-        $int_representation->value       = self::INT_VALUE;
-        $float_representation            = new ArtifactValuesRepresentation();
-        $float_representation->field_id  = self::FLOAT_FIELD_ID;
-        $float_representation->value     = self::FLOAT_VALUE;
-        $string_representation           = new ArtifactValuesRepresentation();
-        $string_representation->field_id = self::STRING_FIELD_ID;
-        $string_representation->value    = self::STRING_VALUE;
-        $text_representation             = new ArtifactValuesRepresentation();
-        $text_representation->field_id   = self::TEXT_FIELD_ID;
-        $text_representation->value      = ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE];
-        $this->fields_retriever          = RetrieveUsedFieldsStub::withFields(
+        $int_representation    = ArtifactValuesRepresentationBuilder::aRepresentation(self::INT_FIELD_ID)
+            ->withValue(self::INT_VALUE)
+            ->build();
+        $float_representation  = ArtifactValuesRepresentationBuilder::aRepresentation(self::FLOAT_FIELD_ID)
+            ->withValue(self::FLOAT_VALUE)
+            ->build();
+        $string_representation = ArtifactValuesRepresentationBuilder::aRepresentation(self::STRING_FIELD_ID)
+            ->withValue(self::STRING_VALUE)
+            ->build();
+        $text_representation   = ArtifactValuesRepresentationBuilder::aRepresentation(self::TEXT_FIELD_ID)
+            ->withValue(['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE])
+            ->build();
+
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             $this->int_field,
             $this->float_field,
             $this->string_field,
@@ -169,29 +172,19 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsArtifactLinkChangesetValueSeparatelyFromRESTUpdatePayload(): void
     {
-        $link_field             = new \Tracker_FormElement_Field_ArtifactLink(
-            self::LINK_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'irrelevant',
-            'Irrelevant',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            1
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::LINK_FIELD_ID)
+                ->withTrackerId(self::TRACKER_ID)
+                ->build()
         );
-        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($link_field);
 
-        $first_linked_artifact_id      = 40;
-        $second_linked_artifact_id     = 87;
-        $link_representation           = new ArtifactValuesRepresentation();
-        $link_representation->field_id = self::LINK_FIELD_ID;
-        $link_representation->links    = [
-            ['id' => $first_linked_artifact_id, 'type' => null],
-            ['id' => $second_linked_artifact_id, 'type' => 'custom_type'],
-        ];
+        $first_linked_artifact_id  = 40;
+        $second_linked_artifact_id = 87;
+        $link_representation       = ArtifactValuesRepresentationBuilder::aRepresentation(self::LINK_FIELD_ID)
+            ->withLinks(
+                ['id' => $first_linked_artifact_id, 'type' => null],
+                ['id' => $second_linked_artifact_id, 'type' => 'custom_type'],
+            )->build();
 
         $changeset_values = $this->getFieldsDataOnUpdate([$link_representation]);
         $artifact_link    = $changeset_values->getArtifactLinkValue();
@@ -222,8 +215,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAtUpdateWhenFieldIDCantBeFoundInTracker(): void
     {
-        $representation           = new ArtifactValuesRepresentation();
-        $representation->field_id = 404;
+        $representation = ArtifactValuesRepresentationBuilder::aRepresentation(404)->build();
 
         $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
         $this->getFieldsDataOnUpdate([$representation]);
@@ -231,9 +223,8 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAtUpdateWhenIntFieldHasNoValue(): void
     {
-        $representation           = new ArtifactValuesRepresentation();
-        $representation->field_id = self::INT_FIELD_ID;
-        $this->fields_retriever   = RetrieveUsedFieldsStub::withFields($this->int_field);
+        $representation         = ArtifactValuesRepresentationBuilder::aRepresentation(self::INT_FIELD_ID)->build();
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($this->int_field);
 
         $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
         $this->getFieldsDataOnUpdate([$representation]);
@@ -264,19 +255,20 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTellsEachFieldToBuildFieldsDataFromRESTCreatePayload(): void
     {
-        $int_representation              = new ArtifactValuesRepresentation();
-        $int_representation->field_id    = self::INT_FIELD_ID;
-        $int_representation->value       = self::INT_VALUE;
-        $float_representation            = new ArtifactValuesRepresentation();
-        $float_representation->field_id  = self::FLOAT_FIELD_ID;
-        $float_representation->value     = self::FLOAT_VALUE;
-        $string_representation           = new ArtifactValuesRepresentation();
-        $string_representation->field_id = self::STRING_FIELD_ID;
-        $string_representation->value    = self::STRING_VALUE;
-        $text_representation             = new ArtifactValuesRepresentation();
-        $text_representation->field_id   = self::TEXT_FIELD_ID;
-        $text_representation->value      = ['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE];
-        $this->fields_retriever          = RetrieveUsedFieldsStub::withFields(
+        $int_representation    = ArtifactValuesRepresentationBuilder::aRepresentation(self::INT_FIELD_ID)
+            ->withValue(self::INT_VALUE)
+            ->build();
+        $float_representation  = ArtifactValuesRepresentationBuilder::aRepresentation(self::FLOAT_FIELD_ID)
+            ->withValue(self::FLOAT_VALUE)
+            ->build();
+        $string_representation = ArtifactValuesRepresentationBuilder::aRepresentation(self::STRING_FIELD_ID)
+            ->withValue(self::STRING_VALUE)
+            ->build();
+        $text_representation   = ArtifactValuesRepresentationBuilder::aRepresentation(self::TEXT_FIELD_ID)
+            ->withValue(['format' => self::TEXT_FORMAT, 'content' => self::TEXT_VALUE])
+            ->build();
+
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             $this->int_field,
             $this->float_field,
             $this->string_field,
@@ -300,29 +292,19 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsArtifactLinkChangesetValueSeparatelyFromRESTCreatePayload(): void
     {
-        $link_field             = new \Tracker_FormElement_Field_ArtifactLink(
-            self::LINK_FIELD_ID,
-            self::TRACKER_ID,
-            null,
-            'irrelevant',
-            'Irrelevant',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            1
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::LINK_FIELD_ID)
+                ->withTrackerId(self::TRACKER_ID)
+                ->build()
         );
-        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($link_field);
 
-        $first_linked_artifact_id      = 41;
-        $second_linked_artifact_id     = 78;
-        $link_representation           = new ArtifactValuesRepresentation();
-        $link_representation->field_id = self::LINK_FIELD_ID;
-        $link_representation->links    = [
-            ['id' => $first_linked_artifact_id, 'type' => null],
-            ['id' => $second_linked_artifact_id, 'type' => 'custom_type'],
-        ];
+        $first_linked_artifact_id  = 41;
+        $second_linked_artifact_id = 78;
+        $link_representation       = ArtifactValuesRepresentationBuilder::aRepresentation(self::LINK_FIELD_ID)
+            ->withLinks(
+                ['id' => $first_linked_artifact_id, 'type' => null],
+                ['id' => $second_linked_artifact_id, 'type' => 'custom_type'],
+            )->build();
 
         $changeset_values = $this->getFieldsDataOnCreate([$link_representation]);
         $artifact_link    = $changeset_values->getArtifactLinkValue();
@@ -351,8 +333,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAtCreateWhenFieldIDCantBeFoundInTracker(): void
     {
-        $representation           = new ArtifactValuesRepresentation();
-        $representation->field_id = 404;
+        $representation = ArtifactValuesRepresentationBuilder::aRepresentation(404)->build();
 
         $this->expectException(\Tracker_FormElement_InvalidFieldException::class);
         $this->getFieldsDataOnCreate([$representation]);
@@ -360,9 +341,8 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAtCreateWhenIntFieldHasNoValue(): void
     {
-        $representation           = new ArtifactValuesRepresentation();
-        $representation->field_id = self::INT_FIELD_ID;
-        $this->fields_retriever   = RetrieveUsedFieldsStub::withFields($this->int_field);
+        $representation         = ArtifactValuesRepresentationBuilder::aRepresentation(self::INT_FIELD_ID)->build();
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields($this->int_field);
 
         $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
         $this->getFieldsDataOnCreate([$representation]);

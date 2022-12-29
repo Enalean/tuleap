@@ -27,7 +27,7 @@ export const LinkedArtifactStub = {
     withDefaults: (data?: Partial<LinkedArtifact>): LinkedArtifact => ({
         identifier: LinkedArtifactIdentifierStub.withId(8),
         title: "precool",
-        status: "Todo",
+        status: { value: "Todo", color: "flamingo-pink" },
         is_open: true,
         uri: "/plugins/tracker/?aid=8",
         xref: ArtifactCrossReferenceStub.withRefAndColor("tasks #8", "clockwork-orange"),
@@ -38,7 +38,7 @@ export const LinkedArtifactStub = {
     withIdAndType: (id: number, link_type: LinkType): LinkedArtifact => ({
         identifier: LinkedArtifactIdentifierStub.withId(id),
         title: "precool",
-        status: "Todo",
+        status: { value: "Todo", color: "flamingo-pink" },
         is_open: true,
         uri: `/plugins/tracker/?aid=${id}`,
         xref: ArtifactCrossReferenceStub.withRefAndColor(`tasks #${id}`, "clockwork-orange"),

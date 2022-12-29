@@ -1,0 +1,16 @@
+[Unit]
+Description=Install and run Tuleap
+After=network.target
+After=network-online.target
+After=default.target
+
+[Service]
+User=root
+Type=oneshot
+StandardOutput=journal+console
+Environment=RUN_MODE=ci
+ExecStart=-/run.sh
+ExecStopPost=/usr/bin/systemctl halt
+
+[Install]
+WantedBy=default.target

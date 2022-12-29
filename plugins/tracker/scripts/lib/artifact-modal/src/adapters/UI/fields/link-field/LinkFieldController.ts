@@ -32,8 +32,8 @@ import { LinkRetrievalFault } from "../../../../domain/fields/link-field/LinkRet
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
-import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
-import type { GroupCollection } from "@tuleap/link-selector";
+import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
+import type { GroupOfItems } from "@tuleap/link-selector";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import type { AddNewLink } from "../../../../domain/fields/link-field/AddNewLink";
@@ -45,10 +45,9 @@ import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLi
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
-import { PossibleParentsGroup } from "./PossibleParentsGroup";
+import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
-import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
 import type {
     ControlLinkedArtifactsPopovers,
     LinkedArtifactPopoverElement,
@@ -67,7 +66,7 @@ export type LinkFieldControllerType = {
     addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
     initPopovers: (popover_elements: LinkedArtifactPopoverElement[]) => void;
-    retrievePossibleParentsGroups(): PromiseLike<GroupCollection>;
+    retrievePossibleParentsGroups(): PromiseLike<GroupOfItems>;
     getCurrentLinkType(has_possible_parents: boolean): LinkType;
     clearFaultNotification(): void;
 };
@@ -171,17 +170,14 @@ export const LinkFieldController = (
         return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
     },
 
-    retrievePossibleParentsGroups(): PromiseLike<GroupCollection> {
+    retrievePossibleParentsGroups(): PromiseLike<GroupOfItems> {
         notification_clearer.clearFaultNotification();
         return parents_retriever.getPossibleParents(current_tracker_identifier).match(
             (possible_parents) =>
-                LinkFieldPossibleParentsGroupsByProjectBuilder.buildGroupsSortedByProject(
-                    link_verifier,
-                    possible_parents
-                ),
+                PossibleParentsGroup.fromPossibleParents(link_verifier, possible_parents),
             (fault) => {
                 fault_notifier.onFault(fault);
-                return [PossibleParentsGroup.buildEmpty()];
+                return PossibleParentsGroup.buildEmpty();
             }
         );
     },

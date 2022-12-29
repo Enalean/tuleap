@@ -62,10 +62,6 @@ function MainCtrl(
         const nodejs_server = kanban_init_data.nodejsServer;
         SharedPropertiesService.setNodeServerAddress(nodejs_server);
 
-        const is_list_picker_enabled = kanban_init_data.isListPickerEnabled === "1";
-        SharedPropertiesService.setIsListPickerEnabled(is_list_picker_enabled);
-        SharedPropertiesService.setSearchEnabled(kanban_init_data.isSearchEnabled === "1");
-
         setAccessibilityMode(kanban_init_data.userAccessibilityMode === "1");
     }
 }

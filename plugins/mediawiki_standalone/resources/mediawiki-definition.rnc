@@ -1,0 +1,4 @@
+mediawiki-standalone =
+    element read-access { element ugroup { ugroup_name }+ }? &
+    element write-access { element ugroup { ugroup_name }+ }? &
+    element admin-access { element ugroup { ugroup_name }+ }?

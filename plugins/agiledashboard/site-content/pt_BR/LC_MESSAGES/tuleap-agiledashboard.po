@@ -457,6 +457,11 @@ msgstr ""
 msgid "Some items are not linked to this milestone."
 msgstr ""
 
+msgid ""
+"Something went wrong while updating the planning. Please contact your "
+"administrator."
+msgstr ""
+
 msgid "Start Kanban"
 msgstr ""
 
@@ -578,6 +583,12 @@ msgstr ""
 msgid "Top backlog"
 msgstr ""
 
+#, php-format
+msgid ""
+"Tracker %s cannot be defined as child of tracker %s because they are part of "
+"the same backlog (%s)"
+msgstr ""
+
 msgid "Tracker already used by another Kanban."
 msgstr ""
 
@@ -661,6 +672,12 @@ msgstr ""
 msgid ""
 "You cannot define the <em>initial effort</em> semantic since there aren't "
 "any numeric fields in the tracker"
+msgstr ""
+
+#, php-format
+msgid ""
+"You cannot have parent and child as backlog trackers (%s, %s). Please choose "
+"only one."
 msgstr ""
 
 msgid ""

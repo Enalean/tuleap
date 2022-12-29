@@ -711,6 +711,16 @@
             <description><![CDATA[My JSON attachment]]></description>
           </file>
         </artifact>
+        <artifact id="3">
+          <changeset>
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2022-12-07T15:10:57+01:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[History Artifact]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
       </artifacts>
     </tracker>
     <triggers/>

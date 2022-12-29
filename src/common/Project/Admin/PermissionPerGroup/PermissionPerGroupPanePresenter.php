@@ -24,12 +24,11 @@ use ProjectUGroup;
 
 class PermissionPerGroupPanePresenter
 {
-    public $permissions;
-    public $has_permissions;
-    public $user_group_name;
+    public bool $has_permissions;
+    public string $user_group_name;
 
     public function __construct(
-        array $permissions,
+        public array $permissions,
         ?ProjectUGroup $selected_ugroup = null,
     ) {
         $this->permissions     = $permissions;

@@ -32,10 +32,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
         ],
     ];
 
-    /**
-     * @return bool
-     */
-    public function isMultiple()
+    public function isMultiple(): bool
     {
         return true;
     }

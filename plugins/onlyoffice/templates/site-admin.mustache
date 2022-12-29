@@ -4,38 +4,281 @@
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">
                 <i class="fa-solid fa-file tlp-pane-title-icon" aria-hidden="true"></i>
-                {{# dgettext }} tuleap-onlyoffice | ONLYOFFICE document server settings {{/ dgettext }}
+                {{# dgettext }} tuleap-onlyoffice | ONLYOFFICE document servers {{/ dgettext }}
             </h1>
         </div>
-        <form method="post">
-            <section class="tlp-pane-section">
-                <div class="tlp-form-element">
-                    <label class="tlp-label" for="server-url">{{# dgettext }} tuleap-onlyoffice | Document server URL {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
-                    <input type="url" pattern="https://.*" size="50" class="tlp-input" id="server-url" name="server_url" placeholder="https://…" required value="{{ server_url }}">
-                </div>
-                <div class="tlp-form-element">
-                    <label class="tlp-label" for="server-key">{{# dgettext }} tuleap-onlyoffice | JWT secret {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
-                    <input
-                        type="password"
-                        size="50"
-                        class="tlp-input"
-                        id="server-key"
-                        name="server_key"
-                        minlength="32"
-                        required
-                        {{# has_existing_secret }}placeholder="{{# dgettext }} tuleap-onlyoffice | Current secret not displayed {{/ dgettext }}"{{/ has_existing_secret }}
-                    >
-                </div>
-                <section class="tlp-pane-section-submit">
-                    {{# csrf_token }}
-                        {{> csrf_token_input }}
-                    {{/csrf_token}}
-                    <button class="tlp-button-primary" type="submit">
-                        <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
-                        {{# dgettext }} tuleap-onlyoffice | Save {{/ dgettext }}
-                    </button>
-                </section>
-            </section>
-        </form>
+        <section class="tlp-pane-section">
+            <div class="tlp-table-actions">
+                <button type="button"
+                        class="tlp-button-primary tlp-table-actions-element onlyoffice-admin-modal-server-button"
+                        data-target-modal-id="onlyoffice-admin-add-server-modal"
+                        {{# has_servers }}disabled="false"{{/ has_servers }}
+                >
+                    <i class="tlp-button-icon fa-solid fa-plus" aria-hidden="true"></i>
+                    {{# dgettext }} tuleap-onlyoffice | Add document server {{/ dgettext }}
+                </button>
+
+                <form method="post"
+                      action="{{ create_url }}"
+                      class="tlp-modal"
+                      role="dialog"
+                      id="onlyoffice-admin-add-server-modal"
+                      aria-labelledby="onlyoffice-admin-add-server-title"
+                >
+                    <div class="tlp-modal-header">
+                        <h1 class="tlp-modal-title" id="onlyoffice-admin-add-server-title">
+                            {{# dgettext }} tuleap-onlyoffice | Add document server{{/ dgettext }}
+                        </h1>
+                        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+                            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="tlp-modal-body">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="server-url">{{# dgettext }} tuleap-onlyoffice | Document server URL {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+                            <input type="url" autocomplete="url" pattern="https://.*" class="tlp-input" id="server-url" name="server_url" placeholder="https://…" required>
+                        </div>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="server-key">{{# dgettext }} tuleap-onlyoffice | JWT secret {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+                            <input
+                                type="password"
+                                class="tlp-input"
+                                id="server-key"
+                                name="server_key"
+                                minlength="32"
+                                required
+                            >
+                        </div>
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/csrf_token}}
+                    </div>
+                    <div class="tlp-modal-footer">
+                        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/gettext}}</button>
+                        <button type="submit" class="tlp-button-primary tlp-modal-action">{{# dgettext }} tuleap-onlyoffice | Save {{/ dgettext }}</button>
+                    </div>
+                </form>
+            </div>
+
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>{{# dgettext }} tuleap-onlyoffice | Document server URL {{/ dgettext }}</th>
+                        <th>{{# dgettext }} tuleap-onlyoffice | Projects restriction{{/ dgettext }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{^ servers }}
+                        <tr>
+                            <td colspan="3" class="tlp-table-cell-empty">
+                                {{# dgettext }} tuleap-onlyoffice | There isn't any document servers configured {{/ dgettext }}
+                            </td>
+                        </tr>
+                    {{/ servers }}
+                    {{# servers }}
+                        <tr>
+                            <td>
+                                {{ server_url }}
+                                {{^ has_existing_secret }}
+                                    <span class="tlp-badge-warning">
+                                        <i class="fa-solid fa-triangle-exclamation tlp-badge-icon" aria-hidden="true"></i>
+                                        {{# dgettext }} tuleap-onlyoffice | Secret is missing {{/ dgettext }}
+                                    </span>
+                                {{/ has_existing_secret }}
+                            </td>
+                            <td>
+                                {{# is_project_restricted }}
+                                    <span class="tlp-badge-secondary">
+                                        {{# dngettext }}
+                                            tuleap-onlyoffice |
+                                            %s project can use the server |
+                                            %s projects can use the server |
+                                            {{ nb_project_restrictions }} |
+                                            {{ nb_project_restrictions }}
+                                        {{/ dngettext }}
+                                    </span>
+                                {{/ is_project_restricted }}
+                                {{^ is_project_restricted }}
+                                    <span class="tlp-badge-success">
+                                        <i class="fa-solid fa-check tlp-badge-icon" aria-hidden="true"></i>
+                                        {{# dgettext }} tuleap-onlyoffice | All projects can use the server{{/ dgettext }}
+                                    </span>
+                                {{/ is_project_restricted }}
+                            </td>
+                            <td class="tlp-table-cell-actions">
+                                <button type="button"
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline onlyoffice-admin-modal-server-button"
+                                        data-target-modal-id="onlyoffice-admin-edit-server-modal-{{ id }}"
+                                >
+                                    <i class="tlp-button-icon fa-solid fa-pencil" aria-hidden="true"></i>
+                                    {{# dgettext }} tuleap-onlyoffice | Edit {{/ dgettext }}
+                                </button>
+                                <button type="button"
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline onlyoffice-admin-modal-server-button"
+                                        data-target-modal-id="onlyoffice-admin-restrict-server-modal-{{ id }}"
+                                >
+                                    <i class="tlp-button-icon fa-solid fa-lock" aria-hidden="true"></i>
+                                    {{# dgettext }} tuleap-onlyoffice | Restrict {{/ dgettext }}
+                                </button>
+                                <button type="button"
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline onlyoffice-admin-modal-server-button"
+                                        data-target-modal-id="onlyoffice-admin-delete-server-modal-{{ id }}"
+                                >
+                                    <i class="tlp-button-icon fa-regular fa-trash-can" aria-hidden="true"></i>
+                                    {{# dgettext }} tuleap-onlyoffice | Delete {{/ dgettext }}
+                                </button>
+
+                                <form method="post"
+                                      action="{{ update_url }}"
+                                      class="tlp-modal"
+                                      role="dialog"
+                                      id="onlyoffice-admin-edit-server-modal-{{ id }}"
+                                      aria-labelledby="onlyoffice-admin-edit-server-title-{{ id }}"
+                                >
+                                    <div class="tlp-modal-header">
+                                        <h1 class="tlp-modal-title" id="onlyoffice-admin-edit-server-title-{{ id }}">
+                                            {{# dgettext }} tuleap-onlyoffice | Edit document server settings{{/ dgettext }}
+                                        </h1>
+                                        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+                                            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div class="tlp-modal-body">
+                                        <div class="tlp-form-element">
+                                            <label class="tlp-label" for="server-url">{{# dgettext }} tuleap-onlyoffice | Document server URL {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+                                            <input type="url" autocomplete="url" pattern="https://.*" class="tlp-input" id="server-url" name="server_url" placeholder="https://…" required value="{{ server_url }}">
+                                        </div>
+                                        <div class="tlp-form-element">
+                                            <label class="tlp-label" for="server-key">{{# dgettext }} tuleap-onlyoffice | JWT secret {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
+                                            <input
+                                                type="password"
+                                                class="tlp-input"
+                                                id="server-key"
+                                                name="server_key"
+                                                minlength="32"
+                                                required
+                                                {{# has_existing_secret }}placeholder="{{# dgettext }} tuleap-onlyoffice | Current secret not displayed {{/ dgettext }}"{{/ has_existing_secret }}
+                                            >
+                                        </div>
+                                        {{# csrf_token }}
+                                            {{> csrf_token_input }}
+                                        {{/csrf_token}}
+                                    </div>
+                                    <div class="tlp-modal-footer">
+                                        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/gettext}}</button>
+                                        <button type="submit" class="tlp-button-primary tlp-modal-action">{{# dgettext }} tuleap-onlyoffice | Save {{/ dgettext }}</button>
+                                    </div>
+                                </form>
+
+                                <form method="post"
+                                      action="{{ delete_url }}"
+                                      class="tlp-modal"
+                                      role="dialog"
+                                      id="onlyoffice-admin-delete-server-modal-{{ id }}"
+                                      aria-labelledby="onlyoffice-admin-delete-server-title-{{ id }}"
+                                >
+                                    <div class="tlp-modal-header">
+                                        <h1 class="tlp-modal-title" id="onlyoffice-admin-delete-server-title-{{ id }}">
+                                            {{# dgettext }} tuleap-onlyoffice | Delete document server{{/ dgettext }}
+                                        </h1>
+                                        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+                                            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div class="tlp-modal-body">
+                                        <p>{{# dgettext }} tuleap-onlyoffice | You're about to delete the document server.{{/ dgettext }}</p>
+                                        <div class="tlp-alert-warning">
+                                            {{# dgettext }} tuleap-onlyoffice | Deleting a document server will induce loosing of modifications for users that are currently using it.{{/ dgettext }}
+                                        </div>
+                                        <p>{{# dgettext }} tuleap-onlyoffice | Please confirm your action.{{/ dgettext }}</p>
+                                        {{# csrf_token }}
+                                            {{> csrf_token_input }}
+                                        {{/csrf_token}}
+                                    </div>
+                                    <div class="tlp-modal-footer">
+                                        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/gettext}}</button>
+                                        <button type="submit" class="tlp-button-primary tlp-modal-action">{{# dgettext }} tuleap-onlyoffice | Delete {{/ dgettext }}</button>
+                                    </div>
+                                </form>
+
+                                <div class="tlp-modal"
+                                     role="dialog"
+                                     id="onlyoffice-admin-restrict-server-modal-{{ id }}"
+                                     aria-labelledby="onlyoffice-admin-restrict-server-title-{{ id }}"
+                                >
+                                    <div class="tlp-modal-header">
+                                        <h1 class="tlp-modal-title" id="onlyoffice-admin-restrict-server-title-{{ id }}">
+                                            {{# dgettext }} tuleap-onlyoffice | Projects restriction{{/ dgettext }}
+                                        </h1>
+                                        <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+                                            <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div class="tlp-modal-body">
+                                        <p>
+                                            {{# dgettext }}
+                                                tuleap-onlyoffice |
+                                                Define which projects will be able to use %s. |
+                                                <code>{{ server_url }}</code>
+                                            {{/ dgettext }}
+                                        </p>
+                                        {{^ has_more_than_one_server }}
+                                            <div class="tlp-form-element">
+                                                <label class="tlp-label tlp-checkbox">
+                                                    <input type="checkbox"
+                                                           {{^ is_project_restricted }}checked{{/ is_project_restricted }}
+                                                           disabled
+                                                    >
+                                                    {{# dgettext }} tuleap-onlyoffice | Allow all projects to use this server{{/ dgettext }}
+                                                </label>
+                                                <p class="tlp-text-warning">
+                                                    <i class="fa-solid fa-person-digging" aria-hidden="true"></i>
+                                                    {{# dgettext }} tuleap-onlyoffice | Under construction, you cannot set restrictions yet.{{/ dgettext }}
+                                                </p>
+                                            </div>
+                                        {{/ has_more_than_one_server }}
+                                        {{# is_project_restricted }}
+                                            <table class="tlp-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="tlp-table-cell-numeric">
+                                                            {{# dgettext }} tuleap-onlyoffice | Id{{/ dgettext }}
+                                                        </th>
+                                                        <th class="tlp-table-cell-main-content">
+                                                            {{# dgettext }} tuleap-onlyoffice | Project{{/ dgettext }}
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{# project_restrictions }}
+                                                        <tr>
+                                                            <td class="tlp-table-cell-numeric">{{ id }}</td>
+                                                            <td>
+                                                                <a href="{{ url }}">{{ label }}</a>
+                                                            </td>
+                                                        </tr>
+                                                    {{/ project_restrictions }}
+                                                    {{^ project_restrictions }}
+                                                        <tr>
+                                                            <td colspan="2" class="tlp-table-cell-empty">
+                                                                {{# dgettext }} tuleap-onlyoffice | No project can use this server.{{/ dgettext }}
+                                                            </td>
+                                                        </tr>
+                                                    {{/ project_restrictions }}
+                                                </tbody>
+                                            </table>
+                                        {{/ is_project_restricted }}
+                                    </div>
+                                    <div class="tlp-modal-footer">
+                                        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Close{{/gettext}}</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {{/ servers }}
+                </tbody>
+            </table>
+        </section>
     </div>
 </section>

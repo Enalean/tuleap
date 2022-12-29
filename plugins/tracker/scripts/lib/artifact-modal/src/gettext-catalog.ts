@@ -88,9 +88,10 @@ export const getParentFetchErrorMessage = (): string =>
     gettextCatalog.getString("Unable to retrieve the parent artifact: %s");
 export const getMatchingArtifactLabel = (): string => gettextCatalog.getString("Matching artifact");
 export const getNoResultFoundEmptyState = (): string => gettextCatalog.getString("No result found");
-export const getLinkSelectorPlaceholderText = (): string => gettextCatalog.getString("Artifact id");
-export const getParentLinkSelectorPlaceholderText = (): string =>
-    gettextCatalog.getString("Artifact id or title");
+export const getLinkSelectorPlaceholderText = (): string =>
+    gettextCatalog.getString("Search for an artifact...");
+export const getLinkSelectorSearchPlaceholderText = (): string =>
+    gettextCatalog.getString("Id, title...");
 export const getMatchingArtifactErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving the artifact to link: %s");
 export const getRemoveLabel = (): string => gettextCatalog.getString("Remove");
@@ -112,3 +113,18 @@ export const getFileUploadErrorMessage = (): string =>
 export const getRecentlyViewedArtifactGroupLabel = (): string =>
     gettextCatalog.getString("Recently viewed artifacts");
 export const getSearchResultsGroupLabel = (): string => gettextCatalog.getString("Search results");
+export const getSearchResultsGroupFootMessage = (): string =>
+    gettextCatalog.getString(
+        "Please refine your search if you did not find what you are looking for."
+    );
+export const getUserHistoryErrorMessage = (): string =>
+    gettextCatalog.getString("Error while retrieving recently viewed artifacts: %s");
+export const getSearchArtifactsErrorMessage = (): string =>
+    gettextCatalog.getString("Error while searching for artifacts: %s");
+export const getCommentsSectionTitle = (): string => gettextCatalog.getString("Follow-ups");
+export const getChangesetsCommentMessage = (): string =>
+    gettextCatalog.getString("Only comments are displayed");
+export const getEmptyCommentsMessage = (): string => gettextCatalog.getString("No follow-ups");
+export const getFollowupEditedBy = (): string => gettextCatalog.getString("Edited by %(user)s");
+export const getCommentsRetrievalErrorMessage = (): string =>
+    gettextCatalog.getString("Error while retrieving the comments: %s");

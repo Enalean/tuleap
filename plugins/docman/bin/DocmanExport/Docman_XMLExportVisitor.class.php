@@ -29,11 +29,11 @@ use Tuleap\Docman\Item\ItemVisitor;
  */
 class Docman_XMLExportVisitor implements ItemVisitor
 {
-    protected $doc;
-    protected $statistics;
-    protected $userCache;
-    protected $dataPath;
-    protected $logger;
+    protected DOMDocument $doc;
+    protected array $statistics;
+    protected array $userCache;
+    protected mixed $dataPath;
+    protected \Psr\Log\LoggerInterface $logger;
     /**
      * @var int
      */
@@ -120,7 +120,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
                     $value = date('c', $value);
                 }
 
-                $node->appendChild($this->doc->createTextNode($value));
+                $node->appendChild($this->doc->createTextNode((string) $value));
             }
             return $node;
         }

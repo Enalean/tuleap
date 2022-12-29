@@ -25,19 +25,19 @@
 class ArtifactDateReminderFactory
 {
     // The notification id
-    public $notification_id;
+    public mixed $notification_id;
 
     // The reminder id
-    public $reminder_id;
+    public mixed $reminder_id;
 
     // The tracker id
-    public $group_artifact_id;
+    public mixed $group_artifact_id;
 
     // The artifact id
-    public $artifact_id;
+    public mixed $artifact_id;
 
     // The field id
-    public $field_id;
+    public mixed $field_id;
 
     /**
      * @var TrackerDateReminder_Logger

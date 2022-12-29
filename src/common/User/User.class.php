@@ -786,7 +786,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function getAuthorizedKeysArray(): array
     {
-        return array_filter(explode(self::SSH_KEY_SEPARATOR, $this->authorized_keys));
+        return array_filter(explode(self::SSH_KEY_SEPARATOR, $this->authorized_keys ?? ''));
     }
 
     /**

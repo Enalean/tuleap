@@ -36,10 +36,6 @@ function ListPickerController($element, $timeout, $scope) {
     const select = $element[0].querySelector("[data-select=list-picker]");
 
     async function init() {
-        if (!self.is_list_picker_enabled) {
-            return;
-        }
-
         bindOptionsDecorators();
 
         $scope.$watch(
@@ -70,9 +66,7 @@ function ListPickerController($element, $timeout, $scope) {
     }
 
     function destroy() {
-        if (self.is_list_picker_enabled) {
-            self.destroy();
-        }
+        self.destroy();
     }
 
     function isFieldValid() {

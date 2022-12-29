@@ -19,14 +19,10 @@
 
 import { GroupSideBySideLinesStub } from "./GroupSideBySideLinesStub";
 import { MapSideBySideLinesStub } from "./MapSideBySideLinesStub";
-import { SideBySideLineState } from "../../src/app/file-diff/diff-modes/side-by-side-lines-state";
-import type { FileLinesState } from "../../src/app/file-diff/diff-modes/side-by-side-lines-state";
-import type {
-    FileLine,
-    GroupOfLines,
-    UnMovedFileLine,
-} from "../../src/app/file-diff/diff-modes/types";
-import type { SynchronizedLineHandles } from "../../src/app/file-diff/diff-modes/side-by-side-line-mapper";
+import { SideBySideLineState } from "../../src/app/file-diff/file-lines/SideBySideLineState";
+import type { FileLinesState } from "../../src/app/file-diff/file-lines/SideBySideLineState";
+import type { FileLine, GroupOfLines, UnMovedFileLine } from "../../src/app/file-diff/types";
+import type { SynchronizedLineHandles } from "../../src/app/file-diff/file-lines/SideBySideLineMapper";
 import { FileLineStub } from "./FileLineStub";
 import { GroupOfLinesStub } from "./GroupOfLinesStub";
 import { FileLineHandleStub } from "./FileLineHandleStub";

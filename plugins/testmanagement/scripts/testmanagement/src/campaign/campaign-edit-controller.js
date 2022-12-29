@@ -219,8 +219,7 @@ function CampaignEditCtrl(
             definition_tracker_id,
             null,
             callback,
-            SharedPropertiesService.isListPickerUsedByTracker(definition_tracker_id),
-            SharedPropertiesService.isSearchEnabled()
+            []
         );
     }
 

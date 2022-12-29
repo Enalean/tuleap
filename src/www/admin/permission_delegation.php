@@ -55,7 +55,8 @@ $controller = new Admin_PermissionDelegationController(
     UserManager::instance(),
     $site_admin_permission_checker,
     new PermissionPresenterBuilder(),
-    $user_group_permissions_dao
+    $user_group_permissions_dao,
+    EventManager::instance(),
 );
 
 $controller->process();

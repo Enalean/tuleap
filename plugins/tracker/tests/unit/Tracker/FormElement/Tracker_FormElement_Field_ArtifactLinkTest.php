@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueEmptyChecker;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -160,7 +161,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testReturnsAnEmptyListWhenThereAreNoValuesInTheChangeset(): void
     {
-        $field     = $this->buildField();
+        $field     = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class);
         $user      = Mockery::mock(PFUser::class);
 
@@ -170,7 +171,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testReturnsAnEmptyPaginatedListWhenThereAreNoValuesInTheChangeset(): void
     {
-        $field     = $this->buildField();
+        $field     = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class);
         $user      = Mockery::mock(PFUser::class);
 
@@ -190,7 +191,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact_1, $artifact_2]));
 
         $changeset = $this->givenAChangesetValueWithArtifactIds($field, [123, 345]);
@@ -214,7 +215,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact_1, $artifact_2]));
 
         $changeset = $this->givenAChangesetValueWithArtifactIds($field, [123, 345]);
@@ -239,7 +240,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact_1, $artifact_2]));
 
         $changeset = $this->givenAChangesetValueWithArtifactIds($field, [123, 345]);
@@ -263,7 +264,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact_1, $artifact_2]));
 
         $changeset = $this->GivenAChangesetValueWithArtifactIds($field, [123, 345]);
@@ -283,7 +284,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact->shouldReceive('getId')->andReturn(123);
         $artifact->shouldReceive('userCanView')->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact]));
 
         $non_existing_id = 666;
@@ -301,7 +302,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact->shouldReceive('getId')->andReturn(123);
         $artifact->shouldReceive('userCanView')->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact]));
 
         $non_existing_id = 666;
@@ -324,7 +325,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->with($user)->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact_1, $artifact_2]));
 
         $changeset = $this->givenAChangesetValueWithArtifactIds($field, [123, 345]);
@@ -347,7 +348,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->with($user)->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact_1, $artifact_2]));
 
         $changeset = $this->givenAChangesetValueWithArtifactIds($field, [123, 345]);
@@ -371,7 +372,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->with($user)->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact_1, $artifact_2]));
 
         $changeset = $this->givenAChangesetValueWithArtifactIds($field, [123, 345]);
@@ -393,7 +394,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
         $artifact_2->shouldReceive('getId')->andReturn(345);
         $artifact_2->shouldReceive('userCanView')->with($user)->andReturn(true);
 
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         $field->setArtifactFactory($this->GivenAnArtifactFactory([$artifact_1, $artifact_2]));
 
         $changeset = $this->GivenAChangesetValueWithArtifactIds($field, [123, 345]);
@@ -408,7 +409,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
     {
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
         $this->expectException(Tracker_FormElement_RESTValueByField_NotImplementedException::class);
 
@@ -420,7 +421,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
     public function testItDoesNotRaiseWarningIfItDoesNotHaveAllInformationToDisplayAnAsyncRenderer(): void
     {
         $this->expectNotToPerformAssertions();
-        $field = $this->buildField();
+        $field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
 
         $field->process(
             $this->createMock(Tracker_IDisplayTrackerLayout::class),
@@ -444,23 +445,6 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
                 }
             },
             \Tuleap\Test\Builders\UserTestBuilder::anAnonymousUser()->build()
-        );
-    }
-
-    private function buildField(): Tracker_FormElement_Field_ArtifactLink
-    {
-        return new Tracker_FormElement_Field_ArtifactLink(
-            1,
-            101,
-            null,
-            'field_artlink',
-            'Field ArtLink',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
         );
     }
 

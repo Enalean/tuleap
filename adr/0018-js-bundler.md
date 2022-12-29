@@ -22,7 +22,7 @@ In a [previous decision][2] (before writing ADRs), we chose to use [webpack][3] 
 
 ## Decision Outcome
 
-[Vite][4] is the default module bundler for new Applications and Libraries (as defined by [ADR-0017][6]). Some contexts will still require [webpack][3]: for example AngularJS applications, legacy concatenated scripts, etc.
+[Vite][4] is the default module bundler for new Applications and Libraries (as defined by [ADR-0016][6]). Some contexts will still require [webpack][3]: for example AngularJS applications, legacy concatenated scripts, etc.
 
 ### Positive Consequences
 
@@ -52,7 +52,7 @@ In a [previous decision][2] (before writing ADRs), we chose to use [webpack][3] 
 ## Links
 
 * Influences [ADR-0014: JS unit test runner][1]
-* [ADR-0017: Multiple independent apps per context][6]
+* [ADR-0016: Independent libraries for shared frontend code][6]
 
 [0]: https://tuleap.net/plugins/tracker/?aid=23415
 [1]: ./0014-js-unit-test-runner.md
@@ -60,4 +60,4 @@ In a [previous decision][2] (before writing ADRs), we chose to use [webpack][3] 
 [3]: https://webpack.js.org/
 [4]: https://vitejs.dev/
 [5]: https://vitejs.dev/team.html
-[6]: ./0017-multiple-apps-per-context.md
+[6]: ./0016-frontend-libraries.md

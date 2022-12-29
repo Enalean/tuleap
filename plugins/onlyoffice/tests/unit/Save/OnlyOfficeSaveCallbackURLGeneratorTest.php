@@ -24,6 +24,7 @@ namespace Tuleap\OnlyOffice\Save;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\Open\Editor\OnlyOfficeDocumentConfig;
 use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -87,7 +88,8 @@ final class OnlyOfficeSaveCallbackURLGeneratorTest extends TestCase
                     new \Docman_Item(['item_id' => 741]),
                     852,
                     'doc.docx',
-                    true
+                    true,
+                    DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
                 ),
                 new ConcealedString('download_token')
             ),

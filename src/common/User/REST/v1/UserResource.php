@@ -164,12 +164,16 @@ class UserResource extends AuthenticatedResource
      * ?query can be either:
      * <ul>
      *   <li>a simple string, then it will search on "real_name" and "username" with wildcard</li>
-     *   <li>a JSON object to search on username or login name with exact match: {"username": "john_doe"} or {"loginname": "john_doe"}</li>
+     *   <li>a JSON object to search on username, login name or email with exact match: {"username": "john_doe"}, {"loginname": "john_doe"} or {"email": "john.doe@example.com"}</li>
      * </ul>
-     *
+     * <pre>
      * When using a JSON object, "username" is equivalent to "loginname" unless you are using an external auth provider
      * such as an LDAP directory. "username" corresponds to the username of the Tuleap account, "loginname" corresponds
      * to what the user uses to login on the Tuleap instance.
+     * </pre>
+     * <pre>
+     * When searching by email, you may get several matches.
+     * </pre>
      *
      * @access hybrid
      *
@@ -201,17 +205,22 @@ class UserResource extends AuthenticatedResource
             throw new RestException(400, 'You cannot search on "username" and "loginname" at the same time');
         }
 
+        $users = [];
+        $user  = null;
+
         $username  = self::extractNameFromExactSearchQuery($json_query, 'username');
         $loginname = self::extractNameFromExactSearchQuery($json_query, 'loginname');
+        $email     = self::extractNameFromExactSearchQuery($json_query, 'email');
         if ($username !== null) {
             $user = $this->user_manager->getUserByUserName($username);
         } elseif ($loginname !== null) {
             $user = $this->user_manager->getUserByLoginName($loginname);
+        } elseif ($email !== null) {
+            $users = $this->user_manager->getAllUsersByEmail($email);
         } else {
-            throw new RestException(400, 'You need to provide either a "username" or "loginname"');
+            throw new RestException(400, 'You need to provide either a "username", "loginname" or "email"');
         }
 
-        $users = [];
         if ($user !== null) {
             $users[] = $user;
         }

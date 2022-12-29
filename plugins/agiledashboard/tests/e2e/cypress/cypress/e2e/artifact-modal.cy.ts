@@ -17,22 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const LINKABLE_ARTIFACT_TITLE = "Linked Artifact";
+
 describe(`Artifact Modal`, function () {
-    const now: number = Date.now();
+    let now: number;
+
     before(function () {
-        cy.clearSessionCookie();
-        cy.projectMemberLogin();
-        getArtifactLinkIdFromREST().as("artifact_link_id");
+        now = Date.now();
+        cy.projectMemberSession();
+        cy.getProjectId("kanban-artifact-modal")
+            .as("project_id")
+            .then((project_id) => getTrackerIdFromREST(project_id).as("tracker_id"))
+            .then((tracker_id) => {
+                getArtifactLinkIdFromREST(tracker_id).as("artifact_link_id");
+            });
 
         cy.visitProjectService("kanban-artifact-modal", "Agile Dashboard");
         cy.get("[data-test=go-to-kanban]").first().click();
-    });
-
-    beforeEach(function () {
-        cy.preserveSessionCookies();
+        findKanbanIdFromURL().as("kanban_id");
     });
 
     it(`can create an artifact with all fields`, function () {
+        cy.projectMemberSession();
+        visitKanban(this.project_id, this.kanban_id);
         cy.get("[data-test=kanban-add-artifact]").click();
 
         cy.get("[data-test=artifact-modal-form]").within(() => {
@@ -181,7 +188,10 @@ describe(`Artifact Modal`, function () {
             });
 
             getFieldWithLabel("Artifact link", "[data-test=artifact-link-field]").within(() => {
-                selectLabelInLinkSelectorDropdown("Linked Artifact", this.artifact_link_id);
+                selectLabelInLinkSelectorDropdown(
+                    String(this.artifact_link_id),
+                    LINKABLE_ARTIFACT_TITLE
+                );
             });
 
             cy.get("[data-test=artifact-modal-save-button]").click();
@@ -190,6 +200,9 @@ describe(`Artifact Modal`, function () {
     });
 
     it(`can edit an artifact with all fields`, function () {
+        cy.projectMemberSession();
+        visitKanban(this.project_id, this.kanban_id);
+
         getKanbanCard("Editable Artifact").within(() => {
             cy.get("[data-test=edit-link]").click();
         });
@@ -355,29 +368,62 @@ describe(`Artifact Modal`, function () {
         });
         waitForKanbanCard(`Editable Artifact ${now}`);
     });
+
+    it(`can link artifacts from user's history`, function () {
+        const HISTORY_ARTIFACT_TITLE = "History Artifact";
+
+        cy.projectMemberSession();
+        cy.log(`Visit History Artifact to ensure it is in history`);
+        cy.visit(`/plugins/tracker/?tracker=${this.tracker_id}`);
+        cy.get("[data-test=tracker-report-table-results-artifact]")
+            .contains(HISTORY_ARTIFACT_TITLE)
+            .parents("[data-test=tracker-report-table-results-artifact]")
+            .find("[data-test=direct-link-to-artifact]")
+            .click();
+
+        cy.log("Edit Editable Artifact");
+        visitKanban(this.project_id, this.kanban_id);
+        getKanbanCard("Editable Artifact").within(() => {
+            cy.get("[data-test=edit-link]").click();
+        });
+
+        cy.get("[data-test=artifact-modal-form]").within(() => {
+            getFieldWithLabel("Artifact link", "[data-test=artifact-link-field]").within(() => {
+                cy.get("[data-test=link-selector-selection]").click();
+            });
+        });
+        cy.get("[data-test=link-selector-search-field]").type(HISTORY_ARTIFACT_TITLE);
+        cy.get("[data-test=link-selector-dropdown]")
+            .find("[data-test=link-selector-item]")
+            .should("contain", HISTORY_ARTIFACT_TITLE);
+
+        cy.log("Close the modal");
+        cy.get("[data-test=artifact-modal-cancel-button]").click();
+    });
 });
 
-function getArtifactLinkIdFromREST(): Cypress.Chainable<number> {
+function getTrackerIdFromREST(project_id: number): Cypress.Chainable<number> {
     return cy
-        .getProjectId("kanban-artifact-modal")
-        .then((project_id: number) => {
-            return cy
-                .getFromTuleapAPI(`/api/projects/${project_id}/trackers`)
-                .then((response) => parseInt(response.body[0].id, 10));
-        })
-        .then((tracker_id: number) => {
-            return cy
-                .getFromTuleapAPI(`/api/trackers/${tracker_id}/artifacts`)
-                .then(
-                    (response): Artifact =>
-                        response.body.find(
-                            (artifact: Artifact) => artifact.title === "Linked Artifact"
-                        )
-                )
-                .then((artifact: Artifact) => {
-                    return artifact.id;
-                });
-        });
+        .getFromTuleapAPI(`/api/projects/${project_id}/trackers`)
+        .then((response) => Number.parseInt(response.body[0].id, 10));
+}
+
+function getArtifactLinkIdFromREST(tracker_id: number): Cypress.Chainable<number> {
+    return cy.getFromTuleapAPI(`/api/trackers/${tracker_id}/artifacts`).then((response) => {
+        return response.body.find(
+            (artifact: Artifact) => artifact.title === LINKABLE_ARTIFACT_TITLE
+        ).id;
+    });
+}
+
+function findKanbanIdFromURL(): Cypress.Chainable<number> {
+    return cy.location("search").then((search) => {
+        const string_kanban_id = new URLSearchParams(search).get("id");
+        if (string_kanban_id === null) {
+            throw Error("Could not deduce kanban_id from URL");
+        }
+        return cy.wrap(Number.parseInt(string_kanban_id, 10));
+    });
 }
 
 interface Artifact {
@@ -441,18 +487,19 @@ function selectLabelInListPickerDropdown(
 }
 
 function selectLabelInLinkSelectorDropdown(
-    label: string,
-    artifact_link_id: number
+    query: string,
+    dropdown_item_label: string
 ): Cypress.Chainable<JQuery<HTMLBodyElement>> {
     cy.get("[data-test=link-selector-selection]").click();
     return cy
         .root()
         .parents("body")
         .within(() => {
-            cy.get("[data-test=link-selector-search-field]").type(String(artifact_link_id));
-            cy.get("[data-test-link-selector-dropdown-open]").within(() => {
-                cy.get("[data-test=link-selector-item]").contains(label).click();
-            });
+            cy.get("[data-test=link-selector-search-field]").type(query);
+            cy.get("[data-test=link-selector-dropdown]")
+                .find("[data-test=link-selector-item]")
+                .contains(dropdown_item_label)
+                .click();
         });
 }
 
@@ -474,6 +521,10 @@ function selectLabelInSelect2Dropdown(label: string): Cypress.Chainable<JQuery<H
 function clearSelect2(): void {
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".select2-selection__clear").click();
+}
+
+function visitKanban(project_id: number, kanban_id: number): void {
+    cy.visit(`/plugins/agiledashboard/?group_id=${project_id}&action=showKanban&id=${kanban_id}`);
 }
 
 function getKanbanCard(label: string): CypressWrapper {

@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
+use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
@@ -134,7 +135,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $tracker_new_dropdown_link_presenter_builder,
                 new HeaderOptionsForPlanningProvider(
                     new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
-                        \Tracker_HierarchyFactory::instance(),
+                        Tracker_HierarchyFactory::instance(),
                         $planning_factory,
                         $mono_milestone_checker,
                     ),
@@ -229,6 +230,11 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new AgileDashboard_PermissionsManager(),
                     Tracker_FormElementFactory::instance()
                 )
+            ),
+            new BacklogTrackersUpdateChecker(
+                Tracker_HierarchyFactory::instance(),
+                TrackerFactory::instance(),
+                BackendLogger::getDefaultLogger(),
             )
         );
     }

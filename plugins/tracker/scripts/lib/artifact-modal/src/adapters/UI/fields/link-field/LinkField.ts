@@ -25,7 +25,7 @@ import {
     getLinkFieldNoteText,
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
-    getParentLinkSelectorPlaceholderText,
+    getLinkSelectorSearchPlaceholderText,
 } from "../../../../gettext-catalog";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
@@ -34,7 +34,10 @@ import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { GroupCollection, LinkSelector } from "@tuleap/link-selector";
 import { createLinkSelector } from "@tuleap/link-selector";
-import { getLinkableArtifact, getLinkableArtifactTemplate } from "./LinkableArtifactTemplate";
+import {
+    getLinkableArtifact,
+    getLinkableArtifactTemplate,
+} from "./dropdown/LinkableArtifactTemplate";
 import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
@@ -165,11 +168,6 @@ export const current_link_type_descriptor = {
         if (!link_type) {
             return LinkType.buildUntyped();
         }
-        if (!LinkType.isReverseChild(link_type)) {
-            host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
-            return link_type;
-        }
-        host.link_selector.setPlaceholder(getParentLinkSelectorPlaceholderText());
         return link_type;
     },
     observe: (host: LinkField): void => {
@@ -246,7 +244,9 @@ export const LinkField = define<LinkField>({
             });
 
             host.link_selector = createLinkSelector(host.artifact_link_select, {
-                search_field_callback: (link_selector, query) => {
+                placeholder: getLinkSelectorPlaceholderText(),
+                search_input_placeholder: getLinkSelectorSearchPlaceholderText(),
+                search_field_callback: (query) => {
                     host.controller.clearFaultNotification();
                     return controller.autoComplete(host, query);
                 },
@@ -263,8 +263,8 @@ export const LinkField = define<LinkField>({
                 },
             });
 
-            controller.retrievePossibleParentsGroups().then((groups) => {
-                host.current_link_type = controller.getCurrentLinkType(groups.length > 0);
+            controller.retrievePossibleParentsGroups().then((group) => {
+                host.current_link_type = controller.getCurrentLinkType(group.items.length > 0);
                 host.allowed_link_types = controller.displayAllowedTypes();
             });
             return controller;

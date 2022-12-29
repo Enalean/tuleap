@@ -1,0 +1,43 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                {{# dgettext }} tuleap-mediawiki_standalone | MediaWiki {{/ dgettext }}
+            </h1>
+        </div>
+
+        <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">{{# dgettext }} tuleap-mediawiki_standalone |  Global permissions {{/ dgettext }}</h2>
+            <table class="tlp-table permission-per-group-table">
+                <thead>
+                <tr class="permission-per-group-double-column-table">
+                    <th>{{# dgettext }} tuleap-mediawiki_standalone |  Permission {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-mediawiki_standalone |  Granted groups {{/ dgettext }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{# permissions }}
+                    <tr>
+                        <td><a href="{{ url }}">{{ name }}</a></td>
+                        <td>
+                            {{# groups }}
+                                <span class="{{# is_project_admin }}tlp-badge-danger tlp-badge-outline{{/ is_project_admin }}
+                                    {{# is_static }}tlp-badge-primary tlp-badge-outline{{/ is_static }}
+                                    {{# is_custom }}tlp-badge-secondary tlp-badge-outline{{/ is_custom }}">{{ name }}</span>
+                            {{/ groups }}
+                        </td>
+                    </tr>
+                {{/ permissions }}
+                {{^ has_permissions }}
+                    <tr>
+                        <td colspan="2" class="tlp-table-cell-empty">
+                            {{# dgettext }} tuleap-mediawiki_standalone |  {{ user_group_name }} has no global permission {{/ dgettext }}
+                        </td>
+                    </tr>
+                {{/ has_permissions }}
+                </tbody>
+            </table>
+        </section>
+
+    </div>
+</section>

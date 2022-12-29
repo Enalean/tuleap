@@ -60,7 +60,7 @@ final class OnlyOfficeSaveController extends \Tuleap\Request\DispatchablePSR15Co
         $this->logger->debug($response_content);
 
         return $this->callback_response_parser
-            ->parseCallbackResponseContent($response_content)
+            ->parseCallbackResponseContent($response_content, $save_token_information)
             ->andThen(
                 /**
                  * @psalm-param OptionalValue<OnlyOfficeCallbackSaveResponseData> $save_response_data

@@ -24,12 +24,6 @@ msgstr ""
 msgid "An error occurred while saving the artifact."
 msgstr ""
 
-msgid "Artifact id"
-msgstr ""
-
-msgid "Artifact id or title"
-msgstr ""
-
 msgid "Auto-compute"
 msgstr ""
 
@@ -54,16 +48,25 @@ msgstr ""
 msgid "Edit"
 msgstr "Editar"
 
-msgid "Edited by"
+msgid "Edited by %(user)s"
 msgstr ""
 
 msgid "Empty"
 msgstr "Vazio"
 
+msgid "Error while retrieving recently viewed artifacts: %s"
+msgstr ""
+
 msgid "Error while retrieving the artifact to link: %s"
 msgstr ""
 
+msgid "Error while retrieving the comments: %s"
+msgstr ""
+
 msgid "Error while retrieving the possible parents: %s"
+msgstr ""
+
+msgid "Error while searching for artifacts: %s"
 msgstr ""
 
 msgid "Error while uploading %(file_name)s: %(error)s"
@@ -91,6 +94,9 @@ msgid "Help"
 msgstr "Ajuda"
 
 msgid "Hidden fieldsets:"
+msgstr ""
+
+msgid "Id, title..."
 msgstr ""
 
 msgid "Keep the file"
@@ -141,6 +147,9 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
+msgid "Please refine your search if you did not find what you are looking for."
+msgstr ""
+
 msgid "Please select a date"
 msgstr ""
 
@@ -172,6 +181,9 @@ msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
 
 msgid "Save changes"
+msgstr ""
+
+msgid "Search for an artifact..."
 msgstr ""
 
 msgid "Search results"

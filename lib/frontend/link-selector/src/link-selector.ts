@@ -43,7 +43,12 @@ export function createLinkSelector(
     const items_map_manager = new ItemsMapManager(ListItemMapBuilder(options.templating_callback));
 
     items_map_manager.refreshItemsMap([]);
-    const base_renderer = new BaseComponentRenderer(document, source_select_box, "");
+    const base_renderer = new BaseComponentRenderer(
+        document,
+        source_select_box,
+        options.placeholder,
+        options.search_input_placeholder
+    );
     const {
         wrapper_element,
         link_selector_element,
@@ -121,12 +126,15 @@ export function createLinkSelector(
 
     event_manager.attachEvents();
 
-    const link_selector_instance: LinkSelector = {
+    const search_event_handler = SearchFieldEventCallbackHandler(
+        search_field_element,
+        options.search_field_callback
+    );
+    search_event_handler.init();
+
+    return {
         setDropdownContent: (groups): void => {
             dropdown_content_refresher.refresh(groups);
-        },
-        setPlaceholder: (placeholder: string): void => {
-            placeholder_element.replaceChildren(document.createTextNode(placeholder));
         },
         resetSelection: (): void => {
             search_field_clearer.clearSearchField();
@@ -139,13 +147,4 @@ export function createLinkSelector(
             field_focus_manager.destroy();
         },
     };
-
-    const search_event_handler = SearchFieldEventCallbackHandler(
-        link_selector_instance,
-        search_field_element,
-        options.search_field_callback
-    );
-    search_event_handler.init();
-
-    return link_selector_instance;
 }

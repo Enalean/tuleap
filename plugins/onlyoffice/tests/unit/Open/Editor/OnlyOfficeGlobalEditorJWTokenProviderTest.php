@@ -37,6 +37,8 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
 use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveCallbackURLGenerator;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenGenerator;
@@ -50,18 +52,30 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
 
     public function testProvidesJWToken(): void
     {
-        \ForgeConfig::set('sys_default_domain', 'example.com');
-
-        $document       = new OnlyOfficeDocument(ProjectTestBuilder::aProject()->build(), new \Docman_Item(['item_id' => 123]), 410, 'Doc.docx', true);
-        $token_provider = self::buildTokenProvider(
-            Result::ok(OnlyOfficeDocumentConfig::fromDocument($document, new ConcealedString('download_token')))
-        );
-
         $root = vfsStream::setup()->url();
         mkdir($root . '/conf/');
         \ForgeConfig::set('sys_custom_dir', $root);
-        $secret = str_repeat('A', 32);
-        \ForgeConfig::set('onlyoffice_document_server_secret', base64_encode(SymmetricCrypto::encrypt(new ConcealedString($secret), (new KeyFactory())->getEncryptionKey())));
+        \ForgeConfig::set('sys_default_domain', 'example.com');
+
+        $secret   = str_repeat('A', 32);
+        $document = new OnlyOfficeDocument(
+            ProjectTestBuilder::aProject()->build(),
+            new \Docman_Item(['item_id' => 123]),
+            410,
+            'Doc.docx',
+            true,
+            DocumentServer::withoutProjectRestrictions(
+                1,
+                'https://example.com',
+                new ConcealedString(
+                    base64_encode(SymmetricCrypto::encrypt(new ConcealedString($secret), (new KeyFactory())->getEncryptionKey()))
+                )
+            )
+        );
+
+        $token_provider = self::buildTokenProvider(
+            Result::ok(OnlyOfficeDocumentConfig::fromDocument($document, new ConcealedString('download_token')))
+        );
 
         $result = $token_provider->getGlobalEditorJWToken(UserTestBuilder::buildWithDefaults(), 12, new \DateTimeImmutable('@20'));
 
@@ -91,10 +105,11 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
         );
         self::assertEquals(
             [
-                'lang'        => 'en',
-                'region'      => 'en-US',
-                'user'        => ['id' => '110', 'name' => 'User #110'],
-                'callbackUrl' => 'https://example.com/onlyoffice/document_save?token=save_token',
+                'lang'          => 'en',
+                'region'        => 'en-US',
+                'user'          => ['id' => '110', 'name' => 'User #110'],
+                'callbackUrl'   => 'https://example.com/onlyoffice/document_save?token=save_token',
+                'customization' => ['macros' => false, 'macrosMode' => 'disable', 'plugins' => false],
             ],
             $parsed_token->claims()->get('editorConfig')
         );
@@ -143,6 +158,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
             ),
             new JwtFacade(),
             new Sha256(),
+            new DocumentServerKeyEncryption(new KeyFactory()),
         );
     }
 }

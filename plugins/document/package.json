@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/autocomplete-for-select2": "workspace:*",
+    "@tuleap/core-constants": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
@@ -19,7 +20,6 @@
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
-    "@tuleap/user-group-constants": "workspace:*",
     "@tuleap/vue-breadcrumb-privacy": "workspace:*",
     "@tuleap/vue2-gettext-composition-helper": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",

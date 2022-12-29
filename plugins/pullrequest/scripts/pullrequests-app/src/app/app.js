@@ -66,7 +66,6 @@ import TimelineService from "./overview/timeline/timeline-service.js";
 import CommitsRestService from "./commits/commits-rest-service.js";
 import PullRequestRestService from "./pull-request/pull-request-rest-service.js";
 import PullRequestService from "./pull-request/pull-request-service.js";
-import CodeMirrorHelperService from "./file-diff/codemirror-helper-service.js";
 
 import MainConfig from "./app-config.js";
 import TuleapResize from "./resize/resize.js";
@@ -80,7 +79,7 @@ import PullRequestConfig from "./pull-request/pull-request-config.js";
 
 import angular_custom_elements_module from "angular-custom-elements";
 import "./comments/PullRequestComment.ts";
-import "./file-diff/FileDiffPlaceholder.ts";
+import "./file-diff/widgets/placeholders/FileDiffPlaceholder.ts";
 import "./comments/new-comment-form/NewInlineCommentForm.ts";
 
 export default angular
@@ -132,7 +131,6 @@ export default angular
     .service("CommitsRestService", CommitsRestService)
     .service("PullRequestRestService", PullRequestRestService)
     .service("PullRequestService", PullRequestService)
-    .service("CodeMirrorHelperService", CodeMirrorHelperService)
 
     .config(MainConfig)
     .config(DashboardConfig)

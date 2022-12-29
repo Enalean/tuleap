@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "adapters/UI/comments/comments";
+@use "adapters/UI/footer/quota-display";
 @use "adapters/UI/fields/link-field/link-field";
 @use "adapters/UI/fields/burndown-field/bundown-field";
 @use "adapters/UI/fields/file-field/file-field";
 @use "adapters/UI/fields/user-avatar-field/user-avatar-field";
-@use "adapters/UI/footer/quota-display";
 @import "tuleap-highlight/highlight";
 @import "fields/computed-field/computed-field";
 @import "fields/open-list-field/open-list-field";
@@ -83,46 +84,6 @@ fieldset {
     background: var(--tlp-white-color);
 }
 
-.tuleap-artifact-modal-followups {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 35%;
-    padding: var(--tlp-medium-spacing);
-    overflow-y: auto;
-    border-left: 1px solid var(--tlp-neutral-normal-color);
-    background: var(--tlp-white-color);
-
-    &.invert-order {
-        > .tuleap-artifact-modal-followups-comments {
-            order: 3;
-        }
-
-        > .artifact-modal-followups-add-form {
-            order: 2;
-            margin: 0 0 var(--tlp-x-large-spacing);
-        }
-    }
-}
-
-.tuleap-artifact-modal-followups-title {
-    flex: 0 0 auto;
-    order: 1;
-    cursor: default;
-}
-
-.tuleap-artifact-modal-followups-title-icon {
-    margin: 0 5px 0 0;
-}
-
-.artifact-modal-followups-add-form {
-    flex: 0 0 auto;
-    order: 3;
-    width: 100%;
-    margin: var(--tlp-x-large-spacing) 0 0;
-}
-
 .artifact-modal-text-label-with-format {
     display: flex;
     align-items: center;
@@ -159,88 +120,6 @@ fieldset {
 
     > .artifact-modal-text-asterisk {
         position: initial;
-    }
-}
-
-.tuleap-artifact-modal-followups-comments {
-    display: flex;
-    flex: 1 0 auto;
-    flex-direction: column;
-    order: 2;
-    width: 100%;
-}
-
-.tuleap-artifact-modal-followups-comments-empty {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: center;
-    justify-content: center;
-    margin: var(--tlp-medium-spacing);
-    color: var(--tlp-main-color-transparent-70);
-    font-style: italic;
-}
-
-.tuleap-artifact-modal-followups-comment {
-    margin: 0 0 var(--tlp-large-spacing);
-
-    &:last-child {
-        margin: 0;
-    }
-
-    a {
-        text-decoration: none;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-}
-
-.tuleap-artifact-modal-followups-comment-header {
-    display: flex;
-    margin: 0 0 var(--tlp-small-spacing);
-
-    > .tlp-avatar {
-        margin: 0 5px 0 0;
-    }
-}
-
-.tuleap-artifact-modal-followups-comment-header-authors {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    justify-content: space-around;
-    font-size: 12px;
-
-    &.multiple-authors > .tuleap-artifact-modal-followups-comment-header-author {
-        flex-direction: row;
-
-        > .tuleap-artifact-modal-followups-comment-header-time {
-            margin: 0 0 0 5px;
-        }
-    }
-}
-
-.tuleap-artifact-modal-followups-comment-header-author {
-    display: flex;
-    flex-direction: column;
-}
-
-.tuleap-artifact-modal-followups-comment-content {
-    font-size: 14px;
-    line-height: 18px;
-
-    p,
-    ul,
-    ol,
-    a,
-    blockquote {
-        font-size: 14px;
-        line-height: 18px;
-    }
-
-    img {
-        max-width: 100%;
     }
 }
 

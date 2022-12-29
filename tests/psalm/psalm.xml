@@ -16,6 +16,7 @@
         <directory name="plugins/*/include/" />
         <directory name="plugins/*/tests/unit/" />
         <directory name="plugins/git/tests/unit/REST/" />
+        <directory name="plugins/tracker/tests/unit/Builders" />
         <directory name="plugins/*/bin/" />
         <directory name="tests/lib/Stubs/" />
         <directory name="tests/phpcs/TuleapCodingStandard/" />
@@ -60,7 +61,6 @@
             <directory name="plugins/testmanagement/tests/unit/"/>
             <directory name="plugins/tracker/tests/unit/"/>
             <directory name="plugins/velocity/tests/unit/"/>
-            <directory name="plugins/webdav/tests/unit/"/>
         </ignoreFiles>
     </projectFiles>
 
@@ -77,7 +77,6 @@
         <file name="tests/psalm/stubs/Psr/EventDispatcher/EventDispatcherInterface.phpstub"/>
         <file name="tests/psalm/stubs/ParagonIE/EasyDB/EasyDB.phpstub"/>
         <file name="tests/psalm/stubs/FastRoute/RouteCollector.phpstub"/>
-        <file name="tests/psalm/stubs/ext-ffi.phpstub"/>
     </stubs>
 
     <plugins>

@@ -1,3 +1,0 @@
-#!/bin/sh
-
-DISPLAY_ERRORS=true /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/forgeupgrade/forgeupgrade.php $@

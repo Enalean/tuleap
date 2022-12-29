@@ -40,25 +40,52 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Result;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
+use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    private string $encrypted_secret_server_1;
+    private string $encrypted_secret_server_2;
+
     protected function setUp(): void
     {
         $root = vfsStream::setup()->url();
         mkdir($root . '/conf/');
         \ForgeConfig::set('sys_custom_dir', $root);
-        $secret = str_repeat('A', 32);
-        \ForgeConfig::set('onlyoffice_document_server_secret', base64_encode(SymmetricCrypto::encrypt(new ConcealedString($secret), (new KeyFactory())->getEncryptionKey())));
+        $secret_key                      = (new KeyFactory())->getEncryptionKey();
+        $this->encrypted_secret_server_1 = base64_encode(
+            SymmetricCrypto::encrypt(
+                new ConcealedString(str_repeat('A', 32)),
+                $secret_key
+            )
+        );
+        $this->encrypted_secret_server_2 = base64_encode(
+            SymmetricCrypto::encrypt(
+                new ConcealedString(str_repeat('B', 32)),
+                $secret_key
+            )
+        );
     }
 
     public function testParsesSaveCallbackContent(): void
     {
-        $res = self::buildParser(true)->parseCallbackResponseContent(
-            json_encode(['token' => self::buildJWT(['status' => 2, 'url' => 'https://example.com/download', 'history' => ['serverVersion' => '7.2.0', 'changes' => [['user' => ['id' => '102']]]]])], JSON_THROW_ON_ERROR)
+        $res = $this->buildParser(true)->parseCallbackResponseContent(
+            json_encode(
+                ['token' => self::buildJWT(
+                    ['status'  => 2,
+                        'url'     => 'https://example.com/download',
+                        'history' => ['serverVersion' => '7.2.0', 'changes' => [['user' => ['id' => '102']]]],
+                    ]
+                ),
+                ],
+                JSON_THROW_ON_ERROR
+            ),
+            new SaveDocumentTokenData(123, 101, 102, 1),
         );
 
         self::assertEquals(
@@ -71,8 +98,9 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
 
     public function testParsesNotSaveRelatedCallbackContent(): void
     {
-        $res = self::buildParser(true)->parseCallbackResponseContent(
-            json_encode(['token' => self::buildJWT(['status' => 1])], JSON_THROW_ON_ERROR)
+        $res = $this->buildParser(true)->parseCallbackResponseContent(
+            json_encode(['token' => self::buildJWT(['status' => 1])], JSON_THROW_ON_ERROR),
+            new SaveDocumentTokenData(123, 101, 102, 1),
         );
 
         self::assertEquals(
@@ -85,7 +113,22 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     {
         self::assertTrue(
             Result::isErr(
-                self::buildParser(true)->parseCallbackResponseContent('Not JSON')
+                $this->buildParser(true)->parseCallbackResponseContent(
+                    'Not JSON',
+                    new SaveDocumentTokenData(123, 101, 102, 1),
+                )
+            )
+        );
+    }
+
+    public function testRejectsWhenCallbackContentIsNotAnArray(): void
+    {
+        self::assertTrue(
+            Result::isErr(
+                $this->buildParser(true)->parseCallbackResponseContent(
+                    json_encode('Not an array', JSON_THROW_ON_ERROR),
+                    new SaveDocumentTokenData(123, 101, 102, 1),
+                )
             )
         );
     }
@@ -94,8 +137,9 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     {
         self::assertTrue(
             Result::isErr(
-                self::buildParser(true)->parseCallbackResponseContent(
-                    json_encode(['invalid_callback_json' => true], JSON_THROW_ON_ERROR)
+                $this->buildParser(true)->parseCallbackResponseContent(
+                    json_encode(['invalid_callback_json' => true], JSON_THROW_ON_ERROR),
+                    new SaveDocumentTokenData(123, 101, 102, 1),
                 )
             )
         );
@@ -105,8 +149,9 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     {
         self::assertTrue(
             Result::isErr(
-                self::buildParser(true)->parseCallbackResponseContent(
-                    json_encode(['token' => 'not_a_jwt'], JSON_THROW_ON_ERROR)
+                $this->buildParser(true)->parseCallbackResponseContent(
+                    json_encode(['token' => 'not_a_jwt'], JSON_THROW_ON_ERROR),
+                    new SaveDocumentTokenData(123, 101, 102, 1),
                 )
             )
         );
@@ -116,8 +161,9 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     {
         self::assertTrue(
             Result::isErr(
-                self::buildParser(false)->parseCallbackResponseContent(
-                    json_encode(['token' => self::buildJWT([])], JSON_THROW_ON_ERROR)
+                $this->buildParser(false)->parseCallbackResponseContent(
+                    json_encode(['token' => self::buildJWT([])], JSON_THROW_ON_ERROR),
+                    new SaveDocumentTokenData(123, 101, 102, 1),
                 )
             )
         );
@@ -130,8 +176,9 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     {
         self::assertTrue(
             Result::isErr(
-                self::buildParser(true)->parseCallbackResponseContent(
-                    json_encode(['token' => $jwt], JSON_THROW_ON_ERROR)
+                $this->buildParser(true)->parseCallbackResponseContent(
+                    json_encode(['token' => $jwt], JSON_THROW_ON_ERROR),
+                    new SaveDocumentTokenData(123, 101, 102, 1),
                 )
             )
         );
@@ -140,18 +187,36 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     public function dataProviderJWtWithUnexpectedClaims(): array
     {
         return [
-            'Missing status' => [self::buildJWT([])],
-            'Missing download URL' => [self::buildJWT(['status' => 2])],
-            'Malformed download URL' => [self::buildJWT(['status' => 2, 'url' => true])],
-            'Missing history key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example'])],
-            'Malformed history key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => 'foo'])],
-            'Missing history.serverVersion key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => []])],
-            'Malformed history.serverVersion key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => ['serverVersion' => true]])],
-            'Malformed history.changes.user key' => [self::buildJWT(['status' => 2, 'url' => 'https://example.com/example', 'history' => ['serverVersion' => '7.2.0', 'changes' => [['user' => ['id' => 'wrong']]]]])],
+            'Missing status'                      => [self::buildJWT([])],
+            'Missing download URL'                => [self::buildJWT(['status' => 2])],
+            'Malformed download URL'              => [self::buildJWT(['status' => 2, 'url' => true])],
+            'Missing history key'                 => [self::buildJWT(
+                ['status' => 2, 'url' => 'https://example.com/example']
+            ),
+            ],
+            'Malformed history key'               => [self::buildJWT(
+                ['status' => 2, 'url' => 'https://example.com/example', 'history' => 'foo']
+            ),
+            ],
+            'Missing history.serverVersion key'   => [self::buildJWT(
+                ['status' => 2, 'url' => 'https://example.com/example', 'history' => []]
+            ),
+            ],
+            'Malformed history.serverVersion key' => [self::buildJWT(
+                ['status' => 2, 'url' => 'https://example.com/example', 'history' => ['serverVersion' => true]]
+            ),
+            ],
+            'Malformed history.changes.user key'  => [self::buildJWT(
+                ['status'  => 2,
+                    'url'     => 'https://example.com/example',
+                    'history' => ['serverVersion' => '7.2.0', 'changes' => [['user' => ['id' => 'wrong']]]],
+                ]
+            ),
+            ],
         ];
     }
 
-    private static function buildParser(bool $pass_jwt_validation): OnlyOfficeCallbackResponseJWTParser
+    private function buildParser(bool $pass_jwt_validation): OnlyOfficeCallbackResponseJWTParser
     {
         return new OnlyOfficeCallbackResponseJWTParser(
             new Parser(new JoseEncoder()),
@@ -184,6 +249,21 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             },
             new Constraint\LooseValidAt(new FrozenClock(new \DateTimeImmutable('@10'))),
             new Signer\Hmac\Sha256(),
+            new DocumentServerForSaveDocumentTokenRetriever(
+                IRetrieveDocumentServersStub::buildWith(
+                    DocumentServer::withoutProjectRestrictions(
+                        1,
+                        'https://example.com/1',
+                        new ConcealedString($this->encrypted_secret_server_1)
+                    ),
+                    DocumentServer::withoutProjectRestrictions(
+                        2,
+                        'https://example.com/2',
+                        new ConcealedString($this->encrypted_secret_server_2)
+                    ),
+                ),
+            ),
+            new DocumentServerKeyEncryption(new KeyFactory()),
         );
     }
 
@@ -199,6 +279,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
                 foreach ($claims as $name => $value) {
                     $builder = $builder->withClaim($name, $value);
                 }
+
                 return $builder;
             }
         )->toString();

@@ -27,16 +27,16 @@ use Psr\Log\LoggerInterface;
 class XMLDocmanImport
 {
     // Directory where content files are located
-    protected $dataBaseDir;
+    protected string $dataBaseDir;
 
     // Metadata map
-    private $metadataMap = [];
+    private array $metadataMap = [];
 
     // List of hardcoded metadata enabled on the target project
-    private $hardCodedMetadata = [];
+    private array $hardCodedMetadata = [];
 
     // Group map
-    private $ugroupMap = [
+    private array $ugroupMap = [
         100 => [
             'ugroup_name' => 'nobody',
             'members' => [],
@@ -60,13 +60,13 @@ class XMLDocmanImport
     ];
 
     // User map (identifier => "unix" user name)
-    private $userMap = [];
+    private array $userMap = [];
 
     // ID of the project
     protected $groupId;
 
     // XML document
-    protected $doc;
+    protected SimpleXMLElement $doc;
 
     // Soap client
     protected $soap;
@@ -86,12 +86,12 @@ class XMLDocmanImport
     // If true: in case of error, retry 5 times
     protected $autoRetry;
 
-    protected $retryCounter;
+    protected int $retryCounter;
 
     protected $logger;
 
     // File to be uploaded chunk size
-    private $chunk_size = 10000000; // ~10MB
+    private int $chunk_size = 10000000; // ~10MB
 
     /**
      * XMLDocmanImport constructor
@@ -1176,7 +1176,7 @@ class XMLDocmanImport
     private function adjustChunkSize()
     {
         $this->logger->warning("Request entity too large, need to adjust upload chunk size");
-        $this->chunk_size = floor($this->chunk_size / 2);
+        $this->chunk_size = (int) floor($this->chunk_size / 2);
         if ($this->chunk_size > 1000) {
             $this->logger->info("New chunk size: " . $this->chunk_size);
             return true;

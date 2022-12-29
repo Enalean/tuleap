@@ -64,8 +64,6 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
      * @param {int} parent_artifact_id       The artifact's parent's id
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the new artifact's id.
-     * @param {boolean} is_list_picker_enabled  Enable the new list picker or not. Currently it is behind a feature flag. (To be removed when the feature flag will be removed)
-     * @param {boolean} is_search_enabled Enable picking artifact links from history and search results. (To be removed when the feature flag is removed)
      * @param {array} prefill_values         The prefill values for creation, using field name as identifier
      */
     function showCreation(
@@ -73,8 +71,6 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         tracker_id,
         parent_artifact_id,
         displayItemCallback,
-        is_list_picker_enabled = false,
-        is_search_enabled = false,
         prefill_values
     ) {
         TuleapArtifactModalLoading.loading = true;
@@ -89,8 +85,6 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                     user_id,
                     tracker_id,
                     parent_artifact_id,
-                    is_list_picker_enabled,
-                    is_search_enabled,
                     prefill_values
                 ),
                 displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
@@ -108,17 +102,8 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
      * @param {int} artifact_id              The id of the artifact we want to edit
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the edited artifact's id.
-     * @param {boolean} is_list_picker_enabled  Enable the new list picker or not. Currently it is behind a feature flag. (To be removed when the feature flag will be removed)
-     * @param {boolean} is_search_enabled Enable picking artifact links from history and search results. (To be removed when the feature flag is removed)
      */
-    function showEdition(
-        user_id,
-        tracker_id,
-        artifact_id,
-        displayItemCallback,
-        is_list_picker_enabled = false,
-        is_search_enabled = false
-    ) {
+    function showEdition(user_id, tracker_id, artifact_id, displayItemCallback) {
         TuleapArtifactModalLoading.loading = true;
 
         return TlpModalService.open({
@@ -127,32 +112,19 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
             controllerAs: "modal",
             tlpModalOptions: { keyboard: false, destroy_on_hide: true },
             resolve: {
-                modal_model: self.initEditionModalModel(
-                    user_id,
-                    tracker_id,
-                    artifact_id,
-                    is_list_picker_enabled,
-                    is_search_enabled
-                ),
+                modal_model: self.initEditionModalModel(user_id, tracker_id, artifact_id),
                 displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
             },
         });
     }
 
-    function initCreationModalModel(
-        user_id,
-        tracker_id,
-        parent_artifact_id,
-        is_list_picker_enabled,
-        is_search_enabled,
-        prefill_values
-    ) {
+    function initCreationModalModel(user_id, tracker_id, parent_artifact_id, prefill_values) {
         const modal_model = {
             user_id,
             tracker_id,
             parent_artifact_id,
-            is_list_picker_enabled,
-            is_search_enabled,
+            user_date_time_format: document.body.dataset.dateTimeFormat,
+            user_locale: document.body.dataset.userLocale,
         };
 
         const creation_mode = true;
@@ -188,19 +160,13 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         return promise;
     }
 
-    function initEditionModalModel(
-        user_id,
-        tracker_id,
-        artifact_id,
-        is_list_picker_enabled,
-        is_search_enabled
-    ) {
+    function initEditionModalModel(user_id, tracker_id, artifact_id) {
         const modal_model = {
             user_id,
             tracker_id,
             artifact_id,
-            is_list_picker_enabled,
-            is_search_enabled,
+            user_date_time_format: document.body.dataset.dateTimeFormat,
+            user_locale: document.body.dataset.userLocale,
         };
 
         const creation_mode = false;
@@ -259,7 +225,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         var preference_key = "tracker_comment_invertorder_" + tracker_id;
 
         return $q.when(getUserPreference(user_id, preference_key)).then(function (data) {
-            modal_model.invert_followups_comments_order = Boolean(data.value);
+            modal_model.invert_followups_comments_order = data.value === "0";
         });
     }
 

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-class IBuildUserPermissionsStub implements IBuildUserPermissions
+final class IBuildUserPermissionsStub implements IBuildUserPermissions
 {
     private function __construct(private UserPermissions $permissions)
     {

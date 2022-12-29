@@ -158,7 +158,7 @@ export const UNTYPED_LINK: UntypedLink = "";
 export type IsChildLinkType = "_is_child";
 export const IS_CHILD_LINK_TYPE: IsChildLinkType = "_is_child";
 
-export type TrackerColorName =
+export type ColorName =
     | "inca-silver"
     | "chrome-silver"
     | "firemist-silver"

@@ -20,5 +20,4 @@
 export type ArtifactProject = {
     readonly id: number;
     readonly label: string;
-    readonly icon: string;
 };

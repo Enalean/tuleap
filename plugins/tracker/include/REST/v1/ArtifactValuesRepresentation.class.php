@@ -44,6 +44,12 @@ class ArtifactValuesRepresentation
     public $links;
 
     /**
+     * @var array | null {@required false} {@type \Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation}
+     * @psalm-var LinkWithDirectionRepresentation[] | null
+     */
+    public ?array $all_links = null;
+
+    /**
      * @var array {@required false}
      */
     public $parent;

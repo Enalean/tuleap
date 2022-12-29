@@ -28,18 +28,20 @@ use ProjectUGroup;
 
 class UGroupRetrieverStub implements \Tuleap\Project\UGroupRetriever
 {
-    private function __construct(private array $ugroups)
+    private function __construct(private array $ugroups_by_id, private array $ugroups_by_name)
     {
     }
 
     public static function buildWithUserGroups(ProjectUGroup ...$user_groups): self
     {
-        $ugroups = [];
+        $ugroups_by_id   = [];
+        $ugroups_by_name = [];
         foreach ($user_groups as $user_group) {
-            $ugroups[$user_group->getId()] = $user_group;
+            $ugroups_by_id[$user_group->getId()]     = $user_group;
+            $ugroups_by_name[$user_group->getName()] = $user_group;
         }
 
-        return new self($ugroups);
+        return new self($ugroups_by_id, $ugroups_by_name);
     }
 
     /**
@@ -47,6 +49,19 @@ class UGroupRetrieverStub implements \Tuleap\Project\UGroupRetriever
      */
     public function getUGroup(Project $project, $ugroup_id): ?ProjectUGroup
     {
-        return $this->ugroups[$ugroup_id] ?? null;
+        return $this->ugroups_by_id[$ugroup_id] ?? null;
+    }
+
+    public function getUGroupByName(Project $project, string $name): ?ProjectUGroup
+    {
+        if (isset($this->ugroups_by_name[$name])) {
+            return $this->ugroups_by_name[$name];
+        }
+
+        if (isset($this->ugroups_by_name['ugroup_' . $name . '_name_key'])) {
+            return $this->ugroups_by_name['ugroup_' . $name . '_name_key'];
+        }
+
+        return null;
     }
 }

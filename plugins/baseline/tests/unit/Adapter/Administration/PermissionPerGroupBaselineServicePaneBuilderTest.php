@@ -34,6 +34,7 @@ use Tuleap\Project\UGroupRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\UGroupRetrieverStub;
 
 class PermissionPerGroupBaselineServicePaneBuilderTest extends TestCase
 {
@@ -91,24 +92,11 @@ class PermissionPerGroupBaselineServicePaneBuilderTest extends TestCase
                 ->build()
         );
 
-        $this->ugroup_retriever = new class ($this->project_admins, $this->project_members, $this->developers) implements UGroupRetriever {
-            public function __construct(
-                private \ProjectUGroup $project_admins,
-                private \ProjectUGroup $project_members,
-                private \ProjectUGroup $developers,
-            ) {
-            }
-
-            public function getUGroup(\Project $project, $ugroup_id): ?\ProjectUGroup
-            {
-                return match ($ugroup_id) {
-                    $this->project_admins->getId() => $this->project_admins,
-                    $this->project_members->getId() => $this->project_members,
-                    $this->developers->getId() => $this->developers,
-                    default => null,
-                };
-            }
-        };
+        $this->ugroup_retriever = UGroupRetrieverStub::buildWithUserGroups(
+            $this->project_admins,
+            $this->project_members,
+            $this->developers
+        );
 
         $this->builder = new PermissionPerGroupBaselineServicePaneBuilder(
             $this->formatter,

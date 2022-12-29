@@ -20,6 +20,7 @@
 import type {
     ArtifactLinkFieldIdentifier,
     CheckBoxFieldIdentifier,
+    ColorName,
     ColumnIdentifier,
     DateFieldIdentifier,
     FieldSetIdentifier,
@@ -27,27 +28,27 @@ import type {
     MultiSelectBoxFieldIdentifier,
     PermissionFieldIdentifier,
     RadioButtonFieldIdentifier,
-    SelectBoxFieldIdentifier,
     SubmissionDateFieldIdentifier,
-    TrackerColorName,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
 import type { UserGroupRepresentation } from "./artifacts";
 import type { OpenListFieldStructure } from "./open-list-field";
+import type { ListFieldStructure } from "./list-field";
 
 export * from "./open-list-field";
 export * from "./list-field";
+export * from "./file-field";
 
 export interface BaseFieldStructure {
     readonly field_id: number;
 }
 
-interface UnknownFieldStructure extends BaseFieldStructure {
+export interface UnknownFieldStructure extends BaseFieldStructure {
     readonly type: never;
 }
 
-interface DateFieldStructure extends BaseFieldStructure {
+export interface DateFieldStructure extends BaseFieldStructure {
     readonly type:
         | DateFieldIdentifier
         | LastUpdateDateFieldIdentifier
@@ -55,20 +56,19 @@ interface DateFieldStructure extends BaseFieldStructure {
     readonly is_time_displayed: boolean;
 }
 
-interface ContainerFieldStructure extends BaseFieldStructure {
+export interface ContainerFieldStructure extends BaseFieldStructure {
     readonly type: ColumnIdentifier | FieldSetIdentifier;
     readonly label: string;
 }
 
-interface ListFieldStructure extends BaseFieldStructure {
+export interface ListLikeFieldStructure extends BaseFieldStructure {
     readonly type:
-        | SelectBoxFieldIdentifier
         | RadioButtonFieldIdentifier
         | MultiSelectBoxFieldIdentifier
         | CheckBoxFieldIdentifier;
 }
 
-interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
+export interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
     readonly type: PermissionFieldIdentifier;
     readonly values: {
         readonly is_used_by_default: boolean;
@@ -92,6 +92,7 @@ export type StructureFields =
     | UnknownFieldStructure
     | DateFieldStructure
     | ContainerFieldStructure
+    | ListLikeFieldStructure
     | ListFieldStructure
     | OpenListFieldStructure
     | PermissionsOnArtifactFieldStructure
@@ -110,7 +111,7 @@ export interface MinimalTrackerResponse {
 export type TrackerProjectRepresentation = ProjectReference;
 
 export interface TrackerResponseWithColor extends MinimalTrackerResponse {
-    readonly color_name: TrackerColorName;
+    readonly color_name: ColorName;
 }
 
 /**

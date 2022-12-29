@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project_AccessPrivateException;
 use ProjectManager;
@@ -33,52 +31,51 @@ use Sabre\DAV\Exception\NotFound;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use WebDAVRoot;
 
 final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
+    private WebDAVRoot $webDAVRoot;
     /**
-     * @var \Mockery\Mock
-     */
-    private $webDAVRoot;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
+     * @var PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
+     * @var ProjectManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\WebDAVUtils
+     * @var \WebDAVUtils&\PHPUnit\Framework\MockObject\MockObject
      */
     private $utils;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PluginManager
+     * @var \PluginManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $plugin_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\WebDAVPlugin
+     * @var \WebDAVPlugin&\PHPUnit\Framework\MockObject\MockObject
      */
     private $plugin;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
+     * @var ProjectAccessChecker&\PHPUnit\Framework\MockObject\MockObject
      */
     private $project_access_checker;
 
     protected function setUp(): void
     {
-        $this->plugin                 = Mockery::mock(\WebDAVPlugin::class, ['getId' => 999]);
-        $this->user                   = Mockery::mock(PFUser::class, ['isAnonymous' => false]);
-        $this->project_manager        = Mockery::mock(\ProjectManager::class);
-        $this->utils                  = Mockery::mock(\WebDAVUtils::class, ['getEventManager' => new \EventManager()]);
-        $this->plugin_manager         = Mockery::mock(\PluginManager::class);
-        $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
+        $this->plugin                 = $this->createMock(\WebDAVPlugin::class);
+        $this->user                   = $this->createMock(PFUser::class);
+        $this->project_manager        = $this->createMock(\ProjectManager::class);
+        $this->utils                  = $this->createMock(\WebDAVUtils::class);
+        $this->plugin_manager         = $this->createMock(\PluginManager::class);
+        $this->project_access_checker = $this->createMock(ProjectAccessChecker::class);
+
+        $this->plugin->method('getId')->willReturn(999);
+        $this->user->method('isAnonymous')->willReturn(false);
+        $this->utils->method('getEventManager')->willReturn(new \EventManager());
 
         $this->webDAVRoot = new WebDAVRoot(
             $this->plugin,
@@ -98,11 +95,19 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenWithPublicProjects(): void
     {
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
+        $webdav_root = new WebDAVRoot(
+            $this->plugin,
+            UserTestBuilder::anAnonymousUser()->build(),
+            1000000,
+            $this->project_manager,
+            $this->utils,
+            $this->plugin_manager,
+            $this->project_access_checker,
+        );
 
         $this->expectException(Forbidden::class);
 
-        $this->webDAVRoot->getChildren();
+        $webdav_root->getChildren();
     }
 
     /**
@@ -110,7 +115,7 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenNoUserProjects(): void
     {
-        $this->user->shouldReceive('getProjects')->andReturn([]);
+        $this->user->method('getProjects')->willReturn([]);
 
         self::assertEquals([], $this->webDAVRoot->getChildren());
     }
@@ -120,13 +125,13 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenUserHaveNoProjectsWithWebDAVActivated(): void
     {
-        $this->user->shouldReceive('getProjects')->andReturns([
+        $this->user->method('getProjects')->willReturn([
             '101',
         ]);
 
-        $this->project_manager->shouldReceive('getProject')->with(101)->andReturn(ProjectTestBuilder::aProject()->withId(101)->build());
+        $this->project_manager->method('getProject')->with(101)->willReturn(ProjectTestBuilder::aProject()->withId(101)->build());
 
-        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnFalse();
+        $this->plugin_manager->method('isPluginAllowedForProject')->with($this->plugin, 101)->willReturn(false);
 
         self::assertEquals([], $this->webDAVRoot->getChildren());
     }
@@ -136,15 +141,15 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenUserHaveProjects(): void
     {
-        $this->user->shouldReceive('getProjects')->andReturns([
+        $this->user->method('getProjects')->willReturn([
             '101',
         ]);
 
-        $this->project_manager->shouldReceive('getProject')->with(101)->andReturn(ProjectTestBuilder::aProject()->withId(101)->withUnixName('FooBar')->build());
+        $this->project_manager->method('getProject')->with(101)->willReturn(ProjectTestBuilder::aProject()->withId(101)->withUnixName('FooBar')->build());
 
-        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnTrue();
+        $this->plugin_manager->method('isPluginAllowedForProject')->with($this->plugin, 101)->willReturn(true);
 
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->once();
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
 
         $children = $this->webDAVRoot->getChildren();
         self::assertCount(1, $children);
@@ -156,9 +161,11 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildFailWithWebDAVNotActivated(): void
     {
-        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnFalse();
+        $this->plugin_manager->method('isPluginAllowedForProject')->with($this->plugin, 101)->willReturn(false);
 
-        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn(ProjectTestBuilder::aProject()->withId(101)->withUnixName('project1')->build());
+        $this->project_manager->method('getProjectByUnixName')->with('project1')->willReturn(
+            ProjectTestBuilder::aProject()->withId(101)->withUnixName('project1')->build()
+        );
 
         $this->expectException(Forbidden::class);
 
@@ -170,7 +177,7 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildFailWithNotExist(): void
     {
-        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn(null);
+        $this->project_manager->method('getProjectByUnixName')->with('project1')->willReturn(null);
 
         $this->expectException(NotFound::class);
 
@@ -182,7 +189,9 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildFailWithNotActive(): void
     {
-        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn(ProjectTestBuilder::aProject()->withStatusDeleted()->build());
+        $this->project_manager->method('getProjectByUnixName')->with('project1')->willReturn(
+            ProjectTestBuilder::aProject()->withStatusDeleted()->build()
+        );
 
         $this->expectException(Forbidden::class);
 
@@ -195,11 +204,13 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetChildFailWithUserCanNotRead(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->withUnixName('project1')->build();
-        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn($project);
+        $this->project_manager->method('getProjectByUnixName')->with('project1')->willReturn($project);
 
-        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnTrue();
+        $this->plugin_manager->method('isPluginAllowedForProject')->with($this->plugin, 101)->willReturn(true);
 
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->with($this->user, $project)->andThrow(new Project_AccessPrivateException());
+        $this->project_access_checker->method('checkUserCanAccessProject')->with($this->user, $project)->willThrowException(
+            new Project_AccessPrivateException()
+        );
 
         $this->expectException(Forbidden::class);
 
@@ -212,11 +223,11 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSucceedGetChild(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->withUnixName('project1')->build();
-        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn($project);
+        $this->project_manager->method('getProjectByUnixName')->with('project1')->willReturn($project);
 
-        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnTrue();
+        $this->plugin_manager->method('isPluginAllowedForProject')->with($this->plugin, 101)->willReturn(true);
 
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->with($this->user, $project)->once();
+        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject')->with($this->user, $project);
 
         self::assertEquals('project1', $this->webDAVRoot->getChild('project1')->getName());
     }

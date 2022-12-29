@@ -22,12 +22,8 @@ import type {
     GroupOfLines,
     RemovedFileLine,
     UnMovedFileLine,
-} from "../../src/app/file-diff/diff-modes/types";
-import {
-    ADDED_GROUP,
-    DELETED_GROUP,
-    UNMOVED_GROUP,
-} from "../../src/app/file-diff/diff-modes/types";
+} from "../../src/app/file-diff/types";
+import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "../../src/app/file-diff/types";
 
 export const GroupOfLinesStub = {
     buildGroupOfRemovedLines: (lines: RemovedFileLine[]): GroupOfLines => ({

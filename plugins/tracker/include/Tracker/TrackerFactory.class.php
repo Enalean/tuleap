@@ -21,6 +21,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
+use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Creation\PostCreationProcessor;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationSettings;
@@ -37,7 +38,7 @@ use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-class TrackerFactory
+class TrackerFactory implements RetrieveTracker
 {
     public const LEGACY_SUFFIX       = '_from_tv3';
     public const TRACKER_MAPPING_KEY = 'plugin_tracker_tracker';
@@ -100,11 +101,7 @@ class TrackerFactory
         self::clearInstance();
     }
 
-    /**
-     * @param int $tracker_id the id of the tracker to retrieve
-     * @return Tracker|null identified by id (null if not found)
-     */
-    public function getTrackerById($tracker_id)
+    public function getTrackerById($tracker_id): ?Tracker
     {
         if (! isset($this->trackers[$tracker_id])) {
             $this->trackers[$tracker_id] = null;

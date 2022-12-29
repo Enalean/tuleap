@@ -29,7 +29,7 @@ import { ClearSearchFieldStub } from "../../tests/stubs/ClearSearchFieldStub";
 import { ManageSelectionStub } from "../../tests/stubs/ManageSelectionStub";
 
 describe("event manager", () => {
-    let doc: HTMLDocument,
+    let doc: Document,
         source_select_box: HTMLSelectElement,
         component_wrapper: HTMLElement,
         link_selector_input: Element,
@@ -82,7 +82,7 @@ describe("event manager", () => {
             dropdown_element,
             dropdown_list_element,
             search_field_element,
-        } = new BaseComponentRenderer(doc, source_select_box, "").renderBaseComponent();
+        } = new BaseComponentRenderer(doc, source_select_box, "", "").renderBaseComponent();
 
         component_wrapper = wrapper_element;
         link_selector_input = link_selector_element;

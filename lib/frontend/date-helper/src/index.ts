@@ -17,15 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+    en_US_DATE_FORMAT,
+    en_US_DATE_TIME_FORMAT,
+    fr_FR_DATE_FORMAT,
+    fr_FR_DATE_TIME_FORMAT,
+} from "@tuleap/core-constants";
+
 export function formatFromPhpToMoment(php_date_format: string): string {
     switch (php_date_format) {
-        case "d/m/Y":
+        case fr_FR_DATE_FORMAT:
             return "DD/MM/YYYY";
-        case "d/m/Y H:i":
+        case fr_FR_DATE_TIME_FORMAT:
             return "DD/MM/YYYY HH:mm";
-        case "Y-m-d":
+        case en_US_DATE_FORMAT:
             return "YYYY-MM-DD";
-        case "Y-m-d H:i":
+        case en_US_DATE_TIME_FORMAT:
             return "YYYY-MM-DD HH:mm";
         default:
             throw new Error("Only french and english date are supported for display");

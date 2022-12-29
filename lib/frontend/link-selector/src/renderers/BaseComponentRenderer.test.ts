@@ -19,9 +19,13 @@
 
 import { describe, expect, it, beforeEach } from "vitest";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
+import type { LinkSelectorComponent } from "../type";
+
+const PLACEHOLDER = "Create a new artifact or search by id or title";
+const INPUT_PLACEHOLDER = "Id, title...";
 
 describe("base-component-renderer", () => {
-    let renderer: BaseComponentRenderer, select: HTMLSelectElement, doc: HTMLDocument;
+    let select: HTMLSelectElement, doc: Document;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
@@ -29,13 +33,12 @@ describe("base-component-renderer", () => {
         select.id = "source-select-box";
 
         doc.body.appendChild(select);
-
-        renderer = new BaseComponentRenderer(
-            doc,
-            select,
-            "Create a new artifact or search by id or title"
-        );
     });
+
+    const render = (): LinkSelectorComponent => {
+        const renderer = new BaseComponentRenderer(doc, select, PLACEHOLDER, INPUT_PLACEHOLDER);
+        return renderer.renderBaseComponent();
+    };
 
     it("should render the base component and append it right after the source <select>", () => {
         const {
@@ -44,7 +47,7 @@ describe("base-component-renderer", () => {
             selection_element,
             placeholder_element,
             dropdown_list_element,
-        } = renderer.renderBaseComponent();
+        } = render();
 
         const base_component = doc.body.querySelector(
             "#source-select-box + .link-selector-component-wrapper"
@@ -64,18 +67,22 @@ describe("base-component-renderer", () => {
     it("When the source <select> is disabled, then the link-selector should be disabled", () => {
         select.setAttribute("disabled", "disabled");
 
-        const { link_selector_element, search_field_element } = renderer.renderBaseComponent();
+        const { link_selector_element, search_field_element } = render();
 
         expect(link_selector_element.classList.contains("link-selector-disabled")).toBe(true);
         expect(search_field_element.hasAttribute("disabled")).toBe(true);
     });
 
+    it(`Given an input_placeholder option; it will set the "placeholder" attribute on the search input`, () => {
+        const { search_field_element } = render();
+
+        expect(search_field_element.getAttribute("placeholder")).toBe(INPUT_PLACEHOLDER);
+    });
+
     describe("placeholder element", () => {
-        it("Should display the a placeholder text", () => {
-            const { placeholder_element } = renderer.renderBaseComponent();
-            expect(placeholder_element.textContent).toBe(
-                "Create a new artifact or search by id or title"
-            );
+        it("Should display the placeholder text", () => {
+            const { placeholder_element } = render();
+            expect(placeholder_element.textContent).toBe(PLACEHOLDER);
         });
     });
 });

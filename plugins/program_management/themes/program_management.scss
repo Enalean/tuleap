@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@use "program_management/admin";
-@use "program_management/project-header-background";
-@use "program_management/backlog";
-@use "program_management/element";
-@use "program_management/program-increment";
-@use "~@tuleap/drag-and-drop";
+
+@use "./program_management/project-header-background";
+@use "./program_management/backlog";
+@use "./program_management/element";
+@use "./program_management/program-increment";
+@use "@tuleap/drag-and-drop";
 
 .program-management-title-header {
     margin: 0;

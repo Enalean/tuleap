@@ -1,0 +1,139 @@
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "@tuleap/project-background";
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "@tuleap/list-picker";
+
+.project-with-background {
+    .program-management-title-header {
+        @include project-background.title-header-typography;
+
+        margin: 0 0 var(--tlp-medium-spacing);
+    }
+}
+
+body {
+    @include project-background.apply-background(
+        ".program-management-title-header",
+        global-variables.$sidebar-expanded-width,
+        global-variables.$sidebar-collapsed-width
+    );
+}
+
+.program-management-title-header {
+    margin: 0;
+    padding: var(--tlp-medium-spacing);
+}
+
+.program-management-configuration-incorrect {
+    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing);
+}
+
+.program-management-admin-teams-container {
+    margin-bottom: var(--tlp-x-large-spacing);
+}
+
+.program-management-subtitle {
+    color: var(--tlp-typo-default-text-color);
+    font-weight: 600;
+}
+
+.program-management-empty-state path {
+    stroke: var(--tlp-illustration-main-color);
+}
+
+.program-management-form-choose-teams {
+    > .list-picker-component-wrapper {
+        width: 350px;
+
+        > .list-picker > .list-picker-selection {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    }
+}
+
+.program-management-admin-pane {
+    flex-direction: column;
+
+    .tlp-pane-container {
+        border-right: 0;
+    }
+}
+
+.program-management-card-teams {
+    display: flex;
+    align-items: center;
+}
+
+.program-management-card-teams-icon {
+    width: 1.25rem;
+    margin: 0 var(--tlp-small-spacing) 0 0;
+    text-align: center;
+}
+
+.program-management-admin-action-button {
+    margin: 0 0 0 auto;
+}
+
+.program-management-admin-action-synchronize-button {
+    margin: 0 var(--tlp-small-spacing) 0 0;
+}
+
+.program-management-error-rest-not-show {
+    display: none;
+}
+
+.program-management-admin-timebox-section {
+    display: grid;
+    grid-template-columns: 1fr fit-content(60%);
+}
+
+.program-management-admin-timebox-illustration {
+    margin: auto var(--tlp-jumbo-spacing) auto
+        calc(var(--tlp-jumbo-spacing) + var(--tlp-medium-spacing));
+
+    > svg {
+        display: block;
+        width: 100%;
+    }
+}
+
+.program-management-admin-illustration-text-caps {
+    text-transform: uppercase;
+}
+
+.program-management-admin-button-save-configuration {
+    margin: 0 auto var(--tlp-medium-spacing) auto;
+}
+
+.program-management-admin-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-configuration-container-milestone {
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+}
+
+.program-management-synchronization-error-badge {
+    height: var(--tlp-button-small-height);
+    margin: 0 var(--tlp-small-spacing) 0 0;
+}

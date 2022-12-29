@@ -22,12 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Permissions;
 
-class ISaveProjectPermissionsStub implements ISaveProjectPermissions
+final class ISaveProjectPermissionsStub implements ISaveProjectPermissions
 {
     /**
      * @var int[]
      */
     private $captured_readers_ugroup_ids = [];
+    /**
+     * @var int[]
+     */
+    private $captured_writers_ugroup_ids = [];
+    /**
+     * @var int[]
+     */
+    private $captured_admins_ugroup_ids = [];
 
     public static function buildSelf(): self
     {
@@ -36,12 +44,22 @@ class ISaveProjectPermissionsStub implements ISaveProjectPermissions
 
     /**
      * @param \ProjectUGroup[] $readers
+     * @param \ProjectUGroup[] $writers
+     * @param \ProjectUGroup[] $admins
      */
-    public function saveProjectPermissions(\Project $project, array $readers): void
+    public function saveProjectPermissions(\Project $project, array $readers, array $writers, array $admins): void
     {
         $this->captured_readers_ugroup_ids = array_map(
             static fn(\ProjectUGroup $user_group) => $user_group->getId(),
             $readers
+        );
+        $this->captured_writers_ugroup_ids = array_map(
+            static fn(\ProjectUGroup $user_group) => $user_group->getId(),
+            $writers
+        );
+        $this->captured_admins_ugroup_ids  = array_map(
+            static fn(\ProjectUGroup $user_group) => $user_group->getId(),
+            $admins
         );
     }
 
@@ -51,5 +69,21 @@ class ISaveProjectPermissionsStub implements ISaveProjectPermissions
     public function getCapturedReadersUgroupIds(): array
     {
         return $this->captured_readers_ugroup_ids;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCapturedWritersUgroupIds(): array
+    {
+        return $this->captured_writers_ugroup_ids;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCapturedAdminsUgroupIds(): array
+    {
+        return $this->captured_admins_ugroup_ids;
     }
 }

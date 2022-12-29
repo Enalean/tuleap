@@ -4,6 +4,7 @@ specifiers:
   '@tuleap/cross-ref-badges': workspace:*
   '@tuleap/list-picker': workspace:*
   '@tuleap/project-background': workspace:*
+  '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-swatch-colors': workspace:*
   dragula: ^3.7.2
 
@@ -11,6 +12,7 @@ dependencies:
   '@tuleap/cross-ref-badges': link:../../../lib/frontend/cross-ref-badges
   '@tuleap/list-picker': link:../../../lib/frontend/list-picker
   '@tuleap/project-background': link:../../../lib/frontend/project-background
+  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-swatch-colors': link:../../../lib/frontend/tlp-swatch-colors
   dragula: 3.7.3
 

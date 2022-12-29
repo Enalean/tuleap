@@ -158,7 +158,7 @@ describe("PlannerView", () => {
 
                 expect(getTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
                 expect(PlanningController.milestones.loading).toBeFalsy();
-                expect(PlanningController.milestones.content).toEqual([
+                expect(PlanningController.milestones.content).toStrictEqual([
                     { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
                     { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
                     { id: 184, start_date: null },
@@ -198,7 +198,7 @@ describe("PlannerView", () => {
 
                 expect(getSubMilestones).toHaveBeenCalledWith(592, expect.any(Function));
                 expect(PlanningController.milestones.loading).toBeFalsy();
-                expect(PlanningController.milestones.content).toEqual([
+                expect(PlanningController.milestones.content).toStrictEqual([
                     { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
                     { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
                     { id: 184, start_date: null },
@@ -267,7 +267,7 @@ describe("PlannerView", () => {
 
             expect(getClosedTopMilestones).toHaveBeenCalledWith(736, expect.any(Function));
             expect(PlanningController.milestones.loading).toBeFalsy();
-            expect(PlanningController.milestones.content).toEqual([
+            expect(PlanningController.milestones.content).toStrictEqual([
                 { id: 747, start_date: "2016-08-14T01:00:00+01:00" },
                 { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
                 { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
@@ -296,7 +296,7 @@ describe("PlannerView", () => {
 
             expect(getClosedSubMilestones).toHaveBeenCalledWith(592, expect.any(Function));
             expect(PlanningController.milestones.loading).toBeFalsy();
-            expect(PlanningController.milestones.content).toEqual([
+            expect(PlanningController.milestones.content).toStrictEqual([
                 { id: 747, start_date: "2016-08-14T01:00:00+01:00" },
                 { id: 307, start_date: "2016-11-12T01:00:00+01:00" },
                 { id: 295, start_date: "2017-01-01T01:00:00+01:00" },
@@ -478,9 +478,7 @@ describe("PlannerView", () => {
                 102,
                 30,
                 651,
-                expect.any(Function),
-                false,
-                false
+                expect.any(Function)
             );
             expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(8541);
         });
@@ -545,9 +543,7 @@ describe("PlannerView", () => {
                 user_id,
                 12,
                 9040,
-                expect.any(Function),
-                false,
-                false
+                expect.any(Function)
             );
             expect(PlanningController.refreshSubmilestone).toHaveBeenCalledWith(9040);
         });
@@ -571,8 +567,7 @@ describe("PlannerView", () => {
                 82,
                 PlanningController.milestone_id,
                 expect.any(Function),
-                false,
-                false
+                []
             );
         });
 
@@ -606,7 +601,7 @@ describe("PlannerView", () => {
                         1668,
                         expect.any(Object)
                     );
-                    expect(PlanningController.milestones.content).toEqual([
+                    expect(PlanningController.milestones.content).toStrictEqual([
                         {
                             id: 1668,
                             label: "Sprint 2015-20",
@@ -645,7 +640,7 @@ describe("PlannerView", () => {
                     1668,
                     expect.any(Object)
                 );
-                expect(PlanningController.milestones.content).toEqual([
+                expect(PlanningController.milestones.content).toStrictEqual([
                     {
                         id: 1668,
                         label: "Sprint 2015-20",
@@ -684,8 +679,7 @@ describe("PlannerView", () => {
                 94,
                 null,
                 expect.any(Function),
-                false,
-                false
+                []
             );
         });
 
@@ -711,7 +705,7 @@ describe("PlannerView", () => {
                     item_id: 9402,
                 });
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7488);
-                expect(submilestone.content).toEqual([{ id: 7488 }, { id: 9402 }]);
+                expect(submilestone.content).toStrictEqual([{ id: 7488 }, { id: 9402 }]);
             });
 
             it("and given that the submilestone's content was empty, when the artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", () => {
@@ -723,7 +717,7 @@ describe("PlannerView", () => {
 
                 expect(MilestoneService.addToContent).toHaveBeenCalledWith(92, [7488]);
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7488);
-                expect(submilestone.content).toEqual([{ id: 7488 }]);
+                expect(submilestone.content).toStrictEqual([{ id: 7488 }]);
             });
         });
     });
@@ -744,13 +738,13 @@ describe("PlannerView", () => {
             get_milestone_request.resolve({
                 results: { id: 9040 },
             });
-            expect(PlanningController.milestones.content).toEqual([
+            expect(PlanningController.milestones.content).toStrictEqual([
                 expect.objectContaining({ id: 9040, updating: true }),
             ]);
             $scope.$apply();
 
             expect(MilestoneService.getMilestone).toHaveBeenCalledWith(9040);
-            expect(PlanningController.milestones.content).toEqual([
+            expect(PlanningController.milestones.content).toStrictEqual([
                 expect.objectContaining({ id: 9040, updating: false }),
             ]);
         });

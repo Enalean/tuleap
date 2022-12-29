@@ -56,7 +56,8 @@ class ManifestManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->singapour_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->singapour_mirror_id, 'singapour.io', 'singapour', 'PLP');
         $this->noida_mirror     = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->noida_mirror_id, 'noida.org', 'noida', 'test');
 
-        $this->generator   = \Mockery::spy(\Git_Mirror_ManifestFileGenerator::class);
+        $this->generator = \Mockery::spy(\Git_Mirror_ManifestFileGenerator::class);
+        $this->generator->shouldReceive('getManifestDirectory')->andReturns('/doesnotexist');
         $this->data_mapper = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
 
         $this->data_mapper->shouldReceive('fetchAll')->andReturns([$this->singapour_mirror, $this->noida_mirror]);

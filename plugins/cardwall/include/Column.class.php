@@ -59,8 +59,8 @@ class Cardwall_Column
         $this->label        = $label;
         $this->header_color = $header_color;
 
-        $this->is_header_a_tlp_color = strpos($header_color, 'rgb') === false
-            && strpos($header_color, '#') === false;
+        $this->is_header_a_tlp_color = strpos((string) $header_color, 'rgb') === false
+            && strpos((string) $header_color, '#') === false;
     }
 
     public function setAutostack($value)

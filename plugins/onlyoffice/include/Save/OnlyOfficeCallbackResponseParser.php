@@ -31,5 +31,8 @@ interface OnlyOfficeCallbackResponseParser
     /**
      * @psalm-return Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault>
      */
-    public function parseCallbackResponseContent(string $response_content): Ok|Err;
+    public function parseCallbackResponseContent(
+        string $response_content,
+        SaveDocumentTokenData $save_token_information,
+    ): Ok|Err;
 }

@@ -4,7 +4,7 @@ import {
     NOT_RUN_STATUS,
     PASSED_STATUS,
 } from "../../execution-constants.js";
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import { resetError, setError } from "../../../feedback-state.js";
 import { updateStatusWithStepResults, updateStepResults } from "./execution-with-steps-updater.js";
 import { sanitize } from "dompurify";

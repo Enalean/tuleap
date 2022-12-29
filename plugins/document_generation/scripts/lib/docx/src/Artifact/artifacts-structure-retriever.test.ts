@@ -227,16 +227,7 @@ describe("retrieveArtifactsStructure", () => {
                 [6, { field_id: 6, type: "sb" }],
                 [7, { field_id: 7, type: "rb" }],
                 [8, { field_id: 8, type: "cb" }],
-                [
-                    9,
-                    {
-                        field_id: 9,
-                        type: "tbl",
-                        bindings: { type: "static" },
-                        default_value: [],
-                        permissions: ["read", "update", "create"],
-                    },
-                ],
+                [9, { field_id: 9, type: "tbl" }],
                 [
                     10,
                     {
@@ -266,7 +257,7 @@ describe("retrieveArtifactsStructure", () => {
                     },
                 ],
                 [11, { field_id: 11, type: "ttmstepexec", label: "Test Execution" }],
-                [12, { field_id: 12, type: "art_link", label: "Artifact link", allowed_types: [] }],
+                [12, { field_id: 12, type: "art_link" }],
             ]),
             disposition: [
                 { id: 3, content: null },

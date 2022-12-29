@@ -27,60 +27,61 @@ Cypress.Commands.add("preserveSessionCookies", () => {
     Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
 });
 
+Cypress.Commands.add("projectAdministratorSession", () => {
+    sessionThroughWebUI("ProjectAdministrator", "Correct Horse Battery Staple");
+});
+
+Cypress.Commands.add("projectMemberSession", () => {
+    sessionThroughWebUI("ProjectMember", "Correct Horse Battery Staple");
+});
+
 Cypress.Commands.add("projectAdministratorLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("ProjectAdministrator");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("ProjectAdministrator", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("projectMemberLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("ProjectMember");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("ProjectMember", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("platformAdminLogin", () => {
-    cy.visit("/");
-
-    cy.get("[data-test=form_loginname]").type("admin");
-    cy.get("[data-test=form_pw]").type("welcome0{enter}");
+    loginThroughWebUI("admin", "welcome0");
 });
 
 Cypress.Commands.add("restrictedMemberLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("RestrictedMember");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("RestrictedMember", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("restrictedRegularUserLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("RestrictedRegularUser");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("RestrictedRegularUser", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("permissionDelegationLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("PermissionDelegation");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("PermissionDelegation", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("regularUserLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("RegularUser");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("RegularUser", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("heisenbergLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("heisenberg");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("heisenberg", "Correct Horse Battery Staple");
 });
 
 Cypress.Commands.add("secondProjectAdministratorLogin", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("SecondProjectAdministrator");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
+    loginThroughWebUI("SecondProjectAdministrator", "Correct Horse Battery Staple");
 });
+
+function loginThroughWebUI(username: string, password: string): void {
+    cy.visit("/");
+    cy.get("[data-test=form_loginname]").type(username);
+    cy.get("[data-test=form_pw]").type(`${password}{enter}`);
+}
+
+function sessionThroughWebUI(username: string, password: string): void {
+    cy.session(["WebUI", username], () => {
+        loginThroughWebUI(username, password);
+    });
+}
 
 Cypress.Commands.add("userLogout", () => {
     cy.get("[data-test=user_logout]").click({ force: true });
@@ -198,24 +199,48 @@ Cypress.Commands.add("switchProjectVisibility", (visibility: string): void => {
 });
 
 Cypress.Commands.add(
-    "createNewIssueProject",
-    (project_short_name: string, project_public_name: string): void => {
-        cy.visit("/project/new");
-        cy.get(
-            "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
-        ).click();
-        cy.get("[data-test=project-registration-next-button]").click();
+    "createNewPublicProject",
+    (project_name: string, xml_template: string): void => {
+        const payload = {
+            shortname: project_name,
+            description: "",
+            label: project_name,
+            is_public: true,
+            categories: [],
+            fields: [],
+            xml_template_name: xml_template,
+            allow_restricted: false,
+        };
 
-        cy.get("[data-test=new-project-name]").type(project_public_name);
-        cy.get("[data-test=project-shortname-slugified-section]").click();
-        cy.get("[data-test=new-project-shortname]").type("{selectall}" + project_short_name);
-        cy.get("[data-test=approve_tos]").click();
-        cy.get("[data-test=project-registration-next-button]").click();
-        cy.get("[data-test=start-working]").click({
-            timeout: 20000,
-        });
+        cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
     }
 );
+
+Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => {
+    const payload = {
+        shortname: project_name,
+        description: "",
+        label: project_name,
+        is_public: false,
+        categories: [],
+        fields: [],
+        xml_template_name: "issues",
+        allow_restricted: true,
+    };
+
+    cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
+});
+
+Cypress.Commands.add("addUser", (user_name: string): void => {
+    cy.visitProjectAdministrationInCurrentProject();
+    cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
+    // ignore rule for select2
+
+    cy.get(".select2-search__field").type(`${user_name}{enter}`);
+
+    cy.get(".select2-result-user").click();
+    cy.get('[data-test="project-admin-submit-add-member"]').click();
+});
 
 const MAX_ATTEMPTS = 10;
 

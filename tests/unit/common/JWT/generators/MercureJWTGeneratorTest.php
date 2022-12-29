@@ -42,7 +42,7 @@ final class MercureJWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var UGroupLiteralizer */
 
-    /** @var  MercureJWTGenerator */
+    /** @var  MercureJWTGeneratorImpl */
     private $mercure_jwt_generator;
 
     /**
@@ -61,13 +61,13 @@ final class MercureJWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->jwt_configuration     = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
-        $this->mercure_jwt_generator = new MercureJWTGenerator($this->jwt_configuration, $this->user_manager);
+        $this->mercure_jwt_generator = new MercureJWTGeneratorImpl($this->jwt_configuration);
     }
 
     public function testJWTDecodedWithAlgorithmHS256(): void
     {
-        $token   = $this->mercure_jwt_generator->getTokenWithSubscription($this->app_name, $this->app_ID);
-        $decoded = $this->jwt_configuration->parser()->parse($token);
+        $token   = $this->mercure_jwt_generator->getTokenWithSubscription($this->app_name, $this->app_ID, $this->user_manager->getCurrentUser());
+        $decoded = $this->jwt_configuration->parser()->parse($token->getString());
         self::assertTrue($this->jwt_configuration->validator()->validate($decoded, new SignedWith($this->jwt_configuration->signer(), $this->jwt_configuration->signingKey())));
     }
 
@@ -77,8 +77,8 @@ final class MercureJWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->app_name . '/' . $this->app_ID,
             $this->app_name . '/' . $this->app_ID . '/{component}/{id}',
         ];
-        $token    = $this->mercure_jwt_generator->getTokenWithoutSubscription($this->app_name, $this->app_ID);
-        $decoded  = (new Parser(new JoseEncoder()))->parse($token);
+        $token    = $this->mercure_jwt_generator->getTokenWithoutSubscription($this->app_name, $this->app_ID, $this->user_manager->getCurrentUser());
+        $decoded  = (new Parser(new JoseEncoder()))->parse($token->getString());
 
         self::assertSame($expected, (array) $decoded->claims()->get('mercure')['subscribe']);
     }
@@ -91,8 +91,8 @@ final class MercureJWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             '/.well-known/mercure/subscriptions/' . urlencode($this->app_name . '/' . $this->app_ID) . '{/sub}',
             '/.well-known/mercure/subscriptions/' . urlencode($this->app_name . '/' . $this->app_ID) . '{subsubscription}{/sub}',
         ];
-        $token    = $this->mercure_jwt_generator->getTokenWithSubscription($this->app_name, $this->app_ID);
-        $decoded  = (new Parser(new JoseEncoder()))->parse($token);
+        $token    = $this->mercure_jwt_generator->getTokenWithSubscription($this->app_name, $this->app_ID, $this->user_manager->getCurrentUser());
+        $decoded  = (new Parser(new JoseEncoder()))->parse($token->getString());
 
         self::assertSame($expected, (array) $decoded->claims()->get('mercure')['subscribe']);
     }
@@ -105,7 +105,7 @@ final class MercureJWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
             'payload' => [''],
         ];
         $token    = $this->mercure_jwt_generator->getTokenBackend();
-        $decoded  = (new Parser(new JoseEncoder()))->parse($token);
+        $decoded  = (new Parser(new JoseEncoder()))->parse($token->getString());
         self::assertSame($expected, (array) $decoded->claims()->get('mercure'));
     }
 }

@@ -34,7 +34,7 @@ class ArtifactRulesManager
     {
     }
 
-    protected $rules_by_tracker_id;
+    protected array $rules_by_tracker_id = [];
     public function getAllRulesByArtifactTypeWithOrder($artifact_type_id)
     {
         if (! isset($this->rules_by_tracker_id[$artifact_type_id])) {

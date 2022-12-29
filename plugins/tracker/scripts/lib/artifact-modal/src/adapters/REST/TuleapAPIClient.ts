@@ -20,8 +20,11 @@
 import { getJSON, getAllJSON, postJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import type { PostFileResponse } from "@tuleap/plugin-tracker-rest-api-types";
-import type { UserHistoryResponse } from "@tuleap/core-rest-api-types";
+import type {
+    ChangesetWithCommentRepresentation,
+    PostFileResponse,
+} from "@tuleap/plugin-tracker-rest-api-types";
+import type { UserHistoryResponse, SearchResultEntry } from "@tuleap/core-rest-api-types";
 import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field/RetrieveMatchingArtifact";
@@ -29,14 +32,14 @@ import type { RetrieveLinkTypes } from "../../domain/fields/link-field/RetrieveL
 import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field/RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact } from "../../domain/fields/link-field/LinkedArtifact";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
+import { LinkedArtifactProxy } from "./fields/link-field/LinkedArtifactProxy";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
 import type { LinkableNumber } from "../../domain/fields/link-field/LinkableNumber";
 import { ParentRetrievalFault } from "../../domain/parent/ParentRetrievalFault";
 import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
-import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
+import { LinkableArtifactProxy } from "./fields/link-field/LinkableArtifactProxy";
 import type { LinkType } from "../../domain/fields/link-field/LinkType";
 import type { RetrievePossibleParents } from "../../domain/fields/link-field/RetrievePossibleParents";
 import { PossibleParentsRetrievalFault } from "../../domain/fields/link-field/PossibleParentsRetrievalFault";
@@ -44,6 +47,10 @@ import type { CreateFileUpload } from "../../domain/fields/file-field/CreateFile
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { RetrieveUserHistory } from "../../domain/fields/link-field/RetrieveUserHistory";
 import type { UserIdentifier } from "../../domain/UserIdentifier";
+import type { SearchArtifacts } from "../../domain/fields/link-field/SearchArtifacts";
+import type { RetrieveComments } from "../../domain/comments/RetrieveComments";
+import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
+import { FollowUpCommentProxy } from "./comments/FollowUpCommentProxy";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -55,7 +62,9 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveLinkedArtifactsByType &
     RetrievePossibleParents &
     CreateFileUpload &
-    RetrieveUserHistory;
+    RetrieveUserHistory &
+    SearchArtifacts &
+    RetrieveComments;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -124,6 +133,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
             })
         );
     },
+
     getUserArtifactHistory(
         user_identifier: UserIdentifier
     ): ResultAsync<readonly LinkableArtifact[], Fault> {
@@ -134,5 +144,28 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
                     .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
             }
         );
+    },
+
+    searchArtifacts(query): ResultAsync<readonly LinkableArtifact[], Fault> {
+        return postJSON<readonly SearchResultEntry[]>(`/api/search?limit=50`, {
+            keywords: query,
+        }).map((results) => {
+            return results
+                .filter((entry) => entry.type === ARTIFACT_TYPE)
+                .map((entry) => LinkableArtifactProxy.fromAPIUserHistory(entry));
+        });
+    },
+
+    getComments(artifact_id, is_order_inverted): ResultAsync<readonly FollowUpComment[], Fault> {
+        return getAllJSON<
+            readonly ChangesetWithCommentRepresentation[],
+            ChangesetWithCommentRepresentation
+        >(`/api/v1/artifacts/${artifact_id.id}/changesets`, {
+            params: {
+                limit: 50,
+                fields: "comments",
+                order: is_order_inverted ? "desc" : "asc",
+            },
+        }).map((comments) => comments.map(FollowUpCommentProxy.fromRepresentation));
     },
 });

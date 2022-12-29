@@ -35,12 +35,10 @@ use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImportBuilder;
 use Tracker_ArtifactFactory;
-use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_FormElementFactory;
-use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_URLVerification;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
@@ -119,6 +117,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInit
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
+use Tuleap\Tracker\REST\Artifact\PUTHandler;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
@@ -550,7 +549,7 @@ class ArtifactsResource extends AuthenticatedResource
                 $user,
                 $linked_artifact,
                 $tracker_representation,
-                StatusValueRepresentation::buildFromArtifact($artifact, $user)
+                StatusValueRepresentation::buildFromArtifact($linked_artifact, $user)
             );
         }
 
@@ -672,6 +671,7 @@ class ArtifactsResource extends AuthenticatedResource
      * @param array                             $values  Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
      * @param NewChangesetCommentRepresentation $comment Comment about update {body, format} {@from body}
      *
+     * @throws RestException 400
      * @throws RestException 403
      */
     protected function putId($id, array $values, ?NewChangesetCommentRepresentation $comment = null)
@@ -727,39 +727,26 @@ class ArtifactsResource extends AuthenticatedResource
             )
         );
 
-        $this->sendAllowHeadersForArtifact();
-        try {
-            $updater = new ArtifactUpdater(
-                new FieldsDataBuilder(
-                    $this->formelement_factory,
-                    new NewArtifactLinkChangesetValueBuilder(
-                        new ArtifactForwardLinksRetriever(
-                            new ArtifactLinksByChangesetCache(),
-                            new ChangesetValueArtifactLinkDao(),
-                            $this->artifact_factory
-                        )
-                    ),
-                    new NewArtifactLinkInitialChangesetValueBuilder()
+        $fields_data_builder = new FieldsDataBuilder(
+            $this->formelement_factory,
+            new NewArtifactLinkChangesetValueBuilder(
+                new ArtifactForwardLinksRetriever(
+                    new ArtifactLinksByChangesetCache(),
+                    new ChangesetValueArtifactLinkDao(),
+                    $this->artifact_factory
                 ),
-                $changeset_creator
-            );
-            $updater->update($user, $artifact, $values, $comment);
-        } catch (Tracker_FormElement_InvalidFieldException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_NoChangeException $exception) {
-            //Do nothing
-        } catch (Tracker_Exception $exception) {
-            if ($GLOBALS['Response']->feedbackHasErrors()) {
-                throw new RestException(500, $GLOBALS['Response']->getRawFeedback());
-            }
-            throw new RestException(500, $exception->getMessage());
-        } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {
-            throw new RestException(500, $exception->getMessage());
-        } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
-            throw new RestException(404, $exception->getMessage());
-        }
+            ),
+            new NewArtifactLinkInitialChangesetValueBuilder()
+        );
+        $updater             = new ArtifactUpdater(
+            $fields_data_builder,
+            $changeset_creator
+        );
+
+        $this->sendAllowHeadersForArtifact();
+
+        $put_handler = new PUTHandler($fields_data_builder, $updater);
+        $put_handler->handle($values, $artifact, $user, $comment);
 
         $this->sendLastModifiedHeader($artifact);
         $this->sendETagHeader($artifact);

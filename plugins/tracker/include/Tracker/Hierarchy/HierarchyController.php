@@ -18,9 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Hierarchy;
 
 use Codendi_Request;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tracker;
@@ -72,6 +75,7 @@ class HierarchyController
         HierarchyDAO $dao,
         Tracker_Workflow_Trigger_RulesDao $tracker_workflow_trigger_rules_dao,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
+        private EventDispatcherInterface $event_dispatcher,
     ) {
         $this->request                            = $request;
         $this->tracker                            = $tracker;
@@ -133,10 +137,28 @@ class HierarchyController
             $this->redirectToAdminHierarchy();
             return;
         }
-        /** @var int[]|false $wanted_children */
-        $wanted_children = $this->request->get('children');
-        if ($wanted_children === false) {
-            $wanted_children = [];
+        /** @var string[]|false $request_children */
+        $request_children = $this->request->get('children');
+        /** @var int[] $wanted_children */
+        $wanted_children = [];
+        if ($request_children !== false) {
+            $wanted_children = array_map('intval', $request_children);
+        }
+
+        $event = $this->event_dispatcher->dispatch(
+            new TrackerHierarchyUpdateEvent(
+                $this->tracker->getUnhierarchizedTracker(),
+                $wanted_children,
+            )
+        );
+
+        if (! $event->canHierarchyBeUpdated()) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $event->getErrorMessage(),
+            );
+            $this->redirectToAdminHierarchy();
+            return;
         }
 
         $children_used_in_trigger_rules = $this->getChildrenUsedInTriggerRules();

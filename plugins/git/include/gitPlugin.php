@@ -489,6 +489,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(PreReceiveAnalyzeCommand::class);
+        $event->addConfigClass(GitoliteAccessURLGenerator::class);
     }
 
     public function cssFile($params)

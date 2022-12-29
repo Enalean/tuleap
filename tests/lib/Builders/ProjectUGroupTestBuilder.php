@@ -41,6 +41,30 @@ final class ProjectUGroupTestBuilder
         return new self($user_group_id);
     }
 
+    public static function buildAnonymous(): \ProjectUGroup
+    {
+        return new \ProjectUgroup([
+            'ugroup_id' => \ProjectUGroup::ANONYMOUS,
+            'name'      => NameTranslator::ANON,
+        ]);
+    }
+
+    public static function buildRegistered(): \ProjectUGroup
+    {
+        return new \ProjectUgroup([
+            'ugroup_id' => \ProjectUGroup::REGISTERED,
+            'name'      => NameTranslator::REGISTERED,
+        ]);
+    }
+
+    public static function buildAuthenticated(): \ProjectUGroup
+    {
+        return new \ProjectUgroup([
+            'ugroup_id' => \ProjectUGroup::AUTHENTICATED,
+            'name'      => NameTranslator::AUTHENTICATED,
+        ]);
+    }
+
     public static function buildProjectMembers(): \ProjectUGroup
     {
         return new \ProjectUgroup([

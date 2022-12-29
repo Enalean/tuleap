@@ -25,6 +25,8 @@ namespace Tuleap\OnlyOffice\Download;
 use DateInterval;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -49,7 +51,14 @@ final class OnlyOfficeDownloadDocumentTokenGeneratorDBStoreTest extends TestCase
 
         $token = $token_generator->generateDownloadToken(
             $user,
-            new OnlyOfficeDocument(ProjectTestBuilder::aProject()->build(), $item, 123, 'document.docx', true),
+            new OnlyOfficeDocument(
+                ProjectTestBuilder::aProject()->build(),
+                $item,
+                123,
+                'document.docx',
+                true,
+                DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
+            ),
             new \DateTimeImmutable('@10'),
         );
 

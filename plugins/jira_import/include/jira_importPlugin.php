@@ -42,6 +42,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeValidator;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/vendor/autoload.php';
+require_once __DIR__ . '/../../projectmilestones/vendor/autoload.php';
 
 define('TULEAP_PLUGIN_JIRA_IMPORT', '1');
 
@@ -71,7 +72,7 @@ final class jira_importPlugin extends Plugin
 
     public function getDependencies(): array
     {
-        return ['tracker', 'agiledashboard', 'cardwall', 'roadmap'];
+        return ['tracker', 'agiledashboard', 'cardwall', 'roadmap', 'projectmilestones'];
     }
 
     public function collectCLICommands(CLICommandsCollector $commands_collector): void

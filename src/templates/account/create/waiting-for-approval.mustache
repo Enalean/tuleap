@@ -1,0 +1,38 @@
+<section class="account-registration">
+    <svg width="259" height="145" viewBox="0 0 259 145" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_467_13641)">
+            <path d="M234 105C234 162.99 186.99 210 129 210C71.0101 210 24 162.99 24 105C24 47.0101 71.0101 7.62939e-06 129 7.62939e-06C186.99 7.62939e-06 234 47.0101 234 105Z" fill="url(#paint0_linear_467_13641)"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M105 49C105 47.8954 105.895 47 107 47H153C154.105 47 155 47.8954 155 49V50.33C155 51.4346 154.105 52.33 153 52.33H149.499C149.446 58.6509 147.881 63.1408 144.773 67.4194C142.283 70.8467 138.764 74.1641 134.488 78.1949L134.488 78.1949L134.487 78.1957L134.487 78.1957L134.481 78.2014C134.2 78.4667 133.915 78.7351 133.627 79.0068C143.445 88.413 149.261 94.6858 149.493 105.333H153C154.105 105.333 155 106.229 155 107.333V108.663C155 109.768 154.105 110.663 153 110.663H107C105.895 110.663 105 109.768 105 108.663V107.333C105 106.229 105.895 105.333 107 105.333H110.507C110.739 94.6858 116.555 88.413 126.373 79.0068C126.083 78.7331 125.796 78.4628 125.513 78.1957L125.512 78.1949C121.236 74.1641 117.717 70.8467 115.227 67.4194C112.119 63.1408 110.554 58.6509 110.501 52.33H107C105.895 52.33 105 51.4346 105 50.33V49ZM116.054 101C117.502 94.9835 121.864 90.2646 130 82.4582C138.136 90.2646 142.498 94.9835 143.946 101H116.054ZM115.767 56L144.233 56C144.397 54.8746 144.486 53.6606 144.498 52.33H115.502C115.514 53.6605 115.603 54.8746 115.767 56ZM130 92C126.703 92 128.157 87.5825 129.583 84.7781C129.759 84.4315 130.241 84.4315 130.417 84.7781C131.843 87.5825 133.297 92 130 92Z" fill="var(--tlp-illustration-main-color)"/>
+        </g>
+        <defs>
+            <linearGradient id="paint0_linear_467_13641" x1="129" y1="0" x2="129" y2="124.408" gradientUnits="userSpaceOnUse">
+                <stop offset="0.416" stop-color="var(--tlp-illustration-grey-on-background)"/>
+                <stop offset="1" stop-color="var(--tlp-illustration-grey-on-background)" stop-opacity="0"/>
+            </linearGradient>
+            <clipPath id="clip0_467_13641">
+                <rect width="259" height="145" fill="white"/>
+            </clipPath>
+        </defs>
+    </svg>
+
+
+    <div class="account-registration-content">
+        <h1 class="account-registration-content-title">
+            {{# gettext }}Your account has been created{{/ gettext }}<br>
+            {{# gettext }}but it must be approved by an administrator{{/ gettext }}
+        </h1>
+
+        <p class="tlp-text-muted">
+            {{# gettext }}Platform administrators have been notified.{{/ gettext }}<br>
+            {{# gettext }}Once approved, you will receive a confirmation email to <strong>%s</strong> | {{ email }}{{/ gettext }}<br>
+            {{# gettext }}with a link to activate your account.{{/ gettext }}
+        </p>
+        <p class="tlp-text-muted">
+            {{# gettext }}In the meantime, you can get %sback to the homepage%s. | <a href="/"> | </a>{{/ gettext }}
+        </p>
+    </div>
+</section>
+
+<div class="account-registration-background">
+    {{> homepage-background }}
+</div>

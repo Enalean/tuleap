@@ -18,14 +18,8 @@
  */
 
 describe(`Planning view Explicit Backlog`, function () {
-    before(function () {
-        cy.clearSessionCookie();
-
-        cy.projectMemberLogin();
-    });
-
     beforeEach(function () {
-        cy.preserveSessionCookies();
+        cy.projectMemberSession();
         cy.visitProjectService("explicit-backlog", "Agile Dashboard");
         // eslint-disable-next-line cypress/require-data-selectors
         cy.get("body").as("body");
@@ -116,39 +110,19 @@ describe(`Planning view Explicit Backlog`, function () {
 
     context("Scrum template usage", () => {
         let project_name: string;
-        let project_public_name: string;
         let now: number;
 
         before(function () {
-            cy.clearSessionCookie();
-
-            cy.projectMemberLogin();
-
             now = Date.now();
         });
 
         beforeEach(function () {
-            cy.preserveSessionCookies();
-
             project_name = "ad-" + now;
-            project_public_name = "Ad " + now;
         });
         it(`Scrum template can be used in explicit mode`, function () {
+            cy.projectMemberSession();
             cy.log("Create a new project");
-            cy.visit("/project/new");
-            cy.get(
-                "[data-test=project-registration-card-label][for=project-registration-tuleap-template-scrum]"
-            ).click();
-            cy.get("[data-test=project-registration-next-button]").click();
-
-            cy.get("[data-test=new-project-name]").type(project_public_name);
-            cy.get("[data-test=project-shortname-slugified-section]").click();
-            cy.get("[data-test=new-project-shortname]").type("{selectall}" + project_name);
-            cy.get("[data-test=approve_tos]").click();
-            cy.get("[data-test=project-registration-next-button]").click();
-            cy.get("[data-test=start-working]").click({
-                timeout: 20000,
-            });
+            cy.createNewPublicProject(project_name, "scrum");
 
             cy.log("Items are automatically linked to top backlog");
             cy.visitProjectService(project_name, "Agile Dashboard");

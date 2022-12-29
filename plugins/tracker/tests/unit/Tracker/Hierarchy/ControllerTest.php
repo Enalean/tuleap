@@ -18,9 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 
 final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -56,6 +59,10 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactLinksUsageDao
      */
     private $artifact_links_usage_dao;
+    /**
+     * @var EventManager&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $event_manager;
 
     protected function setUp(): void
     {
@@ -74,6 +81,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->factory                  = \Mockery::spy(\Tracker_Hierarchy_HierarchicalTrackerFactory::class);
         $this->trigger_rules_dao        = Mockery::spy(Tracker_Workflow_Trigger_RulesDao::class);
         $this->artifact_links_usage_dao = Mockery::mock(ArtifactLinksUsageDao::class);
+        $this->event_manager            = $this->createMock(EventManager::class);
 
         $this->trigger_rules_dao->shouldReceive('searchTriggeringTrackersByTargetTrackerID')->andReturn([]);
     }
@@ -158,7 +166,8 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            $this->artifact_links_usage_dao
+            $this->artifact_links_usage_dao,
+            $this->event_manager,
         );
         return $controller->buildPresenter();
     }
@@ -173,13 +182,21 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->once()
             ->andReturnFalse();
 
+        $this->event_manager->method("dispatch")->willReturn(
+            new TrackerHierarchyUpdateEvent(
+                $this->hierarchical_tracker->getUnhierarchizedTracker(),
+                $children_ids,
+            )
+        );
+
         $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            $this->artifact_links_usage_dao
+            $this->artifact_links_usage_dao,
+            $this->event_manager,
         );
         $controller->update();
     }
@@ -194,13 +211,21 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->once()
             ->andReturnTrue();
 
+        $this->event_manager->method("dispatch")->willReturn(
+            new TrackerHierarchyUpdateEvent(
+                $this->hierarchical_tracker->getUnhierarchizedTracker(),
+                $children_ids,
+            )
+        );
+
         $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            $this->artifact_links_usage_dao
+            $this->artifact_links_usage_dao,
+            $this->event_manager,
         );
         $controller->update();
     }
@@ -215,13 +240,21 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             ->once()
             ->andReturnFalse();
 
+        $this->event_manager->method("dispatch")->willReturn(
+            new TrackerHierarchyUpdateEvent(
+                $this->hierarchical_tracker->getUnhierarchizedTracker(),
+                $children_ids,
+            )
+        );
+
         $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            $this->artifact_links_usage_dao
+            $this->artifact_links_usage_dao,
+            $this->event_manager,
         );
 
         $controller->update();
@@ -242,7 +275,8 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            $this->artifact_links_usage_dao
+            $this->artifact_links_usage_dao,
+            $this->event_manager,
         );
         $controller->update();
     }
@@ -256,7 +290,8 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->factory,
             $this->dao,
             $this->trigger_rules_dao,
-            $this->artifact_links_usage_dao
+            $this->artifact_links_usage_dao,
+            $this->event_manager,
         );
         $this->dao->shouldReceive('updateChildren')->once();
 

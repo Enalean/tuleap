@@ -769,6 +769,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $ugroup_manager = new UGroupManager();
         $project        = $this->getField()->getTracker()->getProject();
         $user_group     = $ugroup_manager->getUGroupByName($project, $value->getLabel());
+        if (! $user_group) {
+            throw new \Exception("Unable to find the user group " . $value->getLabel());
+        }
 
         return new MinimalUserGroupRepresentation($project->getID(), $user_group);
     }

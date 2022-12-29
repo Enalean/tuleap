@@ -21,4 +21,5 @@ const { defineJestConfiguration } = require("@tuleap/build-system-configurator")
 module.exports = {
     ...defineJestConfiguration(),
     displayName: "program-management",
+    roots: ["scripts/planned-iterations", "scripts/program_management"],
 };

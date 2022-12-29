@@ -19,10 +19,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Tracker\Artifact\Artifact;
 
+#[ConfigKeyCategory('Tracker')]
 class Tracker_ReportDao extends DataAccessObject
 {
+    #[\Tuleap\Config\ConfigKey('Define the maximum number of artifacts a report can render')]
+    #[\Tuleap\Config\ConfigKeyHelp(<<<EOT
+    Tuleap tracker reports can reach a limit. This limit is not clear today but it's known to fail around 600'000
+    artifact in single tracker.
+    This configuration variable is introduced to let admin access their tracker despite the large amount of artifacts
+    in order to let them better filter the content.
+    The default is 0 and means 'no limit'
+    EOT)]
+    #[\Tuleap\Config\ConfigKeyInt(0)]
+    public const MAX_ARTIFACTS_IN_REPORT = 'max_artifacts_in_report';
+
     public function __construct()
     {
         parent::__construct();
@@ -234,6 +247,20 @@ class Tracker_ReportDao extends DataAccessObject
             $sql  = " SELECT id, last_changeset_id";
             $sql .= " FROM (" . implode(' UNION ', $sqls) . ") AS R GROUP BY id, last_changeset_id";
 
+            $max_artifacts_in_report = ForgeConfig::getInt(self::MAX_ARTIFACTS_IN_REPORT);
+            if ($max_artifacts_in_report > 0) {
+                $count_query = 'SELECT COUNT(*) as nb FROM (' . $sql . ') AS COUNT_ARTS';
+                $res         = $this->retrieve($count_query);
+                if ($res) {
+                    /** @psalm-suppress DeprecatedMethod */
+                    $row = $res->getRow();
+                    if ($row['nb'] >= $max_artifacts_in_report) {
+                        throw new \Tuleap\Tracker\Report\dao\TooManyMatchingArtifactsException((int) $tracker_id, $row['nb'], $max_artifacts_in_report);
+                    }
+                }
+            }
+
+            /** @psalm-suppress DeprecatedMethod */
             return $this->retrieve($sql);
         }
     }

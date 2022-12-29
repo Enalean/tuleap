@@ -19,7 +19,7 @@
 
 import { getProjectUserGroups } from "../../api/rest-querier";
 import type { UserGroup } from "../../type";
-import { PROJECT_MEMBERS_ID, PROJECT_ADMINISTRATORS_ID } from "@tuleap/user-group-constants";
+import { PROJECT_MEMBERS_ID, PROJECT_ADMINISTRATORS_ID } from "@tuleap/core-constants";
 
 function isUGroupAServiceSpecialUGroup(project_id: number, ugroup: UserGroup): boolean {
     return (

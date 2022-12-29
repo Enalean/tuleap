@@ -24,33 +24,47 @@ namespace Tuleap\MediawikiStandalone\Permissions;
 
 use Tuleap\DB\DataAccessObject;
 
-final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProjectAndPermission, ISaveProjectPermissions
+final class MediawikiPermissionsDao extends DataAccessObject implements ISearchByProject, ISaveProjectPermissions, IUpdatePermissionsFollowingSiteAccessChange
 {
     /**
-     * @return list<array{ ugroup_id: int }>
+     * @return list<array{ ugroup_id: int, permission: string }>
      */
-    public function searchByProjectAndPermission(\Project $project, Permission $permission): array
+    public function searchByProject(\Project $project): array
     {
         return $this->getDB()->run(
-            'SELECT ugroup_id
+            'SELECT ugroup_id, permission
             FROM plugin_mediawiki_standalone_permissions
-            WHERE project_id = ?
-            AND permission = ?',
-            $project->getID(),
-            $permission->getName()
+            WHERE project_id = ?',
+            $project->getID()
         );
     }
 
     /**
      * @param \ProjectUGroup[] $readers
+     * @param \ProjectUGroup[] $writers
+     * @param \ProjectUGroup[] $admins
      */
-    public function saveProjectPermissions(\Project $project, array $readers): void
+    public function saveProjectPermissions(\Project $project, array $readers, array $writers, array $admins): void
     {
         $insertions = [];
         foreach ($readers as $user_group) {
             $insertions[] = [
                 'project_id' => $project->getID(),
                 'permission' => PermissionRead::NAME,
+                'ugroup_id'  => $user_group->getId(),
+            ];
+        }
+        foreach ($writers as $user_group) {
+            $insertions[] = [
+                'project_id' => $project->getID(),
+                'permission' => PermissionWrite::NAME,
+                'ugroup_id'  => $user_group->getId(),
+            ];
+        }
+        foreach ($admins as $user_group) {
+            $insertions[] = [
+                'project_id' => $project->getID(),
+                'permission' => PermissionAdmin::NAME,
                 'ugroup_id'  => $user_group->getId(),
             ];
         }
@@ -99,6 +113,24 @@ final class MediawikiPermissionsDao extends DataAccessObject implements ISearchB
                     );
                 }
             }
+        );
+    }
+
+    public function updateAllAnonymousAccessToRegistered(): void
+    {
+        $this->getDB()->update(
+            'plugin_mediawiki_standalone_permissions',
+            ['ugroup_id' => \ProjectUGroup::REGISTERED],
+            ['ugroup_id' => \ProjectUGroup::ANONYMOUS]
+        );
+    }
+
+    public function updateAllAuthenticatedAccessToRegistered(): void
+    {
+        $this->getDB()->update(
+            'plugin_mediawiki_standalone_permissions',
+            ['ugroup_id' => \ProjectUGroup::REGISTERED],
+            ['ugroup_id' => \ProjectUGroup::AUTHENTICATED]
         );
     }
 }

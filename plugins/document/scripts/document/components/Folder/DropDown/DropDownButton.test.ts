@@ -26,7 +26,6 @@ import emitter from "../../../helpers/emitter";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 
 jest.mock("../../../helpers/emitter");
-jest.mock("@tuleap/tlp-dropdown");
 
 describe("DropDownButton", () => {
     let fake_dropdown_object: Dropdown;

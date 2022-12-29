@@ -77,9 +77,9 @@ class WikiAttachment /* implements UGroupPermission */
      */
     public $revision;
 
-    public $id;
+    public ?int $id = null;
 
-    public $revisionCounter;
+    public mixed $revisionCounter;
 
     public function __construct($gid = 0)
     {
@@ -506,8 +506,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function count()
     {
         if ($this->revisionCounter === null) {
-            $this->getId();
-            $waIter                = WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
+            $waIter                = WikiAttachmentRevision::getRevisionIterator($this->gid, (int) $this->getId());
             $this->revisionCounter = $waIter->count();
         }
         return $this->revisionCounter;
@@ -663,7 +662,7 @@ class WikiAttachment /* implements UGroupPermission */
             }
         }
         $dao = $this->getDao();
-        if (! $dao->setPurgeDate($this->id, $_SERVER['REQUEST_TIME'])) {
+        if (! $dao->setPurgeDate($this->id, $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp())) {
             return false;
         }
         return true;

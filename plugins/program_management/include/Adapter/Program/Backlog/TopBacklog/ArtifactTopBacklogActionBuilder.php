@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use PFUser;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\NotAllowedToPrioritizeException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyFeaturePlanned;
@@ -49,7 +49,7 @@ final class ArtifactTopBacklogActionBuilder
         private VerifyIsPlannable $verify_is_plannable,
         private VerifyIsInTopBacklog $artifacts_explicit_top_backlog_dao,
         private VerifyFeaturePlanned $planned_feature_dao,
-        private JavascriptAsset $asset,
+        private JavascriptAssetGeneric $asset,
         private VerifyTrackerSemantics $tracker_factory,
     ) {
     }

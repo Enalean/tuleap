@@ -91,13 +91,38 @@ class User_ForgeUserGroupFactory
     /**
      * @return User_ForgeUGroup[]
      */
-    public function getAllForProject(Project $project)
+    public function getAllForProject(Project $project): array
+    {
+        return array_merge(
+            $this->getAllForProjectWithoutNobody($project),
+            [$this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)]
+        );
+    }
+
+    /**
+     * @return User_ForgeUGroup[]
+     */
+    public function getAllForProjectWithoutNobody(Project $project): array
     {
         $user_groups = [];
 
         if (ForgeConfig::areAnonymousAllowed() && $project->isPublic()) {
             $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::ANON);
         }
+
+        return array_merge(
+            $user_groups,
+            $this->getAllForProjectWithoutNobodyNorAnonymous($project)
+        );
+    }
+
+    /**
+     * @return User_ForgeUGroup[]
+     */
+    public function getAllForProjectWithoutNobodyNorAnonymous(Project $project): array
+    {
+        $user_groups = [];
+
         if (ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted()) {
             $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::AUTHENTICATED);
         }
@@ -107,7 +132,10 @@ class User_ForgeUserGroupFactory
         $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
         $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_ADMINS);
 
-        return array_merge($user_groups, $this->getStaticByProject($project), [$this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)]);
+        return array_merge(
+            $user_groups,
+            $this->getStaticByProject($project)
+        );
     }
 
     public function getProjectUGroupsWithAdministratorAndMembers(Project $project)

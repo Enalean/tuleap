@@ -56,10 +56,11 @@ final class FileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testParseAndImportLines(): void
     {
         $this->dao->method('searchLatestEntryTimestamp')->willReturn(0);
+        $entry = new \Tuleap\ProFTPd\Xferlog\Entry(1, 1, '', 1, '', '', '', '', '', '', '', '', '', '');
         $this->parser
             ->expects($this->exactly(5))
             ->method('extract')
-            ->will($this->returnValue($this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Entry')->disableOriginalConstructor()->getMock()));
+            ->willReturn($entry);
 
         $this->dao
             ->expects($this->exactly(5))

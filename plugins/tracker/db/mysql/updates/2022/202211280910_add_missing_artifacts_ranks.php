@@ -45,7 +45,7 @@ final class b202211280910_add_missing_artifacts_ranks extends \Tuleap\ForgeUpgra
         $result = $this->api->dbh->query($sql);
         $row    = $result->fetch();
 
-        return $row['MAX_RANK'];
+        return $row['MAX_RANK'] ?? 0;
     }
 
     private function getArtifactsRowsWithMissingRank(): array

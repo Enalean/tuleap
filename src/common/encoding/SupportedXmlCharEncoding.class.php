@@ -30,7 +30,7 @@ class Encoding_SupportedXmlCharEncoding
    /**
     * @see http://www.w3.org/TR/REC-xml/#charsets
     */
-    public static function getXMLCompatibleString($string)
+    public static function getXMLCompatibleString(string $string): string
     {
         $clean   = "";
         $current = null;

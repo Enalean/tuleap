@@ -24,17 +24,11 @@ use Tuleap\Hudson\HudsonJobBuilder;
 
 class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
 {
-    public $plugin;
+    public hudsonPlugin $plugin;
 
-    public $_not_monitored_jobs;
-    /**
-     * @var MinimalHudsonJobFactory
-     */
-    private $factory;
-    /**
-     * @var HudsonJobBuilder
-     */
-    private $job_builder;
+    public mixed $_not_monitored_jobs;
+    private MinimalHudsonJobFactory $factory;
+    private HudsonJobBuilder $job_builder;
 
     public function __construct($user_id, hudsonPlugin $plugin, MinimalHudsonJobFactory $factory, HudsonJobBuilder $job_builder)
     {

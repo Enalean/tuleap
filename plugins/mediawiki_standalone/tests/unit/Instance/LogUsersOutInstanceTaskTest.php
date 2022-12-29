@@ -34,7 +34,7 @@ final class LogUsersOutInstanceTaskTest extends TestCase
         self::assertEquals(['project_id' => null, 'user_id' => null], $task->getPayload());
     }
 
-    public function testBuildsTaskToLogOutUsersOnSpecificInstance(): void
+    public function testBuildsTaskToLogOutUsersOnSpecificInstanceByItsID(): void
     {
         $project = $this->createStub(\Project::class);
         $project->method('getID')->willReturn(200);
@@ -45,6 +45,19 @@ final class LogUsersOutInstanceTaskTest extends TestCase
             (int) $project->getID(),
             ProjectByIDFactoryStub::buildWith($project),
         );
+
+        self::assertNotNull($task);
+        self::assertEquals(['project_id' => 200, 'user_id' => null], $task->getPayload());
+    }
+
+    public function testBuildsTaskToLogOutUsersOnSpecificInstance(): void
+    {
+        $project = $this->createStub(\Project::class);
+        $project->method('getID')->willReturn(200);
+        $project->method('usesService')->willReturn(true);
+        $project->method('isError')->willReturn(false);
+        $project->method('isDeleted')->willReturn(false);
+        $task = LogUsersOutInstanceTask::logsOutUserOfAProject($project);
 
         self::assertNotNull($task);
         self::assertEquals(['project_id' => 200, 'user_id' => null], $task->getPayload());

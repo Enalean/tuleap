@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap;
 
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+
 /**
  * @psalm-immutable
  */
@@ -42,7 +44,7 @@ final class CSRFSynchronizerTokenPresenter
         $this->token = $token;
     }
 
-    public static function fromToken(\CSRFSynchronizerToken $token): self
+    public static function fromToken(CSRFSynchronizerTokenInterface $token): self
     {
         return new self($token->getTokenName(), $token->getToken());
     }

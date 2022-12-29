@@ -9,6 +9,9 @@ msgstr ""
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
 
+msgid "\"None\" value cannot be hidden"
+msgstr ""
+
 msgid "\"duration\" field is empty or invalid"
 msgstr ""
 
@@ -3442,6 +3445,12 @@ msgstr ""
 
 #, php-format
 msgid "Tracker %1$s not duplicated"
+msgstr ""
+
+#, php-format
+msgid ""
+"Tracker %d has too many artifacts (%d) while limit was set to %d. Please "
+"refine your query"
 msgstr ""
 
 #, php-format

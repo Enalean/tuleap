@@ -49,7 +49,6 @@
         is-disabled="modal.isDisabled(field)"
         value-model="modal.values[field.field_id]"
         options-value="field.filtered_values"
-        is-list-picker-enabled="modal.is_list_picker_enabled"
     ></div>
 </script>
 
@@ -61,7 +60,6 @@
         is-disabled="modal.isDisabled(field)"
         value-model="modal.values[field.field_id]"
         options-value="field.filtered_values"
-        is-list-picker-enabled="modal.is_list_picker_enabled"
     ></div>
 </div>
 </script>
@@ -341,78 +339,14 @@
             <ng-include src="field.template_url" ng-repeat="field in modal.ordered_fields"></ng-include>
         </div>
 
-        <div class="tuleap-artifact-modal-followups"
+        <tuleap-artifact-modal-comments-section
             ng-if="! modal.creation_mode"
-            ng-class="{'invert-order': modal.followups_comments.invert_order === 'desc' }"
-        >
-            <h2 class="tlp-modal-subtitle tuleap-artifact-modal-followups-title"
-                title="{{ 'Only comments are displayed' | translate }}"
-            >
-                <i class="far fa-comments tuleap-artifact-modal-followups-title-icon"></i><span translate>Follow-ups</span>
-            </h2>
-
-            <div class="tuleap-artifact-modal-followups-comments">
-                <div ng-repeat="comment in modal.followups_comments.content track by $index"
-                    class="tuleap-artifact-modal-followups-comment"
-                >
-                    <div class="tuleap-artifact-modal-followups-comment-header">
-                        <div class="tlp-avatar">
-                            <img ng-src="{{ comment.submitted_by_details.avatar_url }}">
-                        </div>
-
-                        <div class="tuleap-artifact-modal-followups-comment-header-authors tlp-text-muted" ng-class="{'multiple-authors': comment.submitted_on !== comment.last_modified_date}">
-                            <div class="tuleap-artifact-modal-followups-comment-header-author">
-                                <a ng-if="comment.email" href="mailto:{{comment.email}}">{{ comment.email }}</a>
-                                <a ng-if="! comment.email" href="{{ comment.submitted_by_details.user_url }}">{{ comment.submitted_by_details.display_name }}</a>
-                                <tlp-relative-date
-                                    class="tuleap-artifact-modal-followups-comment-header-time"
-                                    date="{{ comment.submitted_on }}"
-                                    absolute-date="{{ modal.formatDateUsingPreferredUserFormat(comment.submitted_on) }}"
-                                    preference="{{ modal.relativeDatePreference() }}"
-                                    locale="{{ modal.user_locale }}"
-                                    placement="{{ modal.relativeDatePlacement() }}"
-                                >
-                                    {{ modal.formatDateUsingPreferredUserFormat(comment.submitted_on) }}
-                                </tlp-relative-date>
-                            </div>
-
-                            <div ng-if="comment.submitted_on !== comment.last_modified_date"
-                                class="tuleap-artifact-modal-followups-comment-header-author"
-                            >
-                                <span><span translate>Edited by</span> {{ comment.last_modified_by.display_name }}</span>
-                                <tlp-relative-date
-                                    class="tuleap-artifact-modal-followups-comment-header-time"
-                                    date="{{ comment.last_modified_date }}"
-                                    absolute-date="{{ modal.formatDateUsingPreferredUserFormat(comment.last_modified_date) }}"
-                                    preference="{{ modal.relativeDatePreference() }}"
-                                    locale="{{ modal.user_locale }}"
-                                    placement="{{ modal.relativeDatePlacement() }}"
-                                >
-                                    {{ modal.formatDateUsingPreferredUserFormat(comment.last_modified_date) }}
-                                </tlp-relative-date>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tuleap-artifact-modal-followups-comment-content" ng-bind-html="comment.last_comment.post_processed_body"></div>
-                </div>
-
-                <div ng-if="modal.followups_comments.loading_comments" class="tuleap-artifact-modal-followups-comments-loading"></div>
-                <div ng-if="! modal.followups_comments.loading_comments && modal.followups_comments.content.length === 0" class="tuleap-artifact-modal-followups-comments-empty" translate>No follow-ups</div>
-            </div>
-
-            <tuleap-artifact-modal-followup-editor
-                ng-if="modal.isFollowupCommentFormDisplayed()"
-                class="artifact-modal-followups-add-form"
-                format="modal.new_followup_comment.format"
-                content-value="modal.new_followup_comment.body"
-                project-id="modal.tracker.project.id"
-                on-value-changed="modal.setFollowupComment($event)"
-                on-upload-image="modal.addToFilesAddedByTextField($event)"
-                ce-one-way
-                data-test="add-comment-form"
-            ></tuleap-artifact-modal-followup-editor>
-        </div>
+            class="tuleap-artifact-modal-followups"
+            controller="modal.comments_controller"
+            on-new-comment="modal.setFollowupComment($event)"
+            on-upload-image="modal.addToFilesAddedByTextField($event)"
+            ce-one-way
+        ></tuleap-artifact-modal-comments-section>
     </div>
 
     <div class="tlp-modal-footer">
@@ -425,6 +359,7 @@
         <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-modal-action"
             data-dismiss="modal"
+            data-test="artifact-modal-cancel-button"
             translate
         >
             Cancel

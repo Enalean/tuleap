@@ -95,7 +95,7 @@ def runPsalmTaintAnalysis(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php80 "src/vendor/bin/psalm --taint-analysis --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php80 "src/vendor/bin/psalm --taint-analysis --memory-limit=4096M --threads=1 --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }

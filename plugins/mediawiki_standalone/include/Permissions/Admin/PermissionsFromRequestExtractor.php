@@ -20,17 +20,14 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissions;
 
 final class PermissionsFromRequestExtractor
 {
-    /**
-     * @param int[] $readers_ugroup_ids
-     */
-    public function __construct(private array $readers_ugroup_ids)
+    public function __construct(private ProjectPermissions $permissions)
     {
     }
 
@@ -40,7 +37,11 @@ final class PermissionsFromRequestExtractor
     public static function extractPermissionsFromRequest(ServerRequestInterface $request): self
     {
         return new self(
-            self::extractFromRequest($request, 'readers'),
+            new ProjectPermissions(
+                self::extractFromRequest($request, 'readers'),
+                self::extractFromRequest($request, 'writers'),
+                self::extractFromRequest($request, 'admins'),
+            )
         );
     }
 
@@ -64,11 +65,8 @@ final class PermissionsFromRequestExtractor
         return array_map(static fn(string $id) => (int) $id, $body[$key]);
     }
 
-    /**
-     * @return int[]
-     */
-    public function getReadersUgroupIds(): array
+    public function getPermissions(): ProjectPermissions
     {
-        return $this->readers_ugroup_ids;
+        return $this->permissions;
     }
 }

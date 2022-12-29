@@ -1542,6 +1542,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return true;
     }
 
+    public function isMultiple(): bool
+    {
+        return false;
+    }
+
     /**
      * @return bool
      */

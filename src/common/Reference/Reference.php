@@ -224,7 +224,7 @@ class Reference
         if ($projname) {
             $this->link = str_replace('$projname', $projname, $this->link);
         }
-        $this->link = str_replace('$group_id', $this->group_id, $this->link);
+        $this->link = str_replace('$group_id', (string) $this->group_id, $this->link);
         if (is_array($args)) {
             $count = count($args);
             if ($count > 9) {

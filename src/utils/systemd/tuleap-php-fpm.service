@@ -7,8 +7,6 @@ Conflicts=php80-php-fpm.service
 
 [Service]
 Type=notify
-PIDFile=/var/opt/remi/php80/run/php-fpm/php-fpm.pid
-EnvironmentFile=/etc/opt/remi/php80/sysconfig/php-fpm
 ExecStart=/opt/remi/php80/root/usr/sbin/php-fpm --nodaemonize
 ExecReload=/bin/kill -USR2 $MAINPID
 PrivateTmp=false

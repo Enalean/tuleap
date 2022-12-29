@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid ""
 "       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-"
@@ -710,6 +710,9 @@ msgstr "Avatar changé !"
 
 msgid "Back"
 msgstr "Retour"
+
+msgid "Back to the administration"
+msgstr "Retour vers l'administration"
 
 msgid "Background"
 msgstr "Fond"
@@ -1631,12 +1634,6 @@ msgstr "Utilitaires globaux"
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
 
-msgid "Go to the admin page"
-msgstr "Aller sur la page d'administration"
-
-msgid "Go to the home page"
-msgstr "Aller sur la page d'accueil"
-
 msgid "Go up"
 msgstr "Niveau supérieur"
 
@@ -1776,6 +1773,9 @@ msgstr "Importer"
 
 msgid "Import members"
 msgstr "Importer des membres"
+
+msgid "In the meantime, you can get %sback to the homepage%s."
+msgstr "En attendant, vous pouvez %sretourner vers la page d'accueil%s."
 
 msgid "Inactive service cannot be enabled."
 msgstr "Un service indisponible ne peut pas être activé."
@@ -2398,11 +2398,10 @@ msgid "Ok, got it"
 msgstr "Ok, j'ai compris"
 
 msgid ""
-"Once approved click the confirm button in this email.<i class=\"fa fa-"
-"envelope-o\"></i>"
+"Once approved, you will receive a confirmation email to <strong>%s</strong>"
 msgstr ""
-"Une fois approuvé cliquez sur le bouton de confirmation présent dans l'email."
-"<i class=\"fa fa-envelope-o\"></i>"
+"Une fois approuvé, vous recevrez un email de confirmation à <strong>%s</"
+"strong>"
 
 msgid "Once you add a forum, it cannot be modified or deleted!"
 msgstr "Une fois ajouté, un forum ne peut être ni modifié ni détruit !"
@@ -2532,6 +2531,9 @@ msgstr "Droits d'accès de la plateforme"
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
 
+msgid "Platform administrators have been notified."
+msgstr "Les administrateurs de la plateforme ont été avertis."
+
 msgid "Platform banner"
 msgstr "Bannière de plateforme"
 
@@ -2595,13 +2597,9 @@ msgstr ""
 "Veuillez noter que des permissions plus restrictives peuvent être apposées "
 "sur certains items."
 
-#, php-format
-msgid ""
-"Please note the login <span class=\"confirmation-user\">%3$s</span> and "
-"password <span class=\"confirmation-user\">%4$s</span>"
+msgid "Please note the login <code>%s</code> and the password <code>%s</code>"
 msgstr ""
-"Veuillez noter son login <span class=\"confirmation-user\">%3$s</span> et "
-"son mot de passe <span class=\"confirmation-user\">%4$s</span>"
+"Merci de noter le login <code>%s</code> et le mot de passe <code>%s</code>"
 
 msgid "Please select a file to upload"
 msgstr "Veuillez sélectionner un fichier à téléverser"
@@ -3527,9 +3525,6 @@ msgstr "Conditions"
 msgid "Text"
 msgstr "Texte"
 
-msgid "Thank you for using Tuleap"
-msgstr "Nous vous remercions d'utiliser Tuleap"
-
 msgid "Thanks!"
 msgstr "Merci !"
 
@@ -3720,9 +3715,6 @@ msgstr ""
 
 msgid "The submitted language is not supported."
 msgstr "La langue requise n'est pas supportée."
-
-msgid "The user account was created."
-msgstr "Le compte utilisateur a été créé."
 
 msgid "The user will automatically be added as project member."
 msgstr "L'utilisateur sera ajouté automatiquement aux membres du projet."
@@ -4207,6 +4199,9 @@ msgstr "L'utilisateur #%d n'est pas administrateur du projet #%d"
 #, php-format
 msgid "User '%s' does not exist"
 msgstr "L'utilisateur '%s' n’existe pas"
+
+msgid "User account created"
+msgstr "Compte utilisateur créé"
 
 msgid "User added"
 msgstr "Utilisateur ajouté"
@@ -4917,14 +4912,12 @@ msgstr ""
 "Vous recevrez désormais un courrier électronique pour chaque message posté "
 "sur ce forum."
 
+msgid "Your account has been created"
+msgstr "Votre compte a été créé"
+
 #, php-format
 msgid "Your account has been created on %s"
 msgstr "Votre compte a été créé sur %s"
-
-msgid ""
-"Your account has been created,</br> it must be approved by an administrator."
-msgstr ""
-"Votre compte a été crée, </br>il doit être approuvé par un administrateur."
 
 #, php-format
 msgid ""
@@ -5012,6 +5005,9 @@ msgstr "actifs le mois dernier"
 
 msgid "active last week"
 msgstr "actifs la semaine dernière"
+
+msgid "but it must be approved by an administrator"
+msgstr "mais il doit être approuvé par un administrateur"
 
 msgid "check your email for the link to activate your account."
 msgstr "regardez votre e-mail pour le lien permettant d'activer votre compte."
@@ -5110,6 +5106,9 @@ msgstr "consulter"
 
 msgid "waiting"
 msgstr "en attente"
+
+msgid "with a link to activate your account."
+msgstr "avec un lien pour activer votre compte."
 
 msgid "your account will be automatically suspended on {{suspension_date}}."
 msgstr "votre compte sera désactivé automatiquement le {{suspension_date}}."

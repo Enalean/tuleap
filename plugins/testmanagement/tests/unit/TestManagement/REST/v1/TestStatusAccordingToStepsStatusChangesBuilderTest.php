@@ -24,7 +24,7 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue as StaticValue;
 use Tuleap\TestManagement\Step\Step;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
@@ -98,9 +98,9 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
             $steps_changes
         );
 
-        $expected                 = new ArtifactValuesRepresentation();
-        $expected->field_id       = $this->status_field->getId();
-        $expected->bind_value_ids = [$expected_status];
+        $expected = ArtifactValuesRepresentationBuilder::aRepresentation($this->status_field->getId())
+            ->withBindValueIds($expected_status)
+            ->build();
 
         $this->assertEquals(
             $expected,

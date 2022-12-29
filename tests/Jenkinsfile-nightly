@@ -112,6 +112,13 @@ pipeline {
                         }
                     }
                 }
+                stage ('Enterprise Linux 9 (el9)') {
+                    stages {
+                        stage ('Build and run el9') {
+                            steps { script { actions.runBuildAndRun('el9') } }
+                        }
+                    }
+                }
             }
         }
         stage('E2E tests') {
@@ -141,6 +148,20 @@ pipeline {
             post {
                 always {
                     recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(id: 'checkstyle_psalm', pattern: 'results/psalm/checkstyle.xml')]
+                }
+            }
+        }
+
+        stage ('PHP 8.1') {
+            stages {
+                stage('Unit tests') {
+                    steps { script { actions.runPHPUnitTests('81', false) } }
+                    post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
+                }
+
+                stage('DB/Integration') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '81') }) } }
+                    post { always { junit 'results/db/*/db_tests.xml' } }
                 }
             }
         }

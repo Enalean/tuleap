@@ -1,0 +1,23 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-program-management-artifact-action",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/fp-feedback": "workspace:*",
+    "@tuleap/gettext": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

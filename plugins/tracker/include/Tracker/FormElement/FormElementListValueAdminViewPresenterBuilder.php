@@ -60,13 +60,7 @@ class FormElementListValueAdminViewPresenterBuilder
             ]
         );
 
-        $image_title = $value_can_be_hidden ? dgettext(
-            'tuleap-tracker',
-            'Show/hide this value'
-        ) : dgettext(
-            'tuleap-tracker',
-            'You can\'t hide this value since it is used in a semantic, in workflow, in transitions or in field dependency'
-        );
+        $image_title = $this->getImageTitle($value, $value_can_be_hidden);
 
         $image_hidden_alt = $value_can_be_hidden ? dgettext(
             'tuleap-tracker',
@@ -88,6 +82,28 @@ class FormElementListValueAdminViewPresenterBuilder
             $image_hidden_alt,
             $image_hidden_prefix,
             $is_custom_value
+        );
+    }
+
+    private function getImageTitle(Tracker_FormElement_Field_List_Value $value, bool $value_can_be_hidden): string
+    {
+        if ($value_can_be_hidden) {
+            return dgettext(
+                'tuleap-tracker',
+                'Show/hide this value'
+            );
+        }
+
+        if ($value->getId() === Tracker_FormElement_Field_List::NONE_VALUE) {
+            return dgettext(
+                'tuleap-tracker',
+                '"None" value cannot be hidden'
+            );
+        }
+
+        return dgettext(
+            'tuleap-tracker',
+            'You can\'t hide this value since it is used in a semantic, in workflow, in transitions or in field dependency'
         );
     }
 

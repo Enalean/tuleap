@@ -86,7 +86,7 @@ class XMLImport
         }
 
         $xml_validator = new XML_RNGValidator();
-        $rng_path      = realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement.rng');
+        $rng_path      = realpath(__DIR__ . '/../../../resources/testmanagement.rng');
 
         $xml_validator->validate($xml, $rng_path);
 

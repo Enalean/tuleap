@@ -55,7 +55,9 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     {
         $controller = self::buildController(
             Result::ok(
-                OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102]))
+                OptionalValue::fromValue(
+                    new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])
+                )
             ),
             true,
         );
@@ -83,7 +85,9 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     {
         $controller = self::buildController(
             Result::ok(
-                OptionalValue::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102]))
+                OptionalValue::fromValue(
+                    new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])
+                )
             ),
             false,
         );
@@ -97,11 +101,12 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     /**
      * @psalm-param Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault> $parser_response
      */
-    private static function buildController(Ok|Err $parser_response, bool $save_document_success): OnlyOfficeSaveController
-    {
+    private static function buildController(
+        Ok|Err $parser_response,
+        bool $save_document_success,
+    ): OnlyOfficeSaveController {
         return new OnlyOfficeSaveController(
-            new class ($parser_response) implements OnlyOfficeCallbackResponseParser
-            {
+            new class ($parser_response) implements OnlyOfficeCallbackResponseParser {
                 /**
                  * @param Ok<OptionalValue<OnlyOfficeCallbackSaveResponseData>>|Err<Fault> $result
                  */
@@ -110,8 +115,10 @@ final class OnlyOfficeSaveControllerTest extends TestCase
                 ) {
                 }
 
-                public function parseCallbackResponseContent(string $response_content): Ok|Err
-                {
+                public function parseCallbackResponseContent(
+                    string $response_content,
+                    SaveDocumentTokenData $save_token_information,
+                ): Ok|Err {
                     return $this->result;
                 }
             },
@@ -127,6 +134,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
                     if ($this->is_success) {
                         return Result::ok(null);
                     }
+
                     return Result::err(Fault::fromMessage('Could not save document'));
                 }
             },
@@ -138,6 +146,9 @@ final class OnlyOfficeSaveControllerTest extends TestCase
 
     private static function buildCallbackRequestWithSaveToken(): ServerRequestInterface
     {
-        return (new NullServerRequest())->withAttribute(SaveDocumentTokenData::class, new SaveDocumentTokenData(1, 1, 1));
+        return (new NullServerRequest())->withAttribute(
+            SaveDocumentTokenData::class,
+            new SaveDocumentTokenData(1, 1, 1, 1)
+        );
     }
 }

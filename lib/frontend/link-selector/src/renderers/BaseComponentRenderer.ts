@@ -21,9 +21,10 @@ import { isLinkSelectorInAModal } from "../helpers/link-selector-in-modals-helpe
 
 export class BaseComponentRenderer {
     constructor(
-        private readonly doc: HTMLDocument,
+        private readonly doc: Document,
         private readonly source_select_box: HTMLSelectElement,
-        private readonly placeholder: string
+        private readonly placeholder: string,
+        private readonly input_placeholder: string
     ) {}
 
     public renderBaseComponent(): LinkSelectorComponent {
@@ -81,6 +82,7 @@ export class BaseComponentRenderer {
     private createDropdownElement(): HTMLElement {
         const dropdown_element = document.createElement("span");
         dropdown_element.classList.add("link-selector-dropdown");
+        dropdown_element.setAttribute("data-test", "link-selector-dropdown");
         return dropdown_element;
     }
 
@@ -136,6 +138,7 @@ export class BaseComponentRenderer {
         search_field_element.setAttribute("role", "searchbox");
         search_field_element.setAttribute("aria-autocomplete", "list");
         search_field_element.setAttribute("aria-controls", "link-selector-dropdown-values-list");
+        search_field_element.setAttribute("placeholder", this.input_placeholder);
 
         return search_field_element;
     }

@@ -18,9 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Admin\PermissionDelegation\ForgeUserGroupDeletedEvent;
+use Tuleap\admin\PermissionDelegation\PermissionDelegationsAddedToForgeUserGroupEvent;
 use Tuleap\User\GroupCannotRemoveLastAdministrationPermission;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\PermissionDelegation\PermissionDelegationsRemovedForForgeUserGroupEvent;
 use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
+use Tuleap\Admin\PermissionDelegation\UserAddedToForgeUserGroupEvent;
+use Tuleap\Admin\PermissionDelegation\UsersRemovedFromForgeUserGroupEvent;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
@@ -108,6 +113,7 @@ class Admin_PermissionDelegationController
         SiteAdministratorPermissionChecker $site_admin_permission_checker,
         PermissionPresenterBuilder $permission_builder,
         User_ForgeUserGroupPermissionsDao $dao,
+        private \Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher,
     ) {
         $this->request    = $request;
         $this->csrf_token = $csrf_token;
@@ -203,6 +209,7 @@ class Admin_PermissionDelegationController
             try {
                 $user_group = $this->user_group_factory->getForgeUserGroupById($id);
                 $this->user_group_manager->deleteForgeUserGroup($user_group);
+                $this->event_dispatcher->dispatch(new ForgeUserGroupDeletedEvent($user_group));
             } catch (User_UserGroupNotFoundException $e) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
@@ -327,10 +334,13 @@ class Admin_PermissionDelegationController
             try {
                 $user_group = $this->user_group_factory->getForgeUserGroupById($id);
 
+                $added_permissions = [];
                 foreach ($permission_ids as $permission_id) {
                     $permission = $this->user_group_permissions_factory->getForgePermissionById($permission_id);
                     $this->user_group_permissions_manager->addPermission($user_group, $permission);
+                    $added_permissions[] = $permission;
                 }
+                $this->event_dispatcher->dispatch(new PermissionDelegationsAddedToForgeUserGroupEvent($user_group, $added_permissions));
             } catch (User_UserGroupNotFoundException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
             } catch (User_ForgeUserGroupPermission_NotFoundException $e) {
@@ -350,6 +360,7 @@ class Admin_PermissionDelegationController
             try {
                 $user_group = $this->user_group_factory->getForgeUserGroupById($id);
 
+                $deleted_permissions = [];
                 foreach ($permission_ids as $permission_id) {
                     $permission = $this->user_group_permissions_factory->getForgePermissionById($permission_id);
 
@@ -357,7 +368,9 @@ class Admin_PermissionDelegationController
                     $this->checkPermissionCanBeRemoved($permission);
                     $this->user_group_permissions_manager->deletePermission($user_group, $permission);
                     $this->dao->commit();
+                    $deleted_permissions[] = $permission;
                 }
+                $this->event_dispatcher->dispatch(new PermissionDelegationsRemovedForForgeUserGroupEvent($user_group, $deleted_permissions));
             } catch (User_UserGroupNotFoundException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
             } catch (User_ForgeUserGroupPermission_NotFoundException $e) {
@@ -402,6 +415,7 @@ class Admin_PermissionDelegationController
             try {
                 $user_group = $this->user_group_factory->getForgeUserGroupById($group_id);
                 $this->user_group_users_manager->addUserToForgeUserGroup($user, $user_group);
+                $this->event_dispatcher->dispatch(new UserAddedToForgeUserGroupEvent($user));
             } catch (User_UserGroupNotFoundException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
             }
@@ -429,13 +443,17 @@ class Admin_PermissionDelegationController
 
     private function removeUsers($user_group, $user_ids)
     {
+        $users = [];
         foreach ($user_ids as $user_id) {
             $user = $this->user_manager->getUserById($user_id);
 
             if ($user) {
+                $users[] = $user;
                 $this->user_group_users_manager->removeUserFromForgeUserGroup($user, $user_group);
             }
         }
+
+        $this->event_dispatcher->dispatch(new UsersRemovedFromForgeUserGroupEvent($users));
     }
 
     /**

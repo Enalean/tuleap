@@ -25,19 +25,12 @@ import {
     createArtifact,
     editArtifact,
     editArtifactWithConcurrencyChecking,
-    getFollowupsComments,
 } from "./rest/rest-service";
-import {
-    getAllFileFields,
-    isThereAtLeastOneFileField,
-} from "./fields/file-field/file-field-detector";
+import { getAllFileFields } from "./fields/file-field/file-field-detector";
 import {
     isUploadingInCKEditor,
     setIsNotUploadingInCKEditor,
 } from "./fields/file-field/is-uploading-in-ckeditor-state";
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
-import moment from "moment";
-import { formatFromPhpToMoment } from "@tuleap/date-helper";
 import { sprintf } from "sprintf-js";
 import {
     getTargetFieldPossibleValues,
@@ -51,23 +44,23 @@ import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePicke
 import { LinksRetriever } from "./domain/fields/link-field/LinksRetriever";
 import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
 import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
-import { LinksMarkedForRemovalStore } from "./adapters/Memory/LinksMarkedForRemovalStore";
-import { LinksStore } from "./adapters/Memory/LinksStore";
+import { LinksMarkedForRemovalStore } from "./adapters/Memory/fields/link-field/LinksMarkedForRemovalStore";
+import { LinksStore } from "./adapters/Memory/fields/link-field/LinksStore";
 import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
 import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaController";
 import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
-import { LinkFieldValueFormatter } from "./adapters/REST/LinkFieldValueFormatter";
+import { LinkFieldValueFormatter } from "./adapters/REST/fields/link-field/LinkFieldValueFormatter";
 import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldController";
 import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
 import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
-import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field/ArtifactLinkSelectorAutoCompleter";
-import { NewLinksStore } from "./adapters/Memory/NewLinksStore";
+import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field/dropdown/ArtifactLinkSelectorAutoCompleter";
+import { NewLinksStore } from "./adapters/Memory/fields/link-field/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
 import { ParentLinkVerifier } from "./domain/fields/link-field/ParentLinkVerifier";
 import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
 import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
-import { PossibleParentsCache } from "./adapters/Memory/PossibleParentsCache";
+import { PossibleParentsCache } from "./adapters/Memory/fields/link-field/PossibleParentsCache";
 import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedVerifier";
 import { LinkedArtifactsPopoversController } from "./adapters/UI/fields/link-field/LinkedArtifactsPopoversController";
 import { FileFieldsUploader } from "./domain/fields/file-field/FileFieldsUploader";
@@ -76,6 +69,11 @@ import { getFileUploadErrorMessage } from "./gettext-catalog";
 import { AllowedLinksTypesCollection } from "./adapters/UI/fields/link-field/AllowedLinksTypesCollection";
 import { TrackerInAHierarchyVerifier } from "./domain/fields/link-field/TrackerInAHierarchyVerifier";
 import { UserIdentifierProxy } from "./adapters/Caller/UserIdentifierProxy";
+import { UserHistoryCache } from "./adapters/Memory/fields/link-field/UserHistoryCache";
+import { CommentsController } from "./domain/comments/CommentsController";
+import { ProjectIdentifierProxy } from "./adapters/REST/ProjectIdentifierProxy";
+import { EventDispatcher } from "./domain/EventDispatcher";
+import { DidCheckFileFieldIsPresent } from "./domain/DidCheckFileFieldIsPresent";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -102,8 +100,7 @@ function ArtifactModalController(
     displayItemCallback,
     TuleapArtifactModalLoading
 ) {
-    const self = this,
-        user_id = modal_model.user_id;
+    const self = this;
     let confirm_action_to_edit = false;
     const concurrency_error_code = 412;
 
@@ -123,7 +120,10 @@ function ArtifactModalController(
     const current_tracker_identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(
         modal_model.tracker_id
     );
+    const project_identifier = ProjectIdentifierProxy.fromTrackerModel(modal_model.tracker);
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
+    const user_history_cache = UserHistoryCache(api_client);
+    const event_dispatcher = EventDispatcher();
 
     Object.assign(self, {
         $onInit: init,
@@ -137,12 +137,6 @@ function ArtifactModalController(
         title: getTitle(),
         tracker: modal_model.tracker,
         values: modal_model.values,
-        is_list_picker_enabled: modal_model.is_list_picker_enabled,
-        followups_comments: {
-            content: [],
-            loading_comments: true,
-            invert_order: modal_model.invert_followups_comments_order ? "asc" : "desc",
-        },
         new_followup_comment: {
             body: "",
             format: modal_model.text_fields_format,
@@ -163,6 +157,20 @@ function ArtifactModalController(
         ),
         fault_feedback_controller,
         file_upload_quota_controller: FileUploadQuotaController(UserTemporaryFileQuotaStore()),
+        comments_controller: CommentsController(
+            api_client,
+            fault_feedback_controller,
+            current_artifact_identifier,
+            project_identifier,
+            {
+                locale: modal_model.user_locale,
+                date_time_format: modal_model.user_date_time_format,
+                relative_dates_display: modal_model.relative_dates_display,
+                is_comment_order_inverted: modal_model.invert_followups_comments_order,
+                is_allowed_to_add_comment: isNotAnonymousUser(),
+                text_format: modal_model.text_fields_format,
+            }
+        ),
         getLinkFieldController: (field) => {
             return LinkFieldController(
                 LinksRetriever(api_client, api_client, links_store),
@@ -177,11 +185,11 @@ function ArtifactModalController(
                     fault_feedback_controller,
                     possible_parents_cache,
                     already_linked_verifier,
+                    user_history_cache,
+                    api_client,
                     current_artifact_identifier,
                     current_tracker_identifier,
-                    api_client,
-                    UserIdentifierProxy.fromUserId(modal_model.user_id),
-                    modal_model.is_search_enabled
+                    UserIdentifierProxy.fromUserId(modal_model.user_id)
                 ),
                 new_links_store,
                 new_links_store,
@@ -203,7 +211,7 @@ function ArtifactModalController(
             );
         },
         getFileFieldController: (field) => {
-            return FileFieldController(field, self.values[field.field_id]);
+            return FileFieldController(field, self.values[field.field_id], event_dispatcher);
         },
         getPermissionFieldController: (field) => {
             return PermissionFieldController(
@@ -225,9 +233,12 @@ function ArtifactModalController(
         getRestErrorMessage: getErrorMessage,
         hasRestError: hasError,
         isDisabled,
-        isFollowupCommentFormDisplayed,
         isUploadingInCKEditor,
-        isThereAtLeastOneFileField: () => isThereAtLeastOneFileField(Object.values(self.values)),
+        isThereAtLeastOneFileField: () => {
+            const event = DidCheckFileFieldIsPresent();
+            event_dispatcher.dispatch(event);
+            return event.is_there_at_least_one_file_field;
+        },
         setupTooltips,
         submit,
         reopenFieldsetsWithInvalidInput,
@@ -239,12 +250,6 @@ function ArtifactModalController(
         toggleFieldset,
         hasHiddenFieldsets,
         showHiddenFieldsets,
-        relativeDatePreference: () => relativeDatePreference(modal_model.relative_dates_display),
-        relativeDatePlacement: () =>
-            relativeDatePlacement(modal_model.relative_dates_display, "right"),
-        formatDateUsingPreferredUserFormat: (date) =>
-            moment(date).format(formatFromPhpToMoment(document.body.dataset.dateTimeFormat)),
-        user_locale: document.body.dataset.userLocale,
         confirm_action_to_edit,
         getButtonText,
         uploadAllFileFields,
@@ -264,10 +269,6 @@ function ArtifactModalController(
         modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", setIsNotUploadingInCKEditor);
         TuleapArtifactModalLoading.loading = false;
         self.setupTooltips();
-
-        if (!isInCreationMode()) {
-            fetchFollowupsComments(self.artifact_id, 50, 0, self.followups_comments.invert_order);
-        }
     }
 
     function setupTooltips() {
@@ -286,25 +287,8 @@ function ArtifactModalController(
         return is_title_a_text_field ? modal_model.title.content : modal_model.title;
     }
 
-    function isFollowupCommentFormDisplayed() {
-        return !isInCreationMode() && user_id !== 0;
-    }
-
-    function fetchFollowupsComments(artifact_id, limit, offset, order) {
-        return $q
-            .when(getFollowupsComments(artifact_id, limit, offset, order))
-            .then(function (data) {
-                self.followups_comments.content = self.followups_comments.content.concat(
-                    data.results
-                );
-
-                if (offset + limit < data.total) {
-                    fetchFollowupsComments(artifact_id, limit, offset + limit, order);
-                } else {
-                    self.followups_comments.loading_comments = false;
-                    self.setupTooltips();
-                }
-            });
+    function isNotAnonymousUser() {
+        return String(modal_model.user_id) !== "0";
     }
 
     function reopenFieldsetsWithInvalidInput(form) {

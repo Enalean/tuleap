@@ -34,7 +34,7 @@ import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/Retr
 import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
 import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
-import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
+import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
@@ -52,8 +52,9 @@ import { selectOrThrow } from "@tuleap/dom";
 import { AllowedLinksTypesCollection } from "./AllowedLinksTypesCollection";
 import { VerifyIsTrackerInAHierarchyStub } from "../../../../../tests/stubs/VerifyIsTrackerInAHierarchyStub";
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
-import { UserIdentifierProxyStub } from "../../../../../tests/stubs/UserIdentifierStub";
+import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { okAsync } from "neverthrow";
+import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 
 const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupElement =>
     selectOrThrow(select, "[data-test=link-type-select-optgroup]", HTMLOptGroupElement);
@@ -95,7 +96,7 @@ describe("TypeSelectorTemplate", () => {
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(30);
         const parents_retriever = RetrievePossibleParentsStub.withoutParents();
         const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
-        const is_search_feature_flag_enabled = true;
+
         const controller = LinkFieldController(
             RetrieveAllLinkedArtifactsStub.withoutLink(),
             RetrieveLinkedArtifactsSyncStub.withoutLink(),
@@ -111,11 +112,11 @@ describe("TypeSelectorTemplate", () => {
                 fault_notifier,
                 parents_retriever,
                 link_verifier,
+                RetrieveUserHistoryStub.withoutUserHistory(),
+                SearchArtifactsStub.withoutResults(),
                 current_artifact_identifier,
                 current_tracker_identifier,
-                RetrieveUserHistoryStub.withoutUserHistory(),
-                UserIdentifierProxyStub.fromUserId(101),
-                is_search_feature_flag_enabled
+                UserIdentifierStub.fromUserId(101)
             ),
             AddNewLinkStub.withCount(),
             DeleteNewLinkStub.withCount(),

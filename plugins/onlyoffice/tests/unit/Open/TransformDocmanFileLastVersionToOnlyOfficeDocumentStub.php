@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 
 class TransformDocmanFileLastVersionToOnlyOfficeDocumentStub implements TransformDocmanFileLastVersionToOnlyOfficeDocument
 {
@@ -41,9 +43,24 @@ class TransformDocmanFileLastVersionToOnlyOfficeDocumentStub implements Transfor
         return new self(Result::err(Fault::fromMessage('Something bad')));
     }
 
-    public static function buildWithDocmanItem(\Project $project, \Docman_File $item, int $version_id, string $filename): self
-    {
-        return new self(Result::ok(new OnlyOfficeDocument($project, $item, $version_id, $filename, true)));
+    public static function buildWithDocmanItem(
+        \Project $project,
+        \Docman_File $item,
+        int $version_id,
+        string $filename,
+    ): self {
+        return new self(
+            Result::ok(
+                new OnlyOfficeDocument(
+                    $project,
+                    $item,
+                    $version_id,
+                    $filename,
+                    true,
+                    DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
+                )
+            )
+        );
     }
 
     public function transformToOnlyOfficeDocument(DocmanFileLastVersion $file_last_version): Ok|Err

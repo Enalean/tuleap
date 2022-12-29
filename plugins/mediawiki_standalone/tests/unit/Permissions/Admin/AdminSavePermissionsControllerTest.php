@@ -27,12 +27,14 @@ use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\MediawikiStandalone\Permissions\ISaveProjectPermissionsStub;
+use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 
 class AdminSavePermissionsControllerTest extends TestCase
@@ -41,6 +43,11 @@ class AdminSavePermissionsControllerTest extends TestCase
 
     public function testSavePermissions(): void
     {
+        $project = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->withUsedService(MediawikiStandaloneService::SERVICE_SHORTNAME)
+            ->build();
+
         $feedback_serializer = $this->createStub(FeedbackSerializer::class);
         $feedback_serializer->method('serialize');
 
@@ -55,7 +62,11 @@ class AdminSavePermissionsControllerTest extends TestCase
         $permissions_dao = ISaveProjectPermissionsStub::buildSelf();
 
         $controller = new AdminSavePermissionsController(
-            new ProjectPermissionsSaver($permissions_dao, $history_dao),
+            new ProjectPermissionsSaver(
+                $permissions_dao,
+                $history_dao,
+                new EnqueueTaskStub(),
+            ),
             new UserGroupToSaveRetriever(
                 UGroupRetrieverStub::buildWithUserGroups(
                     ProjectUGroupTestBuilder::buildProjectMembers(),
@@ -68,23 +79,36 @@ class AdminSavePermissionsControllerTest extends TestCase
             new NoopSapiEmitter(),
         );
 
-        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $request = (new NullServerRequest())
             ->withAttribute(\Project::class, $project)
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
             ->withParsedBody(
                 [
                     'readers' => ['102', '103'],
+                    'writers' => ['103'],
+                    'admins'  => ['102'],
                 ]
             );
 
         $history_dao
-            ->expects(self::once())
+            ->expects(self::exactly(3))
             ->method('groupAddHistory')
-            ->with(
-                'perm_granted_for_mediawiki_standalone_readers',
-                'Developers,QA',
-                self::PROJECT_ID,
+            ->withConsecutive(
+                [
+                    'perm_granted_for_mediawiki_standalone_readers',
+                    'Developers,QA',
+                    self::PROJECT_ID,
+                ],
+                [
+                    'perm_granted_for_mediawiki_standalone_writers',
+                    'QA',
+                    self::PROJECT_ID,
+                ],
+                [
+                    'perm_granted_for_mediawiki_standalone_admins',
+                    'Developers',
+                    self::PROJECT_ID,
+                ]
             );
 
         $response = $controller->handle($request);
@@ -95,6 +119,10 @@ class AdminSavePermissionsControllerTest extends TestCase
         self::assertEquals(
             [102, 103],
             $permissions_dao->getCapturedReadersUgroupIds()
+        );
+        self::assertEquals(
+            [103],
+            $permissions_dao->getCapturedWritersUgroupIds()
         );
     }
 }

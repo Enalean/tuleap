@@ -9,6 +9,15 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
+msgid "Global MediaWiki Administrator"
+msgstr ""
+
+msgid "Global permissions"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
 msgid "MediaWiki"
 msgstr ""
 
@@ -18,19 +27,46 @@ msgstr ""
 msgid "MediaWiki administration"
 msgstr ""
 
+msgid "MediaWiki administrators"
+msgstr ""
+
 msgid "MediaWiki permissions have been saved"
+msgstr ""
+
+msgid "MediaWiki readers"
+msgstr ""
+
+msgid "MediaWiki writers"
 msgstr ""
 
 msgid "Mediawiki Standalone (read only)"
 msgstr ""
 
+msgid "Permission"
+msgstr ""
+
+msgid "Permission granted for MediaWiki administrators"
+msgstr ""
+
 msgid "Permission granted for MediaWiki readers"
+msgstr ""
+
+msgid "Permission granted for MediaWiki writers"
+msgstr ""
+
+msgid "Permission reset for MediaWiki administrators"
 msgstr ""
 
 msgid "Permission reset for MediaWiki readers"
 msgstr ""
 
+msgid "Permission reset for MediaWiki writers"
+msgstr ""
+
 msgid "Permissions"
+msgstr ""
+
+msgid "Project administrators are de facto administrators of MediaWiki"
 msgstr ""
 
 msgid "Read only access to information about Mediawiki Standalone"
@@ -62,5 +98,19 @@ msgid ""
 "standalone data"
 msgstr ""
 
-msgid "User groups who can read MediaWiki pages"
+msgid ""
+"This permission grants MediaWiki administration rights for each MediaWiki of "
+"every project"
+msgstr ""
+
+msgid "User groups who can administrate"
+msgstr ""
+
+msgid "User groups who can read"
+msgstr ""
+
+msgid "User groups who can write"
+msgstr ""
+
+msgid "{{ user_group_name }} has no global permission"
 msgstr ""

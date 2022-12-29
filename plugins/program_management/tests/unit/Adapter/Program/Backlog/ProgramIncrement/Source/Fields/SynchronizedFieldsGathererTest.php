@@ -39,6 +39,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -239,7 +240,10 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsArtifactLinkReference(): void
     {
         $this->artifact_link_retriever = RetrieveFullArtifactLinkFieldStub::withField(
-            $this->getArtifactLinkField(623, 'premanifest')
+            ArtifactLinkFieldBuilder::anArtifactLinkField(623)
+                ->withLabel('premanifest')
+                ->withTrackerId(self::PROGRAM_INCREMENT_TRACKER_ID)
+                ->build()
         );
 
         $artifact_link = $this->getGatherer()->getArtifactLinkField($this->tracker_identifier, null);
@@ -318,23 +322,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getIntField(int $id, string $label): \Tracker_FormElement_Field_Integer
     {
         return new \Tracker_FormElement_Field_Integer(
-            $id,
-            self::PROGRAM_INCREMENT_TRACKER_ID,
-            1,
-            'irrelevant',
-            $label,
-            'Irrelevant',
-            true,
-            'P',
-            true,
-            '',
-            1
-        );
-    }
-
-    private function getArtifactLinkField(int $id, string $label): \Tracker_FormElement_Field_ArtifactLink
-    {
-        return new \Tracker_FormElement_Field_ArtifactLink(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
             1,

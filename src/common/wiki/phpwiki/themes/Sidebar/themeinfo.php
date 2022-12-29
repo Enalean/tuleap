@@ -52,7 +52,7 @@ class Theme_Sidebar extends PHPWikiTheme
     public function calendarLink($date = false)
     {
         return $this->calendarBase() . SUBPAGE_SEPARATOR .
-               strftime("%Y-%m-%d", $date ? $date : time());
+               date("Y-m-d", $date ? $date : time());
     }
 
     public function calendarBase()

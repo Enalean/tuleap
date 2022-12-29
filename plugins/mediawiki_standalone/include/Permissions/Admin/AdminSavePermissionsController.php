@@ -52,10 +52,12 @@ class AdminSavePermissionsController extends DispatchablePSR15Compatible
         $this->token_provider->getCSRF($project)->check();
 
         try {
-            $permissions = PermissionsFromRequestExtractor::extractPermissionsFromRequest($request);
+            $permissions = PermissionsFromRequestExtractor::extractPermissionsFromRequest($request)->getPermissions();
             $this->permissions_saver->save(
                 $project,
-                $this->user_group_to_save_retriever->getUserGroups($project, $permissions->getReadersUgroupIds()),
+                $this->user_group_to_save_retriever->getUserGroups($project, $permissions->readers),
+                $this->user_group_to_save_retriever->getUserGroups($project, $permissions->writers),
+                $this->user_group_to_save_retriever->getUserGroups($project, $permissions->admins),
             );
         } catch (InvalidRequestException | UnknownUserGroupException $exception) {
             throw new ForbiddenException();

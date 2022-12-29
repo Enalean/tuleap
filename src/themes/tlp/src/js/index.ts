@@ -19,7 +19,6 @@
 
 export * from "@tuleap/tlp-popovers";
 export * from "@tuleap/tlp-modal";
-export * from "@tuleap/tlp-dropdown";
 
 export { default as locale } from "./default_locale";
 

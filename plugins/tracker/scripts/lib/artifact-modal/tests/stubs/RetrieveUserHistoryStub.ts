@@ -20,7 +20,8 @@
 import type { ResultAsync } from "neverthrow";
 import type { LinkableArtifact } from "../../src/domain/fields/link-field/LinkableArtifact";
 import type { RetrieveUserHistory } from "../../src/domain/fields/link-field/RetrieveUserHistory";
-import { okAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 
 export const RetrieveUserHistoryStub = {
     withUserHistory: (
@@ -31,5 +32,9 @@ export const RetrieveUserHistoryStub = {
 
     withoutUserHistory: (): RetrieveUserHistory => ({
         getUserArtifactHistory: () => okAsync([]),
+    }),
+
+    withFault: (fault: Fault): RetrieveUserHistory => ({
+        getUserArtifactHistory: () => errAsync(fault),
     }),
 };

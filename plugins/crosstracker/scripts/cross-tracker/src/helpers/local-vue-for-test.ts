@@ -19,11 +19,11 @@
 
 import type { Vue } from "vue/types/vue";
 import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
+import { initVueGettextFromPoGettextPlugin } from "@tuleap/vue2-gettext-init";
 
 export async function createCrossTrackerLocalVue(): Promise<typeof Vue> {
     const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
+    await initVueGettextFromPoGettextPlugin(local_vue, () => {
         throw new Error("Fallback to default");
     });
 

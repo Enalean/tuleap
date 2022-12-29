@@ -22,6 +22,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0016](0016-frontend-libraries.md) - Independent libraries for shared frontend code
 * [ADR-0017](0017-multiple-apps-per-context.md) - Multiple independent apps per context
 * [ADR-0018](0018-js-bundler.md) - Choice of JavaScript Bundler
+* [ADR-0019](0019-split-tlp.md) - Split `tlp` global library in small packages
 
 <!-- adrlogstop -->
 

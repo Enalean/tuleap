@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerShortname } from "src/domain/TrackerShortname";
+import type { TrackerShortname } from "../../domain/TrackerShortname";
 import type { TrackerWithChangesetValues } from "./TrackerWithChangesetValues";
 
 export const TrackerShortnameProxy = {

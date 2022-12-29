@@ -1,11 +1,11 @@
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import {
     SIDE_BY_SIDE_DIFF,
     UNIFIED_DIFF,
     setMode,
     isUnifiedMode,
     isSideBySideMode,
-} from "../file-diff/diff-mode-state.ts";
+} from "../file-diff/diff-modes/diff-mode-state.ts";
 
 export default FilesController;
 

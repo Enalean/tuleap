@@ -780,7 +780,7 @@ class nusoap_base
         $tod  = gettimeofday();
         $sec  = $tod['sec'];
         $usec = $tod['usec'];
-        return strftime('%Y-%m-%d %H:%M:%S', $sec) . '.' . sprintf('%06d', $usec);
+        return date('Y-m-d H:i:s', $sec) . '.' . sprintf('%06d', $usec);
     }
 
     /**

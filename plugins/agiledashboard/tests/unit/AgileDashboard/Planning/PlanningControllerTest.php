@@ -99,6 +99,10 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UpdateRequestValidator
      */
     private $update_request_validator;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&BacklogTrackersUpdateChecker
+     */
+    private $backlog_trackers_update_checker;
 
     protected function setUp(): void
     {
@@ -119,12 +123,13 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory     = Mockery::mock(PlanningFactory::class);
         $this->explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
 
-        $this->event_manager                = Mockery::mock(EventManager::class);
-        $this->planning_request_validator   = Mockery::mock(\Planning_RequestValidator::class);
-        $this->planning_updater             = Mockery::mock(PlanningUpdater::class);
-        $this->scrum_mono_milestone_checker = Mockery::mock(ScrumForMonoMilestoneChecker::class);
-        $this->root_planning_update_checker = Mockery::mock(UpdateIsAllowedChecker::class);
-        $this->update_request_validator     = Mockery::mock(UpdateRequestValidator::class);
+        $this->event_manager                   = Mockery::mock(EventManager::class);
+        $this->planning_request_validator      = Mockery::mock(\Planning_RequestValidator::class);
+        $this->planning_updater                = Mockery::mock(PlanningUpdater::class);
+        $this->scrum_mono_milestone_checker    = Mockery::mock(ScrumForMonoMilestoneChecker::class);
+        $this->root_planning_update_checker    = Mockery::mock(UpdateIsAllowedChecker::class);
+        $this->update_request_validator        = Mockery::mock(UpdateRequestValidator::class);
+        $this->backlog_trackers_update_checker = $this->createMock(BacklogTrackersUpdateChecker::class);
 
         $this->planning_controller = new Planning_Controller(
             $this->request,
@@ -150,7 +155,8 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->planning_request_validator,
             $this->root_planning_update_checker,
             Mockery::mock(PlanningEditionPresenterBuilder::class),
-            $this->update_request_validator
+            $this->update_request_validator,
+            $this->backlog_trackers_update_checker,
         );
     }
 
@@ -275,6 +281,43 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andThrow(new TrackerHaveAtLeastOneAddToTopBacklogPostActionException([]));
 
         $this->planning_updater->shouldNotReceive('update');
+        $this->backlog_trackers_update_checker->method("checkProvidedBacklogTrackersAreValid");
+
+        $GLOBALS['Response']->shouldReceive('redirect')->once();
+
+        $this->planning_controller->update();
+    }
+
+    public function testItOnlyUpdateCardWallConfigWhenPlanningCannotBeUpdated(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+
+        $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
+        $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
+
+        $planning_parameters = [];
+        $this->request->shouldReceive('get')->withArgs(['planning'])->andReturn($planning_parameters);
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('dispatch')->once();
+
+        $planning = Mockery::mock(\Planning::class);
+        $planning->shouldReceive('getPlanningTracker')->once();
+        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')
+            ->once()
+            ->andReturn([]);
+
+        $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
+        $this->backlog_trackers_update_checker->method("checkProvidedBacklogTrackersAreValid")->willThrowException(
+            new TrackersHaveAtLeastOneHierarchicalLinkException("tracker01", "tracker02")
+        );
+        $this->root_planning_update_checker->shouldNotReceive('checkUpdateIsAllowed');
+
+        $this->planning_updater->shouldNotReceive('update');
 
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
@@ -306,6 +349,7 @@ final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
         $this->root_planning_update_checker->shouldReceive('checkUpdateIsAllowed')->once();
+        $this->backlog_trackers_update_checker->method("checkProvidedBacklogTrackersAreValid");
 
         $this->planning_updater->shouldReceive('update')->once();
 

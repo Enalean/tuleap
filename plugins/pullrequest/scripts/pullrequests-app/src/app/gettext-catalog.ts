@@ -19,6 +19,12 @@
 
 interface GettextCatalog {
     getString: (source: string) => string;
+    getPlural: (
+        nb_items: number,
+        singular_form: string,
+        plural_form: string,
+        params: Record<string, string>
+    ) => string;
 }
 
 let gettextCatalog: GettextCatalog;
@@ -44,3 +50,10 @@ export const getCommentTextAreaPlaceholderText = (): string =>
 export const getOutdatedCommentBadgeText = (): string => gettextCatalog.getString("Outdated");
 export const getNewInlineCommentSubmitButtonText = (): string =>
     gettextCatalog.getString("Comment");
+export const getCollapsibleSectionLabel = (nb_lines: number): string =>
+    gettextCatalog.getPlural(
+        nb_lines,
+        "... Skipped 1 common line",
+        "... Skipped {{ $count }} common lines",
+        {}
+    );

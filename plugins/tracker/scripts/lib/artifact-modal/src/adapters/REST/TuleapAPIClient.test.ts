@@ -19,10 +19,12 @@
 
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
+import { okAsync } from "neverthrow";
+import * as fetch_result from "@tuleap/fetch-result";
+import type { GetAllOptions } from "@tuleap/fetch-result";
 import { ARTIFACT_TYPE } from "@tuleap/core-rest-api-types";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
-import * as fetch_result from "@tuleap/fetch-result";
 import type { LinkedArtifact } from "../../domain/fields/link-field/LinkedArtifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
@@ -31,30 +33,25 @@ import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableAr
 import { LinkableNumberStub } from "../../../tests/stubs/LinkableNumberStub";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkType } from "../../domain/fields/link-field/LinkType";
-import { okAsync } from "neverthrow";
-import type { GetAllOptions } from "@tuleap/fetch-result";
 import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { FileUploadCreated } from "../../domain/fields/file-field/FileUploadCreated";
 import type { NewFileUpload } from "../../domain/fields/file-field/NewFileUpload";
-import { UserIdentifierProxyStub } from "../../../tests/stubs/UserIdentifierStub";
+import { UserIdentifierStub } from "../../../tests/stubs/UserIdentifierStub";
+import type { FollowUpComment } from "../../domain/comments/FollowUpComment";
+import { ChangesetWithCommentRepresentationBuilder } from "../../../tests/builders/ChangesetWithCommentRepresentationBuilder";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
 const ARTIFACT_ID = 90;
+const ARTIFACT_2_ID = 10;
 const FIRST_LINKED_ARTIFACT_ID = 40;
 const SECOND_LINKED_ARTIFACT_ID = 60;
 const ARTIFACT_TITLE = "thio";
 const ARTIFACT_XREF = `story #${ARTIFACT_ID}`;
 const COLOR = "deep-blue";
 const TRACKER_ID = 36;
-const PROJECT = {
-    id: 100,
-    label: "Guinea Pig",
-    icon: "🐹",
-};
-const ARTIFACT_2_ID = 10;
-const ARTIFACT_3_ID = 1158;
+const PROJECT = { id: 179, label: "Guinea Pig", icon: "🐹" };
 
 describe(`TuleapAPIClient`, () => {
     describe(`getParent()`, () => {
@@ -278,35 +275,20 @@ describe(`TuleapAPIClient`, () => {
             });
         });
     });
+
     describe("getUserArtifactHistory()", () => {
         const USER_ID = 102;
         const getUserArtifactHistory = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
             const client = TuleapAPIClient();
-            return client.getUserArtifactHistory(UserIdentifierProxyStub.fromUserId(USER_ID));
+            return client.getUserArtifactHistory(UserIdentifierStub.fromUserId(USER_ID));
         };
-        it(`will return user history entries which are "artefact" type as linkable artifact`, async () => {
-            const first_entry = {
-                per_type_id: ARTIFACT_ID,
-                type: ARTIFACT_TYPE,
-                badges: [],
-            };
-
-            const second_entry = {
-                per_type_id: ARTIFACT_2_ID,
-                type: ARTIFACT_TYPE,
-                badges: [],
-            };
-
-            const third_entry = {
-                per_type_id: ARTIFACT_3_ID,
-                type: "kanban",
-                badges: [],
-            };
-
-            const history = { entries: [first_entry, second_entry, third_entry] };
+        it(`will return user history entries which are "artifact" type as linkable artifact`, async () => {
+            const first_entry = { per_type_id: ARTIFACT_ID, type: ARTIFACT_TYPE, badges: [] };
+            const second_entry = { per_type_id: ARTIFACT_2_ID, type: ARTIFACT_TYPE, badges: [] };
+            const third_entry = { per_type_id: 1158, type: "kanban", badges: [] };
 
             const getSpy = jest.spyOn(fetch_result, "getJSON");
-            getSpy.mockReturnValue(okAsync(history));
+            getSpy.mockReturnValue(okAsync({ entries: [first_entry, second_entry, third_entry] }));
 
             const result = await getUserArtifactHistory();
 
@@ -318,6 +300,99 @@ describe(`TuleapAPIClient`, () => {
             expect(first_returned_artifact.id).toBe(ARTIFACT_ID);
             expect(second_returned_artifact.id).toBe(ARTIFACT_2_ID);
             expect(getSpy).toHaveBeenCalledWith(`/api/v1/users/${USER_ID}/history`);
+        });
+    });
+
+    describe(`searchArtifacts()`, () => {
+        const SEARCH_QUERY = "bookwright";
+
+        const searchArtifacts = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
+            const client = TuleapAPIClient();
+            return client.searchArtifacts(SEARCH_QUERY);
+        };
+
+        it(`will return search results with type "artifact" as linkable artifacts`, async () => {
+            const first_entry = { per_type_id: ARTIFACT_ID, type: ARTIFACT_TYPE, badges: [] };
+            const second_entry = { per_type_id: ARTIFACT_2_ID, type: ARTIFACT_TYPE, badges: [] };
+            const third_entry = { per_type_id: 84, type: "kanban", badges: [] };
+
+            const postSpy = jest
+                .spyOn(fetch_result, "postJSON")
+                .mockReturnValue(okAsync([first_entry, second_entry, third_entry]));
+
+            const result = await searchArtifacts();
+
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_artifact, second_artifact] = result.value;
+            expect(first_artifact.id).toBe(ARTIFACT_ID);
+            expect(second_artifact.id).toBe(ARTIFACT_2_ID);
+            expect(postSpy).toHaveBeenCalledWith(`/api/search?limit=50`, {
+                keywords: SEARCH_QUERY,
+            });
+        });
+    });
+
+    describe(`getComments()`, () => {
+        const FIRST_COMMENT_BODY = "<p>An HTML comment</p>",
+            SECOND_COMMENT_BODY = "Plain text comment";
+        let is_order_inverted: boolean;
+
+        beforeEach(() => {
+            is_order_inverted = true;
+        });
+
+        const getComments = (): ResultAsync<readonly FollowUpComment[], Fault> => {
+            const client = TuleapAPIClient();
+            return client.getComments(
+                CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
+                is_order_inverted
+            );
+        };
+
+        it(`will return an array of comments`, async () => {
+            const first_comment = ChangesetWithCommentRepresentationBuilder.aComment(100)
+                .withPostProcessedBody(FIRST_COMMENT_BODY, "html")
+                .build();
+            const second_comment = ChangesetWithCommentRepresentationBuilder.aComment(101)
+                .withPostProcessedBody(SECOND_COMMENT_BODY, "text")
+                .build();
+
+            const getAllSpy = jest
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(okAsync([first_comment, second_comment]));
+
+            const result = await getComments();
+
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_returned_comment, second_returned_comment] = result.value;
+            expect(first_returned_comment.body).toBe(FIRST_COMMENT_BODY);
+            expect(second_returned_comment.body).toBe(SECOND_COMMENT_BODY);
+
+            expect(getAllSpy).toHaveBeenCalledWith(`/api/v1/artifacts/${ARTIFACT_ID}/changesets`, {
+                params: {
+                    limit: 50,
+                    fields: "comments",
+                    order: "desc",
+                },
+            });
+        });
+
+        it(`will pass "asc" order when the order of comments is inverted`, async () => {
+            is_order_inverted = false;
+
+            const getAllSpy = jest.spyOn(fetch_result, "getAllJSON").mockReturnValue(okAsync([]));
+
+            await getComments();
+
+            expect(getAllSpy).toHaveBeenCalledWith(expect.anything(), {
+                params: expect.objectContaining({ order: "asc" }),
+            });
         });
     });
 });

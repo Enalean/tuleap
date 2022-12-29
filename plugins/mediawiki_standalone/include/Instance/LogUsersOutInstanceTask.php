@@ -47,10 +47,16 @@ final class LogUsersOutInstanceTask implements QueueTask
         } catch (\Project_NotFoundException $e) {
             return null;
         }
+
+        return self::logsOutUserOfAProject($project);
+    }
+
+    public static function logsOutUserOfAProject(\Project $project): ?self
+    {
         if (! $project->usesService(MediawikiStandaloneService::SERVICE_SHORTNAME)) {
             return null;
         }
-        return new self($project_id, null);
+        return new self((int) $project->getID(), null);
     }
 
     public static function logsSpecificUserOutOfAProjectFromItsID(int $project_id, ProjectByIDFactory $project_factory, int $user_id): ?self
@@ -65,7 +71,7 @@ final class LogUsersOutInstanceTask implements QueueTask
         return $task;
     }
 
-    public static function logsSpecificUserOutOfAllProjects(int $user_id): ?self
+    public static function logsSpecificUserOutOfAllProjects(int $user_id): self
     {
         return new self(null, $user_id);
     }

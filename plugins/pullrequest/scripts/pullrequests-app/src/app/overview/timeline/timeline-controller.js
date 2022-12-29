@@ -52,7 +52,9 @@ function TimelineController(SharedPropertiesService, TimelineService) {
                     self.comment_controller = PullRequestCommentController(
                         PullRequestCommentReplyFormFocusHelper(),
                         self.comment_replies_store,
-                        PullRequestCommentNewReplySaver()
+                        PullRequestCommentNewReplySaver(),
+                        self.current_user,
+                        PullRequestPresenter.fromPullRequest(self.pull_request)
                     );
                 })
                 .finally(function () {

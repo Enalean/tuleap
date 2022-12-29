@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post, del } from "@tuleap/tlp-fetch";
+import { get, post, del, recursiveGet } from "@tuleap/tlp-fetch";
 import DateUtils from "../support/date-utils";
 
 export {
@@ -45,9 +45,14 @@ const JSON_HEADERS = {
     "content-type": "application/json",
 };
 
-async function getOpenMilestones(project_id) {
-    const response = await get(`/api/projects/${project_id}/milestones?query={"status":"open"}`);
-    return response.json();
+function getOpenMilestones(project_id) {
+    return recursiveGet(`/api/projects/${encodeURIComponent(project_id)}/milestones`, {
+        params: {
+            query: JSON.stringify({ status: "open" }),
+            limit: 10,
+            offset: 0,
+        },
+    });
 }
 
 async function createBaseline(name, milestone, snapshot_date) {
@@ -92,10 +97,16 @@ async function getTracker(id) {
     return response.json();
 }
 
-async function getBaselines(project_id) {
-    const response = await get(`/api/projects/${project_id}/baselines?limit=1000&offset=0`);
-    const baselines_with_total_count = await response.json();
-    return baselines_with_total_count.baselines;
+function getBaselines(project_id) {
+    return recursiveGet(`/api/projects/${encodeURIComponent(project_id)}/baselines`, {
+        params: {
+            limit: 50,
+            offset: 0,
+        },
+        getCollectionCallback: (collection) => {
+            return collection.baselines;
+        },
+    });
 }
 
 async function getUser(user_id) {
@@ -115,23 +126,33 @@ async function getBaselineArtifacts(baseline_id) {
 }
 
 async function getBaselineArtifactsByIds(baseline_id, artifact_ids) {
-    const query = JSON.stringify({
-        ids: artifact_ids,
-    });
-    const response = await get(
-        `/api/baselines/${baseline_id}/artifacts?query=${encodeURIComponent(query)}`
-    );
+    let artifacts = [];
+    const limit = 100;
+    for (let i = 0; i < artifact_ids.length; i += limit) {
+        const query = JSON.stringify({
+            ids: artifact_ids.slice(i, i + (limit - 1)),
+        });
+        const response = await get(
+            `/api/baselines/${baseline_id}/artifacts?query=${encodeURIComponent(query)}`
+        );
 
-    let json_response = await response.json();
-    return json_response.artifacts;
+        let json_response = await response.json();
+        artifacts = artifacts.concat(json_response.artifacts);
+    }
+
+    return artifacts;
 }
 
-async function getComparisons(project_id) {
-    const response = await get(
-        `/api/projects/${project_id}/baselines_comparisons?limit=1000&offset=0`
-    );
-    const comparisons_with_total_count = await response.json();
-    return comparisons_with_total_count.comparisons;
+function getComparisons(project_id) {
+    return recursiveGet(`/api/projects/${encodeURIComponent(project_id)}/baselines_comparisons`, {
+        params: {
+            limit: 50,
+            offset: 0,
+        },
+        getCollectionCallback: (collection) => {
+            return collection.comparisons;
+        },
+    });
 }
 
 async function createComparison(name, comment, base_baseline_id, compared_to_baseline_id) {

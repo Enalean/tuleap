@@ -30,7 +30,6 @@ export default function ListPickerFieldDirective() {
             value_model: "=valueModel",
             isDisabled: "&isDisabled",
             options_value: "=optionsValue",
-            is_list_picker_enabled: "=isListPickerEnabled",
         },
         controller: ListPickerFieldController,
         controllerAs: "list_picker_field",

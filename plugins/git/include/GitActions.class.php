@@ -229,11 +229,6 @@ class GitActions extends PluginActions
         $this->ugroup_manager                = $ugroup_manager;
     }
 
-    public function process($action_name, $params)
-    {
-        return call_user_func_array([$this, $action_name], $params);
-    }
-
     public function deleteRepository($projectId, $repositoryId)
     {
         $controller   = $this->getController();

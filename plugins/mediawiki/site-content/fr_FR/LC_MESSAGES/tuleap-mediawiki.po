@@ -46,9 +46,6 @@ msgstr "Les changements ont été sauvegardés."
 msgid "Currently, there are no projects that uses Mediawiki 1.23."
 msgstr "Aucun projet n'utilise Mediawiki 1.23."
 
-msgid "Global Mediawiki Administrator"
-msgstr "Administrateur d'instances de mediawiki"
-
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
@@ -187,13 +184,6 @@ msgstr ""
 "project, privé, cela signifie que seuls les membres de projet auront accès "
 "au wiki et qu'ils pourront modifier son contenu (pour plus de détails quant "
 "aux droits, se réferer à la page User Rights page)."
-
-msgid ""
-"This permission grants mediawiki administration rights for each mediawiki of "
-"every project"
-msgstr ""
-"Cette permission donne le droit d'administration sur toutes les instances de "
-"mediawiki"
 
 msgid ""
 "This section allows you to define the user groups that can read and/or write "

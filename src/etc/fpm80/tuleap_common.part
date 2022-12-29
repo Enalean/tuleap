@@ -12,3 +12,6 @@ php_admin_flag[log_errors] = on
 
 ; Security
 php_value[session.use_strict_mode] = on
+
+; Configuration variables should be readable from environment
+clear_env = no

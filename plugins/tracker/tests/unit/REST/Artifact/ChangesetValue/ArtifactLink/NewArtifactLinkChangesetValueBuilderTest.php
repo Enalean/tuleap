@@ -20,14 +20,23 @@
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
+use Tracker_FormElement_InvalidFieldValueException;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Direction\ReverseLinksFeatureFlag;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
+use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 
 final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
+
     private const REMOVED_ARTIFACT_ID          = 103;
     private const ADDED_ARTIFACT_ID            = 106;
     private const SECOND_UNCHANGED_ARTIFACT_ID = 102;
@@ -35,7 +44,7 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
     private const PARENT_ARTIFACT_ID           = 100;
     private const FIELD_ID                     = 242;
 
-    private function build(array $payload)
+    private function build(ArtifactValuesRepresentation $payload)
     {
         $builder = new NewArtifactLinkChangesetValueBuilder(
             RetrieveForwardLinksStub::withLinks(
@@ -44,26 +53,12 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
                     ForwardLinkStub::withType(self::SECOND_UNCHANGED_ARTIFACT_ID, '_is_child'),
                     ForwardLinkStub::withType(self::REMOVED_ARTIFACT_ID, '_is_child'),
                 ])
-            )
-        );
-
-        $link_field = new \Tracker_FormElement_Field_ArtifactLink(
-            self::FIELD_ID,
-            55,
-            1,
-            'irrelevant',
-            'Irrelevant',
-            'Irrelevant',
-            true,
-            'P',
-            false,
-            '',
-            1
+            ),
         );
 
         return $builder->buildFromPayload(
             ArtifactTestBuilder::anArtifact(1060)->build(),
-            $link_field,
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::FIELD_ID)->build(),
             UserTestBuilder::buildWithDefaults(),
             $payload
         );
@@ -71,14 +66,13 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
     public function testItBuildsFromARESTPayload(): void
     {
-        $payload = [
-            'links'  => [
+        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
+            ->withLinks(
                 ['id' => self::FIRST_UNCHANGED_ARTIFACT_ID],
                 ['id' => self::SECOND_UNCHANGED_ARTIFACT_ID, 'type' => '_is_child'],
-                ['id' => self::ADDED_ARTIFACT_ID, 'type' => '_depends_on'],
-            ],
-            'parent' => ['id' => self::PARENT_ARTIFACT_ID],
-        ];
+                ['id' => self::ADDED_ARTIFACT_ID, 'type' => '_depends_on']
+            )->withParent(self::PARENT_ARTIFACT_ID)
+            ->build();
 
         $update_value = $this->build($payload);
 
@@ -90,9 +84,9 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
     public function testItBuildsFromARESTPayloadWithOnlyParentKey(): void
     {
-        $payload = [
-            'parent' => ['id' => self::PARENT_ARTIFACT_ID],
-        ];
+        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
+            ->withParent(self::PARENT_ARTIFACT_ID)
+            ->build();
 
         $update_value = $this->build($payload);
 
@@ -104,13 +98,12 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
 
     public function testItBuildsFromARESTPayloadWithOnlyLinksKey(): void
     {
-        $payload = [
-            'links' => [
+        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
+            ->withLinks(
                 ['id' => self::FIRST_UNCHANGED_ARTIFACT_ID],
                 ['id' => self::SECOND_UNCHANGED_ARTIFACT_ID, 'type' => '_is_child'],
-                ['id' => self::ADDED_ARTIFACT_ID, 'type' => '_depends_on'],
-            ],
-        ];
+                ['id' => self::ADDED_ARTIFACT_ID, 'type' => '_depends_on']
+            )->build();
 
         $update_value = $this->build($payload);
 
@@ -130,21 +123,61 @@ final class NewArtifactLinkChangesetValueBuilderTest extends \Tuleap\Test\PHPUni
         self::assertSame('_depends_on', $third_link->getType());
     }
 
-    public function dataProviderInvalidPayloads(): array
+    public function testItThrowsWhenAllLinkAndLinksAreUsedInTheSameTime(): void
     {
-        return [
-            'Payload is empty'                                  => [[]],
-            'Payload has none of the required keys'             => [['invalid_key' => []]],
-            'Links key does not contain an array'               => [['links' => null]],
-        ];
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
+            ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
+            ->withLinks(['id' => 24])
+            ->build();
+
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectExceptionMessage('cannot be used at the same time');
+        $this->build($payload);
     }
 
-    /**
-     * @dataProvider dataProviderInvalidPayloads
-     */
-    public function testItThrowsWhenPayloadHasNoneOfTheRequiredKeys(array $payload): void
+    public function testItThrowsWhenNeitherLinksOrAllLinksAreUsed(): void
     {
-        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)->build();
+
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectExceptionMessage('"links" and/or "parent" or "all_links" key must be defined');
         $this->build($payload);
+    }
+
+    public function testItThrowsWhenAllLinksIsUsedWithParent(): void
+    {
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
+            ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
+            ->withParent(self::PARENT_ARTIFACT_ID)
+            ->build();
+
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectExceptionMessage('cannot be used at the same time');
+        $this->build($payload);
+    }
+
+    public function testItThrowsWhenAllLinkIsUsedAndFeatureFlagIsDisabled(): void
+    {
+        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
+            ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
+            ->build();
+
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+        $this->build($payload);
+    }
+
+    public function testItBuildsWhenFeatureFlagIsSet(): void
+    {
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+        $payload = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
+            ->withAllLinks(LinkWithDirectionRepresentationBuilder::aReverseLink(48)->build())
+            ->build();
+
+        $update_value = $this->build($payload);
+
+        $this->assertSame(48, $update_value->getSubmittedReverseLinks()->links[0]->getSourceArtifactId());
     }
 }

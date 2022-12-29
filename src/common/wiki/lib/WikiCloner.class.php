@@ -31,7 +31,7 @@
  */
 class WikiCloner
 {
-    /*private int */   public $tmpl_wiki_exist;
+    public mixed $tmpl_wiki_exist;
 
 
  /**

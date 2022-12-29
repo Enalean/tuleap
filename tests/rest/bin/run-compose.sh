@@ -44,7 +44,7 @@ DOCKERCOMPOSE="docker-compose --project-name $project_name -f tests/rest/docker-
 
 function cleanup {
     if [ -n "${TESTS_RESULT:-}" ]; then
-        docker cp "$($DOCKERCOMPOSE ps -q tests)":/output/. "$TESTS_RESULT" || echo "Failed to copy tests result"
+        $DOCKERCOMPOSE cp tests:/output/. "$TESTS_RESULT" || echo "Failed to copy tests result"
     fi
     $DOCKERCOMPOSE down
 }

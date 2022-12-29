@@ -24,8 +24,8 @@ namespace Tuleap\MediawikiStandalone\Permissions\Admin;
 
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectAndPermissionStub;
-use Tuleap\MediawikiStandalone\Permissions\ReadersRetriever;
+use Tuleap\MediawikiStandalone\Permissions\ISearchByProjectStub;
+use Tuleap\MediawikiStandalone\Permissions\ProjectPermissionsRetriever;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -40,6 +40,8 @@ class AdminPermissionsControllerTest extends TestCase
 
     public function testExceptionWhenProjectIsNotAllowed(): void
     {
+        $dao = ISearchByProjectStub::buildWithoutSpecificPermissions();
+
         $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
@@ -47,7 +49,7 @@ class AdminPermissionsControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
             new AdminPermissionsPresenterBuilder(
-                new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions()),
+                new ProjectPermissionsRetriever($dao),
                 $this->createStub(\User_ForgeUserGroupFactory::class),
             ),
             new NoopSapiEmitter(),
@@ -62,6 +64,8 @@ class AdminPermissionsControllerTest extends TestCase
 
     public function testExceptionWhenServiceIsNotActivated(): void
     {
+        $dao = ISearchByProjectStub::buildWithoutSpecificPermissions();
+
         $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
@@ -69,7 +73,7 @@ class AdminPermissionsControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
             new AdminPermissionsPresenterBuilder(
-                new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions()),
+                new ProjectPermissionsRetriever($dao),
                 $this->createStub(\User_ForgeUserGroupFactory::class),
             ),
             new NoopSapiEmitter(),
@@ -94,9 +98,12 @@ class AdminPermissionsControllerTest extends TestCase
             ->willReturn($token);
 
         $user_group_factory = $this->createStub(\User_ForgeUserGroupFactory::class);
-        $user_group_factory->method('getProjectUGroupsWithMembersWithoutNobody')->willReturn([
-            new \User_ForgeUGroup(104, 'Lorem ipsum', ''),
-        ]);
+        $ugroups            = [new \User_ForgeUGroup(104, 'Lorem ipsum', '')];
+        $user_group_factory->method('getAllForProjectWithoutNobody')->willReturn($ugroups);
+        $user_group_factory->method('getAllForProjectWithoutNobodyNorAnonymous')->willReturn($ugroups);
+        $user_group_factory->method('getProjectUGroupsWithMembersWithoutNobody')->willReturn($ugroups);
+
+        $dao = ISearchByProjectStub::buildWithoutSpecificPermissions();
 
         $controller = new AdminPermissionsController(
             \Tuleap\Http\HTTPFactoryBuilder::responseFactory(),
@@ -105,7 +112,7 @@ class AdminPermissionsControllerTest extends TestCase
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $token_provider,
             new AdminPermissionsPresenterBuilder(
-                new ReadersRetriever(ISearchByProjectAndPermissionStub::buildWithoutSpecificPermissions()),
+                new ProjectPermissionsRetriever($dao),
                 $user_group_factory,
             ),
             new NoopSapiEmitter(),

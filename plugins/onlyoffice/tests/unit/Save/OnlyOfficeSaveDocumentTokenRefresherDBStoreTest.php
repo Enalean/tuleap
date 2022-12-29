@@ -37,7 +37,7 @@ final class OnlyOfficeSaveDocumentTokenRefresherDBStoreTest extends TestCase
         $token_verifier = $this->createStub(OnlyOfficeSaveDocumentTokenVerifier::class);
         $dao            = $this->createMock(OnlyOfficeSaveDocumentTokenDAO::class);
 
-        $token_verifier->method('getDocumentSaveTokenData')->willReturn(new SaveDocumentTokenData(1, 102, 1));
+        $token_verifier->method('getDocumentSaveTokenData')->willReturn(new SaveDocumentTokenData(1, 102, 1, 1));
         $dao->expects(self::atLeastOnce())->method('updateTokenExpirationDate')->with(1, 10, 20);
 
         $token_refresher = self::buildTokenRefresher($token_verifier, $dao, new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));

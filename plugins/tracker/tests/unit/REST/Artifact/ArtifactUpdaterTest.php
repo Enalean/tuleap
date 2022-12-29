@@ -34,7 +34,7 @@ use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresenta
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -91,10 +91,10 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function update(?NewChangesetCommentRepresentation $comment): void
     {
-        $string_representation           = new ArtifactValuesRepresentation();
-        $string_representation->field_id = self::FIELD_ID;
-        $string_representation->value    = self::FIELD_VALUE;
-        $values                          = [$string_representation];
+        $string_representation = ArtifactValuesRepresentationBuilder::aRepresentation(self::FIELD_ID)
+            ->withValue(self::FIELD_VALUE)
+            ->build();
+        $values                = [$string_representation];
 
         $updater = new ArtifactUpdater(new FieldsDataBuilder(
             $this->fields_retriever,

@@ -33,6 +33,10 @@ type StaticOpenListItem = {
 };
 
 type UserGroupOpenListItem = {
+    /**
+     * Dynamic user groups have ids like "101_3", where 101 is the
+     * project ID and 3 is a constant.
+     */
     readonly id: string;
     readonly label: string;
 };

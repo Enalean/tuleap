@@ -25,7 +25,7 @@ import type { ScrollingManager } from "../events/ScrollingManager";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 describe("dropdown-manager", () => {
-    let doc: HTMLDocument,
+    let doc: Document,
         wrapper: HTMLElement,
         link_selector: Element,
         dropdown: HTMLElement,
@@ -45,9 +45,11 @@ describe("dropdown-manager", () => {
                 disconnect,
             };
         });
-    });
+        vi.spyOn(window, "requestAnimationFrame").mockImplementation((callback): number => {
+            callback(1);
+            return 1;
+        });
 
-    beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         const source_select_box = document.createElement("select");
         const {
@@ -56,7 +58,7 @@ describe("dropdown-manager", () => {
             dropdown_element,
             dropdown_list_element,
             selection_element,
-        } = new BaseComponentRenderer(doc, source_select_box, "").renderBaseComponent();
+        } = new BaseComponentRenderer(doc, source_select_box, "", "").renderBaseComponent();
 
         scroll_manager = {
             lockScrolling: vi.fn(),
@@ -162,7 +164,7 @@ describe("dropdown-manager", () => {
                     clientHeight: document_client_height,
                 },
                 body: document.createElement("body"),
-            } as unknown as HTMLDocument;
+            } as unknown as Document;
 
             return new DropdownManager(
                 mocked_doc,

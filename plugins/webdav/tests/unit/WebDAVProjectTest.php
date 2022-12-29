@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use Sabre\DAV\Exception\NotFound;
@@ -34,26 +32,24 @@ use WebDAVProject;
 
 final class WebDAVProjectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    private $utils;
-    private $webdav_project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
+     * @var \WebDAVUtils&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $utils;
+    private WebDAVProject $webdav_project;
+    /**
+     * @var Project&\PHPUnit\Framework\MockObject\MockObject
      */
     private $project;
-    /**
-     * @var PFUser
-     */
-    private $user;
+    private PFUser $user;
 
     protected function setUp(): void
     {
         $this->user    = UserTestBuilder::aUser()->build();
-        $this->utils   = Mockery::mock(\WebDAVUtils::class);
-        $this->project = Mockery::mock(\Project::class);
-        $this->project->shouldReceive('usesFile')->andReturnTrue()->byDefault();
+        $this->utils   = $this->createMock(\WebDAVUtils::class);
+        $this->project = $this->createMock(\Project::class);
 
         $this->webdav_project = new WebDAVProject(
             $this->user,
@@ -70,9 +66,9 @@ final class WebDAVProjectTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildrenNoServices(): void
     {
-        $this->utils->shouldReceive('getEventManager')->andReturns(new \EventManager());
+        $this->utils->method('getEventManager')->willReturn(new \EventManager());
 
-        $this->project->shouldReceive('usesFile')->andReturnFalse();
+        $this->project->method('usesFile')->willReturn(false);
 
         self::assertSame([], $this->webdav_project->getChildren());
     }
@@ -82,9 +78,9 @@ final class WebDAVProjectTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetChildFailWithNotExist(): void
     {
-        $this->utils->shouldReceive('getEventManager')->andReturns(new \EventManager());
+        $this->utils->method('getEventManager')->willReturn(new \EventManager());
 
-        $this->project->shouldReceive('usesFile')->andReturnFalse();
+        $this->project->method('usesFile')->willReturn(false);
 
         $this->expectException(NotFound::class);
 

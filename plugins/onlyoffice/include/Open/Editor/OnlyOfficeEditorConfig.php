@@ -28,6 +28,12 @@ namespace Tuleap\OnlyOffice\Open\Editor;
  */
 final class OnlyOfficeEditorConfig
 {
+    /**
+     * Macros cannot be used with the Tuleap/ONLYOFFICE integration, it compromises Tuleap security
+     * @see https://api.onlyoffice.com/editors/config/editor/customization#macrosMode
+     */
+    public array $customization = ['macros' => false, 'macrosMode' => 'disable', 'plugins' => false];
+
     private function __construct(
         public string $lang,
         public string $region,

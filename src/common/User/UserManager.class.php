@@ -48,11 +48,14 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
      */
     public const SPECIAL_USERS_LIMIT = 100;
 
-    public $_users           = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-    public $_userid_bynames  = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-    public $_userid_byldapid = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    /**
+     * @psalm-var array<int|string,PFUser|null>
+     */
+    public array $_users           = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public array $_userid_bynames  = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public array $_userid_byldapid = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
-    private $_userdao                                                          = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    private UserDao|null $_userdao                                             = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     private \Tuleap\User\CurrentUserWithLoggedInInformation|null $current_user = null;
 
     /**
@@ -65,7 +68,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         $this->pending_user_notifier = $pending_user_notifier;
     }
 
-    protected static $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    protected static ?self $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /**
      * @return UserManager
      */
@@ -174,7 +177,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
 
     /**
      * @param string the user_name of the user to find
-     * @return PFUser or null if the user is not found
+     * @return PFUser|null
      */
     public function getUserByUserName($user_name)
     {
@@ -191,7 +194,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         $user    = null;
         $user_id = $this->_userid_bynames[$user_name];
         if ($user_id !== null) {
-            $user = $this->_users[$user_id];
+            $user = $this->_users[(int) $user_id];
         }
         return $user;
     }
@@ -611,14 +614,14 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $this->warnUserAboutAuthenticationAttempts($user);
             $this->warnUserAboutAdminReadOnlyPermission($user);
 
-            $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME']);
+            $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp());
 
             \Tuleap\User\LoginInstrumentation::increment('success');
             $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
             return $user;
         } catch (User_InvalidPasswordWithUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME']);
+            $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp());
         } catch (User_InvalidPasswordException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (User_PasswordExpiredException $exception) {
@@ -669,7 +672,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         $expire = 0;
 
         if ($user->getStickyLogin()) {
-            $expire = $_SERVER['REQUEST_TIME'] + $this->getSessionLifetime();
+            $expire = ($_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp()) + $this->getSessionLifetime();
         }
 
         return $expire;
@@ -985,8 +988,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
      */
     public function createAccount(PFUser $user): ?PFUser
     {
-        $dao     = $this->getDao();
-        $user_id = $dao->create(
+        $dao          = $this->getDao();
+        $request_time = $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp();
+        $user_id      = $dao->create(
             $user->getUserName(),
             $user->getEmail(),
             $user->getPassword(),
@@ -998,7 +1002,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $user->getUnixUid(),
             $user->getUnixBox(),
             $user->getLdapId(),
-            $_SERVER['REQUEST_TIME'],
+            $request_time,
             $user->getConfirmHash(),
             $user->getMailSiteUpdates(),
             $user->getMailVA(),
@@ -1008,7 +1012,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $user->getTimezone(),
             $user->getLanguageID(),
             $user->getExpiryDate(),
-            $_SERVER['REQUEST_TIME']
+            $request_time
         );
         if (! $user_id) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_exit', 'error'));

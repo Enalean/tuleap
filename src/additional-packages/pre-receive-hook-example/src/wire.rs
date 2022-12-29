@@ -17,11 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
-#[derive(Deserialize)]
-pub struct JsonData {
-    pub obj_type: String,
-    pub content: String,
+#[derive(Debug, Deserialize)]
+pub struct HookData {
+    pub updated_references: HashMap<String, UpdatedReferences>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct UpdatedReferences {
+    pub old_value: String,
+    pub new_value: String,
 }
 
 #[derive(Serialize)]

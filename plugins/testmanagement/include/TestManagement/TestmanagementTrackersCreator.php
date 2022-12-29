@@ -46,7 +46,7 @@ class TestmanagementTrackersCreator
      */
     public function createTrackerFromXML(Project $project, string $tracker_itemname): ?Tracker
     {
-        $template_path = TESTMANAGEMENT_RESOURCE_DIR . '/Tracker_' . $tracker_itemname . '.xml';
+        $template_path = (string) realpath(__DIR__ . '/../../resources/templates/Tracker_' . $tracker_itemname . '.xml');
         if ($tracker_itemname === ISSUE_TRACKER_SHORTNAME) {
             $template_path = (string) realpath(__DIR__ . '/../../../tracker/resources/templates/Tracker_Bugs.xml');
         }

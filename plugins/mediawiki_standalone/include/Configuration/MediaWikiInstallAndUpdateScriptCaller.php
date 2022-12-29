@@ -31,6 +31,7 @@ final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAnd
 
     public function __construct(
         private MediaWikiManagementCommandFactory $management_command_factory,
+        private MainpageDeployer $mainpage_deployer,
         private LocalSettingsInstantiator $local_settings_instantiator,
         private ProjectMediaWikiServiceDAO $project_mediawiki_service_dao,
         private LoggerInterface $logger,
@@ -42,6 +43,7 @@ final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAnd
      */
     public function runInstallAndUpdate(): void
     {
+        $this->mainpage_deployer->deployMainPages();
         $this->installFarmInstance();
         $this->logger->debug('Update MediaWiki standalone Tuleap managed LocalSettings file');
         $this->local_settings_instantiator->instantiateLocalSettings();

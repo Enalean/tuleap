@@ -41,7 +41,8 @@ class ChangesetCommentIndexer
 
     public function indexChangesetCommentFromChangeset(\Tracker_Artifact_Changeset $changeset): void
     {
-        $row = $this->changeset_comment_dao->searchLastVersion($changeset->getId())->getRow();
+        $changeset_id = (int) $changeset->getId();
+        $row          = $this->changeset_comment_dao->searchLastVersion($changeset_id)->getRow();
 
         if (! $row) {
             return;
@@ -49,7 +50,7 @@ class ChangesetCommentIndexer
 
         $this->indexComment(
             $changeset->getArtifact(),
-            $changeset->getId(),
+            (string) $changeset_id,
             $row['body'],
             CommentFormatIdentifier::fromFormatString($row['body_format'])
         );

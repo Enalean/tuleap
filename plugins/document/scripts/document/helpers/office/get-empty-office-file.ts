@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import empty_docx from "./empty.docx";
-import empty_xlsx from "./empty.xlsx";
-import empty_pptx from "./empty.pptx";
-
 export async function getEmptyOfficeFileFromMimeType(
+    locale: string,
     mime_type: string
 ): Promise<{ file: File; badge_class: string; extension: string }> {
     let response: Response;
@@ -30,18 +27,31 @@ export async function getEmptyOfficeFileFromMimeType(
     if ("application/word" === mime_type) {
         extension = "docx";
         badge_class = "document-document-badge";
-        response = await fetch(empty_docx);
     } else if ("application/excel" === mime_type) {
         extension = "xlsx";
         badge_class = "document-spreadsheet-badge";
-        response = await fetch(empty_xlsx);
     } else if ("application/powerpoint" === mime_type) {
         extension = "pptx";
         badge_class = "document-presentation-badge";
-        response = await fetch(empty_pptx);
     } else {
         throw Error("Unsupported mime type " + mime_type);
     }
+
+    /* eslint-disable no-unsanitized/method -- The imports are safe, they will be replaced by the bundler anyway */
+    try {
+        response = await fetch(
+            (
+                await import(`./empty_document_templates/${locale}/new.${extension}`)
+            ).default
+        );
+    } catch (e) {
+        response = await fetch(
+            (
+                await import(`./empty_document_templates/en-US/new.${extension}`)
+            ).default
+        );
+    }
+    /* eslint-enable */
 
     return {
         extension,

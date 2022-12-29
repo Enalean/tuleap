@@ -236,9 +236,7 @@ function controller(
             self.user_id,
             submilestone.artifact.tracker.id,
             submilestone.artifact.id,
-            self.refreshSubmilestone,
-            SharedPropertiesService.isListPickerEnabledForTracker(submilestone.artifact.tracker.id),
-            SharedPropertiesService.isSearchEnabled()
+            self.refreshSubmilestone
         );
     }
 
@@ -260,8 +258,7 @@ function controller(
             submilestone_type.id,
             parent_artifact_id,
             callback,
-            SharedPropertiesService.isListPickerEnabledForTracker(submilestone_type.id),
-            SharedPropertiesService.isSearchEnabled()
+            []
         );
     }
 
@@ -321,14 +318,7 @@ function controller(
             });
         }
 
-        NewTuleapArtifactModalService.showCreation(
-            self.user_id,
-            item_type.id,
-            null,
-            callback,
-            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id),
-            SharedPropertiesService.isSearchEnabled()
-        );
+        NewTuleapArtifactModalService.showCreation(self.user_id, item_type.id, null, callback, []);
     }
 
     function prependItemToSubmilestone(child_item_id, parent_item) {
