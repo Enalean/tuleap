@@ -115,7 +115,33 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
         self::assertFalse($checker->isOnlyOfficeIntegrationAvailableForProject($project));
     }
 
-    public function testHappyPath(): void
+    public function testHappyPathWithoutProjectRestrictions(): void
+    {
+        $plugin_manager    = $this->createMock(\PluginManager::class);
+        $onlyoffice_plugin = new \onlyofficePlugin(null);
+        $document_server   = DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'));
+        $checker           = new OnlyOfficeAvailabilityChecker(
+            $plugin_manager,
+            $onlyoffice_plugin,
+            $this->createMock(LoggerInterface::class),
+            IRetrieveDocumentServersStub::buildWith($document_server),
+        );
+
+        $project = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->withUsedService('cvs')
+            ->withUsedService(\DocmanPlugin::SERVICE_SHORTNAME)
+            ->build();
+
+        $plugin_manager
+            ->method('isPluginAllowedForProject')
+            ->with($onlyoffice_plugin, self::PROJECT_ID)
+            ->willReturn(true);
+
+        self::assertTrue($checker->isOnlyOfficeIntegrationAvailableForProject($project));
+    }
+
+    public function testHappyPathWithProjectRestrictions(): void
     {
         $plugin_manager    = $this->createMock(\PluginManager::class);
         $onlyoffice_plugin = new \onlyofficePlugin(null);
