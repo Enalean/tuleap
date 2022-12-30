@@ -8,6 +8,7 @@ module.exports = {
         "import",
         "no-unsanitized",
         "no-only-tests",
+        "monorepo-cop",
     ],
     extends: [
         "eslint:recommended",
@@ -16,6 +17,7 @@ module.exports = {
         "plugin:import/typescript",
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
+        "plugin:monorepo-cop/recommended",
     ],
     parser: "vue-eslint-parser",
     parserOptions: {
