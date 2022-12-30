@@ -38,6 +38,16 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
      */
     public function retrieveAll(): array
     {
+        return $this->getDB()->tryFlatTransaction(
+            fn(): array => $this->retrieveAllWithoutTransaction()
+        );
+    }
+
+    /**
+     * @return list<DocumentServer>
+     */
+    private function retrieveAllWithoutTransaction(): array
+    {
         $document_servers = [];
 
         $server_restrictions = array_reduce(
