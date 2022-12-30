@@ -18,6 +18,75 @@
  *
  */
 
+describe("Cross tracker search", function () {
+    let now: number;
+
+    before(function () {
+        now = Date.now();
+    });
+
+    it("User should be able to set trackers from widgets", function () {
+        cy.projectMemberSession();
+        cy.visit("/my/");
+
+        cy.get("[data-test=dashboard-add-button]").click();
+        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+        cy.get("[data-test=dashboard-add-button-submit]").click();
+
+        cy.get("[data-test=dashboard-configuration-button]").click();
+        cy.get("[data-test=dashboard-add-widget-button]").click();
+        cy.get("[data-test=crosstrackersearch]").click();
+        cy.get("[data-test=dashboard-add-widget-button-submit]").click();
+
+        cy.log("select some trackers");
+        cy.get("[data-test=cross-tracker-reading-mode]").click();
+
+        cy.log("select project");
+        cy.get("[data-test=cross-tracker-selector-project]").select("Cross tracker search");
+
+        cy.get("[data-test=cross-tracker-selector-tracker]").select("Bugs");
+        cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
+        cy.get("[data-test=cross-tracker-selector-tracker]").select("Kanban Tasks");
+        cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
+        cy.intercept("/api/v1/cross_tracker_reports/*/content*").as("getReportContent");
+        cy.get("[data-test=search-report-button]").click();
+
+        cy.log("Bugs has some artifacts");
+        cy.wait("@getReportContent", { timeout: 5000 });
+        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 5);
+        assertOpenArtifacts();
+
+        cy.log("Regular user should be able to execute queries");
+        updateSearchQuery("@title != 'foo'");
+        cy.wait("@getReportContent", { timeout: 5000 });
+        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
+        assertAllArtifacts();
+
+        updateSearchQuery("@status = OPEN()");
+        cy.wait("@getReportContent", { timeout: 5000 });
+        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 5);
+        assertOpenArtifacts();
+
+        updateSearchQuery("@submitted_on BETWEEN(NOW() - 2m, NOW() - 1m)");
+        cy.get("[data-test=cross-tracker-no-results]");
+
+        updateSearchQuery('@last_update_date > "2018-01-01"');
+        cy.wait("@getReportContent", { timeout: 5000 });
+        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
+        assertAllArtifacts();
+
+        cy.log("Save results");
+        cy.get("[data-test=cross-tracker-save-report]").click();
+        cy.get("[data-test=cross-tracker-report-success]");
+
+        cy.log("reload page and check report still has results");
+        cy.reload();
+        cy.wait("@getReportContent", { timeout: 5000 });
+        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
+        assertAllArtifacts();
+    });
+});
+
 function updateSearchQuery(search_query: string): void {
     cy.get("[data-test=cross-tracker-reading-mode]").click();
 
@@ -58,72 +127,3 @@ function clearCodeMirror(): void {
         unwrap.CodeMirror.setValue("");
     });
 }
-
-describe("Cross tracker search", function () {
-    let now: number;
-
-    before(() => {
-        cy.clearSessionCookie();
-        cy.projectMemberLogin();
-    });
-
-    beforeEach(function () {
-        now = Date.now();
-        cy.preserveSessionCookies();
-    });
-
-    it("User should be able to set trackers from widgets", function () {
-        cy.visit("/my/");
-
-        cy.get("[data-test=dashboard-add-button]").click();
-        cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
-        cy.get("[data-test=dashboard-add-button-submit]").click();
-
-        cy.get("[data-test=dashboard-configuration-button]").click();
-        cy.get("[data-test=dashboard-add-widget-button]").click();
-        cy.get("[data-test=crosstrackersearch]").click();
-        cy.get("[data-test=dashboard-add-widget-button-submit]").click();
-
-        cy.log("select some trackers");
-        cy.get("[data-test=cross-tracker-reading-mode]").click();
-
-        cy.log("select project");
-        cy.get("[data-test=cross-tracker-selector-project]").select("Cross tracker search");
-
-        cy.get("[data-test=cross-tracker-selector-tracker]").select("Bugs");
-        cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
-        cy.get("[data-test=cross-tracker-selector-tracker]").select("Kanban Tasks");
-        cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
-        cy.get("[data-test=search-report-button]").click();
-
-        cy.log("Bugs has some artifacts");
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 5);
-        assertOpenArtifacts();
-    });
-
-    it("Regular user should be able to execute queries", function () {
-        updateSearchQuery("@title != 'foo'");
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
-        assertAllArtifacts();
-
-        updateSearchQuery("@status = OPEN()");
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 5);
-        assertOpenArtifacts();
-
-        updateSearchQuery("@submitted_on BETWEEN(NOW() - 2m, NOW() - 1m)");
-        cy.get("[data-test=cross-tracker-no-results]");
-
-        updateSearchQuery('@last_update_date > "2018-01-01"');
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
-        assertAllArtifacts();
-
-        cy.log("Save results");
-        cy.get("[data-test=cross-tracker-save-report]").click();
-        cy.get("[data-test=cross-tracker-report-success]");
-
-        cy.log("reload page and check report still has results");
-        cy.reload();
-        cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
-        assertAllArtifacts();
-    });
-});
