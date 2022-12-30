@@ -30,7 +30,7 @@ import type { BurnupMode, MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import { createBurnupChart } from "../../../../../chart_builder/burnup_chart_builder/burnup-chart-drawer";
 import type { ChartPropsWithoutTooltip } from "@tuleap/chart-builder";
-import { transformToGenericBurnupData } from "../../../../../../../../../agiledashboard/scripts/burnup-chart/src/burnup-data-transformer";
+import { transformToGenericBurnupData } from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
 import { State } from "vuex-class";
 
 @Component

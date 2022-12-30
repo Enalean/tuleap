@@ -19,7 +19,7 @@
 
 import moment from "moment";
 import { createBurnupChart } from "./burnup-chart-drawer.js";
-import { transformToGenericBurnupData } from "./burnup-data-transformer.js";
+import { transformToGenericBurnupData } from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
 import { gettext_provider } from "./gettext-provider.js";
 
 document.addEventListener("DOMContentLoaded", () => {
