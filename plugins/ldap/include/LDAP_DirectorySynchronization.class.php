@@ -28,6 +28,7 @@ require_once 'LDAP_SyncNotificationManager.class.php';
 
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
+use Tuleap\User\PasswordVerifier;
 
 class LDAP_DirectorySynchronization
 {
@@ -177,7 +178,15 @@ class LDAP_DirectorySynchronization
     public function getLdapUserManager()
     {
         if (! isset($this->lum)) {
-            $this->lum = new LDAP_UserManager($this->ldap, LDAP_UserSync::instance(), new \Tuleap\User\UserNameNormalizer(new Rule_UserName(), new Cocur\Slugify\Slugify()));
+            $this->lum = new LDAP_UserManager(
+                $this->ldap,
+                LDAP_UserSync::instance(),
+                new \Tuleap\User\UserNameNormalizer(
+                    new Rule_UserName(),
+                    new Cocur\Slugify\Slugify()
+                ),
+                new PasswordVerifier(new StandardPasswordHandler()),
+            );
         }
         return $this->lum;
     }
