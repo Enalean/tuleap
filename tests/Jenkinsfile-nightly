@@ -159,8 +159,13 @@ pipeline {
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
 
+                stage('REST') {
+                    steps { script { actions.runRESTTests('mysql80', '81') } }
+                    post { always { junit 'results/api-rest/*/rest_tests.xml' } }
+                }
+
                 stage('DB/Integration') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '81') }) } }
+                    steps { script { actions.runDBTests('mysql80', '81') } }
                     post { always { junit 'results/db/*/db_tests.xml' } }
                 }
             }

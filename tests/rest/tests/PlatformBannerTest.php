@@ -95,7 +95,10 @@ class PlatformBannerTest extends ProjectBase
 
         $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('a banner message', $response_json['message']);
-        $this->assertEquals('2100-06-30T09:44:34+01:00', $response_json['expiration_date']);
+        $this->assertEquals(
+            \DateTimeImmutable::createFromFormat(\DateTimeImmutable::ATOM, '2100-06-30T09:44:34+01:00'),
+            \DateTimeImmutable::createFromFormat(\DateTimeImmutable::ATOM, $response_json['expiration_date'])
+        );
     }
 
     /**

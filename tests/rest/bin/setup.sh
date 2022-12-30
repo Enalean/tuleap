@@ -165,6 +165,10 @@ case "$PHP_FPM" in
     echo "Deploy PHP FPM 80"
     /usr/bin/tuleap-cfg site-deploy --php-version=php80
     ;;
+    '/opt/remi/php81/root/usr/sbin/php-fpm')
+    echo "Deploy PHP FPM 81"
+    /usr/bin/tuleap-cfg site-deploy --php-version=php81
+    ;;
 esac
 tuleap_db_config
 sudo -u codendiadm PHP="$PHP_CLI" /usr/bin/tuleap worker:supervisor --quiet start &
