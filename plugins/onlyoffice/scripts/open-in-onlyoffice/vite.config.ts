@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-namespace Tuleap\OnlyOffice\Administration;
-
-use Tuleap\CSRFSynchronizerTokenPresenter;
-
-/**
- * @psalm-immutable
- */
-final class OnlyOfficeAdminSettingsPresenter
-{
-    public string $create_url;
-
-    /**
-     * @param OnlyOfficeServerPresenter[] $servers
-     */
-    public function __construct(
-        public array $servers,
-        public CSRFSynchronizerTokenPresenter $csrf_token,
-    ) {
-        $nb_servers       = count($this->servers);
-        $this->create_url = OnlyOfficeCreateAdminSettingsController::URL;
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    "onlyoffice-editor": path.resolve(__dirname, "src/onlyoffice-editor.ts"),
+                    "open-in-onlyoffice": path.resolve(__dirname, "src/open-in-onlyoffice.ts"),
+                },
+            },
+        },
     }
-}
+);

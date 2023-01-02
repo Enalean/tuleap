@@ -266,6 +266,7 @@ module.exports = {
                 "plugins/testplan/scripts/**/*.vue",
                 "plugins/gitlab/scripts/**/*.vue",
                 "plugins/git/scripts/artifact-create-branch-action/**/*.vue",
+                "plugins/onlyoffice/scripts/siteadmin/**/*.vue",
             ],
             extends: ["plugin:vue/vue3-recommended"],
             rules: {

@@ -19,19 +19,21 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
+import vue from "@vitejs/plugin-vue";
+import { viteExternalsPlugin } from "vite-plugin-externals";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
 export default vite.defineAppConfig(
-    { plugin_name: "onlyoffice" },
     {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        plugins: [viteExternalsPlugin({ tlp: "tlp" }), POGettextPlugin.vite(), vue()],
         build: {
             rollupOptions: {
                 input: {
-                    "onlyoffice-siteadmin": path.resolve(
-                        __dirname,
-                        "scripts/onlyoffice-siteadmin.ts"
-                    ),
-                    "onlyoffice-editor": path.resolve(__dirname, "scripts/onlyoffice-editor.ts"),
-                    "open-in-onlyoffice": path.resolve(__dirname, "scripts/open-in-onlyoffice.ts"),
+                    "onlyoffice-siteadmin": path.resolve(__dirname, "src/onlyoffice-siteadmin.ts"),
                 },
             },
         },

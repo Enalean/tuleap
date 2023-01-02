@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+import type { InjectionKey } from "vue";
+import type { Config } from "./type";
 
-document.addEventListener("DOMContentLoaded", () => {
-    openAllTargetModalsOnClick(document, ".onlyoffice-admin-modal-server-button");
-});
+export const CONFIG: InjectionKey<Config> = Symbol();

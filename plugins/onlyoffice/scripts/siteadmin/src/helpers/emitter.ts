@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import mitt from "mitt";
+import type { Server } from "../type";
 
-namespace Tuleap\OnlyOffice\Administration;
+type Events = {
+    "show-add-server-modal": void;
+    "show-edit-server-modal": Server;
+    "show-restrict-server-modal": Server;
+    "show-delete-server-modal": Server;
+};
 
-use Tuleap\CSRFSynchronizerTokenPresenter;
-
-/**
- * @psalm-immutable
- */
-final class OnlyOfficeAdminSettingsPresenter
-{
-    public string $create_url;
-
-    /**
-     * @param OnlyOfficeServerPresenter[] $servers
-     */
-    public function __construct(
-        public array $servers,
-        public CSRFSynchronizerTokenPresenter $csrf_token,
-    ) {
-        $nb_servers       = count($this->servers);
-        $this->create_url = OnlyOfficeCreateAdminSettingsController::URL;
-    }
-}
+export default mitt<Events>();
