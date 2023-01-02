@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import { describe, it, expect } from "vitest";
 import { sanitizeURL } from "./url-sanitizer";
 
 describe("url-sanitize", () => {
