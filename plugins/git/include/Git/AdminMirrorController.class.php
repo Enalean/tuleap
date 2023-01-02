@@ -20,7 +20,9 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\Mirror\MirrorPresenter;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
+use Tuleap\Layout\JavascriptViteAsset;
 
 class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -87,9 +89,12 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         switch ($request->get('action')) {
             case 'manage-allowed-projects':
                 $GLOBALS['HTML']->addJavascriptAsset(
-                    new \Tuleap\Layout\JavascriptAsset(
-                        new \Tuleap\Layout\IncludeCoreAssets(),
-                        'manage-allowed-projects-on-resource.js'
+                    new JavascriptViteAsset(
+                        new IncludeViteAssets(
+                            __DIR__ . '/../../../../src/scripts/manage-project-restrictions-resources/frontend-assets',
+                            '/assets/core/manage-project-restrictions-resources'
+                        ),
+                        'src/index.ts'
                     )
                 );
 

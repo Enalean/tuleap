@@ -220,8 +220,6 @@ const webpack_config_for_burning_parrot_code = {
         "dashboards/dashboard": "./src/dashboards/dashboard.js",
         "dashboards/widget-contact-modal": "./src/dashboards/widgets/contact-modal.ts",
         "frs-admin-license-agreement": "./src/frs/admin/license-agreement.ts",
-        "manage-allowed-projects-on-resource":
-            "./src/tuleap/manage-allowed-projects-on-resource.js",
         "project-admin": "./src/project/admin/src/index.ts",
         "project-admin-ugroups": "./src/project/admin/src/project-admin-ugroups.ts",
         "project/project-banner": "./src/project/banner/index.ts",
