@@ -1,6 +1,6 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/register",
+  "name": "@tuleap/core-user-registration",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
@@ -8,6 +8,9 @@
   "dependencies": {
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

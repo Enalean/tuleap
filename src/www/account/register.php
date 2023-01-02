@@ -420,8 +420,8 @@ $render = display_account_form($layout, $is_password_needed, $errors);
 
 $layout->addJavascriptAsset(new JavascriptViteAsset(
     new IncludeViteAssets(
-        __DIR__ . '/../../scripts/register/frontend-assets',
-        '/assets/core/register'
+        __DIR__ . '/../../scripts/user-registration/frontend-assets',
+        '/assets/core/user-registration'
     ),
     'src/index.ts'
 ));
