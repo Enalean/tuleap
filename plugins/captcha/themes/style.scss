@@ -1,3 +1,5 @@
 .g-recaptcha {
-    margin: 0 0 30px;
+    display: flex;
+    justify-content: center;
+    margin: var(--tlp-large-spacing) 0 0;
 }

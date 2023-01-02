@@ -25,7 +25,6 @@ class Account_RegisterPresenter
     public $prefill_values;
     public $login;
     public $email;
-    public $email_tooltip;
     public $realname;
     public $siteupdate;
     public $purpose;
@@ -43,11 +42,9 @@ class Account_RegisterPresenter
         $this->prefill_values         = $prefill_values;
         $this->login                  = _('Login Name');
         $this->email                  = _('Email');
-        $this->email_tooltip          = _('We will send an email at this address to confirm your account.');
         $this->realname               = _('Full name');
-        $this->siteupdate             = _('Receive Email about Site Updates <span class="label-help">Very low traffic, includes security notices. Highly Recommended.</span>');
         $this->purpose                = _('Purpose');
-        $this->purpose_directions     = _('Please explain why you are applying for registration on this site<br>');
+        $this->purpose_directions     = _('Please explain why you are applying for registration on this site');
         $this->new_password           = _('Password');
         $this->timezone_selector      = new Account_TimezoneSelectorPresenter(
             $this->prefill_values->form_timezone->value

@@ -193,13 +193,6 @@ msgstr ""
 "confirmation unique à 128 bits. En visitant ce lien vous serez en mesure de "
 "changer mot de passe puis de vous connecter."
 
-msgid ""
-"<em><strong>Remark:</strong> The account will be suspended when the date is "
-"reached. Leave blank if you don't want an expiration date.</em>"
-msgstr ""
-"<em><strong>Remarque&nbsp;:</strong> Une fois cette date passée, le compte "
-"sera suspendu.</em>"
-
 #, php-format
 msgid ""
 "<h4><i class=\"fa fa-exclamation-triangle\"></i> Your local.inc file is "
@@ -1088,11 +1081,17 @@ msgstr "Créer à partir de"
 msgid "Create label"
 msgstr "Créer le label"
 
+msgid "Create my account"
+msgstr "Créer mon compte"
+
 msgid "Create new License Agreement"
 msgstr "Créer une nouvelle licence"
 
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
+
+msgid "Create your account"
+msgstr "Créer votre compte"
 
 msgid "Current and new passwords are identical"
 msgstr "L'ancien et le nouveau mot de passe sont identiques"
@@ -2015,6 +2014,9 @@ msgstr "Se connecter"
 msgid "Login Name"
 msgstr "Nom de login"
 
+msgid "Login name"
+msgstr "Nom de login"
+
 msgid "Logout"
 msgstr "Se déconnecter"
 
@@ -2579,10 +2581,10 @@ msgstr ""
 msgid "Please confirm your action."
 msgstr "Merci de confirmer votre action."
 
-msgid "Please explain why you are applying for registration on this site<br>"
+msgid "Please explain why you are applying for registration on this site"
 msgstr ""
 "Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte "
-"sur ce site<br>"
+"sur ce site"
 
 msgid ""
 "Please make sure the users who will be imported are already registered and "
@@ -2960,13 +2962,8 @@ msgstr "Le nom complet a été mis à jour avec succès"
 msgid "Real name was not updated"
 msgstr "Le nom complet n'a pas été mis à jour"
 
-msgid ""
-"Receive Email about Site Updates <span class=\"label-help\">Very low "
-"traffic, includes security notices. Highly Recommended.</span>"
-msgstr ""
-"Recevoir du courrier électronique à propos des mises à jour du site <span "
-"class=\"label-help\">Faible trafic, informations relatives à la sécurité. "
-"Fortement recommandé.</span>"
+msgid "Receive Email about Site Updates"
+msgstr "Recevoir du courrier électronique à propos des mises à jour du site"
 
 msgid "Receive additional community mailing"
 msgstr ""
@@ -3537,6 +3534,13 @@ msgstr "L'équipe %s."
 #, php-format
 msgid "The XML template \"%s\" provided is not valid"
 msgstr "Le name modèle XML \"%s\" n'est pas valide"
+
+msgid ""
+"The account will be suspended when the date is reached. Leave blank if you "
+"don't want an expiration date."
+msgstr ""
+"Une fois cette date passée, le compte sera suspendu. Laissez vide si vous ne "
+"voulez pas de date d'expiration."
 
 #, php-format
 msgid "The category %d only allows %d values"
@@ -4306,6 +4310,10 @@ msgid "Validated users <a href=\"%1$s\"><B>pending email activation</B></a>"
 msgstr ""
 "Utilisateurs validés en <a href=\"%1$s\"> attente d'activation par e-mail</a>"
 
+msgid "Very low traffic, includes security notices. Highly Recommended."
+msgstr ""
+"Faible trafic, informations relatives à la sécurité. Fortement recommandé."
+
 msgid "View all projects"
 msgstr "Voir tous les projets"
 
@@ -4361,10 +4369,6 @@ msgstr ""
 
 msgid "We need at least one email to send an invitation"
 msgstr "Nous avons besoin d'au moins un email pour envoyer une invitation"
-
-msgid "We will send an email at this address to confirm your account."
-msgstr ""
-"Nous allons envoyer un email à cette adresse afin de confirmer votre compte."
 
 msgid "Webhooks"
 msgstr "Webhooks"
@@ -4644,10 +4648,9 @@ msgstr ""
 "Vous utilisez une version obsolète de %s. Vous pouvez rencontrer divers bugs "
 "si vous continuez."
 
-msgid "You can add a comment on this user registration<br>"
+msgid "You can add a comment on this user registration"
 msgstr ""
-"Vous pouvez ajouter un commentaire sur la création de ce compte "
-"utilisateur<br>"
+"Vous pouvez ajouter un commentaire sur la création de ce compte utilisateur"
 
 msgid "You can choose up to %s category"
 msgid_plural "You can choose up to %s categories"

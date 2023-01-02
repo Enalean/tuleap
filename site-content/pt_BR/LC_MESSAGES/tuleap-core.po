@@ -193,13 +193,6 @@ msgstr ""
 "de 128 bits para a sua conta. Visitar a URL permitirá que você altere sua "
 "senha online e faça o login."
 
-msgid ""
-"<em><strong>Remark:</strong> The account will be suspended when the date is "
-"reached. Leave blank if you don't want an expiration date.</em>"
-msgstr ""
-"<em><strong>Aviso:</strong> A conta será suspensa nessa data. Deixe em "
-"branco se você não quiser uma data de expiração.</em>"
-
 #, php-format
 msgid ""
 "<h4><i class=\"fa fa-exclamation-triangle\"></i> Your local.inc file is "
@@ -1088,11 +1081,17 @@ msgstr "Criar a partir de"
 msgid "Create label"
 msgstr "Criar rótulo"
 
+msgid "Create my account"
+msgstr ""
+
 msgid "Create new License Agreement"
 msgstr "Criar novo Acordo de Licença"
 
 msgid "Create user group"
 msgstr "Criar grupo de usuários"
+
+msgid "Create your account"
+msgstr ""
 
 msgid "Current and new passwords are identical"
 msgstr "As senhas atuais e novas são idênticas"
@@ -2004,6 +2003,9 @@ msgstr "Login"
 msgid "Login Name"
 msgstr "Nome de Login"
 
+msgid "Login name"
+msgstr ""
+
 msgid "Logout"
 msgstr "Logout"
 
@@ -2561,9 +2563,8 @@ msgstr "Por favor, clique no seguinte URL para aprovar o registro:"
 msgid "Please confirm your action."
 msgstr "Por favor, confirme a sua ação."
 
-msgid "Please explain why you are applying for registration on this site<br>"
+msgid "Please explain why you are applying for registration on this site"
 msgstr ""
-"Por favor, explique porque você está solicitando o registro neste site<br>"
 
 msgid ""
 "Please make sure the users who will be imported are already registered and "
@@ -2938,12 +2939,8 @@ msgstr "Nome real atualizado com sucesso"
 msgid "Real name was not updated"
 msgstr "O nome real não foi atualizado"
 
-msgid ""
-"Receive Email about Site Updates <span class=\"label-help\">Very low "
-"traffic, includes security notices. Highly Recommended.</span>"
+msgid "Receive Email about Site Updates"
 msgstr ""
-"Receber Email sobre Atualizações do Site <span class=\"label-help\">Poucas "
-"mensagens, inclui avisos de segurança. Altamente Recomendado.</span>"
 
 msgid "Receive additional community mailing"
 msgstr "Receber emails adicionais da comunidade"
@@ -3510,6 +3507,11 @@ msgstr "O time %s."
 #, php-format
 msgid "The XML template \"%s\" provided is not valid"
 msgstr "O modelo XML \"%s\" fornecido não é válido"
+
+msgid ""
+"The account will be suspended when the date is reached. Leave blank if you "
+"don't want an expiration date."
+msgstr ""
 
 #, php-format
 msgid "The category %d only allows %d values"
@@ -4270,6 +4272,9 @@ msgid "Validated users <a href=\"%1$s\"><B>pending email activation</B></a>"
 msgstr ""
 "Usuários validados <a href=\"%1$s\"><B>activação de email gasto</B></a>"
 
+msgid "Very low traffic, includes security notices. Highly Recommended."
+msgstr ""
+
 msgid "View all projects"
 msgstr "Ver todos os projetos"
 
@@ -4323,9 +4328,6 @@ msgstr ""
 
 msgid "We need at least one email to send an invitation"
 msgstr "É necessário pelo menos um email para o envio de um convite"
-
-msgid "We will send an email at this address to confirm your account."
-msgstr "Nós enviaremos um email para este endereço para confirmar a sua conta."
 
 msgid "Webhooks"
 msgstr "Webhooks"
@@ -4596,8 +4598,8 @@ msgstr ""
 "Você está usando uma versão desatualizada de %s. Você pode encontrar "
 "problemas se continuar."
 
-msgid "You can add a comment on this user registration<br>"
-msgstr "Você pode adicionar um comentário sobre este registro de usuário<br>"
+msgid "You can add a comment on this user registration"
+msgstr ""
 
 msgid "You can choose up to %s category"
 msgid_plural "You can choose up to %s categories"

@@ -1,45 +1,27 @@
-<div id="register-background">
-    <div id="register-form">
-        <h2>{{ title }}</h2>
+<section class="account-registration">
+    <h1 class="accont-registration-creation-title">{{ title }}</h1>
 
-    <form action="{{ form_url }}" name="new_user" method="post">
-        <div class="fields">
-            {{# prefill_values }}
-                {{# form_loginname }}
+    <form action="{{ form_url }}" class="tlp-card account-registration-form" method="post">
+        {{# prefill_values }}
+            {{# form_loginname }}
+                <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
+                    <label class="tlp-label" for="form_loginname">
+                        {{# gettext }}Login name{{/ gettext }}
+                        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <input type="text"
+                           class="tlp-input"
+                           id="form_loginname"
+                           name="form_loginname"
+                           placeholder="jdoe"
+                           value="{{ value }}"
+                           required
+                           autocomplete="username"
+                           pattern="^[a-zA-Z][a-zA-Z0-9\-_\.]{2,}$"
+                    >
                     {{# has_error }}
-                    <div class="control-group error">
-                        <div class="controls">
-                    {{/has_error }}
-                            <input
-                                    type="text"
-                                    id="form_loginname"
-                                    name="form_loginname"
-                                    placeholder="{{ login }} *"
-                                    value="{{ value }}"
-                                    required="required"
-                                    autocomplete="username"
-                                    pattern="^[a-zA-Z][a-zA-Z0-9\-_\.]{2,}$"
-                            />
-                    {{# has_error }}
-                            <span class="help-inline">{{ error }}</span>
-                        </div>
-                    </div>
-                    {{/has_error }}
-                {{/ form_loginname }}
-
-                {{# form_email }}
-                    {{# has_error }}
-                        <div class="control-group error">
-                            <div class="controls">
-                    {{/has_error }}
-                                <input type="email" id="form_email" name="form_email" placeholder="{{ email }} *" value="{{ value }}" required="required" autocomplete="email" />
-                    {{# has_error }}
-                                <span class="help-inline">{{ error }}</span>
-                            </div>
-                        </div>
-                    {{/has_error }}
-                {{/ form_email }}
-
-                {{> register-choose-email }}
-            {{/ prefill_values }}
-        </div>
+                        <p class="tlp-text-danger">{{ error }}</p>
+                    {{/ has_error }}
+                </div>
+            {{/ form_loginname }}
+        {{/ prefill_values }}

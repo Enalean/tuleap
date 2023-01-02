@@ -567,15 +567,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const GET_LOGIN_URL = 'get_login_url';
 
     /**
-     * Allow plugin to add fields in the user register form
-     *
-     * Parameters:
-     * 'request' => HTTPRequest (IN)
-     * 'field'   => string      (OUT)
-     */
-    public const USER_REGISTER_ADDITIONAL_FIELD = 'user_register_additional_field';
-
-    /**
      * Allow plugin to deal before user registration
      *
      * 'request'               => HTTPRequest (IN)
