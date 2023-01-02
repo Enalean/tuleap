@@ -45,10 +45,9 @@ export TEST_RESULT_OUTPUT="$test_results_folder"
 export CYPRESS_VERSION="$cypress_version"
 $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --build --abort-on-container-exit --exit-code-from=test
 
-tuleap_container_id="$($DOCKERCOMPOSE ps -q tuleap)"
 mkdir -p "$test_results_folder/logs"
-docker cp ${tuleap_container_id}:/var/log/nginx/ "$test_results_folder/logs"
-docker cp ${tuleap_container_id}:/var/opt/remi/php80/log/php-fpm/ "$test_results_folder/logs"
+$DOCKERCOMPOSE cp tuleap:/var/log/nginx/ "$test_results_folder/logs"
+$DOCKERCOMPOSE cp tuleap:/var/opt/remi/php80/log/php-fpm/ "$test_results_folder/logs"
 $DOCKERCOMPOSE logs tuleap > "$test_results_folder/logs/tuleap.log"
 
 $DOCKERCOMPOSE logs test > "$test_results_folder/logs/test.log"
