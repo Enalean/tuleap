@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NewFileToAttach } from "../../../../domain/fields/file-field/NewFileToAttach";
+import { NewFileToAttach } from "./NewFileToAttach";
 import type {
     AttachedFileCollection,
     FileFieldControllerType,
     NewFileToAttachCollection,
 } from "./FileFieldController";
 import { FileFieldController } from "./FileFieldController";
-import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
-import type { FileFieldType } from "../../../../domain/fields/file-field/FileFieldType";
-import type { AttachedFileDescription } from "../../../../domain/fields/file-field/AttachedFileDescription";
-import { EventDispatcher } from "../../../../domain/EventDispatcher";
-import { DidCheckFileFieldIsPresent } from "../../../../domain/DidCheckFileFieldIsPresent";
+import type { FileFieldValueModel } from "./FileFieldValueModel";
+import type { FileFieldType } from "./FileFieldType";
+import type { AttachedFileDescription } from "./AttachedFileDescription";
+import { EventDispatcher } from "../../EventDispatcher";
+import { DidCheckFileFieldIsPresent } from "../../DidCheckFileFieldIsPresent";
 
 describe(`FileFieldController`, () => {
     describe(`Events`, () => {

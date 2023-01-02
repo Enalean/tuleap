@@ -50,7 +50,7 @@ import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-f
 import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaController";
 import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
 import { LinkFieldValueFormatter } from "./adapters/REST/fields/link-field/LinkFieldValueFormatter";
-import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldController";
+import { FileFieldController } from "./domain/fields/file-field/FileFieldController";
 import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
 import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
