@@ -102,6 +102,9 @@ msgstr "Le secret est manquant"
 msgid "There isn't any document servers configured"
 msgstr "Aucun serveurs n'est actuellement configuré"
 
+msgid "Unable to find project information"
+msgstr "Impossible de trouver les informations du projet"
+
 msgid "Under construction, you cannot set restrictions yet."
 msgstr ""
 "En construction, vous ne pouvez définir les restrictions pour l'instant."

@@ -20,15 +20,15 @@
 
 <template>
     <div class="tlp-table-actions">
-        <div class="tlp-form-element-append tlp-table-actions-element">
-            <project-autocompleter
-                class="tlp-select onlyoffice-admin-restrict-server-select-project"
-            />
-            <button type="button" id="allow-project" class="tlp-append tlp-button-primary" disabled>
-                <i class="fa-solid fa-circle-check tlp-button-icon" aria-hidden="true"></i>
-                {{ $gettext("Allow project") }}
-            </button>
-        </div>
+        <project-allower
+            class="tlp-table-actions-element"
+            v-bind:add="addProject"
+            v-bind:error="setError"
+        />
+    </div>
+
+    <div class="tlp-alert-danger" v-if="error_message.length > 0">
+        {{ error_message }}
     </div>
 
     <table class="tlp-table" id="allowed-projects-list">
@@ -50,7 +50,9 @@
                 </td>
             </tr>
             <tr v-for="project of sorted_projects" v-bind:key="server.id + '-' + project.id">
-                <td class="tlp-table-cell-numeric">{{ project.id }}</td>
+                <td class="tlp-table-cell-numeric">
+                    {{ project.id }}
+                </td>
                 <td>
                     <a v-bind:href="project.url">{{ project.label }}</a>
                 </td>
@@ -61,21 +63,30 @@
 
 <script setup lang="ts">
 import type { Project, Server } from "../../../type";
-import ProjectAutocompleter from "./ProjectAutocompleter.vue";
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import ProjectAllower from "./ProjectAllower.vue";
 
 const props = defineProps<{ server: Server }>();
 
+const added_projects = ref<Project[]>([]);
+const error_message = ref("");
+
 const sorted_projects = computed(
     (): ReadonlyArray<Project> =>
-        [...props.server.project_restrictions].sort((a, b) =>
-            a.label.localeCompare(b.label, undefined, { numeric: true })
-        )
+        [...props.server.project_restrictions, ...added_projects.value]
+            .filter(is_a_duplicate)
+            .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }))
 );
-</script>
 
-<style lang="scss">
-.onlyoffice-admin-restrict-server-select-project {
-    width: 200px;
+function addProject(project: Project): void {
+    added_projects.value.push(project);
 }
-</style>
+
+function setError(message: string): void {
+    error_message.value = message;
+}
+
+function is_a_duplicate(current: Project, index: number, projects: Project[]): boolean {
+    return index === projects.findIndex((sibling) => sibling.id === current.id);
+}
+</script>

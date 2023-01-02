@@ -44,3 +44,9 @@ export interface Project {
     readonly label: string;
     readonly url: string;
 }
+
+export interface ProjectFromRest {
+    readonly id: number;
+    readonly label: string;
+    readonly shortname: string;
+}
