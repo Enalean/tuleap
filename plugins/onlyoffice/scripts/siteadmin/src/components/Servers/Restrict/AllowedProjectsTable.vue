@@ -25,6 +25,17 @@
             v-bind:add="addProject"
             v-bind:error="setError"
         />
+        <div class="tlp-table-actions-spacer"></div>
+        <div class="tlp-form-element tlp-table-actions-element">
+            <input
+                type="search"
+                class="tlp-search tlp-table-actions-filter"
+                data-test="filter"
+                v-model="filter"
+                autocomplete="off"
+                v-bind:placeholder="$gettext('Project name or id')"
+            />
+        </div>
     </div>
 
     <div class="tlp-alert-danger" v-if="error_message.length > 0">
@@ -49,7 +60,7 @@
                     {{ $gettext("No project can use this server.") }}
                 </td>
             </tr>
-            <tr v-for="project of sorted_projects" v-bind:key="server.id + '-' + project.id">
+            <tr v-for="project of filtered_projects" v-bind:key="server.id + '-' + project.id">
                 <td class="tlp-table-cell-numeric">
                     {{ project.id }}
                 </td>
@@ -70,12 +81,23 @@ const props = defineProps<{ server: Server }>();
 
 const added_projects = ref<Project[]>([]);
 const error_message = ref("");
+const filter = ref("");
 
 const sorted_projects = computed(
     (): ReadonlyArray<Project> =>
         [...props.server.project_restrictions, ...added_projects.value]
             .filter(is_a_duplicate)
             .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }))
+);
+
+const filtered_projects = computed(
+    (): ReadonlyArray<Project> =>
+        [...sorted_projects.value].filter(
+            (project) =>
+                filter.value === "" ||
+                String(project.id).indexOf(filter.value) !== -1 ||
+                project.label.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+        )
 );
 
 function addProject(project: Project): void {
