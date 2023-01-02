@@ -87,6 +87,9 @@ msgstr "Projet"
 msgid "Project name"
 msgstr "Nom du projet"
 
+msgid "Project name or id"
+msgstr "Nom du projet ou id"
+
 msgid "Projects restriction"
 msgstr "Restriction de projets"
 
