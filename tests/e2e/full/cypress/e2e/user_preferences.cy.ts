@@ -37,31 +37,22 @@ describe("User preferences", () => {
         });
 
         describe("User is able to", () => {
-            it("Change his name", () => {
+            it("Change his data", () => {
                 cy.get("[data-test=user-real-name]").clear().type("Heisenberg");
-                cy.get("[data-test=user-prefs-submit-button]").click();
-
-                cy.visit("/account/");
-                cy.get("[data-test=user-real-name]").should("have.value", "Heisenberg");
-            });
-
-            it("Change his email address", () => {
                 cy.get("[data-test=user-email]").clear().type("heisenberg@vamonos-pest.us");
-                cy.get("[data-test=user-prefs-submit-button]").click();
-
-                cy.get("[data-test=user-prefs-email-need-confirmation-warning]").contains(
-                    "An email change was requested, please check your inbox to complete the change."
-                );
-                assertFeedbackContainsMessage(
-                    "New email was successfully saved. To complete the change, please click on the confirmation link you will receive by email (new address)."
-                );
-            });
-
-            it("Change his timezone", () => {
                 cy.get("[data-test=user-timezone]").select("America/Denver", { force: true });
                 cy.get("[data-test=user-prefs-submit-button]").click();
 
+                assertFeedbackContainsMessage(
+                    "New email was successfully saved. To complete the change, please click on the confirmation link you will receive by email (new address)."
+                );
                 cy.visit("/account/");
+
+                cy.get("[data-test=user-real-name]").should("have.value", "Heisenberg");
+                cy.get("[data-test=user-prefs-email-need-confirmation-warning]").contains(
+                    "An email change was requested, please check your inbox to complete the change."
+                );
+
                 cy.get("[data-test=user-timezone]").should("have.value", "America/Denver");
             });
 

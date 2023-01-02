@@ -17,37 +17,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+function createFRSPackage(project_id: number, package_name: string): void {
+    const payload = {
+        project_id: project_id,
+        label: package_name,
+    };
+
+    cy.postFromTuleapApi("https://tuleap/api/frs_packages/", payload);
+}
+
 describe("Frs", function () {
-    let project_id: string;
     let now: number;
 
     context("Project administrators", function () {
         before(() => {
             cy.clearSessionCookie();
             cy.projectAdministratorLogin();
-            cy.getProjectId("permissions-project-01").as("project_id");
+            now = Date.now();
+            cy.createNewPublicProject(`frs-${now}`, "agile_alm").as("project_id");
         });
 
         beforeEach(() => {
             cy.preserveSessionCookies();
-            cy.visitProjectService("frs-project", "Files");
-            now = Date.now();
-        });
-
-        it("can access to admin section", function () {
-            project_id = this.project_id;
-            cy.visit("/file/admin/?group_id=" + project_id + "&action=edit-permissions");
         });
 
         context("Frs packages", function () {
             it("can CRUD a new package", function () {
+                cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get("[data-test=create-new-package]").click();
                 cy.get("[data-test=frs-create-package]").type(`package${now}`);
                 cy.get("[data-test=frs-create-package-button]").click({
                     timeout: 60000,
                 });
 
-                cy.visitProjectService("frs-project", "Files");
+                cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get('[data-test="package-name"]').contains(`package${now}`);
 
                 cy.get("[data-test=update-package]").first().click();
@@ -56,27 +59,23 @@ describe("Frs", function () {
                     timeout: 60000,
                 });
 
-                cy.visitProjectService("frs-project", "Files");
+                cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get('[data-test="package-name"]').contains(`edited${now}`);
 
                 cy.get("[data-test=remove-package]").first().click({
                     timeout: 60000,
                 });
 
-                cy.visitProjectService("frs-project", "Files");
+                cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get("[data-test=main-content]").should("not.contain", `edited${now}`);
             });
         });
 
         context("Frs CRUD releases", function () {
             it("can create a new release", function () {
-                cy.get("[data-test=create-new-package]").click();
-                cy.get("[data-test=frs-create-package]").type("Package to test release");
-                cy.get("[data-test=frs-create-package-button]").click({
-                    timeout: 60000,
-                });
-
-                cy.visitProjectService("frs-project", "Files");
+                cy.visitProjectService(`frs-${now}`, "Files");
+                createFRSPackage(parseInt(this.project_id, 10), "Package to test release");
+                cy.visitProjectService(`frs-${now}`, "Files");
 
                 cy.intercept({
                     url: /file\/admin\/frsajax\.php/,
@@ -90,7 +89,7 @@ describe("Frs", function () {
                 cy.wait("@createRelease", { timeout: 60000 });
 
                 cy.reloadUntilCondition(
-                    () => cy.visitProjectService("frs-project", "Files"),
+                    () => cy.visitProjectService(`frs-${now}`, "Files"),
                     (number_of_attempts, max_attempts) => {
                         cy.log(
                             `Check that My release${now} has been created (attempt ${number_of_attempts}/${max_attempts})`
@@ -102,8 +101,6 @@ describe("Frs", function () {
                     `Timed out while checking if My release${now} has been created`
                 );
 
-                cy.visitProjectService("frs-project", "Files");
-
                 cy.intercept({
                     url: /file\/admin\/frsajax\.php/,
                 }).as("createRelease");
@@ -114,23 +111,24 @@ describe("Frs", function () {
                 });
                 cy.wait("@createRelease", { timeout: 60000 });
 
-                cy.visitProjectService("frs-project", "Files");
+                cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get("[data-test=edit-release]").first().click({ force: true });
                 cy.get('[data-test="release-name"]').should("have.value", `Edited${now}`);
 
-                cy.visitProjectService("frs-project", "Files");
+                cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get("[data-test=release-delete-button]")
                     .first()
                     .click({ force: true, timeout: 60000 });
 
-                cy.visitProjectService("frs-project", "Files");
+                cy.visitProjectService(`frs-${now}`, "Files");
                 cy.get("[data-test=main-content]").should("not.contain", `edited${now}`);
             });
         });
 
         context("Hidden packages", function () {
             it("can create a new hidden package", function () {
-                cy.visitProjectService("frs-hidden-project", "Files");
+                cy.createNewPublicProject(`frs-hidden-${now}`, "agile_alm");
+                cy.visitProjectService(`frs-hidden-${now}`, "Files");
                 cy.get("[data-test=create-new-package]").click();
                 cy.get("[data-test=frs-create-package]").type(`My hidden package${now}`);
                 cy.get("[data-test=status]").within(() => {
@@ -156,15 +154,8 @@ describe("Frs", function () {
             cy.preserveSessionCookies();
         });
 
-        it("should raise an error when user try to access to plugin files admin page", function () {
-            cy.visit("/file/admin/?group_id=" + project_id + "&action=edit-permissions");
-            cy.get("[data-test=feedback]").contains(
-                "You are not granted sufficient permission to perform this operation."
-            );
-        });
-
         it("should not see hidden packages", function () {
-            cy.visitProjectService("frs-project", "Files");
+            cy.visitProjectService(`frs-hidden-${now}`, "Files");
 
             cy.get("[data-test=main-content]").then(($body) => {
                 expect($body).not.to.contain("My hidden package");

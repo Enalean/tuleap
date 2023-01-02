@@ -1,7 +1,7 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,20 +15,51 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-describe("User dashboards", function () {
-    before(() => {
+describe("Hide widget", function () {
+    beforeEach(() => {
         cy.clearSessionCookie();
-        cy.projectMemberLogin();
     });
 
-    beforeEach(function () {
-        cy.preserveSessionCookies();
+    it("given widget is not available on platform, then it must never be displayed", function () {
+        cy.platformAdminLogin();
+        cy.visit("/admin/project-creation/widgets");
+
+        cy.get("[data-test=project-widgets-checkbox-projectheartbeat]").click({ force: true });
+
+        cy.createNewPublicProject("dashboard", "agile_alm");
+        cy.visit("/projects/dashboard");
+
+        cy.get("[data-test=dashboard-widget-projectnote]");
+        cy.get("[data-test=dashboard-widget-projectheartbeat]").should("not.exist");
+
+        //enable heartbeat again
+        cy.visit("/admin/project-creation/widgets");
+        cy.get("[data-test=project-widgets-checkbox-projectheartbeat]").click({ force: true });
     });
 
     it("User should be able to manipulate widgets", function () {
+        cy.platformAdminLogin();
+        cy.visit("/my/");
+
+        cy.get("[data-test=dashboard-configuration-button]").click();
+        cy.get("[data-test=dashboard-delete-tab-button]").click();
+        cy.get("[data-test=dashboard-confirm-delete-button]").click();
+
+        cy.get("[data-test=dashboard-add-button]").click();
+        cy.get("[data-test=dashboard-add-input-name]").type("My Dashboard");
+        cy.get("[data-test=dashboard-add-button-submit]").click();
+
+        cy.get("[data-test=dashboard-configuration-button]").click();
+        cy.get("[data-test=dashboard-add-widget-button]").click();
+        cy.get("[data-test=mysystemevent]").click();
+        cy.get("[data-test=dashboard-add-widget-button-submit]").click();
+        cy.get("[data-test=dashboard-widgets-list]").contains("System events");
+    });
+
+    it("Project member should be able to manipulate widgets", function () {
+        cy.projectMemberLogin();
         cy.visit("/my/");
 
         cy.get("[data-test=dashboard-configuration-button]").click();
@@ -63,14 +94,14 @@ describe("User dashboards", function () {
         cy.get("[data-test=dashboard-add-widget-button]").click();
         cy.get("[data-test=myprojects]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
-        cy.get("[data-test=dashboard-my-projects]").find("td").contains("User dashboard");
+        cy.get("[data-test=dashboard-my-projects]").find("td").contains("MW");
 
         // widget document
         cy.get("[data-test=dashboard-configuration-button]").click();
         cy.get("[data-test=dashboard-add-widget-button]").click();
         cy.get("[data-test=plugin_docman_mydocman_search]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
-        cy.get("[data-test=document-search-id]").type("5");
+        cy.get("[data-test=document-search-id]").type("6");
 
         cy.get("[data-test=document-button-search]").click();
         cy.get("[data-test=document-search-error]").contains("Unable to find the document");
