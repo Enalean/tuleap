@@ -23,7 +23,7 @@ import type { PointsNotNullWithDate } from "../type";
 import type {
     PointsNotNullWithDateForGenericBurnup,
     PointsWithDateForGenericBurnup,
-} from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
+} from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
 
 export { getDisplayableData, getLastData, getLastGenericBurnupData, getDisplayableDataForBurnup };
 

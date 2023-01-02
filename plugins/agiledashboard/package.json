@@ -8,6 +8,7 @@
     "@tuleap/chart-builder": "workspace:*",
     "@tuleap/fp-feedback": "workspace:*",
     "@tuleap/gettext": "workspace:*",
+    "@tuleap/plugin-agiledashboard-burnup-data-transformer": "workspace:*",
     "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
     "@tuleap/plugin-tracker-color-picker": "workspace:*",
     "@tuleap/project-background": "workspace:*",

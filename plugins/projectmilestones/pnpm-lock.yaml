@@ -8,6 +8,7 @@ specifiers:
   '@tuleap/cypress-utilities-support': workspace:*
   '@tuleap/date-helper': workspace:*
   '@tuleap/pie-chart': workspace:*
+  '@tuleap/plugin-agiledashboard-burnup-data-transformer': workspace:*
   '@tuleap/tlp-fetch': workspace:*
   '@tuleap/tlp-swatch-colors': workspace:*
   '@tuleap/vue2-gettext-init': workspace:*
@@ -33,6 +34,7 @@ dependencies:
   '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/pie-chart': link:../../lib/frontend/pie-chart
+  '@tuleap/plugin-agiledashboard-burnup-data-transformer': link:../agiledashboard/scripts/lib/burnup-data-transformer
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init

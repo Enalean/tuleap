@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,12 +15,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import type { BurnupData, GenericBurnupData } from "./type";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-export function transformToGenericBurnupData(
-    burnup_data: BurnupData,
-    mode: string
-): GenericBurnupData;
+export default vite.defineLibConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "PluginAgileDashboardBurnupDataTransformer",
+        },
+    },
+    plugins: [viteDtsPlugin()],
+});

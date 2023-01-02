@@ -22,7 +22,7 @@ import type { ChartPropsWithoutTooltip } from "@tuleap/chart-builder";
 import type {
     GenericBurnupData,
     PointsWithDateForGenericBurnup,
-} from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
+} from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
 
 jest.mock("@tuleap/chart-builder", () => {
     const actual_module = jest.requireActual("@tuleap/chart-builder");

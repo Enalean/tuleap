@@ -17,19 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { transformToGenericBurnupData };
+import type { BurnupData, GenericBurnupData } from "./index";
 
-function transformToGenericBurnupData(burnup_data, mode) {
-    const { start_date, duration, capacity, is_under_calculation, opening_days } = burnup_data;
-    const generic_burnup_data = {
-        start_date,
-        duration,
-        capacity,
-        is_under_calculation,
-        opening_days,
-    };
-
-    let points = [];
+export function transformToGenericBurnupData(
+    burnup_data: BurnupData,
+    mode: "count" | "effort"
+): GenericBurnupData {
+    let points;
     if (mode === "count") {
         points = burnup_data.points_with_date_count_elements.map(function (base_point) {
             return {
@@ -48,7 +42,13 @@ function transformToGenericBurnupData(burnup_data, mode) {
         });
     }
 
-    generic_burnup_data.points_with_date = points;
-
-    return generic_burnup_data;
+    const { start_date, duration, capacity, is_under_calculation, opening_days } = burnup_data;
+    return {
+        start_date,
+        duration,
+        capacity,
+        is_under_calculation,
+        opening_days,
+        points_with_date: points,
+    };
 }

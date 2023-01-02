@@ -19,7 +19,7 @@
  */
 
 import type { ChartPropsWithoutTooltip, XYScale } from "@tuleap/chart-builder";
-import type { GenericBurnupData } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
+import type { GenericBurnupData } from "@tuleap/plugin-agiledashboard-burnup-data-transformer";
 import {
     getDaysToDisplay,
     buildGraphScales,
