@@ -28,6 +28,7 @@ use Tuleap\User\Account\AccountCreated;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\FindUserByEmailEvent;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
+use Tuleap\User\ICreateAccount;
 use Tuleap\User\InvalidSessionException;
 use Tuleap\User\ProvideAnonymousUser;
 use Tuleap\User\ProvideCurrentUser;
@@ -40,7 +41,7 @@ use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, ProvideUserFromRow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, ProvideUserFromRow, ICreateAccount // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
@@ -303,13 +304,13 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         return $this->getUserByUserName($login_name);
     }
 
-/**
- * Returns an array of user ids that match the given string
- *
- * @param String $search comma-separated users' names.
- *
- * @return Array
- */
+    /**
+     * Returns an array of user ids that match the given string
+     *
+     * @param String $search comma-separated users' names.
+     *
+     * @return Array
+     */
     public function getUserIdsList($search)
     {
         $userArray = explode(',', $search);
@@ -736,12 +737,12 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     }
 
     /**
-    * loginAs allows the siteadmin to log as someone else
-    *
-    * @param string $name
-    *
-    * @return string a session hash
-    */
+     * loginAs allows the siteadmin to log as someone else
+     *
+     * @param string $name
+     *
+     * @return string a session hash
+     */
     public function loginAs($name)
     {
         if (! $this->getCurrentUser()->isSuperUser()) {
@@ -886,7 +887,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
                 if (
                     $user_password_hash === null ||
                     ! $password_handler->verifyHashPassword($user_password, $user_password_hash) ||
-                        $password_handler->isPasswordNeedRehash($user_password_hash)
+                    $password_handler->isPasswordNeedRehash($user_password_hash)
                 ) {
                     // Update password
                     $userRow['clear_password'] = $user->getPassword();
