@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import { describe, it, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";

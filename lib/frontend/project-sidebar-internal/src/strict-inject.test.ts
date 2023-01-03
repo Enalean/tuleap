@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import type { InjectionKey, VNode } from "vue";
 import { h, provide } from "vue";
 import { strictInject } from "./strict-inject";
@@ -56,7 +57,7 @@ describe("strict-inject", () => {
             },
         };
 
-        jest.spyOn(console, "warn").mockImplementation(() => {
+        vi.spyOn(console, "warn").mockImplementation(() => {
             // Do nothing
         });
         expect(() => mount(Consumer)).toThrowError(/TestUndefined/);
