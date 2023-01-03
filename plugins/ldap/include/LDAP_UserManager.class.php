@@ -54,8 +54,12 @@ class LDAP_UserManager
      */
     private $user_sync;
 
-    public function __construct(LDAP $ldap, LDAP_UserSync $user_sync, private UserNameNormalizer $username_generator)
-    {
+    public function __construct(
+        LDAP $ldap,
+        LDAP_UserSync $user_sync,
+        private UserNameNormalizer $username_generator,
+        private \Tuleap\User\PasswordVerifier $user_password_verifier,
+    ) {
         $this->ldap      = $ldap;
         $this->user_sync = $user_sync;
     }
@@ -340,27 +344,21 @@ class LDAP_UserManager
 
     /**
      * Synchronize user account with LDAP informations
-     *
-     * @return bool
      */
-    public function synchronizeUser(PFUser $user, LDAPResult $lr, ConcealedString $password)
+    public function synchronizeUser(PFUser $user, LDAPResult $lr, ConcealedString $password): void
     {
         $user->setPassword($password);
 
         $sync = LDAP_UserSync::instance();
-        $sync->sync($user, $lr);
-
-        // Perform DB update
-        $userUpdated = $this->getUserManager()->updateDb($user);
-
-        $ldapUpdated = true;
-        $user_id     = $this->getLdapLoginFromUserIds([$user->getId()])->getRow();
-        if ($user_id['ldap_uid'] != $lr->getLogin()) {
-            $ldapUpdated = $this->updateLdapUid($user, $lr->getLogin());
-            $this->triggerRenameOfUsers();
+        if ($sync->sync($user, $lr) || ! $this->user_password_verifier->verifyPassword($user, $password)) {
+            $this->getUserManager()->updateDb($user);
         }
 
-        return ($userUpdated || $ldapUpdated);
+        $user_id = $this->getLdapLoginFromUserIds([$user->getId()])->getRow();
+        if ($user_id['ldap_uid'] != $lr->getLogin()) {
+            $this->updateLdapUid($user, $lr->getLogin());
+            $this->triggerRenameOfUsers();
+        }
     }
 
     /**
