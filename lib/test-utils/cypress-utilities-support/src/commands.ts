@@ -231,10 +231,9 @@ Cypress.Commands.add("createNewPrivateProject", (project_name: string): void => 
     cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
 });
 
-Cypress.Commands.add("addUser", (user_name: string): void => {
+Cypress.Commands.add("addProjectMember", (user_name: string): void => {
     cy.visitProjectAdministrationInCurrentProject();
     cy.get("[data-test=project-admin-members-add-user-select] + .select2-container").click();
-    // ignore rule for select2
 
     cy.get(".select2-search__field").type(`${user_name}{enter}`);
 
