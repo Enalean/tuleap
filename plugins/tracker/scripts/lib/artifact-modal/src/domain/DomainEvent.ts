@@ -21,12 +21,16 @@ import type { DidCheckFileFieldIsPresent } from "./DidCheckFileFieldIsPresent";
 import type { DidChangeListFieldValue } from "./DidChangeListFieldValue";
 import type { WillDisableSubmit } from "./submit/WillDisableSubmit";
 import type { WillEnableSubmit } from "./submit/WillEnableSubmit";
+import type { WillNotifyFault } from "./WillNotifyFault";
+import type { WillClearFaultNotification } from "./WillClearFaultNotification";
 
 export type AllEvents = {
-    DidCheckFileFieldIsPresent: DidCheckFileFieldIsPresent;
     DidChangeListFieldValue: DidChangeListFieldValue;
+    DidCheckFileFieldIsPresent: DidCheckFileFieldIsPresent;
+    WillClearFaultNotification: WillClearFaultNotification;
     WillDisableSubmit: WillDisableSubmit;
     WillEnableSubmit: WillEnableSubmit;
+    WillNotifyFault: WillNotifyFault;
 };
 
 export type EventType = keyof AllEvents;

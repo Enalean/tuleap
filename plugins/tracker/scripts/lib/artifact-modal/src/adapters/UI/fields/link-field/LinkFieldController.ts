@@ -27,7 +27,6 @@ import type { AddLinkMarkedForRemoval } from "../../../../domain/fields/link-fie
 import type { DeleteLinkMarkedForRemoval } from "../../../../domain/fields/link-field/DeleteLinkMarkedForRemoval";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
-import type { NotifyFault } from "../../../../domain/NotifyFault";
 import { LinkRetrievalFault } from "../../../../domain/fields/link-field/LinkRetrievalFault";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
@@ -46,7 +45,6 @@ import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/V
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { PossibleParentsGroup } from "./dropdown/PossibleParentsGroup";
-import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import type {
     ControlLinkedArtifactsPopovers,
@@ -59,6 +57,8 @@ import type { DispatchEvents } from "../../../../domain/DispatchEvents";
 import { WillDisableSubmit } from "../../../../domain/submit/WillDisableSubmit";
 import { WillEnableSubmit } from "../../../../domain/submit/WillEnableSubmit";
 import { getSubmitDisabledForLinksReason } from "../../../../gettext-catalog";
+import { WillClearFaultNotification } from "../../../../domain/WillClearFaultNotification";
+import { WillNotifyFault } from "../../../../domain/WillNotifyFault";
 
 export type LinkFieldControllerType = {
     displayField(): LinkFieldPresenter;
@@ -99,8 +99,6 @@ export const LinkFieldController = (
     deleted_link_adder: AddLinkMarkedForRemoval,
     deleted_link_remover: DeleteLinkMarkedForRemoval,
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
-    fault_notifier: NotifyFault,
-    notification_clearer: ClearFaultNotification,
     links_autocompleter: ArtifactLinkSelectorAutoCompleterType,
     new_link_adder: AddNewLink,
     new_link_remover: DeleteNewLink,
@@ -149,7 +147,7 @@ export const LinkFieldController = (
                 if (isCreationModeFault(fault)) {
                     event_dispatcher.dispatch(WillEnableSubmit());
                 } else {
-                    fault_notifier.onFault(LinkRetrievalFault(fault));
+                    event_dispatcher.dispatch(WillNotifyFault(LinkRetrievalFault(fault)));
                 }
                 return LinkedArtifactCollectionPresenter.forFault();
             }
@@ -168,7 +166,9 @@ export const LinkFieldController = (
 
     autoComplete: links_autocompleter.autoComplete,
 
-    clearFaultNotification: notification_clearer.clearFaultNotification,
+    clearFaultNotification(): void {
+        event_dispatcher.dispatch(WillClearFaultNotification());
+    },
 
     addNewLink(artifact, type): NewLinkCollectionPresenter {
         new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));
@@ -181,12 +181,11 @@ export const LinkFieldController = (
     },
 
     retrievePossibleParentsGroups(): PromiseLike<GroupOfItems> {
-        notification_clearer.clearFaultNotification();
         return parents_retriever.getPossibleParents(current_tracker_identifier).match(
             (possible_parents) =>
                 PossibleParentsGroup.fromPossibleParents(link_verifier, possible_parents),
             (fault) => {
-                fault_notifier.onFault(fault);
+                event_dispatcher.dispatch(WillNotifyFault(fault));
                 return PossibleParentsGroup.buildEmpty();
             }
         );

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Fault } from "@tuleap/fault";
+import type { DomainEvent } from "./DomainEvent";
 
-export interface NotifyFault {
-    onFault(fault: Fault): void;
-}
+export type WillClearFaultNotification = DomainEvent<"WillClearFaultNotification">;
+
+export const WillClearFaultNotification = (): WillClearFaultNotification => ({
+    type: "WillClearFaultNotification",
+});
