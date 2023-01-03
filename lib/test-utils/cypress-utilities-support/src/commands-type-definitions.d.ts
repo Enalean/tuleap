@@ -77,7 +77,11 @@ declare global {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getFromTuleapAPI(url: string): Chainable<Response<any>>;
 
-            postFromTuleapApi(url: string, payload: Record<string, unknown>): void;
+            postFromTuleapApi(
+                url: string,
+                payload: Record<string, unknown>
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ): Chainable<Response<any>>;
 
             putFromTuleapApi(url: string, payload: Record<string, unknown>): void;
 
@@ -88,7 +92,10 @@ declare global {
                 number_of_attempts?: number
             ): PromiseLike<void>;
 
-            createNewPublicProject(project_name: string, xml_template: string): void;
+            createNewPublicProject(
+                project_name: string,
+                xml_template: string
+            ): Cypress.Chainable<number>;
 
             createNewPrivateProject(project_name: string): void;
 

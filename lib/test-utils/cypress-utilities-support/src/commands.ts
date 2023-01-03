@@ -200,7 +200,7 @@ Cypress.Commands.add("switchProjectVisibility", (visibility: string): void => {
 
 Cypress.Commands.add(
     "createNewPublicProject",
-    (project_name: string, xml_template: string): void => {
+    (project_name: string, xml_template: string): Cypress.Chainable<number> => {
         const payload = {
             shortname: project_name,
             description: "",
@@ -212,7 +212,9 @@ Cypress.Commands.add(
             allow_restricted: false,
         };
 
-        cy.postFromTuleapApi("https://tuleap/api/projects/", payload);
+        return cy.postFromTuleapApi("https://tuleap/api/projects/", payload).then((response) => {
+            return Number.parseInt(response.body.id, 10);
+        });
     }
 );
 
