@@ -24,7 +24,7 @@ import { viteExternalsPlugin } from "vite-plugin-externals";
 export default vite.defineAppConfig(
     {
         plugin_name: "core",
-        sub_app_name: "register",
+        sub_app_name: "user-registration",
     },
     {
         plugins: [viteExternalsPlugin({ tlp: "tlp" })],
