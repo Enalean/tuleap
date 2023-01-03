@@ -96,6 +96,9 @@ msgstr "Restriction de projets"
 msgid "Restrict"
 msgstr "Restreindre"
 
+msgid "Revoke access to selected"
+msgstr "Supprimer l'accès à la sélection"
+
 msgid "Save"
 msgstr "Sauvegarder"
 
