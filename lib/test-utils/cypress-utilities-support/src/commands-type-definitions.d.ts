@@ -92,7 +92,7 @@ declare global {
 
             createNewPrivateProject(project_name: string): void;
 
-            addUser(user_name: string): void;
+            addProjectMember(user_name: string): void;
         }
     }
 }
