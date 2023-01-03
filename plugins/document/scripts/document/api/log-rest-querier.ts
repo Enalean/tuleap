@@ -19,7 +19,7 @@
 import type { RestUser } from "./rest-querier";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { getAllJSON } from "@tuleap/fetch-result";
+import { getAllJSON, uri } from "@tuleap/fetch-result";
 
 export interface LogEntry {
     readonly when: string;
@@ -31,7 +31,7 @@ export interface LogEntry {
 }
 
 export const getLogs = (item_id: number): ResultAsync<readonly LogEntry[], Fault> => {
-    return getAllJSON<readonly LogEntry[], LogEntry>(`/api/v1/docman_items/${item_id}/logs`, {
+    return getAllJSON<readonly LogEntry[], LogEntry>(uri`/api/v1/docman_items/${item_id}/logs`, {
         params: {
             limit: 50,
         },

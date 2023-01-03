@@ -25,6 +25,7 @@ import {
 } from "./rest_querier";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync } from "neverthrow";
+import { uri } from "@tuleap/fetch-result";
 
 describe("API querier", () => {
     describe("getProjectRepositories", () => {
@@ -38,7 +39,7 @@ describe("API querier", () => {
             const result = await getProjectRepositories(project_id, "acme");
 
             expect(getAllJSON).toHaveBeenCalledWith(
-                "/api/v1/projects/27/git",
+                uri`/api/v1/projects/27/git`,
                 expect.objectContaining({
                     params: {
                         fields: "basic",
@@ -61,7 +62,7 @@ describe("API querier", () => {
 
             const result = await postGitBranch(repository_id, branch_name, reference);
 
-            expect(postSpy).toHaveBeenCalledWith("/api/v1/git/27/branches", {
+            expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/git/27/branches`, {
                 branch_name: branch_name,
                 reference: reference,
             });
@@ -83,7 +84,7 @@ describe("API querier", () => {
 
             const result = await postPullRequestOnDefaultBranch(repository, "tuleap-123-title");
 
-            expect(postSpy).toHaveBeenCalledWith("/api/v1/pull_requests", {
+            expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests`, {
                 repository_id: 27,
                 repository_dest_id: 27,
                 branch_src: "tuleap-123-title",

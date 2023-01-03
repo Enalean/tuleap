@@ -20,6 +20,7 @@ import type { Result } from "neverthrow";
 import { okAsync, ResultAsync } from "neverthrow";
 import type { ItemDefinition } from "../type";
 import type { Fault } from "@tuleap/fault";
+import type { EncodedURI } from "@tuleap/fetch-result";
 import { JSONParseFault, post } from "@tuleap/fetch-result";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import type { FullTextState } from "../stores/type";
@@ -36,7 +37,7 @@ export interface QueryResults {
 }
 
 export function querier(
-    url: string,
+    url: EncodedURI,
     keywords: string,
     previously_fetched_results: QueryResults,
     onItemReceived: (result: ItemDefinition) => void,

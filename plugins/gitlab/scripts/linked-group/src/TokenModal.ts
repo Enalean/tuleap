@@ -23,7 +23,7 @@ import { createModal } from "@tuleap/tlp-modal";
 import { get } from "@tuleap/plugin-git-gitlab-api-querier";
 import type { Fault } from "@tuleap/fault";
 import { sprintf } from "sprintf-js";
-import { patchJSON } from "@tuleap/fetch-result";
+import { patchJSON, uri, rawUri } from "@tuleap/fetch-result";
 import {
     FEEDBACK_HIDDEN_CLASSNAME,
     FORM_ELEMENT_DISABLED_CLASSNAME,
@@ -89,11 +89,13 @@ export const TokenModal = (
 
         toggleLoadingState(true);
         const new_token = token_input.value;
-        get(`${group.gitlab_server_uri}/api/v4/groups/${group.gitlab_group_id}`, {
+        get(uri`${rawUri(group.gitlab_server_uri)}/api/v4/groups/${group.gitlab_group_id}`, {
             token: new_token,
         })
             .andThen(() =>
-                patchJSON<undefined>(`/api/gitlab_groups/${group.id}`, { gitlab_token: new_token })
+                patchJSON<undefined>(uri`/api/gitlab_groups/${group.id}`, {
+                    gitlab_token: new_token,
+                })
             )
             .match(
                 () => {

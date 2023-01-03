@@ -23,7 +23,7 @@ import { okAsync } from "neverthrow";
 import { get } from "@tuleap/plugin-git-gitlab-api-querier";
 import type { GitlabGroup, GitlabCredentials } from "../stores/types";
 import { extractNextUrl } from "./link-header-helper";
-import { decodeJSON } from "@tuleap/fetch-result";
+import { decodeJSON, rawUri, uri } from "@tuleap/fetch-result";
 
 export const LINK_HEADER = "link";
 
@@ -40,7 +40,7 @@ export const createGitlabApiQuerier = (): GitlabApi => {
 
         return decodeJSON<readonly GitlabGroup[]>(response).andThen((groups) => {
             if (next_page_url !== null) {
-                return get(next_page_url, credentials).andThen((response) =>
+                return get(uri`${rawUri(next_page_url)}`, credentials).andThen((response) =>
                     continueFetching(response, credentials).map((new_groups) =>
                         groups.concat(new_groups)
                     )
@@ -57,7 +57,7 @@ export const createGitlabApiQuerier = (): GitlabApi => {
                 credentials.server_url
             );
 
-            return get(String(next_page_url), credentials).andThen((response) =>
+            return get(uri`${rawUri(String(next_page_url))}`, credentials).andThen((response) =>
                 continueFetching(response, credentials)
             );
         },

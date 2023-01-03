@@ -26,6 +26,7 @@ import { getURI } from "./auto-encoder";
 import { JSONParseFault } from "./JSONParseFault";
 import type { RetrieveResponse } from "./ResponseRetriever";
 import { GET_METHOD } from "./constants";
+import type { EncodedURI } from "./uri-string-template";
 
 type GetAllLimitParameters = {
     readonly limit?: number;
@@ -74,7 +75,7 @@ const flatten = <TypeOfArrayItem>(
 
 export type GetAll = {
     getAllJSON<TypeOfJSONPayload, TypeOfArrayItem>(
-        uri: string,
+        uri: EncodedURI,
         options?: GetAllOptions<TypeOfJSONPayload, TypeOfArrayItem>
     ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault>;
 };
@@ -83,7 +84,7 @@ const credentials: RequestCredentials = "same-origin";
 
 export const AllGetter = (response_retriever: RetrieveResponse): GetAll => {
     function getAllJSON<TypeOfJSONPayload, TypeOfArrayItem>(
-        uri: string,
+        uri: EncodedURI,
         options: GetAllOptions<TypeOfJSONPayload, TypeOfArrayItem> = {}
     ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault> {
         const { params = {}, max_parallel_requests = 6 } = options;

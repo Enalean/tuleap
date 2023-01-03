@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del } from "@tuleap/fetch-result";
+import { del, uri } from "@tuleap/fetch-result";
 import { selectOrThrow } from "@tuleap/dom";
 import type { GetText } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
@@ -57,7 +57,7 @@ export const UnlinkModal = (
         modal_feedback.classList.add(FEEDBACK_HIDDEN_CLASSNAME);
 
         toggleLoadingState(true);
-        del(`/api/gitlab_groups/${group_id}`).match(
+        del(uri`/api/gitlab_groups/${group_id}`).match(
             () => {
                 const redirect = new URL(loc.href);
                 redirect.searchParams.append("unlink_group", "1");

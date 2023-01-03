@@ -29,6 +29,7 @@ import type { Project, UserHistory, ItemDefinition } from "../../../../type";
 import type { FullTextState } from "../../../../stores/type";
 import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../../stores/type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { uri } from "@tuleap/fetch-result";
 
 describe("SearchResults", () => {
     describe("FullText search available", () => {
@@ -41,7 +42,7 @@ describe("SearchResults", () => {
                                 filter_value: "foobar",
                             },
                             fulltext: {
-                                fulltext_search_url: "/api/search",
+                                fulltext_search_url: uri`/api/search`,
                                 fulltext_search_is_available: true,
                                 fulltext_search_results: {},
                                 fulltext_search_is_loading: true,
@@ -70,7 +71,7 @@ describe("SearchResults", () => {
                                 filter_value: "foobar",
                             },
                             fulltext: {
-                                fulltext_search_url: "/api/search",
+                                fulltext_search_url: uri`/api/search`,
                                 fulltext_search_is_available: true,
                                 fulltext_search_results: {},
                                 fulltext_search_is_loading: false,
@@ -99,7 +100,7 @@ describe("SearchResults", () => {
                                 filter_value: "foobar",
                             },
                             fulltext: {
-                                fulltext_search_url: "/api/search",
+                                fulltext_search_url: uri`/api/search`,
                                 fulltext_search_is_available: true,
                                 fulltext_search_results: {
                                     "/toto": { title: "toto" } as ItemDefinition,
@@ -145,7 +146,7 @@ describe("SearchResults", () => {
                 const pinia = createTestingPinia({
                     initialState: {
                         fulltext: {
-                            fulltext_search_url: "/api/search",
+                            fulltext_search_url: uri`/api/search`,
                             fulltext_search_is_available: true,
                             fulltext_search_results: {},
                             fulltext_search_is_loading: false,
@@ -187,7 +188,7 @@ describe("SearchResults", () => {
                 const pinia = createTestingPinia({
                     initialState: {
                         fulltext: {
-                            fulltext_search_url: "/api/search",
+                            fulltext_search_url: uri`/api/search`,
                             fulltext_search_is_available: true,
                             fulltext_search_results: {},
                             fulltext_search_is_loading: false,
@@ -221,7 +222,7 @@ describe("SearchResults", () => {
             const pinia = createTestingPinia({
                 initialState: {
                     fulltext: {
-                        fulltext_search_url: "/api/search",
+                        fulltext_search_url: uri`/api/search`,
                         fulltext_search_is_available: true,
                         fulltext_search_results: {},
                         fulltext_search_is_loading: false,
@@ -243,7 +244,7 @@ describe("SearchResults", () => {
         let fulltext_state: FullTextState;
         beforeEach(() => {
             fulltext_state = {
-                fulltext_search_url: "/api/search",
+                fulltext_search_url: uri`/api/search`,
                 fulltext_search_is_available: false,
                 fulltext_search_results: {},
                 fulltext_search_is_loading: false,

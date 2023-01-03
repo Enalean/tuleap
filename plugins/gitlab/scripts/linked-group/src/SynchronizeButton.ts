@@ -18,7 +18,7 @@
  */
 
 import { selectOrThrow } from "@tuleap/dom";
-import { postJSON } from "@tuleap/fetch-result";
+import { postJSON, uri } from "@tuleap/fetch-result";
 import type { GetText } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
 import {
@@ -78,7 +78,7 @@ export const SynchronizeButton = (
         feedback.classList.add(FEEDBACK_HIDDEN_CLASSNAME);
         toggleLoadingState(true);
         await postJSON<SynchronizationResponse>(
-            `/api/gitlab_groups/${group_id}/synchronize`,
+            uri`/api/gitlab_groups/${group_id}/synchronize`,
             undefined
         ).match(
             (response) => {

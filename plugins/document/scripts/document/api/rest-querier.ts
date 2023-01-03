@@ -46,7 +46,7 @@ import {
 } from "../helpers/properties-helpers/metadata-to-properties";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { getJSON } from "@tuleap/fetch-result";
+import { getJSON, uri } from "@tuleap/fetch-result";
 
 export {
     getDocumentManagerServiceInformation,
@@ -134,7 +134,7 @@ export interface RestUser {
 }
 
 function getUserByName(username: string): ResultAsync<RestUser[], Fault> {
-    return getJSON<RestUser[]>(`/api/v1/users`, {
+    return getJSON<RestUser[]>(uri`/api/v1/users`, {
         params: {
             query: JSON.stringify({ username }),
             limit: 1,
