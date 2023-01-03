@@ -116,7 +116,6 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $this->addHook(Event::SITE_ACCESS_CHANGE);
 
         $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(UserBecomesProjectAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(UserIsNoLongerProjectAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
@@ -148,14 +147,6 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
     public function getServiceShortname()
     {
         return self::SERVICE_SHORTNAME;
-    }
-
-    public function burning_parrot_get_javascript_files($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
-            $core_assets                  = new \Tuleap\Layout\IncludeCoreAssets();
-            $params['javascript_files'][] = $core_assets->getFileURL('manage-allowed-projects-on-resource.js');
-        }
     }
 
     public function exportXmlProject(ExportXmlProject $event): void
