@@ -17,6 +17,16 @@ msgid_plural "%{ nb } projects can use the server"
 msgstr[0] "%{ nb } projet peut utiliser le serveur"
 msgstr[1] "%{ nb } projets peuvent utiliser le serveur"
 
+msgid "%{ nb } project to allow"
+msgid_plural "%{ nb } projects to allow"
+msgstr[0] "%{ nb } projet à autoriser"
+msgstr[1] "%{ nb } projets à autoriser"
+
+msgid "%{ nb } project to revoke"
+msgid_plural "%{ nb } projects to revoke"
+msgstr[0] "%{ nb } projet à restreindre"
+msgstr[1] "%{ nb } projets à restreindre"
+
 msgid "Add document server"
 msgstr "Ajouter un serveur de document"
 
@@ -107,6 +117,12 @@ msgstr "Le secret est manquant"
 
 msgid "There isn't any document servers configured"
 msgstr "Aucun serveurs n'est actuellement configuré"
+
+msgid "To be allowed"
+msgstr "À autoriser"
+
+msgid "To be revoked"
+msgstr "À restreindre"
 
 msgid "Unable to find project information"
 msgstr "Impossible de trouver les informations du projet"

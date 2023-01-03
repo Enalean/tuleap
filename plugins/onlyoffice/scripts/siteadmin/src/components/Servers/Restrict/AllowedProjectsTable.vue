@@ -58,6 +58,7 @@
                 <th>
                     <input
                         type="checkbox"
+                        v-model="select_all"
                         v-on:change="toggleAllDelete($event.target)"
                         data-test="remove-all"
                     />
@@ -69,6 +70,7 @@
                     {{ $gettext("Project") }}
                     <i class="fa-solid fa-caret-down tlp-table-sort-icon" aria-hidden="true"></i>
                 </th>
+                <th class="tlp-table-cell-actions"></th>
             </tr>
         </thead>
         <tbody>
@@ -77,7 +79,14 @@
                     {{ $gettext("No project can use this server.") }}
                 </td>
             </tr>
-            <tr v-for="project of filtered_projects" v-bind:key="server.id + '-' + project.id">
+            <tr
+                v-for="project of filtered_projects"
+                v-bind:key="server.id + '-' + project.id"
+                v-bind:class="{
+                    'tlp-table-row-success': project.is_added,
+                    'tlp-table-row-danger': project.is_removed,
+                }"
+            >
                 <td>
                     <input
                         type="checkbox"
@@ -90,7 +99,20 @@
                     {{ project.id }}
                 </td>
                 <td>
-                    <a v-bind:href="project.url">{{ project.label }}</a>
+                    <a
+                        v-bind:href="project.url"
+                        class="onlyoffice-admin-restrict-server-modal-project-link"
+                    >
+                        {{ project.label }}
+                    </a>
+                </td>
+                <td class="tlp-table-cell-actions">
+                    <span class="tlp-badge-success tlp-badge-outline" v-if="project.is_added">
+                        {{ $gettext("To be allowed") }}
+                    </span>
+                    <span class="tlp-badge-danger tlp-badge-outline" v-if="project.is_removed">
+                        {{ $gettext("To be revoked") }}
+                    </span>
                 </td>
             </tr>
         </tbody>
@@ -102,25 +124,39 @@ import type { Project, Server } from "../../../type";
 import { computed, ref } from "vue";
 import ProjectAllower from "./ProjectAllower.vue";
 
-const props = defineProps<{ server: Server }>();
+const props = defineProps<{
+    server: Server;
+    set_nb_to_allow: (nb: number) => void;
+    set_nb_to_revoke: (nb: number) => void;
+}>();
 
-const existing_projects = ref<Project[]>([...props.server.project_restrictions]);
-const added_projects = ref<Project[]>([]);
+interface DisplayedProject extends Project {
+    readonly is_added: boolean;
+    is_removed: boolean;
+}
+
+const existing_projects = ref<DisplayedProject[]>(
+    props.server.project_restrictions.map(
+        (project): DisplayedProject => ({ ...project, is_added: false, is_removed: false })
+    )
+);
+const added_projects = ref<DisplayedProject[]>([]);
 const error_message = ref("");
 const filter = ref("");
 const projects_to_remove = ref<number[]>([]);
+const select_all = ref(false);
 
-const deduplicated_projects = computed((): Project[] =>
+const deduplicated_projects = computed((): DisplayedProject[] =>
     [...existing_projects.value, ...added_projects.value].filter(is_a_duplicate)
 );
 
-const sorted_projects = computed((): Project[] =>
+const sorted_projects = computed((): DisplayedProject[] =>
     [...deduplicated_projects.value].sort((a, b) =>
         a.label.localeCompare(b.label, undefined, { numeric: true })
     )
 );
 
-const filtered_projects = computed((): Project[] =>
+const filtered_projects = computed((): DisplayedProject[] =>
     sorted_projects.value.filter(
         (project) =>
             filter.value === "" ||
@@ -130,7 +166,8 @@ const filtered_projects = computed((): Project[] =>
 );
 
 function addProject(project: Project): void {
-    added_projects.value.push(project);
+    added_projects.value.push({ ...project, is_added: true, is_removed: false });
+    props.set_nb_to_allow(deduplicated_projects.value.filter((project) => project.is_added).length);
 }
 
 function setError(message: string): void {
@@ -138,11 +175,19 @@ function setError(message: string): void {
 }
 
 function onDelete(): void {
-    [existing_projects, added_projects].forEach((collection) => {
-        collection.value = collection.value.filter(
-            (project) => projects_to_remove.value.indexOf(project.id) === -1
-        );
+    projects_to_remove.value.forEach((id) => {
+        const existing_project = existing_projects.value.find((project) => project.id === id);
+        if (existing_project) {
+            existing_project.is_removed = true;
+        }
+
+        added_projects.value = added_projects.value.filter((project) => project.id !== id);
     });
+    projects_to_remove.value = [];
+    select_all.value = false;
+
+    props.set_nb_to_allow(deduplicated_projects.value.filter((project) => project.is_added).length);
+    props.set_nb_to_revoke(existing_projects.value.filter((project) => project.is_removed).length);
 }
 
 function toggleAllDelete(checkbox: EventTarget | null): void {
@@ -157,7 +202,17 @@ function toggleAllDelete(checkbox: EventTarget | null): void {
     }
 }
 
-function is_a_duplicate(current: Project, index: number, projects: Project[]): boolean {
+function is_a_duplicate(
+    current: DisplayedProject,
+    index: number,
+    projects: DisplayedProject[]
+): boolean {
     return index === projects.findIndex((sibling) => sibling.id === current.id);
 }
 </script>
+
+<style lang="scss">
+.onlyoffice-admin-restrict-server-modal-project-link {
+    color: var(--tlp-typo-default-text-color);
+}
+</style>
