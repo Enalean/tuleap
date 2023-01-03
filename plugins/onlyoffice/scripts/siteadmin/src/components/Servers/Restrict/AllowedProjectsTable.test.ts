@@ -139,4 +139,89 @@ describe("AllowedProjectsTable", () => {
         expect(wrapper.text()).toContain("Project B");
         expect(wrapper.text()).not.toContain("Le projet C");
     });
+
+    it("should display existing projects + added ones - deleted ones", async () => {
+        const server: Server = {
+            id: 1,
+            server_url: "https://example.com",
+            is_project_restricted: true,
+            project_restrictions: [
+                {
+                    id: 101,
+                    label: "Project A",
+                    url: "/projects/project-a",
+                },
+                {
+                    id: 103,
+                    label: "Le projet C",
+                    url: "/projects/project-c",
+                },
+            ],
+        } as unknown as Server;
+
+        const wrapper = shallowMount(AllowedProjectsTable, {
+            global: { plugins: [createGettext({ silent: true })] },
+            props: {
+                server,
+            },
+        });
+
+        await wrapper.findComponent(ProjectAllower).props("add")({
+            id: 102,
+            label: "Project B",
+            url: "/projects/project-b",
+        });
+
+        expect(wrapper.find("[data-test=delete]").attributes("disabled")).toBeDefined();
+        await wrapper.find("[data-test=projects-to-remove-102]").setValue(true);
+        await wrapper.find("[data-test=projects-to-remove-103]").setValue(true);
+        expect(wrapper.find("[data-test=delete]").attributes("disabled")).toBeUndefined();
+        await wrapper.find("[data-test=delete]").trigger("click");
+
+        expect(wrapper.text()).toContain("Project A");
+        expect(wrapper.text()).not.toContain("Project B");
+        expect(wrapper.text()).not.toContain("Le projet C");
+    });
+
+    it("should allow to remove all at once", async () => {
+        const server: Server = {
+            id: 1,
+            server_url: "https://example.com",
+            is_project_restricted: true,
+            project_restrictions: [
+                {
+                    id: 101,
+                    label: "Project A",
+                    url: "/projects/project-a",
+                },
+                {
+                    id: 103,
+                    label: "Le projet C",
+                    url: "/projects/project-c",
+                },
+            ],
+        } as unknown as Server;
+
+        const wrapper = shallowMount(AllowedProjectsTable, {
+            global: { plugins: [createGettext({ silent: true })] },
+            props: {
+                server,
+            },
+        });
+
+        await wrapper.findComponent(ProjectAllower).props("add")({
+            id: 102,
+            label: "Project B",
+            url: "/projects/project-b",
+        });
+
+        expect(wrapper.find("[data-test=delete]").attributes("disabled")).toBeDefined();
+        await wrapper.find("[data-test=remove-all]").setValue(true);
+        expect(wrapper.find("[data-test=delete]").attributes("disabled")).toBeUndefined();
+        await wrapper.find("[data-test=delete]").trigger("click");
+
+        expect(wrapper.text()).not.toContain("Project A");
+        expect(wrapper.text()).not.toContain("Project B");
+        expect(wrapper.text()).not.toContain("Le projet C");
+    });
 });

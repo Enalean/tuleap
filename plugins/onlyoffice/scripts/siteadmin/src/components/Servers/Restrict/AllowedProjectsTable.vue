@@ -25,6 +25,16 @@
             v-bind:add="addProject"
             v-bind:error="setError"
         />
+        <button
+            type="button"
+            class="tlp-button-danger tlp-button tlp-table-actions-element"
+            v-on:click="onDelete"
+            data-test="delete"
+            v-bind:disabled="projects_to_remove.length === 0"
+        >
+            <i class="fa-solid fa-circle-minus tlp-button-icon" aria-hidden="true"></i>
+            {{ $gettext("Revoke access to selected") }}
+        </button>
         <div class="tlp-table-actions-spacer"></div>
         <div class="tlp-form-element tlp-table-actions-element">
             <input
@@ -45,6 +55,13 @@
     <table class="tlp-table" id="allowed-projects-list">
         <thead>
             <tr>
+                <th>
+                    <input
+                        type="checkbox"
+                        v-on:change="toggleAllDelete($event.target)"
+                        data-test="remove-all"
+                    />
+                </th>
                 <th class="tlp-table-cell-numeric">
                     {{ $gettext("Id") }}
                 </th>
@@ -56,11 +73,19 @@
         </thead>
         <tbody>
             <tr v-if="sorted_projects.length === 0">
-                <td colspan="2" class="tlp-table-cell-empty">
+                <td colspan="3" class="tlp-table-cell-empty">
                     {{ $gettext("No project can use this server.") }}
                 </td>
             </tr>
             <tr v-for="project of filtered_projects" v-bind:key="server.id + '-' + project.id">
+                <td>
+                    <input
+                        type="checkbox"
+                        v-model="projects_to_remove"
+                        v-bind:value="project.id"
+                        v-bind:data-test="'projects-to-remove-' + project.id"
+                    />
+                </td>
                 <td class="tlp-table-cell-numeric">
                     {{ project.id }}
                 </td>
@@ -79,25 +104,29 @@ import ProjectAllower from "./ProjectAllower.vue";
 
 const props = defineProps<{ server: Server }>();
 
+const existing_projects = ref<Project[]>([...props.server.project_restrictions]);
 const added_projects = ref<Project[]>([]);
 const error_message = ref("");
 const filter = ref("");
+const projects_to_remove = ref<number[]>([]);
 
-const sorted_projects = computed(
-    (): ReadonlyArray<Project> =>
-        [...props.server.project_restrictions, ...added_projects.value]
-            .filter(is_a_duplicate)
-            .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }))
+const deduplicated_projects = computed((): Project[] =>
+    [...existing_projects.value, ...added_projects.value].filter(is_a_duplicate)
 );
 
-const filtered_projects = computed(
-    (): ReadonlyArray<Project> =>
-        [...sorted_projects.value].filter(
-            (project) =>
-                filter.value === "" ||
-                String(project.id).indexOf(filter.value) !== -1 ||
-                project.label.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
-        )
+const sorted_projects = computed((): Project[] =>
+    [...deduplicated_projects.value].sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { numeric: true })
+    )
+);
+
+const filtered_projects = computed((): Project[] =>
+    sorted_projects.value.filter(
+        (project) =>
+            filter.value === "" ||
+            String(project.id).indexOf(filter.value) !== -1 ||
+            project.label.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+    )
 );
 
 function addProject(project: Project): void {
@@ -106,6 +135,26 @@ function addProject(project: Project): void {
 
 function setError(message: string): void {
     error_message.value = message;
+}
+
+function onDelete(): void {
+    [existing_projects, added_projects].forEach((collection) => {
+        collection.value = collection.value.filter(
+            (project) => projects_to_remove.value.indexOf(project.id) === -1
+        );
+    });
+}
+
+function toggleAllDelete(checkbox: EventTarget | null): void {
+    if (!(checkbox instanceof HTMLInputElement)) {
+        return;
+    }
+
+    if (checkbox.checked) {
+        projects_to_remove.value = deduplicated_projects.value.map((project) => project.id);
+    } else {
+        projects_to_remove.value = [];
+    }
 }
 
 function is_a_duplicate(current: Project, index: number, projects: Project[]): boolean {
