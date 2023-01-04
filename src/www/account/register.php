@@ -25,6 +25,7 @@ use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\User\Account\Register\RegisterFormPresenterBuilder;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -159,103 +160,6 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
     );
 
     return $res;
-}
-
-/**
- * Function to get errors with its key
- * to display errors for each element
-**/
-function getFieldError($field_key, array $errors)
-{
-    if (isset($errors[$field_key])) {
-        return $errors[$field_key];
-    }
-    return null;
-}
-
-/**
- * @return Closure(): void
- */
-function display_account_form(\Tuleap\Layout\BaseLayout $layout, bool $is_password_needed, array $errors): Closure
-{
-    $request = HTTPRequest::instance();
-
-    $page = $request->get('page');
-
-    $form_loginname       = $request->exist('form_loginname') ? $request->get('form_loginname') : '';
-    $form_loginname_error = getFieldError('form_loginname', $errors);
-
-    $form_realname       = $request->exist('form_realname') ? $request->get('form_realname') : '';
-    $form_realname_error = getFieldError('form_realname', $errors);
-
-    $form_email       = $request->exist('form_email') ? $request->get('form_email') : '';
-    $form_email_error = getFieldError('form_email', $errors);
-
-    $form_pw       = '';
-    $form_pw_error = getFieldError('form_pw', $errors);
-
-    $form_mail_site       = ! $request->exist('form_mail_site') || $request->get('form_mail_site') == 1;
-    $form_mail_site_error = getFieldError('form_mail_site', $errors);
-
-    $form_restricted       = ForgeConfig::areRestrictedUsersAllowed() && (! $request->exist('form_restricted') || $request->get('form_restricted') == 1);
-    $form_restricted_error = getFieldError('form_restricted', $errors);
-
-    $form_send_email       = $request->get('form_send_email') == 1;
-    $form_send_email_error = getFieldError('form_send_email', $errors);
-
-    if ($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
-        $timezone = $request->get('timezone');
-    } else {
-        $timezone = false;
-    }
-    $timezone_error = getFieldError('timezone', $errors);
-
-    $form_register_purpose       = $request->exist('form_register_purpose') ? $request->get('form_register_purpose') : '';
-    $form_register_purpose_error = getFieldError('form_register_purpose', $errors);
-
-    $extra_plugin_field = EventManager::instance()
-        ->dispatch(new \Tuleap\User\Account\Register\AddAdditionalFieldUserRegistration($layout, $request))
-        ->getAdditionalFieldsInHtml();
-
-
-    if ($page == "admin_creation") {
-        $prefill   = new Account_RegisterAdminPrefillValuesPresenter(
-            new Account_RegisterField($form_loginname, $form_loginname_error),
-            new Account_RegisterField($form_email, $form_email_error),
-            new Account_RegisterField($form_pw, $form_pw_error),
-            new Account_RegisterField($form_realname, $form_realname_error),
-            new Account_RegisterField($form_register_purpose, $form_register_purpose_error),
-            new Account_RegisterField($form_mail_site, $form_mail_site_error),
-            new Account_RegisterField($timezone, $timezone_error),
-            new Account_RegisterField($form_restricted, $form_restricted_error),
-            new Account_RegisterField($form_send_email, $form_send_email_error),
-            ForgeConfig::areRestrictedUsersAllowed()
-        );
-        $presenter = new Account_RegisterByAdminPresenter($prefill, $extra_plugin_field);
-        $template  = 'register-admin';
-    } else {
-        $password_field = null;
-        if ($is_password_needed) {
-            $password_field = new Account_RegisterField($form_pw, $form_pw_error);
-        }
-
-        $prefill   = new Account_RegisterPrefillValuesPresenter(
-            new Account_RegisterField($form_loginname, $form_loginname_error),
-            new Account_RegisterField($form_email, $form_email_error),
-            $password_field,
-            new Account_RegisterField($form_realname, $form_realname_error),
-            new Account_RegisterField($form_register_purpose, $form_register_purpose_error),
-            new Account_RegisterField($form_mail_site, $form_mail_site_error),
-            new Account_RegisterField($timezone, $timezone_error)
-        );
-        $presenter = new Account_RegisterByUserPresenter($prefill, $extra_plugin_field);
-        $template  = 'register-user';
-    }
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
-
-    return static function () use ($renderer, $template, $presenter): void {
-        $renderer->renderToPage($template, $presenter);
-    };
 }
 
 $is_password_needed = true;
@@ -416,7 +320,12 @@ if ($layout === null) {
     throw new \Exception("Could not load BurningParrot theme");
 }
 
-$render = display_account_form($layout, $is_password_needed, $errors);
+$builder = new RegisterFormPresenterBuilder(
+    EventManager::instance(),
+    TemplateRendererFactory::build(),
+    new Account_TimezonesCollection(),
+);
+$render  = $builder->getPresenterClosure($request, $layout, $is_password_needed, $errors);
 
 $layout->addJavascriptAsset(new JavascriptViteAsset(
     new IncludeViteAssets(
