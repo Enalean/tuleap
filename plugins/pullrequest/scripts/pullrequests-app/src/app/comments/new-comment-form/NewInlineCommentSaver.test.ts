@@ -21,6 +21,7 @@ import * as tuleap_api from "@tuleap/fetch-result";
 import { NewInlineCommentContext } from "./NewInlineCommentContext";
 import { INLINE_COMMENT_POSITION_RIGHT } from "../types";
 import { NewInlineCommentSaver } from "./NewInlineCommentSaver";
+import { uri } from "@tuleap/fetch-result";
 
 describe("NewInlineCommentSaver", () => {
     it("should save the new inline comment", () => {
@@ -31,7 +32,7 @@ describe("NewInlineCommentSaver", () => {
 
         comment_saver.postComment("Noice!");
 
-        expect(postSpy).toHaveBeenCalledWith("/api/v1/pull_requests/1/inline-comments", {
+        expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/1/inline-comments`, {
             file_path: "README.md",
             unidiff_offset: 55,
             position: INLINE_COMMENT_POSITION_RIGHT,

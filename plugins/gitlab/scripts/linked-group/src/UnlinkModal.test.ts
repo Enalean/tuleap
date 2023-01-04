@@ -30,6 +30,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { FEEDBACK_HIDDEN_CLASSNAME, HIDDEN_ICON_CLASSNAME } from "./classnames";
+import { uri } from "@tuleap/fetch-result";
 
 const GROUP_LINK_ID = 77;
 
@@ -91,7 +92,7 @@ describe(`UnlinkModal`, () => {
 
             await result;
 
-            expect(delSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_LINK_ID}`);
+            expect(delSpy).toHaveBeenCalledWith(uri`/api/gitlab_groups/${GROUP_LINK_ID}`);
             assertLoadingState(true);
 
             const expected_url = new URL(

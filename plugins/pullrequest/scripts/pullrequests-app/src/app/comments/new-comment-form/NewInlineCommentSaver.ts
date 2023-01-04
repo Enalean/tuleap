@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { postJSON } from "@tuleap/fetch-result";
+import { postJSON, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type { FileDiffCommentPayload } from "../types";
@@ -32,7 +32,7 @@ export const NewInlineCommentSaver = (
 ): SaveNewInlineComment => ({
     postComment: (content: string): ResultAsync<FileDiffCommentPayload, Fault> =>
         postJSON<FileDiffCommentPayload>(
-            `/api/v1/pull_requests/${inline_comment_context.pull_request_id}/inline-comments`,
+            uri`/api/v1/pull_requests/${inline_comment_context.pull_request_id}/inline-comments`,
             {
                 file_path: inline_comment_context.file_path,
                 unidiff_offset: inline_comment_context.unidiff_offset,

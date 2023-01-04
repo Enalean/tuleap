@@ -17,19 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import * as fetch_result from "@tuleap/fetch-result";
 
 const getSpy = vi.fn();
-vi.mock("@tuleap/fetch-result", () => {
-    return {
-        getJSON<TypeOfJSONPayload>(
-            uri: string,
-            options?: OptionsWithAutoEncodedParameters
-        ): ResultAsync<TypeOfJSONPayload, Fault> {
-            return getSpy(uri, options);
-        },
-    };
-});
+vi.mock("@tuleap/fetch-result");
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return {
         autocomplete_projects_for_select2(select: HTMLSelectElement): void {
@@ -42,12 +34,15 @@ vi.mock("@tuleap/autocomplete-for-select2", () => {
 import { createGettext } from "vue3-gettext";
 import { shallowMount } from "@vue/test-utils";
 import ProjectAllower from "./ProjectAllower.vue";
-import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import type { OptionsWithAutoEncodedParameters } from "@tuleap/fetch-result";
+import { uri } from "@tuleap/fetch-result";
 
 describe("ProjectAllower", () => {
+    beforeEach((): void => {
+        vi.spyOn(fetch_result, "getJSON").mockImplementation(getSpy);
+    });
+
     it("should fetch project information and add it to the list", async () => {
         const add = vi.fn();
         const error = vi.fn();
@@ -67,7 +62,7 @@ describe("ProjectAllower", () => {
         await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
         await wrapper.find("[data-test=button]").trigger("click");
 
-        expect(getSpy).toHaveBeenCalledWith(`/api/projects`, {
+        expect(getSpy).toHaveBeenCalledWith(uri`/api/projects`, {
             params: { query: '{"shortname":"acme"}' },
         });
         expect(error).toHaveBeenCalledWith("");
@@ -115,7 +110,7 @@ describe("ProjectAllower", () => {
         await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
         await wrapper.find("[data-test=button]").trigger("click");
 
-        expect(getSpy).toHaveBeenCalledWith(`/api/projects`, {
+        expect(getSpy).toHaveBeenCalledWith(uri`/api/projects`, {
             params: { query: '{"shortname":"acme"}' },
         });
         expect(error).toHaveBeenCalledWith("Unable to find project information");
@@ -141,7 +136,7 @@ describe("ProjectAllower", () => {
         await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
         await wrapper.find("[data-test=button]").trigger("click");
 
-        expect(getSpy).toHaveBeenCalledWith(`/api/projects`, {
+        expect(getSpy).toHaveBeenCalledWith(uri`/api/projects`, {
             params: { query: '{"shortname":"acme"}' },
         });
         expect(error).toHaveBeenCalledWith("Unable to find project information");
@@ -172,7 +167,7 @@ describe("ProjectAllower", () => {
         await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
         await wrapper.find("[data-test=button]").trigger("click");
 
-        expect(getSpy).toHaveBeenCalledWith(`/api/projects`, {
+        expect(getSpy).toHaveBeenCalledWith(uri`/api/projects`, {
             params: { query: '{"shortname":"acme"}' },
         });
         expect(error).toHaveBeenCalledWith("Unable to find project information");

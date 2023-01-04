@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { extractProjectnameFromAutocompleterResult } from "../../../helpers/extract-projectname-from-autocompleter-result";
-import { getJSON } from "@tuleap/fetch-result";
+import { getJSON, uri } from "@tuleap/fetch-result";
 import type { Project, ProjectFromRest } from "../../../type";
 import { useGettext } from "vue3-gettext";
 import { autocomplete_projects_for_select2 } from "@tuleap/autocomplete-for-select2";
@@ -73,7 +73,7 @@ function onClick(): void {
     resetError();
     is_loading.value = true;
 
-    getJSON<ReadonlyArray<ProjectFromRest>>("/api/projects", {
+    getJSON<ReadonlyArray<ProjectFromRest>>(uri`/api/projects`, {
         params: {
             query: JSON.stringify({ shortname }),
         },

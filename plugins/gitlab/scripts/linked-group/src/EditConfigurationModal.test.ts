@@ -46,6 +46,7 @@ import {
     FORM_ELEMENT_DISABLED_CLASSNAME,
     HIDDEN_ICON_CLASSNAME,
 } from "./classnames";
+import { uri } from "@tuleap/fetch-result";
 
 const noop = (): void => {
     // Do nothing;
@@ -206,7 +207,7 @@ describe(`EditConfigurationModal`, () => {
             await result;
 
             assertLoadingState(false);
-            expect(patchSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_LINK_ID}`, {
+            expect(patchSpy).toHaveBeenCalledWith(uri`/api/gitlab_groups/${GROUP_LINK_ID}`, {
                 allow_artifact_closure: true,
                 create_branch_prefix: BRANCH_PREFIX,
             });
@@ -231,7 +232,7 @@ describe(`EditConfigurationModal`, () => {
             confirm_button.click();
             await result;
 
-            expect(patchSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_LINK_ID}`, {
+            expect(patchSpy).toHaveBeenCalledWith(uri`/api/gitlab_groups/${GROUP_LINK_ID}`, {
                 allow_artifact_closure: true,
                 create_branch_prefix: "",
             });

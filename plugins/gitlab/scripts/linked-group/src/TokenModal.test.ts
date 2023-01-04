@@ -41,6 +41,7 @@ import {
     TokenModal,
 } from "./TokenModal";
 import { selectOrThrow } from "@tuleap/dom";
+import { rawUri, uri } from "@tuleap/fetch-result";
 
 const noop = (): void => {
     // Do nothing;
@@ -150,10 +151,10 @@ describe(`TokenModal`, () => {
             assertLoadingState(false);
             expect(modalHide).toHaveBeenCalled();
             expect(validateTokenSpy).toHaveBeenCalledWith(
-                `${GITLAB_SERVER_URI}/api/v4/groups/${GITLAB_GROUP_ID}`,
+                uri`${rawUri(GITLAB_SERVER_URI)}/api/v4/groups/${GITLAB_GROUP_ID}`,
                 { token: NEW_TOKEN }
             );
-            expect(saveTokenSpy).toHaveBeenCalledWith(`/api/gitlab_groups/${GROUP_LINK_ID}`, {
+            expect(saveTokenSpy).toHaveBeenCalledWith(uri`/api/gitlab_groups/${GROUP_LINK_ID}`, {
                 gitlab_token: NEW_TOKEN,
             });
         });
