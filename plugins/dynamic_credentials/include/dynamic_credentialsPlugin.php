@@ -74,11 +74,14 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function beforeLogin(BeforeStandardLogin|BeforeSVNLogin $event): void
     {
-        $credential_retriever = $this->getCredentialRetriever();
+        if (($_SERVER[LoaderScheduler::FASTCGI_DISABLE_SESSION_AUTOSTART_INSTRUCTION] ?? '') === 'true') {
+            return;
+        }
         if (session_status() === PHP_SESSION_NONE) {
             PHP_Session::start();
         }
-        $support_session = new DynamicCredentialSession($_SESSION, $credential_retriever);
+        $credential_retriever = $this->getCredentialRetriever();
+        $support_session      = new DynamicCredentialSession($_SESSION, $credential_retriever);
         try {
             $support_session->initialize($event->getLoginName(), $event->getPassword());
         } catch (\Tuleap\DynamicCredentials\Credential\CredentialException $e) {
@@ -100,6 +103,9 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     public function userManagerGetUserInstance(array $params)
     {
         if ((int) $params['row']['user_id'] !== DynamicUser::ID) {
+            return;
+        }
+        if (($_SERVER[LoaderScheduler::FASTCGI_DISABLE_SESSION_AUTOSTART_INSTRUCTION] ?? '') === 'true') {
             return;
         }
 
