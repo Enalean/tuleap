@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "./program_management/project-header-background";
-@use "./program_management/backlog";
-@use "./program_management/element";
-@use "./program_management/program-increment";
+@use "./project-header-background";
+@use "./backlog";
+@use "./element";
+@use "./program-increment";
 @use "@tuleap/drag-and-drop";
 
 .program-management-title-header {

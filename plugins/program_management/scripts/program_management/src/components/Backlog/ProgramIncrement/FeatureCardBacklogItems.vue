@@ -67,10 +67,10 @@ export default class FeatureCardBacklogItems extends Vue {
     @Prop({ required: true })
     readonly program_increment!: ProgramIncrement;
 
-    private user_stories: UserStory[] = [];
-    private is_loading_user_story = false;
-    private message_error_rest = "";
-    private is_opened = false;
+    user_stories: UserStory[] = [];
+    is_loading_user_story = false;
+    message_error_rest = "";
+    is_opened = false;
 
     mounted(): void {
         const button_close_stories = this.$refs.openCloseButton;

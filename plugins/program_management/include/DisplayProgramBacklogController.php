@@ -26,8 +26,8 @@ use HTTPRequest;
 use PFUser;
 use Project;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramBacklogPresenter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerConfiguration;
@@ -112,11 +112,8 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
 
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
-        $assets = $this->getAssets();
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'program-management-style'));
-
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->getAssets(), 'src/index.ts'));
         $this->includeHeaderAndNavigationBar($layout, $project);
-        $layout->includeFooterJavascriptFile($assets->getFileURL('program_management.js'));
 
         $this->template_renderer->renderToPage(
             'program-backlog',
@@ -146,11 +143,11 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         );
     }
 
-    private function getAssets(): IncludeAssets
+    private function getAssets(): IncludeViteAssets
     {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/program_management'
+        return new IncludeViteAssets(
+            __DIR__ . '/../scripts/program_management/frontend-assets',
+            '/assets/program_management/program_management'
         );
     }
 

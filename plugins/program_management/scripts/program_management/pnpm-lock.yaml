@@ -5,10 +5,12 @@ specifiers:
   '@tuleap/burningparrot-theme': workspace:*
   '@tuleap/date-helper': workspace:*
   '@tuleap/dom': workspace:*
+  '@tuleap/drag-and-drop': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
   '@tuleap/project-background': workspace:*
   '@tuleap/project-privacy-helper': workspace:*
   '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/tlp-modal': workspace:*
   '@tuleap/tlp-swatch-colors': workspace:*
   '@tuleap/vue-breadcrumb-privacy': workspace:*
   '@tuleap/vue2-gettext-init': workspace:*
@@ -16,6 +18,7 @@ specifiers:
   '@vue/test-utils': ^1.3.0
   vue: ^2.7.8
   vue-class-component: ^7.2.6
+  vue-dompurify-html: ^2.5.1
   vue-property-decorator: ^9.1.2
   vuex: ^3.6.2
   vuex-class: ^0.3.2
@@ -24,13 +27,16 @@ dependencies:
   '@tuleap/burningparrot-theme': link:../../../../src/themes/BurningParrot
   '@tuleap/date-helper': link:../../../../lib/frontend/date-helper
   '@tuleap/dom': link:../../../../lib/frontend/dom
+  '@tuleap/drag-and-drop': link:../../../../lib/frontend/drag-and-drop
   '@tuleap/project-background': link:../../../../lib/frontend/project-background
   '@tuleap/project-privacy-helper': link:../../../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
   '@tuleap/tlp-swatch-colors': link:../../../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue-breadcrumb-privacy': link:../../../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue2-gettext-init': link:../../../../lib/frontend/vue2-gettext-init
   vue: 2.7.8
+  vue-dompurify-html: 2.5.1_vue@2.7.8
   vuex: 3.6.2_vue@2.7.8
 
 devDependencies:
@@ -126,6 +132,10 @@ packages:
   /dom-event-types/1.0.0:
     resolution: {integrity: sha512-2G2Vwi2zXTHBGqXHsJ4+ak/iP0N8Ar+G8a7LiD2oup5o4sQWytwqqrZu/O6hIMV0KMID2PL69OhpshLO0n7UJQ==}
     dev: true
+
+  /dompurify/2.3.4:
+    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
+    dev: false
 
   /editorconfig/0.15.3:
     resolution: {integrity: sha512-M9wIMFx96vq0R4F+gRpY3o2exzb8hEj/n9S8unZtHSvYjibBp/iMufSzvmOcV/laG0ZtuTVGtiJggPOSW2r93g==}
@@ -303,6 +313,15 @@ packages:
     dependencies:
       vue: 2.7.8
     dev: true
+
+  /vue-dompurify-html/2.5.1_vue@2.7.8:
+    resolution: {integrity: sha512-B8rQj2jAPJJhtKHHa6jg5B3/RoKBmmUl/awP/GxWXGu75j4Y7+MHqv0DG52v0Uz0taEpHyZun34KEYMAfrPWnA==}
+    peerDependencies:
+      vue: ^2.0.0
+    dependencies:
+      dompurify: 2.3.4
+      vue: 2.7.8
+    dev: false
 
   /vue-property-decorator/9.1.2_chk7q7rgeabwy64hfqmb36krqe:
     resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}
