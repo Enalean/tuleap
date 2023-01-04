@@ -27,6 +27,7 @@ use FastRoute\RouteCollector;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
+use Tuleap\Http\Server\ForceDisableErrorDisplayMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -80,6 +81,7 @@ final class SVNProjectAccessRouteDefinition
             ],
             new ParameterRetriever(new ParameterDao()),
             new SapiEmitter(),
+            new ForceDisableErrorDisplayMiddleware(),
             new ServiceInstrumentationMiddleware('svn_auth_operation')
         );
     }
