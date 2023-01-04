@@ -31,7 +31,6 @@ if [ -f "/opt/rh/rh-mysql80/root/usr/bin/mysqldump" ]; then
 else
     declare -r mysqldump="/usr/bin/mysqldump"
 fi
-declare -r php="/opt/remi/php80/root/usr/bin/php"
 declare -r php_launcher="/usr/share/tuleap/src/utils/php-launcher.sh"
 declare -r printf="/usr/bin/printf"
 declare -r rm="/usr/bin/rm"
@@ -45,7 +44,7 @@ declare -r tuleapcfg="/usr/bin/tuleap-cfg"
 declare -a cmd=("${awk}" "${basename}" "${cat}" "${chmod}" "${chown}"
                 "${cp}" "${date}" "${getenforce}" "${getopt}" "${grep}"
                 "${gzip}" "${head}" "${install}" "${ln}" "${mkdir}" "${mv}"
-                "${mysql}" "${mysqladmin}" "${mysqldump}" "${php}" "${printf}"
+                "${mysql}" "${mysqladmin}" "${mysqldump}" "${printf}"
                 "${rm}" "${sed}" "${su}" "${systemctl}" "${touch}" "${tr}")
 
 # declare files path
