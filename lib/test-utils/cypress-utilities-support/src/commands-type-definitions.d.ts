@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ArtifactCreationPayload } from "./commands";
+
 export type ReloadCallback = () => void;
 export type ConditionPredicate = (
     number_of_attempts: number,
@@ -100,6 +102,13 @@ declare global {
             createNewPrivateProject(project_name: string): void;
 
             addProjectMember(user_name: string): void;
+
+            getTrackerIdFromREST(
+                project_id: number,
+                tracker_name: string
+            ): Cypress.Chainable<number>;
+
+            createArtifact(payload: ArtifactCreationPayload): void;
         }
     }
 }

@@ -27,6 +27,50 @@ describe("Cross tracker search", function () {
 
     it("User should be able to set trackers from widgets", function () {
         cy.projectMemberSession();
+
+        cy.createNewPublicProject(`x-tracker-${now}`, "agile_alm").then((project_id) => {
+            cy.getTrackerIdFromREST(project_id, "bug").then((tracker_id) => {
+                cy.createArtifact({
+                    tracker_id: tracker_id,
+                    artifact_title: "bug",
+                    artifact_status: "New",
+                    title_field_name: "summary",
+                });
+                cy.createArtifact({
+                    tracker_id: tracker_id,
+                    artifact_title: "bug 1",
+                    artifact_status: "New",
+                    title_field_name: "summary",
+                });
+                cy.createArtifact({
+                    tracker_id: tracker_id,
+                    artifact_title: "bug 2",
+                    artifact_status: "In Progress",
+                    title_field_name: "summary",
+                });
+            });
+            cy.getTrackerIdFromREST(project_id, "task").then((tracker_id) => {
+                cy.createArtifact({
+                    tracker_id: tracker_id,
+                    artifact_title: "nananana",
+                    artifact_status: "Todo",
+                    title_field_name: "title",
+                });
+                cy.createArtifact({
+                    tracker_id: tracker_id,
+                    artifact_title: "kanban 1",
+                    artifact_status: "Done",
+                    title_field_name: "title",
+                });
+                cy.createArtifact({
+                    tracker_id: tracker_id,
+                    artifact_title: "kanban 2",
+                    artifact_status: "Todo",
+                    title_field_name: "title",
+                });
+            });
+        });
+
         cy.visit("/my/");
 
         cy.get("[data-test=dashboard-add-button]").click();
@@ -42,11 +86,11 @@ describe("Cross tracker search", function () {
         cy.get("[data-test=cross-tracker-reading-mode]").click();
 
         cy.log("select project");
-        cy.get("[data-test=cross-tracker-selector-project]").select("Cross tracker search");
+        cy.get("[data-test=cross-tracker-selector-project]").select(`x-tracker-${now}`);
 
         cy.get("[data-test=cross-tracker-selector-tracker]").select("Bugs");
         cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
-        cy.get("[data-test=cross-tracker-selector-tracker]").select("Kanban Tasks");
+        cy.get("[data-test=cross-tracker-selector-tracker]").select("Tasks");
         cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
         cy.intercept("/api/v1/cross_tracker_reports/*/content*").as("getReportContent");
         cy.get("[data-test=search-report-button]").click();
