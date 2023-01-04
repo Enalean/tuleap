@@ -68,7 +68,6 @@ import Vue from "vue";
 
 import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { sprintf } from "sprintf-js";
 import { getIncrementIterations } from "../../../helpers/increment-iterations-retriever";
 import { buildIterationCreationUrl } from "../../../helpers/create-new-iteration-link-builder";
 
@@ -98,10 +97,10 @@ export default class PlannedIterationsSection extends Vue {
     @configuration.State
     readonly iteration_tracker_id!: number;
 
-    private iterations: Array<Iteration> = [];
-    private error_message = "";
-    private has_error = false;
-    private is_loading = false;
+    iterations: Array<Iteration> = [];
+    error_message = "";
+    has_error = false;
+    is_loading = false;
 
     async mounted(): Promise<void> {
         try {
@@ -120,9 +119,9 @@ export default class PlannedIterationsSection extends Vue {
             return this.$gettext("The retrieval of iterations has failed");
         }
 
-        return sprintf(
-            this.$gettext("The retrieval of %s has failed"),
-            this.iterations_labels.label
+        return this.$gettextInterpolate(
+            this.$gettext("The retrieval of %{ iteration_label } has failed"),
+            { iteration_label: this.iterations_labels.label }
         );
     }
 

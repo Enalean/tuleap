@@ -6,6 +6,5 @@
     },
     "include": [
         "scripts/program_management/**/*",
-        "scripts/planned-iterations/**/*"
     ]
 }

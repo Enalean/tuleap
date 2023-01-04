@@ -23,8 +23,6 @@ const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const entry_points = {
     program_management: "./scripts/program_management/index.ts",
     "program-management-style": "./themes/program_management.scss",
-    "planned-iterations": "./scripts/planned-iterations/index.ts",
-    "planned-iterations-style": "./themes/planned-iterations.scss",
 };
 
 module.exports = [
