@@ -20,7 +20,7 @@
 @use "sass:math";
 
 $tlp-popover-radius: var(--tlp-large-radius);
-$tlp-popover-arrow-size: 10px;
+$tlp-popover-arrow-size: 14px;
 $tlp-popover-hover-transition-show: 75ms ease-out 500ms;
 $tlp-popover-hover-transition-hide: 75ms ease-out 250ms;
 $tlp-popover-click-transition: 75ms ease-out;
@@ -60,23 +60,30 @@ $tlp-popover-click-transition: 75ms ease-out;
     display: flex;
     z-index: 1;
     align-items: center;
-    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
+    padding: calc(var(--tlp-small-spacing) * 1.5) var(--tlp-medium-spacing);
+    border-bottom: 1px solid var(--tlp-neutral-light-color);
     border-top-left-radius: $tlp-popover-radius;
     border-top-right-radius: $tlp-popover-radius;
-    background: var(--tlp-main-color);
+    background: var(--tlp-white-color);
 }
 
 .tlp-popover-title {
     margin: 0;
-    color: var(--tlp-white-color);
-    font-size: 16px;
-    line-height: 24px;
+    color: var(--tlp-dark-color);
+    font-size: 1rem;
+    line-height: 1.5rem;
     text-transform: none;
+
+    &::before {
+        margin-right: var(--tlp-small-spacing);
+        font-family: "Font Awesome 6 Free";
+        font-size: 0.875rem;
+    }
 }
 
 .tlp-popover-body {
     z-index: 1;
-    padding: var(--tlp-medium-spacing);
+    padding: calc(var(--tlp-small-spacing) * 1.5) var(--tlp-medium-spacing);
     background: var(--tlp-white-color);
     color: var(--tlp-dark-color);
     font-size: 0.875rem;
@@ -99,7 +106,7 @@ $tlp-popover-click-transition: 75ms ease-out;
     z-index: 1;
     align-items: center;
     justify-content: flex-end;
-    padding: var(--tlp-medium-spacing);
+    padding: calc(var(--tlp-small-spacing) * 1.5) var(--tlp-medium-spacing);
     border-top: 1px solid var(--tlp-neutral-light-color);
     border-bottom-right-radius: $tlp-popover-radius;
     border-bottom-left-radius: $tlp-popover-radius;
@@ -110,104 +117,126 @@ $tlp-popover-click-transition: 75ms ease-out;
     }
 }
 
-.tlp-popover-arrow,
-.tlp-popover-arrow::before {
+.tlp-popover-arrow {
     position: absolute;
+    z-index: -1;
     width: $tlp-popover-arrow-size;
     height: $tlp-popover-arrow-size;
-}
 
-.tlp-popover-arrow {
-    visibility: hidden;
-    background: var(--tlp-main-color);
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform: rotate(45deg);
+    }
 
     &::before {
-        content: "";
-        visibility: visible;
-        transform: rotate(45deg);
-        background: inherit;
+        background: var(--tlp-dark-color-transparent-90);
     }
-}
 
-.tlp-popover-danger {
-    > .tlp-popover-arrow,
-    > .tlp-popover-header {
-        background: var(--tlp-danger-color);
+    &::after {
+        background: var(--tlp-white-color);
     }
 }
 
 .tlp-popover-info {
-    > .tlp-popover-arrow,
-    > .tlp-popover-header {
-        background: var(--tlp-info-color);
-    }
-}
+    > .tlp-popover-header > .tlp-popover-title {
+        color: var(--tlp-info-dark-color);
 
-.tlp-popover-warning {
-    > .tlp-popover-arrow,
-    > .tlp-popover-header {
-        background: var(--tlp-warning-color);
+        &::before {
+            content: "\f05a"; // fa-info-circle
+            font-weight: 900;
+        }
     }
 }
 
 .tlp-popover-success {
-    > .tlp-popover-arrow,
-    > .tlp-popover-header {
-        background: var(--tlp-success-color);
+    > .tlp-popover-header > .tlp-popover-title {
+        color: var(--tlp-success-dark-color);
+
+        &::before {
+            content: "\f164"; // fa-thumbs-up
+            font-weight: 900;
+        }
+    }
+}
+
+.tlp-popover-warning {
+    > .tlp-popover-header > .tlp-popover-title {
+        color: var(--tlp-warning-dark-color);
+
+        &::before {
+            content: "\f071"; // fa-exclamation-triangle
+            font-weight: 900;
+        }
+    }
+}
+
+.tlp-popover-danger {
+    > .tlp-popover-header > .tlp-popover-title {
+        color: var(--tlp-danger-dark-color);
+
+        &::before {
+            content: "\f06a"; // fa-exclamation-circle
+            font-weight: 900;
+        }
     }
 }
 
 .tlp-popover[data-popover-placement^="top"] {
     > .tlp-popover-arrow {
-        bottom: -(math.div($tlp-popover-arrow-size, 2));
-        background: var(--tlp-white-color);
+        bottom: -(math.div($tlp-popover-arrow-size, 2) + 1);
+
+        &::after {
+            top: -1px;
+        }
     }
 
     &.tlp-popover-shown {
-        transform: translateY(-#{math.div($tlp-popover-arrow-size, 2)});
+        transform: translateY(-#{math.div($tlp-popover-arrow-size, 2) + 1});
     }
 }
 
 .tlp-popover[data-popover-placement^="bottom"] {
     > .tlp-popover-arrow {
-        top: -(math.div($tlp-popover-arrow-size, 2));
+        top: -(math.div($tlp-popover-arrow-size, 2) + 1);
+
+        &::after {
+            top: 1px;
+        }
     }
 
     &.tlp-popover-shown {
-        transform: translateY(#{math.div($tlp-popover-arrow-size, 2)});
+        transform: translateY(#{math.div($tlp-popover-arrow-size, 2) + 1});
     }
 }
 
 .tlp-popover[data-popover-placement^="right"] {
-    &[data-popover-placement="right"],
-    &[data-popover-placement="right-end"] {
-        > .tlp-popover-arrow {
-            background: var(--tlp-white-color);
+    > .tlp-popover-arrow {
+        left: -(math.div($tlp-popover-arrow-size, 2) + 1);
+
+        &::after {
+            left: 1px;
         }
     }
 
-    > .tlp-popover-arrow {
-        left: -(math.div($tlp-popover-arrow-size, 2));
-    }
-
     &.tlp-popover-shown {
-        transform: translateX(#{math.div($tlp-popover-arrow-size, 2)});
+        transform: translateX(#{math.div($tlp-popover-arrow-size, 2) + 1});
     }
 }
 
 .tlp-popover[data-popover-placement^="left"] {
-    &[data-popover-placement="left"],
-    &[data-popover-placement="left-end"] {
-        > .tlp-popover-arrow {
-            background: var(--tlp-white-color);
+    > .tlp-popover-arrow {
+        right: -(math.div($tlp-popover-arrow-size, 2) + 1);
+
+        &::after {
+            right: 1px;
         }
     }
 
-    > .tlp-popover-arrow {
-        right: -(math.div($tlp-popover-arrow-size, 2));
-    }
-
     &.tlp-popover-shown {
-        transform: translateX(-#{math.div($tlp-popover-arrow-size, 2)});
+        transform: translateX(-#{math.div($tlp-popover-arrow-size, 2) + 1});
     }
 }
