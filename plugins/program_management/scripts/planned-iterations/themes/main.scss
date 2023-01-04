@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/project-background";
-@use "../../src/themes/BurningParrot/css/includes/global-variables";
+@use "./project-header-background";
+@use "./backlog";
+@use "./iterations";
+@use "./element";
 
-.project-with-background {
-    .planned-iterations-title-header,
-    .planned-iterations-title-header-dates {
-        @include project-background.title-header-typography;
-
-        margin: 0 0 var(--tlp-medium-spacing);
-    }
+.planned-iterations-title-header {
+    margin: 0;
+    padding: var(--tlp-medium-spacing);
 }
 
-body {
-    @include project-background.apply-background(
-        ".planned-iterations-title-header",
-        global-variables.$sidebar-expanded-width,
-        global-variables.$sidebar-collapsed-width
-    );
+.planned-iterations-title-header-dates {
+    padding: 0 0 0 var(--tlp-medium-spacing);
 }

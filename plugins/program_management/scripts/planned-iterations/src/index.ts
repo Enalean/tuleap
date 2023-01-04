@@ -18,10 +18,14 @@
  */
 
 import Vue from "vue";
-import App from "./src/components/App.vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./src/store";
+import App from "./components/App.vue";
+import {
+    getPOFileFromLocaleWithoutExtension,
+    initVueGettextFromPoGettextPlugin,
+} from "@tuleap/vue2-gettext-init";
+import { createStore } from "./store";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
+import "../themes/main.scss";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("planned-iterations-app");
@@ -32,12 +36,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user_locale = getDatasetItemOrThrow(document.body, "userLocale");
     Vue.config.language = user_locale;
 
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "plan-iterations-po-" */ "./po/" + getPOFileFromLocale(locale)
-            )
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
 
     const AppComponent = Vue.extend(App);

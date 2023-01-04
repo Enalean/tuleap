@@ -111,7 +111,7 @@ export default class IterationCard extends Vue {
     @configuration.State
     readonly user_locale!: string;
 
-    private is_open = false;
+    is_open = false;
 
     formatDate(date: string): string {
         return formatDateYearMonthDay(this.user_locale, date);
