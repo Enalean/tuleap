@@ -188,7 +188,7 @@ $request = HTTPRequest::instance();
 $hp      = Codendi_HTMLPurifier::instance();
 $errors  = [];
 if ($request->isPost() && $request->exist('Register')) {
-    $before_validation_event = EventManager::instance()->dispatch(new \Tuleap\User\Account\Register\BeforeRegisterFormValidationEvent($request));
+    $before_validation_event = $event_manager->dispatch(new \Tuleap\User\Account\Register\BeforeRegisterFormValidationEvent($request));
 
     $page                        = $request->get('page');
     $mail_confirm_code_generator = new MailConfirmationCodeGenerator(
@@ -198,15 +198,8 @@ if ($request->isPost() && $request->exist('Register')) {
     $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
     if ($before_validation_event->isRegistrationValid() && $new_user = register_valid($is_password_needed, $mail_confirm_code, $errors)) {
         $new_userid = $new_user->getId();
-        EventManager::instance()->processEvent(
-            Event::AFTER_USER_REGISTRATION,
-            [
-                'request' => $request,
-                'user_id' => $new_userid,
-            ]
-        );
+        $event_manager->dispatch(new \Tuleap\User\Account\Register\AfterUserRegistrationEvent($request, $new_user));
 
-        $user_name      = user_getname($new_userid);
         $admin_creation = false;
 
         if ($page == 'admin_creation') {
@@ -230,7 +223,7 @@ if ($request->isPost() && $request->exist('Register')) {
 
         if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0 || $admin_creation) {
             if (! $admin_creation) {
-                if (! send_new_user_email($request->get('form_email'), $user_name, $mail_confirm_code)) {
+                if (! send_new_user_email($request->get('form_email'), $new_user->getUserName(), $mail_confirm_code)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
                         $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])

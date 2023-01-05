@@ -173,12 +173,11 @@ class Controller
         }
     }
 
-    public function linkRegisteringAccount($user_id, $link_id, $request_time)
+    public function linkRegisteringAccount(PFUser $user, $link_id, $request_time)
     {
         try {
             $unlinked_account = $this->unlinked_account_manager->getbyId($link_id);
             $provider         = $this->provider_manager->getById($unlinked_account->getProviderId());
-            $user             = $this->user_manager->getUserById($user_id);
 
             $this->linkAccount($user, $provider, $unlinked_account, $request_time);
         } catch (Exception $ex) {

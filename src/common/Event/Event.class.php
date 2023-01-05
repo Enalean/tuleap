@@ -567,14 +567,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const GET_LOGIN_URL = 'get_login_url';
 
     /**
-     * Allow plugin to deal after user registration
-     *
-     * 'user_id' => int (IN)
-     * 'request' => HTTPRequest (IN)
-     */
-    public const AFTER_USER_REGISTRATION = 'after_user_registration';
-
-    /**
      * Event raised to get the list of resources associated with a project
      *
      * Parameters:

@@ -19,10 +19,12 @@
  */
 
 use FastRoute\RouteCollector;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Validation\Validator;
+use Psr\Log\LoggerInterface;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
@@ -80,6 +82,7 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Account\AccountTabPresenterCollection;
+use Tuleap\User\Account\Register\AfterUserRegistrationEvent;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserNameNormalizer;
@@ -104,7 +107,7 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
 
         $this->addHook(Event::LOGIN_ADDITIONAL_CONNECTOR);
         $this->addHook('before_register');
-        $this->addHook(Event::AFTER_USER_REGISTRATION);
+        $this->addHook(AfterUserRegistrationEvent::NAME);
         $this->addHook('anonymous_access_to_script_allowed');
         $this->addHook('cssfile');
         $this->addHook(SiteAdministrationAddOption::NAME);
@@ -297,9 +300,8 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
         return ! $is_registration_confirmation && $link_id;
     }
 
-    public function after_user_registration(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function afterUserRegistrationEvent(AfterUserRegistrationEvent $event): void
     {
-        $request = $params['request'];
         $storage =& $this->getSessionStorage();
         $link_id = $storage[self::SESSION_LINK_ID_KEY] ?? '';
 
@@ -318,7 +320,7 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
                 $storage,
             );
 
-            $account_linker_controler->linkRegisteringAccount($params['user_id'], $link_id, $request->getTime());
+            $account_linker_controler->linkRegisteringAccount($event->getUser(), $link_id, $event->getRequest()->getTime());
         }
     }
 
@@ -332,9 +334,9 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
-    private function getLogger(): \Psr\Log\LoggerInterface
+    private function getLogger(): LoggerInterface
     {
-        return \BackendLogger::getDefaultLogger('openid_connect_client.log');
+        return BackendLogger::getDefaultLogger('openid_connect_client.log');
     }
 
     public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
@@ -493,7 +495,7 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
             HTTPFactoryBuilder::responseFactory(),
             $this->getProviderManager(),
             $this->getAuthorizationRequestCreator(),
-            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new SapiEmitter(),
             new ServiceInstrumentationMiddleware($this->getName()),
             new DisableCacheMiddleware()
         );
