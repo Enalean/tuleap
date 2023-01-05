@@ -17,22 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../../../../src/themes/BurningParrot/css/includes/global-variables";
-@import "../../../scripts/kanban/node_modules/@tuleap/plugin-tracker-artifact-modal";
-@import "../../../scripts/kanban/node_modules/ng-scrollbar/dist/ng-scrollbar";
-@import "../../../scripts/kanban/node_modules/dragular/dist/dragular";
-@import "./highlight";
-@import "kanban/socket";
-@import "kanban/edit-kanban";
-@import "kanban/kanban-item";
-@import "kanban/reports-modal";
-@import "kanban/diagram";
-@import "kanban/add-to-dashboard";
-@import "kanban/filter";
-@import "kanban/feedback";
-@import "kanban/add-in-place";
-@import "kanban/under-the-fold-notification";
-@import "kanban/project-header-background";
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "@tuleap/plugin-tracker-artifact-modal";
+@use "ng-scrollbar/dist/ng-scrollbar";
+@use "dragular/dist/dragular";
+@use "@tuleap/plugin-agiledashboard-card-fields";
+@use "./socket";
+@use "./edit-kanban";
+@use "./kanban-item";
+@use "./reports-modal";
+@use "./diagram";
+@use "./add-to-dashboard";
+@use "./filter";
+@use "./feedback";
+@use "./add-in-place";
+@use "./under-the-fold-notification";
+@use "./project-header-background";
 
 $kanban-column-closed-width: 60px;
 $kanban-column-header-height: 50px;

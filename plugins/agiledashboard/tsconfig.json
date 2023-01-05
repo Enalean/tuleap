@@ -1,9 +1,15 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "module": "esNext",
+        "module": "es2020",
         "types": ["jest", "node"]
     },
-    "include": ["scripts/**/*"],
-    "exclude": ["scripts/lib/**"]
+    "include": [
+        "scripts/administration/**/*",
+        "scripts/artifact-additional-action/**/*",
+        "scripts/burnup-chart/**/*",
+        "scripts/permissions-per-group/**/*",
+        "scripts/planning-v2/**/*",
+        "scripts/*"
+    ]
 }

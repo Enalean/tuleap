@@ -20,7 +20,7 @@
 @use "sass:color";
 @use "sass:map";
 @use "@tuleap/tlp-swatch-colors";
-@import "../../card-fields";
+@use "../../../../../scripts/planning-v2/node_modules/@tuleap/plugin-agiledashboard-card-fields";
 @import "backlog-item-moves";
 
 $accessibility-pattern-width: 20px;
