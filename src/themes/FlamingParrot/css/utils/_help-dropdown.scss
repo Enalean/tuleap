@@ -39,7 +39,7 @@
 .tlp-dropdown-menu {
     transform: translateY(-10px);
     transition: opacity 75ms ease-out;
-    border: 1px solid #e3e5ed;
+    border: 1px solid var(--tlp-dark-color);
     opacity: 0;
     background: var(--tlp-dark-color);
     font-size: 13px;
@@ -112,8 +112,8 @@
     width: 40px;
     height: 40px;
     padding: 0;
+    border: 0;
     border-radius: 50%;
-    border-color: var(--tlp-dark-color);
     background: var(--tlp-dark-color) !important;
 
     @keyframes pulse {
