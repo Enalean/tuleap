@@ -95,7 +95,7 @@ Summary: CVS component for Tuleap
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rcs, cvsgraph
 Requires: perl-libwww-perl, perl-LWP-Protocol-https
-Requires: viewvc, viewvc-theme-tuleap >= 1.0.8
+Requires: viewvc >= 1.1.30, viewvc-theme-tuleap >= 1.0.8
 Requires: cvs-tuleap
 Requires: libnss-mysql, nss, nscd
 Requires: perl-Text-Iconv
@@ -113,7 +113,7 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
 %if "%{?dist}" == ".el9"
 Requires: viewvc-tuleap, httpd, glibc-langpack-en
 %else
-Requires: viewvc, python
+Requires: viewvc >= 1.1.30, python
 %endif
 Requires: viewvc-theme-tuleap >= 1.0.8
 Requires: perl-libwww-perl, perl-LWP-Protocol-https
