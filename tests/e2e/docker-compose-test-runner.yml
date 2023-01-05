@@ -1,10 +1,10 @@
 version: "2"
 
 services:
-  test:
-    image: tuleap-run-e2e-tests-v2
+  test-cypress:
+    image: tuleap-run-e2e-tests-cypress
     build:
-      context: ./tests/e2e/docker # This is resolved from the rout of the sources
+      context: ./tests/e2e/docker # This is resolved from the root of the sources
       dockerfile: run-tests.dockerfile
       platforms:
         - linux/amd64
@@ -19,3 +19,19 @@ services:
     networks:
       - tuleap
       - external-connectivity
+
+  test-phpunit:
+    image: tuleap-run-e2e-tests-phpunit
+    build:
+      context: ./tests/e2e/docker
+      dockerfile: run-phpunit-tests.dockerfile
+      platforms:
+        - linux/amd64
+      args:
+        DOCKER_REGISTRY: ${DOCKER_REGISTRY:-docker.io}
+    command: /tuleap/tests/e2e/full/run-phpunit.sh
+    volumes:
+      - .:/tuleap
+      - ${TEST_RESULT_OUTPUT}:/output
+    networks:
+      - tuleap

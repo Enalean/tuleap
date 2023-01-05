@@ -167,29 +167,8 @@ _pluginGit() {
 }
 
 _pluginSVN() {
-    local -r httpd_vhost="/etc/httpd/conf.d/tuleap-vhost.conf"
-    local plugin_svn_configured="false"
-    local server_name=$(/usr/bin/tuleap config-get sys_default_domain)
-
-    if [ ! -f ${httpd_vhost} ]; then
-        ${awk} '{ gsub("%sys_default_domain%", "'"${server_name}"'");
-                  gsub("*:80$", "127.0.0.1:8080");
-                  gsub("*:80>", "127.0.0.1:8080>");
-                  print }' \
-                    "${tuleap_src}/etc/tuleap-vhost.conf.dist" > ${httpd_vhost}
-        ${sed} --in-place '/Include.*configuration\|tuleap-aliases/d' \
-             ${httpd_vhost}
-        plugin_svn_configured="true"
-    fi
-
-    if [ ${plugin_svn_configured} = "true" ]; then
-        ${tuleapcfg} systemctl restart "httpd.service"
-        ${tuleapcfg} systemctl enable "httpd.service"
-        _infoMessage "Plugin SVN is configured"
-        plugins_configured+=('true')
-    else
-        _infoMessage "Plugin SVN is already configured"
-    fi
+    sudo -u codendiadm /usr/bin/tuleap plugin:install svn
+    /usr/bin/tuleap setup:svn
 }
 
 _pluginMediawiki() {
