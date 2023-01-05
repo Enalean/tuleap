@@ -1,6 +1,6 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-program-management-iterations",
+  "name": "@tuleap/plugin-program-management-backlog",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
@@ -9,13 +9,16 @@
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/dom": "workspace:*",
+    "@tuleap/drag-and-drop": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/project-privacy-helper": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue-breadcrumb-privacy": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",
     "vue": "^2.7.8",
+    "vue-dompurify-html": "^2.5.1",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

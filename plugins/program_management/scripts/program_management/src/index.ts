@@ -18,12 +18,16 @@
  */
 
 import Vue from "vue";
-import App from "./src/components/App.vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./src/store";
-import type { ConfigurationState } from "./src/store/configuration";
+import App from "./components/App.vue";
+import {
+    getPOFileFromLocaleWithoutExtension,
+    initVueGettextFromPoGettextPlugin,
+} from "@tuleap/vue2-gettext-init";
+import { createStore } from "./store";
+import type { ConfigurationState } from "./store/configuration";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
+import "../themes/main.scss";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("program-management-app");
@@ -80,13 +84,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         tracker_iteration_label: iteration_label,
     };
 
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "program-management-po-" */ "./po/" +
-                    getPOFileFromLocale(locale)
-            )
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
 
     const AppComponent = Vue.extend(App);

@@ -16,8 +16,8 @@ msgid "Close"
 msgstr "Fechar"
 
 msgid ""
-"Configuration can be done in <a href='%s' data-test='program-go-to-"
-"administration'>administration</a> of service."
+"Configuration can be done in <a href=\"%{ url }\" data-test=\"program-go-to-"
+"administration\">administration</a> of service."
 msgstr ""
 
 msgid "Configuration can be done in administration of service."
@@ -41,7 +41,7 @@ msgstr ""
 msgid "Oops, there's an issue"
 msgstr ""
 
-msgid "Plan %s"
+msgid "Plan %{ iteration_label }"
 msgstr ""
 
 msgid "Program"
