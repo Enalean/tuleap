@@ -119,7 +119,7 @@ body.reduce-help-button .help-dropdown {
             display: none;
         }
 
-        &::after {
+        &:not(.tlp-dropdown-submenu)[data-placement^="top"]::after {
             border-top-color: var(--tlp-dark-color);
         }
 
