@@ -20,8 +20,6 @@
  *
  */
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\InviteBuddy\AccountCreationFeedback;
 use Tuleap\User\Account\RedirectAfterLogin;
 
 // adduser.php - All the forms and functions to manage unix users
@@ -42,44 +40,6 @@ function account_add_user_to_group($group_id, &$user_unix_name)
         //user doesn't exist
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'user_not_exist'));
         return false;
-    }
-}
-
-// Set user password (Unix, Web)
-function account_create(string $loginname, ?ConcealedString $pw, $ldap_id = '', $realname = '', $register_purpose = '', $email = '', $status = 'P', $confirm_hash = '', $mail_site = 0, $mail_va = 0, $timezone = 'GMT', $lang_id = 'en_US', $unix_status = 'N', $expiry_date = 0)
-{
-    $um   = UserManager::instance();
-    $user = new PFUser();
-    $user->setUserName($loginname);
-    $user->setRealName($realname);
-    if ($pw !== null) {
-        $user->setPassword($pw);
-    }
-    $user->setLdapId($ldap_id);
-    $user->setRegisterPurpose($register_purpose);
-    $user->setEmail($email);
-    $user->setStatus($status);
-    $user->setConfirmHash($confirm_hash);
-    $user->setMailSiteUpdates($mail_site);
-    $user->setMailVA($mail_va);
-    $user->setTimezone($timezone);
-    $user->setLanguageID($lang_id);
-    $user->setUnixStatus($unix_status);
-    $user->setExpiryDate($expiry_date);
-
-    $u = $um->createAccount($user);
-    if ($u) {
-        $account_creation_feedback = new AccountCreationFeedback(
-            new \Tuleap\InviteBuddy\InvitationDao(),
-            $um,
-            new \Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier(),
-            BackendLogger::getDefaultLogger(),
-        );
-        $account_creation_feedback->accountHasJustBeenCreated($u);
-
-        return $u->getId();
-    } else {
-        return $u;
     }
 }
 

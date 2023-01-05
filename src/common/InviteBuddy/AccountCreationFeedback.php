@@ -25,7 +25,7 @@ namespace Tuleap\InviteBuddy;
 use Psr\Log\LoggerInterface;
 use UserManager;
 
-class AccountCreationFeedback
+class AccountCreationFeedback implements InvitationSuccessFeedback
 {
     /**
      * @var InvitationDao
