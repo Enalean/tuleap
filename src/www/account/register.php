@@ -188,21 +188,15 @@ $request = HTTPRequest::instance();
 $hp      = Codendi_HTMLPurifier::instance();
 $errors  = [];
 if ($request->isPost() && $request->exist('Register')) {
-    $is_registration_valid = true;
-    EventManager::instance()->processEvent(
-        Event::BEFORE_USER_REGISTRATION,
-        [
-            'request'               => $request,
-            'is_registration_valid' => &$is_registration_valid,
-        ]
-    );
+    $before_validation_event = EventManager::instance()->dispatch(new \Tuleap\User\Account\Register\BeforeRegisterFormValidationEvent($request));
+
     $page                        = $request->get('page');
     $mail_confirm_code_generator = new MailConfirmationCodeGenerator(
         UserManager::instance(),
         new RandomNumberGenerator()
     );
     $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
-    if ($is_registration_valid && $new_user = register_valid($is_password_needed, $mail_confirm_code, $errors)) {
+    if ($before_validation_event->isRegistrationValid() && $new_user = register_valid($is_password_needed, $mail_confirm_code, $errors)) {
         $new_userid = $new_user->getId();
         EventManager::instance()->processEvent(
             Event::AFTER_USER_REGISTRATION,

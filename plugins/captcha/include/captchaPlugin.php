@@ -37,6 +37,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Account\Register\AddAdditionalFieldUserRegistration;
+use Tuleap\User\Account\Register\BeforeRegisterFormValidationEvent;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -53,7 +54,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
 
         $this->addHook(Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST, 'addExternalScriptToTheWhitelist');
         $this->addHook(AddAdditionalFieldUserRegistration::NAME);
-        $this->addHook(Event::BEFORE_USER_REGISTRATION, 'checkCaptchaBeforeSubmission');
+        $this->addHook(BeforeRegisterFormValidationEvent::NAME);
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
     }
@@ -103,10 +104,9 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
-    public function checkCaptchaBeforeSubmission(array $params)
+    public function beforeRegisterFormValidationEvent(BeforeRegisterFormValidationEvent $event): void
     {
-        $request = $params['request'];
-        \assert($request instanceof HTTPRequest);
+        $request = $event->getRequest();
         if ($request->getCurrentUser()->isSuperUser()) {
             return;
         }
@@ -132,7 +132,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
                 Feedback::ERROR,
                 dgettext('tuleap-captcha', 'We have not been able to assert that you are not a robot, please try again')
             );
-            $params['is_registration_valid'] = false;
+            $event->invalidateRegistration();
         }
     }
 

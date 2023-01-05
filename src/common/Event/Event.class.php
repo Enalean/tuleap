@@ -567,14 +567,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const GET_LOGIN_URL = 'get_login_url';
 
     /**
-     * Allow plugin to deal before user registration
-     *
-     * 'request'               => HTTPRequest (IN)
-     * 'is_registration_valid' => bool (OUT)
-     */
-    public const BEFORE_USER_REGISTRATION = 'before_user_registration';
-
-    /**
      * Allow plugin to deal after user registration
      *
      * 'user_id' => int (IN)
