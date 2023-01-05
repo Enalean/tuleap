@@ -48,9 +48,35 @@
                 <code>{{ server.server_url }}</code>
             </p>
             <allow-all-projects-checkbox v-bind:server="server" />
-            <allowed-projects-table v-if="server.is_project_restricted" v-bind:server="server" />
+            <allowed-projects-table
+                v-if="server.is_project_restricted"
+                v-bind:server="server"
+                v-bind:set_nb_to_allow="setNbToAllow"
+                v-bind:set_nb_to_revoke="setNbToRevoke"
+            />
         </div>
-        <div class="tlp-modal-footer">
+        <div class="tlp-modal-footer onlyoffice-admin-restrict-server-modal-footer">
+            <span class="tlp-badge-success tlp-badge-outline" v-if="nb_to_allow">
+                {{
+                    $ngettext(
+                        `%{ nb } project to allow`,
+                        `%{ nb } projects to allow`,
+                        nb_to_allow,
+                        { nb: String(nb_to_allow) }
+                    )
+                }}
+            </span>
+            <span class="tlp-badge-danger tlp-badge-outline" v-if="nb_to_revoke">
+                {{
+                    $ngettext(
+                        `%{ nb } project to revoke`,
+                        `%{ nb } projects to revoke`,
+                        nb_to_revoke,
+                        { nb: String(nb_to_revoke) }
+                    )
+                }}
+            </span>
+            <span class="onlyoffice-admin-restrict-server-modal-footer-spacer"></span>
             <button
                 type="reset"
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
@@ -74,6 +100,16 @@ const props = defineProps<{ server: Server }>();
 
 let modal: Modal | null = null;
 const root = ref<HTMLElement | null>(null);
+const nb_to_allow = ref(0);
+const nb_to_revoke = ref(0);
+
+function setNbToAllow(nb: number): void {
+    nb_to_allow.value = nb;
+}
+
+function setNbToRevoke(nb: number): void {
+    nb_to_revoke.value = nb;
+}
 
 function showModal(server: Server): void {
     if (server.id !== props.server.id) {
@@ -98,3 +134,14 @@ onUnmounted(() => {
     emitter.off("show-restrict-server-modal", showModal);
 });
 </script>
+
+<style lang="scss">
+.onlyoffice-admin-restrict-server-modal-footer {
+    align-items: center;
+    gap: calc(var(--tlp-medium-spacing) / 2);
+}
+
+.onlyoffice-admin-restrict-server-modal-footer-spacer {
+    flex: 1 0 auto;
+}
+</style>

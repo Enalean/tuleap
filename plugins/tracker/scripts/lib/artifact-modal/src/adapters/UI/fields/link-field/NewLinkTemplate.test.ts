@@ -112,7 +112,7 @@ describe(`NewLinkTemplate`, () => {
         expect(status.textContent?.trim()).toBe(new_link.status?.value);
         expect(type.textContent?.trim()).toBe(expected_type);
 
-        expect(row.classList.contains("link-field-table-row-new")).toBe(true);
+        expect(row.classList.contains("tlp-table-row-success")).toBe(true);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(false);
         expect(status.classList.contains("tlp-badge-daphne-blue")).toBe(true);
     });
@@ -142,7 +142,7 @@ describe(`NewLinkTemplate`, () => {
         expect(status.textContent?.trim()).toBe(new_link.status?.value);
         expect(type.textContent?.trim()).toBe(new_link.link_type.label);
 
-        expect(row.classList.contains("link-field-table-row-new")).toBe(true);
+        expect(row.classList.contains("tlp-table-row-success")).toBe(true);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(true);
     });
 

@@ -100,6 +100,49 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
             background: var(--tlp-main-color-hover-background);
         }
 
+        > tr.tlp-table-row-success,
+        > tr.tlp-table-row-success > th,
+        > tr.tlp-table-row-success > td {
+            background: var(--tlp-success-color-lighter-90);
+        }
+
+        > tr.tlp-table-row-success:hover,
+        > tr.tlp-table-row-success:hover > th,
+        > tr.tlp-table-row-success:hover > td,
+        > tr.tlp-table-row-success:focus-within,
+        > tr.tlp-table-row-success:focus-within > th,
+        > tr.tlp-table-row-success:focus-within > td {
+            background: var(--tlp-success-color-lighter-80);
+        }
+
+        > tr.tlp-table-row-danger,
+        > tr.tlp-table-row-danger > th,
+        > tr.tlp-table-row-danger > td {
+            background: var(--tlp-danger-color-lighter-90);
+
+            &:not(.tlp-table-cell-actions) {
+                text-decoration: line-through;
+
+                > .tlp-badge-primary,
+                > .tlp-badge-secondary,
+                > .tlp-badge-info,
+                > .tlp-badge-success,
+                > .tlp-badge-warning,
+                > .tlp-badge-danger {
+                    text-decoration: line-through;
+                }
+            }
+        }
+
+        > tr.tlp-table-row-danger:hover,
+        > tr.tlp-table-row-danger:hover > th,
+        > tr.tlp-table-row-danger:hover > td,
+        > tr.tlp-table-row-danger:focus-within,
+        > tr.tlp-table-row-danger:focus-within > th,
+        > tr.tlp-table-row-danger:focus-within > td {
+            background: var(--tlp-danger-color-lighter-80);
+        }
+
         > tr > th,
         > tr > td {
             padding: $tlp-table-cell-padding;

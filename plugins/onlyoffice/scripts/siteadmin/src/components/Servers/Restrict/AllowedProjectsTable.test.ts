@@ -57,6 +57,8 @@ describe("AllowedProjectsTable", () => {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
                 server,
+                set_nb_to_allow: vi.fn(),
+                set_nb_to_revoke: vi.fn(),
             },
         });
 
@@ -83,10 +85,13 @@ describe("AllowedProjectsTable", () => {
             ],
         } as unknown as Server;
 
+        const set_nb_to_allow = vi.fn();
         const wrapper = shallowMount(AllowedProjectsTable, {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
                 server,
+                set_nb_to_allow,
+                set_nb_to_revoke: vi.fn(),
             },
         });
 
@@ -99,6 +104,7 @@ describe("AllowedProjectsTable", () => {
         expect(wrapper.text()).toContain("Project A");
         expect(wrapper.text()).toContain("Project B");
         expect(wrapper.text()).toContain("Le projet C");
+        expect(set_nb_to_allow).toHaveBeenCalledWith(1);
     });
 
     it("should display existing projects + added ones - filtered ones", async () => {
@@ -124,6 +130,8 @@ describe("AllowedProjectsTable", () => {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
                 server,
+                set_nb_to_allow: vi.fn(),
+                set_nb_to_revoke: vi.fn(),
             },
         });
 
@@ -159,10 +167,14 @@ describe("AllowedProjectsTable", () => {
             ],
         } as unknown as Server;
 
+        const set_nb_to_allow = vi.fn();
+        const set_nb_to_revoke = vi.fn();
         const wrapper = shallowMount(AllowedProjectsTable, {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
                 server,
+                set_nb_to_allow,
+                set_nb_to_revoke,
             },
         });
 
@@ -180,7 +192,10 @@ describe("AllowedProjectsTable", () => {
 
         expect(wrapper.text()).toContain("Project A");
         expect(wrapper.text()).not.toContain("Project B");
-        expect(wrapper.text()).not.toContain("Le projet C");
+        expect(wrapper.text()).toContain("Le projet C");
+        expect(wrapper.findAll(".tlp-table-row-danger")).toHaveLength(1);
+        expect(set_nb_to_allow).toHaveBeenCalledWith(0);
+        expect(set_nb_to_revoke).toHaveBeenCalledWith(1);
     });
 
     it("should allow to remove all at once", async () => {
@@ -206,6 +221,8 @@ describe("AllowedProjectsTable", () => {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
                 server,
+                set_nb_to_allow: vi.fn(),
+                set_nb_to_revoke: vi.fn(),
             },
         });
 
@@ -220,8 +237,9 @@ describe("AllowedProjectsTable", () => {
         expect(wrapper.find("[data-test=delete]").attributes("disabled")).toBeUndefined();
         await wrapper.find("[data-test=delete]").trigger("click");
 
-        expect(wrapper.text()).not.toContain("Project A");
+        expect(wrapper.text()).toContain("Project A");
         expect(wrapper.text()).not.toContain("Project B");
-        expect(wrapper.text()).not.toContain("Le projet C");
+        expect(wrapper.text()).toContain("Le projet C");
+        expect(wrapper.findAll(".tlp-table-row-danger")).toHaveLength(2);
     });
 });
