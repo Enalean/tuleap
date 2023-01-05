@@ -10,14 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.1.1\n"
-
-msgid ""
-"       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-"
-"MM-DD format."
-msgstr ""
-"       Desculpe - A data de validade está no formato incorreto. Deve estar "
-"no formato AAAA-MM-DD."
+"X-Generator: Poedit 2.3\n"
 
 msgid " New user"
 msgstr " Novo usuário"
@@ -1491,6 +1484,12 @@ msgstr "Fóruns Existentes"
 
 msgid "Existing mailing lists"
 msgstr "Listas de emails existentes"
+
+msgid ""
+"Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format."
+msgstr ""
+"A data de validade está no formato incorreto. Deve estar no formato AAAA-MM-"
+"DD."
 
 msgid "Expiration date"
 msgstr "Data de expiração"

@@ -12,13 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.3\n"
 
-msgid ""
-"       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-"
-"MM-DD format."
-msgstr ""
-"\tDésolé, le format de la date du d'expiration est incorrect. Il doit suivre "
-"le format AAAA-MM-JJ."
-
 msgid " New user"
 msgstr " Nouvel utilisateur"
 
@@ -1496,6 +1489,12 @@ msgstr "Forums existants"
 
 msgid "Existing mailing lists"
 msgstr "Listes de diffusion existantes"
+
+msgid ""
+"Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format."
+msgstr ""
+"Le format de la date du d'expiration est incorrect. Il doit suivre le format "
+"AAAA-MM-JJ."
 
 msgid "Expiration date"
 msgstr "Date d'expiration"

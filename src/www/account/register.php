@@ -26,7 +26,11 @@ use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\User\Account\Register\RegisterFormPresenterBuilder;
+use Tuleap\User\Account\Register\RegisterFormValidationIssue;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -40,9 +44,7 @@ $GLOBALS['HTML']->includeCalendarScripts();
 $request = HTTPRequest::instance();
 $page    = $request->get('page');
 
-// ###### function register_valid()
-// ###### checks for valid register from form post
-if ($page == "admin_creation") {
+if ($page === "admin_creation") {
     $request->checkUserIsSuperUser();
 }
 
@@ -57,7 +59,11 @@ if (! $request->getCurrentUser()->isSuperUser() && ! $registration_guard->isRegi
     );
 }
 
-function register_valid(bool $is_password_needed, $mail_confirm_code, array &$errors): ?PFUser
+/**
+ *
+ * @return Ok<PFUser>|Err<RegisterFormValidationIssue>|Err<null>
+ */
+function register_valid(bool $is_password_needed, string $mail_confirm_code): Ok|Err
 {
     global $Language;
 
@@ -65,38 +71,32 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
 
     $rule_username = new Rule_UserName();
     if (! $rule_username->isValid((string) $request->get('form_loginname'))) {
-        $errors['form_loginname'] = $rule_username->getErrorMessage();
-        return null;
+        return Result::err(RegisterFormValidationIssue::fromFieldName('form_loginname', $rule_username->getErrorMessage()));
     }
 
     $vRealName = new Valid_RealNameFormat('form_realname');
     $vRealName->required();
     if (! $request->valid($vRealName)) {
         $GLOBALS['Response']->addFeedback('error', _('Real name contains illegal characters.'));
-        $errors['form_realname'] = _('Real name contains illegal characters.');
-        return null;
+        return Result::err(RegisterFormValidationIssue::fromFieldName('form_realname', _('Real name contains illegal characters.')));
     }
 
     if ($is_password_needed && ! $request->existAndNonEmpty('form_pw')) {
         $GLOBALS['Response']->addFeedback('error', _('You must supply a password.'));
-        $errors['form_pw'] = _('You must supply a password.');
-        return null;
+        return Result::err(RegisterFormValidationIssue::fromFieldName('form_pw', _('You must supply a password.')));
     }
     $tz = $request->get('timezone');
     if (! is_valid_timezone($tz)) {
         $GLOBALS['Response']->addFeedback('error', _('You must supply a timezone.'));
-        $errors['timezone'] = _('You must supply a timezone.');
-        return null;
+        return Result::err(RegisterFormValidationIssue::fromFieldName('timezone', _('You must supply a timezone.')));
     }
     if (! $request->existAndNonEmpty('form_register_purpose') && (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1 && $request->get('page') != "admin_creation")) {
         $GLOBALS['Response']->addFeedback('error', _('You must explain the purpose of your registration.'));
-        $errors['form_register_purpose'] = _('You must explain the purpose of your registration.');
-        return null;
+        return Result::err(RegisterFormValidationIssue::fromFieldName('form_register_purpose', _('You must explain the purpose of your registration.')));
     }
     if (! validate_email($request->get('form_email'))) {
         $GLOBALS['Response']->addFeedback('error', _('Invalid Email Address'));
-        $errors['form_email'] = _('Invalid Email Address');
-        return null;
+        return Result::err(RegisterFormValidationIssue::fromFieldName('form_email', _('Invalid Email Address')));
     }
 
     $password = null;
@@ -105,8 +105,7 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
         $password_confirmation = new ConcealedString((string) $request->get('form_pw2'));
         if ($request->get('page') !== "admin_creation" && ! $password->isIdenticalTo($password_confirmation)) {
             $GLOBALS['Response']->addFeedback('error', _('Passwords do not match.'));
-            $errors['form_pw'] = _('Passwords do not match.');
-            return null;
+            return Result::err(RegisterFormValidationIssue::fromFieldName('form_pw', _('Passwords do not match.')));
         }
 
         $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
@@ -114,16 +113,14 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
             foreach ($password_sanity_checker->getErrors() as $error) {
                 $GLOBALS['Response']->addFeedback('error', $error);
             }
-            $errors['form_pw'] = 'Error';
-            return null;
+            return Result::err(RegisterFormValidationIssue::fromFieldName('form_pw', 'Error'));
         }
     }
 
     $expiry_date = 0;
     if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
-        $GLOBALS['Response']->addFeedback('error', _('       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.'));
-        $errors['form_expiry'] = _('       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.');
-        return null;
+        $GLOBALS['Response']->addFeedback('error', _('Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.'));
+        return Result::err(RegisterFormValidationIssue::fromFieldName('form_expiry', _('Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.')));
     }
     $vDate = new Valid_String();
     $vDate->required();
@@ -154,7 +151,7 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
         )
     );
 
-    return $account->register(
+    $new_user = $account->register(
         $request->get('form_loginname'),
         $password,
         $request->get('form_realname'),
@@ -169,6 +166,11 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
         'A',
         $expiry_date
     );
+    if (! $new_user) {
+        return Result::err(null);
+    }
+
+    return Result::ok($new_user);
 }
 
 $is_password_needed = true;
@@ -186,7 +188,8 @@ if ($page !== 'admin_creation') {
 // ###### first check for valid login, if so, congratulate
 $request = HTTPRequest::instance();
 $hp      = Codendi_HTMLPurifier::instance();
-$errors  = [];
+
+$form_validation_issue = null;
 if ($request->isPost() && $request->exist('Register')) {
     $before_validation_event = $event_manager->dispatch(new \Tuleap\User\Account\Register\BeforeRegisterFormValidationEvent($request));
 
@@ -196,106 +199,133 @@ if ($request->isPost() && $request->exist('Register')) {
         new RandomNumberGenerator()
     );
     $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
-    if ($before_validation_event->isRegistrationValid() && $new_user = register_valid($is_password_needed, $mail_confirm_code, $errors)) {
-        $new_userid = $new_user->getId();
-        $event_manager->dispatch(new \Tuleap\User\Account\Register\AfterUserRegistrationEvent($request, $new_user));
-
-        $admin_creation = false;
-
-        if ($page == 'admin_creation') {
-            $admin_creation = true;
-            if ($request->get('form_send_email')) {
-                //send an email to the user with th login and password
-                $from    = ForgeConfig::get('sys_noreply');
-                $is_sent = send_admin_new_user_email(
-                    $request->get('form_email'),
-                    $request->get('form_loginname')
+    if ($before_validation_event->isRegistrationValid()) {
+        register_valid($is_password_needed, $mail_confirm_code)->match(
+            function (PFUser $new_user) use ($event_manager, $request, $page, $mail_confirm_code) {
+                $new_userid = $new_user->getId();
+                $event_manager->dispatch(
+                    new \Tuleap\User\Account\Register\AfterUserRegistrationEvent($request, $new_user)
                 );
 
-                if (! $is_sent) {
-                    $GLOBALS['Response']->addFeedback(
-                        Feedback::ERROR,
-                        $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])
-                    );
+                $admin_creation = false;
+
+                if ($page == 'admin_creation') {
+                    $admin_creation = true;
+                    if ($request->get('form_send_email')) {
+                        //send an email to the user with th login and password
+                        $from    = ForgeConfig::get('sys_noreply');
+                        $is_sent = send_admin_new_user_email(
+                            $request->get('form_email'),
+                            $request->get('form_loginname')
+                        );
+
+                        if (! $is_sent) {
+                            $GLOBALS['Response']->addFeedback(
+                                Feedback::ERROR,
+                                $GLOBALS['Language']->getText(
+                                    'global',
+                                    'mail_failed',
+                                    [ForgeConfig::get('sys_email_admin')]
+                                )
+                            );
+                        }
+                    }
                 }
-            }
-        }
 
-        if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0 || $admin_creation) {
-            if (! $admin_creation) {
-                if (! send_new_user_email($request->get('form_email'), $new_user->getUserName(), $mail_confirm_code)) {
-                    $GLOBALS['Response']->addFeedback(
-                        Feedback::ERROR,
-                        $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])
+                if (
+                    ForgeConfig::getInt(
+                        User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL
+                    ) === 0 || $admin_creation
+                ) {
+                    if (! $admin_creation) {
+                        if (
+                            ! send_new_user_email(
+                                $request->get('form_email'),
+                                $new_user->getUserName(),
+                                $mail_confirm_code
+                            )
+                        ) {
+                            $GLOBALS['Response']->addFeedback(
+                                Feedback::ERROR,
+                                $GLOBALS['Language']->getText(
+                                    'global',
+                                    'mail_failed',
+                                    [ForgeConfig::get('sys_email_admin')]
+                                )
+                            );
+                        }
+                    }
+
+                    $theme_manager    = new ThemeManager(
+                        new \Tuleap\BurningParrotCompatiblePageDetector(
+                            new \Tuleap\Request\CurrentPage(),
+                            new User_ForgeUserGroupPermissionsManager(
+                                new User_ForgeUserGroupPermissionsDao()
+                            )
+                        )
                     );
+                    $user_manager     = UserManager::instance();
+                    $renderer_factory = TemplateRendererFactory::build();
+                    $assets           = new \Tuleap\Layout\IncludeCoreAssets();
+
+                    $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
+
+                    $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
+                    if ($layout === null) {
+                        throw new \Exception("Could not load BurningParrot theme");
+                    }
+                    $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
+                    $layout->header(
+                        HeaderConfigurationBuilder::get(_('Register'))->build()
+                    );
+                    if ($admin_creation) {
+                        $renderer->renderToPage("confirmation-admin-creation", [
+                            'login'    => $request->get('form_loginname'),
+                            'password' => $request->get('form_pw'),
+                        ]);
+                    } else {
+                        $renderer->renderToPage("confirmation-link-sent", [
+                            'email' => $request->get('form_email'),
+                        ]);
+                    }
+                    $layout->footer(FooterConfiguration::withoutContent());
+                    exit;
+                } else {
+                    // Registration requires approval
+                    // inform the user that approval is required
+                    $theme_manager    = new ThemeManager(
+                        new \Tuleap\BurningParrotCompatiblePageDetector(
+                            new \Tuleap\Request\CurrentPage(),
+                            new User_ForgeUserGroupPermissionsManager(
+                                new User_ForgeUserGroupPermissionsDao()
+                            )
+                        )
+                    );
+                    $user_manager     = UserManager::instance();
+                    $renderer_factory = TemplateRendererFactory::build();
+                    $assets           = new \Tuleap\Layout\IncludeCoreAssets();
+
+                    $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
+
+                    $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
+                    if ($layout === null) {
+                        throw new \Exception("Could not load BurningParrot theme");
+                    }
+                    $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
+                    $layout->header(
+                        HeaderConfigurationBuilder::get(_('Register'))->build()
+                    );
+                    $renderer->renderToPage("waiting-for-approval", [
+                        'email' => $request->get('form_email'),
+                    ]);
+                    $layout->footer(FooterConfiguration::withoutContent());
+                    exit;
                 }
+            },
+            function (?RegisterFormValidationIssue $issue) use (&$form_validation_issue) {
+                $form_validation_issue = $issue;
             }
-
-            $theme_manager    = new ThemeManager(
-                new \Tuleap\BurningParrotCompatiblePageDetector(
-                    new \Tuleap\Request\CurrentPage(),
-                    new User_ForgeUserGroupPermissionsManager(
-                        new User_ForgeUserGroupPermissionsDao()
-                    )
-                )
-            );
-            $user_manager     = UserManager::instance();
-            $renderer_factory = TemplateRendererFactory::build();
-            $assets           = new \Tuleap\Layout\IncludeCoreAssets();
-
-            $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
-
-            $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
-            if ($layout === null) {
-                throw new \Exception("Could not load BurningParrot theme");
-            }
-            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
-            $layout->header(
-                HeaderConfigurationBuilder::get(_('Register'))->build()
-            );
-            if ($admin_creation) {
-                $renderer->renderToPage("confirmation-admin-creation", [
-                    'login'    => $request->get('form_loginname'),
-                    'password' => $request->get('form_pw'),
-                ]);
-            } else {
-                $renderer->renderToPage("confirmation-link-sent", [
-                    'email' => $request->get('form_email'),
-                ]);
-            }
-            $layout->footer(FooterConfiguration::withoutContent());
-            exit;
-        } else {
-            // Registration requires approval
-            // inform the user that approval is required
-            $theme_manager    = new ThemeManager(
-                new \Tuleap\BurningParrotCompatiblePageDetector(
-                    new \Tuleap\Request\CurrentPage(),
-                    new User_ForgeUserGroupPermissionsManager(
-                        new User_ForgeUserGroupPermissionsDao()
-                    )
-                )
-            );
-            $user_manager     = UserManager::instance();
-            $renderer_factory = TemplateRendererFactory::build();
-            $assets           = new \Tuleap\Layout\IncludeCoreAssets();
-
-            $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
-
-            $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
-            if ($layout === null) {
-                throw new \Exception("Could not load BurningParrot theme");
-            }
-            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
-            $layout->header(
-                HeaderConfigurationBuilder::get(_('Register'))->build()
-            );
-            $renderer->renderToPage("waiting-for-approval", [
-                'email' => $request->get('form_email'),
-            ]);
-            $layout->footer(FooterConfiguration::withoutContent());
-            exit;
-        }
+        );
     }
 }
 
@@ -322,7 +352,7 @@ $builder = new RegisterFormPresenterBuilder(
     TemplateRendererFactory::build(),
     new Account_TimezonesCollection(),
 );
-$render  = $builder->getPresenterClosure($request, $layout, $is_password_needed, $errors);
+$render  = $builder->getPresenterClosure($request, $layout, $is_password_needed, $form_validation_issue);
 
 $layout->addJavascriptAsset(new JavascriptViteAsset(
     new IncludeViteAssets(
