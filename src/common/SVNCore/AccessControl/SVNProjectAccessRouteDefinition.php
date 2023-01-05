@@ -25,6 +25,8 @@ namespace Tuleap\SVNCore\AccessControl;
 
 use FastRoute\RouteCollector;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\ForceDisableErrorDisplayMiddleware;
@@ -33,6 +35,11 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\SVNCore\Cache\ParameterDao;
 use Tuleap\SVNCore\Cache\ParameterRetriever;
+use Tuleap\User\AccessKey\AccessKeyDAO;
+use Tuleap\User\AccessKey\AccessKeyVerifier;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
+use Tuleap\User\AccessKey\Scope\SVNAccessKeyScope;
 use Tuleap\User\PasswordVerifier;
 
 final class SVNProjectAccessRouteDefinition
@@ -52,10 +59,11 @@ final class SVNProjectAccessRouteDefinition
 
     public static function instantiateProjectAccessController(): SVNProjectAccessController
     {
-        $logger           = \BackendLogger::getDefaultLogger();
-        $event_manager    = \EventManager::instance();
-        $user_manager     = \UserManager::instance();
-        $password_handler = new \StandardPasswordHandler();
+        $logger                       = \BackendLogger::getDefaultLogger();
+        $event_manager                = \EventManager::instance();
+        $user_manager                 = \UserManager::instance();
+        $password_handler             = new \StandardPasswordHandler();
+        $svn_login_name_user_provider = new SVNLoginNameUserProvider($user_manager, $event_manager);
         return new SVNProjectAccessController(
             HTTPFactoryBuilder::responseFactory(),
             $logger,
@@ -63,8 +71,25 @@ final class SVNProjectAccessRouteDefinition
             \ProjectManager::instance(),
             new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), $event_manager),
             [
+                new SVNPersonalAccessKeyBasedAuthenticationMethod(
+                    new \Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer(new \Tuleap\User\AccessKey\PrefixAccessKey()),
+                    new AccessKeyVerifier(
+                        new AccessKeyDAO(),
+                        new SplitTokenVerificationStringHasher(),
+                        $user_manager,
+                        new AccessKeyScopeRetriever(
+                            new AccessKeyScopeDAO(),
+                            new AuthenticationScopeBuilderFromClassNames(
+                                SVNAccessKeyScope::class
+                            ),
+                        ),
+                    ),
+                    SVNAccessKeyScope::fromItself(),
+                    $svn_login_name_user_provider,
+                    $logger,
+                ),
                 new SVNTokenBasedAuthenticationMethod(
-                    new SVNLoginNameUserProvider($user_manager, $event_manager),
+                    $svn_login_name_user_provider,
                     new \SVN_TokenHandler(new \SVN_TokenDao(), new \RandomNumberGenerator(), $password_handler),
                     $logger
                 ),

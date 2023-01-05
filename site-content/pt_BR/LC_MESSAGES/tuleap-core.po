@@ -393,6 +393,9 @@ msgstr "As chaves de acesso foram excluídas com sucesso."
 msgid "Access logs"
 msgstr "Logs de acesso"
 
+msgid "Access to SVN repositories"
+msgstr ""
+
 msgid "Access to the REST API"
 msgstr "Acesso à API REST"
 
@@ -3106,6 +3109,9 @@ msgstr ""
 
 msgid "SSH keys"
 msgstr "Chaves SSH"
+
+msgid "SVN"
+msgstr ""
 
 msgid "SVN Commits"
 msgstr "SVN Commits"

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,20 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
+use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
-final class CoreAccessKeyScopeBuilderFactory
+final class SVNAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
-    private function __construct()
+    public function getAuthenticationScopeClassname(): string
     {
+        return SVNAccessKeyScope::class;
     }
 
-    public static function buildCoreAccessKeyScopeBuilder(): AuthenticationScopeBuilder
+    public function testDoesNotCoversAllTheScopes(): void
     {
-        return new AuthenticationScopeBuilderFromClassNames(
-            RESTAccessKeyScope::class,
-            SVNAccessKeyScope::class,
-        );
+        $scope = $this->createStub(AuthenticationScope::class);
+        $scope->method('getIdentifier')->willReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
+
+        $this->assertFalse(RESTAccessKeyScope::fromItself()->covers($scope));
     }
 }
