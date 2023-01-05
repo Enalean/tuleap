@@ -79,6 +79,13 @@ msgstr "Id"
 msgid "JWT secret"
 msgstr "Secret JWT"
 
+msgid ""
+"Moving project from a server to another will induce loosing of modifications "
+"for users that are currently using the former."
+msgstr ""
+"Déplacer un projet d'un serveur à un autre provoquera la perte des "
+"modifications pour les utilisateurs en train d'utiliser l'ancien."
+
 msgid "No project can use this server."
 msgstr "Aucun projet ne peut utiliser ce serveur."
 
@@ -118,11 +125,17 @@ msgstr "Le secret est manquant"
 msgid "There isn't any document servers configured"
 msgstr "Aucun serveurs n'est actuellement configuré"
 
+msgid "This project is currently allowed for %{ server }"
+msgstr "Ce projet est actuellement autorisé pour %{ server }"
+
 msgid "To be allowed"
 msgstr "À autoriser"
 
 msgid "To be revoked"
 msgstr "À restreindre"
+
+msgid "To be revoked from another server"
+msgstr "À restreindre d'un autre serveur"
 
 msgid "Unable to find project information"
 msgstr "Impossible de trouver les informations du projet"

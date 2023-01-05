@@ -28,6 +28,9 @@ msgstr "Le serveur de document a été créé"
 msgid "Document server have been deleted"
 msgstr "Le serveur de document a été supprimé"
 
+msgid "Document server restrictions have been saved"
+msgstr "Les restrictions du serveur de document ont été sauvegardées"
+
 msgid "Document server settings have been saved"
 msgstr "Les paramètres du serveur de document ont été sauvegardés"
 
