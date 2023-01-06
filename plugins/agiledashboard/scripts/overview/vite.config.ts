@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "scrum/overview";
-@use "@tuleap/plugin-agiledashboard-scrum-header";
-@use "@tuleap/plugin-agiledashboard-scrum-milestone-header";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-.agiledashboard-milestone-details-items-list-badge {
-    margin: 0 5px 0 0;
-}
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    overview: path.resolve(__dirname, "src/main.ts"),
+                },
+            },
+        },
+    }
+);

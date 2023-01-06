@@ -17,6 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/plugin-agiledashboard-scrum-header";
+@use "@tuleap/plugin-agiledashboard-scrum-milestone-header/dist/style.css";
+
+.agiledashboard-milestone-details-items-list-badge {
+    margin: 0 5px 0 0;
+}
+
 .agiledashboard-milestone-details {
     display: flex;
 }

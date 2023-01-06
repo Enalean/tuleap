@@ -12,6 +12,9 @@
       "import": "./dist/plugin-agiledashboard-scrum-milestone-header.js",
       "require": "./dist/plugin-agiledashboard-scrum-milestone-header.umd.cjs",
       "style": "./dist/style.css"
+    },
+    "./dist/style.css": {
+      "default": "./dist/style.css"
     }
   },
   "dependencies": {
