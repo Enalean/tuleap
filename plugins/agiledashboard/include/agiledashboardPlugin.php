@@ -54,6 +54,8 @@ use Tuleap\AgileDashboard\Kanban\KanbanURL;
 use Tuleap\AgileDashboard\Kanban\KanbanXmlImporter;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
+use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSenderMercure;
+use Tuleap\AgileDashboard\Kanban\RealTimeMercure\KanbanArtifactMessageBuilderMercure;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\VisitRetriever;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
@@ -70,7 +72,9 @@ use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
+use Tuleap\AgileDashboard\RealTime\MercureJWTController;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
+use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageControllerMercure;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
 use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
@@ -117,6 +121,8 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\RealTime\NodeJSClient;
+use Tuleap\RealTimeMercure\ClientBuilder;
+use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -140,6 +146,7 @@ use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportProcessAdditionalQuery;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
@@ -1309,6 +1316,22 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
+    public function getKanbanArtifactMessageSenderMercure(): KanbanArtifactMessageSenderMercure
+    {
+        $kanba_item_dao                           = new AgileDashboard_KanbanItemDao();
+        $mercure_client                           = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $realtime_artifact_message_builder_kanban = new KanbanArtifactMessageBuilderMercure(
+            $kanba_item_dao,
+            Tracker_Artifact_ChangesetFactoryBuilder::build()
+        );
+
+        $realtime_artifact_message_sender_mercure = new RealTimeMercureArtifactMessageSender($mercure_client);
+        return new KanbanArtifactMessageSenderMercure(
+            $realtime_artifact_message_sender_mercure,
+            $realtime_artifact_message_builder_kanban
+        );
+    }
+
     /**
      * @return RealTimeArtifactMessageController
      */
@@ -1320,6 +1343,14 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
+    public function getRealtimeMessageControllerMercure(): RealTimeArtifactMessageControllerMercure
+    {
+        return new RealTimeArtifactMessageControllerMercure(
+            $this->getKanbanFactory(),
+            $this->getKanbanArtifactMessageSenderMercure()
+        );
+    }
+
     public function trackerArtifactCreated(ArtifactCreated $event)
     {
         $artifact = $event->getArtifact();
@@ -1328,7 +1359,12 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $artifact,
             RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_CREATED
         );
-
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
+            $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
+                $artifact,
+                RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_CREATED
+            );
+        }
         $cleaner = new DirectArtifactLinkCleaner(
             $this->getMilestoneFactory(),
             new ExplicitBacklogDao(),
@@ -1346,7 +1382,12 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $artifact,
             RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_UPDATED
         );
-
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
+                $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
+                    $artifact,
+                    RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_UPDATED
+                );
+        }
         $cleaner = new DirectArtifactLinkCleaner(
             $this->getMilestoneFactory(),
             new ExplicitBacklogDao(),
@@ -1366,6 +1407,14 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 $artifact,
                 RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_REORDERED
             );
+        }
+        if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KEY)) {
+            foreach ($artifacts as $artifact) {
+                $this->getRealtimeMessageControllerMercure()->sendMessageForKanban(
+                    $artifact,
+                    RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_REORDERED
+                );
+            }
         }
     }
 
@@ -1668,9 +1717,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         });
     }
 
-    public function routeGetJWT(): \Tuleap\AgileDashboard\RealTime\MercureJWTController
+    public function routeGetJWT(): MercureJWTController
     {
-        return new \Tuleap\AgileDashboard\RealTime\MercureJWTController(
+        return new MercureJWTController(
             $this->getKanbanFactory(),
             $this->getLogger(),
             HTTPFactoryBuilder::responseFactory(),
