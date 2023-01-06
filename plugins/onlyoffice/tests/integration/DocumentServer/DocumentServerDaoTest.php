@@ -60,6 +60,7 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function tearDown(): void
     {
         $this->db->run('DELETE FROM plugin_onlyoffice_document_server');
+        $this->db->run('DELETE FROM plugin_onlyoffice_document_server_project_restriction');
         $this->db->delete('groups', ['group_id' => $this->project_a_id]);
         $this->db->delete('groups', ['group_id' => $this->project_b_id]);
 
@@ -135,6 +136,15 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($server_b->is_project_restricted);
         self::assertEmpty($server_a->project_restrictions);
         self::assertCount(1, $server_b->project_restrictions);
+
+        $this->dao->delete($server_b->id);
+        $are_projects_restrictions_deleted_after_server_deletion =
+            $this->db->single(
+                'SELECT COUNT(*) FROM plugin_onlyoffice_document_server_project_restriction WHERE server_id = ?',
+                [$server_b->id]
+            ) === 0;
+
+        self::assertTrue($are_projects_restrictions_deleted_after_server_deletion);
     }
 
     private function decrypt(ConcealedString $secret): ConcealedString
