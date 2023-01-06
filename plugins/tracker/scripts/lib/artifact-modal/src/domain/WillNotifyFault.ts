@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ClearFaultNotification } from "../../src/domain/ClearFaultNotification";
+import type { DomainEvent } from "./DomainEvent";
+import type { Fault } from "@tuleap/fault";
 
-export interface ClearFaultNotificationStub extends ClearFaultNotification {
-    getCallCount(): number;
-}
-
-export const ClearFaultNotificationStub = {
-    withCount: (): ClearFaultNotificationStub => {
-        let call_count = 0;
-        return {
-            clearFaultNotification(): void {
-                call_count++;
-            },
-            getCallCount: () => call_count,
-        };
-    },
+export type WillNotifyFault = DomainEvent<"WillNotifyFault"> & {
+    readonly fault: Fault;
 };
+
+export const WillNotifyFault = (fault: Fault): WillNotifyFault => ({
+    type: "WillNotifyFault",
+    fault,
+});

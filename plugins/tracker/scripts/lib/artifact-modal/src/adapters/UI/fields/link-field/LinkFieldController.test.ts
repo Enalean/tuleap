@@ -31,7 +31,6 @@ import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/Delet
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
-import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { ArtifactLinkSelectorAutoCompleter } from "./dropdown/ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
@@ -41,7 +40,6 @@ import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
-import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
 import type { RetrieveNewLinks } from "../../../../domain/fields/link-field/RetrieveNewLinks";
@@ -73,7 +71,6 @@ import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUser
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
-import type { DispatchEvents } from "../../../../domain/DispatchEvents";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -86,16 +83,14 @@ describe(`LinkFieldController`, () => {
         deleted_link_adder: AddLinkMarkedForRemovalStub,
         deleted_link_remover: DeleteLinkMarkedForRemovalStub,
         deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
-        fault_notifier: NotifyFaultStub,
         new_link_adder: AddNewLinkStub,
         new_links_retriever: RetrieveNewLinks,
         new_link_remover: DeleteNewLinkStub,
-        notification_clearer: ClearFaultNotificationStub,
         parents_retriever: RetrievePossibleParents,
         allowed_link_types: AllowedLinkTypeRepresentation[],
         parent_identifier: ParentArtifactIdentifier | null,
         verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy,
-        event_dispatcher: DispatchEvents;
+        event_dispatcher: DispatchEventsStub;
 
     beforeEach(() => {
         setCatalog({
@@ -106,15 +101,13 @@ describe(`LinkFieldController`, () => {
         deleted_link_adder = AddLinkMarkedForRemovalStub.withCount();
         deleted_link_remover = DeleteLinkMarkedForRemovalStub.withCount();
         deleted_link_verifier = VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
-        fault_notifier = NotifyFaultStub.withCount();
         new_link_adder = AddNewLinkStub.withCount();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
         new_link_remover = DeleteNewLinkStub.withCount();
-        notification_clearer = ClearFaultNotificationStub.withCount();
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
         parent_identifier = null;
         verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
-        event_dispatcher = DispatchEventsStub.buildNoOp();
+        event_dispatcher = DispatchEventsStub.withRecordOfEventTypes();
 
         allowed_link_types = [
             { shortname: IS_CHILD_LINK_TYPE, forward_label: "Child", reverse_label: "Parent" },
@@ -138,17 +131,15 @@ describe(`LinkFieldController`, () => {
             deleted_link_adder,
             deleted_link_remover,
             deleted_link_verifier,
-            fault_notifier,
-            notification_clearer,
             ArtifactLinkSelectorAutoCompleter(
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
                     okAsync(LinkableArtifactStub.withDefaults())
                 ),
-                fault_notifier,
                 parents_retriever,
                 link_verifier,
                 RetrieveUserHistoryStub.withoutUserHistory(),
                 SearchArtifactsStub.withoutResults(),
+                event_dispatcher,
                 current_artifact_identifier,
                 current_tracker_identifier,
                 UserIdentifierStub.fromUserId(101)
@@ -243,18 +234,15 @@ describe(`LinkFieldController`, () => {
             it won't notify that there has been a fault
             and it will enable the modal submit again
             and it will return an empty presenter`, async () => {
-            const event_types: string[] = [];
-            event_dispatcher = DispatchEventsStub.withCallback((event) => {
-                event_types.push(event.type);
-            });
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(
                 NoLinksInCreationModeFault()
             );
             const artifacts = await displayLinkedArtifacts();
 
             expect(artifacts.has_loaded_content).toBe(true);
-            expect(fault_notifier.getCallCount()).toBe(0);
+            const event_types = event_dispatcher.getDispatchedEventTypes();
             expect(event_types).toHaveLength(2);
+            expect(event_types).not.toContain("WillNotifyFault");
             expect(event_types).toContain("WillDisableSubmit");
             expect(event_types).toContain("WillEnableSubmit");
         });
@@ -262,15 +250,12 @@ describe(`LinkFieldController`, () => {
         it(`when the modal is in edition mode and it succeeds loading,
             and it will disable the modal submit while links are loading, so that existing links are not erased by mistake
             it will return a presenter with the linked artifacts`, async () => {
-            const event_types: string[] = [];
-            event_dispatcher = DispatchEventsStub.withCallback((event) => {
-                event_types.push(event.type);
-            });
             const linked_artifact = LinkedArtifactStub.withDefaults();
             links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
             const artifacts = await displayLinkedArtifacts();
 
             expect(artifacts.has_loaded_content).toBe(true);
+            const event_types = event_dispatcher.getDispatchedEventTypes();
             expect(event_types).toHaveLength(2);
             expect(event_types).toContain("WillDisableSubmit");
             expect(event_types).toContain("WillEnableSubmit");
@@ -280,16 +265,13 @@ describe(`LinkFieldController`, () => {
             it will notify that there has been a fault
             and it will not enable again the modal submit, so that existing links are not erased by mistake
             and it will return an empty presenter`, async () => {
-            const event_types: string[] = [];
-            event_dispatcher = DispatchEventsStub.withCallback((event) => {
-                event_types.push(event.type);
-            });
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(Fault.fromMessage("Ooops"));
             const artifacts = await displayLinkedArtifacts();
 
             expect(artifacts.has_loaded_content).toBe(true);
-            expect(fault_notifier.getCallCount()).toBe(1);
-            expect(event_types).toHaveLength(1);
+            const event_types = event_dispatcher.getDispatchedEventTypes();
+            expect(event_types).toHaveLength(2);
+            expect(event_types).toContain("WillNotifyFault");
             expect(event_types).toContain("WillDisableSubmit");
             expect(event_types).not.toContain("WillEnableSubmit");
         });
@@ -394,7 +376,6 @@ describe(`LinkFieldController`, () => {
         it(`will return the group of possible parents for this tracker`, async () => {
             const group = await retrieveParents();
 
-            expect(notification_clearer.getCallCount()).toBe(1);
             expect(group.is_loading).toBe(false);
             const parent_ids = group.items.map((item) => {
                 const linkable_artifact = item.value as LinkableArtifact;
@@ -412,7 +393,7 @@ describe(`LinkFieldController`, () => {
 
             const group = await retrieveParents();
 
-            expect(fault_notifier.getCallCount()).toBe(1);
+            expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             expect(group.is_loading).toBe(false);
             expect(group.items).toHaveLength(0);
         });

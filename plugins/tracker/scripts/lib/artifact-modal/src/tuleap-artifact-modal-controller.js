@@ -104,7 +104,8 @@ function ArtifactModalController(
     let confirm_action_to_edit = false;
     const concurrency_error_code = 412;
 
-    const fault_feedback_controller = FaultFeedbackController();
+    const event_dispatcher = EventDispatcher();
+    const fault_feedback_controller = FaultFeedbackController(event_dispatcher);
     const api_client = TuleapAPIClient();
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
@@ -123,7 +124,6 @@ function ArtifactModalController(
     const project_identifier = ProjectIdentifierProxy.fromTrackerModel(modal_model.tracker);
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
     const user_history_cache = UserHistoryCache(api_client);
-    const event_dispatcher = EventDispatcher();
 
     Object.assign(self, {
         $onInit: init,
@@ -153,14 +153,14 @@ function ArtifactModalController(
         ),
         parent_feedback_controller: ParentFeedbackController(
             api_client,
-            fault_feedback_controller,
+            event_dispatcher,
             parent_identifier
         ),
         fault_feedback_controller,
         file_upload_quota_controller: FileUploadQuotaController(UserTemporaryFileQuotaStore()),
         comments_controller: CommentsController(
             api_client,
-            fault_feedback_controller,
+            event_dispatcher,
             current_artifact_identifier,
             project_identifier,
             {
@@ -179,15 +179,13 @@ function ArtifactModalController(
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,
-                fault_feedback_controller,
-                fault_feedback_controller,
                 ArtifactLinkSelectorAutoCompleter(
                     api_client,
-                    fault_feedback_controller,
                     possible_parents_cache,
                     already_linked_verifier,
                     user_history_cache,
                     api_client,
+                    event_dispatcher,
                     current_artifact_identifier,
                     current_tracker_identifier,
                     UserIdentifierProxy.fromUserId(modal_model.user_id)

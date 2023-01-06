@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DispatchEvents, EventObserver } from "../../src/domain/DispatchEvents";
+import type { DispatchEvents } from "../../src/domain/DispatchEvents";
 import type { EventType } from "../../src/domain/DomainEvent";
+
+export type DispatchEventsStub = DispatchEvents & {
+    getDispatchedEventTypes(): EventType[];
+};
 
 export const DispatchEventsStub = {
     buildNoOp: (): DispatchEvents => ({
@@ -27,11 +31,16 @@ export const DispatchEventsStub = {
         },
     }),
 
-    withCallback: (callback: EventObserver<EventType>): DispatchEvents => ({
-        dispatch(event, ...other_events): void {
-            for (const current_event of [event, ...other_events]) {
-                callback(current_event);
-            }
-        },
-    }),
+    withRecordOfEventTypes: (): DispatchEventsStub => {
+        const event_types: EventType[] = [];
+        return {
+            dispatch(event, ...other_events): void {
+                const current_event_types = [event, ...other_events].map(
+                    (mapped_event) => mapped_event.type
+                );
+                event_types.push(...current_event_types);
+            },
+            getDispatchedEventTypes: () => event_types,
+        };
+    },
 };

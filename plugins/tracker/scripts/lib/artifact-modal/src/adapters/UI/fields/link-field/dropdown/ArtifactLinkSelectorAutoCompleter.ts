@@ -23,7 +23,6 @@ import type { RetrieveMatchingArtifact } from "../../../../../domain/fields/link
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import type { CurrentArtifactIdentifier } from "../../../../../domain/CurrentArtifactIdentifier";
 import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
-import type { NotifyFault } from "../../../../../domain/NotifyFault";
 import { MatchingArtifactRetrievalFault } from "../../../../../domain/fields/link-field/MatchingArtifactRetrievalFault";
 import { LinkType } from "../../../../../domain/fields/link-field/LinkType";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
@@ -41,6 +40,8 @@ import { UserHistoryRetrievalFault } from "../../../../../domain/fields/link-fie
 import type { SearchArtifacts } from "../../../../../domain/fields/link-field/SearchArtifacts";
 import { SearchArtifactsFault } from "../../../../../domain/fields/link-field/SearchArtifactsFault";
 import { ArtifactLinkListDuplicateRemover } from "../ArtifactLinkListDuplicateRemover";
+import type { DispatchEvents } from "../../../../../domain/DispatchEvents";
+import { WillNotifyFault } from "../../../../../domain/WillNotifyFault";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete(host: LinkField, query: string): void;
@@ -60,11 +61,11 @@ const SEARCH_QUERY_MINIMUM_LENGTH = 3;
 
 export const ArtifactLinkSelectorAutoCompleter = (
     retrieve_matching_artifact: RetrieveMatchingArtifact,
-    fault_notifier: NotifyFault,
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
     user_history_retriever: RetrieveUserHistory,
     artifacts_searcher: SearchArtifacts,
+    event_dispatcher: DispatchEvents,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
     user: UserIdentifier
@@ -78,7 +79,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 (artifacts) =>
                     RecentlyViewedArtifactGroup.fromUserHistory(link_verifier, artifacts),
                 (fault) => {
-                    fault_notifier.onFault(UserHistoryRetrievalFault(fault));
+                    event_dispatcher.dispatch(WillNotifyFault(UserHistoryRetrievalFault(fault)));
                     return RecentlyViewedArtifactGroup.buildEmpty();
                 }
             );
@@ -98,7 +99,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 if (isSearchBackendUnavailable(fault)) {
                     return [];
                 }
-                fault_notifier.onFault(SearchArtifactsFault(fault));
+                event_dispatcher.dispatch(WillNotifyFault(SearchArtifactsFault(fault)));
                 return [SearchResultsGroup.buildEmpty()];
             }
         );
@@ -110,7 +111,9 @@ export const ArtifactLinkSelectorAutoCompleter = (
             (artifact) => MatchingArtifactsGroup.fromMatchingArtifact(link_verifier, artifact),
             (fault) => {
                 if (!isExpectedFault(fault)) {
-                    fault_notifier.onFault(MatchingArtifactRetrievalFault(fault));
+                    event_dispatcher.dispatch(
+                        WillNotifyFault(MatchingArtifactRetrievalFault(fault))
+                    );
                 }
                 return MatchingArtifactsGroup.buildEmpty();
             }
@@ -124,7 +127,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
             .match(
                 (artifacts) => PossibleParentsGroup.fromPossibleParents(link_verifier, artifacts),
                 (fault) => {
-                    fault_notifier.onFault(fault);
+                    event_dispatcher.dispatch(WillNotifyFault(fault));
                     return PossibleParentsGroup.buildEmpty();
                 }
             );
