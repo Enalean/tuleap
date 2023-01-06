@@ -6,8 +6,6 @@ specifiers:
   '@tuleap/chart-builder': workspace:*
   '@tuleap/cypress-configurator': workspace:*
   '@tuleap/cypress-utilities-support': workspace:*
-  '@tuleap/fp-feedback': workspace:*
-  '@tuleap/gettext': workspace:*
   '@tuleap/plugin-agiledashboard-burnup-data-transformer': workspace:*
   '@tuleap/plugin-agiledashboard-scrum-header': workspace:*
   '@tuleap/plugin-agiledashboard-scrum-milestone-header': workspace:*
@@ -29,8 +27,6 @@ specifiers:
 dependencies:
   '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
-  '@tuleap/fp-feedback': link:../../lib/frontend/fp-feedback
-  '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/plugin-agiledashboard-burnup-data-transformer': link:scripts/lib/burnup-data-transformer
   '@tuleap/plugin-agiledashboard-scrum-header': link:scripts/lib/scrum-header
   '@tuleap/plugin-agiledashboard-scrum-milestone-header': link:scripts/lib/scrum-milestone-header

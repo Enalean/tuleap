@@ -7,8 +7,6 @@
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/chart-builder": "workspace:*",
-    "@tuleap/fp-feedback": "workspace:*",
-    "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-agiledashboard-burnup-data-transformer": "workspace:*",
     "@tuleap/plugin-agiledashboard-scrum-header": "workspace:*",
     "@tuleap/plugin-agiledashboard-scrum-milestone-header": "workspace:*",
@@ -36,6 +34,6 @@
     "typecheck": "tsc --noEmit",
     "build": "rm -rf ./frontend-assets/ && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
-    "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js scripts/administration scripts/artifact-additional-action"
+    "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js scripts/administration"
   }
 }

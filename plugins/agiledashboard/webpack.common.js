@@ -48,7 +48,6 @@ const webpack_config_for_themes = {
 const webpack_config_for_typescript = {
     entry: {
         overview: "./scripts/overview.ts",
-        "artifact-additional-action": "./scripts/artifact-additional-action/src/index.ts",
         administration: "./scripts/administration/administration.ts",
     },
     context,

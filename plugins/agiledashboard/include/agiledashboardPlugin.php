@@ -1915,7 +1915,13 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->getPlanningPermissionsManager(),
             new ArtifactsInExplicitBacklogDao(),
             new PlannedArtifactDao(),
-            $this->getScriptAssetByName('artifact-additional-action.js'),
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../scripts/artifact-additional-action/frontend-assets',
+                    '/assets/agiledashboard/artifact-additional-action'
+                ),
+                'src/index.ts'
+            ),
             new PlanningTrackerBacklogChecker($this->getPlanningFactory()),
             EventManager::instance()
         );
