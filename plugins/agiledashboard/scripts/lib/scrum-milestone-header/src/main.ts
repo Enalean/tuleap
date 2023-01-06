@@ -17,10 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "scrum/overview";
-@use "@tuleap/plugin-agiledashboard-scrum-header";
-@use "@tuleap/plugin-agiledashboard-scrum-milestone-header";
+import { createDropdown } from "@tuleap/tlp-dropdown";
+import "../themes/main.scss";
 
-.agiledashboard-milestone-details-items-list-badge {
-    margin: 0 5px 0 0;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const menu = document.getElementById("agiledashboard-scrum-milestone-menu");
+    if (!menu) {
+        return;
+    }
+
+    createDropdown(menu);
+});

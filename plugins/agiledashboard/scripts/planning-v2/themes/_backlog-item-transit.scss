@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "./backlog-item-moves";
+
 .backlog-item {
     &.gu-transit {
         border-radius: var(--tlp-medium-radius);

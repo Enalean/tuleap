@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.agiledashboard-header-title {
-    margin: 0;
-    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
-}
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-#agiledashboard-scrum-milestone-menu {
-    cursor: pointer;
-}
-
-#agiledashboard-scrum-milestone-menu-caret {
-    font-size: 20px;
-}
+export default vite.defineLibConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/main.ts"),
+            name: "PluginAgileDashboardScrumMilestoneHeader",
+        },
+    },
+});

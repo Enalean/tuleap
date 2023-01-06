@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "./loader";
+
 .agiledashboard-top-backlog {
     margin: var(--tlp-medium-spacing) 0 0;
 }

@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "milestone";
+@use "./milestone";
+@use "./loader";
 
 .milestones {
     display: flex;

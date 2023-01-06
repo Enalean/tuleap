@@ -74,6 +74,16 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
                     'kanban-style'
                 )
             );
+        } elseif (self::isPlanningV2URL($request)) {
+            $layout->addCssAsset(
+                new CssAssetWithoutVariantDeclinaisons(
+                    new IncludeAssets(
+                        __DIR__ . '/../../scripts/planning-v2/frontend-assets',
+                        '/assets/agiledashboard/planning-v2'
+                    ),
+                    'planning-style'
+                )
+            );
         }
 
         $router = $this->router_builder->build($request);

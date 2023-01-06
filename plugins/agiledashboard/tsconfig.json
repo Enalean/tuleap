@@ -9,7 +9,6 @@
         "scripts/artifact-additional-action/**/*",
         "scripts/burnup-chart/**/*",
         "scripts/permissions-per-group/**/*",
-        "scripts/planning-v2/**/*",
         "scripts/*"
     ]
 }

@@ -5,16 +5,16 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/chart-builder": "workspace:*",
     "@tuleap/fp-feedback": "workspace:*",
     "@tuleap/gettext": "workspace:*",
     "@tuleap/plugin-agiledashboard-burnup-data-transformer": "workspace:*",
-    "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
+    "@tuleap/plugin-agiledashboard-scrum-header": "workspace:*",
+    "@tuleap/plugin-agiledashboard-scrum-milestone-header": "workspace:*",
     "@tuleap/plugin-tracker-color-picker": "workspace:*",
     "@tuleap/project-background": "workspace:*",
-    "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
-    "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue-permissions-per-group-badge": "workspace:*",
     "d3": "^7.0.0",
     "d3-array": "^3.0.1",
@@ -36,6 +36,6 @@
     "typecheck": "tsc --noEmit",
     "build": "rm -rf ./frontend-assets/ && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
-    "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js \"$(pwd)\""
+    "test": "jest --config=../../tests/jest/jest.projects-plugins.config.js scripts/administration scripts/artifact-additional-action"
   }
 }

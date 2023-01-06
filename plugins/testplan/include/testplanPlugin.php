@@ -178,7 +178,6 @@ final class testplanPlugin extends Plugin
         return new TestPlanController(
             $this->buildTemplateRenderer(),
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
-            $agiledashboard_plugin->getIncludeAssets(),
             new IncludeAssets(
                 __DIR__ . '/../frontend-assets',
                 '/assets/testplan'

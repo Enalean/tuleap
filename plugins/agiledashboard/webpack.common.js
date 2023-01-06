@@ -47,6 +47,7 @@ const webpack_config_for_themes = {
 
 const webpack_config_for_typescript = {
     entry: {
+        overview: "./scripts/overview.ts",
         "artifact-additional-action": "./scripts/artifact-additional-action/src/index.ts",
         administration: "./scripts/administration/administration.ts",
     },
@@ -91,7 +92,6 @@ const webpack_config_for_charts = {
 const webpack_config_for_javascript = {
     entry: {
         "home-burndowns": "./scripts/home.js",
-        "scrum-header": "./scripts/scrum-header.js",
         "permission-per-group": "./scripts/permissions-per-group/src/index.js",
         "planning-admin": "./scripts/planning-admin.js",
     },
@@ -112,42 +112,9 @@ const webpack_config_for_javascript = {
     },
 };
 
-const webpack_config_for_planning_v2 = {
-    entry: {
-        "planning-v2": "./scripts/planning-v2/src/app/app.js",
-    },
-    context,
-    output,
-    externals: {
-        tlp: "tlp",
-        jquery: "jQuery",
-        ckeditor4: "CKEDITOR",
-    },
-    resolve: {
-        alias: {
-            // angular alias for the artifact modal (otherwise it is included twice)
-            angular$: path.resolve(__dirname, "./scripts/planning-v2/node_modules/angular"),
-            "angular-sanitize$": path.resolve(
-                __dirname,
-                "./scripts/planning-v2/node_modules/angular-sanitize"
-            ),
-        },
-        extensions: [".ts", ".js"],
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_ng_cache_loader,
-            webpack_configurator.rule_angular_gettext_loader,
-        ],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
-};
-
 module.exports = [
     webpack_config_for_themes,
     webpack_config_for_charts,
     webpack_config_for_typescript,
     webpack_config_for_javascript,
-    webpack_config_for_planning_v2,
 ];

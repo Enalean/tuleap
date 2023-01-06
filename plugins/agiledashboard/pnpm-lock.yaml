@@ -2,18 +2,18 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/burningparrot-theme': workspace:*
   '@tuleap/chart-builder': workspace:*
   '@tuleap/cypress-configurator': workspace:*
   '@tuleap/cypress-utilities-support': workspace:*
   '@tuleap/fp-feedback': workspace:*
   '@tuleap/gettext': workspace:*
   '@tuleap/plugin-agiledashboard-burnup-data-transformer': workspace:*
-  '@tuleap/plugin-tracker-artifact-modal': workspace:*
+  '@tuleap/plugin-agiledashboard-scrum-header': workspace:*
+  '@tuleap/plugin-agiledashboard-scrum-milestone-header': workspace:*
   '@tuleap/plugin-tracker-color-picker': workspace:*
   '@tuleap/project-background': workspace:*
-  '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-fetch': workspace:*
-  '@tuleap/tlp-swatch-colors': workspace:*
   '@tuleap/vue-permissions-per-group-badge': workspace:*
   '@types/node': ^14.14.31
   d3: ^7.0.0
@@ -27,16 +27,16 @@ specifiers:
   vue-gettext: ^2.1.12
 
 dependencies:
+  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
   '@tuleap/fp-feedback': link:../../lib/frontend/fp-feedback
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/plugin-agiledashboard-burnup-data-transformer': link:scripts/lib/burnup-data-transformer
-  '@tuleap/plugin-tracker-artifact-modal': link:../tracker/scripts/lib/artifact-modal
+  '@tuleap/plugin-agiledashboard-scrum-header': link:scripts/lib/scrum-header
+  '@tuleap/plugin-agiledashboard-scrum-milestone-header': link:scripts/lib/scrum-milestone-header
   '@tuleap/plugin-tracker-color-picker': link:../tracker/scripts/lib/colorpicker
   '@tuleap/project-background': link:../../lib/frontend/project-background
-  '@tuleap/tlp-dropdown': link:../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue-permissions-per-group-badge': link:../../lib/frontend/vue-permissions-per-group-badge
   d3: 7.0.0
   d3-array: 3.0.1
