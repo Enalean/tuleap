@@ -93,8 +93,7 @@ else
     update-ca-trust enable
     update-ca-trust extract
 
-    replacement=`echo $REALTIME_KEY | sed "s|/|\\\\\/|g"`
-    echo "\$nodejs_server_jwt_private_key = '$replacement';" >> /etc/tuleap/conf/local.inc
+    echo "\$nodejs_server_jwt_private_key = '$REALTIME_KEY';" >> /etc/tuleap/conf/local.inc
     echo "\$nodejs_server = 'tuleap-web.tuleap-aio-dev.docker:443';" >> /etc/tuleap/conf/local.inc
     echo "\$nodejs_server_int = 'realtime';" >> /etc/tuleap/conf/local.inc
 
