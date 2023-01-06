@@ -20,23 +20,21 @@
 @use "sass:map";
 @use "sass:color";
 @use "@tuleap/tlp-swatch-colors";
+@use "@tuleap/plugin-agiledashboard-card-fields";
+@use "./kanban-item-moves";
+@use "./kanban-item-transit";
+@use "./transition-variables" as transition;
 
-$transition-duration: 100ms;
-$transition-delay: 500ms;
 $expand-collapse-bar-height: 8px;
 $margin-between-kanban-item-on-hover: 1px;
 $margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanban-item-on-hover;
 $accessibility-pattern-width: 20px;
 $accessibility-pattern-right-margin: 4px;
 
-@import "../card-fields";
-@import "kanban-item-moves";
-@import "kanban-item-transit";
-
 .kanban-item {
     margin: $margin-between-kanban-item var(--tlp-small-spacing);
     list-style-type: none;
-    transition: margin $transition-duration $transition-delay;
+    transition: margin transition.$duration transition.$delay;
 
     @each $color-name, $colors in tlp-swatch-colors.$color-map {
         &.kanban-item-#{$color-name} {
@@ -173,7 +171,7 @@ kanban-item {
     flex-direction: column;
     width: calc(100% - var(--tlp-medium-spacing));
     overflow-y: hidden;
-    transition: padding-bottom $transition-duration;
+    transition: padding-bottom transition.$duration;
 
     &.kanban-item-card-with-accessibility {
         .kanban-item-content-info-label,
@@ -264,7 +262,7 @@ time-info {
     justify-content: center;
     height: 0;
     overflow: hidden;
-    transition: height $transition-duration $transition-delay;
+    transition: height transition.$duration transition.$delay;
     cursor: pointer;
 
     &:hover .kanban-item-content-expand-collapse-icon {

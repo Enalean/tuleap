@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,31 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.agiledashboard-top-backlog {
-    margin: var(--tlp-medium-spacing) 0 0;
-}
+const common = require("./webpack.common.js");
+const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
-.backlog-add-item-button {
-    margin: 0 0 0 var(--tlp-medium-spacing);
-}
-
-.backlog-header-search {
-    flex: 1 1 auto;
-    min-width: 90px;
-    max-width: 150px;
-}
-
-.backlog-empty {
-    height: 100px;
-}
-
-.backlog-loading {
-    @extend %loader;
-}
-
-.backlog-fully-loaded {
-    padding: 30px 0 0;
-    color: var(--tlp-main-color-transparent-70);
-    font-size: 0.9em;
-    text-align: center;
-}
+module.exports = webpack_configurator.extendDevConfiguration(common);

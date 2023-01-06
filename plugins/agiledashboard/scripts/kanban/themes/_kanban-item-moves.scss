@@ -1,9 +1,11 @@
+@use "./transition-variables" as transition;
+
 .kanban-item-content-moves {
     position: absolute;
     z-index: 1000;
     right: 12px;
     height: 100%;
-    transition: opacity $transition-duration $transition-delay;
+    transition: opacity transition.$duration transition.$delay;
     opacity: 0;
 }
 

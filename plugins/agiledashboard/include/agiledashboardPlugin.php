@@ -835,7 +835,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         $request = HTTPRequest::instance();
         if (KanbanURL::isKanbanURL($request)) {
-            return new KanbanJavascriptDependenciesProvider($this->getIncludeAssets());
+            return new KanbanJavascriptDependenciesProvider(
+                new IncludeAssets(__DIR__ . '/../scripts/kanban/frontend-assets', '/assets/agiledashboard/kanban')
+            );
         } elseif (AgileDashboardLegacyController::isPlanningV2URL($request)) {
             return new PlanningJavascriptDependenciesProvider($this->getIncludeAssets());
         }
