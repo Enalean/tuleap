@@ -19,16 +19,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\InviteBuddy\AccountCreationFeedback;
+use Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier;
+use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
+use Tuleap\User\Account\Register\AccountRegister;
 use Tuleap\User\Account\Register\RegisterFormPresenterBuilder;
 use Tuleap\User\Account\Register\RegisterFormValidationIssue;
 use Tuleap\User\Account\RegistrationGuardEvent;
@@ -37,8 +36,6 @@ header("Cache-Control: no-cache, no-store, must-revalidate");
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/proj_email.php';
-require_once __DIR__ . '/../include/account.php';
-require_once __DIR__ . '/../include/timezones.php';
 
 $GLOBALS['HTML']->includeCalendarScripts();
 $request = HTTPRequest::instance();
@@ -64,120 +61,6 @@ if (! $request->getCurrentUser()->isSuperUser() && ! $registration_guard->isRegi
     );
 }
 
-/**
- *
- * @return Ok<PFUser>|Err<RegisterFormValidationIssue>|Err<null>
- */
-function register_valid(bool $is_password_needed, string $mail_confirm_code): Ok|Err
-{
-    global $Language;
-
-    $request = HTTPRequest::instance();
-
-    $rule_username = new Rule_UserName();
-    if (! $rule_username->isValid((string) $request->get('form_loginname'))) {
-        return Result::err(RegisterFormValidationIssue::fromFieldName('form_loginname', $rule_username->getErrorMessage()));
-    }
-
-    $vRealName = new Valid_RealNameFormat('form_realname');
-    $vRealName->required();
-    if (! $request->valid($vRealName)) {
-        $GLOBALS['Response']->addFeedback('error', _('Real name contains illegal characters.'));
-        return Result::err(RegisterFormValidationIssue::fromFieldName('form_realname', _('Real name contains illegal characters.')));
-    }
-
-    if ($is_password_needed && ! $request->existAndNonEmpty('form_pw')) {
-        $GLOBALS['Response']->addFeedback('error', _('You must supply a password.'));
-        return Result::err(RegisterFormValidationIssue::fromFieldName('form_pw', _('You must supply a password.')));
-    }
-    $tz = $request->get('timezone');
-    if (! is_valid_timezone($tz)) {
-        $GLOBALS['Response']->addFeedback('error', _('You must supply a timezone.'));
-        return Result::err(RegisterFormValidationIssue::fromFieldName('timezone', _('You must supply a timezone.')));
-    }
-    if (! $request->existAndNonEmpty('form_register_purpose') && (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1 && $request->get('page') != "admin_creation")) {
-        $GLOBALS['Response']->addFeedback('error', _('You must explain the purpose of your registration.'));
-        return Result::err(RegisterFormValidationIssue::fromFieldName('form_register_purpose', _('You must explain the purpose of your registration.')));
-    }
-    if (! validate_email($request->get('form_email'))) {
-        $GLOBALS['Response']->addFeedback('error', _('Invalid Email Address'));
-        return Result::err(RegisterFormValidationIssue::fromFieldName('form_email', _('Invalid Email Address')));
-    }
-
-    $password = null;
-    if ($is_password_needed) {
-        $password              = new ConcealedString((string) $request->get('form_pw'));
-        $password_confirmation = new ConcealedString((string) $request->get('form_pw2'));
-        if ($request->get('page') !== "admin_creation" && ! $password->isIdenticalTo($password_confirmation)) {
-            $GLOBALS['Response']->addFeedback('error', _('Passwords do not match.'));
-            return Result::err(RegisterFormValidationIssue::fromFieldName('form_pw', _('Passwords do not match.')));
-        }
-
-        $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
-        if (! $password_sanity_checker->check($password)) {
-            foreach ($password_sanity_checker->getErrors() as $error) {
-                $GLOBALS['Response']->addFeedback('error', $error);
-            }
-            return Result::err(RegisterFormValidationIssue::fromFieldName('form_pw', 'Error'));
-        }
-    }
-
-    $expiry_date = 0;
-    if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
-        $GLOBALS['Response']->addFeedback('error', _('Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.'));
-        return Result::err(RegisterFormValidationIssue::fromFieldName('form_expiry', _('Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.')));
-    }
-    $vDate = new Valid_String();
-    $vDate->required();
-    if ($request->exist('form_expiry') && $vDate->validate($request->get('form_expiry'))) {
-        $date_list        = preg_split("/-/D", $request->get('form_expiry'), 3);
-        $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
-        $expiry_date      = $unix_expiry_time;
-    }
-
-    $status = 'P';
-    if ($request->get('page') == "admin_creation") {
-        if ($request->get('form_restricted')) {
-            $status = 'R';
-        } else {
-            $status = 'A';
-        }
-    }
-
-    $user_manager = UserManager::instance();
-
-    $account = new \Tuleap\User\Account\Register\AccountRegister(
-        $user_manager,
-        new AccountCreationFeedback(
-            new \Tuleap\InviteBuddy\InvitationDao(),
-            $user_manager,
-            new \Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier(),
-            \BackendLogger::getDefaultLogger(),
-        )
-    );
-
-    $new_user = $account->register(
-        $request->get('form_loginname'),
-        $password,
-        $request->get('form_realname'),
-        $request->get('form_register_purpose'),
-        $request->get('form_email'),
-        $status,
-        $mail_confirm_code,
-        $request->get('form_mail_site'),
-        $request->get('form_mail_va'),
-        $tz,
-        $user_manager->getCurrentUser()->getLocale(),
-        'A',
-        $expiry_date
-    );
-    if (! $new_user) {
-        return Result::err(null);
-    }
-
-    return Result::ok($new_user);
-}
-
 $is_password_needed = true;
 if ($page !== 'admin_creation') {
     $event_manager->processEvent(
@@ -190,23 +73,35 @@ if ($page !== 'admin_creation') {
     );
 }
 
-// ###### first check for valid login, if so, congratulate
 $request = HTTPRequest::instance();
-$hp      = Codendi_HTMLPurifier::instance();
 
 $form_validation_issue = null;
 if ($request->isPost() && $request->exist('Register')) {
-    $before_validation_event = $event_manager->dispatch(new \Tuleap\User\Account\Register\BeforeRegisterFormValidationEvent($request));
+    if (
+        $event_manager
+        ->dispatch(new \Tuleap\User\Account\Register\BeforeRegisterFormValidationEvent($request))
+        ->isRegistrationValid()
+    ) {
+        $mail_confirm_code_generator = new MailConfirmationCodeGenerator(
+            UserManager::instance(),
+            new RandomNumberGenerator()
+        );
+        $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
 
-    $page                        = $request->get('page');
-    $mail_confirm_code_generator = new MailConfirmationCodeGenerator(
-        UserManager::instance(),
-        new RandomNumberGenerator()
-    );
-    $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
-    if ($before_validation_event->isRegistrationValid()) {
-        register_valid($is_password_needed, $mail_confirm_code)->match(
-            function (PFUser $new_user) use ($event_manager, $request, $page, $mail_confirm_code, $renderer_factory, $layout, $assets) {
+        $form_handler = new \Tuleap\User\Account\Register\RegisterFormHandler(
+            new AccountRegister(
+                UserManager::instance(),
+                new AccountCreationFeedback(
+                    new InvitationDao(),
+                    UserManager::instance(),
+                    new AccountCreationFeedbackEmailNotifier(),
+                    BackendLogger::getDefaultLogger(),
+                )
+            ),
+            new Account_TimezonesCollection(),
+        );
+        $form_handler->process($request, $is_password_needed, $mail_confirm_code)->match(
+            function (PFUser $new_user) use ($event_manager, $request, $mail_confirm_code, $renderer_factory, $layout, $assets) {
                 $new_userid = $new_user->getId();
                 $event_manager->dispatch(
                     new \Tuleap\User\Account\Register\AfterUserRegistrationEvent($request, $new_user)
@@ -214,7 +109,7 @@ if ($request->isPost() && $request->exist('Register')) {
 
                 $admin_creation = false;
 
-                if ($page == 'admin_creation') {
+                if ($request->get('page') === 'admin_creation') {
                     $admin_creation = true;
                     if ($request->get('form_send_email')) {
                         //send an email to the user with th login and password
