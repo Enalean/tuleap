@@ -34,6 +34,7 @@ export interface Server {
     readonly server_url: string;
     readonly delete_url: string;
     readonly update_url: string;
+    readonly restrict_url: string;
     readonly has_existing_secret: boolean;
     readonly is_project_restricted: boolean;
     readonly project_restrictions: ReadonlyArray<Project>;

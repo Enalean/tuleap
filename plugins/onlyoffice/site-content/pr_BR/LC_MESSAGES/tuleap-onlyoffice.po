@@ -22,6 +22,9 @@ msgstr ""
 msgid "Document server have been deleted"
 msgstr ""
 
+msgid "Document server restrictions have been saved"
+msgstr ""
+
 msgid "Document server settings have been saved"
 msgstr ""
 

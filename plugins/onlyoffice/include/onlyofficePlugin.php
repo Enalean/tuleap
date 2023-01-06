@@ -53,6 +53,7 @@ use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeCreateAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeDeleteAdminSettingsController;
+use Tuleap\OnlyOffice\Administration\OnlyOfficeRestrictAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeUpdateAdminSettingsController;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerDao;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
@@ -186,6 +187,7 @@ final class onlyofficePlugin extends Plugin
         $route_collector->post(OnlyOfficeCreateAdminSettingsController::URL, $this->getRouteHandler('routeCreateAdminSettings'));
         $route_collector->post(OnlyOfficeUpdateAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeUpdateAdminSettings'));
         $route_collector->post(OnlyOfficeDeleteAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeDeleteAdminSettings'));
+        $route_collector->post(OnlyOfficeRestrictAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeRestrictAdminSettings'));
     }
 
     public function routePostDocumentSave(): OnlyOfficeSaveController
@@ -456,6 +458,17 @@ final class onlyofficePlugin extends Plugin
     public function routeDeleteAdminSettings(): \Tuleap\Request\DispatchableWithRequest
     {
         return new OnlyOfficeDeleteAdminSettingsController(
+            self::buildCSRFTokenAdmin(),
+            new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory())),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
+            new SapiEmitter(),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
+        );
+    }
+
+    public function routeRestrictAdminSettings(): \Tuleap\Request\DispatchableWithRequest
+    {
+        return new OnlyOfficeRestrictAdminSettingsController(
             self::buildCSRFTokenAdmin(),
             new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory())),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),

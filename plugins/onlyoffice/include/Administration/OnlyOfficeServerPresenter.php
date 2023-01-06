@@ -32,6 +32,7 @@ final class OnlyOfficeServerPresenter
 {
     public string $delete_url;
     public string $update_url;
+    public string $restrict_url;
     public int $nb_project_restrictions;
 
     /**
@@ -44,8 +45,9 @@ final class OnlyOfficeServerPresenter
         public bool $is_project_restricted,
         public array $project_restrictions,
     ) {
-        $this->delete_url = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
-        $this->update_url = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $id;
+        $this->delete_url   = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
+        $this->update_url   = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $id;
+        $this->restrict_url = OnlyOfficeRestrictAdminSettingsController::URL . '/' . $id;
 
         $this->nb_project_restrictions = count($this->project_restrictions);
     }

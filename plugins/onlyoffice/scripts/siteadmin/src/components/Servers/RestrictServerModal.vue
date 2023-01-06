@@ -19,7 +19,9 @@
   -->
 
 <template>
-    <div
+    <form
+        method="post"
+        v-bind:action="server.restrict_url"
         class="tlp-modal"
         v-bind:class="{ 'tlp-modal-medium-sized': server.is_project_restricted }"
         role="dialog"
@@ -53,39 +55,62 @@
                 v-bind:server="server"
                 v-bind:set_nb_to_allow="setNbToAllow"
                 v-bind:set_nb_to_revoke="setNbToRevoke"
+                v-bind:set_nb_to_move="setNbToMove"
             />
+            <csrf-token />
         </div>
-        <div class="tlp-modal-footer onlyoffice-admin-restrict-server-modal-footer">
-            <span class="tlp-badge-success tlp-badge-outline" v-if="nb_to_allow">
-                {{
-                    $ngettext(
-                        `%{ nb } project to allow`,
-                        `%{ nb } projects to allow`,
-                        nb_to_allow,
-                        { nb: String(nb_to_allow) }
-                    )
-                }}
-            </span>
-            <span class="tlp-badge-danger tlp-badge-outline" v-if="nb_to_revoke">
-                {{
-                    $ngettext(
-                        `%{ nb } project to revoke`,
-                        `%{ nb } projects to revoke`,
-                        nb_to_revoke,
-                        { nb: String(nb_to_revoke) }
-                    )
-                }}
-            </span>
-            <span class="onlyoffice-admin-restrict-server-modal-footer-spacer"></span>
-            <button
-                type="reset"
-                class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                data-dismiss="modal"
+        <div class="tlp-modal-footer">
+            <div
+                class="tlp-alert-warning tlp-badge-outline"
+                v-if="nb_to_move"
+                data-test="warning-moved-project"
             >
-                {{ $gettext("Close") }}
-            </button>
+                {{
+                    $gettext(
+                        "Moving project from a server to another will induce loosing of modifications for users that are currently using the former."
+                    )
+                }}
+            </div>
+            <div class="onlyoffice-admin-restrict-server-modal-footer-actions">
+                <span class="tlp-badge-success tlp-badge-outline" v-if="nb_to_allow">
+                    {{
+                        $ngettext(
+                            `%{ nb } project to allow`,
+                            `%{ nb } projects to allow`,
+                            nb_to_allow,
+                            { nb: String(nb_to_allow) }
+                        )
+                    }}
+                </span>
+                <span class="tlp-badge-danger tlp-badge-outline" v-if="nb_to_revoke">
+                    {{
+                        $ngettext(
+                            `%{ nb } project to revoke`,
+                            `%{ nb } projects to revoke`,
+                            nb_to_revoke,
+                            { nb: String(nb_to_revoke) }
+                        )
+                    }}
+                </span>
+                <span class="onlyoffice-admin-restrict-server-modal-footer-spacer"></span>
+                <button
+                    type="reset"
+                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                    data-dismiss="modal"
+                >
+                    {{ $gettext("Cancel") }}
+                </button>
+                <button
+                    type="submit"
+                    class="tlp-button-primary tlp-modal-action"
+                    v-bind:disabled="nb_to_revoke + nb_to_allow === 0"
+                    data-test="submit"
+                >
+                    {{ $gettext("Save") }}
+                </button>
+            </div>
         </div>
-    </div>
+    </form>
 </template>
 <script setup lang="ts">
 import type { Server } from "../../type";
@@ -95,6 +120,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import emitter from "../../helpers/emitter";
 import AllowAllProjectsCheckbox from "./Restrict/AllowAllProjectsCheckbox.vue";
 import AllowedProjectsTable from "./Restrict/AllowedProjectsTable.vue";
+import CsrfToken from "../CsrfToken.vue";
 
 const props = defineProps<{ server: Server }>();
 
@@ -102,6 +128,7 @@ let modal: Modal | null = null;
 const root = ref<HTMLElement | null>(null);
 const nb_to_allow = ref(0);
 const nb_to_revoke = ref(0);
+const nb_to_move = ref(0);
 
 function setNbToAllow(nb: number): void {
     nb_to_allow.value = nb;
@@ -109,6 +136,10 @@ function setNbToAllow(nb: number): void {
 
 function setNbToRevoke(nb: number): void {
     nb_to_revoke.value = nb;
+}
+
+function setNbToMove(nb: number): void {
+    nb_to_move.value = nb;
 }
 
 function showModal(server: Server): void {
@@ -135,10 +166,17 @@ onUnmounted(() => {
 });
 </script>
 
-<style lang="scss">
-.onlyoffice-admin-restrict-server-modal-footer {
+<style lang="scss" scoped>
+.tlp-modal-footer {
+    flex-direction: column;
+    gap: var(--tlp-small-spacing);
+}
+
+.onlyoffice-admin-restrict-server-modal-footer-actions {
+    display: flex;
     align-items: center;
-    gap: calc(var(--tlp-medium-spacing) / 2);
+    gap: var(--tlp-small-spacing);
+    width: 100%;
 }
 
 .onlyoffice-admin-restrict-server-modal-footer-spacer {

@@ -107,6 +107,18 @@
                     </a>
                 </td>
                 <td class="tlp-table-cell-actions">
+                    <span
+                        class="tlp-badge-warning tlp-badge-outline"
+                        v-if="project.is_added && project.already_allowed_for_other_server"
+                        v-bind:title="
+                            $gettext('This project is currently allowed for %{ server }', {
+                                server: project.already_allowed_for_other_server.server_url,
+                            })
+                        "
+                        data-test="badge-warning-currently-allowed"
+                    >
+                        {{ $gettext("To be revoked from another server") }}
+                    </span>
                     <span class="tlp-badge-success tlp-badge-outline" v-if="project.is_added">
                         {{ $gettext("To be allowed") }}
                     </span>
@@ -117,27 +129,49 @@
             </tr>
         </tbody>
     </table>
+
+    <template v-for="project of deduplicated_projects">
+        <input
+            v-bind:key="server.id + '-' + project.id + '-hidden-input'"
+            type="hidden"
+            name="projects[]"
+            v-bind:value="project.id"
+            v-if="!project.is_removed"
+            v-bind:data-test="'project-id-to-restrict-' + project.id"
+        />
+    </template>
 </template>
 
 <script setup lang="ts">
 import type { Project, Server } from "../../../type";
 import { computed, ref } from "vue";
 import ProjectAllower from "./ProjectAllower.vue";
+import { CONFIG } from "../../../injection-keys";
+import { strictInject } from "../../../helpers/strict-inject";
+
+const config = strictInject(CONFIG);
 
 const props = defineProps<{
     server: Server;
     set_nb_to_allow: (nb: number) => void;
     set_nb_to_revoke: (nb: number) => void;
+    set_nb_to_move: (nb: number) => void;
 }>();
 
 interface DisplayedProject extends Project {
     readonly is_added: boolean;
+    readonly already_allowed_for_other_server: Server | undefined;
     is_removed: boolean;
 }
 
 const existing_projects = ref<DisplayedProject[]>(
     props.server.project_restrictions.map(
-        (project): DisplayedProject => ({ ...project, is_added: false, is_removed: false })
+        (project): DisplayedProject => ({
+            ...project,
+            is_added: false,
+            is_removed: false,
+            already_allowed_for_other_server: undefined,
+        })
     )
 );
 const added_projects = ref<DisplayedProject[]>([]);
@@ -166,8 +200,24 @@ const filtered_projects = computed((): DisplayedProject[] =>
 );
 
 function addProject(project: Project): void {
-    added_projects.value.push({ ...project, is_added: true, is_removed: false });
+    added_projects.value.push({
+        ...project,
+        is_added: true,
+        is_removed: false,
+        already_allowed_for_other_server: config.servers.find(
+            (server) =>
+                server.id !== props.server.id &&
+                server.project_restrictions.some(
+                    (already_allowed_project) => project.id === already_allowed_project.id
+                )
+        ),
+    });
     props.set_nb_to_allow(deduplicated_projects.value.filter((project) => project.is_added).length);
+    props.set_nb_to_move(
+        deduplicated_projects.value.filter(
+            (project) => project.is_added && project.already_allowed_for_other_server
+        ).length
+    );
 }
 
 function setError(message: string): void {
@@ -211,8 +261,12 @@ function is_a_duplicate(
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .onlyoffice-admin-restrict-server-modal-project-link {
     color: var(--tlp-typo-default-text-color);
+}
+
+.tlp-table-cell-actions > .tlp-badge-outline + .tlp-badge-outline {
+    margin: 0 0 0 var(--tlp-small-spacing);
 }
 </style>
