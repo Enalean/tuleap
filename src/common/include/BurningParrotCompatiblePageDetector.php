@@ -52,6 +52,7 @@ class BurningParrotCompatiblePageDetector
         }
 
         return $this->isInCoreServicesSiteAdmin($current_user)
+            || $this->isInRegister()
             || $this->current_page->isDashboard()
             || $this->isManagingLabels()
             || $this->isInProjectAdmin()
@@ -77,6 +78,11 @@ class BurningParrotCompatiblePageDetector
             || strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group.php') === 0;
     }
 
+    private function isInRegister(): bool
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0;
+    }
+
     private function isInCoreServicesSiteAdmin(PFUser $current_user)
     {
         $uri = $_SERVER['REQUEST_URI'];
@@ -84,8 +90,7 @@ class BurningParrotCompatiblePageDetector
         $is_in_site_admin = (
                     strpos($uri, '/admin/') === 0 ||
                     strpos($uri, '/tracker/admin/restore.php') === 0
-                ) &&
-                strpos($uri, '/admin/register_admin.php') !== 0;
+                );
 
         if ($is_in_site_admin && $current_user->isSuperUser()) {
             return true;
