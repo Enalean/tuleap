@@ -128,7 +128,7 @@ fn compile_and_exec(filename: String, input: String) -> Result<String, anyhow::E
     let run = linker
         .get_default(&mut store, "")
         .expect("should get the wasi runtime")
-        .typed::<(), (), _>(&store)
+        .typed::<(), ()>(&store)
         .expect("should type the function");
 
     std::thread::spawn(move || {
