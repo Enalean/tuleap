@@ -37,40 +37,40 @@ final class RegisterFormPresenterBuilder
     /**
      * @return \Closure(): void
      */
-    public function getPresenterClosure(\HTTPRequest $request, BaseLayout $layout, bool $is_password_needed, array $errors): \Closure
+    public function getPresenterClosure(\HTTPRequest $request, BaseLayout $layout, bool $is_password_needed, ?RegisterFormValidationIssue $form_validation_issue): \Closure
     {
         $page = $request->get('page');
 
         $form_loginname       = $request->exist('form_loginname') ? $request->get('form_loginname') : '';
-        $form_loginname_error = $this->getFieldError('form_loginname', $errors);
+        $form_loginname_error = $this->getFieldError('form_loginname', $form_validation_issue);
 
         $form_realname       = $request->exist('form_realname') ? $request->get('form_realname') : '';
-        $form_realname_error = $this->getFieldError('form_realname', $errors);
+        $form_realname_error = $this->getFieldError('form_realname', $form_validation_issue);
 
         $form_email       = $request->exist('form_email') ? $request->get('form_email') : '';
-        $form_email_error = $this->getFieldError('form_email', $errors);
+        $form_email_error = $this->getFieldError('form_email', $form_validation_issue);
 
         $form_pw       = '';
-        $form_pw_error = $this->getFieldError('form_pw', $errors);
+        $form_pw_error = $this->getFieldError('form_pw', $form_validation_issue);
 
         $form_mail_site       = ! $request->exist('form_mail_site') || $request->get('form_mail_site') == 1;
-        $form_mail_site_error = $this->getFieldError('form_mail_site', $errors);
+        $form_mail_site_error = $this->getFieldError('form_mail_site', $form_validation_issue);
 
         $form_restricted       = \ForgeConfig::areRestrictedUsersAllowed() && (! $request->exist('form_restricted') || $request->get('form_restricted') == 1);
-        $form_restricted_error = $this->getFieldError('form_restricted', $errors);
+        $form_restricted_error = $this->getFieldError('form_restricted', $form_validation_issue);
 
         $form_send_email       = $request->get('form_send_email') == 1;
-        $form_send_email_error = $this->getFieldError('form_send_email', $errors);
+        $form_send_email_error = $this->getFieldError('form_send_email', $form_validation_issue);
 
         if ($request->exist('timezone') && $this->timezones_collection->isValidTimezone($request->get('timezone'))) {
             $timezone = $request->get('timezone');
         } else {
             $timezone = false;
         }
-        $timezone_error = $this->getFieldError('timezone', $errors);
+        $timezone_error = $this->getFieldError('timezone', $form_validation_issue);
 
         $form_register_purpose       = $request->exist('form_register_purpose') ? $request->get('form_register_purpose') : '';
-        $form_register_purpose_error = $this->getFieldError('form_register_purpose', $errors);
+        $form_register_purpose_error = $this->getFieldError('form_register_purpose', $form_validation_issue);
 
         $extra_plugin_field = $this->event_dispatcher
             ->dispatch(new AddAdditionalFieldUserRegistration($layout, $request))
@@ -117,11 +117,8 @@ final class RegisterFormPresenterBuilder
         };
     }
 
-    private function getFieldError(string $field_key, array $errors): ?string
+    private function getFieldError(string $field_key, ?RegisterFormValidationIssue $form_validation_issue): ?string
     {
-        if (isset($errors[$field_key])) {
-            return $errors[$field_key];
-        }
-        return null;
+        return $form_validation_issue ? $form_validation_issue->getFieldError($field_key) : null;
     }
 }
