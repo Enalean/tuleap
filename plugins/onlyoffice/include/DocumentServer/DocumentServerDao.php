@@ -53,7 +53,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
 
         $server_restrictions = array_reduce(
             $this->getDB()->run(
-                'SELECT R.server_id, R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label
+                'SELECT R.server_id, R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label, `groups`.icon_codepoint
                 FROM plugin_onlyoffice_document_server_project_restriction AS R
                 INNER JOIN `groups` ON (R.project_id = `groups`.group_id AND `groups`.status = "A")',
             ),
@@ -62,11 +62,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
                     $server_restrictions[$row['server_id']] = [];
                 }
 
-                $server_restrictions[$row['server_id']][] = new RestrictedProject(
-                    $row['project_id'],
-                    $row['name'],
-                    $row['label']
-                );
+                $server_restrictions[$row['server_id']][] = RestrictedProject::fromRow($row);
 
                 return $server_restrictions;
             },
@@ -119,13 +115,9 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
 
         if ($row['is_project_restricted'] || $this->isThereMultipleServers()) {
             $project_restrictions = array_map(
-                static fn(array $row) => new RestrictedProject(
-                    $row['project_id'],
-                    $row['name'],
-                    $row['label']
-                ),
+                static fn(array $row) => RestrictedProject::fromRow($row),
                 $this->getDB()->run(
-                    'SELECT R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label
+                    'SELECT R.project_id, `groups`.unix_group_name AS name, `groups`.group_name AS label, `groups`.icon_codepoint
                         FROM plugin_onlyoffice_document_server_project_restriction AS R
                         INNER JOIN `groups` ON (R.project_id = `groups`.group_id AND `groups`.status <> "D")
                         WHERE server_id=?',
