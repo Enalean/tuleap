@@ -23,11 +23,13 @@ use std::sync::Arc;
 use wasi_common::pipe::{ReadPipe, WritePipe};
 use wasmtime::*;
 use wasmtime_wasi::sync::WasiCtxBuilder;
+use wasmtime_wasi::WasiCtx;
 use wire::{InternalErrorJson, RejectionMessageJson, UserErrorJson, WasmExpectedOutputJson};
 
 mod wire;
 
 const MAX_EXEC_TIME_IN_MS: u64 = 80;
+const MAX_MEMORY_SIZE: usize = 3145728; /* 3 Mo  */
 
 #[no_mangle]
 pub extern "C" fn callWasmModule(
@@ -64,6 +66,10 @@ pub extern "C" fn callWasmModule(
                     "The module has exceeded the {} ms of allowed computation time",
                     MAX_EXEC_TIME_IN_MS
                 )),
+                Some(&Trap::UnreachableCodeReached) => user_error(format!(
+                    "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use",
+                    MAX_MEMORY_SIZE
+                )),
                 None => internal_error(format!("{}", e.to_string())),
                 _ => user_error(format!("{}", e.root_cause())),
             };
@@ -98,14 +104,25 @@ fn load_module(engine: &Engine, path: &String) -> Result<Module> {
     Module::from_file(engine, path)
 }
 
+struct StoreState {
+    limits: StoreLimits,
+    wasi: WasiCtx,
+}
+
 fn compile_and_exec(filename: String, input: String) -> Result<String, anyhow::Error> {
     let stdin = ReadPipe::from(input.to_owned());
     let stdout = WritePipe::new_in_memory();
 
-    let wasi = WasiCtxBuilder::new()
-        .stdin(Box::new(stdin.clone()))
-        .stdout(Box::new(stdout.clone()))
-        .build();
+    let my_state = StoreState {
+        limits: StoreLimitsBuilder::new()
+            .memory_size(MAX_MEMORY_SIZE)
+            .instances(1)
+            .build(),
+        wasi: WasiCtxBuilder::new()
+            .stdin(Box::new(stdin.clone()))
+            .stdout(Box::new(stdout.clone()))
+            .build(),
+    };
 
     let mut config = Config::new();
     config.epoch_interruption(true);
@@ -113,8 +130,9 @@ fn compile_and_exec(filename: String, input: String) -> Result<String, anyhow::E
 
     let mut linker = Linker::new(&engine);
 
-    let mut store = Store::new(&engine, wasi);
-    wasmtime_wasi::add_to_linker(&mut linker, |s| s)?;
+    let mut store = Store::new(&engine, my_state);
+    store.limiter(|state| &mut state.limits);
+    wasmtime_wasi::add_to_linker(&mut linker, |state: &mut StoreState| &mut state.wasi)?;
 
     store.epoch_deadline_trap();
     store.set_epoch_deadline(1);
@@ -163,7 +181,7 @@ mod tests {
     use std::os::raw::c_char;
     use std::ptr;
 
-    use crate::{callWasmModule, MAX_EXEC_TIME_IN_MS};
+    use crate::{callWasmModule, MAX_EXEC_TIME_IN_MS, MAX_MEMORY_SIZE};
 
     #[test]
     fn expected_output_rejection() {
@@ -271,6 +289,29 @@ mod tests {
     }
 
     #[test]
+    fn module_not_found() {
+        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/do-not-exist.wasm";
+        let wasm_c_str = CString::new(wasm_module_path).unwrap();
+        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+
+        let json = r#"{
+            "updated_references": {
+                "refs\/heads\/tuleap-master": {
+                    "old_value": "c8ee0a8bcf3f185a272a04d6493456b3562f5050",
+                    "new_value": "e6ecbb16e4e9792fa8c5824204e1a58f2007dc31"
+                }
+        }"#;
+        let json_c_str = CString::new(json).unwrap();
+        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+
+        let c_out = callWasmModule(wasm_c_world, json_c_world);
+        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
+        let str_out: &str = cstr_out.to_str().unwrap();
+
+        assert_eq!(r#"{"internal_error":"failed to read input file"}"#, str_out);
+    }
+
+    #[test]
     fn module_exceeding_max_running_time_gets_killed() {
         let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/running-time.wasm";
         let wasm_c_str = CString::new(wasm_module_path).unwrap();
@@ -310,6 +351,30 @@ mod tests {
 
         assert_eq!(
             r#"{"error":"The wasm module did not return valid JSON"}"#,
+            str_out
+        );
+    }
+
+    #[test]
+    fn wasm_module_allocate_too_much_memory() {
+        let wasm_module_path =
+            "./test-wasm-modules/target/wasm32-wasi/release/memory-alloc-fail.wasm";
+        let wasm_c_str = CString::new(wasm_module_path).unwrap();
+        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
+
+        let json = "";
+        let json_c_str = CString::new(json).unwrap();
+        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
+
+        let c_out = callWasmModule(wasm_c_world, json_c_world);
+        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
+        let str_out: &str = cstr_out.to_str().unwrap();
+
+        assert_eq!(
+            format!(
+                r#"{{"error":"wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use"}}"#,
+                MAX_MEMORY_SIZE
+            ),
             str_out
         );
     }

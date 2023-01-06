@@ -10,3 +10,7 @@ path = "src/running-time/main.rs"
 [[bin]]
 name = "wrong-json"
 path = "src/wrong-json/main.rs"
+
+[[bin]]
+name = "memory-alloc-fail"
+path = "src/memory-alloc-fail/main.rs"
