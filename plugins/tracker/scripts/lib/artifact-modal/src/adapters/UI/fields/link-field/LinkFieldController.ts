@@ -55,6 +55,10 @@ import type {
 import type { LinkField } from "./LinkField";
 import type { CollectAllowedLinksTypes } from "../../../../domain/fields/link-field/CollectAllowedLinksTypes";
 import type { VerifyIsTrackerInAHierarchy } from "../../../../domain/fields/link-field/VerifyIsTrackerInAHierarchy";
+import type { DispatchEvents } from "../../../../domain/DispatchEvents";
+import { WillDisableSubmit } from "../../../../domain/submit/WillDisableSubmit";
+import { WillEnableSubmit } from "../../../../domain/submit/WillEnableSubmit";
+import { getSubmitDisabledForLinksReason } from "../../../../gettext-catalog";
 
 export type LinkFieldControllerType = {
     displayField(): LinkFieldPresenter;
@@ -104,13 +108,14 @@ export const LinkFieldController = (
     parent_verifier: VerifyHasParentLink,
     parents_retriever: RetrievePossibleParents,
     link_verifier: VerifyIsAlreadyLinked,
+    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy,
+    event_dispatcher: DispatchEvents,
+    control_popovers: ControlLinkedArtifactsPopovers,
     field: ArtifactLinkFieldStructure,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
     current_artifact_reference: ArtifactCrossReference | null,
-    control_popovers: ControlLinkedArtifactsPopovers,
-    allowed_links_types_collection: CollectAllowedLinksTypes,
-    tracker_hierarchy_verifier: VerifyIsTrackerInAHierarchy
+    allowed_links_types_collection: CollectAllowedLinksTypes
 ): LinkFieldControllerType => ({
     displayField: () =>
         LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
@@ -130,21 +135,26 @@ export const LinkFieldController = (
             allowed_links_types_collection
         ),
 
-    displayLinkedArtifacts: () =>
-        links_retriever.getLinkedArtifacts(current_artifact_identifier).match(
+    displayLinkedArtifacts: (): PromiseLike<LinkedArtifactCollectionPresenter> => {
+        event_dispatcher.dispatch(WillDisableSubmit(getSubmitDisabledForLinksReason()));
+        return links_retriever.getLinkedArtifacts(current_artifact_identifier).match(
             (artifacts) => {
+                event_dispatcher.dispatch(WillEnableSubmit());
                 const presenters = artifacts.map((linked_artifact) =>
                     LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, false)
                 );
                 return LinkedArtifactCollectionPresenter.fromArtifacts(presenters);
             },
             (fault) => {
-                if (!isCreationModeFault(fault)) {
+                if (isCreationModeFault(fault)) {
+                    event_dispatcher.dispatch(WillEnableSubmit());
+                } else {
                     fault_notifier.onFault(LinkRetrievalFault(fault));
                 }
                 return LinkedArtifactCollectionPresenter.forFault();
             }
-        ),
+        );
+    },
 
     markForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {
         deleted_link_adder.addLinkMarkedForRemoval(artifact_identifier);

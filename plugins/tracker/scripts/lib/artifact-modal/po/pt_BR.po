@@ -102,6 +102,9 @@ msgstr ""
 msgid "Keep the file"
 msgstr ""
 
+msgid "Linked artifacts are loading"
+msgstr ""
+
 msgid "Linked to"
 msgstr ""
 

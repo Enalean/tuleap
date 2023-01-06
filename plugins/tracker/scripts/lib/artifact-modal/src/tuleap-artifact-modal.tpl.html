@@ -371,7 +371,8 @@
             ng-class="{'tlp-button-danger': modal.confirm_action_to_edit, 'tlp-button-primary': !modal.confirm_action_to_edit }"
             ng-value="modal.getButtonText()"
             ng-click="modal.reopenFieldsetsWithInvalidInput($event.target.form)"
-            ng-disabled="modal.isUploadingInCKEditor()"
+            ng-disabled="modal.isSubmitDisabled()"
+            title="{{ modal.submit_disabling_reason }}"
         >
     </div>
 </form>

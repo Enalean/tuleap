@@ -72,6 +72,8 @@ import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStu
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
+import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
+import type { DispatchEvents } from "../../../../domain/DispatchEvents";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -92,7 +94,8 @@ describe(`LinkFieldController`, () => {
         parents_retriever: RetrievePossibleParents,
         allowed_link_types: AllowedLinkTypeRepresentation[],
         parent_identifier: ParentArtifactIdentifier | null,
-        verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy;
+        verify_is_tracker_in_a_hierarchy: VerifyIsTrackerInAHierarchy,
+        event_dispatcher: DispatchEvents;
 
     beforeEach(() => {
         setCatalog({
@@ -111,6 +114,7 @@ describe(`LinkFieldController`, () => {
         parents_retriever = RetrievePossibleParentsStub.withoutParents();
         parent_identifier = null;
         verify_is_tracker_in_a_hierarchy = VerifyIsTrackerInAHierarchyStub.withNoHierarchy();
+        event_dispatcher = DispatchEventsStub.buildNoOp();
 
         allowed_link_types = [
             { shortname: IS_CHILD_LINK_TYPE, forward_label: "Child", reverse_label: "Parent" },
@@ -127,6 +131,7 @@ describe(`LinkFieldController`, () => {
         const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
         const cross_reference = ArtifactCrossReferenceStub.withRef("story #18");
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(70);
+
         return LinkFieldController(
             links_retriever,
             links_retriever_sync,
@@ -154,6 +159,9 @@ describe(`LinkFieldController`, () => {
             ParentLinkVerifier(links_retriever_sync, new_links_retriever, parent_identifier),
             parents_retriever,
             link_verifier,
+            verify_is_tracker_in_a_hierarchy,
+            event_dispatcher,
+            ControlLinkedArtifactsPopoversStub.build(),
             {
                 field_id: FIELD_ID,
                 type: "art_link",
@@ -163,9 +171,7 @@ describe(`LinkFieldController`, () => {
             current_artifact_identifier,
             current_tracker_identifier,
             cross_reference,
-            ControlLinkedArtifactsPopoversStub.build(),
-            AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_link_types),
-            verify_is_tracker_in_a_hierarchy
+            AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_link_types)
         );
     };
 
@@ -235,7 +241,12 @@ describe(`LinkFieldController`, () => {
 
         it(`when the modal is in creation mode,
             it won't notify that there has been a fault
+            and it will enable the modal submit again
             and it will return an empty presenter`, async () => {
+            const event_types: string[] = [];
+            event_dispatcher = DispatchEventsStub.withCallback((event) => {
+                event_types.push(event.type);
+            });
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(
                 NoLinksInCreationModeFault()
             );
@@ -243,25 +254,44 @@ describe(`LinkFieldController`, () => {
 
             expect(artifacts.has_loaded_content).toBe(true);
             expect(fault_notifier.getCallCount()).toBe(0);
+            expect(event_types).toHaveLength(2);
+            expect(event_types).toContain("WillDisableSubmit");
+            expect(event_types).toContain("WillEnableSubmit");
         });
 
         it(`when the modal is in edition mode and it succeeds loading,
+            and it will disable the modal submit while links are loading, so that existing links are not erased by mistake
             it will return a presenter with the linked artifacts`, async () => {
+            const event_types: string[] = [];
+            event_dispatcher = DispatchEventsStub.withCallback((event) => {
+                event_types.push(event.type);
+            });
             const linked_artifact = LinkedArtifactStub.withDefaults();
             links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
             const artifacts = await displayLinkedArtifacts();
 
             expect(artifacts.has_loaded_content).toBe(true);
+            expect(event_types).toHaveLength(2);
+            expect(event_types).toContain("WillDisableSubmit");
+            expect(event_types).toContain("WillEnableSubmit");
         });
 
         it(`when the modal is in edition mode and it fails loading,
             it will notify that there has been a fault
+            and it will not enable again the modal submit, so that existing links are not erased by mistake
             and it will return an empty presenter`, async () => {
+            const event_types: string[] = [];
+            event_dispatcher = DispatchEventsStub.withCallback((event) => {
+                event_types.push(event.type);
+            });
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(Fault.fromMessage("Ooops"));
             const artifacts = await displayLinkedArtifacts();
 
             expect(artifacts.has_loaded_content).toBe(true);
             expect(fault_notifier.getCallCount()).toBe(1);
+            expect(event_types).toHaveLength(1);
+            expect(event_types).toContain("WillDisableSubmit");
+            expect(event_types).not.toContain("WillEnableSubmit");
         });
     });
 

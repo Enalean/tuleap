@@ -55,6 +55,7 @@ import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUser
 import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
+import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 
 const getSelectMainOptionsGroup = (select: HTMLSelectElement): HTMLOptGroupElement =>
     selectOrThrow(select, "[data-test=link-type-select-optgroup]", HTMLOptGroupElement);
@@ -124,13 +125,14 @@ describe("TypeSelectorTemplate", () => {
             VerifyHasParentLinkStub.withNoParentLink(),
             parents_retriever,
             link_verifier,
+            VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
+            DispatchEventsStub.buildNoOp(),
+            ControlLinkedArtifactsPopoversStub.build(),
             field,
             current_artifact_identifier,
             current_tracker_identifier,
             ArtifactCrossReferenceStub.withRef("bug #22"),
-            ControlLinkedArtifactsPopoversStub.build(),
-            AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
-            VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
+            AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types)
         );
         host = {
             controller,

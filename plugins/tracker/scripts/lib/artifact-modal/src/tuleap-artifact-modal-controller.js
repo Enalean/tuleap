@@ -137,6 +137,7 @@ function ArtifactModalController(
         title: getTitle(),
         tracker: modal_model.tracker,
         values: modal_model.values,
+        submit_disabling_reason: null,
         new_followup_comment: {
             body: "",
             format: modal_model.text_fields_format,
@@ -197,6 +198,9 @@ function ArtifactModalController(
                 ParentLinkVerifier(links_store, new_links_store, parent_identifier),
                 possible_parents_cache,
                 already_linked_verifier,
+                TrackerInAHierarchyVerifier(modal_model.tracker.parent),
+                event_dispatcher,
+                LinkedArtifactsPopoversController(),
                 field,
                 current_artifact_identifier,
                 current_tracker_identifier,
@@ -205,9 +209,7 @@ function ArtifactModalController(
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
                     modal_model.tracker.color_name
                 ),
-                LinkedArtifactsPopoversController(),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types),
-                TrackerInAHierarchyVerifier(modal_model.tracker.parent)
+                AllowedLinksTypesCollection.buildFromTypesRepresentations(field.allowed_types)
             );
         },
         getFileFieldController: (field) => {
@@ -233,7 +235,9 @@ function ArtifactModalController(
         getRestErrorMessage: getErrorMessage,
         hasRestError: hasError,
         isDisabled,
-        isUploadingInCKEditor,
+        isSubmitDisabled: () => {
+            return self.submit_disabling_reason !== null || isUploadingInCKEditor();
+        },
         isThereAtLeastOneFileField: () => {
             const event = DidCheckFileFieldIsPresent();
             event_dispatcher.dispatch(event);
@@ -264,6 +268,13 @@ function ArtifactModalController(
     }
 
     function init() {
+        event_dispatcher.addObserver("WillDisableSubmit", (event) => {
+            self.submit_disabling_reason = event.reason;
+        });
+        event_dispatcher.addObserver("WillEnableSubmit", () => {
+            self.submit_disabling_reason = null;
+            $scope.$apply();
+        });
         setFieldDependenciesWatchers();
 
         modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", setIsNotUploadingInCKEditor);

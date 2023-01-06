@@ -55,6 +55,7 @@ import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUser
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
 import { selectOrThrow } from "@tuleap/dom";
+import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -203,6 +204,9 @@ describe(`LinkedArtifactTemplate`, () => {
                 VerifyHasParentLinkStub.withNoParentLink(),
                 parents_retriever,
                 link_verifier,
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
+                DispatchEventsStub.buildNoOp(),
+                ControlLinkedArtifactsPopoversStub.build(),
                 {
                     field_id: 457,
                     label: "Artifact link",
@@ -212,9 +216,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 current_artifact_identifier,
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("story #72"),
-                ControlLinkedArtifactsPopoversStub.build(),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations([]),
-                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
+                AllowedLinksTypesCollection.buildFromTypesRepresentations([])
             );
 
             return {

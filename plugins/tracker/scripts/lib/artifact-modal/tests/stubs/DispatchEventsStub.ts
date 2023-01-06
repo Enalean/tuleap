@@ -17,20 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DidCheckFileFieldIsPresent } from "./DidCheckFileFieldIsPresent";
-import type { DidChangeListFieldValue } from "./DidChangeListFieldValue";
-import type { WillDisableSubmit } from "./submit/WillDisableSubmit";
-import type { WillEnableSubmit } from "./submit/WillEnableSubmit";
+import type { DispatchEvents, EventObserver } from "../../src/domain/DispatchEvents";
+import type { EventType } from "../../src/domain/DomainEvent";
 
-export type AllEvents = {
-    DidCheckFileFieldIsPresent: DidCheckFileFieldIsPresent;
-    DidChangeListFieldValue: DidChangeListFieldValue;
-    WillDisableSubmit: WillDisableSubmit;
-    WillEnableSubmit: WillEnableSubmit;
-};
+export const DispatchEventsStub = {
+    buildNoOp: (): DispatchEvents => ({
+        dispatch(): void {
+            // Do nothing, ignore all events
+        },
+    }),
 
-export type EventType = keyof AllEvents;
-
-export type DomainEvent<TypeOfEvent extends EventType> = {
-    readonly type: TypeOfEvent;
+    withCallback: (callback: EventObserver<EventType>): DispatchEvents => ({
+        dispatch(event, ...other_events): void {
+            for (const current_event of [event, ...other_events]) {
+                callback(current_event);
+            }
+        },
+    }),
 };

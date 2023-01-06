@@ -53,6 +53,7 @@ import { UserIdentifierStub } from "../../../../../tests/stubs/UserIdentifierStu
 import { RetrieveUserHistoryStub } from "../../../../../tests/stubs/RetrieveUserHistoryStub";
 import { okAsync } from "neverthrow";
 import { SearchArtifactsStub } from "../../../../../tests/stubs/SearchArtifactsStub";
+import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -189,6 +190,9 @@ describe(`NewLinkTemplate`, () => {
                 VerifyHasParentLinkStub.withNoParentLink(),
                 parents_retriever,
                 link_verifier,
+                VerifyIsTrackerInAHierarchyStub.withNoHierarchy(),
+                DispatchEventsStub.buildNoOp(),
+                ControlLinkedArtifactsPopoversStub.build(),
                 {
                     field_id: 525,
                     label: "Artifact link",
@@ -198,9 +202,7 @@ describe(`NewLinkTemplate`, () => {
                 current_artifact_identifier,
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("bug #22"),
-                ControlLinkedArtifactsPopoversStub.build(),
-                AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types),
-                VerifyIsTrackerInAHierarchyStub.withNoHierarchy()
+                AllowedLinksTypesCollection.buildFromTypesRepresentations(allowed_types)
             );
 
             return {
