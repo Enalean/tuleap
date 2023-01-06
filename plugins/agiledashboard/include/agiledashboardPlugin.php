@@ -825,7 +825,15 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
-        $event->addJavascript($this->getScriptAssetByName('permission-per-group.js'));
+        $event->addJavascript(
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(
+                    __DIR__ . '/../scripts/permissions-per-group/frontend-assets',
+                    '/assets/agiledashboard/permissions-per-group'
+                ),
+                'src/index.js'
+            )
+        );
     }
 
     /**
@@ -2117,11 +2125,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
 
         $event->addServiceNameUsed('agile_dashboard');
-    }
-
-    private function getScriptAssetByName(string $name): JavascriptAsset
-    {
-        return new JavascriptAsset($this->getIncludeAssets(), $name);
     }
 
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
