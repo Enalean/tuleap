@@ -36,8 +36,14 @@ msgstr "Tous les projets peuvent utiliser le serveur"
 msgid "Allow all projects to use this server"
 msgstr "Autoriser tous les projets à utiliser ce serveur"
 
+msgid "Allow for all projects"
+msgstr "Autoriser pour tous les projets"
+
 msgid "Allow project"
 msgstr "Autoriser le projet"
+
+msgid "Allowing for all projects"
+msgstr "Autorisation pour tous les projets"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -122,6 +128,13 @@ msgstr "Sauvegarder"
 msgid "Secret is missing"
 msgstr "Le secret est manquant"
 
+msgid ""
+"The list of projects that were previously whitelisted will be permanently "
+"lost."
+msgstr ""
+"La liste des projets qui étaient explicitement autorisés sera définitivement "
+"perdue."
+
 msgid "There isn't any document servers configured"
 msgstr "Aucun serveurs n'est actuellement configuré"
 
@@ -143,6 +156,13 @@ msgstr "Impossible de trouver les informations du projet"
 msgid "Under construction, you cannot set restrictions yet."
 msgstr ""
 "En construction, vous ne pouvez définir les restrictions pour l'instant."
+
+msgid ""
+"You are about to allow access to the server for every projects on the "
+"platform."
+msgstr ""
+"Vous êtes sur le point d'autoriser l'accès au serveur pour tous les projets "
+"de la plateforme."
 
 msgid "You're about to delete the following document server:"
 msgstr "Vous êtes sur le point de supprimer le serveur de document :"

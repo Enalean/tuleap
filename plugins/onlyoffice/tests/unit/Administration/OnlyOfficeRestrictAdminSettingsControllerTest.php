@@ -38,7 +38,7 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testSaveSettings(): void
+    public function testSaveRestriction(): void
     {
         $restrictor = IRestrictDocumentServerStub::buildSelf();
 
@@ -47,12 +47,49 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
             ->withAttribute('id', 1)
-            ->withParsedBody(['projects' => ['101', '102']]);
+            ->withParsedBody(['is_restricted' => '1', 'projects' => ['101', '102']]);
 
         $response = $controller->handle($request);
 
         self::assertEquals(302, $response->getStatusCode());
+        self::assertFalse($restrictor->hasBeenUnrestricted());
         self::assertTrue($restrictor->hasBeenRestricted());
+    }
+
+    public function testSaveUnestriction(): void
+    {
+        $restrictor = IRestrictDocumentServerStub::buildSelf();
+
+        $controller = $this->buildController($restrictor);
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
+            ->withAttribute('id', 1)
+            ->withParsedBody(['is_restricted' => '0']);
+
+        $response = $controller->handle($request);
+
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertFalse($restrictor->hasBeenRestricted());
+        self::assertTrue($restrictor->hasBeenUnrestricted());
+    }
+
+    public function testSaveUnestrictionFailsIfTooManyServers(): void
+    {
+        $restrictor = IRestrictDocumentServerStub::buildWithTooManyServersForUnrestriction();
+
+        $controller = $this->buildController($restrictor);
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
+            ->withAttribute('id', 1)
+            ->withParsedBody(['is_restricted' => '0']);
+
+        $response = $controller->handle($request);
+
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertFalse($restrictor->hasBeenRestricted());
+        self::assertFalse($restrictor->hasBeenUnrestricted());
     }
 
     /**
@@ -75,7 +112,8 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
     {
         return [
             ['No parameters' => []],
-            ['Projects is not an array' => ['projects' => 'not an array']],
+            ['is_restricted is not in the body' => ['projects' => [1]]],
+            ['Projects is not an array' => ['is_restricted' => '1', 'projects' => 'not an array']],
         ];
     }
 

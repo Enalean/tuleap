@@ -30,6 +30,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OnlyOffice\DocumentServer\IRestrictDocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\TooManyServersException;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
 
@@ -51,22 +52,60 @@ final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15C
     {
         $this->csrf_token->check();
 
-        $body     = $request->getParsedBody();
+        $user = $request->getAttribute(\PFUser::class);
+        assert($user instanceof \PFUser);
+
+        $server_id = (int) $request->getAttribute('id');
+
+        $body = $request->getParsedBody();
+        if (! isset($body['is_restricted'])) {
+            throw new ForbiddenException();
+        }
+
+        return match ((bool) $body['is_restricted']) {
+            true => $this->restrict($server_id, $user, $body),
+            false => $this->unrestrict($server_id, $user),
+        };
+    }
+
+    private function unrestrict(int $server_id, \PFUser $user): ResponseInterface
+    {
+        try {
+            $this->restrictor->unrestrict($server_id);
+
+            return $this->redirect_with_feedback_factory->createResponseForUser(
+                $user,
+                OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL,
+                new NewFeedback(
+                    \Feedback::SUCCESS,
+                    dgettext('tuleap-onlyoffice', 'Document server restrictions have been removed')
+                ),
+            );
+        } catch (TooManyServersException) {
+            return $this->redirect_with_feedback_factory->createResponseForUser(
+                $user,
+                OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL,
+                new NewFeedback(
+                    \Feedback::ERROR,
+                    dgettext('tuleap-onlyoffice', 'Document server restrictions cannot be removed since there are more than one server defined. Please remove other servers beforehand.')
+                ),
+            );
+        }
+    }
+
+    private function restrict(int $server_id, \PFUser $user, array $body): ResponseInterface
+    {
         $projects = $body['projects'] ?? null;
         if (! is_array($projects)) {
             throw new ForbiddenException();
         }
 
-        $server_id = (int) $request->getAttribute('id');
         $this->restrictor->restrict($server_id, $projects);
-
-        $user = $request->getAttribute(\PFUser::class);
-        assert($user instanceof \PFUser);
 
         return $this->redirect_with_feedback_factory->createResponseForUser(
             $user,
             self::getServerRestrictUrl($server_id),
-            new NewFeedback(\Feedback::INFO, dgettext('tuleap-onlyoffice', 'Document server restrictions have been saved')),
+            new NewFeedback(\Feedback::SUCCESS, dgettext('tuleap-onlyoffice', 'Document server restrictions have been saved')),
         );
     }
 

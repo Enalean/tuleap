@@ -28,6 +28,17 @@ msgstr "Le serveur de document a été créé"
 msgid "Document server have been deleted"
 msgstr "Le serveur de document a été supprimé"
 
+msgid ""
+"Document server restrictions cannot be removed since there are more than one "
+"server defined. Please remove other servers beforehand."
+msgstr ""
+"Les restrictions pour le serveur de documents ne peuvent pas être supprimées "
+"car il y a plus d'un serveur défini. Veuillez supprimer les autres serveurs "
+"au préalable."
+
+msgid "Document server restrictions have been removed"
+msgstr "Les restrictions au serveur de documents ont été supprimées"
+
 msgid "Document server restrictions have been saved"
 msgstr "Les restrictions du serveur de document ont été sauvegardées"
 

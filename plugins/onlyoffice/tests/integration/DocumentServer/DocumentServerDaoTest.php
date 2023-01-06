@@ -147,6 +147,33 @@ final class DocumentServerDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($are_projects_restrictions_deleted_after_server_deletion);
     }
 
+    public function testUnrestriction(): void
+    {
+        $this->dao->create('https://example.com', new ConcealedString('very_secret'));
+        $this->dao->create('https://example.com/another', new ConcealedString('another_secret'));
+
+        $servers = $this->dao->retrieveAll();
+        $this->dao->restrict($servers[0]->id, [$this->project_a_id, $this->project_b_id]);
+        $server_a = $this->dao->retrieveById($servers[0]->id);
+        $server_b = $this->dao->retrieveById($servers[1]->id);
+
+        self::assertTrue($server_a->is_project_restricted);
+        self::assertTrue($server_b->is_project_restricted);
+
+        try {
+            $this->dao->unrestrict($server_a->id);
+            self::fail("Cannot unrestrict when there are more than one server");
+        } catch (TooManyServersException) {
+        }
+
+        $this->dao->delete($server_b->id);
+        $this->dao->unrestrict($server_a->id);
+
+        $server_a = $this->dao->retrieveById($server_a->id);
+        self::assertFalse($server_a->is_project_restricted);
+        self::assertEmpty($server_a->project_restrictions);
+    }
+
     private function decrypt(ConcealedString $secret): ConcealedString
     {
         return $this->encryption->decryptValue($secret->getString());

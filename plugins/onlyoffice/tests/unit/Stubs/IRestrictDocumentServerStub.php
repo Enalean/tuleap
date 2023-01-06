@@ -23,18 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Stubs;
 
 use Tuleap\OnlyOffice\DocumentServer\IRestrictDocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\TooManyServersException;
 
 final class IRestrictDocumentServerStub implements IRestrictDocumentServer
 {
-    private bool $has_been_restricted = false;
+    private bool $has_been_restricted   = false;
+    private bool $has_been_unrestricted = false;
 
-    private function __construct()
+    private function __construct(private bool $too_many_servers_for_unrestriction)
     {
     }
 
     public static function buildSelf(): self
     {
-        return new self();
+        return new self(false);
+    }
+
+    public static function buildWithTooManyServersForUnrestriction(): self
+    {
+        return new self(true);
     }
 
     public function restrict(int $id, array $project_ids): void
@@ -42,8 +49,21 @@ final class IRestrictDocumentServerStub implements IRestrictDocumentServer
         $this->has_been_restricted = true;
     }
 
+    public function unrestrict(int $id): void
+    {
+        if ($this->too_many_servers_for_unrestriction) {
+            throw new TooManyServersException();
+        }
+        $this->has_been_unrestricted = true;
+    }
+
     public function hasBeenRestricted(): bool
     {
         return $this->has_been_restricted;
+    }
+
+    public function hasBeenUnrestricted(): bool
+    {
+        return $this->has_been_unrestricted;
     }
 }

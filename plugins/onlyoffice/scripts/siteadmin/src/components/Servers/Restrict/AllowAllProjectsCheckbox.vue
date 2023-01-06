@@ -20,22 +20,73 @@
 
 <template>
     <div class="tlp-form-element" v-if="config.servers.length <= 1">
-        <label class="tlp-label tlp-checkbox">
-            <input type="checkbox" v-bind:checked="!server.is_project_restricted" disabled />
+        <label class="tlp-label" for="onlyoffice-admin-toggle-allow-all">
             {{ $gettext("Allow all projects to use this server") }}
         </label>
-        <p class="tlp-text-warning">
+        <div class="tlp-switch">
+            <input type="hidden" name="is_restricted" value="1" />
+            <input
+                type="checkbox"
+                name="is_restricted"
+                value="0"
+                v-model="is_checked"
+                v-bind:disabled="!server.is_project_restricted"
+                v-on:change="onChange($event.target)"
+                id="onlyoffice-admin-toggle-allow-all"
+                class="tlp-switch-checkbox"
+            />
+            <label
+                for="onlyoffice-admin-toggle-allow-all"
+                class="tlp-switch-button"
+                aria-hidden
+            ></label>
+        </div>
+        <p class="tlp-text-warning" v-if="!server.is_project_restricted">
             <i class="fa-solid fa-person-digging" aria-hidden="true"></i>
             {{ $gettext("Under construction, you cannot set restrictions yet.") }}
         </p>
+        <unrestiction-confirmation-modal
+            v-if="show_unrestriction_modal"
+            v-on:cancel-unrestriction="cancelUnrestriction"
+        />
     </div>
+    <input type="hidden" name="is_restricted" value="1" v-else />
 </template>
 
 <script setup lang="ts">
 import type { Server } from "../../../type";
 import { CONFIG } from "../../../injection-keys";
 import { strictInject } from "../../../helpers/strict-inject";
-defineProps<{ server: Server }>();
+import { ref } from "vue";
+import UnrestictionConfirmationModal from "./UnrestictionConfirmationModal.vue";
+
+const props = defineProps<{
+    server: Server;
+}>();
+
+const is_checked = ref(!props.server.is_project_restricted);
+const show_unrestriction_modal = ref(false);
 
 const config = strictInject(CONFIG);
+
+function onChange(checkbox: EventTarget | null): void {
+    if (!(checkbox instanceof HTMLInputElement)) {
+        return;
+    }
+
+    if (props.server.is_project_restricted) {
+        show_unrestriction_modal.value = checkbox.checked;
+    }
+}
+
+function cancelUnrestriction(): void {
+    show_unrestriction_modal.value = false;
+    is_checked.value = false;
+}
 </script>
+
+<style lang="scss" scoped>
+.tlp-form-element {
+    margin: 0 0 var(--tlp-x-large-spacing);
+}
+</style>
