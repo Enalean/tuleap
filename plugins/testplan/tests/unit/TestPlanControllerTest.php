@@ -98,7 +98,6 @@ final class TestPlanControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->controller = new TestPlanController(
             $this->renderer,
             $this->bread_crumbs_builder,
-            $this->agiledashboard_asset,
             $this->testplan_asset,
             $this->testplan_pane_displayable,
             $this->visit_recorder,

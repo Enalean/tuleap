@@ -795,7 +795,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function burning_parrot_get_stylesheets(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = HTTPRequest::instance();
-        if (AgileDashboardLegacyController::isInOverviewTab($request) || AgileDashboardLegacyController::isPlanningV2URL($request)) {
+        if (AgileDashboardLegacyController::isInOverviewTab($request)) {
             $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('scrum-style.css');
         } elseif (AgileDashboardLegacyController::isScrumAdminURL($request)) {
             $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('administration-style.css');
@@ -805,7 +805,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (AgileDashboardLegacyController::isInOverviewTab(HTTPRequest::instance())) {
-            $params['javascript_files'][] = $this->getIncludeAssets()->getFileURL('scrum-header.js');
+            $params['javascript_files'][] = $this->getIncludeAssets()->getFileURL('overview.js');
             return;
         }
 
@@ -839,7 +839,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
                 new IncludeAssets(__DIR__ . '/../scripts/kanban/frontend-assets', '/assets/agiledashboard/kanban')
             );
         } elseif (AgileDashboardLegacyController::isPlanningV2URL($request)) {
-            return new PlanningJavascriptDependenciesProvider($this->getIncludeAssets());
+            return new PlanningJavascriptDependenciesProvider(
+                new IncludeAssets(__DIR__ . '/../scripts/planning-v2/frontend-assets', '/assets/agiledashboard/planning-v2')
+            );
         }
 
         return null;
@@ -1861,7 +1863,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    public function getIncludeAssets(): IncludeAssets
+    private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
             __DIR__ . '/../frontend-assets',

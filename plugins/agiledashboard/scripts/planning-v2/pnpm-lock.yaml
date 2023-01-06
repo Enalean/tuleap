@@ -2,11 +2,16 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/burningparrot-theme': workspace:*
   '@tuleap/plugin-agiledashboard-card-fields': workspace:*
+  '@tuleap/plugin-agiledashboard-scrum-header': workspace:*
+  '@tuleap/plugin-agiledashboard-scrum-milestone-header': workspace:*
   '@tuleap/plugin-agiledashboard-shared': workspace:*
   '@tuleap/plugin-tracker-artifact-modal': workspace:*
+  '@tuleap/project-background': workspace:*
   '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/tlp-swatch-colors': workspace:*
   angular: ^1.8.2
   angular-animate: ^1.8.2
   angular-gettext: ^2.4.2
@@ -21,11 +26,16 @@ specifiers:
   sprintf-js: ^1.1.2
 
 dependencies:
+  '@tuleap/burningparrot-theme': link:../../../../src/themes/BurningParrot
   '@tuleap/plugin-agiledashboard-card-fields': link:../lib/card-fields
+  '@tuleap/plugin-agiledashboard-scrum-header': link:../lib/scrum-header
+  '@tuleap/plugin-agiledashboard-scrum-milestone-header': link:../lib/scrum-milestone-header
   '@tuleap/plugin-agiledashboard-shared': link:../lib/shared
   '@tuleap/plugin-tracker-artifact-modal': link:../../../tracker/scripts/lib/artifact-modal
+  '@tuleap/project-background': link:../../../../lib/frontend/project-background
   '@tuleap/tlp-dropdown': link:../../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-swatch-colors': link:../../../../lib/frontend/tlp-swatch-colors
   angular: 1.8.2
   angular-animate: 1.8.2
   angular-gettext: 2.4.2

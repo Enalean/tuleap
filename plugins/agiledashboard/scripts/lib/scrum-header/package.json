@@ -1,0 +1,16 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-agiledashboard-scrum-header",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "exports": {
+    ".": {
+      "style": "./themes/main.scss"
+    }
+  },
+  "dependencies": {
+    "@tuleap/burningparrot-theme": "workspace:*",
+    "@tuleap/project-background": "workspace:*"
+  }
+}

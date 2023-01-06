@@ -18,7 +18,12 @@
  */
 
 @use "@tuleap/project-background";
-@import "../../src/themes/BurningParrot/css/includes/global-variables";
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+
+.agiledashboard-header-title {
+    margin: 0;
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
+}
 
 .project-with-background {
     .agiledashboard-header-title,
@@ -37,8 +42,8 @@ body {
     @each $element-with-project-background in $elements-with-project-background {
         @include project-background.apply-background(
             $element-with-project-background,
-            $sidebar-expanded-width,
-            $sidebar-collapsed-width
+            global-variables.$sidebar-expanded-width,
+            global-variables.$sidebar-collapsed-width
         );
     }
 }

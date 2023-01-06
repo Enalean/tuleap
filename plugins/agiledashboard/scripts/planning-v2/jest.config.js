@@ -25,11 +25,11 @@ const jest_base_config = defineAngularMocksJestConfiguration();
 module.exports = {
     ...jest_base_config,
     displayName: "planning-v2",
+    setupFiles: [...jest_base_config.setupFiles, "./tests/jest.setup.js"],
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",
         // The artifact modal module causes lots of WARNING: Tried to load AngularJS more than once.
         "^angular$": "<rootDir>/node_modules/angular/index.js",
     },
-    setupFilesAfterEnv: [...jest_base_config.setupFilesAfterEnv, "./test-load-jquery.js"],
 };

@@ -2,10 +2,12 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/burningparrot-theme': workspace:*
   '@tuleap/cypress-configurator': workspace:*
   '@tuleap/cypress-utilities-support': workspace:*
   '@tuleap/drag-and-drop': workspace:*
   '@tuleap/keyboard-shortcuts': workspace:*
+  '@tuleap/plugin-agiledashboard-scrum-milestone-header': workspace:*
   '@tuleap/project-background': workspace:*
   '@tuleap/tlp': workspace:*
   '@tuleap/tlp-fetch': workspace:*
@@ -30,8 +32,10 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
+  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/drag-and-drop': link:../../lib/frontend/drag-and-drop
   '@tuleap/keyboard-shortcuts': link:../../lib/frontend/keyboard-shortcuts
+  '@tuleap/plugin-agiledashboard-scrum-milestone-header': link:../agiledashboard/scripts/lib/scrum-milestone-header
   '@tuleap/project-background': link:../../lib/frontend/project-background
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch

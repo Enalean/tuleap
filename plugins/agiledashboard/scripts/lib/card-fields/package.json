@@ -16,6 +16,7 @@
     }
   },
   "dependencies": {
+    "@tuleap/tlp-swatch-colors": "workspace:*",
     "dompurify": "^2.3.6",
     "escape-string-regexp": "^2.0.0"
   },
