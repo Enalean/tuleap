@@ -2,7 +2,6 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
-  '@tuleap/burningparrot-theme': workspace:*
   '@tuleap/chart-builder': workspace:*
   '@tuleap/cypress-configurator': workspace:*
   '@tuleap/cypress-utilities-support': workspace:*
@@ -10,7 +9,6 @@ specifiers:
   '@tuleap/plugin-agiledashboard-scrum-header': workspace:*
   '@tuleap/plugin-agiledashboard-scrum-milestone-header': workspace:*
   '@tuleap/plugin-tracker-color-picker': workspace:*
-  '@tuleap/project-background': workspace:*
   '@types/node': ^14.14.31
   d3: ^7.0.0
   d3-array: ^3.0.1
@@ -21,13 +19,11 @@ specifiers:
   sprintf-js: ^1.1.2
 
 dependencies:
-  '@tuleap/burningparrot-theme': link:../../src/themes/BurningParrot
   '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
   '@tuleap/plugin-agiledashboard-burnup-data-transformer': link:scripts/lib/burnup-data-transformer
   '@tuleap/plugin-agiledashboard-scrum-header': link:scripts/lib/scrum-header
   '@tuleap/plugin-agiledashboard-scrum-milestone-header': link:scripts/lib/scrum-milestone-header
   '@tuleap/plugin-tracker-color-picker': link:../tracker/scripts/lib/colorpicker
-  '@tuleap/project-background': link:../../lib/frontend/project-background
   d3: 7.0.0
   d3-array: 3.0.1
   d3-selection: 3.0.0

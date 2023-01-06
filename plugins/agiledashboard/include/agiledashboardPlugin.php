@@ -797,8 +797,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $request = HTTPRequest::instance();
         if (AgileDashboardLegacyController::isInOverviewTab($request)) {
             $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('scrum-style.css');
-        } elseif (AgileDashboardLegacyController::isScrumAdminURL($request)) {
-            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('administration-style.css');
         }
     }
 
