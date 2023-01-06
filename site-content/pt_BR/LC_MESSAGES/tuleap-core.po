@@ -341,13 +341,6 @@ msgstr ""
 msgid "A template without any service enabled."
 msgstr "Um modelo sem qualquer serviço habilitado."
 
-msgid ""
-"A token will be automatically generated at the form submission. The comment "
-"is not required but it can help you to manage your tokens."
-msgstr ""
-"Um token será gerado automaticamente ao enviar o formulário. O comentário "
-"não é obrigatório mas pode lhe ajudar na gestão dos seus tokens."
-
 msgid "API"
 msgstr "API"
 
@@ -1096,6 +1089,11 @@ msgstr "Criar grupo de usuários"
 msgid "Create your account"
 msgstr ""
 
+msgid ""
+"Creating new SVN tokens is no more possible, personal access keys should be "
+"used instead."
+msgstr ""
+
 msgid "Current and new passwords are identical"
 msgstr "As senhas atuais e novas são idênticas"
 
@@ -1596,14 +1594,8 @@ msgstr "Geral"
 msgid "Generate"
 msgstr "Gerar"
 
-msgid "Generate an SVN token"
-msgstr "Gerar um token SVN"
-
 msgid "Generate new key"
 msgstr "Gerar uma nova chave"
-
-msgid "Generate new token"
-msgstr "Gerar um novo token"
 
 msgid "Generated on"
 msgstr "Gerado em"
@@ -2186,9 +2178,6 @@ msgstr "O nome da lista deve conter 4 ou mais caracteres"
 
 msgid "My Dashboard"
 msgstr "Meu Painel"
-
-msgid "My comment so I won't forget the purpose of this token..."
-msgstr "Meu comentário para lembrar o propósito deste token..."
 
 msgid "My dashboard"
 msgstr "Meu painel"
@@ -4030,9 +4019,6 @@ msgstr ""
 msgid "Today"
 msgstr "Hoje"
 
-msgid "Token comment"
-msgstr "Comentário do Token"
-
 msgid "Too many projects are waiting to be approved."
 msgstr "Há projetos demais aguardando aprovação."
 
@@ -4738,9 +4724,6 @@ msgstr "Você não tem permissão para acessar a administração do site."
 
 msgid "You don't have any SSH keys yet."
 msgstr "Você ainda não tem nenhuma chave SSH."
-
-msgid "You don't have any SVN tokens yet."
-msgstr "Você ainda não tem nenhum token SVN."
 
 msgid "You don't have any access keys yet."
 msgstr "Você ainda não tem nenhuma chave de acesso."

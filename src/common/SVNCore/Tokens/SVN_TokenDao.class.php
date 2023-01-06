@@ -33,16 +33,6 @@ class SVN_TokenDao extends \Tuleap\DB\DataAccessObject
         return $this->getDB()->run($sql, $user_id);
     }
 
-    public function generateSVNTokenForUser(int $user_id, string $token, string $comment): void
-    {
-        $generated_date = time();
-
-        $sql = "INSERT INTO svn_token (user_id, token, generated_date, comment)
-                VALUES (?, ?, ?, ?)";
-
-        $this->getDB()->run($sql, $user_id, $token, $generated_date, $comment);
-    }
-
     public function deleteSVNTokensForUser(int $user_id, array $tokens_to_be_deleted): void
     {
         if (count($tokens_to_be_deleted) === 0) {

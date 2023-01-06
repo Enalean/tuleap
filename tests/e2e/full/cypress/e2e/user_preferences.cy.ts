@@ -210,28 +210,6 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-personal-access-key]").should("have.length", 0);
             });
         });
-
-        describe("in the SVN Tokens section", () => {
-            it("the user is able to manipulate a SVN token", () => {
-                cy.get("[data-test=generate-svn-token-button]").click();
-                cy.get("[data-test=svn-token-description]").type("My handsome SVN token");
-                cy.get("[data-test=generate-new-svn-token-button]").click();
-
-                cy.get("[data-test=user-prefs-add-svn-token-feedback]").contains(
-                    "Here is your new SVN token. Please make sure you copy it, you won't be able to see it again!"
-                );
-                cy.get("[data-test=user-prefs-new-svn-token]").should("exist");
-
-                cy.get("[data-test=user-prefs-svn-token]").should("have.length", 1);
-
-                //revoke it
-                cy.get("[data-test=user-prefs-revoke-svn-token-checkbox]").click();
-                cy.get("[data-test=button-revoke-svn-tokens]").click();
-                cy.get("[data-test=user-prefs-svn-token]").should("have.length", 0);
-
-                assertFeedbackContainsMessage("SVN tokens have been successfully deleted");
-            });
-        });
     });
 
     describe("in the [Appearance & Language] tab", () => {

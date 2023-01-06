@@ -43,7 +43,7 @@ final class SVN_TokenHandlerTest extends TestCase
             ['id' => 100, 'token' => 'some_token', 'generated_date' => 1, 'last_usage' => 2, 'last_ip' => '2001:db8::3', 'comment' => ''],
             ['id' => 200, 'token' => $password_handler->computeUnixPassword(new ConcealedString(self::VALID_TOKEN)), 'generated_date' => 1, 'last_usage' => 2, 'last_ip' => '2001:db8::3', 'comment' => ''],
         ]);
-        $this->token_handler = new \SVN_TokenHandler($this->token_dao, new \RandomNumberGenerator(), $password_handler);
+        $this->token_handler = new \SVN_TokenHandler($this->token_dao, $password_handler);
     }
 
     public function testAcceptsValidToken(): void

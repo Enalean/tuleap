@@ -63,7 +63,6 @@ use Tuleap\ContentSecurityPolicy\CSPViolationReportToController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
-use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\date\Admin\RelativeDatesDisplayController;
 use Tuleap\date\Admin\RelativeDatesDisplaySaveController;
@@ -182,7 +181,6 @@ use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
 use Tuleap\User\SSHKey\SSHKeyCreateController;
 use Tuleap\User\SSHKey\SSHKeyDeleteController;
-use Tuleap\User\SVNToken\SVNTokenCreateController;
 use Tuleap\User\SVNToken\SVNTokenRevokeController;
 use Tuleap\Widget\WidgetFactory;
 use UGroupManager;
@@ -437,11 +435,6 @@ class RouteCollector
     public static function postAccountAccessKeyRevoke(): DispatchableWithRequest
     {
         return new AccessKeyRevocationController(DisplayKeysTokensController::getCSRFToken());
-    }
-
-    public static function postAccountSVNTokenCreate(): DispatchableWithRequest
-    {
-        return new SVNTokenCreateController(DisplayKeysTokensController::getCSRFToken(), SVN_TokenHandler::build(), new KeyFactory());
     }
 
     public static function postAccountSVNTokenRevoke(): DispatchableWithRequest
@@ -1055,7 +1048,6 @@ class RouteCollector
             $r->post('/ssh_key/delete', [self::class, 'postAccountSSHKeyDelete']);
             $r->post('/access_key/create', [self::class, 'postAccountAccessKeyCreate']);
             $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
-            $r->post('/svn_token/create', [self::class, 'postAccountSVNTokenCreate']);
             $r->post('/svn_token/revoke', [self::class, 'postAccountSVNTokenRevoke']);
 
             $r->get('/edition', [self::class, 'getEditionController']);
