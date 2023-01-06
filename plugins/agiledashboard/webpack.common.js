@@ -28,7 +28,6 @@ const output = webpack_configurator.configureOutput(
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 
 const entry_points = {
-    "burnup-chart": "./themes/FlamingParrot/css/burnup-chart.scss",
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "planning-admin-colorpicker": "./themes/FlamingParrot/css/planning-admin-colorpicker.scss",
 };
@@ -41,27 +40,6 @@ const webpack_config_for_themes = {
         rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
     },
     plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
-};
-
-const webpack_config_for_charts = {
-    entry: {
-        "burnup-chart": "./scripts/burnup-chart/src/burnup-chart.js",
-    },
-    context,
-    output,
-    externals: {
-        tuleap: "tuleap",
-    },
-    resolve: {
-        alias: {
-            // deduplicate moment that is also used by chart-builder
-            moment$: path.resolve(__dirname, "node_modules/moment"),
-        },
-    },
-    module: {
-        rules: [webpack_configurator.rule_po_files],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
 
 const webpack_config_for_javascript = {
@@ -78,8 +56,4 @@ const webpack_config_for_javascript = {
     plugins: [manifest_plugin],
 };
 
-module.exports = [
-    webpack_config_for_themes,
-    webpack_config_for_charts,
-    webpack_config_for_javascript,
-];
+module.exports = [webpack_config_for_themes, webpack_config_for_javascript];

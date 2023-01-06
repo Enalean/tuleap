@@ -21,7 +21,6 @@ import { sprintf } from "sprintf-js";
 import { max } from "d3-array";
 import { select } from "d3-selection";
 import { curveLinear } from "d3-shape";
-import { gettext_provider } from "./gettext-provider.js";
 import {
     buildGraphScales,
     buildChartLayout,
@@ -38,15 +37,10 @@ import {
 
 import { getLastDayData, getDisplayableData } from "./chart-data-service.js";
 
-export { createBurnupChart };
-
-function createBurnupChart({
-    chart_container,
-    chart_props,
-    chart_legends,
-    generic_burnup_data,
-    mode,
-}) {
+export function createBurnupChart(
+    { chart_container, chart_props, chart_legends, generic_burnup_data, mode },
+    gettext_provider,
+) {
     const tooltip_factory = new TooltipFactory({
         tooltip_margin_bottom: 25,
         tooltip_padding_width: 15,

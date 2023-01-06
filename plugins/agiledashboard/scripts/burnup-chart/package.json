@@ -1,0 +1,32 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-agiledashboard-burnup-chart",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./themes/burnup-chart.scss"
+    }
+  },
+  "dependencies": {
+    "@tuleap/chart-builder": "workspace:*",
+    "@tuleap/gettext": "workspace:*",
+    "@tuleap/plugin-agiledashboard-burnup-data-transformer": "workspace:*",
+    "@tuleap/plugin-tracker-chart-styles": "workspace:^",
+    "d3-array": "^3.0.1",
+    "d3-selection": "^3.0.0",
+    "d3-shape": "^3.0.1",
+    "moment": "^2.29.4",
+    "sprintf-js": "^1.1.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

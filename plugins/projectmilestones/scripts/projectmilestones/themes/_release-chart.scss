@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 @use "@tuleap/plugin-tracker-burndown-chart" as burndown-chart;
+@use "@tuleap/plugin-agiledashboard-burnup-chart";
 
 $timeline-color: var(--tlp-main-color-lighter-90);
 

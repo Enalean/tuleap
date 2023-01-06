@@ -10,6 +10,7 @@
     "@tuleap/chart-builder": "workspace:*",
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/pie-chart": "workspace:*",
+    "@tuleap/plugin-agiledashboard-burnup-chart": "workspace:^",
     "@tuleap/plugin-agiledashboard-burnup-data-transformer": "workspace:*",
     "@tuleap/plugin-tracker-burndown-chart": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",

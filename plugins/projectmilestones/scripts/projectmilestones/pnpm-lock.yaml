@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/pie-chart':
     specifier: workspace:*
     version: link:../../../../lib/frontend/pie-chart
+  '@tuleap/plugin-agiledashboard-burnup-chart':
+    specifier: workspace:^
+    version: link:../../../agiledashboard/scripts/burnup-chart
   '@tuleap/plugin-agiledashboard-burnup-data-transformer':
     specifier: workspace:*
     version: link:../../../agiledashboard/scripts/lib/burnup-data-transformer

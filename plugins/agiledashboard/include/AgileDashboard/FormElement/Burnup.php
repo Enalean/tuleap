@@ -43,7 +43,8 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\v1\Artifact\BurnupRepresentation;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
@@ -163,22 +164,20 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             $warning = $e->getMessage();
         }
 
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../frontend-assets',
-            '/assets/agiledashboard'
+        $include_assets = new IncludeViteAssets(
+            __DIR__ . '/../../../scripts/burnup-chart/frontend-assets',
+            '/assets/agiledashboard/burnup-chart'
         );
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('burnup-chart.js'));
+        $GLOBALS['HTML']->addJavascriptAsset(new JavascriptViteAsset($include_assets, 'src/burnup-chart.js'));
 
         $capacity              = $this->getConfigurationValueRetriever()->getCapacity($artifact, $user);
         $burnup_representation = new BurnupRepresentation($capacity, $burnup_data);
-        $css_file_url          = $include_assets->getFileURL('burnup-chart.css');
 
         return new BurnupFieldPresenter(
             $this->getCountElementsModeChecker(),
             $burnup_representation,
             $artifact,
             $can_burnup_be_regenerated,
-            $css_file_url,
             $user->getLocale(),
             $warning
         );
