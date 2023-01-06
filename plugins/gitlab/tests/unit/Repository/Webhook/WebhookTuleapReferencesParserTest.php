@@ -139,7 +139,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($char . 'TULEAP-123');
         $references            = $references_collection->getTuleapReferences();
 
-        self::assertCount(1, $references, "${char}TULEAP-123 should be parsed");
+        self::assertCount(1, $references, "{$char}TULEAP-123 should be parsed");
         self::assertSame(123, $references[0]->getId());
         self::assertNull($references[0]->getClosingKeyword());
     }
@@ -160,7 +160,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($char . 'TULEAP-123');
         $references            = $references_collection->getTuleapReferences();
 
-        self::assertEmpty($references, "${char}TULEAP-123 should not be parsed");
+        self::assertEmpty($references, "{$char}TULEAP-123 should not be parsed");
     }
 
     /**
