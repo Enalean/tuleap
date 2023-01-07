@@ -119,6 +119,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     protected $user_name;
     protected $email;
     protected $user_pw;
+
+    private ?string $user_pw_legacy;
     protected $realname;
     protected $register_purpose;
     protected $status;
