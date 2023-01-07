@@ -34,6 +34,7 @@ class Mapping implements IFindUserFromXMLReference
 
     /** @var ReadyToBeImportedUsersCollection */
     private $collection;
+    private LoggerInterface $logger;
 
     public function __construct(
         UserManager $user_manager,

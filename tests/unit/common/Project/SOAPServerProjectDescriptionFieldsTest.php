@@ -20,9 +20,23 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    private string $session_key;
+    private $project;
+    private $project_manager;
+    private $user_manager;
+    private $generic_user_factory;
+    private $description_factory;
+    private $description_manager;
+    private $description_value_factory;
+    private $service_usage_factory;
+    private $service_usage_manager;
+    private Project_SOAPServer $server;
+    private $user;
+    private $user_admin;
 
     protected function setUp(): void
     {

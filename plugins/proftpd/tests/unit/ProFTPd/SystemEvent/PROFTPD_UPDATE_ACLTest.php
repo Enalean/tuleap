@@ -25,6 +25,7 @@
 use Tuleap\ProFTPd\Admin\PermissionsManager;
 use Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class SystemEvent_PROFTPD_UPDATE_ACLTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;
@@ -43,6 +44,7 @@ final class SystemEvent_PROFTPD_UPDATE_ACLTest extends \Tuleap\Test\PHPUnit\Test
     private $project;
     private $project_manager;
     private $acl_updater;
+    private string|false $not_mixed_case_path;
 
     public function setUp(): void
     {

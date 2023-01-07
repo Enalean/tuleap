@@ -18,13 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $backend;
 
-    private $acl_updater;
+    private Tuleap\ProFTPd\Admin\ACLUpdater $acl_updater;
 
     private $path;
+    private string $http_user;
+    private string $writers;
+    private string $readers;
 
     protected function setUp(): void
     {
@@ -37,7 +41,7 @@ final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->readers     = 'gpig-ftp_readers';
     }
 
-    public function testAllDirectoriesHaveDefaultAndEffectiveACLAndAllFilesOnlyHaveEffectiveACL()
+    public function testAllDirectoriesHaveDefaultAndEffectiveACLAndAllFilesOnlyHaveEffectiveACL(): void
     {
         $root_path = $this->path;
 
@@ -76,7 +80,7 @@ final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testItSetsAclOn4Elements()
+    public function testItSetsAclOn4Elements(): void
     {
         $this->backend->expects($this->exactly(4))->method('resetacl');
         $this->backend->expects($this->exactly(4))->method('modifyacl');

@@ -60,7 +60,7 @@ use XMLImportHelper;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -170,6 +170,8 @@ class XmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerPrivateCommentUGroupExtractor
      */
     private $private_comment_extractor;
+    private $response;
+    private Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping;
 
     public function setUp(): void
     {

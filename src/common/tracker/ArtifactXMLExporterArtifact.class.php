@@ -49,6 +49,7 @@ class ArtifactXMLExporterArtifact
 
     /** @var ArtifactCommentXMLExporter */
     private $comment_exporter;
+    private ArtifactAttachmentXMLExporter $attachment_exporter;
 
     public function __construct(ArtifactXMLExporterDao $dao, ArtifactAttachmentXMLExporter $attachment_exporter, ArtifactXMLNodeHelper $node_helper, \Psr\Log\LoggerInterface $logger)
     {

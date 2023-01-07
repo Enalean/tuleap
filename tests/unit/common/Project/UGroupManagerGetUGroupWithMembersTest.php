@@ -25,12 +25,19 @@ class UGroupManagerGetUGroupWithMembersTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     use MockeryPHPUnitIntegration;
 
+    private int $ugroup_id;
+    private Project $project;
+    /**
+     * @var \Mockery\Mock&\Mockery\MockInterface&UGroupManager
+     */
+    private $ugroup_manager;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->ugroup_id = 112;
-        $this->project   = \Mockery::spy(\Project::class);
+        $this->project   = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->build();
 
         $this->ugroup_manager = \Mockery::mock(\UGroupManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
