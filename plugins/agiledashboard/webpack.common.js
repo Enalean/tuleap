@@ -91,7 +91,6 @@ const webpack_config_for_charts = {
 const webpack_config_for_javascript = {
     entry: {
         "home-burndowns": "./scripts/home.js",
-        "permission-per-group": "./scripts/permissions-per-group/src/index.js",
         "planning-admin": "./scripts/planning-admin.js",
     },
     context,
@@ -102,13 +101,7 @@ const webpack_config_for_javascript = {
         tuleap: "tuleap",
         jquery: "jQuery",
     },
-    module: {
-        rules: [webpack_configurator.rule_easygettext_loader, webpack_configurator.rule_vue_loader],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias,
-    },
+    plugins: [manifest_plugin],
 };
 
 module.exports = [
