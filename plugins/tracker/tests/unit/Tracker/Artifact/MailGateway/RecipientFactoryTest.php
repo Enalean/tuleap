@@ -20,14 +20,28 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class RecipientFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
     private $changeset;
+    private PFUser $user;
+    /**
+     * @var \Mockery\MockInterface&\Tuleap\Tracker\Artifact\Artifact
+     */
+    private $artifact;
+    private string $salt;
+    private string $host;
+    /**
+     * @var \Mockery\MockInterface&Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var \Mockery\MockInterface&UserManager
+     */
+    private $user_manager;
+    private Tracker_Artifact_MailGateway_RecipientFactory $factory;
 
     protected function setUp(): void
     {

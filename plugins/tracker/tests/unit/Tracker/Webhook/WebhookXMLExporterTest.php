@@ -20,8 +20,6 @@
 
 namespace Tuleap\Tracker\Webhook;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 class WebhookXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -32,6 +30,14 @@ class WebhookXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var WebhookXMLExporter
      */
     private $exporter;
+    /**
+     * @var WebhookFactory&\Mockery\MockInterface
+     */
+    private $webhook_factory;
+    /**
+     * @var \Tracker&\Mockery\MockInterface
+     */
+    private $tracker;
 
     public function setUp(): void
     {

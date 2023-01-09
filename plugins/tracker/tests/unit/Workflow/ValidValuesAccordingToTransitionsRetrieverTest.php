@@ -47,6 +47,12 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
     private \Tracker_FormElement_Field_List_Bind_StaticValue $test_value_2;
     private \Tracker_FormElement_Field_List_Bind_StaticValue $test_value_3;
     private \Tracker_FormElement_Field_List_Bind_StaticValue $value_from_artifact;
+    private \PFUser $user;
+    /**
+     * @var Workflow_Transition_ConditionFactory&Stub
+     */
+    private $condition_factory;
+    private ValidValuesAccordingToTransitionsRetriever $first_valid_value_according_to_dependencies_retriever;
 
     protected function setUp(): void
     {

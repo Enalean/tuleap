@@ -24,8 +24,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_FormElement_Field;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 class MoveStatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -34,6 +32,26 @@ class MoveStatusSemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var MoveStatusSemanticChecker
      */
     private $checker;
+    /**
+     * @var \Tracker_FormElementFactory&Mockery\MockInterface
+     */
+    private $form_element_factory;
+    /**
+     * @var \Tracker&Mockery\MockInterface
+     */
+    private $source_tracker;
+    /**
+     * @var \Tracker&Mockery\MockInterface
+     */
+    private $target_tracker;
+    /**
+     * @var Tracker_FormElement_Field&Mockery\MockInterface
+     */
+    private $source_status_field;
+    /**
+     * @var Tracker_FormElement_Field&Mockery\MockInterface
+     */
+    private $target_status_field;
 
     protected function setUp(): void
     {

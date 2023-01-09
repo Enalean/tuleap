@@ -20,8 +20,6 @@
 
 namespace Tuleap\Tracker\Reference;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -32,6 +30,22 @@ class ReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var ReferenceCreator
      */
     private $creator;
+    /**
+     * @var \ServiceManager&\Mockery\MockInterface
+     */
+    private $service_manager;
+    /**
+     * @var \TrackerV3&\Mockery\MockInterface
+     */
+    private $tv3;
+    /**
+     * @var \ReferenceDao&\Mockery\MockInterface
+     */
+    private $reference_dao;
+    /**
+     * @var \Project&\Mockery\MockInterface
+     */
+    private $project;
 
     public function setUp(): void
     {

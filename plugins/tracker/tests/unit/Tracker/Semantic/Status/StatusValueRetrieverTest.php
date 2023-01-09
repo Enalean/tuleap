@@ -55,6 +55,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private Artifact $artifact;
     private Tracker_Semantic_Status $semantic_status;
     private PFUser $user;
+    private Tracker $tracker;
 
     protected function setUp(): void
     {

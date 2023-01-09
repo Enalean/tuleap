@@ -46,6 +46,10 @@ final class SubmittedValueConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var Artifact */
     private $art_124;
+    /**
+     * @var Artifact&Mockery\MockInterface
+     */
+    private $art_201;
 
     protected function setUp(): void
     {

@@ -22,8 +22,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MailGatewayInsecureTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -43,20 +41,35 @@ class MailGatewayInsecureTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\MockInterface
      */
     protected $incoming_mail;
+    /**
+     * @var \Tracker_FormElementFactory&\Mockery\MockInterface
+     */
+    private $formelement_factory;
+    /**
+     * @var Tracker_Artifact_MailGateway_Notifier&\Mockery\MockInterface
+     */
+    private $notifier;
+    /**
+     * @var \Mockery\MockInterface&Tracker_Artifact_MailGateway_CitationStripper
+     */
+    private $citation_stripper;
+    /**
+     * @var \Mockery\MockInterface&Tracker_Artifact_Changeset
+     */
+    private $changeset;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artifact                 = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->user                     = \Mockery::spy(\PFUser::class);
-        $this->tracker                  = \Mockery::spy(\Tracker::class);
-        $this->incoming_message_factory = \Mockery::spy(\Tracker_Artifact_MailGateway_IncomingMessageFactory::class);
-        $this->artifact_factory         = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->formelement_factory      = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->tracker_config           = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);
-        $this->logger                   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->notifier                 = \Mockery::spy(\Tracker_Artifact_MailGateway_Notifier::class);
-        $this->incoming_mail_dao        = \Mockery::spy(\Tracker_Artifact_Changeset_IncomingMailDao::class);
+        $this->artifact            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->user                = \Mockery::spy(\PFUser::class);
+        $this->tracker             = \Mockery::spy(\Tracker::class);
+        $incoming_message_factory  = \Mockery::spy(\Tracker_Artifact_MailGateway_IncomingMessageFactory::class);
+        $this->artifact_factory    = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->tracker_config      = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);
+        $this->notifier            = \Mockery::spy(\Tracker_Artifact_MailGateway_Notifier::class);
+        $this->incoming_mail_dao   = \Mockery::spy(\Tracker_Artifact_Changeset_IncomingMailDao::class);
 
         $this->citation_stripper = \Mockery::spy(\Tracker_Artifact_MailGateway_CitationStripper::class)->shouldReceive('stripText')->with($this->body)->andReturns($this->stripped_body)->getMock();
 
@@ -68,7 +81,7 @@ class MailGatewayInsecureTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->incoming_message->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->incoming_message->shouldReceive('getBody')->andReturns($this->body);
 
-        $this->incoming_message_factory->shouldReceive('build')->andReturns($this->incoming_message);
+        $incoming_message_factory->shouldReceive('build')->andReturns($this->incoming_message);
 
         $this->incoming_mail = Mockery::spy(IncomingMail::class);
         $this->incoming_mail->shouldReceive('getRawMail')->andReturns('Raw mail');
@@ -111,14 +124,14 @@ class MailGatewayInsecureTest extends \Tuleap\Test\PHPUnit\TestCase
         $filter          = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter::class);
 
         $this->mailgateway = new Tracker_Artifact_MailGateway_InsecureMailGateway(
-            $this->incoming_message_factory,
+            $incoming_message_factory,
             $this->citation_stripper,
             $this->notifier,
             $this->incoming_mail_dao,
             $this->artifact_factory,
             $this->formelement_factory,
             new Tracker_ArtifactByEmailStatus($this->tracker_config),
-            $this->logger,
+            new \Psr\Log\NullLogger(),
             $filter
         );
         $filter->shouldReceive('isAnAutoReplyMail')->andReturns(false);

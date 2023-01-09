@@ -23,13 +23,15 @@ namespace Tuleap\Tracker\Service;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Service;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
     private ServiceActivator $activator;
+    /**
+     * @var \Project&\Mockery\MockInterface
+     */
+    private $template;
     private $tracker_core_service;
     private $tracker_plugin_service;
 

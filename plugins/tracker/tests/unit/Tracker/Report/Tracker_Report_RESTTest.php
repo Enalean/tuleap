@@ -29,6 +29,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
      */
     private $report;
     private Tracker_FormElementFactory|Stub $formelement_factory;
+    private Tracker $tracker;
 
     protected function setUp(): void
     {

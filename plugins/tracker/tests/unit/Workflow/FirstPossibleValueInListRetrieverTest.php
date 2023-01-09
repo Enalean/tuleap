@@ -71,6 +71,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
     private \Workflow_Transition_Condition_Permissions|Stub $condition_1;
     private \Workflow_Transition_Condition_Permissions|Stub $condition_2;
     private Workflow_Transition_ConditionFactory|Stub $condition_factory;
+    private \Tracker $tracker;
 
     protected function setUp(): void
     {
