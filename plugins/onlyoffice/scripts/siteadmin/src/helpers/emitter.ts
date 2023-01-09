@@ -23,7 +23,6 @@ import type { Server } from "../type";
 type Events = {
     "show-add-server-modal": void;
     "show-edit-server-modal": Server;
-    "show-restrict-server-modal": Server;
     "show-delete-server-modal": Server;
 };
 

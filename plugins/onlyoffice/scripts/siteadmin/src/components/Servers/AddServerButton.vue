@@ -21,7 +21,7 @@
 <template>
     <button
         type="button"
-        class="tlp-button-primary tlp-table-actions-element onlyoffice-admin-modal-server-button"
+        class="tlp-button-primary tlp-table-actions-element"
         v-bind:disabled="config.servers.length > 0"
         v-on:click="emitter.emit('show-add-server-modal')"
     >

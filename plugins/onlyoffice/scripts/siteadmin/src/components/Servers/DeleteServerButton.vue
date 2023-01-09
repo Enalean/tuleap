@@ -21,7 +21,7 @@
 <template>
     <button
         type="button"
-        class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline onlyoffice-admin-modal-server-button"
+        class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
         v-on:click="emitter.emit('show-delete-server-modal', server)"
     >
         <i class="tlp-button-icon fa-regular fa-trash-can" aria-hidden="true"></i>

@@ -21,7 +21,7 @@
 <template>
     <button
         type="button"
-        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline onlyoffice-admin-modal-server-button"
+        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
         v-on:click="emitter.emit('show-edit-server-modal', server)"
     >
         <i class="tlp-button-icon fa-solid fa-pencil" aria-hidden="true"></i>

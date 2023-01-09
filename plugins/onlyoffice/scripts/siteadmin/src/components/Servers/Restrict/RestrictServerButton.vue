@@ -21,16 +21,19 @@
 <template>
     <button
         type="button"
-        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline onlyoffice-admin-modal-server-button"
-        v-on:click="emitter.emit('show-restrict-server-modal', server)"
+        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+        v-on:click="navigation.restrict(server)"
     >
         <i class="tlp-button-icon fa-solid fa-lock" aria-hidden="true"></i>
         {{ $gettext("Restrict") }}
     </button>
 </template>
 <script setup lang="ts">
-import emitter from "../../helpers/emitter";
-import type { Server } from "../../type";
+import type { Server } from "../../../type";
+import { strictInject } from "../../../helpers/strict-inject";
+import { NAVIGATION } from "../../../injection-keys";
 
 defineProps<{ server: Server }>();
+
+const navigation = strictInject(NAVIGATION);
 </script>

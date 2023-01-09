@@ -47,7 +47,7 @@ final class OnlyOfficeServerPresenter
     ) {
         $this->delete_url   = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
         $this->update_url   = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $id;
-        $this->restrict_url = OnlyOfficeRestrictAdminSettingsController::URL . '/' . $id;
+        $this->restrict_url = OnlyOfficeRestrictAdminSettingsController::getServerRestrictUrl($id);
 
         $this->nb_project_restrictions = count($this->project_restrictions);
     }

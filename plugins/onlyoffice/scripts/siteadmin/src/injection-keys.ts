@@ -18,6 +18,7 @@
  */
 
 import type { InjectionKey } from "vue";
-import type { Config } from "./type";
+import type { Config, Navigation } from "./type";
 
 export const CONFIG: InjectionKey<Config> = Symbol();
+export const NAVIGATION: InjectionKey<Navigation> = Symbol();

@@ -20,6 +20,7 @@
 export interface Config {
     readonly has_servers: boolean;
     readonly create_url: string;
+    readonly base_url: string;
     readonly csrf_token: CsrfToken;
     readonly servers: ReadonlyArray<Server>;
 }
@@ -50,4 +51,9 @@ export interface ProjectFromRest {
     readonly id: number;
     readonly label: string;
     readonly shortname: string;
+}
+
+export interface Navigation {
+    readonly restrict: (server: Server) => void;
+    readonly cancelRestriction: () => void;
 }
