@@ -6,7 +6,6 @@
     },
     "include": [
         "scripts/administration/**/*",
-        "scripts/artifact-additional-action/**/*",
         "scripts/burnup-chart/**/*",
         "scripts/permissions-per-group/**/*",
         "scripts/*"
