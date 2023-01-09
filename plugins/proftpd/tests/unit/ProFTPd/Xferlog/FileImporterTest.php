@@ -20,12 +20,18 @@
 
 use Tuleap\ProFTPd\Xferlog\Dao;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class FileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|UserDao
      */
     private $user_dao;
+    private $dao;
+    private $parser;
+    private $user_manager;
+    private $project_manager;
+    private \Tuleap\ProFTPd\Xferlog\FileImporter $file_importer;
 
     protected function setUp(): void
     {

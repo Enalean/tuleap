@@ -27,7 +27,7 @@ use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use TrackerFactory;
 
-class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -63,7 +63,7 @@ class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private $project_id          = 101;
     private $campaign_tracker_id = 444;
-
+    private $project;
 
     /**
      * Setup and general stubs
@@ -99,14 +99,14 @@ class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function stubCampaignTracker()
+    private function stubCampaignTracker(): void
     {
         $this->config->shouldReceive('getCampaignTrackerId')->andReturn($this->campaign_tracker_id);
         $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($this->campaign_tracker);
     }
 
-    private function stubCampaignArtifact()
+    private function stubCampaignArtifact(): \Tuleap\Tracker\Artifact\Artifact
     {
         $campaign_artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_ref      = Mockery::spy(\Tuleap\Tracker\REST\Artifact\ArtifactReference::class);
@@ -122,7 +122,7 @@ class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      *
      */
 
-    public function testItCreatesACampaignWithTheGivenName()
+    public function testItCreatesACampaignWithTheGivenName(): void
     {
         $this->stubCampaignTracker();
         $this->definition_selector->shouldReceive('selectDefinitions')->andReturn([]);
@@ -160,7 +160,7 @@ class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItCreatesAnArtifactLinkToMilestoneWhenGivenAMilestoneId()
+    public function testItCreatesAnArtifactLinkToMilestoneWhenGivenAMilestoneId(): void
     {
         $this->stubCampaignTracker();
         $campaign_artifact = $this->stubCampaignArtifact();
@@ -187,7 +187,7 @@ class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItCreatesTestExecutionsForSelectedDefinitions()
+    public function testItCreatesTestExecutionsForSelectedDefinitions(): void
     {
         $definition_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $definition_1->allows()->getId()->andReturn("1");

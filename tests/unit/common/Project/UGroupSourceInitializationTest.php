@@ -24,6 +24,11 @@ class UGroupSourceInitializationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var \Mockery\Mock&\Mockery\MockInterface&ProjectUGroup
+     */
+    private $ugroup;
+
     protected function setUp(): void
     {
         parent::setUp();

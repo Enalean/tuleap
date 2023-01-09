@@ -23,23 +23,26 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 require_once 'bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class GitRepositoryCanDeletedTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitRepositoryCanDeletedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    private $backend;
+    private GitRepository $repo;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->backend = \Mockery::spy(Git_Backend_Interface::class)->shouldReceive('getGitRootPath')->andReturns(dirname(__FILE__) . '/_fixtures')->getMock();
-        $project       = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('perms')->getMock();
+        $project       = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withUnixName('perms')->build();
 
         $this->repo = new GitRepository();
         $this->repo->setBackend($this->backend);
         $this->repo->setProject($project);
     }
 
-    public function testItCanBeDeletedWithDotGitDotGitRepositoryShouldSucceed()
+    public function testItCanBeDeletedWithDotGitDotGitRepositoryShouldSucceed(): void
     {
         $this->backend->shouldReceive('canBeDeleted')->andReturns(true);
         $this->repo->setPath('perms/coincoin.git.git');
@@ -47,7 +50,7 @@ class GitRepositoryCanDeletedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertTrue($this->repo->canBeDeleted());
     }
 
-    public function testItCanBeDeletedWithWrongRepositoryPathShouldFail()
+    public function testItCanBeDeletedWithWrongRepositoryPathShouldFail(): void
     {
         $this->backend->shouldReceive('canBeDeleted')->andReturns(true);
         $this->repo->setPath('perms/coincoin');
@@ -55,7 +58,7 @@ class GitRepositoryCanDeletedTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($this->repo->canBeDeleted());
     }
 
-    public function testItCannotBeDeletedIfBackendForbidIt()
+    public function testItCannotBeDeletedIfBackendForbidIt(): void
     {
         $this->backend->shouldReceive('canBeDeleted')->andReturns(false);
 

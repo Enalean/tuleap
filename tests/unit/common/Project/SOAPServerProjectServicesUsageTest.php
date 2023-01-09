@@ -24,10 +24,20 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Project_SOAPServer
-     */
-    private $server;
+    private Project_SOAPServer $server;
+    private int $group_id;
+    private string $session_key;
+    private $project;
+    private $project_manager;
+    private $user_manager;
+    private $generic_user_factory;
+    private $description_factory;
+    private $description_manager;
+    private $description_value_factory;
+    private $service_usage_factory;
+    private $service_usage_manager;
+    private $user;
+    private $user_admin;
 
     protected function setUp(): void
     {

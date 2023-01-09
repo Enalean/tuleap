@@ -19,7 +19,7 @@
  *
  */
 
-class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -32,6 +32,7 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
     private $user_manager;
     private $permission_manager;
     private $frs_permission_manager;
+    private $project_manager;
 
     public function setUp(): void
     {
@@ -48,7 +49,7 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $this->frs_package_factory->shouldReceive('getProjectManager')->andReturns($this->project_manager);
     }
 
-    public function testGetFRSPackageFromDb()
+    public function testGetFRSPackageFromDb(): void
     {
         $packageArray1       = ['package_id'       => 1,
             'group_id'         => 1,
@@ -95,14 +96,14 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $this->assertEquals($PackageFactory->getFRSPackageFromDb(2), $package2);
     }
 
-    public function testAdminHasAlwaysAccess()
+    public function testAdminHasAlwaysAccess(): void
     {
         $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(true);
 
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
 
-    private function userCanReadWithSpecificPerms($can_read_package)
+    private function userCanReadWithSpecificPerms($can_read_package): FRSPackageFactory
     {
         $this->frs_permission_manager->shouldReceive('userCanRead')->andReturns(true);
         $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(false);
@@ -115,13 +116,13 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         return $this->frs_package_factory;
     }
 
-    public function testUserCanReadWithSpecificPermsHasAccess()
+    public function testUserCanReadWithSpecificPermsHasAccess(): void
     {
         $this->frs_package_factory = $this->userCanReadWithSpecificPerms(true);
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
 
-    public function testUserCanReadWithSpecificPermsHasNoAccess()
+    public function testUserCanReadWithSpecificPermsHasNoAccess(): void
     {
         $this->frs_package_factory = $this->userCanReadWithSpecificPerms(false);
         $this->assertFalse($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
@@ -130,7 +131,7 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
     /**
      * userHasPermissions return false but isPermissionExist return false because no permissions where set, so let user see the gems
      */
-    public function testUserCanReadWhenNoPermissionsSet()
+    public function testUserCanReadWhenNoPermissionsSet(): void
     {
         $this->frs_permission_manager->shouldReceive('userCanRead')->andReturns(true);
         $this->user->shouldReceive('getUgroups')->with($this->group_id, [])->once()->andReturns([1, 2, 76]);
@@ -143,31 +144,31 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
 
-    public function testAdminCanAlwaysUpdate()
+    public function testAdminCanAlwaysUpdate(): void
     {
         $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(true);
         $this->assertTrue($this->frs_package_factory->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
     }
 
-    public function testMereMortalCannotUpdate()
+    public function testMereMortalCannotUpdate(): void
     {
         $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(false);
         $this->assertFalse($this->frs_package_factory->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
     }
 
-    public function testAdminCanAlwaysCreate()
+    public function testAdminCanAlwaysCreate(): void
     {
         $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(true);
         $this->assertTrue($this->frs_package_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
-    public function testMereMortalCannotCreate()
+    public function testMereMortalCannotCreate(): void
     {
         $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(false);
         $this->assertFalse($this->frs_package_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
-    public function testDeleteProjectPackagesFail()
+    public function testDeleteProjectPackagesFail(): void
     {
         $packageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $package        = \Mockery::spy(FRSPackage::class);
@@ -178,7 +179,7 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $this->assertFalse($packageFactory->deleteProjectPackages(1));
     }
 
-    public function testDeleteProjectPackagesSuccess()
+    public function testDeleteProjectPackagesSuccess(): void
     {
         $packageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $package        = \Mockery::spy(FRSPackage::class);

@@ -25,12 +25,14 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\TemporaryTestDirectory;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
+
+    private array $file;
 
     protected function setUp(): void
     {

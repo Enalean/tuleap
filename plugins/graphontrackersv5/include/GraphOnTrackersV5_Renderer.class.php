@@ -36,7 +36,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      * @var Tracker_FormElementFactory
      */
     private $form_element_factory;
-
+    private UserManager $user_manager;
     public function __construct($id, $report, $name, $description, $rank, $plugin, UserManager $user_manager, Tracker_FormElementFactory $form_element_factory)
     {
         parent::__construct($id, $report, $name, $description, $rank);

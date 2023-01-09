@@ -25,8 +25,9 @@ require_once 'bootstrap.php';
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectUGroup;
 use SimpleXMLElement;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class XmlUgroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XmlUgroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -34,12 +35,19 @@ class XmlUgroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var XmlUgroupRetriever
      */
     private $retriever;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Psr\Log\LoggerInterface
+     */
+    private $logger;
+    private \Project $project;
+    private ProjectUGroup $ugroup_01;
+    private ProjectUGroup $ugroup_02;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->logger   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->logger   = $this->createMock(\Psr\Log\LoggerInterface::class);
         $ugroup_manager = \Mockery::spy(\UGroupManager::class);
 
         $this->retriever = new XmlUgroupRetriever(
@@ -47,7 +55,7 @@ class XmlUgroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $ugroup_manager
         );
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->build();
 
         $this->ugroup_01 = new ProjectUGroup([
             'ugroup_id' => 101,
@@ -108,7 +116,7 @@ XML;
         $xml_node = new SimpleXMLElement($xml);
         $expected = [$this->ugroup_01, $this->ugroup_02];
 
-        $this->logger->shouldReceive('warning')->once();
+        $this->logger->expects(self::once())->method('warning');
         $this->assertEquals($expected, $this->retriever->getUgroupsForPermissionNode($this->project, $xml_node));
     }
 
