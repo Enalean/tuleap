@@ -31,7 +31,6 @@ const entry_points = {
     "burnup-chart": "./themes/FlamingParrot/css/burnup-chart.scss",
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "planning-admin-colorpicker": "./themes/FlamingParrot/css/planning-admin-colorpicker.scss",
-    "administration-style": "./themes/BurningParrot/css/administration.scss",
     "scrum-style": "./themes/BurningParrot/css/scrum.scss",
 };
 
@@ -48,18 +47,11 @@ const webpack_config_for_themes = {
 const webpack_config_for_typescript = {
     entry: {
         overview: "./scripts/overview.ts",
-        administration: "./scripts/administration/administration.ts",
     },
     context,
     output,
-    externals: {
-        tlp: "tlp",
-    },
     module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_po_files,
-        ],
+        rules: [...webpack_configurator.configureTypescriptRules()],
     },
     plugins: [manifest_plugin],
     resolve: {

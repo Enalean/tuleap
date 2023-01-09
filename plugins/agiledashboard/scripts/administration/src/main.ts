@@ -1,7 +1,7 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import { defineJestConfiguration } from "@tuleap/build-system-configurator";
-import { env } from "node:process";
-
-env.DISABLE_TS_TYPECHECK = "true";
-export default {
-    ...defineJestConfiguration(),
-    displayName: "agiledashboard-administration",
-};
+import "../themes/main.scss";
+import "./administration";

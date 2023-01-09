@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createPopover, openTargetModalIdOnClick } from "tlp";
+import { createPopover } from "@tuleap/tlp-popovers";
+import { openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 
 document.addEventListener("DOMContentLoaded", () => {
     canNotCreatePlanningPopover();
