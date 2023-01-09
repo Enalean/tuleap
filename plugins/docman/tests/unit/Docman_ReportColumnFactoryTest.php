@@ -27,6 +27,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Docman_ReportColumnFactoryTest extends TestCase
 {
+    private Docman_ReportColumnFactory $report_column_factory;
+
     protected function setUp(): void
     {
         $this->report_column_factory = new Docman_ReportColumnFactory(101);

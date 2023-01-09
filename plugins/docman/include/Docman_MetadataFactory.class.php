@@ -67,11 +67,6 @@ class Docman_MetadataFactory
             self::HARDCODED_METADATA_STATUS_LABEL,
         ];
 
-        $this->scalarMetadata = [PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
-            PLUGIN_DOCMAN_METADATA_TYPE_STRING,
-            PLUGIN_DOCMAN_METADATA_TYPE_DATE,
-        ];
-
         $this->groupId = $groupId;
     }
 
