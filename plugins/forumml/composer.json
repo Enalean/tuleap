@@ -7,7 +7,7 @@
     "classmap": ["include/"]
   },
   "require": {
-    "php-mime-mail-parser/php-mime-mail-parser": "^7.0"
+    "php-mime-mail-parser/php-mime-mail-parser": "^8.0.0"
   },
   "config": {
     "sort-packages": true
