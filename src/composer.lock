@@ -369,16 +369,16 @@
         },
         {
             "name": "embed/embed",
-            "version": "v4.3.4",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/Embed.git",
-                "reference": "3efed0e92bc3e26e4c77d6ead4b230076ce766ec"
+                "reference": "72ea7eb8226008dd10834bc0c9becc708f7a7871"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Embed/zipball/3efed0e92bc3e26e4c77d6ead4b230076ce766ec",
-                "reference": "3efed0e92bc3e26e4c77d6ead4b230076ce766ec",
+                "url": "https://api.github.com/repos/oscarotero/Embed/zipball/72ea7eb8226008dd10834bc0c9becc708f7a7871",
+                "reference": "72ea7eb8226008dd10834bc0c9becc708f7a7871",
                 "shasum": ""
             },
             "require": {
@@ -407,12 +407,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Embed\\": "src"
-                },
                 "files": [
                     "src/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Embed\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -438,9 +438,23 @@
             "support": {
                 "email": "oom@oscarotero.com",
                 "issues": "https://github.com/oscarotero/Embed/issues",
-                "source": "https://github.com/oscarotero/Embed/tree/v4.3.4"
+                "source": "https://github.com/oscarotero/Embed/tree/v4.4.7"
             },
-            "time": "2021-06-22T18:10:12+00:00"
+            "funding": [
+                {
+                    "url": "https://paypal.me/oscarotero",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/oscarotero",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/misteroom",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2022-12-12T14:45:19+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
