@@ -288,6 +288,8 @@ import { createLinkSelector } from "@tuleap/link-selector";
                 };
 
                 const link_selector = createLinkSelector(source_select, {
+                    placeholder: "Please select an item to link",
+                    search_input_placeholder: "Type a number",
                     templating_callback: (html, item) =>
                         html`
                             <span class="tlp-badge-${item.value.color} doc-link-selector-badge">
@@ -298,7 +300,7 @@ import { createLinkSelector } from "@tuleap/link-selector";
                     selection_callback: () => {
                         // Do nothing
                     },
-                    search_field_callback: (link_selector, query) => {
+                    search_field_callback: (query) => {
                         if (query === "") {
                             link_selector.setDropdownContent([{ ...group, items }]);
                             return;
@@ -321,7 +323,6 @@ import { createLinkSelector } from "@tuleap/link-selector";
                         link_selector.setDropdownContent([group]);
                     },
                 });
-                link_selector.setPlaceholder("Please select an item to link");
                 link_selector.setDropdownContent([{ ...group, items }]);
             }
 

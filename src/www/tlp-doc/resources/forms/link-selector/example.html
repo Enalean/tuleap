@@ -8,11 +8,13 @@
         import { createLinkSelector } from "@tuleap/link-selector";
 
         const link_selector = createLinkSelector(document.querySelector('#link-selector-sb'), {
+            placeholder: "Please select an item to link",
+            search_input_placeholder: "Type a number",
             templating_callback: (html, item) => html`${item.id}`,
             selection_callback: (selected_value) => {
                 console.log("Selected value : " + selected_value);
             },
-            search_field_callback: (link_selector, query) => {
+            search_field_callback: (query) => {
                 console.log("Serach query : " + query);
                 link_selector.setDropdownContent([{
                     label: "Matching items",
@@ -24,6 +26,5 @@
                 }])
             }
         });
-        link_selector.setPlaceholder("Please select an item to link");
     </script>
 </div>
