@@ -30,6 +30,8 @@ use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLink;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -39,6 +41,7 @@ final class PUTHandler
     public function __construct(
         private FieldsDataBuilder $fields_data_builder,
         private ArtifactUpdater $artifact_updater,
+        private RetrieveReverseLinks $reverse_links_retriever,
     ) {
     }
 
@@ -52,11 +55,14 @@ final class PUTHandler
             $changeset_values        = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
             $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getSubmittedReverseLinks();
             if ($reverse_link_collection !== null && count($reverse_link_collection->links) > 0) {
-                $links_to_json = array_map(
-                    static fn($link) => sprintf('Link from %s with type `%s`', $link->getSourceArtifactId(), $link->getType() ?? ''),
+                $stored_reverse_links = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
+
+                $stored_links_to_json = array_map(static fn(ReverseLink $stored_link) => sprintf('Link from %d with type `%s`', $stored_link->getSourceArtifactId(), $stored_link->getType() ?? ''), $stored_reverse_links->links);
+                $links_to_json        = array_map(
+                    static fn($link) => sprintf('Link from %d with type `%s`', $link->getSourceArtifactId(), $link->getType() ?? ''),
                     $reverse_link_collection->links
                 );
-                echo sprintf('{"Reverse links": "%s"}', implode(', ', $links_to_json));
+                echo sprintf('{"Reverse link stored from artifact %d ": "%s", "Reverse links": "%s"}', $artifact->getId(), implode(', ', $stored_links_to_json), implode(', ', $links_to_json));
             } else {
                 $this->artifact_updater->update($submitter, $artifact, $values, $comment);
             }
