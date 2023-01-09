@@ -50,6 +50,11 @@ if ($page === "admin_creation") {
 
 $event_manager = EventManager::instance();
 
+$layout = $GLOBALS['Response'];
+$assets = new \Tuleap\Layout\IncludeCoreAssets();
+
+$renderer_factory = TemplateRendererFactory::build();
+
 $registration_guard = $event_manager->dispatch(new RegistrationGuardEvent());
 
 if (! $request->getCurrentUser()->isSuperUser() && ! $registration_guard->isRegistrationPossible()) {
@@ -201,7 +206,7 @@ if ($request->isPost() && $request->exist('Register')) {
     $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
     if ($before_validation_event->isRegistrationValid()) {
         register_valid($is_password_needed, $mail_confirm_code)->match(
-            function (PFUser $new_user) use ($event_manager, $request, $page, $mail_confirm_code) {
+            function (PFUser $new_user) use ($event_manager, $request, $page, $mail_confirm_code, $renderer_factory, $layout, $assets) {
                 $new_userid = $new_user->getId();
                 $event_manager->dispatch(
                     new \Tuleap\User\Account\Register\AfterUserRegistrationEvent($request, $new_user)
@@ -256,24 +261,8 @@ if ($request->isPost() && $request->exist('Register')) {
                         }
                     }
 
-                    $theme_manager    = new ThemeManager(
-                        new \Tuleap\BurningParrotCompatiblePageDetector(
-                            new \Tuleap\Request\CurrentPage(),
-                            new User_ForgeUserGroupPermissionsManager(
-                                new User_ForgeUserGroupPermissionsDao()
-                            )
-                        )
-                    );
-                    $user_manager     = UserManager::instance();
-                    $renderer_factory = TemplateRendererFactory::build();
-                    $assets           = new \Tuleap\Layout\IncludeCoreAssets();
-
                     $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
 
-                    $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
-                    if ($layout === null) {
-                        throw new \Exception("Could not load BurningParrot theme");
-                    }
                     $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
                     $layout->header(
                         HeaderConfigurationBuilder::get(_('Register'))->build()
@@ -291,26 +280,8 @@ if ($request->isPost() && $request->exist('Register')) {
                     $layout->footer(FooterConfiguration::withoutContent());
                     exit;
                 } else {
-                    // Registration requires approval
-                    // inform the user that approval is required
-                    $theme_manager    = new ThemeManager(
-                        new \Tuleap\BurningParrotCompatiblePageDetector(
-                            new \Tuleap\Request\CurrentPage(),
-                            new User_ForgeUserGroupPermissionsManager(
-                                new User_ForgeUserGroupPermissionsDao()
-                            )
-                        )
-                    );
-                    $user_manager     = UserManager::instance();
-                    $renderer_factory = TemplateRendererFactory::build();
-                    $assets           = new \Tuleap\Layout\IncludeCoreAssets();
-
                     $renderer = $renderer_factory->getRenderer(__DIR__ . "/../../templates/account/create/");
 
-                    $layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
-                    if ($layout === null) {
-                        throw new \Exception("Could not load BurningParrot theme");
-                    }
                     $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'account-registration-style'));
                     $layout->header(
                         HeaderConfigurationBuilder::get(_('Register'))->build()
@@ -329,27 +300,9 @@ if ($request->isPost() && $request->exist('Register')) {
     }
 }
 
-
-$theme_manager    = new ThemeManager(
-    new \Tuleap\BurningParrotCompatiblePageDetector(
-        new \Tuleap\Request\CurrentPage(),
-        new User_ForgeUserGroupPermissionsManager(
-            new User_ForgeUserGroupPermissionsDao()
-        )
-    )
-);
-$user_manager     = UserManager::instance();
-$renderer_factory = TemplateRendererFactory::build();
-$assets           = new \Tuleap\Layout\IncludeCoreAssets();
-
-$layout = $theme_manager->getBurningParrot($user_manager->getCurrentUserWithLoggedInInformation());
-if ($layout === null) {
-    throw new \Exception("Could not load BurningParrot theme");
-}
-
 $builder = new RegisterFormPresenterBuilder(
     EventManager::instance(),
-    TemplateRendererFactory::build(),
+    $renderer_factory,
     new Account_TimezonesCollection(),
 );
 $render  = $builder->getPresenterClosure($request, $layout, $is_password_needed, $form_validation_issue);
