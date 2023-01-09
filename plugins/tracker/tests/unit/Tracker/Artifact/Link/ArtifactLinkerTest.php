@@ -29,6 +29,7 @@ use Tracker_NoChangeException;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -77,11 +78,13 @@ final class ArtifactLinkerTest extends TestCase
 
         $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::buildWithArtifactLinkFields([]);
 
-        $artifact_linker = $this->instantiateArtifactLinker();
+        $artifact_linker  = $this->instantiateArtifactLinker();
+        $links            = [ForwardLinkProxy::buildFromData(18, "")];
+        $linked_artifacts = new CollectionOfForwardLinks($links);
 
         self::expectException(RuntimeException::class);
         $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('error');
-        $artifact_linker->linkArtifact($artifact, 18, $this->user, '');
+        $artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user, '');
     }
 
     public function testItReturnsFalseAndDisplayAnErrorWhenNoArtifactLinkFieldsAreUsed(): void
@@ -93,8 +96,10 @@ final class ArtifactLinkerTest extends TestCase
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
 
-        $artifact_linker = $this->instantiateArtifactLinker();
-        self::assertFalse($artifact_linker->linkArtifact($artifact, 18, $this->user, ''));
+        $links            = [ForwardLinkProxy::buildFromData(18, "")];
+        $linked_artifacts = new CollectionOfForwardLinks($links);
+        $artifact_linker  = $this->instantiateArtifactLinker();
+        self::assertFalse($artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user, ''));
     }
 
     public function testItReturnsTrueAndCreateChangeset(): void
@@ -113,7 +118,10 @@ final class ArtifactLinkerTest extends TestCase
 
         $GLOBALS['Response']->expects(self::never())->method('addFeedback')->with('error');
 
-        self::assertTrue($artifact_linker->linkArtifact($artifact, 18, $this->user, ''));
+        $links            = [ForwardLinkProxy::buildFromData(18, "")];
+        $linked_artifacts = new CollectionOfForwardLinks($links);
+
+        self::assertTrue($artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user, ''));
         self::assertSame(1, $this->changeset_creator->getCallsCount());
     }
 
@@ -133,7 +141,10 @@ final class ArtifactLinkerTest extends TestCase
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('info');
 
-        self::assertFalse($artifact_linker->linkArtifact($artifact, 18, $this->user, ''));
+        $links            = [ForwardLinkProxy::buildFromData(18, "")];
+        $linked_artifacts = new CollectionOfForwardLinks($links);
+
+        self::assertFalse($artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user, ''));
         self::assertSame(0, $this->changeset_creator->getCallsCount());
     }
 
@@ -152,8 +163,10 @@ final class ArtifactLinkerTest extends TestCase
         $artifact_linker = $this->instantiateArtifactLinker();
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
+        $links            = [ForwardLinkProxy::buildFromData(18, "")];
+        $linked_artifacts = new CollectionOfForwardLinks($links);
 
-        self::assertFalse($artifact_linker->linkArtifact($artifact, 18, $this->user, ''));
+        self::assertFalse($artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user, ''));
         self::assertSame(0, $this->changeset_creator->getCallsCount());
     }
 }

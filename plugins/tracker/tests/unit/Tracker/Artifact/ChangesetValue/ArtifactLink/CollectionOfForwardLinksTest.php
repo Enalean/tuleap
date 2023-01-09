@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 
-final class CollectionOfArtifactLinksTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var ForwardLinkStub[]
@@ -62,5 +62,12 @@ final class CollectionOfArtifactLinksTest extends \Tuleap\Test\PHPUnit\TestCase
             102 => '_depends_on',
             103 => '',
         ], $collection->getArtifactTypesByIds());
+    }
+
+    public function testItReturnsAStringSeparatedByCommaOFArtifactsIds(): void
+    {
+        $collection = new CollectionOfForwardLinks($this->artifact_links);
+
+        self::assertSame("101, 102, 103, 104", $collection->getArtifactLinksAsStringList());
     }
 }

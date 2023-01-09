@@ -25,31 +25,37 @@ namespace Tuleap\Tracker\Artifact\Link;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 
 final class ArtifactLinkFilter implements FilterArtifactLink
 {
     public function filterArtifactIdsIAmAlreadyLinkedTo(
         Artifact $artifact,
         Tracker_FormElement_Field_ArtifactLink $field,
-        string $linked_artifact_id,
-    ): string {
-        $linked_artifact_id_as_array = explode(',', $linked_artifact_id);
-
+        CollectionOfForwardLinks $collection_of_forward_links,
+    ): CollectionOfForwardLinks {
         $last_changeset = $artifact->getLastChangeset();
         if (! $last_changeset) {
-            return $linked_artifact_id;
+            return $collection_of_forward_links;
         }
 
         $changeset_value = $last_changeset->getValue($field);
 
         if (! $changeset_value) {
-            return $linked_artifact_id;
+            return $collection_of_forward_links;
         }
 
         \assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
 
-        $existing_links              = $changeset_value->getArtifactIds();
-        $linked_artifact_id_as_array = array_diff($linked_artifact_id_as_array, $existing_links);
-        return implode(',', $linked_artifact_id_as_array);
+        $existing_links       = $changeset_value->getArtifactIds();
+        $linked_artifact_list = $collection_of_forward_links->getArtifactLinks();
+
+        $filtered_forward_links = [];
+        foreach ($linked_artifact_list as $artifact_link) {
+            if (! in_array($artifact_link->getTargetArtifactId(), $existing_links)) {
+                $filtered_forward_links[] = $artifact_link;
+            }
+        }
+        return new CollectionOfForwardLinks($filtered_forward_links);
     }
 }

@@ -27,13 +27,13 @@ use PFUser;
 use RuntimeException;
 use Tracker;
 use Tracker_Exception;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -53,9 +53,8 @@ final class ArtifactLinker
      */
     public function linkArtifact(
         Artifact $current_artifact,
-        int|string $linked_artifact_id,
+        CollectionOfForwardLinks $forward_links,
         PFUser $current_user,
-        string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
     ): bool {
         $tracker        = $this->getTrackerFromArtifact($current_artifact);
         $artlink_fields = $this->form_element_factory->getUsedArtifactLinkFields($tracker);
@@ -74,16 +73,13 @@ final class ArtifactLinker
         $comment       = '';
         $artlink_field = $artlink_fields[0];
 
-        $linked_artifact_id = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($current_artifact, $artlink_field, (string) $linked_artifact_id);
+        $forward_link_collection = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($current_artifact, $artlink_field, $forward_links);
 
         $fields_data                                        = [];
-        $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
+        $fields_data[$artlink_field->getId()]['new_values'] = $forward_link_collection->getArtifactLinksAsStringList();
 
         if ($tracker->isProjectAllowedToUseType()) {
-            $fields_data[$artlink_field->getId()]['types'] = $this->getTypeForLink(
-                $linked_artifact_id,
-                $artifact_link_type
-            );
+            $fields_data[$artlink_field->getId()]['types'] = $forward_link_collection->getArtifactTypesByIds();
         }
 
         try {
@@ -117,16 +113,5 @@ final class ArtifactLinker
             throw new RuntimeException('Tracker does not exist');
         }
         return $tracker;
-    }
-
-    private function getTypeForLink(string $linked_artifact_id, string $artifact_link_type): array
-    {
-        $types                     = [];
-        $linked_artifact_ids_array = explode(',', $linked_artifact_id);
-        foreach ($linked_artifact_ids_array as $linked_artifact_id) {
-            $types[$linked_artifact_id] = $artifact_link_type;
-        }
-
-        return $types;
     }
 }

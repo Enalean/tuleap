@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,22 +15,28 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Link;
 
-use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Test\PHPUnit\TestCase;
 
-interface FilterArtifactLink
+final class ForwardLinkProxyTest extends TestCase
 {
-    public function filterArtifactIdsIAmAlreadyLinkedTo(
-        Artifact $artifact,
-        Tracker_FormElement_Field_ArtifactLink $field,
-        CollectionOfForwardLinks $collection_of_forward_links,
-    ): CollectionOfForwardLinks;
+    public function testFromData(): void
+    {
+        $link = ForwardLinkProxy::buildFromData(101, '_is_child');
+        self::assertSame(101, $link->getTargetArtifactId());
+        self::assertSame('_is_child', $link->getType());
+    }
+
+    public function testFromDataWithoutType(): void
+    {
+        $link = ForwardLinkProxy::buildFromData(101, '');
+        self::assertSame(101, $link->getTargetArtifactId());
+        self::assertNull($link->getType());
+    }
 }

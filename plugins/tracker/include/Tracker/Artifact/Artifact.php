@@ -118,9 +118,11 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinkFilter;
+use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\FieldsDataFromRequestRetriever;
@@ -1713,14 +1715,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     }
 
     /**
-     * User want to link an artifact to the current one
-     *
      * @deprecated use ArtifactLinker::linkArtifact() instead
-     * @param int    $linked_artifact_id The id of the artifact to link
-     * @param PFUser $current_user       The user who made the link
      */
     public function linkArtifact(
-        $linked_artifact_id,
+        int $linked_artifact_id,
         PFUser $current_user,
         string $artifact_link_type = Tracker_FormElement_Field_ArtifactLink::NO_TYPE,
     ): bool {
@@ -1732,19 +1730,17 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $this->getNewChangesetCreator($validator),
             new ArtifactLinkFilter()
         );
-        return $artifact_linker->linkArtifact($this, $linked_artifact_id, $current_user, $artifact_link_type);
+
+        $links         = [ForwardLinkProxy::buildFromData($linked_artifact_id, $artifact_link_type)];
+        $forward_links = new CollectionOfForwardLinks($links);
+
+        return $artifact_linker->linkArtifact($this, $forward_links, $current_user);
     }
 
     /**
-     * User want to link an artifact to the current one
-     *
      * @deprecated use ArtifactLinker::linkArtifact() instead
-     * @param array  $linked_artifact_ids The ids of the artifacts to link
-     * @param PFUser $current_user        The user who made the link
-     *
-     * @return bool true if success false otherwise
      */
-    public function linkArtifacts($linked_artifact_ids, PFUser $current_user)
+    public function linkArtifacts(array $linked_artifact_ids, PFUser $current_user): bool
     {
         $validator = $this->getFieldValidator();
 
@@ -1755,9 +1751,13 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             new ArtifactLinkFilter()
         );
 
-        $linked_artifact_ids = implode(',', $linked_artifact_ids);
+        $links = [];
+        foreach ($linked_artifact_ids as $linked_artifact_id) {
+            $links[] = ForwardLinkProxy::buildFromData((int) $linked_artifact_id, Tracker_FormElement_Field_ArtifactLink::NO_TYPE);
+        }
+        $forward_links = new CollectionOfForwardLinks($links);
 
-        return $artifact_linker->linkArtifact($this, $linked_artifact_ids, $current_user);
+        return $artifact_linker->linkArtifact($this, $forward_links, $current_user);
     }
 
     /**
