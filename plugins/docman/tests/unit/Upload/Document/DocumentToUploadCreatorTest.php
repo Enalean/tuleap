@@ -47,6 +47,7 @@ final class DocumentToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\MockInterface|PermissionItemUpdater
      */
     private $permissions_item_updater;
+    private FilenameBuilder $filename_builder;
 
     public function setUp(): void
     {

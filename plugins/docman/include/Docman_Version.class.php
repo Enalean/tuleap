@@ -37,7 +37,7 @@ class Docman_Version implements Version
         $this->itemId         = null;
         $this->number         = null;
         $this->label          = null;
-        $this->changeLog      = null;
+        $this->changelog      = null;
         $this->date           = null;
         $this->filename       = null;
         $this->filesize       = 0;
