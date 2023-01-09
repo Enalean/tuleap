@@ -90,7 +90,7 @@ final class SVNProjectAccessRouteDefinition
                 ),
                 new SVNTokenBasedAuthenticationMethod(
                     $svn_login_name_user_provider,
-                    new \SVN_TokenHandler(new \SVN_TokenDao(), new \RandomNumberGenerator(), $password_handler),
+                    new \SVN_TokenHandler(new \SVN_TokenDao(), $password_handler),
                     $logger
                 ),
                 new SVNPasswordBasedAuthenticationMethod(

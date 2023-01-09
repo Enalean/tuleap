@@ -34,9 +34,6 @@ const addSSHKeyButton = (): Modal | null =>
 const GENERATE_ACCESS_KEY_BUTTON_ID = "generate-access-key-button";
 const addAccessKeyButton = (): Modal | null =>
     openTargetModalIdOnClick(document, GENERATE_ACCESS_KEY_BUTTON_ID);
-const GENERATE_SVN_TOKEN_BUTTON_ID = "generate-svn-token-button";
-const addSVNTokenButton = (): Modal | null =>
-    openTargetModalIdOnClick(document, GENERATE_SVN_TOKEN_BUTTON_ID);
 
 function handleSSHKeys(): void {
     addSSHKeyButton();
@@ -90,8 +87,6 @@ function addAccessKeyDatePicker(): void {
 }
 
 function handleSVNTokens(): void {
-    addSVNTokenButton();
-
     toggleButtonAccordingToCheckBoxesStateWithIds(
         "button-revoke-svn-tokens",
         "svn-tokens-selected[]"

@@ -332,13 +332,6 @@ msgstr ""
 msgid "A template without any service enabled."
 msgstr "Un template sans aucun service activé."
 
-msgid ""
-"A token will be automatically generated at the form submission. The comment "
-"is not required but it can help you to manage your tokens."
-msgstr ""
-"Un nouveau jeton sera généré lors de la soumission du formulaire. La "
-"description n'est pas requise mais peut vous aider à gérer vos jetons."
-
 msgid "API"
 msgstr "API"
 
@@ -1089,6 +1082,13 @@ msgstr "Ajouter un groupe utilisateur"
 msgid "Create your account"
 msgstr "Créer votre compte"
 
+msgid ""
+"Creating new SVN tokens is no more possible, personal access keys should be "
+"used instead."
+msgstr ""
+"La création de nouveaux jetons SVN n'est plus possible, les clés d'accès "
+"personnelles doivent être utilisées à la place."
+
 msgid "Current and new passwords are identical"
 msgstr "L'ancien et le nouveau mot de passe sont identiques"
 
@@ -1602,14 +1602,8 @@ msgstr "Général"
 msgid "Generate"
 msgstr "Générer"
 
-msgid "Generate an SVN token"
-msgstr "Générer un jeton SVN"
-
 msgid "Generate new key"
 msgstr "Générer une nouvelle clé"
-
-msgid "Generate new token"
-msgstr "Générer un nouveau jeton"
 
 msgid "Generated on"
 msgstr "Générée le"
@@ -2196,10 +2190,6 @@ msgstr "Le nom de la liste doit comporter au moins 4 caractères"
 
 msgid "My Dashboard"
 msgstr "Mon tableau de bord"
-
-msgid "My comment so I won't forget the purpose of this token..."
-msgstr ""
-"Mon commentaire qui me permettra de ne pas oublier l'utilité de ce token..."
 
 msgid "My dashboard"
 msgstr "Mon tableau de bord"
@@ -4061,9 +4051,6 @@ msgstr ""
 msgid "Today"
 msgstr "Aujourd'hui"
 
-msgid "Token comment"
-msgstr "Commentaire du jeton"
-
 msgid "Too many projects are waiting to be approved."
 msgstr "Trop de projets sont en attente de validation."
 
@@ -4789,9 +4776,6 @@ msgstr ""
 
 msgid "You don't have any SSH keys yet."
 msgstr "Vous n'avez pas de clef SSH."
-
-msgid "You don't have any SVN tokens yet."
-msgstr "Vous n'avez pas de jetons SVN."
 
 msgid "You don't have any access keys yet."
 msgstr "Vous n'avez pas de clef d'accès."
