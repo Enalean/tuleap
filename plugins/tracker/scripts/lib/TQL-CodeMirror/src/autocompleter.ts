@@ -19,6 +19,7 @@
 
 import CodeMirror from "codemirror";
 import type { TQLCodeMirrorEditor } from "./builder";
+import { variable_definition } from "./configuration";
 
 export { getHint };
 
@@ -63,7 +64,7 @@ function getStartOfToken(editor: TQLCodeMirrorEditor): number {
     const cursor = editor.getCursor();
     const line = editor.getLine(cursor.line);
     let start = cursor.ch;
-    const a_word = /[@\w]+/;
+    const a_word = variable_definition.regex;
 
     while (start && a_word.test(line.charAt(start - 1))) {
         --start;
