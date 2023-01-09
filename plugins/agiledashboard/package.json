@@ -7,8 +7,6 @@
   "dependencies": {
     "@tuleap/chart-builder": "workspace:*",
     "@tuleap/plugin-agiledashboard-burnup-data-transformer": "workspace:*",
-    "@tuleap/plugin-agiledashboard-scrum-header": "workspace:*",
-    "@tuleap/plugin-agiledashboard-scrum-milestone-header": "workspace:*",
     "@tuleap/plugin-tracker-color-picker": "workspace:*",
     "d3": "^7.0.0",
     "d3-array": "^3.0.1",
@@ -21,11 +19,9 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/cypress-configurator": "workspace:*",
-    "@tuleap/cypress-utilities-support": "workspace:*",
-    "@types/node": "^14.14.31"
+    "@tuleap/cypress-utilities-support": "workspace:*"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
     "build": "rm -rf ./frontend-assets/ && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch"
   }

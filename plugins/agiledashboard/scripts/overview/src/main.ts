@@ -17,4 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../themes/main.scss";
 import "@tuleap/plugin-agiledashboard-scrum-milestone-header";

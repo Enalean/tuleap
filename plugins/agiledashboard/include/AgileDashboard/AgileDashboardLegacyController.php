@@ -28,9 +28,12 @@ use Feedback;
 use HTTPRequest;
 use Tuleap\AgileDashboard\Kanban\KanbanURL;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\DispatchableWithThemeSelection;
 use Tuleap\Request\ForbiddenException;
@@ -64,27 +67,7 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
             $layout->redirect('/');
         }
 
-        if (KanbanURL::isKanbanURL($request)) {
-            $layout->addCssAsset(
-                new CssAssetWithoutVariantDeclinaisons(
-                    new IncludeAssets(
-                        __DIR__ . '/../../scripts/kanban/frontend-assets',
-                        '/assets/agiledashboard/kanban'
-                    ),
-                    'kanban-style'
-                )
-            );
-        } elseif (self::isPlanningV2URL($request)) {
-            $layout->addCssAsset(
-                new CssAssetWithoutVariantDeclinaisons(
-                    new IncludeAssets(
-                        __DIR__ . '/../../scripts/planning-v2/frontend-assets',
-                        '/assets/agiledashboard/planning-v2'
-                    ),
-                    'planning-style'
-                )
-            );
-        }
+        $this->includeAssets($request, $layout);
 
         $router = $this->router_builder->build($request);
 
@@ -121,5 +104,48 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
         return $request->get('action') === 'admin'
             && $request->get('pane') !== 'kanban'
             && $request->get('pane') !== 'charts';
+    }
+
+    private function includeAssets(HTTPRequest $request, BaseLayout $layout): void
+    {
+        if (KanbanURL::isKanbanURL($request)) {
+            $kanban_assets = new IncludeAssets(
+                __DIR__ . '/../../scripts/kanban/frontend-assets',
+                '/assets/agiledashboard/kanban'
+            );
+            $provider      = new KanbanJavascriptDependenciesProvider($kanban_assets);
+            foreach ($provider->getDependencies() as $dependency) {
+                $layout->includeFooterJavascriptFile($dependency['file']);
+            }
+            $layout->addCssAsset(
+                new CssAssetWithoutVariantDeclinaisons($kanban_assets, 'kanban-style')
+            );
+            return;
+        }
+        if (self::isPlanningV2URL($request)) {
+            $planning_assets = new IncludeAssets(
+                __DIR__ . '/../../scripts/planning-v2/frontend-assets',
+                '/assets/agiledashboard/planning-v2'
+            );
+            $provider        = new PlanningJavascriptDependenciesProvider($planning_assets);
+            foreach ($provider->getDependencies() as $dependency) {
+                $layout->includeFooterJavascriptFile($dependency['file']);
+            }
+            $layout->addCssAsset(
+                new CssAssetWithoutVariantDeclinaisons($planning_assets, 'planning-style')
+            );
+            return;
+        }
+        if (self::isInOverviewTab($request)) {
+            $layout->addJavascriptAsset(
+                new JavascriptViteAsset(
+                    new IncludeViteAssets(
+                        __DIR__ . '/../../scripts/overview/frontend-assets',
+                        '/assets/agiledashboard/overview'
+                    ),
+                    'src/main.ts'
+                )
+            );
+        }
     }
 }

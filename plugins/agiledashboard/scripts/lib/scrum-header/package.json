@@ -6,7 +6,7 @@
   "private": true,
   "exports": {
     ".": {
-      "style": "./themes/main.scss"
+      "default": "./themes/main.scss"
     }
   },
   "dependencies": {

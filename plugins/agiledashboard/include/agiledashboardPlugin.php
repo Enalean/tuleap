@@ -60,7 +60,6 @@ use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\VisitRetriever;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
-use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
@@ -69,7 +68,6 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
-use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\Planning\XML\ProvideCurrentUserForXMLImport;
 use Tuleap\AgileDashboard\RealTime\MercureJWTController;
@@ -240,8 +238,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
             $this->addHook(ITEM_PRIORITY_CHANGE);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
-            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(PermissionPerGroupDisplayEvent::NAME);
             $this->addHook(HistoryEntryCollection::NAME);
             $this->addHook(Event::USER_HISTORY_CLEAR);
@@ -791,36 +787,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
-    /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
-    public function burning_parrot_get_stylesheets(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $request = HTTPRequest::instance();
-        if (AgileDashboardLegacyController::isInOverviewTab($request)) {
-            $params['stylesheets'][] = $this->getIncludeAssets()->getFileURL('scrum-style.css');
-        }
-    }
-
-    public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (AgileDashboardLegacyController::isInOverviewTab(HTTPRequest::instance())) {
-            $params['javascript_files'][] = $this->getIncludeAssets()->getFileURL('overview.js');
-            return;
-        }
-
-        $provider = $this->getJavascriptDependenciesProvider();
-        if ($provider === null) {
-            return;
-        }
-
-        foreach ($provider->getDependencies() as $javascript) {
-            if (isset($javascript['snippet'])) {
-                $GLOBALS['HTML']->includeFooterJavascriptSnippet($javascript['snippet']);
-            } else {
-                $params['javascript_files'][] = $javascript['file'];
-            }
-        }
-    }
-
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event): void
     {
         $event->addJavascript(
@@ -834,46 +800,9 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    /**
-     * @return \Tuleap\AgileDashboard\JavascriptDependenciesProvider
-     */
-    private function getJavascriptDependenciesProvider()
-    {
-        $request = HTTPRequest::instance();
-        if (KanbanURL::isKanbanURL($request)) {
-            return new KanbanJavascriptDependenciesProvider(
-                new IncludeAssets(__DIR__ . '/../scripts/kanban/frontend-assets', '/assets/agiledashboard/kanban')
-            );
-        } elseif (AgileDashboardLegacyController::isPlanningV2URL($request)) {
-            return new PlanningJavascriptDependenciesProvider(
-                new IncludeAssets(__DIR__ . '/../scripts/planning-v2/frontend-assets', '/assets/agiledashboard/planning-v2')
-            );
-        }
-
-        return null;
-    }
-
     private function isAnAgiledashboardRequest()
     {
         return $this->currentRequestIsForPlugin();
-    }
-
-    private function isScrumAdminURL()
-    {
-        $request = HTTPRequest::instance();
-
-        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 &&
-            $request->get('action') === 'admin' &&
-            $request->get('pane') !== 'kanban' &&
-            $request->get('pane') !== 'charts';
-    }
-
-    private function isPlanningV2URL()
-    {
-        $request              = HTTPRequest::instance();
-        $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
-
-        return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
     }
 
     private function isHomepageURL(HTTPRequest $request)

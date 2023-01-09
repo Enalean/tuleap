@@ -31,7 +31,6 @@ const entry_points = {
     "burnup-chart": "./themes/FlamingParrot/css/burnup-chart.scss",
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "planning-admin-colorpicker": "./themes/FlamingParrot/css/planning-admin-colorpicker.scss",
-    "scrum-style": "./themes/BurningParrot/css/scrum.scss",
 };
 
 const webpack_config_for_themes = {
@@ -42,21 +41,6 @@ const webpack_config_for_themes = {
         rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
     },
     plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
-};
-
-const webpack_config_for_typescript = {
-    entry: {
-        overview: "./scripts/overview.ts",
-    },
-    context,
-    output,
-    module: {
-        rules: [...webpack_configurator.configureTypescriptRules()],
-    },
-    plugins: [manifest_plugin],
-    resolve: {
-        extensions: [".ts", ".js"],
-    },
 };
 
 const webpack_config_for_charts = {
@@ -99,6 +83,5 @@ const webpack_config_for_javascript = {
 module.exports = [
     webpack_config_for_themes,
     webpack_config_for_charts,
-    webpack_config_for_typescript,
     webpack_config_for_javascript,
 ];
