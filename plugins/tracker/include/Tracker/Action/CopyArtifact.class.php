@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -74,6 +75,7 @@ class Tracker_Action_CopyArtifact
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_imported_mapping,
         Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger,
         private TrackerFactory $tracker_factory,
+        private EventDispatcherInterface $event_dispatcher,
     ) {
         $this->tracker                    = $tracker;
         $this->artifact_factory           = $artifact_factory;
@@ -178,6 +180,13 @@ class Tracker_Action_CopyArtifact
 
         $this->importChangesets($xml_artifacts, $new_artifacts, $xml_field_mapping);
         $this->addSummaryCommentChangeset($new_artifacts[0], $current_user, $from_changeset);
+        $this->event_dispatcher->dispatch(
+            new \Tuleap\Tracker\Action\AfterArtifactCopiedEvent(
+                $this->artifacts_imported_mapping,
+                $from_changeset->getTracker()->getProject(),
+            )
+        );
+
         $this->redirectToArtifact($new_artifacts[0]);
     }
 
