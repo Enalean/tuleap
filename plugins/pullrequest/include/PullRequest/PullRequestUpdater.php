@@ -107,62 +107,7 @@ class PullRequestUpdater
     {
         $prs = $this->pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
         foreach ($prs as $pr) {
-            $this->pull_request_factory->updateSourceRev($pr, $new_rev);
-
-            $repository_destination = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
-            if ($repository_destination === null) {
-                continue;
-            }
-            $executor_repository_destination = $this->git_exec_factory->getGitExec($repository_destination);
-
-            $updated_pr = new PullRequest(
-                $pr->getId(),
-                $pr->getTitle(),
-                $pr->getDescription(),
-                $pr->getRepositoryId(),
-                $pr->getUserId(),
-                $pr->getCreationDate(),
-                $pr->getBranchSrc(),
-                $new_rev,
-                $pr->getRepoDestId(),
-                $pr->getBranchDest(),
-                $pr->getSha1Dest(),
-                $pr->getStatus(),
-                $pr->getMergeStatus()
-            );
-
-            $executor_repository_source = $this->git_exec_factory->getGitExec($repository);
-            $this->git_pull_request_reference_updater->updatePullRequestReference(
-                $updated_pr,
-                $executor_repository_source,
-                $executor_repository_destination,
-                $repository_destination
-            );
-
-            $ancestor_rev = $executor_repository_destination->getCommonAncestor($new_rev, $pr->getBranchDest());
-            if ($ancestor_rev !== $pr->getSha1Dest()) {
-                $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
-            }
-            $this->event_dispatcher->dispatch(
-                PullRequestUpdatedEvent::fromPullRequestUserAndReferences(
-                    $pr,
-                    $user,
-                    $pr->getSha1Src(),
-                    $new_rev,
-                    $pr->getBranchDest(),
-                    $ancestor_rev
-                )
-            );
-
-            $merge_status = $this->pull_request_merger->detectMergeabilityStatus(
-                $executor_repository_destination,
-                $new_rev,
-                $ancestor_rev
-            );
-            $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
-
-            $this->updateInlineCommentsWhenSourceChanges($executor_repository_destination, $pr, $ancestor_rev, $new_rev);
-            $this->timeline_event_creator->storeUpdateEvent($pr, $user);
+            $this->updatePullRequestWithNewSourceRev($pr, $user, $repository, $new_rev);
         }
 
         $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $branch_name);
@@ -179,6 +124,74 @@ class PullRequestUpdater
             );
             $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
         }
+    }
+
+    /**
+     * @throws GitReference\GitReferenceNotFound
+     * @throws \Git_Command_Exception
+     */
+    public function updatePullRequestWithNewSourceRev(
+        PullRequest $pr,
+        PFUser $user,
+        GitRepository $repository,
+        string $new_rev,
+    ): void {
+        $this->pull_request_factory->updateSourceRev($pr, $new_rev);
+
+        $repository_destination = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
+        if ($repository_destination === null) {
+            return;
+        }
+        $executor_repository_destination = $this->git_exec_factory->getGitExec($repository_destination);
+
+        $updated_pr = new PullRequest(
+            $pr->getId(),
+            $pr->getTitle(),
+            $pr->getDescription(),
+            $pr->getRepositoryId(),
+            $pr->getUserId(),
+            $pr->getCreationDate(),
+            $pr->getBranchSrc(),
+            $new_rev,
+            $pr->getRepoDestId(),
+            $pr->getBranchDest(),
+            $pr->getSha1Dest(),
+            $pr->getStatus(),
+            $pr->getMergeStatus()
+        );
+
+        $executor_repository_source = $this->git_exec_factory->getGitExec($repository);
+        $this->git_pull_request_reference_updater->updatePullRequestReference(
+            $updated_pr,
+            $executor_repository_source,
+            $executor_repository_destination,
+            $repository_destination
+        );
+
+        $ancestor_rev = $executor_repository_destination->getCommonAncestor($new_rev, $pr->getBranchDest());
+        if ($ancestor_rev !== $pr->getSha1Dest()) {
+            $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
+        }
+        $this->event_dispatcher->dispatch(
+            PullRequestUpdatedEvent::fromPullRequestUserAndReferences(
+                $pr,
+                $user,
+                $pr->getSha1Src(),
+                $new_rev,
+                $pr->getBranchDest(),
+                $ancestor_rev
+            )
+        );
+
+        $merge_status = $this->pull_request_merger->detectMergeabilityStatus(
+            $executor_repository_destination,
+            $new_rev,
+            $ancestor_rev
+        );
+        $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
+
+        $this->updateInlineCommentsWhenSourceChanges($executor_repository_destination, $pr, $ancestor_rev, $new_rev);
+        $this->timeline_event_creator->storeUpdateEvent($pr, $user);
     }
 
     private function updateInlineCommentsWhenSourceChanges(GitExec $git_exec, PullRequest $pull_request, $new_dest_rev, $new_src_rev)
