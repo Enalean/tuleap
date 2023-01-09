@@ -67,6 +67,9 @@ setup_database() {
 
     enable_plugins
 
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php configure apache
+    /usr/bin/tuleap setup:svn
+
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/tests/e2e/full/tuleap/cypress_database_init_values.sql"
 }
 
@@ -139,5 +142,6 @@ sed -i 's/inet_interfaces = localhost/inet_interfaces = 127.0.0.1/' /etc/postfix
 
 /opt/remi/php80/root/usr/sbin/php-fpm --daemonize
 nginx
+/usr/sbin/httpd
 
 exec tail -f /var/log/nginx/error.log
