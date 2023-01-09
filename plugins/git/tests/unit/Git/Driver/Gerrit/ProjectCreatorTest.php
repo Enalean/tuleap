@@ -114,7 +114,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
         $zip_archive = new ZipArchive();
         $zip_archive->open("$this->fixtures/firefox.zip");
         $zip_archive->extractTo($this->tmpdir);
-        `tar -xzf $this->fixtures/gitolite_firefox.git.tgz --directory $this->tmpdir`;
+        shell_exec("tar --no-same-owner -xzf $this->fixtures/gitolite_firefox.git.tgz --directory $this->tmpdir");
 
         $host         = $this->tmpdir;
         $login        = $this->gerrit_admin_instance;
