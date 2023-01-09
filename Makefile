@@ -300,13 +300,13 @@ pull-docker-images: ## Pull all docker images used for development
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:c7-php80 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=tuleap/tuleap-community-edition:latest KEY_PATH=tools/utils/signing-keys/tuleap-community.pub
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
-	cosign verify -key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/tuleap-aio-dev:c7-php81-nginx
-	cosign verify -key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/ldap:latest
+	cosign verify --key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/tuleap-aio-dev:c7-php81-nginx
+	cosign verify --key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/ldap:latest
 
 .PHONY:docker-pull-verify
 docker-pull-verify:
 	$(DOCKER) pull $(IMAGE_NAME)
-	cosign verify -key $(KEY_PATH) $(IMAGE_NAME)
+	cosign verify --key $(KEY_PATH) $(IMAGE_NAME)
 
 #
 # Dev setup
