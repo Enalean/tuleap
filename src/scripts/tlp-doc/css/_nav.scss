@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/tlp/src/scss/variables/colors/common-colors";
+
 $nav-blocks-margin: 30px;
 $color-switcher-item-active-color: #ffffff;
 $nav-item-color: #888888;
@@ -121,27 +123,27 @@ $nav-item-color: #888888;
         }
 
         &.switch-to-orange {
-            background-color: $tlp-theme-orange;
+            background-color: common-colors.$tlp-theme-orange;
         }
 
         &.switch-to-blue {
-            background-color: $tlp-theme-blue;
+            background-color: common-colors.$tlp-theme-blue;
         }
 
         &.switch-to-green {
-            background-color: $tlp-theme-green;
+            background-color: common-colors.$tlp-theme-green;
         }
 
         &.switch-to-grey {
-            background-color: $tlp-theme-grey;
+            background-color: common-colors.$tlp-theme-grey;
         }
 
         &.switch-to-purple {
-            background-color: $tlp-theme-purple;
+            background-color: common-colors.$tlp-theme-purple;
         }
 
         &.switch-to-red {
-            background-color: $tlp-theme-red;
+            background-color: common-colors.$tlp-theme-red;
         }
 
         &.switch-to-background-white,

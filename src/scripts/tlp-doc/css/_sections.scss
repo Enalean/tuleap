@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "demos";
+
 $section-title-color: #666666;
 $section-sub-title-color: #a5a5a5;
-$editor-scrollbar-color: rgb(241 241 241);
 
 main {
     min-height: 100%;
@@ -81,5 +82,3 @@ main {
         font-size: 13px;
     }
 }
-
-@import "demos";

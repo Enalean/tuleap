@@ -129,39 +129,6 @@ const webpack_config_for_tlp = {
     ],
 };
 
-const webpack_config_for_tlp_doc = {
-    entry: {
-        style: "./src/tlp-doc/css/main.scss",
-        script: "./src/tlp-doc/src/index.js",
-    },
-    context,
-    // This one does NOT go in ./frontend-assets because we do not deliver it in production, only in dev environment
-    output: webpack_configurator.configureOutput(
-        path.resolve(__dirname, "../../www/tlp-doc/dist/"),
-        "/tlp-doc/dist/"
-    ),
-    externals: {
-        tlp: "tlp",
-    },
-    resolve: {
-        extensions: [".js", ".ts"],
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_scss_loader,
-            webpack_configurator.rule_po_files,
-        ],
-    },
-    plugins: [
-        // Since it has a different output, it gets its own CleanWebpackPlugin and ManifestPlugin
-        webpack_configurator.getCleanWebpackPlugin(),
-        webpack_configurator.getManifestPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(false),
-        ...webpack_configurator.getCSSExtractionPlugins(),
-    ],
-};
-
 const webpack_config_for_flaming_parrot_code = {
     entry: {
         "flamingparrot-with-polyfills": "./src/FlamingParrot/index.ts",
@@ -469,7 +436,6 @@ module.exports = [
     webpack_config_legacy_combined,
     webpack_config_for_rich_text_editor,
     webpack_config_for_tlp,
-    webpack_config_for_tlp_doc,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
     webpack_config_for_vue,
