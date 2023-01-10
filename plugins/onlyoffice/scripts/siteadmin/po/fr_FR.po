@@ -164,5 +164,11 @@ msgstr ""
 "Vous êtes sur le point d'autoriser l'accès au serveur pour tous les projets "
 "de la plateforme."
 
+msgid ""
+"You can allow all the projects when only one document server is configured"
+msgstr ""
+"Vous ne pouvez autorisez tous les projets que lorsqu'il n'y a qu'un serveur "
+"de document configuré"
+
 msgid "You're about to delete the following document server:"
 msgstr "Vous êtes sur le point de supprimer le serveur de document :"
