@@ -63,13 +63,11 @@ export class ListOptionsChangesObserver {
     }
 
     private isChildrenMutation(mutations: Array<MutationRecord>): boolean {
-        return (
-            mutations.find((mutation) => {
-                return (
-                    mutation.type === "childList" ||
-                    (mutation.type === "attributes" && mutation.attributeName === "disabled")
-                );
-            }) !== undefined
+        return mutations.some(
+            (mutation) =>
+                mutation.type === "childList" ||
+                (mutation.type === "attributes" &&
+                    ["disabled", "value"].includes(mutation.attributeName ?? ""))
         );
     }
 }

@@ -28,10 +28,11 @@ import type { TemplateResult } from "lit/html.js";
 import { html } from "lit/html.js";
 
 describe("ListItemBuilder", () => {
-    let select: HTMLSelectElement, builder: ListItemMapBuilder;
+    let select: HTMLSelectElement, builder: ListItemMapBuilder, doc: Document;
 
     beforeEach(() => {
-        select = document.createElement("select");
+        doc = document.implementation.createHTMLDocument();
+        select = doc.createElement("select");
         builder = new ListItemMapBuilder(select);
     });
 
@@ -211,7 +212,7 @@ describe("ListItemBuilder", () => {
     });
 
     it("should ignore options with empty value attribute and no content BUT does not remove them from the source <select> options", async () => {
-        const empty_option = document.createElement("option");
+        const empty_option = doc.createElement("option");
         empty_option.setAttribute("id", "empty-option");
         empty_option.setAttribute("value", "");
         select.appendChild(empty_option);
@@ -226,7 +227,7 @@ describe("ListItemBuilder", () => {
     });
 
     it("should NOT ignore options with empty value attribute with content", async () => {
-        const empty_option = document.createElement("option");
+        const empty_option = doc.createElement("option");
         empty_option.setAttribute("id", "empty-option");
         empty_option.setAttribute("value", "");
         empty_option.textContent = "Some label";

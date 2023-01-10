@@ -36,20 +36,18 @@ describe("SingleSelectionManager", () => {
         items_map_manager: ItemsMapManager,
         dropdown_manager: DropdownManager,
         item_1: ListPickerItem,
-        item_2: ListPickerItem;
+        item_2: ListPickerItem,
+        doc: Document;
 
     beforeEach(async () => {
-        source_select_box = document.createElement("select");
+        doc = document.implementation.createHTMLDocument();
+        source_select_box = doc.createElement("select");
         appendSimpleOptionsToSourceSelectBox(source_select_box);
 
         const { dropdown_element, selection_element, placeholder_element } =
-            new BaseComponentRenderer(
-                document.implementation.createHTMLDocument(),
-                source_select_box,
-                {
-                    placeholder: "Please select a value",
-                }
-            ).renderBaseComponent();
+            new BaseComponentRenderer(doc, source_select_box, {
+                placeholder: "Please select a value",
+            }).renderBaseComponent();
 
         selection_container = selection_element;
         placeholder = placeholder_element;
@@ -221,9 +219,9 @@ describe("SingleSelectionManager", () => {
 
         it("when no item has been selected, then it should select the first available option", async () => {
             source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
+            const new_option_0 = doc.createElement("option");
             new_option_0.value = "new option 0";
-            const new_option_1 = document.createElement("option");
+            const new_option_1 = doc.createElement("option");
             new_option_1.value = "new option 1";
             source_select_box.appendChild(new_option_0);
             source_select_box.appendChild(new_option_1);
@@ -252,7 +250,7 @@ describe("SingleSelectionManager", () => {
             );
 
             source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
+            const new_option_0 = doc.createElement("option");
             new_option_0.value = "new option 0";
             source_select_box.appendChild(new_option_0);
 
@@ -266,9 +264,9 @@ describe("SingleSelectionManager", () => {
             manager.processSelection(item_1.element);
 
             source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
+            const new_option_0 = doc.createElement("option");
             new_option_0.value = "new option 0";
-            const new_option_1 = document.createElement("option");
+            const new_option_1 = doc.createElement("option");
             new_option_1.value = item_1.value;
             source_select_box.appendChild(new_option_0);
             source_select_box.appendChild(new_option_1);
@@ -287,9 +285,9 @@ describe("SingleSelectionManager", () => {
             manager.processSelection(item_1.element);
 
             source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
+            const new_option_0 = doc.createElement("option");
             new_option_0.value = "new option 0";
-            const new_option_1 = document.createElement("option");
+            const new_option_1 = doc.createElement("option");
             new_option_1.value = "new option 1";
             source_select_box.appendChild(new_option_0);
             source_select_box.appendChild(new_option_1);

@@ -49,12 +49,13 @@ describe("MultipleSelectionManager", () => {
     }
 
     beforeEach(async () => {
-        source_select_box = document.createElement("select");
+        const doc = document.implementation.createHTMLDocument();
+        source_select_box = doc.createElement("select");
         source_select_box.setAttribute("multiple", "multiple");
         appendSimpleOptionsToSourceSelectBox(source_select_box);
 
         const { selection_element, search_field_element } = new BaseComponentRenderer(
-            document.implementation.createHTMLDocument(),
+            doc,
             source_select_box,
             {
                 placeholder: "Please select some values",
