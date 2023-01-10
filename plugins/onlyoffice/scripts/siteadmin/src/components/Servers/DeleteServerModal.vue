@@ -46,7 +46,7 @@
         <div class="tlp-modal-body">
             <p>
                 {{ $gettext("You're about to delete the following document server:") }}
-                <code>{{ server.server_url }}</code>
+                <span class="tlp-badge-secondary">{{ server.server_url }}</span>
             </p>
             <div class="tlp-alert-warning">
                 {{
