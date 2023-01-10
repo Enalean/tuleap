@@ -24,9 +24,6 @@ export const LinkSelectorStub = {
         setDropdownContent(): void {
             // Do nothing
         },
-        setPlaceholder(): void {
-            // Do nothing
-        },
         resetSelection(): void {
             // Do nothing
         },
