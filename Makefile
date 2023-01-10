@@ -181,19 +181,11 @@ tests-e2e-dev: ## Run E2E tests. DB to select the database to use (mysql57, mysq
 	$(eval DB ?= mysql80)
 	@tests/e2e/full/wrap_for_dev_context.sh "$(DB)"
 
-.PHONY:tests-e2e-svn-distlp
-tests-e2e-svn-distlp: ## Run E2E Tuleap Distributed SVN tests. DB to select the database to use (mysql57, mysql80).
-	$(eval DB ?= mysql80)
-	@tests/e2e/distlp/wrap.sh "$(DB)"
-
 tests_cypress:
 	@$(MAKE) --no-print-directory tests-e2e
 
 tests_cypress_dev:
 	@$(MAKE) --no-print-directory tests-e2e-dev
-
-tests_cypress_distlp: ## Run Cypress distlp tests
-	@$(MAKE) --no-print-directory tests-e2e-svn-distlp
 
 ifeq ($(COVERAGE_ENABLED),1)
 COVERAGE_PARAMS_PHPUNIT=--coverage-html=/tmp/results/coverage/
