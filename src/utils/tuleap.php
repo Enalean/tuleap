@@ -34,7 +34,6 @@ use Tuleap\CLI\Command\ProcessSystemEventsCommand;
 use Tuleap\CLI\Command\QueueSystemCheckCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
 use Tuleap\CLI\Command\WorkerSupervisorCommand;
-use Tuleap\CLI\Command\WorkerSVNRootUpdateCommand;
 use Tuleap\CLI\Command\WorkerSystemCtlCommand;
 use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
@@ -161,20 +160,6 @@ $CLI_command_collector->addCommand(
             $backend_logger,
             DBFactory::getMainTuleapDBConnection()
         );
-    }
-);
-
-$CLI_command_collector->addCommand(
-    WorkerSVNRootUpdateCommand::NAME,
-    static function (): WorkerSVNRootUpdateCommand {
-        return new WorkerSVNRootUpdateCommand();
-    }
-);
-
-$CLI_command_collector->addCommand(
-    \Tuleap\CLI\Command\RedisWaiterCommand::NAME,
-    static function (): \Tuleap\CLI\Command\RedisWaiterCommand {
-        return new \Tuleap\CLI\Command\RedisWaiterCommand();
     }
 );
 

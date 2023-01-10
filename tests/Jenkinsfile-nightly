@@ -73,13 +73,6 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage('Distributed SVN integration') {
-                    options { retry(1) }
-                    steps {
-                        script { actions.runEndToEndTests('distlp', 'mysql57') }
-                        junit 'results/e2e/distlp/*.xml'
-                    }
-                }
                 stage ('MariaDB 10.3') {
                     stages {
                         stage('REST CentOS 7 PHP 8.0 MariaDB 10.3') {

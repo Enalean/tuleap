@@ -2,10 +2,6 @@
 
 /bin/cp -f /usr/share/tuleap/tools/docker/tuleap-aio-dev/run-dev.service /etc/systemd/system
 
-if [ -n "$TULEAP_DISTLP_TEST" ]; then
-    echo "Storage=persistent" >> /etc/systemd/journald.conf
-fi
-
 /usr/bin/systemctl enable run-dev.service
 
 exec /usr/sbin/init

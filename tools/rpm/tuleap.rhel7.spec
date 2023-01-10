@@ -683,7 +683,6 @@ done
 %{__install} src/utils/systemd/tuleap.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-workers.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-worker@.service $RPM_BUILD_ROOT/%{_unitdir}
-%{__install} src/utils/systemd/tuleap-svn-updater.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-default.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-default.service $RPM_BUILD_ROOT/%{_unitdir}
@@ -1241,7 +1240,6 @@ fi
 
 %files core-subversion
 %defattr(-,root,root,-)
-%attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
 
 #
 # Plugins
