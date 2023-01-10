@@ -18,9 +18,14 @@
  */
 
 @use "sass:color";
-@import "@tuleap/tlp/src/scss/variables/colors/common-colors";
-@import "~@tuleap/list-picker";
-@import "~@tuleap/link-selector";
+@use "@tuleap/list-picker";
+@use "@tuleap/link-selector";
+@use "codemirror/lib/codemirror";
+@use "codemirror/theme/mdn-like";
+@use "codemirror/addon/scroll/simplescrollbars";
+@use "./nav";
+@use "./sections";
+@use "./javascript-sections";
 
 $nav-width: 150px;
 $nav-margin: 30px;
@@ -347,10 +352,3 @@ body {
 .hljs {
     background: none;
 }
-
-@import "./nav";
-@import "./sections";
-@import "./javascript-sections";
-@import "~codemirror/lib/codemirror";
-@import "~codemirror/theme/mdn-like";
-@import "~codemirror/addon/scroll/simplescrollbars";
