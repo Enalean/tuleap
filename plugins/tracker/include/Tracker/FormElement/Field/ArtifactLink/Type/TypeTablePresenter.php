@@ -41,13 +41,17 @@ class TypeTablePresenter
     public $mass_unlink_title;
 
     public const TABLE_ID_PREFIX = "tracker_report_table_type_";
+    public bool $are_links_deletable;
 
     public function __construct(
         TypePresenter $type,
         array $artifact_links,
-        public bool $is_reverse_artifact_links,
+        bool $is_reverse_artifact_links,
         Tracker_FormElement_Field_ArtifactLink $field,
+        bool $can_link_be_modified,
     ) {
+        $this->are_links_deletable = ! $is_reverse_artifact_links && $can_link_be_modified;
+
         $this->table_id   = self::TABLE_ID_PREFIX . $type->shortname;
         $this->type       = $type->shortname;
         $this->type_label = $this->fetchTabLabel($type, $is_reverse_artifact_links);
@@ -73,13 +77,17 @@ class TypeTablePresenter
         $this->mass_unlink_title = dgettext('tuleap-tracker', 'Mark all links to be removed');
     }
 
-    public static function buildForHeader(TypePresenter $type_presenter, Tracker_FormElement_Field_ArtifactLink $field)
-    {
+    public static function buildForHeader(
+        TypePresenter $type_presenter,
+        Tracker_FormElement_Field_ArtifactLink $field,
+        bool $can_link_be_modified,
+    ) {
         return new TypeTablePresenter(
             $type_presenter,
             [],
             false,
-            $field
+            $field,
+            $can_link_be_modified,
         );
     }
 
