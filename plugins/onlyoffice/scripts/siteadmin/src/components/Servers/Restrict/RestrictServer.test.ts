@@ -28,16 +28,20 @@ vi.mock("@tuleap/autocomplete-for-select2", () => {
 });
 
 import { shallowMount } from "@vue/test-utils";
-import RestrictServerModal from "./RestrictServerModal.vue";
+import RestrictServer from "./RestrictServer.vue";
 import { createGettext } from "vue3-gettext";
-import type { Server } from "../../type";
-import AllowedProjectsTable from "./Restrict/AllowedProjectsTable.vue";
+import type { Navigation, Server } from "../../../type";
+import AllowedProjectsTable from "./AllowedProjectsTable.vue";
+import { NAVIGATION } from "../../../injection-keys";
 
-describe("RestrictServerModal", () => {
+describe("RestrictServer", () => {
     it("should disable if there is no project to allow or revoke", async () => {
-        const wrapper = shallowMount(RestrictServerModal, {
+        const wrapper = shallowMount(RestrictServer, {
             global: {
                 plugins: [createGettext({ silent: true })],
+                provide: {
+                    [NAVIGATION as symbol]: {} as Navigation,
+                },
             },
             props: {
                 server: {
@@ -64,9 +68,12 @@ describe("RestrictServerModal", () => {
     });
 
     it("should display a warning if project is about to be moved from one server to another", async () => {
-        const wrapper = shallowMount(RestrictServerModal, {
+        const wrapper = shallowMount(RestrictServer, {
             global: {
                 plugins: [createGettext({ silent: true })],
+                provide: {
+                    [NAVIGATION as symbol]: {} as Navigation,
+                },
             },
             props: {
                 server: {

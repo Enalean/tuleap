@@ -58,13 +58,13 @@
 </template>
 
 <script setup lang="ts">
-import AddServerModal from "./Servers/AddServerModal.vue";
-import AddServerButton from "./Servers/AddServerButton.vue";
-import ServersEmptyState from "./Servers/ServersEmptyState.vue";
+import AddServerModal from "./AddServerModal.vue";
+import AddServerButton from "./AddServerButton.vue";
+import ServersEmptyState from "./ServersEmptyState.vue";
+import ServerRow from "./ServerRow.vue";
 
-import { strictInject } from "../helpers/strict-inject";
-import { CONFIG } from "../injection-keys";
-import ServerRow from "./Servers/ServerRow.vue";
+import { strictInject } from "../../helpers/strict-inject";
+import { CONFIG } from "../../injection-keys";
 
 const config = strictInject(CONFIG);
 </script>

@@ -50,19 +50,17 @@
 
             <edit-server-modal v-bind:server="server" />
             <delete-server-modal v-bind:server="server" />
-            <restrict-server-modal v-bind:server="server" />
         </td>
     </tr>
 </template>
 
 <script setup lang="ts">
 import EditServerButton from "./EditServerButton.vue";
-import RestrictServerButton from "./RestrictServerButton.vue";
+import RestrictServerButton from "./Restrict/RestrictServerButton.vue";
 import DeleteServerButton from "./DeleteServerButton.vue";
 import EditServerModal from "./EditServerModal.vue";
-import type { Server } from "../../type";
 import DeleteServerModal from "./DeleteServerModal.vue";
-import RestrictServerModal from "./RestrictServerModal.vue";
+import type { Server } from "../../type";
 
 defineProps<{ server: Server }>();
 </script>

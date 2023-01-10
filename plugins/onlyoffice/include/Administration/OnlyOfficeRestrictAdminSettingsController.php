@@ -57,15 +57,21 @@ final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15C
             throw new ForbiddenException();
         }
 
-        $this->restrictor->restrict((int) $request->getAttribute('id'), $projects);
+        $server_id = (int) $request->getAttribute('id');
+        $this->restrictor->restrict($server_id, $projects);
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);
 
         return $this->redirect_with_feedback_factory->createResponseForUser(
             $user,
-            OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL,
+            self::getServerRestrictUrl($server_id),
             new NewFeedback(\Feedback::INFO, dgettext('tuleap-onlyoffice', 'Document server restrictions have been saved')),
         );
+    }
+
+    public static function getServerRestrictUrl(int $server_id): string
+    {
+        return self::URL . '/' . $server_id;
     }
 }

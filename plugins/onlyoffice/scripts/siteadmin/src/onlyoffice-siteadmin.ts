@@ -20,8 +20,8 @@
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { createApp } from "vue";
-import ServersApp from "./components/ServersApp.vue";
 import { CONFIG } from "./injection-keys";
+import App from "./components/App.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const gettext_provider = await initVueGettext(
@@ -33,7 +33,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (mount_point && mount_point.dataset.config) {
         const config = JSON.parse(mount_point.dataset.config);
 
-        const app = createApp(ServersApp);
+        const app = createApp(App, {
+            location: window.location,
+            history: window.history,
+        });
         app.use(gettext_provider);
         app.provide(CONFIG, config);
         app.mount(mount_point);
