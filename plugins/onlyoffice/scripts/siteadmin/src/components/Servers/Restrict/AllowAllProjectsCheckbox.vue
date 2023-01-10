@@ -19,38 +19,52 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="config.servers.length <= 1">
-        <label class="tlp-label" for="onlyoffice-admin-toggle-allow-all">
-            {{ $gettext("Allow all projects to use this server") }}
-        </label>
-        <div class="tlp-switch">
-            <input type="hidden" name="is_restricted" value="1" />
-            <input
-                type="checkbox"
-                name="is_restricted"
-                value="0"
-                v-model="is_checked"
-                v-bind:disabled="!server.is_project_restricted"
-                v-on:change="onChange($event.target)"
-                id="onlyoffice-admin-toggle-allow-all"
-                class="tlp-switch-checkbox"
+    <div
+        class="onlyoffice-admin-toggle-allow-all-wrapper"
+        v-bind:class="{
+            'tlp-tooltip tlp-tooltip-right': config.servers.length > 1,
+        }"
+        v-bind:data-tlp-tooltip="
+            $gettext('You can allow all the projects when only one document server is configured')
+        "
+    >
+        <div
+            class="tlp-form-element"
+            v-bind:class="{
+                'tlp-form-element-disabled': config.servers.length > 1,
+            }"
+        >
+            <label class="tlp-label" for="onlyoffice-admin-toggle-allow-all">
+                {{ $gettext("Allow all projects to use this server") }}
+            </label>
+            <div class="tlp-switch">
+                <input type="hidden" name="is_restricted" value="1" />
+                <input
+                    type="checkbox"
+                    name="is_restricted"
+                    value="0"
+                    v-model="is_checked"
+                    v-bind:disabled="config.servers.length > 1 || !server.is_project_restricted"
+                    v-on:change="onChange($event.target)"
+                    id="onlyoffice-admin-toggle-allow-all"
+                    class="tlp-switch-checkbox"
+                />
+                <label
+                    for="onlyoffice-admin-toggle-allow-all"
+                    class="tlp-switch-button"
+                    aria-hidden
+                ></label>
+            </div>
+            <p class="tlp-text-warning" v-if="!server.is_project_restricted">
+                <i class="fa-solid fa-person-digging" aria-hidden="true"></i>
+                {{ $gettext("Under construction, you cannot set restrictions yet.") }}
+            </p>
+            <unrestiction-confirmation-modal
+                v-if="show_unrestriction_modal"
+                v-on:cancel-unrestriction="cancelUnrestriction"
             />
-            <label
-                for="onlyoffice-admin-toggle-allow-all"
-                class="tlp-switch-button"
-                aria-hidden
-            ></label>
         </div>
-        <p class="tlp-text-warning" v-if="!server.is_project_restricted">
-            <i class="fa-solid fa-person-digging" aria-hidden="true"></i>
-            {{ $gettext("Under construction, you cannot set restrictions yet.") }}
-        </p>
-        <unrestiction-confirmation-modal
-            v-if="show_unrestriction_modal"
-            v-on:cancel-unrestriction="cancelUnrestriction"
-        />
     </div>
-    <input type="hidden" name="is_restricted" value="1" v-else />
 </template>
 
 <script setup lang="ts">
@@ -86,7 +100,8 @@ function cancelUnrestriction(): void {
 </script>
 
 <style lang="scss" scoped>
-.tlp-form-element {
+.onlyoffice-admin-toggle-allow-all-wrapper {
+    align-self: flex-start;
     margin: 0 0 var(--tlp-x-large-spacing);
 }
 </style>

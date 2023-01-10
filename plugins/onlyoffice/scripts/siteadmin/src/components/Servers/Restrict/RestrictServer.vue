@@ -28,7 +28,7 @@
                     {{ $gettext("Projects restriction") }}
                 </h1>
             </div>
-            <section class="tlp-pane-section">
+            <section class="tlp-pane-section onlyoffice-admin-restrict-server-section">
                 <p>
                     {{ $gettext("Define which projects will be able to use the server:") }}
                     <span class="tlp-badge-secondary">{{ server.server_url }}</span>
@@ -55,7 +55,7 @@
                         )
                     }}
                 </div>
-                <div class="onlyoffice-admin-restrict-server-modal-footer-actions">
+                <div class="onlyoffice-admin-restrict-server-footer-actions">
                     <span class="tlp-badge-success tlp-badge-outline" v-if="nb_to_allow">
                         {{
                             $ngettext(
@@ -76,7 +76,7 @@
                             )
                         }}
                     </span>
-                    <span class="onlyoffice-admin-restrict-server-modal-footer-spacer"></span>
+                    <span class="onlyoffice-admin-restrict-server-footer-spacer"></span>
                     <button
                         type="reset"
                         class="tlp-button-primary tlp-button-outline tlp-modal-action"
@@ -137,14 +137,19 @@ h1 {
     gap: var(--tlp-small-spacing);
 }
 
-.onlyoffice-admin-restrict-server-modal-footer-actions {
+.onlyoffice-admin-restrict-server-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.onlyoffice-admin-restrict-server-footer-actions {
     display: flex;
     align-items: center;
     gap: var(--tlp-small-spacing);
     width: 100%;
 }
 
-.onlyoffice-admin-restrict-server-modal-footer-spacer {
+.onlyoffice-admin-restrict-server-footer-spacer {
     flex: 1 0 auto;
 }
 </style>
