@@ -187,15 +187,10 @@ import { createLinkSelector } from "@tuleap/link-selector";
                     is_filterable: true,
                     items_template_formatter: (html, value_id, option_label) => {
                         if (value_id === "103" || value_id === "108") {
-                            return html`
-                                <i class="fas fa-fw fa-user-slash"></i>
-                                ${option_label}
-                            `;
+                            return html`<i class="fa-solid fa-fw fa-user-slash"></i>
+                                ${option_label}`;
                         }
-                        return html`
-                            <i class="fas fa-fw fa-user"></i>
-                            ${option_label}
-                        `;
+                        return html`<i class="fa-solid fa-fw fa-user"></i> ${option_label}`;
                     },
                 });
             }

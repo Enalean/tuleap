@@ -86,21 +86,21 @@ export default class ProjectInformationInputPrivacyList extends Vue {
 
     selected_visibility = ACCESS_PRIVATE;
 
-    async mounted(): Promise<void> {
+    mounted(): void {
         this.selected_visibility = this.project_default_visibility;
 
         if (!(this.$el instanceof HTMLSelectElement)) {
             throw new Error("Element is supposed to be a select element");
         }
 
-        this.list_picker_instance = await createListPicker(this.$el, {
+        this.list_picker_instance = createListPicker(this.$el, {
             items_template_formatter: (html_processor, value_id, item_label) => {
                 const description = this.translatedVisibilityDetails(value_id);
                 const template = html_processor`<div>
                     <span class="project-information-input-privacy-list-option-label">${item_label}</span>
                     <p class="project-information-input-privacy-list-option-description">${description}</p>
                 </div>`;
-                return Promise.resolve(template);
+                return template;
             },
         });
     }

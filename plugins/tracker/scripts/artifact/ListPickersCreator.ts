@@ -46,8 +46,8 @@ export const ListPickersCreator = (
                 return;
             }
 
-            edit_button.addEventListener("click", async () => {
-                await createListPickerForSelect(select);
+            edit_button.addEventListener("click", () => {
+                createListPickerForSelect(select);
                 initTargetFieldsIfAny(select);
             });
         });
@@ -60,9 +60,9 @@ export const ListPickersCreator = (
                 return "#tracker_field_" + id;
             });
 
-            doc.querySelectorAll(ids.join(", ")).forEach(async (field: HTMLSelectElement) => {
+            doc.querySelectorAll(ids.join(", ")).forEach((field: HTMLSelectElement) => {
                 initTargetFieldsIfAny(field);
-                await createListPickerForSelect(field);
+                createListPickerForSelect(field);
             });
         }
     }
@@ -88,16 +88,16 @@ export const ListPickersCreator = (
     }
 
     function initListPickers(selects: NodeListOf<HTMLSelectElement>): void {
-        selects.forEach(async (select) => {
-            await createListPickerForSelect(select);
+        selects.forEach((select) => {
+            createListPickerForSelect(select);
         });
     }
 
-    async function createListPickerForSelect(select: HTMLSelectElement): Promise<void> {
+    function createListPickerForSelect(select: HTMLSelectElement): void {
         if (store.isWrapped(select.id)) {
             return;
         }
-        await createListPicker(select, {
+        createListPicker(select, {
             locale,
             is_filterable: true,
             none_value: getNoneElement(select),

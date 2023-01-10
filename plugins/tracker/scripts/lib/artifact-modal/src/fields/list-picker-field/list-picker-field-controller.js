@@ -35,7 +35,7 @@ function ListPickerController($element, $timeout, $scope) {
     });
     const select = $element[0].querySelector("[data-select=list-picker]");
 
-    async function init() {
+    function init() {
         bindOptionsDecorators();
 
         $scope.$watch(
@@ -53,9 +53,7 @@ function ListPickerController($element, $timeout, $scope) {
             locale: document.body.dataset.userLocale,
             is_filterable: true,
         };
-        self.destroy = await createListPicker(select, options).then((list_picker) => {
-            return list_picker.destroy;
-        });
+        self.destroy = createListPicker(select, options).destroy;
     }
 
     function bindOptionsDecorators() {

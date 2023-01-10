@@ -27,7 +27,7 @@ import * as list_picker from "@tuleap/list-picker";
 
 describe("ProjectInformationInputPrivacyList", () => {
     beforeEach(() => {
-        jest.spyOn(list_picker, "createListPicker").mockResolvedValue({
+        jest.spyOn(list_picker, "createListPicker").mockReturnValue({
             destroy: () => {
                 // Nothing to do since we did not really create something
             },

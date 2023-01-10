@@ -66,8 +66,8 @@ export default {
             selector: null,
         };
     },
-    async mounted() {
-        this.selector = await createListPicker(this.$refs.select, {
+    mounted() {
+        this.selector = createListPicker(this.$refs.select, {
             is_filterable: true,
             placeholder: this.$gettext("Choose an icon"),
             items_template_formatter: (html_processor, value_id) => {
@@ -77,7 +77,7 @@ export default {
                     <i aria-hidden="true" class="project-admin-services-modal-icon-item fa-fw ${icon_info["fa-icon"]}"></i>
                     <span>${icon_info.description}</span>
                 `;
-                return Promise.resolve(template);
+                return template;
             },
         });
     },

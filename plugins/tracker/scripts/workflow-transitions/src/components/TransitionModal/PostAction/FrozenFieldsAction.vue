@@ -119,10 +119,10 @@ export default {
             },
         }),
     },
-    async mounted() {
+    mounted() {
         this.frozen_field_ids = this.post_action.field_ids;
         if (this.is_list_picker_enabled) {
-            this.list_picker = await createListPicker(
+            this.list_picker = createListPicker(
                 this.$refs.workflow_transition_modal_frozen_fields,
                 {
                     locale: document.body.dataset.userLocale,
