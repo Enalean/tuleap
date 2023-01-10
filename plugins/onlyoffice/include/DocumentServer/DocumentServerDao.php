@@ -204,4 +204,19 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
             }
         );
     }
+
+    public function unrestrict(int $id): void
+    {
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($id): void {
+                $nb_servers = $db->single('SELECT COUNT(*) FROM plugin_onlyoffice_document_server');
+                if ($nb_servers > 1) {
+                    throw new TooManyServersException();
+                }
+
+                $db->delete('plugin_onlyoffice_document_server_project_restriction', ['server_id' => $id]);
+                $db->update('plugin_onlyoffice_document_server', ['is_project_restricted' => false], ['id' => $id]);
+            }
+        );
+    }
 }

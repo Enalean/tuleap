@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,15 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\DocumentServer;
 
-interface IRestrictDocumentServer
+class TooManyServersException extends \Exception
 {
-    /**
-     * @param int[] $project_ids
-     */
-    public function restrict(int $id, array $project_ids): void;
-
-    /**
-     * @throws TooManyServersException
-     */
-    public function unrestrict(int $id): void;
 }
