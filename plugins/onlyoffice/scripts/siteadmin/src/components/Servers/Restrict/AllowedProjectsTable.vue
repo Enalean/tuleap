@@ -262,6 +262,10 @@ function is_a_duplicate(
 </script>
 
 <style lang="scss" scoped>
+.tlp-table-actions {
+    margin: var(--tlp-x-large-spacing) 0 var(--tlp-medium-spacing);
+}
+
 .onlyoffice-admin-restrict-server-modal-project-link {
     color: var(--tlp-typo-default-text-color);
 }

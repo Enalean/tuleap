@@ -44,7 +44,7 @@
                     name="is_restricted"
                     value="0"
                     v-model="is_checked"
-                    v-bind:disabled="config.servers.length > 1 || !server.is_project_restricted"
+                    v-bind:disabled="config.servers.length > 1"
                     v-on:change="onChange($event.target)"
                     id="onlyoffice-admin-toggle-allow-all"
                     class="tlp-switch-checkbox"
@@ -55,13 +55,13 @@
                     aria-hidden
                 ></label>
             </div>
-            <p class="tlp-text-warning" v-if="!server.is_project_restricted">
-                <i class="fa-solid fa-person-digging" aria-hidden="true"></i>
-                {{ $gettext("Under construction, you cannot set restrictions yet.") }}
-            </p>
             <unrestiction-confirmation-modal
                 v-if="show_unrestriction_modal"
                 v-on:cancel-unrestriction="cancelUnrestriction"
+            />
+            <restriction-confirmation-modal
+                v-if="show_restriction_modal"
+                v-on:cancel-restriction="cancelRestriction"
             />
         </div>
     </div>
@@ -73,6 +73,7 @@ import { CONFIG } from "../../../injection-keys";
 import { strictInject } from "../../../helpers/strict-inject";
 import { ref } from "vue";
 import UnrestictionConfirmationModal from "./UnrestictionConfirmationModal.vue";
+import RestrictionConfirmationModal from "./RestrictionConfirmationModal.vue";
 
 const props = defineProps<{
     server: Server;
@@ -80,6 +81,7 @@ const props = defineProps<{
 
 const is_checked = ref(!props.server.is_project_restricted);
 const show_unrestriction_modal = ref(false);
+const show_restriction_modal = ref(false);
 
 const config = strictInject(CONFIG);
 
@@ -90,6 +92,8 @@ function onChange(checkbox: EventTarget | null): void {
 
     if (props.server.is_project_restricted) {
         show_unrestriction_modal.value = checkbox.checked;
+    } else {
+        show_restriction_modal.value = !checkbox.checked;
     }
 }
 
@@ -97,11 +101,15 @@ function cancelUnrestriction(): void {
     show_unrestriction_modal.value = false;
     is_checked.value = false;
 }
+
+function cancelRestriction(): void {
+    show_restriction_modal.value = false;
+    is_checked.value = true;
+}
 </script>
 
 <style lang="scss" scoped>
 .onlyoffice-admin-toggle-allow-all-wrapper {
     align-self: flex-start;
-    margin: 0 0 var(--tlp-x-large-spacing);
 }
 </style>

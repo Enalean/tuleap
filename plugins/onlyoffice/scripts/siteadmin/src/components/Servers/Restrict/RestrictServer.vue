@@ -43,7 +43,10 @@
                 />
                 <csrf-token />
             </section>
-            <section class="tlp-pane-section tlp-pane-section-submit">
+            <section
+                class="tlp-pane-section tlp-pane-section-submit"
+                v-if="server.is_project_restricted"
+            >
                 <div
                     class="tlp-alert-warning tlp-badge-outline"
                     v-if="nb_to_move"
