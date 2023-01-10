@@ -31,7 +31,7 @@
             <section class="tlp-pane-section">
                 <p>
                     {{ $gettext("Define which projects will be able to use the server:") }}
-                    <code>{{ server.server_url }}</code>
+                    <span class="tlp-badge-secondary">{{ server.server_url }}</span>
                 </p>
                 <allow-all-projects-checkbox v-bind:server="server" />
                 <allowed-projects-table
