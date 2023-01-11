@@ -22,8 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../bootstrap.php';
-
 class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -34,6 +32,10 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \Tuleap\Test\PHPUnit\TestCase
     private $user;
     private $user_manager;
     private $sshkey_dumper;
+    /**
+     * @var Git_SystemEventManager&\Mockery\MockInterface
+     */
+    private $system_event_manager;
 
     protected function setUp(): void
     {

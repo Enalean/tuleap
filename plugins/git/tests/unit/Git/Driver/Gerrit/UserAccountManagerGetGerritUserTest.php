@@ -25,6 +25,12 @@ class UserAccountManagerGetGerritUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private string $ldap_login;
+    /**
+     * @var \Mockery\MockInterface&LDAPResult
+     */
+    private $ldap_result;
+
     protected function setUp(): void
     {
         parent::setUp();

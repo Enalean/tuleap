@@ -39,6 +39,14 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends \Tulea
      * @var Git_Driver_Gerrit_UserAccountManager
      */
     private $user_account_manager;
+    /**
+     * @var string[]
+     */
+    private array $original_keys;
+    /**
+     * @var string[]
+     */
+    private array $new_keys;
 
     protected function setUp(): void
     {

@@ -54,6 +54,18 @@ class GitRepositoryManagerForkTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectHistoryDao
      */
     private $project_history_dao;
+    /**
+     * @var GitRepositoryMirrorUpdater&\Mockery\MockInterface
+     */
+    private $mirror_updater;
+    /**
+     * @var \Mockery\MockInterface&Git_Mirror_MirrorDataMapper
+     */
+    private $mirror_data_mapper;
+    /**
+     * @var EventManager&\Mockery\MockInterface
+     */
+    private $event_manager;
 
     protected function setUp(): void
     {

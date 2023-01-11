@@ -37,6 +37,7 @@ final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\Mock|GitRepositoryManager
      */
     private $manager;
+    private GitRepository $repository;
 
     protected function setUp(): void
     {
@@ -47,8 +48,6 @@ final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
         $this->dao                      = Mockery::mock(GitDao::class);
         $this->backup_directory         = vfsStream::setup()->url();
-        $this->mirror_updater           = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
-        $this->mirror_data_mapper       = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
 
         $this->manager = \Mockery::mock(
             \GitRepositoryManager::class,
@@ -57,8 +56,8 @@ final class GitRepositoryManagerCreateTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->git_system_event_manager,
                 $this->dao,
                 $this->backup_directory,
-                $this->mirror_updater,
-                $this->mirror_data_mapper,
+                $this->createStub(\GitRepositoryMirrorUpdater::class),
+                $this->createStub(\Git_Mirror_MirrorDataMapper::class),
                 Mockery::mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
                 Mockery::mock('ProjectHistoryDao'),
                 Mockery::mock('Tuleap\Git\Permissions\HistoryValueFormatter'),

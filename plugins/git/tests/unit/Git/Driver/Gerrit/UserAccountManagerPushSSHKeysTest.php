@@ -25,6 +25,36 @@ class UserAccountManagerPushSSHKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private PFUser $user;
+    /**
+     * @var Git_Driver_Gerrit&\Mockery\MockInterface
+     */
+    private $gerrit_driver;
+    /**
+     * @var \Mockery\MockInterface&Git_Driver_Gerrit_GerritDriverFactory
+     */
+    private $gerrit_driver_factory;
+    /**
+     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
+     */
+    private $remote_gerrit_factory;
+    /**
+     * @var Git_Driver_Gerrit_User&\Mockery\MockInterface
+     */
+    private $gerrit_user;
+    /**
+     * @var \Mockery\MockInterface&Git_Driver_Gerrit_UserAccountManager
+     */
+    private $user_account_manager;
+    /**
+     * @var Git_RemoteServer_GerritServer&\Mockery\MockInterface
+     */
+    private $remote_server1;
+    /**
+     * @var Git_RemoteServer_GerritServer&\Mockery\MockInterface
+     */
+    private $remote_server2;
+
     protected function setUp(): void
     {
         parent::setUp();

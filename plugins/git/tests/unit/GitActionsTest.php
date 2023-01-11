@@ -29,6 +29,11 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
+    /**
+     * @var \Mockery\MockInterface&GitActions
+     */
+    private $gitAction;
+
     protected function setUp(): void
     {
         parent::setUp();

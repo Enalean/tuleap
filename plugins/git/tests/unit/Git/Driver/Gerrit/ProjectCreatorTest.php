@@ -22,8 +22,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -93,6 +91,36 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends \Tuleap\T
 
     /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
     protected $template_processor;
+    /**
+     * @var true
+     */
+    private bool $migrate_access_rights;
+    /**
+     * @var GitRepository&\Mockery\MockInterface
+     */
+    private $repository;
+    /**
+     * @var Git_Driver_Gerrit&\Mockery\MockInterface
+     */
+    private $driver;
+    /**
+     * @var Git_Driver_Gerrit_UserFinder&\Mockery\MockInterface
+     */
+    private $userfinder;
+    private Git_Exec $git_exec;
+    /**
+     * @var GitRepository&\Mockery\MockInterface
+     */
+    private $repository_in_a_private_project;
+    private Git_Driver_Gerrit_ProjectCreator $project_creator;
+    /**
+     * @var GitRepository&\Mockery\MockInterface
+     */
+    private $repository_without_registered;
+    /**
+     * @var GitRepository&\Mockery\MockInterface
+     */
+    private $repository_with_registered;
 
     private function getGitExec($dir)
     {

@@ -20,8 +20,6 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-require_once __DIR__ . '/bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitRepositoryManagerRepositoryNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,6 +32,14 @@ class GitRepositoryManagerRepositoryNameTest extends \Tuleap\Test\PHPUnit\TestCa
     private $project_name;
     private $dao;
     private $backup_directory;
+    /**
+     * @var GitRepositoryMirrorUpdater&\Mockery\MockInterface
+     */
+    private $mirror_updater;
+    /**
+     * @var Git_Mirror_MirrorDataMapper&\Mockery\MockInterface
+     */
+    private $mirror_data_mapper;
 
     protected function setUp(): void
     {
