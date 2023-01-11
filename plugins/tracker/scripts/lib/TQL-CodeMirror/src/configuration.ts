@@ -60,8 +60,8 @@ const TQL_mode_definition = {
     ],
 };
 
-const variable_definition = {
-    regex: /@?[a-zA-Z0-9_]+/,
+export const variable_definition = {
+    regex: /@?[a-zA-Z0-9_-]+/,
     token: "variable",
 };
 
