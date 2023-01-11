@@ -91,7 +91,7 @@ final class onlyofficePlugin extends Plugin
     public function __construct(?int $id)
     {
         parent::__construct($id);
-        $this->setScope(self::SCOPE_PROJECT);
+        $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-onlyoffice', __DIR__ . '/../site-content');
     }
 
@@ -130,8 +130,6 @@ final class onlyofficePlugin extends Plugin
     public function newItemAlternativeCollector(NewItemAlternativeCollector $collector): void
     {
         $only_office_availability_checker = new OnlyOfficeAvailabilityChecker(
-            PluginManager::instance(),
-            $this,
             self::getLogger(),
             new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory())),
         );
@@ -304,7 +302,7 @@ final class onlyofficePlugin extends Plugin
     {
         $servers_retriever = new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory()));
         $transformer       = new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-            new OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, self::getLogger(), $servers_retriever),
+            new OnlyOfficeAvailabilityChecker(self::getLogger(), $servers_retriever),
             ProjectManager::instance(),
             $servers_retriever,
         );
@@ -330,7 +328,7 @@ final class onlyofficePlugin extends Plugin
             new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
                 self::getDocmanFileLastVersionProvider(),
                 new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-                    new OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger, $servers_retriever),
+                    new OnlyOfficeAvailabilityChecker($logger, $servers_retriever),
                     ProjectManager::instance(),
                     $servers_retriever,
                 ),
@@ -358,7 +356,7 @@ final class onlyofficePlugin extends Plugin
                     new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
                         self::getDocmanFileLastVersionProvider(),
                         new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
-                            new OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger, $servers_retriever),
+                            new OnlyOfficeAvailabilityChecker($logger, $servers_retriever),
                             ProjectManager::instance(),
                             $servers_retriever,
                         ),
