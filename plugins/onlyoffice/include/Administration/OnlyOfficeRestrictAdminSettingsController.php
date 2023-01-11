@@ -95,7 +95,7 @@ final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15C
 
     private function restrict(int $server_id, \PFUser $user, array $body): ResponseInterface
     {
-        $projects = $body['projects'] ?? null;
+        $projects = $body['projects'] ?? [];
         if (! is_array($projects)) {
             throw new ForbiddenException();
         }

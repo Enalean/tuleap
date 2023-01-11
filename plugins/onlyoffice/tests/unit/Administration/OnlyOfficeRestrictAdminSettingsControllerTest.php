@@ -56,7 +56,25 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
         self::assertTrue($restrictor->hasBeenRestricted());
     }
 
-    public function testSaveUnestriction(): void
+    public function testSaveTheFirstRestriction(): void
+    {
+        $restrictor = IRestrictDocumentServerStub::buildSelf();
+
+        $controller = $this->buildController($restrictor);
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
+            ->withAttribute('id', 1)
+            ->withParsedBody(['is_restricted' => '1']);
+
+        $response = $controller->handle($request);
+
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertFalse($restrictor->hasBeenUnrestricted());
+        self::assertTrue($restrictor->hasBeenRestricted());
+    }
+
+    public function testSaveUnrestriction(): void
     {
         $restrictor = IRestrictDocumentServerStub::buildSelf();
 
@@ -74,7 +92,7 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
         self::assertTrue($restrictor->hasBeenUnrestricted());
     }
 
-    public function testSaveUnestrictionFailsIfTooManyServers(): void
+    public function testSaveUnrestrictionFailsIfTooManyServers(): void
     {
         $restrictor = IRestrictDocumentServerStub::buildWithTooManyServersForUnrestriction();
 

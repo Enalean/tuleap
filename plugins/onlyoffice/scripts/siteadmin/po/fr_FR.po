@@ -54,6 +54,9 @@ msgstr "Fermer"
 msgid "Current secret not displayed"
 msgstr "Le secret actuel n'est pas affiché"
 
+msgid "Data may be lost"
+msgstr "Perte de données possible"
+
 msgid "Define which projects will be able to use the server:"
 msgstr "Définissez quels projets seront autorisés à utiliser le serveur :"
 
@@ -69,6 +72,9 @@ msgid ""
 msgstr ""
 "Supprimer un serveur de document provoquera la perte des modifications pour "
 "les utilisateurs en train de l'utiliser."
+
+msgid "Disallow for all projects"
+msgstr "Exclure tous les projets"
 
 msgid "Document server URL"
 msgstr "URL du serveur de document"
@@ -141,6 +147,13 @@ msgstr "Aucun serveurs n'est actuellement configuré"
 msgid "This project is currently allowed for %{ server }"
 msgstr "Ce projet est actuellement autorisé pour %{ server }"
 
+msgid ""
+"This will induce loosing of modifications for users that are currently using "
+"it."
+msgstr ""
+"Ceci provoquera la perte des modifications pour les utilisateurs en train de "
+"l'utiliser."
+
 msgid "To be allowed"
 msgstr "À autoriser"
 
@@ -153,16 +166,19 @@ msgstr "À restreindre d'un autre serveur"
 msgid "Unable to find project information"
 msgstr "Impossible de trouver les informations du projet"
 
-msgid "Under construction, you cannot set restrictions yet."
-msgstr ""
-"En construction, vous ne pouvez définir les restrictions pour l'instant."
-
 msgid ""
 "You are about to allow access to the server for every projects on the "
 "platform."
 msgstr ""
 "Vous êtes sur le point d'autoriser l'accès au serveur pour tous les projets "
 "de la plateforme."
+
+msgid ""
+"You are about to disallow access to the server for every projects on the "
+"platform."
+msgstr ""
+"Vous êtes sur le point d'exclure l'accès au serveur pour tous les projets de "
+"la plateforme."
 
 msgid ""
 "You can allow all the projects when only one document server is configured"
