@@ -71667,7 +71667,7 @@
       <code>isManagingLabels</code>
       <code>isSoftwareMap</code>
     </MissingReturnType>
-    <PossiblyUndefinedArrayOffset occurrences="10">
+    <PossiblyUndefinedArrayOffset occurrences="9">
       <code>$_SERVER['QUERY_STRING']</code>
       <code>$_SERVER['REQUEST_URI']</code>
       <code>$_SERVER['REQUEST_URI']</code>

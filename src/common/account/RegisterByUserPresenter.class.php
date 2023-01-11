@@ -23,7 +23,8 @@ class Account_RegisterByUserPresenter extends Account_RegisterPresenter
     public $submit;
     public $mandatory;
     public $new_password2;
-    public $form_url = '/account/register.php';
+
+    public string $form_url = '/account/register.php';
 
     public function __construct(Account_RegisterPrefillValuesPresenter $prefill_values, $extra_plugin_field)
     {

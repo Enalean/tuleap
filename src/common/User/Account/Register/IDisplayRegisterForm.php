@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// the administrator can create a user account; we display the same page as user registration under the admin menu
-require_once __DIR__ . '/../include/pre.php';
+declare(strict_types=1);
 
-HTTPRequest::instance()->checkUserIsSuperUser();
+namespace Tuleap\User\Account\Register;
 
-require_once __DIR__ . '/../account/register.php';
+use Tuleap\Layout\BaseLayout;
+
+interface IDisplayRegisterForm
+{
+    public function display(\HTTPRequest $request, BaseLayout $layout, bool $is_admin, bool $is_password_needed): void;
+}

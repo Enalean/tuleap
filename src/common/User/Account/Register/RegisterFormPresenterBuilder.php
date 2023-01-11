@@ -37,10 +37,25 @@ final class RegisterFormPresenterBuilder
     /**
      * @return \Closure(): void
      */
-    public function getPresenterClosure(\HTTPRequest $request, BaseLayout $layout, bool $is_password_needed, ?RegisterFormValidationIssue $form_validation_issue): \Closure
-    {
-        $page = $request->get('page');
+    public function getPresenterClosureForFirstDisplay(
+        \HTTPRequest $request,
+        BaseLayout $layout,
+        bool $is_admin,
+        bool $is_password_needed,
+    ): \Closure {
+        return $this->getPresenterClosure($request, $layout, $is_admin, $is_password_needed, null);
+    }
 
+    /**
+     * @return \Closure(): void
+     */
+    public function getPresenterClosure(
+        \HTTPRequest $request,
+        BaseLayout $layout,
+        bool $is_admin,
+        bool $is_password_needed,
+        ?RegisterFormValidationIssue $form_validation_issue,
+    ): \Closure {
         $form_loginname       = $request->exist('form_loginname') ? $request->get('form_loginname') : '';
         $form_loginname_error = $this->getFieldError('form_loginname', $form_validation_issue);
 
@@ -77,7 +92,7 @@ final class RegisterFormPresenterBuilder
             ->getAdditionalFieldsInHtml();
 
 
-        if ($page === "admin_creation") {
+        if ($is_admin) {
             $prefill   = new \Account_RegisterAdminPrefillValuesPresenter(
                 new \Account_RegisterField($form_loginname, $form_loginname_error),
                 new \Account_RegisterField($form_email, $form_email_error),
