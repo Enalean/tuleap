@@ -41,11 +41,23 @@
             </button>
         </div>
         <div class="tlp-modal-body">
+            <div
+                class="tlp-alert-warning"
+                data-test="warning"
+                v-if="config.servers.length === 1 && !config.servers[0].is_project_restricted"
+            >
+                {{ $gettext("Adding a second server will restrict the existing one.") }}
+                {{
+                    $gettext(
+                        "Users won't have access anymore and will lose unsaved modifications until their projects are explicitelly allowed."
+                    )
+                }}
+            </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="server-url"
-                    >{{ $gettext("Document server URL") }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i
-                ></label>
+                <label class="tlp-label" for="server-url">
+                    {{ $gettext("Document server URL") }}
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                </label>
                 <input
                     type="url"
                     autocomplete="url"
@@ -58,10 +70,10 @@
                 />
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="server-key"
-                    >{{ $gettext("JWT secret") }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i
-                ></label>
+                <label class="tlp-label" for="server-key">
+                    {{ $gettext("JWT secret") }}
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                </label>
                 <input
                     type="password"
                     class="tlp-input"
