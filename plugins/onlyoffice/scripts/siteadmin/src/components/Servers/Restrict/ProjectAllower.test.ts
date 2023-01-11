@@ -37,6 +37,9 @@ import ProjectAllower from "./ProjectAllower.vue";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { uri } from "@tuleap/fetch-result";
+import type { Config, Server } from "../../../type";
+import { CONFIG } from "../../../injection-keys";
+import MoveProjectConfirmationModal from "./MoveProjectConfirmationModal.vue";
 
 describe("ProjectAllower", () => {
     beforeEach((): void => {
@@ -44,7 +47,8 @@ describe("ProjectAllower", () => {
     });
 
     it("should fetch project information and add it to the list", async () => {
-        const add = vi.fn();
+        const server: Server = { id: 1 } as Server;
+
         const error = vi.fn();
 
         getSpy.mockReturnValue(okAsync([{ id: 102, label: "ACME Corp", shortname: "acme" }]));
@@ -52,9 +56,12 @@ describe("ProjectAllower", () => {
         const wrapper = shallowMount(ProjectAllower, {
             global: {
                 plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CONFIG as symbol]: { servers: [server] } as unknown as Config,
+                },
             },
             props: {
-                add,
+                server,
                 error,
             },
         });
@@ -66,33 +73,16 @@ describe("ProjectAllower", () => {
             params: { query: '{"shortname":"acme"}' },
         });
         expect(error).toHaveBeenCalledWith("");
-        expect(add).toHaveBeenCalledWith({ id: 102, label: "ACME Corp", url: "/projects/acme" });
-    });
-
-    it("should encode the shortname in the project url", async () => {
-        const add = vi.fn();
-        const error = vi.fn();
-
-        getSpy.mockReturnValue(okAsync([{ id: 102, label: "ACME Corp", shortname: "ac/me" }]));
-
-        const wrapper = shallowMount(ProjectAllower, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
-            props: {
-                add,
-                error,
-            },
-        });
-
-        await wrapper.find({ ref: "select" }).setValue("ACME Corp (ac/me)");
-        await wrapper.find("[data-test=button]").trigger("click");
-
-        expect(add).toHaveBeenCalledWith({ id: 102, label: "ACME Corp", url: "/projects/ac%2Fme" });
+        const input = wrapper.find("[data-test=project-to-add]").element;
+        if (!(input instanceof HTMLInputElement)) {
+            throw Error("Unable to find input");
+        }
+        expect(input.value).toBe("102");
     });
 
     it("should display an error if no project matchs the shortname", async () => {
-        const add = vi.fn();
+        const server: Server = { id: 1 } as Server;
+
         const error = vi.fn();
 
         getSpy.mockReturnValue(okAsync([]));
@@ -100,9 +90,12 @@ describe("ProjectAllower", () => {
         const wrapper = shallowMount(ProjectAllower, {
             global: {
                 plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CONFIG as symbol]: { servers: [server] } as unknown as Config,
+                },
             },
             props: {
-                add,
+                server,
                 error,
             },
         });
@@ -114,11 +107,12 @@ describe("ProjectAllower", () => {
             params: { query: '{"shortname":"acme"}' },
         });
         expect(error).toHaveBeenCalledWith("Unable to find project information");
-        expect(add).not.toHaveBeenCalled();
+        expect(wrapper.find("[data-test=project-to-add]").exists()).toBe(false);
     });
 
     it("should display an error if retrieval of the project fails", async () => {
-        const add = vi.fn();
+        const server: Server = { id: 1 } as Server;
+
         const error = vi.fn();
 
         getSpy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
@@ -126,9 +120,12 @@ describe("ProjectAllower", () => {
         const wrapper = shallowMount(ProjectAllower, {
             global: {
                 plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CONFIG as symbol]: { servers: [server] } as unknown as Config,
+                },
             },
             props: {
-                add,
+                server,
                 error,
             },
         });
@@ -140,11 +137,12 @@ describe("ProjectAllower", () => {
             params: { query: '{"shortname":"acme"}' },
         });
         expect(error).toHaveBeenCalledWith("Unable to find project information");
-        expect(add).not.toHaveBeenCalled();
+        expect(wrapper.find("[data-test=project-to-add]").exists()).toBe(false);
     });
 
     it("should display an error if more than one project match the shortname", async () => {
-        const add = vi.fn();
+        const server: Server = { id: 1 } as Server;
+
         const error = vi.fn();
 
         getSpy.mockReturnValue(
@@ -157,9 +155,12 @@ describe("ProjectAllower", () => {
         const wrapper = shallowMount(ProjectAllower, {
             global: {
                 plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CONFIG as symbol]: { servers: [server] } as unknown as Config,
+                },
             },
             props: {
-                add,
+                server,
                 error,
             },
         });
@@ -171,6 +172,51 @@ describe("ProjectAllower", () => {
             params: { query: '{"shortname":"acme"}' },
         });
         expect(error).toHaveBeenCalledWith("Unable to find project information");
-        expect(add).not.toHaveBeenCalled();
+        expect(wrapper.find("[data-test=project-to-add]").exists()).toBe(false);
+    });
+
+    it("should ask for confirmation before moving a project to another one", async () => {
+        const server: Server = {
+            id: 1,
+            is_project_restricted: true,
+            project_restrictions: [],
+        } as unknown as Server;
+        const another_server: Server = {
+            id: 2,
+            is_project_restricted: true,
+            project_restrictions: [{ id: 102, label: "ACME Corp", url: "/projects/acme" }],
+        } as unknown as Server;
+
+        const error = vi.fn();
+
+        getSpy.mockReturnValue(okAsync([{ id: 102, label: "ACME Corp", shortname: "acme" }]));
+
+        const wrapper = shallowMount(ProjectAllower, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CONFIG as symbol]: { servers: [server, another_server] } as unknown as Config,
+                },
+            },
+            props: {
+                server,
+                error,
+            },
+        });
+
+        await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
+        await wrapper.find("[data-test=button]").trigger("click");
+
+        expect(getSpy).toHaveBeenCalledWith(uri`/api/projects`, {
+            params: { query: '{"shortname":"acme"}' },
+        });
+        expect(wrapper.find("[data-test=project-to-add]").exists()).toBe(false);
+        expect(wrapper.findComponent(MoveProjectConfirmationModal).exists()).toBe(true);
+        await wrapper.findComponent(MoveProjectConfirmationModal).props("move")();
+        const input = wrapper.find("[data-test=project-to-add]").element;
+        if (!(input instanceof HTMLInputElement)) {
+            throw Error("Unable to find input");
+        }
+        expect(input.value).toBe("102");
     });
 });

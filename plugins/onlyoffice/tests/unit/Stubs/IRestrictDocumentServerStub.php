@@ -27,8 +27,11 @@ use Tuleap\OnlyOffice\DocumentServer\TooManyServersException;
 
 final class IRestrictDocumentServerStub implements IRestrictDocumentServer
 {
-    private bool $has_been_restricted   = false;
-    private bool $has_been_unrestricted = false;
+    /**
+     * @var int[] | null
+     */
+    private ?array $has_been_restricted_with = null;
+    private bool $has_been_unrestricted      = false;
 
     private function __construct(private bool $too_many_servers_for_unrestriction)
     {
@@ -44,9 +47,12 @@ final class IRestrictDocumentServerStub implements IRestrictDocumentServer
         return new self(true);
     }
 
+    /**
+     * @param int[] $project_ids
+     */
     public function restrict(int $id, array $project_ids): void
     {
-        $this->has_been_restricted = true;
+        $this->has_been_restricted_with = $project_ids;
     }
 
     public function unrestrict(int $id): void
@@ -59,7 +65,17 @@ final class IRestrictDocumentServerStub implements IRestrictDocumentServer
 
     public function hasBeenRestricted(): bool
     {
-        return $this->has_been_restricted;
+        return $this->has_been_restricted_with !== null;
+    }
+
+    /**
+     * @param int[] $project_ids
+     */
+    public function hasBeenRestrictedWith(array $project_ids): bool
+    {
+        return $this->has_been_restricted_with !== null
+            && empty(array_diff($this->has_been_restricted_with, $project_ids))
+            && empty(array_diff($project_ids, $this->has_been_restricted_with));
     }
 
     public function hasBeenUnrestricted(): bool

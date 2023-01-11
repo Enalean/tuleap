@@ -17,15 +17,21 @@ msgid_plural "%{ nb } projects can use the server"
 msgstr[0] "%{ nb } projet peut utiliser le serveur"
 msgstr[1] "%{ nb } projets peuvent utiliser le serveur"
 
-msgid "%{ nb } project to allow"
-msgid_plural "%{ nb } projects to allow"
-msgstr[0] "%{ nb } projet à autoriser"
-msgstr[1] "%{ nb } projets à autoriser"
+msgid ""
+"%{ nb } project will have their access removed and won't be able to use this "
+"server:"
+msgid_plural ""
+"%{ nb } projects will have their access removed and won't be able to use "
+"this server:"
+msgstr[0] ""
+"%{ nb } projet aura son accès supprimé et ne pourra plus utiliser ce "
+"serveur :"
+msgstr[1] ""
+"%{ nb } projets auront leur accès supprimé et ne pourront plus utiliser ce "
+"serveur :"
 
-msgid "%{ nb } project to revoke"
-msgid_plural "%{ nb } projects to revoke"
-msgstr[0] "%{ nb } projet à restreindre"
-msgstr[1] "%{ nb } projets à restreindre"
+msgid "%{ project } is already configured to use:"
+msgstr "%{ project } est actuellement autorisé à utiliser :"
 
 msgid "Add document server"
 msgstr "Ajouter un serveur de document"
@@ -35,6 +41,9 @@ msgstr "L'ajout d'un second serveur entraîne la restriction de celui existant."
 
 msgid "All projects can use the server"
 msgstr "Tous les projets peuvent utiliser le serveur"
+
+msgid "All unsaved document modifications will be lost."
+msgstr "Toutes les modifications en cours seront perdues."
 
 msgid "Allow all projects to use this server"
 msgstr "Autoriser tous les projets à utiliser ce serveur"
@@ -50,6 +59,9 @@ msgstr "Autorisation pour tous les projets"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Change the server"
+msgstr "Changer de serveur"
 
 msgid "Close"
 msgstr "Fermer"
@@ -88,18 +100,14 @@ msgstr "Éditer"
 msgid "Edit document server settings"
 msgstr "Éditer les paramètres du serveur de document"
 
+msgid "However all unsaved document modifications will be lost."
+msgstr "Cependant toutes les modifications en cours seront perdues."
+
 msgid "Id"
 msgstr "Id"
 
 msgid "JWT secret"
 msgstr "Secret JWT"
-
-msgid ""
-"Moving project from a server to another will induce loosing of modifications "
-"for users that are currently using the former."
-msgstr ""
-"Déplacer un projet d'un serveur à un autre provoquera la perte des "
-"modifications pour les utilisateurs en train d'utiliser l'ancien."
 
 msgid "No project can use this server."
 msgstr "Aucun projet ne peut utiliser ce serveur."
@@ -125,6 +133,9 @@ msgstr "Nom du projet ou id"
 msgid "Projects restriction"
 msgstr "Restriction de projets"
 
+msgid "Remove access"
+msgstr "Supprimer l'accès"
+
 msgid "Restrict"
 msgstr "Restreindre"
 
@@ -147,24 +158,12 @@ msgstr ""
 msgid "There isn't any document servers configured"
 msgstr "Aucun serveurs n'est actuellement configuré"
 
-msgid "This project is currently allowed for %{ server }"
-msgstr "Ce projet est actuellement autorisé pour %{ server }"
-
 msgid ""
 "This will induce loosing of modifications for users that are currently using "
 "it."
 msgstr ""
 "Ceci provoquera la perte des modifications pour les utilisateurs en train de "
 "l'utiliser."
-
-msgid "To be allowed"
-msgstr "À autoriser"
-
-msgid "To be revoked"
-msgstr "À restreindre"
-
-msgid "To be revoked from another server"
-msgstr "À restreindre d'un autre serveur"
 
 msgid "Unable to find project information"
 msgstr "Impossible de trouver les informations du projet"
@@ -174,7 +173,7 @@ msgid ""
 "their projects are explicitelly allowed."
 msgstr ""
 "Les utilisateurs n'y auront plus accès et perdront leur modifications en "
-"cours à moins que leur projets soient explicitement autorisés. "
+"cours à moins que leur projets soient explicitement autorisés."
 
 msgid ""
 "You are about to allow access to the server for every projects on the "
@@ -195,6 +194,9 @@ msgid ""
 msgstr ""
 "Vous ne pouvez autorisez tous les projets que lorsqu'il n'y a qu'un serveur "
 "de document configuré"
+
+msgid "You can change this project to use:"
+msgstr "Vous pouvez changer ce projet pour qu'il utilise :"
 
 msgid "You're about to delete the following document server:"
 msgstr "Vous êtes sur le point de supprimer le serveur de document :"

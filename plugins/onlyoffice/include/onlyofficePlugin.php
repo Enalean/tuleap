@@ -466,9 +466,12 @@ final class onlyofficePlugin extends Plugin
 
     public function routeRestrictAdminSettings(): \Tuleap\Request\DispatchableWithRequest
     {
+        $document_server_dao = new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory()));
+
         return new OnlyOfficeRestrictAdminSettingsController(
             self::buildCSRFTokenAdmin(),
-            new DocumentServerDao(new DocumentServerKeyEncryption(new KeyFactory())),
+            $document_server_dao,
+            $document_server_dao,
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
             new SapiEmitter(),
             new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
