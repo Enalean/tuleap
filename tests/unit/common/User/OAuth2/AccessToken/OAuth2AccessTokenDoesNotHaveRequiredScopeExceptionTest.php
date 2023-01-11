@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\AccessToken;
 
-use Laminas\Cache\Exception\LogicException;
+use LogicException;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
