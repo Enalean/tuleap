@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,7 +21,7 @@
 
 namespace Tuleap\JiraImport\JiraAgile;
 
-interface JiraEpicRetriever
+interface JiraEpicFromBoardRetriever
 {
     /**
      * @return JiraEpic[]

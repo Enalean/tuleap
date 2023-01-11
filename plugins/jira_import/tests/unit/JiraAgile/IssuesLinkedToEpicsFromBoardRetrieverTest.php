@@ -29,7 +29,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 {
     public function testItReturnsIssuesLinkedToOneEpic(): void
     {
-        $epics_retriever = new class implements JiraEpicRetriever {
+        $epics_retriever = new class implements JiraEpicFromBoardRetriever {
             public function getEpics(JiraBoard $board): array
             {
                 return [
@@ -56,7 +56,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItReturnsIssuesLinkedToTwoEpics(): void
     {
-        $epics_retriever = new class implements JiraEpicRetriever {
+        $epics_retriever = new class implements JiraEpicFromBoardRetriever {
             public function getEpics(JiraBoard $board): array
             {
                 return [

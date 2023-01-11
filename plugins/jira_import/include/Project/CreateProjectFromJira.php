@@ -36,7 +36,7 @@ use Tuleap\JiraImport\JiraAgile\JiraBoard;
 use Tuleap\JiraImport\JiraAgile\JiraBoardsRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraAgileImporter;
 use Tuleap\JiraImport\JiraAgile\JiraEpicIssuesRetrieverFromAPI;
-use Tuleap\JiraImport\JiraAgile\JiraEpicRetrieverFromAPI;
+use Tuleap\JiraImport\JiraAgile\JiraEpicFromBoardRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintIssuesRetrieverFromAPI;
 use Tuleap\JiraImport\JiraAgile\JiraSprintRetrieverFromAPI;
 use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
@@ -199,7 +199,7 @@ final class CreateProjectFromJira
             }
 
             $issues_linked_to_epics_retriever = new IssuesLinkedToEpicsRetriever(
-                new JiraEpicRetrieverFromAPI(
+                new JiraEpicFromBoardRetrieverFromAPI(
                     $jira_client,
                     $logger,
                 ),

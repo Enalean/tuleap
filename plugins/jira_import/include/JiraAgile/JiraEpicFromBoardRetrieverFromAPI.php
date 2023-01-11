@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 
-final class JiraEpicRetrieverFromAPI implements JiraEpicRetriever
+final class JiraEpicFromBoardRetrieverFromAPI implements JiraEpicFromBoardRetriever
 {
     /**
      * @var JiraClient
