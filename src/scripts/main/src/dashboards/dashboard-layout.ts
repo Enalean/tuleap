@@ -19,8 +19,6 @@
 
 import { post } from "jquery";
 
-export { applyAutomaticLayout, applyLayout };
-
 const one_column_layout = "one-column";
 const default_two_columns_layout = "two-columns";
 const default_three_columns_layout = "three-columns";
@@ -43,7 +41,7 @@ function isAvailableColumn(column_number: number): column_number is NumberOfColu
     return Object.values(Object.keys(NumberOfColumnsForLayout)).includes(column_number.toString());
 }
 
-function applyAutomaticLayout(row: HTMLElement): void {
+export function applyAutomaticLayout(row: HTMLElement): void {
     const current_layout = row.dataset.currentLayout;
     if (!current_layout) {
         throw new Error("");
@@ -61,7 +59,7 @@ function applyAutomaticLayout(row: HTMLElement): void {
     applyLayoutToRow(row, layout_name);
 }
 
-function applyLayout(row: HTMLElement, layout_name: string): void {
+export function applyLayout(row: HTMLElement, layout_name: string): void {
     applyLayoutToRow(row, layout_name);
     extractAndSaveLayoutChoice(row, layout_name);
 }

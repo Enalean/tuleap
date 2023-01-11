@@ -23,21 +23,13 @@ import type { Repository } from "../type";
 
 export type RepositoryCallback = (repositories: Repository[]) => void;
 
-export {
-    getRepositoryList,
-    getForkedRepositoryList,
-    postRepository,
-    setRepositoriesSortedByPathUserPreference,
-    deleteRepositoriesSortedByPathUserPreference,
-};
-
 const USER_PREFERENCE_KEY = "are_git_repositories_sorted_by_path";
 
 export interface GitRepositoryRecursiveGet {
     repositories: Array<Repository>;
 }
 
-function setRepositoriesSortedByPathUserPreference(user_id: number): Promise<Response> {
+export function setRepositoriesSortedByPathUserPreference(user_id: number): Promise<Response> {
     return patch(`/api/users/${user_id}/preferences`, {
         headers: {
             "Content-Type": "application/json",
@@ -49,7 +41,7 @@ function setRepositoriesSortedByPathUserPreference(user_id: number): Promise<Res
     });
 }
 
-function deleteRepositoriesSortedByPathUserPreference(user_id: number): Promise<Response> {
+export function deleteRepositoriesSortedByPathUserPreference(user_id: number): Promise<Response> {
     return del(`/api/users/${user_id}/preferences?key=${USER_PREFERENCE_KEY}`);
 }
 
@@ -60,7 +52,7 @@ function buildCollectionCallback(displayCallback: RepositoryCallback) {
     };
 }
 
-function getForkedRepositoryList(
+export function getForkedRepositoryList(
     project_id: number,
     owner_id: string,
     order_by: string,
@@ -80,7 +72,7 @@ function getForkedRepositoryList(
     });
 }
 
-function getRepositoryList(
+export function getRepositoryList(
     project_id: number,
     order_by: string,
     displayCallback: RepositoryCallback
@@ -98,7 +90,10 @@ function getRepositoryList(
     });
 }
 
-async function postRepository(project_id: number, repository_name: string): Promise<Repository> {
+export async function postRepository(
+    project_id: number,
+    repository_name: string
+): Promise<Repository> {
     const headers = {
         "content-type": "application/json",
     };

@@ -20,22 +20,12 @@
 import { get, put, recursiveGet } from "@tuleap/tlp-fetch";
 import type { ArtifactsCollection, Report, Project, Tracker } from "../type";
 
-export {
-    getReport,
-    getReportContent,
-    getQueryResult,
-    updateReport,
-    getSortedProjectsIAmMemberOf,
-    getTrackersOfProject,
-    getCSVReport,
-};
-
-async function getReport(report_id: number): Promise<Report> {
+export async function getReport(report_id: number): Promise<Report> {
     const response = await get("/api/v1/cross_tracker_reports/" + report_id);
     return response.json();
 }
 
-async function getReportContent(
+export async function getReportContent(
     report_id: number,
     limit: number,
     offset: number
@@ -55,7 +45,7 @@ async function getReportContent(
     return { artifacts, total };
 }
 
-async function getQueryResult(
+export async function getQueryResult(
     report_id: number,
     trackers_id: Array<number>,
     expert_query: string,
@@ -79,7 +69,7 @@ async function getQueryResult(
     return { artifacts, total };
 }
 
-async function updateReport(
+export async function updateReport(
     report_id: number,
     trackers_id: Array<number>,
     expert_query: string
@@ -93,7 +83,7 @@ async function updateReport(
     return response.json();
 }
 
-async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
+export async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
     const json = await recursiveGet<Array<unknown>, Project>("/api/v1/projects", {
         params: {
             limit: 50,
@@ -106,7 +96,7 @@ async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
     });
 }
 
-function getTrackersOfProject(project_id: number): Promise<Array<Tracker>> {
+export function getTrackersOfProject(project_id: number): Promise<Array<Tracker>> {
     return recursiveGet("/api/v1/projects/" + project_id + "/trackers", {
         params: {
             limit: 50,
@@ -115,7 +105,7 @@ function getTrackersOfProject(project_id: number): Promise<Array<Tracker>> {
     });
 }
 
-function getCSVReport(report_id: number): Promise<string> {
+export function getCSVReport(report_id: number): Promise<string> {
     return recursiveGetCSV("/plugins/crosstracker/csv_export/" + report_id, {
         limit: 50,
         offset: 0,

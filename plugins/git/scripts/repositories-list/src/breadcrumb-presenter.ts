@@ -20,18 +20,6 @@
 import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
-export {
-    setBreadcrumbSettings,
-    getAdministrationUrl,
-    getRepositoryListUrl,
-    getForkRepositoriesUrl,
-    getProjectPublicName,
-    getProjectUrl,
-    getPrivacy,
-    getProjectFlags,
-    getProjectIcon,
-};
-
 let administration_url: string,
     repository_list_url: string,
     fork_repositories_url: string,
@@ -41,7 +29,7 @@ let administration_url: string,
     project_flags: Array<ProjectFlag>,
     project_icon: string;
 
-function setBreadcrumbSettings(
+export function setBreadcrumbSettings(
     admin_url: string,
     repositories_url: string,
     fork_url: string,
@@ -61,34 +49,34 @@ function setBreadcrumbSettings(
     project_icon = proj_icon;
 }
 
-function getAdministrationUrl(): string {
+export function getAdministrationUrl(): string {
     return administration_url;
 }
 
-function getRepositoryListUrl(): string {
+export function getRepositoryListUrl(): string {
     return repository_list_url;
 }
 
-function getForkRepositoriesUrl(): string {
+export function getForkRepositoriesUrl(): string {
     return fork_repositories_url;
 }
 
-function getProjectPublicName(): string {
+export function getProjectPublicName(): string {
     return project_public_name;
 }
 
-function getProjectUrl(): string {
+export function getProjectUrl(): string {
     return project_url;
 }
 
-function getPrivacy(): ProjectPrivacy {
+export function getPrivacy(): ProjectPrivacy {
     return privacy;
 }
 
-function getProjectFlags(): Array<ProjectFlag> {
+export function getProjectFlags(): Array<ProjectFlag> {
     return project_flags;
 }
 
-function getProjectIcon(): string {
+export function getProjectIcon(): string {
     return project_icon;
 }
