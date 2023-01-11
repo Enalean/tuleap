@@ -22,7 +22,6 @@
     <button
         type="button"
         class="tlp-button-primary tlp-table-actions-element"
-        v-bind:disabled="config.servers.length > 0"
         v-on:click="emitter.emit('show-add-server-modal')"
     >
         <i class="tlp-button-icon fa-solid fa-plus" aria-hidden="true"></i>
@@ -31,9 +30,5 @@
 </template>
 
 <script setup lang="ts">
-import { strictInject } from "../../helpers/strict-inject";
-import { CONFIG } from "../../injection-keys";
 import emitter from "../../helpers/emitter";
-
-const config = strictInject(CONFIG);
 </script>

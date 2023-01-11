@@ -30,6 +30,9 @@ msgstr[1] "%{ nb } projets à restreindre"
 msgid "Add document server"
 msgstr "Ajouter un serveur de document"
 
+msgid "Adding a second server will restrict the existing one."
+msgstr "L'ajout d'un second serveur entraîne la restriction de celui existant."
+
 msgid "All projects can use the server"
 msgstr "Tous les projets peuvent utiliser le serveur"
 
@@ -165,6 +168,13 @@ msgstr "À restreindre d'un autre serveur"
 
 msgid "Unable to find project information"
 msgstr "Impossible de trouver les informations du projet"
+
+msgid ""
+"Users won't have access anymore and will lose unsaved modifications until "
+"their projects are explicitelly allowed."
+msgstr ""
+"Les utilisateurs n'y auront plus accès et perdront leur modifications en "
+"cours à moins que leur projets soient explicitement autorisés. "
 
 msgid ""
 "You are about to allow access to the server for every projects on the "
