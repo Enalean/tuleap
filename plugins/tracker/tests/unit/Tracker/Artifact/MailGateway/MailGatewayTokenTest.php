@@ -21,8 +21,6 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MailGatewayTokenTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -42,6 +40,26 @@ class MailGatewayTokenTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\MockInterface
      */
     protected $incoming_mail;
+    /**
+     * @var Tracker_Artifact_MailGateway_IncomingMessageFactory&\Mockery\MockInterface
+     */
+    private $incoming_message_factory;
+    /**
+     * @var Tracker_FormElementFactory&\Mockery\MockInterface
+     */
+    private $formelement_factory;
+    /**
+     * @var \Psr\Log\LoggerInterface&\Mockery\MockInterface
+     */
+    private $logger;
+    /**
+     * @var Tracker_Artifact_MailGateway_Notifier&\Mockery\MockInterface
+     */
+    private $notifier;
+    /**
+     * @var \Mockery\MockInterface&Tracker_Artifact_MailGateway_CitationStripper
+     */
+    private $citation_stripper;
 
     protected function setUp(): void
     {

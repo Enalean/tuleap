@@ -27,11 +27,32 @@ class Tracker_URLTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private PFUser $user;
+    /**
+     * @var Artifact&\Mockery\MockInterface
+     */
+    private $artifact;
+    /**
+     * @var Tracker_Report&\Mockery\MockInterface
+     */
+    private $report;
+    /**
+     * @var Tracker&\Mockery\MockInterface
+     */
+    private $tracker;
+    /**
+     * @var Tracker_FormElement_Interface&\Mockery\MockInterface
+     */
+    private $formElement;
+    /**
+     * @var \Mockery\MockInterface&Tracker_URL
+     */
+    private $url;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = \Mockery::spy(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturns(666);
+        $this->user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(666)->build();
 
         $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $af             = \Mockery::spy(\Tracker_ArtifactFactory::class);

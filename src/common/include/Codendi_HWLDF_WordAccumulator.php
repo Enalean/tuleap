@@ -26,13 +26,13 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
     /**
      * @var array
      */
-    private $_lines;
+    private $_lines              = [];
+    private string|false $_line  = false;
+    private string|false $_group = false;
+    private string $_tag         = '~begin';
+
     public function __construct()
     {
-        $this->_lines = [];
-        $this->_line  = \false;
-        $this->_group = \false;
-        $this->_tag   = '~begin';
     }
 
     public function _flushGroup($new_tag)
@@ -73,7 +73,7 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
                 continue;
             }
             if ($word[0] == "\n") {
-                $this->_group .= " ";
+                $this->_group = ((string) $this->_group) . " ";
                 $this->_flushLine($tag);
                 $word = \substr($word, 1);
             }

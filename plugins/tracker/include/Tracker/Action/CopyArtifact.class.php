@@ -70,10 +70,10 @@ class Tracker_Action_CopyArtifact
         Tracker_Artifact_XMLImport $xml_importer,
         Tracker_XML_Updater_ChangesetXMLUpdater $xml_updater,
         Tracker_XML_Updater_TemporaryFileXMLUpdater $file_updater,
-        Tracker_XML_Exporter_ChildrenXMLExporter $children_xml_exporter,
+        private Tracker_XML_Exporter_ChildrenXMLExporter $children_xml_exporter,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_imported_mapping,
         Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger,
-        TrackerFactory $tracker_factory,
+        private TrackerFactory $tracker_factory,
     ) {
         $this->tracker                    = $tracker;
         $this->artifact_factory           = $artifact_factory;
@@ -81,10 +81,8 @@ class Tracker_Action_CopyArtifact
         $this->xml_importer               = $xml_importer;
         $this->xml_updater                = $xml_updater;
         $this->file_updater               = $file_updater;
-        $this->children_xml_exporter      = $children_xml_exporter;
         $this->artifacts_imported_mapping = $artifacts_imported_mapping;
         $this->logger                     = $logger;
-        $this->tracker_factory            = $tracker_factory;
     }
 
     public function process(
@@ -184,7 +182,7 @@ class Tracker_Action_CopyArtifact
     }
 
     /**
-     * @return Artifact[] or null in case of error
+     * @return Artifact[]|null null in case of error
      */
     private function importBareArtifacts(
         PFUser $current_user,
@@ -199,7 +197,10 @@ class Tracker_Action_CopyArtifact
                 $current_user,
                 $imported_at
             );
-            $artifact           = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config, $tracker_xml_config);
+            if ($tracker === null) {
+                return null;
+            }
+            $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config, $tracker_xml_config);
             if (! $artifact) {
                 return null;
             } else {
@@ -214,7 +215,11 @@ class Tracker_Action_CopyArtifact
     {
         $extraction_path = '';
         foreach (iterator_to_array($xml_artifacts->artifact, false) as $i => $xml_artifact) {
-            $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
+            $tracker_id = (int) $xml_artifact['tracker_id'];
+            $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
+            if ($tracker === null) {
+                throw new \RuntimeException(sprintf('Cannot find tracker #%d to import changesets', $tracker_id));
+            }
             $tracker->getWorkflow()->disable();
             $fields_data_builder = $this->xml_importer->createFieldsDataBuilder(
                 $tracker,

@@ -49,6 +49,7 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
     private Tracker_FormElement_Field_Selectbox|Stub $field_not_changed_2;
     private array $rules;
     private FirstValidValueAccordingToDependenciesRetriever $first_valid_value_according_to_dependencies_retriever;
+    private BindValueIdCollectionStub $value_collection;
 
     protected function setUp(): void
     {
