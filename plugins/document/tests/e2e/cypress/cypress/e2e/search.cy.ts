@@ -25,10 +25,26 @@ describe("Document search", () => {
         project_unixname = "doc-search-" + now;
     });
 
+    function createAProjectWithSearchableDocument(title: string): void {
+        cy.createNewPublicProject(project_unixname, "issues").then((project_id) => {
+            cy.getFromTuleapAPI(`api/projects/${project_id}/docman_service`).then((response) => {
+                const root_folder_id = response.body.root_item.id;
+
+                const payload = {
+                    title,
+                    description: "",
+                    type: "empty",
+                };
+                cy.postFromTuleapApi(`api/docman_folders/${root_folder_id}/empties`, payload);
+            });
+        });
+    }
+
     it("User can search", () => {
         cy.projectAdministratorSession();
         cy.log("Create a new project");
-        cy.createNewPublicProject(project_unixname, "issues");
+        const title = `Lorem ipsum doloret`;
+        createAProjectWithSearchableDocument(title);
 
         cy.log("Define custom filters/columns to display");
         cy.visitProjectService(project_unixname, "Documents");
@@ -45,20 +61,6 @@ describe("Document search", () => {
         });
 
         cy.get("[data-test=save-configuration]").click();
-
-        cy.log("Create a document");
-        cy.visitProjectService(project_unixname, "Documents");
-        const title = `Lorem ipsum doloret`;
-
-        cy.get("[data-test=document-header-actions]").within(() => {
-            cy.get("[data-test=document-item-action-new-button]").click();
-            cy.get("[data-test=document-new-empty-creation-button]").click();
-        });
-        cy.get("[data-test=document-new-item-modal]").within(() => {
-            cy.get("[data-test=document-new-item-title]").type(title);
-
-            cy.get("[data-test=document-modal-submit-button-create-item]").click();
-        });
 
         cy.log("Project member can find documents");
         cy.projectMemberSession();
