@@ -39,7 +39,6 @@ final class OnlyOfficeAdminSettingsPresenter
         public array $servers,
         public CSRFSynchronizerTokenPresenter $csrf_token,
     ) {
-        $nb_servers       = count($this->servers);
         $this->create_url = OnlyOfficeCreateAdminSettingsController::URL;
         $this->base_url   = OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL;
     }

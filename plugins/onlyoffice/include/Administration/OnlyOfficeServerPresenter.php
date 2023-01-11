@@ -36,7 +36,7 @@ final class OnlyOfficeServerPresenter
     public int $nb_project_restrictions;
 
     /**
-     * @param array<int, RestrictedProjectPresenter> $project_restrictions
+     * @param list<RestrictedProjectPresenter> $project_restrictions
      */
     private function __construct(
         public int $id,
@@ -59,10 +59,10 @@ final class OnlyOfficeServerPresenter
             $server->url,
             $server->has_existing_secret,
             $server->is_project_restricted,
-            array_map(
+            array_values(array_map(
                 static fn(RestrictedProject $project) => RestrictedProjectPresenter::fromRestrictedProject($project),
                 $server->project_restrictions,
-            ),
+            )),
         );
     }
 }

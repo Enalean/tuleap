@@ -62,7 +62,7 @@ final class DocumentServerDao extends DataAccessObject implements IRetrieveDocum
                     $server_restrictions[$row['server_id']] = [];
                 }
 
-                $server_restrictions[$row['server_id']][] = RestrictedProject::fromRow($row);
+                $server_restrictions[$row['server_id']][$row['project_id']] = RestrictedProject::fromRow($row);
 
                 return $server_restrictions;
             },
