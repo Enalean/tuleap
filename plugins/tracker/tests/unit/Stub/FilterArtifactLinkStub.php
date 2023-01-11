@@ -24,21 +24,23 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\Link\FilterArtifactLink;
+use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 
 final class FilterArtifactLinkStub implements FilterArtifactLink
 {
-    private function __construct(private string $linked_artifact_id)
+    private function __construct(private CollectionOfForwardLinks $forward_links)
     {
     }
 
-    public function filterArtifactIdsIAmAlreadyLinkedTo(Artifact $artifact, Tracker_FormElement_Field_ArtifactLink $field, string $linked_artifact_id,): string
+    public function filterArtifactIdsIAmAlreadyLinkedTo(Artifact $artifact, Tracker_FormElement_Field_ArtifactLink $field, CollectionOfForwardLinks $collection_of_forward_links): CollectionOfForwardLinks
     {
-        return $this->linked_artifact_id;
+        return $this->forward_links;
     }
 
     public static function withArtifactIdsIAmAlreadyLinkedTo(?string $linked_artifact_id): self
     {
-        return new self($linked_artifact_id);
+        return new self(new CollectionOfForwardLinks([ForwardLinkProxy::buildFromData((int) $linked_artifact_id, "")]));
     }
 }

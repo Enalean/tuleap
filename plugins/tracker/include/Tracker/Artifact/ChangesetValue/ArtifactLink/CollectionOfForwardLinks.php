@@ -44,6 +44,11 @@ final class CollectionOfForwardLinks
         return $this->artifact_links;
     }
 
+    public function getArtifactLinksAsStringList(): string
+    {
+        return implode(', ', $this->getTargetArtifactIds());
+    }
+
     /**
      * @return int[]
      */

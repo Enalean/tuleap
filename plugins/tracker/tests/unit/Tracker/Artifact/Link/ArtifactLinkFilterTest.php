@@ -27,6 +27,7 @@ use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 
 final class ArtifactLinkFilterTest extends TestCase
@@ -45,8 +46,11 @@ final class ArtifactLinkFilterTest extends TestCase
         $artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build();
         $linked_artifact_id  = "36";
 
-        $result = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($artifact, $artifact_link_field, $linked_artifact_id);
-        self::assertSame($linked_artifact_id, $result);
+        $links            = [ForwardLinkProxy::buildFromData((int) $linked_artifact_id, "")];
+        $linked_artifacts = new CollectionOfForwardLinks($links);
+
+        $result = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($artifact, $artifact_link_field, $linked_artifacts);
+        self::assertSame($linked_artifact_id, $result->getArtifactLinksAsStringList());
     }
 
     public function testItReturnsLinkedArtifactIdWhenTheCurrentArtifactDoesNotHaveChangesetValue(): void
@@ -60,9 +64,11 @@ final class ArtifactLinkFilterTest extends TestCase
         $artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(15)->build();
 
         $linked_artifact_id = "36";
+        $links              = [ForwardLinkProxy::buildFromData((int) $linked_artifact_id, "")];
+        $linked_artifacts   = new CollectionOfForwardLinks($links);
 
-        $result = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($artifact, $artifact_link_field, $linked_artifact_id);
-        self::assertSame($linked_artifact_id, $result);
+        $result = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($artifact, $artifact_link_field, $linked_artifacts);
+        self::assertSame($linked_artifact_id, $result->getArtifactLinksAsStringList());
     }
 
     public function testItReturnsTheIdsOfTheLinkedArtifactsIfTheLinkedArtifactWasNotAlreadyLinkedWithTheCurrentOne(): void
@@ -93,8 +99,11 @@ final class ArtifactLinkFilterTest extends TestCase
 
         $linked_artifact_id = "36";
 
-        $result = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($artifact, $artifact_link_field, $linked_artifact_id);
-        self::assertSame($linked_artifact_id, $result);
+        $links            = [ForwardLinkProxy::buildFromData((int) $linked_artifact_id, "")];
+        $linked_artifacts = new CollectionOfForwardLinks($links);
+
+        $result = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($artifact, $artifact_link_field, $linked_artifacts);
+        self::assertSame($linked_artifact_id, $result->getArtifactLinksAsStringList());
     }
 
     private function buildTrackerLinkInfo(Artifact $artifact): Tracker_ArtifactLinkInfo
