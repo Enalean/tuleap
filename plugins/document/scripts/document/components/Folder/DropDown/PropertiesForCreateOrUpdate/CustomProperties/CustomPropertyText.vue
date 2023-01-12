@@ -45,25 +45,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Property } from "../../../../../type";
 import emitter from "../../../../../helpers/emitter";
 
-@Component
-export default class CustomPropertyText extends Vue {
-    @Prop({ required: true })
-    readonly currentlyUpdatedItemProperty!: Property;
+const props = defineProps<{ currentlyUpdatedItemProperty: Property }>();
 
-    private value = String(this.currentlyUpdatedItemProperty.value);
+const value = String(props.currentlyUpdatedItemProperty.value);
 
-    oninput($event: Event): void {
-        if ($event.target instanceof HTMLTextAreaElement) {
-            emitter.emit("update-custom-property", {
-                property_short_name: this.currentlyUpdatedItemProperty.short_name,
-                value: $event.target.value,
-            });
-        }
+function oninput($event: Event): void {
+    if ($event.target instanceof HTMLTextAreaElement) {
+        emitter.emit("update-custom-property", {
+            property_short_name: props.currentlyUpdatedItemProperty.short_name,
+            value: $event.target.value,
+        });
     }
 }
 </script>
