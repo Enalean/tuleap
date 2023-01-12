@@ -79,11 +79,11 @@ def runPsalm(String configPath, String filesToAnalyze, String root='.') {
             if (filesToAnalyze == '' || filesToAnalyze == '.') {
                 sh """
                 mkdir -p ../results/psalm/
-                scl enable php80 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+                scl enable php81 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
                 """
             } else {
                 sh """
-                scl enable php80 "tests/psalm/psalm-ci-launcher.php --config='${configPath}' --report-folder=../results/psalm/ ${filesToAnalyze}"
+                scl enable php81 "tests/psalm/psalm-ci-launcher.php --config='${configPath}' --report-folder=../results/psalm/ ${filesToAnalyze}"
                 """
             }
         }
@@ -95,7 +95,7 @@ def runPsalmTaintAnalysis(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php80 "src/vendor/bin/psalm --taint-analysis --memory-limit=4096M --threads=1 --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php81 "src/vendor/bin/psalm --taint-analysis --memory-limit=4096M --threads=1 --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }
@@ -106,7 +106,7 @@ def runPsalmUnusedCodeDetection(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php80 "src/vendor/bin/psalm --find-unused-code --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php81 "src/vendor/bin/psalm --find-unused-code --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }
@@ -117,8 +117,8 @@ def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAn
         return;
     }
     sh """
-    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none \${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-phpunit:c7-php80 \
-        scl enable php80 "php -d memory_limit=768M ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}"
+    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none \${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-phpunit:c7-php81 \
+        scl enable php81 "php -d memory_limit=768M ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}"
     """
 }
 
@@ -127,7 +127,7 @@ def runDeptrac() {
         sh """
         export CI_REPORT_OUTPUT_PATH="\$WORKSPACE/results/deptrac/"
         mkdir -p "\$CI_REPORT_OUTPUT_PATH"
-        scl enable php80 "./tests/deptrac/run.sh"
+        scl enable php81 "./tests/deptrac/run.sh"
         """
     }
 }

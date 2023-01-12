@@ -247,7 +247,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->color                        = $color;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return "Tracker #" . $this->id;
     }

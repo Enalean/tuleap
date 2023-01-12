@@ -488,7 +488,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             }
             try {
                 $session_manager    = $this->getSessionManager();
-                $now                = $_SERVER['REQUEST_TIME'];
+                $now                = $_SERVER['REQUEST_TIME'] ?? ((new DateTimeImmutable())->getTimestamp());
                 $user_agent         = $_SERVER['HTTP_USER_AGENT'] ?? '';
                 $session_lifetime   = $this->getSessionLifetime();
                 $user_from_session  = $session_manager->getUser($session_hash, $now, $session_lifetime, $user_agent);

@@ -54,7 +54,7 @@ class UserRESTReferenceRepresentation
         return $representation;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string) print_r($this, true);
     }

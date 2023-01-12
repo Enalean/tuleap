@@ -57,10 +57,7 @@ class ParametrizedFrom
         return $this->parameters;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->from . var_export($this->parameters, 1);
     }

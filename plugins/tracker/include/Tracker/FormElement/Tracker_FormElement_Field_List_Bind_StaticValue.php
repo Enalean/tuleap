@@ -48,11 +48,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         $this->rank        = $rank;
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->label ? $this->label : '';
     }

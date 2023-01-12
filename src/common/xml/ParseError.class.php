@@ -33,7 +33,7 @@ class XML_ParseError
         $this->message = $message;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return 'Line: ' . $this->line . ' Column: ' . $this->column . ' ' . $this->type . ' ' . $this->message;
     }

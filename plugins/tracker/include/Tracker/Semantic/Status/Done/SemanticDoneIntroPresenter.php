@@ -54,7 +54,7 @@ class SemanticDoneIntroPresenter
 
     public function __construct(
         array $selected_values,
-        ?Tracker_FormElement_Field $semantic_status_field = null,
+        ?Tracker_FormElement_Field $semantic_status_field,
         array $external_services_descriptions,
     ) {
         $this->semantic_status_is_defined = ($semantic_status_field !== null);
