@@ -248,12 +248,7 @@ abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDecla
         if (! is_dir($cache_dir) && ! mkdir($cache_dir) && ! is_dir($cache_dir)) {
             throw new \RuntimeException(sprintf('RSS cache directory "%s" was not created', $cache_dir));
         }
-        $cache = Laminas\Cache\StorageFactory::factory([
-            'adapter' => [
-                'name'    => 'filesystem',
-                'options' => ['cache_dir' => $cache_dir],
-            ],
-        ]);
+        $cache = new Laminas\Cache\Storage\Adapter\Filesystem(['cache_dir' => $cache_dir]);
         FeedReader::setCache($cache);
         FeedReader::useHttpConditionalGet();
 
