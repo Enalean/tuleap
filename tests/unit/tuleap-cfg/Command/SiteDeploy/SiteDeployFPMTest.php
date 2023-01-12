@@ -50,7 +50,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $base_dir                       = $this->getTmpDir();
-        $this->php_configuration_folder = $base_dir . '/etc/opt/remi/php80';
+        $this->php_configuration_folder = $base_dir . '/etc/opt/remi/php81';
         mkdir($this->php_configuration_folder . '/php-fpm.d', 0755, true);
         $this->temp_dir = $base_dir . '/var/tmp';
         mkdir($this->temp_dir, 0755, true);
@@ -60,7 +60,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->current_user           = posix_getpwuid(posix_geteuid())['name'];
     }
 
-    public function testDeployphp80Prod(): void
+    public function testDeployphp81Prod(): void
     {
         $deploy = new SiteDeployFPM(
             new NullLogger(),
@@ -203,7 +203,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertStringContainsString('user = ' . $this->current_user, file_get_contents($this->php_configuration_folder . '/php-fpm.d/tuleap_common.part'));
     }
 
-    public function testDeployphp80WithSimpleRedisSession(): void
+    public function testDeployphp81WithSimpleRedisSession(): void
     {
         $deploy = new SiteDeployFPM(
             new NullLogger(),
@@ -227,7 +227,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('', $redis_password);
     }
 
-    public function testDeployphp80WithAuthenticatedRedisSession(): void
+    public function testDeployphp81WithAuthenticatedRedisSession(): void
     {
         $deploy = new SiteDeployFPM(
             new NullLogger(),
@@ -251,7 +251,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('this_is_secure,really', $redis_password);
     }
 
-    public function testDeployphp80WithAuthenticatedRedisSessionWithTLS(): void
+    public function testDeployphp81WithAuthenticatedRedisSessionWithTLS(): void
     {
         $deploy = new SiteDeployFPM(
             new NullLogger(),

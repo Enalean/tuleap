@@ -53,7 +53,7 @@ class Git_Mirror_Mirror
         $this->owner_id   = $owner->getId();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return self::class . ' ' . $this->id;
     }

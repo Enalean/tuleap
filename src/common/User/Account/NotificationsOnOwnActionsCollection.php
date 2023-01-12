@@ -45,7 +45,7 @@ final class NotificationsOnOwnActionsCollection implements Dispatchable, \Iterat
         $this->store[] = $presenter;
     }
 
-    public function current()
+    public function current(): NotificationsOnOwnActionsPresenter
     {
         return $this->store[$this->i];
     }

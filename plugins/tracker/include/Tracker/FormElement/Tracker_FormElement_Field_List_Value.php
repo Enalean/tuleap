@@ -91,7 +91,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
 
     abstract public function getJsonId();
 
-    abstract public function __toString();
+    abstract public function __toString(): string;
 
     abstract public function getLabel();
 

@@ -140,7 +140,7 @@ setup_system_configuration
 sed -i 's/inet_interfaces = localhost/inet_interfaces = 127.0.0.1/' /etc/postfix/main.cf
 /usr/sbin/postfix -c /etc/postfix start
 
-/opt/remi/php80/root/usr/sbin/php-fpm --daemonize
+/opt/remi/php81/root/usr/sbin/php-fpm --daemonize
 nginx
 /usr/sbin/httpd
 

@@ -1883,7 +1883,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return self::class . " #$this->id";
     }

@@ -1580,7 +1580,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->languageFactory = $languageFactory;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return "User #" . $this->getId();
     }

@@ -147,7 +147,7 @@ class Tracker_ArtifactLinkInfo
      *
      * @return string the raw value of this artifact link
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->getKeyword() . ' #' . $this->getArtifactId();
     }
@@ -189,7 +189,7 @@ class Tracker_ArtifactLinkInfo
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getLabel();
     }

@@ -32,7 +32,7 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
         $this->label = $label;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getLabel();
     }
