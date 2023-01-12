@@ -74,7 +74,7 @@ final class RegisterFormProcessor implements IProcessRegisterForm
                 function (PFUser $new_user) use ($request, $mail_confirm_code, $layout, $is_admin) {
                     if ($is_admin) {
                         if ($request->get('form_send_email')) {
-                            $is_sent = $this->sendLoginAndPasswordByMailToUser(
+                            $is_sent = $this->sendLoginByMailToUser(
                                 (string) $request->get('form_email'),
                                 (string) $request->get('form_loginname')
                             );
@@ -107,14 +107,8 @@ final class RegisterFormProcessor implements IProcessRegisterForm
                             $mail_confirm_code
                         )
                     ) {
-                        $layout->addFeedback(
-                            Feedback::ERROR,
-                            $GLOBALS['Language']->getText(
-                                'global',
-                                'mail_failed',
-                                [ForgeConfig::get('sys_email_admin')]
-                            )
-                        );
+                        $this->displayConfirmationLinkError($layout);
+                        return;
                     }
 
                     $this->displayConfirmationLinkSent($layout, $request);
@@ -125,7 +119,7 @@ final class RegisterFormProcessor implements IProcessRegisterForm
             );
     }
 
-    private function sendLoginAndPasswordByMailToUser(string $to, string $login): bool
+    private function sendLoginByMailToUser(string $to, string $login): bool
     {
         return $this->admin_register_mail_builder
             ->getMail(
@@ -192,6 +186,20 @@ final class RegisterFormProcessor implements IProcessRegisterForm
         );
         $renderer->renderToPage("waiting-for-approval", [
             'email' => $request->get('form_email'),
+        ]);
+        $layout->footer(FooterConfiguration::withoutContent());
+    }
+
+    private function displayConfirmationLinkError(BaseLayout $layout): void
+    {
+        $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../../../templates/account/create/");
+
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'account-registration-style'));
+        $layout->header(
+            HeaderConfigurationBuilder::get(_('Register'))->build()
+        );
+        $renderer->renderToPage("confirmation-link-error", [
+            'email_admin' => ForgeConfig::get('sys_email_admin'),
         ]);
         $layout->footer(FooterConfiguration::withoutContent());
     }

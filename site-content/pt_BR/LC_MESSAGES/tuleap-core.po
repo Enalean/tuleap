@@ -421,6 +421,9 @@ msgstr "A conta deve estar ativa para alterar a senha"
 msgid "Account status"
 msgstr "Conta"
 
+msgid "Action required"
+msgstr ""
+
 msgid "Actions"
 msgstr "Ações"
 
@@ -2554,6 +2557,9 @@ msgstr "Por favor, clique no seguinte URL para aprovar o registro:"
 msgid "Please confirm your action."
 msgstr "Por favor, confirme a sua ação."
 
+msgid "Please contact the administrators at:"
+msgstr ""
+
 msgid "Please explain why you are applying for registration on this site"
 msgstr ""
 
@@ -3517,6 +3523,9 @@ msgstr "O id de categoria %d não é um id raiz válido para categorias"
 
 msgid "The chosen color is not allowed."
 msgstr "A cor escolhida não é permitida."
+
+msgid "The confirmation email couldn't be sent."
+msgstr ""
 
 msgid ""
 "The confirmation key is expired, please renew if needed your request for the "

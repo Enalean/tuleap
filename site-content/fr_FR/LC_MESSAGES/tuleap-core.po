@@ -419,6 +419,9 @@ msgstr "Le compte doit être actif pour changer le mot de passe"
 msgid "Account status"
 msgstr "Statut du compte utilisateur"
 
+msgid "Action required"
+msgstr "Action requise"
+
 msgid "Actions"
 msgstr "Actions"
 
@@ -2573,6 +2576,9 @@ msgstr ""
 msgid "Please confirm your action."
 msgstr "Merci de confirmer votre action."
 
+msgid "Please contact the administrators at:"
+msgstr "Veuillez contacter les administrateurs à :"
+
 msgid "Please explain why you are applying for registration on this site"
 msgstr ""
 "Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte "
@@ -3547,6 +3553,9 @@ msgstr "L'id de catégorie %d n'est pas une catégorie racine valide"
 
 msgid "The chosen color is not allowed."
 msgstr "La couleur choisie n'est pas autorisée."
+
+msgid "The confirmation email couldn't be sent."
+msgstr "Le lien de confirmation n'a pas pu être envoyé."
 
 msgid ""
 "The confirmation key is expired, please renew if needed your request for the "
