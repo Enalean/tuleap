@@ -49,10 +49,10 @@ describe("RestrictionConfirmationModal", () => {
             global: { plugins: [createGettext({ silent: true })] },
         });
 
-        expect(wrapper.find("[data-test=submit-icon]").classes()).toContain("fa-save");
+        expect(wrapper.find("[data-test=submit-icon]").exists()).toBe(false);
 
         await wrapper.find("[data-test=submit]").trigger("click");
 
-        expect(wrapper.find("[data-test=submit-icon]").classes()).toContain("fa-circle-notch");
+        expect(wrapper.find("[data-test=submit-icon]").exists()).toBe(true);
     });
 });

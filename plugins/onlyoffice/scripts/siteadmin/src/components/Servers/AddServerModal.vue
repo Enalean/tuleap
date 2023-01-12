@@ -41,18 +41,6 @@
             </button>
         </div>
         <div class="tlp-modal-body">
-            <div
-                class="tlp-alert-warning"
-                data-test="warning"
-                v-if="config.servers.length === 1 && !config.servers[0].is_project_restricted"
-            >
-                {{ $gettext("Adding a second server will restrict the existing one.") }}
-                {{
-                    $gettext(
-                        "Users won't have access anymore and will lose unsaved modifications until their projects are explicitelly allowed."
-                    )
-                }}
-            </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="server-url">
                     {{ $gettext("Document server URL") }}
@@ -86,16 +74,30 @@
             <csrf-token />
         </div>
         <div class="tlp-modal-footer">
-            <button
-                type="reset"
-                class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                data-dismiss="modal"
+            <div
+                class="tlp-alert-warning"
+                data-test="warning"
+                v-if="config.servers.length === 1 && !config.servers[0].is_project_restricted"
             >
-                {{ $gettext("Cancel") }}
-            </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action">
-                {{ $gettext("Save") }}
-            </button>
+                {{ $gettext("Adding a second server will restrict the existing one.") }}
+                {{
+                    $gettext(
+                        "Users won't have access anymore and will lose unsaved modifications until their projects are explicitelly allowed."
+                    )
+                }}
+            </div>
+            <div class="onlyoffice-admin-add-server-modal-footer">
+                <button
+                    type="reset"
+                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                    data-dismiss="modal"
+                >
+                    {{ $gettext("Cancel") }}
+                </button>
+                <button type="submit" class="tlp-button-primary tlp-modal-action">
+                    {{ $gettext("Save") }}
+                </button>
+            </div>
         </div>
     </form>
 </template>
@@ -133,3 +135,14 @@ onUnmounted(() => {
     emitter.off("show-add-server-modal", showModal);
 });
 </script>
+
+<style lang="scss" scoped>
+.tlp-modal-footer {
+    flex-direction: column;
+}
+
+.onlyoffice-admin-add-server-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+</style>
