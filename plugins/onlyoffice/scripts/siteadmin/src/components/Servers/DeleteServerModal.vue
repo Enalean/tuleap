@@ -22,7 +22,7 @@
     <form
         method="post"
         v-bind:action="server.delete_url"
-        class="tlp-modal"
+        class="tlp-modal tlp-modal-danger"
         role="dialog"
         v-bind:aria-labelledby="'onlyoffice-admin-delete-server-title-' + server.id"
         ref="root"
@@ -48,25 +48,25 @@
                 {{ $gettext("You're about to delete the following document server:") }}
                 <span class="tlp-badge-secondary">{{ server.server_url }}</span>
             </p>
-            <div class="tlp-alert-warning">
+            <p>
                 {{
                     $gettext(
                         "Deleting a document server will induce loosing of modifications for users that are currently using it."
                     )
                 }}
-            </div>
+            </p>
             <p>{{ $gettext("Please confirm your action.") }}</p>
             <csrf-token />
         </div>
         <div class="tlp-modal-footer">
             <button
                 type="reset"
-                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
             >
                 {{ $gettext("Cancel") }}
             </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <button type="submit" class="tlp-button-danger tlp-modal-action">
                 {{ $gettext("Delete") }}
             </button>
         </div>

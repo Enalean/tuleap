@@ -52,6 +52,7 @@
         v-if="show_remove_project_modal"
         v-bind:server="server"
         v-bind:nb="projects_to_remove.length"
+        v-on:cancel-project-removal="show_remove_project_modal = false"
     />
 
     <div class="tlp-alert-danger" v-if="error_message.length > 0">
@@ -82,6 +83,11 @@
             <tr v-if="sorted_projects.length === 0">
                 <td colspan="3" class="tlp-table-cell-empty">
                     {{ $gettext("No project can use this server.") }}
+                </td>
+            </tr>
+            <tr v-else-if="filtered_projects.length === 0">
+                <td colspan="3" class="tlp-table-cell-empty">
+                    {{ $gettext("No project matchs your query.") }}
                 </td>
             </tr>
             <tr
@@ -175,9 +181,11 @@ function toggleAllDelete(checkbox: EventTarget | null): void {
     }
 
     if (checkbox.checked) {
-        projects_to_remove.value = props.server.project_restrictions.map((project) => project.id);
+        projects_to_remove.value = filtered_projects.value.map((project) => project.id);
     } else {
-        projects_to_remove.value = [];
+        projects_to_remove.value = projects_to_remove.value.filter(
+            (project_id) => !filtered_projects.value.find((project) => project.id === project_id)
+        );
     }
 }
 </script>

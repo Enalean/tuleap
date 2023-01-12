@@ -112,6 +112,9 @@ msgstr "Secret JWT"
 msgid "No project can use this server."
 msgstr "Aucun projet ne peut utiliser ce serveur."
 
+msgid "No project matchs your query."
+msgstr "Aucun projet ne correspond à votre recherche."
+
 msgid "ONLYOFFICE"
 msgstr "ONLYOFFICE"
 

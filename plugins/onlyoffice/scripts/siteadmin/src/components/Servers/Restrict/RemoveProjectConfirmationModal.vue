@@ -74,9 +74,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
-import { createModal } from "@tuleap/tlp-modal";
+import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type { Server } from "../../../type";
 
 defineProps<{
@@ -87,10 +87,23 @@ defineProps<{
 const root = ref<HTMLElement | null>(null);
 const modal = ref<Modal | null>(null);
 
+const emit = defineEmits<{ (e: "cancel-project-removal"): void }>();
+
+function cancelProjectRemoval(): void {
+    emit("cancel-project-removal");
+}
+
 onMounted(() => {
     if (root.value) {
         modal.value = createModal(root.value);
+        modal.value.addEventListener(EVENT_TLP_MODAL_HIDDEN, cancelProjectRemoval);
         modal.value.show();
+    }
+});
+
+onUnmounted(() => {
+    if (modal.value) {
+        modal.value.removeEventListener(EVENT_TLP_MODAL_HIDDEN, cancelProjectRemoval);
     }
 });
 </script>

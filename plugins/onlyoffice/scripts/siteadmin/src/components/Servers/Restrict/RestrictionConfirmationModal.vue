@@ -68,12 +68,9 @@
                 data-test="submit"
             >
                 <i
-                    class="tlp-button-icon fa-solid"
+                    class="tlp-button-icon fa-solid fa-spin fa-circle-notch"
                     aria-hidden="true"
-                    v-bind:class="{
-                        'fa-spin fa-circle-notch': is_submitting,
-                        'fa-save': !is_submitting,
-                    }"
+                    v-if="is_submitting"
                     data-test="submit-icon"
                 ></i>
                 {{ $gettext("Disallow for all projects") }}
