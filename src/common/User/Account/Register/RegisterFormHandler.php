@@ -43,7 +43,7 @@ final class RegisterFormHandler
     /**
      * @return Ok<PFUser>|Err<RegisterFormValidationIssue>|Err<null>
      */
-    public function process(\HTTPRequest $request, bool $is_password_needed, string $mail_confirm_code): Ok|Err
+    public function process(\HTTPRequest $request, bool $is_password_needed, bool $is_admin, string $mail_confirm_code): Ok|Err
     {
         $form_loginname = (string) $request->get('form_loginname');
         $rule_username  = new Rule_UserName();
@@ -78,9 +78,11 @@ final class RegisterFormHandler
             );
         }
         if (
-            ! $request->existAndNonEmpty('form_register_purpose') && (ForgeConfig::getInt(
-                User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL
-            ) === 1 && $request->get('page') != "admin_creation")
+            ! $request->existAndNonEmpty('form_register_purpose')
+            && (
+                ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1
+                && ! $is_admin
+            )
         ) {
             $GLOBALS['Response']->addFeedback('error', _('You must explain the purpose of your registration.'));
 
@@ -104,7 +106,7 @@ final class RegisterFormHandler
         if ($is_password_needed) {
             $password              = new ConcealedString((string) $request->get('form_pw'));
             $password_confirmation = new ConcealedString((string) $request->get('form_pw2'));
-            if ($request->get('page') !== "admin_creation" && ! $password->isIdenticalTo($password_confirmation)) {
+            if (! $is_admin && ! $password->isIdenticalTo($password_confirmation)) {
                 $GLOBALS['Response']->addFeedback('error', _('Passwords do not match.'));
 
                 return Result::err(RegisterFormValidationIssue::fromFieldName('form_pw', _('Passwords do not match.')));
@@ -148,7 +150,7 @@ final class RegisterFormHandler
         }
 
         $status = 'P';
-        if ($request->get('page') == "admin_creation") {
+        if ($is_admin) {
             if ($request->get('form_restricted')) {
                 $status = 'R';
             } else {

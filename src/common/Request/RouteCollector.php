@@ -84,9 +84,13 @@ use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\InviteBuddy\AccountCreationFeedback;
+use Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
+use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\MailingList\MailingListAdministrationController;
 use Tuleap\MailingList\MailingListCreationController;
@@ -164,6 +168,14 @@ use Tuleap\User\Account\DisplayKeysTokensController;
 use Tuleap\User\Account\DisplayNotificationsController;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
+use Tuleap\User\Account\Register\AccountRegister;
+use Tuleap\User\Account\Register\DisplayAdminRegisterFormController;
+use Tuleap\User\Account\Register\DisplayRegisterFormController;
+use Tuleap\User\Account\Register\ProcessAdminRegisterFormController;
+use Tuleap\User\Account\Register\ProcessRegisterFormController;
+use Tuleap\User\Account\Register\RegisterFormDisplayer;
+use Tuleap\User\Account\Register\RegisterFormPresenterBuilder;
+use Tuleap\User\Account\Register\RegisterFormProcessor;
 use Tuleap\User\Account\RemoveFromProjectController;
 use Tuleap\User\Account\SVNTokensPresenterBuilder;
 use Tuleap\User\Account\UpdateAccountInformationController;
@@ -949,6 +961,103 @@ class RouteCollector
         );
     }
 
+    public static function getDisplayRegisterFormController(): DispatchableWithRequest
+    {
+        $event_manager = EventManager::instance();
+
+        return new DisplayRegisterFormController(
+            new RegisterFormDisplayer(
+                new RegisterFormPresenterBuilder(
+                    $event_manager,
+                    TemplateRendererFactory::build(),
+                    new \Account_TimezonesCollection(),
+                ),
+                new \Tuleap\Layout\IncludeCoreAssets(),
+            ),
+            $event_manager,
+            $event_manager,
+        );
+    }
+
+    public static function getDisplayAdminRegisterFormController(): DispatchableWithRequest
+    {
+        return new DisplayAdminRegisterFormController(
+            new RegisterFormDisplayer(
+                new RegisterFormPresenterBuilder(
+                    EventManager::instance(),
+                    TemplateRendererFactory::build(),
+                    new \Account_TimezonesCollection(),
+                ),
+                new \Tuleap\Layout\IncludeCoreAssets(),
+            ),
+        );
+    }
+
+    public static function postRegister(): DispatchableWithRequest
+    {
+        $event_manager = \EventManager::instance();
+
+        return new ProcessRegisterFormController(
+            self::getRegisterFormProcessor(),
+            $event_manager,
+            $event_manager,
+        );
+    }
+
+    public static function postAdminRegister(): DispatchableWithRequest
+    {
+        return new ProcessAdminRegisterFormController(
+            self::getRegisterFormProcessor(),
+        );
+    }
+
+    private static function getRegisterFormProcessor(): RegisterFormProcessor
+    {
+        $event_manager          = EventManager::instance();
+        $user_manager           = \UserManager::instance();
+        $locale_switcher        = new LocaleSwitcher();
+        $mail_presenter_factory = new \MailPresenterFactory();
+        $renderer_factory       = TemplateRendererFactory::build();
+        $include_core_assets    = new IncludeCoreAssets();
+        $timezones_collection   = new \Account_TimezonesCollection();
+        $mail_renderer          = $renderer_factory->getRenderer(
+            \ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
+        );
+
+        return new RegisterFormProcessor(
+            new \Tuleap\User\Account\Register\RegisterFormHandler(
+                new AccountRegister(
+                    $user_manager,
+                    new AccountCreationFeedback(
+                        new InvitationDao(),
+                        $user_manager,
+                        new AccountCreationFeedbackEmailNotifier(),
+                        \BackendLogger::getDefaultLogger(),
+                    )
+                ),
+                $timezones_collection,
+            ),
+            new \MailConfirmationCodeGenerator(
+                $user_manager,
+                new \RandomNumberGenerator()
+            ),
+            $renderer_factory,
+            new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail"),
+            new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail-admin"),
+            \Tuleap\ServerHostname::HTTPSUrl(),
+            $include_core_assets,
+            $event_manager,
+            new RegisterFormDisplayer(
+                new RegisterFormPresenterBuilder(
+                    $event_manager,
+                    $renderer_factory,
+                    $timezones_collection,
+                ),
+                $include_core_assets,
+            ),
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r): void
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -1032,6 +1141,9 @@ class RouteCollector
             $r->post('/dates-display', [self::class, 'postAdminDatesDisplay']);
 
             $r->get('/banner', [self::class, 'getGetPlatformBannerAdministration']);
+
+            $r->get('/register', [self::class, 'getDisplayAdminRegisterFormController']);
+            $r->post('/register', [self::class, 'postAdminRegister']);
         });
 
         $r->addGroup('/account', static function (FastRoute\RouteCollector $r) {
@@ -1064,6 +1176,9 @@ class RouteCollector
             $r->post('/logout', [self::class, 'postLogoutAccount']);
 
             $r->post('/remove_from_project/{project_id:\d+}', [self::class, 'postAccountRemoveFromProject']);
+
+            $r->get('/register.php', [self::class, 'getDisplayRegisterFormController']);
+            $r->post('/register.php', [self::class, 'postRegister']);
         });
         $r->get('/.well-known/change-password', [self::class, 'getWellKnownUrlChangePassword']);
 

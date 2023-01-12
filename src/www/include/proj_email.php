@@ -52,18 +52,6 @@ function send_new_user_email($to, $login, $confirm_hash)
     return $mail->send();
 }
 
-function send_admin_new_user_email($to, $login)
-{
-    //needed by new_user_email.txt
-    $base_url  = \Tuleap\ServerHostname::HTTPSUrl();
-    $presenter = new MailPresenterFactory();
-
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');
-    $mail     = new TuleapRegisterMail($presenter, $renderer, UserManager::instance(), new LocaleSwitcher(), "mail-admin");
-    $mail     = $mail->getMail($login, '', $base_url, ForgeConfig::get('sys_noreply'), $to, "admin");
-    return $mail->send();
-}
-
 function send_new_user_email_notification($to, $login)
 {
     //needed by new_user_email.txt
