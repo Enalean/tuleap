@@ -23,13 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Administration;
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\DocumentServer\IRestrictDocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\IRetrieveDocumentServers;
+use Tuleap\OnlyOffice\DocumentServer\RestrictedProject;
 use Tuleap\OnlyOffice\Stubs\IRestrictDocumentServerStub;
+use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -38,29 +43,71 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testSaveRestriction(): void
+    public function testSaveRestrictionAddsProject(): void
     {
         $restrictor = IRestrictDocumentServerStub::buildSelf();
+        $retriever  = IRetrieveDocumentServersStub::buildWith(
+            DocumentServer::withProjectRestrictions(
+                1,
+                'https://example.com',
+                new ConcealedString('secret'),
+                [
+                    101 => new RestrictedProject(101, 'acme', 'Acme Project'),
+                ],
+            ),
+        );
 
-        $controller = $this->buildController($restrictor);
+        $controller = $this->buildController($retriever, $restrictor);
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
             ->withAttribute('id', 1)
-            ->withParsedBody(['is_restricted' => '1', 'projects' => ['101', '102']]);
+            ->withParsedBody(['is_restricted' => '1', 'project-to-add' => '102']);
 
         $response = $controller->handle($request);
 
         self::assertEquals(302, $response->getStatusCode());
         self::assertFalse($restrictor->hasBeenUnrestricted());
-        self::assertTrue($restrictor->hasBeenRestricted());
+        self::assertTrue($restrictor->hasBeenRestrictedWith([101, 102]));
+    }
+
+    public function testSaveRestrictionRemovesProject(): void
+    {
+        $restrictor = IRestrictDocumentServerStub::buildSelf();
+        $retriever  = IRetrieveDocumentServersStub::buildWith(
+            DocumentServer::withProjectRestrictions(
+                1,
+                'https://example.com',
+                new ConcealedString('secret'),
+                [
+                    101 => new RestrictedProject(101, 'acme', 'Acme Project'),
+                    102 => new RestrictedProject(101, 'evil', 'Evil Corp'),
+                ],
+            ),
+        );
+
+        $controller = $this->buildController($retriever, $restrictor);
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
+            ->withAttribute('id', 1)
+            ->withParsedBody(['is_restricted' => '1', 'projects-to-remove' => ['102']]);
+
+        $response = $controller->handle($request);
+
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertFalse($restrictor->hasBeenUnrestricted());
+        self::assertTrue($restrictor->hasBeenRestrictedWith([101]));
     }
 
     public function testSaveTheFirstRestriction(): void
     {
         $restrictor = IRestrictDocumentServerStub::buildSelf();
+        $retriever  = IRetrieveDocumentServersStub::buildWith(
+            DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('secret'))
+        );
 
-        $controller = $this->buildController($restrictor);
+        $controller = $this->buildController($retriever, $restrictor);
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
@@ -71,14 +118,24 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
 
         self::assertEquals(302, $response->getStatusCode());
         self::assertFalse($restrictor->hasBeenUnrestricted());
-        self::assertTrue($restrictor->hasBeenRestricted());
+        self::assertTrue($restrictor->hasBeenRestrictedWith([]));
     }
 
     public function testSaveUnrestriction(): void
     {
         $restrictor = IRestrictDocumentServerStub::buildSelf();
+        $retriever  = IRetrieveDocumentServersStub::buildWith(
+            DocumentServer::withProjectRestrictions(
+                1,
+                'https://example.com',
+                new ConcealedString('secret'),
+                [
+                    101 => new RestrictedProject(101, 'acme', 'Acme Project'),
+                ],
+            ),
+        );
 
-        $controller = $this->buildController($restrictor);
+        $controller = $this->buildController($retriever, $restrictor);
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
@@ -95,8 +152,22 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
     public function testSaveUnrestrictionFailsIfTooManyServers(): void
     {
         $restrictor = IRestrictDocumentServerStub::buildWithTooManyServersForUnrestriction();
+        $retriever  = IRetrieveDocumentServersStub::buildWith(
+            DocumentServer::withProjectRestrictions(
+                1,
+                'https://example.com/a',
+                new ConcealedString('secret'),
+                [],
+            ),
+            DocumentServer::withProjectRestrictions(
+                2,
+                'https://example.com/b',
+                new ConcealedString('secret'),
+                [],
+            ),
+        );
 
-        $controller = $this->buildController($restrictor);
+        $controller = $this->buildController($retriever, $restrictor);
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
@@ -115,7 +186,11 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
      */
     public function testRejectsInvalidSettings(array $body): void
     {
-        $controller = $this->buildController(IRestrictDocumentServerStub::buildSelf());
+        $retriever = IRetrieveDocumentServersStub::buildWith(
+            DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('secret'))
+        );
+
+        $controller = $this->buildController($retriever, IRestrictDocumentServerStub::buildSelf());
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
@@ -129,14 +204,33 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
     public function dataProviderInvalidSettings(): array
     {
         return [
-            ['No parameters' => []],
-            ['is_restricted is not in the body' => ['projects' => [1]]],
-            ['Projects is not an array' => ['is_restricted' => '1', 'projects' => 'not an array']],
+            [
+                'No parameters' => [],
+            ],
+            [
+                'is_restricted is not in the body' => [
+                    'project-to-add' => '1',
+                ],
+            ],
+            [
+                'Project to add is not a numeric' => [
+                    'is_restricted'  => '1',
+                    'project-to-add' => 'not a numeric',
+                ],
+            ],
+            [
+                'Projects to remove is not an array' => [
+                    'is_restricted'      => '1',
+                    'projects-to-remove' => 'not an array',
+                ],
+            ],
         ];
     }
 
-    private function buildController(IRestrictDocumentServer $restrictor): OnlyOfficeRestrictAdminSettingsController
-    {
+    private function buildController(
+        IRetrieveDocumentServers $retriever,
+        IRestrictDocumentServer $restrictor,
+    ): OnlyOfficeRestrictAdminSettingsController {
         $csrf_token = $this->createStub(\CSRFSynchronizerToken::class);
         $csrf_token->method('check');
 
@@ -145,6 +239,7 @@ final class OnlyOfficeRestrictAdminSettingsControllerTest extends TestCase
 
         return new OnlyOfficeRestrictAdminSettingsController(
             $csrf_token,
+            $retriever,
             $restrictor,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             new SapiEmitter()

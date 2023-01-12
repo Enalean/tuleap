@@ -31,7 +31,6 @@ import type { Config, Server } from "../../../type";
 import { shallowMount } from "@vue/test-utils";
 import AllowedProjectsTable from "./AllowedProjectsTable.vue";
 import { createGettext } from "vue3-gettext";
-import ProjectAllower from "./ProjectAllower.vue";
 import { CONFIG } from "../../../injection-keys";
 
 describe("AllowedProjectsTable", () => {
@@ -65,9 +64,7 @@ describe("AllowedProjectsTable", () => {
             },
             props: {
                 server,
-                set_nb_to_allow: vi.fn(),
-                set_nb_to_revoke: vi.fn(),
-                set_nb_to_move: vi.fn(),
+                submit: vi.fn(),
             },
         });
 
@@ -75,132 +72,7 @@ describe("AllowedProjectsTable", () => {
         expect(wrapper.text()).toContain("Le projet C");
     });
 
-    it("should display existing projects + added ones", async () => {
-        const server: Server = {
-            id: 1,
-            server_url: "https://example.com",
-            is_project_restricted: true,
-            project_restrictions: [
-                {
-                    id: 101,
-                    label: "Project A",
-                    url: "/projects/project-a",
-                },
-                {
-                    id: 103,
-                    label: "Le projet C",
-                    url: "/projects/project-c",
-                },
-            ],
-        } as unknown as Server;
-
-        const set_nb_to_allow = vi.fn();
-        const wrapper = shallowMount(AllowedProjectsTable, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-                provide: {
-                    [CONFIG as symbol]: {
-                        servers: [server],
-                    } as unknown as Config,
-                },
-            },
-            props: {
-                server,
-                set_nb_to_allow,
-                set_nb_to_revoke: vi.fn(),
-                set_nb_to_move: vi.fn(),
-            },
-        });
-
-        await wrapper.findComponent(ProjectAllower).props("add")({
-            id: 102,
-            label: "Project B",
-            url: "/projects/project-b",
-        });
-
-        expect(wrapper.text()).toContain("Project A");
-        expect(wrapper.text()).toContain("Project B");
-        expect(wrapper.text()).toContain("Le projet C");
-        expect(set_nb_to_allow).toHaveBeenCalledWith(1);
-        expect(wrapper.find("[data-test=project-id-to-restrict-101]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=project-id-to-restrict-102]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=project-id-to-restrict-103]").exists()).toBe(true);
-    });
-
-    it("should warn that we are moving a project from a server to another one", async () => {
-        const server: Server = {
-            id: 1,
-            server_url: "https://example.com",
-            is_project_restricted: true,
-            project_restrictions: [
-                {
-                    id: 101,
-                    label: "Project A",
-                    url: "/projects/project-a",
-                },
-                {
-                    id: 103,
-                    label: "Le projet C",
-                    url: "/projects/project-c",
-                },
-            ],
-        } as unknown as Server;
-
-        const set_nb_to_allow = vi.fn();
-        const set_nb_to_move = vi.fn();
-        const wrapper = shallowMount(AllowedProjectsTable, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-                provide: {
-                    [CONFIG as symbol]: {
-                        servers: [
-                            server,
-                            {
-                                id: 2,
-                                server_url: "https://another-server.example.com",
-                                is_project_restricted: true,
-                                project_restrictions: [
-                                    {
-                                        id: 104,
-                                        label: "Project D",
-                                        url: "/projects/project-d",
-                                    },
-                                ],
-                            },
-                        ],
-                    } as unknown as Config,
-                },
-            },
-            props: {
-                server,
-                set_nb_to_allow,
-                set_nb_to_revoke: vi.fn(),
-                set_nb_to_move,
-            },
-        });
-
-        await wrapper.findComponent(ProjectAllower).props("add")({
-            id: 102,
-            label: "Project B",
-            url: "/projects/project-b",
-        });
-
-        expect(set_nb_to_allow).toHaveBeenCalledWith(1);
-        expect(set_nb_to_move).toHaveBeenCalledWith(0);
-        expect(wrapper.findAll("[data-test=badge-warning-currently-allowed]")).toHaveLength(0);
-
-        await wrapper.findComponent(ProjectAllower).props("add")({
-            id: 104,
-            label: "Project D",
-            url: "/projects/project-d",
-        });
-
-        expect(set_nb_to_allow).toHaveBeenCalledWith(2);
-        expect(set_nb_to_move).toHaveBeenCalledWith(1);
-        expect(wrapper.findAll("[data-test=badge-warning-currently-allowed]")).toHaveLength(1);
-    });
-
-    it("should display existing projects + added ones - filtered ones", async () => {
+    it("should display existing projects - filtered ones", async () => {
         const server: Server = {
             id: 1,
             server_url: "https://example.com",
@@ -230,87 +102,14 @@ describe("AllowedProjectsTable", () => {
             },
             props: {
                 server,
-                set_nb_to_allow: vi.fn(),
-                set_nb_to_revoke: vi.fn(),
-                set_nb_to_move: vi.fn(),
+                submit: vi.fn(),
             },
-        });
-
-        await wrapper.findComponent(ProjectAllower).props("add")({
-            id: 102,
-            label: "Project B",
-            url: "/projects/project-b",
         });
 
         await wrapper.find("[data-test=filter]").setValue("project");
 
         expect(wrapper.text()).toContain("Project A");
-        expect(wrapper.text()).toContain("Project B");
         expect(wrapper.text()).not.toContain("Le projet C");
-        expect(wrapper.find("[data-test=project-id-to-restrict-101]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=project-id-to-restrict-102]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=project-id-to-restrict-103]").exists()).toBe(true);
-    });
-
-    it("should display existing projects + added ones - deleted ones", async () => {
-        const server: Server = {
-            id: 1,
-            server_url: "https://example.com",
-            is_project_restricted: true,
-            project_restrictions: [
-                {
-                    id: 101,
-                    label: "Project A",
-                    url: "/projects/project-a",
-                },
-                {
-                    id: 103,
-                    label: "Le projet C",
-                    url: "/projects/project-c",
-                },
-            ],
-        } as unknown as Server;
-
-        const set_nb_to_allow = vi.fn();
-        const set_nb_to_revoke = vi.fn();
-        const wrapper = shallowMount(AllowedProjectsTable, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-                provide: {
-                    [CONFIG as symbol]: {
-                        servers: [server],
-                    } as unknown as Config,
-                },
-            },
-            props: {
-                server,
-                set_nb_to_allow,
-                set_nb_to_revoke,
-                set_nb_to_move: vi.fn(),
-            },
-        });
-
-        await wrapper.findComponent(ProjectAllower).props("add")({
-            id: 102,
-            label: "Project B",
-            url: "/projects/project-b",
-        });
-
-        expect(wrapper.find("[data-test=delete]").attributes("disabled")).toBeDefined();
-        await wrapper.find("[data-test=projects-to-remove-102]").setValue(true);
-        await wrapper.find("[data-test=projects-to-remove-103]").setValue(true);
-        expect(wrapper.find("[data-test=delete]").attributes("disabled")).toBeUndefined();
-        await wrapper.find("[data-test=delete]").trigger("click");
-
-        expect(wrapper.text()).toContain("Project A");
-        expect(wrapper.text()).not.toContain("Project B");
-        expect(wrapper.text()).toContain("Le projet C");
-        expect(wrapper.findAll(".tlp-table-row-danger")).toHaveLength(1);
-        expect(set_nb_to_allow).toHaveBeenCalledWith(0);
-        expect(set_nb_to_revoke).toHaveBeenCalledWith(1);
-        expect(wrapper.find("[data-test=project-id-to-restrict-101]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=project-id-to-restrict-102]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=project-id-to-restrict-103]").exists()).toBe(false);
     });
 
     it("should allow to remove all at once", async () => {
@@ -343,29 +142,16 @@ describe("AllowedProjectsTable", () => {
             },
             props: {
                 server,
-                set_nb_to_allow: vi.fn(),
-                set_nb_to_revoke: vi.fn(),
-                set_nb_to_move: vi.fn(),
+                submit: vi.fn(),
             },
-        });
-
-        await wrapper.findComponent(ProjectAllower).props("add")({
-            id: 102,
-            label: "Project B",
-            url: "/projects/project-b",
         });
 
         expect(wrapper.find("[data-test=delete]").attributes("disabled")).toBeDefined();
         await wrapper.find("[data-test=remove-all]").setValue(true);
         expect(wrapper.find("[data-test=delete]").attributes("disabled")).toBeUndefined();
-        await wrapper.find("[data-test=delete]").trigger("click");
 
         expect(wrapper.text()).toContain("Project A");
-        expect(wrapper.text()).not.toContain("Project B");
         expect(wrapper.text()).toContain("Le projet C");
         expect(wrapper.findAll(".tlp-table-row-danger")).toHaveLength(2);
-        expect(wrapper.find("[data-test=project-id-to-restrict-101]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=project-id-to-restrict-102]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=project-id-to-restrict-103]").exists()).toBe(false);
     });
 });

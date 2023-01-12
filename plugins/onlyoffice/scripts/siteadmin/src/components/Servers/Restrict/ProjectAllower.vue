@@ -20,6 +20,14 @@
 
 <template>
     <div class="tlp-form-element-append">
+        <input
+            type="hidden"
+            name="project-to-add"
+            v-model="project_to_add_id"
+            v-if="project_to_add_id"
+            data-test="project-to-add"
+        />
+
         <select
             class="tlp-select onlyoffice-admin-restrict-server-select-project"
             v-bind:data-placeholder="$gettext('Project name')"
@@ -39,21 +47,47 @@
             ></i>
             {{ $gettext("Allow project") }}
         </button>
+        <move-project-confirmation-modal
+            v-if="show_move_project_modal"
+            v-bind:cancel="show_move_project_modal.cancelMove"
+            v-bind:move="show_move_project_modal.move"
+            v-bind:previous_server="show_move_project_modal.previous_server"
+            v-bind:project="show_move_project_modal.project"
+            v-bind:new_server="server"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import { extractProjectnameFromAutocompleterResult } from "../../../helpers/extract-projectname-from-autocompleter-result";
 import { getJSON, uri } from "@tuleap/fetch-result";
-import type { Project, ProjectFromRest } from "../../../type";
+import type { Project, ProjectFromRest, Server } from "../../../type";
 import { useGettext } from "vue3-gettext";
 import { autocomplete_projects_for_select2 } from "@tuleap/autocomplete-for-select2";
+import MoveProjectConfirmationModal from "./MoveProjectConfirmationModal.vue";
+import { strictInject } from "../../../helpers/strict-inject";
+import { CONFIG } from "../../../injection-keys";
 
-const props = defineProps<{ add: (project: Project) => void; error: (message: string) => void }>();
+const config = strictInject(CONFIG);
+
+const props = defineProps<{
+    error: (message: string) => void;
+    server: Server;
+}>();
 
 const select = ref<HTMLSelectElement | null>(null);
 const is_loading = ref(false);
+const project_to_add_id = ref(0);
+
+interface ShowMoveProjectModal {
+    readonly move: () => void;
+    readonly cancelMove: () => void;
+    readonly project: Project;
+    readonly previous_server: Server;
+}
+
+const show_move_project_modal = ref<ShowMoveProjectModal | null>(null);
 
 onMounted(() => {
     if (select.value) {
@@ -62,6 +96,13 @@ onMounted(() => {
         });
     }
 });
+
+function resetSelectField(): void {
+    if (select.value) {
+        select.value.value = "";
+        select.value.dispatchEvent(new Event("change"));
+    }
+}
 
 function onClick(): void {
     if (!select.value) {
@@ -85,15 +126,45 @@ function onClick(): void {
             }
 
             const { id, shortname, label } = matching_projects[0];
-            props.add({
+            const project = {
                 id,
                 label,
                 url: `/projects/${encodeURIComponent(shortname)}`,
-            });
-            is_loading.value = false;
-            if (select.value) {
-                select.value.value = "";
-                select.value.dispatchEvent(new Event("change"));
+            };
+            function addProject(): void {
+                project_to_add_id.value = project.id;
+                nextTick(() => {
+                    if (select.value) {
+                        select.value.form?.submit();
+                    }
+                });
+            }
+
+            const previous_server = config.servers.find(
+                (server) =>
+                    server.id !== props.server.id &&
+                    server.project_restrictions.some(
+                        (already_allowed_project) => project.id === already_allowed_project.id
+                    )
+            );
+            if (previous_server) {
+                show_move_project_modal.value = {
+                    project,
+                    previous_server,
+                    move: (): void => {
+                        show_move_project_modal.value = null;
+                        addProject();
+                    },
+                    cancelMove: (): void => {
+                        if (show_move_project_modal.value) {
+                            resetSelectField();
+                            show_move_project_modal.value = null;
+                            is_loading.value = false;
+                        }
+                    },
+                };
+            } else {
+                addProject();
             }
         },
         (): void => {

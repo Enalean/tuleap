@@ -29,10 +29,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\DocumentServerNotFoundException;
 use Tuleap\OnlyOffice\DocumentServer\IRestrictDocumentServer;
+use Tuleap\OnlyOffice\DocumentServer\IRetrieveDocumentServers;
+use Tuleap\OnlyOffice\DocumentServer\RestrictedProject;
 use Tuleap\OnlyOffice\DocumentServer\TooManyServersException;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
 
 final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15Compatible
 {
@@ -40,6 +45,7 @@ final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15C
 
     public function __construct(
         private CSRFSynchronizerToken $csrf_token,
+        private IRetrieveDocumentServers $retriever,
         private IRestrictDocumentServer $restrictor,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         EmitterInterface $emitter,
@@ -56,6 +62,11 @@ final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15C
         assert($user instanceof \PFUser);
 
         $server_id = (int) $request->getAttribute('id');
+        try {
+            $server = $this->retriever->retrieveById($server_id);
+        } catch (DocumentServerNotFoundException) {
+            throw new NotFoundException();
+        }
 
         $body = $request->getParsedBody();
         if (! isset($body['is_restricted'])) {
@@ -63,19 +74,19 @@ final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15C
         }
 
         return match ((bool) $body['is_restricted']) {
-            true => $this->restrict($server_id, $user, $body),
-            false => $this->unrestrict($server_id, $user),
+            true => $this->restrict($server, $user, $body),
+            false => $this->unrestrict($server, $user),
         };
     }
 
-    private function unrestrict(int $server_id, \PFUser $user): ResponseInterface
+    private function unrestrict(DocumentServer $server, \PFUser $user): ResponseInterface
     {
         try {
-            $this->restrictor->unrestrict($server_id);
+            $this->restrictor->unrestrict($server->id);
 
             return $this->redirect_with_feedback_factory->createResponseForUser(
                 $user,
-                OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL,
+                self::getServerRestrictUrl($server->id),
                 new NewFeedback(
                     \Feedback::SUCCESS,
                     dgettext('tuleap-onlyoffice', 'Document server restrictions have been removed')
@@ -93,18 +104,35 @@ final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15C
         }
     }
 
-    private function restrict(int $server_id, \PFUser $user, array $body): ResponseInterface
+    private function restrict(DocumentServer $server, \PFUser $user, array $body): ResponseInterface
     {
-        $projects = $body['projects'] ?? [];
-        if (! is_array($projects)) {
-            throw new ForbiddenException();
-        }
+        if (isset($body['project-to-add'])) {
+            if (! is_numeric($body['project-to-add'])) {
+                throw new ForbiddenException();
+            }
 
-        $this->restrictor->restrict($server_id, $projects);
+            $new_restricted_projects = [
+                ...array_map(static fn (RestrictedProject $project) => $project->id, $server->project_restrictions),
+                (int) $body['project-to-add'],
+            ];
+            $this->restrictor->restrict($server->id, $new_restricted_projects);
+        } elseif (isset($body['projects-to-remove'])) {
+            if (! is_array($body['projects-to-remove'])) {
+                throw new ForbiddenException();
+            }
+
+            $new_restricted_projects = array_diff(
+                array_map(static fn (RestrictedProject $project) => $project->id, $server->project_restrictions),
+                $body['projects-to-remove'],
+            );
+            $this->restrictor->restrict($server->id, $new_restricted_projects);
+        } else {
+            $this->restrictor->restrict($server->id, []);
+        }
 
         return $this->redirect_with_feedback_factory->createResponseForUser(
             $user,
-            self::getServerRestrictUrl($server_id),
+            self::getServerRestrictUrl($server->id),
             new NewFeedback(\Feedback::SUCCESS, dgettext('tuleap-onlyoffice', 'Document server restrictions have been saved')),
         );
     }
