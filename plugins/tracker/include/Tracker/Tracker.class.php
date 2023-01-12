@@ -820,7 +820,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                     ),
                     new Tracker_XML_Importer_ArtifactImportedMapping(),
                     $logger,
-                    TrackerFactory::instance()
+                    TrackerFactory::instance(),
+                    EventManager::instance(),
                 );
                 $action->process($layout, $request, $current_user);
                 break;

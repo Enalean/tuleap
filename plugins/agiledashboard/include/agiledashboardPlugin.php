@@ -31,6 +31,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
+use Tuleap\AgileDashboard\ExplicitBacklog\CopiedArtifact\AddCopiedArtifactsToTopBacklog;
 use Tuleap\AgileDashboard\ExplicitBacklog\CreateTrackerFromXMLChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\DirectArtifactLinkCleaner;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
@@ -121,6 +122,7 @@ use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\Tracker\Action\AfterArtifactCopiedEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -286,6 +288,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(GetSemanticProgressUsageEvent::NAME);
             $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
             $this->addHook(TrackerHierarchyUpdateEvent::NAME);
+            $this->addHook(AfterArtifactCopiedEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2191,5 +2194,19 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $event->setHierarchyCannotBeUpdated();
             $event->setErrorMessage($exception->getMessage());
         }
+    }
+
+    public function afterArtifactCopiedEvent(AfterArtifactCopiedEvent $event): void
+    {
+        $adder = new AddCopiedArtifactsToTopBacklog(
+            new ExplicitBacklogDao(),
+            new ArtifactsInExplicitBacklogDao(),
+            new PlannedArtifactDao(),
+        );
+
+        $adder->addCopiedArtifactsToTopBacklog(
+            $event->getArtifactImportedMapping(),
+            $event->getProject(),
+        );
     }
 }
