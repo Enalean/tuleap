@@ -34,6 +34,7 @@ let
       runHook preBuild
       rm composer.json
       rm composer.lock
+      rm *.patch
       mv vendor/composer/ vendor/composer_tuleap-skins-extensions/
       substituteInPlace vendor/autoload.php --replace '/composer/' '/composer_tuleap-skins-extensions/'
       mv vendor/autoload.php vendor/autoload_tuleap-skins-extensions.php
@@ -78,6 +79,10 @@ let
       name = "tuleap-mediawiki-flavor-src";
       paths = [ mediawiki mediawikiSkinsAndExtensions mediawikiTuleapConfig mediawikiTuleapConfigSuspended ];
     };
+
+    patches = [
+      ./mediawiki-extensions/Fix-command-injection-pdfbook.patch
+    ];
 
     unpackPhase = ''
       runHook preUnpack
