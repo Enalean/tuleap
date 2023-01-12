@@ -24,8 +24,6 @@ namespace Tuleap\Tracker\Artifact\Link;
 
 use Feedback;
 use PFUser;
-use RuntimeException;
-use Tracker;
 use Tracker_Exception;
 use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -34,7 +32,9 @@ use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
@@ -42,9 +42,8 @@ final class ArtifactLinker
 {
     public function __construct(
         private RetrieveUsedArtifactLinkFields $form_element_factory,
-        private RetrieveTracker $tracker_factory,
         private CreateNewChangeset $changeset_creator,
-        private FilterArtifactLink $artifact_link_filter,
+        private RetrieveForwardLinks $forward_links_retriever,
     ) {
     }
 
@@ -56,8 +55,7 @@ final class ArtifactLinker
         CollectionOfForwardLinks $forward_links,
         PFUser $current_user,
     ): bool {
-        $tracker        = $this->getTrackerFromArtifact($current_artifact);
-        $artlink_fields = $this->form_element_factory->getUsedArtifactLinkFields($tracker);
+        $artlink_fields = $this->form_element_factory->getUsedArtifactLinkFields($current_artifact->getTracker());
 
         if (count($artlink_fields) === 0) {
             $GLOBALS['Response']->addFeedback(
@@ -70,25 +68,22 @@ final class ArtifactLinker
             return false;
         }
 
-        $comment       = '';
-        $artlink_field = $artlink_fields[0];
+        $comment             = '';
+        $artifact_link_field = $artlink_fields[0];
 
-        $forward_link_collection = $this->artifact_link_filter->filterArtifactIdsIAmAlreadyLinkedTo($current_artifact, $artlink_field, $forward_links);
-
-        $fields_data                                        = [];
-        $fields_data[$artlink_field->getId()]['new_values'] = $forward_link_collection->getArtifactLinksAsStringList();
-
-        if ($tracker->isProjectAllowedToUseType()) {
-            $fields_data[$artlink_field->getId()]['types'] = $forward_link_collection->getArtifactTypesByIds();
-        }
+        $existing_links      = $this->forward_links_retriever->retrieve($current_user, $artifact_link_field, $current_artifact);
+        $new_changeset_value = NewArtifactLinkChangesetValue::fromAddedValues(
+            $artifact_link_field->getId(),
+            $existing_links->differenceById($forward_links),
+        );
+        $container           = new ChangesetValuesContainer([], $new_changeset_value);
 
         try {
-            $comment_format_at_artifact_linking = CommentFormatIdentifier::buildCommonMark();
-            $new_changeset                      = NewChangeset::fromFieldsDataArray(
+            $new_changeset = NewChangeset::fromFieldsDataArray(
                 $current_artifact,
-                $fields_data,
+                $container->getFieldsData(),
                 $comment,
-                $comment_format_at_artifact_linking,
+                CommentFormatIdentifier::buildCommonMark(),
                 [],
                 $current_user,
                 (new \DateTimeImmutable())->getTimestamp(),
@@ -104,14 +99,5 @@ final class ArtifactLinker
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
             return false;
         }
-    }
-
-    private function getTrackerFromArtifact(Artifact $artifact): Tracker
-    {
-        $tracker = $this->tracker_factory->getTrackerById($artifact->getTrackerId());
-        if ($tracker === null) {
-            throw new RuntimeException('Tracker does not exist');
-        }
-        return $tracker;
     }
 }
