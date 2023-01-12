@@ -171,7 +171,8 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
                         new TypeDao(),
                         $artifact_links_usage_dao
                     ),
-                    $artifact_links_usage_dao
+                    $artifact_links_usage_dao,
+                    $event_manager,
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(

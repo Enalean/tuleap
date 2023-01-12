@@ -100,7 +100,8 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
                         new TypeDao(),
                         $artifact_links_usage_dao
                     ),
-                    $artifact_links_usage_dao
+                    $artifact_links_usage_dao,
+                    $event_dispatcher,
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(

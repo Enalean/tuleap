@@ -332,7 +332,8 @@ class gitlabPlugin extends Plugin
                 new ArtifactLinkValidator(
                     $artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                    $artifact_links_usage_dao
+                    $artifact_links_usage_dao,
+                    $event_manager,
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -559,7 +560,8 @@ class gitlabPlugin extends Plugin
                 new ArtifactLinkValidator(
                     $artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                    $artifact_links_usage_dao
+                    $artifact_links_usage_dao,
+                    $event_manager,
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(

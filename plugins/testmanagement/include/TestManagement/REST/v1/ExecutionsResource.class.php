@@ -226,7 +226,8 @@ class ExecutionsResource
                 new ArtifactLinkValidator(
                     $this->artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao
+                    $usage_dao,
+                    $event_dispatcher,
                 ),
                 new WorkflowUpdateChecker($this->getFrozenFieldDetector())
             ),

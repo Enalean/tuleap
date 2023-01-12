@@ -348,7 +348,8 @@ class CampaignsResource
                 new ArtifactLinkValidator(
                     $this->artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao
+                    $usage_dao,
+                    $event_manager,
                 ),
                 new WorkflowUpdateChecker($this->getFrozenFieldDetector())
             ),

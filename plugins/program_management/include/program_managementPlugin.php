@@ -31,6 +31,8 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\ProgramManagement\Adapter\ArtifactLinks\DeletedArtifactLinksProxy;
+use Tuleap\ProgramManagement\Adapter\ArtifactLinks\LinkedArtifactDAO;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
@@ -149,6 +151,7 @@ use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementXMLConfigParser;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayPlanIterationsController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
+use Tuleap\ProgramManagement\Domain\ArtifactLinks\DeletedArtifactLinksChecker;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\PotentialPlannableTrackersConfigurationBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProjectUGroupCanPrioritizeItemsBuilder;
@@ -237,6 +240,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
@@ -325,6 +329,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $this->addHook(ImportXMLProjectTrackerDone::NAME);
         $this->addHook(PossibleParentSelector::NAME);
         $this->addHook('codendi_daily_start');
+        $this->addHook(ValidateArtifactLinkValueEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -957,7 +962,8 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                         new TypeDao(),
                         $artifact_links_usage_dao
                     ),
-                    $artifact_links_usage_dao
+                    $artifact_links_usage_dao,
+                    $event_dispatcher,
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(
@@ -1675,5 +1681,16 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $dao     = new PendingSynchronizationDao();
         $cleaner = new SynchronizationCleaner($dao);
         $cleaner->clean();
+    }
+
+    public function validateArtifactLinkValueEvent(ValidateArtifactLinkValueEvent $event): void
+    {
+        $checker = new DeletedArtifactLinksChecker(
+            new LinkedArtifactDAO(),
+        );
+
+        $checker->checkArtifactHaveMirroredMilestonesInProvidedLinks(
+            DeletedArtifactLinksProxy::fromEvent($event),
+        );
     }
 }

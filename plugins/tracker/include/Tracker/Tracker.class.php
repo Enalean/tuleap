@@ -3423,7 +3423,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 new TypeDao(),
                 $artifact_links_usage_dao
             ),
-            $artifact_links_usage_dao
+            $artifact_links_usage_dao,
+            EventManager::instance(),
         );
     }
 
