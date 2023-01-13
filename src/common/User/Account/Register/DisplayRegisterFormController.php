@@ -35,7 +35,6 @@ final class DisplayRegisterFormController implements DispatchableWithRequest, Di
     public function __construct(
         private IDisplayRegisterForm $form_displayer,
         private EventDispatcherInterface $event_dispatcher,
-        private \EventManager $event_manager, // needed for legacy event 'before_register'
     ) {
     }
 
@@ -46,17 +45,10 @@ final class DisplayRegisterFormController implements DispatchableWithRequest, Di
             throw new ForbiddenException();
         }
 
-        $is_admin           = false;
-        $is_password_needed = true;
-        $this->event_manager->processEvent(
-            'before_register',
-            [
-                'request'                      => $request,
-                'is_registration_confirmation' => false,
-                'is_password_needed'           => &$is_password_needed,
-            ]
-        );
+        $is_password_needed = $this->event_dispatcher
+            ->dispatch(new BeforeUserRegistrationEvent($request))
+            ->isPasswordNeeded();
 
-        $this->form_displayer->display($request, $layout, $is_admin, $is_password_needed);
+        $this->form_displayer->display($request, $layout, RegisterFormContext::forAnonymous($is_password_needed));
     }
 }

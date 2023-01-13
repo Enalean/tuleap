@@ -43,8 +43,11 @@ final class RegisterFormHandler
     /**
      * @return Ok<PFUser>|Err<RegisterFormValidationIssue>|Err<null>
      */
-    public function process(\HTTPRequest $request, bool $is_password_needed, bool $is_admin, string $mail_confirm_code): Ok|Err
+    public function process(\HTTPRequest $request, RegisterFormContext $context, string $mail_confirm_code): Ok|Err
     {
+        $is_admin           = $context->is_admin;
+        $is_password_needed = $context->is_password_needed;
+
         $form_loginname = (string) $request->get('form_loginname');
         $rule_username  = new Rule_UserName();
         if (! $rule_username->isValid($form_loginname)) {

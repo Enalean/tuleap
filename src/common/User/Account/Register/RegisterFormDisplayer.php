@@ -42,25 +42,23 @@ final class RegisterFormDisplayer implements IDisplayRegisterForm
     public function display(
         \HTTPRequest $request,
         BaseLayout $layout,
-        bool $is_admin,
-        bool $is_password_needed,
+        RegisterFormContext $context,
     ): void {
         $this->render(
             $layout,
-            $this->presenter_builder->getPresenterClosureForFirstDisplay($request, $layout, $is_admin, $is_password_needed)
+            $this->presenter_builder->getPresenterClosureForFirstDisplay($request, $layout, $context)
         );
     }
 
     public function displayWithPossibleIssue(
         \HTTPRequest $request,
         BaseLayout $layout,
-        bool $is_admin,
-        bool $is_password_needed,
+        RegisterFormContext $context,
         ?RegisterFormValidationIssue $issue,
     ): void {
         $this->render(
             $layout,
-            $this->presenter_builder->getPresenterClosure($request, $layout, $is_admin, $is_password_needed, $issue)
+            $this->presenter_builder->getPresenterClosure($request, $layout, $context, $issue)
         );
     }
 

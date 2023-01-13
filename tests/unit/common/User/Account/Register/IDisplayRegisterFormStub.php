@@ -40,11 +40,11 @@ class IDisplayRegisterFormStub implements IDisplayRegisterForm
         return new self();
     }
 
-    public function display(\HTTPRequest $request, BaseLayout $layout, bool $is_admin, bool $is_password_needed): void
+    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
     {
         $this->has_been_displayed = true;
-        $this->is_admin           = $is_admin;
-        $this->is_password_needed = $is_password_needed;
+        $this->is_admin           = $context->is_admin;
+        $this->is_password_needed = $context->is_password_needed;
     }
 
     public function isAdmin(): bool

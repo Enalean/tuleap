@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use Tuleap\Event\Dispatchable;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -35,17 +36,9 @@ class ProcessRegisterFormControllerTest extends TestCase
     {
         $form_processor = IProcessRegisterFormStub::buildSelf();
 
-        $event_manager = new class extends \EventManager
-        {
-            public function processEvent($event_name, $params = [])
-            {
-            }
-        };
-
         $controller = new ProcessRegisterFormController(
             $form_processor,
             EventDispatcherStub::withIdentityCallback(),
-            $event_manager,
         );
         $controller->process(
             HTTPRequestBuilder::get()->build(),
@@ -62,20 +55,17 @@ class ProcessRegisterFormControllerTest extends TestCase
     {
         $form_processor = IProcessRegisterFormStub::buildSelf();
 
-        $event_manager = new class extends \EventManager
-        {
-            public function processEvent($event_name, $params = [])
-            {
-                if ($event_name === 'before_register') {
-                    $params['is_password_needed'] = false;
-                }
-            }
-        };
-
         $controller = new ProcessRegisterFormController(
             $form_processor,
-            EventDispatcherStub::withIdentityCallback(),
-            $event_manager,
+            EventDispatcherStub::withCallback(
+                static function (Dispatchable $event): object {
+                    if ($event instanceof BeforeUserRegistrationEvent) {
+                        $event->noNeedForPassword();
+                    }
+
+                    return $event;
+                }
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->build(),
@@ -94,23 +84,17 @@ class ProcessRegisterFormControllerTest extends TestCase
 
         $form_processor = IProcessRegisterFormStub::buildSelf();
 
-        $event_manager = new class extends \EventManager
-        {
-            public function processEvent($event_name, $params = [])
-            {
-            }
-        };
-
         $controller = new ProcessRegisterFormController(
             $form_processor,
             EventDispatcherStub::withCallback(
-                static function (RegistrationGuardEvent $event) {
-                    $event->disableRegistration();
+                static function (Dispatchable $event): object {
+                    if ($event instanceof RegistrationGuardEvent) {
+                        $event->disableRegistration();
+                    }
 
                     return $event;
                 }
             ),
-            $event_manager,
         );
         $controller->process(
             HTTPRequestBuilder::get()->build(),

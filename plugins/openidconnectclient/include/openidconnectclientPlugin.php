@@ -83,6 +83,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\Account\Register\AfterUserRegistrationEvent;
+use Tuleap\User\Account\Register\BeforeUserRegistrationEvent;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserNameNormalizer;
@@ -106,7 +107,7 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
         $this->setScope(self::SCOPE_SYSTEM);
 
         $this->addHook(Event::LOGIN_ADDITIONAL_CONNECTOR);
-        $this->addHook('before_register');
+        $this->addHook(BeforeUserRegistrationEvent::NAME);
         $this->addHook(AfterUserRegistrationEvent::NAME);
         $this->addHook('anonymous_access_to_script_allowed');
         $this->addHook('cssfile');
@@ -265,12 +266,11 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
         $params['additional_connector'] .= $renderer->renderToString('login_connector', $login_connector_presenter);
     }
 
-    public function before_register(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function beforeUserRegistrationEvent(BeforeUserRegistrationEvent $event): void
     {
-        $request = $params['request'];
-        $link_id = $request->get('openidconnect_link_id');
+        $link_id = $event->getRequest()->get('openidconnect_link_id');
 
-        if ($this->isUserRegistrationWithOpenIDConnectPossible($params['is_registration_confirmation'], $link_id)) {
+        if ($link_id) {
             $provider_manager         = $this->getProviderManager();
             $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
             try {
@@ -288,16 +288,8 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
                 );
                 $GLOBALS['Response']->redirect('/');
             }
-            $params['is_password_needed'] = false;
+            $event->noNeedForPassword();
         }
-    }
-
-    /**
-     * @return bool
-     */
-    private function isUserRegistrationWithOpenIDConnectPossible($is_registration_confirmation, $link_id)
-    {
-        return ! $is_registration_confirmation && $link_id;
     }
 
     public function afterUserRegistrationEvent(AfterUserRegistrationEvent $event): void
