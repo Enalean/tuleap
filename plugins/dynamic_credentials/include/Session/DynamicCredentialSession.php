@@ -26,21 +26,8 @@ use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 
 class DynamicCredentialSession
 {
-    public const STORAGE_IDENTIFIER = 'dynamic_credential_storage';
-
-    /**
-     * @var array
-     */
-    private $storage;
-    /**
-     * @var CredentialRetriever
-     */
-    private $credential_retriever;
-
-    public function __construct(array &$storage, CredentialRetriever $credential_retriever)
+    public function __construct(private DynamicCredentialIdentifierStorage $storage, private CredentialRetriever $credential_retriever)
     {
-        $this->storage              =& $storage;
-        $this->credential_retriever = $credential_retriever;
     }
 
     /**
@@ -51,16 +38,8 @@ class DynamicCredentialSession
      */
     public function initialize(string $username, ConcealedString $password)
     {
-        $credential                              = $this->credential_retriever->authenticate($username, $password);
-        $this->storage[self::STORAGE_IDENTIFIER] = $credential->getIdentifier();
-    }
-
-    /**
-     * @return bool
-     */
-    private function isSessionInitialized()
-    {
-        return isset($this->storage[self::STORAGE_IDENTIFIER]);
+        $credential = $this->credential_retriever->authenticate($username, $password);
+        $this->storage->setIdentifier($credential->getIdentifier());
     }
 
     /**
@@ -70,10 +49,11 @@ class DynamicCredentialSession
      */
     public function getAssociatedCredential()
     {
-        if (! $this->isSessionInitialized()) {
+        $identifier = $this->storage->getIdentifier();
+        if ($identifier === null) {
             throw new DynamicCredentialSessionNotInitializedException();
         }
 
-        return $this->credential_retriever->getByIdentifier($this->storage[self::STORAGE_IDENTIFIER]);
+        return $this->credential_retriever->getByIdentifier($identifier);
     }
 }
