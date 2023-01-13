@@ -20,25 +20,26 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\User\Account\Register;
 
-/**
- * @psalm-immutable
- */
-final class RegisterFormContext
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\InviteBuddy\Invitation;
+use Tuleap\Test\PHPUnit\TestCase;
+
+class InvitationToEmailTest extends TestCase
 {
-    private function __construct(public bool $is_admin, public bool $is_password_needed, public ?InvitationToEmail $invitation_to_email)
+    public function testItReturnsAnInvitationToEmailObject(): void
     {
+        self::assertEquals(
+            'jdoe@example.com',
+            InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))->to_email,
+        );
     }
 
-    public static function forAnonymous(bool $is_password_needed, ?InvitationToEmail $invitation_to_email): self
+    public function testEnsureThatInvitationHasBeenMadeForANewUser(): void
     {
-        return new self(false, $is_password_needed, $invitation_to_email);
-    }
+        $this->expectException(InvitationShouldBeToEmailException::class);
 
-    public static function forAdmin(): self
-    {
-        return new self(true, true, null);
+        InvitationToEmail::fromInvitation(new Invitation(''), new ConcealedString('secret'));
     }
 }

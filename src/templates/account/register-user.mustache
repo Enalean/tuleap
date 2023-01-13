@@ -1,8 +1,12 @@
 {{> register-form-start }}
 
     {{# prefill_values }}
+        {{# invitation_token }}
+            <input type="hidden" name="invitation-token" value="{{ value }}" />
+        {{/ invitation_token }}
+
         {{# form_email }}
-            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
+            <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}{{# is_disabled }}tlp-form-element-disabled{{/is_disabled}}">
                 <label class="tlp-label" for="form_email">
                     {{# gettext }}Email{{/ gettext }}
                     <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
@@ -15,6 +19,7 @@
                        value="{{ value }}"
                        required
                        autocomplete="email"
+                       {{# is_disabled }}disabled{{/is_disabled}}
                 >
                 {{# has_error }}
                     <p class="tlp-text-danger">{{ error }}</p>

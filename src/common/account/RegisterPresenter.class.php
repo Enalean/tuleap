@@ -37,7 +37,7 @@ class Account_RegisterPresenter
     public $legal = '';
     private $extra_plugin_field;
 
-    public function __construct(Account_RegisterPrefillValuesPresenter $prefill_values, $extra_plugin_field)
+    public function __construct(\Tuleap\User\Account\Register\RegisterPrefillValuesPresenter $prefill_values, $extra_plugin_field)
     {
         $this->prefill_values         = $prefill_values;
         $this->login                  = _('Login Name');

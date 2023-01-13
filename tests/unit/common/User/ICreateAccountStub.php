@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
+use PFUser;
+use Tuleap\Cryptography\ConcealedString;
+
 final class ICreateAccountStub implements ICreateAccount
 {
     private function __construct(private ?\PFUser $created_user)
@@ -41,5 +44,9 @@ final class ICreateAccountStub implements ICreateAccount
     public function createAccount(\PFUser $user): ?\PFUser
     {
         return $this->created_user;
+    }
+
+    public function login(string $name, ConcealedString $pwd, $allowpending = false): PFUser
+    {
     }
 }

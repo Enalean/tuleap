@@ -20,25 +20,36 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\User;
 
-namespace Tuleap\User\Account\Register;
+use PFUser;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-/**
- * @psalm-immutable
- */
-final class RegisterFormContext
+final class LogUserStub implements LogUser
 {
-    private function __construct(public bool $is_admin, public bool $is_password_needed, public ?InvitationToEmail $invitation_to_email)
+    private bool $has_been_logged_in = false;
+
+    private function __construct()
     {
     }
 
-    public static function forAnonymous(bool $is_password_needed, ?InvitationToEmail $invitation_to_email): self
+    public static function buildSelf(): self
     {
-        return new self(false, $is_password_needed, $invitation_to_email);
+        return new self();
     }
 
-    public static function forAdmin(): self
+    public function login(string $name, ConcealedString $pwd): PFUser
     {
-        return new self(true, true, null);
+        $this->has_been_logged_in = true;
+
+        return UserTestBuilder::anActiveUser()
+            ->withUserName($name)
+            ->build();
+    }
+
+    public function hasBeenLoggedIn(): bool
+    {
+        return $this->has_been_logged_in;
     }
 }

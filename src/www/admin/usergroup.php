@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -340,7 +341,7 @@ $user_has_rest_read_only_administration_delegation = $forge_user_group_permissio
 );
 
 $invite_buddy_configuration = new InviteBuddyConfiguration(EventManager::instance());
-$invited_by_builder         = new InvitedByPresenterBuilder(new InvitationDao(), $um);
+$invited_by_builder         = new InvitedByPresenterBuilder(new InvitationDao(new SplitTokenVerificationStringHasher()), $um);
 $invited_by                 = $invite_buddy_configuration->isFeatureEnabled()
     ? $invited_by_builder->getInvitedByPresenter($user)
     : null;

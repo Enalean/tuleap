@@ -20,25 +20,30 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\User\Account\Register;
+
 
 /**
  * @psalm-immutable
  */
-final class RegisterFormContext
+final class IExtractInvitationToEmailStub implements IExtractInvitationToEmail
 {
-    private function __construct(public bool $is_admin, public bool $is_password_needed, public ?InvitationToEmail $invitation_to_email)
+    private function __construct(private ?InvitationToEmail $invitation)
     {
     }
 
-    public static function forAnonymous(bool $is_password_needed, ?InvitationToEmail $invitation_to_email): self
+    public static function withoutInvitation(): self
     {
-        return new self(false, $is_password_needed, $invitation_to_email);
+        return new self(null);
     }
 
-    public static function forAdmin(): self
+    public static function withInvitation(InvitationToEmail $invitation): self
     {
-        return new self(true, true, null);
+        return new self($invitation);
+    }
+
+    public function getInvitationToEmail(\Codendi_Request $request): ?InvitationToEmail
+    {
+        return $this->invitation;
     }
 }

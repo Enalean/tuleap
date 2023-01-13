@@ -24,51 +24,25 @@ namespace Tuleap\InviteBuddy;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 
 class InvitationSender
 {
-    public const  STATUS_SENT  = 'sent';
-    private const STATUS_ERROR = 'error';
-
-    /**
-     * @var InvitationSenderGateKeeper
-     */
-    private $gate_keeper;
-    /**
-     * @var InvitationEmailNotifier
-     */
-    private $email_notifier;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var InvitationDao
-     */
-    private $dao;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var InvitationInstrumentation
-     */
-    private $instrumentation;
+    private const STATUS_CREATING = 'creating';
+    public const STATUS_SENT      = 'sent';
+    private const STATUS_ERROR    = 'error';
 
     public function __construct(
-        InvitationSenderGateKeeper $gate_keeper,
-        InvitationEmailNotifier $email_notifier,
-        \UserManager $user_manager,
-        InvitationDao $dao,
-        LoggerInterface $logger,
-        InvitationInstrumentation $instrumentation,
+        private InvitationSenderGateKeeper $gate_keeper,
+        private InvitationEmailNotifier $email_notifier,
+        private \UserManager $user_manager,
+        private InvitationDao $dao,
+        private LoggerInterface $logger,
+        private InvitationInstrumentation $instrumentation,
+        private SplitTokenFormatter $split_token_formatter,
     ) {
-        $this->gate_keeper     = $gate_keeper;
-        $this->email_notifier  = $email_notifier;
-        $this->user_manager    = $user_manager;
-        $this->dao             = $dao;
-        $this->logger          = $logger;
-        $this->instrumentation = $instrumentation;
     }
 
     /**
@@ -93,23 +67,32 @@ class InvitationSender
                 $email,
             );
 
-            $status = self::STATUS_SENT;
-            if ($this->email_notifier->send($current_user, $recipient, $custom_message)) {
+            $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+
+            $invitation_id = $this->dao->create(
+                $now,
+                (int) $current_user->getId(),
+                $email,
+                $recipient->getUserId(),
+                $custom_message,
+                self::STATUS_CREATING,
+                $secret,
+            );
+
+            $token = $this->split_token_formatter->getIdentifier(
+                new SplitToken($invitation_id, $secret)
+            );
+
+            if ($this->email_notifier->send($current_user, $recipient, $custom_message, $token)) {
                 $this->instrumentation->increment();
+                $status = self::STATUS_SENT;
             } else {
                 $this->logger->error("Unable to send invitation from user #{$current_user->getId()} to $email");
                 $status     = self::STATUS_ERROR;
                 $failures[] = $email;
             }
 
-            $this->dao->save(
-                $now,
-                (int) $current_user->getId(),
-                $email,
-                $recipient->getUserId(),
-                $custom_message,
-                $status
-            );
+            $this->dao->update($invitation_id, $status);
         }
 
         if (count($failures) === count($emails)) {

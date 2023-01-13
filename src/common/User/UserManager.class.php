@@ -30,6 +30,7 @@ use Tuleap\User\FindUserByEmailEvent;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\ICreateAccount;
 use Tuleap\User\InvalidSessionException;
+use Tuleap\User\LogUser;
 use Tuleap\User\ProvideAnonymousUser;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
@@ -41,7 +42,7 @@ use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, ProvideUserFromRow, ICreateAccount // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, ProvideUserFromRow, ICreateAccount, LogUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
@@ -580,15 +581,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     }
 
     /**
-     * Login the user
-     *
-     * @deprected
-     * @param $name string The login name submitted by the user
-     * @param ConcealedString $pwd The password submitted by the user
-     * @param $allowpending boolean True if pending users are allowed (for verify.php). Default is false
      * @return PFUser Registered user or anonymous if the authentication failed
      */
-    public function login($name, ConcealedString $pwd, $allowpending = false)
+    public function login(string $name, ConcealedString $pwd): PFUser
     {
         try {
             $password_expiration_checker = new User_PasswordExpirationChecker();
@@ -603,11 +598,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $status_manager              = new User_UserStatusManager();
 
             $user = $login_manager->authenticate($name, $pwd);
-            if ($allowpending) {
-                $status_manager->checkStatusOnVerifyPage($user);
-            } else {
-                $status_manager->checkStatus($user);
-            }
+            $status_manager->checkStatus($user);
 
             $this->openWebSession($user);
             $password_expiration_checker->checkPasswordLifetime($user);

@@ -20,25 +20,14 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\InviteBuddy;
 
-namespace Tuleap\User\Account\Register;
+use Tuleap\Authentication\SplitToken\SplitToken;
 
-/**
- * @psalm-immutable
- */
-final class RegisterFormContext
+interface InvitationByTokenRetriever
 {
-    private function __construct(public bool $is_admin, public bool $is_password_needed, public ?InvitationToEmail $invitation_to_email)
-    {
-    }
-
-    public static function forAnonymous(bool $is_password_needed, ?InvitationToEmail $invitation_to_email): self
-    {
-        return new self(false, $is_password_needed, $invitation_to_email);
-    }
-
-    public static function forAdmin(): self
-    {
-        return new self(true, true, null);
-    }
+    /**
+     * @throws InvalidInvitationTokenException
+     */
+    public function searchBySplitToken(SplitToken $split_token): Invitation;
 }

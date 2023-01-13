@@ -27,6 +27,7 @@ use ForgeConfig;
 use PFUser;
 use TemplateRenderer;
 use TemplateRendererFactory;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Mail\TemplateWithoutFooter;
 use Tuleap\ServerHostname;
 
@@ -42,7 +43,7 @@ class InvitationEmailNotifier
         $this->template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates/invite_buddy");
     }
 
-    public function send(\PFUser $current_user, InvitationRecipient $recipient, ?string $custom_message): bool
+    public function send(\PFUser $current_user, InvitationRecipient $recipient, ?string $custom_message, ConcealedString $token): bool
     {
         $mail = new Codendi_Mail();
         $mail->setLookAndFeelTemplate(new TemplateWithoutFooter());
@@ -52,7 +53,7 @@ class InvitationEmailNotifier
         if ($recipient->user) {
             $this->askToLogin($mail, $current_user, $recipient->user, $custom_message);
         } else {
-            $this->askToRegister($mail, $current_user, $recipient->email, $custom_message);
+            $this->askToRegister($mail, $current_user, $recipient->email, $custom_message, $token);
         }
 
         return $mail->send();
@@ -82,11 +83,12 @@ class InvitationEmailNotifier
         \PFUser $current_user,
         string $external_email,
         ?string $custom_message,
+        ConcealedString $token,
     ): void {
         $mail->setTo($external_email);
         $mail->setSubject(sprintf(_('Invitation to register to %s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
 
-        $register_url = ServerHostname::HTTPSUrl() . '/account/register.php';
+        $register_url = ServerHostname::HTTPSUrl() . '/account/register.php?invitation-token=' . $token->getString();
 
         $presenter = new InvitationEmailRegisterPresenter($current_user, $register_url, $custom_message);
         $body      = $this->template_renderer->renderToString("invite-register", $presenter);

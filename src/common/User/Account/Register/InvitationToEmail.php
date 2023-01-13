@@ -20,25 +20,29 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\User\Account\Register;
+
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\InviteBuddy\Invitation;
 
 /**
  * @psalm-immutable
  */
-final class RegisterFormContext
+final class InvitationToEmail
 {
-    private function __construct(public bool $is_admin, public bool $is_password_needed, public ?InvitationToEmail $invitation_to_email)
+    private function __construct(public string $to_email, public ConcealedString $token)
     {
     }
 
-    public static function forAnonymous(bool $is_password_needed, ?InvitationToEmail $invitation_to_email): self
+    /**
+     * @throws InvitationShouldBeToEmailException
+     */
+    public static function fromInvitation(Invitation $invitation, ConcealedString $token): self
     {
-        return new self(false, $is_password_needed, $invitation_to_email);
-    }
+        if (! $invitation->to_email) {
+            throw new InvitationShouldBeToEmailException();
+        }
 
-    public static function forAdmin(): self
-    {
-        return new self(true, true, null);
+        return new self($invitation->to_email, $token);
     }
 }

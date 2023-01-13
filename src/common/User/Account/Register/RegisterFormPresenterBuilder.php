@@ -92,15 +92,15 @@ final class RegisterFormPresenterBuilder
 
         if ($context->is_admin) {
             $prefill   = new \Account_RegisterAdminPrefillValuesPresenter(
-                new \Account_RegisterField($form_loginname, $form_loginname_error),
-                new \Account_RegisterField($form_email, $form_email_error),
-                new \Account_RegisterField($form_pw, $form_pw_error),
-                new \Account_RegisterField($form_realname, $form_realname_error),
-                new \Account_RegisterField($form_register_purpose, $form_register_purpose_error),
-                new \Account_RegisterField($form_mail_site, $form_mail_site_error),
-                new \Account_RegisterField($timezone, $timezone_error),
-                new \Account_RegisterField($form_restricted, $form_restricted_error),
-                new \Account_RegisterField($form_send_email, $form_send_email_error),
+                new RegisterField($form_loginname, $form_loginname_error),
+                new RegisterField($form_email, $form_email_error),
+                new RegisterField($form_pw, $form_pw_error),
+                new RegisterField($form_realname, $form_realname_error),
+                new RegisterField($form_register_purpose, $form_register_purpose_error),
+                new RegisterField($form_mail_site, $form_mail_site_error),
+                new RegisterField($timezone, $timezone_error),
+                new RegisterField($form_restricted, $form_restricted_error),
+                new RegisterField($form_send_email, $form_send_email_error),
                 \ForgeConfig::areRestrictedUsersAllowed()
             );
             $presenter = new \Account_RegisterByAdminPresenter($prefill, $extra_plugin_field);
@@ -108,17 +108,25 @@ final class RegisterFormPresenterBuilder
         } else {
             $password_field = null;
             if ($context->is_password_needed) {
-                $password_field = new \Account_RegisterField($form_pw, $form_pw_error);
+                $password_field = new RegisterField($form_pw, $form_pw_error);
             }
 
-            $prefill   = new \Account_RegisterPrefillValuesPresenter(
-                new \Account_RegisterField($form_loginname, $form_loginname_error),
-                new \Account_RegisterField($form_email, $form_email_error),
+            $invitation_token = null;
+            $email_field      = new RegisterField($form_email, $form_email_error);
+            if ($context->invitation_to_email) {
+                $email_field      = new DisabledField($context->invitation_to_email->to_email);
+                $invitation_token = new RegisterField($context->invitation_to_email->token->getString(), null);
+            }
+
+            $prefill   = new RegisterPrefillValuesPresenter(
+                new RegisterField($form_loginname, $form_loginname_error),
+                $email_field,
                 $password_field,
-                new \Account_RegisterField($form_realname, $form_realname_error),
-                new \Account_RegisterField($form_register_purpose, $form_register_purpose_error),
-                new \Account_RegisterField($form_mail_site, $form_mail_site_error),
-                new \Account_RegisterField($timezone, $timezone_error)
+                new RegisterField($form_realname, $form_realname_error),
+                new RegisterField($form_register_purpose, $form_register_purpose_error),
+                new RegisterField($form_mail_site, $form_mail_site_error),
+                new RegisterField($timezone, $timezone_error),
+                $invitation_token,
             );
             $presenter = new \Account_RegisterByUserPresenter($prefill, $extra_plugin_field);
             $template  = 'register-user';

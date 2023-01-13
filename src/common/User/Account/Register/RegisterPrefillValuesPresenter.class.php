@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Account_RegisterByUserPresenter extends Account_RegisterPresenter
+namespace Tuleap\User\Account\Register;
+
+class RegisterPrefillValuesPresenter
 {
-    public $title;
-    public $submit;
-    public $mandatory;
-    public $new_password2;
-
-    public string $form_url = '/account/register.php';
-
-    public function __construct(\Tuleap\User\Account\Register\RegisterPrefillValuesPresenter $prefill_values, $extra_plugin_field)
-    {
-        parent::__construct($prefill_values, $extra_plugin_field);
-        $this->title         = _('Create your account');
-        $this->submit        = _('Create my account');
-        $this->mandatory     = _('All fields are mandatory.');
-        $this->new_password2 = _('Repeat password');
+    public function __construct(
+        public RegisterField $form_loginname,
+        public RegisterField|DisabledField $form_email,
+        public ?RegisterField $form_pw,
+        public RegisterField $form_realname,
+        public RegisterField $form_register_purpose,
+        public RegisterField $form_mail_site,
+        public RegisterField $form_timezone,
+        public ?RegisterField $invitation_token,
+    ) {
     }
 }

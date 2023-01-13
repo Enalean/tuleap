@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InvitationEmailNotifier;
@@ -32,6 +34,7 @@ use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\InviteBuddy\UnableToSendInvitationsException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -81,7 +84,7 @@ class InvitationsResource extends AuthenticatedResource
         $user_manager = \UserManager::instance();
         $current_user = $user_manager->getCurrentUser();
 
-        $dao                        = new InvitationDao();
+        $dao                        = new InvitationDao(new SplitTokenVerificationStringHasher());
         $invite_buddy_configuration = new InviteBuddyConfiguration(\EventManager::instance());
         $sender                     = new InvitationSender(
             new InvitationSenderGateKeeper(
@@ -93,7 +96,8 @@ class InvitationsResource extends AuthenticatedResource
             $user_manager,
             $dao,
             \BackendLogger::getDefaultLogger(),
-            new InvitationInstrumentation(Prometheus::instance())
+            new InvitationInstrumentation(Prometheus::instance()),
+            new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
         );
 
         try {

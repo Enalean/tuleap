@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,20 +15,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Account_RegisterField
-{
-    public $value;
-    public $has_error;
-    public $error;
+declare(strict_types=1);
 
-    public function __construct($value, $error)
-    {
-        $this->has_error = $error != null;
-        $this->value     = $value;
-        $this->error     = $error;
-    }
+namespace Tuleap\User;
+
+use PFUser;
+use Tuleap\Cryptography\ConcealedString;
+
+interface LogUser
+{
+    /**
+     * @return PFUser Registered user or anonymous if the authentication failed
+     */
+    public function login(string $name, ConcealedString $pwd): PFUser;
 }

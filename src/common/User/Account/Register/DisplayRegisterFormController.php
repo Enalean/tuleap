@@ -35,6 +35,7 @@ final class DisplayRegisterFormController implements DispatchableWithRequestNoAu
     public function __construct(
         private IDisplayRegisterForm $form_displayer,
         private EventDispatcherInterface $event_dispatcher,
+        private IExtractInvitationToEmail $invitation_to_email_request_extractor,
     ) {
     }
 
@@ -49,6 +50,13 @@ final class DisplayRegisterFormController implements DispatchableWithRequestNoAu
             ->dispatch(new BeforeUserRegistrationEvent($request))
             ->isPasswordNeeded();
 
-        $this->form_displayer->display($request, $layout, RegisterFormContext::forAnonymous($is_password_needed));
+        $this->form_displayer->display(
+            $request,
+            $layout,
+            RegisterFormContext::forAnonymous(
+                $is_password_needed,
+                $this->invitation_to_email_request_extractor->getInvitationToEmail($request),
+            ),
+        );
     }
 }
