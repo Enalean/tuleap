@@ -24,8 +24,6 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -55,6 +53,19 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
     protected $umbrella_manager;
 
     protected $project_admins_gerrit_name = 'mozilla/project_admins';
+    private string $project_admins_gerrit_parent_name;
+    /**
+     * @var Project&\Mockery\MockInterface
+     */
+    private $parent_project;
+    /**
+     * @var ProjectUGroup&\Mockery\MockInterface
+     */
+    private $parent_project_admins;
+    /**
+     * @var ProjectUGroup&\Mockery\MockInterface
+     */
+    private $project_admins;
 
     protected function setUp(): void
     {

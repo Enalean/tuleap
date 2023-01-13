@@ -55,6 +55,7 @@ abstract class PluginController
      */
     protected $default_page_rendering = true;
     protected HTTPRequest $request;
+    public PFUser $user;
 
     public function __construct(UserManager $user_manager, HTTPRequest $request)
     {

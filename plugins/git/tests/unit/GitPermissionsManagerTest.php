@@ -21,8 +21,6 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Git\Permissions\FineGrainedDao;
 
-require_once 'bootstrap.php';
-
 final class GitPermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -31,6 +29,10 @@ final class GitPermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $git_permissions_manager;
     protected $git_permissions_dao;
     protected $git_system_event_manager;
+    /**
+     * @var Project&\Mockery\MockInterface
+     */
+    private $project;
 
     protected function setUp(): void
     {

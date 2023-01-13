@@ -24,8 +24,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
-require_once __DIR__ . '/bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitBackendGitoliteUserAccessRightsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,6 +33,14 @@ class GitBackendGitoliteUserAccessRightsTest extends \Tuleap\Test\PHPUnit\TestCa
      * @var Git_Backend_Gitolite
      */
     private $backend;
+    /**
+     * @var PFUser&\Mockery\LegacyMockInterface
+     */
+    private $user;
+    /**
+     * @var GitRepository&\Mockery\MockInterface
+     */
+    private $repository;
 
     protected function setUp(): void
     {

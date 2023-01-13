@@ -22,8 +22,6 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\GlobalResponseMock;
 
-require_once __DIR__ . '/bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,6 +32,52 @@ class GitActionsFetchConfigTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var GitActions
      */
     private $actions;
+    private int $project_id;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project|(Project&\Mockery\LegacyMockInterface)|(Project&\Mockery\MockInterface)
+     */
+    private Project|\Mockery\MockInterface|\Mockery\LegacyMockInterface $project;
+    private int $repo_id;
+    /**
+     * @var GitRepository&\Mockery\MockInterface
+     */
+    private $repo;
+    /**
+     * @var \PFUser&\Mockery\MockInterface
+     */
+    private $user;
+    /**
+     * @var Codendi_Request&\Mockery\MockInterface
+     */
+    private $request;
+    /**
+     * @var Git_SystemEventManager&\Mockery\MockInterface
+     */
+    private $system_event_manager;
+    /**
+     * @var Git&\Mockery\MockInterface
+     */
+    private $controller;
+    /**
+     * @var Git_Driver_Gerrit&\Mockery\MockInterface
+     */
+    private $driver;
+    /**
+     * @var Git_RemoteServer_GerritServerFactory&\Mockery\MockInterface
+     */
+    private $gerrit_server_factory;
+    /**
+     * @var \Mockery\MockInterface&GitRepositoryFactory
+     */
+    private $factory;
+    /**
+     * @var Git_Driver_Gerrit_ProjectCreator&\Mockery\MockInterface
+     */
+    private $project_creator;
+    /**
+     * @var GitPermissionsManager&\Mockery\MockInterface
+     */
+    private $git_permissions_manager;
 
     protected function setUp(): void
     {
