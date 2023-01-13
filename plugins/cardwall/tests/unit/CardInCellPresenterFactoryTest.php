@@ -25,12 +25,28 @@
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Tracker\Artifact\Artifact;
 
-require_once __DIR__ . '/bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class CardInCellPresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    private int $field_id;
+    /**
+     * @var \Mockery\MockInterface&Tracker_FormElement_Field_MultiSelectbox
+     */
+    private $field;
+    /**
+     * @var \Mockery\MockInterface&Artifact
+     */
+    private $artifact;
+    /**
+     * @var \Mockery\MockInterface&Cardwall_CardPresenter
+     */
+    private $card_presenter;
+    /**
+     * @var \Mockery\MockInterface&Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+     */
+    private $field_provider;
 
     protected function setUp(): void
     {

@@ -27,6 +27,13 @@ final class Cardwall_OnTop_Config_Command_CreateColumnTest extends \Tuleap\Test\
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
 
+    private int $tracker_id;
+    /**
+     * @var Cardwall_OnTop_ColumnDao&\Mockery\MockInterface
+     */
+    private $dao;
+    private Cardwall_OnTop_Config_Command_CreateColumn $command;
+
     protected function setUp(): void
     {
         parent::setUp();
