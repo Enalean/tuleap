@@ -107,7 +107,8 @@ class CardMappedFieldUpdater
                 new ArtifactLinkValidator(
                     $artifact_factory,
                     new TypePresenterFactory(new TypeDao(), $usage_dao),
-                    $usage_dao
+                    $usage_dao,
+                    $event_dispatcher,
                 ),
                 new WorkflowUpdateChecker(
                     new FrozenFieldDetector(

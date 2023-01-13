@@ -2300,7 +2300,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao(),
                 $usage_dao
             ),
-            $usage_dao
+            $usage_dao,
+            $this->getEventManager(),
         );
     }
 

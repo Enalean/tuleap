@@ -47,6 +47,10 @@ msgid ""
 "SAFe(R) - Scrum Team\""
 msgstr ""
 
+#, php-format
+msgid "Artifact links with \"%s\" type cannot be removed."
+msgstr ""
+
 msgid "Can prioritize features"
 msgstr ""
 

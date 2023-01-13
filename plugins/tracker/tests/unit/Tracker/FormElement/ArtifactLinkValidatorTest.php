@@ -27,6 +27,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
 
@@ -86,6 +87,10 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $type_no_type;
     private $project;
     private $dao;
+    /**
+     * @var \EventManager&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $event_dispatcher;
 
     public function setUp(): void
     {
@@ -110,10 +115,13 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker->shouldReceive('getProject')->andReturn($this->project);
 
+        $this->event_dispatcher = $this->createMock(\EventManager::class);
+
         $this->artifact_link_validator = new ArtifactLinkValidator(
             $this->artifact_factory,
             $this->type_presenter_factory,
-            $this->dao
+            $this->dao,
+            $this->event_dispatcher
         );
 
         $this->type_is_child = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter::class);
@@ -466,6 +474,39 @@ final class ArtifactLinkValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->field,
                 new SystemActionContext()
             )
+        );
+    }
+
+    public function testItAsksToExternalPluginsToValidateDeletionOfLinks(): void
+    {
+        $value = [
+            'new_values' => '',
+            'types' => ['123' => ''],
+            'removed_values' => [
+                "666" => ["666"],
+            ],
+        ];
+
+        $changeset       = Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $changeset->shouldReceive('getValue')->andReturn($changeset_value);
+        $artifact_link_info = Mockery::mock(\Tracker_ArtifactLinkInfo::class);
+        $artifact_link_info->shouldReceive('getType')->andReturn('an_editable_link');
+        $changeset_value->shouldReceive('getValue')->andReturn(['123' => $artifact_link_info]);
+        $this->artifact->shouldReceive('getLastChangesetWithFieldValue')->andReturn($changeset);
+        $this->type_presenter_factory->shouldReceive('getAllTypesEditableInProject')->andReturn([]);
+
+        $returned_event = new ValidateArtifactLinkValueEvent(
+            $this->artifact,
+            ["666"],
+        );
+        $this->event_dispatcher->expects(self::once())->method("dispatch")->willReturn($returned_event);
+
+        $this->artifact_link_validator->isValid(
+            $value,
+            $this->artifact,
+            $this->field,
+            new ManualActionContext()
         );
     }
 }
