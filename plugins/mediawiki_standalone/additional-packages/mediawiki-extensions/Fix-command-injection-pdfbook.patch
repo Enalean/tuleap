@@ -1,0 +1,70 @@
+index 532ee00..1704e86 100755
+--- a/extensions/PdfBook/PdfBookAction.php
++++ b/extensions/PdfBook/PdfBookAction.php
+@@ -27,9 +27,9 @@ class PdfBookAction extends Action {
+
+ 		// Initialise PDF variables
+ 		$htmldoc   = $this->setProperty( 'HtmlDocPath', '/usr/bin/htmldoc' );
+-		$format    = $this->setProperty( 'format', '', '' );
+-		$nothumbs  = $this->setProperty( 'nothumbs', '', '' );
+-		$notitle   = $this->setProperty( 'notitle', '', '' );
++		$format    = $this->setProperty( 'format', 'single' );
++		$nothumbs  = $this->setProperty( 'nothumbs', '' );
++		$notitle   = $this->setProperty( 'notitle', '' );
+ 		$layout    = $format == 'single' ? '--webpage' : '--firstpage toc';
+ 		$charset   = $this->setProperty( 'Charset',     'iso-8859-1' );
+ 		$left      = $this->setProperty( 'LeftMargin',  '1cm' );
+@@ -45,7 +45,7 @@ class PdfBookAction extends Action {
+ 		$width     = $this->setProperty( 'Width',       '' );
+ 		$numbering = $this->setProperty( 'Numbering', 'yes' );
+ 		$options   = $this->setProperty( 'Options',     '' );
+-		$width     = $width ? "--browserwidth $width" : '';
++		$width     = $width ? "--browserwidth " . escapeshellarg($width) : '';
+ 		$comments  = ExtensionRegistry::getInstance()->isLoaded( 'AjaxComments' )
+ 			? $this->setProperty( 'comments', '', false )
+ 			: '';
+@@ -197,14 +197,14 @@ class PdfBookAction extends Action {
+ 				// Build the htmldoc command
+ 				$numbering = $numbering == 'yes' ? '--numbered' : '';
+ 				$footer = $format == 'single' ? "..." : ".1.";
+-				$toc = $format == 'single' ? "" : " --toclevels $levels";
+-				$cmd  = "--left $left --right $right --top $top --bottom $bottom"
++				$toc = $format == 'single' ? "" : " --toclevels " . escapeshellarg($levels);
++				$cmd  = "--left " . escapeshellarg($left) . " --right " . escapeshellarg($right) . " --top " . escapeshellarg($top) . " --bottom " . escapeshellarg($bottom)
+ 					. " --header ... --footer $footer --headfootsize 8 --quiet --jpeg --color"
+-					. " --bodyfont $font --fontsize $size --fontspacing $ls --linkstyle plain --linkcolor $linkcol"
+-					. "$toc --no-title $numbering --charset $charset $options $layout $width";
++					. " --bodyfont " . escapeshellarg($font) . " --fontsize " . escapeshellarg($size) ." --fontspacing " . escapeshellarg($ls) . " --linkstyle plain --linkcolor " . escapeshellarg($linkcol)
++					. "$toc --no-title $numbering --charset " . escapeshellarg($charset) . " $options $layout $width";
+ 				$cmd = $format == 'htmltoc'
+-					? "$htmldoc -t html --format html $cmd \"$file\" "
+-					: "$htmldoc -t pdf --format pdf14 $cmd \"$file\" ";
++					? "$htmldoc -t html --format html $cmd " . escapeshellarg($file) . " "
++					: "$htmldoc -t pdf --format pdf14 $cmd " . escapeshellarg($file) . " ";
+
+ 				// Execute the command outputting to the cache file
+ 				putenv( "HTMLDOC_NOCGI=1" );
+@@ -230,19 +230,9 @@ class PdfBookAction extends Action {
+ 	}
+
+ 	/**
+-	 * Return a sanitised property for htmldoc using global, request or passed default
++	 * Return a sanitised property for htmldoc using global or a passed default
+ 	 */
+-	private function setProperty( $name, $val, $prefix = 'pdf' ) {
+-		$request = $this->getRequest();
+-		if ( $request->getText( "$prefix$name" ) ) {
+-			$val = $request->getText( "$prefix$name" );
+-		}
+-
+-		// hack to handle ampersand entities in URL
+-		if ( $request->getText( "amp;$prefix$name" ) ) {
+-			$val = $request->getText( "amp;$prefix$name" );
+-		}
+-
++	private function setProperty( $name, $val ) {
+ 		if ( isset( $GLOBALS["wgPdfBook$name"] ) ) {
+ 			$val = $GLOBALS["wgPdfBook$name"];
+ 		}
+--
+2.39.0
