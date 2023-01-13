@@ -40,9 +40,6 @@ final class DisplayAdminRegisterFormController implements DispatchableWithReques
             throw new ForbiddenException();
         }
 
-        $is_admin           = true;
-        $is_password_needed = true;
-
-        $this->form_displayer->display($request, $layout, $is_admin, $is_password_needed);
+        $this->form_displayer->display($request, $layout, RegisterFormContext::forAdmin());
     }
 }

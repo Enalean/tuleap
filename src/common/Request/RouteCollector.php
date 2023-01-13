@@ -975,7 +975,6 @@ class RouteCollector
                 new \Tuleap\Layout\IncludeCoreAssets(),
             ),
             $event_manager,
-            $event_manager,
         );
     }
 
@@ -995,12 +994,9 @@ class RouteCollector
 
     public static function postRegister(): DispatchableWithRequest
     {
-        $event_manager = \EventManager::instance();
-
         return new ProcessRegisterFormController(
             self::getRegisterFormProcessor(),
-            $event_manager,
-            $event_manager,
+            \EventManager::instance(),
         );
     }
 

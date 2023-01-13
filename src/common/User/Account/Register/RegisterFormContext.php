@@ -20,26 +20,25 @@
 
 declare(strict_types=1);
 
+
 namespace Tuleap\User\Account\Register;
 
-use HTTPRequest;
-use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithBurningParrot;
-use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\ForbiddenException;
-
-final class ProcessAdminRegisterFormController implements DispatchableWithRequest, DispatchableWithBurningParrot
+/**
+ * @psalm-immutable
+ */
+final class RegisterFormContext
 {
-    public function __construct(private IProcessRegisterForm $form_processor)
+    private function __construct(public bool $is_admin, public bool $is_password_needed)
     {
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public static function forAnonymous(bool $is_password_needed): self
     {
-        if (! $request->getCurrentUser()->isSuperUser()) {
-            throw new ForbiddenException();
-        }
+        return new self(false, $is_password_needed);
+    }
 
-        $this->form_processor->process($request, $layout, RegisterFormContext::forAdmin());
+    public static function forAdmin(): self
+    {
+        return new self(true, true);
     }
 }

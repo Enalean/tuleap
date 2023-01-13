@@ -40,10 +40,9 @@ final class RegisterFormPresenterBuilder
     public function getPresenterClosureForFirstDisplay(
         \HTTPRequest $request,
         BaseLayout $layout,
-        bool $is_admin,
-        bool $is_password_needed,
+        RegisterFormContext $context,
     ): \Closure {
-        return $this->getPresenterClosure($request, $layout, $is_admin, $is_password_needed, null);
+        return $this->getPresenterClosure($request, $layout, $context, null);
     }
 
     /**
@@ -52,8 +51,7 @@ final class RegisterFormPresenterBuilder
     public function getPresenterClosure(
         \HTTPRequest $request,
         BaseLayout $layout,
-        bool $is_admin,
-        bool $is_password_needed,
+        RegisterFormContext $context,
         ?RegisterFormValidationIssue $form_validation_issue,
     ): \Closure {
         $form_loginname       = $request->exist('form_loginname') ? $request->get('form_loginname') : '';
@@ -92,7 +90,7 @@ final class RegisterFormPresenterBuilder
             ->getAdditionalFieldsInHtml();
 
 
-        if ($is_admin) {
+        if ($context->is_admin) {
             $prefill   = new \Account_RegisterAdminPrefillValuesPresenter(
                 new \Account_RegisterField($form_loginname, $form_loginname_error),
                 new \Account_RegisterField($form_email, $form_email_error),
@@ -109,7 +107,7 @@ final class RegisterFormPresenterBuilder
             $template  = 'register-admin';
         } else {
             $password_field = null;
-            if ($is_password_needed) {
+            if ($context->is_password_needed) {
                 $password_field = new \Account_RegisterField($form_pw, $form_pw_error);
             }
 

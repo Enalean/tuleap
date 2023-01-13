@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use Tuleap\Event\Dispatchable;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -29,23 +30,15 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
-class DisplayRegisterFormControllerTest extends TestCase
+final class DisplayRegisterFormControllerTest extends TestCase
 {
     public function testPasswordIsNeededByDefault(): void
     {
         $form_displayer = IDisplayRegisterFormStub::buildSelf();
 
-        $event_manager = new class extends \EventManager
-        {
-            public function processEvent($event_name, $params = [])
-            {
-            }
-        };
-
         $controller = new DisplayRegisterFormController(
             $form_displayer,
             EventDispatcherStub::withIdentityCallback(),
-            $event_manager,
         );
         $controller->process(
             HTTPRequestBuilder::get()->build(),
@@ -62,20 +55,17 @@ class DisplayRegisterFormControllerTest extends TestCase
     {
         $form_displayer = IDisplayRegisterFormStub::buildSelf();
 
-        $event_manager = new class extends \EventManager
-        {
-            public function processEvent($event_name, $params = [])
-            {
-                if ($event_name === 'before_register') {
-                    $params['is_password_needed'] = false;
-                }
-            }
-        };
-
         $controller = new DisplayRegisterFormController(
             $form_displayer,
-            EventDispatcherStub::withIdentityCallback(),
-            $event_manager,
+            EventDispatcherStub::withCallback(
+                static function (Dispatchable $event): object {
+                    if ($event instanceof BeforeUserRegistrationEvent) {
+                        $event->noNeedForPassword();
+                    }
+
+                    return $event;
+                }
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->build(),
@@ -94,23 +84,17 @@ class DisplayRegisterFormControllerTest extends TestCase
 
         $form_displayer = IDisplayRegisterFormStub::buildSelf();
 
-        $event_manager = new class extends \EventManager
-        {
-            public function processEvent($event_name, $params = [])
-            {
-            }
-        };
-
         $controller = new DisplayRegisterFormController(
             $form_displayer,
             EventDispatcherStub::withCallback(
-                static function (RegistrationGuardEvent $event) {
-                    $event->disableRegistration();
+                static function (Dispatchable $event): object {
+                    if ($event instanceof RegistrationGuardEvent) {
+                        $event->disableRegistration();
+                    }
 
                     return $event;
                 }
             ),
-            $event_manager,
         );
         $controller->process(
             HTTPRequestBuilder::get()->build(),

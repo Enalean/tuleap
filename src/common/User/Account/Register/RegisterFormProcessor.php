@@ -55,12 +55,12 @@ final class RegisterFormProcessor implements IProcessRegisterForm
     ) {
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, bool $is_admin, bool $is_password_needed): void
+    public function process(HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
     {
         $mail_confirm_code = $this->mail_confirmation_code_generator->getConfirmationCode();
 
         $this->form_handler
-            ->process($request, $is_password_needed, $is_admin, $mail_confirm_code)
+            ->process($request, $context, $mail_confirm_code)
             ->andThen(
                 function (PFUser $new_user) use ($request): Ok|Err {
                     $this->event_manager->dispatch(
@@ -71,8 +71,8 @@ final class RegisterFormProcessor implements IProcessRegisterForm
                 }
             )
             ->match(
-                function (PFUser $new_user) use ($request, $mail_confirm_code, $layout, $is_admin) {
-                    if ($is_admin) {
+                function (PFUser $new_user) use ($request, $mail_confirm_code, $layout, $context) {
+                    if ($context->is_admin) {
                         if ($request->get('form_send_email')) {
                             $is_sent = $this->sendLoginAndPasswordByMailToUser(
                                 (string) $request->get('form_email'),
@@ -119,8 +119,8 @@ final class RegisterFormProcessor implements IProcessRegisterForm
 
                     $this->displayConfirmationLinkSent($layout, $request);
                 },
-                function (?RegisterFormValidationIssue $issue) use ($request, $layout, $is_admin, $is_password_needed) {
-                    $this->form_displayer->displayWithPossibleIssue($request, $layout, $is_admin, $is_password_needed, $issue);
+                function (?RegisterFormValidationIssue $issue) use ($request, $layout, $context) {
+                    $this->form_displayer->displayWithPossibleIssue($request, $layout, $context, $issue);
                 }
             );
     }

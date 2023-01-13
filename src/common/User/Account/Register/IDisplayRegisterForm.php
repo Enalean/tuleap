@@ -26,5 +26,5 @@ use Tuleap\Layout\BaseLayout;
 
 interface IDisplayRegisterForm
 {
-    public function display(\HTTPRequest $request, BaseLayout $layout, bool $is_admin, bool $is_password_needed): void;
+    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
 }

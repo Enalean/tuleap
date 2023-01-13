@@ -22,34 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
-use HTTPRequest;
-use Tuleap\Layout\BaseLayout;
-
-class IProcessRegisterFormStub implements IProcessRegisterForm
+final class BeforeUserRegistrationEvent implements \Tuleap\Event\Dispatchable
 {
-    private bool $is_admin           = false;
-    private bool $is_password_needed = false;
-    private bool $has_been_processed = false;
+    public const NAME = 'beforeUserRegistrationEvent';
 
-    private function __construct()
+    private bool $is_password_needed = true;
+
+    public function __construct(private \Codendi_Request $request)
     {
     }
 
-    public static function buildSelf(): self
+    public function getRequest(): \Codendi_Request
     {
-        return new self();
-    }
-
-    public function process(HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
-    {
-        $this->has_been_processed = true;
-        $this->is_admin           = $context->is_admin;
-        $this->is_password_needed = $context->is_password_needed;
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->is_admin;
+        return $this->request;
     }
 
     public function isPasswordNeeded(): bool
@@ -57,8 +42,8 @@ class IProcessRegisterFormStub implements IProcessRegisterForm
         return $this->is_password_needed;
     }
 
-    public function hasBeenProcessed(): bool
+    public function noNeedForPassword(): void
     {
-        return $this->has_been_processed;
+        $this->is_password_needed = false;
     }
 }
