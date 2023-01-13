@@ -5,6 +5,7 @@ services:
     image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-rest:c7-${PHP_VERSION}
     environment:
       - DB_HOST=${DB_HOST}
+      - PHP_VERSION=${PHP_VERSION}
     volumes:
       - ${BASEDIR}:/usr/share/tuleap:ro,cached
     command: /usr/share/tuleap/tests/integration/bin/run.sh

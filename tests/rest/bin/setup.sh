@@ -54,7 +54,7 @@ setup_database() {
         --tuleap-fqdn="localhost.localdomain" \
         --site-admin-password="$MYSQL_PASSWORD"
 
-    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost"
+    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost" --php-version=$PHP_VERSION
     echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
     echo "\$nodejs_server_jwt_private_key = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';" >> /etc/tuleap/conf/local.inc
 
