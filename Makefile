@@ -343,9 +343,13 @@ dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start: ## Start Tuleap web with PHP 8.0 & nginx on CentOS7
-	@echo "Start Tuleap in PHP 8.0 on CentOS 7"
+start: ## Start Tuleap with PHP 8.1 on CentOS 7
+	@echo "Start Tuleap with PHP 8.1 on CentOS 7"
 	@$(MAKE) --no-print-directory start-rp
+
+start-el9: ## Start Tuleap with PHP 8.1 on Rocky Linux 9
+	@echo "Start Tuleap with PHP 8.1 on Rocky Linux 9"
+	@$(MAKE) --no-print-directory start-rp DOCKER_COMPOSE_FLAGS="-f compose-el9.yaml"
 
 start-rp:
 	$(eval DOCKER_COMPOSE_FLAGS ?= )

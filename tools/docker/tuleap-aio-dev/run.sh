@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 
-set -x
+set -ex
 
 systemctl start systemd-user-sessions.service
 
-while ! /opt/rh/rh-mysql80/root/bin/mysql -hdb -uroot -p$MYSQL_ROOT_PASSWORD -e "show databases" >/dev/null; do
+if [ -f /opt/rh/rh-mysql80/root/bin/mysql ]; then
+    MYSQL=/opt/rh/rh-mysql80/root/bin/mysql
+elif [ -f /usr/bin/mysql ]; then
+    MYSQL=/usr/bin/mysql
+else
+    echo "No MySQL client. Abort"
+    exit 1
+fi
+
+while ! $MYSQL -hdb -uroot -p$MYSQL_ROOT_PASSWORD -e "show databases" >/dev/null; do
     echo "Wait for the db";
     sleep 1
 done
