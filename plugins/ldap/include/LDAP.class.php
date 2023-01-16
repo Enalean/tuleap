@@ -368,7 +368,7 @@ class LDAP
 
             if ($sr !== false) {
                 $this->logger->debug('LDAP search success ' . $baseDn . ' ' . $filter . ' *** SCOPE: ' . $scope . ' *** ATTRIBUTES: ' . implode(', ', $attributes));
-                assert(PHP_VERSION_ID >= 80100 && $sr instanceof \LDAP\Result);
+                /** @psalm-var \LDAP\Result $sr */
                 $entries = ldap_get_entries($this->ds, $sr);
                 if ($entries !== false) {
                     return new LDAPResultIterator($entries, $this->ldapParams);
