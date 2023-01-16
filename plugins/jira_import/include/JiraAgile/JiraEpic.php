@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -54,5 +54,17 @@ final class JiraEpic
     public static function buildFromAPI(array $json): self
     {
         return new self($json['id'], $json['key'], $json['self']);
+    }
+
+    /**
+     * @param array{id: string, key: string} $json
+     */
+    public static function buildFromIssueAPI(array $json): self
+    {
+        return new self(
+            (int) $json['id'],
+            $json['key'],
+            "/rest/agile/1.0/epic/" . urlencode($json['id'])
+        );
     }
 }
