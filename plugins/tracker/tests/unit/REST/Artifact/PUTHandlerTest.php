@@ -28,11 +28,13 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
+use Tuleap\Tracker\Test\Stub\RetrieveReverseLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 final class PUTHandlerTest extends TestCase
@@ -64,7 +66,8 @@ final class PUTHandlerTest extends TestCase
                 ),
                 new NewArtifactLinkInitialChangesetValueBuilder()
             ),
-            $this->artifact_updater
+            $this->artifact_updater,
+            RetrieveReverseLinksStub::withLinks(new CollectionOfReverseLinks([]))
         );
         $put_handler->handle([], $artifact, $user, null);
     }
