@@ -26,11 +26,11 @@ use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
-use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
-final class DisplayRegisterFormController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final class DisplayRegisterFormController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
     public function __construct(
         private IDisplayRegisterForm $form_displayer,
