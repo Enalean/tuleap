@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { adjustItemToContentAfterItemCreationInAFolder };
-
 import { getItem } from "../../api/rest-querier";
 
 import { flagItemAsCreated } from "./flag-item-as-created";
 import type { Folder, State } from "../../type";
 import type { ActionContext } from "vuex";
 
-async function adjustItemToContentAfterItemCreationInAFolder(
+export async function adjustItemToContentAfterItemCreationInAFolder(
     context: ActionContext<State, State>,
     parent: Folder,
     current_folder: Folder,

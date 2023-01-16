@@ -21,9 +21,7 @@ import CodeMirror from "codemirror";
 import type { TQLCodeMirrorEditor } from "./builder";
 import { variable_definition } from "./configuration";
 
-export { getHint };
-
-function getHint(
+export function getHint(
     editor: TQLCodeMirrorEditor,
     options: CodeMirror.ShowHintOptions
 ): CodeMirror.Hints | undefined {

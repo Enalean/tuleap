@@ -19,52 +19,41 @@
 
 import type { State, Tracker } from "../type";
 
-export {
-    setErrorMessage,
-    resetFeedbacks,
-    switchToReadingMode,
-    switchToWritingMode,
-    switchReportToSaved,
-    discardUnsavedReport,
-    setInvalidTrackers,
-    resetInvalidTrackerList,
-};
-
-function setErrorMessage(state: State, message: string): void {
+export function setErrorMessage(state: State, message: string): void {
     state.error_message = message;
 }
 
-function resetFeedbacks(state: State): void {
+export function resetFeedbacks(state: State): void {
     state.error_message = null;
     state.success_message = null;
 }
 
-function switchToReadingMode(state: State, saved_state: boolean): void {
+export function switchToReadingMode(state: State, saved_state: boolean): void {
     resetFeedbacks(state);
     state.reading_mode = true;
     state.is_report_saved = saved_state;
 }
 
-function switchToWritingMode(state: State): void {
+export function switchToWritingMode(state: State): void {
     resetFeedbacks(state);
     state.reading_mode = false;
 }
 
-function switchReportToSaved(state: State, message: string): void {
+export function switchReportToSaved(state: State, message: string): void {
     state.success_message = message;
     state.error_message = null;
     state.is_report_saved = true;
 }
 
-function discardUnsavedReport(state: State): void {
+export function discardUnsavedReport(state: State): void {
     resetFeedbacks(state);
     state.is_report_saved = true;
 }
 
-function setInvalidTrackers(state: State, invalid_trackers: Array<Tracker>): void {
+export function setInvalidTrackers(state: State, invalid_trackers: Array<Tracker>): void {
     state.invalid_trackers = invalid_trackers;
 }
 
-function resetInvalidTrackerList(state: State): void {
+export function resetInvalidTrackerList(state: State): void {
     state.invalid_trackers = [];
 }

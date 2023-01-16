@@ -22,24 +22,15 @@ import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constan
 import type { ClipboardState } from "./module";
 import type { Item } from "../../type";
 
-export {
-    cutItem,
-    copyItem,
-    emptyClipboardAfterItemDeletion,
-    emptyClipboard,
-    startPasting,
-    pastingHasFailed,
-};
-
-function cutItem(state: ClipboardState, item: Item): void {
+export function cutItem(state: ClipboardState, item: Item): void {
     startNewClipboardOperation(state, item, CLIPBOARD_OPERATION_CUT);
 }
 
-function copyItem(state: ClipboardState, item: Item): void {
+export function copyItem(state: ClipboardState, item: Item): void {
     startNewClipboardOperation(state, item, CLIPBOARD_OPERATION_COPY);
 }
 
-function startNewClipboardOperation(
+export function startNewClipboardOperation(
     state: ClipboardState,
     item: Item,
     operationType: string
@@ -53,20 +44,20 @@ function startNewClipboardOperation(
     state.operation_type = operationType;
 }
 
-function emptyClipboardAfterItemDeletion(state: ClipboardState, deleted_item: Item): void {
+export function emptyClipboardAfterItemDeletion(state: ClipboardState, deleted_item: Item): void {
     if (state.item_id === deleted_item.id) {
         emptyClipboard(state);
     }
 }
 
-function emptyClipboard(state: ClipboardState): void {
+export function emptyClipboard(state: ClipboardState): void {
     Object.assign(state, defaultState());
 }
 
-function startPasting(state: ClipboardState): void {
+export function startPasting(state: ClipboardState): void {
     state.pasting_in_progress = true;
 }
 
-function pastingHasFailed(state: ClipboardState): void {
+export function pastingHasFailed(state: ClipboardState): void {
     state.pasting_in_progress = false;
 }

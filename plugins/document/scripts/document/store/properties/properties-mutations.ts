@@ -20,9 +20,10 @@
 import type { PropertiesState } from "./module";
 import type { Property } from "../../type";
 
-export { saveProjectProperties };
-
-function saveProjectProperties(state: PropertiesState, project_properties: Array<Property>): void {
+export function saveProjectProperties(
+    state: PropertiesState,
+    project_properties: Array<Property>
+): void {
     state.project_properties = project_properties;
     state.has_loaded_properties = true;
 }
