@@ -34,7 +34,7 @@ use User_UserStatusManager;
 use Valid_RealNameFormat;
 use Valid_String;
 
-final class RegisterFormHandler
+final class RegisterFormHandler implements IValidateFormAndCreateUser
 {
     public function __construct(private AccountRegister $account_register, private \Account_TimezonesCollection $timezones_collection)
     {

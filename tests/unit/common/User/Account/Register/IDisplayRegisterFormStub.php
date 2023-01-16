@@ -25,11 +25,11 @@ namespace Tuleap\User\Account\Register;
 
 use Tuleap\Layout\BaseLayout;
 
-class IDisplayRegisterFormStub implements IDisplayRegisterForm
+final class IDisplayRegisterFormStub implements IDisplayRegisterForm
 {
-    private bool $is_admin           = false;
-    private bool $is_password_needed = false;
-    private bool $has_been_displayed = false;
+    private bool $has_been_displayed                     = false;
+    private bool $has_been_displayed_with_possible_issue = false;
+    private ?RegisterFormContext $context                = null;
 
     private function __construct()
     {
@@ -43,22 +43,36 @@ class IDisplayRegisterFormStub implements IDisplayRegisterForm
     public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
     {
         $this->has_been_displayed = true;
-        $this->is_admin           = $context->is_admin;
-        $this->is_password_needed = $context->is_password_needed;
+        $this->context            = $context;
     }
 
     public function isAdmin(): bool
     {
-        return $this->is_admin;
+        return $this->context && $this->context->is_admin;
     }
 
     public function isPasswordNeeded(): bool
     {
-        return $this->is_password_needed;
+        return $this->context && $this->context->is_password_needed;
     }
 
     public function hasBeenDisplayed(): bool
     {
         return $this->has_been_displayed;
+    }
+
+    public function hasBeenDisplayedWithPossibleIssue(): bool
+    {
+        return $this->has_been_displayed_with_possible_issue;
+    }
+
+    public function displayWithPossibleIssue(
+        \HTTPRequest $request,
+        BaseLayout $layout,
+        RegisterFormContext $context,
+        ?RegisterFormValidationIssue $issue,
+    ): void {
+        $this->has_been_displayed_with_possible_issue = true;
+        $this->context                                = $context;
     }
 }

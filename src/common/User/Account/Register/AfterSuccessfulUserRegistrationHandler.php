@@ -22,16 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use HTTPRequest;
+use PFUser;
 use Tuleap\Layout\BaseLayout;
 
-interface IDisplayRegisterForm
+interface AfterSuccessfulUserRegistrationHandler
 {
-    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
-
-    public function displayWithPossibleIssue(
-        \HTTPRequest $request,
+    public function afterSuccessfullUserRegistration(
+        PFUser $new_user,
+        HTTPRequest $request,
         BaseLayout $layout,
+        string $mail_confirm_code,
         RegisterFormContext $context,
-        ?RegisterFormValidationIssue $issue,
     ): void;
 }

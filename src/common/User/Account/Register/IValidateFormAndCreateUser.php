@@ -22,16 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
-use Tuleap\Layout\BaseLayout;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
 
-interface IDisplayRegisterForm
+interface IValidateFormAndCreateUser
 {
-    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
-
-    public function displayWithPossibleIssue(
-        \HTTPRequest $request,
-        BaseLayout $layout,
-        RegisterFormContext $context,
-        ?RegisterFormValidationIssue $issue,
-    ): void;
+    /**
+     * @return Ok<\PFUser>|Err<RegisterFormValidationIssue>|Err<null>
+     */
+    public function process(\HTTPRequest $request, RegisterFormContext $context, string $mail_confirm_code): Ok|Err;
 }

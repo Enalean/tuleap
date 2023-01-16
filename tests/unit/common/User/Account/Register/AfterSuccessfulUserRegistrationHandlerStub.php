@@ -22,16 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use HTTPRequest;
+use PFUser;
 use Tuleap\Layout\BaseLayout;
 
-interface IDisplayRegisterForm
+final class AfterSuccessfulUserRegistrationHandlerStub implements AfterSuccessfulUserRegistrationHandler
 {
-    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
+    private bool $has_been_called = false;
 
-    public function displayWithPossibleIssue(
-        \HTTPRequest $request,
+    private function __construct()
+    {
+    }
+
+    public static function buildSelf(): self
+    {
+        return new self();
+    }
+
+    public function afterSuccessfullUserRegistration(
+        PFUser $new_user,
+        HTTPRequest $request,
         BaseLayout $layout,
+        string $mail_confirm_code,
         RegisterFormContext $context,
-        ?RegisterFormValidationIssue $issue,
-    ): void;
+    ): void {
+        $this->has_been_called = true;
+    }
+
+    public function hasBeenCalled(): bool
+    {
+        return $this->has_been_called;
+    }
 }

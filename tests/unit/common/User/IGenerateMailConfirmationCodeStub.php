@@ -20,18 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\Account\Register;
+namespace Tuleap\User;
 
-use Tuleap\Layout\BaseLayout;
-
-interface IDisplayRegisterForm
+/**
+ * @psalm-immutable
+ */
+final class IGenerateMailConfirmationCodeStub implements IGenerateMailConfirmationCode
 {
-    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
+    public function __construct(private string $code)
+    {
+    }
 
-    public function displayWithPossibleIssue(
-        \HTTPRequest $request,
-        BaseLayout $layout,
-        RegisterFormContext $context,
-        ?RegisterFormValidationIssue $issue,
-    ): void;
+    public static function fromString(string $code): self
+    {
+        return new self($code);
+    }
+
+    public function getConfirmationCode(): string
+    {
+        return $this->code;
+    }
 }

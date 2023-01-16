@@ -169,6 +169,8 @@ use Tuleap\User\Account\DisplayNotificationsController;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\Register\AccountRegister;
+use Tuleap\User\Account\Register\AfterSuccessfulUserRegistration;
+use Tuleap\User\Account\Register\ConfirmationPageDisplayer;
 use Tuleap\User\Account\Register\DisplayAdminRegisterFormController;
 use Tuleap\User\Account\Register\DisplayRegisterFormController;
 use Tuleap\User\Account\Register\ProcessAdminRegisterFormController;
@@ -1033,16 +1035,20 @@ class RouteCollector
                 ),
                 $timezones_collection,
             ),
-            new \MailConfirmationCodeGenerator(
+            new \Tuleap\User\MailConfirmationCodeGenerator(
                 $user_manager,
                 new \RandomNumberGenerator()
             ),
-            $renderer_factory,
-            new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail"),
-            new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail-admin"),
-            \Tuleap\ServerHostname::HTTPSUrl(),
-            $include_core_assets,
-            $event_manager,
+            new AfterSuccessfulUserRegistration(
+                new ConfirmationPageDisplayer(
+                    $renderer_factory,
+                    $include_core_assets,
+                ),
+                new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail"),
+                new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail-admin"),
+                \Tuleap\ServerHostname::HTTPSUrl(),
+                $event_manager,
+            ),
             new RegisterFormDisplayer(
                 new RegisterFormPresenterBuilder(
                     $event_manager,

@@ -18,23 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailConfirmationCodeGenerator
-{
-    /** @var UserManager */
-    private $user_manager;
-    /** @var RandomNumberGenerator */
-    private $random_generator;
+namespace Tuleap\User;
 
-    public function __construct(UserManager $user_manager, RandomNumberGenerator $random_generator)
+final class MailConfirmationCodeGenerator implements IGenerateMailConfirmationCode
+{
+    public function __construct(private \UserManager $user_manager, private \RandomNumberGenerator $random_generator)
     {
-        $this->user_manager     = $user_manager;
-        $this->random_generator = $random_generator;
     }
 
-    /**
-     * @return string
-     */
-    public function getConfirmationCode()
+    public function getConfirmationCode(): string
     {
         $confirmation_code = null;
 
