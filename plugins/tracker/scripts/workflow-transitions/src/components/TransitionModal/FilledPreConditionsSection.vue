@@ -164,20 +164,20 @@ export default {
             },
         },
     },
-    async mounted() {
+    mounted() {
         if (this.current_transition) {
             this.authorized_user_group_ids = this.current_transition.authorized_user_group_ids;
             this.not_empty_field_ids = this.current_transition.not_empty_field_ids;
         }
         if (this.is_list_picker_enabled) {
-            this.configuration_permission_list_picker = await createListPicker(
+            this.configuration_permission_list_picker = createListPicker(
                 this.$refs.workflow_configuration_permission,
                 {
                     locale: document.body.dataset.userLocale,
                     is_filterable: true,
                 }
             );
-            this.not_empty_fields_list_picker = await createListPicker(
+            this.not_empty_fields_list_picker = createListPicker(
                 this.$refs.workflow_configuration_not_empty_fields,
                 {
                     locale: document.body.dataset.userLocale,

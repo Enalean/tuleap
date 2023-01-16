@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/dom': workspace:*
   '@tuleap/gettext': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
   '@tuleap/tlp': workspace:*
@@ -16,6 +17,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/dom': link:../dom
   '@tuleap/po-gettext-plugin': link:../po-gettext-plugin
 
 packages:

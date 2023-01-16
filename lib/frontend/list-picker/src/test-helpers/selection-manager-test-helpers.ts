@@ -17,20 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { SpyInstance } from "vitest";
 import { expect } from "vitest";
+import type { ListPickerItem } from "../type";
 
 export function expectChangeEventToHaveBeenFiredOnSourceSelectBox(
-    source_select_box: HTMLSelectElement,
+    spy: SpyInstance,
     nb_times: number
 ): void {
     if (nb_times === 0) {
-        expect(source_select_box.dispatchEvent).not.toHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
         return;
     }
 
     if (nb_times > 1) {
-        expect(source_select_box.dispatchEvent).toHaveBeenCalledTimes(nb_times);
+        expect(spy).toHaveBeenCalledTimes(nb_times);
     }
 
-    expect(source_select_box.dispatchEvent).toHaveBeenCalledWith(new Event("change"));
+    expect(spy).toHaveBeenCalledWith(new Event("change"));
+}
+
+export function expectItemToBeSelected(item: ListPickerItem): void {
+    expect(item.is_selected).toBe(true);
+    expect(item.element.getAttribute("aria-selected")).toBe("true");
+    expect(item.target_option.getAttribute("selected")).toBe("selected");
+    expect(item.target_option.selected).toBe(true);
+}
+
+export function expectItemNotToBeSelected(item: ListPickerItem): void {
+    expect(item.is_selected).toBe(false);
+    expect(item.element.getAttribute("aria-selected")).toBe("false");
+    expect(item.target_option.hasAttribute("selected")).toBe(false);
+    expect(item.target_option.selected).toBe(false);
 }

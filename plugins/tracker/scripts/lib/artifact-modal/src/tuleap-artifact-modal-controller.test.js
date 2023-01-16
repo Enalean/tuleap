@@ -28,7 +28,6 @@ import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./fields/file-field/file-field-detector";
 import * as is_uploading_in_ckeditor_state from "./fields/file-field/is-uploading-in-ckeditor-state";
 import * as field_dependencies_helper from "./field-dependencies-helper.js";
-import { getTargetFieldPossibleValues } from "./field-dependencies-helper.js";
 import * as fields_validator from "./validate-artifact-field-value.js";
 
 const PROJECT_ID = 133;
@@ -355,69 +354,16 @@ describe("TuleapArtifactModalController", () => {
         });
     });
 
-    describe("Field dependency watchers - Given a field dependency rule was defined in the tracker", function () {
-        it("and given there was only one target value, when I change the source field's value, then the field dependencies service will be called to modify the target field and the target field's value will be set according to the dependency rule", function () {
-            var target_field = {
-                field_id: 58,
-                values: [{ id: 694 }, { id: 924 }],
-                filtered_values: [{ id: 694 }, { id: 924 }],
-            };
-            var target_field_value = [694];
-            var field_dependencies_rules = [
-                {
-                    source_field_id: 65,
-                    source_value_id: 478,
-                    target_field_id: 58,
-                    target_value_id: 924,
-                },
-            ];
-            jest.spyOn(field_dependencies_helper, "getTargetFieldPossibleValues").mockReturnValue([
-                { id: 924 },
-            ]);
-            var modal_model = controller_params.modal_model;
-            modal_model.tracker = {
-                project: { id: PROJECT_ID },
-                fields: [target_field],
-                workflow: {
-                    rules: {
-                        lists: field_dependencies_rules,
-                    },
-                },
-            };
-            modal_model.values = {
-                65: {
-                    bind_value_ids: [],
-                },
-                58: {
-                    bind_value_ids: target_field_value,
-                },
-            };
-
-            ArtifactModalController = $controller(BaseModalController, controller_params);
-            ArtifactModalController.$onInit();
-            // First apply so the watcher takes into account the initial value
-            $scope.$apply();
-
-            modal_model.values[65].bind_value_ids.push(478);
-            $scope.$apply();
-
-            expect(field_dependencies_helper.getTargetFieldPossibleValues).toHaveBeenCalledWith(
-                [478],
-                target_field,
-                field_dependencies_rules
-            );
-            expect(target_field.filtered_values).toEqual([{ id: 924 }]);
-            expect(target_field_value).toEqual([924]);
-        });
-
-        it("and given there were two target values, when I change the source field's value, then the field dependencies service will be called to modify the target field and the target fields's value will be reset", function () {
-            var target_field = {
+    describe("Field dependency watchers - Given a field dependency rule was defined in the tracker", () => {
+        it(`and given there were two target values,
+            when I change the source field's value,
+            then the target field filtered values will be changed`, () => {
+            const target_field = {
                 field_id: 47,
                 values: [{ id: 412 }, { id: 157 }],
                 filtered_values: [{ id: 412 }],
             };
-            var target_field_value = [412];
-            var field_dependencies_rules = [
+            const field_dependencies_rules = [
                 {
                     source_field_id: 51,
                     source_value_id: 780,
@@ -431,28 +377,16 @@ describe("TuleapArtifactModalController", () => {
                     target_value_id: 157,
                 },
             ];
-            jest.spyOn(field_dependencies_helper, "getTargetFieldPossibleValues").mockReturnValue([
-                { id: 412 },
-                { id: 157 },
-            ]);
 
-            var modal_model = controller_params.modal_model;
+            const modal_model = controller_params.modal_model;
             modal_model.tracker = {
                 project: { id: PROJECT_ID },
                 fields: [target_field],
-                workflow: {
-                    rules: {
-                        lists: field_dependencies_rules,
-                    },
-                },
+                workflow: { rules: { lists: field_dependencies_rules } },
             };
             modal_model.values = {
-                51: {
-                    bind_value_ids: [],
-                },
-                47: {
-                    bind_value_ids: target_field_value,
-                },
+                51: { bind_value_ids: [] },
+                47: { bind_value_ids: [412] },
             };
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
@@ -463,13 +397,7 @@ describe("TuleapArtifactModalController", () => {
             modal_model.values[51].bind_value_ids.push(780);
             $scope.$apply();
 
-            expect(getTargetFieldPossibleValues).toHaveBeenCalledWith(
-                [780],
-                target_field,
-                field_dependencies_rules
-            );
-            expect(target_field.filtered_values).toEqual([{ id: 412 }, { id: 157 }]);
-            expect(target_field_value).toEqual([]);
+            expect(target_field.filtered_values).toStrictEqual([{ id: 412 }, { id: 157 }]);
         });
     });
 

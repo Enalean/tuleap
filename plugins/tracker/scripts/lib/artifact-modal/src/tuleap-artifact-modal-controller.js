@@ -463,17 +463,6 @@ function ArtifactModalController(
             target_field,
             field_dependencies_rules
         );
-
-        var target_field_selected_value = modal_model.values[target_field.field_id].bind_value_ids;
-        emptyArray(target_field_selected_value);
-
-        if (target_field.filtered_values.length === 1) {
-            target_field_selected_value.push(target_field.filtered_values[0].id);
-        }
-    }
-
-    function emptyArray(array) {
-        array.length = 0;
     }
 
     function setFieldValueForCustomElement(event) {

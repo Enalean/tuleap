@@ -118,10 +118,10 @@ export default {
             return this.$gettext("Choose a fieldset");
         },
     },
-    async mounted() {
+    mounted() {
         this.hidden_fieldset_ids = this.post_action.fieldset_ids;
         if (this.is_list_picker_enabled) {
-            this.list_picker = await createListPicker(
+            this.list_picker = createListPicker(
                 this.$refs.workflow_transition_modal_hidden_fieldsets,
                 {
                     locale: document.body.dataset.userLocale,

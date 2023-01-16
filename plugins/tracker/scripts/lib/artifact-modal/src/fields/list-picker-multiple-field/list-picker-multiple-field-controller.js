@@ -36,7 +36,7 @@ function MultiselectBoxController($element, $timeout, $scope) {
 
     const select = $element[0].querySelector("[data-select=list-picker-multiple]");
 
-    async function init() {
+    function init() {
         bindOptionsDecorators();
 
         $scope.$watch(
@@ -54,9 +54,7 @@ function MultiselectBoxController($element, $timeout, $scope) {
 
         const options = { locale: document.body.dataset.userLocale, none_value: none_value };
 
-        self.destroy = await createListPicker(select, options).then((list_picker) => {
-            return list_picker.destroy;
-        });
+        self.destroy = createListPicker(select, options).destroy;
     }
 
     function bindOptionsDecorators() {

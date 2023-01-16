@@ -36,7 +36,7 @@ export class ListItemMapBuilder {
         this.items_templates_cache = new Map();
     }
 
-    public async buildListPickerItemsMap(): Promise<ListPickerItemMap> {
+    public buildListPickerItemsMap(): ListPickerItemMap {
         const map = new Map();
         const useless_options = [];
 
@@ -62,7 +62,7 @@ export class ListItemMapBuilder {
             }
 
             const id = this.getItemId(option, group_id);
-            const template = await this.getTemplateForItem(option, id);
+            const template = this.getTemplateForItem(option, id);
             const is_disabled = Boolean(option.hasAttribute("disabled"));
             const item: ListPickerItem = {
                 id,
@@ -136,10 +136,7 @@ export class ListItemMapBuilder {
         return base_id + option_value;
     }
 
-    private async getTemplateForItem(
-        option: HTMLOptionElement,
-        item_id: string
-    ): Promise<TemplateResult> {
+    private getTemplateForItem(option: HTMLOptionElement, item_id: string): TemplateResult {
         const template = this.items_templates_cache.get(item_id);
         if (template) {
             return template;
@@ -151,7 +148,7 @@ export class ListItemMapBuilder {
         }
 
         if (this.options && this.options.items_template_formatter) {
-            const custom_template = await this.options.items_template_formatter(
+            const custom_template = this.options.items_template_formatter(
                 html,
                 option.value,
                 option_label

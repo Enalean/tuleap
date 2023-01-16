@@ -28,10 +28,7 @@ export const PROGRAM_INCREMENT_TRACKER_ID = "admin-configuration-program-increme
 export const PLANNABLE_TRACKERS_ID = "admin-configuration-plannable-trackers";
 export const PERMISSION_PRIORITIZE_ID = "admin-configuration-permission-prioritize";
 
-export async function initListPickersMilestoneSection(
-    doc: Document,
-    gettext_provider: GetText
-): Promise<void> {
+export function initListPickersMilestoneSection(doc: Document, gettext_provider: GetText): void {
     const program_increment_tracker_element = doc.getElementById(PROGRAM_INCREMENT_TRACKER_ID);
 
     if (
@@ -45,19 +42,19 @@ export async function initListPickersMilestoneSection(
 
     const permission_prioritize_element = getHTMLSelectElementFromId(doc, PERMISSION_PRIORITIZE_ID);
 
-    await createListPicker(program_increment_tracker_element, {
+    createListPicker(program_increment_tracker_element, {
         locale: doc.body.dataset.userLocale,
         placeholder: gettext_provider.gettext("Choose a source tracker for Program Increments"),
         is_filterable: true,
     });
 
-    await createListPicker(plannable_trackers_element, {
+    createListPicker(plannable_trackers_element, {
         locale: doc.body.dataset.userLocale,
         placeholder: gettext_provider.gettext("Choose which trackers can be planned"),
         is_filterable: true,
     });
 
-    await createListPicker(permission_prioritize_element, {
+    createListPicker(permission_prioritize_element, {
         locale: doc.body.dataset.userLocale,
         placeholder: gettext_provider.gettext("Choose who can prioritize and plan items"),
         is_filterable: true,
@@ -73,7 +70,7 @@ export async function initListPickersMilestoneSection(
         disabledPlannableTrackers(doc, event.target);
     });
 
-    await setIterationSection(
+    setIterationSection(
         doc,
         program_increment_tracker_element,
         plannable_trackers_element,
@@ -81,19 +78,18 @@ export async function initListPickersMilestoneSection(
     );
 }
 
-async function setIterationSection(
+function setIterationSection(
     doc: Document,
     program_increment_tracker_element: HTMLSelectElement,
     plannable_trackers_element: HTMLSelectElement,
     gettext_provider: GetText
-): Promise<void> {
+): void {
     const iteration_trackers_element = getHTMLSelectElementFromId(doc, ITERATION_SELECT_ID);
 
-    await createListPicker(iteration_trackers_element, {
+    createListPicker(iteration_trackers_element, {
         locale: doc.body.dataset.userLocale,
         placeholder: gettext_provider.gettext("Choose a source tracker for Iterations"),
         is_filterable: true,
-        keep_none_value: true,
     });
 
     disabledIterationTrackersFromProgramIncrementAndPlannableTrackers(
