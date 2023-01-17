@@ -261,7 +261,7 @@ class LDAP_UserManager
         $user->setLdapId($eduid);
         $user->setRealName($cn);
         $user->setEmail($email);
-        $mail_confirm_code_generator = new MailConfirmationCodeGenerator(
+        $mail_confirm_code_generator = new \Tuleap\User\MailConfirmationCodeGenerator(
             $this->getUserManager(),
             new RandomNumberGenerator()
         );

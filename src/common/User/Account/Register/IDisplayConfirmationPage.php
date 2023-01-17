@@ -24,14 +24,13 @@ namespace Tuleap\User\Account\Register;
 
 use Tuleap\Layout\BaseLayout;
 
-interface IDisplayRegisterForm
+interface IDisplayConfirmationPage
 {
-    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
+    public function displayConfirmationForAdmin(BaseLayout $layout, \HTTPRequest $request): void;
 
-    public function displayWithPossibleIssue(
-        \HTTPRequest $request,
-        BaseLayout $layout,
-        RegisterFormContext $context,
-        ?RegisterFormValidationIssue $issue,
-    ): void;
+    public function displayConfirmationLinkSent(BaseLayout $layout, \HTTPRequest $request): void;
+
+    public function displayWaitForApproval(BaseLayout $layout, \HTTPRequest $request): void;
+
+    public function displayConfirmationLinkError(BaseLayout $layout): void;
 }

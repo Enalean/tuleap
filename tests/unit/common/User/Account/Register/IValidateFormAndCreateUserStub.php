@@ -22,16 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
-use Tuleap\Layout\BaseLayout;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-interface IDisplayRegisterForm
+final class IValidateFormAndCreateUserStub implements IValidateFormAndCreateUser
 {
-    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
+    private function __construct(private ?\PFUser $user)
+    {
+    }
 
-    public function displayWithPossibleIssue(
-        \HTTPRequest $request,
-        BaseLayout $layout,
-        RegisterFormContext $context,
-        ?RegisterFormValidationIssue $issue,
-    ): void;
+    public static function withCreatedUser(\PFUser $user): self
+    {
+        return new self($user);
+    }
+
+    public static function withError(): self
+    {
+        return new self(null);
+    }
+
+    /**
+     * @return Ok<PFUser>|Err<RegisterFormValidationIssue>|Err<null>
+     */
+    public function process(\HTTPRequest $request, RegisterFormContext $context, string $mail_confirm_code): Ok|Err
+    {
+        return $this->user
+            ? Result::ok($this->user)
+            : Result::err(null);
+    }
 }

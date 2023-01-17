@@ -20,18 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\Account\Register;
+namespace Tuleap\User;
 
-use Tuleap\Layout\BaseLayout;
-
-interface IDisplayRegisterForm
+interface IGenerateMailConfirmationCode
 {
-    public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void;
-
-    public function displayWithPossibleIssue(
-        \HTTPRequest $request,
-        BaseLayout $layout,
-        RegisterFormContext $context,
-        ?RegisterFormValidationIssue $issue,
-    ): void;
+    public function getConfirmationCode(): string;
 }
