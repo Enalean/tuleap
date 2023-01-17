@@ -32,28 +32,26 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Item } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
+import { computed } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class LockProperty extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const props = defineProps<{ item: Item }>();
 
-    get is_checked(): boolean {
-        return this.item.lock_info !== null;
-    }
+const is_checked = computed((): boolean => {
+    return props.item.lock_info !== null;
+});
 
-    get lock_label(): string {
-        return this.is_checked ? this.$gettext("Keep lock?") : this.$gettext("Lock new version");
-    }
+const { $gettext } = useGettext();
+const lock_label = computed((): string => {
+    return is_checked.value ? $gettext("Keep lock?") : $gettext("Lock new version");
+});
 
-    oninput($event: Event): void {
-        if ($event.target instanceof HTMLInputElement) {
-            emitter.emit("update-lock", $event.target.checked);
-        }
+function oninput($event: Event): void {
+    if ($event.target instanceof HTMLInputElement) {
+        emitter.emit("update-lock", $event.target.checked);
     }
 }
 </script>
