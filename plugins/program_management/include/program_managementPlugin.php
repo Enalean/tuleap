@@ -33,6 +33,7 @@ use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\DeletedArtifactLinksProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\LinkedArtifactDAO;
+use Tuleap\ProgramManagement\Adapter\ArtifactLinks\ProvidedArtifactLinksTypesProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
@@ -151,6 +152,7 @@ use Tuleap\ProgramManagement\Adapter\XML\ProgramManagementXMLConfigParser;
 use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayPlanIterationsController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
+use Tuleap\ProgramManagement\Domain\ArtifactLinks\ArtifactLinksNewTypesChecker;
 use Tuleap\ProgramManagement\Domain\ArtifactLinks\DeletedArtifactLinksChecker;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\PotentialPlannableTrackersConfigurationBuilder;
@@ -1685,12 +1687,20 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
     public function validateArtifactLinkValueEvent(ValidateArtifactLinkValueEvent $event): void
     {
-        $checker = new DeletedArtifactLinksChecker(
+        $deleted_artifact_links_checker = new DeletedArtifactLinksChecker(
             new LinkedArtifactDAO(),
         );
 
-        $checker->checkArtifactHaveMirroredMilestonesInProvidedLinks(
+        $deleted_artifact_links_checker->checkArtifactHaveMirroredMilestonesInProvidedDeletedLinks(
             DeletedArtifactLinksProxy::fromEvent($event),
+        );
+
+        $artifact_links_new_types_checker = new ArtifactLinksNewTypesChecker(
+            new LinkedArtifactDAO(),
+        );
+
+        $artifact_links_new_types_checker->checkArtifactHaveMirroredMilestonesInProvidedLinks(
+            ProvidedArtifactLinksTypesProxy::fromEvent($event),
         );
     }
 }

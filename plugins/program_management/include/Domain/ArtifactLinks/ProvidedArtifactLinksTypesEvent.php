@@ -21,11 +21,15 @@
 declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\ArtifactLinks;
-interface SearchLinkedArtifacts
+
+interface ProvidedArtifactLinksTypesEvent
 {
+    public function getUpdatedArtifactId(): int;
+
     /**
-     * @param int[] $submitted_links_to_check
-     * @psalm-param non-empty-array<int> $submitted_links_to_check
+     * @psalm-return list<array<int, string>>
      */
-    public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool;
+    public function getProvidedArtifactLinksTypes(): array;
+
+    public function setProvidedLinksAreNotValidWithMessage(string $message): void;
 }
