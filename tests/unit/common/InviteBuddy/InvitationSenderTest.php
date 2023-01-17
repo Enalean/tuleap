@@ -26,6 +26,7 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\ForgeConfigSandbox;
 use UserManager;
 
@@ -85,7 +86,8 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_manager,
             $this->dao,
             $this->logger,
-            $this->instrumentation
+            $this->instrumentation,
+            new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
         );
 
         ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 5);
@@ -99,7 +101,8 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
 
         $this->email_notifier->shouldReceive("send")->once()->andReturnTrue();
-        $this->dao->shouldReceive('save');
+        $this->dao->shouldReceive('create');
+        $this->dao->shouldReceive('update');
         $this->instrumentation->shouldReceive('increment');
 
         $this->sender->send($this->current_user, ["john@example.com"], null);
@@ -144,7 +147,8 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                         return $recipient->user === null && $recipient->email === "john@example.com";
                     }
                 ),
-                "A custom message"
+                "A custom message",
+                Mockery::any(),
             )
             ->once()
             ->andReturnTrue();
@@ -157,22 +161,29 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                         return $recipient->user === $known_user && $recipient->email === "doe@example.com";
                     }
                 ),
-                "A custom message"
+                "A custom message",
+                Mockery::any(),
             )
             ->once()
             ->andReturnTrue();
 
         $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "john@example.com", null, "A custom message", "sent")
+            ->shouldReceive('create')
+            ->with(Mockery::any(), 123, "john@example.com", null, "A custom message", "creating", Mockery::any())
             ->once();
         $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "doe@example.com", 1001, "A custom message", "sent")
+            ->shouldReceive('create')
+            ->with(Mockery::any(), 123, "doe@example.com", 1001, "A custom message", "creating", Mockery::any())
             ->once();
 
         $this->instrumentation
             ->shouldReceive('increment')
+            ->twice();
+
+
+        $this->dao
+            ->shouldReceive('update')
+            ->with(Mockery::any(), 'sent')
             ->twice();
 
         self::assertEmpty(
@@ -196,14 +207,20 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                         return $recipient->user === null && $recipient->email === "doe@example.com";
                     }
                 ),
-                null
+                null,
+                Mockery::any(),
             )
             ->once()
             ->andReturnTrue();
 
         $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "doe@example.com", null, null, "sent")
+            ->shouldReceive('create')
+            ->with(Mockery::any(), 123, "doe@example.com", null, null, "creating", Mockery::any())
+            ->once();
+
+        $this->dao
+            ->shouldReceive('update')
+            ->with(Mockery::any(), 'sent')
             ->once();
 
         $this->instrumentation
@@ -229,7 +246,8 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                         return $recipient->user === null && $recipient->email === "john@example.com";
                     }
                 ),
-                null
+                null,
+                Mockery::any(),
             )
             ->once()
             ->andReturnFalse();
@@ -242,18 +260,19 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                         return $recipient->user === null && $recipient->email === "doe@example.com";
                     }
                 ),
-                null
+                null,
+                Mockery::any(),
             )
             ->once()
             ->andReturnTrue();
 
         $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "john@example.com", null, null, "error")
+            ->shouldReceive('create')
+            ->with(Mockery::any(), 123, "john@example.com", null, null, "creating", Mockery::any())
             ->once();
         $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "doe@example.com", null, null, "sent")
+            ->shouldReceive('create')
+            ->with(Mockery::any(), 123, "doe@example.com", null, null, "creating", Mockery::any())
             ->once();
 
         $this->instrumentation
@@ -262,6 +281,16 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->logger
             ->shouldReceive('error')
             ->with("Unable to send invitation from user #123 to john@example.com")
+            ->once();
+
+        $this->dao
+            ->shouldReceive('update')
+            ->with(Mockery::any(), 'error')
+            ->once();
+
+        $this->dao
+            ->shouldReceive('update')
+            ->with(Mockery::any(), 'sent')
             ->once();
 
         self::assertEquals(
@@ -286,7 +315,8 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                         return $recipient->user === null && $recipient->email === "john@example.com";
                     }
                 ),
-                null
+                null,
+                Mockery::any(),
             )
             ->once()
             ->andReturnFalse();
@@ -299,18 +329,19 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                         return $recipient->user === null && $recipient->email === "doe@example.com";
                     }
                 ),
-                null
+                null,
+                Mockery::any(),
             )
             ->once()
             ->andReturnFalse();
 
         $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "john@example.com", null, null, "error")
+            ->shouldReceive('create')
+            ->with(Mockery::any(), 123, "john@example.com", null, null, "creating", Mockery::any())
             ->once();
         $this->dao
-            ->shouldReceive('save')
-            ->with(Mockery::any(), 123, "doe@example.com", null, null, "error")
+            ->shouldReceive('create')
+            ->with(Mockery::any(), 123, "doe@example.com", null, null, "creating", Mockery::any())
             ->once();
 
         $this->logger
@@ -321,6 +352,11 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('error')
             ->with("Unable to send invitation from user #123 to doe@example.com")
             ->once();
+
+        $this->dao
+            ->shouldReceive('update')
+            ->with(Mockery::any(), 'error')
+            ->twice();
 
         $this->expectException(UnableToSendInvitationsException::class);
 

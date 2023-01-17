@@ -22,12 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\InviteBuddy\Invitation;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\User\LogUserStub;
 
 final class AfterSuccessfulUserRegistrationTest extends TestCase
 {
@@ -64,6 +68,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             $admin_register_mail_builder,
             'https://example.com',
             $event_dispatcher,
+            LogUserStub::buildSelf(),
         );
 
         $after->afterSuccessfullUserRegistration(
@@ -102,6 +107,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             $admin_register_mail_builder,
             'https://example.com',
             $event_dispatcher,
+            LogUserStub::buildSelf(),
         );
 
         $after->afterSuccessfullUserRegistration(
@@ -109,7 +115,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             HTTPRequestBuilder::get()->build(),
             LayoutBuilder::build(),
             'secret',
-            RegisterFormContext::forAnonymous(true),
+            RegisterFormContext::forAnonymous(true, null),
         );
 
         self::assertTrue($after_event_emitted);
@@ -148,6 +154,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             $admin_register_mail_builder,
             'https://example.com',
             $event_dispatcher,
+            LogUserStub::buildSelf(),
         );
 
         $after->afterSuccessfullUserRegistration(
@@ -155,7 +162,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             HTTPRequestBuilder::get()->build(),
             LayoutBuilder::build(),
             'secret',
-            RegisterFormContext::forAnonymous(true),
+            RegisterFormContext::forAnonymous(true, null),
         );
 
         self::assertTrue($after_event_emitted);
@@ -194,6 +201,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             $admin_register_mail_builder,
             'https://example.com',
             $event_dispatcher,
+            LogUserStub::buildSelf(),
         );
 
         $after->afterSuccessfullUserRegistration(
@@ -201,10 +209,52 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             HTTPRequestBuilder::get()->build(),
             LayoutBuilder::build(),
             'secret',
-            RegisterFormContext::forAnonymous(true),
+            RegisterFormContext::forAnonymous(true, null),
         );
 
         self::assertTrue($after_event_emitted);
         self::assertTrue($confirmation_page->hasConfirmationLinkErrorBeenDisplayed());
+    }
+
+    public function testItDoesNotDisplaySentAConfirmationLinkIfUserHasAnInvitationBecauseWeAlreadyKnowThatTheirEmailIsValid(): void
+    {
+        \ForgeConfig::set(\User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL, 0);
+
+        $user_register_mail_builder  = $this->createMock(\TuleapRegisterMail::class);
+        $admin_register_mail_builder = $this->createMock(\TuleapRegisterMail::class);
+
+        $after_event_emitted = false;
+
+        $confirmation_page = IDisplayConfirmationPageStub::buildSelf();
+        $event_dispatcher  = EventDispatcherStub::withCallback(static function (AfterUserRegistrationEvent $event) use (&$after_event_emitted): AfterUserRegistrationEvent {
+            $after_event_emitted = true;
+
+            return $event;
+        });
+
+        $log_user = LogUserStub::buildSelf();
+        $after    = new AfterSuccessfulUserRegistration(
+            $confirmation_page,
+            $user_register_mail_builder,
+            $admin_register_mail_builder,
+            'https://example.com',
+            $event_dispatcher,
+            $log_user,
+        );
+
+        $inspector = new LayoutInspector();
+
+        $after->afterSuccessfullUserRegistration(
+            UserTestBuilder::buildWithDefaults(),
+            HTTPRequestBuilder::get()->withParam('form_pw', 'secret')->build(),
+            LayoutBuilder::buildWithInspector($inspector),
+            'secret',
+            RegisterFormContext::forAnonymous(true, InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+        );
+
+        self::assertTrue($after_event_emitted);
+        self::assertFalse($confirmation_page->hasConfirmationLinkSentBeenDisplayed());
+        self::assertTrue($log_user->hasBeenLoggedIn());
+        self::assertEquals('/my/', $inspector->getRedirectUrl());
     }
 }

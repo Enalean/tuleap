@@ -58,6 +58,8 @@ use Tuleap\Admin\ProjectWidgetsConfigurationDisplayController;
 use Tuleap\Admin\ProjectWidgetsConfigurationPOSTDisableController;
 use Tuleap\Admin\ProjectWidgetsConfigurationPOSTEnableController;
 use Tuleap\admin\SiteContentCustomisationController;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Config\ConfigDao;
 use Tuleap\ContentSecurityPolicy\CSPViolationReportToController;
 use Tuleap\Core\RSS\News\LatestNewsController;
@@ -89,6 +91,7 @@ use Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
 use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\SiteHomepageController;
@@ -173,6 +176,7 @@ use Tuleap\User\Account\Register\AfterSuccessfulUserRegistration;
 use Tuleap\User\Account\Register\ConfirmationPageDisplayer;
 use Tuleap\User\Account\Register\DisplayAdminRegisterFormController;
 use Tuleap\User\Account\Register\DisplayRegisterFormController;
+use Tuleap\User\Account\Register\InvitationToEmailRequestExtractor;
 use Tuleap\User\Account\Register\ProcessAdminRegisterFormController;
 use Tuleap\User\Account\Register\ProcessRegisterFormController;
 use Tuleap\User\Account\Register\RegisterFormDisplayer;
@@ -977,6 +981,10 @@ class RouteCollector
                 new \Tuleap\Layout\IncludeCoreAssets(),
             ),
             $event_manager,
+            new InvitationToEmailRequestExtractor(
+                new InvitationDao(new SplitTokenVerificationStringHasher()),
+                new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+            ),
         );
     }
 
@@ -999,6 +1007,10 @@ class RouteCollector
         return new ProcessRegisterFormController(
             self::getRegisterFormProcessor(),
             \EventManager::instance(),
+            new InvitationToEmailRequestExtractor(
+                new InvitationDao(new SplitTokenVerificationStringHasher()),
+                new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+            ),
         );
     }
 
@@ -1018,16 +1030,18 @@ class RouteCollector
         $renderer_factory       = TemplateRendererFactory::build();
         $include_core_assets    = new IncludeCoreAssets();
         $timezones_collection   = new \Account_TimezonesCollection();
+        $invitation_dao         = new InvitationDao(new SplitTokenVerificationStringHasher());
         $mail_renderer          = $renderer_factory->getRenderer(
             \ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
         );
+
 
         return new RegisterFormProcessor(
             new \Tuleap\User\Account\Register\RegisterFormHandler(
                 new AccountRegister(
                     $user_manager,
                     new AccountCreationFeedback(
-                        new InvitationDao(),
+                        $invitation_dao,
                         $user_manager,
                         new AccountCreationFeedbackEmailNotifier(),
                         \BackendLogger::getDefaultLogger(),
@@ -1048,6 +1062,7 @@ class RouteCollector
                 new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail-admin"),
                 \Tuleap\ServerHostname::HTTPSUrl(),
                 $event_manager,
+                $user_manager,
             ),
             new RegisterFormDisplayer(
                 new RegisterFormPresenterBuilder(

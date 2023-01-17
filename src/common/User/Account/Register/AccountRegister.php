@@ -43,7 +43,7 @@ final class AccountRegister
         string $register_purpose,
         string $email,
         string $status,
-        string $confirm_hash,
+        ?string $confirm_hash,
         string $mail_site,
         string $mail_va,
         string $timezone,
@@ -61,7 +61,9 @@ final class AccountRegister
         $user->setRegisterPurpose($register_purpose);
         $user->setEmail($email);
         $user->setStatus($status);
-        $user->setConfirmHash($confirm_hash);
+        if ($confirm_hash) {
+            $user->setConfirmHash($confirm_hash);
+        }
         $user->setMailSiteUpdates($mail_site);
         $user->setMailVA($mail_va);
         $user->setTimezone($timezone);

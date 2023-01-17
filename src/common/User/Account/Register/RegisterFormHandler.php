@@ -36,8 +36,10 @@ use Valid_String;
 
 final class RegisterFormHandler implements IValidateFormAndCreateUser
 {
-    public function __construct(private AccountRegister $account_register, private \Account_TimezonesCollection $timezones_collection)
-    {
+    public function __construct(
+        private AccountRegister $account_register,
+        private \Account_TimezonesCollection $timezones_collection,
+    ) {
     }
 
     /**
@@ -80,10 +82,11 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
                 RegisterFormValidationIssue::fromFieldName('timezone', _('You must supply a timezone.'))
             );
         }
+        $is_siteadmin_approval_needed = ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1;
         if (
             ! $request->existAndNonEmpty('form_register_purpose')
             && (
-                ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1
+                $is_siteadmin_approval_needed
                 && ! $is_admin
             )
         ) {
@@ -97,12 +100,18 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
             );
         }
 
-        $form_email = (string) $request->get('form_email');
-        $rule_email = new \Rule_Email();
-        if (! $rule_email->isValid($form_email)) {
-            $GLOBALS['Response']->addFeedback('error', _('Invalid Email Address'));
+        if (! $is_admin && $context->invitation_to_email) {
+            $form_email = $context->invitation_to_email->to_email;
+        } else {
+            $form_email = (string) $request->get('form_email');
+            $rule_email = new \Rule_Email();
+            if (! $rule_email->isValid($form_email)) {
+                $GLOBALS['Response']->addFeedback('error', _('Invalid Email Address'));
 
-            return Result::err(RegisterFormValidationIssue::fromFieldName('form_email', _('Invalid Email Address')));
+                return Result::err(
+                    RegisterFormValidationIssue::fromFieldName('form_email', _('Invalid Email Address'))
+                );
+            }
         }
 
         $password = null;
@@ -159,6 +168,9 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
             } else {
                 $status = 'A';
             }
+        } elseif ($context->invitation_to_email && ! $is_siteadmin_approval_needed) {
+            $status            = 'A';
+            $mail_confirm_code = null;
         }
 
         $new_user = $this->account_register->register(

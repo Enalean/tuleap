@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use EventManager;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
 /**
  * @psalm-immutable
@@ -61,7 +62,7 @@ class InviteBuddiesPresenter
     {
         $event_manager              = \EventManager::instance();
         $limit_checker              = new InvitationLimitChecker(
-            new InvitationDao(),
+            new InvitationDao(new SplitTokenVerificationStringHasher()),
             new InviteBuddyConfiguration($event_manager)
         );
         $invite_buddy_configuration = new InviteBuddyConfiguration(EventManager::instance());

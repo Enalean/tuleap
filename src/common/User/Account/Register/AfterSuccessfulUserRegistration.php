@@ -27,7 +27,10 @@ use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Config\ConfigurationVariables;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\User\LogUser;
 use TuleapRegisterMail;
 use User_UserStatusManager;
 
@@ -39,6 +42,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         private TuleapRegisterMail $admin_register_mail_builder,
         private string $base_url,
         private EventDispatcherInterface $event_dispatcher,
+        private LogUser $log_user,
     ) {
     }
 
@@ -78,6 +82,13 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
 
         if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL)) {
             $this->confirmation_page->displayWaitForApproval($layout, $request);
+            return;
+        }
+
+        if ($context->invitation_to_email) {
+            $this->log_user->login($new_user->getUserName(), new ConcealedString($request->get('form_pw')));
+            $layout->addFeedback(Feedback::SUCCESS, sprintf(_('Welcome to %s'), \ForgeConfig::get(ConfigurationVariables::NAME)));
+            $layout->redirect('/my/');
             return;
         }
 

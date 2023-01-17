@@ -4349,6 +4349,10 @@ msgstr "Bem-vindo a %1$s"
 msgid "Welcome to %1$s!"
 msgstr "Bem-vindo à %1$s!"
 
+#, php-format
+msgid "Welcome to %s"
+msgstr ""
+
 msgid "Welcome to your new project"
 msgstr "Bem vindo ao seu novo projeto"
 
@@ -4895,6 +4899,9 @@ msgstr ""
 
 msgid "Your history is empty"
 msgstr "O seu histórico está vazio"
+
+msgid "Your invitation link is not valid"
+msgstr ""
 
 msgid "Your place was saved"
 msgstr "O seu lugar foi gravado"

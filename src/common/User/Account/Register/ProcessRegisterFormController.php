@@ -35,6 +35,7 @@ final class ProcessRegisterFormController implements DispatchableWithRequestNoAu
     public function __construct(
         private IProcessRegisterForm $form_processor,
         private EventDispatcherInterface $event_dispatcher,
+        private IExtractInvitationToEmail $invitation_to_email_request_extractor,
     ) {
     }
 
@@ -49,6 +50,13 @@ final class ProcessRegisterFormController implements DispatchableWithRequestNoAu
             ->dispatch(new BeforeUserRegistrationEvent($request))
             ->isPasswordNeeded();
 
-        $this->form_processor->process($request, $layout, RegisterFormContext::forAnonymous($is_password_needed));
+        $this->form_processor->process(
+            $request,
+            $layout,
+            RegisterFormContext::forAnonymous(
+                $is_password_needed,
+                $this->invitation_to_email_request_extractor->getInvitationToEmail($request)
+            ),
+        );
     }
 }

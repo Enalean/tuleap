@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Event\Dispatchable;
+use Tuleap\InviteBuddy\Invitation;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -39,6 +41,7 @@ class ProcessRegisterFormControllerTest extends TestCase
         $controller = new ProcessRegisterFormController(
             $form_processor,
             EventDispatcherStub::withIdentityCallback(),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
         );
         $controller->process(
             HTTPRequestBuilder::get()->build(),
@@ -66,6 +69,7 @@ class ProcessRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
         );
         $controller->process(
             HTTPRequestBuilder::get()->build(),
@@ -95,6 +99,7 @@ class ProcessRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
         );
         $controller->process(
             HTTPRequestBuilder::get()->build(),

@@ -20,25 +20,17 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\User\Account\Register;
 
 /**
  * @psalm-immutable
  */
-final class RegisterFormContext
+final class DisabledField
 {
-    private function __construct(public bool $is_admin, public bool $is_password_needed, public ?InvitationToEmail $invitation_to_email)
-    {
-    }
+    public bool $has_error   = false;
+    public bool $is_disabled = true;
 
-    public static function forAnonymous(bool $is_password_needed, ?InvitationToEmail $invitation_to_email): self
+    public function __construct(public mixed $value)
     {
-        return new self(false, $is_password_needed, $invitation_to_email);
-    }
-
-    public static function forAdmin(): self
-    {
-        return new self(true, true, null);
     }
 }

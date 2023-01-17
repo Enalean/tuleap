@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,30 +13,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-declare(strict_types=1);
-
 
 namespace Tuleap\User\Account\Register;
 
 /**
  * @psalm-immutable
  */
-final class RegisterFormContext
+final class RegisterField
 {
-    private function __construct(public bool $is_admin, public bool $is_password_needed, public ?InvitationToEmail $invitation_to_email)
-    {
-    }
+    public bool $has_error;
+    public bool $is_disabled = false;
 
-    public static function forAnonymous(bool $is_password_needed, ?InvitationToEmail $invitation_to_email): self
+    public function __construct(public mixed $value, public ?string $error)
     {
-        return new self(false, $is_password_needed, $invitation_to_email);
-    }
-
-    public static function forAdmin(): self
-    {
-        return new self(true, true, null);
+        $this->has_error = $error !== null;
     }
 }

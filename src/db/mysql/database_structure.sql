@@ -1593,6 +1593,7 @@ CREATE TABLE invitations(
     custom_message TEXT NULL,
     status VARCHAR(10),
     created_user_id INT(11) NULL,
+    verifier TEXT NOT NULL DEFAULT '',
     INDEX idx(created_on, from_user_id),
     INDEX idx_email(to_email(20)),
     INDEX idx_created(created_user_id, status, to_email(20))
