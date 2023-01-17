@@ -45,7 +45,7 @@ final class DisplayRegisterFormControllerTest extends TestCase
         $controller = new DisplayRegisterFormController(
             $form_displayer,
             EventDispatcherStub::withIdentityCallback(),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
             RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
@@ -74,7 +74,7 @@ final class DisplayRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
             RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
@@ -105,7 +105,7 @@ final class DisplayRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
             RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(

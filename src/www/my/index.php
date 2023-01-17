@@ -79,7 +79,12 @@ $router                     = new UserDashboardRouter(
             $GLOBALS['Response'],
             $core_assets,
             new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($core_assets, 'dashboards-style')])
-        )
+        ),
+        new \Tuleap\Dashboard\User\FirstTimerPresenterBuilder(
+            new \Tuleap\InviteBuddy\InvitationDao(new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher()),
+            new \Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer(new \Tuleap\InviteBuddy\PrefixTokenInvitation()),
+            UserManager::instance(),
+        ),
     ),
     new WidgetDashboardController(
         $csrf_token,

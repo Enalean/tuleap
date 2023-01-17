@@ -27,7 +27,6 @@ use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\User\LogUser;
@@ -107,8 +106,9 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
     private function automagicallyLogUser(PFUser $new_user, HTTPRequest $request, BaseLayout $layout): void
     {
         $this->log_user->login($new_user->getUserName(), new ConcealedString($request->get('form_pw')));
-        $layout->addFeedback(Feedback::SUCCESS, sprintf(_('Welcome to %s'), \ForgeConfig::get(ConfigurationVariables::NAME)));
-        $layout->redirect('/my/');
+        $layout->redirect('/my/?' . http_build_query([
+            'invitation-token' => $request->get('invitation-token'),
+        ]));
     }
 
     private function sendLoginByMailToUser(string $to, string $login): bool

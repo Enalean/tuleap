@@ -107,6 +107,9 @@ msgstr "%s convidou você para %s."
 msgid "%s invited you to register to %s."
 msgstr "%s convidou você para registrar-se em %s."
 
+msgid "%s invited you, so you’re now a fresh member of this platform."
+msgstr ""
+
 #, php-format
 msgid "%s new projects"
 msgstr "%s novos projetos"
@@ -709,6 +712,9 @@ msgstr "Mau"
 
 msgid "Banner"
 msgstr "Banner"
+
+msgid "Before you start, you need to know a few things:"
+msgstr ""
 
 msgid "Best Regards."
 msgstr "Atenciosamente."
@@ -1668,6 +1674,9 @@ msgstr "Cabeçalho"
 msgid "Heartbeat"
 msgstr "Ritmo do projeto"
 
+msgid "Hello %s"
+msgstr ""
+
 msgid "Hello,"
 msgstr "Olá,"
 
@@ -1760,6 +1769,11 @@ msgstr "Importar"
 
 msgid "Import members"
 msgstr "Importar membros"
+
+msgid ""
+"In each project, you will find various tools such as Kanbans, Documents, "
+"Milestones…"
+msgstr ""
 
 msgid "In the meantime, you can get %sback to the homepage%s."
 msgstr ""
@@ -3516,6 +3530,11 @@ msgid ""
 "don't want an expiration date."
 msgstr ""
 
+msgid ""
+"The base unit of Tuleap is the project, you can join or create as many "
+"projects as you want."
+msgstr ""
+
 #, php-format
 msgid "The category %d only allows %d values"
 msgstr "A categoria %d permite apenas %d valores"
@@ -4096,6 +4115,9 @@ msgstr "Incapaz de atualizar as preferências de usuário"
 msgid "Unauthorized action for anonymous"
 msgstr "Ação não autorizada para usuários anônimos"
 
+msgid "Understood"
+msgstr ""
+
 msgid "Unix Group Name"
 msgstr "Nome do Grupo Unix"
 
@@ -4352,7 +4374,6 @@ msgstr "Bem-vindo a %1$s"
 msgid "Welcome to %1$s!"
 msgstr "Bem-vindo à %1$s!"
 
-#, php-format
 msgid "Welcome to %s"
 msgstr ""
 

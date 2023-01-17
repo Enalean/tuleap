@@ -107,6 +107,11 @@ msgstr "%s vous a invité sur %s."
 msgid "%s invited you to register to %s."
 msgstr "%s vous invite à vous enregistrer sur %s."
 
+msgid "%s invited you, so you’re now a fresh member of this platform."
+msgstr ""
+"Vous avez été invité par %s, vous êtes maintenant un nouveau membre de cette "
+"plateforme."
+
 #, php-format
 msgid "%s new projects"
 msgstr "Annonces %s"
@@ -707,6 +712,9 @@ msgstr "Mauvaise"
 
 msgid "Banner"
 msgstr "Bannière"
+
+msgid "Before you start, you need to know a few things:"
+msgstr "Avant de commencer, quelques choses à savoir :"
 
 msgid "Best Regards."
 msgstr "Cordialement."
@@ -1678,6 +1686,9 @@ msgstr "Accroche"
 msgid "Heartbeat"
 msgstr "Activité"
 
+msgid "Hello %s"
+msgstr "Bonjour %s"
+
 msgid "Hello,"
 msgstr "Bonjour,"
 
@@ -1771,6 +1782,13 @@ msgstr "Importer"
 
 msgid "Import members"
 msgstr "Importer des membres"
+
+msgid ""
+"In each project, you will find various tools such as Kanbans, Documents, "
+"Milestones…"
+msgstr ""
+"Dans chaque projet, vous trouverez différents outils comme des Kanbans, "
+"Documents, Jalons…"
 
 msgid "In the meantime, you can get %sback to the homepage%s."
 msgstr "En attendant, vous pouvez %sretourner vers la page d'accueil%s."
@@ -3546,6 +3564,13 @@ msgstr ""
 "Une fois cette date passée, le compte sera suspendu. Laissez vide si vous ne "
 "voulez pas de date d'expiration."
 
+msgid ""
+"The base unit of Tuleap is the project, you can join or create as many "
+"projects as you want."
+msgstr ""
+"L'unité de base dans Tuleap est le projet, vous pouvez rejoindre ou créer "
+"autant de projets que vous voulez."
+
 #, php-format
 msgid "The category %d only allows %d values"
 msgstr "La catégorie %d autorise seulement %d valeurs"
@@ -4128,6 +4153,9 @@ msgstr "La mise à jour des préférences utilisateur a échoué"
 msgid "Unauthorized action for anonymous"
 msgstr "Cette action n'est pas autorisée pour les anonymes"
 
+msgid "Understood"
+msgstr "Compris"
+
 msgid "Unix Group Name"
 msgstr "Nom du groupe unix"
 
@@ -4394,7 +4422,6 @@ msgstr "Bienvenue sur %1$s"
 msgid "Welcome to %1$s!"
 msgstr "Bienvenue sur %1$s!"
 
-#, php-format
 msgid "Welcome to %s"
 msgstr "Bienvenue sur %s"
 

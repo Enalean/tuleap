@@ -246,15 +246,17 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
 
         $after->afterSuccessfullUserRegistration(
             UserTestBuilder::buildWithDefaults(),
-            HTTPRequestBuilder::get()->withParam('form_pw', 'secret')->build(),
+            HTTPRequestBuilder::get()
+                ->withParams(['form_pw' => 'secret', 'invitation-token' => 'tlp-invite-13.abc'])
+                ->build(),
             LayoutBuilder::buildWithInspector($inspector),
             'secret',
-            RegisterFormContext::forAnonymous(true, InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            RegisterFormContext::forAnonymous(true, InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 101), new ConcealedString('secret'))),
         );
 
         self::assertTrue($after_event_emitted);
         self::assertFalse($confirmation_page->hasConfirmationLinkSentBeenDisplayed());
         self::assertTrue($log_user->hasBeenLoggedIn());
-        self::assertEquals('/my/', $inspector->getRedirectUrl());
+        self::assertEquals('/my/?invitation-token=tlp-invite-13.abc', $inspector->getRedirectUrl());
     }
 }
