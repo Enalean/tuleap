@@ -7,10 +7,10 @@ let
   tuleapVersion = builtins.readFile ../../../VERSION;
   tuleapGitBinBasePath = "/usr/lib/tuleap/git";
   gitStatic = (pkgs.pkgsStatic.gitMinimal.overrideAttrs (oldAttrs: rec {
-    version = "2.39.0";
+    version = "2.39.1";
     src = pkgs.fetchurl {
       url = "https://www.kernel.org/pub/software/scm/git/git-${version}.tar.xz";
-      sha256 = "sha256-uhmbE/tamco97JF7C9c2vA61qd+Hc31DXt398Q1pJls=";
+      sha256 = "40a38a0847b30c371b35873b3afcf123885dd41ea3ecbbf510efa97f3ce5c161";
     };
 
     dontPatchShebangs = true;
