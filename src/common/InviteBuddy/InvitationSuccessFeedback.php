@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
+use Tuleap\User\Account\Register\RegisterFormContext;
+
 interface InvitationSuccessFeedback
 {
-    public function accountHasJustBeenCreated(\PFUser $just_created_user): void;
+    public function accountHasJustBeenCreated(\PFUser $just_created_user, RegisterFormContext $context): void;
 }

@@ -50,6 +50,7 @@ final class AccountRegister
         string $lang_id,
         string $unix_status,
         int|string $expiry_date,
+        RegisterFormContext $context,
     ): ?\PFUser {
         $user = new \PFUser();
         $user->setUserName($loginname);
@@ -73,7 +74,7 @@ final class AccountRegister
 
         $created_user = $this->account_creator->createAccount($user);
         if ($created_user) {
-            $this->invitation_success_feedback->accountHasJustBeenCreated($created_user);
+            $this->invitation_success_feedback->accountHasJustBeenCreated($created_user, $context);
         }
 
         return $created_user;

@@ -25,6 +25,9 @@ namespace Tuleap\InviteBuddy;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Log\LoggerInterface;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\Account\Register\InvitationToEmail;
+use Tuleap\User\Account\Register\RegisterFormContext;
 use UserManager;
 
 class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -74,7 +77,7 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->shouldReceive('saveJustCreatedUserThanksToInvitation')
-            ->with('doe@example.com', 104)
+            ->with('doe@example.com', 104, null)
             ->once();
 
         $this->dao
@@ -83,7 +86,32 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn([]);
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+    }
+
+    public function testItUpdatesInvitationsWithJustCreatedUserByInvitation(): void
+    {
+        $new_user = Mockery::mock(\PFUser::class);
+        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+
+        $this->dao
+            ->shouldReceive('saveJustCreatedUserThanksToInvitation')
+            ->with('doe@example.com', 104, 1)
+            ->once();
+
+        $this->dao
+            ->shouldReceive('searchByEmail')
+            ->with('doe@example.com')
+            ->once()
+            ->andReturn([]);
+
+        $this->account_creation_feedback->accountHasJustBeenCreated(
+            $new_user,
+            RegisterFormContext::forAnonymous(
+                true,
+                InvitationToEmail::fromInvitation(new Invitation(1, 'doe@example.com', 102), new ConcealedString('secret'))
+            )
+        );
     }
 
     public function testItNotifiesNobodyIfUserWasNotInvited(): void
@@ -104,7 +132,7 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('send')
             ->never();
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 
     public function testItNotifiesEveryPeopleWhoInvitedTheUser(): void
@@ -158,7 +186,7 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturnTrue();
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 
     public function testItIgnoresUsersThatCannotBeFoundButLogsAnError(): void
@@ -196,7 +224,7 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with("Invitation was referencing an unknown user #103")
             ->once();
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 
     public function testItIgnoresUsersThatAreNotAliveButLogsAWarning(): void
@@ -237,7 +265,7 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with("Cannot send invitation feedback to inactive user #103")
             ->once();
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 
     public function testItLogsAnErrorIfEmailCannotBeSent(): void
@@ -279,6 +307,6 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with("Unable to send invitation feedback to user #103 after registration of user #104")
             ->once();
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user);
+        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 }

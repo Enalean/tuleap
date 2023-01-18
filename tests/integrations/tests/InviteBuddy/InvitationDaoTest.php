@@ -46,9 +46,11 @@ class InvitationDaoTest extends TestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, 'creating', $verifier);
+        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, Invitation::STATUS_CREATING, $verifier);
 
         $invitation = $this->dao->searchBySplitToken(new SplitToken($id, $verifier));
+        self::assertEquals($id, $invitation->id);
+        self::assertEquals(101, $invitation->from_user_id);
         self::assertEquals('jdoe@example.com', $invitation->to_email);
     }
 
@@ -56,11 +58,68 @@ class InvitationDaoTest extends TestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, 'creating', $verifier);
+        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, Invitation::STATUS_CREATING, $verifier);
 
         $invalid_verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
         $this->expectException(InvalidInvitationTokenException::class);
         $this->dao->searchBySplitToken(new SplitToken($id, $invalid_verifier));
+    }
+
+    public function testSaveJustCreatedUserThanksToInvitationWhenNoSpecificInvitationIsUsed(): void
+    {
+        $this->createBunchOfInvitations();
+
+        self::assertFalse($this->dao->hasUsedAnInvitationToRegister(201));
+
+        $this->dao->saveJustCreatedUserThanksToInvitation('alice@example.com', 201, null);
+
+        self::assertFalse($this->dao->hasUsedAnInvitationToRegister(201));
+
+        self::assertEquals(
+            [201, null, 201],
+            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT created_user_id FROM invitations ORDER BY id"),
+        );
+        self::assertEquals(
+            [Invitation::STATUS_SENT, Invitation::STATUS_SENT, Invitation::STATUS_SENT],
+            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT status FROM invitations ORDER BY id"),
+        );
+    }
+
+    public function testSaveJustCreatedUserThanksToInvitationWhenAGivenInvitationIsUsed(): void
+    {
+        [, , $second_invitation_to_alice_id] = $this->createBunchOfInvitations();
+
+        self::assertFalse($this->dao->hasUsedAnInvitationToRegister(201));
+
+        $this->dao->saveJustCreatedUserThanksToInvitation('alice@example.com', 201, $second_invitation_to_alice_id);
+
+        self::assertTrue($this->dao->hasUsedAnInvitationToRegister(201));
+
+        self::assertEquals(
+            [201, null, 201],
+            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT created_user_id FROM invitations ORDER BY id"),
+        );
+        self::assertEquals(
+            [Invitation::STATUS_SENT, Invitation::STATUS_SENT, Invitation::STATUS_USED],
+            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT status FROM invitations ORDER BY id"),
+        );
+    }
+
+    public function createBunchOfInvitations(): array
+    {
+        $verifier_1 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+        $verifier_2 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+        $verifier_3 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+
+        $first_invitation_to_alice_id  = $this->dao->create(1234567890, 101, "alice@example.com", null, null, Invitation::STATUS_CREATING, $verifier_1);
+        $first_invitation_to_bob_id    = $this->dao->create(1234567890, 102, "bob@example.com", null, null, Invitation::STATUS_CREATING, $verifier_2);
+        $second_invitation_to_alice_id = $this->dao->create(1234567890, 103, "alice@example.com", null, null, Invitation::STATUS_CREATING, $verifier_3);
+
+        $this->dao->update($first_invitation_to_alice_id, Invitation::STATUS_SENT);
+        $this->dao->update($first_invitation_to_bob_id, Invitation::STATUS_SENT);
+        $this->dao->update($second_invitation_to_alice_id, Invitation::STATUS_SENT);
+
+        return [$first_invitation_to_alice_id, $first_invitation_to_bob_id, $second_invitation_to_alice_id];
     }
 }

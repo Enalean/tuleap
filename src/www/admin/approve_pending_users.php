@@ -21,6 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\InviteBuddy\InvitationDao;
+
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
 require_once __DIR__ . '/../include/proj_email.php';
@@ -113,6 +116,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 $Language->getText('admin_approve_pending_users', 'user_activated_success')
             );
         }
+        $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
     } elseif ($action_select == 'validate') {
         $csrf_token->check();
         if ($status == 'restricted') {
@@ -121,6 +125,28 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             $newstatus = 'V';
         }
 
+        $invitation_dao           = new InvitationDao(new SplitTokenVerificationStringHasher());
+        $nb_asked_to_be_validated = count($users_array);
+
+        $users_array = array_reduce(
+            $users_array,
+            static function (array $to_be_validated_user_ids, int $user_id) use ($invitation_dao): array {
+                if (! $invitation_dao->hasUsedAnInvitationToRegister($user_id)) {
+                    $to_be_validated_user_ids[] = $user_id;
+                }
+
+                return $to_be_validated_user_ids;
+            },
+            []
+        );
+        if (empty($users_array)) {
+            if ($nb_asked_to_be_validated === 1) {
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, _("The user doesn't need to be validated"));
+            } else {
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, _("All users don't need to be validated"));
+            }
+            $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
+        }
 
         // update the user status flag to active
         db_query("UPDATE user SET expiry_date='" . $expiry_date . "', status='" . $newstatus . "'" .
@@ -152,6 +178,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 $Language->getText('admin_approve_pending_users', 'user_validated_success')
             );
         }
+        $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
     } elseif ($action_select == 'delete') {
         $csrf_token->check();
         db_query("UPDATE user SET status='D', approved_by='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'" .
@@ -172,12 +199,17 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 $Language->getText('admin_approve_pending_users', 'user_deleted_success')
             );
         }
+        $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
     } elseif ($action_select === 'resend_email') {
         $csrf_token->check();
-        $user_manager = UserManager::instance();
+        $user_manager   = UserManager::instance();
+        $invitation_dao = new InvitationDao(new SplitTokenVerificationStringHasher());
         foreach ($users_array as $user_id) {
             $user = $user_manager->getUserById($user_id);
             if ($user === null) {
+                continue;
+            }
+            if ($invitation_dao->hasUsedAnInvitationToRegister((int) $user->getId())) {
                 continue;
             }
             if (
@@ -205,24 +237,46 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 );
             }
         }
+        $GLOBALS['Response']->redirect('/admin/approve_pending_users.php?' . http_build_query(['page' => $page]));
     }
 }
+
 // No action - First time in this script
 // Show the list of pending user waiting for approval
 if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING) {
-    $res = db_query("SELECT * FROM user WHERE status='P'");
+    $res = db_query(
+        "SELECT user.*, invitations.from_user_id
+            FROM user
+            LEFT JOIN invitations ON (user.user_id = invitations.created_user_id AND invitations.status = 'used')
+            WHERE user.status='P'"
+    );
     $msg = $Language->getText('admin_approve_pending_users', 'no_pending_validated');
     if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 0) {
-        $res = db_query("SELECT * FROM user WHERE status='P' OR status='V' OR status='W'");
+        $res = db_query(
+            "SELECT user.*, invitations.from_user_id
+                FROM user
+                LEFT JOIN invitations ON (user.user_id = invitations.created_user_id AND invitations.status = 'used')
+                WHERE user.status='P' OR user.status='V' OR user.status='W'"
+        );
         $msg = $Language->getText('admin_approve_pending_users', 'no_pending');
     }
 } elseif ($page == ADMIN_APPROVE_PENDING_PAGE_VALIDATED) {
-    $res = db_query("SELECT * FROM user WHERE status='V' OR status='W'");
+    $res = db_query(
+        "SELECT user.*, invitations.from_user_id
+            FROM user
+            LEFT JOIN invitations ON (user.user_id = invitations.created_user_id AND invitations.status = 'used')
+            WHERE user.status='V' OR user.status='W'"
+    );
     $msg = $Language->getText('admin_approve_pending_users', 'no_validated');
 }
 
+$user_manager = UserManager::instance();
+
 $users = [];
 while ($row = db_fetch_array($res)) {
+    $invited_by_user            = $row['from_user_id'] ? $user_manager->getUserById((int) $row['from_user_id']) : null;
+    $is_email_already_validated = $invited_by_user !== null;
+
     $users[] = new Tuleap\User\Admin\PendingUserPresenter(
         $row['user_id'],
         $row['user_name'],
@@ -231,7 +285,9 @@ while ($row = db_fetch_array($res)) {
         $row['add_date'],
         $row['register_purpose'],
         $row['expiry_date'],
-        $row['status']
+        $row['status'],
+        $invited_by_user ? \Tuleap\User\Admin\UserPresenter::fromUser($invited_by_user) : null,
+        $is_email_already_validated,
     );
 }
 

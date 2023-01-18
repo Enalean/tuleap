@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
+use Tuleap\User\Account\Register\RegisterFormContext;
+
 final class InvitationSuccessFeedbackStub implements InvitationSuccessFeedback
 {
     private \PFUser | null $has_been_called_with = null;
@@ -35,7 +37,7 @@ final class InvitationSuccessFeedbackStub implements InvitationSuccessFeedback
         return new self();
     }
 
-    public function accountHasJustBeenCreated(\PFUser $just_created_user): void
+    public function accountHasJustBeenCreated(\PFUser $just_created_user, RegisterFormContext $context): void
     {
         $this->has_been_called_with = $just_created_user;
     }

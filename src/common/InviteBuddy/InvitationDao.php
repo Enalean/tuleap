@@ -67,12 +67,12 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
      */
     public function searchBySplitToken(SplitToken $split_token): Invitation
     {
-        $row = $this->getDB()->row('SELECT to_email, from_user_id, verifier FROM invitations WHERE id = ?', $split_token->getID());
+        $row = $this->getDB()->row('SELECT id, to_email, from_user_id, verifier FROM invitations WHERE id = ?', $split_token->getID());
         if (! $this->hasher->verifyHash($split_token->getVerificationString(), $row['verifier'])) {
             throw new InvalidInvitationTokenException();
         }
 
-        return new Invitation($row['to_email'], $row['from_user_id']);
+        return new Invitation($row['id'], $row['to_email'], $row['from_user_id']);
     }
 
     public function searchByEmail(string $to_email): array
@@ -80,21 +80,24 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
         return $this->getDB()->run(
             "SELECT DISTINCT from_user_id FROM invitations WHERE to_email = ? AND status = ?",
             $to_email,
-            InvitationSender::STATUS_SENT,
+            Invitation::STATUS_SENT,
         );
     }
 
-    public function saveJustCreatedUserThanksToInvitation(string $to_email, int $just_created_user_id): void
+    public function saveJustCreatedUserThanksToInvitation(string $to_email, int $just_created_user_id, ?int $used_invitation_id): void
     {
         $this->getDB()->run(
             "UPDATE invitations
-                SET created_user_id = ?
+                SET created_user_id = ?,
+                    status = IF(id = ?, ?, status)
                 WHERE to_email = ?
                   AND status = ?
                   AND created_user_id IS NULL",
             $just_created_user_id,
+            $used_invitation_id,
+            Invitation::STATUS_USED,
             $to_email,
-            InvitationSender::STATUS_SENT,
+            Invitation::STATUS_SENT,
         );
     }
 
@@ -113,5 +116,13 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
                 WHERE from_user_id = ? AND DATE(FROM_UNIXTIME(created_on)) = CURDATE()";
 
         return (int) $this->getDB()->single($sql, [$user_id]);
+    }
+
+    public function hasUsedAnInvitationToRegister(int $user_id): bool
+    {
+        return (bool) $this->getDB()->single(
+            "SELECT 1 FROM invitations WHERE created_user_id = ? AND status = ?",
+            [$user_id, Invitation::STATUS_USED]
+        );
     }
 }

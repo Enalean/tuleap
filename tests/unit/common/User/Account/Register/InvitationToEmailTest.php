@@ -32,7 +32,7 @@ class InvitationToEmailTest extends TestCase
     {
         self::assertEquals(
             'jdoe@example.com',
-            InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))->to_email,
+            InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))->to_email,
         );
     }
 
@@ -40,6 +40,6 @@ class InvitationToEmailTest extends TestCase
     {
         $this->expectException(InvitationShouldBeToEmailException::class);
 
-        InvitationToEmail::fromInvitation(new Invitation('', 102), new ConcealedString('secret'));
+        InvitationToEmail::fromInvitation(new Invitation(1, '', 102), new ConcealedString('secret'));
     }
 }

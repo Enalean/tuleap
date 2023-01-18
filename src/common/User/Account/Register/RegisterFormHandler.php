@@ -186,7 +186,8 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
             $timezone,
             $request->getCurrentUser()->getLocale(),
             'A',
-            $expiry_date
+            $expiry_date,
+            $context,
         );
         if (! $new_user) {
             return Result::err(null);
