@@ -86,9 +86,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         }
 
         if ($context->invitation_to_email) {
-            $this->log_user->login($new_user->getUserName(), new ConcealedString($request->get('form_pw')));
-            $layout->addFeedback(Feedback::SUCCESS, sprintf(_('Welcome to %s'), \ForgeConfig::get(ConfigurationVariables::NAME)));
-            $layout->redirect('/my/');
+            $this->automagicallyLogUser($new_user, $request, $layout);
             return;
         }
 
@@ -104,6 +102,13 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         }
 
         $this->confirmation_page->displayConfirmationLinkSent($layout, $request);
+    }
+
+    private function automagicallyLogUser(PFUser $new_user, HTTPRequest $request, BaseLayout $layout): void
+    {
+        $this->log_user->login($new_user->getUserName(), new ConcealedString($request->get('form_pw')));
+        $layout->addFeedback(Feedback::SUCCESS, sprintf(_('Welcome to %s'), \ForgeConfig::get(ConfigurationVariables::NAME)));
+        $layout->redirect('/my/');
     }
 
     private function sendLoginByMailToUser(string $to, string $login): bool

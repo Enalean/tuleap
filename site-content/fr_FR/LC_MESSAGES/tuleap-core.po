@@ -2336,6 +2336,9 @@ msgstr "Pas de licence à approuver"
 msgid "No matching labels"
 msgstr "Il n'y a aucun label correspondant"
 
+msgid "No need to register, you are already logged in."
+msgstr "Pas besoin de vous enregistrer, vous êtes déjà connecté."
+
 msgid "No one monitoring"
 msgstr "Forum non surveillé"
 
@@ -4805,6 +4808,11 @@ msgstr "Vous n'avez pas la permission de voir les groupes d'utilisateurs."
 
 msgid "You have a restricted user account"
 msgstr "Vous avez un compte utilisateur restreint"
+
+msgid "You have already used your invitation to register, you can now log in."
+msgstr ""
+"Vous avez déjà utilisé votre invitation pour s'enregistrer, vous pouvez "
+"maintenant vous connecter."
 
 #, php-format
 msgid "You have not rights to update dashboards of the project \"%s\"."
