@@ -34,6 +34,7 @@ use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 
 class UserDashboardController
@@ -93,6 +94,7 @@ class UserDashboardController
         WidgetDeletor $widget_deletor,
         WidgetMinimizor $widget_minimizor,
         AssetsIncluder $assets_includer,
+        private FirstTimerPresenterBuilder $first_timer_presenter_builder,
     ) {
         $this->csrf                     = $csrf;
         $this->retriever                = $retriever;
@@ -112,8 +114,11 @@ class UserDashboardController
         $dashboard_id    = $request->get('dashboard_id');
         $user_dashboards = $this->retriever->getAllUserDashboards($current_user);
 
+        $layout = $GLOBALS['Response'];
+        assert($layout instanceof BaseLayout);
+
         if ($dashboard_id && ! $this->doesDashboardIdExist($dashboard_id, $user_dashboards)) {
-            $GLOBALS['Response']->addFeedback(
+            $layout->addFeedback(
                 Feedback::ERROR,
                 sprintf(
                     dgettext(
@@ -129,9 +134,14 @@ class UserDashboardController
 
         $this->assets_includer->includeAssets($user_dashboards_presenter);
 
+        $first_timer_presenter = $this->first_timer_presenter_builder->buildPresenter($request);
+        if ($first_timer_presenter) {
+            $layout->addJavascriptAsset($first_timer_presenter->javascript_assets);
+        }
+
         $title    = $this->getPageTitle($user_dashboards_presenter, $current_user);
         $purifier = Codendi_HTMLPurifier::instance();
-        $GLOBALS['Response']->header([
+        $layout->header([
             'title' => $purifier->purify($title),
             'body_class' => ['body-user-dashboard', 'reduce-help-button'],
         ]);
@@ -144,10 +154,11 @@ class UserDashboardController
                 $this->csrf,
                 '/my/',
                 new UserPresenter($current_user),
-                $user_dashboards_presenter
+                $user_dashboards_presenter,
+                $first_timer_presenter,
             )
         );
-        $GLOBALS['Response']->footer(FooterConfiguration::withoutContent());
+        $layout->footer(FooterConfiguration::withoutContent());
     }
 
     /**

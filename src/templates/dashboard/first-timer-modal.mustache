@@ -1,0 +1,37 @@
+<section class="tlp-modal first-timer-modal" role="dialog" id="first-timer-success-modal" aria-labelledby="first-timer-success-modal-title">
+    <div class="tlp-modal-body first-timer-modal-body">
+        <h1 class="first-timer-modal-title" id="first-timer-success-modal-title">
+            {{# gettext }}Hello %s | {{ real_name }}{{/ gettext }}
+        </h1>
+        <h2 class="first-timer-modal-subtitle">
+            {{# gettext }}Welcome to %s | {{ plateform_name }}{{/ gettext }}
+        </h2>
+
+        <hr class="first-timer-modal-separator" />
+
+        {{# invited_by_user }}
+            <div class="first-timer-modal-instructions">
+                <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i>
+                <div class="first-timer-modal-instructions-content">
+                    <p>{{# gettext }}%s invited you, so you’re now a fresh member of this platform. | {{ real_name }}{{/ gettext }}</p>
+                </div>
+            </div>
+        {{/ invited_by_user }}
+
+        <div class="first-timer-modal-instructions">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            <div class="first-timer-modal-instructions-content">
+                <p>{{# gettext }}Before you start, you need to know a few things:{{/ gettext }}</p>
+                <ul>
+                    <li>{{# gettext }}The base unit of Tuleap is the project, you can join or create as many projects as you want.{{/ gettext }}</li>
+                    <li>{{# gettext }}In each project, you will find various tools such as Kanbans, Documents, Milestones…{{/ gettext }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Understood{{/ gettext }}
+        </button>
+    </div>
+</section>

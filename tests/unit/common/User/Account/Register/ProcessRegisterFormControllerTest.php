@@ -43,7 +43,7 @@ class ProcessRegisterFormControllerTest extends TestCase
         $controller = new ProcessRegisterFormController(
             $form_processor,
             EventDispatcherStub::withIdentityCallback(),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
             RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
@@ -72,7 +72,7 @@ class ProcessRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
             RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
@@ -103,7 +103,7 @@ class ProcessRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
             RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(

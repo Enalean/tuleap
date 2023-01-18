@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-namespace Tuleap\InviteBuddy;
-
-
-/**
- * @psalm-immutable
- */
-final class Invitation
-{
-    public function __construct(public string $to_email, public int $from_user_id)
+export default vite.defineAppConfig(
     {
+        plugin_name: "core",
+        sub_app_name: "first-timer",
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    "first-timer": path.resolve(__dirname, "src/first-timer.ts"),
+                },
+            },
+        },
     }
-}
+);

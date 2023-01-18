@@ -20,26 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\Account\Register;
+namespace Tuleap\Dashboard\User;
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\InviteBuddy\Invitation;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Layout\JavascriptViteAsset;
 
-class InvitationToEmailTest extends TestCase
+final class FirstTimerPresenter
 {
-    public function testItReturnsAnInvitationToEmailObject(): void
-    {
-        self::assertEquals(
-            'jdoe@example.com',
-            InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))->to_email,
-        );
-    }
+    public ?UserPresenter $invited_by_user;
 
-    public function testEnsureThatInvitationHasBeenMadeForANewUser(): void
-    {
-        $this->expectException(InvitationShouldBeToEmailException::class);
-
-        InvitationToEmail::fromInvitation(new Invitation('', 102), new ConcealedString('secret'));
+    public function __construct(
+        public string $real_name,
+        public string $plateform_name,
+        ?\PFUser $invited_by_user,
+        public JavascriptViteAsset $javascript_assets,
+    ) {
+        $this->invited_by_user = $invited_by_user ? new UserPresenter($invited_by_user) : null;
     }
 }
