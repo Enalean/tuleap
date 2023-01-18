@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\ForgeConfigSandbox;
@@ -32,53 +31,27 @@ use UserManager;
 
 class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationSenderGateKeeper
-     */
-    private $gate_keeper;
-    /**
-     * @var InvitationSender
-     */
-    private $sender;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $current_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationEmailNotifier
-     */
-    private $email_notifier;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationDao
-     */
-    private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationInstrumentation
-     */
-    private $instrumentation;
+    private InvitationSenderGateKeeper|MockObject $gate_keeper;
+    private InvitationSender $sender;
+    private MockObject|\PFUser $current_user;
+    private InvitationEmailNotifier|MockObject $email_notifier;
+    private UserManager|MockObject $user_manager;
+    private InvitationDao|MockObject $dao;
+    private LoggerInterface|MockObject $logger;
 
     protected function setUp(): void
     {
-        $this->current_user = Mockery::mock(\PFUser::class);
-        $this->current_user->shouldReceive(['getId' => 123]);
+        $this->current_user = $this->createMock(\PFUser::class);
+        $this->current_user->method('getId')->willReturn(123);
 
-        $this->gate_keeper     = Mockery::mock(InvitationSenderGateKeeper::class);
-        $this->email_notifier  = Mockery::mock(InvitationEmailNotifier::class);
-        $this->user_manager    = Mockery::mock(UserManager::class);
-        $this->dao             = Mockery::mock(InvitationDao::class);
-        $this->logger          = Mockery::mock(LoggerInterface::class);
-        $this->instrumentation = Mockery::mock(InvitationInstrumentation::class);
+        $this->gate_keeper     = $this->createMock(InvitationSenderGateKeeper::class);
+        $this->email_notifier  = $this->createMock(InvitationEmailNotifier::class);
+        $this->user_manager    = $this->createMock(UserManager::class);
+        $this->dao             = $this->createMock(InvitationDao::class);
+        $this->logger          = $this->createMock(LoggerInterface::class);
+        $this->instrumentation = $this->createMock(InvitationInstrumentation::class);
 
         $this->sender = new InvitationSender(
             $this->gate_keeper,
@@ -95,15 +68,15 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItEnsuresThatAllConditionsAreOkToSendInvitations(): void
     {
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+        $this->gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $this->user_manager->method('getUserByEmail')->willReturn(null);
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(0);
 
-        $this->email_notifier->shouldReceive("send")->once()->andReturnTrue();
-        $this->dao->shouldReceive('create');
-        $this->dao->shouldReceive('update');
-        $this->instrumentation->shouldReceive('increment');
+        $this->email_notifier->expects(self::once())->method("send")->willReturn(true);
+        $this->dao->method('create');
+        $this->dao->method('update');
+        $this->instrumentation->method('increment');
 
         $this->sender->send($this->current_user, ["john@example.com"], null);
     }
@@ -111,10 +84,10 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNothingIfAllConditionsAreNotOk(): void
     {
         $this->gate_keeper
-            ->shouldReceive('checkNotificationsCanBeSent')
-            ->andThrow(InvitationSenderGateKeeperException::class);
+            ->method('checkNotificationsCanBeSent')
+            ->willThrowException(new InvitationSenderGateKeeperException());
 
-        $this->email_notifier->shouldReceive("send")->never();
+        $this->email_notifier->expects(self::never())->method("send");
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
@@ -123,68 +96,64 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSendAnInvitationForEachEmailAndLogStatus(): void
     {
-        $known_user = Mockery::mock(\PFUser::class);
-        $known_user->shouldReceive(['getId' => 1001]);
+        $known_user = $this->createMock(\PFUser::class);
+        $known_user->method('getId')->willReturn(1001);
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(3);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(3);
 
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
+        $this->gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
         $this->user_manager
-            ->shouldReceive('getUserByEmail')
-            ->with("john@example.com")
-            ->andReturnNull();
-        $this->user_manager
-            ->shouldReceive('getUserByEmail')
-            ->with("doe@example.com")
-            ->andReturn($known_user);
+            ->method('getUserByEmail')
+            ->withConsecutive(
+                ["john@example.com"],
+                ["doe@example.com"],
+            )
+            ->willReturnOnConsecutiveCalls(null, $known_user);
 
         $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "john@example.com";
-                    }
-                ),
-                "A custom message",
-                Mockery::any(),
+            ->expects(self::exactly(2))
+            ->method("send")
+            ->withConsecutive(
+                [
+                    $this->current_user,
+                    $this->callback(
+                        function (InvitationRecipient $recipient) {
+                            return $recipient->user === null && $recipient->email === "john@example.com";
+                        }
+                    ),
+                    "A custom message",
+                    $this->anything(),
+                ],
+                [
+                    $this->current_user,
+                    $this->callback(
+                        function (InvitationRecipient $recipient) use ($known_user) {
+                            return $recipient->user === $known_user && $recipient->email === "doe@example.com";
+                        }
+                    ),
+                    "A custom message",
+                    $this->anything(),
+                ]
             )
-            ->once()
-            ->andReturnTrue();
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) use ($known_user) {
-                        return $recipient->user === $known_user && $recipient->email === "doe@example.com";
-                    }
-                ),
-                "A custom message",
-                Mockery::any(),
-            )
-            ->once()
-            ->andReturnTrue();
+            ->willReturnOnConsecutiveCalls(true, true);
 
         $this->dao
-            ->shouldReceive('create')
-            ->with(Mockery::any(), 123, "john@example.com", null, "A custom message", "creating", Mockery::any())
-            ->once();
-        $this->dao
-            ->shouldReceive('create')
-            ->with(Mockery::any(), 123, "doe@example.com", 1001, "A custom message", "creating", Mockery::any())
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('create')
+            ->withConsecutive(
+                [$this->anything(), 123, "john@example.com", null, "A custom message", "creating", $this->anything()],
+                [$this->anything(), 123, "doe@example.com", 1001, "A custom message", "creating", $this->anything()]
+            );
 
         $this->instrumentation
-            ->shouldReceive('increment')
-            ->twice();
+            ->expects(self::exactly(2))
+            ->method('increment');
 
 
         $this->dao
-            ->shouldReceive('update')
-            ->with(Mockery::any(), 'sent')
-            ->twice();
+            ->expects(self::exactly(2))
+            ->method('update')
+            ->with($this->anything(), 'sent');
 
         self::assertEmpty(
             $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], "A custom message")
@@ -193,105 +162,100 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItIgnoresEmptyEmails(): void
     {
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+        $this->gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $this->user_manager->method('getUserByEmail')->willReturn(null);
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(0);
 
         $this->email_notifier
-            ->shouldReceive("send")
+            ->expects(self::once())
+            ->method("send")
             ->with(
                 $this->current_user,
-                Mockery::on(
+                $this->callback(
                     function (InvitationRecipient $recipient) {
                         return $recipient->user === null && $recipient->email === "doe@example.com";
                     }
                 ),
                 null,
-                Mockery::any(),
+                $this->anything(),
             )
-            ->once()
-            ->andReturnTrue();
+            ->willReturn(true);
 
         $this->dao
-            ->shouldReceive('create')
-            ->with(Mockery::any(), 123, "doe@example.com", null, null, "creating", Mockery::any())
-            ->once();
+            ->expects(self::once())
+            ->method('create')
+            ->with($this->anything(), 123, "doe@example.com", null, null, "creating", $this->anything());
 
         $this->dao
-            ->shouldReceive('update')
-            ->with(Mockery::any(), 'sent')
-            ->once();
+            ->expects(self::once())
+            ->method('update')
+            ->with($this->anything(), 'sent');
 
         $this->instrumentation
-            ->shouldReceive('increment')
-            ->once();
+            ->expects(self::once())
+            ->method('increment');
 
         self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"], null));
     }
 
     public function testItReturnsEmailsInFailureAndLogStatus(): void
     {
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+        $this->gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $this->user_manager->method('getUserByEmail')->willReturn(null);
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(0);
 
         $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "john@example.com";
-                    }
-                ),
-                null,
-                Mockery::any(),
+            ->expects(self::exactly(2))
+            ->method("send")
+            ->withConsecutive(
+                [
+                    $this->current_user,
+                    $this->callback(
+                        function (InvitationRecipient $recipient) {
+                            return $recipient->user === null && $recipient->email === "john@example.com";
+                        }
+                    ),
+                    null,
+                    $this->anything(),
+                ],
+                [
+                    $this->current_user,
+                    $this->callback(
+                        function (InvitationRecipient $recipient) {
+                            return $recipient->user === null && $recipient->email === "doe@example.com";
+                        }
+                    ),
+                    null,
+                    $this->anything(),
+                ]
             )
-            ->once()
-            ->andReturnFalse();
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "doe@example.com";
-                    }
-                ),
-                null,
-                Mockery::any(),
-            )
-            ->once()
-            ->andReturnTrue();
+            ->willReturnOnConsecutiveCalls(false, true);
 
         $this->dao
-            ->shouldReceive('create')
-            ->with(Mockery::any(), 123, "john@example.com", null, null, "creating", Mockery::any())
-            ->once();
-        $this->dao
-            ->shouldReceive('create')
-            ->with(Mockery::any(), 123, "doe@example.com", null, null, "creating", Mockery::any())
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('create')
+            ->withConsecutive(
+                [$this->anything(), 123, "john@example.com", null, null, "creating", $this->anything()],
+                [$this->anything(), 123, "doe@example.com", null, null, "creating", $this->anything()]
+            );
 
         $this->instrumentation
-            ->shouldReceive('increment')
-            ->once();
+            ->expects(self::once())
+            ->method('increment');
         $this->logger
-            ->shouldReceive('error')
-            ->with("Unable to send invitation from user #123 to john@example.com")
-            ->once();
+            ->expects(self::once())
+            ->method('error')
+            ->with("Unable to send invitation from user #123 to john@example.com");
 
         $this->dao
-            ->shouldReceive('update')
-            ->with(Mockery::any(), 'error')
-            ->once();
-
-        $this->dao
-            ->shouldReceive('update')
-            ->with(Mockery::any(), 'sent')
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('update')
+            ->withConsecutive(
+                [$this->anything(), 'error'],
+                [$this->anything(), 'sent']
+            );
 
         self::assertEquals(
             ["john@example.com"],
@@ -301,62 +265,58 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesAnExceptionIfEveryEmailsAreInFailure(): void
     {
-        $this->gate_keeper->shouldReceive('checkNotificationsCanBeSent')->once();
-        $this->user_manager->shouldReceive('getUserByEmail')->andReturnNull();
+        $this->gate_keeper->expects(self::once())->method('checkNotificationsCanBeSent');
+        $this->user_manager->method('getUserByEmail')->willReturn(null);
 
-        $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);
+        $this->dao->method('getInvitationsSentByUserForToday')->willReturn(0);
 
         $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "john@example.com";
-                    }
-                ),
-                null,
-                Mockery::any(),
+            ->expects(self::exactly(2))
+            ->method("send")
+            ->withConsecutive(
+                [
+                    $this->current_user,
+                    $this->callback(
+                        function (InvitationRecipient $recipient) {
+                            return $recipient->user === null && $recipient->email === "john@example.com";
+                        }
+                    ),
+                    null,
+                    $this->anything(),
+                ],
+                [
+                    $this->current_user,
+                    $this->callback(
+                        function (InvitationRecipient $recipient) {
+                            return $recipient->user === null && $recipient->email === "doe@example.com";
+                        }
+                    ),
+                    null,
+                    $this->anything(),
+                ]
             )
-            ->once()
-            ->andReturnFalse();
-        $this->email_notifier
-            ->shouldReceive("send")
-            ->with(
-                $this->current_user,
-                Mockery::on(
-                    function (InvitationRecipient $recipient) {
-                        return $recipient->user === null && $recipient->email === "doe@example.com";
-                    }
-                ),
-                null,
-                Mockery::any(),
-            )
-            ->once()
-            ->andReturnFalse();
+            ->willReturnOnConsecutiveCalls(false, false);
 
         $this->dao
-            ->shouldReceive('create')
-            ->with(Mockery::any(), 123, "john@example.com", null, null, "creating", Mockery::any())
-            ->once();
-        $this->dao
-            ->shouldReceive('create')
-            ->with(Mockery::any(), 123, "doe@example.com", null, null, "creating", Mockery::any())
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('create')
+            ->withConsecutive(
+                [$this->anything(), 123, "john@example.com", null, null, "creating", $this->anything()],
+                [$this->anything(), 123, "doe@example.com", null, null, "creating", $this->anything()]
+            );
 
         $this->logger
-            ->shouldReceive('error')
-            ->with("Unable to send invitation from user #123 to john@example.com")
-            ->once();
-        $this->logger
-            ->shouldReceive('error')
-            ->with("Unable to send invitation from user #123 to doe@example.com")
-            ->once();
+            ->expects(self::exactly(2))
+            ->method('error')
+            ->withConsecutive(
+                ["Unable to send invitation from user #123 to john@example.com"],
+                ["Unable to send invitation from user #123 to doe@example.com"]
+            );
 
         $this->dao
-            ->shouldReceive('update')
-            ->with(Mockery::any(), 'error')
-            ->twice();
+            ->expects(self::exactly(2))
+            ->method('update')
+            ->with($this->anything(), 'error');
 
         $this->expectException(UnableToSendInvitationsException::class);
 
