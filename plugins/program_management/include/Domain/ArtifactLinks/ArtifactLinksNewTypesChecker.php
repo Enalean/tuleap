@@ -24,29 +24,35 @@ namespace Tuleap\ProgramManagement\Domain\ArtifactLinks;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 
-class DeletedArtifactLinksChecker
+final class ArtifactLinksNewTypesChecker
 {
     public function __construct(private SearchLinkedArtifacts $search_linked_artifacts)
     {
     }
 
-    public function checkArtifactHaveMirroredMilestonesInProvidedDeletedLinks(DeletedArtifactLinksEvent $deleted_artifact_links_event): void
-    {
-        $deleted_artifact_links_ids = $deleted_artifact_links_event->getDeletedArtifactLinksIds();
+    public function checkArtifactHaveMirroredMilestonesInProvidedLinks(
+        ProvidedArtifactLinksTypesEvent $provided_artifact_links_types_event,
+    ): void {
+        $provided_links_without_system_types = [];
+        foreach ($provided_artifact_links_types_event->getProvidedArtifactLinksTypes() as $linked_artifact_id => $type) {
+            if ($type !== TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
+                $provided_links_without_system_types[] = $linked_artifact_id;
+            }
+        }
 
-        if (empty($deleted_artifact_links_ids)) {
+        if (empty($provided_links_without_system_types)) {
             return;
         }
 
         if (
             $this->search_linked_artifacts->doesArtifactHaveMirroredMilestonesInProvidedLinks(
-                $deleted_artifact_links_event->getUpdatedArtifactId(),
-                $deleted_artifact_links_ids,
+                $provided_artifact_links_types_event->getUpdatedArtifactId(),
+                $provided_links_without_system_types,
             )
         ) {
-            $deleted_artifact_links_event->setDeletedLinksAreNotValidWithMessage(
+            $provided_artifact_links_types_event->setProvidedLinksAreNotValidWithMessage(
                 sprintf(
-                    dgettext('tuleap-program_management', 'Artifact links with "%s" type cannot be removed.'),
+                    dgettext('tuleap-program_management', 'Artifact links with "%s" type cannot be updated.'),
                     TimeboxArtifactLinkType::ART_LINK_SHORT_NAME
                 )
             );

@@ -69,6 +69,11 @@ msgid "Artifact links with \"%s\" type cannot be removed."
 msgstr ""
 "Les liens entre artéfacts de type \"%s\" ne peuvent pas être supprimés."
 
+#, php-format
+msgid "Artifact links with \"%s\" type cannot be updated."
+msgstr ""
+"Les liens entre artéfacts de type \"%s\" ne peuvent pas être mis à jour."
+
 msgid "Can prioritize features"
 msgstr "Peut prioriser des fonctionnalités"
 

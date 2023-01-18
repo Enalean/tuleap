@@ -83,16 +83,9 @@ class ArtifactLinkValidator
             }
         }
 
-        if (
-            is_array($value) &&
-            array_key_exists("removed_values", $value) &&
-            ! empty($value["removed_values"])
-        ) {
+        if (is_array($value)) {
             $event = $this->event_dispatcher->dispatch(
-                new ValidateArtifactLinkValueEvent(
-                    $artifact,
-                    array_keys($value["removed_values"])
-                )
+                ValidateArtifactLinkValueEvent::buildFromSubmittedValues($artifact, $value),
             );
 
             if ($event->isValid() === false) {

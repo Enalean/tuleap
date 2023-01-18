@@ -51,6 +51,10 @@ msgstr ""
 msgid "Artifact links with \"%s\" type cannot be removed."
 msgstr ""
 
+#, php-format
+msgid "Artifact links with \"%s\" type cannot be updated."
+msgstr ""
+
 msgid "Can prioritize features"
 msgstr ""
 

@@ -34,11 +34,33 @@ class ValidateArtifactLinkValueEvent implements Dispatchable
 
     /**
      * @param int[] $submitted_links_for_deletion
+     *
+     * @psalm-param list<array<int, string>> $submitted_links_with_types
      */
-    public function __construct(
+    private function __construct(
         private Artifact $artifact,
         private array $submitted_links_for_deletion,
+        private array $submitted_links_with_types,
     ) {
+    }
+
+    public static function buildFromSubmittedValues(Artifact $artifact, array $submitted_values): self
+    {
+        $submitted_links_for_deletion = [];
+        if (array_key_exists("removed_values", $submitted_values) && ! empty($submitted_values["removed_values"])) {
+            $submitted_links_for_deletion = array_keys($submitted_values["removed_values"]);
+        }
+
+        $submitted_links_with_types = [];
+        if (array_key_exists("types", $submitted_values) && ! empty($submitted_values["types"])) {
+            $submitted_links_with_types = $submitted_values["types"];
+        }
+
+        return new self(
+            $artifact,
+            $submitted_links_for_deletion,
+            $submitted_links_with_types,
+        );
     }
 
     public function isValid(): bool
@@ -72,5 +94,13 @@ class ValidateArtifactLinkValueEvent implements Dispatchable
     public function getArtifact(): Artifact
     {
         return $this->artifact;
+    }
+
+    /**
+     * @psalm-return list<array<int, string>>
+     */
+    public function getSubmittedLinksWithTypes(): array
+    {
+        return $this->submitted_links_with_types;
     }
 }

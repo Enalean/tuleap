@@ -76,6 +76,7 @@ class NewChangesetCreator implements CreateNewChangeset
                 $email,
             ) {
                 $fields_data = $changeset->getFieldsData();
+
                 try {
                     $workflow = $this->workflow_retriever->getNonNullWorkflow($artifact->getTracker());
                     $this->validateNewChangeset($changeset, $email, $workflow);
