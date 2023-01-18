@@ -28,8 +28,10 @@ use Tuleap\InviteBuddy\Invitation;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\RetrieveUserByEmailStub;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
 class ProcessRegisterFormControllerTest extends TestCase
@@ -42,9 +44,10 @@ class ProcessRegisterFormControllerTest extends TestCase
             $form_processor,
             EventDispatcherStub::withIdentityCallback(),
             IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
-            HTTPRequestBuilder::get()->build(),
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
             $this->createMock(BaseLayout::class),
             [],
         );
@@ -70,9 +73,10 @@ class ProcessRegisterFormControllerTest extends TestCase
                 }
             ),
             IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
-            HTTPRequestBuilder::get()->build(),
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
             $this->createMock(BaseLayout::class),
             [],
         );
@@ -100,13 +104,77 @@ class ProcessRegisterFormControllerTest extends TestCase
                 }
             ),
             IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
-            HTTPRequestBuilder::get()->build(),
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
             $this->createMock(BaseLayout::class),
             [],
         );
 
         self::assertFalse($form_processor->hasBeenProcessed());
+    }
+
+    public function testRejectWhenCurrentUserIsAlreadyLoggedIn(): void
+    {
+        $this->expectException(ForbiddenException::class);
+
+        $form_processor = IProcessRegisterFormStub::buildSelf();
+
+        $controller = new ProcessRegisterFormController(
+            $form_processor,
+            EventDispatcherStub::withIdentityCallback(),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withNoUser(),
+        );
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anActiveUser()->build())->build(),
+            $this->createMock(BaseLayout::class),
+            [],
+        );
+
+        self::assertFalse($form_processor->hasBeenProcessed());
+    }
+
+    public function testRejectWhenInvitationHasAlreadyBeenUsed(): void
+    {
+        $this->expectException(ForbiddenException::class);
+
+        $form_processor = IProcessRegisterFormStub::buildSelf();
+
+        $controller = new ProcessRegisterFormController(
+            $form_processor,
+            EventDispatcherStub::withIdentityCallback(),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withUser(UserTestBuilder::buildWithDefaults()),
+        );
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
+            $this->createMock(BaseLayout::class),
+            [],
+        );
+
+        self::assertFalse($form_processor->hasBeenProcessed());
+    }
+
+    public function testWithNoInvitation(): void
+    {
+        $form_processor = IProcessRegisterFormStub::buildSelf();
+
+        $controller = new ProcessRegisterFormController(
+            $form_processor,
+            EventDispatcherStub::withIdentityCallback(),
+            IExtractInvitationToEmailStub::withoutInvitation(),
+            RetrieveUserByEmailStub::withNoUser(),
+        );
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
+            $this->createMock(BaseLayout::class),
+            [],
+        );
+
+        self::assertTrue($form_processor->hasBeenProcessed());
+        self::assertFalse($form_processor->isAdmin());
+        self::assertTrue($form_processor->isPasswordNeeded());
     }
 }

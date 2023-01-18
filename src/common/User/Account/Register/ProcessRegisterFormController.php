@@ -29,6 +29,7 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\RegistrationGuardEvent;
+use Tuleap\User\RetrieveUserByEmail;
 
 final class ProcessRegisterFormController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
@@ -36,14 +37,27 @@ final class ProcessRegisterFormController implements DispatchableWithRequestNoAu
         private IProcessRegisterForm $form_processor,
         private EventDispatcherInterface $event_dispatcher,
         private IExtractInvitationToEmail $invitation_to_email_request_extractor,
+        private RetrieveUserByEmail $user_manager,
     ) {
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        if (! $request->getCurrentUser()->isAnonymous()) {
+            throw new ForbiddenException();
+        }
+
         $registration_guard = $this->event_dispatcher->dispatch(new RegistrationGuardEvent());
         if (! $registration_guard->isRegistrationPossible()) {
             throw new ForbiddenException();
+        }
+
+        $invitation_to_email = $this->invitation_to_email_request_extractor->getInvitationToEmail($request);
+        if ($invitation_to_email) {
+            $already_registered_user = $this->user_manager->getUserByEmail($invitation_to_email->to_email);
+            if ($already_registered_user) {
+                throw new ForbiddenException();
+            }
         }
 
         $is_password_needed = $this->event_dispatcher
@@ -55,7 +69,7 @@ final class ProcessRegisterFormController implements DispatchableWithRequestNoAu
             $layout,
             RegisterFormContext::forAnonymous(
                 $is_password_needed,
-                $this->invitation_to_email_request_extractor->getInvitationToEmail($request)
+                $invitation_to_email,
             ),
         );
     }

@@ -28,8 +28,12 @@ use Tuleap\InviteBuddy\Invitation;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\RetrieveUserByEmailStub;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
 final class DisplayRegisterFormControllerTest extends TestCase
@@ -42,9 +46,10 @@ final class DisplayRegisterFormControllerTest extends TestCase
             $form_displayer,
             EventDispatcherStub::withIdentityCallback(),
             IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
-            HTTPRequestBuilder::get()->build(),
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
             $this->createMock(BaseLayout::class),
             [],
         );
@@ -70,9 +75,10 @@ final class DisplayRegisterFormControllerTest extends TestCase
                 }
             ),
             IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
-            HTTPRequestBuilder::get()->build(),
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
             $this->createMock(BaseLayout::class),
             [],
         );
@@ -100,13 +106,81 @@ final class DisplayRegisterFormControllerTest extends TestCase
                 }
             ),
             IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com'), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
-            HTTPRequestBuilder::get()->build(),
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
             $this->createMock(BaseLayout::class),
             [],
         );
 
         self::assertFalse($form_displayer->hasBeenDisplayed());
+    }
+
+    public function testRedirectToMyWhenCurrentUserIsAlreadyLoggedIn(): void
+    {
+        $form_displayer = IDisplayRegisterFormStub::buildSelf();
+
+        $controller = new DisplayRegisterFormController(
+            $form_displayer,
+            EventDispatcherStub::withIdentityCallback(),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withNoUser(),
+        );
+
+        $inspector = new LayoutInspector();
+
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anActiveUser()->build())->build(),
+            LayoutBuilder::buildWithInspector($inspector),
+            [],
+        );
+
+        self::assertFalse($form_displayer->hasBeenDisplayed());
+        self::assertEquals('/my/', $inspector->getRedirectUrl());
+    }
+
+    public function testRedirectToLoginWhenInvitationHasAlreadyBeenUsed(): void
+    {
+        $form_displayer = IDisplayRegisterFormStub::buildSelf();
+
+        $controller = new DisplayRegisterFormController(
+            $form_displayer,
+            EventDispatcherStub::withIdentityCallback(),
+            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation('jdoe@example.com', 102), new ConcealedString('secret'))),
+            RetrieveUserByEmailStub::withUser(UserTestBuilder::buildWithDefaults()),
+        );
+
+        $inspector = new LayoutInspector();
+
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
+            LayoutBuilder::buildWithInspector($inspector),
+            [],
+        );
+
+        self::assertFalse($form_displayer->hasBeenDisplayed());
+        self::assertEquals('/account/login.php', $inspector->getRedirectUrl());
+    }
+
+    public function testWithoutInvitation(): void
+    {
+        $form_displayer = IDisplayRegisterFormStub::buildSelf();
+
+        $controller = new DisplayRegisterFormController(
+            $form_displayer,
+            EventDispatcherStub::withIdentityCallback(),
+            IExtractInvitationToEmailStub::withoutInvitation(),
+            RetrieveUserByEmailStub::withNoUser(),
+        );
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
+            $this->createMock(BaseLayout::class),
+            [],
+        );
+
+        self::assertTrue($form_displayer->hasBeenDisplayed());
+        self::assertFalse($form_displayer->isAdmin());
+        self::assertTrue($form_displayer->isPasswordNeeded());
     }
 }

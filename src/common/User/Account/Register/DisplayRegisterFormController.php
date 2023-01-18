@@ -29,6 +29,7 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Account\RegistrationGuardEvent;
+use Tuleap\User\RetrieveUserByEmail;
 
 final class DisplayRegisterFormController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
@@ -36,14 +37,31 @@ final class DisplayRegisterFormController implements DispatchableWithRequestNoAu
         private IDisplayRegisterForm $form_displayer,
         private EventDispatcherInterface $event_dispatcher,
         private IExtractInvitationToEmail $invitation_to_email_request_extractor,
+        private RetrieveUserByEmail $user_manager,
     ) {
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        if (! $request->getCurrentUser()->isAnonymous()) {
+            $this->alreadyLoggedIn($layout);
+
+            return;
+        }
+
         $registration_guard = $this->event_dispatcher->dispatch(new RegistrationGuardEvent());
         if (! $registration_guard->isRegistrationPossible()) {
             throw new ForbiddenException();
+        }
+
+        $invitation_to_email = $this->invitation_to_email_request_extractor->getInvitationToEmail($request);
+        if ($invitation_to_email) {
+            $already_registered_user = $this->user_manager->getUserByEmail($invitation_to_email->to_email);
+            if ($already_registered_user) {
+                $this->previouslyRegistered($layout);
+
+                return;
+            }
         }
 
         $is_password_needed = $this->event_dispatcher
@@ -55,8 +73,23 @@ final class DisplayRegisterFormController implements DispatchableWithRequestNoAu
             $layout,
             RegisterFormContext::forAnonymous(
                 $is_password_needed,
-                $this->invitation_to_email_request_extractor->getInvitationToEmail($request),
+                $invitation_to_email,
             ),
         );
+    }
+
+    private function alreadyLoggedIn(BaseLayout $layout): void
+    {
+        $layout->addFeedback(\Feedback::INFO, _('No need to register, you are already logged in.'));
+        $layout->redirect('/my/');
+    }
+
+    private function previouslyRegistered(BaseLayout $layout): void
+    {
+        $layout->addFeedback(
+            \Feedback::INFO,
+            _('You have already used your invitation to register, you can now log in.')
+        );
+        $layout->redirect('/account/login.php');
     }
 }

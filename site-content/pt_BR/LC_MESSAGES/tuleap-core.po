@@ -2325,6 +2325,9 @@ msgstr "Não há licença para aprovar"
 msgid "No matching labels"
 msgstr "Sem rótulos correspondentes"
 
+msgid "No need to register, you are already logged in."
+msgstr ""
+
 msgid "No one monitoring"
 msgstr "Ninguém monitorando"
 
@@ -4751,6 +4754,9 @@ msgstr "Você não tem permissão para visualizar os grupos de usuários."
 
 msgid "You have a restricted user account"
 msgstr "Você possui uma conta de usuário restrita"
+
+msgid "You have already used your invitation to register, you can now log in."
+msgstr ""
 
 #, php-format
 msgid "You have not rights to update dashboards of the project \"%s\"."

@@ -35,6 +35,7 @@ use Tuleap\User\ProvideAnonymousUser;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 use Tuleap\User\ProvideUserFromRow;
+use Tuleap\User\RetrieveUserByEmail;
 use Tuleap\User\RetrieveUserById;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
@@ -42,7 +43,7 @@ use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, ProvideUserFromRow, ICreateAccount, LogUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, RetrieveUserByEmail, ProvideUserFromRow, ICreateAccount, LogUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
