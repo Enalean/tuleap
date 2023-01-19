@@ -71,7 +71,6 @@ class InvitationSender
                 $email,
                 $recipient->getUserId(),
                 $custom_message,
-                Invitation::STATUS_CREATING,
                 $secret,
             );
 
@@ -81,14 +80,12 @@ class InvitationSender
 
             if ($this->email_notifier->send($current_user, $recipient, $custom_message, $token)) {
                 $this->instrumentation->increment();
-                $status = Invitation::STATUS_SENT;
+                $this->dao->markAsSent($invitation_id);
             } else {
                 $this->logger->error("Unable to send invitation from user #{$current_user->getId()} to $email");
-                $status     = Invitation::STATUS_ERROR;
+                $this->dao->markAsError($invitation_id);
                 $failures[] = $email;
             }
-
-            $this->dao->update($invitation_id, $status);
         }
 
         if (count($failures) === count($emails)) {

@@ -75,7 +75,7 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->email_notifier->expects(self::once())->method("send")->willReturn(true);
         $this->dao->method('create');
-        $this->dao->method('update');
+        $this->dao->method('markAsSent');
         $this->instrumentation->method('increment');
 
         $this->sender->send($this->current_user, ["john@example.com"], null);
@@ -141,8 +141,8 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::exactly(2))
             ->method('create')
             ->withConsecutive(
-                [$this->anything(), 123, "john@example.com", null, "A custom message", "creating", $this->anything()],
-                [$this->anything(), 123, "doe@example.com", 1001, "A custom message", "creating", $this->anything()]
+                [$this->anything(), 123, "john@example.com", null, "A custom message", $this->anything()],
+                [$this->anything(), 123, "doe@example.com", 1001, "A custom message", $this->anything()]
             );
 
         $this->instrumentation
@@ -152,8 +152,7 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->expects(self::exactly(2))
-            ->method('update')
-            ->with($this->anything(), 'sent');
+            ->method('markAsSent');
 
         self::assertEmpty(
             $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], "A custom message")
@@ -185,12 +184,11 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao
             ->expects(self::once())
             ->method('create')
-            ->with($this->anything(), 123, "doe@example.com", null, null, "creating", $this->anything());
+            ->with($this->anything(), 123, "doe@example.com", null, null, $this->anything());
 
         $this->dao
             ->expects(self::once())
-            ->method('update')
-            ->with($this->anything(), 'sent');
+            ->method('markAsSent');
 
         $this->instrumentation
             ->expects(self::once())
@@ -237,8 +235,8 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::exactly(2))
             ->method('create')
             ->withConsecutive(
-                [$this->anything(), 123, "john@example.com", null, null, "creating", $this->anything()],
-                [$this->anything(), 123, "doe@example.com", null, null, "creating", $this->anything()]
+                [$this->anything(), 123, "john@example.com", null, null, $this->anything()],
+                [$this->anything(), 123, "doe@example.com", null, null, $this->anything()]
             );
 
         $this->instrumentation
@@ -249,13 +247,8 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('error')
             ->with("Unable to send invitation from user #123 to john@example.com");
 
-        $this->dao
-            ->expects(self::exactly(2))
-            ->method('update')
-            ->withConsecutive(
-                [$this->anything(), 'error'],
-                [$this->anything(), 'sent']
-            );
+        $this->dao->expects(self::once())->method('markAsError');
+        $this->dao->expects(self::once())->method('markAsSent');
 
         self::assertEquals(
             ["john@example.com"],
@@ -301,8 +294,8 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::exactly(2))
             ->method('create')
             ->withConsecutive(
-                [$this->anything(), 123, "john@example.com", null, null, "creating", $this->anything()],
-                [$this->anything(), 123, "doe@example.com", null, null, "creating", $this->anything()]
+                [$this->anything(), 123, "john@example.com", null, null, $this->anything()],
+                [$this->anything(), 123, "doe@example.com", null, null, $this->anything()]
             );
 
         $this->logger
@@ -315,8 +308,7 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao
             ->expects(self::exactly(2))
-            ->method('update')
-            ->with($this->anything(), 'error');
+            ->method('markAsError');
 
         $this->expectException(UnableToSendInvitationsException::class);
 
