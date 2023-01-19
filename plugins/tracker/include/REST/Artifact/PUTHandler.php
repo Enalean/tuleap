@@ -30,6 +30,7 @@ use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AllLinksToLinksKeyValuesConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLink;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
@@ -64,7 +65,8 @@ final class PUTHandler
                 );
                 echo sprintf('{"Reverse link stored from artifact %d ": "%s", "Reverse links": "%s"}', $artifact->getId(), implode(', ', $stored_links_to_json), implode(', ', $links_to_json));
             } else {
-                $this->artifact_updater->update($submitter, $artifact, $values, $comment);
+                $values_with_links_key = AllLinksToLinksKeyValuesConverter::convertIfNeeded($values);
+                $this->artifact_updater->update($submitter, $artifact, $values_with_links_key, $comment);
             }
         } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException $exception) {
             throw new RestException(400, $exception->getMessage());
