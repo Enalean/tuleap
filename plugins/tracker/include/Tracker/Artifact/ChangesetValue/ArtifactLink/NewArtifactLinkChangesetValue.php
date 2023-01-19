@@ -30,7 +30,8 @@ final class NewArtifactLinkChangesetValue
 {
     private function __construct(
         private int $field_id,
-        private ?ArtifactLinksDiff $artifact_links_diff,
+        private CollectionOfForwardLinks $added_values,
+        private CollectionOfForwardLinks $removed_values,
         private ?CollectionOfForwardLinks $submitted_values,
         private ?NewParentLink $parent,
         private CollectionOfReverseLinks $submitted_reverse_links,
@@ -44,13 +45,31 @@ final class NewArtifactLinkChangesetValue
         ?NewParentLink $parent,
         CollectionOfReverseLinks $submitted_reverse_links,
     ): self {
-        $diff = $submitted_values !== null ? ArtifactLinksDiff::build($submitted_values, $existing_links) : null;
+        $added_values   = $submitted_values
+            ? $existing_links->differenceById($submitted_values)
+            : new CollectionOfForwardLinks([]);
+        $removed_values = $submitted_values
+            ? $submitted_values->differenceById($existing_links)
+            : new CollectionOfForwardLinks([]);
         return new self(
             $field_id,
-            $diff,
+            $added_values,
+            $removed_values,
             $submitted_values,
             $parent,
             $submitted_reverse_links
+        );
+    }
+
+    public static function fromAddedValues(int $field_id, CollectionOfForwardLinks $submitted_values): self
+    {
+        return new self(
+            $field_id,
+            $submitted_values,
+            new CollectionOfForwardLinks([]),
+            $submitted_values,
+            null,
+            new CollectionOfReverseLinks([])
         );
     }
 
@@ -59,9 +78,14 @@ final class NewArtifactLinkChangesetValue
         return $this->field_id;
     }
 
-    public function getArtifactLinksDiff(): ?ArtifactLinksDiff
+    public function getAddedValues(): CollectionOfForwardLinks
     {
-        return $this->artifact_links_diff;
+        return $this->added_values;
+    }
+
+    public function getRemovedValues(): CollectionOfForwardLinks
+    {
+        return $this->removed_values;
     }
 
     public function getParent(): ?NewParentLink

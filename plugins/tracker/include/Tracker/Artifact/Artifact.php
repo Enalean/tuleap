@@ -118,10 +118,12 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksByChangesetCache;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLinkDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
-use Tuleap\Tracker\Artifact\Link\ArtifactLinkFilter;
 use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -1726,9 +1728,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         $artifact_linker = new ArtifactLinker(
             $this->getFormElementFactory(),
-            TrackerFactory::instance(),
             $this->getNewChangesetCreator($validator),
-            new ArtifactLinkFilter()
+            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), Tracker_ArtifactFactory::instance())
         );
 
         $links         = [ForwardLinkProxy::buildFromData($linked_artifact_id, $artifact_link_type)];
@@ -1746,9 +1747,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         $artifact_linker = new ArtifactLinker(
             $this->getFormElementFactory(),
-            TrackerFactory::instance(),
             $this->getNewChangesetCreator($validator),
-            new ArtifactLinkFilter()
+            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), Tracker_ArtifactFactory::instance())
         );
 
         $links = [];

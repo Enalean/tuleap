@@ -37,7 +37,7 @@ final class ForwardLinkProxy implements ForwardLink
     {
         return new self(
             $linked_artifact_id,
-            ($artifact_link_type === "") ? null : $artifact_link_type
+            ($artifact_link_type === '') ? null : $artifact_link_type
         );
     }
 

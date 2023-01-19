@@ -189,9 +189,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_values = $this->getFieldsDataOnUpdate([$link_representation]);
         $artifact_link    = $changeset_values->getArtifactLinkValue();
         self::assertNotNull($artifact_link);
-        $links_diff = $artifact_link->getArtifactLinksDiff();
-        self::assertNotNull($links_diff);
-        $new_links = $links_diff->getNewValues();
+        $new_links = $artifact_link->getAddedValues()->getTargetArtifactIds();
         self::assertCount(2, $new_links);
         self::assertContains($first_linked_artifact_id, $new_links);
         self::assertContains($second_linked_artifact_id, $new_links);
