@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ListPicker, ListPickerOptions } from "./type";
+import type { ListPicker, ListPickerOptions, SelectionManager } from "./type";
 import { DropdownContentRenderer } from "./renderers/DropdownContentRenderer";
 import { EventManager } from "./events/EventManager";
 import { DropdownManager } from "./dropdown/DropdownManager";
@@ -77,7 +77,7 @@ export function createListPicker(
         field_focus_manager
     );
 
-    let selection_manager;
+    let selection_manager: SelectionManager;
 
     let none_item;
     if (options?.none_value) {

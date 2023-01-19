@@ -190,83 +190,103 @@ describe("SingleSelectionManager", () => {
         });
     });
 
-    describe("resetAfterDependenciesUpdate", () => {
-        it(`when an item is selected but there is no option in the source <select> anymore,
-            then it should display the placeholder`, () => {
-            manager.processSelection(item_1.element);
-            source_select_box.innerHTML = "";
-            items_map_manager.refreshItemsMap();
+    describe("resetAfterChangeInOptions", () => {
+        it.each([
+            [
+                `no item has been selected, and there is no option in the select anymore`,
+                (): void => {
+                    source_select_box.innerHTML = "";
+                    item_1.target_option.selected = false;
+                },
+            ],
+            [
+                `an item has been selected, but there is no option in the select anymore`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                    source_select_box.innerHTML = "";
+                },
+            ],
+            [
+                `no item has been selected, and there are new options but none of them is selected`,
+                (): void => {
+                    const new_option_0 = doc.createElement("option");
+                    new_option_0.value = "new option 0";
+                    const new_option_1 = doc.createElement("option");
+                    new_option_1.value = "new option 1";
+                    source_select_box.replaceChildren(new_option_0, new_option_1);
+                    source_select_box.value = "";
+                    item_1.target_option.selected = false;
+                },
+            ],
+            [
+                `an item has been selected, but does not exist in the new options,
+                and no new option is selected`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                    const new_option_0 = doc.createElement("option");
+                    new_option_0.value = "new option 0";
+                    const new_option_1 = doc.createElement("option");
+                    new_option_1.value = "new option 1";
+                    source_select_box.replaceChildren(new_option_0, new_option_1);
+                    source_select_box.value = "";
+                },
+            ],
+        ])(`when %s, then it should display the placeholder`, (_conditions_description, setup) => {
+            setup();
             const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
-            manager.resetAfterDependenciesUpdate();
+            items_map_manager.refreshItemsMap();
+            manager.resetAfterChangeInOptions();
 
             expectItemNotToBeSelected(item_1);
             expect(selection_container.contains(placeholder)).toBe(true);
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
         });
 
-        it(`when no item has been selected and there is no option in the source <select> anymore,
-            then it should do nothing`, () => {
-            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
-            source_select_box.innerHTML = "";
-            items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
+        it.each([
+            [
+                `no item has been selected`,
+                `it should mark the new option as selected`,
+                (): void => {
+                    // No setup
+                },
+            ],
+            [
+                `an item has been selected`,
+                `it should mark the new option as selected`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                },
+            ],
+            [
+                `an item has been selected and is still selected in the new options`,
+                `it should keep it selected`,
+                (): void => {
+                    manager.processSelection(item_2.element);
+                },
+            ],
+        ])(
+            `when %s, and there are new options including one that is selected,
+            then %s`,
+            (_conditions_description, _expectation_description, setup) => {
+                setup();
+                const new_option_1 = doc.createElement("option");
+                new_option_1.value = "new option 1";
+                const new_option_2 = doc.createElement("option");
+                new_option_2.value = item_2.value;
+                new_option_2.selected = true;
+                source_select_box.replaceChildren(new_option_1, new_option_2);
+                item_1.target_option.selected = false;
 
-            expect(selection_container.contains(placeholder)).toBe(true);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
-        });
+                const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
+                items_map_manager.refreshItemsMap();
+                manager.resetAfterChangeInOptions();
 
-        it(`when no item has been selected, and there are new options in the source <select>,
-            then it should display the placeholder`, () => {
-            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
-            const new_option_0 = doc.createElement("option");
-            new_option_0.value = "new option 0";
-            const new_option_1 = doc.createElement("option");
-            new_option_1.value = "new option 1";
-            source_select_box.replaceChildren(new_option_0, new_option_1);
-
-            items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
-
-            expect(selection_container.contains(placeholder)).toBe(true);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
-        });
-
-        it(`when an item has been selected, and is still available in the new options,
-            then it should keep it selected`, () => {
-            manager.processSelection(item_1.element);
-            const new_option_0 = doc.createElement("option");
-            new_option_0.value = "new option 0";
-            const new_option_1 = doc.createElement("option");
-            new_option_1.value = item_1.value;
-            source_select_box.replaceChildren(new_option_0, new_option_1);
-            items_map_manager.refreshItemsMap();
-
-            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
-            manager.resetAfterDependenciesUpdate();
-
-            const new_item_1 = items_map_manager.findListPickerItemInItemMap(item_1.id);
-            expectItemToBeSelected(new_item_1);
-            expect(selection_container.contains(placeholder)).toBe(false);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
-        });
-
-        it(`when an item has been selected, but is not available in the new options,
-            then it should display the placeholder`, () => {
-            manager.processSelection(item_1.element);
-
-            const new_option_0 = doc.createElement("option");
-            new_option_0.value = "new option 0";
-            const new_option_1 = doc.createElement("option");
-            new_option_1.value = "new option 1";
-            source_select_box.replaceChildren(new_option_0, new_option_1);
-            items_map_manager.refreshItemsMap();
-
-            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
-            manager.resetAfterDependenciesUpdate();
-
-            expectItemNotToBeSelected(item_1);
-            expect(selection_container.contains(placeholder)).toBe(true);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
-        });
+                expectItemNotToBeSelected(item_1);
+                const new_item_2 = items_map_manager.findListPickerItemInItemMap(item_2.id);
+                expectItemToBeSelected(new_item_2);
+                expect(selection_container.contains(placeholder)).toBe(false);
+                expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
+            }
+        );
     });
 });

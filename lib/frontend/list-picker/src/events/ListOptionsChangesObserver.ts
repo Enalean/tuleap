@@ -57,7 +57,7 @@ export class ListOptionsChangesObserver {
 
             this.items_map_manager.refreshItemsMap();
             this.dropdown_content_renderer.renderAfterDependenciesUpdate();
-            this.selection_manager.resetAfterDependenciesUpdate();
+            this.selection_manager.resetAfterChangeInOptions();
             this.event_manager.attachItemListEvent();
         };
     }

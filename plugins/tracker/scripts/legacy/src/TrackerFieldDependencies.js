@@ -150,7 +150,7 @@ tuleap.tracker.Field = function (id, name, label) {
             return this;
         },
         force: function (new_options) {
-            var el = this.element();
+            const el = this.element();
             //Clear the field
             var len = el.options.length;
             for (var i = len; i >= 0; i--) {
@@ -160,30 +160,31 @@ tuleap.tracker.Field = function (id, name, label) {
             //Revert selected state for all options
             this.updateSelectedState();
 
-            //Add options
-            this.options.forEach(
-                function (option, value) {
-                    if (new_options.has(value)) {
-                        var opt = new Option(option.text, option.value);
-                        if (option.dataset) {
-                            Object.keys(option.dataset).forEach((data_attribute_name) => {
-                                opt.setAttribute(
-                                    data_attribute_name,
-                                    option.dataset[data_attribute_name]
-                                );
-                            });
-                        }
-
-                        if (new_options.get(value).selected) {
-                            opt.selected = true;
-                            const option_key = parseInt(option.value, 10);
-                            //Store the selected state for this option
-                            this.options.get(option_key).selected = true;
-                        }
-                        el.options[el.options.length] = opt;
-                    }
-                }.bind(this)
+            const at_least_one_new_value_selected = Array.from(new_options.values()).some(
+                (option) => option.selected
             );
+            //Add options
+            this.options.forEach((option, value) => {
+                if (!new_options.has(value)) {
+                    return;
+                }
+                const opt = new Option(option.text, option.value);
+                if (option.dataset) {
+                    Object.keys(option.dataset).forEach((data_attribute_name) => {
+                        opt.setAttribute(data_attribute_name, option.dataset[data_attribute_name]);
+                    });
+                }
+                if (new_options.get(value).selected) {
+                    opt.selected = true;
+                    option.selected = true;
+                }
+                if (!at_least_one_new_value_selected && new_options.size === 1) {
+                    //Select the only available option
+                    opt.selected = true;
+                    option.selected = true;
+                }
+                el.options[el.options.length] = opt;
+            });
 
             el.dispatchEvent(new Event("change"));
             //We've finished. Highlight the field to indicate to the user that it has changed (or not)
@@ -223,12 +224,13 @@ tuleap.tracker.Field = function (id, name, label) {
             return document.getElementById(id_sb);
         },
         onchange: function () {
-            var el = this.element();
+            const el = this.element();
             //Store the selected state
-            var len = el.options.length;
-            for (var i = 0; i < len; ++i) {
-                if (typeof this.options[el.options[i].value] !== "undefined") {
-                    this.options[el.options[i].value].selected = el.options[i].selected;
+            for (const html_option of el.options) {
+                const bind_value_id = Number.parseInt(html_option.value, 10);
+                const state_option = this.options.get(bind_value_id);
+                if (state_option) {
+                    state_option.selected = html_option.selected;
                 }
             }
             //Process rules

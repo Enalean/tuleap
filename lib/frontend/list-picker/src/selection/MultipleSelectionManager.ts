@@ -117,15 +117,23 @@ export class MultipleSelectionManager implements SelectionManager {
     }
 
     public initSelection(): void {
-        for (const option of this.source_select_box.options) {
-            if (!option.selected || !option.value) {
+        this.readSelectedItemsFromSelectElement().forEach((item) => {
+            this.selectListPickerItem(item, false);
+        });
+    }
+
+    private readSelectedItemsFromSelectElement(): ReadonlyArray<ListPickerItem> {
+        const items: ListPickerItem[] = [];
+        for (const option of this.source_select_box.selectedOptions) {
+            if (!option.value) {
                 continue;
             }
             const item_to_select = this.items_map_manager.getItemWithValue(option.value);
             if (item_to_select) {
-                this.selectListPickerItem(item_to_select, false);
+                items.push(item_to_select);
             }
         }
+        return items;
     }
 
     public handleBackspaceKey(event: KeyboardEvent): void {
@@ -154,18 +162,12 @@ export class MultipleSelectionManager implements SelectionManager {
         event.cancelBubble = true;
     }
 
-    public resetAfterDependenciesUpdate(): void {
-        const selected_items: Array<ListPickerItem> = [];
-        this.selection_state.selected_items.forEach((item) => {
-            const item_to_select = this.items_map_manager.getItemWithValue(item.value);
-            if (item_to_select === null) {
-                return;
-            }
-            selected_items.push(item_to_select);
-        });
-
+    public resetAfterChangeInOptions(): void {
+        const selected_items = this.readSelectedItemsFromSelectElement();
         this.clearSelectionState();
-        selected_items.forEach((item) => this.selectListPickerItem(item, false));
+        selected_items.forEach((item) => {
+            this.selectListPickerItem(item, false);
+        });
 
         this.togglePlaceholder();
         this.toggleClearValuesButton();

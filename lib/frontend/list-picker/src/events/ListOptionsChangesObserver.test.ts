@@ -52,7 +52,7 @@ describe("ListOptionsChangesObserver", () => {
         } as unknown as ItemsMapManager;
 
         selection_manager = {
-            resetAfterDependenciesUpdate: vi.fn(),
+            resetAfterChangeInOptions: vi.fn(),
         } as unknown as SelectionManager;
 
         event_manager = { attachItemListEvent: vi.fn() } as unknown as EventManager;
@@ -75,7 +75,7 @@ describe("ListOptionsChangesObserver", () => {
 
         expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
     });
 
@@ -88,7 +88,7 @@ describe("ListOptionsChangesObserver", () => {
 
         expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
     });
 
@@ -101,7 +101,7 @@ describe("ListOptionsChangesObserver", () => {
 
         expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
     });
 
@@ -114,7 +114,7 @@ describe("ListOptionsChangesObserver", () => {
 
         expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
     });
 
@@ -140,7 +140,7 @@ describe("ListOptionsChangesObserver", () => {
 
         expect(items_map_manager.refreshItemsMap).not.toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).not.toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).not.toHaveBeenCalled();
+        expect(selection_manager.resetAfterChangeInOptions).not.toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).not.toHaveBeenCalled();
     });
 });

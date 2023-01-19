@@ -88,51 +88,39 @@ export class SingleSelectionManager implements SelectionManager {
     }
 
     public initSelection(): void {
+        const item_to_select = this.readSelectedItemFromSelectElement();
+        if (item_to_select) {
+            this.replacePlaceholderWithCurrentSelection(item_to_select);
+        }
+    }
+
+    private readSelectedItemFromSelectElement(): ListPickerItem | null {
         const item_to_select = this.items_map_manager.getItemWithValue(
             this.source_select_box.value
         );
         if (item_to_select) {
-            this.replacePlaceholderWithCurrentSelection(item_to_select);
-            return;
+            return item_to_select;
         }
 
-        const selected_option = this.source_select_box.querySelector("option[selected]");
-        if (!(selected_option instanceof HTMLElement) || !selected_option.dataset.itemId) {
-            return;
+        const selected_option = this.source_select_box.selectedOptions.item(0);
+        if (!selected_option || !selected_option.dataset.itemId) {
+            return null;
         }
-
-        this.replacePlaceholderWithCurrentSelection(
-            this.items_map_manager.findListPickerItemInItemMap(selected_option.dataset.itemId)
-        );
+        return this.items_map_manager.findListPickerItemInItemMap(selected_option.dataset.itemId);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public handleBackspaceKey(event: KeyboardEvent): void {
+    public handleBackspaceKey(): void {
         // Do nothing, we are in single selection mode
     }
 
-    public resetAfterDependenciesUpdate(): void {
-        const available_items = this.items_map_manager.getListPickerItems();
-        if (available_items.length === 0) {
+    public resetAfterChangeInOptions(): void {
+        const new_selected_item = this.readSelectedItemFromSelectElement();
+        if (!new_selected_item) {
             this.showPlaceholder();
             this.clearSelection();
             return;
         }
-
-        if (this.selection_state === null) {
-            this.showPlaceholder();
-            return;
-        }
-
-        const item = this.items_map_manager.getItemWithValue(
-            this.selection_state.selected_item.value
-        );
-        if (!item) {
-            this.clearSelection();
-            this.showPlaceholder();
-            return;
-        }
-        this.selectListPickerItem(item, false);
+        this.selectListPickerItem(new_selected_item, false);
     }
 
     private createCurrentSelectionElement(item: ListPickerItem): DocumentFragment {
