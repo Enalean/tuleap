@@ -1674,8 +1674,8 @@ msgstr "Cabeçalho"
 msgid "Heartbeat"
 msgstr "Ritmo do projeto"
 
-msgid "Hello %s"
-msgstr ""
+msgid "Hello"
+msgstr "Olá"
 
 msgid "Hello,"
 msgstr "Olá,"

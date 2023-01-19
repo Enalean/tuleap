@@ -1686,8 +1686,8 @@ msgstr "Accroche"
 msgid "Heartbeat"
 msgstr "Activité"
 
-msgid "Hello %s"
-msgstr "Bonjour %s"
+msgid "Hello"
+msgstr "Bonjour"
 
 msgid "Hello,"
 msgstr "Bonjour,"
