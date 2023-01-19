@@ -30,16 +30,14 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\User\LogUser;
-use TuleapRegisterMail;
 use User_UserStatusManager;
 
 final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegistrationHandler
 {
     public function __construct(
         private IDisplayConfirmationPage $confirmation_page,
-        private TuleapRegisterMail $user_register_mail_builder,
-        private TuleapRegisterMail $admin_register_mail_builder,
-        private string $base_url,
+        private ConfirmationHashEmailSender $confirmation_hash_email_sender,
+        private NewUserByAdminEmailSender $new_user_by_admin_email_sender,
         private EventDispatcherInterface $event_dispatcher,
         private LogUser $log_user,
     ) {
@@ -58,7 +56,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
 
         if ($context->is_admin) {
             if ($request->get('form_send_email')) {
-                $is_sent = $this->sendLoginByMailToUser(
+                $is_sent = $this->new_user_by_admin_email_sender->sendLoginByMailToUser(
                     (string) $request->get('form_email'),
                     (string) $request->get('form_loginname')
                 );
@@ -90,7 +88,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         }
 
         if (
-            ! $this->sendNewUserEmail(
+            ! $this->confirmation_hash_email_sender->sendConfirmationHashEmail(
                 (string) $request->get('form_email'),
                 $new_user->getUserName(),
                 $mail_confirm_code
@@ -109,33 +107,5 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         $layout->redirect('/my/?' . http_build_query([
             'invitation-token' => $request->get('invitation-token'),
         ]));
-    }
-
-    private function sendLoginByMailToUser(string $to, string $login): bool
-    {
-        return $this->admin_register_mail_builder
-            ->getMail(
-                $login,
-                '',
-                $this->base_url,
-                ForgeConfig::get('sys_noreply'),
-                $to,
-                "admin"
-            )
-            ->send();
-    }
-
-    private function sendNewUserEmail(string $to, string $login, string $confirm_hash): bool
-    {
-        return $this->user_register_mail_builder
-            ->getMail(
-                $login,
-                $confirm_hash,
-                $this->base_url,
-                ForgeConfig::get('sys_noreply'),
-                $to,
-                "user"
-            )
-            ->send();
     }
 }

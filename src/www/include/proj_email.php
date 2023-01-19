@@ -40,18 +40,6 @@ function send_new_project_email(Project $project)
     return true;
 }
 
-function send_new_user_email($to, $login, $confirm_hash)
-{
-    //needed by new_user_email.txt
-    $base_url  = \Tuleap\ServerHostname::HTTPSUrl();
-    $presenter = new MailPresenterFactory();
-
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');
-    $mail     = new TuleapRegisterMail($presenter, $renderer, UserManager::instance(), new LocaleSwitcher(), "mail");
-    $mail     = $mail->getMail($login, $confirm_hash, $base_url, ForgeConfig::get('sys_noreply'), $to, "user");
-    return $mail->send();
-}
-
 function send_new_user_email_notification($to, $login)
 {
     //needed by new_user_email.txt
