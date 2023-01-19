@@ -32,10 +32,12 @@ import {
     TYPE_WIKI,
 } from "./constants";
 
+export type FolderContentItem = Item | FakeItem;
+
 export interface State {
     is_loading_folder: boolean;
     current_folder: Folder;
-    folder_content: Array<Item | FakeItem>;
+    folder_content: Array<FolderContentItem>;
     current_folder_ascendant_hierarchy: Array<Folder>;
     is_loading_ascendant_hierarchy: boolean;
     is_loading_currently_previewed_item: boolean;
