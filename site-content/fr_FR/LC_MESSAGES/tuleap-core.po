@@ -520,6 +520,9 @@ msgstr "Administrateurs"
 msgid "Agile Enterprise Planning - Full ALM"
 msgstr "Agile Enterprise Planning - ALM complet"
 
+msgid "All emails are already validated"
+msgstr "Tous les emails sont déjà validés"
+
 msgid "All fields are mandatory."
 msgstr "Tous les champs marqués sont obligatoires."
 
@@ -534,6 +537,9 @@ msgstr "Tous les projets"
 
 msgid "All users"
 msgstr "Tous les utilisateurs"
+
+msgid "All users don't need to be validated"
+msgstr "Tous les utilisateurs sont déjà validés"
 
 msgid "All users must be logged in"
 msgstr "Authentification requise"
@@ -1400,6 +1406,9 @@ msgstr "Adresse e-mail"
 
 msgid "Email format preference successfully updated"
 msgstr "La préférence de format de courriel a été mise à jour"
+
+msgid "Email is already validated"
+msgstr "L'email est déjà validé"
 
 msgid "Email not sent"
 msgstr "E-mail pas envoyé"
@@ -3751,6 +3760,9 @@ msgstr ""
 
 msgid "The submitted language is not supported."
 msgstr "La langue requise n'est pas supportée."
+
+msgid "The user doesn't need to be validated"
+msgstr "L'utilisateur n'a pas besoin d'être validé"
 
 msgid "The user will automatically be added as project member."
 msgstr "L'utilisateur sera ajouté automatiquement aux membres du projet."

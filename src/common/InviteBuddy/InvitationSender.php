@@ -30,10 +30,6 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 
 class InvitationSender
 {
-    private const STATUS_CREATING = 'creating';
-    public const STATUS_SENT      = 'sent';
-    private const STATUS_ERROR    = 'error';
-
     public function __construct(
         private InvitationSenderGateKeeper $gate_keeper,
         private InvitationEmailNotifier $email_notifier,
@@ -75,7 +71,7 @@ class InvitationSender
                 $email,
                 $recipient->getUserId(),
                 $custom_message,
-                self::STATUS_CREATING,
+                Invitation::STATUS_CREATING,
                 $secret,
             );
 
@@ -85,10 +81,10 @@ class InvitationSender
 
             if ($this->email_notifier->send($current_user, $recipient, $custom_message, $token)) {
                 $this->instrumentation->increment();
-                $status = self::STATUS_SENT;
+                $status = Invitation::STATUS_SENT;
             } else {
                 $this->logger->error("Unable to send invitation from user #{$current_user->getId()} to $email");
-                $status     = self::STATUS_ERROR;
+                $status     = Invitation::STATUS_ERROR;
                 $failures[] = $email;
             }
 

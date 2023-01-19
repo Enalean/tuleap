@@ -49,6 +49,7 @@ class PendingUsersCollectionPresenter
     public $activate_all_label;
     public $restricted_all_label;
     public $more_than_one_to_validate;
+    public bool $are_all_emails_already_validated;
 
     public function __construct($title, array $users, $page, CSRFSynchronizerToken $csrf_token)
     {
@@ -62,6 +63,8 @@ class PendingUsersCollectionPresenter
 
         $this->can_be_restricted = ForgeConfig::areRestrictedUsersAllowed();
         $this->can_be_validated  = ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1 && ADMIN_APPROVE_PENDING_PAGE_PENDING == $page;
+
+        $this->are_all_emails_already_validated = count(array_filter($users, static fn(PendingUserPresenter $user) => ! $user->is_email_already_validated)) === 0;
 
         $this->validate_notice = $GLOBALS['Language']->getText('admin_approve_pending_users', 'validate_notice');
         $this->activate_notice = $GLOBALS['Language']->getText('admin_approve_pending_users', 'activate_notice');

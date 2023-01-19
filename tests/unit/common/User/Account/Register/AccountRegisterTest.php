@@ -55,7 +55,8 @@ class AccountRegisterTest extends TestCase
                 'timezone',
                 'lang_id',
                 'unix_status',
-                'expiry_date'
+                'expiry_date',
+                RegisterFormContext::forAdmin(),
             )
         );
         self::assertFalse($invitation_success_feedback->hasBeenCalled());
@@ -86,7 +87,8 @@ class AccountRegisterTest extends TestCase
                 'timezone',
                 'lang_id',
                 'unix_status',
-                'expiry_date'
+                'expiry_date',
+                RegisterFormContext::forAdmin(),
             )
         );
         self::assertTrue($invitation_success_feedback->hasBeenCalledWith($created_user));

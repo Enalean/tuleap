@@ -28,7 +28,12 @@ namespace Tuleap\InviteBuddy;
  */
 final class Invitation
 {
-    public function __construct(public string $to_email, public int $from_user_id)
+    public const STATUS_CREATING = 'creating';
+    public const STATUS_SENT     = 'sent';
+    public const STATUS_USED     = 'used';
+    public const STATUS_ERROR    = 'error';
+
+    public function __construct(public int $id, public string $to_email, public int $from_user_id)
     {
     }
 }

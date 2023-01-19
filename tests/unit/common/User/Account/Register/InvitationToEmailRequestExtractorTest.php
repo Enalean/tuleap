@@ -86,7 +86,7 @@ class InvitationToEmailRequestExtractorTest extends TestCase
     {
         $identifier = new PrefixedSplitTokenSerializer(new PrefixTokenInvitation());
         $extractor  = new InvitationToEmailRequestExtractor(
-            InvitationByTokenRetrieverStub::withMatchingInvitation(new Invitation('', 102)),
+            InvitationByTokenRetrieverStub::withMatchingInvitation(new Invitation(1, '', 102)),
             $identifier,
         );
 
@@ -106,7 +106,7 @@ class InvitationToEmailRequestExtractorTest extends TestCase
     {
         $identifier = new PrefixedSplitTokenSerializer(new PrefixTokenInvitation());
         $extractor  = new InvitationToEmailRequestExtractor(
-            InvitationByTokenRetrieverStub::withMatchingInvitation(new Invitation('jdoe@example.com', 102)),
+            InvitationByTokenRetrieverStub::withMatchingInvitation(new Invitation(1, 'jdoe@example.com', 102)),
             $identifier,
         );
 
