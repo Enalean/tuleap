@@ -40,7 +40,6 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
         string $to_email,
         ?int $to_user_id,
         ?string $custom_message,
-        string $status,
         SplitTokenVerificationString $verifier,
     ): int {
         return (int) $this->getDB()->insertReturnId(
@@ -51,15 +50,20 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
                 'to_email'       => $to_email,
                 'to_user_id'     => $to_user_id,
                 'custom_message' => $custom_message,
-                'status'         => $status,
+                'status'         => Invitation::STATUS_CREATING,
                 'verifier'       => $this->hasher->computeHash($verifier),
             ]
         );
     }
 
-    public function update(int $id, string $status): void
+    public function markAsSent(int $id): void
     {
-        $this->getDB()->update('invitations', ['status' => $status], ['id' => $id]);
+        $this->getDB()->update('invitations', ['status' => Invitation::STATUS_SENT], ['id' => $id]);
+    }
+
+    public function markAsError(int $id): void
+    {
+        $this->getDB()->update('invitations', ['status' => Invitation::STATUS_ERROR], ['id' => $id]);
     }
 
     /**

@@ -46,7 +46,7 @@ class InvitationDaoTest extends TestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, Invitation::STATUS_CREATING, $verifier);
+        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, $verifier);
 
         $invitation = $this->dao->searchBySplitToken(new SplitToken($id, $verifier));
         self::assertEquals($id, $invitation->id);
@@ -58,7 +58,7 @@ class InvitationDaoTest extends TestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, Invitation::STATUS_CREATING, $verifier);
+        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, $verifier);
 
         $invalid_verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
@@ -112,13 +112,13 @@ class InvitationDaoTest extends TestCase
         $verifier_2 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $verifier_3 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $first_invitation_to_alice_id  = $this->dao->create(1234567890, 101, "alice@example.com", null, null, Invitation::STATUS_CREATING, $verifier_1);
-        $first_invitation_to_bob_id    = $this->dao->create(1234567890, 102, "bob@example.com", null, null, Invitation::STATUS_CREATING, $verifier_2);
-        $second_invitation_to_alice_id = $this->dao->create(1234567890, 103, "alice@example.com", null, null, Invitation::STATUS_CREATING, $verifier_3);
+        $first_invitation_to_alice_id  = $this->dao->create(1234567890, 101, "alice@example.com", null, null, $verifier_1);
+        $first_invitation_to_bob_id    = $this->dao->create(1234567890, 102, "bob@example.com", null, null, $verifier_2);
+        $second_invitation_to_alice_id = $this->dao->create(1234567890, 103, "alice@example.com", null, null, $verifier_3);
 
-        $this->dao->update($first_invitation_to_alice_id, Invitation::STATUS_SENT);
-        $this->dao->update($first_invitation_to_bob_id, Invitation::STATUS_SENT);
-        $this->dao->update($second_invitation_to_alice_id, Invitation::STATUS_SENT);
+        $this->dao->markAsSent($first_invitation_to_alice_id);
+        $this->dao->markAsSent($first_invitation_to_bob_id);
+        $this->dao->markAsSent($second_invitation_to_alice_id);
 
         return [$first_invitation_to_alice_id, $first_invitation_to_bob_id, $second_invitation_to_alice_id];
     }
