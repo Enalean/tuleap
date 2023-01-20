@@ -173,10 +173,12 @@ use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\Register\AccountRegister;
 use Tuleap\User\Account\Register\AfterSuccessfulUserRegistration;
+use Tuleap\User\Account\Register\ConfirmationHashEmailSender;
 use Tuleap\User\Account\Register\ConfirmationPageDisplayer;
 use Tuleap\User\Account\Register\DisplayAdminRegisterFormController;
 use Tuleap\User\Account\Register\DisplayRegisterFormController;
 use Tuleap\User\Account\Register\InvitationToEmailRequestExtractor;
+use Tuleap\User\Account\Register\NewUserByAdminEmailSender;
 use Tuleap\User\Account\Register\ProcessAdminRegisterFormController;
 use Tuleap\User\Account\Register\ProcessRegisterFormController;
 use Tuleap\User\Account\Register\RegisterFormDisplayer;
@@ -1060,9 +1062,14 @@ class RouteCollector
                     $renderer_factory,
                     $include_core_assets,
                 ),
-                new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail"),
-                new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail-admin"),
-                \Tuleap\ServerHostname::HTTPSUrl(),
+                new ConfirmationHashEmailSender(
+                    new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail"),
+                    \Tuleap\ServerHostname::HTTPSUrl(),
+                ),
+                new NewUserByAdminEmailSender(
+                    new \TuleapRegisterMail($mail_presenter_factory, $mail_renderer, $user_manager, $locale_switcher, "mail-admin"),
+                    \Tuleap\ServerHostname::HTTPSUrl(),
+                ),
                 $event_manager,
                 $user_manager,
             ),

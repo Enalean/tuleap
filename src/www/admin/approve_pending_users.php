@@ -23,6 +23,7 @@
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\Language\LocaleSwitcher;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
@@ -157,8 +158,19 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
                  . " WHERE user_id IN (" . db_ei_implode($users_array) . ")");
 
+        $confirmation_hash_email_sender = new \Tuleap\User\Account\Register\ConfirmationHashEmailSender(
+            new \TuleapRegisterMail(
+                new \MailPresenterFactory(),
+                TemplateRendererFactory::build()
+                    ->getRenderer(\ForgeConfig::get('codendi_dir') . '/src/templates/mail/'),
+                $user_manager,
+                new LocaleSwitcher(),
+                "mail"
+            ),
+            \Tuleap\ServerHostname::HTTPSUrl(),
+        );
         while ($row_user = db_fetch_array($res_user)) {
-            if (! send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
+            if (! $confirmation_hash_email_sender->sendConfirmationHashEmail($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
                         $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])
@@ -219,7 +231,23 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                 continue;
             }
 
-            $is_mail_sent = send_new_user_email($user->getEmail(), $user->getUserName(), $user->getConfirmHash());
+
+            $confirmation_hash_email_sender = new \Tuleap\User\Account\Register\ConfirmationHashEmailSender(
+                new \TuleapRegisterMail(
+                    new \MailPresenterFactory(),
+                    TemplateRendererFactory::build()
+                        ->getRenderer(\ForgeConfig::get('codendi_dir') . '/src/templates/mail/'),
+                    $user_manager,
+                    new LocaleSwitcher(),
+                    "mail"
+                ),
+                \Tuleap\ServerHostname::HTTPSUrl(),
+            );
+            $is_mail_sent                   = $confirmation_hash_email_sender->sendConfirmationHashEmail(
+                $user->getEmail(),
+                $user->getUserName(),
+                $user->getConfirmHash()
+            );
 
             if ($is_mail_sent) {
                 $GLOBALS['Response']->addFeedback(

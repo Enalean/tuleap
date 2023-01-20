@@ -64,9 +64,14 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
 
         $after = new AfterSuccessfulUserRegistration(
             $confirmation_page,
-            $user_register_mail_builder,
-            $admin_register_mail_builder,
-            'https://example.com',
+            new ConfirmationHashEmailSender(
+                $user_register_mail_builder,
+                'https://example.com',
+            ),
+            new NewUserByAdminEmailSender(
+                $admin_register_mail_builder,
+                'https://example.com',
+            ),
             $event_dispatcher,
             LogUserStub::buildSelf(),
         );
@@ -103,9 +108,14 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
 
         $after = new AfterSuccessfulUserRegistration(
             $confirmation_page,
-            $user_register_mail_builder,
-            $admin_register_mail_builder,
-            'https://example.com',
+            new ConfirmationHashEmailSender(
+                $user_register_mail_builder,
+                'https://example.com',
+            ),
+            new NewUserByAdminEmailSender(
+                $admin_register_mail_builder,
+                'https://example.com',
+            ),
             $event_dispatcher,
             LogUserStub::buildSelf(),
         );
@@ -150,9 +160,14 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
 
         $after = new AfterSuccessfulUserRegistration(
             $confirmation_page,
-            $user_register_mail_builder,
-            $admin_register_mail_builder,
-            'https://example.com',
+            new ConfirmationHashEmailSender(
+                $user_register_mail_builder,
+                'https://example.com',
+            ),
+            new NewUserByAdminEmailSender(
+                $admin_register_mail_builder,
+                'https://example.com',
+            ),
             $event_dispatcher,
             LogUserStub::buildSelf(),
         );
@@ -197,9 +212,14 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
 
         $after = new AfterSuccessfulUserRegistration(
             $confirmation_page,
-            $user_register_mail_builder,
-            $admin_register_mail_builder,
-            'https://example.com',
+            new ConfirmationHashEmailSender(
+                $user_register_mail_builder,
+                'https://example.com',
+            ),
+            new NewUserByAdminEmailSender(
+                $admin_register_mail_builder,
+                'https://example.com',
+            ),
             $event_dispatcher,
             LogUserStub::buildSelf(),
         );
@@ -235,9 +255,14 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
         $log_user = LogUserStub::buildSelf();
         $after    = new AfterSuccessfulUserRegistration(
             $confirmation_page,
-            $user_register_mail_builder,
-            $admin_register_mail_builder,
-            'https://example.com',
+            new ConfirmationHashEmailSender(
+                $user_register_mail_builder,
+                'https://example.com',
+            ),
+            new NewUserByAdminEmailSender(
+                $admin_register_mail_builder,
+                'https://example.com',
+            ),
             $event_dispatcher,
             $log_user,
         );
