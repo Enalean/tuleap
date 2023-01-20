@@ -26,7 +26,12 @@ use Feedback;
 use PFUser;
 use Tracker_Exception;
 use Tracker_NoChangeException;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
@@ -35,15 +40,22 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLink;
+use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-final class ArtifactLinker
+/**
+ * I'm responsible for link an artifact to another using artifact link field
+ */
+final class ArtifactLinker implements LinkArtifact
 {
     public function __construct(
         private RetrieveUsedArtifactLinkFields $form_element_factory,
         private CreateNewChangeset $changeset_creator,
         private RetrieveForwardLinks $forward_links_retriever,
+        private RetrieveViewableArtifact $artifact_retriever,
     ) {
     }
 
@@ -99,5 +111,26 @@ final class ArtifactLinker
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    public function linkReverseArtifacts(Artifact $targeted_artifact, CollectionOfReverseLinks $reverse_links, PFUser $user): Ok|Err
+    {
+        foreach ($reverse_links->links as $reverse_link) {
+            $source_artifact = $this->getSourceArtifactFromReverseLink($reverse_link, $user);
+            if (! $source_artifact) {
+                return Result::err(ArtifactDoesNotExistFault::build($reverse_link->getSourceArtifactId()));
+            }
+            $forward_link = $reverse_link->convertIntoForwardLinkCollection($targeted_artifact);
+            $this->linkArtifact($source_artifact, $forward_link, $user);
+        }
+        return Result::ok(null);
+    }
+
+    private function getSourceArtifactFromReverseLink(ReverseLink $reverse_link, PFUser $current_user): ?Artifact
+    {
+        return $this->artifact_retriever->getArtifactByIdUserCanView($current_user, $reverse_link->getSourceArtifactId());
     }
 }

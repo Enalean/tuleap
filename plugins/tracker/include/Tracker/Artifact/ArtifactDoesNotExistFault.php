@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,24 +15,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
+namespace Tuleap\Tracker\Artifact;
 
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\NeverThrow\Fault;
 
 /**
- * I hold a link from another Artifact to the current Artifact.
  * @psalm-immutable
  */
-interface ReverseLink
+final class ArtifactDoesNotExistFault extends Fault
 {
-    public function getSourceArtifactId(): int;
-
-    public function getType(): ?string;
-
-    public function convertIntoForwardLinkCollection(Artifact $artifact): CollectionOfForwardLinks;
+    public static function build(int $artifact_id): Fault
+    {
+        return new self(sprintf("Artifact #%d does not exist", $artifact_id));
+    }
 }

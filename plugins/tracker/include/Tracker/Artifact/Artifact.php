@@ -1729,7 +1729,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $artifact_linker = new ArtifactLinker(
             $this->getFormElementFactory(),
             $this->getNewChangesetCreator($validator),
-            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), Tracker_ArtifactFactory::instance())
+            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), Tracker_ArtifactFactory::instance()),
+            Tracker_ArtifactFactory::instance()
         );
 
         $links         = [ForwardLinkProxy::buildFromData($linked_artifact_id, $artifact_link_type)];
@@ -1748,7 +1749,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $artifact_linker = new ArtifactLinker(
             $this->getFormElementFactory(),
             $this->getNewChangesetCreator($validator),
-            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), Tracker_ArtifactFactory::instance())
+            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), Tracker_ArtifactFactory::instance()),
+            Tracker_ArtifactFactory::instance()
         );
 
         $links = [];

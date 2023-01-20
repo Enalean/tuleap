@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,24 +15,27 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
+namespace Tuleap\Tracker\Artifact\Link;
 
+use PFUser;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
 
 /**
- * I hold a link from another Artifact to the current Artifact.
- * @psalm-immutable
+ * I'm responsible for link an artifact to another using artifact link field
  */
-interface ReverseLink
+interface LinkArtifact
 {
-    public function getSourceArtifactId(): int;
-
-    public function getType(): ?string;
-
-    public function convertIntoForwardLinkCollection(Artifact $artifact): CollectionOfForwardLinks;
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    public function linkReverseArtifacts(Artifact $targeted_artifact, CollectionOfReverseLinks $reverse_links, PFUser $user): Ok|Err;
 }

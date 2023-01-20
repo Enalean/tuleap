@@ -33,6 +33,9 @@ final class ForwardLinkProxy implements ForwardLink
     {
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function buildFromData(int $linked_artifact_id, string $artifact_link_type): self
     {
         return new self(
