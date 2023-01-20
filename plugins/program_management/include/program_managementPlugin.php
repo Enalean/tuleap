@@ -238,6 +238,7 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\DisplayArtifactLinkEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -332,6 +333,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $this->addHook(PossibleParentSelector::NAME);
         $this->addHook('codendi_daily_start');
         $this->addHook(ValidateArtifactLinkValueEvent::NAME);
+        $this->addHook(DisplayArtifactLinkEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1702,5 +1704,12 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $artifact_links_new_types_checker->checkArtifactHaveMirroredMilestonesInProvidedLinks(
             ProvidedArtifactLinksTypesProxy::fromEvent($event),
         );
+    }
+
+    public function displayArtifactLinkEvent(DisplayArtifactLinkEvent $event): void
+    {
+        if ($event->getTypePresenter()->shortname === TimeboxArtifactLinkType::ART_LINK_SHORT_NAME) {
+            $event->setLinkCannotBeModified();
+        }
     }
 }
