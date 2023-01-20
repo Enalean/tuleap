@@ -54,7 +54,12 @@ function account_redirect_after_login(PFUser $user, string $return_to): void
     if ($return_to) {
         $returnToToken = parse_url($return_to);
         if (preg_match('{/my(/|/index.php|)}i', $returnToToken['path'] ?? '')) {
-            $url = '/my/index.php';
+            if (strpos($return_to, '/my/') === 0) {
+                $url       = $return_to;
+                $return_to = '';
+            } else {
+                $url = '/my/index.php';
+            }
         } else {
             $url = '/my/redirect.php';
         }
