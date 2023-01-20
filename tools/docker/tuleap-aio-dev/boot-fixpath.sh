@@ -4,13 +4,15 @@ set -x
 
 # It's a "reboot", just discard image default
 [ -f /etc/aliases ]               && rm -f /etc/aliases
-[ -f /etc/aliases.codendi ]        && rm -f /etc/aliases.codendi
+[ -f /etc/aliases.codendi ]       && rm -f /etc/aliases.codendi
 [ -f /etc/logrotate.d/httpd ]     && rm -f /etc/logrotate.d/httpd
 [ -f /etc/libnss-mysql-root.cfg ] && rm -f /etc/libnss-mysql-root.cfg
 [ -f /etc/libnss-mysql.cfg ]      && rm -f /etc/libnss-mysql.cfg
 [ -f /etc/my.cnf ]                && rm -f /etc/my.cnf
 [ -f /etc/nsswitch.conf ]         && rm -f /etc/nsswitch.conf
 [ -d /etc/tuleap ]                && rm -rf /etc/tuleap
+[ -d /cvsroot ]                   && rm -f /cvsroot
+[ -d /svnroot ]                   && rm -f /svnroot
 [ -d /etc/httpd/conf ]            && rm -rf /etc/httpd/conf
 [ -d /etc/httpd/conf.d ]          && rm -rf /etc/httpd/conf.d
 
