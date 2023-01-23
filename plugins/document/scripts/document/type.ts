@@ -127,7 +127,7 @@ export const ItemType = [
     TYPE_LINK,
     TYPE_EMPTY,
 ] as const;
-export type ItemType = typeof ItemType[number];
+export type ItemType = (typeof ItemType)[number];
 
 export interface Item extends MinimalItem {
     description: string;
@@ -375,10 +375,10 @@ export const AllowedSearchType = [
     "link",
     "empty",
 ] as const;
-export type AllowedSearchType = typeof AllowedSearchType[number];
+export type AllowedSearchType = (typeof AllowedSearchType)[number];
 
 export const AllowedSearchDateOperator = [">", "=", "<"];
-export type AllowedSearchDateOperator = typeof AllowedSearchDateOperator[number];
+export type AllowedSearchDateOperator = (typeof AllowedSearchDateOperator)[number];
 
 export interface SearchDate {
     readonly operator: AllowedSearchDateOperator;
@@ -454,7 +454,7 @@ export const HardcodedPropertyName = [
     "status",
 ] as const;
 export type AllowedSearchBodyPropertyName =
-    | typeof HardcodedPropertyName[number]
+    | (typeof HardcodedPropertyName)[number]
     | AdditionalFieldNumber;
 
 interface SearchBodyProperty {

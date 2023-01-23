@@ -32,7 +32,7 @@ export const DROPDOWN_SHOWN_CLASS_NAME = "tlp-dropdown-shown";
 export const TRIGGER_CLICK = "click";
 export const TRIGGER_HOVER_AND_CLICK = "hover-and-click";
 const TriggerType = [TRIGGER_CLICK, TRIGGER_HOVER_AND_CLICK] as const;
-type TriggerType = typeof TriggerType[number];
+type TriggerType = (typeof TriggerType)[number];
 
 export interface DropdownOptions {
     keyboard?: boolean;

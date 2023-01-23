@@ -37,7 +37,13 @@ $link-table-cell-background: transparent;
 
     > .link-field-table-body {
         > .link-field-table-row {
-            > :is(.link-field-table-cell-type, .link-field-table-cell-xref, .link-field-table-cell-status, .link-field-table-cell-action, .link-field-table-cell-no-links) {
+            > :is(
+                    .link-field-table-cell-type,
+                    .link-field-table-cell-xref,
+                    .link-field-table-cell-status,
+                    .link-field-table-cell-action,
+                    .link-field-table-cell-no-links
+                ) {
                 padding: $link-table-cell-padding;
                 border-bottom: $link-table-cell-border-bottom;
                 border-bottom-right-radius: 0;
