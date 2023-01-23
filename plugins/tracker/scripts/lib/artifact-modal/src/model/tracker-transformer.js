@@ -118,12 +118,7 @@ function displayI18NLabelIfAvailable(field_values) {
 }
 
 function addNoneValueInSelectboxField(selectbox_field) {
-    if (
-        selectbox_field.default_value &&
-        selectbox_field.default_value instanceof Array &&
-        selectbox_field.default_value.length === 0 &&
-        !selectbox_field.has_transitions
-    ) {
+    if (!selectbox_field.has_transitions) {
         selectbox_field.values.unshift({
             id: 100,
             label: getNone(),
