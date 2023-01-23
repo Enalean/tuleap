@@ -317,13 +317,16 @@ class UserDao extends \Tuleap\DB\DataAccessObject
      */
     public function storeLoginSuccess($user_id, $time): void
     {
-        $sql = 'UPDATE user_access
+        $this->getDB()->tryFlatTransaction(function (\ParagonIE\EasyDB\EasyDB $db) use ($user_id, $time) {
+            $this->flagUserAsFirstTimerIfItIsTheirFirstLogin((int) $user_id);
+            $sql = 'UPDATE user_access
                 SET nb_auth_failure = 0,
                     prev_auth_success = last_auth_success,
                     last_auth_success = ?,
                     last_access_date = ?
                 WHERE user_id = ?';
-        $this->getDB()->run($sql, $time, $time, $user_id);
+            $this->getDB()->run($sql, $time, $time, $user_id);
+        });
     }
 
      /**
@@ -611,6 +614,21 @@ class UserDao extends \Tuleap\DB\DataAccessObject
             'UPDATE user SET status="D" WHERE status="P" AND add_date + ? < ?',
             $pending_account_lifetime,
             $current_time,
+        );
+    }
+
+    public function userWillNotBeAnymoreAFirstTimer(int $user_id): void
+    {
+        $this->getDB()->update('user', ['is_first_timer' => false], ['user_id' => $user_id]);
+    }
+
+    private function flagUserAsFirstTimerIfItIsTheirFirstLogin(int $user_id): void
+    {
+        $this->getDB()->run(
+            'UPDATE user LEFT JOIN user_access USING (user_id)
+            SET is_first_timer = true
+            WHERE user.user_id = ? AND (user_access.user_id IS NULL OR user_access.last_auth_success = 0)',
+            $user_id
         );
     }
 }

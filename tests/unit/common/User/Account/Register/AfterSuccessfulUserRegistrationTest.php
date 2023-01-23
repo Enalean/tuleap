@@ -282,6 +282,6 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
         self::assertTrue($after_event_emitted);
         self::assertFalse($confirmation_page->hasConfirmationLinkSentBeenDisplayed());
         self::assertTrue($log_user->hasBeenLoggedIn());
-        self::assertEquals('/my/?invitation-token=tlp-invite-13.abc', $inspector->getRedirectUrl());
+        self::assertEquals('/my/', $inspector->getRedirectUrl());
     }
 }

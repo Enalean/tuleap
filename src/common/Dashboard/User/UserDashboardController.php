@@ -134,7 +134,7 @@ class UserDashboardController
 
         $this->assets_includer->includeAssets($user_dashboards_presenter);
 
-        $first_timer_presenter = $this->first_timer_presenter_builder->buildPresenter($request);
+        $first_timer_presenter = $this->first_timer_presenter_builder->buildPresenter($current_user);
         if ($first_timer_presenter) {
             $layout->addJavascriptAsset($first_timer_presenter->javascript_assets);
         }

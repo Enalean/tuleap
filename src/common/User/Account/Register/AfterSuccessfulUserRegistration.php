@@ -104,8 +104,6 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
     private function automagicallyLogUser(PFUser $new_user, HTTPRequest $request, BaseLayout $layout): void
     {
         $this->log_user->login($new_user->getUserName(), new ConcealedString($request->get('form_pw')));
-        $layout->redirect('/my/?' . http_build_query([
-            'invitation-token' => $request->get('invitation-token'),
-        ]));
+        $layout->redirect('/my/');
     }
 }

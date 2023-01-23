@@ -22,53 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Dashboard\User;
 
-use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
-use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Config\ConfigurationVariables;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\InviteBuddy\InvalidInvitationTokenException;
-use Tuleap\InviteBuddy\InvitationByTokenRetriever;
+use Tuleap\InviteBuddy\UsedInvitationRetriever;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\Request\ForbiddenException;
 use Tuleap\User\RetrieveUserById;
 
 final class FirstTimerPresenterBuilder
 {
     public function __construct(
-        private InvitationByTokenRetriever $invitation_dao,
-        private SplitTokenIdentifierTranslator $split_token_identifier,
+        private UsedInvitationRetriever $invitation_dao,
         private RetrieveUserById $user_manager,
     ) {
     }
 
-    public function buildPresenter(\Codendi_Request $request): ?FirstTimerPresenter
+    public function buildPresenter(\PFUser $user): ?FirstTimerPresenter
     {
-        $token = $request->get('invitation-token');
-        if (! \is_string($token)) {
+        if (! $user->isFirstTimer()) {
             return null;
         }
 
-        $token = new ConcealedString($token);
-        try {
-            $invitation = $this->invitation_dao->searchBySplitToken(
-                $this->split_token_identifier->getSplitToken($token)
-            );
+        $invitation = $this->invitation_dao->searchInvitationUsedToRegister((int) $user->getId());
 
-            return new FirstTimerPresenter(
-                $request->getCurrentUser()->getRealName(),
-                \ForgeConfig::get(ConfigurationVariables::NAME),
-                $this->user_manager->getUserById($invitation->from_user_id),
-                new JavascriptViteAsset(
-                    new IncludeViteAssets(
-                        __DIR__ . '/../../../scripts/first-timer/frontend-assets',
-                        '/assets/core/first-timer',
-                    ),
-                    'src/first-timer.ts',
+        return new FirstTimerPresenter(
+            $user->getRealName(),
+            \ForgeConfig::get(ConfigurationVariables::NAME),
+            $invitation ? $this->user_manager->getUserById($invitation->from_user_id) : null,
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/first-timer/frontend-assets',
+                    '/assets/core/first-timer',
                 ),
-            );
-        } catch (InvalidIdentifierFormatException | InvalidInvitationTokenException) {
-            throw new ForbiddenException(_('Your invitation link is not valid'));
-        }
+                'src/first-timer.ts',
+            ),
+        );
     }
 }
