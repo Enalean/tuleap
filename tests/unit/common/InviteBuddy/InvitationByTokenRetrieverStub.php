@@ -26,26 +26,35 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 
 class InvitationByTokenRetrieverStub implements InvitationByTokenRetriever
 {
-    private function __construct(private ?Invitation $invitation)
+    private function __construct(private ?Invitation $invitation, private bool $invitation_found)
     {
     }
 
     public static function withMatchingInvitation(Invitation $invitation): self
     {
-        return new self($invitation);
+        return new self($invitation, true);
     }
 
     public static function withoutMatchingInvitation(): self
     {
-        return new self(null);
+        return new self(null, false);
+    }
+
+    public static function withoutValidInvitation(): self
+    {
+        return new self(null, true);
     }
 
     public function searchBySplitToken(SplitToken $split_token): Invitation
     {
-        if (! $this->invitation) {
+        if ($this->invitation) {
+            return $this->invitation;
+        }
+
+        if ($this->invitation_found) {
             throw new InvalidInvitationTokenException();
         }
 
-        return $this->invitation;
+        throw new InvitationNotFoundException();
     }
 }

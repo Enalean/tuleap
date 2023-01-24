@@ -22,12 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use Tuleap\Authentication\SplitToken\SplitToken;
-
-interface InvitationByTokenRetriever
+final class InvitationNotFoundException extends \Exception
 {
-    /**
-     * @throws InvalidInvitationTokenException|InvitationNotFoundException
-     */
-    public function searchBySplitToken(SplitToken $split_token): Invitation;
 }

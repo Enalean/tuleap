@@ -66,6 +66,17 @@ class InvitationDaoTest extends TestCase
         $this->dao->searchBySplitToken(new SplitToken($id, $invalid_verifier));
     }
 
+    public function testExceptionWhenInvitationCannotBeFound(): void
+    {
+        $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+
+        $unknown_invitation_id = -1;
+
+        $this->expectException(InvitationNotFoundException::class);
+
+        $this->dao->searchBySplitToken(new SplitToken($unknown_invitation_id, $verifier));
+    }
+
     public function testSaveJustCreatedUserThanksToInvitationWhenNoSpecificInvitationIsUsed(): void
     {
         $this->createBunchOfInvitations();
