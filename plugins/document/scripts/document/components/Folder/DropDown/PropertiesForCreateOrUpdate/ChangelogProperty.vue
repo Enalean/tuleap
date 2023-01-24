@@ -33,18 +33,14 @@
         ></textarea>
     </div>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import emitter from "../../../../helpers/emitter";
-@Component
-export default class ChangelogProperty extends Vue {
-    @Prop({ required: true })
-    readonly value!: string;
 
-    oninput($event: Event): void {
-        if ($event.target instanceof HTMLTextAreaElement) {
-            emitter.emit("update-changelog-property", $event.target.value);
-        }
+defineProps<{ value: string }>();
+
+function oninput($event: Event): void {
+    if ($event.target instanceof HTMLTextAreaElement) {
+        emitter.emit("update-changelog-property", $event.target.value);
     }
 }
 </script>
