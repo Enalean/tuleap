@@ -33,6 +33,7 @@ final class ParentArtifactRepresentation
         public string $title,
         public string $xref,
         public string $uri,
+        public string $html_url,
         public MinimalTrackerRepresentation $tracker,
         public ?StatusValueRepresentation $full_status,
     ) {
@@ -46,6 +47,7 @@ final class ParentArtifactRepresentation
             $artifact->getCachedTitle(),
             $artifact->getXRef(),
             ArtifactRepresentation::ROUTE . '/' . $artifact_id,
+            $artifact->getUri(),
             MinimalTrackerRepresentation::build($artifact->getTracker()),
             $status_value_representation
         );
