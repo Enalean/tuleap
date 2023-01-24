@@ -887,9 +887,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
                     $userRow['clear_password'] = $user->getPassword();
                 }
             }
-            if ($user->getLegacyUserPw() !== '') {
-                $userRow['user_pw'] = '';
-            }
             $result = $this->getDao()->updateByRow($userRow);
             if ($result) {
                 if ($user->isSuspended() || $user->isDeleted()) {

@@ -132,14 +132,12 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         }
     }
 
-    private function checkPasswordStorageConformity(PFUser $user)
+    private function checkPasswordStorageConformity(PFUser $user): void
     {
-        $hashed_password        = $user->getUserPw();
-        $legacy_hashed_password = $user->getLegacyUserPw();
+        $hashed_password = $user->getUserPw();
 
         if (
-            $this->isPasswordUpdatingNeeded($hashed_password) ||
-            $this->isLegacyPasswordRemovalNeeded($legacy_hashed_password)
+            $this->isPasswordUpdatingNeeded($hashed_password)
         ) {
             $this->user_manager->updateDb($user);
         }
@@ -148,10 +146,5 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     private function isPasswordUpdatingNeeded($hashed_password)
     {
         return $this->password_handler->isPasswordNeedRehash($hashed_password);
-    }
-
-    private function isLegacyPasswordRemovalNeeded($legacy_hashed_password)
-    {
-        return ! empty($legacy_hashed_password);
     }
 }
