@@ -82,6 +82,26 @@ class InvitationToEmailRequestExtractorTest extends TestCase
         );
     }
 
+    public function testExceptionWhenInvitationTokenCannotBeVerified()
+    {
+        $identifier = new PrefixedSplitTokenSerializer(new PrefixTokenInvitation());
+        $extractor  = new InvitationToEmailRequestExtractor(
+            InvitationByTokenRetrieverStub::withoutValidInvitation(),
+            $identifier,
+        );
+
+        $this->expectException(ForbiddenException::class);
+
+        $extractor->getInvitationToEmail(
+            HTTPRequestBuilder::get()
+                ->withParam(
+                    'invitation-token',
+                    $identifier->getIdentifier(new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()))->getString(),
+                )
+                ->build(),
+        );
+    }
+
     public function testExceptionWhenInvitationIsTargetToAnAlreadyRegisteredUser()
     {
         $identifier = new PrefixedSplitTokenSerializer(new PrefixTokenInvitation());

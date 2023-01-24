@@ -67,11 +67,15 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
     }
 
     /**
-     * @throws InvalidInvitationTokenException
+     * @throws InvalidInvitationTokenException|InvitationNotFoundException
      */
     public function searchBySplitToken(SplitToken $split_token): Invitation
     {
         $row = $this->getDB()->row('SELECT id, to_email, from_user_id, verifier FROM invitations WHERE id = ?', $split_token->getID());
+        if (! $row) {
+            throw new InvitationNotFoundException();
+        }
+
         if (! $this->hasher->verifyHash($split_token->getVerificationString(), $row['verifier'])) {
             throw new InvalidInvitationTokenException();
         }

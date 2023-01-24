@@ -27,6 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\InviteBuddy\InvalidInvitationTokenException;
 use Tuleap\InviteBuddy\InvitationByTokenRetriever;
+use Tuleap\InviteBuddy\InvitationNotFoundException;
 use Tuleap\Request\ForbiddenException;
 
 final class InvitationToEmailRequestExtractor implements IExtractInvitationToEmail
@@ -51,7 +52,12 @@ final class InvitationToEmailRequestExtractor implements IExtractInvitationToEma
             );
 
             return InvitationToEmail::fromInvitation($invitation, $token);
-        } catch (InvalidIdentifierFormatException | InvalidInvitationTokenException | InvitationShouldBeToEmailException $e) {
+        } catch (
+            InvalidIdentifierFormatException |
+            InvalidInvitationTokenException |
+            InvitationNotFoundException |
+            InvitationShouldBeToEmailException
+        ) {
             throw new ForbiddenException(_('Your invitation link is not valid'));
         }
     }
