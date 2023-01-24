@@ -767,6 +767,7 @@ CREATE TABLE user (
   last_pwd_update int(11) NOT NULL default '0',
   expiry_date int(11),
   has_custom_avatar TINYINT(1) NOT NULL DEFAULT 0,
+  is_first_timer BOOL NOT NULL DEFAULT false,
   PRIMARY KEY  (user_id),
   INDEX idx_user_name(user_name(10)),
   INDEX idx_user_mail(email(10)),

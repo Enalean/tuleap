@@ -27,7 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DataAccessObject;
 
-class InvitationDao extends DataAccessObject implements InvitationByTokenRetriever
+class InvitationDao extends DataAccessObject implements InvitationByTokenRetriever, UsedInvitationRetriever
 {
     public function __construct(private SplitTokenVerificationStringHasher $hasher)
     {
@@ -128,5 +128,19 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
             "SELECT 1 FROM invitations WHERE created_user_id = ? AND status = ?",
             [$user_id, Invitation::STATUS_USED]
         );
+    }
+
+    public function searchInvitationUsedToRegister(int $user_id): ?Invitation
+    {
+        $row = $this->getDB()->row(
+            "SELECT id, to_email, from_user_id FROM invitations WHERE created_user_id = ? AND status = ?",
+            $user_id,
+            Invitation::STATUS_USED
+        );
+        if (! $row) {
+            return null;
+        }
+
+        return new Invitation($row['id'], $row['to_email'], $row['from_user_id']);
     }
 }

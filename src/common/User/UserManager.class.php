@@ -515,6 +515,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             if ($this->current_user === null) {
                 //No valid session_hash/ip found. User is anonymous
                 $this->current_user = \Tuleap\User\CurrentUserWithLoggedInInformation::fromAnonymous($this);
+            } elseif ($this->current_user->user->isFirstTimer()) {
+                $this->getDao()->userWillNotBeAnymoreAFirstTimer((int) $this->current_user->user->getId());
             }
             //cache the user
             $this->_users[$this->current_user->user->getId()]                = $this->current_user->user;

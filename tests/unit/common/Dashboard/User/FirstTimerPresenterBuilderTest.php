@@ -22,16 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Dashboard\User;
 
-use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
-use Tuleap\Authentication\SplitToken\SplitToken;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\InviteBuddy\Invitation;
-use Tuleap\InviteBuddy\InvitationByTokenRetrieverStub;
-use Tuleap\InviteBuddy\PrefixTokenInvitation;
-use Tuleap\Request\ForbiddenException;
-use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\InviteBuddy\UsedInvitationRetrieverStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
@@ -51,84 +45,51 @@ class FirstTimerPresenterBuilderTest extends TestCase
 
         $invitee = UserTestBuilder::aUser()
             ->withId(103)
+            ->withIsFirstTimer(true)
             ->withRealName('Thomas Neo Anderson')
             ->build();
 
-        $identifier = new PrefixedSplitTokenSerializer(new PrefixTokenInvitation());
-
         $builder = new FirstTimerPresenterBuilder(
-            InvitationByTokenRetrieverStub::withMatchingInvitation(
+            UsedInvitationRetrieverStub::withUsedInvitation(
                 new Invitation(1, 'jdoe@example.com', $project_admin->getId())
             ),
-            $identifier,
             RetrieveUserByIdStub::withUser($project_admin),
         );
 
-        $presenter = $builder->buildPresenter(
-            HTTPRequestBuilder::get()
-                ->withUser($invitee)
-                ->withParam(
-                    'invitation-token',
-                    $identifier->getIdentifier(
-                        new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString())
-                    )->getString()
-                )
-                ->build()
-        );
+        $presenter = $builder->buildPresenter($invitee);
 
         self::assertEquals('Agent Smith', $presenter->invited_by_user->real_name);
         self::assertEquals('Thomas Neo Anderson', $presenter->real_name);
     }
 
-    public function testNullWhenTokenIsNotInTheRequest(): void
+    public function testWithoutInvitation(): void
     {
+        \ForgeConfig::set(ConfigurationVariables::NAME, 'Tuleap');
+
+        $invitee = UserTestBuilder::aUser()
+            ->withId(103)
+            ->withIsFirstTimer(true)
+            ->withRealName('Thomas Neo Anderson')
+            ->build();
+
         $builder = new FirstTimerPresenterBuilder(
-            InvitationByTokenRetrieverStub::withoutMatchingInvitation(),
-            new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+            UsedInvitationRetrieverStub::withoutInvitation(),
             RetrieveUserByIdStub::withNoUser(),
         );
 
-        self::assertNull($builder->buildPresenter(HTTPRequestBuilder::get()->build()));
+        $presenter = $builder->buildPresenter($invitee);
+
+        self::assertEquals(null, $presenter->invited_by_user);
+        self::assertEquals('Thomas Neo Anderson', $presenter->real_name);
     }
 
-    public function testExceptionWhenTokenIsInvalid(): void
+    public function testNullWhenUserIsNotAFirstTimer(): void
     {
         $builder = new FirstTimerPresenterBuilder(
-            InvitationByTokenRetrieverStub::withoutMatchingInvitation(),
-            new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+            UsedInvitationRetrieverStub::withoutInvitation(),
             RetrieveUserByIdStub::withNoUser(),
         );
 
-        $this->expectException(ForbiddenException::class);
-
-        $builder->buildPresenter(
-            HTTPRequestBuilder::get()
-                ->withParam('invitation-token', 'not-a-valid-token')
-                ->build()
-        );
-    }
-
-    public function testExceptionWhenInvitationIsNotFound(): void
-    {
-        $identifier = new PrefixedSplitTokenSerializer(new PrefixTokenInvitation());
-
-        $builder = new FirstTimerPresenterBuilder(
-            InvitationByTokenRetrieverStub::withoutMatchingInvitation(),
-            $identifier,
-            RetrieveUserByIdStub::withNoUser(),
-        );
-
-        $this->expectException(ForbiddenException::class);
-
-        $builder->buildPresenter(
-            HTTPRequestBuilder::get()
-                ->withParam(
-                    'invitation-token',
-                    $identifier->getIdentifier(
-                        new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString())
-                    )->getString()
-                )
-                ->build()
-        );
+        self::assertNull($builder->buildPresenter(UserTestBuilder::buildWithDefaults()));
     }
 }
