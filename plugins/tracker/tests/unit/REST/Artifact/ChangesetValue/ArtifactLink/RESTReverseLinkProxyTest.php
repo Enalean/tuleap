@@ -23,6 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
+use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\LinkWithDirectionRepresentationBuilder;
 
 final class RESTReverseLinkProxyTest extends TestCase
@@ -49,5 +52,17 @@ final class RESTReverseLinkProxyTest extends TestCase
     {
         $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
         RESTReverseLinkProxy::fromPayload(LinkWithDirectionRepresentationBuilder::aReverseLinkWithNullType(74));
+    }
+
+    public function testItConvertsReverseLinkIntoACollectionOfForwardOnes(): void
+    {
+        $link              = RESTReverseLinkProxy::fromPayload(
+            LinkWithDirectionRepresentationBuilder::aReverseLink(49)->withType('')->build()
+        );
+        $targeted_artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        self::assertEquals(
+            new CollectionOfForwardLinks([ForwardLinkProxy::buildFromData($targeted_artifact->getId(), '')]),
+            $link->convertIntoForwardLinkCollection($targeted_artifact)
+        );
     }
 }

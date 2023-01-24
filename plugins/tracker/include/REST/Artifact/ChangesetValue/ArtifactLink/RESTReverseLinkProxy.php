@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLink;
+use Tuleap\Tracker\Artifact\Link\ForwardLinkProxy;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
 /**
@@ -66,5 +69,10 @@ final class RESTReverseLinkProxy implements ReverseLink
     public function getType(): ?string
     {
         return $this->type;
+    }
+
+    public function convertIntoForwardLinkCollection(Artifact $artifact): CollectionOfForwardLinks
+    {
+        return new CollectionOfForwardLinks([ForwardLinkProxy::buildFromData($artifact->getId(), $this->type ?? '')]);
     }
 }

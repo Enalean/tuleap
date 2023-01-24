@@ -95,6 +95,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLi
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
@@ -496,7 +497,7 @@ class ArtifactsResource extends AuthenticatedResource
      * Get all artifacts linked by type
      *
      * Get all the artifacts linked by type.
-     * If no type is provided, it will search linked artifacts witn no type.
+     * If no type is provided, it will search linked artifacts with no type.
      *
      * @url GET {id}/linked_artifacts
      *
@@ -746,14 +747,23 @@ class ArtifactsResource extends AuthenticatedResource
             $changeset_creator
         );
 
+        $artifact_factory =  Tracker_ArtifactFactory::instance();
+
         $reverse_link_retriever = new ReverseLinksRetriever(
             new ReverseLinksDao(),
-            Tracker_ArtifactFactory::instance()
+            $artifact_factory
+        );
+
+        $artifact_linker = new ArtifactLinker(
+            $this->formelement_factory,
+            $changeset_creator,
+            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), $artifact_factory),
+            $artifact_factory
         );
 
         $this->sendAllowHeadersForArtifact();
 
-        $put_handler = new PUTHandler($fields_data_builder, $updater, $reverse_link_retriever);
+        $put_handler = new PUTHandler($fields_data_builder, $updater, $reverse_link_retriever, $artifact_linker);
         $put_handler->handle($values, $artifact, $user, $comment);
 
         $this->sendLastModifiedHeader($artifact);

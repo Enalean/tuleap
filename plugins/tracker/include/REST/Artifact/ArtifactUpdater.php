@@ -30,6 +30,9 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 
+/**
+ * I'm responsible for updating all fields of artifact (title, description, artifact_link ...)
+ */
 class ArtifactUpdater
 {
     public function __construct(

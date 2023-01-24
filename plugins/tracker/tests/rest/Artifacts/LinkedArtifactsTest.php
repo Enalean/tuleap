@@ -65,6 +65,57 @@ final class LinkedArtifactsTest extends TrackerBase
         $this->assertArtifactLinks($response_with_read_only_user, $artifact_id_1, $artifact_id_2);
     }
 
+    public function testPUTReverseArtifacts(): void
+    {
+        $project_id = $this->getProjectId(self::PROJECT_SHORTNAME);
+        $tracker_id = $this->tracker_ids[$project_id][self::TRACKER_SHORTNAME];
+        $field_id   = $this->getAUsedFieldId($tracker_id, self::FIELD_SHORTNAME);
+
+        $tracker = $this->tracker_representations[$tracker_id];
+        foreach ($tracker['fields'] as $field) {
+            if ($field['name'] === 'status') {
+                $status_field_id       = $field['field_id'];
+                $this->status_value_id = $field['values'][0]['id'];
+            }
+        }
+
+        $artifact_id_1 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
+        $artifact_id_2 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
+
+        $body = json_encode(
+            [
+                'values' => [
+                    [
+                        "field_id" => $field_id,
+                        "all_links" => [
+                            [
+                                "id" => $artifact_id_2,
+                                "direction" => "reverse",
+                                "type" => "",
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest('PUT', "artifacts/$artifact_id_1")->withBody($this->stream_factory->createStream($body))
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_2) . '/linked_artifacts?direction=forward')
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $linked_artifacts_collection = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertEquals($artifact_id_1, $linked_artifacts_collection["collection"][0]["id"]);
+    }
+
     private function createArtifact(int $tracker_id, int $art_link_field_id, int $status_field_id, int ...$linked_artifacts): int
     {
         $payload = [
