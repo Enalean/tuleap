@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-
 /**
  * @psalm-immutable
  */
@@ -33,7 +32,12 @@ final class Invitation
     public const STATUS_USED     = 'used';
     public const STATUS_ERROR    = 'error';
 
-    public function __construct(public int $id, public string $to_email, public int $from_user_id)
-    {
+    public function __construct(
+        public int $id,
+        public string $to_email,
+        public ?int $to_user_id,
+        public int $from_user_id,
+        public ?int $created_user_id,
+    ) {
     }
 }

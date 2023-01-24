@@ -81,8 +81,8 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $this->dao
-            ->shouldReceive('searchByEmail')
-            ->with('doe@example.com')
+            ->shouldReceive('searchByCreatedUserId')
+            ->with(104)
             ->once()
             ->andReturn([]);
 
@@ -100,8 +100,8 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $this->dao
-            ->shouldReceive('searchByEmail')
-            ->with('doe@example.com')
+            ->shouldReceive('searchByCreatedUserId')
+            ->with(104)
             ->once()
             ->andReturn([]);
 
@@ -109,7 +109,7 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $new_user,
             RegisterFormContext::forAnonymous(
                 true,
-                InvitationToEmail::fromInvitation(new Invitation(1, 'doe@example.com', 102), new ConcealedString('secret'))
+                InvitationToEmail::fromInvitation(new Invitation(1, 'doe@example.com', null, 102, null), new ConcealedString('secret'))
             )
         );
     }
@@ -123,8 +123,8 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByEmail')
-            ->with('doe@example.com')
+            ->shouldReceive('searchByCreatedUserId')
+            ->with(104)
             ->once()
             ->andReturn([]);
 
@@ -149,8 +149,8 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByEmail')
-            ->with('doe@example.com')
+            ->shouldReceive('searchByCreatedUserId')
+            ->with(104)
             ->once()
             ->andReturn(
                 [
@@ -198,8 +198,8 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByEmail')
-            ->with('doe@example.com')
+            ->shouldReceive('searchByCreatedUserId')
+            ->with(104)
             ->once()
             ->andReturn(
                 [
@@ -239,8 +239,8 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByEmail')
-            ->with('doe@example.com')
+            ->shouldReceive('searchByCreatedUserId')
+            ->with(104)
             ->once()
             ->andReturn(
                 [
@@ -280,8 +280,8 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByEmail')
-            ->with('doe@example.com')
+            ->shouldReceive('searchByCreatedUserId')
+            ->with(104)
             ->once()
             ->andReturn(
                 [

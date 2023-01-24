@@ -33,7 +33,6 @@ use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
-use Tuleap\Test\Stubs\RetrieveUserByEmailStub;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
 final class DisplayRegisterFormControllerTest extends TestCase
@@ -45,8 +44,12 @@ final class DisplayRegisterFormControllerTest extends TestCase
         $controller = new DisplayRegisterFormController(
             $form_displayer,
             EventDispatcherStub::withIdentityCallback(),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withNoUser(),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
@@ -74,8 +77,12 @@ final class DisplayRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withNoUser(),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
@@ -105,8 +112,12 @@ final class DisplayRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withNoUser(),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
@@ -124,8 +135,12 @@ final class DisplayRegisterFormControllerTest extends TestCase
         $controller = new DisplayRegisterFormController(
             $form_displayer,
             EventDispatcherStub::withIdentityCallback(),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withNoUser(),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
 
         $inspector = new LayoutInspector();
@@ -147,8 +162,12 @@ final class DisplayRegisterFormControllerTest extends TestCase
         $controller = new DisplayRegisterFormController(
             $form_displayer,
             EventDispatcherStub::withIdentityCallback(),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withUser(UserTestBuilder::buildWithDefaults()),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, 201),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
 
         $inspector = new LayoutInspector();
@@ -171,7 +190,6 @@ final class DisplayRegisterFormControllerTest extends TestCase
             $form_displayer,
             EventDispatcherStub::withIdentityCallback(),
             IExtractInvitationToEmailStub::withoutInvitation(),
-            RetrieveUserByEmailStub::withNoUser(),
         );
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),

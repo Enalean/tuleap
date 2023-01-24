@@ -43,8 +43,12 @@ class ProcessRegisterFormControllerTest extends TestCase
         $controller = new ProcessRegisterFormController(
             $form_processor,
             EventDispatcherStub::withIdentityCallback(),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withNoUser(),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
@@ -72,8 +76,12 @@ class ProcessRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withNoUser(),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
@@ -103,8 +111,12 @@ class ProcessRegisterFormControllerTest extends TestCase
                     return $event;
                 }
             ),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withNoUser(),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),
@@ -124,8 +136,12 @@ class ProcessRegisterFormControllerTest extends TestCase
         $controller = new ProcessRegisterFormController(
             $form_processor,
             EventDispatcherStub::withIdentityCallback(),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withNoUser(),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::anActiveUser()->build())->build(),
@@ -145,8 +161,12 @@ class ProcessRegisterFormControllerTest extends TestCase
         $controller = new ProcessRegisterFormController(
             $form_processor,
             EventDispatcherStub::withIdentityCallback(),
-            IExtractInvitationToEmailStub::withInvitation(InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 102), new ConcealedString('secret'))),
-            RetrieveUserByEmailStub::withUser(UserTestBuilder::buildWithDefaults()),
+            IExtractInvitationToEmailStub::withInvitation(
+                InvitationToEmail::fromInvitation(
+                    new Invitation(1, 'jdoe@example.com', null, 102, 201),
+                    new ConcealedString('secret'),
+                ),
+            ),
         );
         $controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::anAnonymousUser()->build())->build(),

@@ -63,7 +63,14 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
 
     public function markAsError(int $id): void
     {
-        $this->getDB()->update('invitations', ['status' => Invitation::STATUS_ERROR], ['id' => $id]);
+        $this->getDB()->update(
+            'invitations',
+            [
+                'status'   => Invitation::STATUS_ERROR,
+                'to_email' => '',
+            ],
+            ['id' => $id]
+        );
     }
 
     /**
@@ -71,7 +78,7 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
      */
     public function searchBySplitToken(SplitToken $split_token): Invitation
     {
-        $row = $this->getDB()->row('SELECT id, to_email, from_user_id, verifier FROM invitations WHERE id = ?', $split_token->getID());
+        $row = $this->getDB()->row('SELECT id, to_email, to_user_id, from_user_id, created_user_id, verifier FROM invitations WHERE id = ?', $split_token->getID());
         if (! $row) {
             throw new InvitationNotFoundException();
         }
@@ -80,15 +87,16 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
             throw new InvalidInvitationTokenException();
         }
 
-        return new Invitation($row['id'], $row['to_email'], $row['from_user_id']);
+        return new Invitation($row['id'], $row['to_email'], $row['to_user_id'], $row['from_user_id'], $row['created_user_id']);
     }
 
-    public function searchByEmail(string $to_email): array
+    public function searchByCreatedUserId(int $user_id): array
     {
         return $this->getDB()->run(
-            "SELECT DISTINCT from_user_id FROM invitations WHERE to_email = ? AND status = ?",
-            $to_email,
+            "SELECT DISTINCT from_user_id FROM invitations WHERE created_user_id = ? AND status IN (?, ?)",
+            $user_id,
             Invitation::STATUS_SENT,
+            Invitation::STATUS_USED,
         );
     }
 
@@ -97,7 +105,8 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
         $this->getDB()->run(
             "UPDATE invitations
                 SET created_user_id = ?,
-                    status = IF(id = ?, ?, status)
+                    status = IF(id = ?, ?, status),
+                    to_email = ''
                 WHERE to_email = ?
                   AND status = ?
                   AND created_user_id IS NULL",
@@ -137,7 +146,7 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
     public function searchInvitationUsedToRegister(int $user_id): ?Invitation
     {
         $row = $this->getDB()->row(
-            "SELECT id, to_email, from_user_id FROM invitations WHERE created_user_id = ? AND status = ?",
+            'SELECT id, to_email, to_user_id, from_user_id, created_user_id FROM invitations WHERE created_user_id = ? AND status = ?',
             $user_id,
             Invitation::STATUS_USED
         );
@@ -145,6 +154,6 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
             return null;
         }
 
-        return new Invitation($row['id'], $row['to_email'], $row['from_user_id']);
+        return new Invitation($row['id'], $row['to_email'], $row['to_user_id'], $row['from_user_id'], $row['created_user_id']);
     }
 }
