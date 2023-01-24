@@ -43,10 +43,11 @@ describe("MultipleSelectionManager", () => {
         gettext_provider: GettextProvider,
         item_1: ListPickerItem,
         item_2: ListPickerItem,
-        openListPicker: () => void;
+        openListPicker: () => void,
+        doc: Document;
 
     beforeEach(() => {
-        const doc = document.implementation.createHTMLDocument();
+        doc = document.implementation.createHTMLDocument();
         source_select_box = doc.createElement("select");
         source_select_box.setAttribute("multiple", "multiple");
         appendSimpleOptionsToSourceSelectBox(source_select_box);
@@ -450,44 +451,122 @@ describe("MultipleSelectionManager", () => {
         });
     });
 
-    describe("resetAfterDependenciesUpdate", () => {
-        it("should remove the values from the previous selection that do not appear in the new options", () => {
-            manager.processSelection(item_1.element);
-            manager.processSelection(item_2.element);
+    describe("resetAfterChangeInOptions", () => {
+        it.each([
+            [
+                `no item has been selected, and there is no option in the select anymore`,
+                (): void => {
+                    source_select_box.innerHTML = "";
+                },
+            ],
+            [
+                `items were selected but there is no option in the select anymore`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                    manager.processSelection(item_2.element);
+                    source_select_box.innerHTML = "";
+                },
+            ],
+            [
+                `no item has been selected, and there are new options but none of them is selected`,
+                (): void => {
+                    const new_option_0 = doc.createElement("option");
+                    new_option_0.value = "new option 0";
+                    const new_option_1 = doc.createElement("option");
+                    new_option_1.value = "new option 1";
+                    source_select_box.replaceChildren(new_option_0, new_option_1);
+                    source_select_box.value = "";
+                },
+            ],
+            [
+                `items were selected, but don't exist in the new options,
+                and no new option is selected`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                    manager.processSelection(item_2.element);
+                    const new_option_0 = doc.createElement("option");
+                    new_option_0.value = "new option 0";
+                    const new_option_1 = doc.createElement("option");
+                    new_option_1.value = "new option 1";
+                    source_select_box.replaceChildren(new_option_0, new_option_1);
+                    source_select_box.value = "";
+                },
+            ],
+        ])(
+            `when %s, then it should display the placeholder and remove the [remove all values] button`,
+            (_conditions_description, setup) => {
+                setup();
+                const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
+                item_map_manager.refreshItemsMap();
+                manager.resetAfterChangeInOptions();
 
-            source_select_box.options[3].value = "a_brand_new_value";
-            item_map_manager.refreshItemsMap();
-            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
-            manager.resetAfterDependenciesUpdate();
-
-            const new_item_with_item_1_value = item_map_manager.getItemWithValue(item_1.value);
-            const new_item_with_item_2_value = item_map_manager.getItemWithValue(item_2.value);
-            if (new_item_with_item_1_value === null) {
-                throw new Error(
-                    "an item matching item_1's value should have been found in the items map"
-                );
+                expect(
+                    selection_container.querySelector(".list-picker-selected-value-remove-button")
+                ).toBeNull();
+                expect(search_input.getAttribute("placeholder")).toBe("Please select some values");
+                expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
             }
-            expectItemToBeSelected(new_item_with_item_1_value);
-            expect(new_item_with_item_2_value).toBeNull();
+        );
 
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
-        });
+        it.each([
+            [
+                `no item has been selected`,
+                `it should mark the new options as selected`,
+                (): void => {
+                    // No setup
+                },
+            ],
+            [
+                `items were selected`,
+                `it should mark the new options as selected`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                    manager.processSelection(item_2.element);
+                },
+            ],
+            [
+                `an item was selected and is still selected in the new options`,
+                `it should keep it selected`,
+                (): void => {
+                    manager.processSelection(item_1.element);
+                },
+            ],
+        ])(
+            `when %s, and there are new options including some that are selected,
+            then %s`,
+            (_conditions_description, _expectation_description, setup) => {
+                setup();
+                const new_option_1 = doc.createElement("option");
+                new_option_1.value = item_1.value;
+                new_option_1.selected = true;
+                const new_option_2 = doc.createElement("option");
+                new_option_2.value = "new option 2";
+                const new_option_3 = doc.createElement("option");
+                new_option_3.value = "new option 3";
+                new_option_3.selected = true;
+                source_select_box.replaceChildren(new_option_1, new_option_2, new_option_3);
 
-        it("should put back the placeholder and remove the [remove all values] button when no item are selected", () => {
-            manager.processSelection(item_1.element);
-            manager.processSelection(item_2.element);
+                const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
+                item_map_manager.refreshItemsMap();
+                manager.resetAfterChangeInOptions();
 
-            source_select_box.options[2].value = "a_brand_new_value";
-            source_select_box.options[3].value = "another_brand_new_value";
-            item_map_manager.refreshItemsMap();
-            const dispatch = vi.spyOn(source_select_box, "dispatchEvent");
-            manager.resetAfterDependenciesUpdate();
-
-            expect(
-                selection_container.querySelector(".list-picker-selected-value-remove-button")
-            ).toBeNull();
-            expect(search_input.getAttribute("placeholder")).toBe("Please select some values");
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
-        });
+                const new_item_with_item_1_value = item_map_manager.getItemWithValue(item_1.value);
+                if (!new_item_with_item_1_value) {
+                    throw Error(
+                        "an item matching item_1's value should have been found in the items map"
+                    );
+                }
+                expectItemToBeSelected(new_item_with_item_1_value);
+                const new_item_with_item_2_value = item_map_manager.getItemWithValue(item_2.value);
+                expect(new_item_with_item_2_value).toBeNull();
+                expectItemNotToBeSelected(item_2);
+                const new_item_3 = item_map_manager.getItemWithValue("new option 3");
+                if (!new_item_3) {
+                    throw Error("Expected to find an item for option 3");
+                }
+                expectItemToBeSelected(new_item_3);
+                expectChangeEventToHaveBeenFiredOnSourceSelectBox(dispatch, 0);
+            }
+        );
     });
 });
