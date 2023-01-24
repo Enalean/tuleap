@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DataAccessObject;
 
-class InvitationDao extends DataAccessObject implements InvitationByTokenRetriever, UsedInvitationRetriever
+class InvitationDao extends DataAccessObject implements InvitationByTokenRetriever, UsedInvitationRetriever, InvitationPurger
 {
     public function __construct(private SplitTokenVerificationStringHasher $hasher)
     {
@@ -87,7 +89,7 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
             throw new InvalidInvitationTokenException();
         }
 
-        return new Invitation($row['id'], $row['to_email'], $row['to_user_id'], $row['from_user_id'], $row['created_user_id']);
+        return $this->instantiateFromRow($row);
     }
 
     public function searchByCreatedUserId(int $user_id): array
@@ -154,6 +156,51 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
             return null;
         }
 
-        return new Invitation($row['id'], $row['to_email'], $row['to_user_id'], $row['from_user_id'], $row['created_user_id']);
+        return $this->instantiateFromRow($row);
+    }
+
+    /**
+     * @return Invitation[] Invitations that are removed
+     */
+    public function purgeObsoleteInvitations(\DateTimeImmutable $today, int $nb_days): array
+    {
+        return $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($today, $nb_days): array {
+                $obsolete_invitations = $db->run(
+                    'SELECT id, to_email, to_user_id, from_user_id, created_user_id
+                    FROM invitations
+                    WHERE created_on < ?
+                      AND created_user_id IS NULL
+                      AND status <> ?',
+                    $today->getTimestamp() - $nb_days * 24 * 3600,
+                    Invitation::STATUS_USED
+                );
+
+                if ($obsolete_invitations) {
+                    $db->delete(
+                        'invitations',
+                        EasyStatement::open()->in('id IN (?*)', array_column($obsolete_invitations, 'id'))
+                    );
+                }
+
+                $purged_invitations = [];
+                foreach ($obsolete_invitations as $row) {
+                    $purged_invitations[] = $this->instantiateFromRow($row);
+                }
+
+                return $purged_invitations;
+            }
+        );
+    }
+
+    private function instantiateFromRow(array $row): Invitation
+    {
+        return new Invitation(
+            $row['id'],
+            $row['to_email'],
+            $row['to_user_id'],
+            $row['from_user_id'],
+            $row['created_user_id'],
+        );
     }
 }

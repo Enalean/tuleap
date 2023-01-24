@@ -20,6 +20,7 @@
 
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\CLI\Application;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Command\ConfigDumpCommand;
@@ -41,6 +42,7 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\Config\ConfigDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
+use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Plugin\PluginInstallCommand;
 use Tuleap\Queue\WorkerLogger;
@@ -186,7 +188,8 @@ $CLI_command_collector->addCommand(
                 new BaseLanguageFactory(),
                 BackendLogger::getDefaultLogger('usersuspension_syslog'),
                 new LocaleSwitcher()
-            )
+            ),
+            new InvitationDao(new SplitTokenVerificationStringHasher()),
         );
     }
 );
