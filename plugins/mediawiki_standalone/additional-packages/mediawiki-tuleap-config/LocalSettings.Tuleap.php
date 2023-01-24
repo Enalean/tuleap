@@ -134,4 +134,7 @@ $GLOBALS['wgDebugLogGroups'] = [
     'TuleapFarm' => '/var/log/tuleap/mediawiki_log',
 ];
 
+// Make sure sessions are stored in DB
+$GLOBALS['wgSessionCacheType'] = CACHE_DB;
+
 // Tuleap Specific - END ###

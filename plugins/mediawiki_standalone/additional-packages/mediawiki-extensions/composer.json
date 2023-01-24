@@ -6,14 +6,14 @@
         {
           "name": "mediawiki/labeled-section-transclusion",
           "type": "mediawiki-extension",
-          "version": "1.35.8",
+          "version": "1.35.9",
           "require": {
             "composer/installers": "^1.0"
           },
           "source": {
             "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion.git",
             "type": "git",
-            "reference": "c86c3bbe4acf7053b1b51c474b4e6fa14d792281"
+            "reference": "6667e70cbb19874fcfbf929df814802c415b1fe7"
           }
         }
       ]
@@ -24,14 +24,14 @@
         {
           "name": "mediawiki/math",
           "type": "mediawiki-extension",
-          "version": "1.35.8",
+          "version": "1.35.9",
           "require": {
             "composer/installers": "^1.0"
           },
           "source": {
             "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Math.git",
             "type": "git",
-            "reference": "93da70c5ed033ea44a3c0381e4edc22231b097cc"
+            "reference": "fd3c11f0b6b7d329577bc5166cf59a2056e59c5c"
           }
         }
       ]
@@ -68,12 +68,12 @@
     }
   ],
   "require": {
-    "mediawiki/labeled-section-transclusion": "^1.35.8",
-    "mediawiki/math": "^1.35.8",
+    "mediawiki/labeled-section-transclusion": "^1.35.9",
+    "mediawiki/math": "^1.35.9",
     "mediawiki/mpdf": "^1.0",
-    "mediawiki/tuleap-integration": "1.0.2",
-    "mediawiki/tuleap-skin": "1.0.2",
-    "mediawiki/tuleap-wiki-farm": "1.1.1"
+    "mediawiki/tuleap-integration": "1.0.3",
+    "mediawiki/tuleap-skin": "1.0.3",
+    "mediawiki/tuleap-wiki-farm": "1.1.2"
   },
   "replace": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4ddc585cf78f8c3198a92944301669d",
+    "content-hash": "75a6c42d14cfc2899a63c882554baaf3",
     "packages": [
         {
             "name": "composer/installers",
@@ -286,11 +286,11 @@
         },
         {
             "name": "mediawiki/labeled-section-transclusion",
-            "version": "1.35.8",
+            "version": "1.35.9",
             "source": {
                 "type": "git",
                 "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion.git",
-                "reference": "c86c3bbe4acf7053b1b51c474b4e6fa14d792281"
+                "reference": "6667e70cbb19874fcfbf929df814802c415b1fe7"
             },
             "require": {
                 "composer/installers": "^1.0"
@@ -299,11 +299,11 @@
         },
         {
             "name": "mediawiki/math",
-            "version": "1.35.8",
+            "version": "1.35.9",
             "source": {
                 "type": "git",
                 "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Math.git",
-                "reference": "93da70c5ed033ea44a3c0381e4edc22231b097cc"
+                "reference": "fd3c11f0b6b7d329577bc5166cf59a2056e59c5c"
             },
             "require": {
                 "composer/installers": "^1.0"
@@ -325,16 +325,16 @@
         },
         {
             "name": "mediawiki/tuleap-integration",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "b283e338b29c0769b6959edf3b0485715784e035"
+                "reference": "69d2860810294ba4d01c2213fc52dafa6402e5ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/b283e338b29c0769b6959edf3b0485715784e035",
-                "reference": "b283e338b29c0769b6959edf3b0485715784e035",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/69d2860810294ba4d01c2213fc52dafa6402e5ca",
+                "reference": "69d2860810294ba4d01c2213fc52dafa6402e5ca",
                 "shasum": ""
             },
             "require": {
@@ -374,22 +374,22 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.2"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.3"
             },
-            "time": "2022-12-06T12:05:48+00:00"
+            "time": "2023-01-24T07:09:38+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "0e7607a4564b253fc8f54016bca1cd31993a971d"
+                "reference": "3c1f738c60e0015ed5a3303de9aae9db3d07238f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/0e7607a4564b253fc8f54016bca1cd31993a971d",
-                "reference": "0e7607a4564b253fc8f54016bca1cd31993a971d",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/3c1f738c60e0015ed5a3303de9aae9db3d07238f",
+                "reference": "3c1f738c60e0015ed5a3303de9aae9db3d07238f",
                 "shasum": ""
             },
             "require": {
@@ -424,22 +424,22 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.2"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.3"
             },
-            "time": "2022-12-01T07:13:03+00:00"
+            "time": "2023-01-31T11:59:41+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "998fada29062d7c65f9678a9f70b6c09cc5aaf6e"
+                "reference": "d1f8e592f1feee774ca46233d7b7ac2605cc3042"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/998fada29062d7c65f9678a9f70b6c09cc5aaf6e",
-                "reference": "998fada29062d7c65f9678a9f70b6c09cc5aaf6e",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/d1f8e592f1feee774ca46233d7b7ac2605cc3042",
+                "reference": "d1f8e592f1feee774ca46233d7b7ac2605cc3042",
                 "shasum": ""
             },
             "require": {
@@ -477,9 +477,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.1.1"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.1.2"
             },
-            "time": "2022-12-06T12:12:16+00:00"
+            "time": "2023-01-31T11:57:18+00:00"
         },
         {
             "name": "mpdf/mpdf",
@@ -1037,16 +1037,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.11",
+            "version": "v5.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "6e75fe6874cbc7e4773d049616ab450eff537bf1"
+                "reference": "c5ba874c9b636dbccf761e22ce750e88ec3f55e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/6e75fe6874cbc7e4773d049616ab450eff537bf1",
-                "reference": "6e75fe6874cbc7e4773d049616ab450eff537bf1",
+                "url": "https://api.github.com/repos/symfony/process/zipball/c5ba874c9b636dbccf761e22ce750e88ec3f55e1",
+                "reference": "c5ba874c9b636dbccf761e22ce750e88ec3f55e1",
                 "shasum": ""
             },
             "require": {
@@ -1079,7 +1079,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.11"
+                "source": "https://github.com/symfony/process/tree/v5.4.19"
             },
             "funding": [
                 {
@@ -1095,7 +1095,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-27T16:58:25+00:00"
+            "time": "2023-01-01T08:32:19+00:00"
         }
     ],
     "packages-dev": [],
@@ -1106,5 +1106,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }
