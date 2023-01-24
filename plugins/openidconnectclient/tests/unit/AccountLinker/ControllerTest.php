@@ -91,8 +91,6 @@ final class ControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ])->build();
 
         $controller->linkExistingAccount($request);
-
-        self::assertTrue(true);
     }
 
     public function testLinkAnExistingAccountDisplayLoginFormIfUserCannotBeLoggedIn(): void
@@ -149,7 +147,5 @@ final class ControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ])->build();
 
         $controller->linkExistingAccount($request);
-
-        self::assertTrue(true);
     }
 }
