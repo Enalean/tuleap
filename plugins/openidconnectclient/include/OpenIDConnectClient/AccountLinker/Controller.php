@@ -168,9 +168,14 @@ class Controller
                 Feedback::INFO,
                 sprintf(dgettext('tuleap-openidconnectclient', 'Your account has been successfully linked to %1$s'), $provider->getName())
             );
-            require_once __DIR__ . '/../../../../../src/www/include/account.php';
-            \account_redirect_after_login($user, $request->get('return_to'));
+            $this->redirectAfterLogin($user, $request);
         }
+    }
+
+    protected function redirectAfterLogin(PFUser $user, HTTPRequest $request): void
+    {
+        require_once __DIR__ . '/../../../../../src/www/include/account.php';
+        \account_redirect_after_login($user, $request->get('return_to'));
     }
 
     public function linkRegisteringAccount(PFUser $user, $link_id, $request_time)
