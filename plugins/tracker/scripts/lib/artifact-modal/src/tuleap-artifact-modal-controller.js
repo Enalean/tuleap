@@ -234,7 +234,6 @@ function ArtifactModalController(
                 user_locale
             );
         },
-        getEventDispatcher: () => event_dispatcher,
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
         getDropdownAttribute,
@@ -281,7 +280,7 @@ function ArtifactModalController(
             self.submit_disabling_reason = null;
             $scope.$apply();
         });
-        setFieldDependenciesWatchers();
+        FieldDependenciesValuesHelper(event_dispatcher, self.tracker.workflow.rules.lists);
 
         modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", setIsNotUploadingInCKEditor);
         TuleapArtifactModalLoading.loading = false;
@@ -427,10 +426,6 @@ function ArtifactModalController(
 
     function formatColor(color) {
         return color.split("_").join("-");
-    }
-
-    function setFieldDependenciesWatchers() {
-        FieldDependenciesValuesHelper(self.getEventDispatcher(), self.tracker.workflow.rules.lists);
     }
 
     function setFieldValueForCustomElement(event) {

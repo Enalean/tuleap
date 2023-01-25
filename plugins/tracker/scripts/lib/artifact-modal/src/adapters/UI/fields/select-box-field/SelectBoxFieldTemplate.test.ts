@@ -21,6 +21,7 @@ import type { SelectBoxFieldPresenter } from "./SelectBoxFieldPresenter";
 import type { HostElement } from "./SelectBoxField";
 import { buildSelectBox, onSelectChange } from "./SelectBoxFieldTemplate";
 import { selectOrThrow } from "@tuleap/dom";
+import type { BindValueId } from "../../../../domain/fields/select-box-field/BindValueId";
 
 function getSelectBox(
     presenter: SelectBoxFieldPresenter,
@@ -136,15 +137,12 @@ describe("SelectBoxFieldTemplate", () => {
     });
 
     describe("onSelectChange()", () => {
-        let select: HTMLSelectElement, option: HTMLOptionElement, host: HostElement;
+        let doc: Document, host: HostElement, select: HTMLSelectElement;
 
         beforeEach(() => {
-            const doc = document.implementation.createHTMLDocument();
-            option = doc.createElement("option");
-            option.selected = true;
+            doc = document.implementation.createHTMLDocument();
             select = doc.createElement("select");
-            select.appendChild(option);
-
+            select.multiple = true;
             host = {
                 controller: {
                     setSelectedValue: jest.fn(),
@@ -153,26 +151,41 @@ describe("SelectBoxFieldTemplate", () => {
             } as unknown as HostElement;
         });
 
-        it("should push the selected value to the bind_value_ids array", () => {
-            option.value = "105";
+        const injectSelectedOptionsFromValues = (
+            bind_value_ids: ReadonlyArray<BindValueId>
+        ): void => {
+            select.append(
+                ...bind_value_ids.map((value) => {
+                    const option = doc.createElement("option");
+                    option.value = String(value);
+                    option.selected = true;
+                    return option;
+                })
+            );
+        };
 
+        it("should push all the selected values to the bind_value_ids array", () => {
+            const selected_values = [101, 102, 103];
+
+            injectSelectedOptionsFromValues(selected_values);
             onSelectChange(host, {
                 target: select,
             } as unknown as Event);
 
-            expect(host.bind_value_ids).toStrictEqual([105]);
-            expect(host.controller.setSelectedValue).toHaveBeenCalledWith(host.bind_value_ids);
+            expect(host.bind_value_ids).toStrictEqual(selected_values);
+            expect(host.controller.setSelectedValue).toHaveBeenCalledWith(selected_values);
         });
 
-        it('When the selected value contains the character "_", Then it should not try to parse it as a Number', () => {
-            option.value = "105_3";
+        it('When some selected values contains the character "_", Then it should not try to parse them as a Number', () => {
+            const selected_values = ["101_2", "101_3", 1234];
 
+            injectSelectedOptionsFromValues(selected_values);
             onSelectChange(host, {
                 target: select,
             } as unknown as Event);
 
-            expect(host.bind_value_ids).toStrictEqual(["105_3"]);
-            expect(host.controller.setSelectedValue).toHaveBeenCalledWith(host.bind_value_ids);
+            expect(host.bind_value_ids).toStrictEqual(selected_values);
+            expect(host.controller.setSelectedValue).toHaveBeenCalledWith(selected_values);
         });
     });
 });
