@@ -42,6 +42,7 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\Config\ConfigDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
+use Tuleap\InviteBuddy\InvitationCleaner;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Plugin\PluginInstallCommand;
@@ -168,6 +169,8 @@ $CLI_command_collector->addCommand(
 $CLI_command_collector->addCommand(
     DailyJobCommand::NAME,
     static function () use ($event_manager, $user_manager): DailyJobCommand {
+        $locale_switcher = new LocaleSwitcher();
+
         return new DailyJobCommand(
             $event_manager,
             new AccessKeyRevoker(
@@ -187,9 +190,17 @@ $CLI_command_collector->addCommand(
                 $user_manager,
                 new BaseLanguageFactory(),
                 BackendLogger::getDefaultLogger('usersuspension_syslog'),
-                new LocaleSwitcher()
+                $locale_switcher
             ),
-            new InvitationDao(new SplitTokenVerificationStringHasher()),
+            new InvitationCleaner(
+                new InvitationDao(new SplitTokenVerificationStringHasher()),
+                $locale_switcher,
+                TemplateRendererFactory::build(),
+                static function (Codendi_Mail $mail) {
+                    $mail->send();
+                },
+                UserManager::instance(),
+            ),
         );
     }
 );

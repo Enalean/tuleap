@@ -109,7 +109,13 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $new_user,
             RegisterFormContext::forAnonymous(
                 true,
-                InvitationToEmail::fromInvitation(new Invitation(1, 'doe@example.com', null, 102, null), new ConcealedString('secret'))
+                InvitationToEmail::fromInvitation(
+                    InvitationTestBuilder::aSentInvitation(1)
+                        ->from(102)
+                        ->to('doe@example.com')
+                        ->build(),
+                    new ConcealedString('secret')
+                )
             )
         );
     }

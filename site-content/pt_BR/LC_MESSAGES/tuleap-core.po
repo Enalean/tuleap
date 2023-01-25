@@ -1686,6 +1686,9 @@ msgstr "Ritmo do projeto"
 msgid "Hello"
 msgstr "Olá"
 
+msgid "Hello %s,"
+msgstr ""
+
 msgid "Hello,"
 msgstr "Olá,"
 
@@ -1891,6 +1894,11 @@ msgstr "É usado?"
 
 msgid "Issue tracking"
 msgstr "Rastreamento de problemas"
+
+msgid "It has just been automatically removed."
+msgid_plural "They have just been automatically removed."
+msgstr[0] ""
+msgstr[1] ""
 
 #, php-format
 msgid "JpGraph error for graph \"%s\": %s"
@@ -2400,6 +2408,11 @@ msgstr "Notificações"
 
 msgid "Number of login failure:"
 msgstr "Número de falhas de login:"
+
+msgid "Obsolete invitation removal"
+msgid_plural "Obsolete invitations removal"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Offline access"
 msgstr "Acesso offline"
@@ -3589,6 +3602,13 @@ msgstr "O arquivo '%s' já está sendo carregado"
 
 msgid "The file cannot be found"
 msgstr "O arquivo não foi encontrado"
+
+msgid ""
+"The following invitation has not been completed and becomes obsolete today."
+msgid_plural ""
+"The following invitations have not been completed and become obsolete today."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "The given license agreement is not valid for this project"
 msgstr "O acordo de licença não é válido para este projeto"

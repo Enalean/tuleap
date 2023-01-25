@@ -22,27 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-/**
- * @psalm-immutable
- */
-final class Invitation
+final class InvitationPurgerStub implements InvitationPurger
 {
-    public const STATUS_CREATING = 'creating';
-    public const STATUS_SENT     = 'sent';
-    public const STATUS_USED     = 'used';
-    public const STATUS_ERROR    = 'error';
+    private bool $has_been_called = false;
 
     /**
-     * @param self::STATUS_* $status
+     * @param Invitation[] $purged_invitations
      */
-    public function __construct(
-        public int $id,
-        public string $to_email,
-        public ?int $to_user_id,
-        public int $from_user_id,
-        public ?int $created_user_id,
-        public string $status,
-        public int $created_on,
-    ) {
+    private function __construct(private array $purged_invitations)
+    {
+    }
+
+    public static function withoutAnyPurgedInvitations(): self
+    {
+        return new self([]);
+    }
+
+    public static function withPurgedInvitations(Invitation ...$purged_invitations): self
+    {
+        return new self($purged_invitations);
+    }
+
+    public function purgeObsoleteInvitations(\DateTimeImmutable $today, int $nb_days): array
+    {
+        $this->has_been_called = true;
+
+        return $this->purged_invitations;
+    }
+
+    public function hasBeenCalled(): bool
+    {
+        return $this->has_been_called;
     }
 }

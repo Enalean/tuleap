@@ -1,0 +1,19 @@
+{{# gettext }}Hello %s, | {{ current_user_real_name }}{{/ gettext }}
+
+{{# ngettext }}
+    The following invitation has not been completed and becomes obsolete today. |
+    The following invitations have not been completed and become obsolete today. |
+    {{ nb_obsolete_invitations }}
+{{/ ngettext }} {{# ngettext }}
+    It has just been automatically removed. |
+    They have just been automatically removed. |
+    {{ nb_obsolete_invitations }}
+{{/ ngettext }}
+
+
+{{# obsolete_invitations }}
+* {{ to }} ({{ created_on }})
+{{/ obsolete_invitations }}
+
+{{# gettext }}Best regards,{{/ gettext }}
+{{# gettext }}The %s team. | {{ instance_name }}{{/ gettext }}

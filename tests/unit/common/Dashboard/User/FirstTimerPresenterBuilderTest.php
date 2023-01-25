@@ -24,7 +24,7 @@ namespace Tuleap\Dashboard\User;
 
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\InviteBuddy\Invitation;
+use Tuleap\InviteBuddy\InvitationTestBuilder;
 use Tuleap\InviteBuddy\UsedInvitationRetrieverStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -51,7 +51,10 @@ class FirstTimerPresenterBuilderTest extends TestCase
 
         $builder = new FirstTimerPresenterBuilder(
             UsedInvitationRetrieverStub::withUsedInvitation(
-                new Invitation(1, 'jdoe@example.com', null, $project_admin->getId(), null)
+                InvitationTestBuilder::aUsedInvitation(1)
+                    ->from($project_admin->getId())
+                    ->to('jdoe@example.com')
+                    ->build(),
             ),
             RetrieveUserByIdStub::withUser($project_admin),
         );

@@ -30,6 +30,8 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
 final class VersionRepresentationCollectionBuilderTest extends TestCase
 {
+    private const USER_ID = 101;
+
     private VersionDao|\PHPUnit\Framework\MockObject\MockObject $docman_version_dao;
     private CoAuthorDao|\PHPUnit\Framework\MockObject\MockObject $co_author_dao;
     private VersionRepresentationCollectionBuilder $builder;
@@ -42,10 +44,14 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
 
         $this->factory = $this->createMock(\Docman_ApprovalTableFileFactory::class);
 
+        $user        = UserTestBuilder::aUser()->withId(self::USER_ID)->build();
+        $co_author_1 = UserTestBuilder::aUser()->withId(102)->build();
+        $co_author_2 = UserTestBuilder::aUser()->withId(103)->build();
+
         $this->builder = new VersionRepresentationCollectionBuilder(
             $this->docman_version_dao,
             $this->co_author_dao,
-            RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
+            RetrieveUserByIdStub::withUsers($user, $co_author_1, $co_author_2),
             TableFactoryForFileBuilderStub::buildWithFactory($this->factory)
         );
         $user_helper   = $this->createStub(\UserHelper::class);
@@ -61,12 +67,10 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
 
     public function testItBuildAVersionsRepresentation(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $dar_item = [
             'item_id' => 4,
             'title' => 'item',
-            'user_id' => 101,
+            'user_id' => self::USER_ID,
             'update_date' => 1542099693,
             'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FILE,
             'parent_id' => 100,
@@ -81,7 +85,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             'label' => "my version label",
             'filename' => "a_file.txt",
             'changelog' => '',
-            'user_id' => 101,
+            'user_id' => self::USER_ID,
             'date' => 1542099693,
             'authoring_tool' => 'Awesome Office Editor',
         ];
@@ -111,12 +115,10 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
 
     public function testItBuildAVersionsRepresentationWithApprovalTable(): void
     {
-        $user = UserTestBuilder::buildWithDefaults();
-
         $dar_item = [
             'item_id' => 4,
             'title' => 'item',
-            'user_id' => 101,
+            'user_id' => self::USER_ID,
             'update_date' => 1542099693,
             'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FILE,
             'parent_id' => 100,
@@ -131,7 +133,7 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             'label' => "my version label",
             'filename' => "a_file.txt",
             'changelog' => '',
-            'user_id' => 101,
+            'user_id' => self::USER_ID,
             'date' => 1542099693,
         ];
         $this->docman_version_dao->method('searchByItemId')->willReturn([$dar]);

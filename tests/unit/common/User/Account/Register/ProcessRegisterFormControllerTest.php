@@ -24,7 +24,7 @@ namespace Tuleap\User\Account\Register;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Event\Dispatchable;
-use Tuleap\InviteBuddy\Invitation;
+use Tuleap\InviteBuddy\InvitationTestBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -45,7 +45,9 @@ class ProcessRegisterFormControllerTest extends TestCase
             EventDispatcherStub::withIdentityCallback(),
             IExtractInvitationToEmailStub::withInvitation(
                 InvitationToEmail::fromInvitation(
-                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    InvitationTestBuilder::aSentInvitation(1)
+                        ->to('jdoe@example.com')
+                        ->build(),
                     new ConcealedString('secret'),
                 ),
             ),
@@ -78,7 +80,9 @@ class ProcessRegisterFormControllerTest extends TestCase
             ),
             IExtractInvitationToEmailStub::withInvitation(
                 InvitationToEmail::fromInvitation(
-                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    InvitationTestBuilder::aSentInvitation(1)
+                    ->to('jdoe@example.com')
+                    ->build(),
                     new ConcealedString('secret'),
                 ),
             ),
@@ -113,7 +117,9 @@ class ProcessRegisterFormControllerTest extends TestCase
             ),
             IExtractInvitationToEmailStub::withInvitation(
                 InvitationToEmail::fromInvitation(
-                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    InvitationTestBuilder::aSentInvitation(1)
+                    ->to('jdoe@example.com')
+                    ->build(),
                     new ConcealedString('secret'),
                 ),
             ),
@@ -138,7 +144,9 @@ class ProcessRegisterFormControllerTest extends TestCase
             EventDispatcherStub::withIdentityCallback(),
             IExtractInvitationToEmailStub::withInvitation(
                 InvitationToEmail::fromInvitation(
-                    new Invitation(1, 'jdoe@example.com', null, 102, null),
+                    InvitationTestBuilder::aSentInvitation(1)
+                    ->to('jdoe@example.com')
+                    ->build(),
                     new ConcealedString('secret'),
                 ),
             ),
@@ -163,7 +171,10 @@ class ProcessRegisterFormControllerTest extends TestCase
             EventDispatcherStub::withIdentityCallback(),
             IExtractInvitationToEmailStub::withInvitation(
                 InvitationToEmail::fromInvitation(
-                    new Invitation(1, 'jdoe@example.com', null, 102, 201),
+                    InvitationTestBuilder::aSentInvitation(1)
+                        ->to('jdoe@example.com')
+                        ->withCreatedUserId(201)
+                        ->build(),
                     new ConcealedString('secret'),
                 ),
             ),
