@@ -32,8 +32,8 @@ use Laminas\Feed\Reader\Reader as FeedReader;
 */
 abstract class Widget_Rss extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public $rss_title;
-    public $rss_url;
+    public ?string $rss_title = null;
+    public ?string $rss_url   = null;
 
     public function __construct($id, $owner_id, $owner_type)
     {

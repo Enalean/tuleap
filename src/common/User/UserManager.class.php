@@ -500,7 +500,6 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
                     $this->current_user = null;
                 } else {
                     $accessInfo = $this->getUserAccessInfo($this->current_user->user);
-                    $now        = $_SERVER['REQUEST_TIME'];
                     $break_time = $now - ($accessInfo['last_access_date'] ?? 0);
                     //if the access is not later than 6 hours, it is not necessary to log it
                     if ($break_time > ForgeConfig::get('last_access_resolution')) {
