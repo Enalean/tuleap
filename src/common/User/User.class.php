@@ -120,7 +120,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     protected $email;
     protected $user_pw;
 
-    private ?string $user_pw_legacy;
     protected $realname;
     protected $register_purpose;
     protected $status;
@@ -223,7 +222,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->user_name         = isset($row['user_name'])          ? $row['user_name']          : null;
         $this->email             = isset($row['email'])              ? $row['email']              : null;
         $this->user_pw           = isset($row['password'])           ? $row['password']           : null;
-        $this->user_pw_legacy    = isset($row['user_pw'])            ? $row['user_pw']            : null;
         $this->realname          = isset($row['realname'])           ? $row['realname']           : null;
         $this->register_purpose  = isset($row['register_purpose'])   ? $row['register_purpose']   : null;
         $this->status            = isset($row['status'])             ? $row['status']             : null;
@@ -807,11 +805,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getUserPw(): ?string
     {
         return $this->user_pw;
-    }
-
-    public function getLegacyUserPw()
-    {
-        return $this->user_pw_legacy;
     }
 
     /**

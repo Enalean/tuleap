@@ -743,7 +743,6 @@ CREATE TABLE user (
   user_id int(11) NOT NULL auto_increment,
   user_name text NOT NULL,
   email text NOT NULL,
-  user_pw varchar(32) NOT NULL default '',
   password varchar(255) DEFAULT NULL,
   realname text NOT NULL,
   register_purpose text,

@@ -37,7 +37,6 @@ INSERT INTO user SET \
         user_id = 100, \
         user_name = 'None', \
         email = 'noreply@_DOMAIN_NAME_', \
-        user_pw = '*********34343', \
         realname = '0', \
         register_purpose = NULL, \
         status = 'S', \
@@ -67,7 +66,6 @@ INSERT INTO user SET \
         user_name = 'admin', \
         email = 'codendi-admin@_DOMAIN_NAME_', \
         password = 'SITEADMIN_PASSWORD', \
-        user_pw = '', \
         realname = 'Site Administrator', \
         register_purpose = NULL, \
         status = 'A', \
