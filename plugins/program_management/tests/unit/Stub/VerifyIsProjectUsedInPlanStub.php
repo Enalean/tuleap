@@ -36,6 +36,11 @@ final class VerifyIsProjectUsedInPlanStub implements VerifyIsProjectUsedInPlan
         return new self(true);
     }
 
+    public static function withProjectNotUsedInPlan(): self
+    {
+        return new self(false);
+    }
+
     public function isProjectUsedInPlan(ProgramForAdministrationIdentifier $administration_identifier): bool
     {
         return $this->is_used_in_plan;
