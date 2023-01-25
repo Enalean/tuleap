@@ -27,73 +27,76 @@
         v-bind:required="required"
         v-on:input="onDatePickerInput"
         v-model="input_value"
+        ref="root"
     />
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import type { DatePickerInstance } from "tlp";
 import { datePicker } from "tlp";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
-@Component
-export default class DateFlatPicker extends Vue {
-    @Prop({ required: true })
-    readonly id!: string;
+const props = defineProps<{
+    id: string;
+    required: boolean;
+    value: string;
+}>();
 
-    @Prop({ required: true })
-    readonly required!: boolean;
+const datepicker = ref<DatePickerInstance | null>(null);
+const input_value = ref(props.value);
+const root = ref<InstanceType<typeof HTMLElement>>();
 
-    @Prop({ required: true })
-    readonly value!: string;
-
-    private datepicker: null | DatePickerInstance = null;
-    private input_value = this.value;
-
-    @Watch("value")
-    public updateValue(new_value: string): void {
-        if (this.datepicker === null) {
+watch(
+    () => input_value.value,
+    (value: string): void => {
+        if (datepicker.value === null) {
             return;
         }
-        if (new_value) {
-            this.datepicker.setDate(new_value, false);
+        if (value) {
+            datepicker.value.setDate(value, false);
         }
-    }
+    },
+    { immediate: true }
+);
 
-    mounted(): void {
-        const element = this.$el;
-        if (element instanceof HTMLInputElement) {
-            this.datepicker = datePicker(element, {
-                defaultDate: this.value,
-                onChange: this.onDatePickerChange,
-                allowInput: true,
-                errorHandler: (error) => {
-                    if (error.message.includes("Invalid date provided")) {
-                        return;
-                    }
-                    throw error;
-                },
-            });
-        }
+onMounted((): void => {
+    const element = root.value;
+    if (element instanceof HTMLInputElement) {
+        datepicker.value = datePicker(element, {
+            defaultDate: props.value,
+            onChange: onDatePickerChange,
+            allowInput: true,
+            errorHandler: (error) => {
+                if (error.message.includes("Invalid date provided")) {
+                    return;
+                }
+                throw error;
+            },
+        });
     }
-    beforeDestroy(): void {
-        if (this.datepicker === null) {
-            return;
-        }
-        this.datepicker.destroy();
-        this.datepicker = null;
+});
+onBeforeUnmount((): void => {
+    if (datepicker.value === null) {
+        return;
     }
+    datepicker.value.destroy();
+    datepicker.value = null;
+});
 
-    onDatePickerInput(event: Event) {
-        if (event.target instanceof HTMLInputElement) {
-            this.$emit("input", event.target.value);
-        }
+const emit = defineEmits<{
+    (e: "input", value: string): void;
+}>();
+
+function onDatePickerInput(event: Event) {
+    if (event.target instanceof HTMLInputElement) {
+        emit("input", event.target.value);
     }
-    onDatePickerChange(): void {
-        const element = this.$el;
-        if (element instanceof HTMLInputElement) {
-            this.$nextTick(() => {
-                this.$emit("input", element.value);
-            });
-        }
+}
+
+async function onDatePickerChange(): Promise<void> {
+    const element = root.value;
+    if (element instanceof HTMLInputElement) {
+        await nextTick();
+        emit("input", element.value);
     }
 }
 </script>

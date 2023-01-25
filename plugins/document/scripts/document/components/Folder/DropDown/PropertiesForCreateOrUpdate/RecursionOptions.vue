@@ -49,12 +49,6 @@
         </select>
     </section>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-
-@Component
-export default class RecursionOptions extends Vue {
-    @Prop({ required: true })
-    readonly value!: string;
-}
+<script setup lang="ts">
+defineProps<{ value: string }>();
 </script>

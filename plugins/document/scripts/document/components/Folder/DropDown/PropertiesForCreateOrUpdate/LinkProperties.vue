@@ -43,21 +43,14 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { isLink } from "../../../../helpers/type-check-helper";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import type { Item } from "../../../../type";
+import type { Item, LinkProperties } from "../../../../type";
+import { computed } from "vue";
 
-@Component
-export default class LinkProperties extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const props = defineProps<{ value: LinkProperties; item: Item }>();
 
-    @Prop({ required: true })
-    readonly value!: Item;
-
-    get is_displayed(): boolean {
-        return isLink(this.item);
-    }
-}
+const is_displayed = computed((): boolean => {
+    return isLink(props.item);
+});
 </script>
