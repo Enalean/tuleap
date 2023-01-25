@@ -24,4 +24,13 @@ namespace Tuleap\InviteBuddy;
 
 final class InvalidInvitationTokenException extends \Exception
 {
+    public function __construct(private bool $has_user_already_been_created)
+    {
+        parent::__construct();
+    }
+
+    public function hasUserAlreadyBeenCreated(): bool
+    {
+        return $this->has_user_already_been_created;
+    }
 }

@@ -52,10 +52,16 @@ final class InvitationToEmailRequestExtractor implements IExtractInvitationToEma
             );
 
             return InvitationToEmail::fromInvitation($invitation, $token);
+        } catch (InvitationNotFoundException) {
+            throw new ForbiddenException(_('Your invitation cannot be found. Maybe it became obsolete and has been revoked.'));
+        } catch (InvalidInvitationTokenException $exception) {
+            if ($exception->hasUserAlreadyBeenCreated()) {
+                throw new ForbiddenException(_('Your invitation link is not valid. Maybe you already used it, in that case you can directly log in.'));
+            }
+
+            throw new ForbiddenException(_('Your invitation link is not valid'));
         } catch (
             InvalidIdentifierFormatException |
-            InvalidInvitationTokenException |
-            InvitationNotFoundException |
             InvitationShouldBeToEmailException
         ) {
             throw new ForbiddenException(_('Your invitation link is not valid'));

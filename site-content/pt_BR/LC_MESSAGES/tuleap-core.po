@@ -4958,7 +4958,17 @@ msgstr ""
 msgid "Your history is empty"
 msgstr "O seu histórico está vazio"
 
+msgid ""
+"Your invitation cannot be found. Maybe it became obsolete and has been "
+"revoked."
+msgstr ""
+
 msgid "Your invitation link is not valid"
+msgstr ""
+
+msgid ""
+"Your invitation link is not valid. Maybe you already used it, in that case "
+"you can directly log in."
 msgstr ""
 
 msgid "Your place was saved"

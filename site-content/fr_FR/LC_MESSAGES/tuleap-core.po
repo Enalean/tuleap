@@ -5035,8 +5035,22 @@ msgstr ""
 msgid "Your history is empty"
 msgstr "Votre historique est vide"
 
+msgid ""
+"Your invitation cannot be found. Maybe it became obsolete and has been "
+"revoked."
+msgstr ""
+"Votre invitation ne peut pas être trouvée. Peut-être qu'elle est devenue "
+"obsolète et qu'elle a été révoquée."
+
 msgid "Your invitation link is not valid"
 msgstr "Votre lien d'invitation est invalide"
+
+msgid ""
+"Your invitation link is not valid. Maybe you already used it, in that case "
+"you can directly log in."
+msgstr ""
+"Votre lien d'invitation n'est pas valide. Peut-être que vous l'avez déjà "
+"utilisé, dans ce cas vous pouvez directement vous connecter."
 
 msgid "Your place was saved"
 msgstr "Position dans le forum sauvegardée."
