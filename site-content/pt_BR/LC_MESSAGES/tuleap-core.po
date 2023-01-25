@@ -1839,7 +1839,6 @@ msgstr "O projeto inválido foi aprovado."
 msgid "Invalid selection of categories"
 msgstr "Seleção inválida de categorias"
 
-#, php-format
 msgid "Invitation complete!"
 msgstr "Convite finalizado!"
 
