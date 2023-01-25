@@ -36,69 +36,62 @@
         <translate>Create new version</translate>
     </button>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { isLink, isWiki } from "../../../../helpers/type-check-helper";
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
+import { computed, ref } from "vue";
 import type { Item } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useActions } from "vuex-composition-helpers";
+import type { RootActionsRetrieve } from "../../../../store/actions-retrieve";
 
-@Component
-export default class NewItemVersionButton extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const props = defineProps<{ item: Item; buttonClasses: string; iconClasses: string }>();
 
-    @Prop({ required: true })
-    readonly buttonClasses!: string;
+const { loadDocument } = useActions<Pick<RootActionsRetrieve, "loadDocument">>(["loadDocument"]);
 
-    @Prop({ required: true })
-    readonly iconClasses!: string;
+let is_loading_item = ref(false);
 
-    private is_loading_item = false;
+const { $gettext } = useGettext();
+const cannot_create_new_wiki_version_because_approval_table = $gettext(
+    "This wiki has a approval table, you can't update it."
+);
 
-    get is_item_a_wiki_with_approval_table(): boolean {
-        return isWiki(this.item) && this.item.approval_table !== null;
+const is_item_a_wiki_with_approval_table = computed((): boolean => {
+    return isWiki(props.item) && props.item.approval_table !== null;
+});
+
+const button_classes = computed((): string => {
+    let classes = props.buttonClasses;
+
+    if (is_item_a_wiki_with_approval_table.value) {
+        classes += " document-new-item-version-button-disabled tlp-tooltip tlp-tooltip-left";
     }
 
-    get cannot_create_new_wiki_version_because_approval_table(): string {
-        return this.$gettext("This wiki has a approval table, you can't update it.");
+    return classes;
+});
+
+async function goToUpdate(): Promise<void> {
+    if (is_item_a_wiki_with_approval_table.value) {
+        return;
     }
 
-    get button_classes(): string {
-        let classes = this.buttonClasses;
+    if (isLink(props.item)) {
+        is_loading_item.value = true;
 
-        if (this.is_item_a_wiki_with_approval_table) {
-            classes += " document-new-item-version-button-disabled tlp-tooltip tlp-tooltip-left";
-        }
+        const link_with_all_properties = await loadDocument(props.item.id);
 
-        return classes;
-    }
-
-    async goToUpdate(): Promise<void> {
-        if (this.is_item_a_wiki_with_approval_table) {
-            return;
-        }
-
-        if (isLink(this.item)) {
-            this.is_loading_item = true;
-
-            const link_with_all_properties = await this.$store.dispatch(
-                "loadDocument",
-                this.item.id
-            );
-
+        if (link_with_all_properties) {
             emitter.emit("show-create-new-item-version-modal", {
                 detail: { current_item: link_with_all_properties },
             });
-
-            this.is_loading_item = false;
-            return;
         }
 
-        emitter.emit("show-create-new-item-version-modal", {
-            detail: { current_item: this.item },
-        });
+        is_loading_item.value = false;
+        return;
     }
+
+    emitter.emit("show-create-new-item-version-modal", {
+        detail: { current_item: props.item },
+    });
 }
 </script>

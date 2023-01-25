@@ -30,18 +30,13 @@
     </button>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
 
-@Component
-export default class QuickLookDeleteButton extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const props = defineProps<{ item: Item }>();
 
-    toggleQuickLook() {
-        emitter.emit("toggle-quick-look", { details: { item: this.item } });
-    }
+function toggleQuickLook(): void {
+    emitter.emit("toggle-quick-look", { details: { item: props.item } });
 }
 </script>

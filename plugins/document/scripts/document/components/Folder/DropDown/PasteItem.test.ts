@@ -103,7 +103,6 @@ describe("PasteItem", () => {
         expect(store.dispatch).toHaveBeenCalledWith("clipboard/pasteItem", {
             destination_folder: destination,
             current_folder,
-            global_context: store,
         });
         expect(emitMock).toHaveBeenCalledWith("hide-action-menu");
     });
