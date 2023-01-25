@@ -80,7 +80,7 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
      */
     public function searchBySplitToken(SplitToken $split_token): Invitation
     {
-        $row = $this->getDB()->row('SELECT id, to_email, to_user_id, from_user_id, created_user_id, verifier FROM invitations WHERE id = ?', $split_token->getID());
+        $row = $this->getDB()->row('SELECT id, to_email, to_user_id, from_user_id, created_user_id, status, created_on, verifier FROM invitations WHERE id = ?', $split_token->getID());
         if (! $row) {
             throw new InvitationNotFoundException();
         }
@@ -148,7 +148,7 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
     public function searchInvitationUsedToRegister(int $user_id): ?Invitation
     {
         $row = $this->getDB()->row(
-            'SELECT id, to_email, to_user_id, from_user_id, created_user_id FROM invitations WHERE created_user_id = ? AND status = ?',
+            'SELECT id, to_email, to_user_id, from_user_id, created_user_id, status, created_on FROM invitations WHERE created_user_id = ? AND status = ?',
             $user_id,
             Invitation::STATUS_USED
         );
@@ -167,7 +167,7 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($today, $nb_days): array {
                 $obsolete_invitations = $db->run(
-                    'SELECT id, to_email, to_user_id, from_user_id, created_user_id
+                    'SELECT id, to_email, to_user_id, from_user_id, created_user_id, status, created_on
                     FROM invitations
                     WHERE created_on < ?
                       AND created_user_id IS NULL
@@ -201,6 +201,8 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
             $row['to_user_id'],
             $row['from_user_id'],
             $row['created_user_id'],
+            $row['status'],
+            $row['created_on'],
         );
     }
 }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account\Register;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\InviteBuddy\Invitation;
+use Tuleap\InviteBuddy\InvitationTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class InvitationToEmailTest extends TestCase
@@ -32,7 +32,12 @@ class InvitationToEmailTest extends TestCase
     {
         self::assertEquals(
             'jdoe@example.com',
-            InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', null, 102, null), new ConcealedString('secret'))->to_email,
+            InvitationToEmail::fromInvitation(
+                InvitationTestBuilder::aSentInvitation(1)
+                    ->to('jdoe@example.com')
+                    ->build(),
+                new ConcealedString('secret')
+            )->to_email,
         );
     }
 
@@ -40,6 +45,11 @@ class InvitationToEmailTest extends TestCase
     {
         $this->expectException(InvitationShouldBeToEmailException::class);
 
-        InvitationToEmail::fromInvitation(new Invitation(1, '', 101, 102, null), new ConcealedString('secret'));
+        InvitationToEmail::fromInvitation(
+            InvitationTestBuilder::aSentInvitation(1)
+                ->to(102)
+                ->build(),
+            new ConcealedString('secret')
+        );
     }
 }

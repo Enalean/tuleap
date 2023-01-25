@@ -24,9 +24,9 @@ namespace Tuleap\User\Account\Register;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
-use Tuleap\InviteBuddy\Invitation;
 use Tuleap\InviteBuddy\InvitationByTokenRetrieverStub;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\InviteBuddy\InvitationTestBuilder;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -106,7 +106,11 @@ class InvitationToEmailRequestExtractorTest extends TestCase
     {
         $identifier = new PrefixedSplitTokenSerializer(new PrefixTokenInvitation());
         $extractor  = new InvitationToEmailRequestExtractor(
-            InvitationByTokenRetrieverStub::withMatchingInvitation(new Invitation(1, '', 101, 102, null)),
+            InvitationByTokenRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(1)
+                    ->to(101)
+                    ->build(),
+            ),
             $identifier,
         );
 
@@ -126,7 +130,11 @@ class InvitationToEmailRequestExtractorTest extends TestCase
     {
         $identifier = new PrefixedSplitTokenSerializer(new PrefixTokenInvitation());
         $extractor  = new InvitationToEmailRequestExtractor(
-            InvitationByTokenRetrieverStub::withMatchingInvitation(new Invitation(1, 'jdoe@example.com', null, 102, null)),
+            InvitationByTokenRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(1)
+                    ->to('jdoe@example.com')
+                    ->build(),
+            ),
             $identifier,
         );
 

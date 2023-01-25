@@ -24,7 +24,7 @@ namespace Tuleap\User\Account\Register;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\InviteBuddy\Invitation;
+use Tuleap\InviteBuddy\InvitationTestBuilder;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
@@ -276,7 +276,15 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
                 ->build(),
             LayoutBuilder::buildWithInspector($inspector),
             'secret',
-            RegisterFormContext::forAnonymous(true, InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', null, 101, null), new ConcealedString('secret'))),
+            RegisterFormContext::forAnonymous(
+                true,
+                InvitationToEmail::fromInvitation(
+                    InvitationTestBuilder::aSentInvitation(1)
+                        ->to('jdoe@example.com')
+                        ->build(),
+                    new ConcealedString('secret')
+                )
+            ),
         );
 
         self::assertTrue($after_event_emitted);
