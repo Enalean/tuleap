@@ -95,7 +95,7 @@ class KanbanArtifactMessageSenderMercure
             );
     }
 
-    private function topicHelper(int $kanban_id): string
+    public static function topicHelper(int $kanban_id): string
     {
         return self::KANBAN_TOPIC . $kanban_id;
     }
