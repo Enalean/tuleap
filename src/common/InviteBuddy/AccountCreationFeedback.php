@@ -24,37 +24,16 @@ namespace Tuleap\InviteBuddy;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\User\Account\Register\RegisterFormContext;
-use UserManager;
+use Tuleap\User\RetrieveUserById;
 
 class AccountCreationFeedback implements InvitationSuccessFeedback
 {
-    /**
-     * @var InvitationDao
-     */
-    private $dao;
-    /**
-     * @var AccountCreationFeedbackEmailNotifier
-     */
-    private $email_notifier;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
     public function __construct(
-        InvitationDao $dao,
-        UserManager $user_manager,
-        AccountCreationFeedbackEmailNotifier $email_notifier,
-        LoggerInterface $logger,
+        private InvitationDao $dao,
+        private RetrieveUserById $user_manager,
+        private AccountCreationFeedbackEmailNotifier $email_notifier,
+        private LoggerInterface $logger,
     ) {
-        $this->dao            = $dao;
-        $this->user_manager   = $user_manager;
-        $this->email_notifier = $email_notifier;
-        $this->logger         = $logger;
     }
 
     public function accountHasJustBeenCreated(\PFUser $just_created_user, RegisterFormContext $context): void

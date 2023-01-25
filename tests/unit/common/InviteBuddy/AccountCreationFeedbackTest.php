@@ -22,90 +22,81 @@ declare(strict_types=1);
 
 namespace Tuleap\InviteBuddy;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\User\Account\Register\InvitationToEmail;
 use Tuleap\User\Account\Register\RegisterFormContext;
-use UserManager;
 
-class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private AccountCreationFeedback $account_creation_feedback;
+    private LoggerInterface|MockObject $logger;
+    private InvitationDao|MockObject $dao;
+    private MockObject|AccountCreationFeedbackEmailNotifier $email_notifier;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|InvitationDao
-     */
-    private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AccountCreationFeedbackEmailNotifier
-     */
-    private $email_notifier;
-    /**
-     * @var AccountCreationFeedback
-     */
-    private $account_creation_feedback;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
 
     protected function setUp(): void
     {
-        $this->logger         = Mockery::mock(LoggerInterface::class);
-        $this->dao            = Mockery::mock(InvitationDao::class);
-        $this->email_notifier = Mockery::mock(AccountCreationFeedbackEmailNotifier::class);
-        $this->user_manager   = Mockery::mock(UserManager::class);
-
-        $this->account_creation_feedback = new AccountCreationFeedback(
-            $this->dao,
-            $this->user_manager,
-            $this->email_notifier,
-            $this->logger,
-        );
+        $this->logger         = $this->createMock(LoggerInterface::class);
+        $this->dao            = $this->createMock(InvitationDao::class);
+        $this->email_notifier = $this->createMock(AccountCreationFeedbackEmailNotifier::class);
     }
 
     public function testItUpdatesInvitationsWithJustCreatedUser(): void
     {
-        $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
 
         $this->dao
-            ->shouldReceive('saveJustCreatedUserThanksToInvitation')
-            ->with('doe@example.com', 104, null)
-            ->once();
+            ->expects(self::once())
+            ->method('saveJustCreatedUserThanksToInvitation')
+            ->with('doe@example.com', 104, null);
 
         $this->dao
-            ->shouldReceive('searchByCreatedUserId')
+            ->expects(self::once())
+            ->method('searchByCreatedUserId')
             ->with(104)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withNoUser(),
+            $this->email_notifier,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 
     public function testItUpdatesInvitationsWithJustCreatedUserByInvitation(): void
     {
-        $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
 
         $this->dao
-            ->shouldReceive('saveJustCreatedUserThanksToInvitation')
-            ->with('doe@example.com', 104, 1)
-            ->once();
+            ->expects(self::once())
+            ->method('saveJustCreatedUserThanksToInvitation')
+            ->with('doe@example.com', 104, 1);
 
         $this->dao
-            ->shouldReceive('searchByCreatedUserId')
+            ->expects(self::once())
+            ->method('searchByCreatedUserId')
             ->with(104)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
-        $this->account_creation_feedback->accountHasJustBeenCreated(
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withNoUser(),
+            $this->email_notifier,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated(
             $new_user,
             RegisterFormContext::forAnonymous(
                 true,
@@ -122,43 +113,58 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItNotifiesNobodyIfUserWasNotInvited(): void
     {
-        $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
 
         $this->dao
-            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
+            ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByCreatedUserId')
+            ->expects(self::once())
+            ->method('searchByCreatedUserId')
             ->with(104)
-            ->once()
-            ->andReturn([]);
+            ->willReturn([]);
 
         $this->email_notifier
-            ->shouldReceive('send')
-            ->never();
+            ->expects(self::never())
+            ->method('send');
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withNoUser(),
+            $this->email_notifier,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 
     public function testItNotifiesEveryPeopleWhoInvitedTheUser(): void
     {
-        $from_user = Mockery::mock(\PFUser::class);
-        $from_user->shouldReceive(['isAlive' => true]);
-        $from_another_user = Mockery::mock(\PFUser::class);
-        $from_another_user->shouldReceive(['isAlive' => true]);
+        $from_user = UserTestBuilder::aUser()
+            ->withId(103)
+            ->withStatus('A')
+            ->build();
 
-        $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+        $from_another_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withStatus('A')
+            ->build();
+
+        $new_user = UserTestBuilder::aUser()
+            ->withId(105)
+            ->withEmail('doe@example.com')
+            ->build();
 
         $this->dao
-            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
+            ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByCreatedUserId')
-            ->with(104)
-            ->once()
-            ->andReturn(
+            ->expects(self::once())
+            ->method('searchByCreatedUserId')
+            ->with(105)
+            ->willReturn(
                 [
                     [
                         'from_user_id' => 103,
@@ -169,45 +175,39 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(103)
-            ->once()
-            ->andReturn($from_user);
-
-        $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(104)
-            ->once()
-            ->andReturn($from_another_user);
-
         $this->email_notifier
-            ->shouldReceive('send')
-            ->with($from_user, $new_user)
-            ->once()
-            ->andReturnTrue();
-        $this->email_notifier
-            ->shouldReceive('send')
-            ->with($from_another_user, $new_user)
-            ->once()
-            ->andReturnTrue();
+            ->expects(self::exactly(2))
+            ->method('send')
+            ->withConsecutive(
+                [$from_user, $new_user],
+                [$from_another_user, $new_user],
+            )
+            ->willReturnOnConsecutiveCalls(true, true);
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withUsers($new_user, $from_user, $from_another_user),
+            $this->email_notifier,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 
     public function testItIgnoresUsersThatCannotBeFoundButLogsAnError(): void
     {
-        $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
 
         $this->dao
-            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
+            ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByCreatedUserId')
+            ->expects(self::once())
+            ->method('searchByCreatedUserId')
             ->with(104)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     [
                         'from_user_id' => 103,
@@ -215,40 +215,44 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(103)
-            ->once()
-            ->andReturnNull();
-
         $this->email_notifier
-            ->shouldReceive('send')
-            ->never();
+            ->expects(self::never())
+            ->method('send');
 
         $this->logger
-            ->shouldReceive('error')
-            ->with("Invitation was referencing an unknown user #103")
-            ->once();
+            ->expects(self::once())
+            ->method('error')
+            ->with("Invitation was referencing an unknown user #103");
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withNoUser(),
+            $this->email_notifier,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 
     public function testItIgnoresUsersThatAreNotAliveButLogsAWarning(): void
     {
-        $from_user = Mockery::mock(\PFUser::class);
-        $from_user->shouldReceive(['isAlive' => false]);
+        $from_user = UserTestBuilder::aUser()
+            ->withId(103)
+            ->withStatus('D')
+            ->build();
 
-        $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
 
         $this->dao
-            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
+            ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByCreatedUserId')
+            ->expects(self::once())
+            ->method('searchByCreatedUserId')
             ->with(104)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     [
                         'from_user_id' => 103,
@@ -256,40 +260,44 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(103)
-            ->once()
-            ->andReturn($from_user);
-
         $this->email_notifier
-            ->shouldReceive('send')
-            ->never();
+            ->expects(self::never())
+            ->method('send');
 
         $this->logger
-            ->shouldReceive('warning')
-            ->with("Cannot send invitation feedback to inactive user #103")
-            ->once();
+            ->expects(self::once())
+            ->method('warning')
+            ->with("Cannot send invitation feedback to inactive user #103");
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withUsers($from_user),
+            $this->email_notifier,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 
     public function testItLogsAnErrorIfEmailCannotBeSent(): void
     {
-        $from_user = Mockery::mock(\PFUser::class);
-        $from_user->shouldReceive(['isAlive' => true, 'getId' => 103]);
+        $from_user = UserTestBuilder::aUser()
+            ->withId(103)
+            ->withStatus('A')
+            ->build();
 
-        $new_user = Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive(['getEmail' => 'doe@example.com', 'getId' => 104]);
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
 
         $this->dao
-            ->shouldReceive('saveJustCreatedUserThanksToInvitation');
+            ->method('saveJustCreatedUserThanksToInvitation');
 
         $this->dao
-            ->shouldReceive('searchByCreatedUserId')
+            ->expects(self::once())
+            ->method('searchByCreatedUserId')
             ->with(104)
-            ->once()
-            ->andReturn(
+            ->willReturn(
                 [
                     [
                         'from_user_id' => 103,
@@ -297,22 +305,22 @@ class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             );
 
-        $this->user_manager
-            ->shouldReceive('getUserById')
-            ->with(103)
-            ->once()
-            ->andReturn($from_user);
-
         $this->email_notifier
-            ->shouldReceive('send')
-            ->once()
-            ->andReturnFalse();
+            ->expects(self::once())
+            ->method('send')
+            ->willReturn(false);
 
         $this->logger
-            ->shouldReceive('error')
-            ->with("Unable to send invitation feedback to user #103 after registration of user #104")
-            ->once();
+            ->expects(self::once())
+            ->method('error')
+            ->with("Unable to send invitation feedback to user #103 after registration of user #104");
 
-        $this->account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withUsers($from_user),
+            $this->email_notifier,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
     }
 }
