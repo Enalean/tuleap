@@ -33,14 +33,22 @@ final class AllLinksToLinksKeyValuesConverter
      */
     public static function convertIfNeeded(array $values): array
     {
-        if ($values && $values[0]->links === null && $values[0]->all_links !== null) {
-            return array_map(function (ArtifactValuesRepresentation $value) {
-                $value->links     = array_map(function (LinkWithDirectionRepresentation $link) {
-                    return (array) $link;
-                }, ($value->all_links) ?? []);
-                $value->all_links = null;
-                return $value;
-            }, $values);
+        foreach ($values as $value) {
+            if ($value->links === null && $value->all_links !== null) {
+                return array_map(
+                    function (ArtifactValuesRepresentation $value) {
+                        $value->links     = array_map(
+                            function (LinkWithDirectionRepresentation $link) {
+                                return (array) $link;
+                            },
+                            ($value->all_links) ?? []
+                        );
+                        $value->all_links = null;
+                        return $value;
+                    },
+                    $values
+                );
+            }
         }
         return $values;
     }
