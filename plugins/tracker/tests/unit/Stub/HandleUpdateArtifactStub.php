@@ -24,20 +24,22 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
 use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
-use Tuleap\Tracker\Artifact\Link\LinkArtifact;
+use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
-final class LinkArtifactStub implements LinkArtifact
+final class HandleUpdateArtifactStub implements HandleUpdateArtifact
 {
+    private int $unlink_reverse_artifact_method_call_count;
     private int $link_reverse_artifact_method_call_count;
 
     private function __construct()
     {
-        $this->link_reverse_artifact_method_call_count = 0;
+        $this->unlink_reverse_artifact_method_call_count = 0;
+        $this->link_reverse_artifact_method_call_count   = 0;
     }
 
     public static function build(): self
@@ -45,13 +47,21 @@ final class LinkArtifactStub implements LinkArtifact
         return new self();
     }
 
-    /**
-     * @return Ok<null>|Err<Fault>
-     */
-    public function linkReverseArtifacts(Artifact $targeted_artifact, CollectionOfReverseLinks $reverse_links, PFUser $user): Ok|Err
+    public function removeReverseLinks(Artifact $current_artifact, PFUser $submitter, CollectionOfReverseLinks $removed_reverse_links, ?NewChangesetCommentRepresentation $comment = null): Ok|Err
+    {
+        $this->unlink_reverse_artifact_method_call_count++;
+        return Result::ok(null);
+    }
+
+    public function addReverseLink(Artifact $current_artifact, PFUser $submitter, CollectionOfReverseLinks $added_reverse_link, ?NewChangesetCommentRepresentation $comment = null): Ok|Err
     {
         $this->link_reverse_artifact_method_call_count++;
         return Result::ok(null);
+    }
+
+    public function getUnlinkReverseArtifactMethodCallCount(): int
+    {
+        return $this->unlink_reverse_artifact_method_call_count;
     }
 
     public function getLinkReverseArtifactMethodCallCount(): int

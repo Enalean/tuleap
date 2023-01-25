@@ -28,14 +28,34 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
-/**
- * I'm responsible for link an artifact to another using artifact link field
- */
-interface LinkArtifact
+interface HandleUpdateArtifact
 {
     /**
+     * @throws FieldValidationException
+     * @throws \Tracker_NoChangeException
+     * @throws \Tracker_Exception
      * @return Ok<null>|Err<Fault>
      */
-    public function linkReverseArtifacts(Artifact $targeted_artifact, CollectionOfReverseLinks $reverse_links, PFUser $user): Ok|Err;
+    public function removeReverseLinks(
+        Artifact $current_artifact,
+        PFUser $submitter,
+        CollectionOfReverseLinks $removed_reverse_links,
+        ?NewChangesetCommentRepresentation $comment = null,
+    ): Ok|Err;
+
+    /**
+     * @throws FieldValidationException
+     * @throws \Tracker_NoChangeException
+     * @throws \Tracker_Exception
+     * @return Ok<null>|Err<Fault>
+     */
+    public function addReverseLink(
+        Artifact $current_artifact,
+        PFUser $submitter,
+        CollectionOfReverseLinks $added_reverse_link,
+        ?NewChangesetCommentRepresentation $comment = null,
+    ): Ok|Err;
 }

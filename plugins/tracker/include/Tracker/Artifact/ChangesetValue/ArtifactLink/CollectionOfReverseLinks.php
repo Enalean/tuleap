@@ -33,4 +33,17 @@ final class CollectionOfReverseLinks
     public function __construct(public array $links)
     {
     }
+
+    public function differenceById(CollectionOfReverseLinks $other_links): CollectionOfReverseLinks
+    {
+        $difference = array_udiff(
+            $this->links,
+            $other_links->links,
+            static fn(
+                ReverseLink $link_a,
+                ReverseLink $link_b,
+            ) => $link_a->getSourceArtifactId() - $link_b->getSourceArtifactId()
+        );
+        return new CollectionOfReverseLinks($difference);
+    }
 }

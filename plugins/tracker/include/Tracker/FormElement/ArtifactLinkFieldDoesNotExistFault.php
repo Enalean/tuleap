@@ -20,25 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST;
+namespace Tuleap\Tracker\FormElement;
 
-use Luracast\Restler\RestException;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
-use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
 
-final class FaultMapper
+/**
+ * @psalm-immutable
+ */
+final class ArtifactLinkFieldDoesNotExistFault extends Fault
 {
-    /**
-     * @psalm-return never-return
-     * @throws RestException
-     */
-    public static function mapToRestException(Fault $fault): void
+    public static function build(int $artifact_id): Fault
     {
-        $status_code = match ($fault::class) {
-            ArtifactDoesNotExistFault::class , ArtifactLinkFieldDoesNotExistFault::class => 400,
-            default => 500,
-        };
-        throw new RestException($status_code, (string) $fault);
+        return new self(sprintf("Artifact link field does not exist for the artifact #%d", $artifact_id));
     }
 }

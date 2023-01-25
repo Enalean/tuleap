@@ -81,6 +81,7 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $artifact_id_1 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
         $artifact_id_2 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
+        $artifact_id_3 = $this->createArtifact($tracker_id, $field_id, $status_field_id);
 
         $body = json_encode(
             [
@@ -89,9 +90,14 @@ final class LinkedArtifactsTest extends TrackerBase
                         "field_id" => $field_id,
                         "all_links" => [
                             [
-                                "id" => $artifact_id_2,
+                                "id"        => $artifact_id_2,
                                 "direction" => "reverse",
-                                "type" => "",
+                                "type"      => "",
+                            ],
+                            [
+                                "id"        => $artifact_id_3,
+                                "direction" => "reverse",
+                                "type"      => "",
                             ],
                         ],
                     ],
@@ -106,24 +112,67 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $this->assertEquals(200, $response->getStatusCode());
 
+        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1);
+        $this->assertReverseLinkExist($artifact_id_3, $artifact_id_1);
+
+        $body = json_encode(
+            [
+                'values' => [
+                    [
+                        "field_id"  => $field_id,
+                        "all_links" => [
+                            [
+                                "id"        => $artifact_id_2,
+                                "direction" => "reverse",
+                                "type"      => "",
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest('PUT', "artifacts/$artifact_id_1")->withBody($this->stream_factory->createStream($body))
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertReverseLinkExist($artifact_id_2, $artifact_id_1);
+
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_2) . '/linked_artifacts?direction=forward')
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward')
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $linked_artifacts_collection = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($artifact_id_1, $linked_artifacts_collection["collection"][0]["id"]);
+
+        $this->assertEmpty($linked_artifacts_collection["collection"]);
+    }
+
+    private function assertReverseLinkExist(int $source_artifact_id, int $artifact_id): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $source_artifact_id) . '/linked_artifacts?direction=forward')
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $linked_artifacts_collection = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertNotEmpty($linked_artifacts_collection["collection"]);
+        $this->assertEquals($artifact_id, $linked_artifacts_collection["collection"][0]["id"]);
     }
 
     private function createArtifact(int $tracker_id, int $art_link_field_id, int $status_field_id, int ...$linked_artifacts): int
     {
         $payload = [
             'tracker' => ['id' => $tracker_id],
-            'values' => [
+            'values'  => [
                 [
                     'field_id' => $art_link_field_id,
-                    'links' => (static function (int ...$linked_artifacts): array {
+                    'links'    => (static function (int ...$linked_artifacts): array {
                         $representations = [];
 
                         foreach ($linked_artifacts as $linked_artifact) {

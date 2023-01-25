@@ -73,6 +73,18 @@ final class NewArtifactLinkChangesetValue
         );
     }
 
+    public static function fromRemovedValues(int $field_id, CollectionOfForwardLinks $values_to_remove): self
+    {
+        return new self(
+            $field_id,
+            new CollectionOfForwardLinks([]),
+            $values_to_remove,
+            new CollectionOfForwardLinks([]),
+            null,
+            new CollectionOfReverseLinks([])
+        );
+    }
+
     public function getFieldId(): int
     {
         return $this->field_id;

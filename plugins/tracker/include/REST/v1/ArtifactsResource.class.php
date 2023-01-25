@@ -96,6 +96,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
+use Tuleap\Tracker\Artifact\Link\ArtifactUpdateHandler;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
@@ -679,8 +680,11 @@ class ArtifactsResource extends AuthenticatedResource
      */
     protected function putId($id, array $values, ?NewChangesetCommentRepresentation $comment = null)
     {
-        $user     = $this->user_manager->getCurrentUser();
-        $artifact = $this->getArtifactById($user, $id);
+        $transaction_executor = new DBTransactionExecutorWithConnection(
+            DBFactory::getMainTuleapDBConnection()
+        );
+        $user                 = $this->user_manager->getCurrentUser();
+        $artifact             = $this->getArtifactById($user, $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $artifact->getTracker()->getProject()
@@ -712,7 +716,7 @@ class ArtifactsResource extends AuthenticatedResource
             $fields_retriever,
             $this->event_manager,
             new \Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            $transaction_executor,
             ArtifactChangesetSaver::build(),
             new ParentLinkAction($this->artifact_factory),
             new AfterNewChangesetHandler($this->artifact_factory, $fields_retriever),
@@ -761,9 +765,21 @@ class ArtifactsResource extends AuthenticatedResource
             $artifact_factory
         );
 
+        $artifact_from_rest_updater = new ArtifactUpdateHandler(
+            $changeset_creator,
+            $this->formelement_factory,
+            $artifact_factory
+        );
+
         $this->sendAllowHeadersForArtifact();
 
-        $put_handler = new PUTHandler($fields_data_builder, $updater, $reverse_link_retriever, $artifact_linker);
+        $put_handler = new PUTHandler(
+            $fields_data_builder,
+            $updater,
+            $reverse_link_retriever,
+            $artifact_from_rest_updater,
+            $transaction_executor
+        );
         $put_handler->handle($values, $artifact, $user, $comment);
 
         $this->sendLastModifiedHeader($artifact);
