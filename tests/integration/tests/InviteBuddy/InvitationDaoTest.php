@@ -30,6 +30,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 class InvitationDaoTest extends TestCase
 {
+    private const CREATED_ON_TIMESTAMP = 1234567890;
+
     private InvitationDao $dao;
 
     protected function setUp(): void
@@ -46,7 +48,7 @@ class InvitationDaoTest extends TestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, $verifier);
+        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "jdoe@example.com", null, null, $verifier);
 
         $invitation = $this->dao->searchBySplitToken(new SplitToken($id, $verifier));
         self::assertEquals($id, $invitation->id);
@@ -58,7 +60,7 @@ class InvitationDaoTest extends TestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(1234567890, 101, "jdoe@example.com", null, null, $verifier);
+        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "jdoe@example.com", null, null, $verifier);
 
         $invalid_verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
@@ -157,20 +159,57 @@ class InvitationDaoTest extends TestCase
         return DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT to_email FROM invitations ORDER BY id");
     }
 
-    public function createBunchOfInvitations(): array
+    private function createBunchOfInvitations(): array
     {
         $verifier_1 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $verifier_2 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $verifier_3 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $first_invitation_to_alice_id  = $this->dao->create(1234567890, 101, "alice@example.com", null, null, $verifier_1);
-        $first_invitation_to_bob_id    = $this->dao->create(1234567890, 102, "bob@example.com", null, null, $verifier_2);
-        $second_invitation_to_alice_id = $this->dao->create(1234567890, 103, "alice@example.com", null, null, $verifier_3);
+        $first_invitation_to_alice_id  = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "alice@example.com", null, null, $verifier_1);
+        $first_invitation_to_bob_id    = $this->dao->create(self::CREATED_ON_TIMESTAMP, 102, "bob@example.com", null, null, $verifier_2);
+        $second_invitation_to_alice_id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 103, "alice@example.com", null, null, $verifier_3);
 
         $this->dao->markAsSent($first_invitation_to_alice_id);
         $this->dao->markAsSent($first_invitation_to_bob_id);
         $this->dao->markAsSent($second_invitation_to_alice_id);
 
         return [$first_invitation_to_alice_id, $first_invitation_to_bob_id, $second_invitation_to_alice_id];
+    }
+
+    public function testPurge(): void
+    {
+        $nb_days = 30;
+
+        $date_without_expired_invitations = (new \DateTimeImmutable())
+            ->setTimestamp(self::CREATED_ON_TIMESTAMP);
+
+        $date_with_expired_invitations = (new \DateTimeImmutable())
+            ->setTimestamp(self::CREATED_ON_TIMESTAMP + ($nb_days + 1) * 24 * 3600);
+
+        $this->createBunchOfInvitations();
+
+        $purged_invitations = $this->dao->purgeObsoleteInvitations($date_without_expired_invitations, $nb_days);
+        self::assertCount(0, $purged_invitations);
+        self::assertEquals(3, $this->getNumberOfRemainingInvitations());
+
+        $purged_invitations = $this->dao->purgeObsoleteInvitations($date_with_expired_invitations, $nb_days);
+        self::assertCount(3, $purged_invitations);
+        self::assertEquals(0, $this->getNumberOfRemainingInvitations());
+
+        DBFactory::getMainTuleapDBConnection()->getDB()->run("DELETE FROM invitations");
+
+        [, , $second_invitation_to_alice_id] = $this->createBunchOfInvitations();
+
+        $this->dao->saveJustCreatedUserThanksToInvitation('alice@example.com', 201, $second_invitation_to_alice_id);
+
+        $purged_invitations = $this->dao->purgeObsoleteInvitations($date_with_expired_invitations, $nb_days);
+        self::assertCount(1, $purged_invitations);
+        self::assertEquals('bob@example.com', $purged_invitations[0]->to_email);
+        self::assertEquals(2, $this->getNumberOfRemainingInvitations());
+    }
+
+    private function getNumberOfRemainingInvitations(): int
+    {
+        return DBFactory::getMainTuleapDBConnection()->getDB()->single("SELECT count(*) FROM invitations");
     }
 }
