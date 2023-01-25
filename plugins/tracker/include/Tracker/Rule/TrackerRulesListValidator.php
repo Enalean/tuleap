@@ -102,17 +102,27 @@ class TrackerRulesListValidator
                     $dependencies,
                     $value_field_list
                 );
+            } else {
+                $error_occured = true;
+                $this->dealDependencesProblems($source, $target, $values, null, $value_field_list);
             }
         }
 
         return $error_occured;
     }
 
-    private function checkFieldsValidity(Tracker $tracker, array $values, int $target, int $source, $dependencies, array $value_field_list): bool
+    private function checkFieldsValidity(Tracker $tracker, array $values, int $target, int $source, array $dependencies, array $value_field_list): bool
     {
         $error_occured = false;
         $target_values = $values[$target]['values'];
         $source_values = $values[$source]['values'];
+
+        if (empty($target_values)) {
+            $error_occured = true;
+            $this->dealDependencesProblems($source, $target, $values, null, $value_field_list);
+            return $error_occured;
+        }
+
         foreach ($target_values as $target_value) {
             if ($error_occured) {
                 break;
@@ -187,8 +197,8 @@ class TrackerRulesListValidator
                 }
 
                 $target_field->setHasErrors(true);
-                $target_label = $values[$target]['field']->getLabel();
-                $source_label = $values[$source]['field']->getLabel();
+                $target_label = $target_field->getLabel();
+                $source_label = $source_field->getLabel();
 
                 $this->sendFeedbackError($target_label, $source_label, $pb_source_values, $pb_target_values);
             }
