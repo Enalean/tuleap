@@ -79,7 +79,7 @@ interface ListFieldValue {
 type FieldValue = ValueOfFieldWithSingleSelection | ListFieldValue;
 type FieldValuesMap = ReadonlyArray<FieldValue>;
 
-export async function createArtifact(
+export function createArtifact(
     tracker_id: number,
     field_values: FieldValuesMap
 ): Promise<JustCreatedArtifact> {
@@ -90,13 +90,14 @@ export async function createArtifact(
         values: field_values,
     });
 
-    const response = await post("/api/v1/artifacts", {
+    return post("/api/v1/artifacts", {
         headers,
         body,
-    });
-    resetError();
-    const { id } = await response.json();
-    return { id };
+    }).then(async (response) => {
+        resetError();
+        const { id } = await response.json();
+        return { id };
+    }, errorHandler);
 }
 
 interface FollowupComment {
@@ -105,7 +106,7 @@ interface FollowupComment {
 }
 type JustEditedArtifact = JustCreatedArtifact;
 
-export async function editArtifact(
+export function editArtifact(
     artifact_id: number,
     field_values: FieldValuesMap,
     followup_comment: FollowupComment
@@ -115,15 +116,16 @@ export async function editArtifact(
         comment: followup_comment,
     });
 
-    await put(encodeURI(`/api/v1/artifacts/${artifact_id}`), {
+    return put(encodeURI(`/api/v1/artifacts/${artifact_id}`), {
         headers,
         body,
-    });
-    resetError();
-    return { id: artifact_id };
+    }).then(() => {
+        resetError();
+        return { id: artifact_id };
+    }, errorHandler);
 }
 
-export async function editArtifactWithConcurrencyChecking(
+export function editArtifactWithConcurrencyChecking(
     artifact_id: number,
     field_values: FieldValuesMap,
     followup_comment: FollowupComment,
@@ -135,12 +137,13 @@ export async function editArtifactWithConcurrencyChecking(
         comment: followup_comment,
     });
 
-    await put(encodeURI(`/api/v1/artifacts/${artifact_id}`), {
+    return put(encodeURI(`/api/v1/artifacts/${artifact_id}`), {
         headers: getEditHeaders(etag, last_modified),
         body,
-    });
-    resetError();
-    return { id: artifact_id };
+    }).then(() => {
+        resetError();
+        return { id: artifact_id };
+    }, errorHandler);
 }
 
 function getEditHeaders(
