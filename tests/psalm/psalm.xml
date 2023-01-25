@@ -7,6 +7,8 @@
     resolveFromConfigFile="false"
     errorBaseline="./tests/psalm/tuleap-baseline.xml"
     allowNamedArgumentCalls="false"
+    findUnusedBaselineEntry="false"
+    findUnusedCode="false"
 >
     <projectFiles>
         <directory name="src/common/" />
