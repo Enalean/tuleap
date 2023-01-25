@@ -36,7 +36,7 @@ class AccountCreationFeedbackEmailNotifier
         $mail->setLookAndFeelTemplate(new TemplateWithoutFooter());
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($from_user->getEmail());
-        $mail->setSubject(sprintf(_('Invitation complete!'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
+        $mail->setSubject(_('Invitation complete!'));
 
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates/invite_buddy");
 

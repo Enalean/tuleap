@@ -1856,7 +1856,6 @@ msgstr "Projet invalide passé en paramètre."
 msgid "Invalid selection of categories"
 msgstr "La selection de catégories n'est pas valide"
 
-#, php-format
 msgid "Invitation complete!"
 msgstr "Invitation terminée !"
 
