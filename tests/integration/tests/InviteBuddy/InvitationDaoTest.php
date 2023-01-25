@@ -115,6 +115,46 @@ class InvitationDaoTest extends TestCase
             [Invitation::STATUS_SENT, Invitation::STATUS_SENT, Invitation::STATUS_USED],
             DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT status FROM invitations ORDER BY id"),
         );
+        self::assertEquals(
+            [101, 103],
+            array_map(
+                static fn (array $row) => $row['from_user_id'],
+                $this->dao->searchByCreatedUserId(201),
+            ),
+        );
+    }
+
+    public function testEmailShouldBeClearedAsSoonAsTheInvitationIsNotAnymoreInSentStatusSoThatWeDontKeepOrDuplicatePersonalyIdentifiableInformationEverywhere(): void
+    {
+        [
+            $first_invitation_to_alice_id,
+            $first_invitation_to_bob_id,
+            $second_invitation_to_alice_id,
+        ] = $this->createBunchOfInvitations();
+        self::assertEquals(
+            ["alice@example.com", "bob@example.com", "alice@example.com"],
+            $this->getStoredEmails(),
+        );
+
+        $this->dao->markAsError($first_invitation_to_bob_id);
+        self::assertEquals(
+            ["alice@example.com", "", "alice@example.com"],
+            $this->getStoredEmails(),
+        );
+
+        $this->dao->saveJustCreatedUserThanksToInvitation('alice@example.com', 201, $second_invitation_to_alice_id);
+        self::assertEquals(
+            ["", "", ""],
+            $this->getStoredEmails(),
+        );
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getStoredEmails(): array
+    {
+        return DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT to_email FROM invitations ORDER BY id");
     }
 
     public function createBunchOfInvitations(): array

@@ -30,7 +30,7 @@ use Tuleap\InviteBuddy\Invitation;
  */
 final class InvitationToEmail
 {
-    private function __construct(public int $id, public string $to_email, public ConcealedString $token)
+    private function __construct(public int $id, public string $to_email, public ?int $created_user_id, public ConcealedString $token)
     {
     }
 
@@ -39,10 +39,10 @@ final class InvitationToEmail
      */
     public static function fromInvitation(Invitation $invitation, ConcealedString $token): self
     {
-        if (! $invitation->to_email) {
+        if ($invitation->to_user_id) {
             throw new InvitationShouldBeToEmailException();
         }
 
-        return new self($invitation->id, $invitation->to_email, $token);
+        return new self($invitation->id, $invitation->to_email, $invitation->created_user_id, $token);
     }
 }

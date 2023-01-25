@@ -276,7 +276,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
                 ->build(),
             LayoutBuilder::buildWithInspector($inspector),
             'secret',
-            RegisterFormContext::forAnonymous(true, InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', 101), new ConcealedString('secret'))),
+            RegisterFormContext::forAnonymous(true, InvitationToEmail::fromInvitation(new Invitation(1, 'jdoe@example.com', null, 101, null), new ConcealedString('secret'))),
         );
 
         self::assertTrue($after_event_emitted);

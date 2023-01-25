@@ -51,7 +51,7 @@ class FirstTimerPresenterBuilderTest extends TestCase
 
         $builder = new FirstTimerPresenterBuilder(
             UsedInvitationRetrieverStub::withUsedInvitation(
-                new Invitation(1, 'jdoe@example.com', $project_admin->getId())
+                new Invitation(1, 'jdoe@example.com', null, $project_admin->getId(), null)
             ),
             RetrieveUserByIdStub::withUser($project_admin),
         );

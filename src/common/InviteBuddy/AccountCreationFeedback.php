@@ -65,7 +65,7 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
             $context->invitation_to_email ? $context->invitation_to_email->id : null
         );
 
-        foreach ($this->dao->searchByEmail((string) $just_created_user->getEmail()) as $row) {
+        foreach ($this->dao->searchByCreatedUserId((int) $just_created_user->getId()) as $row) {
             $from_user = $this->user_manager->getUserById($row['from_user_id']);
             if (! $from_user) {
                 $this->logger->error("Invitation was referencing an unknown user #" . $row['from_user_id']);

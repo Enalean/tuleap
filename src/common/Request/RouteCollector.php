@@ -987,7 +987,6 @@ class RouteCollector
                 new InvitationDao(new SplitTokenVerificationStringHasher()),
                 new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
             ),
-            \UserManager::instance(),
         );
     }
 
@@ -1014,7 +1013,6 @@ class RouteCollector
                 new InvitationDao(new SplitTokenVerificationStringHasher()),
                 new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
             ),
-            \UserManager::instance(),
         );
     }
 
