@@ -70,6 +70,7 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
             [
                 'status'   => Invitation::STATUS_ERROR,
                 'to_email' => '',
+                'verifier' => '',
             ],
             ['id' => $id]
         );
@@ -86,7 +87,7 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
         }
 
         if (! $this->hasher->verifyHash($split_token->getVerificationString(), $row['verifier'])) {
-            throw new InvalidInvitationTokenException();
+            throw new InvalidInvitationTokenException(! empty($row['created_user_id']));
         }
 
         return $this->instantiateFromRow($row);
@@ -108,7 +109,8 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
             "UPDATE invitations
                 SET created_user_id = ?,
                     status = IF(id = ?, ?, status),
-                    to_email = ''
+                    to_email = '',
+                    verifier = ''
                 WHERE to_email = ?
                   AND status = ?
                   AND created_user_id IS NULL",

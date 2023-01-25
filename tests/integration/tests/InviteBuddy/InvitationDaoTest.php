@@ -126,7 +126,7 @@ class InvitationDaoTest extends TestCase
         );
     }
 
-    public function testEmailShouldBeClearedAsSoonAsTheInvitationIsNotAnymoreInSentStatusSoThatWeDontKeepOrDuplicatePersonalyIdentifiableInformationEverywhere(): void
+    public function testEmailAndVerifierShouldBeClearedAsSoonAsTheInvitationIsNotAnymoreInSentStatusSoThatWeDontKeepOrDuplicatePersonalyIdentifiableInformationEverywhere(): void
     {
         [
             $first_invitation_to_alice_id,
@@ -137,18 +137,30 @@ class InvitationDaoTest extends TestCase
             ["alice@example.com", "bob@example.com", "alice@example.com"],
             $this->getStoredEmails(),
         );
+        $verifiers = $this->getStoredVerifiers();
+        self::assertNotEquals('', $verifiers[0]);
+        self::assertNotEquals('', $verifiers[1]);
+        self::assertNotEquals('', $verifiers[2]);
 
         $this->dao->markAsError($first_invitation_to_bob_id);
         self::assertEquals(
             ["alice@example.com", "", "alice@example.com"],
             $this->getStoredEmails(),
         );
+        $verifiers = $this->getStoredVerifiers();
+        self::assertNotEquals('', $verifiers[0]);
+        self::assertEquals('', $verifiers[1]);
+        self::assertNotEquals('', $verifiers[2]);
 
         $this->dao->saveJustCreatedUserThanksToInvitation('alice@example.com', 201, $second_invitation_to_alice_id);
         self::assertEquals(
             ["", "", ""],
             $this->getStoredEmails(),
         );
+        $verifiers = $this->getStoredVerifiers();
+        self::assertEquals('', $verifiers[0]);
+        self::assertEquals('', $verifiers[1]);
+        self::assertEquals('', $verifiers[2]);
     }
 
     /**
@@ -157,6 +169,14 @@ class InvitationDaoTest extends TestCase
     private function getStoredEmails(): array
     {
         return DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT to_email FROM invitations ORDER BY id");
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getStoredVerifiers(): array
+    {
+        return DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT verifier FROM invitations ORDER BY id");
     }
 
     private function createBunchOfInvitations(): array

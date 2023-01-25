@@ -52,7 +52,7 @@ class InvitationByTokenRetrieverStub implements InvitationByTokenRetriever
         }
 
         if ($this->invitation_found) {
-            throw new InvalidInvitationTokenException();
+            throw new InvalidInvitationTokenException(false);
         }
 
         throw new InvitationNotFoundException();
