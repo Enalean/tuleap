@@ -37,7 +37,7 @@
             v-bind:value="value"
             v-bind:disabled="is_root_folder"
             v-on:input="oninput"
-            ref="input"
+            ref="title_input"
             data-test="document-new-item-title"
         />
         <p class="tlp-text-danger" v-if="error_message.length > 0" data-test="title-error-message">
