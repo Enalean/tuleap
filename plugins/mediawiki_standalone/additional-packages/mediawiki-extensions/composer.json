@@ -40,16 +40,16 @@
       "type": "package",
       "package": [
         {
-          "name": "mediawiki/pdf-book",
+          "name": "mediawiki/mpdf",
           "type": "mediawiki-extension",
-          "version": "2.0.5",
+          "version": "1.0.0",
           "require": {
-            "composer/installers": "^1.0"
+            "mpdf/mpdf": "^8.1.4"
           },
           "source": {
-            "url": "https://gitlab.com/organicdesign/PdfBook",
+            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Mpdf.git",
             "type": "git",
-            "reference": "a394656d977726ffdaa367eab0ee2bfce9a60fd9"
+            "reference": "2a61ff84fbaa1e0e222389a1ffb05ce40cd4746c"
           }
         }
       ]
@@ -70,13 +70,15 @@
   "require": {
     "mediawiki/labeled-section-transclusion": "^1.35.8",
     "mediawiki/math": "^1.35.8",
-    "mediawiki/pdf-book": "^2.0.5",
+    "mediawiki/mpdf": "^1.0",
     "mediawiki/tuleap-integration": "1.0.2",
     "mediawiki/tuleap-skin": "1.0.2",
     "mediawiki/tuleap-wiki-farm": "1.1.1"
   },
   "replace": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0",
+    "psr/log": "^1.0",
+    "psr/http-message": "^1.0",
     "symfony/polyfill-php80": "^1.25.5"
   },
   "config": {

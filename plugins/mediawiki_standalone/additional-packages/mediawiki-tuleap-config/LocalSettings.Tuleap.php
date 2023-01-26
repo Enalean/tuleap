@@ -58,10 +58,11 @@ wfLoadExtensions([
     'ParserFunctions',
     'SyntaxHighlight_GeSHi',
     'WikiEditor',
-    'PdfBook',
+    'Mpdf',
 ]);
 $GLOBALS['wgPFEnableStringFunctions'] = true;
-$GLOBALS['wgPdfBookTab']              = true;
+$GLOBALS['wgMpdfSimpleOutput']        = true;
+$GLOBALS['wgMpdfTab']                 = true;
 
 $GLOBALS['wgDefaultUserOptions']['usebetatoolbar']     = 1;
 $GLOBALS['wgDefaultUserOptions']['usebetatoolbar-cgd'] = 1;
