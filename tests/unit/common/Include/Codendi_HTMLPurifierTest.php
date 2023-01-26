@@ -156,6 +156,7 @@ class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
         $this->assertEquals('\'<a href="mailto:john.doe@example.com">john.doe@example.com</a>\'', $p->purify('\'john.doe@example.com\'', CODENDI_PURIFIER_BASIC));
         $this->assertEquals('&lt;<a href="mailto:john.doe@example.com">john.doe@example.com</a>&gt;', $p->purify('<john.doe@example.com>', CODENDI_PURIFIER_BASIC));
         $this->assertEquals('<a href="ssh://gitolite@example.com/tuleap/stable.git">ssh://gitolite@example.com/tuleap/stable.git</a>', $p->purify('ssh://gitolite@example.com/tuleap/stable.git', CODENDI_PURIFIER_BASIC));
+        self::assertEquals('<a href="https://sub_domain.example.com">https://sub_domain.example.com</a>', $p->purify('https://sub_domain.example.com', CODENDI_PURIFIER_BASIC));
         $reference_manager = Mockery::mock(ReferenceManager::class);
         $reference_manager->shouldReceive('insertReferences')->withArgs(function (&$data, $group_id) {
             $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
