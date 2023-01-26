@@ -44,17 +44,20 @@ final class AllLinksToLinksKeyValuesConverterTest extends TestCase
         $all_links->type      = '';
         $all_links->direction = 'forward';
 
+        $artifact_value_string        = new ArtifactValuesRepresentation();
+        $artifact_value_string->value = "A string value";
+
         $artifact_value               = new ArtifactValuesRepresentation();
         $artifact_value->links        = null;
         $artifact_value->all_links[0] = $all_links;
 
-        $values = [$artifact_value];
+        $values = [$artifact_value_string, $artifact_value];
 
         $converted_value = AllLinksToLinksKeyValuesConverter::convertIfNeeded($values);
 
         self::assertNull($converted_value[0]->all_links);
 
         $expected_links_key_value[0] = ['id' => 12, 'type' => '', 'direction' => 'forward'];
-        self::assertEquals($expected_links_key_value, $converted_value[0]->links);
+        self::assertEquals($expected_links_key_value, $converted_value[1]->links);
     }
 }
