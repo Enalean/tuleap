@@ -22,7 +22,7 @@
         class="tlp-dropdown-menu-item"
         type="button"
         role="menuitem"
-        v-on:click="cutItem(item)"
+        v-on:click="doCutItem(item)"
         v-bind:class="{ 'tlp-dropdown-menu-item-disabled': pasting_in_progress }"
         v-bind:disabled="pasting_in_progress"
         v-if="can_cut_item"
@@ -32,31 +32,28 @@
         <translate>Cut</translate>
     </button>
 </template>
-<script lang="ts">
-import { namespace } from "vuex-class";
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
+import { useNamespacedMutations, useState } from "vuex-composition-helpers";
+import type { ClipboardState } from "../../../store/clipboard/module";
+import { computed } from "vue";
 
-const clipboard = namespace("clipboard");
+const props = defineProps<{ item: Item }>();
+const { pasting_in_progress } = useState<Pick<ClipboardState, "pasting_in_progress">>("clipboard", [
+    "pasting_in_progress",
+]);
 
-@Component
-export default class CutItem extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const { cutItem } = useNamespacedMutations("clipboard", ["cutItem"]);
 
-    @clipboard.State
-    readonly pasting_in_progress!: boolean;
+const can_cut_item = computed((): boolean => {
+    return props.item.user_can_write && props.item.parent_id !== 0;
+});
 
-    get can_cut_item(): boolean {
-        return this.item.user_can_write && this.item.parent_id !== 0;
+function doCutItem(): void {
+    if (!pasting_in_progress.value) {
+        emitter.emit("hide-action-menu");
     }
-
-    cutItem(): void {
-        if (!this.pasting_in_progress) {
-            emitter.emit("hide-action-menu");
-        }
-        this.$store.commit("clipboard/cutItem", this.item);
-    }
+    cutItem(props.item);
 }
 </script>

@@ -24,8 +24,8 @@ import {
     addNewFolder,
     addNewLink,
     addNewWiki,
+    getItem,
 } from "../api/rest-querier";
-import { adjustItemToContentAfterItemCreationInAFolder } from "./actions-helpers/adjust-item-to-content-after-item-creation-in-folder";
 import type { ActionContext } from "vuex";
 import type { CreatedItem, Folder, Item, RootState } from "../type";
 import {
@@ -39,6 +39,14 @@ import {
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import emitter from "../helpers/emitter";
 import { getErrorMessage } from "../helpers/properties-helpers/error-handler-helper";
+import type { State } from "../type";
+import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created";
+
+export interface RootActionsCreate {
+    readonly createNewItem: typeof createNewItem;
+    readonly addNewUploadFile: typeof addNewUploadFile;
+    readonly adjustItemToContentAfterItemCreationInAFolder: typeof adjustItemToContentAfterItemCreationInAFolder;
+}
 
 export const createNewItem = async (
     context: ActionContext<RootState, RootState>,
@@ -87,12 +95,11 @@ export const createNewItem = async (
             return undefined;
         }
         emitter.emit("new-item-has-just-been-created", item_reference);
-        await adjustItemToContentAfterItemCreationInAFolder(
-            context,
+        await adjustItemToContentAfterItemCreationInAFolder(context, {
             parent,
             current_folder,
-            item_reference.id
-        );
+            item_id: item_reference.id,
+        });
         return item_reference;
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
@@ -129,3 +136,26 @@ export const addNewUploadFile = async (
         throw exception;
     }
 };
+
+export interface AdjustItemPayload {
+    parent: Folder;
+    current_folder: Folder;
+    item_id: number;
+}
+
+export async function adjustItemToContentAfterItemCreationInAFolder(
+    context: ActionContext<State, State>,
+    payload: AdjustItemPayload
+): Promise<void> {
+    const created_item = await getItem(payload.item_id);
+
+    context.commit("removeItemFromFolderContent", created_item);
+
+    flagItemAsCreated(context, created_item);
+
+    if (!payload.parent.is_expanded && payload.parent.id !== payload.current_folder.id) {
+        context.commit("addDocumentToFoldedFolder", [payload.parent, created_item, false]);
+    }
+
+    return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
+}
