@@ -1,5 +1,10 @@
+<?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright Enalean (c) 2023 - Present. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -16,21 +21,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
-#[derive(Debug, Deserialize)]
-pub struct HookData {
-    pub updated_references: HashMap<String, UpdatedReferences>,
-}
+namespace Tuleap\Git\Hook\PreReceive;
 
-#[derive(Debug, Deserialize)]
-pub struct UpdatedReferences {
-    pub old_value: String,
-    pub new_value: String,
-}
-
-#[derive(Serialize)]
-pub struct JsonResult {
-    pub result: Option<String>,
+class PreReceiveWasmNotFoundException extends \Exception
+{
 }

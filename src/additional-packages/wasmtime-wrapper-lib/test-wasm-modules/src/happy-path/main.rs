@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use std::io;
 
-fn main() -> () {
-    print!("Hello world");
+fn main() -> io::Result<()> {
+    let mut input = String::new();
+    let stdin = io::stdin();
+    stdin.read_line(&mut input)?;
+
+    print!("{}", input);
+
+    Ok(())
 }

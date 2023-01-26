@@ -24,7 +24,7 @@ use wasi_common::pipe::{ReadPipe, WritePipe};
 use wasmtime::*;
 use wasmtime_wasi::sync::WasiCtxBuilder;
 use wasmtime_wasi::WasiCtx;
-use wire::{InternalErrorJson, RejectionMessageJson, UserErrorJson, WasmExpectedOutputJson};
+use wire::{InternalErrorJson, UserErrorJson};
 
 mod wire;
 
@@ -34,7 +34,7 @@ const MAX_MEMORY_SIZE: usize = 3145728; /* 3 Mo  */
 #[no_mangle]
 pub extern "C" fn callWasmModule(
     filename_ptr: *const c_char,
-    json_ptr: *const c_char,
+    json_ptr: *const c_char
 ) -> *mut c_char {
     if filename_ptr.is_null() {
         return internal_error("filename_ptr is null in callWasmModule".to_owned());
@@ -47,18 +47,8 @@ pub extern "C" fn callWasmModule(
 
     match compile_and_exec(filename, input) {
         Ok(s) => {
-            match serde_json::from_str::<WasmExpectedOutputJson>(&s) {
-                Ok(res) => {
-                    let msg = RejectionMessageJson {
-                        rejection_message: res.result,
-                    };
-                    let c_str = CString::new(serde_json::to_string(&msg).unwrap()).unwrap();
-                    return CString::into_raw(c_str);
-                }
-                Err(_err) => {
-                    return user_error("The wasm module did not return valid JSON".to_owned());
-                }
-            };
+            let c_str = CString::new(s).unwrap();
+            return CString::into_raw(c_str);
         }
         Err(e) => {
             return match e.downcast_ref::<Trap>() {
@@ -184,20 +174,12 @@ mod tests {
     use crate::{callWasmModule, MAX_EXEC_TIME_IN_MS, MAX_MEMORY_SIZE};
 
     #[test]
-    fn expected_output_rejection() {
-        let wasm_module_path =
-            "../pre-receive-hook-example/target/wasm32-wasi/release/pre-receive-hook-example.wasm";
+    fn expected_output_normal() {
+        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm";
         let wasm_c_str = CString::new(wasm_module_path).unwrap();
         let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
 
-        let json = r#"{
-            "updated_references": {
-                "refs\/heads\/master": {
-                    "old_value": "c8ee0a8bcf3f185a272a04d6493456b3562f5050",
-                    "new_value": "e6ecbb16e4e9792fa8c5824204e1a58f2007dc31"
-                }
-            }
-        }"#;
+        let json = "Hello world !";
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
@@ -206,38 +188,9 @@ mod tests {
         let str_out: &str = cstr_out.to_str().unwrap();
 
         assert_eq!(
-            r#"{"rejection_message":"the following reference refs/heads/master does not start by refs/heads/tuleap-..."}"#,
+            "Hello world !",
             str_out
         );
-    }
-
-    #[test]
-    fn expected_output_normal() {
-        let wasm_module_path =
-            "../pre-receive-hook-example/target/wasm32-wasi/release/pre-receive-hook-example.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
-
-        let json = r#"{
-            "updated_references": {
-                "refs\/heads\/tuleap-master": {
-                    "old_value": "c8ee0a8bcf3f185a272a04d6493456b3562f5050",
-                    "new_value": "e6ecbb16e4e9792fa8c5824204e1a58f2007dc31"
-                },
-                "refs\/heads\/tuleap-hello": {
-                    "old_value": "0000000000000000000000000000000000000000",
-                    "new_value": "0066b8447a411086ecd19210dd3f5df818056f47"
-                }
-            }
-        }"#;
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
-
-        let c_out = callWasmModule(wasm_c_world, json_c_world);
-        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
-        let str_out: &str = cstr_out.to_str().unwrap();
-
-        assert_eq!(r#"{"rejection_message":null}"#, str_out);
     }
 
     #[test]
@@ -272,7 +225,7 @@ mod tests {
     #[test]
     fn json_ptr_is_null_error() {
         let wasm_module_path =
-            "../pre-receive-hook-example/target/wasm32-wasi/release/pre-receive-hook-example.wasm";
+            "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm";
         let wasm_c_str = CString::new(wasm_module_path).unwrap();
         let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
 
@@ -330,27 +283,6 @@ mod tests {
                 r#"{{"error":"The module has exceeded the {} ms of allowed computation time"}}"#,
                 MAX_EXEC_TIME_IN_MS
             ),
-            str_out
-        );
-    }
-
-    #[test]
-    fn module_returns_broken_json() {
-        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/wrong-json.wasm";
-        let wasm_c_str = CString::new(wasm_module_path).unwrap();
-        let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
-
-        let json = "";
-        let json_c_str = CString::new(json).unwrap();
-        let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
-
-        let c_out = callWasmModule(wasm_c_world, json_c_world);
-
-        let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
-        let str_out: &str = cstr_out.to_str().unwrap();
-
-        assert_eq!(
-            r#"{"error":"The wasm module did not return valid JSON"}"#,
             str_out
         );
     }

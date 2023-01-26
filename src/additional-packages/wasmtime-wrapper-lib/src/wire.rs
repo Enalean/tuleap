@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct InternalErrorJson {
@@ -26,14 +26,4 @@ pub struct InternalErrorJson {
 #[derive(Serialize)]
 pub struct UserErrorJson {
     pub error: String,
-}
-
-#[derive(Serialize)]
-pub struct RejectionMessageJson {
-    pub rejection_message: Option<String>,
-}
-
-#[derive(Deserialize)]
-pub struct WasmExpectedOutputJson {
-    pub result: Option<String>,
 }

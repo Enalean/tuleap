@@ -29,7 +29,6 @@ final class FFIWASMCaller implements WASMCaller
      */
     private \FFI $ffi;
     private const HEADER_PATH = __DIR__ . '/../../additional-packages/wasmtime-wrapper-lib/wasmtimewrapper.h';
-    private const MODULE_PATH = __DIR__ . '/../../additional-packages/pre-receive-hook-example/target/wasm32-wasi/release/pre-receive-hook-example.wasm';
 
     public function __construct()
     {
@@ -43,9 +42,9 @@ final class FFIWASMCaller implements WASMCaller
         $this->ffi = $ffi_tmp;
     }
 
-    public function call(string $json_input): string
+    public function call(string $wasm_path, string $json_input): string
     {
-        $json_output     = $this->ffi->callWasmModule(self::MODULE_PATH, $json_input);
+        $json_output     = $this->ffi->callWasmModule($wasm_path, $json_input);
         $json_output_php = \FFI::string($json_output);
         $this->ffi->freeCallWasmModuleOutput($json_output);
 
