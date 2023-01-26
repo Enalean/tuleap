@@ -28,7 +28,9 @@ final class FFIWASMCaller implements WASMCaller
      * @var \FFI&FFIWASMCallerStub $ffi
      */
     private \FFI $ffi;
-    private const HEADER_PATH = __DIR__ . '/../../additional-packages/wasmtime-wrapper-lib/wasmtimewrapper.h';
+    private const MAX_EXEC_TIME_IN_MS      = 80;
+    private const MAX_MEMORY_SIZE_IN_BYTES = 3145728; /* 3 Mo */
+    private const HEADER_PATH              = __DIR__ . '/../../additional-packages/wasmtime-wrapper-lib/wasmtimewrapper.h';
 
     public function __construct()
     {
@@ -44,7 +46,7 @@ final class FFIWASMCaller implements WASMCaller
 
     public function call(string $wasm_path, string $json_input): string
     {
-        $json_output     = $this->ffi->callWasmModule($wasm_path, $json_input);
+        $json_output     = $this->ffi->callWasmModule($wasm_path, $json_input, self::MAX_EXEC_TIME_IN_MS, self::MAX_MEMORY_SIZE_IN_BYTES);
         $json_output_php = \FFI::string($json_output);
         $this->ffi->freeCallWasmModuleOutput($json_output);
 

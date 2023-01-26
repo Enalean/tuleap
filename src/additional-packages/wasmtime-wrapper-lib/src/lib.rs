@@ -28,13 +28,12 @@ use wire::{InternalErrorJson, UserErrorJson};
 
 mod wire;
 
-const MAX_EXEC_TIME_IN_MS: u64 = 80;
-const MAX_MEMORY_SIZE: usize = 3145728; /* 3 Mo  */
-
 #[no_mangle]
 pub extern "C" fn callWasmModule(
     filename_ptr: *const c_char,
-    json_ptr: *const c_char
+    json_ptr: *const c_char,
+    max_exec_time_in_ms: u64,
+    max_memory_size_in_bytes: usize,
 ) -> *mut c_char {
     if filename_ptr.is_null() {
         return internal_error("filename_ptr is null in callWasmModule".to_owned());
@@ -44,8 +43,11 @@ pub extern "C" fn callWasmModule(
     }
     let filename = unsafe { CStr::from_ptr(filename_ptr).to_string_lossy().into_owned() };
     let input = unsafe { CStr::from_ptr(json_ptr).to_string_lossy().into_owned() };
-
-    match compile_and_exec(filename, input) {
+    let limits = Limitations {
+        max_exec_time: max_exec_time_in_ms,
+        max_memory: max_memory_size_in_bytes,
+    };
+    match compile_and_exec(filename, input, &limits) {
         Ok(s) => {
             let c_str = CString::new(s).unwrap();
             return CString::into_raw(c_str);
@@ -54,11 +56,11 @@ pub extern "C" fn callWasmModule(
             return match e.downcast_ref::<Trap>() {
                 Some(&Trap::Interrupt) => user_error(format!(
                     "The module has exceeded the {} ms of allowed computation time",
-                    MAX_EXEC_TIME_IN_MS
+                    limits.max_exec_time
                 )),
                 Some(&Trap::UnreachableCodeReached) => user_error(format!(
                     "wasm `unreachable` instruction executed, your module *most probably* tried to allocate more than the {} bytes of memory that it is allowed to use",
-                    MAX_MEMORY_SIZE
+                    limits.max_memory
                 )),
                 None => internal_error(format!("{}", e.to_string())),
                 _ => user_error(format!("{}", e.root_cause())),
@@ -99,13 +101,22 @@ struct StoreState {
     wasi: WasiCtx,
 }
 
-fn compile_and_exec(filename: String, input: String) -> Result<String, anyhow::Error> {
+struct Limitations {
+    max_exec_time: u64,
+    max_memory: usize,
+}
+
+fn compile_and_exec(
+    filename: String,
+    input: String,
+    limits: &Limitations,
+) -> Result<String, anyhow::Error> {
     let stdin = ReadPipe::from(input.to_owned());
     let stdout = WritePipe::new_in_memory();
 
     let my_state = StoreState {
         limits: StoreLimitsBuilder::new()
-            .memory_size(MAX_MEMORY_SIZE)
+            .memory_size(limits.max_memory)
             .instances(1)
             .build(),
         wasi: WasiCtxBuilder::new()
@@ -139,8 +150,9 @@ fn compile_and_exec(filename: String, input: String) -> Result<String, anyhow::E
         .typed::<(), ()>(&store)
         .expect("should type the function");
 
+    let max_exec_time = limits.max_exec_time;
     std::thread::spawn(move || {
-        std::thread::sleep(std::time::Duration::from_millis(MAX_EXEC_TIME_IN_MS));
+        std::thread::sleep(std::time::Duration::from_millis(max_exec_time));
         engine.increment_epoch();
     });
 
@@ -171,7 +183,10 @@ mod tests {
     use std::os::raw::c_char;
     use std::ptr;
 
-    use crate::{callWasmModule, MAX_EXEC_TIME_IN_MS, MAX_MEMORY_SIZE};
+    use crate::callWasmModule;
+
+    const MAX_EXEC_TIME: u64 = 80;
+    const MAX_MEMORY_SIZE: usize = 3145728;
 
     #[test]
     fn expected_output_normal() {
@@ -183,14 +198,11 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world);
+        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
-        assert_eq!(
-            "Hello world !",
-            str_out
-        );
+        assert_eq!("Hello world !", str_out);
     }
 
     #[test]
@@ -212,7 +224,7 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world);
+        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -224,14 +236,13 @@ mod tests {
 
     #[test]
     fn json_ptr_is_null_error() {
-        let wasm_module_path =
-            "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm";
+        let wasm_module_path = "./test-wasm-modules/target/wasm32-wasi/release/happy-path.wasm";
         let wasm_c_str = CString::new(wasm_module_path).unwrap();
         let wasm_c_world: *const c_char = wasm_c_str.as_ptr() as *const c_char;
 
         let json_c_world = ptr::null();
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world);
+        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -257,7 +268,7 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world);
+        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
@@ -274,14 +285,14 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world);
+        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
         assert_eq!(
             format!(
                 r#"{{"error":"The module has exceeded the {} ms of allowed computation time"}}"#,
-                MAX_EXEC_TIME_IN_MS
+                MAX_EXEC_TIME
             ),
             str_out
         );
@@ -298,7 +309,7 @@ mod tests {
         let json_c_str = CString::new(json).unwrap();
         let json_c_world: *const c_char = json_c_str.as_ptr() as *const c_char;
 
-        let c_out = callWasmModule(wasm_c_world, json_c_world);
+        let c_out = callWasmModule(wasm_c_world, json_c_world, MAX_EXEC_TIME, MAX_MEMORY_SIZE);
         let cstr_out: &CStr = unsafe { CStr::from_ptr(c_out) };
         let str_out: &str = cstr_out.to_str().unwrap();
 
