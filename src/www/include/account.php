@@ -34,7 +34,7 @@ function account_add_user_to_group($group_id, &$user_unix_name)
             return false;
         }
         $project_member_adder = \Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications::build();
-        $project_member_adder->addProjectMember($user, $project);
+        $project_member_adder->addProjectMemberWithFeedback($user, $project);
         return true;
     } else {
         //user doesn't exist

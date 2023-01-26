@@ -29,6 +29,7 @@ use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\User\LogUser;
 use User_UserStatusManager;
 
@@ -40,6 +41,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         private NewUserByAdminEmailSender $new_user_by_admin_email_sender,
         private EventDispatcherInterface $event_dispatcher,
         private LogUser $log_user,
+        private ProjectByIDFactory $project_retriever,
     ) {
     }
 
@@ -83,7 +85,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         }
 
         if ($context->invitation_to_email) {
-            $this->automagicallyLogUser($new_user, $request, $layout);
+            $this->automagicallyLogUser($new_user, $request, $layout, $context->invitation_to_email);
             return;
         }
 
@@ -101,9 +103,32 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         $this->confirmation_page->displayConfirmationLinkSent($layout, $request);
     }
 
-    private function automagicallyLogUser(PFUser $new_user, HTTPRequest $request, BaseLayout $layout): void
-    {
+    private function automagicallyLogUser(
+        PFUser $new_user,
+        HTTPRequest $request,
+        BaseLayout $layout,
+        InvitationToEmail $invitation_to_email,
+    ): void {
         $this->log_user->login($new_user->getUserName(), new ConcealedString($request->get('form_pw')));
+        if (! $invitation_to_email->to_project_id) {
+            $this->redirectToUserDashboard($layout);
+        } else {
+            $this->redirectToProjectDashboard($layout, $invitation_to_email->to_project_id);
+        }
+    }
+
+    private function redirectToProjectDashboard(BaseLayout $layout, int $project_id): void
+    {
+        try {
+            $project = $this->project_retriever->getValidProjectById($project_id);
+            $layout->redirect($project->getUrl());
+        } catch (\Project_NotFoundException) {
+            $this->redirectToUserDashboard($layout);
+        }
+    }
+
+    private function redirectToUserDashboard(BaseLayout $layout): void
+    {
         $layout->redirect('/my/');
     }
 }

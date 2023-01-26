@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+
 .first-timer-modal {
     z-index: 2007;
 }
@@ -64,4 +66,16 @@
     // horizontal scroll until the canvas disappear.
     max-width: 100%;
     height: 100vh;
+}
+
+.has-sidebar {
+    .first-timer-success-confetti-canvas {
+        margin: 0 0 0 -1 * global-variables.$sidebar-expanded-width;
+    }
+
+    &.sidebar-collapsed {
+        .first-timer-success-confetti-canvas {
+            margin: 0 0 0 -1 * global-variables.$sidebar-collapsed-width;
+        }
+    }
 }

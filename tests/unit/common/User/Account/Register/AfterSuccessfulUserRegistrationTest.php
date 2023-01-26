@@ -28,9 +28,11 @@ use Tuleap\InviteBuddy\InvitationTestBuilder;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\User\LogUserStub;
 
 final class AfterSuccessfulUserRegistrationTest extends TestCase
@@ -74,6 +76,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             ),
             $event_dispatcher,
             LogUserStub::buildSelf(),
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         $after->afterSuccessfullUserRegistration(
@@ -118,6 +121,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             ),
             $event_dispatcher,
             LogUserStub::buildSelf(),
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         $after->afterSuccessfullUserRegistration(
@@ -170,6 +174,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             ),
             $event_dispatcher,
             LogUserStub::buildSelf(),
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         $after->afterSuccessfullUserRegistration(
@@ -222,6 +227,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             ),
             $event_dispatcher,
             LogUserStub::buildSelf(),
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         $after->afterSuccessfullUserRegistration(
@@ -265,6 +271,7 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
             ),
             $event_dispatcher,
             $log_user,
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         $inspector = new LayoutInspector();
@@ -291,5 +298,69 @@ final class AfterSuccessfulUserRegistrationTest extends TestCase
         self::assertFalse($confirmation_page->hasConfirmationLinkSentBeenDisplayed());
         self::assertTrue($log_user->hasBeenLoggedIn());
         self::assertEquals('/my/', $inspector->getRedirectUrl());
+    }
+
+    public function testItRedirectsToProjectTheUserHasBeenInvitedInto(): void
+    {
+        \ForgeConfig::set(\User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL, 0);
+
+        $user_register_mail_builder  = $this->createMock(\TuleapRegisterMail::class);
+        $admin_register_mail_builder = $this->createMock(\TuleapRegisterMail::class);
+
+        $after_event_emitted = false;
+
+        $confirmation_page = IDisplayConfirmationPageStub::buildSelf();
+        $event_dispatcher  = EventDispatcherStub::withCallback(static function (AfterUserRegistrationEvent $event) use (&$after_event_emitted): AfterUserRegistrationEvent {
+            $after_event_emitted = true;
+
+            return $event;
+        });
+
+        $log_user = LogUserStub::buildSelf();
+        $after    = new AfterSuccessfulUserRegistration(
+            $confirmation_page,
+            new ConfirmationHashEmailSender(
+                $user_register_mail_builder,
+                'https://example.com',
+            ),
+            new NewUserByAdminEmailSender(
+                $admin_register_mail_builder,
+                'https://example.com',
+            ),
+            $event_dispatcher,
+            $log_user,
+            ProjectByIDFactoryStub::buildWith(
+                ProjectTestBuilder::aProject()
+                    ->withId(111)
+                    ->withUnixName('awesome-project')
+                    ->build()
+            ),
+        );
+
+        $inspector = new LayoutInspector();
+
+        $after->afterSuccessfullUserRegistration(
+            UserTestBuilder::buildWithDefaults(),
+            HTTPRequestBuilder::get()
+                ->withParams(['form_pw' => 'secret', 'invitation-token' => 'tlp-invite-13.abc'])
+                ->build(),
+            LayoutBuilder::buildWithInspector($inspector),
+            'secret',
+            RegisterFormContext::forAnonymous(
+                true,
+                InvitationToEmail::fromInvitation(
+                    InvitationTestBuilder::aSentInvitation(1)
+                        ->to('jdoe@example.com')
+                        ->toProjectId(111)
+                        ->build(),
+                    new ConcealedString('secret')
+                )
+            ),
+        );
+
+        self::assertTrue($after_event_emitted);
+        self::assertFalse($confirmation_page->hasConfirmationLinkSentBeenDisplayed());
+        self::assertTrue($log_user->hasBeenLoggedIn());
+        self::assertEquals('/projects/awesome-project', $inspector->getRedirectUrl());
     }
 }

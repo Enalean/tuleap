@@ -170,7 +170,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('addUserToStaticGroup')
             ->with(168, 24, 217)
             ->once();
-        $this->project_member_adder->shouldNotReceive('addProjectMember');
+        $this->project_member_adder->shouldNotReceive('addProjectMemberWithFeedback');
 
         $this->adder->addMember($user, $ugroup);
     }
@@ -205,7 +205,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('addUserToStaticGroup')
             ->with(168, 24, 217)
             ->once();
-        $this->project_member_adder->shouldNotReceive('addProjectMember');
+        $this->project_member_adder->shouldNotReceive('addProjectMemberWithFeedback');
 
         $this->adder->addMember($user, $ugroup);
     }
@@ -241,7 +241,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(168, 24, 217)
             ->once();
         $this->project_member_adder
-            ->shouldReceive('addProjectMember')
+            ->shouldReceive('addProjectMemberWithFeedback')
             ->with($user, $project)
             ->once();
 

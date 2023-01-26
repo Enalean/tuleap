@@ -43,6 +43,7 @@ final class Invitation
         public ?int $created_user_id,
         public string $status,
         public int $created_on,
+        public ?int $to_project_id,
     ) {
     }
 }

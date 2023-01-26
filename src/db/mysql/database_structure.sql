@@ -1590,6 +1590,7 @@ CREATE TABLE invitations(
     from_user_id INT(11) NOT NULL,
     to_email TEXT NOT NULL,
     to_user_id INT(11) NULL,
+    to_project_id INT NULL,
     custom_message TEXT NULL,
     status VARCHAR(10),
     created_user_id INT(11) NULL,

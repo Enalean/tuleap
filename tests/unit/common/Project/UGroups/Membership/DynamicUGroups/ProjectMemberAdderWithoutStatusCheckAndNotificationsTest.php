@@ -66,7 +66,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\T
 
         $GLOBALS['Response']->expects(self::never())->method('addFeedback');
 
-        $this->project_member_adder->addProjectMember($user, $this->an_active_project);
+        $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project);
     }
 
     public function testItDisplaysAnErrorWhenRestrictedUserIsAddedToWoRestrictedProject(): void
@@ -76,7 +76,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\T
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
-        $this->project_member_adder->addProjectMember($user, $this->an_active_project);
+        $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project);
     }
 
     public function testItDisplaysAnErrorWhenUserIsAlreadyMember(): void
@@ -86,6 +86,6 @@ class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\T
 
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with(\Feedback::ERROR);
 
-        $this->project_member_adder->addProjectMember($user, $this->an_active_project);
+        $this->project_member_adder->addProjectMemberWithFeedback($user, $this->an_active_project);
     }
 }

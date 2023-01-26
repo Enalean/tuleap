@@ -30,6 +30,7 @@ final class InvitationTestBuilder
     private int $from_user_id     = 101;
     private int $created_on       = 1234567890;
     private ?int $created_user_id = null;
+    private ?int $to_project_id   = null;
 
     /**
      * @param Invitation::STATUS_* $status
@@ -99,6 +100,13 @@ final class InvitationTestBuilder
         return $this;
     }
 
+    public function toProjectId(int $project_id): self
+    {
+        $this->to_project_id = $project_id;
+
+        return $this;
+    }
+
     public function build(): Invitation
     {
         return new Invitation(
@@ -109,6 +117,7 @@ final class InvitationTestBuilder
             $this->created_user_id,
             $this->status,
             $this->created_on,
+            $this->to_project_id,
         );
     }
 }

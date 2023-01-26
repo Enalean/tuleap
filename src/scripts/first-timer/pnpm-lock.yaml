@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/burningparrot-theme': workspace:*
   '@tuleap/tlp-modal': workspace:*
   '@types/canvas-confetti': ^1.6.0
   canvas-confetti: ^1.6.0
@@ -12,6 +13,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
+  '@tuleap/burningparrot-theme': link:../../themes/BurningParrot
   '@types/canvas-confetti': 1.6.0
 
 packages:

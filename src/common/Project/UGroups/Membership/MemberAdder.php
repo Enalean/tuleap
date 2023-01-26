@@ -130,7 +130,7 @@ class MemberAdder
             $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)
             && ! $user->isMember($project_id)
         ) {
-            $this->project_member_adder->addProjectMember($user, $project);
+            $this->project_member_adder->addProjectMemberWithFeedback($user, $project);
         }
     }
 }

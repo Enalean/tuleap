@@ -58,16 +58,13 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         );
     }
 
-    public function addProjectMember(\PFUser $user, \Project $project): void
+    public function addProjectMemberWithFeedback(\PFUser $user, \Project $project): void
     {
-        if (! $user->isActive() && ! $user->isRestricted()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
-            return;
-        }
         try {
-            $this->project_member_adder->addProjectMember($user, $project);
-            $this->sendNotification($user, $project);
+            $this->addProjectMember($user, $project);
             $GLOBALS['Response']->addFeedback(Feedback::INFO, _('User added'));
+        } catch (UserIsNotActiveOrRestrictedException) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
         } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (AlreadyProjectMemberException $exception) {
@@ -75,6 +72,22 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         } catch (NoEmailForUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('No email for user account'));
         }
+    }
+
+    /**
+     * @throws UserIsNotActiveOrRestrictedException
+     * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
+     * @throws AlreadyProjectMemberException
+     * @throws NoEmailForUserException
+     */
+    public function addProjectMember(\PFUser $user, \Project $project): void
+    {
+        if (! $user->isActive() && ! $user->isRestricted()) {
+            throw new UserIsNotActiveOrRestrictedException();
+        }
+
+        $this->project_member_adder->addProjectMember($user, $project);
+        $this->sendNotification($user, $project);
     }
 
     private function sendNotification(\PFUser $user, \Project $project): void

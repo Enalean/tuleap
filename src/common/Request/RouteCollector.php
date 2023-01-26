@@ -150,6 +150,7 @@ use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
 use Tuleap\Project\Service\IndexController;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
@@ -1027,6 +1028,7 @@ class RouteCollector
     {
         $event_manager          = EventManager::instance();
         $user_manager           = \UserManager::instance();
+        $project_manager        = ProjectManager::instance();
         $locale_switcher        = new LocaleSwitcher();
         $mail_presenter_factory = new \MailPresenterFactory();
         $renderer_factory       = TemplateRendererFactory::build();
@@ -1038,6 +1040,7 @@ class RouteCollector
         );
 
 
+
         return new RegisterFormProcessor(
             new \Tuleap\User\Account\Register\RegisterFormHandler(
                 new AccountRegister(
@@ -1046,6 +1049,8 @@ class RouteCollector
                         $invitation_dao,
                         $user_manager,
                         new AccountCreationFeedbackEmailNotifier(),
+                        $project_manager,
+                        ProjectMemberAdderWithStatusCheckAndNotifications::build(),
                         \BackendLogger::getDefaultLogger(),
                     )
                 ),
@@ -1070,6 +1075,7 @@ class RouteCollector
                 ),
                 $event_manager,
                 $user_manager,
+                $project_manager,
             ),
             new RegisterFormDisplayer(
                 new RegisterFormPresenterBuilder(

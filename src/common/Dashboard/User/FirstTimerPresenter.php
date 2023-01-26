@@ -23,17 +23,28 @@ declare(strict_types=1);
 namespace Tuleap\Dashboard\User;
 
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 
 final class FirstTimerPresenter
 {
     public ?UserPresenter $invited_by_user;
+    public ?string $project_name = null;
+    public ?string $project_icon = null;
 
     public function __construct(
         public string $real_name,
         public string $plateform_name,
         ?\PFUser $invited_by_user,
+        ?\Project $project,
         public JavascriptViteAsset $javascript_assets,
     ) {
+        if ($project) {
+            $this->project_name = $project->getPublicName();
+            $this->project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
+                $project->getIconUnicodeCodepoint()
+            );
+        }
+
         $this->invited_by_user = $invited_by_user ? new UserPresenter($invited_by_user) : null;
     }
 }
