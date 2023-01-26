@@ -36,88 +36,81 @@
         <translate>Download as zip</translate>
     </button>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { redirectToUrl } from "../../../../helpers/location-helper";
 import emitter from "../../../../helpers/emitter";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import type { Item } from "../../../../type";
-import { namespace } from "vuex-class";
+import type { Folder } from "../../../../type";
 import { isPlatformOSX } from "../../../../helpers/platform-detector";
+import { useNamespacedActions, useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
+import { computed, ref } from "vue";
+import type { PropertiesActions } from "../../../../store/properties/properties-actions";
 
-const configuration = namespace("configuration");
+const props = defineProps<{ item: Folder }>();
 
-@Component
-export default class DownloadFolderAsZip extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const { project_name, max_archive_size, warning_threshold } = useState<
+    Pick<ConfigurationState, "project_name" | "max_archive_size" | "warning_threshold">
+>("configuration", ["project_name", "max_archive_size", "warning_threshold"]);
 
-    private is_retrieving_folder_size = false;
+const { getFolderProperties } = useNamespacedActions<PropertiesActions>("properties", [
+    "getFolderProperties",
+]);
 
-    @configuration.State
-    readonly project_name!: string;
+const is_retrieving_folder_size = ref(false);
 
-    @configuration.State
-    readonly max_archive_size!: number;
+const folder_href = computed((): string => {
+    return `/plugins/document/${project_name.value}/folders/${encodeURIComponent(
+        props.item.id
+    )}/download-folder-as-zip`;
+});
 
-    @configuration.State
-    readonly warning_threshold!: number;
-
-    get folder_href(): string {
-        return `/plugins/document/${this.project_name}/folders/${encodeURIComponent(
-            this.item.id
-        )}/download-folder-as-zip`;
+function shouldWarnOSXUser(total_size: number, nb_files: number): boolean {
+    if (!isPlatformOSX(window)) {
+        return false;
     }
 
-    shouldWarnOSXUser(total_size: number, nb_files: number): boolean {
-        if (!isPlatformOSX(window)) {
-            return false;
-        }
+    const total_size_in_GB = total_size * Math.pow(10, -9);
+    return total_size_in_GB >= 4 || nb_files >= 64000;
+}
 
-        const total_size_in_GB = total_size * Math.pow(10, -9);
-        return total_size_in_GB >= 4 || nb_files >= 64000;
+async function checkFolderSize(): Promise<void> {
+    is_retrieving_folder_size.value = true;
+
+    const folder_properties = await getFolderProperties(props.item);
+    is_retrieving_folder_size.value = false;
+
+    if (folder_properties === null) {
+        return;
     }
-    async checkFolderSize(): Promise<void> {
-        this.is_retrieving_folder_size = true;
 
-        const folder_properties = await this.$store.dispatch(
-            "properties/getFolderProperties",
-            this.item
-        );
-        this.is_retrieving_folder_size = false;
+    // max_archive_size is in MB, total_size in Bytes. Let's convert it to Bytes first.
+    const max_archive_size_in_Bytes = max_archive_size.value * Math.pow(10, 6);
+    const { total_size, nb_files } = folder_properties;
 
-        if (folder_properties === null) {
-            return;
-        }
+    if (total_size > max_archive_size_in_Bytes) {
+        emitter.emit("show-max-archive-size-threshold-exceeded-modal", {
+            detail: { current_folder_size: total_size },
+        });
 
-        // max_archive_size is in MB, total_size in Bytes. Let's convert it to Bytes first.
-        const max_archive_size_in_Bytes = this.max_archive_size * Math.pow(10, 6);
-        const { total_size, nb_files } = folder_properties;
-
-        if (total_size > max_archive_size_in_Bytes) {
-            emitter.emit("show-max-archive-size-threshold-exceeded-modal", {
-                detail: { current_folder_size: total_size },
-            });
-
-            return;
-        }
-
-        // warning_threshold is in MB, total_size in Bytes. Let's convert it to Bytes first.
-        const warning_threshold_in_Bytes = this.warning_threshold * Math.pow(10, 6);
-        const should_warn_osx_user = this.shouldWarnOSXUser(total_size, nb_files);
-
-        if (total_size > warning_threshold_in_Bytes) {
-            emitter.emit("show-archive-size-warning-modal", {
-                detail: {
-                    current_folder_size: total_size,
-                    folder_href: this.folder_href,
-                    should_warn_osx_user,
-                },
-            });
-
-            return;
-        }
-
-        redirectToUrl(this.folder_href);
+        return;
     }
+
+    // warning_threshold is in MB, total_size in Bytes. Let's convert it to Bytes first.
+    const warning_threshold_in_Bytes = warning_threshold.value * Math.pow(10, 6);
+    const should_warn_osx_user = shouldWarnOSXUser(total_size, nb_files);
+
+    if (total_size > warning_threshold_in_Bytes) {
+        emitter.emit("show-archive-size-warning-modal", {
+            detail: {
+                current_folder_size: total_size,
+                folder_href: folder_href.value,
+                should_warn_osx_user,
+            },
+        });
+
+        return;
+    }
+
+    redirectToUrl(folder_href.value);
 }
 </script>
