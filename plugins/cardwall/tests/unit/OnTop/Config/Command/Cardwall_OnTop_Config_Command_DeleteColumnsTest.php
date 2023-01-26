@@ -27,6 +27,21 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \Tuleap\Test
     use \Tuleap\GlobalResponseMock;
     use \Tuleap\GlobalLanguageMock;
 
+    private int $tracker_id;
+    /**
+     * @var Cardwall_OnTop_ColumnMappingFieldDao&\Mockery\MockInterface
+     */
+    private $field_dao;
+    /**
+     * @var Cardwall_OnTop_ColumnMappingFieldValueDao&\Mockery\MockInterface
+     */
+    private $value_dao;
+    /**
+     * @var Cardwall_OnTop_ColumnDao&\Mockery\MockInterface
+     */
+    private $dao;
+    private Cardwall_OnTop_Config_Command_DeleteColumns $command;
+
     protected function setUp(): void
     {
         parent::setUp();

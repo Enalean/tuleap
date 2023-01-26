@@ -56,6 +56,14 @@ class MoveSemanticInitialEffortCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Tracker_FormElement_Field&Mockery\MockInterface
      */
     private $target_initial_effort_field;
+    /**
+     * @var AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface
+     */
+    private $source_initial_effort_semantic;
+    /**
+     * @var AgileDashBoard_Semantic_InitialEffort&Mockery\MockInterface
+     */
+    private $target_initial_effort_semantic;
 
     protected function setUp(): void
     {

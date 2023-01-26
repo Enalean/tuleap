@@ -42,6 +42,10 @@ final class TrackerHierarchyUpdateCheckerTest extends TestCase
      * @var PlanningFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $planning_factory;
+    /**
+     * @var TrackerFactory&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $tracker_factory;
 
     protected function setUp(): void
     {
