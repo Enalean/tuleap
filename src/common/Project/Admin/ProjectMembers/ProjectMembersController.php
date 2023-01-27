@@ -36,6 +36,11 @@ use ProjectHistoryDao;
 use ProjectManager;
 use ProjectUGroup;
 use TemplateRendererFactory;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
@@ -131,6 +136,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         ProjectAdministratorChecker $administrator_checker,
         SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
         MembershipDelegationDao $membership_delegation_dao,
+        private ListOfPendingInvitationsPresenterBuilder $pending_invitations_presenter_builder,
     ) {
         $this->members_dao                              = $members_dao;
         $this->user_helper                              = $user_helper;
@@ -180,7 +186,12 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             new SynchronizedProjectMembershipDetector(
                 new SynchronizedProjectMembershipDao()
             ),
-            new MembershipDelegationDao()
+            new MembershipDelegationDao(),
+            new ListOfPendingInvitationsPresenterBuilder(
+                new InviteBuddyConfiguration($event_manager),
+                new InvitationDao(new SplitTokenVerificationStringHasher()),
+                new TlpRelativeDatePresenterBuilder(),
+            ),
         );
     }
 
@@ -260,9 +271,18 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             $user_locale
         );
 
+        $pending_invitations = $this->pending_invitations_presenter_builder->getPendingInvitationsPresenter(
+            $project,
+            $request->getCurrentUser()
+        );
+        if ($pending_invitations) {
+            $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
+        }
+
         $this->event_manager->processEvent($additional_modals);
 
         $this->displayHeader($title, $project, $layout, $additional_modals);
+
 
         $renderer->renderToPage(
             'project-members',
@@ -273,7 +293,8 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 $additional_modals,
                 $user_locale,
                 $this->canUserSeeUGroups($request->getCurrentUser(), $project),
-                $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)
+                $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project),
+                $pending_invitations,
             )
         );
 

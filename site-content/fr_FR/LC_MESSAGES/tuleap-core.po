@@ -1160,6 +1160,9 @@ msgstr ""
 msgid "Date"
 msgstr "Date"
 
+msgid "Date of the invitation"
+msgstr "Date de l'invitation"
+
 msgid "Dates display"
 msgstr "Affichage des dates"
 
@@ -2515,6 +2518,9 @@ msgstr "Les mots de passe ne sont pas identiques."
 
 msgid "Pending"
 msgstr "En attente"
+
+msgid "Pending invitations"
+msgstr "Invitations en cours"
 
 msgid "Pending projects"
 msgstr "Projets en attente"
