@@ -59,8 +59,8 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
         if ($context->is_admin) {
             if ($request->get('form_send_email')) {
                 $is_sent = $this->new_user_by_admin_email_sender->sendLoginByMailToUser(
-                    (string) $request->get('form_email'),
-                    (string) $request->get('form_loginname')
+                    $new_user->getEmail(),
+                    $new_user->getUserName(),
                 );
 
                 if (! $is_sent) {
@@ -91,7 +91,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
 
         if (
             ! $this->confirmation_hash_email_sender->sendConfirmationHashEmail(
-                (string) $request->get('form_email'),
+                $new_user->getEmail(),
                 $new_user->getUserName(),
                 $mail_confirm_code
             )

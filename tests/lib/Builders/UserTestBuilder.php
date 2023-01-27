@@ -259,6 +259,6 @@ class UserTestBuilder
 
     private static function aPreBuiltUser(int $id): self
     {
-        return self::aUser()->withId($id)->withUserName('John');
+        return self::aUser()->withId($id)->withUserName('John')->withEmail('john@example.com');
     }
 }
