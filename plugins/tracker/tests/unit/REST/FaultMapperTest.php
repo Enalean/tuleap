@@ -20,25 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST;
+namespace Tuleap\Tracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
+use Tuleap\Tracker\REST\FaultMapper;
 
-final class FaultMapper
+final class FaultMapperTest extends TestCase
 {
-    /**
-     * @psalm-return never-return
-     * @throws RestException
-     */
-    public static function mapToRestException(Fault $fault): void
+    public function dataProviderFaults(): iterable
     {
-        $status_code = match ($fault::class) {
-            ArtifactDoesNotExistFault::class , ArtifactLinkFieldDoesNotExistFault::class => 400,
-            default => 500,
-        };
-        throw new RestException($status_code, (string) $fault);
+        yield 'Artifact does not exists' => [ArtifactDoesNotExistFault::build(10), 400];
+        yield 'Artifact link field does not exist' => [ArtifactLinkFieldDoesNotExistFault::build(15), 400];
+        yield 'Default to error 500 for unknown Fault' => [Fault::fromMessage('Unmapped fault'), 500];
+    }
+
+    /**
+     * @dataProvider dataProviderFaults
+     */
+    public function testItMapsFaultsToRestExceptions(Fault $fault, int $expected_status_code): void
+    {
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode($expected_status_code);
+        FaultMapper::mapToRestException($fault);
     }
 }

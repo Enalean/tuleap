@@ -49,7 +49,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 /**
  * I'm responsible for link an artifact to another using artifact link field
  */
-final class ArtifactLinker implements LinkArtifact
+final class ArtifactLinker
 {
     public function __construct(
         private RetrieveUsedArtifactLinkFields $form_element_factory,

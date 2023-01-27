@@ -29,10 +29,11 @@ use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AllLinksToLinksKeyValuesConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
-use Tuleap\Tracker\Artifact\Link\LinkArtifact;
+use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\FaultMapper;
@@ -44,7 +45,8 @@ final class PUTHandler
         private FieldsDataBuilder $fields_data_builder,
         private ArtifactUpdater $artifact_updater,
         private RetrieveReverseLinks $reverse_links_retriever,
-        private LinkArtifact $artifact_linker,
+        private HandleUpdateArtifact $artifact_update_handler,
+        private DBTransactionExecutor $transaction_executor,
     ) {
     }
 
@@ -57,12 +59,20 @@ final class PUTHandler
         try {
             $changeset_values        = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
             $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getSubmittedReverseLinks();
+
             if ($reverse_link_collection !== null && count($reverse_link_collection->links) > 0) {
-                $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
-                $this->artifact_linker->linkReverseArtifacts($artifact, $reverse_link_collection, $submitter)
-                                      ->mapErr(
-                                          [FaultMapper::class, 'mapToRestException']
-                                      );
+                $stored_reverse_links = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
+                $this->transaction_executor->execute(
+                    function () use ($reverse_link_collection, $stored_reverse_links, $artifact, $submitter, $comment) {
+                        $this->artifact_update_handler->addReverseLink($artifact, $submitter, $reverse_link_collection->differenceById($stored_reverse_links), $comment)
+                                                      ->map(function () use ($artifact, $submitter, $reverse_link_collection, $stored_reverse_links, $comment) {
+                                                        $this->artifact_update_handler->removeReverseLinks($artifact, $submitter, $stored_reverse_links->differenceById($reverse_link_collection), $comment);
+                                                      })
+                                              ->mapErr(
+                                                  [FaultMapper::class, 'mapToRestException']
+                                              );
+                    }
+                );
             } else {
                 $values_with_links_key = AllLinksToLinksKeyValuesConverter::convertIfNeeded($values);
                 $this->artifact_updater->update($submitter, $artifact, $values_with_links_key, $comment);
