@@ -39,6 +39,7 @@ services:
     - ldap
     - db
     - realtime
+    - mailhog
 
   realtime:
     build:
