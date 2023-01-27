@@ -81,7 +81,7 @@ let
     };
 
     patches = [
-      ./mediawiki-extensions/Fix-command-injection-pdfbook.patch
+      ./mediawiki-extensions/mpdf-extension-mpdf-8.patch
     ];
 
     unpackPhase = ''
