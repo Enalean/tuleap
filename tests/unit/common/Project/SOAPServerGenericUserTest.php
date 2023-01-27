@@ -30,6 +30,10 @@ final class SOAPServerGenericUserTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tuleap\Cryptography\ConcealedString $password;
     private $user;
     private $admin;
+    /**
+     * @var GenericUserFactory&\Mockery\MockInterface
+     */
+    private $generic_user_factory;
 
     protected function setUp(): void
     {

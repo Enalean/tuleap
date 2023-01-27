@@ -24,6 +24,12 @@ class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private int $user_id;
+    /**
+     * @var \Mockery\MockInterface&PFUser
+     */
+    private $user;
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -90,12 +90,12 @@ final class SetupMysqlInitCommand extends Command
 
         Both --app-password and --nss-password can be used independently or together.
 
-        The connection to the database can be encrypted and you can control the way it's done with ${ssl_opt} with:
-        - ${ssl_disabled}: no usage of encryption (default)
-        - ${ssl_no_verify}: connection will be encrypted by host won't be verified
-        - ${ssl_verify_ca}: connection is encrypted and host is verified
+        The connection to the database can be encrypted and you can control the way it's done with {$ssl_opt} with:
+        - {$ssl_disabled}: no usage of encryption (default)
+        - {$ssl_no_verify}: connection will be encrypted by host won't be verified
+        - {$ssl_verify_ca}: connection is encrypted and host is verified
 
-        And encrypted connection requires a Certificate Authority (CA) file that must be provide with ${ssl_ca_file}.
+        And encrypted connection requires a Certificate Authority (CA) file that must be provide with {$ssl_ca_file}.
 
         EOT;
     }

@@ -37,7 +37,8 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     /**
      * @var string[]
      */
-    private $fileforge = ['sudo', __DIR__ . '/../../utils/fileforge.pl'];
+    private $fileforge                         = ['sudo', __DIR__ . '/../../utils/fileforge.pl'];
+    public ?FRSReleaseFactory $release_factory = null;
 
     public function __construct(?\Psr\Log\LoggerInterface $logger = null)
     {

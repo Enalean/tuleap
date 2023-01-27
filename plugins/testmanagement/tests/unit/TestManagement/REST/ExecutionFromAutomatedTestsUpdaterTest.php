@@ -87,8 +87,6 @@ class ExecutionFromAutomatedTestsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
             ListOfExecutionsWithAutomatedTestDataRetriever::class
         );
 
-        $this->artifact_dao =
-
         $this->execution_from_automated_test_updater = new ExecutionFromAutomatedTestsUpdater(
             $this->execution_status_updater,
             $this->execution_change_extractor,

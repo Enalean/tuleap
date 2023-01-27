@@ -50,6 +50,26 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DisabledProjectWidgetsChecker
      */
     private $checker;
+    /**
+     * @var ProjectDashboardDao&\Mockery\MockInterface
+     */
+    private ProjectDashboardDao|\Mockery\LegacyMockInterface|\Mockery\MockInterface $dao;
+    /**
+     * @var ProjectDashboardRetriever&\Mockery\MockInterface
+     */
+    private ProjectDashboardRetriever|\Mockery\LegacyMockInterface|\Mockery\MockInterface $retriever;
+    /**
+     * @var \Tuleap\Dashboard\Widget\DashboardWidgetDao&\Mockery\MockInterface
+     */
+    private \Tuleap\Dashboard\Widget\DashboardWidgetDao|\Mockery\MockInterface|\Mockery\LegacyMockInterface $widget_dao;
+    /**
+     * @var \Tuleap\Dashboard\Widget\DashboardWidgetRetriever&\Mockery\MockInterface
+     */
+    private \Tuleap\Dashboard\Widget\DashboardWidgetRetriever|\Mockery\LegacyMockInterface|\Mockery\MockInterface $widget_retriever;
+    /**
+     * @var \Tuleap\Widget\WidgetFactory&\Mockery\MockInterface
+     */
+    private \Tuleap\Widget\WidgetFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface $widget_factory;
 
     protected function setUp(): void
     {

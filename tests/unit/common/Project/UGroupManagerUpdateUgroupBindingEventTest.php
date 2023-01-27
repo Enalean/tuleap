@@ -37,6 +37,14 @@ class UGroupManagerUpdateUgroupBindingEventTest extends \Tuleap\Test\PHPUnit\Tes
      * @var ProjectUGroup
      */
     private $ugroup_24;
+    /**
+     * @var UGroupDao&\Mockery\MockInterface
+     */
+    private $dao;
+    /**
+     * @var \Mockery\MockInterface&UGroupManager
+     */
+    private $ugroup_manager;
 
     protected function setUp(): void
     {

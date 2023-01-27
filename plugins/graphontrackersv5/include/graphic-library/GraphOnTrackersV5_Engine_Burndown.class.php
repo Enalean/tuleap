@@ -28,6 +28,10 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine
 {
     public $duration;
     public $start_date;
+    public string $title       = '';
+    public string $description = '';
+    public int $width          = 0;
+    public int $height         = 0;
 
     public function validData(): bool
     {

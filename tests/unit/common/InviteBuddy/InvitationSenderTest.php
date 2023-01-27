@@ -40,6 +40,10 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserManager|MockObject $user_manager;
     private InvitationDao|MockObject $dao;
     private LoggerInterface|MockObject $logger;
+    /**
+     * @var InvitationInstrumentation&MockObject
+     */
+    private $instrumentation;
 
     protected function setUp(): void
     {

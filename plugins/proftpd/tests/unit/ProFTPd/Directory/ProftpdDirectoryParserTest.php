@@ -20,10 +20,16 @@
 
 namespace Tuleap\ProFTPd\Directory;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 class DirectoryParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private DirectoryItem $expected_item_01;
+    private DirectoryItem $expected_item_02;
+    private DirectoryItem $expected_item_03;
+    private DirectoryItem $expected_item_04;
+    private DirectoryItem $expected_item_05;
+    private DirectoryItem $expected_item_06;
+    private DirectoryParser $parser;
+
     public function setUp(): void
     {
         parent::setUp();

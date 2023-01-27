@@ -26,6 +26,18 @@ class GenericUserFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:igno
      * @var GenericUserFactory
      */
     private $factory;
+    /**
+     * @var UserManager&\Mockery\MockInterface
+     */
+    private $user_manager;
+    /**
+     * @var ProjectManager&\Mockery\MockInterface
+     */
+    private $project_manager;
+    /**
+     * @var Project&\Mockery\MockInterface
+     */
+    private $project;
 
     protected function setUp(): void
     {
