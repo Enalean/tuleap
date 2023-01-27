@@ -22,6 +22,7 @@
         class="tlp-modal tlp-modal-danger"
         role="dialog"
         aria-labelledby="max-size-threshold-modal-label"
+        ref="max_size_modal"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="max-size-threshold-modal-label" v-translate>
@@ -67,37 +68,46 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import type { Modal } from "@tuleap/tlp-modal";
-import { createModal } from "@tuleap/tlp-modal";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
+import type { ConfigurationState } from "../../../../store/configuration";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useState } from "vuex-composition-helpers";
 
-const configuration = namespace("configuration");
+const props = defineProps<{ size: number }>();
 
-@Component
-export default class ModalMaxArchiveSizeThresholdExceeded extends Vue {
-    @Prop({ required: true })
-    readonly size!: number;
+const { max_archive_size } = useState<Pick<ConfigurationState, "max_archive_size">>(
+    "configuration",
+    ["max_archive_size"]
+);
 
-    @configuration.State
-    readonly max_archive_size!: number;
+const modal = ref<Modal | null>(null);
 
-    private modal: Modal | null = null;
+const max_size_modal = ref<InstanceType<typeof HTMLElement>>();
 
-    mounted(): void {
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-hidden", this.close);
-        this.modal.show();
+onMounted((): void => {
+    if (max_size_modal.value) {
+        modal.value = createModal(max_size_modal.value, { destroy_on_hide: true });
+        modal.value.addEventListener("tlp-modal-hidden", close);
+        modal.value.show();
     }
+});
 
-    get size_in_MB(): string {
-        const size_in_mb = this.size / Math.pow(10, 6);
-        return Number.parseFloat(size_in_mb.toString()).toFixed(2);
-    }
+onBeforeUnmount(() => {
+    modal.value?.removeEventListener(EVENT_TLP_MODAL_HIDDEN, close);
+});
 
-    close(): void {
-        this.$emit("download-as-zip-modal-closed");
-    }
+const size_in_MB = computed((): string => {
+    const size_in_mb = props.size / Math.pow(10, 6);
+    return Number.parseFloat(size_in_mb.toString()).toFixed(2);
+});
+
+const emit = defineEmits<{
+    (e: "download-as-zip-modal-closed"): void;
+}>();
+
+function close(): void {
+    emit("download-as-zip-modal-closed");
 }
 </script>
