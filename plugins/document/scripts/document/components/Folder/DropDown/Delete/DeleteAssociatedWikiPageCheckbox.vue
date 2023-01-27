@@ -57,52 +57,52 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { sprintf } from "sprintf-js";
-import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Wiki } from "../../../../type";
 import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
-import { namespace } from "vuex-class";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
+import { computed, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const configuration = namespace("configuration");
+const props = defineProps<{ item: Wiki; wikiPageReferencers: Array<ItemPath> }>();
 
-@Component
-export default class DeleteAssociatedWikiPageCheckbox extends Vue {
-    @Prop({ required: true })
-    readonly item!: Wiki;
+const { project_id } = useState<Pick<ConfigurationState, "project_id">>("configuration", [
+    "project_id",
+]);
 
-    @Prop({ required: true })
-    readonly wikiPageReferencers!: Array<ItemPath>;
+const is_option_checked = ref(false);
 
-    @configuration.State
-    readonly project_id!: number;
+const { $gettext } = useGettext();
+const wiki_deletion_warning = computed((): string => {
+    return sprintf(
+        $gettext(
+            'You should also be aware that the following wiki documents referencing page "%s" will no longer be valid if you choose to propagate the deletion to the wiki service:'
+        ),
+        props.item.wiki_properties.page_name
+    );
+});
 
-    private is_option_checked = false;
+const emit = defineEmits<{
+    (e: "input", { delete_associated_wiki_page: boolean }): void;
+}>();
 
-    get wiki_deletion_warning(): string {
-        return sprintf(
-            this.$gettext(
-                'You should also be aware that the following wiki documents referencing page "%s" will no longer be valid if you choose to propagate the deletion to the wiki service:'
-            ),
-            this.item.wiki_properties.page_name
-        );
+function processInput($event: Event): void {
+    const event_target = $event.target;
+
+    if (event_target instanceof HTMLInputElement) {
+        const is_checked = event_target.checked;
+
+        emit("input", { delete_associated_wiki_page: is_checked });
+
+        is_option_checked.value = is_checked;
     }
+}
 
-    processInput($event: Event): void {
-        const event_target = $event.target;
-
-        if (event_target instanceof HTMLInputElement) {
-            const is_checked = event_target.checked;
-
-            this.$emit("input", { delete_associated_wiki_page: is_checked });
-
-            this.is_option_checked = is_checked;
-        }
-    }
-    getWikiPageUrl(referencer: ItemPath): string {
-        return `/plugins/docman/?group_id=${encodeURIComponent(
-            this.project_id
-        )}&action=show&id=${encodeURIComponent(referencer.id)}`;
-    }
+function getWikiPageUrl(referencer: ItemPath): string {
+    return `/plugins/docman/?group_id=${encodeURIComponent(
+        project_id.value
+    )}&action=show&id=${encodeURIComponent(referencer.id)}`;
 }
 </script>

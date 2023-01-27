@@ -44,6 +44,7 @@ export interface State {
     root_title: string;
     currently_previewed_item: Item | null;
     files_uploads_list: Array<ItemFile | FakeItem>;
+    show_post_deletion_notification: boolean;
 }
 
 export interface RootState extends State {

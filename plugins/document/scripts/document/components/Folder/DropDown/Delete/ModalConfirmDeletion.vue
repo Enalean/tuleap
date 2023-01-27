@@ -23,6 +23,7 @@
         class="tlp-modal tlp-modal-danger"
         role="dialog"
         aria-labelledby="document-confirm-deletion-modal-title"
+        ref="delete_modal"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-confirm-deletion-modal-title" v-translate>
@@ -32,7 +33,7 @@
                 class="tlp-modal-close"
                 type="button"
                 data-dismiss="modal"
-                v-bind:aria-label="close"
+                v-bind:aria-label="close_title"
             >
                 <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
@@ -74,7 +75,7 @@
                 type="button"
                 class="tlp-button-danger tlp-modal-action"
                 data-test="document-confirm-deletion-button"
-                v-on:click="deleteItem()"
+                v-on:click="doDeleteItem()"
                 v-bind:class="{ disabled: is_confirm_button_disabled }"
                 v-bind:disabled="is_confirm_button_disabled"
             >
@@ -91,141 +92,147 @@
     </div>
 </template>
 
-<script lang="ts">
-import { sprintf } from "sprintf-js";
+<script setup lang="ts">
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
+import DeleteAssociatedWikiPageCheckbox from "./DeleteAssociatedWikiPageCheckbox.vue";
 import { isFolder, isWiki } from "../../../../helpers/type-check-helper";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import type { Folder, Item } from "../../../../type";
-import { namespace, State } from "vuex-class";
+import type { Item } from "../../../../type";
 import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
+import {
+    useActions,
+    useMutations,
+    useNamespacedMutations,
+    useNamespacedState,
+    useState,
+} from "vuex-composition-helpers";
+import type { RootState } from "../../../../type";
+import type { ErrorState } from "../../../../store/error/module";
+import type { Ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useRouter } from "../../../../helpers/use-router";
 
-const error = namespace("error");
+const props = defineProps<{ item: Item }>();
 
-@Component({
-    components: {
-        ModalFeedback,
-        "delete-associated-wiki-page-checkbox": () =>
-            import("./DeleteAssociatedWikiPageCheckbox.vue"),
-    },
-})
-export default class ModalConfirmDeletion extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const { current_folder, currently_previewed_item } = useState<
+    Pick<RootState, "current_folder" | "currently_previewed_item">
+>(["current_folder", "currently_previewed_item"]);
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
 
-    @Prop({ required: false, default: false })
-    readonly shouldRedirectToParentAfterDeletion!: boolean;
+const { deleteItem, getWikisReferencingSameWikiPage } = useActions([
+    "deleteItem",
+    "getWikisReferencingSameWikiPage",
+]);
+const { showPostDeletionNotification, updateCurrentlyPreviewedItem } = useMutations([
+    "showPostDeletionNotification",
+    "updateCurrentlyPreviewedItem",
+]);
+const { resetModalError } = useNamespacedMutations("error", ["resetModalError"]);
 
-    @error.State
-    readonly has_modal_error!: boolean;
+const modal = ref<Modal | null>(null);
 
-    @State
-    readonly current_folder!: Folder;
+const is_item_being_deleted = ref(false);
+const wiki_page_referencers_loading = ref(false);
+const additional_options = ref({});
+const wiki_page_referencers: Ref<null | Array<ItemPath>> = ref(null);
 
-    @State
-    readonly currently_previewed_item!: Item;
+const is_an_action_on_going = computed((): boolean => {
+    return is_item_being_deleted.value || wiki_page_referencers_loading.value;
+});
 
-    private modal: null | Modal = null;
-    private is_item_being_deleted = false;
-    private wiki_page_referencers_loading = false;
-    private additional_options = {};
-    private wiki_page_referencers: null | Array<ItemPath> = null;
+const is_confirm_button_disabled = computed((): boolean => {
+    return has_modal_error.value || is_an_action_on_going.value;
+});
 
-    get is_confirm_button_disabled(): boolean {
-        return this.has_modal_error || this.is_an_action_on_going;
-    }
-    get is_an_action_on_going(): boolean {
-        return this.is_item_being_deleted || this.wiki_page_referencers_loading;
-    }
-    get can_wiki_checkbox_be_shown(): boolean {
-        return (
-            isWiki(this.item) &&
-            !this.wiki_page_referencers_loading &&
-            this.wiki_page_referencers !== null
-        );
-    }
-    get close(): string {
-        return this.$gettext("Close");
-    }
-    get modal_description(): string {
-        return sprintf(
-            this.$gettext('You are about to delete "%s" permanently. Please confirm your action.'),
-            this.item.title
-        );
-    }
+const can_wiki_checkbox_be_shown = computed((): boolean => {
+    return (
+        isWiki(props.item) &&
+        !wiki_page_referencers_loading.value &&
+        wiki_page_referencers.value !== null
+    );
+});
 
-    mounted(): void {
-        if (!this.$el) {
-            return;
-        }
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-hidden", this.resetModal);
+const { $gettext, interpolate } = useGettext();
+const router = useRouter();
 
-        this.modal.show();
+const close_title = $gettext("Close");
+const modal_description = interpolate(
+    $gettext('You are about to delete "%{ title }" permanently. Please confirm your action.'),
+    { title: props.item.title }
+);
 
-        if (isWiki(this.item) && this.item.wiki_properties.page_id !== null) {
-            this.setWikiPageReferencers();
-        }
-    }
+const delete_modal = ref<InstanceType<typeof HTMLElement>>();
 
-    async deleteItem(): Promise<void> {
-        const deleted_item_parent_id = this.item.parent_id;
-        this.is_item_being_deleted = true;
-
-        await this.$store.dispatch("deleteItem", [this.item, this.additional_options]);
-
-        if (!this.has_modal_error && this.modal && deleted_item_parent_id) {
-            this.$store.commit("showPostDeletionNotification");
-            await this.redirectToParentFolderIfNeeded(deleted_item_parent_id.toString());
-
-            this.modal.hide();
-        }
-
-        this.is_item_being_deleted = false;
+onMounted((): void => {
+    if (delete_modal.value) {
+        modal.value = createModal(delete_modal.value, { destroy_on_hide: true });
+        modal.value.addEventListener("tlp-modal-hidden", close);
+        modal.value.show();
     }
 
-    async setWikiPageReferencers(): Promise<void> {
-        this.wiki_page_referencers_loading = true;
+    if (isWiki(props.item) && props.item.wiki_properties.page_id !== null) {
+        setWikiPageReferencers();
+    }
+});
 
-        const referencers = await this.$store.dispatch(
-            "getWikisReferencingSameWikiPage",
-            this.item
-        );
+async function doDeleteItem(): Promise<void> {
+    const deleted_item_parent_id = props.item.parent_id;
+    is_item_being_deleted.value = true;
 
-        this.wiki_page_referencers_loading = false;
-        this.wiki_page_referencers = referencers;
+    await deleteItem([props.item, additional_options.value]);
+
+    if (!has_modal_error.value && modal.value && deleted_item_parent_id) {
+        showPostDeletionNotification();
+        await redirectToParentFolderIfNeeded(deleted_item_parent_id.toString());
+
+        modal.value.hide();
     }
 
-    resetModal(): void {
-        this.$store.commit("error/resetModalError");
-        this.$emit("delete-modal-closed");
+    is_item_being_deleted.value = false;
+}
+
+async function setWikiPageReferencers(): Promise<void> {
+    wiki_page_referencers_loading.value = true;
+
+    const referencers = await getWikisReferencingSameWikiPage(props.item);
+
+    wiki_page_referencers_loading.value = false;
+    wiki_page_referencers.value = referencers;
+}
+
+const emit = defineEmits<{ (e: "delete-modal-closed"): void }>();
+
+function close(): void {
+    resetModalError();
+    emit("delete-modal-closed");
+}
+
+async function redirectToParentFolderIfNeeded(deleted_item_parent_id: string) {
+    const is_item_the_current_folder = props.item.id === current_folder.value.id;
+    const is_item_being_previewed =
+        currently_previewed_item.value !== null &&
+        currently_previewed_item.value.id === props.item.id;
+
+    if (!is_item_the_current_folder && !is_item_being_previewed) {
+        return;
     }
 
-    async redirectToParentFolderIfNeeded(deleted_item_parent_id: string) {
-        const is_item_the_current_folder = this.item.id === this.current_folder.id;
-        const is_item_being_previewed =
-            this.currently_previewed_item !== null &&
-            this.currently_previewed_item.id === this.item.id;
+    updateCurrentlyPreviewedItem(null);
+    await router.replace({
+        name: "folder",
+        params: { item_id: deleted_item_parent_id },
+    });
+}
 
-        if (!is_item_the_current_folder && !is_item_being_previewed) {
-            return;
-        }
+function is_item_a_wiki(item: Item): boolean {
+    return isWiki(item);
+}
 
-        this.$store.commit("updateCurrentlyPreviewedItem", null);
-        await this.$router.replace({
-            name: "folder",
-            params: { item_id: deleted_item_parent_id },
-        });
-    }
-
-    is_item_a_wiki(item: Item): boolean {
-        return isWiki(item);
-    }
-
-    is_item_a_folder(item: Item): boolean {
-        return isFolder(item);
-    }
+function is_item_a_folder(item: Item): boolean {
+    return isFolder(item);
 }
 </script>
