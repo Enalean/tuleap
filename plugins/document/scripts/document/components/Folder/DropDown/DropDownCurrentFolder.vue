@@ -49,51 +49,34 @@
     </drop-down-menu>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import DropDownMenu from "./DropDownMenu.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DeleteItem from "./Delete/DeleteItem.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
-import { Component, Vue } from "vue-property-decorator";
-import type { Folder } from "../../../type";
-import { namespace, State } from "vuex-class";
+import type { State } from "../../../type";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { computed } from "vue";
 
-const configuration = namespace("configuration");
+const { current_folder } = useState<Pick<State, "current_folder">>(["current_folder"]);
+const { forbid_writers_to_update, forbid_writers_to_delete } = useState<
+    Pick<ConfigurationState, "forbid_writers_to_update" | "forbid_writers_to_delete">
+>("configuration", ["forbid_writers_to_update", "forbid_writers_to_delete"]);
 
-@Component({
-    components: {
-        DropDownItemTitle,
-        UpdateProperties,
-        UpdatePermissions,
-        DeleteItem,
-        DropDownSeparator,
-        DropDownMenu,
-    },
-})
-export default class DropDownCurrentFolder extends Vue {
-    @State
-    readonly current_folder!: Folder;
+const can_user_delete_item = computed((): boolean => {
+    return (
+        current_folder.value.user_can_write &&
+        canDelete(forbid_writers_to_delete.value, current_folder.value) &&
+        Boolean(current_folder.value.parent_id)
+    );
+});
 
-    @configuration.State
-    readonly forbid_writers_to_update!: boolean;
-
-    @configuration.State
-    readonly forbid_writers_to_delete!: boolean;
-
-    get can_user_delete_item(): boolean {
-        return (
-            this.current_folder.user_can_write &&
-            canDelete(this.forbid_writers_to_delete, this.current_folder) &&
-            Boolean(this.current_folder.parent_id)
-        );
-    }
-
-    get should_display_update_properties(): boolean {
-        return canUpdateProperties(this.forbid_writers_to_update, this.current_folder);
-    }
-}
+const should_display_update_properties = computed((): boolean => {
+    return canUpdateProperties(forbid_writers_to_update.value, current_folder.value);
+});
 </script>

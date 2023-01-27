@@ -17,17 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    FakeItem,
-    Folder,
-    State,
-    ApprovableDocument,
-    ItemFile,
-    Link,
-    Wiki,
-    Embedded,
-    Item,
-} from "../type";
+import type { FakeItem, Folder, State, ApprovableDocument, ItemFile, Item } from "../type";
 import { isFolder } from "../helpers/type-check-helper";
 import Vue from "vue";
 
@@ -146,41 +136,6 @@ export function replaceFileWithNewVersion(state: State, payload: ReplaceFilePayl
     payload.existing_item.file_properties = payload.new_version.file_properties;
     payload.existing_item.lock_info = payload.new_version.lock_info;
 
-    replaceApprovalTables(payload.existing_item, payload.new_version);
-}
-
-export interface ReplaceLinkPayload {
-    existing_item: Link;
-    new_version: Link;
-}
-
-export function replaceLinkWithNewVersion(state: State, payload: ReplaceLinkPayload): void {
-    payload.existing_item.link_properties = payload.new_version.link_properties;
-    payload.existing_item.lock_info = payload.new_version.lock_info;
-
-    replaceApprovalTables(payload.existing_item, payload.new_version);
-}
-
-export interface ReplaceWikiPayload {
-    existing_item: Wiki;
-    new_version: Wiki;
-}
-
-export function replaceWikiWithNewVersion(state: State, payload: ReplaceWikiPayload): void {
-    payload.existing_item.lock_info = payload.new_version.lock_info;
-    payload.existing_item.wiki_properties = payload.new_version.wiki_properties;
-}
-
-export interface ReplaceEmbeddedPayload {
-    existing_item: Embedded;
-    new_version: Embedded;
-}
-
-export function replaceEmbeddedFilesWithNewVersion(
-    state: State,
-    payload: ReplaceEmbeddedPayload
-): void {
-    payload.existing_item.lock_info = payload.new_version.lock_info;
     replaceApprovalTables(payload.existing_item, payload.new_version);
 }
 

@@ -28,7 +28,7 @@
                 'tlp-append tlp-dropdown-split-button-caret': isAppended,
                 'tlp-button-ellipsis': !isAppended,
             }"
-            ref="dropdownButton"
+            ref="dropdown_button"
             type="button"
             data-test="document-drop-down-button"
             v-bind:aria-label="$gettext(`Open dropdown menu`)"
@@ -42,7 +42,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import {
     createDropdown,
@@ -51,58 +51,56 @@ import {
 } from "@tuleap/tlp-dropdown";
 import { EVENT_TLP_MODAL_SHOWN } from "@tuleap/tlp-modal";
 import emitter from "../../../helpers/emitter";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
-@Component
-export default class DropDownButton extends Vue {
-    @Prop({ required: true })
-    readonly isInLargeMode!: boolean;
+defineProps<{ isInLargeMode: boolean; isInQuickLookMode: boolean; isAppended: boolean }>();
 
-    @Prop({ required: true })
-    readonly isInQuickLookMode!: boolean;
+let dropdown: null | Dropdown = null;
 
-    @Prop({ required: true })
-    readonly isAppended!: boolean;
+const dropdown_button = ref<InstanceType<typeof HTMLButtonElement> | null>(null);
+const emit = defineEmits<{
+    (e: "dropdown-shown"): void;
+    (e: "dropdown-hidden"): void;
+}>();
 
-    private dropdown: null | Dropdown = null;
-
-    mounted() {
-        const dropdownButton = this.$refs.dropdownButton;
-        if (!(dropdownButton instanceof Element)) {
-            return;
-        }
-
-        this.dropdown = createDropdown(dropdownButton);
-
-        this.dropdown.addEventListener(EVENT_TLP_DROPDOWN_SHOWN, this.showDropdownEvent);
-        this.dropdown.addEventListener(EVENT_TLP_DROPDOWN_HIDDEN, this.hideDropdownEvent);
-        document.addEventListener(EVENT_TLP_MODAL_SHOWN, this.hideActionMenu);
-
-        emitter.on("hide-action-menu", this.hideActionMenu);
-    }
-    beforeDestroy() {
-        document.removeEventListener(EVENT_TLP_MODAL_SHOWN, this.hideActionMenu);
-
-        emitter.off("hide-action-menu", this.hideActionMenu);
-        if (!this.dropdown) {
-            return;
-        }
-        this.dropdown.removeEventListener(EVENT_TLP_DROPDOWN_SHOWN, this.showDropdownEvent);
-        this.dropdown.removeEventListener(EVENT_TLP_DROPDOWN_HIDDEN, this.hideDropdownEvent);
+onMounted(() => {
+    if (!(dropdown_button.value instanceof HTMLButtonElement)) {
+        return;
     }
 
-    hideActionMenu(): void {
-        if (this.dropdown && this.dropdown.is_shown) {
-            this.dropdown.hide();
-        }
+    dropdown = createDropdown(dropdown_button.value);
+
+    dropdown.addEventListener(EVENT_TLP_DROPDOWN_SHOWN, showDropdownEvent);
+    dropdown.addEventListener(EVENT_TLP_DROPDOWN_HIDDEN, hideDropdownEvent);
+    document.addEventListener(EVENT_TLP_MODAL_SHOWN, hideActionMenu);
+
+    emitter.on("hide-action-menu", hideActionMenu);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener(EVENT_TLP_MODAL_SHOWN, hideActionMenu);
+
+    emitter.off("hide-action-menu", hideActionMenu);
+    if (!dropdown) {
+        return;
     }
-    showDropdownEvent(): void {
-        emitter.emit("set-dropdown-shown", { is_dropdown_shown: true });
-        this.$emit("dropdown-shown");
+    dropdown.removeEventListener(EVENT_TLP_DROPDOWN_SHOWN, showDropdownEvent);
+    dropdown.removeEventListener(EVENT_TLP_DROPDOWN_HIDDEN, hideDropdownEvent);
+});
+
+function hideActionMenu(): void {
+    if (dropdown && dropdown.is_shown) {
+        dropdown.hide();
     }
-    hideDropdownEvent(): void {
-        emitter.emit("set-dropdown-shown", { is_dropdown_shown: false });
-        this.$emit("dropdown-hidden");
-    }
+}
+
+function showDropdownEvent(): void {
+    emitter.emit("set-dropdown-shown", { is_dropdown_shown: true });
+    emit("dropdown-shown");
+}
+
+function hideDropdownEvent(): void {
+    emitter.emit("set-dropdown-shown", { is_dropdown_shown: false });
+    emit("dropdown-hidden");
 }
 </script>
