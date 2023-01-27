@@ -25,6 +25,8 @@ define('DELETE_ARTIFACT_FOLLOWUP_FAULT', '3023');
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../common/session.php';
 
+\Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
+
 if (defined('NUSOAP')) {
 // Type definition
     $server->wsdl->addComplexType(
