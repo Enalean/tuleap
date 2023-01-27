@@ -20,9 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard\Project;
 
 use Tuleap\Config\ConfigurationVariables;
+use Tuleap\Dashboard\User\FirstTimerPresenter;
 use Tuleap\InviteBuddy\UsedInvitationRetriever;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -36,19 +37,23 @@ final class FirstTimerPresenterBuilder
     ) {
     }
 
-    public function buildPresenter(\PFUser $user): ?FirstTimerPresenter
+    public function buildPresenter(\PFUser $user, \Project $project): ?FirstTimerPresenter
     {
         if (! $user->isFirstTimer()) {
             return null;
         }
 
-        $invitation = $this->invitation_dao->searchInvitationUsedToRegister((int) $user->getId());
+        $invited_into_project = null;
+        $invitation           = $this->invitation_dao->searchInvitationUsedToRegister((int) $user->getId());
+        if ($invitation && (int) $project->getID() === $invitation->to_project_id) {
+            $invited_into_project = $project;
+        }
 
         return new FirstTimerPresenter(
             $user->getRealName(),
             \ForgeConfig::get(ConfigurationVariables::NAME),
             $invitation ? $this->user_manager->getUserById($invitation->from_user_id) : null,
-            null,
+            $invited_into_project,
             new JavascriptViteAsset(
                 new IncludeViteAssets(
                     __DIR__ . '/../../../scripts/first-timer/frontend-assets',

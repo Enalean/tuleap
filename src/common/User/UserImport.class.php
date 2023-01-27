@@ -96,7 +96,7 @@ class UserImport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function updateDB(Project $project, UserImportCollection $user_collection)
     {
         foreach ($user_collection->getUsers() as $user) {
-            $this->project_member_adder->addProjectMember($user, $project);
+            $this->project_member_adder->addProjectMemberWithFeedback($user, $project);
         }
     }
 }

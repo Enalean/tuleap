@@ -579,7 +579,7 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
     {
         switch ($user_group->getId()) {
             case ProjectUGroup::PROJECT_MEMBERS:
-                $this->getProjectMemberAdder()->addProjectMember($user, $user_group->getProject());
+                $this->getProjectMemberAdder()->addProjectMemberWithFeedback($user, $user_group->getProject());
                 break;
             case ProjectUGroup::PROJECT_ADMIN:
                 $this->getDynamicUGroupMembersUpdater()->addUser($user_group->getProject(), $user_group, $user);

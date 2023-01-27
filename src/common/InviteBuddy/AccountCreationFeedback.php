@@ -23,6 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\AlreadyProjectMemberException;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\NoEmailForUserException;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\UserIsNotActiveOrRestrictedException;
+use Tuleap\User\Account\Register\InvitationToEmail;
 use Tuleap\User\Account\Register\RegisterFormContext;
 use Tuleap\User\RetrieveUserById;
 
@@ -32,6 +39,8 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
         private InvitationDao $dao,
         private RetrieveUserById $user_manager,
         private AccountCreationFeedbackEmailNotifier $email_notifier,
+        private ProjectByIDFactory $project_retriever,
+        private ProjectMemberAdder $project_member_adder,
         private LoggerInterface $logger,
     ) {
     }
@@ -43,6 +52,10 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
             (int) $just_created_user->getId(),
             $context->invitation_to_email ? $context->invitation_to_email->id : null
         );
+
+        if ($context->invitation_to_email) {
+            $this->addUserToProjectAccordingToInvitation($just_created_user, $context->invitation_to_email);
+        }
 
         foreach ($this->dao->searchByCreatedUserId((int) $just_created_user->getId()) as $row) {
             $from_user = $this->user_manager->getUserById($row['from_user_id']);
@@ -60,6 +73,48 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
                     "Unable to send invitation feedback to user #{$from_user->getId()} after registration of user #{$just_created_user->getId()}"
                 );
             }
+        }
+    }
+
+    private function addUserToProjectAccordingToInvitation(
+        \PFUser $just_created_user,
+        InvitationToEmail $invitation_to_email,
+    ): void {
+        if (! $invitation_to_email->to_project_id) {
+            return;
+        }
+
+        if (! $just_created_user->isActive() && $just_created_user->isRestricted()) {
+            $this->logger->info("User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id}, but need to be active first. Wating for site admin approval");
+            return;
+        }
+
+        try {
+            $project = $this->project_retriever->getValidProjectById($invitation_to_email->to_project_id);
+            $this->project_member_adder->addProjectMember($just_created_user, $project);
+        } catch (UserIsNotActiveOrRestrictedException $e) {
+            $this->logger->error(
+                "Unable to add non active nor restricted user to project. This should not happen.",
+                ['exception' => $e]
+            );
+        } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted) {
+            $this->logger->error(
+                "Unable to add restricted user #{$just_created_user->getId()} to project #{$invitation_to_email->to_project_id}.",
+            );
+        } catch (AlreadyProjectMemberException) {
+            // I don't know how we can end up in this situation
+            // but we don't need to do anything. This is fine.
+        } catch (NoEmailForUserException $e) {
+            $this->logger->error(
+                "User that have been invited by email does not have an email. This should not happen.",
+                ['exception' => $e]
+            );
+        } catch (\Project_NotFoundException) {
+            $this->logger->error(
+                "User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id}, but it appears that this project is not valid."
+            );
+        } catch (\Exception $e) {
+            $this->logger->error("Got an unexpceted error", ['exception' => $e]);
         }
     }
 }

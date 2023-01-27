@@ -491,7 +491,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     {
         $this->logger->info("Add user {$user->getUserName()} to project.");
 
-        $this->project_member_adder->addProjectMember($user, $project);
+        $this->project_member_adder->addProjectMemberWithFeedback($user, $project);
     }
 
     private function cleanProjectMembersFromUserCreator(Project $project, array $users, PFUser $user_creator)

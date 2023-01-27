@@ -171,7 +171,7 @@ class DynamicUGroupMembersUpdater
     private function ensureUserIsProjectMember(Project $project, PFUser $user)
     {
         if (! $this->user_permissions_dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
-            $this->project_member_adder->addProjectMember($user, $project);
+            $this->project_member_adder->addProjectMemberWithFeedback($user, $project);
         }
     }
 

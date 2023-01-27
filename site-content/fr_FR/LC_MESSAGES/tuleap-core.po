@@ -112,6 +112,11 @@ msgstr ""
 "Vous avez été invité par %s, vous êtes maintenant un nouveau membre de cette "
 "plateforme."
 
+msgid "%s invited you, so you’re now a fresh member of this project."
+msgstr ""
+"Vous avez été invité par %s, vous êtes maintenant un nouveau membre de ce "
+"projet."
+
 #, php-format
 msgid "%s new projects"
 msgstr "Annonces %s"

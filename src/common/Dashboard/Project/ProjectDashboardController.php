@@ -121,6 +121,7 @@ class ProjectDashboardController
         IncludeAssets $core_assets,
         CssAsset $css_asset,
         Codendi_HTMLPurifier $purifier,
+        private FirstTimerPresenterBuilder $first_timer_presenter_builder,
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;
@@ -162,7 +163,7 @@ class ProjectDashboardController
         }
 
         if ($dashboard_id && ! $this->doesDashboardIdExist($dashboard_id, $project_dashboards)) {
-            $GLOBALS['Response']->addFeedback(
+            $this->layout->addFeedback(
                 Feedback::ERROR,
                 _('The requested dashboard does not exist.')
             );
@@ -185,6 +186,11 @@ class ProjectDashboardController
         }
 
         $this->assets_includer->includeAssets($project_dashboards_presenter);
+
+        $first_timer_presenter = $this->first_timer_presenter_builder->buildPresenter($user, $project);
+        if ($first_timer_presenter) {
+            $this->layout->addJavascriptAsset($first_timer_presenter->javascript_assets);
+        }
 
         $title = $this->purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
 
@@ -220,10 +226,11 @@ class ProjectDashboardController
                 ),
                 $project_dashboards_presenter,
                 $this->canUpdateDashboards($user, $project),
-                $display_project_created_modal_presenter
+                $display_project_created_modal_presenter,
+                $first_timer_presenter,
             )
         );
-        $GLOBALS['Response']->footer([]);
+        $this->layout->footer([]);
     }
 
     public function createDashboard(HTTPRequest $request)

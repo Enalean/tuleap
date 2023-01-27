@@ -25,7 +25,10 @@ namespace Tuleap\InviteBuddy;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\User\Account\Register\InvitationToEmail;
 use Tuleap\User\Account\Register\RegisterFormContext;
@@ -67,6 +70,8 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             RetrieveUserByIdStub::withNoUser(),
             $this->email_notifier,
+            ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->createMock(ProjectMemberAdder::class),
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -94,6 +99,8 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             RetrieveUserByIdStub::withNoUser(),
             $this->email_notifier,
+            ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->createMock(ProjectMemberAdder::class),
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated(
@@ -104,6 +111,48 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
                     InvitationTestBuilder::aSentInvitation(1)
                         ->from(102)
                         ->to('doe@example.com')
+                        ->build(),
+                    new ConcealedString('secret')
+                )
+            )
+        );
+    }
+
+    public function testItAddUsersToProjectTheyHaveBeenInvitedInto(): void
+    {
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $this->dao->method('saveJustCreatedUserThanksToInvitation');
+        $this->dao->method('searchByCreatedUserId')->willReturn([]);
+
+        $project = ProjectTestBuilder::aProject()->withId(111)->build();
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::once())
+            ->method('addProjectMember')
+            ->with($new_user, $project);
+
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withNoUser(),
+            $this->email_notifier,
+            ProjectByIDFactoryStub::buildWith($project),
+            $project_member_adder,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated(
+            $new_user,
+            RegisterFormContext::forAnonymous(
+                true,
+                InvitationToEmail::fromInvitation(
+                    InvitationTestBuilder::aSentInvitation(1)
+                        ->from(102)
+                        ->to('doe@example.com')
+                        ->toProjectId(111)
                         ->build(),
                     new ConcealedString('secret')
                 )
@@ -135,6 +184,8 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             RetrieveUserByIdStub::withNoUser(),
             $this->email_notifier,
+            ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->createMock(ProjectMemberAdder::class),
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -188,6 +239,8 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             RetrieveUserByIdStub::withUsers($new_user, $from_user, $from_another_user),
             $this->email_notifier,
+            ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->createMock(ProjectMemberAdder::class),
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -228,6 +281,8 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             RetrieveUserByIdStub::withNoUser(),
             $this->email_notifier,
+            ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->createMock(ProjectMemberAdder::class),
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -273,6 +328,8 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             RetrieveUserByIdStub::withUsers($from_user),
             $this->email_notifier,
+            ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->createMock(ProjectMemberAdder::class),
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -319,6 +376,8 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             RetrieveUserByIdStub::withUsers($from_user),
             $this->email_notifier,
+            ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->createMock(ProjectMemberAdder::class),
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());

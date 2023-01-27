@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/burningparrot-theme": "workspace:*",
     "@types/canvas-confetti": "^1.6.0"
   },
   "scripts": {
