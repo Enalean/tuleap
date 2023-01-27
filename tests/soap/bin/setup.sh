@@ -78,6 +78,7 @@ load_project() {
 }
 
 seed_data() {
+    sudo -u codendiadm PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap config-set feature_flag_enable_deprecated_soap_api 1
     sudo -u codendiadm PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap plugin:install docman
     load_project /usr/share/tuleap/tests/soap/_fixtures/01-project
 

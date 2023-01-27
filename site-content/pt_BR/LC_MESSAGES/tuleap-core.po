@@ -3545,6 +3545,9 @@ msgstr "Esse usuário não existe."
 msgid "The %s team."
 msgstr "O time %s."
 
+msgid "The SOAP API is no more accessible, please use the REST API instead"
+msgstr ""
+
 #, php-format
 msgid "The XML template \"%s\" provided is not valid"
 msgstr "O modelo XML \"%s\" fornecido não é válido"

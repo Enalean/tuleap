@@ -25,6 +25,8 @@ use Tuleap\URI\URIModifier;
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../../include/session.php';
 
+\Tuleap\SOAP\DisableSOAPEndpoints::checkIfSOAPEndpointsCanBeUsed();
+
 // define fault code constants
 define('INVALID_PACKAGE_FAULT', '3017');
 define('INVALID_RELEASE_FAULT', '3018');
