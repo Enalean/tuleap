@@ -800,7 +800,9 @@ msgstr ""
 msgid "Writer"
 msgstr ""
 
-msgid "You are about to delete \"%s\" permanently. Please confirm your action."
+msgid ""
+"You are about to delete \"%{ title }\" permanently. Please confirm your "
+"action."
 msgstr ""
 
 msgid ""
