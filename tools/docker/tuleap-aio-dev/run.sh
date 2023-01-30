@@ -53,9 +53,8 @@ perl -pi -e "s%^alias_database = hash:/etc/aliases%alias_database = hash:/etc/al
 perl -pi -e "s%^#recipient_delimiter = %recipient_delimiter = %" /etc/postfix/main.cf
 perl -pi -e "s%^inet_protocols = .*%inet_protocols = ipv4%" /etc/postfix/main.cf
 
-# Email whitelist
-/usr/share/tuleap/tools/docker/tuleap-aio-dev/whitelist_emails.sh
-echo "transport_maps = hash:/etc/postfix/transport" >> /etc/postfix/main.cf
+# Email are relayed to mailhog catch all
+echo "relayhost = mailhog:1025" >> /etc/postfix/main.cf
 
 # Update nscd config
 perl -pi -e "s%enable-cache[\t ]+group[\t ]+yes%enable-cache group no%" /etc/nscd.conf

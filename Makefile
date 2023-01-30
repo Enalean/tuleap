@@ -355,24 +355,13 @@ start-rp:
 	$(eval DOCKER_COMPOSE_FLAGS ?= )
 	$(DOCKER_COMPOSE) $(DOCKER_COMPOSE_FLAGS) up --build -d reverse-proxy
 	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
+	@echo "Database IP: $(call get_ip_addr,db)"
+	@echo "Mailhog (email catch all) available at browser at http://$(call get_ip_addr,mailhog):8025"
 
 start-ldap-admin: ## Start ldap administration ui
 	@echo "Start ldap administration ui"
 	@$(DOCKER_COMPOSE) up -d ldap-admin
 	@echo "Open your browser at https://localhost:6443"
-
-start-mailhog: ## Start mailhog to catch emails sent by your Tuleap dev platform
-	@echo "Start mailhog to catch emails sent by your Tuleap dev platform"
-	$(DOCKER_COMPOSE) up -d mailhog
-	$(DOCKER_COMPOSE) exec web make -C /usr/share/tuleap deploy-mailhog-conf
-	@echo "Open your browser at http://$(call get_ip_addr,mailhog):8025"
-
-deploy-mailhog-conf:
-	@if ! grep -q -F -e '^relayhost = mailhog:1025' /etc/postfix/main.cf; then \
-	    sed -i -e 's/^\(transport_maps.*\)$$/#\1/' /etc/postfix/main.cf && \
-	    echo 'relayhost = mailhog:1025' >> /etc/postfix/main.cf; \
-	    systemctl restart postfix; \
-	 fi
 
 start-gitlab:
 	@echo "Start gitlab instance for your Tuleap dev"
