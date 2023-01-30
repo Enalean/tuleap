@@ -14,7 +14,7 @@
 
 <ul>
     {{# obsolete_invitations }}
-        <li>{{ to }} ({{ created_on }})</li>
+        <li>{{ to }} ({{# to_project }}{{# gettext }}Invitation sent for project %1$s on %2$s | {{ to_project }} | {{ created_on }} {{/ gettext }}{{/ to_project }}{{^ to_project }}{{# gettext }} Invitation sent on %s | {{ created_on }}{{/ gettext }}{{/ to_project }})</li>
     {{/ obsolete_invitations }}
 </ul>
 

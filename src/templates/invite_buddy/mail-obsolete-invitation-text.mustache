@@ -12,7 +12,7 @@
 
 
 {{# obsolete_invitations }}
-* {{ to }} ({{ created_on }})
+* {{ to }} ({{# to_project }}{{# gettext }}Invitation sent for project %1$s on %2$s | {{ to_project }} | {{ created_on }} {{/ gettext }}{{/ to_project }}{{^ to_project }}{{# gettext }} Invitation sent on %s | {{ created_on }}{{/ gettext }}{{/ to_project }})
 {{/ obsolete_invitations }}
 
 {{# gettext }}Best regards,{{/ gettext }}

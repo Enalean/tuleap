@@ -24,6 +24,7 @@ namespace Tuleap\InviteBuddy;
 
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Mail\TemplateWithoutFooter;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\User\RetrieveUserById;
 
 final class InvitationCleaner
@@ -37,6 +38,7 @@ final class InvitationCleaner
         private \TemplateRendererFactory $renderer_factory,
         private \Closure $sendmail,
         private RetrieveUserById $user_manager,
+        private ProjectByIDFactory $project_manager,
     ) {
     }
 
@@ -113,10 +115,22 @@ final class InvitationCleaner
                     'current_user_real_name'  => $from_user->getRealName(),
                     'nb_obsolete_invitations' => $nb_obsolete_invitations,
                     'obsolete_invitations'    => array_map(
-                        static function (Invitation $invitation) {
+                        function (Invitation $invitation) {
+                            $to_project = null;
+                            if ($invitation->to_project_id) {
+                                try {
+                                    $to_project = $this->project_manager
+                                        ->getValidProjectById($invitation->to_project_id)
+                                        ->getPublicName();
+                                } catch (\Project_NotFoundException $e) {
+                                    // ignore project in error, it does not change the fact that the invitation is obsolete
+                                }
+                            }
+
                             return [
                                 'to'         => $invitation->to_email,
-                                'created_on' => \DateHelper::formatForLanguage($GLOBALS['Language'], $invitation->created_on),
+                                'to_project' => $to_project,
+                                'created_on' => \DateHelper::formatForLanguage($GLOBALS['Language'], $invitation->created_on, true),
                             ];
                         },
                         $obsolete_invitations,

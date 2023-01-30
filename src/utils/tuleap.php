@@ -200,6 +200,7 @@ $CLI_command_collector->addCommand(
                     $mail->send();
                 },
                 UserManager::instance(),
+                ProjectManager::instance(),
             ),
         );
     }
