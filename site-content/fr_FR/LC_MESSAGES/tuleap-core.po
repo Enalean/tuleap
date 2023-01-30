@@ -1873,6 +1873,12 @@ msgstr "L'invitation n'a pas pu être envoyée à :"
 msgid "Invitation has been successfully sent to:"
 msgstr "L'invitation a été envoyée à :"
 
+msgid "Invitation sent for project %1$s on %2$s"
+msgstr "Invitation envoyée pour le projet %1$s le %2$s"
+
+msgid "Invitation sent on %s"
+msgstr "Invitation envoyée le %s"
+
 #, php-format
 msgid "Invitation to log on to %s"
 msgstr "Invitation pour vous connecter sur %s"

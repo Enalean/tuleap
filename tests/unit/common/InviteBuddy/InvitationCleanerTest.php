@@ -26,9 +26,11 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
 class InvitationCleanerTest extends TestCase
@@ -54,8 +56,8 @@ class InvitationCleanerTest extends TestCase
             ->willReturn(__DIR__ . '/../../../../site-content/en_US/mail/html_template.php');
         $GLOBALS['Language']
             ->method('getText')
-            ->with('system', 'datefmt')
-            ->willReturn('d/m/Y H:i');
+            ->with('system', 'datefmt_short')
+            ->willReturn('d/m/Y');
 
         $this->jane = UserTestBuilder::aUser()
             ->withId(self::JANE_ID)
@@ -98,6 +100,7 @@ class InvitationCleanerTest extends TestCase
                 $captured_sent_mails[] = $mail;
             },
             RetrieveUserByIdStub::withNoUser(),
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
@@ -108,6 +111,11 @@ class InvitationCleanerTest extends TestCase
 
     public function testItSendsAnEmailToTheUsersWhoInvited(): void
     {
+        $project = ProjectTestBuilder::aProject()
+            ->withId(111)
+            ->withPublicName("Gotham City")
+            ->build();
+
         $purger = InvitationPurgerStub::withPurgedInvitations(
             InvitationTestBuilder::aSentInvitation(1)
                 ->from(self::JANE_ID)
@@ -117,6 +125,7 @@ class InvitationCleanerTest extends TestCase
             InvitationTestBuilder::aSentInvitation(2)
                 ->from(self::JOHN_ID)
                 ->to('batman@example.com')
+                ->toProjectId(111)
                 ->withCreatedOn(1234567890)
                 ->build(),
         );
@@ -133,6 +142,7 @@ class InvitationCleanerTest extends TestCase
                 $captured_sent_mails[] = $mail;
             },
             RetrieveUserByIdStub::withUsers($this->jane, $this->john),
+            ProjectByIDFactoryStub::buildWith($project),
         );
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
@@ -141,11 +151,11 @@ class InvitationCleanerTest extends TestCase
         self::assertCount(2, $captured_sent_mails);
 
         self::assertStringContainsString('Jane Doe', $captured_sent_mails[0]->getBodyText());
-        self::assertStringContainsString('02/2009', $captured_sent_mails[0]->getBodyText());
+        self::assertTrue((bool) preg_match('%Invitation sent on \d\d/02/2009%', $captured_sent_mails[0]->getBodyText()));
         self::assertStringContainsString('superman@example.com', $captured_sent_mails[0]->getBodyText());
 
         self::assertStringContainsString('John McClane', $captured_sent_mails[1]->getBodyText());
-        self::assertStringContainsString('02/2009', $captured_sent_mails[1]->getBodyText());
+        self::assertTrue((bool) preg_match('%Invitation sent for project Gotham City on \d\d/02/2009%', $captured_sent_mails[1]->getBodyText()));
         self::assertStringContainsString('batman@example.com', $captured_sent_mails[1]->getBodyText());
     }
 
@@ -174,6 +184,7 @@ class InvitationCleanerTest extends TestCase
                 $captured_sent_mails[] = $mail;
             },
             RetrieveUserByIdStub::withUsers($this->jane, $this->john),
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
@@ -211,6 +222,7 @@ class InvitationCleanerTest extends TestCase
                 $captured_sent_mails[] = $mail;
             },
             RetrieveUserByIdStub::withUsers($this->jane, $this->john),
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
@@ -244,6 +256,7 @@ class InvitationCleanerTest extends TestCase
                 $captured_sent_mails[] = $mail;
             },
             RetrieveUserByIdStub::withUsers($this->jane, $this->john),
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());

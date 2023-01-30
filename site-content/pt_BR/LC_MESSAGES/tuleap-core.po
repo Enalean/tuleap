@@ -1854,6 +1854,12 @@ msgstr "O convite não pôde ser enviado para:"
 msgid "Invitation has been successfully sent to:"
 msgstr "Convite enviado com sucesso para:"
 
+msgid "Invitation sent for project %1$s on %2$s"
+msgstr ""
+
+msgid "Invitation sent on %s"
+msgstr ""
+
 #, php-format
 msgid "Invitation to log on to %s"
 msgstr "Convite para logar em %s"
