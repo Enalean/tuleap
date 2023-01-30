@@ -21,8 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Duration, DateTime } from "luxon";
-
 export {
     formatMinutes,
     formatDatetimeToISO,
@@ -30,16 +28,37 @@ export {
     sortTimesChronologically,
 };
 
+function padTimeNumber(number) {
+    if (number < 10) {
+        return "0" + number;
+    }
+    return number;
+}
+
 function formatMinutes(minutes) {
-    return Duration.fromObject({ minutes }).toFormat("hh:mm");
+    const remaining_minutes = minutes % 60;
+    const hours = (minutes - remaining_minutes) / 60;
+
+    return `${padTimeNumber(hours)}:${padTimeNumber(remaining_minutes)}`;
 }
 
 function formatDatetimeToISO(string_date) {
-    return DateTime.fromISO(string_date).toISO({
-        suppressSeconds: false,
-        suppressMilliseconds: true,
-        includeOffset: true,
-    });
+    const date = new Date(string_date);
+
+    return (
+        date.getUTCFullYear() +
+        "-" +
+        padTimeNumber(date.getUTCMonth() + 1) +
+        "-" +
+        padTimeNumber(date.getUTCDate()) +
+        "T" +
+        padTimeNumber(date.getUTCHours()) +
+        ":" +
+        padTimeNumber(date.getUTCMinutes()) +
+        ":" +
+        padTimeNumber(date.getUTCSeconds()) +
+        "Z"
+    );
 }
 
 function formatDateUsingPreferredUserFormat(date, user_locale) {
