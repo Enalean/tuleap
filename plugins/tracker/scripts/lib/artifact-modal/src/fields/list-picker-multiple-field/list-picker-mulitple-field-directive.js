@@ -30,6 +30,7 @@ export default function ListPickerMultipleFieldDirective() {
             value_model: "=valueModel",
             isDisabled: "&isDisabled",
             options_value: "=optionsValue",
+            event_dispatcher: "=eventDispatcher",
         },
         controller: ListPickerMultipleFieldController,
         controllerAs: "list_picker_multiple_field",

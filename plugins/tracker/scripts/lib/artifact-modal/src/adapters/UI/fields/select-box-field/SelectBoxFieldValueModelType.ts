@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DomainEvent } from "./DomainEvent";
+import type { BindValueId } from "../../../../domain/fields/select-box-field/BindValueId";
 
-export type DidChangeListFieldValue = DomainEvent<"DidChangeListFieldValue">;
-
-export const DidChangeListFieldValue = (): DidChangeListFieldValue => ({
-    type: "DidChangeListFieldValue",
-});
+export interface SelectBoxFieldValueModelType {
+    bind_value_ids: BindValueId[];
+}

@@ -19,7 +19,7 @@
 
 import { EventDispatcher } from "./EventDispatcher";
 import { DidCheckFileFieldIsPresent } from "./DidCheckFileFieldIsPresent";
-import { DidChangeListFieldValue } from "./DidChangeListFieldValue";
+import { DidChangeListFieldValue } from "./fields/select-box-field/DidChangeListFieldValue";
 
 const FIRST_EVENT_TYPE = "DidCheckFileFieldIsPresent",
     SECOND_EVENT_TYPE = "DidChangeListFieldValue";
@@ -31,7 +31,7 @@ describe(`EventDispatcher`, () => {
 
     beforeEach(() => {
         first_event = DidCheckFileFieldIsPresent();
-        second_event = DidChangeListFieldValue();
+        second_event = DidChangeListFieldValue(12, [123]);
         dispatcher = EventDispatcher();
     });
 

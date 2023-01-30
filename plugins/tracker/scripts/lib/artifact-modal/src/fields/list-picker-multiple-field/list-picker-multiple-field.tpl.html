@@ -32,6 +32,7 @@
             ng-options="field_value.id as field_value.label for field_value in list_picker_multiple_field.options_value"
             ng-required="{{ list_picker_multiple_field.field.required }}"
             ng-disabled="list_picker_multiple_field.isDisabled(field)"
+            ng-change="list_picker_multiple_field.onValueChange()"
             data-select="list-picker-multiple"
             tuleap-highlight-directive="field.filtered_values"
             data-test="multi-selectbox-field-select"

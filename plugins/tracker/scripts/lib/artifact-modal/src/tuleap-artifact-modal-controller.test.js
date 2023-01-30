@@ -27,8 +27,8 @@ import * as modal_create_mode_state from "./modal-creation-mode-state";
 import * as rest_service from "./rest/rest-service";
 import * as file_field_detector from "./fields/file-field/file-field-detector";
 import * as is_uploading_in_ckeditor_state from "./fields/file-field/is-uploading-in-ckeditor-state";
-import * as field_dependencies_helper from "./field-dependencies-helper.js";
 import * as fields_validator from "./validate-artifact-field-value.js";
+import * as field_dependencies_helper from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 
 const PROJECT_ID = 133;
 
@@ -98,6 +98,11 @@ describe("TuleapArtifactModalController", () => {
                     tracker: {
                         item_name: "story",
                         project: { id: PROJECT_ID },
+                        workflow: {
+                            rules: {
+                                lists: [],
+                            },
+                        },
                     },
                 },
                 TuleapArtifactModalLoading,
@@ -123,7 +128,7 @@ describe("TuleapArtifactModalController", () => {
         });
 
         it("when I load the controller, then field dependencies watchers will be set once for each different source field which are submittable", function () {
-            jest.spyOn(field_dependencies_helper, "setUpFieldDependenciesActions");
+            jest.spyOn(field_dependencies_helper, "FieldDependenciesValuesHelper");
             controller_params.modal_model.tracker = {
                 project: { id: PROJECT_ID },
                 fields: [{ field_id: 22 }],
@@ -148,18 +153,14 @@ describe("TuleapArtifactModalController", () => {
             };
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
-
-            const values = {
+            ArtifactModalController.values = {
                 43: { field_id: 43, bind_value_ids: [907] },
             };
-
-            ArtifactModalController.values = values;
             ArtifactModalController.$onInit();
 
-            expect($scope.$watch).toHaveBeenCalledTimes(1);
-            expect(field_dependencies_helper.setUpFieldDependenciesActions).toHaveBeenCalledWith(
-                controller_params.modal_model.tracker,
-                expect.any(Function)
+            expect(field_dependencies_helper.FieldDependenciesValuesHelper).toHaveBeenCalledWith(
+                expect.any(Object),
+                controller_params.modal_model.tracker.workflow.rules.lists
             );
         });
 
@@ -354,53 +355,6 @@ describe("TuleapArtifactModalController", () => {
         });
     });
 
-    describe("Field dependency watchers - Given a field dependency rule was defined in the tracker", () => {
-        it(`and given there were two target values,
-            when I change the source field's value,
-            then the target field filtered values will be changed`, () => {
-            const target_field = {
-                field_id: 47,
-                values: [{ id: 412 }, { id: 157 }],
-                filtered_values: [{ id: 412 }],
-            };
-            const field_dependencies_rules = [
-                {
-                    source_field_id: 51,
-                    source_value_id: 780,
-                    target_field_id: 47,
-                    target_value_id: 412,
-                },
-                {
-                    source_field_id: 51,
-                    source_value_id: 780,
-                    target_field_id: 47,
-                    target_value_id: 157,
-                },
-            ];
-
-            const modal_model = controller_params.modal_model;
-            modal_model.tracker = {
-                project: { id: PROJECT_ID },
-                fields: [target_field],
-                workflow: { rules: { lists: field_dependencies_rules } },
-            };
-            modal_model.values = {
-                51: { bind_value_ids: [] },
-                47: { bind_value_ids: [412] },
-            };
-
-            ArtifactModalController = $controller(BaseModalController, controller_params);
-            ArtifactModalController.$onInit();
-            // First apply so the watcher takes into account the initial value
-            $scope.$apply();
-
-            modal_model.values[51].bind_value_ids.push(780);
-            $scope.$apply();
-
-            expect(target_field.filtered_values).toStrictEqual([{ id: 412 }, { id: 157 }]);
-        });
-    });
-
     describe("Can manipulate the fields and comments", () => {
         beforeEach(() => {
             ArtifactModalController = $controller(BaseModalController, controller_params);
@@ -496,7 +450,7 @@ describe("TuleapArtifactModalController", () => {
                 ArtifactModalController = $controller(BaseModalController, controller_params);
                 ArtifactModalController.$onInit();
 
-                expect(ArtifactModalController.hidden_fieldsets).toEqual([]);
+                expect(ArtifactModalController.hidden_fieldsets).toStrictEqual([]);
             });
 
             it("Given the modal is not in creation mode, when I open it then there are hidden fieldsets defined", () => {
@@ -504,7 +458,7 @@ describe("TuleapArtifactModalController", () => {
                 ArtifactModalController = $controller(BaseModalController, controller_params);
                 ArtifactModalController.$onInit();
 
-                expect(ArtifactModalController.hidden_fieldsets).toEqual([
+                expect(ArtifactModalController.hidden_fieldsets).toStrictEqual([
                     { label: "fieldset01", is_hidden: true },
                 ]);
             });

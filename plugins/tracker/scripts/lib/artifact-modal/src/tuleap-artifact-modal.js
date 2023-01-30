@@ -35,7 +35,6 @@ import UgroupsOpenListFieldDirective from "./fields/open-list-field/ugroups-open
 import UsersOpenListFieldDirective from "./fields/open-list-field/users-open-list-field-directive.js";
 import AwkwardCreationFields from "./model/awkward-creation-fields-constant.js";
 import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
-import ListPickerDirective from "./fields/list-picker-field/list-picker-field-directive.js";
 import ListPickerMultipleDirective from "./fields/list-picker-multiple-field/list-picker-mulitple-field-directive.js";
 
 import "./fields/computed-field/ComputedField";
@@ -55,6 +54,7 @@ import "./adapters/UI/fields/date-readonly-field/DateReadonlyField";
 import "./adapters/UI/fields/file-field/FileField";
 import "./adapters/UI/fields/permission-field/PermissionField";
 import "./adapters/UI/fields/checkbox-field/CheckboxField";
+import "./adapters/UI/fields/select-box-field/SelectBoxField";
 import "./adapters/UI/feedback/ModalFeedback";
 import "./adapters/UI/footer/FileUploadQuota";
 import "./adapters/UI/comments/ModalCommentsSection";
@@ -80,7 +80,6 @@ export default angular
     .directive("tuleapArtifactModalUgroupsOpenListField", UgroupsOpenListFieldDirective)
     .directive("tuleapArtifactModalUsersOpenListField", UsersOpenListFieldDirective)
     .directive("tuleapHighlightDirective", HighlightDirective)
-    .directive("tuleapArtifactModalListPickerField", ListPickerDirective)
     .directive("tuleapArtifactModalListPickerMultipleField", ListPickerMultipleDirective)
     .service("NewTuleapArtifactModalService", ArtifactModalService)
     .value("TuleapArtifactModalLoading", {
