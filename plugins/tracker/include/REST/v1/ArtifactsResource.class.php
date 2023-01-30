@@ -762,7 +762,6 @@ class ArtifactsResource extends AuthenticatedResource
             $this->formelement_factory,
             $changeset_creator,
             new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), $artifact_factory),
-            $artifact_factory
         );
 
         $artifact_from_rest_updater = new ArtifactUpdateHandler(
