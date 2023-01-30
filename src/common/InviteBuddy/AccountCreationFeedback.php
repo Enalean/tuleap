@@ -41,6 +41,7 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
         private AccountCreationFeedbackEmailNotifier $email_notifier,
         private ProjectByIDFactory $project_retriever,
         private ProjectMemberAdder $project_member_adder,
+        private InvitationInstrumentation $invitation_instrumentation,
         private LoggerInterface $logger,
     ) {
     }
@@ -52,6 +53,8 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
             (int) $just_created_user->getId(),
             $context->invitation_to_email ? $context->invitation_to_email->id : null
         );
+
+        $this->invitation_instrumentation->incrementUsedInvitation();
 
         if ($context->invitation_to_email) {
             $this->addUserToProjectAccordingToInvitation($just_created_user, $context->invitation_to_email);
@@ -85,7 +88,7 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
         }
 
         if (! $just_created_user->isActive() && $just_created_user->isRestricted()) {
-            $this->logger->info("User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id}, but need to be active first. Wating for site admin approval");
+            $this->logger->info("User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id}, but need to be active first. Waiting for site admin approval");
             return;
         }
 
@@ -114,7 +117,7 @@ class AccountCreationFeedback implements InvitationSuccessFeedback
                 "User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id}, but it appears that this project is not valid."
             );
         } catch (\Exception $e) {
-            $this->logger->error("Got an unexpceted error", ['exception' => $e]);
+            $this->logger->error("Got an unexpected error while adding an invited user to a project", ['exception' => $e]);
         }
     }
 }

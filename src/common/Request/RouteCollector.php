@@ -91,6 +91,7 @@ use Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
 use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationInstrumentation;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\IncludeCoreAssets;
@@ -1051,6 +1052,7 @@ class RouteCollector
                         new AccountCreationFeedbackEmailNotifier(),
                         $project_manager,
                         ProjectMemberAdderWithStatusCheckAndNotifications::build(),
+                        new InvitationInstrumentation(Prometheus::instance()),
                         \BackendLogger::getDefaultLogger(),
                     )
                 ),

@@ -35,17 +35,21 @@ use Tuleap\User\Account\Register\RegisterFormContext;
 
 final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private AccountCreationFeedback $account_creation_feedback;
     private LoggerInterface|MockObject $logger;
     private InvitationDao|MockObject $dao;
     private MockObject|AccountCreationFeedbackEmailNotifier $email_notifier;
+    /**
+     * @var InvitationInstrumentation&MockObject
+     */
+    private $invitation_instrumentation;
 
 
     protected function setUp(): void
     {
-        $this->logger         = $this->createMock(LoggerInterface::class);
-        $this->dao            = $this->createMock(InvitationDao::class);
-        $this->email_notifier = $this->createMock(AccountCreationFeedbackEmailNotifier::class);
+        $this->logger                     = $this->createMock(LoggerInterface::class);
+        $this->dao                        = $this->createMock(InvitationDao::class);
+        $this->email_notifier             = $this->createMock(AccountCreationFeedbackEmailNotifier::class);
+        $this->invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
     }
 
     public function testItUpdatesInvitationsWithJustCreatedUser(): void
@@ -66,12 +70,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(104)
             ->willReturn([]);
 
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
             RetrieveUserByIdStub::withNoUser(),
             $this->email_notifier,
             ProjectByIDFactoryStub::buildWithoutProject(),
             $this->createMock(ProjectMemberAdder::class),
+            $this->invitation_instrumentation,
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -95,12 +102,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(104)
             ->willReturn([]);
 
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
             RetrieveUserByIdStub::withNoUser(),
             $this->email_notifier,
             ProjectByIDFactoryStub::buildWithoutProject(),
             $this->createMock(ProjectMemberAdder::class),
+            $this->invitation_instrumentation,
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated(
@@ -136,12 +146,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('addProjectMember')
             ->with($new_user, $project);
 
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
             RetrieveUserByIdStub::withNoUser(),
             $this->email_notifier,
             ProjectByIDFactoryStub::buildWith($project),
             $project_member_adder,
+            $this->invitation_instrumentation,
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated(
@@ -180,12 +193,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::never())
             ->method('send');
 
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
             RetrieveUserByIdStub::withNoUser(),
             $this->email_notifier,
             ProjectByIDFactoryStub::buildWithoutProject(),
             $this->createMock(ProjectMemberAdder::class),
+            $this->invitation_instrumentation,
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -235,12 +251,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturnOnConsecutiveCalls(true, true);
 
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
             RetrieveUserByIdStub::withUsers($new_user, $from_user, $from_another_user),
             $this->email_notifier,
             ProjectByIDFactoryStub::buildWithoutProject(),
             $this->createMock(ProjectMemberAdder::class),
+            $this->invitation_instrumentation,
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -277,12 +296,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('error')
             ->with("Invitation was referencing an unknown user #103");
 
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
             RetrieveUserByIdStub::withNoUser(),
             $this->email_notifier,
             ProjectByIDFactoryStub::buildWithoutProject(),
             $this->createMock(ProjectMemberAdder::class),
+            $this->invitation_instrumentation,
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -324,12 +346,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('warning')
             ->with("Cannot send invitation feedback to inactive user #103");
 
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
             RetrieveUserByIdStub::withUsers($from_user),
             $this->email_notifier,
             ProjectByIDFactoryStub::buildWithoutProject(),
             $this->createMock(ProjectMemberAdder::class),
+            $this->invitation_instrumentation,
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());
@@ -372,12 +397,15 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('error')
             ->with("Unable to send invitation feedback to user #103 after registration of user #104");
 
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
             RetrieveUserByIdStub::withUsers($from_user),
             $this->email_notifier,
             ProjectByIDFactoryStub::buildWithoutProject(),
             $this->createMock(ProjectMemberAdder::class),
+            $this->invitation_instrumentation,
             $this->logger,
         );
         $account_creation_feedback->accountHasJustBeenCreated($new_user, RegisterFormContext::forAdmin());

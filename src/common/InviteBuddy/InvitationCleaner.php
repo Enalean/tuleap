@@ -39,18 +39,22 @@ final class InvitationCleaner
         private \Closure $sendmail,
         private RetrieveUserById $user_manager,
         private ProjectByIDFactory $project_manager,
+        private InvitationInstrumentation $invitation_instrumentation,
     ) {
     }
 
     public function cleanObsoleteInvitations(\DateTimeImmutable $today): void
     {
-        $purged_invitations = $this->invitation_purger->purgeObsoleteInvitations(
+        $purged_invitations    = $this->invitation_purger->purgeObsoleteInvitations(
             $today,
             \ForgeConfig::getInt(InvitationPurger::NB_DAYS)
         );
-        if (! $purged_invitations) {
+        $nb_purged_invitations = count($purged_invitations);
+        if ($nb_purged_invitations <= 0) {
             return;
         }
+
+        $this->invitation_instrumentation->incrementExpiredInvitations($nb_purged_invitations);
 
         foreach ($this->getObsoleteInvitationsIndexedByUsers($purged_invitations) as $user_id => $obsolete_invitations) {
             $user = $this->user_manager->getUserById($user_id);
