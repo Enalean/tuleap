@@ -29,7 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DataAccessObject;
 
-class InvitationDao extends DataAccessObject implements InvitationByTokenRetriever, UsedInvitationRetriever, InvitationPurger
+class InvitationDao extends DataAccessObject implements InvitationByTokenRetriever, UsedInvitationRetriever, InvitationPurger, PendingInvitationsForProjectRetriever
 {
     public function __construct(private SplitTokenVerificationStringHasher $hasher)
     {
@@ -222,6 +222,24 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
 
                 return $purged_invitations;
             }
+        );
+    }
+
+    public function searchPendingInvitationsForProject(int $project_id): array
+    {
+        return array_map(
+            fn (array $row): Invitation => $this->instantiateFromRow($row),
+            $this->getDB()->run(
+                'SELECT *
+                    FROM invitations
+                    WHERE to_project_id = ?
+                      AND status = ?
+                      AND to_email <> ""
+                      AND created_user_id IS NULL
+                    ORDER BY created_on',
+                $project_id,
+                Invitation::STATUS_SENT
+            )
         );
     }
 

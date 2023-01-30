@@ -1,9 +1,42 @@
 <div class="tlp-framed-horizontally">
+
+    {{# pending_invitations }}
+        <h2>{{# gettext }}Pending invitations{{/ gettext }}</h2>
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <section class="tlp-pane-section">
+                    <table class="tlp-table">
+                        <thead>
+                            <tr>
+                                <th>{{# gettext }}Email{{/ gettext }}</th>
+                                <th>{{# gettext }}Date of the invitation{{/ gettext }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{# invitations }}
+                                <tr>
+                                    <td>
+                                        <div class="project-admin-pending-invitation-email">
+                                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M10.0449 12.3633H11.4043V12.0234C11.4043 11.4375 11.6211 11.1328 12.3887 10.6875C13.1855 10.2129 13.6309 9.58594 13.6309 8.69531V8.68359C13.6309 7.40039 12.5586 6.47461 10.9531 6.47461C9.21289 6.47461 8.25781 7.48242 8.2168 8.85352V8.86523L9.58203 8.85938L9.59375 8.85352C9.63477 8.13281 10.1211 7.66992 10.877 7.66992C11.6152 7.66992 12.1074 8.12109 12.1074 8.73633V8.74805C12.1074 9.32227 11.8613 9.63867 11.1348 10.0781C10.3262 10.5527 9.98633 11.0801 10.0391 11.9473L10.0449 12.3633ZM10.7891 15.1465C11.3867 15.1465 11.7617 14.7832 11.7617 14.2266C11.7617 13.6641 11.3867 13.3008 10.7891 13.3008C10.2031 13.3008 9.81641 13.6641 9.81641 14.2266C9.81641 14.7832 10.2031 15.1465 10.7891 15.1465Z" fill="var(--tlp-dimmed-color)"/>
+                                                <rect x="0.5" y="0.5" width="21" height="21" rx="10.5" stroke="var(--tlp-dimmed-color)" stroke-dasharray="2 2"/>
+                                            </svg>
+                                            {{ email }}
+                                        </div>
+                                    </td>
+                                    <td>{{# date }}{{> tlp_relative_date }}{{/ date }}</td>
+                                </tr>
+                            {{/ invitations }}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+    {{/ pending_invitations }}
+
+    <h2>{{# gettext }}Members{{/ gettext }}</h2>
     <section class="tlp-pane">
         <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fas fa-users"></i> {{# gettext }}Members{{/ gettext }} </h1>
-            </div>
             <section class="tlp-pane-section">
                 {{# is_synchronized_with_ugroups }}
                 <div class="tlp-alert-info">

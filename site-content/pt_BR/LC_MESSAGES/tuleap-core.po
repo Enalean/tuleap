@@ -1153,6 +1153,9 @@ msgstr "Dados (como artefatos ou usuários) não serão incluídos."
 msgid "Date"
 msgstr "Data"
 
+msgid "Date of the invitation"
+msgstr ""
+
 msgid "Dates display"
 msgstr "Formato das datas"
 
@@ -2495,6 +2498,9 @@ msgstr "As senhas não coincidem."
 
 msgid "Pending"
 msgstr "Pendente"
+
+msgid "Pending invitations"
+msgstr ""
 
 msgid "Pending projects"
 msgstr "Projetos pendentes"

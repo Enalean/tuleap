@@ -1,0 +1,102 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\Project\Admin\ProjectMembers;
+
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\InviteBuddy\InvitationTestBuilder;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\InviteBuddy\PendingInvitationsForProjectRetrieverStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
+{
+    use GlobalLanguageMock;
+
+    private \Project $project;
+    private \PFUser $user;
+
+    protected function setUp(): void
+    {
+        $this->project = ProjectTestBuilder::aProject()->build();
+        $this->user    = UserTestBuilder::buildWithDefaults();
+
+        $GLOBALS['Language']
+            ->method('getText')
+            ->with('system', 'datefmt')
+            ->willReturn('d/m/Y H:i');
+    }
+
+    public function testNullIfFeatureIsNotEnabled(): void
+    {
+        $configuration = $this->createMock(InviteBuddyConfiguration::class);
+        $configuration->method('isFeatureEnabled')->willReturn(false);
+
+        $builder = new ListOfPendingInvitationsPresenterBuilder(
+            $configuration,
+            PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
+            new TlpRelativeDatePresenterBuilder(),
+        );
+
+        self::assertNull(
+            $builder->getPendingInvitationsPresenter($this->project, $this->user)
+        );
+    }
+
+    public function testNullIfNoPendingInvitations(): void
+    {
+        $configuration = $this->createMock(InviteBuddyConfiguration::class);
+        $configuration->method('isFeatureEnabled')->willReturn(true);
+
+        $builder = new ListOfPendingInvitationsPresenterBuilder(
+            $configuration,
+            PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
+            new TlpRelativeDatePresenterBuilder(),
+        );
+
+        self::assertNull(
+            $builder->getPendingInvitationsPresenter($this->project, $this->user)
+        );
+    }
+
+    public function testWithPendingInvitations(): void
+    {
+        $configuration = $this->createMock(InviteBuddyConfiguration::class);
+        $configuration->method('isFeatureEnabled')->willReturn(true);
+
+        $builder = new ListOfPendingInvitationsPresenterBuilder(
+            $configuration,
+            PendingInvitationsForProjectRetrieverStub::with(
+                InvitationTestBuilder::aSentInvitation(1)->to('jane@example.com')->withCreatedOn(1234567890)->build(),
+                InvitationTestBuilder::aSentInvitation(2)->to('john@example.com')->withCreatedOn(2345678901)->build(),
+            ),
+            new TlpRelativeDatePresenterBuilder(),
+        );
+
+        $presenter = $builder->getPendingInvitationsPresenter($this->project, $this->user);
+        self::assertEquals('jane@example.com', $presenter->invitations[0]->email);
+        self::assertEquals('john@example.com', $presenter->invitations[1]->email);
+    }
+}

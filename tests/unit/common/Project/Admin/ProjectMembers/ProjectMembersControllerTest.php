@@ -26,6 +26,9 @@ use HTTPRequest;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\InviteBuddy\PendingInvitationsForProjectRetrieverStub;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
@@ -63,7 +66,12 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_retriever,
             $this->administrator_checker,
             M::mock(SynchronizedProjectMembershipDetector::class),
-            $this->membership_delegation_dao
+            $this->membership_delegation_dao,
+            new ListOfPendingInvitationsPresenterBuilder(
+                $this->createStub(InviteBuddyConfiguration::class),
+                PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
+                $this->createStub(TlpRelativeDatePresenterBuilder::class),
+            )
         );
     }
 
