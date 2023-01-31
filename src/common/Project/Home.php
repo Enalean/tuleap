@@ -53,6 +53,8 @@ use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -95,11 +97,7 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                 EventManager::instance()
             );
 
-            $core_assets                              = new \Tuleap\Layout\IncludeCoreAssets();
-            $project_registration_creation_css_assets = new CssAssetWithoutVariantDeclinaisons(
-                $core_assets,
-                'project-registration-creation-style'
-            );
+            $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
             $csrf_token                 = new CSRFSynchronizerToken('/project/');
             $dashboard_widget_dao       = new DashboardWidgetDao($widget_factory);
@@ -128,7 +126,13 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                     EventManager::instance(),
                     $layout,
                     $core_assets,
-                    $project_registration_creation_css_assets,
+                    new JavascriptViteAsset(
+                        new IncludeViteAssets(
+                            __DIR__ . '/../../scripts/project-registration/frontend-assets',
+                            '/assets/core/project-registration'
+                        ),
+                        'src/index-for-modal.ts'
+                    ),
                     Codendi_HTMLPurifier::instance(),
                     new FirstTimerPresenterBuilder(
                         new InvitationDao(new SplitTokenVerificationStringHasher()),

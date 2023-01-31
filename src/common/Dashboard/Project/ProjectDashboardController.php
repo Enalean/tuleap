@@ -40,8 +40,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
@@ -99,10 +99,6 @@ class ProjectDashboardController
      * @var IncludeAssets
      */
     private $javascript_assets;
-    /**
-     * @var CssAsset
-     */
-    private $css_asset;
 
     private Codendi_HTMLPurifier $purifier;
 
@@ -119,7 +115,7 @@ class ProjectDashboardController
         EventManager $event_manager,
         BaseLayout $layout,
         IncludeAssets $core_assets,
-        CssAsset $css_asset,
+        private JavascriptAssetGeneric $project_registration_assets,
         Codendi_HTMLPurifier $purifier,
         private FirstTimerPresenterBuilder $first_timer_presenter_builder,
     ) {
@@ -135,7 +131,6 @@ class ProjectDashboardController
         $this->event_manager            = $event_manager;
         $this->layout                   = $layout;
         $this->javascript_assets        = $core_assets;
-        $this->css_asset                = $css_asset;
         $this->purifier                 = $purifier;
     }
 
@@ -156,10 +151,7 @@ class ProjectDashboardController
         \assert($display_project_created_modal_presenter instanceof DisplayCreatedProjectModalPresenter);
 
         if ($display_project_created_modal_presenter->should_display_created_project_modal) {
-            $this->layout->includeFooterJavascriptFile(
-                $this->javascript_assets->getFileURL('project/project-registration-creation.js')
-            );
-            $this->layout->addCssAsset($this->css_asset);
+            $this->layout->addJavascriptAsset($this->project_registration_assets);
         }
 
         if ($dashboard_id && ! $this->doesDashboardIdExist($dashboard_id, $project_dashboards)) {

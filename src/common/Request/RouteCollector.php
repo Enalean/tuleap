@@ -95,6 +95,8 @@ use Tuleap\InviteBuddy\InvitationInstrumentation;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\IncludeCoreAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\MailingList\MailingListAdministrationController;
 use Tuleap\MailingList\MailingListCreationController;
@@ -746,7 +748,13 @@ class RouteCollector
         $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
         return new ProjectRegistrationController(
             TemplateRendererFactory::build(),
-            $core_assets,
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../scripts/project-registration/frontend-assets',
+                    '/assets/core/project-registration'
+                ),
+                'src/index.ts'
+            ),
             new ProjectRegistrationUserPermissionChecker(
                 new \ProjectDao()
             ),

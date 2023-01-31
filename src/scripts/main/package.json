@@ -4,7 +4,6 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "dependencies": {
     "@joeattardi/emoji-button": "^4.6.2",
     "@tuleap/autocomplete-for-select2": "workspace:*",
@@ -44,7 +43,6 @@
     "node-gettext": "^3.0.0",
     "panzoom": "^9.4.1",
     "prismjs": "^1.29.0",
-    "slugify": "^1.6.1",
     "sprintf-js": "^1.1.2",
     "turndown": "^7.0.0",
     "vue": "^2.7.8",

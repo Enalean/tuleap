@@ -99,9 +99,9 @@ import TemplateCard from "../TemplateCard.vue";
     },
 })
 export default class AdvancedTemplateList extends Vue {
-    private should_choose_a_project = false;
-    private is_loading_project_list = false;
-    private has_error = false;
+    should_choose_a_project = false;
+    is_loading_project_list = false;
+    has_error = false;
 
     @State
     selected_company_template!: null | TemplateData;

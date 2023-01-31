@@ -30,14 +30,14 @@
             v-bind:id="`input-${field.group_desc_id}`"
             v-if="field.desc_type === 'line'"
             required
-            v-on:input="updateField(field.group_desc_id, $event.target.value)"
+            v-on:input="updateField(field.group_desc_id, $event)"
         />
         <textarea
             class="tlp-textarea tlp-textarea-large"
             v-bind:id="`textaarea-${field.group_desc_id}`"
             required
             v-else-if="field.desc_type === 'text'"
-            v-on:input="updateField(field.group_desc_id, $event.target.value)"
+            v-on:input="updateField(field.group_desc_id, $event)"
             data-test="project-field-text"
         ></textarea>
         <p
@@ -60,8 +60,15 @@ export default class FieldList extends Vue {
     @Prop({ required: true })
     readonly field!: FieldData;
 
-    updateField(field_id: number, value: string): void {
-        EventBus.$emit("update-field-list", { field_id: field_id, value: value });
+    updateField(field_id: string, event: Event): void {
+        if (
+            !(event.target instanceof HTMLInputElement) &&
+            !(event.target instanceof HTMLTextAreaElement)
+        ) {
+            return;
+        }
+        const value = event.target.value;
+        EventBus.$emit("update-field-list", { field_id, value });
     }
 
     get isRequired(): boolean {
