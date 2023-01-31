@@ -104,7 +104,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         projects_user_is_admin_of: [],
         error: null,
         is_creating_project: false,
-        configuration: configuration_state,
     };
 
     Vue.use(VueDOMPurifyHTML, {

@@ -25,32 +25,22 @@
         name="privacy"
         data-test="project-information-input-privacy-list"
         v-model="selected_visibility"
+        v-on:change="onChange"
         required
     >
         <option
             v-if="are_restricted_users_allowed"
             value="unrestricted"
-            v-bind:selected="is_public_included_restricted_selected"
             v-translate
             data-test="unrestricted"
         >
             Public incl. restricted
         </option>
-        <option value="public" v-bind:selected="is_public_selected" data-test="public" v-translate>
-            Public
-        </option>
-        <option
-            value="private"
-            v-bind:selected="is_private_selected"
-            data-test="private"
-            v-translate
-        >
-            Private
-        </option>
+        <option value="public" data-test="public" v-translate>Public</option>
+        <option value="private" data-test="private" v-translate>Private</option>
         <option
             value="private-wo-restr"
             v-if="are_restricted_users_allowed"
-            v-bind:selected="is_private_without_restricted_selected"
             data-test="private-wo-restr"
             v-translate
         >
@@ -63,7 +53,7 @@
 import Vue from "vue";
 import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
-import { Component, Watch } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import EventBus from "../../../helpers/event-bus";
 import {
     ACCESS_PRIVATE,
@@ -77,29 +67,27 @@ const configuration = namespace("configuration");
 @Component
 export default class ProjectInformationInputPrivacyList extends Vue {
     @configuration.State
-    project_default_visibility!: string;
-
-    @configuration.State
     are_restricted_users_allowed!: boolean;
 
     private list_picker_instance: ListPicker | null = null;
 
-    selected_visibility = ACCESS_PRIVATE;
+    selected_visibility = this.$store.state.configuration.project_default_visibility;
 
     mounted(): void {
-        this.selected_visibility = this.project_default_visibility;
-
+        setTimeout(() => {
+            // wait so that the handler of the event in an ancestor component has time to register itself
+            this.onChange();
+        });
         if (!(this.$el instanceof HTMLSelectElement)) {
             throw new Error("Element is supposed to be a select element");
         }
-
         this.list_picker_instance = createListPicker(this.$el, {
             items_template_formatter: (html_processor, value_id, item_label) => {
                 const description = this.translatedVisibilityDetails(value_id);
                 const template = html_processor`<div>
-                    <span class="project-information-input-privacy-list-option-label">${item_label}</span>
-                    <p class="project-information-input-privacy-list-option-description">${description}</p>
-                </div>`;
+                <span class="project-information-input-privacy-list-option-label">${item_label}</span>
+                <p class="project-information-input-privacy-list-option-description">${description}</p>
+            </div>`;
                 return template;
             },
         });
@@ -109,22 +97,6 @@ export default class ProjectInformationInputPrivacyList extends Vue {
         if (this.list_picker_instance !== null) {
             this.list_picker_instance.destroy();
         }
-    }
-
-    get is_public_included_restricted_selected(): boolean {
-        return this.selected_visibility === ACCESS_PUBLIC_UNRESTRICTED;
-    }
-
-    get is_public_selected(): boolean {
-        return this.selected_visibility === ACCESS_PUBLIC;
-    }
-
-    get is_private_selected(): boolean {
-        return this.selected_visibility === ACCESS_PRIVATE;
-    }
-
-    get is_private_without_restricted_selected(): boolean {
-        return this.selected_visibility === ACCESS_PRIVATE_WO_RESTRICTED;
     }
 
     translatedVisibilityDetails(visibility: string): string {
@@ -153,9 +125,8 @@ export default class ProjectInformationInputPrivacyList extends Vue {
         }
     }
 
-    @Watch("selected_visibility")
-    updateProjectVisibility(visibility: string): void {
-        EventBus.$emit("update-project-visibility", { new_visibility: visibility });
+    onChange(): void {
+        EventBus.$emit("update-project-visibility", { new_visibility: this.selected_visibility });
     }
 }
 </script>

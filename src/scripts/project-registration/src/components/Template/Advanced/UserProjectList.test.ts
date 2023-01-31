@@ -24,7 +24,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { TemplateData } from "../../../type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../../store/type";
+import type { RootState } from "../../../store/type";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("UserProjectList", () => {
@@ -34,7 +34,7 @@ describe("UserProjectList", () => {
         store: Store;
 
     beforeEach(() => {
-        const state: State = {} as State;
+        const state: RootState = {} as RootState;
 
         const store_options = {
             state,

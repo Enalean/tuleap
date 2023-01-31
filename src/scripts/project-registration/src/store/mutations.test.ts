@@ -19,7 +19,7 @@
  */
 
 import mutations from "./mutations";
-import type { State } from "./type";
+import type { RootState } from "./type";
 import type { TemplateData } from "../type";
 
 describe("mutation", () => {
@@ -34,7 +34,7 @@ describe("mutation", () => {
                     glyph: "<svg></svg>",
                     is_built_in: false,
                 } as TemplateData,
-            } as State;
+            } as RootState;
 
             const selected_template = {
                 title: "scrum template",
@@ -58,7 +58,7 @@ describe("mutation", () => {
                     is_built_in: true,
                 } as TemplateData,
                 selected_company_template: null,
-            } as State;
+            } as RootState;
 
             const selected_template = {
                 title: "Whole lot company",
@@ -76,7 +76,7 @@ describe("mutation", () => {
         it("reset the project creation error", () => {
             const state = {
                 error: "It does not work :(",
-            } as State;
+            } as RootState;
 
             mutations.resetProjectCreationError(state);
             expect(state.error).toBeNull();

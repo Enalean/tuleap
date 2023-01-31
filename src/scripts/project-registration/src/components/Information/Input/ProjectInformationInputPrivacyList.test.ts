@@ -19,7 +19,6 @@
  */
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import type { RootState } from "../../../store/type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ProjectInformationInputPrivacyList from "./ProjectInformationInputPrivacyList.vue";
 import type { ConfigurationState } from "../../../store/configuration";
@@ -46,16 +45,13 @@ describe("ProjectInformationInputPrivacyList", () => {
                     $store: createStoreMock({
                         state: {
                             configuration: configuration_state,
-                        } as RootState,
+                        },
                     }),
                 },
             });
 
             await wrapper.vm.$nextTick();
-
-            expect((wrapper.get("[data-test=public]").element as HTMLOptionElement).selected).toBe(
-                true
-            );
+            expect(wrapper.vm.selected_visibility).toBe("public");
         });
 
         it("Should select the 'Public incl. restricted' by default", async () => {
@@ -70,15 +66,13 @@ describe("ProjectInformationInputPrivacyList", () => {
                     $store: createStoreMock({
                         state: {
                             configuration: configuration_state,
-                        } as RootState,
+                        },
                     }),
                 },
             });
-            await wrapper.vm.$nextTick();
 
-            expect(
-                (wrapper.get("[data-test=unrestricted]").element as HTMLOptionElement).selected
-            ).toBe(true);
+            await wrapper.vm.$nextTick();
+            expect(wrapper.vm.selected_visibility).toBe("unrestricted");
         });
 
         it("Should select the 'Private' by default", async () => {
@@ -92,14 +86,12 @@ describe("ProjectInformationInputPrivacyList", () => {
                     $store: createStoreMock({
                         state: {
                             configuration: configuration_state,
-                        } as RootState,
+                        },
                     }),
                 },
             });
 
-            expect((wrapper.get("[data-test=private]").element as HTMLOptionElement).selected).toBe(
-                true
-            );
+            expect(wrapper.vm.selected_visibility).toBe("private");
         });
 
         it("Should select the 'Private incl. restricted' by default", async () => {
@@ -114,15 +106,13 @@ describe("ProjectInformationInputPrivacyList", () => {
                     $store: createStoreMock({
                         state: {
                             configuration: configuration_state,
-                        } as RootState,
+                        },
                     }),
                 },
             });
-            await wrapper.vm.$nextTick();
 
-            expect((wrapper.get("[data-test=private]").element as HTMLOptionElement).selected).toBe(
-                true
-            );
+            await wrapper.vm.$nextTick();
+            expect(wrapper.vm.selected_visibility).toBe("private");
         });
     });
 
@@ -139,7 +129,7 @@ describe("ProjectInformationInputPrivacyList", () => {
                     $store: createStoreMock({
                         state: {
                             configuration: configuration_state,
-                        } as RootState,
+                        },
                     }),
                 },
             });
@@ -161,7 +151,7 @@ describe("ProjectInformationInputPrivacyList", () => {
                     $store: createStoreMock({
                         state: {
                             configuration: configuration_state,
-                        } as RootState,
+                        },
                     }),
                 },
             });

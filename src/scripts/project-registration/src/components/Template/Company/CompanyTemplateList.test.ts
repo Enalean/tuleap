@@ -24,7 +24,6 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import TemplateCardContent from "../TemplateCard.vue";
 import CompanyTemplateList from "./CompanyTemplateList.vue";
-import type { RootState } from "../../../store/type";
 import type { ConfigurationState } from "../../../store/configuration";
 
 describe("CompanyTemplateList", () => {
@@ -63,7 +62,7 @@ describe("CompanyTemplateList", () => {
                     $store: createStoreMock({
                         state: {
                             configuration: configuration_state,
-                        } as RootState,
+                        },
                     }),
                 },
             });
