@@ -48,6 +48,12 @@ function getDisconnectedCallback(host: HostElement): () => void {
     };
 }
 
+const getRootDataTestId = (host: SelectBoxField): string => {
+    return host.field_presenter.is_multiple_select_box
+        ? "multi-selectbox-field"
+        : "selectbox-field";
+};
+
 export const SelectBoxField = define<SelectBoxField>({
     tag: "tuleap-artifact-modal-select-box-field",
     select_element: ({ content }) => {
@@ -76,7 +82,7 @@ export const SelectBoxField = define<SelectBoxField>({
     field_presenter: undefined,
     bind_value_ids: undefined,
     content: (host) => html`
-        <div class="${getFormElementClasses(host)}" data-test="selectbox-field">
+        <div class="${getFormElementClasses(host)}" data-test="${getRootDataTestId(host)}">
             <label for="${`tracker_field_${host.field_presenter.field_id}`}" class="tlp-label">
                 ${host.field_presenter.field_label}
                 ${host.field_presenter.is_field_required &&

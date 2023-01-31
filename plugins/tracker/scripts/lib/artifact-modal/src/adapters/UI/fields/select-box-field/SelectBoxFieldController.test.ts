@@ -126,6 +126,7 @@ describe("SelectBoxFieldController", () => {
                 field_label: "Status",
                 is_field_disabled: false,
                 is_field_required: true,
+                is_multiple_select_box: false,
                 select_box_options: [
                     {
                         id: option_2.value,
@@ -159,6 +160,22 @@ describe("SelectBoxFieldController", () => {
             controller.destroy();
 
             expect(list_picker_instance.destroy).toHaveBeenCalled();
+        });
+
+        it("should activate the none_value option of the list-picker when the field is a multiple list field", () => {
+            field = {
+                type: "msb",
+            } as unknown as ListFieldStructure;
+
+            jest.spyOn(list_picker_lib, "createListPicker").mockImplementation();
+
+            getController().initListPicker(select);
+
+            expect(list_picker_lib.createListPicker).toHaveBeenCalledWith(select, {
+                locale: "en_US",
+                is_filterable: true,
+                none_value: "100",
+            });
         });
     });
 });

@@ -63,19 +63,38 @@ export const onSelectChange = (host: SelectBoxField, event: Event): void => {
         return;
     }
 
-    if (select.value && !select.value.includes("_")) {
-        host.bind_value_ids = [Number.parseInt(select.value, 10)];
-    } else {
-        host.bind_value_ids = select.value ? [select.value] : [];
-    }
-    host.controller.setSelectedValue(host.bind_value_ids);
+    const selected_value_ids = Array.from(select.selectedOptions).map((option) => {
+        if (option.value && !option.value.includes("_")) {
+            return Number.parseInt(option.value, 10);
+        }
+
+        return option.value;
+    });
+
+    host.bind_value_ids = selected_value_ids;
+    host.controller.setSelectedValue(selected_value_ids);
 };
 
 export const buildSelectBox = (host: SelectBoxField): UpdateFunction<SelectBoxField> => {
+    if (host.field_presenter.is_multiple_select_box) {
+        return html`
+            <select
+                multiple
+                id="${"tracker_field_" + host.field_presenter.field_id}"
+                required="${host.field_presenter.is_field_required}"
+                disabled="${host.field_presenter.is_field_disabled}"
+                onchange="${onSelectChange}"
+                data-select="list-picker"
+                data-test="multi-selectbox-field-select"
+            >
+                ${getOptionsTemplates(host.bind_value_ids, host.field_presenter.select_box_options)}
+            </select>
+        `;
+    }
+
     return html`
         <select
             id="${"tracker_field_" + host.field_presenter.field_id}"
-            class="tlp-select"
             required="${host.field_presenter.is_field_required}"
             disabled="${host.field_presenter.is_field_disabled}"
             onchange="${onSelectChange}"

@@ -21,6 +21,25 @@ import { SelectBoxFieldPresenter } from "./SelectBoxFieldPresenter";
 import type { ListFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 
 describe("SelectBoxFieldPresenter", () => {
+    it.each([
+        ["sb", false],
+        ["msb", true],
+    ])(
+        `When the type of the field is %s, Then is_multiple_field should be %s`,
+        (select_box_field_type, is_multiple) => {
+            const field = {
+                field_id: 105,
+                label: "Assigned to",
+                type: select_box_field_type,
+                values: [],
+            } as unknown as ListFieldStructure;
+
+            const presenter = SelectBoxFieldPresenter.fromField(field, [], true);
+
+            expect(presenter.is_multiple_select_box).toBe(is_multiple);
+        }
+    );
+
     it(`should build a presenter taking into account:
         - the state of the field (disabled, required)
         - the colors bound to the options`, () => {

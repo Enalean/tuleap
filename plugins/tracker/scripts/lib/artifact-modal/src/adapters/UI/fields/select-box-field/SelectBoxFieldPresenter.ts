@@ -24,6 +24,7 @@ import type { BindValueId } from "../../../../domain/fields/select-box-field/Bin
 export interface SelectBoxFieldPresenter {
     readonly field_id: number;
     readonly field_label: string;
+    readonly is_multiple_select_box: boolean;
     readonly is_field_required: boolean;
     readonly is_field_disabled: boolean;
     readonly select_box_options: ReadonlyArray<SelectBoxOptionPresenter>;
@@ -89,6 +90,7 @@ export const SelectBoxFieldPresenter = {
     ): SelectBoxFieldPresenter => ({
         field_id: field.field_id,
         field_label: field.label,
+        is_multiple_select_box: field.type === "msb",
         is_field_required: field.required,
         is_field_disabled,
         select_box_options: buildSelectBoxOptions(field, allowed_bind_value_ids),

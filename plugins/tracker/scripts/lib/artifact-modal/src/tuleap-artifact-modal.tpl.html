@@ -50,16 +50,10 @@
 </script>
 
 <script type="text/ng-template" id="field-msb.tpl.html">
-<div class="tlp-form-element">
-    <div
-        class="field"
-        tuleap-artifact-modal-list-picker-multiple-field="field"
-        is-disabled="modal.isDisabled(field)"
-        value-model="modal.values[field.field_id]"
-        options-value="field.filtered_values"
-        event-dispatcher="modal.getEventDispatcher()"
-    ></div>
-</div>
+<tuleap-artifact-modal-select-box-field
+    controller="modal.getSelectBoxFieldController(field)"
+    ce-one-way
+></tuleap-artifact-modal-select-box-field>
 </script>
 
 <script type="text/ng-template" id="field-rb.tpl.html">

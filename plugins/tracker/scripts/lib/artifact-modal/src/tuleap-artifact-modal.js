@@ -34,8 +34,6 @@ import StaticOpenListFieldDirective from "./fields/open-list-field/static-open-l
 import UgroupsOpenListFieldDirective from "./fields/open-list-field/ugroups-open-list-field-directive.js";
 import UsersOpenListFieldDirective from "./fields/open-list-field/users-open-list-field-directive.js";
 import AwkwardCreationFields from "./model/awkward-creation-fields-constant.js";
-import HighlightDirective from "./tuleap-highlight/highlight-directive.js";
-import ListPickerMultipleDirective from "./fields/list-picker-multiple-field/list-picker-mulitple-field-directive.js";
 
 import "./fields/computed-field/ComputedField";
 import "./fields/float-field/FloatField";
@@ -79,8 +77,6 @@ export default angular
     .directive("tuleapArtifactModalStaticOpenListField", StaticOpenListFieldDirective)
     .directive("tuleapArtifactModalUgroupsOpenListField", UgroupsOpenListFieldDirective)
     .directive("tuleapArtifactModalUsersOpenListField", UsersOpenListFieldDirective)
-    .directive("tuleapHighlightDirective", HighlightDirective)
-    .directive("tuleapArtifactModalListPickerMultipleField", ListPickerMultipleDirective)
     .service("NewTuleapArtifactModalService", ArtifactModalService)
     .value("TuleapArtifactModalLoading", {
         loading: false,

@@ -95,9 +95,17 @@ export const SelectBoxFieldController = (
             });
         },
         initListPicker(select: HTMLSelectElement): void {
+            const additional_options = {};
+            if (field.type === "msb") {
+                Object.assign(additional_options, {
+                    none_value: "100",
+                });
+            }
+
             list_picker_instance = createListPicker(select, {
                 locale: user_locale,
                 is_filterable: true,
+                ...additional_options,
             });
         },
         destroy(): void {
