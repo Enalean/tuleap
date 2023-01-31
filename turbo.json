@@ -15,9 +15,11 @@
         "tsconfig*.json",
         "pnpm-lock.yaml",
         "scripts/**/*.ts",
+        "scripts/**/*.vue",
         "scripts/**/*.tsx",
         "scripts/**/*.json",
         "src/**/*.ts",
+        "src/**/*.vue",
         "src/**/*.tsx",
         "src/**/*.json"
       ],
