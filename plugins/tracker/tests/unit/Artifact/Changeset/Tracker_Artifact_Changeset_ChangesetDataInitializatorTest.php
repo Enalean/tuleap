@@ -96,6 +96,27 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
         );
     }
 
+    public function testAnEmptyValueForListFieldShouldUseNoneValueToWorkWellWithFieldDependenciesCheckingAfterward(): void
+    {
+        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+            ->with($this->tracker)
+            ->andReturns([]);
+
+        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $value     = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
+        $value->shouldReceive('getValue')->andReturn([]);
+        $changeset->shouldReceive('getValues')->andReturn([22 => $value]);
+
+        $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+
+        $fields_data = [];
+
+        $this->assertEquals(
+            [22 => [100]],
+            $this->initializator->process($this->artifact, $fields_data)
+        );
+    }
+
     public function testSubmittedDateFieldsOverridesPreviousChangeset(): void
     {
         $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
