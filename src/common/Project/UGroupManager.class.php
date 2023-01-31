@@ -528,7 +528,7 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
      * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveUserMembershipToUserGroupException
      * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      */
-    public function syncUgroupMembers(ProjectUGroup $user_group, array $users_from_references)
+    public function syncUgroupMembers(ProjectUGroup $user_group, array $users_from_references, PFUser $project_admin)
     {
         $this->getDao()->startTransaction();
 
@@ -537,7 +537,7 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
         $members_to_add    = $this->getUsersToAdd($current_members, $users_from_references);
 
         foreach ($members_to_add as $member_to_add) {
-            $this->addUserToUserGroup($user_group, $member_to_add);
+            $this->addUserToUserGroup($user_group, $member_to_add, $project_admin);
         }
 
         foreach ($members_to_remove as $member_to_remove) {
@@ -575,17 +575,17 @@ class UGroupManager implements \Tuleap\Project\UGroupRetriever // phpcs:ignore P
      * @throws UGroup_Invalid_Exception
      * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      */
-    private function addUserToUserGroup(ProjectUGroup $user_group, PFUser $user)
+    private function addUserToUserGroup(ProjectUGroup $user_group, PFUser $user, PFUser $project_admin)
     {
         switch ($user_group->getId()) {
             case ProjectUGroup::PROJECT_MEMBERS:
-                $this->getProjectMemberAdder()->addProjectMemberWithFeedback($user, $user_group->getProject());
+                $this->getProjectMemberAdder()->addProjectMemberWithFeedback($user, $user_group->getProject(), $project_admin);
                 break;
             case ProjectUGroup::PROJECT_ADMIN:
-                $this->getDynamicUGroupMembersUpdater()->addUser($user_group->getProject(), $user_group, $user);
+                $this->getDynamicUGroupMembersUpdater()->addUser($user_group->getProject(), $user_group, $user, $project_admin);
                 break;
             default:
-                $user_group->addUser($user);
+                $user_group->addUser($user, $project_admin);
         }
     }
 

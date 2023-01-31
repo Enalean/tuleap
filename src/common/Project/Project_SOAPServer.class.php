@@ -154,7 +154,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         if ($user = $this->userManager->getUserById($userId)) {
             try {
                 $ugroup = new ProjectUGroup(['ugroup_id' => $ugroupId, 'group_id' => $groupId]);
-                $ugroup->addUser($user);
+                $ugroup->addUser($user, $this->userManager->getCurrentUser());
             } catch (Exception $e) {
                 throw new SoapFault((string) $e->getCode(), $e->getMessage());
             }

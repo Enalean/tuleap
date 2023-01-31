@@ -30,6 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Request\ProjectRetriever;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -72,6 +73,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var M\MockInterface|MemberAdder
      */
     private $member_adder;
+    private \PFUser $project_admin;
 
     protected function setUp(): void
     {
@@ -92,16 +94,17 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->member_adder,
             $this->csrf
         );
+
+        $this->project_admin = UserTestBuilder::buildWithDefaults();
     }
 
     private function checkUserIsProjectAdmin(\Project $project): void
     {
-        $project_admin = M::mock(\PFUser::class);
         $this->http_request->shouldReceive('getCurrentUser')
             ->once()
-            ->andReturn($project_admin);
+            ->andReturn($this->project_admin);
         $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->with($project_admin, $project)
+            ->with($this->project_admin, $project)
             ->once();
     }
 
@@ -122,7 +125,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->http_request->shouldReceive('get')->with('add_user_name')->andReturn('danton');
         $this->user_manager->shouldReceive('findUser')->with('danton')->andReturn($user_to_add);
 
-        $this->member_adder->shouldReceive('addMember')->with($user_to_add, $ugroup)->once();
+        $this->member_adder->shouldReceive('addMember')->with($user_to_add, $ugroup, $this->project_admin)->once();
 
         $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->once();
 

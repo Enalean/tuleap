@@ -130,15 +130,20 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAddUsersToProjectTheyHaveBeenInvitedInto(): void
     {
+        $project = ProjectTestBuilder::aProject()->withId(111)->build();
+
         $new_user = UserTestBuilder::aUser()
             ->withId(104)
             ->withEmail('doe@example.com')
             ->build();
 
+        $project_admin = UserTestBuilder::anActiveUser()
+            ->withId(102)
+            ->withAdministratorOf($project)
+            ->build();
+
         $this->dao->method('saveJustCreatedUserThanksToInvitation');
         $this->dao->method('searchByCreatedUserId')->willReturn([]);
-
-        $project = ProjectTestBuilder::aProject()->withId(111)->build();
 
         $project_member_adder = $this->createMock(ProjectMemberAdder::class);
         $project_member_adder
@@ -147,10 +152,167 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($new_user, $project);
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+        $this->invitation_instrumentation->expects(self::once())->method('incrementProjectInvitation');
 
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withNoUser(),
+            RetrieveUserByIdStub::withUsers($new_user, $project_admin),
+            $this->email_notifier,
+            ProjectByIDFactoryStub::buildWith($project),
+            $project_member_adder,
+            $this->invitation_instrumentation,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated(
+            $new_user,
+            RegisterFormContext::forAnonymous(
+                true,
+                InvitationToEmail::fromInvitation(
+                    InvitationTestBuilder::aSentInvitation(1)
+                        ->from(102)
+                        ->to('doe@example.com')
+                        ->toProjectId(111)
+                        ->build(),
+                    new ConcealedString('secret')
+                )
+            )
+        );
+    }
+
+    public function testItDoesNotAddUsersToProjectIfTheyHaveNotBeenInvitedByAProjectAdmin(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(111)->build();
+
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $not_anymore_a_project_admin = UserTestBuilder::anActiveUser()
+            ->withId(102)
+            ->build();
+
+        $this->dao->method('saveJustCreatedUserThanksToInvitation');
+        $this->dao->method('searchByCreatedUserId')->willReturn([]);
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::never())
+            ->method('addProjectMember');
+
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
+        $this->logger
+            ->expects(self::once())
+            ->method('error')
+            ->with("User #104 has been invited by user #102 to project #111, but user #102 is not project admin");
+
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withUsers($new_user, $not_anymore_a_project_admin),
+            $this->email_notifier,
+            ProjectByIDFactoryStub::buildWith($project),
+            $project_member_adder,
+            $this->invitation_instrumentation,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated(
+            $new_user,
+            RegisterFormContext::forAnonymous(
+                true,
+                InvitationToEmail::fromInvitation(
+                    InvitationTestBuilder::aSentInvitation(1)
+                        ->from(102)
+                        ->to('doe@example.com')
+                        ->toProjectId(111)
+                        ->build(),
+                    new ConcealedString('secret')
+                )
+            )
+        );
+    }
+
+    public function testItDoesNotAddUsersToProjectIfTheyHaveBeenInvitedByProjectAdminThatIsNotAlive(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(111)->build();
+
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $not_anymore_a_project_admin = UserTestBuilder::aUser()
+            ->withStatus(\PFUser::STATUS_SUSPENDED)
+            ->withId(102)
+            ->build();
+
+        $this->dao->method('saveJustCreatedUserThanksToInvitation');
+        $this->dao->method('searchByCreatedUserId')->willReturn([]);
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::never())
+            ->method('addProjectMember');
+
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
+        $this->logger
+            ->expects(self::once())
+            ->method('error')
+            ->with("User #104 has been invited by user #102 to project #111, but user #102 is not active nor restricted");
+
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withUsers($new_user, $not_anymore_a_project_admin),
+            $this->email_notifier,
+            ProjectByIDFactoryStub::buildWith($project),
+            $project_member_adder,
+            $this->invitation_instrumentation,
+            $this->logger,
+        );
+        $account_creation_feedback->accountHasJustBeenCreated(
+            $new_user,
+            RegisterFormContext::forAnonymous(
+                true,
+                InvitationToEmail::fromInvitation(
+                    InvitationTestBuilder::aSentInvitation(1)
+                        ->from(102)
+                        ->to('doe@example.com')
+                        ->toProjectId(111)
+                        ->build(),
+                    new ConcealedString('secret')
+                )
+            )
+        );
+    }
+
+    public function testItDoesNotAddUsersToProjectIfTheyHaveBeenInvitedByAnUnknownUser(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(111)->build();
+
+        $new_user = UserTestBuilder::aUser()
+            ->withId(104)
+            ->withEmail('doe@example.com')
+            ->build();
+
+        $this->dao->method('saveJustCreatedUserThanksToInvitation');
+        $this->dao->method('searchByCreatedUserId')->willReturn([]);
+
+        $project_member_adder = $this->createMock(ProjectMemberAdder::class);
+        $project_member_adder
+            ->expects(self::never())
+            ->method('addProjectMember');
+
+        $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
+
+        $this->logger
+            ->expects(self::once())
+            ->method('error')
+            ->with("User #104 has been invited by user #102 to project #111, but we cannot find user #102");
+
+        $account_creation_feedback = new AccountCreationFeedback(
+            $this->dao,
+            RetrieveUserByIdStub::withUsers($new_user),
             $this->email_notifier,
             ProjectByIDFactoryStub::buildWith($project),
             $project_member_adder,

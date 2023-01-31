@@ -71,18 +71,18 @@ class UgroupDuplicator
         $this->event_manager = $event_manager;
     }
 
-    public function duplicateOnProjectCreation(Project $template, $new_project_id, array &$ugroup_mapping)
+    public function duplicateOnProjectCreation(Project $template, $new_project_id, array &$ugroup_mapping, \PFUser $project_admin)
     {
         foreach ($this->manager->getStaticUGroups($template) as $ugroup) {
             if (! $ugroup->isStatic()) {
                 continue;
             }
 
-            $this->duplicate($ugroup, $new_project_id, $ugroup_mapping);
+            $this->duplicate($ugroup, $new_project_id, $ugroup_mapping, $project_admin);
         }
     }
 
-    private function duplicate(ProjectUGroup $source_ugroup, $new_project_id, array &$ugroup_mapping)
+    private function duplicate(ProjectUGroup $source_ugroup, $new_project_id, array &$ugroup_mapping, \PFUser $project_admin)
     {
         $ugroup_id     = $source_ugroup->getId();
         $new_ugroup_id = $this->dao->createUgroupFromSourceUgroup($ugroup_id, $new_project_id);
@@ -94,7 +94,7 @@ class UgroupDuplicator
         $new_ugroup = $this->manager->getById($new_ugroup_id);
 
         $this->pluginDuplicatesUgroup($source_ugroup, $new_ugroup);
-        $this->duplicateUgroupUsersAndBinding($source_ugroup, $new_ugroup, $new_project_id);
+        $this->duplicateUgroupUsersAndBinding($source_ugroup, $new_ugroup, $new_project_id, $project_admin);
 
         $ugroup_mapping[$ugroup_id] = $new_ugroup_id;
     }
@@ -112,7 +112,7 @@ class UgroupDuplicator
         );
     }
 
-    private function duplicateUgroupUsersAndBinding(ProjectUGroup $source_ugroup, ProjectUGroup $new_ugroup, $new_project_id)
+    private function duplicateUgroupUsersAndBinding(ProjectUGroup $source_ugroup, ProjectUGroup $new_ugroup, $new_project_id, \PFUser $project_admin)
     {
         $this->dao->createBinding($new_project_id, $source_ugroup->getId(), $new_ugroup->getId());
 
@@ -121,7 +121,7 @@ class UgroupDuplicator
         } else {
             foreach ($source_ugroup->getMembers() as $member) {
                 try {
-                    $this->member_adder->addMember($member, $new_ugroup);
+                    $this->member_adder->addMember($member, $new_ugroup, $project_admin);
                 } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $exception) {
                     // do nothing
                 }
