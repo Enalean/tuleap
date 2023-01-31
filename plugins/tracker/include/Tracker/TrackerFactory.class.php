@@ -27,6 +27,10 @@ use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\Creation\TrackerCreationSettingsBuilder;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\Notifications\GlobalNotificationDuplicationDao;
+use Tuleap\Tracker\Notifications\Settings\NotificationSettingsDuplicator;
+use Tuleap\Tracker\Notifications\UgroupsToNotifyDuplicationDao;
+use Tuleap\Tracker\Notifications\UsersToNotifyDuplicationDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\TrackerColor;
@@ -419,6 +423,15 @@ class TrackerFactory implements RetrieveTracker
         Tracker_CannedResponseFactory::instance()->duplicate($id_template, $id);
         //Duplicate field dependencies
         $this->getRuleFactory()->duplicate($id_template, $id, $field_mapping);
+
+        $notification_settings_duplicator = new NotificationSettingsDuplicator(
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new GlobalNotificationDuplicationDao(),
+            new UsersToNotifyDuplicationDao(),
+            new UgroupsToNotifyDuplicationDao(),
+        );
+        $notification_settings_duplicator->duplicate((int) $id_template, $id, $duplication_user_group_mapping);
+
         $tracker = $this->getTrackerById($id);
 
         // Process event that tracker is created

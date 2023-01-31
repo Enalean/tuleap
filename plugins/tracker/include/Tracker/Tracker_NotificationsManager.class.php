@@ -352,7 +352,7 @@ class Tracker_NotificationsManager
     public function getGlobalNotifications()
     {
         $notifs = [];
-        foreach ($this->getGlobalDao()->searchByTrackerId($this->tracker->id) as $row) {
+        foreach ($this->getGlobalDao()->searchByTrackerId((int) $this->tracker->id) as $row) {
             $notifs[$row['id']] = new Tracker_GlobalNotification(
                 $row['id'],
                 $this->tracker->id,
