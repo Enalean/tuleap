@@ -26,7 +26,6 @@ import TemplateCardContent from "../TemplateCard.vue";
 import TuleapTemplateList from "./TuleapTemplateList.vue";
 import type { TemplateData } from "../../../type";
 import type { ConfigurationState } from "../../../store/configuration";
-import type { RootState } from "../../../store/type";
 
 describe("TuleapTemplateList", () => {
     let local_vue = createLocalVue();
@@ -47,7 +46,7 @@ describe("TuleapTemplateList", () => {
                 $store: createStoreMock({
                     state: {
                         configuration: configuration_state,
-                    } as RootState,
+                    },
                 }),
             },
         });

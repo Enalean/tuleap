@@ -53,7 +53,7 @@ describe("TemplateSelection", () => {
                     state: {
                         configuration: configuration_state,
                         selected_template_category,
-                    } as RootState,
+                    } as RootState & { configuration: ConfigurationState },
                 }),
             },
         });

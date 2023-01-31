@@ -24,14 +24,14 @@ import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-t
 import * as element_checker from "../../helpers/is-element-in-viewport";
 import VueRouter from "vue-router";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../store/type";
+import type { RootState } from "../../store/type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import TemplateFooter from "./TemplateFooter.vue";
 
 describe("TemplateFooter", () => {
-    let factory: Wrapper<TemplateFooter>, router: VueRouter, store: Store, state: State;
+    let factory: Wrapper<TemplateFooter>, router: VueRouter, store: Store, state: RootState;
     beforeEach(async () => {
-        state = {} as State;
+        state = {} as RootState;
         const getters = {
             is_template_selected: false,
         };

@@ -20,7 +20,7 @@
 import Vue from "vue";
 import type { Store } from "vuex";
 import Vuex from "vuex";
-import type { RootState, State } from "./type";
+import type { RootState } from "./type";
 import mutations from "./mutations";
 import * as actions from "./actions";
 import * as getters from "./getters";
@@ -32,7 +32,7 @@ Vue.use(Vuex);
 export function createStore(
     root_state: RootState,
     configuration_state: ConfigurationState
-): Store<State> {
+): Store<RootState> {
     const configuration = createConfigurationModule(configuration_state);
 
     return new Vuex.Store({

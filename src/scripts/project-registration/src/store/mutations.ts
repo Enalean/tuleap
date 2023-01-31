@@ -18,12 +18,12 @@
  *
  */
 
-import type { State } from "./type";
+import type { RootState } from "./type";
 import type { TemplateData } from "../type";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export default {
-    setSelectedTemplate(state: State, selected_template: TemplateData): void {
+    setSelectedTemplate(state: RootState, selected_template: TemplateData): void {
         if (selected_template.is_built_in) {
             state.selected_tuleap_template = selected_template;
             state.selected_company_template = null;
@@ -33,21 +33,21 @@ export default {
         }
     },
 
-    resetSelectedTemplate(state: State): void {
+    resetSelectedTemplate(state: RootState): void {
         state.selected_tuleap_template = null;
         state.selected_company_template = null;
     },
 
-    resetProjectCreationError(state: State): void {
+    resetProjectCreationError(state: RootState): void {
         state.error = null;
     },
 
-    setIsCreatingProject(state: State, is_creating_project: boolean): void {
+    setIsCreatingProject(state: RootState, is_creating_project: boolean): void {
         state.error = null;
         state.is_creating_project = is_creating_project;
     },
 
-    async handleError(state: State, rest_error: FetchWrapperError): Promise<void> {
+    async handleError(state: RootState, rest_error: FetchWrapperError): Promise<void> {
         try {
             const { error } = await rest_error.response.json();
             state.error = error.message;
@@ -57,16 +57,16 @@ export default {
         }
     },
 
-    resetError(state: State): void {
+    resetError(state: RootState): void {
         state.error = null;
     },
 
-    setSelectedTemplateCategory(state: State, selected_template_category: string): void {
+    setSelectedTemplateCategory(state: RootState, selected_template_category: string): void {
         state.selected_template_category = selected_template_category;
     },
 
     setAvailableProjectsUserIsAdminOf(
-        state: State,
+        state: RootState,
         projects_user_is_admin_of: TemplateData[]
     ): void {
         state.projects_user_is_admin_of = projects_user_is_admin_of;

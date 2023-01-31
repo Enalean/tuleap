@@ -19,9 +19,8 @@
  */
 
 import type { TemplateData } from "../type";
-import type { ConfigurationState } from "./configuration";
 
-export interface State {
+export interface RootState {
     selected_tuleap_template: TemplateData | null;
     selected_company_template: TemplateData | null;
     selected_template_category: string | null;
@@ -41,8 +40,4 @@ export interface StoreOptions {
         project_default_visibility: string;
         is_project_approval_required: boolean;
     };
-}
-
-export interface RootState extends State {
-    readonly configuration: ConfigurationState;
 }

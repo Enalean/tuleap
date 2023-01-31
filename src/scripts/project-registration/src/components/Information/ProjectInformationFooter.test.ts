@@ -23,16 +23,16 @@ import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../store/type";
+import type { RootState } from "../../store/type";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 
 describe("ProjectInformationFooter", () => {
     let factory: Wrapper<ProjectInformationFooter>, store: Store;
 
     beforeEach(async () => {
-        const state: State = {
+        const state: RootState = {
             is_creating_project: false,
-        } as State;
+        } as RootState;
 
         const store_options = {
             state,

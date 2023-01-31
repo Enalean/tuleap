@@ -18,21 +18,21 @@
  *
  */
 import * as getters from "./getters";
-import type { State } from "./type";
+import type { RootState } from "./type";
 import type { TemplateData } from "../type";
 import { is_currently_selected_template } from "./getters";
 
 describe("getters", () => {
     describe("is_template_selected", () => {
         it(`Should return false when there is no selected template`, () => {
-            const state: State = {
+            const state: RootState = {
                 selected_tuleap_template: null,
                 selected_company_template: null,
-            } as State;
+            } as RootState;
             expect(getters.is_template_selected(state)).toBe(false);
         });
         it(`Should return true when a tuleap template is choosen`, () => {
-            const state: State = {
+            const state: RootState = {
                 selected_tuleap_template: {
                     title: "scrum",
                     description: "scrum desc",
@@ -41,11 +41,11 @@ describe("getters", () => {
                     is_built_in: true,
                 } as TemplateData,
                 selected_company_template: null,
-            } as State;
+            } as RootState;
             expect(getters.is_template_selected(state)).toBe(true);
         });
         it(`Should return true when a company template is choosen`, () => {
-            const state: State = {
+            const state: RootState = {
                 selected_tuleap_template: null,
                 selected_company_template: {
                     title: "scrum",
@@ -54,34 +54,34 @@ describe("getters", () => {
                     glyph: "<svg></svg>",
                     is_built_in: false,
                 } as TemplateData,
-            } as State;
+            } as RootState;
             expect(getters.is_template_selected(state)).toBe(true);
         });
     });
 
     describe("has_error", () => {
         it(`Should return false when no error message is stored`, () => {
-            const state: State = {
+            const state: RootState = {
                 error: null,
-            } as State;
+            } as RootState;
             expect(getters.has_error(state)).toBe(false);
         });
         it(`Should return true when a template is choosen`, () => {
-            const state: State = {
+            const state: RootState = {
                 error: "Ho snap!",
-            } as State;
+            } as RootState;
             expect(getters.has_error(state)).toBe(true);
         });
     });
 
     describe("is_currently_selected_template", () => {
-        let state: State, scrum_template: TemplateData;
+        let state: RootState, scrum_template: TemplateData;
 
         beforeEach(() => {
             state = {
                 selected_company_template: null,
                 selected_tuleap_template: null,
-            } as State;
+            } as RootState;
 
             scrum_template = { id: "scrum" } as TemplateData;
         });

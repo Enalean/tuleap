@@ -18,20 +18,20 @@
  *
  */
 
-import type { State } from "./type";
+import type { RootState } from "./type";
 import type { ProjectProperties, TemplateData } from "../type";
 import { getProjectUserIsAdminOf, postProject } from "../api/rest-querier";
 import type { ActionContext } from "vuex";
 
 export function setSelectedTemplate(
-    context: ActionContext<State, State>,
+    context: ActionContext<RootState, RootState>,
     selected_template: TemplateData
 ): void {
     return context.commit("setSelectedTemplate", selected_template);
 }
 
 export async function createProject(
-    context: ActionContext<State, State>,
+    context: ActionContext<RootState, RootState>,
     project_properties: ProjectProperties
 ): Promise<string> {
     let response;
@@ -49,7 +49,9 @@ export async function createProject(
     return response;
 }
 
-export async function loadUserProjects(context: ActionContext<State, State>): Promise<void> {
+export async function loadUserProjects(
+    context: ActionContext<RootState, RootState>
+): Promise<void> {
     const projects_user_is_admin_of = await getProjectUserIsAdminOf();
     context.commit("setAvailableProjectsUserIsAdminOf", projects_user_is_admin_of);
 }
