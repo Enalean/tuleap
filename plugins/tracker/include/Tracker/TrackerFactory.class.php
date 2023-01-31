@@ -574,6 +574,7 @@ class TrackerFactory implements RetrieveTracker
             'group_id'          => $to_project_id,
             'ugroups_mapping'   => $mapping_registry->getUgroupMapping(),
             'source_project_id' => $from_project_id,
+            'mapping_registry'  => $mapping_registry,
         ]);
     }
 
