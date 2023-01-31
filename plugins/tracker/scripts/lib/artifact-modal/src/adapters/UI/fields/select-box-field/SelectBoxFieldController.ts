@@ -76,7 +76,10 @@ export const SelectBoxFieldController = (
                 value_model.bind_value_ids = value_model.bind_value_ids.filter((bind_value_id) =>
                     event.allowed_bind_value_ids.includes(bind_value_id)
                 );
-                if (event.allowed_bind_value_ids.length === 1) {
+                if (
+                    value_model.bind_value_ids.length === 0 &&
+                    event.allowed_bind_value_ids.length > 0
+                ) {
                     value_model.bind_value_ids = [event.allowed_bind_value_ids[0]];
                 }
 
