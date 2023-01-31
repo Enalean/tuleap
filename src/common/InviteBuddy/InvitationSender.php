@@ -79,7 +79,7 @@ class InvitationSender
             );
 
             if ($this->email_notifier->send($current_user, $recipient, $custom_message, $token)) {
-                $this->instrumentation->increment();
+                $this->instrumentation->incrementPlatformInvitation();
                 $this->dao->markAsSent($invitation_id);
             } else {
                 $this->logger->error("Unable to send invitation from user #{$current_user->getId()} to $email");

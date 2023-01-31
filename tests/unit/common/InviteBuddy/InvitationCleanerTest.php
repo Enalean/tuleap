@@ -33,7 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
-class InvitationCleanerTest extends TestCase
+final class InvitationCleanerTest extends TestCase
 {
     use TemporaryTestDirectory;
     use ForgeConfigSandbox;
@@ -44,6 +44,10 @@ class InvitationCleanerTest extends TestCase
 
     private \PFUser $jane;
     private \PFUser $john;
+    /**
+     * @var InvitationInstrumentation&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $invitation_instrumentation;
 
     protected function setUp(): void
     {
@@ -80,6 +84,8 @@ class InvitationCleanerTest extends TestCase
             ]
         );
         \UserManager::setInstance($user_manager);
+
+        $this->invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
     }
 
     protected function tearDown(): void
@@ -96,12 +102,15 @@ class InvitationCleanerTest extends TestCase
             $purger,
             new LocaleSwitcher(),
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
-            static function (\Codendi_Mail $mail) use ($captured_sent_mails): void {
+            static function (\Codendi_Mail $mail) use (&$captured_sent_mails): void {
                 $captured_sent_mails[] = $mail;
             },
             RetrieveUserByIdStub::withNoUser(),
             ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->invitation_instrumentation,
         );
+
+        $this->invitation_instrumentation->expects(self::never())->method('incrementExpiredInvitations');
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 
@@ -143,7 +152,10 @@ class InvitationCleanerTest extends TestCase
             },
             RetrieveUserByIdStub::withUsers($this->jane, $this->john),
             ProjectByIDFactoryStub::buildWith($project),
+            $this->invitation_instrumentation,
         );
+
+        $this->invitation_instrumentation->expects(self::once())->method('incrementExpiredInvitations')->with(2);
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 
@@ -185,7 +197,10 @@ class InvitationCleanerTest extends TestCase
             },
             RetrieveUserByIdStub::withUsers($this->jane, $this->john),
             ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->invitation_instrumentation,
         );
+
+        $this->invitation_instrumentation->expects(self::once())->method('incrementExpiredInvitations')->with(2);
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 
@@ -223,7 +238,10 @@ class InvitationCleanerTest extends TestCase
             },
             RetrieveUserByIdStub::withUsers($this->jane, $this->john),
             ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->invitation_instrumentation,
         );
+
+        $this->invitation_instrumentation->expects(self::once())->method('incrementExpiredInvitations')->with(2);
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 
@@ -257,7 +275,10 @@ class InvitationCleanerTest extends TestCase
             },
             RetrieveUserByIdStub::withUsers($this->jane, $this->john),
             ProjectByIDFactoryStub::buildWithoutProject(),
+            $this->invitation_instrumentation,
         );
+
+        $this->invitation_instrumentation->expects(self::once())->method('incrementExpiredInvitations')->with(2);
 
         $cleaner->cleanObsoleteInvitations(new \DateTimeImmutable());
 

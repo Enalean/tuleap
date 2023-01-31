@@ -26,21 +26,35 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 
 class InvitationInstrumentation
 {
-    private const METRIC_NAME = 'user_invitations_total';
-    private const HELP        = 'Total number of invitations sent by users';
+    private const INVITATION_METRIC_NAME           = 'user_invitations_total';
+    private const INVITATION_METRIC_HELP           = 'Total number of invitations sent by users';
+    private const INVITATION_COMPLETED_METRIC_NAME = 'completed_user_invitations_total';
+    private const INVITATION_COMPLETED_METRIC_HELP = 'Total number of completed user invitations';
 
-    /**
-     * @var Prometheus
-     */
-    private $prometheus;
-
-    public function __construct(Prometheus $prometheus)
+    public function __construct(private Prometheus $prometheus)
     {
-        $this->prometheus = $prometheus;
     }
 
-    public function increment(): void
+    public function incrementProjectInvitation(): void
     {
-        $this->prometheus->increment(self::METRIC_NAME, self::HELP);
+        $this->prometheus->increment(self::INVITATION_METRIC_NAME, self::INVITATION_METRIC_HELP, ['type' => 'project']);
+    }
+
+    public function incrementPlatformInvitation(): void
+    {
+        $this->prometheus->increment(self::INVITATION_METRIC_NAME, self::INVITATION_METRIC_HELP, ['type' => 'platform']);
+    }
+
+    public function incrementUsedInvitation(): void
+    {
+        $this->prometheus->increment(self::INVITATION_COMPLETED_METRIC_NAME, self::INVITATION_COMPLETED_METRIC_HELP, ['type' => 'used']);
+    }
+
+    /**
+     * @psalm-param positive-int $nb
+     */
+    public function incrementExpiredInvitations(int $nb): void
+    {
+        $this->prometheus->incrementBy(self::INVITATION_COMPLETED_METRIC_NAME, self::INVITATION_COMPLETED_METRIC_HELP, $nb, ['type' => 'expired']);
     }
 }

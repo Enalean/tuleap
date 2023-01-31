@@ -201,6 +201,7 @@ $CLI_command_collector->addCommand(
                 },
                 UserManager::instance(),
                 ProjectManager::instance(),
+                new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
             ),
         );
     }

@@ -29,7 +29,7 @@ use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\ForgeConfigSandbox;
 use UserManager;
 
-class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
@@ -76,7 +76,7 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->email_notifier->expects(self::once())->method("send")->willReturn(true);
         $this->dao->method('create');
         $this->dao->method('markAsSent');
-        $this->instrumentation->method('increment');
+        $this->instrumentation->method('incrementPlatformInvitation');
 
         $this->sender->send($this->current_user, ["john@example.com"], null);
     }
@@ -147,7 +147,7 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->instrumentation
             ->expects(self::exactly(2))
-            ->method('increment');
+            ->method('incrementPlatformInvitation');
 
 
         $this->dao
@@ -192,7 +192,7 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->instrumentation
             ->expects(self::once())
-            ->method('increment');
+            ->method('incrementPlatformInvitation');
 
         self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"], null));
     }
@@ -241,7 +241,7 @@ class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->instrumentation
             ->expects(self::once())
-            ->method('increment');
+            ->method('incrementPlatformInvitation');
         $this->logger
             ->expects(self::once())
             ->method('error')
