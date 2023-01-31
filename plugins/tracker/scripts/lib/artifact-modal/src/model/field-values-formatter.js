@@ -19,7 +19,7 @@
 
 import AwkwardCreationFields from "./awkward-creation-fields-constant.js";
 import { formatExistingValue as formatForLinkField } from "../fields/link-field/link-field-initializer.js";
-import { formatExistingValue as formatForDateField } from "../fields/date-field/date-field-initializer.js";
+import { buildEditableDateFieldValue } from "../adapters/UI/fields/date-field/date-field-value-builder.ts";
 import {
     formatDefaultValue as defaultForOpenListField,
     formatExistingValue as formatForOpenListField,
@@ -68,7 +68,7 @@ function formatExistingValue(field, artifact_value) {
 
     switch (field.type) {
         case "date":
-            value_obj = formatForDateField(field, artifact_value);
+            value_obj = buildEditableDateFieldValue(field, artifact_value.value);
             break;
         case "cb":
             value_obj.bind_value_ids = mapCheckboxValues(field, artifact_value.bind_value_ids);

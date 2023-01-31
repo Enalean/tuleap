@@ -29,6 +29,7 @@ import type {
     PermissionFieldIdentifier,
     RadioButtonFieldIdentifier,
     SubmissionDateFieldIdentifier,
+    Permission,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -48,13 +49,22 @@ export interface UnknownFieldStructure extends BaseFieldStructure {
     readonly type: never;
 }
 
-export interface DateFieldStructure extends BaseFieldStructure {
-    readonly type:
-        | DateFieldIdentifier
-        | LastUpdateDateFieldIdentifier
-        | SubmissionDateFieldIdentifier;
+export interface CommonDateFieldStructure extends BaseFieldStructure {
     readonly is_time_displayed: boolean;
 }
+
+export interface ReadonlyDateFieldStructure extends CommonDateFieldStructure {
+    readonly type: LastUpdateDateFieldIdentifier | SubmissionDateFieldIdentifier;
+}
+
+export interface EditableDateFieldStructure extends CommonDateFieldStructure {
+    readonly type: DateFieldIdentifier;
+    readonly label: string;
+    readonly permissions: ReadonlyArray<Permission>;
+    readonly required: boolean;
+}
+
+export type DateFieldStructure = ReadonlyDateFieldStructure | EditableDateFieldStructure;
 
 export interface ContainerFieldStructure extends BaseFieldStructure {
     readonly type: ColumnIdentifier | FieldSetIdentifier;
