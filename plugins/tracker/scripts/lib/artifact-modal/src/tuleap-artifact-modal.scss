@@ -23,6 +23,7 @@
 @use "adapters/UI/fields/burndown-field/bundown-field";
 @use "adapters/UI/fields/file-field/file-field";
 @use "adapters/UI/fields/user-avatar-field/user-avatar-field";
+@use "adapters/UI/fields/select-box-field/select-box-field";
 @import "fields/computed-field/computed-field";
 @import "fields/open-list-field/open-list-field";
 @import "@tuleap/list-picker";

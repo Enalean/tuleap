@@ -22,6 +22,7 @@ import type { ControlSelectBoxField } from "./SelectBoxFieldController";
 import type { SelectBoxFieldPresenter } from "./SelectBoxFieldPresenter";
 import { buildSelectBox } from "./SelectBoxFieldTemplate";
 import type { BindValueId } from "../../../../domain/fields/select-box-field/BindValueId";
+import { highlightSelectBoxField } from "./SelectBoxHighlighter";
 
 export interface SelectBoxField {
     readonly content: () => HTMLElement;
@@ -71,6 +72,8 @@ export const SelectBoxField = define<SelectBoxField>({
             controller.onDependencyChange((bind_value_ids, presenter) => {
                 host.bind_value_ids = bind_value_ids;
                 host.field_presenter = presenter;
+
+                highlightSelectBoxField(host);
             });
 
             setTimeout(() => controller.setSelectedValue(host.bind_value_ids));
