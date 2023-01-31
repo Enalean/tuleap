@@ -14,7 +14,7 @@ Summary:        Highly flexible server for git directory version tracker
 
 License:        GPLv2 and CC-BY-SA
 URL:            http://github.com/sitaramc/gitolite
-Source0:        https://github.com/sitaramc/gitolite/archive/v%{gitolite_version}.tar.gz
+Source0:        gitolite-src.tar
 
 BuildArch:      noarch
 
@@ -45,7 +45,7 @@ elsewhere in the doc/ directory.
 
 
 %prep
-%setup -qn gitolite-%{gitolite_version}
+%setup -qc
 
 %build
 #This page intentionally left blank.
