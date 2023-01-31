@@ -115,7 +115,7 @@ describe("SelectBoxFieldController", () => {
             - and notify potential target fields about its value update`, () => {
             const callback = jest.fn();
 
-            value_model.bind_value_ids = [option_1_value];
+            value_model.bind_value_ids = [option_1_value, option_2_value];
 
             getController().onDependencyChange(callback);
             event_dispatcher.dispatch(DidChangeAllowedValues(field.field_id, [option_2_value]));
@@ -138,6 +138,33 @@ describe("SelectBoxFieldController", () => {
             const [fired_event] = did_change_list_field_value_events;
             expect(fired_event.field_id).toStrictEqual(field.field_id);
             expect(fired_event.bind_value_ids).toStrictEqual([option_2_value]);
+        });
+
+        it(`Given that a DidChangeAllowedValues has been received
+            When the selected values are not allowed anymore
+            Then it should select the first possible allowed value`, () => {
+            value_model.bind_value_ids = [option_1_value];
+
+            getController().onDependencyChange(() => {
+                /* Do nothing */
+            });
+            event_dispatcher.dispatch(DidChangeAllowedValues(field.field_id, [option_2_value]));
+
+            expect(value_model.bind_value_ids).toStrictEqual([option_2_value]);
+        });
+
+        it(`Given that a DidChangeAllowedValues has been received
+            When the selected values are not allowed anymore
+            And there is no allowed value anymore
+            Then it should only clear the previous selection`, () => {
+            value_model.bind_value_ids = [option_1_value];
+
+            getController().onDependencyChange(() => {
+                /* Do nothing */
+            });
+            event_dispatcher.dispatch(DidChangeAllowedValues(field.field_id, []));
+
+            expect(value_model.bind_value_ids).toStrictEqual([]);
         });
     });
 
