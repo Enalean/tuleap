@@ -191,7 +191,6 @@ const webpack_config_for_burning_parrot_code = {
         "project-admin-ugroups": "./src/project/admin/src/project-admin-ugroups.ts",
         "project/project-banner": "./src/project/banner/index.ts",
         "platform/platform-banner": "./src/platform/banner/index.ts",
-        "project/project-registration-creation": "./src/project/registration/index-for-modal.ts",
         "site-admin-generate-pie-charts": "./src/site-admin/generate-pie-charts.ts",
         "site-admin-mass-emailing": "./src/site-admin/massmail.ts",
         "site-admin-most-recent-logins": "./src/site-admin/most-recent-logins.ts",
@@ -252,7 +251,6 @@ const webpack_config_for_vue = {
         "project/project-admin-banner": "./src/project/admin/banner/index-banner-project-admin.ts",
         "site-admin/platform-banner": "./src/platform/banner/admin/index-platform-banner-admin.ts",
         "project-admin-services": "./src/project/admin/services/src/index-project-admin.js",
-        "project/project-registration": "./src/project/registration/index.ts",
         "site-admin-services": "./src/project/admin/services/src/index-site-admin.js",
     },
     context,
@@ -367,10 +365,6 @@ const theme_entry_points = {
     "dashboards-style": "./node_modules/@tuleap/burningparrot-theme/css/dashboards/dashboards.scss",
     "account-registration-style":
         "./node_modules/@tuleap/burningparrot-theme/css/account-registration/account-registration.scss",
-    "project-registration-style":
-        "./node_modules/@tuleap/burningparrot-theme/css/project-registration/project-registration.scss",
-    "project-registration-creation-style":
-        "./node_modules/@tuleap/burningparrot-theme/css/project-registration-creation/project-creation-modal.scss",
     "BurningParrot/burning-parrot":
         "./node_modules/@tuleap/burningparrot-theme/css/burning-parrot.scss",
 };

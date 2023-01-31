@@ -29,7 +29,7 @@
             id="trovecat"
             name="trovecat"
             required
-            v-on:change="updateTroveCategories(trovecat.id, $event.target.value)"
+            v-on:change="updateTroveCategories(trovecat.id, $event)"
             data-test="trove-category-list"
         >
             <option></option>
@@ -55,8 +55,12 @@ export default class TroveCategoryList extends Vue {
     @Prop({ required: true })
     readonly trovecat!: TroveCatData;
 
-    updateTroveCategories(category_id: number, value_id: number): void {
-        EventBus.$emit("choose-trove-cat", { category_id: category_id, value_id: value_id });
+    updateTroveCategories(category_id: string, event: Event): void {
+        if (!(event.target instanceof HTMLSelectElement)) {
+            return;
+        }
+        const value_id = event.target.value;
+        EventBus.$emit("choose-trove-cat", { category_id, value_id });
     }
 }
 </script>

@@ -31,7 +31,7 @@
             name="description"
             v-bind:placeholder="$gettext('My useful project description')"
             v-bind:required="is_description_required"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="onInput"
             data-test="project-description"
         />
     </div>
@@ -47,5 +47,12 @@ const configuration = namespace("configuration");
 export default class FieldDescription extends Vue {
     @configuration.State
     is_description_required!: boolean;
+
+    onInput(event: Event): void {
+        if (!(event.target instanceof HTMLTextAreaElement)) {
+            return;
+        }
+        this.$emit("input", event.target.value);
+    }
 }
 </script>

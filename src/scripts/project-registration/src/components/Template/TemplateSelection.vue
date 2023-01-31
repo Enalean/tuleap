@@ -91,12 +91,12 @@ const configuration = namespace("configuration");
     },
 })
 export default class TemplateSelection extends Vue {
-    private readonly CATEGORY_TULEAP = "Tuleap";
-    private readonly CATEGORY_ACME = "ACME";
-    private readonly CATEGORY_ADVANCED = "Advanced";
+    readonly CATEGORY_TULEAP = "Tuleap";
+    readonly CATEGORY_ACME = "ACME";
+    readonly CATEGORY_ADVANCED = "Advanced";
 
-    private external_templates_categories: ExternalTemplateCategory[] = [];
-    private categorised_external_templates_map = new Map<string, ExternalTemplateData[]>();
+    external_templates_categories: ExternalTemplateCategory[] = [];
+    categorised_external_templates_map = new Map<string, ExternalTemplateData[]>();
 
     @configuration.State
     company_name!: string;

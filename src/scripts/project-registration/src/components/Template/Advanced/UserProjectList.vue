@@ -65,7 +65,7 @@ export default class UserProjectList extends Vue {
         }
     }
 
-    private selected_project: TemplateData | string = "";
+    selected_project: TemplateData | string = "";
 
     mounted(): void {
         if (this.selectedCompanyTemplate !== null) {

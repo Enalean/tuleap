@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,16 +14,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal } from "tlp";
-
-document.addEventListener("DOMContentLoaded", () => {
-    const congratulation_modal_content = document.getElementById("project-creation-success-modal");
-    if (congratulation_modal_content) {
-        const congratulation_modal = createModal(congratulation_modal_content);
-        congratulation_modal.show();
-    }
-});
+declare module "*.vue" {
+    import Vue from "vue";
+    export default Vue;
+}

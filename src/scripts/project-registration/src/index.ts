@@ -17,15 +17,19 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../themes/project-registration/project-registration.scss";
 import Vue from "vue";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
-import App from "./src/components/App.vue";
-import type { TemplateData, TroveCatData } from "./src/type";
-import { createStore } from "./src/store";
-import type { RootState } from "./src/store/type";
+import {
+    getPOFileFromLocaleWithoutExtension,
+    initVueGettextFromPoGettextPlugin,
+} from "@tuleap/vue2-gettext-init";
+import App from "./components/App.vue";
+import type { TemplateData, TroveCatData } from "./type";
+import { createStore } from "./store";
+import type { RootState } from "./store/type";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { createRouter } from "./src/router";
-import type { ConfigurationState } from "./src/store/configuration";
+import { createRouter } from "./router";
+import type { ConfigurationState } from "./store/configuration";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("project-registration");
@@ -33,13 +37,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(
+    await initVueGettextFromPoGettextPlugin(
         Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "project/project-registration-po-" */ "./po/" +
-                    getPOFileFromLocale(locale)
-            )
+        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`)
     );
 
     const tuleap_templates_json = vue_mount_point.dataset.availableTuleapTemplates;
