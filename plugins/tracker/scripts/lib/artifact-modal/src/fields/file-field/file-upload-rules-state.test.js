@@ -18,7 +18,7 @@
  */
 
 import { updateFileUploadRulesWhenNeeded, file_upload_rules } from "./file-upload-rules-state.js";
-import * as file_field_detector from "./file-field-detector";
+import * as file_field_detector from "../../adapters/UI/fields/file-field/file-field-detector";
 import * as rest_service from "../../rest/rest-service";
 
 describe("FileUploadRulesUpdater() -", () => {

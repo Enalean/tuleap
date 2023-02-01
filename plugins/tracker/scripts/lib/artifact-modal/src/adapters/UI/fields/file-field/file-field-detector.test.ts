@@ -23,7 +23,7 @@ import {
     getFirstFileField,
 } from "./file-field-detector";
 import * as disabled_field_detector from "../disabled-field-detector";
-import type { Field } from "../../domain/fields/Field";
+import type { Field } from "../../../../domain/fields/Field";
 
 describe("file-field-detector", () => {
     let isDisabled: jest.SpyInstance;

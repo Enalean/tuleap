@@ -19,7 +19,7 @@
 
 import type { HostElement } from "./RadioButtonsField";
 import { RadioButtonsField, onInput } from "./RadioButtonsField";
-import { setCatalog } from "../../gettext-catalog";
+import { setCatalog } from "../../../../gettext-catalog";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 

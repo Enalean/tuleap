@@ -25,8 +25,8 @@ import BaseModalController from "./tuleap-artifact-modal-controller.js";
 
 import * as modal_create_mode_state from "./modal-creation-mode-state";
 import * as rest_service from "./rest/rest-service";
-import * as file_field_detector from "./fields/file-field/file-field-detector";
-import * as is_uploading_in_ckeditor_state from "./fields/file-field/is-uploading-in-ckeditor-state";
+import * as file_field_detector from "./adapters/UI/fields/file-field/file-field-detector";
+import * as is_uploading_in_ckeditor_state from "./common/is-uploading-in-ckeditor-state";
 import * as fields_validator from "./validate-artifact-field-value.js";
 import * as field_dependencies_helper from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 

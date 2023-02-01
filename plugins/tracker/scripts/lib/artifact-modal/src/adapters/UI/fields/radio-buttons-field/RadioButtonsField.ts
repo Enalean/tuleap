@@ -18,7 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
-import { getNone } from "../../gettext-catalog";
+import { getNone } from "../../../../gettext-catalog";
 
 export const RADIO_BUTTONS_NONE_VALUE = "100";
 

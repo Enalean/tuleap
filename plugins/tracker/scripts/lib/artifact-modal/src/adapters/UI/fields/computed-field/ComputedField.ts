@@ -25,7 +25,7 @@ import {
     getComputedValueLabel,
     getEmptyLabel,
     getEditButtonLabel,
-} from "../../gettext-catalog";
+} from "../../../../gettext-catalog";
 
 export type AllowedValue = number | "";
 

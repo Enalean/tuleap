@@ -35,12 +35,12 @@ import UgroupsOpenListFieldDirective from "./fields/open-list-field/ugroups-open
 import UsersOpenListFieldDirective from "./fields/open-list-field/users-open-list-field-directive.js";
 import AwkwardCreationFields from "./model/awkward-creation-fields-constant.js";
 
-import "./fields/computed-field/ComputedField";
-import "./fields/float-field/FloatField";
-import "./fields/int-field/IntField";
-import "./fields/radio-buttons-field/RadioButtonsField";
-import "./fields/string-field/StringField";
-import "./fields/text-field/TextField";
+import "./adapters/UI/fields/computed-field/ComputedField";
+import "./adapters/UI/fields/float-field/FloatField";
+import "./adapters/UI/fields/int-field/IntField";
+import "./adapters/UI/fields/radio-buttons-field/RadioButtonsField";
+import "./adapters/UI/fields/string-field/StringField";
+import "./adapters/UI/fields/text-field/TextField";
 import "./adapters/UI/fields/link-field/LinkField";
 import "./adapters/UI/fields/date-field/DateField";
 import "./adapters/UI/fields/burndown-field/BurndownField";
