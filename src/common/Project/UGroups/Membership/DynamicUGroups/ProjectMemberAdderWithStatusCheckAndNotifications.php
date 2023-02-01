@@ -58,10 +58,10 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         );
     }
 
-    public function addProjectMemberWithFeedback(\PFUser $user, \Project $project): void
+    public function addProjectMemberWithFeedback(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         try {
-            $this->addProjectMember($user, $project);
+            $this->addProjectMember($user, $project, $project_admin);
             $GLOBALS['Response']->addFeedback(Feedback::INFO, _('User added'));
         } catch (UserIsNotActiveOrRestrictedException) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
@@ -71,6 +71,8 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (NoEmailForUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('No email for user account'));
+        } catch (NotProjectAdminException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Must be project admin to add a project member'));
         }
     }
 
@@ -79,14 +81,15 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
      * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      * @throws AlreadyProjectMemberException
      * @throws NoEmailForUserException
+     * @throws NotProjectAdminException
      */
-    public function addProjectMember(\PFUser $user, \Project $project): void
+    public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         if (! $user->isActive() && ! $user->isRestricted()) {
             throw new UserIsNotActiveOrRestrictedException();
         }
 
-        $this->project_member_adder->addProjectMember($user, $project);
+        $this->project_member_adder->addProjectMember($user, $project, $project_admin);
         $this->sendNotification($user, $project);
     }
 

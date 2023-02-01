@@ -2211,6 +2211,9 @@ msgstr "O monitoramento foi desativado"
 msgid "Month"
 msgstr "Mês"
 
+msgid "Must be project admin to add a project member"
+msgstr ""
+
 msgid "Must choose a message first"
 msgstr "Deve escolher uma mensagem primeiro"
 

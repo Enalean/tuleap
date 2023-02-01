@@ -24,13 +24,14 @@ use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowi
 
 interface ProjectMemberAdder
 {
-    public function addProjectMemberWithFeedback(\PFUser $user, \Project $project): void;
+    public function addProjectMemberWithFeedback(\PFUser $user, \Project $project, \PFUser $project_admin): void;
 
     /**
      * @throws UserIsNotActiveOrRestrictedException
      * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      * @throws AlreadyProjectMemberException
      * @throws NoEmailForUserException
+     * @throws NotProjectAdminException
      */
-    public function addProjectMember(\PFUser $user, \Project $project): void;
+    public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void;
 }

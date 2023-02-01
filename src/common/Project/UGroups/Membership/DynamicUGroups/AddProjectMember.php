@@ -72,13 +72,16 @@ class AddProjectMember
         );
     }
 
-    public function addProjectMember(\PFUser $user, \Project $project): void
+    public function addProjectMember(\PFUser $user, \Project $project, \PFUser $project_admin): void
     {
         if (\ForgeConfig::areRestrictedUsersAllowed() && $user->isRestricted() && $project->getAccess() === \Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             throw new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $project);
         }
         if ($this->dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
             throw new AlreadyProjectMemberException(_('User is already member of the project'));
+        }
+        if (! $project_admin->isAdmin((int) $project->getID())) {
+            throw new NotProjectAdminException();
         }
 
         $this->dao->addUserAsProjectMember((int) $project->getID(), (int) $user->getId());
@@ -97,7 +100,14 @@ class AddProjectMember
             ]
         );
 
-        $this->history_dao->groupAddHistory('added_user', $user->getUserName(), $project->getID(), [$user->getUserName()]);
+        $this->history_dao->addHistory(
+            $project,
+            $project_admin,
+            new \DateTimeImmutable('now'),
+            'added_user',
+            $user->getUserName(),
+            [$user->getUserName()],
+        );
 
         $this->ugroup_binding->reloadUgroupBindingInProject($project);
     }

@@ -2230,6 +2230,9 @@ msgstr "La surveillance du forum est arrêté"
 msgid "Month"
 msgstr "Mois"
 
+msgid "Must be project admin to add a project member"
+msgstr "Doit être administrateur de projet pour ajouter un membre de projet"
+
 msgid "Must choose a message first"
 msgstr "Veuillez d'abord choisir un message"
 

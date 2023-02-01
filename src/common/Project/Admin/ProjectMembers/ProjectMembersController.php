@@ -231,7 +231,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
             case 'import':
                 $this->csrf_token->check();
-                $this->importMembers($project);
+                $this->importMembers($project, $user);
                 $this->redirect($project, $layout);
                 break;
 
@@ -442,7 +442,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         return $this->ugroup_presenters[$ugroup_id];
     }
 
-    private function importMembers(Project $project)
+    private function importMembers(Project $project, PFUser $project_admin)
     {
         $import_file = $_FILES['user_filename']['tmp_name'];
 
@@ -453,7 +453,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
         $user_collection = $this->user_importer->parse($project->getID(), $import_file);
         if ($user_collection) {
-            $this->user_importer->updateDB($project, $user_collection);
+            $this->user_importer->updateDB($project, $user_collection, $project_admin);
             $this->user_group_bindings->reloadUgroupBindingInProject($project);
         }
     }

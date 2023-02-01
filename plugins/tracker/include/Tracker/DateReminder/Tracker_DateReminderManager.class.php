@@ -166,7 +166,7 @@ class Tracker_DateReminderManager
 
         // 3. Send the notification
         foreach ($messages as $m) {
-            $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+            $historyDao = new ProjectHistoryDao();
             $historyDao->groupAddHistory("tracker_date_reminder_sent", $this->tracker->getName() . ":" . $reminder->getField()->getId(), $this->tracker->getGroupId(), $m['recipients']);
             $this->sendReminder($artifact, $m['recipients'], $m['headers'], $m['subject'], $m['htmlBody'], $m['txtBody']);
         }

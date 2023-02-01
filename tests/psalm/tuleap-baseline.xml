@@ -4200,6 +4200,11 @@
       <code>$this-&gt;getUserGroupsPresenter($readers_ugroup_id, $project)</code>
     </ArgumentTypeCoercion>
   </file>
+  <file src="plugins/baseline/include/Adapter/Administration/RoleAssignmentsHistoryEntryAdder.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/baseline/include/Adapter/ArtifactLinkRepository.php">
     <DeprecatedMethod>
       <code>getAnArtifactLinkField</code>
@@ -15888,6 +15893,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git.class.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code>$p[1]</code>
     </InvalidArgument>
@@ -17758,6 +17767,9 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Mirror/MirrorResourceRestrictor.class.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code>allowProjectOnMirror</code>
       <code>isMirrorRestricted</code>
@@ -17775,6 +17787,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Mirror/MirrorUpdater.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code>updateRepositoryMirrors</code>
     </MissingReturnType>
@@ -18397,6 +18412,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Permissions/TemplatePermissionsUpdater.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$enable_fine_grained_permissions</code>
       <code>$enable_fine_grained_permissions</code>
@@ -18620,6 +18639,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/RemoteServer/Gerrit/MigrationHandler.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$disconnect_option</code>
       <code>$disconnect_option</code>
@@ -18827,6 +18851,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Repository/DescriptionUpdater.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$description</code>
     </MissingParamType>
@@ -18867,6 +18894,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Repository/RepositoryCreator.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <PossiblyInvalidArgument>
       <code>$project-&gt;getID()</code>
       <code>$project-&gt;getID()</code>
@@ -19386,6 +19417,20 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/git/include/GitActions.class.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$enable_fine_grained_permissions</code>
       <code>$enable_fine_grained_permissions</code>
@@ -20823,6 +20868,9 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/GitRepositoryManager.class.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$bundle_path</code>
       <code>$bundle_path</code>
@@ -25395,6 +25443,9 @@
     </PossiblyFalseArgument>
   </file>
   <file src="plugins/ldap/include/LDAP_ProjectGroupManager.class.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidReturnStatement>
       <code>$project-&gt;getMembersId()</code>
     </InvalidReturnStatement>
@@ -26999,6 +27050,11 @@
     <InvalidReturnType>
       <code>Ok&lt;string&gt;|Err&lt;Fault&gt;</code>
     </InvalidReturnType>
+  </file>
+  <file src="plugins/mediawiki_standalone/include/Permissions/Admin/ProjectPermissionsSaver.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/mediawiki_standalone/include/REST/OAuth2/OAuth2MediawikiStandaloneReadScope.php">
     <InvalidReturnStatement>
@@ -29221,6 +29277,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/DefaultSettings/DefaultSettingsController.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code>$is_merge_commit_allowed</code>
     </InvalidArgument>
@@ -31013,6 +31072,8 @@
   <file src="plugins/statistics/include/ProjectQuotaManager.class.php">
     <DeprecatedMethod>
       <code>getRow</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
       <code>isError</code>
       <code>rowCount</code>
     </DeprecatedMethod>
@@ -32199,6 +32260,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/AccessControl/AccessFileHistoryCreator.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$content</code>
       <code>$content</code>
@@ -32444,6 +32509,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Admin/ImmutableTagCreator.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$immutable_tags_path</code>
       <code>$immutable_tags_path</code>
@@ -32638,6 +32706,7 @@
   <file src="plugins/svn/include/SVN/Admin/MailNotificationManager.php">
     <DeprecatedMethod>
       <code>commit</code>
+      <code>groupAddHistory</code>
       <code>rollback</code>
       <code>rollback</code>
       <code>rollback</code>
@@ -33603,6 +33672,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Repository/HookConfigUpdator.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code>initHookConfiguration</code>
       <code>update</code>
@@ -33656,6 +33728,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Repository/RepositoryCreator.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$copy_from_core</code>
       <code>$copy_from_core</code>
@@ -33680,6 +33756,9 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/svn/include/SVN/Repository/RepositoryDeleter.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <PossiblyInvalidArgument>
       <code>$repository-&gt;getProject()-&gt;getID()</code>
     </PossiblyInvalidArgument>
@@ -34547,6 +34626,11 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Admin/AdminController.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$selected_read_ugroup</code>
       <code>$selected_write_ugroup</code>
@@ -36045,6 +36129,10 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Admin/GlobalAdmin/Trackers/PromoteTrackersController.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidReturnType>
       <code>process</code>
     </InvalidReturnType>
@@ -36351,6 +36439,7 @@
   <file src="plugins/tracker/include/Tracker/Artifact/ArtifactsDeletion/ArtifactDeletor.php">
     <DeprecatedMethod>
       <code>commit</code>
+      <code>groupAddHistory</code>
       <code>startTransaction</code>
     </DeprecatedMethod>
     <MissingReturnType>
@@ -39091,6 +39180,9 @@
       <code>$dar</code>
       <code>$dar</code>
       <code>getRow</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
       <code>isError</code>
       <code>isError</code>
       <code>isError</code>
@@ -39121,6 +39213,9 @@
     </UndefinedVariable>
   </file>
   <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminderManager.class.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <ImplicitToStringCast>
       <code>$user</code>
     </ImplicitToStringCast>
@@ -41484,6 +41579,9 @@
       <code>$layout</code>
       <code>$request</code>
     </ArgumentTypeCoercion>
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidNullableReturnType>
       <code>DataAccessObject</code>
     </InvalidNullableReturnType>
@@ -45056,6 +45154,9 @@
     </InvalidScalarArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/Settings/NotificationsUserSettingsUpdateController.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidReturnType>
       <code>process</code>
     </InvalidReturnType>
@@ -50769,6 +50870,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Tracker_NotificationsManager.class.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$addresses</code>
       <code>$email_address</code>
@@ -54037,6 +54142,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker_encryption/include/Tracker_Key.class.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$group_id</code>
       <code>$id_tracker</code>
@@ -54958,9 +55066,6 @@
     <MissingReturnType>
       <code>configure</code>
     </MissingReturnType>
-    <UndefinedInterfaceMethod>
-      <code>ask</code>
-    </UndefinedInterfaceMethod>
   </file>
   <file src="src/common/CLI/Command/WorkerSupervisorCommand.php">
     <MissingClosureParamType>
@@ -56836,6 +56941,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/FRS/FRSPermissionCreator.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$new_access</code>
       <code>$old_access</code>
@@ -57263,6 +57371,9 @@
     <DeprecatedMethod>
       <code>$list</code>
       <code>$list</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
     </DeprecatedMethod>
     <InvalidArgument>
       <code>$fileModuleId</code>
@@ -57983,6 +58094,7 @@
   <file src="src/common/Label/REST/LabelsUpdater.php">
     <DeprecatedMethod>
       <code>commit</code>
+      <code>groupAddHistory</code>
       <code>rollBack</code>
       <code>startTransaction</code>
     </DeprecatedMethod>
@@ -59544,6 +59656,9 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/Project/Admin/Categories/ProjectCategoriesUpdater.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <PossiblyInvalidArgument>
       <code>$project-&gt;getID()</code>
     </PossiblyInvalidArgument>
@@ -59909,6 +60024,9 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Project/Admin/ProjectDetails/ProjectDetailsController.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidScalarArgument>
       <code>$child-&gt;getID()</code>
       <code>$parent-&gt;getID()</code>
@@ -60499,6 +60617,8 @@
   </file>
   <file src="src/common/Project/Admin/ProjectUGroup/BindingController.php">
     <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
       <code>userIsAdmin</code>
     </DeprecatedMethod>
     <MissingReturnType>
@@ -60543,6 +60663,9 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/common/Project/Admin/ProjectUGroup/DelegationController.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code>(int) $has_membership_management</code>
     </InvalidArgument>
@@ -61137,6 +61260,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/Label/AddController.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$new_color</code>
     </MissingParamType>
@@ -61161,6 +61287,7 @@
   <file src="src/common/Project/Label/DeleteController.php">
     <DeprecatedMethod>
       <code>commit</code>
+      <code>groupAddHistory</code>
       <code>rollBack</code>
       <code>startTransaction</code>
     </DeprecatedMethod>
@@ -61175,6 +61302,7 @@
   <file src="src/common/Project/Label/EditController.php">
     <DeprecatedMethod>
       <code>commit</code>
+      <code>groupAddHistory</code>
       <code>rollBack</code>
       <code>startTransaction</code>
     </DeprecatedMethod>
@@ -61673,6 +61801,9 @@
       <code>foundRows</code>
       <code>foundRows</code>
       <code>foundRows</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
     </DeprecatedMethod>
     <FalsableReturnStatement>
       <code>false</code>
@@ -62453,11 +62584,6 @@
       <code>$ugroup_id</code>
     </MissingParamType>
   </file>
-  <file src="src/common/Project/UGroups/Membership/DynamicUGroups/AddProjectMember.php">
-    <PossiblyInvalidArgument>
-      <code>$project-&gt;getID()</code>
-    </PossiblyInvalidArgument>
-  </file>
   <file src="src/common/Project/UGroups/Membership/DynamicUGroups/DynamicUGroupMembersUpdater.php">
     <MissingReturnType>
       <code>addForumAdministrator</code>
@@ -62575,6 +62701,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/UserRemover.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$admin_action</code>
       <code>$admin_action</code>
@@ -65607,12 +65736,9 @@
   <file src="src/common/User/LoginManager.class.php">
     <MissingParamType>
       <code>$hashed_password</code>
-      <code>$legacy_hashed_password</code>
     </MissingParamType>
     <MissingReturnType>
       <code>authenticateFromDatabase</code>
-      <code>checkPasswordStorageConformity</code>
-      <code>isLegacyPasswordRemovalNeeded</code>
       <code>isPasswordUpdatingNeeded</code>
       <code>validateAndSetCurrentUser</code>
     </MissingReturnType>
@@ -66033,7 +66159,6 @@
       <code>getAllUgroups</code>
       <code>getDynamicUgroups</code>
       <code>getEmailNew</code>
-      <code>getLegacyUserPw</code>
       <code>getPermissionManager</code>
       <code>getPreferencesDao</code>
       <code>getPublicProfileUrl</code>
@@ -67300,10 +67425,6 @@
       <code>$widget_id</code>
       <code>$widget_id</code>
     </MissingParamType>
-    <MissingPropertyType>
-      <code>$rss_title</code>
-      <code>$rss_url</code>
-    </MissingPropertyType>
     <MissingReturnType>
       <code>cloneContent</code>
       <code>destroy</code>
@@ -67925,6 +68046,11 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/admin/ProjectEdit/ProjectEditController.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidScalarArgument>
       <code>$project-&gt;getID()</code>
       <code>$project-&gt;getID()</code>
@@ -70240,23 +70366,6 @@
     </InvalidFalsableReturnType>
   </file>
   <file src="src/common/dao/ProjectHistoryDao.class.php">
-    <DeprecatedMethod>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>foundRows</code>
-      <code>parent::__construct($da)</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-    </DeprecatedMethod>
-    <InvalidParamDefault>
-      <code>int</code>
-    </InvalidParamDefault>
     <PossiblyUndefinedArrayOffset>
       <code>$_SERVER['REQUEST_TIME']</code>
     </PossiblyUndefinedArrayOffset>
@@ -73775,6 +73884,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/system_event/include/SystemEvent_PROJECT_RENAME.class.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <FalseOperand>
       <code>false</code>
       <code>false</code>
@@ -77649,6 +77761,9 @@
       <code>user_set_preference('tracker_import_notify_' . $this-&gt;ath-&gt;getID(), 0)</code>
       <code>user_set_preference('tracker_import_notify_' . $this-&gt;ath-&gt;getID(), 1)</code>
     </DeprecatedFunction>
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code>$aid_column</code>
       <code>$art_field_fact</code>
@@ -79033,6 +79148,7 @@
     </PossiblyInvalidOperand>
     <PossiblyUndefinedArrayOffset>
       <code>$_SERVER['REQUEST_TIME']</code>
+      <code>$_SERVER['REQUEST_TIME']</code>
     </PossiblyUndefinedArrayOffset>
     <RedundantCastGivenDocblockType>
       <code>(int) $groupId</code>
@@ -79088,6 +79204,7 @@
       <code>$filesystemName</code>
     </MissingParamType>
     <PossiblyUndefinedArrayOffset>
+      <code>$_SERVER['REQUEST_TIME']</code>
       <code>$_SERVER['REQUEST_TIME']</code>
     </PossiblyUndefinedArrayOffset>
   </file>
@@ -80068,6 +80185,9 @@
     </MissingReturnType>
   </file>
   <file src="src/www/admin/approve-pending.php">
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <PossiblyInvalidArgument>
       <code>$project-&gt;getID()</code>
     </PossiblyInvalidArgument>
@@ -80199,7 +80319,7 @@
   <file src="src/www/admin/projecthistory.php">
     <PossiblyNullArgument>
       <code>$group_id</code>
-      <code>$group_id</code>
+      <code>$old_value</code>
     </PossiblyNullArgument>
     <UndefinedGlobalVariable>
       <code>$subEvents</code>
@@ -82643,6 +82763,7 @@
       <code>$darUgroups</code>
       <code>current</code>
       <code>current</code>
+      <code>groupAddHistory</code>
       <code>isError</code>
       <code>isError</code>
       <code>isError</code>
@@ -82747,6 +82868,10 @@
       <code>db_query($sql)</code>
       <code>db_query($sql)</code>
     </DeprecatedFunction>
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <InvalidParamDefault>
       <code>bool</code>
     </InvalidParamDefault>
@@ -82919,19 +83044,9 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="src/www/project/admin/project_admin_utils.php">
-    <DeprecatedMethod>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>quoteLikeValueSuffix</code>
-      <code>quoteLikeValueSuffix</code>
-      <code>quoteLikeValueSurround</code>
-    </DeprecatedMethod>
     <InvalidArgument>
       <code>$subEventsBox</code>
     </InvalidArgument>
-    <InvalidIterator>
-      <code>$subEventsBox</code>
-    </InvalidIterator>
     <MissingParamType>
       <code>$current_pane_shortname</code>
       <code>$params</code>
@@ -82943,6 +83058,8 @@
     </MissingReturnType>
     <PossiblyNullArgument>
       <code>$event</code>
+      <code>$old_value</code>
+      <code>$old_value</code>
       <code>$user</code>
     </PossiblyNullArgument>
     <RedundantCastGivenDocblockType>
@@ -83051,6 +83168,10 @@
       <code>escapeInt</code>
       <code>escapeIntImplode</code>
       <code>escapeIntImplode</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
+      <code>groupAddHistory</code>
       <code>quoteLikeValueSuffix</code>
       <code>quoteLikeValueSurround</code>
       <code>quoteLikeValueSurround</code>
@@ -83157,6 +83278,9 @@
       <code>db_query($sql)</code>
       <code>db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['filter'] . $sql['order'] . $sql['limit'])</code>
     </DeprecatedFunction>
+    <DeprecatedMethod>
+      <code>groupAddHistory</code>
+    </DeprecatedMethod>
     <ParadoxicalCondition>
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
