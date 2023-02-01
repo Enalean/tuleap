@@ -19,15 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *  Data Access Object for Permissions
- */
+use Tuleap\Tracker\TrackerDuplicationType;
+use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
+
 class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 {
-    public const DUPLICATE_NEW_PROJECT   = 1;
-    public const DUPLICATE_SAME_PROJECT  = 2;
-    public const DUPLICATE_OTHER_PROJECT = 3;
-
     /**
     * Gets all tables of the db
     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
@@ -181,34 +177,28 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
     * @param int    $from
     * @param int    $to
     * @param Array $permission_type
-    * @param int    $duplicate_type
-    * @param Array|false  $ugroup_mapping, an array of static ugroups
-    *
-    * @return bool
     */
-    public function duplicatePermissions($from, $to, array $permission_type, $duplicate_type, $ugroup_mapping = false)
+    public function duplicatePermissions($from, $to, array $permission_type, TrackerDuplicationUserGroupMapping $duplication_user_group_mapping): bool
     {
         $from            = $this->da->quoteSmart($from, ['force_string' => true]);
         $to              = $this->da->quoteSmart($to, ['force_string' => true]);
         $permission_type = '(' . $this->da->quoteSmartImplode(',', $permission_type) . ')';
 
         //Duplicate static perms
-        if ($ugroup_mapping !== false) {
-            foreach ($ugroup_mapping as $template_ugroup => $new_ugroup) {
-                $template_ugroup = $this->da->escapeInt($template_ugroup);
-                $new_ugroup      = $this->da->escapeInt($new_ugroup);
-                $sql             = 'INSERT INTO permissions (permission_type,object_id,ugroup_id)
-                            SELECT permission_type, ' . $to . ',' . $new_ugroup . '
-                            FROM permissions
-                            WHERE object_id = ' . $from . '
-                                AND ugroup_id = ' . $template_ugroup . '
-                                AND permission_type IN ' . $permission_type;
-                $this->update($sql);
-            }
+        foreach ($duplication_user_group_mapping->ugroup_mapping as $template_ugroup => $new_ugroup) {
+            $template_ugroup = $this->da->escapeInt($template_ugroup);
+            $new_ugroup      = $this->da->escapeInt($new_ugroup);
+            $sql             = 'INSERT INTO permissions (permission_type,object_id,ugroup_id)
+                        SELECT permission_type, ' . $to . ',' . $new_ugroup . '
+                        FROM permissions
+                        WHERE object_id = ' . $from . '
+                            AND ugroup_id = ' . $template_ugroup . '
+                            AND permission_type IN ' . $permission_type;
+            $this->update($sql);
         }
 
         $and = '';
-        if ($duplicate_type == self::DUPLICATE_NEW_PROJECT || $duplicate_type == self::DUPLICATE_OTHER_PROJECT) {
+        if ($duplication_user_group_mapping->duplication_type === TrackerDuplicationType::DUPLICATE_NEW_PROJECT || $duplication_user_group_mapping->duplication_type === TrackerDuplicationType::DUPLICATE_OTHER_PROJECT) {
             $and = ' AND ugroup_id <= 100';
         }
         //Duplicate dynamic perms

@@ -88,11 +88,9 @@ final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \Tul
     {
         $new_transition_id = 2;
         $field_mapping     = ['some fields mapping'];
-        $ugroup_mapping    = ['some ugroups mapping'];
-        $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
 
         $this->dao->shouldReceive('duplicate')->with($this->transition->getId(), $new_transition_id, $field_mapping)->once();
-        $this->factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+        $this->factory->duplicate($this->transition, $new_transition_id, $field_mapping);
     }
 
     public function testItChecksThatFieldIsNotUsed(): void

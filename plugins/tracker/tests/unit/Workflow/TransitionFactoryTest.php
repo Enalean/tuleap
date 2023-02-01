@@ -112,6 +112,8 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
         $t3          = new Transition(3, 1, $field_value_analyzed, $field_value_new);
         $transitions = [$t1, $t2, $t3];
 
+        $user_groups_mapping = \Tuleap\Tracker\TrackerDuplicationUserGroupMapping::fromSameProjectWithoutMapping();
+
         $tf = \Mockery::mock(
             \TransitionFactory::class,
             [
@@ -135,9 +137,9 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
         $tf->shouldReceive('addTransition')->with(1, 3067, 3068)->once()->andReturn(102);
         $tf->shouldReceive('addTransition')->with(1, 3067, 3066)->once()->andReturn(103);
 
-        $this->condition_factory->shouldReceive('duplicate')->with($t1, 101, [], false, false)->once();
-        $this->condition_factory->shouldReceive('duplicate')->with($t2, 102, [], false, false)->once();
-        $this->condition_factory->shouldReceive('duplicate')->with($t3, 103, [], false, false)->once();
+        $this->condition_factory->shouldReceive('duplicate')->with($t1, 101, [], $user_groups_mapping)->once();
+        $this->condition_factory->shouldReceive('duplicate')->with($t2, 102, [], $user_groups_mapping)->once();
+        $this->condition_factory->shouldReceive('duplicate')->with($t3, 103, [], $user_groups_mapping)->once();
 
         $tpaf->shouldReceive('duplicate')->times(3);
         $tpaf->shouldReceive('duplicate')->with($t1, 101, [])->ordered();
@@ -145,6 +147,6 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
         $tpaf->shouldReceive('duplicate')->with($t3, 103, [])->ordered();
         $tf->shouldReceive('getPostActionFactory')->andReturns($tpaf);
 
-        $tf->duplicate($values, 1, $transitions, [], false, false);
+        $tf->duplicate($values, 1, $transitions, [], $user_groups_mapping);
     }
 }
