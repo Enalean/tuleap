@@ -23,17 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Link;
 
 use Tuleap\GlobalResponseMock;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\RESTReverseLinkProxy;
-use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -85,27 +77,6 @@ final class ArtifactLinkerTest extends TestCase
         return $artifact_linker->linkArtifact($artifact, $linked_artifacts, $this->user, '');
     }
 
-    /**
-     * @return Ok<null>|Err<Fault>
-     */
-    private function linkReverseArtifact(): Ok|Err
-    {
-        $artifact                = ArtifactTestBuilder::anArtifact(self::CURRENT_ARTIFACT_ID)->build();
-        $link_payload            = new LinkWithDirectionRepresentation();
-        $link_payload->id        = 10;
-        $link_payload->direction = "reverse";
-        $link_payload->type      = "";
-        $linked_artifacts        = new CollectionOfReverseLinks([RESTReverseLinkProxy::fromPayload($link_payload)]);
-
-        $artifact_linker = new ArtifactLinker(
-            $this->form_element_factory,
-            $this->changeset_creator,
-            $this->links_retriever,
-            $this->artifact_retriever
-        );
-        return $artifact_linker->linkReverseArtifacts($artifact, $linked_artifacts, $this->user, '');
-    }
-
     public function testItReturnsFalseAndDisplayAnErrorWhenNoArtifactLinkFieldsAreUsed(): void
     {
         $this->form_element_factory = RetrieveUsedArtifactLinkFieldsStub::buildWithArtifactLinkFields([]);
@@ -143,26 +114,5 @@ final class ArtifactLinkerTest extends TestCase
         $GLOBALS['Response']->expects(self::once())->method('addFeedback')->with('error');
         self::assertFalse($this->linkArtifact());
         self::assertSame(0, $this->changeset_creator->getCallsCount());
-    }
-
-    public function testItCreateTheReverseLinkOfAnArtifact(): void
-    {
-        $source_artifact          = ArtifactTestBuilder::anArtifact(10)->build();
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact);
-
-        $result = $this->linkReverseArtifact();
-        self::assertSame(1, $this->changeset_creator->getCallsCount());
-        self::assertTrue(Result::isOk($result));
-        self::assertNull($result->value);
-    }
-
-    public function testItDoesNotCreateTheReverseLinkIfTheSourceArtifactIsNotFound(): void
-    {
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withNoArtifact();
-
-        $result = $this->linkReverseArtifact();
-        self::assertSame(0, $this->changeset_creator->getCallsCount());
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(ArtifactDoesNotExistFault::class, $result->error);
     }
 }
