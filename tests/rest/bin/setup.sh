@@ -161,10 +161,6 @@ setup_tuleap
 setup_redis
 setup_database
 case "$PHP_FPM" in
-    '/opt/remi/php80/root/usr/sbin/php-fpm')
-    echo "Deploy PHP FPM 80"
-    /usr/bin/tuleap-cfg site-deploy --php-version=php80
-    ;;
     '/opt/remi/php81/root/usr/sbin/php-fpm')
     echo "Deploy PHP FPM 81"
     /usr/bin/tuleap-cfg site-deploy --php-version=php81

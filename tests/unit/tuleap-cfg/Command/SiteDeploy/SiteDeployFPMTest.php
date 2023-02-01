@@ -68,7 +68,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             new FPMSessionFiles(),
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm80',
+            __DIR__ . '/../../../../../src/etc/fpm81',
             [],
             $this->temp_dir,
         );
@@ -87,7 +87,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertStringContainsString('user = ' . $this->current_user, $tuleap_conf);
         $this->assertStringContainsString('group = ' . $this->current_user, $tuleap_conf);
 
-        $this->assertFileEquals(__DIR__ . '/../../../../../src/etc/fpm80/tuleap_errors_prod.part', $this->php_configuration_folder . '/php-fpm.d/tuleap_errors.part');
+        $this->assertFileEquals(__DIR__ . '/../../../../../src/etc/fpm81/tuleap_errors_prod.part', $this->php_configuration_folder . '/php-fpm.d/tuleap_errors.part');
     }
 
     public function testDeployDoesntTouchExistingFilesByDefault(): void
@@ -109,7 +109,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             new FPMSessionFiles(),
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm80',
+            __DIR__ . '/../../../../../src/etc/fpm81',
             [],
             $this->temp_dir,
         );
@@ -139,7 +139,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             new FPMSessionFiles(),
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm80',
+            __DIR__ . '/../../../../../src/etc/fpm81',
             [],
             $this->temp_dir,
         );
@@ -163,7 +163,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             new FPMSessionFiles(),
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm80',
+            __DIR__ . '/../../../../../src/etc/fpm81',
             [],
             $this->temp_dir,
         );
@@ -191,7 +191,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             new FPMSessionFiles(),
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm80',
+            __DIR__ . '/../../../../../src/etc/fpm81',
             [],
             $this->temp_dir,
         );
@@ -211,7 +211,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'redis'),
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm80',
+            __DIR__ . '/../../../../../src/etc/fpm81',
             [],
             $this->temp_dir,
         );
@@ -235,7 +235,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', false, 7222, 'this_is_secure,really'),
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm80',
+            __DIR__ . '/../../../../../src/etc/fpm81',
             [],
             $this->temp_dir,
         );
@@ -259,7 +259,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', true, 7222, ''),
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm80',
+            __DIR__ . '/../../../../../src/etc/fpm81',
             [],
             $this->temp_dir,
         );
