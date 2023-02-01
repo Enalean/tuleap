@@ -30,7 +30,7 @@ interface DateFieldValue {
 
 export function buildEditableDateFieldValue(
     field: EditableDateFieldStructure,
-    date_field_value: string
+    date_field_value: string | null
 ): DateFieldValue {
     const { field_id, type, permissions, is_time_displayed } = field;
 
@@ -42,7 +42,11 @@ export function buildEditableDateFieldValue(
     };
 }
 
-function getValue(value: string, is_time_displayed: boolean): string {
+function getValue(value: string | null, is_time_displayed: boolean): string {
+    if (value === null) {
+        return "";
+    }
+
     if (is_time_displayed) {
         return moment(value, moment.ISO_8601).format("YYYY-MM-DD HH:mm");
     }
