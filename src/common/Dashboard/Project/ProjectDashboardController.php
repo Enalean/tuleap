@@ -40,7 +40,6 @@ use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\TroveCat\TroveCatLinkDao;
@@ -95,10 +94,6 @@ class ProjectDashboardController
      * @var BaseLayout
      */
     private $layout;
-    /**
-     * @var IncludeAssets
-     */
-    private $javascript_assets;
 
     private Codendi_HTMLPurifier $purifier;
 
@@ -114,7 +109,6 @@ class ProjectDashboardController
         AssetsIncluder $assets_includer,
         EventManager $event_manager,
         BaseLayout $layout,
-        IncludeAssets $core_assets,
         private JavascriptAssetGeneric $project_registration_assets,
         Codendi_HTMLPurifier $purifier,
         private FirstTimerPresenterBuilder $first_timer_presenter_builder,
@@ -130,7 +124,6 @@ class ProjectDashboardController
         $this->assets_includer          = $assets_includer;
         $this->event_manager            = $event_manager;
         $this->layout                   = $layout;
-        $this->javascript_assets        = $core_assets;
         $this->purifier                 = $purifier;
     }
 
