@@ -18,9 +18,9 @@
  */
 
 import { validateOpenListFieldValue } from "./fields/open-list-field/open-list-field-validate-service.js";
-import { formatComputedFieldValue } from "./fields/computed-field/computed-field-value-formatter.js";
+import { formatComputedFieldValue } from "./adapters/UI/fields/computed-field/computed-field-value-formatter.js";
 import { formatPermissionFieldValue } from "./adapters/UI/fields/permission-field/permission-field-value-formatter";
-import { validateFileField } from "./fields/file-field/file-field-validator.js";
+import { validateFileField } from "./adapters/UI/fields/file-field/file-field-validator.js";
 import { FILE_FIELD, TEXT_FIELD } from "@tuleap/plugin-tracker-constants";
 
 export function validateArtifactFieldsValues(

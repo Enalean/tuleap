@@ -19,7 +19,7 @@
 
 import type { HostElement } from "./ComputedField";
 import { ComputedField, getDisplayedValue, onInput, validateInput } from "./ComputedField";
-import { setCatalog } from "../../gettext-catalog";
+import { setCatalog } from "../../../../gettext-catalog";
 
 const FIELD_ID = 371;
 

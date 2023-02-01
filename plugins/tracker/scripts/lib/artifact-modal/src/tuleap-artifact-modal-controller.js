@@ -20,17 +20,17 @@
 import { loadTooltips } from "@tuleap/tooltip";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
-import { isDisabled } from "./fields/disabled-field-detector";
+import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
 import {
     createArtifact,
     editArtifact,
     editArtifactWithConcurrencyChecking,
 } from "./rest/rest-service";
-import { getAllFileFields } from "./fields/file-field/file-field-detector";
+import { getAllFileFields } from "./adapters/UI/fields/file-field/file-field-detector";
 import {
     isUploadingInCKEditor,
     setIsNotUploadingInCKEditor,
-} from "./fields/file-field/is-uploading-in-ckeditor-state";
+} from "./common/is-uploading-in-ckeditor-state";
 import { sprintf } from "sprintf-js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";

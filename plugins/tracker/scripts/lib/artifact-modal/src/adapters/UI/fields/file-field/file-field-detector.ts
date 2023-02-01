@@ -18,9 +18,9 @@
  */
 
 import { FILE_FIELD } from "@tuleap/plugin-tracker-constants";
-import type { Field } from "../../domain/fields/Field";
+import type { Field } from "../../../../domain/fields/Field";
 import { isDisabled } from "../disabled-field-detector";
-import type { FileFieldValueModel } from "../../domain/fields/file-field/FileFieldValueModel";
+import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
 
 const isFileField = (field: Field): field is FileFieldValueModel => field.type === FILE_FIELD;
 const isEnabledFileField = (field: Field): field is FileFieldValueModel =>

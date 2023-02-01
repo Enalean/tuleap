@@ -18,9 +18,9 @@
  */
 
 import { isDisabled } from "./disabled-field-detector";
-import * as modal_creation_mode_state from "../modal-creation-mode-state";
+import * as modal_creation_mode_state from "../../../modal-creation-mode-state";
 import type { Permission } from "@tuleap/plugin-tracker-constants";
-import type { Field } from "../domain/fields/Field";
+import type { Field } from "../../../domain/fields/Field";
 
 describe(`disabled-field-detector`, () => {
     describe(`isDisabled()`, () => {
