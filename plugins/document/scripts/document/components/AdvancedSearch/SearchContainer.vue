@@ -39,125 +39,121 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+<script setup lang="ts">
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import SearchResultTable from "./SearchResult/SearchResultTable.vue";
 import type { AdvancedSearchParams, SearchResult } from "../../type";
 import deepEqual from "fast-deep-equal";
 import SearchHeader from "./SearchHeader.vue";
 import { searchInFolder } from "../../api/rest-querier";
-import { Action } from "vuex-class";
 import SearchResultError from "./SearchResult/SearchResultError.vue";
 import { getRouterQueryFromSearchParams } from "../../helpers/get-router-query-from-search-params";
 import SearchItemModals from "./SearchItemModals.vue";
 import emitter from "../../helpers/emitter";
+import type { Ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { useActions } from "vuex-composition-helpers";
+import type { RootActionsRetrieve } from "../../store/actions-retrieve";
+import { useRouter, useRoute } from "../../helpers/use-router";
 
-@Component({
-    components: {
-        SearchItemModals,
-        SearchResultError,
-        SearchHeader,
-        SearchResultTable,
-        SearchCriteriaPanel,
+const router = useRouter();
+const route = useRoute();
+
+const props = defineProps<{ query: AdvancedSearchParams; offset: number; folder_id: number }>();
+
+const reduce_help_button_class = "reduce-help-button";
+const is_loading = ref(false);
+const error: Ref<Error | null> = ref(null);
+const results: Ref<SearchResult | null> = ref(null);
+let current_route = route.query;
+
+const { loadFolder } = useActions<Pick<RootActionsRetrieve, "loadFolder">>(["loadFolder"]);
+
+onMounted(() => {
+    loadFolder(props.folder_id);
+    document.body.classList.add(reduce_help_button_class);
+
+    emitter.on("new-item-has-just-been-created", reload);
+    emitter.on("item-properties-have-just-been-updated", reload);
+    emitter.on("item-permissions-have-just-been-updated", reload);
+    emitter.on("item-has-just-been-deleted", reload);
+    emitter.on("item-has-just-been-updated", reload);
+});
+
+onUnmounted(() => {
+    document.body.classList.remove(reduce_help_button_class);
+
+    emitter.off("new-item-has-just-been-created", reload);
+    emitter.off("item-properties-have-just-been-updated", reload);
+    emitter.off("item-permissions-have-just-been-updated", reload);
+    emitter.off("item-has-just-been-deleted", reload);
+    emitter.off("item-has-just-been-updated", reload);
+});
+
+function reload(): void {
+    window.location.reload();
+}
+
+watch(
+    () => props.query,
+    (query: AdvancedSearchParams): void => {
+        search(query, props.offset);
     },
-})
-export default class SearchContainer extends Vue {
-    @Prop({ required: true })
-    readonly query!: AdvancedSearchParams;
+    { immediate: true }
+);
 
-    @Prop({ required: true })
-    readonly offset!: number;
-
-    @Prop({ required: true })
-    readonly folder_id!: number;
-
-    reduce_help_button_class = "reduce-help-button";
-    is_loading = false;
-    error: Error | null = null;
-    results: SearchResult | null = null;
-
-    @Action
-    readonly loadFolder!: (item_id: number) => Promise<void>;
-
-    mounted(): void {
-        this.loadFolder(this.folder_id);
-        document.body.classList.add(this.reduce_help_button_class);
-
-        emitter.on("new-item-has-just-been-created", this.reload);
-        emitter.on("item-properties-have-just-been-updated", this.reload);
-        emitter.on("item-permissions-have-just-been-updated", this.reload);
-        emitter.on("item-has-just-been-deleted", this.reload);
-        emitter.on("item-has-just-been-updated", this.reload);
+watch(
+    () => props.offset,
+    (offset: number): void => {
+        search(props.query, offset);
     }
+);
 
-    beforeUnmount(): void {
-        document.body.classList.remove(this.reduce_help_button_class);
-
-        emitter.off("new-item-has-just-been-created", this.reload);
-        emitter.off("item-properties-have-just-been-updated", this.reload);
-        emitter.off("item-permissions-have-just-been-updated", this.reload);
-        emitter.off("item-has-just-been-deleted", this.reload);
-        emitter.off("item-has-just-been-updated", this.reload);
+watch(
+    () => props.folder_id,
+    (folder_id: number): void => {
+        loadFolder(folder_id);
+        search(props.query, props.offset);
     }
+);
 
-    reload(): void {
-        window.location.reload();
-    }
+function search(new_query: AdvancedSearchParams, offset: number): void {
+    is_loading.value = true;
+    error.value = null;
+    results.value = null;
 
-    @Watch("query", { immediate: true, deep: true })
-    searchQuery(query: AdvancedSearchParams): void {
-        this.search(query, this.offset);
-    }
-
-    @Watch("offset")
-    searchOffset(offset: number): void {
-        this.search(this.query, offset);
-    }
-
-    @Watch("folder_id")
-    searchFolder(folder_id: number): void {
-        this.loadFolder(folder_id);
-        this.search(this.query, this.offset);
-    }
-
-    search(new_query: AdvancedSearchParams, offset: number): void {
-        this.is_loading = true;
-        this.error = null;
-        this.results = null;
-
-        searchInFolder(this.folder_id, new_query, offset)
-            .then((results: SearchResult) => {
-                this.results = results;
-            })
-            .catch((error) => {
-                this.error = error;
-                throw error;
-            })
-            .finally(() => {
-                this.is_loading = false;
-            });
-    }
-
-    get can_result_table_be_displayed(): boolean {
-        return this.error === null;
-    }
-
-    advancedSearch(params: AdvancedSearchParams): void {
-        const query = getRouterQueryFromSearchParams(params);
-
-        if (deepEqual(this.$route.query, query)) {
-            this.searchQuery(params);
-            return;
-        }
-
-        this.$router.push({
-            name: "search",
-            params: {
-                folder_id: String(this.folder_id),
-            },
-            query,
+    searchInFolder(props.folder_id, new_query, offset)
+        .then((search_results: SearchResult) => {
+            results.value = search_results;
+        })
+        .catch((error) => {
+            error.value = error;
+            throw error;
+        })
+        .finally(() => {
+            is_loading.value = false;
         });
+}
+
+const can_result_table_be_displayed = computed((): boolean => {
+    return error.value === null;
+});
+
+function advancedSearch(params: AdvancedSearchParams): void {
+    const query = getRouterQueryFromSearchParams(params);
+
+    if (deepEqual(current_route, query)) {
+        return;
     }
+
+    router.push({
+        name: "search",
+        params: {
+            folder_id: String(props.folder_id),
+        },
+        query,
+    });
+
+    current_route = query;
 }
 </script>
