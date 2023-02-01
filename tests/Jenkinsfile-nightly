@@ -144,31 +144,6 @@ pipeline {
                 }
             }
         }
-
-        stage ('PHP 8.0') {
-            failFast false
-            parallel {
-                stage('Unit tests') {
-                    steps { script { actions.runPHPUnitTests('80', false) } }
-                    post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
-                }
-
-                stage('REST') {
-                    steps { script { actions.runRESTTests('mysql80', '80') } }
-                    post { always { junit 'results/api-rest/*/rest_tests.xml' } }
-                }
-
-                stage('DB/Integration') {
-                    steps { script { actions.runDBTests('mysql80', '80') } }
-                    post { always { junit 'results/db/*/db_tests.xml' } }
-                }
-
-                stage('SOAP') {
-                    steps { script { actions.runSOAPTests('mysql80', '80') } }
-                    post { always { junit 'results/soap/*/soap_tests.xml' } }
-                }
-            }
-        }
     }
     post {
         always {

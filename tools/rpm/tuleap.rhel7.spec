@@ -48,11 +48,6 @@ Packager: Tuleap team <security@tuleap.org>
 AutoReqProv: no
 
 # Php and web related stuff
-Requires: php80-php-common >= 8.0.7
-Requires: php80-php, php80-php-mysql, php80-php-xml, php80-php-mbstring, php80-php-gd, php80-php-soap
-Requires: php80-php-intl, php80-php-process, php80-php-opcache, php80-php-fpm, php80-php-pecl-redis5, php80-php-sodium
-Requires: php80-php-pecl-zip
-Requires: php80-php-ffi
 Requires: php81-php-common
 Requires: php81-php, php81-php-mysql, php81-php-xml, php81-php-mbstring, php81-php-gd, php81-php-soap
 Requires: php81-php-intl, php81-php-process, php81-php-opcache, php81-php-fpm, php81-php-pecl-redis5, php81-php-sodium
@@ -135,7 +130,7 @@ Manage dependencies for Tuleap Subversion integration
 %package plugin-forumml
 Summary: ForumML plugin for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php80-php-pecl-mailparse, php81-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php81-php-pecl-mailparse
 Requires: tuleap-core-mailman
 %description plugin-forumml
 ForumML brings to Tuleap a very nice mail archive viewer and the possibility
@@ -179,7 +174,7 @@ Group: Development/Tools
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
-Requires: php80-php-ldap, php81-php-ldap
+Requires: php81-php-ldap
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
@@ -216,7 +211,7 @@ Plugin to access to file releases & docman though WebDAV
 AutoReqProv: no
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php80-php-pecl-mailparse, php81-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php81-php-pecl-mailparse
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -998,7 +993,6 @@ if [ $1 -eq 1 ]; then
         tuleap.service \
         tuleap-workers.service \
         tuleap-php-fpm.service &>/dev/null || :
-    /usr/bin/systemctl mask php80-php-fpm || :
     /usr/bin/systemctl mask php81-php-fpm || :
 fi
 
@@ -1058,7 +1052,6 @@ fi
 
 
 %postun
-/usr/bin/systemctl unmask php80-php-fpm || :
 /usr/bin/systemctl unmask php81-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 

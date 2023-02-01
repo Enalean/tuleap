@@ -155,19 +155,19 @@ generate-po: ## Generate translatable strings
 generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
-tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (80, 81). DB to select the database to use (mysql57, mysql80, mariadb103)
+tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81). DB to select the database to use (mysql57, mysql80, mariadb103)
 	$(eval PHP_VERSION ?= 81)
 	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (80, 81). DB to select the database to use (mysql57, mysql80, mariadb103)
+tests-soap: ## Run all SOAP tests. PHP_VERSION to select the version of PHP to use (81). DB to select the database to use (mysql57, mysql80, mariadb103)
 	$(eval PHP_VERSION ?= 81)
 	$(eval DB ?= mysql80)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/soap/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
-tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (80, 81). DB to select the database to use (mysql57, mariadb103, mysql80)
+tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (81). DB to select the database to use (mysql57, mariadb103, mysql80)
 	$(eval PHP_VERSION ?= 81)
 	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
@@ -213,7 +213,7 @@ phpunit-ci:
 	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
 
 .PHONY: tests-unit-php
-tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (81,80). FILES to run specific tests.
+tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (81). FILES to run specific tests.
 	$(eval PHP_VERSION ?= 81)
 	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none ghcr.io/enalean/tuleap-test-phpunit:c7-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
 
