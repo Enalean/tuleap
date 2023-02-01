@@ -26,22 +26,33 @@ jest.mock("moment", () => ({
     default: jest.requireActual("moment"),
 }));
 
+const getDateField = (is_time_displayed: boolean): EditableDateFieldStructure => {
+    return {
+        field_id: 824,
+        label: "nondrying",
+        name: "indisciplined",
+        permissions: ["read", "update", "create"],
+        type: "date",
+        is_time_displayed,
+    } as unknown as EditableDateFieldStructure;
+};
+
 describe("date-field-value-builder", () => {
+    let format: jest.SpyInstance;
+
+    beforeEach(() => {
+        format = jest
+            .spyOn(moment.fn, "format")
+            .mockImplementation(() => "a date formatted using the provided format");
+    });
+
     it.each([
         [false, "YYYY-MM-DD"],
         [true, "YYYY-MM-DD HH:mm"],
     ])(
         "When is_time_displayed is %s, then the time should be formatted using the format %s in the formatted value",
         (is_time_displayed, expected_format) => {
-            const format = jest.spyOn(moment.fn, "format").mockImplementation(() => "");
-            const date_field = {
-                field_id: 824,
-                label: "nondrying",
-                name: "indisciplined",
-                permissions: ["read", "update", "create"],
-                type: "date",
-                is_time_displayed,
-            } as unknown as EditableDateFieldStructure;
+            const date_field = getDateField(is_time_displayed);
 
             expect(
                 buildEditableDateFieldValue(date_field, "2015-05-29T18:09:43+03:00")
@@ -49,10 +60,17 @@ describe("date-field-value-builder", () => {
                 field_id: date_field.field_id,
                 permissions: date_field.permissions,
                 type: date_field.type,
-                value: expect.any(String),
+                value: "a date formatted using the provided format",
             });
 
             expect(format).toHaveBeenCalledWith(expected_format);
         }
     );
+
+    it("When the date is null, Then it should return the value as an empty string", () => {
+        const result = buildEditableDateFieldValue(getDateField(true), null);
+
+        expect(format).not.toHaveBeenCalled();
+        expect(result.value).toBe("");
+    });
 });
