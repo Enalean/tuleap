@@ -125,7 +125,6 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                     ),
                     EventManager::instance(),
                     $layout,
-                    $core_assets,
                     new JavascriptViteAsset(
                         new IncludeViteAssets(
                             __DIR__ . '/../../scripts/project-registration/frontend-assets',
