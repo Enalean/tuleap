@@ -33,6 +33,7 @@ class TimelineEventRepresentation
     public const REBASE  = 'rebase';
     public const MERGE   = 'merge';
     public const ABANDON = 'abandon';
+    public const REOPEN  = 'reopen';
 
     /**
      * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
@@ -75,6 +76,7 @@ class TimelineEventRepresentation
             TimelineGlobalEvent::REBASE  => self::REBASE,
             TimelineGlobalEvent::MERGE   => self::MERGE,
             TimelineGlobalEvent::ABANDON => self::ABANDON,
+            TimelineGlobalEvent::REOPEN  => self::REOPEN,
         ];
 
         return $status_name[$type_acronym];

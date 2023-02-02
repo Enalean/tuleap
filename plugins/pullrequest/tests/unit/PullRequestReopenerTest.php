@@ -27,6 +27,7 @@ use GitRepositoryFactory;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeReopen;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\GitReference\GitReferenceNotFound;
+use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -49,21 +50,27 @@ final class PullRequestReopenerTest extends TestCase
      * @var PullRequestUpdater&\PHPUnit\Framework\MockObject\MockObject
      */
     private $pull_request_updater;
+    /**
+     * @var TimelineEventCreator&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private TimelineEventCreator|\PHPUnit\Framework\MockObject\MockObject $timeline_event_creator;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dao                  = $this->createMock(Dao::class);
-        $this->repository_factory   = $this->createMock(GitRepositoryFactory::class);
-        $this->git_exec_factory     = $this->createMock(GitExecFactory::class);
-        $this->pull_request_updater = $this->createMock(PullRequestUpdater::class);
+        $this->dao                    = $this->createMock(Dao::class);
+        $this->repository_factory     = $this->createMock(GitRepositoryFactory::class);
+        $this->git_exec_factory       = $this->createMock(GitExecFactory::class);
+        $this->pull_request_updater   = $this->createMock(PullRequestUpdater::class);
+        $this->timeline_event_creator = $this->createMock(TimelineEventCreator::class);
 
         $this->reopener = new PullRequestReopener(
             $this->dao,
             $this->repository_factory,
             $this->git_exec_factory,
             $this->pull_request_updater,
+            $this->timeline_event_creator,
         );
     }
 
@@ -137,6 +144,7 @@ final class PullRequestReopenerTest extends TestCase
 
         $this->pull_request_updater->expects(self::never())->method('updatePullRequestWithNewSourceRev');
         $this->dao->expects(self::once())->method('reopen');
+        $this->timeline_event_creator->expects(self::once())->method('storeReopenEvent');
 
         $this->reopener->reopen(
             $this->buildAnAbandonedPullRequest(),
@@ -144,7 +152,7 @@ final class PullRequestReopenerTest extends TestCase
         );
     }
 
-    public function testItThrowsAnExceptionIfThePullRequestSourceBrancheDoesNotExistAnymore(): void
+    public function testItThrowsAnExceptionIfThePullRequestSourceBranchDoesNotExistAnymore(): void
     {
         $this->expectException(PullRequestCannotBeReopen::class);
 
@@ -224,6 +232,7 @@ final class PullRequestReopenerTest extends TestCase
 
         $this->pull_request_updater->expects(self::once())->method('updatePullRequestWithNewSourceRev');
         $this->dao->expects(self::once())->method('reopen');
+        $this->timeline_event_creator->expects(self::once())->method('storeReopenEvent');
 
         $this->reopener->reopen(
             $this->buildAnAbandonedPullRequest(),
