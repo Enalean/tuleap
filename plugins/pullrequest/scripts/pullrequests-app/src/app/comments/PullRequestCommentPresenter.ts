@@ -22,6 +22,7 @@ import {
     getUserMergePullRequest,
     getUserRebasePullRequest,
     getUserUpdatePullRequest,
+    getUserReopenedPullRequest,
 } from "../gettext-catalog";
 import type { FileDiffCommentPayload, InlineCommentPosition, PullRequestUser } from "./types";
 
@@ -189,6 +190,8 @@ function getTimelineEventMessage(event: TimelineEventPayload): string {
             return getUserMergePullRequest();
         case "abandon":
             return getUserAbandonedPullRequest();
+        case "reopen":
+            return getUserReopenedPullRequest();
         default:
             return "";
     }

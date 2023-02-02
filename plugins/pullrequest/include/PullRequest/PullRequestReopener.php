@@ -28,6 +28,7 @@ use PFUser;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeReopen;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\GitReference\GitReferenceNotFound;
+use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 
 class PullRequestReopener
 {
@@ -36,6 +37,7 @@ class PullRequestReopener
         private GitRepositoryFactory $git_repository_factory,
         private GitExecFactory $git_exec_factory,
         private PullRequestUpdater $pull_request_updater,
+        private TimelineEventCreator $timeline_event_creator,
     ) {
     }
 
@@ -80,6 +82,10 @@ class PullRequestReopener
             }
 
             $this->pull_request_dao->reopen($pull_request->getId());
+            $this->timeline_event_creator->storeReopenEvent(
+                $pull_request,
+                $user_reopening_the_pr,
+            );
         } catch (
             UnknownBranchNameException |
             GitReferenceNotFound |

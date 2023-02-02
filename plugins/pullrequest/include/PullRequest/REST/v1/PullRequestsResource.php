@@ -980,6 +980,7 @@ class PullRequestsResource extends AuthenticatedResource
                     ),
                     PullRequestNotificationSupport::buildDispatcher(\pullrequestPlugin::getLogger())
                 ),
+                new TimelineEventCreator(new TimelineDao()),
             ),
             new URLVerification(),
             $this->logger

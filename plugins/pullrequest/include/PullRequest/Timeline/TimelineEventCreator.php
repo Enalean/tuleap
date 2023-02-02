@@ -20,36 +20,37 @@
 
 namespace Tuleap\PullRequest\Timeline;
 
-use Tuleap\PullRequest\Timeline\Dao as TimeLineDao;
+use PFUser;
 use Tuleap\PullRequest\PullRequest;
 
 class TimelineEventCreator
 {
-    /** @var Tuleap\PullRequest\Timeline\Dao */
-    private $timeline_dao;
-
-    public function __construct(TimeLineDao $timeline_dao)
+    public function __construct(private Dao $timeline_dao)
     {
-        $this->timeline_dao = $timeline_dao;
     }
 
-    public function storeUpdateEvent(PullRequest $pull_request, $user)
+    public function storeUpdateEvent(PullRequest $pull_request, PFUser $user): void
     {
         $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineGlobalEvent::UPDATE);
     }
 
-    public function storeRebaseEvent(PullRequest $pull_request, $user)
+    public function storeRebaseEvent(PullRequest $pull_request, PFUser $user): void
     {
         $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineGlobalEvent::REBASE);
     }
 
-    public function storeMergeEvent(PullRequest $pull_request, $user)
+    public function storeMergeEvent(PullRequest $pull_request, PFUser $user): void
     {
         $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineGlobalEvent::MERGE);
     }
 
-    public function storeAbandonEvent(PullRequest $pull_request, $user)
+    public function storeAbandonEvent(PullRequest $pull_request, PFUser $user): void
     {
         $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineGlobalEvent::ABANDON);
+    }
+
+    public function storeReopenEvent(PullRequest $pull_request, PFUser $user): void
+    {
+        $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineGlobalEvent::REOPEN);
     }
 }
