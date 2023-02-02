@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function isInCreationMode(): boolean;
-export function setCreationMode(mode: boolean): void;
+let is_in_creation_mode = true;
+
+export function isInCreationMode(): boolean {
+    return is_in_creation_mode;
+}
+
+export function setCreationMode(mode: boolean): void {
+    is_in_creation_mode = mode;
+}
