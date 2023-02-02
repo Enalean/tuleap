@@ -251,6 +251,7 @@ export const RichTextEditor = define<RichTextEditor>({
             disabled="${host.disabled}"
             class="tlp-textarea"
             rows="${host.rows}"
+            maxlength="65535"
             oninput="${onTextareaInput}"
         >
 ${host.contentValue}</textarea

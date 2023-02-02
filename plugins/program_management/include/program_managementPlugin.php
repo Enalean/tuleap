@@ -244,6 +244,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
@@ -1001,6 +1002,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new TextValueValidator(),
             )
         );
 

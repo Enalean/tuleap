@@ -48,6 +48,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
@@ -253,7 +254,8 @@ final class Tracker_ArtifactTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:i
                 $reference_manager,
                 Mockery::spy(TrackerPrivateCommentUGroupPermissionInserter::class),
                 $changeset_comment_indexer,
-            )
+                new TextValueValidator(),
+            ),
         );
         $creator->create($changeset_creation, PostCreationContext::withNoConfig(false));
     }

@@ -40,6 +40,7 @@ use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 
 class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -117,6 +118,7 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new TextValueValidator(),
             )
         );
 

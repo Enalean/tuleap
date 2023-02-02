@@ -197,18 +197,6 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
-    public function testIsValid(): void
-    {
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-
-        $rule_string = \Mockery::spy(\Rule_String::class);
-        $rule_string->shouldReceive('isValid')->andReturns(true);
-
-        $this->text_field->shouldReceive('getRuleString')->andReturns($rule_string);
-
-        $this->assertTrue($this->text_field->isValid($artifact, "Du texte"));
-    }
-
     public function testHasChanges(): void
     {
         $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Text::class);

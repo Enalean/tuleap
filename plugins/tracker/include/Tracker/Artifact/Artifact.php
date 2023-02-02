@@ -140,6 +140,7 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
@@ -2169,6 +2170,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new TextValueValidator(),
             )
         );
     }
