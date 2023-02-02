@@ -126,6 +126,10 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
      */
     public $parent_id;
 
+    /**
+     * @var bool {@type bool}
+     */
+    public bool $user_can_reopen;
 
     public function build(
         PullRequest $pull_request,
@@ -134,6 +138,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         GitPullRequestReference $git_reference,
         $user_can_merge,
         $user_can_abandon,
+        bool $user_can_reopen,
         $user_can_update_labels,
         $last_build_status_name,
         $last_build_date,
@@ -156,6 +161,7 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $this->user_can_update_labels = $user_can_update_labels;
         $this->user_can_merge         = $user_can_merge;
         $this->user_can_abandon       = $user_can_abandon;
+        $this->user_can_reopen        = $user_can_reopen;
         $this->merge_status           = $this->expandMergeStatusName($pull_request->getMergeStatus());
 
         $this->short_stat = $pr_short_stat_representation;

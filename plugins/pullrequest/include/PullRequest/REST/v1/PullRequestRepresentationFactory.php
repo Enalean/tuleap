@@ -79,6 +79,12 @@ class PullRequestRepresentationFactory
         $user_can_abandon = $user_can_merge ||
             $this->access_control_verifier->canWrite($user, $repository_src, $pull_request->getBranchSrc());
 
+        $user_can_reopen = (
+            $pull_request->getStatus() === PullRequest::STATUS_ABANDONED &&
+            $this->access_control_verifier->canWrite($user, $repository_dest, $pull_request->getBranchDest()) &&
+            $this->access_control_verifier->canWrite($user, $repository_src, $pull_request->getBranchSrc())
+        );
+
         $user_can_update_labels = $user_can_merge;
 
         [$last_build_status_name, $last_build_date] = $this->getLastBuildInformation($pull_request, $repository_dest);
@@ -91,6 +97,7 @@ class PullRequestRepresentationFactory
             $pull_request_with_git_reference->getGitReference(),
             $user_can_merge,
             $user_can_abandon,
+            $user_can_reopen,
             $user_can_update_labels,
             $last_build_status_name,
             $last_build_date,
