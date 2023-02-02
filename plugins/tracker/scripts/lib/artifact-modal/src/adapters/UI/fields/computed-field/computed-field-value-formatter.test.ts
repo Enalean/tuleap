@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { formatComputedFieldValue } from "./computed-field-value-formatter.js";
+import { formatComputedFieldValue } from "./computed-field-value-formatter";
 
 describe("computed-field-value-formatter", () => {
     describe("formatComputedFieldValue() -", () => {
@@ -40,7 +40,7 @@ describe("computed-field-value-formatter", () => {
 
             const result = formatComputedFieldValue(field_value);
 
-            expect(result).toEqual({
+            expect(result).toStrictEqual({
                 field_id: 415,
                 is_autocomputed: true,
             });
@@ -75,7 +75,7 @@ describe("computed-field-value-formatter", () => {
 
                 const result = formatComputedFieldValue(field_value);
 
-                expect(result).toEqual({
+                expect(result).toStrictEqual({
                     field_id: 306,
                     manual_value: 33,
                 });
