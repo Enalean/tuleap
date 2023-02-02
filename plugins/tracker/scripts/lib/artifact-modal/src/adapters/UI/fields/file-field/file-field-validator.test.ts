@@ -17,57 +17,63 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { validateFileField } from "./file-field-validator.js";
+import { validateFileField } from "./file-field-validator";
+import type { FileValueModel, FollowupValueModel } from "./file-field-validator";
+import type { TextFieldValueModel } from "../text-field/text-field-value-formatter";
 import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
 } from "@tuleap/plugin-tracker-constants";
 
+const getFileValueModel = (data: Partial<FileValueModel>): FileValueModel => {
+    return {
+        field_id: 6476,
+        type: "file",
+        label: "Attachments",
+        file_descriptions: [
+            {
+                id: 429,
+                submitted_by: 110,
+                description: "favicon",
+                name: "favicon.ico",
+                size: 1022,
+                type: "image/vnd.microsoft.icon",
+                html_url: "/plugins/tracker/attachments/429-favicon.ico",
+                html_preview_url: null,
+                uri: "artifact_files/429",
+                display_as_image: true,
+            },
+            {
+                id: 481,
+                submitted_by: 110,
+                description: "",
+                name: "pullrequest-pr-diff-comment.png",
+                size: 20866,
+                type: "image/png",
+                html_url: "/plugins/tracker/attachments/481-pullrequest-pr-diff-comment.png",
+                html_preview_url:
+                    "/plugins/tracker/attachments/preview/481-pullrequest-pr-diff-comment.png",
+                uri: "artifact_files/481",
+                display_as_image: true,
+            },
+        ],
+        images_added_by_text_fields: [],
+        permissions: ["read", "update", "create"],
+        temporary_files: [{ file: {}, description: "" }],
+        value: [],
+        ...data,
+    } as FileValueModel;
+};
+
 describe(`file-field-validator`, () => {
     describe(`validateFileField()
         Given a file value model,
         a list of text field value models
         and the new followup value model`, () => {
-        let file_value_model, text_field_value_models, followup_value_model;
+        let text_field_value_models: ReadonlyArray<TextFieldValueModel>,
+            followup_value_model: FollowupValueModel;
         beforeEach(() => {
-            file_value_model = {
-                field_id: 6476,
-                type: "file",
-                label: "Attachments",
-                file_descriptions: [
-                    {
-                        id: 429,
-                        submitted_by: 110,
-                        description: "favicon",
-                        name: "favicon.ico",
-                        size: 1022,
-                        type: "image/vnd.microsoft.icon",
-                        html_url: "/plugins/tracker/attachments/429-favicon.ico",
-                        html_preview_url: null,
-                        uri: "artifact_files/429",
-                        display_as_image: true,
-                    },
-                    {
-                        id: 481,
-                        submitted_by: 110,
-                        description: "",
-                        name: "pullrequest-pr-diff-comment.png",
-                        size: 20866,
-                        type: "image/png",
-                        html_url:
-                            "/plugins/tracker/attachments/481-pullrequest-pr-diff-comment.png",
-                        html_preview_url:
-                            "/plugins/tracker/attachments/preview/481-pullrequest-pr-diff-comment.png",
-                        uri: "artifact_files/481",
-                        display_as_image: true,
-                    },
-                ],
-                images_added_by_text_fields: [],
-                permissions: ["read", "update", "create"],
-                temporary_files: [{ file: {}, description: "" }],
-                value: [429, 481],
-            };
             text_field_value_models = [];
             followup_value_model = {
                 body: "",
@@ -86,15 +92,13 @@ describe(`file-field-validator`, () => {
         });
 
         it(`when the file's value is empty, it will return "field_id" and empty "value"`, () => {
-            file_value_model.value = [];
-
             const result = validateFileField(
-                file_value_model,
+                getFileValueModel({ value: [] }),
                 text_field_value_models,
                 followup_value_model
             );
 
-            expect(result).toEqual({
+            expect(result).toStrictEqual({
                 field_id: 6476,
                 value: [],
             });
@@ -102,12 +106,12 @@ describe(`file-field-validator`, () => {
 
         it(`will return a value model with only "field_id" and "value" attributes`, () => {
             const result = validateFileField(
-                file_value_model,
+                getFileValueModel({ value: [429, 481] }),
                 text_field_value_models,
                 followup_value_model
             );
 
-            expect(result).toEqual({
+            expect(result).toStrictEqual({
                 field_id: 6476,
                 value: [429, 481],
             });
@@ -116,24 +120,28 @@ describe(`file-field-validator`, () => {
         describe(`and files have been added directly on the file field`, () => {
             it(`will keep the files' ids`, () => {
                 const result = validateFileField(
-                    file_value_model,
+                    getFileValueModel({ value: [429, 481] }),
                     text_field_value_models,
                     followup_value_model
                 );
 
-                expect(result.value).toContain(429);
-                expect(result.value).toContain(481);
+                expect(result?.value).toContain(429);
+                expect(result?.value).toContain(481);
             });
         });
 
         describe(`and files have been added by Text field image upload`, () => {
-            let text_field_referencing_an_image, other_text_field;
+            let file_value_model: FileValueModel,
+                text_field_referencing_an_image: TextFieldValueModel,
+                other_text_field: TextFieldValueModel;
             beforeEach(() => {
-                file_value_model.images_added_by_text_fields = [
-                    { id: 127, download_href: "https://example.com/answerably.jpg" },
-                    { id: 142, download_href: "https://example.com/carboxylation.gif" },
-                ];
-                file_value_model.value = [...file_value_model.value, 127, 142];
+                file_value_model = getFileValueModel({
+                    images_added_by_text_fields: [
+                        { id: 127, download_href: "https://example.com/answerably.jpg" },
+                        { id: 142, download_href: "https://example.com/carboxylation.gif" },
+                    ],
+                    value: [429, 481, 127, 142],
+                });
 
                 text_field_referencing_an_image = {
                     field_id: 6401,
@@ -161,8 +169,8 @@ describe(`file-field-validator`, () => {
                         followup_value_model
                     );
 
-                    expect(result.value).toContain(127);
-                    expect(result.value).toContain(142);
+                    expect(result?.value).toContain(127);
+                    expect(result?.value).toContain(142);
                 });
             });
 
@@ -186,13 +194,16 @@ describe(`file-field-validator`, () => {
                         followup_value_model
                     );
 
-                    expect(result.value).toContain(127);
-                    expect(result.value).toContain(142);
+                    expect(result?.value).toContain(127);
+                    expect(result?.value).toContain(142);
                 });
 
                 it(`and the followup format has been switched to text format,
                     then it will filter out the image files' ids`, () => {
-                    followup_value_model.format = TEXT_FORMAT_TEXT;
+                    followup_value_model = {
+                        ...followup_value_model,
+                        format: TEXT_FORMAT_TEXT,
+                    };
 
                     const result = validateFileField(
                         file_value_model,
@@ -200,15 +211,24 @@ describe(`file-field-validator`, () => {
                         followup_value_model
                     );
 
-                    expect(result.value).not.toContain(127);
-                    expect(result.value).not.toContain(142);
+                    expect(result?.value).not.toContain(127);
+                    expect(result?.value).not.toContain(142);
                 });
             });
 
             describe(`and those image urls were removed from the text
                     fields`, () => {
                 it(`will filter out the image files' ids`, () => {
-                    other_text_field.value = `<p>Some text</p>`;
+                    text_field_value_models = [
+                        text_field_referencing_an_image,
+                        {
+                            ...other_text_field,
+                            value: {
+                                ...other_text_field.value,
+                                content: `<p>Some text</p>`,
+                            },
+                        },
+                    ];
 
                     const result = validateFileField(
                         file_value_model,
@@ -216,13 +236,22 @@ describe(`file-field-validator`, () => {
                         followup_value_model
                     );
 
-                    expect(result.value).not.toContain(142);
+                    expect(result?.value).not.toContain(142);
                 });
             });
 
             describe(`and one of the text field has been switched to text format`, () => {
                 it(`will filter out the image files' ids`, () => {
-                    other_text_field.value.format = TEXT_FORMAT_TEXT;
+                    text_field_value_models = [
+                        text_field_referencing_an_image,
+                        {
+                            ...other_text_field,
+                            value: {
+                                ...other_text_field.value,
+                                format: TEXT_FORMAT_TEXT,
+                            },
+                        },
+                    ];
 
                     const result = validateFileField(
                         file_value_model,
@@ -230,7 +259,7 @@ describe(`file-field-validator`, () => {
                         followup_value_model
                     );
 
-                    expect(result.value).not.toContain(142);
+                    expect(result?.value).not.toContain(142);
                 });
             });
 
@@ -242,8 +271,8 @@ describe(`file-field-validator`, () => {
                         followup_value_model
                     );
 
-                    expect(result.value).toContain(429);
-                    expect(result.value).toContain(481);
+                    expect(result?.value).toContain(429);
+                    expect(result?.value).toContain(481);
                 });
             });
         });
