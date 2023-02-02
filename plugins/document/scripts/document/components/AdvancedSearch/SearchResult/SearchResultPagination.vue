@@ -97,113 +97,95 @@
         </template>
     </div>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Route } from "vue-router/types/router";
 import type { Dictionary } from "vue-router/types/router";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { computed } from "vue";
+import { useRoute } from "../../../helpers/use-router";
 
-@Component
-export default class SearchResultPagination extends Vue {
-    @Prop({ required: true })
-    readonly from!: number;
+const props = defineProps<{ from: number; to: number; total: number; limit: number }>();
 
-    @Prop({ required: true })
-    readonly to!: number;
+const { $gettext, interpolate } = useGettext();
 
-    @Prop({ required: true })
-    readonly total!: number;
+const begin_title = $gettext("Begin");
+const previous_title = $gettext("Previous");
+const next_title = $gettext("Next");
+const end_title = $gettext("End");
 
-    @Prop({ required: true })
-    readonly limit!: number;
+const route = useRoute();
 
-    get pages(): string {
-        return this.$gettextInterpolate(
-            this.$gettext("%{ from } – %{ to } of %{ total }").replace(
-                /(%\{\s*(?:from|to|total)\s*\})/g,
-                '<span class="tlp-pagination-number">$1</span>'
-            ),
-            {
-                from: this.from + 1,
-                to: this.to + 1,
-                total: this.total,
-            }
-        );
-    }
+const pages = computed((): string => {
+    return interpolate(
+        $gettext("%{ from } – %{ to } of %{ total }").replace(
+            /(%\{\s*(?:from|to|total)\s*\})/g,
+            '<span class="tlp-pagination-number">$1</span>'
+        ),
+        {
+            from: props.from + 1,
+            to: props.to + 1,
+            total: props.total,
+        }
+    );
+});
 
-    get begin_title(): string {
-        return this.$gettext("Begin");
-    }
+const begin_to = computed((): Route => {
+    const query = getInitialQueryWithoutItsOffset();
 
-    get previous_title(): string {
-        return this.$gettext("Previous");
-    }
+    return {
+        ...route,
+        query,
+    };
+});
 
-    get next_title(): string {
-        return this.$gettext("Next");
-    }
+const to_previous = computed((): Route => {
+    const query = getInitialQueryWithoutItsOffset();
 
-    get end_title(): string {
-        return this.$gettext("End");
-    }
-
-    get begin_to(): Route {
-        const query = this.getInitialQueryWithoutItsOffset();
-
+    const new_offset = Math.max(0, props.from - props.limit);
+    if (new_offset === 0) {
         return {
-            ...this.$route,
+            ...route,
             query,
         };
     }
 
-    get to_previous(): Route {
-        const query = this.getInitialQueryWithoutItsOffset();
+    return {
+        ...route,
+        query: {
+            ...query,
+            offset: String(new_offset),
+        },
+    };
+});
 
-        const new_offset = Math.max(0, this.from - this.limit);
-        if (new_offset === 0) {
-            return {
-                ...this.$route,
-                query,
-            };
-        }
+const to_next = computed((): Route => {
+    const new_offset = Math.min(props.total - 1, props.from + props.limit);
 
-        return {
-            ...this.$route,
-            query: {
-                ...query,
-                offset: String(new_offset),
-            },
-        };
-    }
+    return {
+        ...route,
+        query: {
+            ...route.query,
+            offset: String(new_offset),
+        },
+    };
+});
 
-    get to_next(): Route {
-        const new_offset = Math.min(this.total - 1, this.from + this.limit);
+const to_end = computed((): Route => {
+    return {
+        ...route,
+        query: {
+            ...route.query,
+            offset: String(props.total - (props.total % props.limit)),
+        },
+    };
+});
 
-        return {
-            ...this.$route,
-            query: {
-                ...this.$route.query,
-                offset: String(new_offset),
-            },
-        };
-    }
+function getInitialQueryWithoutItsOffset(): Dictionary<string | (string | null)[]> {
+    // We don't want to use offset from rest destructuring
+    // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#rest_in_object_destructuring
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { offset, ...query } = route.query;
 
-    get to_end(): Route {
-        return {
-            ...this.$route,
-            query: {
-                ...this.$route.query,
-                offset: String(this.total - (this.total % this.limit)),
-            },
-        };
-    }
-
-    getInitialQueryWithoutItsOffset(): Dictionary<string | (string | null)[]> {
-        // We don't want to use offset from rest destructuring
-        // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#rest_in_object_destructuring
-        //eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { offset, ...query } = this.$route.query;
-
-        return query;
-    }
+    return query;
 }
 </script>

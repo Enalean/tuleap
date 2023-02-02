@@ -54,6 +54,9 @@ describe("SearchContainer", () => {
                 $store: createStoreMock({
                     state: {},
                 }),
+                $route: {
+                    query: { q: "" },
+                },
             },
         });
 
@@ -251,7 +254,7 @@ describe("SearchContainer", () => {
         );
 
         expect(router.push).not.toHaveBeenCalled();
-        expect(searchInFolderMock).toHaveBeenCalledTimes(2);
+        expect(searchInFolderMock).toHaveBeenCalledTimes(1);
     });
 
     it("should perform a new search if user paginates through results", async () => {
@@ -343,6 +346,9 @@ describe("SearchContainer", () => {
                 $store: createStoreMock({
                     state: {},
                 }),
+                $route: {
+                    query: { q: "" },
+                },
             },
         });
 
@@ -369,6 +375,9 @@ describe("SearchContainer", () => {
                 $store: createStoreMock({
                     state: {},
                 }),
+                $route: {
+                    query: { q: "" },
+                },
             },
         });
 
@@ -413,6 +422,9 @@ describe("SearchContainer", () => {
                 $store: createStoreMock({
                     state: {},
                 }),
+                $route: {
+                    query: { q: "" },
+                },
             },
         });
 
