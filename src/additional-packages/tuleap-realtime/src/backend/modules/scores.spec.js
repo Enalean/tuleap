@@ -2,7 +2,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 
-var Scores = require('../../../backend/modules/scores');
+var Scores = require('./scores');
 var scores = new Scores();
 
 describe("Module Scores", function() {

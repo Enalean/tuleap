@@ -2,16 +2,16 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-var Rights = require('../../../backend/modules/rights');
+var Rights = require('./rights');
 var rights = new Rights();
 
-var Scores = require('../../../backend/modules/scores');
+var Scores = require('./scores');
 var scores = new Scores();
 
-var Rooms = require('../../../backend/modules/rooms');
+var Rooms = require('./rooms');
 var rooms = new Rooms(rights, scores);
 
-var Executions = require('../../../backend/modules/executions');
+var Executions = require('./executions');
 
 describe("Module Rooms", function() {
     var groups, user_id, room_id, socket, socket_bis, socket_in_room;
