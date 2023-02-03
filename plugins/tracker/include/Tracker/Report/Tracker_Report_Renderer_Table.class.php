@@ -1248,11 +1248,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 );
                             } else {
                                 $html .= $column['field']->fetchChangesetValue(
-                                    $row['id'],
-                                    $row['changeset_id'],
+                                    (int) $row['id'],
+                                    (int) $row['changeset_id'],
                                     $value,
                                     $this->report,
-                                    $from_aid
+                                    (int) $from_aid
                                 );
                             }
                             $html .= '</td>';
