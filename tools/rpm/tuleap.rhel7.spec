@@ -609,6 +609,11 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/botmattermost
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/botmattermost_agiledashboard
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/botmattermost_git
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mytuleap_contact_support
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
 
 %if %{with enterprise}
 %else

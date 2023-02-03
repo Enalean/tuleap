@@ -4377,6 +4377,572 @@
       <code>rest_resources</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/botmattermost/include/BotMattermost/Bot/BotDao.php">
+    <InvalidReturnStatement>
+      <code>$this-&gt;getDB()-&gt;insertReturnId(
+            'plugin_botmattermost_bot',
+            [
+                'name'        =&gt; $bot_name,
+                'webhook_url' =&gt; $bot_webhook_url,
+                'avatar_url'  =&gt; $bot_avatar_url,
+                'project_id'  =&gt; $project_id,
+            ]
+        )</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code>int</code>
+    </InvalidReturnType>
+  </file>
+  <file src="plugins/botmattermost/include/BotMattermost/Bot/BotFactory.php">
+    <InvalidArrayOffset>
+      <code>$row['project_id']</code>
+    </InvalidArrayOffset>
+    <MissingParamType>
+      <code>$bot_id</code>
+    </MissingParamType>
+    <TypeDoesNotContainType>
+      <code>$dar === false</code>
+      <code>$dar === false</code>
+      <code>$row === false</code>
+      <code>$row === null || $row === false</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/botmattermost/include/BotMattermost/BotMattermostDeleted.php">
+    <MissingReturnType>
+      <code>getBot</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost/include/BotMattermost/Controller/AdminController.php">
+    <MissingParamType>
+      <code>$id</code>
+      <code>$url</code>
+      <code>$url</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>addBot</code>
+      <code>deleteBot</code>
+      <code>displayIndex</code>
+      <code>editBot</code>
+      <code>validBotId</code>
+      <code>validOptionalUrl</code>
+      <code>validPostArgument</code>
+      <code>validUrl</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost/include/BotMattermost/Exception/ProvidedBotParameterIsNotValidException.php">
+    <MissingParamType>
+      <code>$message</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/botmattermost/include/BotMattermost/Plugin/PluginInfo.php">
+    <TooManyArguments>
+      <code>new \PluginDescriptor(
+                dgettext('tuleap-botmattermost', 'Bot Mattermost'),
+                dgettext('tuleap-botmattermost', 'Bot to send notifications in Mattermost'),
+                dgettext('tuleap-botmattermost', 'Bot to send notifications in Mattermost')
+            )</code>
+    </TooManyArguments>
+  </file>
+  <file src="plugins/botmattermost/include/BotMattermost/Router.php">
+    <MissingReturnType>
+      <code>checkUserIsSiteAdmin</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost/include/SenderServices/Attachment.php">
+    <MissingParamType>
+      <code>$pre_text</code>
+      <code>$text</code>
+      <code>$title</code>
+      <code>$title_link</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$color</code>
+      <code>$pre_text</code>
+      <code>$text</code>
+      <code>$title</code>
+      <code>$title_link</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>getColor</code>
+      <code>getPreText</code>
+      <code>getText</code>
+      <code>getTitle</code>
+      <code>getTitleLink</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost/include/SenderServices/EncoderMessage.php">
+    <MissingReturnType>
+      <code>generateArrayAttachments</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost/include/SenderServices/MarkdownEngine/MarkdownMustacheRenderer.php">
+    <MissingClosureParamType>
+      <code>$value</code>
+    </MissingClosureParamType>
+    <MissingPropertyType>
+      <code>$markdown_special_characters</code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/botmattermost/include/SenderServices/Message.php">
+    <MissingParamType>
+      <code>$text</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$attachments</code>
+      <code>$text</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>addAttachment</code>
+      <code>getAttachments</code>
+      <code>getText</code>
+      <code>hasAttachments</code>
+      <code>hasContent</code>
+      <code>hasText</code>
+      <code>setText</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost/include/SenderServices/Sender.php">
+    <MissingParamType>
+      <code>$channel</code>
+      <code>$channel</code>
+      <code>$post_string</code>
+      <code>$url</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>generateAndSendNotification</code>
+      <code>pushNotification</code>
+      <code>pushNotificationByChannel</code>
+      <code>pushNotificationWithoutChannel</code>
+      <code>send</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost/include/botmattermostPlugin.php">
+    <MissingParamType>
+      <code>$id</code>
+      <code>$params</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>burningParrotCompatiblePage</code>
+      <code>burning_parrot_get_javascript_files</code>
+      <code>burning_parrot_get_stylesheets</code>
+    </MissingReturnType>
+    <PossiblyUndefinedArrayOffset>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/botmattermost/tests/unit/BotMattermost/SenderServices/SenderTest.php">
+    <PossiblyUndefinedMethod>
+      <code>expects</code>
+    </PossiblyUndefinedMethod>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/BotMattermostStandUpSummary/BotMattermostStandUpSummary.php">
+    <MissingParamType>
+      <code>$project_id</code>
+      <code>$send_time</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$project_id</code>
+      <code>$send_time</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>getBot</code>
+      <code>getProjectId</code>
+      <code>getSendTime</code>
+      <code>isAssigned</code>
+      <code>toArray</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/BotMattermostStandUpSummary/Dao.php">
+    <NullableReturnStatement>
+      <code>$res['id']</code>
+    </NullableReturnStatement>
+    <PossiblyNullArrayAccess>
+      <code>$res['id']</code>
+    </PossiblyNullArrayAccess>
+    <RedundantCast>
+      <code>(int) $bot-&gt;getId()</code>
+    </RedundantCast>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/BotMattermostStandUpSummary/Factory.php">
+    <MissingParamType>
+      <code>$notification_id</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$send_time</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>deleteBotNotification</code>
+      <code>deleteBotNotificationByBot</code>
+      <code>getAgileDashboardBotsForSummary</code>
+      <code>getBotNotification</code>
+      <code>saveBotNotification</code>
+    </MissingReturnType>
+    <TypeDoesNotContainType>
+      <code>$dar === false</code>
+      <code>empty($bots_mattermost_stand_up_summary)</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/BotMattermostStandUpSummary/Validator.php">
+    <MissingParamType>
+      <code>$action</code>
+      <code>$bot_id</code>
+      <code>$id</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>isValid</code>
+      <code>isValidAddAction</code>
+      <code>isValidEditAction</code>
+      <code>validBotId</code>
+      <code>validId</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/Controller.php">
+    <MissingPropertyType>
+      <code>$bot_agiledashboard_factory</code>
+      <code>$bot_factory</code>
+      <code>$csrf</code>
+      <code>$request</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>addBotNotification</code>
+      <code>deleteBotNotification</code>
+      <code>deleteBotNotificationByBot</code>
+      <code>displayIndex</code>
+      <code>editBotNotification</code>
+      <code>process</code>
+      <code>redirectWithErrorFeedback</code>
+      <code>render</code>
+    </MissingReturnType>
+    <UndefinedThisPropertyAssignment>
+      <code>$this-&gt;validator</code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch>
+      <code>$this-&gt;validator</code>
+      <code>$this-&gt;validator</code>
+      <code>$this-&gt;validator</code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/Plugin/PluginInfo.php">
+    <TooManyArguments>
+      <code>new \PluginDescriptor(
+                dgettext('tuleap-botmattermost_agiledashboard', 'Bot Mattermost-Agile Dashboard'),
+                dgettext('tuleap-botmattermost_agiledashboard', 'Bot to send stand-up summary in mattermost'),
+                dgettext('tuleap-botmattermost_agiledashboard', 'Bot to send stand-up summary in mattermost')
+            )</code>
+    </TooManyArguments>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/Presenter/AdminNotificationPresenter.php">
+    <MissingPropertyType>
+      <code>$alert_time_warning</code>
+      <code>$any_configured_notification</code>
+      <code>$any_configured_notification_tips</code>
+      <code>$bot_assigned</code>
+      <code>$bot_list_is_empty</code>
+      <code>$button_close</code>
+      <code>$button_config</code>
+      <code>$button_confirm</code>
+      <code>$button_delete</code>
+      <code>$button_edit</code>
+      <code>$description</code>
+      <code>$empty_bot_list</code>
+      <code>$empty_channel_list</code>
+      <code>$has_bots</code>
+      <code>$has_project_bots</code>
+      <code>$has_system_bots</code>
+      <code>$input_channels_handles</code>
+      <code>$label_channels_handles</code>
+      <code>$label_send_time</code>
+      <code>$modal_add_title</code>
+      <code>$modal_delete_content</code>
+      <code>$modal_delete_title</code>
+      <code>$modal_edit_title</code>
+      <code>$project_bots</code>
+      <code>$project_id</code>
+      <code>$purified_info_channels_handles</code>
+      <code>$system_bots</code>
+      <code>$table_col_channels</code>
+      <code>$table_col_name</code>
+      <code>$title</code>
+    </MissingPropertyType>
+    <UndefinedThisPropertyAssignment>
+      <code>$this-&gt;button_save</code>
+      <code>$this-&gt;description_create_bot</code>
+      <code>$this-&gt;label_bot_list</code>
+      <code>$this-&gt;label_bot_name</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/Presenter/StandUpSummaryPresenter.php">
+    <MissingParamType>
+      <code>$last_plannings</code>
+      <code>$project_name</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$last_plannings</code>
+      <code>$no_current_milestones</code>
+      <code>$no_current_plannings</code>
+      <code>$no_update</code>
+      <code>$project_name</code>
+      <code>$quick_access_text</code>
+      <code>$table_header_days_remaining</code>
+      <code>$table_header_id</code>
+      <code>$table_header_last_update</code>
+      <code>$table_header_status</code>
+      <code>$table_header_status_closed</code>
+      <code>$table_header_status_open</code>
+      <code>$table_header_title</code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/SenderServices/StandUpNotificationBuilder.php">
+    <MissingParamType>
+      <code>$date</code>
+      <code>$date</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>buildArtifactLink</code>
+      <code>buildBurndownUrl</code>
+      <code>buildLinkedArtifactTable</code>
+      <code>buildMilestoneForNotification</code>
+      <code>buildMilestoneInformation</code>
+      <code>buildMilestonesForNotification</code>
+      <code>buildNotificationText</code>
+      <code>checkModificationOnArtifact</code>
+      <code>getBurndownUrl</code>
+      <code>getDate</code>
+      <code>getDateTime</code>
+      <code>getLinkedArtifactsWithRecentModification</code>
+      <code>getMilestoneDaysRemaining</code>
+      <code>getPlanningCardwallUrl</code>
+      <code>getTrackerArtifactInfo</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/SenderServices/StandUpNotificationSender.php">
+    <MissingReturnType>
+      <code>getProjectsIdsFromAgileDashboardBots</code>
+      <code>send</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost_agiledashboard/include/botmattermost_agiledashboardPlugin.php">
+    <ArgumentTypeCoercion>
+      <code>MarkdownTemplateRendererFactory::build()
+                -&gt;getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/templates')</code>
+    </ArgumentTypeCoercion>
+    <MissingParamType>
+      <code>$id</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>additional_scrum_admin_pane_content</code>
+      <code>botmattermost_bot_deleted</code>
+      <code>cron_job_every_minute</code>
+      <code>getController</code>
+      <code>getHooksAndCallbacks</code>
+      <code>getRenderToString</code>
+      <code>getRequest</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/BotMattermostGitNotification/BotMattermostGitNotification.php">
+    <MissingParamType>
+      <code>$channels</code>
+      <code>$repository_id</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$channels</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>getBot</code>
+      <code>toArray</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/BotMattermostGitNotification/Dao.php">
+    <MissingParamType>
+      <code>$repository_id</code>
+    </MissingParamType>
+    <NullableReturnStatement>
+      <code>$res['id']</code>
+    </NullableReturnStatement>
+    <PossiblyNullArrayAccess>
+      <code>$res['id']</code>
+    </PossiblyNullArrayAccess>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/BotMattermostGitNotification/Factory.php">
+    <MissingParamType>
+      <code>$bot_id</code>
+      <code>$notification_id</code>
+      <code>$repository_id</code>
+      <code>$repository_id</code>
+      <code>$repository_id</code>
+      <code>$repository_id</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>addBotNotification</code>
+      <code>deleteBotNotification</code>
+      <code>deleteBotNotificationByBot</code>
+      <code>getBotNotification</code>
+      <code>saveBotNotification</code>
+    </MissingReturnType>
+    <TypeDoesNotContainType>
+      <code>$dar === false</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/BotMattermostGitNotification/Validator.php">
+    <MissingParamType>
+      <code>$action</code>
+      <code>$id</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>isValid</code>
+      <code>isValidAddAction</code>
+      <code>isValidEditAction</code>
+      <code>validId</code>
+    </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>$repository</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/Controller.php">
+    <MissingPropertyType>
+      <code>$bot_factory</code>
+      <code>$bot_git_factory</code>
+      <code>$csrf</code>
+      <code>$git_repository_factory</code>
+      <code>$request</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>addBotNotification</code>
+      <code>deleteBotNotification</code>
+      <code>deleteBotNotificationByBot</code>
+      <code>displayIndex</code>
+      <code>editBotNotification</code>
+      <code>process</code>
+      <code>redirectWithErrorFeedback</code>
+      <code>render</code>
+    </MissingReturnType>
+    <UndefinedThisPropertyAssignment>
+      <code>$this-&gt;validator</code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch>
+      <code>$this-&gt;validator</code>
+      <code>$this-&gt;validator</code>
+      <code>$this-&gt;validator</code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/Plugin/PluginInfo.php">
+    <TooManyArguments>
+      <code>new \PluginDescriptor(
+                dgettext('tuleap-botmattermost_git', 'Bot Mattermost-Git'),
+                dgettext('tuleap-botmattermost_git', 'Bot to send Git notifications in Mattermost'),
+                dgettext('tuleap-botmattermost_git', 'Bot to send Git notifications in Mattermost')
+            )</code>
+    </TooManyArguments>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/Presenter/AttachmentPreTextPresenter.php">
+    <MissingPropertyType>
+      <code>$branch_destination</code>
+      <code>$branch_source</code>
+      <code>$pre_text_message</code>
+      <code>$repository_destination</code>
+      <code>$repository_url_manager</code>
+      <code>$this-&gt;repository_destination</code>
+      <code>$this-&gt;repository_url_manager</code>
+      <code>$user_link</code>
+      <code>$user_name</code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code>getRepositoryLink</code>
+    </MissingReturnType>
+    <UndefinedThisPropertyAssignment>
+      <code>$this-&gt;pre_text_project</code>
+      <code>$this-&gt;repository_destination_link</code>
+      <code>$this-&gt;repository_destination_name</code>
+      <code>$this-&gt;user</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/Presenter/Presenter.php">
+    <MissingPropertyType>
+      <code>$repository</code>
+    </MissingPropertyType>
+    <UndefinedThisPropertyAssignment>
+      <code>$this-&gt;any_configured_notification</code>
+      <code>$this-&gt;any_configured_notification_tips</code>
+      <code>$this-&gt;button_close</code>
+      <code>$this-&gt;button_config</code>
+      <code>$this-&gt;button_confirm</code>
+      <code>$this-&gt;button_delete</code>
+      <code>$this-&gt;button_edit</code>
+      <code>$this-&gt;description</code>
+      <code>$this-&gt;description_create_bot</code>
+      <code>$this-&gt;empty_bot_list</code>
+      <code>$this-&gt;empty_channel_list</code>
+      <code>$this-&gt;input_channels_handles</code>
+      <code>$this-&gt;label_avatar_url</code>
+      <code>$this-&gt;label_bot_list</code>
+      <code>$this-&gt;label_bot_name</code>
+      <code>$this-&gt;label_channels_handles</code>
+      <code>$this-&gt;modal_add_title</code>
+      <code>$this-&gt;modal_delete_content</code>
+      <code>$this-&gt;modal_delete_title</code>
+      <code>$this-&gt;modal_edit_title</code>
+      <code>$this-&gt;project_id</code>
+      <code>$this-&gt;purified_info_channels_handles</code>
+      <code>$this-&gt;repository_id</code>
+      <code>$this-&gt;title</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/SenderServices/GitNotificationBuilder.php">
+    <MissingParamType>
+      <code>$review</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/SenderServices/PullRequestNotificationBuilder.php">
+    <MissingParamType>
+      <code>$pull_request_description</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>buildNotificationAttachment</code>
+      <code>makePreText</code>
+      <code>makeText</code>
+      <code>makeTitleLink</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost_git/include/BotMattermostGit/SenderServices/PullRequestNotificationSender.php">
+    <MissingReturnType>
+      <code>send</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/botmattermost_git/include/botmattermost_gitPlugin.php">
+    <ArgumentTypeCoercion>
+      <code>PluginManager::instance()-&gt;getPluginByName('git')</code>
+    </ArgumentTypeCoercion>
+    <MissingParamType>
+      <code>$id</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>botmattermost_bot_deleted</code>
+      <code>cssfile</code>
+      <code>getController</code>
+      <code>getFactory</code>
+      <code>getGitRepositoryFactory</code>
+      <code>getGitRepositoryUrlManager</code>
+      <code>getHooksAndCallbacks</code>
+      <code>getLogger</code>
+      <code>getSender</code>
+      <code>git_additional_notifications</code>
+      <code>pullrequest_hook_create_pull_request</code>
+    </MissingReturnType>
+    <PossiblyNullArgument>
+      <code>PluginManager::instance()-&gt;getPluginByName('git')</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code>getPluginPath</code>
+      <code>getPluginPath</code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedArrayOffset>
+      <code>$_SERVER['REQUEST_URI']</code>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="plugins/bugzilla_reference/include/Bugzilla/Administration/Controller.php">
     <MissingReturnType>
       <code>addReference</code>
@@ -4911,11 +5477,8 @@
       <code>escapeInt</code>
       <code>escapeInt</code>
       <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
       <code>parent::__construct()</code>
       <code>retrieve</code>
-      <code>update</code>
       <code>update</code>
       <code>update</code>
       <code>update</code>
@@ -4923,17 +5486,14 @@
     <MissingParamType>
       <code>$field_id</code>
       <code>$field_id</code>
-      <code>$from_renderer_id</code>
       <code>$renderer_id</code>
       <code>$renderer_id</code>
       <code>$renderer_id</code>
       <code>$renderer_id</code>
-      <code>$to_renderer_id</code>
     </MissingParamType>
     <MissingReturnType>
       <code>create</code>
       <code>delete</code>
-      <code>duplicate</code>
       <code>save</code>
       <code>searchByRendererId</code>
     </MissingReturnType>
@@ -6100,7 +6660,6 @@
       <code>trackerEventGetSemanticDuplicators</code>
       <code>tracker_event_manage_semantics</code>
       <code>tracker_event_semantic_from_xml</code>
-      <code>tracker_event_trackers_duplicated</code>
       <code>tracker_report_renderer_types</code>
     </MissingReturnType>
     <PossiblyNullArrayAccess>
@@ -15190,6 +15749,101 @@
     <TypeDoesNotContainType>
       <code>IS_SCRIPT</code>
     </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/LicenseManager/CountDueLicenses/DueLicencesDao.php">
+    <InvalidReturnStatement>
+      <code>$this-&gt;getDB()-&gt;safeQuery($sql, $parameters)</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code>array</code>
+    </InvalidReturnType>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/LicenseManager/CountDueLicenses/LicenseManagerCountDueLicensesCommand.php">
+    <MissingReturnType>
+      <code>configure</code>
+    </MissingReturnType>
+    <TypeDoesNotContainType>
+      <code>empty($visitors_project_ids)</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/LicenseManager/CountDueLicenses/UserEvolutionHistoryExporter.php">
+    <PossiblyFalseArgument>
+      <code>$rows</code>
+    </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code>$data[0]</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/LicenseManager/LicenseManagerComputedMetricsCollector.php">
+    <MissingParamType>
+      <code>$max_users</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>collect</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/LicenseManager/PluginInfo.php">
+    <TooManyArguments>
+      <code>new \PluginDescriptor(
+                dgettext('tuleap-enalean_licensemanager', 'Enalean License Manager'),
+                dgettext('tuleap-enalean_licensemanager', 'Manage usage of license for Tuleap'),
+                dgettext('tuleap-enalean_licensemanager', 'Manage usage of license for Tuleap')
+            )</code>
+    </TooManyArguments>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/LicenseManager/StatusActivityEmitter.php">
+    <MissingParamType>
+      <code>$webhook_url</code>
+      <code>$webhook_url</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>emit</code>
+      <code>emitWebhook</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/LicenseManager/Webhook/StatusLogger.php">
+    <MissingParamType>
+      <code>$status</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>log</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/LicenseManager/Webhook/UserCounterPayload.php">
+    <MissingParamType>
+      <code>$event</code>
+      <code>$max_users</code>
+      <code>$user_id</code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code>$payload</code>
+    </MissingPropertyType>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/LicenseManager/Webhook/UserCounterWebhook.php">
+    <MissingParamType>
+      <code>$url</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/enalean_licensemanager/include/enalean_licensemanagerPlugin.php">
+    <InvalidArgument>
+      <code>[
+                new StatisticsBadgePresenter(
+                    "$nb_alive_users_label / $max_allowed_users_label",
+                    $level
+                ),
+            ]</code>
+    </InvalidArgument>
+    <MissingParamType>
+      <code>$event</code>
+      <code>$id</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>collectComputedMetrics</code>
+      <code>getHooksAndCallbacks</code>
+      <code>get_siteadmin_homepage_user_statistics</code>
+      <code>get_siteadmin_warnings</code>
+      <code>userStatusActivity</code>
+    </MissingReturnType>
   </file>
   <file src="plugins/forumml/bin/mail2dbng.php">
     <DeprecatedFunction>
@@ -27151,6 +27805,74 @@
       <code>getPluginInfo</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/mytuleap_contact_support/include/ContactSupportFormController.php">
+    <MissingReturnType>
+      <code>getHelpPageContent</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/mytuleap_contact_support/include/Plugin/Info.php">
+    <MissingParamType>
+      <code>$incname</code>
+      <code>$plugin</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>getDefaultConfPath</code>
+    </MissingReturnType>
+    <TooManyArguments>
+      <code>new \PluginDescriptor(
+                dgettext('tuleap-mytuleap_contact_support', 'myTuleap contact support'),
+                dgettext('tuleap-mytuleap_contact_support', 'Display a contact support modal'),
+                dgettext('tuleap-mytuleap_contact_support', 'Display a contact support modal')
+            )</code>
+    </TooManyArguments>
+  </file>
+  <file src="plugins/mytuleap_contact_support/include/Presenter/ConfirmationEmailToUserPresenter.php">
+    <MissingParamType>
+      <code>$current_user_real_name</code>
+      <code>$message_content</code>
+      <code>$message_title</code>
+      <code>$mytuleap_name</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/mytuleap_contact_support/include/Presenter/EmailToSupportPresenter.php">
+    <MissingParamType>
+      <code>$current_user_real_name</code>
+      <code>$message_content</code>
+      <code>$message_title</code>
+      <code>$mytuleap_name</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/mytuleap_contact_support/include/Presenter/FormPresenter.php">
+    <MissingParamType>
+      <code>$administrator_email</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/mytuleap_contact_support/include/Presenter/ModalPresenter.php">
+    <MissingParamType>
+      <code>$help_page_content</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/mytuleap_contact_support/include/mytuleap_contact_supportPlugin.php">
+    <MissingParamType>
+      <code>$id</code>
+      <code>$params</code>
+      <code>$params</code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code>burning_parrot_get_javascript_files</code>
+      <code>burning_parrot_get_stylesheets</code>
+      <code>cssfile</code>
+      <code>getContactSupportFormController</code>
+      <code>getHooksAndCallbacks</code>
+      <code>getPluginInfo</code>
+      <code>getRenderer</code>
+      <code>getSendMailSupportController</code>
+      <code>javascript_file</code>
+    </MissingReturnType>
+    <PossiblyUndefinedArrayOffset>
+      <code>$_SERVER['REQUEST_URI']</code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
   <file src="plugins/oauth2_server/include/AuthorizationServer/AuthorizationEndpointProcessConsentController.php">
     <InvalidArrayOffset>
       <code>$body_params[self::OIDC_NONCE]</code>
@@ -36690,14 +37412,6 @@
     <MissingParamType>
       <code>$submitted_value</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/ChangesetDataInitializator.class.php">
-    <MissingReturnType>
-      <code>process</code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code>getValues</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/FieldsValidator.class.php">
     <MissingParamType>
