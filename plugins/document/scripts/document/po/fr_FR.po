@@ -403,6 +403,13 @@ msgstr "Le contenu du mail est requis"
 msgid "Manager"
 msgstr "Gestionnaire"
 
+msgid ""
+"Managers are also Writers. Redundant permissions are automatically de-"
+"duplicated."
+msgstr ""
+"Les gestionnaires sont également rédacteurs. Les permissions redondantes "
+"sont automatiquement dédupliquées."
+
 msgid "Maximum archive size allowed: %{ max_archive_size } MB"
 msgstr "Taille maximum de l'archive autorisée : %{ max_archive_size } Mo"
 
@@ -864,6 +871,13 @@ msgstr ""
 
 msgid "Writer"
 msgstr "Rédacteur"
+
+msgid ""
+"Writers and Managers are also Readers. Redundant permissions are "
+"automatically de-duplicated."
+msgstr ""
+"Les gestionnaires et les rédacteurs sont également lecteurs. Les permissions "
+"redondantes sont automatiquement dédupliquées."
 
 msgid ""
 "You are about to delete \"%{ title }\" permanently. Please confirm your "
