@@ -31,7 +31,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
@@ -50,6 +50,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends \Tuleap\T
      * @var \Project
      */
     private $an_active_project;
+    private \PFUser $project_admin;
 
     protected function setUp(): void
     {
