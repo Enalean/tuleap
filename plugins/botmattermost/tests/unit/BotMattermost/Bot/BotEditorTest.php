@@ -26,8 +26,6 @@ use Tuleap\BotMattermost\Administration\Request\ParameterValidator;
 use Tuleap\BotMattermost\Exception\ProvidedBotParameterIsNotValidException;
 use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 final class BotEditorTest extends TestCase
 {
     private BotEditor $bot_editor;

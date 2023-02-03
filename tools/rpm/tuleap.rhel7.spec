@@ -400,6 +400,27 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-securitytxt
 %{summary}.
 
+%package plugin-botmattermost
+Summary: Bot Mattermost management for Tuleap
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-botmattermost
+%{summary}.
+
+%package plugin-botmattermost-agiledashboard
+Summary: Bot Mattermost AgileDashboard - Stand up summary
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-botmattermost, tuleap-plugin-agiledashboard
+%description plugin-botmattermost-agiledashboard
+%{summary}.
+
+%package plugin-botmattermost-git
+Summary: Bot Mattermost git - Git Notification
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-botmattermost, tuleap-plugin-git
+%description plugin-botmattermost-git
+%{summary}.
+
 %if %{with enterprise}
 
 %package plugin-baseline
@@ -552,6 +573,20 @@ Provides: tuleap-plugin-textualreport
 %description plugin-document_generation
 %{summary}.
 
+%package plugin-mytuleap-contact-support
+Summary: myTuleap Contact support
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-mytuleap-contact-support
+%{summary}.
+
+%package plugin-enalean-licensemanager
+Summary: Manage usage of license for Tuleap
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-enalean-licensemanager
+%{summary}.
+
 %endif
 
 %if %{with experimental}
@@ -609,11 +644,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/botmattermost
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/botmattermost_agiledashboard
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/botmattermost_git
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mytuleap_contact_support
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
 
 %if %{with enterprise}
 %else
@@ -638,6 +668,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mytuleap_contact_support
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
 %endif
 
 %if "%{?dist}" == ".el9"
@@ -885,6 +917,9 @@ done
 # Plugin GitLab
 %{__install} plugins/gitlab/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
 %{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
+
+# Plugin BotMattermost
+%{__cp} -ar plugins/botmattermost/tuleap-plugin-botmattermost.conf $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d/
 
 %if %{with enterprise}
 
@@ -1449,6 +1484,19 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/securitytxt
 
+%files plugin-botmattermost
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/botmattermost
+%attr(00644,root,root) %config(noreplace) /etc/logrotate.d/tuleap-plugin-botmattermost.conf
+
+%files plugin-botmattermost-agiledashboard
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/botmattermost_agiledashboard
+
+%files plugin-botmattermost-git
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/botmattermost_git
+
 %if %{with enterprise}
 
 %files plugin-baseline
@@ -1537,6 +1585,14 @@ fi
 %files plugin-document_generation
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/document_generation
+
+%files plugin-mytuleap-contact-support
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/mytuleap_contact_support
+
+%files plugin-enalean-licensemanager
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/enalean_licensemanager
 
 %endif
 

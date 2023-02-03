@@ -22,8 +22,6 @@ namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
 use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 final class MarkdownTemplateRendererFactoryTest extends TestCase
 {
     public function testItGetsAMarkdownRenderer(): void
