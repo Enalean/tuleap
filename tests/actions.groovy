@@ -73,19 +73,13 @@ def runStylelint() {
     }
 }
 
-def runPsalm(String configPath, String filesToAnalyze, String root='.') {
+def runPsalm(String configPath, String root='.') {
     withEnv(['XDG_CACHE_HOME=/tmp/psalm_cache/']) {
         dir ('sources') {
-            if (filesToAnalyze == '' || filesToAnalyze == '.') {
-                sh """
-                mkdir -p ../results/psalm/
-                scl enable php81 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
-                """
-            } else {
-                sh """
-                scl enable php81 "tests/psalm/psalm-ci-launcher.php --config='${configPath}' --report-folder=../results/psalm/ ${filesToAnalyze}"
-                """
-            }
+            sh """
+            mkdir -p ../results/psalm/
+            scl enable php81 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+            """
         }
     }
 }

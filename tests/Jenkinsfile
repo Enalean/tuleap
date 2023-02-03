@@ -139,7 +139,7 @@ pipeline {
                     steps {
                         script {
                             execTestWithLimitedConcurrency({
-                                actions.runPsalm('tests/psalm/psalm.xml', '.')
+                                actions.runPsalm('tests/psalm/psalm.xml')
                         }) }
                     }
                     post {
