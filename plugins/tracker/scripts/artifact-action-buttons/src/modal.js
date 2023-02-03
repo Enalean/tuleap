@@ -37,15 +37,12 @@ export function init(vue_mount_point) {
 
     const { trackerId, trackerName, trackerColor, artifactId, projectId } = vue_mount_point.dataset;
 
-    const is_list_picker_enabled = Boolean(JSON.parse(vue_mount_point.dataset.isListPickerEnabled));
-
     setFromTracker(
         Number.parseInt(trackerId, 10),
         trackerName,
         trackerColor,
         artifactId,
-        projectId,
-        is_list_picker_enabled
+        projectId
     );
 
     new RootComponent({}).$mount(vue_mount_point);

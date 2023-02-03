@@ -30,7 +30,6 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\PossibleParentSelector;
-use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -48,8 +47,6 @@ final class PossibleParentSelectorRendererTest extends TestCase
         $this->user               = UserTestBuilder::aUser()->build();
         $this->user_story_tracker = TrackerTestBuilder::aTracker()->withId(35)->build();
         $GLOBALS['HTML']          = LayoutBuilder::build();
-
-        \ForgeConfig::setFeatureFlag(ListPickerIncluder::FORGE_CONFIG_KEY, '');
 
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
         $this->renderer = PossibleParentSelectorRenderer::buildWithDefaultTemplateRenderer();

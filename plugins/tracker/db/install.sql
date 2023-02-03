@@ -1075,5 +1075,4 @@ FROM `groups`
 WHERE `groups`.status != 'D'
       AND service.short_name = 'plugin_tracker';
 
-INSERT INTO forgeconfig (name, value) VALUES ('feature_flag_use_list_pickers_in_trackers_and_modals', 1);
 INSERT INTO forgeconfig (name, value) VALUES ('tracker_jira_force_basic_auth', '1');
