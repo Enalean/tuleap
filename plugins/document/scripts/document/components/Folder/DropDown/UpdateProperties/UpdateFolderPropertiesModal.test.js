@@ -19,65 +19,77 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 
 import UpdateFolderPropertiesModal from "./UpdateFolderPropertiesModal.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("UpdateFolderPropertiesModal", () => {
     let factory, store;
 
     beforeEach(() => {
-        const general_store = {
-            state: {
-                current_folder: {
-                    id: 42,
-                    title: "My current folder",
-                    properties: [
-                        {
-                            short_name: "title",
-                            name: "title",
-                            list_value: "My current folder",
-                            is_multiple_value_allowed: false,
-                            type: "text",
-                            is_required: false,
-                        },
-                        {
-                            short_name: "custom property",
-                            name: "custom",
-                            value: "value",
-                            is_multiple_value_allowed: false,
-                            type: "text",
-                            is_required: false,
-                        },
-                        {
-                            short_name: "status",
-                            list_value: [
-                                {
-                                    id: 103,
-                                },
-                            ],
-                        },
-                    ],
-                },
-                configuration: {
-                    project_id: 102,
-                },
-            },
-        };
-
-        store = createStoreMock(general_store, {
-            error: { has_modal_error: false },
-            configuration: { is_status_property_used: true },
-        });
-
         factory = (props = {}) => {
             return shallowMount(UpdateFolderPropertiesModal, {
-                localVue,
                 mocks: { $store: store },
                 propsData: { ...props },
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            configuration: {
+                                state: {
+                                    is_status_property_used: true,
+                                    project_id: "102",
+                                },
+                                namespaced: true,
+                            },
+                            error: {
+                                state: {
+                                    has_modal_error: false,
+                                },
+                                namespaced: true,
+                            },
+                            properties: {
+                                state: {
+                                    has_loaded_properties: false,
+                                },
+                                namespaced: true,
+                            },
+                        },
+                        state: {
+                            current_folder: {
+                                id: 42,
+                                title: "My current folder",
+                                properties: [
+                                    {
+                                        short_name: "title",
+                                        name: "title",
+                                        list_value: "My current folder",
+                                        is_multiple_value_allowed: false,
+                                        type: "text",
+                                        is_required: false,
+                                    },
+                                    {
+                                        short_name: "custom property",
+                                        name: "custom",
+                                        value: "value",
+                                        is_multiple_value_allowed: false,
+                                        type: "text",
+                                        is_required: false,
+                                    },
+                                    {
+                                        short_name: "status",
+                                        list_value: [
+                                            {
+                                                id: 103,
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    }),
+                },
             });
         };
 
@@ -190,10 +202,6 @@ describe("UpdateFolderPropertiesModal", () => {
         });
     });
     it("Transform item property rest representation", () => {
-        store.state.properties = {
-            has_loaded_properties: false,
-        };
-
         const properties_to_update = {
             short_name: "field_1234",
             list_value: [

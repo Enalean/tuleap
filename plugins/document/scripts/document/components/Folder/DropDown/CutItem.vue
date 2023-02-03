@@ -39,12 +39,15 @@ import { useClipboardStore } from "../../../stores/clipboard";
 import { computed } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
+import { useStore } from "vuex";
 
+const store = useStore();
 const props = defineProps<{ item: Item }>();
+
 const { project_id, user_id } = useNamespacedState<
     Pick<ConfigurationState, "project_id" | "user_id">
 >("configuration", ["project_id", "user_id"]);
-const clipboard = useClipboardStore(project_id.value, user_id.value);
+const clipboard = useClipboardStore(store, project_id.value, user_id.value);
 
 const can_cut_item = computed((): boolean => {
     return props.item.user_can_write && props.item.parent_id !== 0;

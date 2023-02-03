@@ -17,13 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import DropDownCurrentFolder from "./DropDownCurrentFolder.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Folder, State } from "../../../type";
-import type { ConfigurationState } from "../../../store/configuration";
+import type { Folder, RootState } from "../../../type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("DropDownCurrentFolder", () => {
     function createWrapper(
@@ -33,11 +31,19 @@ describe("DropDownCurrentFolder", () => {
         parent_id: number,
         forbid_writers_to_update: boolean,
         forbid_writers_to_delete: boolean
-    ): Wrapper<DropDownCurrentFolder> {
+    ): VueWrapper<InstanceType<typeof DropDownCurrentFolder>> {
         return shallowMount(DropDownCurrentFolder, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            namespaced: true,
+                            state: {
+                                forbid_writers_to_update,
+                                forbid_writers_to_delete,
+                            },
+                        },
+                    },
                     state: {
                         current_folder: {
                             id: 42,
@@ -46,11 +52,7 @@ describe("DropDownCurrentFolder", () => {
                             can_user_manage,
                             parent_id,
                         } as Folder,
-                        configuration: {
-                            forbid_writers_to_update,
-                            forbid_writers_to_delete,
-                        } as ConfigurationState,
-                    } as unknown as State,
+                    } as unknown as RootState,
                 }),
             },
             propsData: { isInFolderEmptyState },

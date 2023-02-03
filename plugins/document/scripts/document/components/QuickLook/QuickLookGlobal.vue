@@ -46,10 +46,7 @@
                 <label class="tlp-label" for="item-description">{{
                     $gettext("Description")
                 }}</label>
-                <p
-                    id="item-description"
-                    v-dompurify-html="currently_previewed_item.post_processed_description"
-                ></p>
+                <p id="item-description" v-dompurify-html="get_description"></p>
             </div>
         </section>
     </section>
@@ -85,6 +82,12 @@ const { currently_previewed_item } = useState<Pick<State, "currently_previewed_i
 const emit = defineEmits<{
     (e: "close-quick-look-event"): void;
 }>();
+
+const get_description = computed((): string => {
+    return currently_previewed_item.value
+        ? currently_previewed_item.value.post_processed_description
+        : "";
+});
 
 const icon_class = computed((): string => {
     const item = currently_previewed_item.value;
@@ -140,4 +143,8 @@ const quick_look_component_action = computed(() => {
 function closeQuickLookEvent(): void {
     emit("close-quick-look-event");
 }
+
+defineExpose({
+    get_description,
+});
 </script>

@@ -18,29 +18,53 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
-
 import PermissionsUpdateModal from "./PermissionsUpdateModal.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-
 import * as tlp_modal from "@tuleap/tlp-modal";
 import * as handle_errors from "../../../store/actions-helpers/handle-errors";
 import emitter from "../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("PermissionsUpdateModal", () => {
-    let factory, store;
+    let factory;
+    let load_project_ugroups = jest.fn().mockImplementation(() => {
+        return { id: "102_3", label: "Project members" };
+    });
+    const update_permissions = jest.fn().mockImplementation(() => {
+        return { id: "102_3", label: "Project members" };
+    });
 
     beforeEach(() => {
-        store = createStoreMock(
-            {},
-            { permissions: { project_ugroups: null }, error: {}, configuration: {} }
-        );
+        load_project_ugroups.mockReset();
+        update_permissions.mockReset();
 
-        factory = (props = {}) => {
+        factory = (props = {}, ugroups) => {
             return shallowMount(PermissionsUpdateModal, {
-                localVue,
                 propsData: { ...props },
-                mocks: { $store: store },
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            permissions: {
+                                namespaced: true,
+                                state: { project_ugroups: ugroups },
+                                actions: {
+                                    loadProjectUserGroupsIfNeeded: load_project_ugroups,
+                                    updatePermissions: update_permissions,
+                                },
+                            },
+                            configuration: {
+                                namespaced: true,
+                                state: {},
+                            },
+                            error: {
+                                namespaced: true,
+                                mutations: {
+                                    resetModalError: jest.fn(),
+                                },
+                            },
+                        },
+                    }),
+                },
             });
         };
 
@@ -61,23 +85,7 @@ describe("PermissionsUpdateModal", () => {
         });
     });
 
-    it("Set a loading a state by default", () => {
-        const wrapper = factory({ item: {} });
-
-        expect(wrapper.find("[class=document-permissions-modal-loading-state]").exists()).toBe(
-            true
-        );
-    });
-
-    it("When the modal is first opened the project user groups are loaded and the content populated", async () => {
-        store.dispatch.mockImplementation((name) => {
-            if (name === "permissions/loadProjectUserGroupsIfNeeded") {
-                store.state.permissions.project_ugroups = [
-                    { id: "102_3", label: "Project members" },
-                ];
-            }
-        });
-
+    it(`when the modal receives a "show" event, it will open again`, async () => {
         const item_to_update = {
             id: 104,
             title: "My item",
@@ -87,8 +95,36 @@ describe("PermissionsUpdateModal", () => {
                 can_manage: [{ id: "102_3" }],
             },
         };
-        const wrapper = factory({ item: item_to_update });
-        await wrapper.vm.$nextTick();
+        const project_ugroups = [{ id: "102_3", label: "Project members" }];
+        const wrapper = factory({ item: item_to_update }, project_ugroups);
+        await nextTick();
+        wrapper.vm.reset();
+        emitter.emit("show-update-permissions-modal");
+
+        expect(load_project_ugroups).toHaveBeenCalledTimes(2);
+    });
+
+    it("Set a loading a state by default", () => {
+        const wrapper = factory({ item: {} }, null);
+
+        expect(wrapper.find("[class=document-permissions-modal-loading-state]").exists()).toBe(
+            true
+        );
+    });
+
+    it("When the modal is first opened the project user groups are loaded and the content populated", async () => {
+        const item_to_update = {
+            id: 104,
+            title: "My item",
+            permissions_for_groups: {
+                can_read: [],
+                can_write: [],
+                can_manage: [{ id: "102_3" }],
+            },
+        };
+        const project_ugroups = [{ id: "102_3", label: "Project members" }];
+        const wrapper = factory({ item: item_to_update }, project_ugroups);
+        await nextTick();
         expect(wrapper.find(".document-permissions-update-container").exists()).toBe(true);
         expect(wrapper.vm.can_be_submitted).toBe(true);
 
@@ -100,34 +136,10 @@ describe("PermissionsUpdateModal", () => {
         expect(updated_permissions_per_groups).toEqual(item_to_update.permissions_for_groups);
     });
 
-    it(`when the modal receives a "show" event, it will open again`, async () => {
-        store.dispatch.mockImplementation((name) => {
-            if (name === "loadProjectUserGroupsIfNeeded") {
-                store.state.project_ugroups = [{ id: "102_3", label: "Project members" }];
-            }
-        });
-
-        const item_to_update = {
-            id: 104,
-            title: "My item",
-            permissions_for_groups: {
-                can_read: [],
-                can_write: [],
-                can_manage: [{ id: "102_3" }],
-            },
-        };
-        const wrapper = factory({ item: item_to_update });
-        await wrapper.vm.$nextTick();
-        wrapper.vm.reset();
-        emitter.emit("show-update-permissions-modal");
-
-        expect(store.dispatch).toHaveBeenCalledTimes(2);
-    });
-
     it("When the modal is first opened but the project user groups can not be loaded a global error is generated", async () => {
         const handleErrors = jest.spyOn(handle_errors, "handleErrors").mockImplementation(() => {});
 
-        store.dispatch.mockImplementation(() => {
+        load_project_ugroups = jest.fn().mockImplementation(() => {
             return Promise.reject({});
         });
 
@@ -140,8 +152,9 @@ describe("PermissionsUpdateModal", () => {
                 can_manage: [],
             },
         };
-        const wrapper = factory({ item: item_to_update });
-        await wrapper.vm.$nextTick();
+        factory({ item: item_to_update });
+        await nextTick();
+        await nextTick();
 
         expect(handleErrors).toHaveBeenCalledTimes(1);
     });
@@ -159,8 +172,9 @@ describe("PermissionsUpdateModal", () => {
             },
         };
 
-        wrapper.setProps({ item: item_to_update });
-        await wrapper.vm.$nextTick();
+        const project_ugroups = [{ id: "102_3", label: "Project members" }];
+        wrapper.setProps({ item: item_to_update }, project_ugroups);
+        await nextTick();
 
         const updated_permissions_per_groups = {
             can_read: wrapper.vm.updated_permissions.can_read,
@@ -181,16 +195,8 @@ describe("PermissionsUpdateModal", () => {
             },
         };
 
-        store.state.permissions.project_ugroups = [];
-        const wrapper = factory({ item });
-
-        const expectedActionName = "permissions/updatePermissions";
-        store.dispatch.mockImplementation(function (actionName) {
-            if (actionName !== expectedActionName) {
-                return;
-            }
-            expect(wrapper.vm.can_be_submitted).toBe(false);
-        });
+        const project_ugroups = [];
+        const wrapper = factory({ item }, project_ugroups);
 
         wrapper.get("form").trigger("submit.prevent");
 
@@ -200,11 +206,13 @@ describe("PermissionsUpdateModal", () => {
             can_write: wrapper.vm.updated_permissions.can_write,
             can_manage: wrapper.vm.updated_permissions.can_manage,
         };
-        expect(store.dispatch).toHaveBeenCalledWith(expectedActionName, {
+
+        expect(update_permissions).toHaveBeenCalledWith(expect.anything(), {
             item: item,
             updated_permissions: permissions_to_update,
         });
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
         expect(wrapper.vm.can_be_submitted).toBe(true);
     });
 

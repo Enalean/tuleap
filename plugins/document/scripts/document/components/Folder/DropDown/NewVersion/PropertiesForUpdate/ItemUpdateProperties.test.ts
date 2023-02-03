@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../../helpers/local-vue";
 import ItemUpdateProperties from "./ItemUpdateProperties.vue";
 
 describe("ItemUpdateProperties", () => {
-    function getWrapper(item = {}, isOpenAfterDnd = false): Wrapper<ItemUpdateProperties> {
+    function getWrapper(
+        item = {},
+        isOpenAfterDnd = false
+    ): VueWrapper<InstanceType<typeof ItemUpdateProperties>> {
         return shallowMount(ItemUpdateProperties, {
-            localVue,
             propsData: {
                 version: {
                     title: "Not idea",

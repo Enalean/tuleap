@@ -34,6 +34,7 @@
         <div class="tlp-modal-body">
             <link-properties
                 v-model="new_item_version.link_properties"
+                v-bind:value="new_item_version.link_properties"
                 v-bind:item="new_item_version"
             />
             <embedded-properties

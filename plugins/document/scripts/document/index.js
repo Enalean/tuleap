@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
+import Vue, { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 
 import App from "./components/App.vue";
-import { createStore } from "./store/index.js";
-import { createRouter } from "./router/index.js";
+import { createInitializedStore } from "./store/index.js";
+import { createInitializedRouter } from "./router/router";
 import moment from "moment";
 import "moment-timezone";
-import { createPinia, PiniaVuePlugin } from "pinia";
-
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { createPinia } from "pinia";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
 
@@ -100,9 +100,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     moment.tz(user_timezone);
     moment.locale(user_locale);
 
-    await initVueGettext(Vue, (locale) =>
-        import(/* webpackChunkName: "document-po-" */ "./po/" + getPOFileFromLocale(locale))
-    );
+    const app = createApp(App, {
+        csrf_token_name,
+        csrf_token,
+    });
 
     const configuration_state = {
         user_id,
@@ -137,31 +138,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         can_user_switch_to_old_ui,
     };
 
-    const AppComponent = Vue.extend(App);
-    const store = createStore(configuration_state);
-    const router = createRouter(store, project_name);
+    const store = createInitializedStore(user_id, project_id, configuration_state);
+    app.use(store);
+    const gettext = await initVueGettext(createGettext, (locale) =>
+        import(`./po/${getPOFileFromLocale(locale)}`)
+    );
 
-    Vue.use(PiniaVuePlugin);
     const pinia = createPinia();
+    app.use(pinia);
 
-    new AppComponent({
-        store,
-        router,
-        propsData: {
-            csrf_token_name,
-            csrf_token,
-        },
-        provide: {
-            should_display_history_in_document,
-            should_display_source_column_for_versions,
-            create_new_item_alternatives,
-        },
-        pinia,
-    }).$mount(vue_mount_point);
+    app.use(gettext);
+    app.use(createInitializedRouter(store, project_name, gettext));
 
-    const gettext_provider = {
-        $gettext: Vue.prototype.$gettext,
-        $pgettext: Vue.prototype.$pgettext,
-    };
-    setupDocumentShortcuts(gettext_provider);
+    app.provide(should_display_history_in_document);
+    app.provide(should_display_source_column_for_versions);
+    app.provide(create_new_item_alternatives);
+
+    app.mount(vue_mount_point);
+
+    setupDocumentShortcuts(gettext);
 });

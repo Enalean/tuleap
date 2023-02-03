@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <drop-down-menu v-bind:item="currently_previewed_item">
+    <div class="dropdown-menu">
         <template v-if="currently_previewed_item.user_can_write">
             <lock-item
                 v-bind:item="currently_previewed_item"
@@ -41,6 +41,8 @@
                 v-if="should_display_update_properties"
             />
             <update-permissions v-bind:item="currently_previewed_item" slot="update-permissions" />
+
+            <drop-down-menu v-bind:item="currently_previewed_item" />
             <drop-down-separator slot="delete-item-separator" v-if="can_user_delete_item" />
             <delete-item
                 v-bind:item="currently_previewed_item"
@@ -50,7 +52,7 @@
                 v-if="can_user_delete_item"
             />
         </template>
-    </drop-down-menu>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -64,7 +66,7 @@ import UpdatePermissions from "./UpdatePermissions.vue";
 import type { State } from "../../../type";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
-import { useState, useNamespacedState } from "vuex-composition-helpers";
+import { useNamespacedState, useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
 

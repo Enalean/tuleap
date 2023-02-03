@@ -55,6 +55,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useActions } from "vuex-composition-helpers";
 import type { RootActionsRetrieve } from "../../store/actions-retrieve";
 import { useRouter, useRoute } from "../../helpers/use-router";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const router = useRouter();
 const route = useRoute();
@@ -126,9 +127,11 @@ function search(new_query: AdvancedSearchParams, offset: number): void {
         .then((search_results: SearchResult) => {
             results.value = search_results;
         })
-        .catch((error) => {
-            error.value = error;
-            throw error;
+        .catch((query_error) => {
+            error.value = query_error;
+            if (!(query_error instanceof FetchWrapperError)) {
+                throw query_error;
+            }
         })
         .finally(() => {
             is_loading.value = false;

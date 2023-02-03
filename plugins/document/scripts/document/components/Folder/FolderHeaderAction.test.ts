@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
 import FolderHeaderAction from "./FolderHeaderAction.vue";
 import type { Folder } from "../../type";
 
 describe("FolderHeaderAction", () => {
-    function createWrapper(item: Folder): Wrapper<FolderHeaderAction> {
+    function createWrapper(item: Folder): VueWrapper<InstanceType<typeof FolderHeaderAction>> {
         return shallowMount(FolderHeaderAction, {
-            localVue,
             propsData: { item },
         });
     }

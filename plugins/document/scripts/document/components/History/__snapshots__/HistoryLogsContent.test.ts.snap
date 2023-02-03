@@ -2,6 +2,7 @@
 
 exports[`HistoryLogsContent should collapse cols when there is no new value 1`] = `
 <tbody>
+  
   <tr>
     <td>
       <document-relative-date-stub
@@ -9,35 +10,30 @@ exports[`HistoryLogsContent should collapse cols when there is no new value 1`] 
         relative_placement="top"
       />
     </td>
-     
     <td>
       <user-badge-stub
         user="[object Object]"
       />
     </td>
-     
     <td>
       WAT
     </td>
-     
     <td
       class="document-history-merged-values"
       colspan="2"
     >
-      
-                old
-            
+      old
     </td>
-     
-    <!---->
-     
-    <!---->
+    <!--v-if-->
+    <!--v-if-->
   </tr>
+  
 </tbody>
 `;
 
 exports[`HistoryLogsContent should collapse cols when there is no new value nor old value 1`] = `
 <tbody>
+  
   <tr>
     <td>
       <document-relative-date-stub
@@ -45,33 +41,30 @@ exports[`HistoryLogsContent should collapse cols when there is no new value nor 
         relative_placement="top"
       />
     </td>
-     
     <td>
       <user-badge-stub
         user="[object Object]"
       />
     </td>
-     
     <td>
       WAT
     </td>
-     
-    <!---->
-     
-    <!---->
-     
+    <!--v-if-->
+    <!--v-if-->
     <td
       class="document-history-merged-values"
       colspan="2"
     >
-      <!---->
+      <!--v-if-->
     </td>
   </tr>
+  
 </tbody>
 `;
 
 exports[`HistoryLogsContent should collapse cols when there is no old value 1`] = `
 <tbody>
+  
   <tr>
     <td>
       <document-relative-date-stub
@@ -79,35 +72,30 @@ exports[`HistoryLogsContent should collapse cols when there is no old value 1`] 
         relative_placement="top"
       />
     </td>
-     
     <td>
       <user-badge-stub
         user="[object Object]"
       />
     </td>
-     
     <td>
       WAT
     </td>
-     
-    <!---->
-     
+    <!--v-if-->
     <td
       class="document-history-merged-values"
       colspan="2"
     >
-      
-                new
-            
+      new
     </td>
-     
-    <!---->
+    <!--v-if-->
   </tr>
+  
 </tbody>
 `;
 
 exports[`HistoryLogsContent should display a link to a diff 1`] = `
 <tbody>
+  
   <tr>
     <td>
       <document-relative-date-stub
@@ -115,21 +103,16 @@ exports[`HistoryLogsContent should display a link to a diff 1`] = `
         relative_placement="top"
       />
     </td>
-     
     <td>
       <user-badge-stub
         user="[object Object]"
       />
     </td>
-     
     <td>
       WAT
     </td>
-     
-    <!---->
-     
-    <!---->
-     
+    <!--v-if-->
+    <!--v-if-->
     <td
       class="document-history-merged-values"
       colspan="2"
@@ -141,11 +124,13 @@ exports[`HistoryLogsContent should display a link to a diff 1`] = `
       </a>
     </td>
   </tr>
+  
 </tbody>
 `;
 
 exports[`HistoryLogsContent should display old and new value 1`] = `
 <tbody>
+  
   <tr>
     <td>
       <document-relative-date-stub
@@ -153,36 +138,28 @@ exports[`HistoryLogsContent should display old and new value 1`] = `
         relative_placement="top"
       />
     </td>
-     
     <td>
       <user-badge-stub
         user="[object Object]"
       />
     </td>
-     
     <td>
       WAT
     </td>
-     
     <td
       class=""
       colspan="1"
     >
-      
-                old
-            
+      old
     </td>
-     
     <td
       class=""
       colspan="1"
     >
-      
-                new
-            
+      new
     </td>
-     
-    <!---->
+    <!--v-if-->
   </tr>
+  
 </tbody>
 `;

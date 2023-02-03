@@ -18,13 +18,12 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../helpers/local-vue";
 import FakeCaret from "./FakeCaret.vue";
 import type { Empty, Folder, Item, ItemFile, Link, Wiki } from "../../../type";
 import type { RootState } from "../../../type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("FakeCaret", () => {
     const item = {
@@ -33,18 +32,19 @@ describe("FakeCaret", () => {
         type: "wiki",
     } as Wiki;
 
-    function getWrapper(state: RootState, item: Wiki): Wrapper<FakeCaret> {
-        const store_options = { state };
+    function getWrapper(state: RootState, item: Wiki): VueWrapper<InstanceType<typeof FakeCaret>> {
         const component_options = {
-            localVue,
             propsData: {
                 item,
             },
         };
-        const store = createStoreMock(store_options);
 
         return shallowMount(FakeCaret, {
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    state: state as unknown as RootState,
+                }),
+            },
             ...component_options,
         });
     }

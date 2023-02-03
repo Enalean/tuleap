@@ -18,36 +18,28 @@
  *
  */
 
-import VueRouter from "vue-router";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import EmbeddedCellTitle from "./EmbeddedCellTitle.vue";
-import localVue from "../../../helpers/local-vue";
 import { TYPE_EMBEDDED } from "../../../constants";
 import type { Embedded, Folder, RootState } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import * as route from "../../../helpers/use-router";
-import type { Location, Route } from "vue-router/types/router";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import * as router from "../../../helpers/use-router";
+import type { Router } from "vue-router";
 
 describe("EmbeddedCellTitle", () => {
-    function getWrapper(item: Embedded): Wrapper<EmbeddedCellTitle> {
-        const router = new VueRouter();
-        jest.spyOn(router, "resolve").mockImplementation(() => ({
-            location: {} as Location,
-            route: {} as Route,
-            href: "/patch/to/embedded",
-            normalizedTo: {} as Location,
-            resolved: {} as Route,
-        }));
-        const mocked_router = jest.spyOn(route, "useRouter");
-        mocked_router.mockReturnValue(router);
+    beforeEach(() => {
+        const mock_resolve = jest.fn().mockReturnValue({ href: "/my-url" });
+        jest.spyOn(router, "useRouter").mockImplementation(() => {
+            return { resolve: mock_resolve } as unknown as Router;
+        });
+    });
 
+    function getWrapper(item: Embedded): VueWrapper<InstanceType<typeof EmbeddedCellTitle>> {
         return shallowMount(EmbeddedCellTitle, {
-            localVue,
             propsData: { item },
-            mocks: {
-                localVue,
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         current_folder: {
                             id: 1,
@@ -55,6 +47,7 @@ describe("EmbeddedCellTitle", () => {
                         } as Folder,
                     } as RootState,
                 }),
+                stubs: ["router-link", "router-view"],
             },
         });
     }

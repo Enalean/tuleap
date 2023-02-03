@@ -17,30 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import DropDownMenuTreeView from "./DropDownMenuTreeView.vue";
 import type { Folder, Item, ItemFile } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ConfigurationState } from "../../../store/configuration";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("DropDownMenuTreeView", () => {
     function createWrapper(
         item: Item,
         forbid_writers_to_update: boolean,
         forbid_writers_to_delete: boolean
-    ): Wrapper<DropDownMenuTreeView> {
+    ): VueWrapper<InstanceType<typeof DropDownMenuTreeView>> {
         return shallowMount(DropDownMenuTreeView, {
-            localVue,
             propsData: { item },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            forbid_writers_to_update,
-                            forbid_writers_to_delete,
-                        } as ConfigurationState,
+                            namespaced: true,
+                            state: {
+                                forbid_writers_to_update,
+                                forbid_writers_to_delete,
+                            },
+                        },
                     },
                 }),
             },
@@ -126,7 +127,7 @@ describe("DropDownMenuTreeView", () => {
     });
 
     it(`Given item is not a folder and user can write
-        Then user can create new version of document`, () => {
+        Then user can create new version of document`, async () => {
         const wrapper = createWrapper(
             {
                 id: 1,
@@ -137,6 +138,8 @@ describe("DropDownMenuTreeView", () => {
             false,
             false
         );
+        await nextTick();
+
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();

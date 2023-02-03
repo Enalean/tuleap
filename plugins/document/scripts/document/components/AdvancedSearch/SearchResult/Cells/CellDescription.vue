@@ -22,13 +22,22 @@
     <td>
         <div
             class="document-search-result-html-content"
-            v-dompurify-html="item.post_processed_description"
+            v-dompurify-html="get_post_processed_description"
         ></div>
     </td>
 </template>
 
 <script setup lang="ts">
 import type { ItemSearchResult } from "../../../../type";
+import { computed } from "vue";
 
-defineProps<{ item: ItemSearchResult }>();
+const props = defineProps<{ item: ItemSearchResult }>();
+
+const get_post_processed_description = computed(
+    (): string => props.item.post_processed_description
+);
+
+defineExpose({
+    get_post_processed_description,
+});
 </script>

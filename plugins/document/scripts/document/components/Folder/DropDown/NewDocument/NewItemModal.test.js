@@ -18,77 +18,63 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 
 import NewItemModal from "./NewItemModal.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import emitter from "../../../../helpers/emitter";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../../constants";
 import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("NewItemModal", () => {
-    let factory, store;
+    let factory;
+    const load_projects_ugroups = jest.fn();
+
+    const current_folder = {
+        id: 42,
+        title: "My current folder",
+        obsolescence_date: null,
+        properties: [
+            {
+                short_name: "title",
+                name: "title",
+                list_value: "My current folder",
+                is_multiple_value_allowed: false,
+                type: "text",
+                is_required: false,
+                description: "My current folder",
+                is_used: false,
+            },
+            {
+                short_name: "custom property",
+                name: "custom",
+                value: "value",
+                is_multiple_value_allowed: false,
+                type: "text",
+                is_required: false,
+                description: "Some Custom",
+                is_used: false,
+            },
+            {
+                short_name: "status",
+                list_value: [
+                    {
+                        id: 103,
+                    },
+                ],
+            },
+        ],
+        permissions_for_groups: {
+            can_read: [],
+            can_write: [],
+            can_manage: [],
+        },
+    };
 
     beforeEach(() => {
-        const general_store = {
-            state: {
-                current_folder: {
-                    id: 42,
-                    title: "My current folder",
-                    properties: [
-                        {
-                            short_name: "title",
-                            name: "title",
-                            list_value: "My current folder",
-                            is_multiple_value_allowed: false,
-                            type: "text",
-                            is_required: false,
-                            description: "My current folder",
-                            is_used: false,
-                        },
-                        {
-                            short_name: "custom property",
-                            name: "custom",
-                            value: "value",
-                            is_multiple_value_allowed: false,
-                            type: "text",
-                            is_required: false,
-                            description: "Some Custom",
-                            is_used: false,
-                        },
-                        {
-                            short_name: "status",
-                            list_value: [
-                                {
-                                    id: 103,
-                                },
-                            ],
-                        },
-                    ],
-                    permissions_for_groups: {
-                        can_read: [],
-                        can_write: [],
-                        can_manage: [],
-                    },
-                },
-                configuration: {
-                    project_id: 102,
-                    is_status_property_used: true,
-                    is_obsolescence_date_property_used: true,
-                },
-            },
-        };
-
-        store = createStoreMock(general_store, {
-            permissions: { project_ugroups: null },
-            properties: {},
-        });
-
         factory = (item = {}) => {
             return shallowMount(NewItemModal, {
-                localVue,
-                mocks: { $store: store },
                 data() {
                     return {
                         item,
@@ -96,7 +82,38 @@ describe("NewItemModal", () => {
                         is_loading: false,
                         modal: null,
                         parent: {},
+                        permissions_for_groups: {
+                            can_read: [],
+                            can_write: [],
+                            can_manage: [],
+                        },
                     };
+                },
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            permissions: {
+                                state: {
+                                    project_ugroups: null,
+                                },
+                                namespaced: true,
+                                actions: {
+                                    loadProjectUserGroupsIfNeeded: load_projects_ugroups,
+                                },
+                            },
+                            configuration: {
+                                state: {
+                                    project_id: 102,
+                                    is_status_property_used: true,
+                                    is_obsolescence_date_property_used: true,
+                                },
+                                namespaced: true,
+                            },
+                        },
+                        state: {
+                            current_folder,
+                        },
+                    }),
                 },
             });
         };
@@ -136,7 +153,7 @@ describe("NewItemModal", () => {
             value: "wololo some words",
         });
         expect(wrapper.vm.item.properties[0].value).toBe("wololo some words");
-        wrapper.destroy();
+        wrapper.unmount();
     });
 
     it("inherit default values from parent properties", async () => {
@@ -159,12 +176,12 @@ describe("NewItemModal", () => {
 
         const wrapper = factory();
         emitter.emit("createItem", {
-            item: store.state.current_folder,
+            item: current_folder,
         });
-        await wrapper.vm.$nextTick().then(() => {});
+        await nextTick();
 
         expect(wrapper.vm.item.properties).toStrictEqual(item_to_create.properties);
-        wrapper.destroy();
+        wrapper.unmount();
     });
 
     it("Updates status", () => {
@@ -190,7 +207,7 @@ describe("NewItemModal", () => {
         expect(wrapper.vm.item.status).toBe("approved");
         emitter.emit("update-status-property", "draft");
         expect(wrapper.vm.item.status).toBe("draft");
-        wrapper.destroy();
+        wrapper.unmount();
     });
 
     it("Updates title", () => {
@@ -216,7 +233,7 @@ describe("NewItemModal", () => {
         expect(wrapper.vm.item.title).toBe("Color folder");
         emitter.emit("update-title-property", "A folder");
         expect(wrapper.vm.item.title).toBe("A folder");
-        wrapper.destroy();
+        wrapper.unmount();
     });
 
     it("should update the filename accordingly to title when created from empty", async function () {
@@ -242,14 +259,15 @@ describe("NewItemModal", () => {
             },
         });
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
+        await nextTick();
 
         emitter.emit("update-title-property", "Specs V1");
         expect(wrapper.vm.item.file_properties.file.name).toBe("Specs V1.docx");
         emitter.emit("update-title-property", "Specs V1.final");
         expect(wrapper.vm.item.file_properties.file.name).toBe("Specs V1.final.docx");
-        wrapper.destroy();
+        wrapper.unmount();
     });
 
     it("Updates description", () => {
@@ -274,6 +292,6 @@ describe("NewItemModal", () => {
         expect(wrapper.vm.item.description).toBe("A custom description");
         emitter.emit("update-description-property", "A description");
         expect(wrapper.vm.item.description).toBe("A description");
-        wrapper.destroy();
+        wrapper.unmount();
     });
 });

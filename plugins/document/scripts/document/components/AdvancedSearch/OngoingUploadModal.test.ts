@@ -27,22 +27,22 @@ jest.mock("@tuleap/tlp-modal", () => {
 });
 
 import OngoingUploadModal from "./OngoingUploadModal.vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
 import type { Modal } from "@tuleap/tlp-modal";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ItemFile, RootState } from "../../type";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("OngoingUploadModal", () => {
     let modal: Modal, addEventListener: jest.SpyInstance, show: jest.SpyInstance;
 
-    function getWrapper(files_uploads_list: Array<ItemFile>): Wrapper<OngoingUploadModal> {
+    function getWrapper(
+        files_uploads_list: Array<ItemFile>
+    ): VueWrapper<InstanceType<typeof OngoingUploadModal>> {
         return shallowMount(OngoingUploadModal, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         files_uploads_list,
                     } as RootState,

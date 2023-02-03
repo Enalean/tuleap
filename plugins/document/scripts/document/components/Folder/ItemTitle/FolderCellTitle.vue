@@ -74,7 +74,7 @@ import { useRouter } from "../../../helpers/use-router";
 import { computed, onMounted, ref } from "vue";
 import type { PreferenciesActions } from "../../../store/preferencies/preferencies-actions";
 import { abortCurrentUploads } from "../../../helpers/abort-current-uploads";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { RootGetter } from "../../../store/getters";
 
 const router = useRouter();

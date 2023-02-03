@@ -18,16 +18,14 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ActionsHeader from "./ActionsHeader.vue";
-import localVue from "../../helpers/local-vue";
 import type { Item } from "../../type";
 
 describe("ActionsHeader", () => {
-    function getWrapper(item: Item): Wrapper<ActionsHeader> {
+    function getWrapper(item: Item): VueWrapper<InstanceType<typeof ActionsHeader>> {
         return shallowMount(ActionsHeader, {
-            localVue,
             propsData: { item },
         });
     }

@@ -46,7 +46,7 @@
 import { isFolder } from "../../../helpers/type-check-helper";
 import type { FakeItem } from "../../../type";
 import { computed, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { useActions } from "vuex-composition-helpers";
 
 const props = defineProps<{ item: FakeItem }>();

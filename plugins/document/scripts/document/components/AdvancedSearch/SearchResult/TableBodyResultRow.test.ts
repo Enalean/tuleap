@@ -20,7 +20,6 @@
 import { shallowMount } from "@vue/test-utils";
 import TableBodyResultRow from "./TableBodyResultRow.vue";
 import type { ItemSearchResult } from "../../../type";
-import localVue from "../../../helpers/local-vue";
 import CellId from "./Cells/CellId.vue";
 import CellTitle from "./Cells/CellTitle.vue";
 import CellDescription from "./Cells/CellDescription.vue";
@@ -48,7 +47,6 @@ describe("TableBodyResultRow", () => {
         "when wanted column is %s then matching component should be %s",
         (name, expected_component) => {
             const wrapper = shallowMount(TableBodyResultRow, {
-                localVue,
                 propsData: {
                     item: {
                         id: 123,

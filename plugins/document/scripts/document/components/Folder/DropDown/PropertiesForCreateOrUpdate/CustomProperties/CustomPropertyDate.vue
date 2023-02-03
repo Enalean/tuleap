@@ -39,6 +39,7 @@
                 v-bind:required="currentlyUpdatedItemProperty.is_required"
                 v-model="value"
                 v-on:input="oninput"
+                v-bind:value="value"
             />
         </div>
     </div>

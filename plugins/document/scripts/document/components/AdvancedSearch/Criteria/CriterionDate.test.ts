@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, mount } from "@vue/test-utils";
 import CriterionDate from "./CriterionDate.vue";
 import type { SearchDate } from "../../../type";
-import localVue from "../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("CriterionDate", () => {
     it("should render the component when no date set", async () => {
         const wrapper = shallowMount(CriterionDate, {
-            localVue,
             propsData: {
                 criterion: {
                     name: "create_date",
@@ -33,9 +33,10 @@ describe("CriterionDate", () => {
                 },
                 value: null,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -43,7 +44,6 @@ describe("CriterionDate", () => {
     it("should render the component when date is set", async () => {
         const value: SearchDate = { date: "2022-01-01", operator: "=" };
         const wrapper = shallowMount(CriterionDate, {
-            localVue,
             propsData: {
                 criterion: {
                     name: "create_date",
@@ -51,16 +51,16 @@ describe("CriterionDate", () => {
                 },
                 value,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it("should warn parent component when user is changing date", () => {
-        const wrapper = shallowMount(CriterionDate, {
-            localVue,
+        const wrapper = mount(CriterionDate, {
             propsData: {
                 criterion: {
                     name: "create_date",
@@ -68,11 +68,10 @@ describe("CriterionDate", () => {
                 },
                 value: null,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        wrapper
-            .find("[data-test=document-criterion-date-create_date]")
-            .vm.$emit("input", "2022-01-01");
+        wrapper.find("[data-test=document-criterion-date-create_date]").setValue("2022-01-01");
 
         const expected: SearchDate = { date: "2022-01-01", operator: ">" };
         expect(wrapper.emitted().input).toStrictEqual([[expected]]);
@@ -80,7 +79,6 @@ describe("CriterionDate", () => {
 
     it("should warn parent component when user is changing operator", () => {
         const wrapper = shallowMount(CriterionDate, {
-            localVue,
             propsData: {
                 criterion: {
                     name: "create_date",
@@ -88,6 +86,7 @@ describe("CriterionDate", () => {
                 },
                 value: null,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         wrapper.find("[data-test=equal]").setSelected();

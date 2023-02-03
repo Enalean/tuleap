@@ -19,52 +19,57 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 import emitter from "../../../../helpers/emitter";
 
 import UpdatePropertiesModal from "./UpdatePropertiesModal.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp_modal from "@tuleap/tlp-modal";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("UpdatePropertiesModal", () => {
-    let factory, store;
+    let factory;
 
     beforeEach(() => {
-        const general_store = {
-            state: {
-                current_folder: {
-                    id: 42,
-                    title: "My current folder",
-                    properties: [
-                        {
-                            short_name: "title",
-                            name: "title",
-                            list_value: "My current folder",
-                            is_multiple_value_allowed: false,
-                            type: "text",
-                            is_required: false,
-                        },
-                        {
-                            short_name: "custom property",
-                            name: "custom",
-                            value: "value",
-                            is_multiple_value_allowed: false,
-                            type: "text",
-                            is_required: false,
-                        },
-                    ],
-                },
-                configuration: { project_id: 102, is_status_property_used: true },
-            },
-        };
-
-        store = createStoreMock(general_store, { error: { has_modal_error: false } });
-
-        factory = (props = {}) => {
+        factory = (item, has_loaded_properties) => {
             return shallowMount(UpdatePropertiesModal, {
-                localVue,
-                mocks: { $store: store },
-                propsData: { ...props },
+                propsData: { item },
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            configuration: {
+                                state: {
+                                    project_id: 102,
+                                    is_status_property_used: true,
+                                    has_loaded_properties,
+                                },
+                                namespaced: true,
+                            },
+                        },
+                        state: {
+                            current_folder: {
+                                id: 42,
+                                title: "My current folder",
+                                properties: [
+                                    {
+                                        short_name: "title",
+                                        name: "title",
+                                        list_value: "My current folder",
+                                        is_multiple_value_allowed: false,
+                                        type: "text",
+                                        is_required: false,
+                                    },
+                                    {
+                                        short_name: "custom property",
+                                        name: "custom",
+                                        value: "value",
+                                        is_multiple_value_allowed: false,
+                                        type: "text",
+                                        is_required: false,
+                                    },
+                                ],
+                            },
+                        },
+                    }),
+                },
             });
         };
 
@@ -95,7 +100,7 @@ describe("UpdatePropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory({ item });
+        const wrapper = factory(item, true);
 
         expect(wrapper.vm.item_to_update.owner.id).toBe(101);
 
@@ -104,10 +109,6 @@ describe("UpdatePropertiesModal", () => {
     });
 
     it("Transform item property rest representation", () => {
-        store.state.properties = {
-            has_loaded_properties: false,
-        };
-
         const properties_to_update = {
             short_name: "field_1234",
             list_value: [
@@ -144,7 +145,7 @@ describe("UpdatePropertiesModal", () => {
             value: 103,
         };
 
-        const wrapper = factory({ item });
+        const wrapper = factory(item, false);
 
         expect(wrapper.vm.formatted_item_properties).toEqual([properties_in_rest_format]);
     });
@@ -165,7 +166,7 @@ describe("UpdatePropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory({ item });
+        const wrapper = factory(item, true);
 
         expect(wrapper.vm.item_to_update.status).toBe("rejected");
 
@@ -190,7 +191,7 @@ describe("UpdatePropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory({ item });
+        const wrapper = factory(item, true);
 
         expect(wrapper.vm.item_to_update.title).toBe("A folder");
 
@@ -215,7 +216,7 @@ describe("UpdatePropertiesModal", () => {
             ],
         };
 
-        const wrapper = factory({ item });
+        const wrapper = factory(item, true);
 
         expect(wrapper.vm.item_to_update.description).toBe("A custom description");
 

@@ -25,8 +25,8 @@
         ref="max_size_modal"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="max-size-threshold-modal-label" v-translate>
-                Maximum archive size threshold exceeded
+            <h1 class="tlp-modal-title" id="max-size-threshold-modal-label">
+                {{ $gettext("Maximum archive size threshold exceeded") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -38,21 +38,24 @@
             </button>
         </div>
         <div class="tlp-modal-body">
-            <p v-translate>
-                The size of the zip file you are attempting to download is exceeding the threshold
-                defined by the site administrators.
+            <p>
+                {{
+                    $gettext(
+                        "The size of the zip file you are attempting to download is exceeding the threshold defined by the site administrators."
+                    )
+                }}
             </p>
-            <p v-translate>
-                Contact your administrator or try to reorganize this folder, then try again.
+            <p>
+                {{
+                    $gettext(
+                        "Contact your administrator or try to reorganize this folder, then try again."
+                    )
+                }}
             </p>
             <div class="tlp-alert-danger">
-                <span v-translate="{ max_archive_size }">
-                    Maximum archive size allowed: %{ max_archive_size } MB
-                </span>
+                <span> {{ max_size_allowed_message }} </span>
                 <br />
-                <span data-test="download-as-zip-folder-size" v-translate="{ size_in_MB }">
-                    Size of the archive to be downloaded: %{ size_in_MB } MB
-                </span>
+                <span data-test="download-as-zip-folder-size"> {{ archive_size_message }} </span>
             </div>
         </div>
         <div class="tlp-modal-footer">
@@ -61,9 +64,8 @@
                 class="tlp-button-danger tlp-button-primary tlp-modal-action"
                 data-dismiss="modal"
                 data-test="close-max-archive-size-threshold-exceeded-modal"
-                v-translate
             >
-                Got it
+                {{ $gettext("Got it") }}
             </button>
         </div>
     </div>
@@ -74,6 +76,9 @@ import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
+import { useGettext } from "vue3-gettext";
+
+const { interpolate, $gettext } = useGettext();
 
 const props = defineProps<{ size: number }>();
 
@@ -101,6 +106,18 @@ onBeforeUnmount(() => {
 const size_in_MB = computed((): string => {
     const size_in_mb = props.size / Math.pow(10, 6);
     return Number.parseFloat(size_in_mb.toString()).toFixed(2);
+});
+
+const archive_size_message = computed((): string => {
+    const translated = $gettext("Size of the archive to be downloaded: %{ size_in_MB } MB");
+
+    return interpolate(translated, { size_in_MB: size_in_MB.value });
+});
+
+const max_size_allowed_message = computed((): string => {
+    const translated = $gettext("Maximum archive size allowed: %{ max_archive_size } MB");
+
+    return interpolate(translated, { max_archive_size });
 });
 
 const emit = defineEmits<{

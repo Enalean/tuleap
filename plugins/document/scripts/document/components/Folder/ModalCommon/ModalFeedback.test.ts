@@ -18,27 +18,28 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ModalFeedback from "./ModalFeedback.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ErrorState } from "../../../store/error/module";
-import type { RootState } from "../../../type";
-import localVue from "../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ModalFeedback", () => {
-    function createWrapper(has_error: boolean): Wrapper<ModalFeedback> {
-        const error = { modal_error: "", has_modal_error: has_error } as unknown as ErrorState;
-        const state = { error: error } as RootState;
-
-        const store_options = {
-            state,
-        };
-
-        const store = createStoreMock(store_options);
+    function createWrapper(has_error: boolean): VueWrapper<InstanceType<typeof ModalFeedback>> {
         return shallowMount(ModalFeedback, {
-            localVue, //Needed to avoid conflict between Vuex and Composition API
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        error: {
+                            state: {
+                                modal_error: "",
+                                has_modal_error: has_error,
+                            } as unknown as ErrorState,
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
     }
     it("Does not display anything when no error", () => {

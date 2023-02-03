@@ -18,16 +18,17 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../../helpers/local-vue";
 import ObsolescenceDatePropertyForUpdate from "./ObsolescenceDatePropertyForUpdate.vue";
 import moment from "moment/moment";
 import DateFlatPicker from "../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../../../store/configuration";
+import { nextTick } from "vue";
 
 function checkSelectedDateIsCorrect(
-    wrapper: Wrapper<ObsolescenceDatePropertyForUpdate>,
+    wrapper: VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForUpdate>>,
     expected_value: string
 ): void {
     const select = wrapper.get("[data-test=document-obsolescence-date-select-update]");
@@ -38,7 +39,7 @@ function checkSelectedDateIsCorrect(
 }
 
 function checkDatePickerValueIsCorrect(
-    wrapper: Wrapper<ObsolescenceDatePropertyForUpdate>,
+    wrapper: VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForUpdate>>,
     expected_value: string
 ): void {
     const date_picker = wrapper.findComponent(DateFlatPicker);
@@ -49,14 +50,18 @@ function checkDatePickerValueIsCorrect(
 describe("ObsolescenceDatePropertyForUpdate", () => {
     function createWrapper(
         is_obsolescence_date_property_used: boolean
-    ): Wrapper<ObsolescenceDatePropertyForUpdate> {
+    ): VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForUpdate>> {
         return shallowMount(ObsolescenceDatePropertyForUpdate, {
-            localVue,
             propsData: { value: "" },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { is_obsolescence_date_property_used },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                is_obsolescence_date_property_used,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
             },
@@ -79,7 +84,7 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
         it(`Obsolescence date should be null if the option "permanent" is chosen by the user`, async () => {
             const wrapper = createWrapper(true);
 
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             expect(wrapper.find("[data-test=obsolescence-date-property]").exists()).toBeTruthy();
             checkSelectedDateIsCorrect(wrapper, "permanent");
@@ -95,7 +100,7 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
             element.selected = true;
 
             wrapper.get("[data-test=document-obsolescence-date-select-update]").trigger("change");
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             const current_date = moment().format("YYYY-MM-DD");
 
@@ -113,7 +118,7 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
             const wrapper = createWrapper(true);
 
             wrapper.findComponent(DateFlatPicker).vm.$emit("input", "2019-06-30");
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             expect(wrapper.find("[data-test=obsolescence-date-property]").exists()).toBeTruthy();
             checkSelectedDateIsCorrect(wrapper, "fixed");

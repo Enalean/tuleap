@@ -20,14 +20,10 @@
 
 import { shallowMount } from "@vue/test-utils";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
-import localVue from "../../helpers/local-vue";
-import Vuex from "vuex";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { TYPE_FILE } from "../../constants";
-import type { Item } from "../../type";
+import type { Item, RootState } from "../../type";
 import type { User } from "../../type";
-
-localVue.use(Vuex);
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookItemIsLockedMessage", () => {
     it("renders locked message for document", () => {
@@ -40,12 +36,11 @@ describe("QuickLookItemIsLockedMessage", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookItemIsLockedMessage, {
-            localVue,
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         currently_previewed_item: item,
-                    },
+                    } as RootState,
                 }),
             },
         });

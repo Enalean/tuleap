@@ -18,13 +18,14 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import localVue from "../../../../../helpers/local-vue";
 import ObsolescenceDatePropertyForCreate from "./ObsolescenceDatePropertyForCreate.vue";
 import moment from "moment/moment";
 import emitter from "../../../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../../../../store/configuration";
+import { nextTick } from "vue";
 
 jest.mock("../../../../../helpers/emitter");
 
@@ -32,14 +33,18 @@ describe("ObsolescenceDatePropertyForCreate", () => {
     function createWrapper(
         value: string,
         is_obsolescence_date_property_used: boolean
-    ): Wrapper<ObsolescenceDatePropertyForCreate> {
+    ): VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForCreate>> {
         return shallowMount(ObsolescenceDatePropertyForCreate, {
-            localVue,
             propsData: { value },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration: { is_obsolescence_date_property_used },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                is_obsolescence_date_property_used,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
             },
@@ -47,7 +52,7 @@ describe("ObsolescenceDatePropertyForCreate", () => {
     }
 
     function checkOptionValue(
-        wrapper: Wrapper<ObsolescenceDatePropertyForCreate>,
+        wrapper: VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForCreate>>,
         expected_value: string
     ): void {
         const checked_element = wrapper.find("option:checked").element;
@@ -77,7 +82,7 @@ describe("ObsolescenceDatePropertyForCreate", () => {
             const select = wrapper.get("[data-test=document-obsolescence-date-select]");
             select.trigger("change");
 
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             checkOptionValue(wrapper, "permanent");
             expect(emitter.emit).toHaveBeenCalledWith("update-obsolescence-date-property", "");
@@ -112,8 +117,8 @@ describe("ObsolescenceDatePropertyForCreate", () => {
             const wrapper = createWrapper("", true);
 
             checkOptionValue(wrapper, "permanent");
-            wrapper.find("[data-test=obsolescence-date-input]").vm.$emit("input", "2019-09-07");
-            await wrapper.vm.$nextTick();
+            wrapper.vm.updateObsolescenceDate("2019-09-07");
+            await nextTick();
 
             expect(
                 (
@@ -127,36 +132,26 @@ describe("ObsolescenceDatePropertyForCreate", () => {
         it(`date is invalid when it's is anterior the current date`, async () => {
             const wrapper = createWrapper("", true);
 
-            wrapper.find("[data-test=obsolescence-date-input]").vm.$emit("input", "2018-09-07");
-            await wrapper.vm.$nextTick();
+            wrapper.vm.updateObsolescenceDate(moment().format("2018-09-07"));
+            await nextTick();
 
-            expect(
-                wrapper.find("[data-test=obsolescence-date-error-message]").exists()
-            ).toBeTruthy();
+            expect(wrapper.vm.has_error_message).toBeTruthy();
         });
         it(`date is valid for today`, async () => {
             const wrapper = createWrapper("", true);
 
-            wrapper
-                .find("[data-test=obsolescence-date-input]")
-                .vm.$emit("input", moment().format("YYYY-MM-DD"));
-            await wrapper.vm.$nextTick();
+            wrapper.vm.updateObsolescenceDate(moment().format("YYYY-MM-DD"));
+            await nextTick();
 
-            expect(
-                wrapper.find("[data-test=obsolescence-date-error-message]").exists()
-            ).toBeTruthy();
+            expect(wrapper.vm.has_error_message).toBeTruthy();
         });
         it(`date is valid when it's in the future`, async () => {
             const wrapper = createWrapper("", true);
 
-            wrapper
-                .find("[data-test=obsolescence-date-input]")
-                .vm.$emit("input", moment().add(3, "day").format("YYYY-MM-DD"));
-            await wrapper.vm.$nextTick();
+            wrapper.vm.updateObsolescenceDate(moment().add(3, "day").format("YYYY-MM-DD"));
+            await nextTick();
 
-            expect(
-                wrapper.find("[data-test=obsolescence-date-error-message]").exists()
-            ).toBeFalsy();
+            expect(wrapper.vm.has_error_message).toBeFalsy();
         });
     });
 });

@@ -96,4 +96,8 @@ const error_message = computed((): string | null => {
 
     return document_loading_error.value;
 });
+
+defineExpose({
+    error_message,
+});
 </script>

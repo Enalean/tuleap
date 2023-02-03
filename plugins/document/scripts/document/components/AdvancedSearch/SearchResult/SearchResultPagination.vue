@@ -98,11 +98,11 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { Route } from "vue-router/types/router";
-import type { Dictionary } from "vue-router/types/router";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { computed } from "vue";
-import { useRoute } from "../../../helpers/use-router";
+import type { RouteLocationNormalized } from "vue-router";
+import { useRoute } from "vue-router";
+import type { Dictionary } from "vue-router/types/router";
 
 const props = defineProps<{ from: number; to: number; total: number; limit: number }>();
 
@@ -129,7 +129,7 @@ const pages = computed((): string => {
     );
 });
 
-const begin_to = computed((): Route => {
+const begin_to = computed((): RouteLocationNormalized => {
     const query = getInitialQueryWithoutItsOffset();
 
     return {
@@ -138,7 +138,7 @@ const begin_to = computed((): Route => {
     };
 });
 
-const to_previous = computed((): Route => {
+const to_previous = computed((): RouteLocationNormalized => {
     const query = getInitialQueryWithoutItsOffset();
 
     const new_offset = Math.max(0, props.from - props.limit);
@@ -158,7 +158,7 @@ const to_previous = computed((): Route => {
     };
 });
 
-const to_next = computed((): Route => {
+const to_next = computed((): RouteLocationNormalized => {
     const new_offset = Math.min(props.total - 1, props.from + props.limit);
 
     return {
@@ -170,7 +170,7 @@ const to_next = computed((): Route => {
     };
 });
 
-const to_end = computed((): Route => {
+const to_end = computed((): RouteLocationNormalized => {
     return {
         ...route,
         query: {
@@ -188,4 +188,11 @@ function getInitialQueryWithoutItsOffset(): Dictionary<string | (string | null)[
 
     return query;
 }
+
+defineExpose({
+    pages,
+    begin_to,
+    to_previous,
+    to_next,
+});
 </script>

@@ -20,20 +20,16 @@
 
 <template>
     <td>
-        <template v-for="(parent_item, index) in props.item.parents">
+        <template v-for="(parent_item, index) in props.item.parents" v-bind:key="parent_item.id">
             <router-link
                 v-bind:to="getSearchFolderRoute(parent_item)"
-                v-bind:key="'link-' + parent_item.id"
                 custom
                 v-slot="{ navigate, href }"
                 data-test="document-cell-location-parent-item-title"
             >
                 <a v-bind:href="href" v-on:click="navigate">{{ parent_item.title }}</a>
             </router-link>
-            <span
-                v-if="props.item.parents.length - 1 > index"
-                v-bind:key="'separator-' + parent_item.id"
-            >
+            <span v-if="props.item.parents.length - 1 > index">
                 /
                 <!---->
             </span>
@@ -43,15 +39,15 @@
 
 <script setup lang="ts">
 import type { ItemSearchResult } from "../../../../type";
-import { useRoute } from "../../../../helpers/use-router";
-import type { Dictionary, Route } from "vue-router/types/router";
+import type { RouteLocationNormalizedLoaded } from "vue-router";
+import { useRoute } from "vue-router";
 
 const props = defineProps<{ item: ItemSearchResult }>();
 
 const route = useRoute();
 
-function getSearchFolderRoute(parent: { id: number }): Route {
-    const params: Dictionary<string> = {};
+function getSearchFolderRoute(parent: { id: number }): RouteLocationNormalizedLoaded {
+    const params: Record<string, string> = {};
     params.folder_id = String(parent.id);
     return {
         ...route,

@@ -20,7 +20,6 @@
 import { shallowMount } from "@vue/test-utils";
 import CellOwner from "./CellOwner.vue";
 import type { ItemSearchResult, User } from "../../../../type";
-import localVue from "../../../../helpers/local-vue";
 import UserBadge from "../../../User/UserBadge.vue";
 
 describe("CellOwner", () => {
@@ -31,7 +30,6 @@ describe("CellOwner", () => {
         } as unknown as User;
 
         const wrapper = shallowMount(CellOwner, {
-            localVue,
             propsData: {
                 item: {
                     owner,
@@ -41,6 +39,6 @@ describe("CellOwner", () => {
 
         const user_badge = wrapper.findComponent(UserBadge);
         expect(user_badge.exists()).toBe(true);
-        expect(user_badge.props().user).toBe(owner);
+        expect(user_badge.props().user).toStrictEqual(owner);
     });
 });

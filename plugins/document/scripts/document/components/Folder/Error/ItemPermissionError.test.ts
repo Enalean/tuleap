@@ -19,22 +19,13 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ItemPermissionError from "./ItemPermissionError.vue";
-import localVue from "../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("ItemPermissionError", () => {
     it("displays the error with a for to send custom email", () => {
-        const state = {
-            configuration: { project_id: 101 },
-        };
-
-        const store_options = { state };
-
-        const store = createStoreMock(store_options);
-
         const wrapper = shallowMount(ItemPermissionError, {
-            localVue,
             data() {
                 return {
                     error: "",
@@ -42,7 +33,18 @@ describe("ItemPermissionError", () => {
                 };
             },
             propsData: { csrf_token: "", csrf_token_name: "challenge" },
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: {
+                                project_id: 101,
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();

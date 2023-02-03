@@ -17,32 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import localVue from "../../helpers/local-vue";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../store/configuration";
 import DocumentRelativeDate from "./DocumentRelativeDate.vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("DocumentRelativeDate", () => {
     it("should display a tlp-relative-date element", () => {
         const wrapper = shallowMount(DocumentRelativeDate, {
-            localVue,
             propsData: {
                 date: "2021-10-06",
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                        } as unknown as ConfigurationState,
+                            state: {
+                                date_time_format: "Y-m-d H:i",
+                                relative_dates_display: "relative_first-absolute_shown",
+                                user_locale: "en_US",
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
+                stubs: {
+                    "tlp-relative-date": true,
+                },
             },
         });
 
@@ -51,24 +52,26 @@ describe("DocumentRelativeDate", () => {
 
     it("should display a tlp-relative-date element with placement on right", () => {
         const wrapper = shallowMount(DocumentRelativeDate, {
-            localVue,
             propsData: {
                 date: "2021-10-06",
                 relative_placement: "right",
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            date_time_format: "Y-m-d H:i",
-                            relative_dates_display: "relative_first-absolute_shown",
-                            user_locale: "en_US",
-                        } as unknown as ConfigurationState,
+                            state: {
+                                date_time_format: "Y-m-d H:i",
+                                relative_dates_display: "relative_first-absolute_shown",
+                                user_locale: "en_US",
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
-            },
-            stubs: {
-                "tlp-relative-date": true,
+                stubs: {
+                    "tlp-relative-date": true,
+                },
             },
         });
 

@@ -17,19 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyText from "./CustomPropertyText.vue";
 import type { Property } from "../../../../../type";
-import localVue from "../../../../../helpers/local-vue";
 import emitter from "../../../../../helpers/emitter";
 
 jest.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyText", () => {
-    function createWrapper(property: Property): Wrapper<CustomPropertyText> {
+    function createWrapper(
+        property: Property
+    ): VueWrapper<InstanceType<typeof CustomPropertyText>> {
         return shallowMount(CustomPropertyText, {
-            localVue,
             propsData: { currentlyUpdatedItemProperty: property },
         });
     }

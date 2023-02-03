@@ -34,6 +34,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { useRoute } from "vue-router";
 
 export default {
     name: "SwitchToOldUI",
@@ -41,15 +42,16 @@ export default {
         ...mapState(["current_folder"]),
         ...mapState("configuration", ["project_id"]),
         redirect_url() {
+            const route = useRoute();
             const encoded_project_id = encodeURIComponent(this.project_id);
-            if (this.$route.name === "folder") {
+            if (route.name === "folder") {
                 return (
                     "/plugins/docman/?group_id=" +
                     encoded_project_id +
                     "&action=show&id=" +
                     encodeURIComponent(parseInt(this.$route.params.item_id, 10))
                 );
-            } else if (this.$route.name === "preview" && this.current_folder) {
+            } else if (route.name === "preview" && this.current_folder) {
                 return (
                     "/plugins/docman/?group_id=" +
                     encoded_project_id +

@@ -20,7 +20,6 @@
 import { shallowMount } from "@vue/test-utils";
 import CellCustomProperty from "./CellCustomProperty.vue";
 import type { ItemSearchResult } from "../../../../type";
-import localVue from "../../../../helpers/local-vue";
 
 describe("CellCustomProperty", () => {
     const item: ItemSearchResult = {
@@ -46,63 +45,59 @@ describe("CellCustomProperty", () => {
 
     it("should display a string property", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            localVue,
             propsData: {
                 column_name: "field_123",
                 item,
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`<cell-string-stub>Lorem ipsum</cell-string-stub>`);
+        expect(wrapper.vm.value_string).toBe("Lorem ipsum");
+        expect(wrapper.html()).toBe(`<cell-string-stub></cell-string-stub>`);
     });
 
-    it("should display a list property as comma separated list of values", () => {
+    it("should display a list property", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            localVue,
             propsData: {
                 column_name: "field_124",
                 item,
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`<cell-string-stub>Am, Stram</cell-string-stub>`);
+        expect(wrapper.vm.value_list).toBe("Am, Stram");
+        expect(wrapper.html()).toBe(`<cell-string-stub></cell-string-stub>`);
     });
 
     it("should display a date property", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            localVue,
             propsData: {
                 column_name: "field_125",
                 item,
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(
-            `<cell-date-stub date="2022-01-30"></cell-date-stub>`
-        );
+        expect(wrapper.vm.value_date).toBe("2022-01-30");
+        expect(wrapper.html()).toBe(`<cell-date-stub date="2022-01-30"></cell-date-stub>`);
     });
 
     it("should display an empty cell when the item does not have the column in its custom properties", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            localVue,
             propsData: {
                 column_name: "field_126",
                 item,
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`<td></td>`);
+        expect(wrapper.html()).toBe(`<td></td>`);
     });
 
     it("should display an empty cell when the date is null", () => {
         const wrapper = shallowMount(CellCustomProperty, {
-            localVue,
             propsData: {
                 column_name: "field_225",
                 item,
             },
         });
 
-        expect(wrapper).toMatchInlineSnapshot(`<td></td>`);
+        expect(wrapper.html()).toBe(`<td></td>`);
     });
 });

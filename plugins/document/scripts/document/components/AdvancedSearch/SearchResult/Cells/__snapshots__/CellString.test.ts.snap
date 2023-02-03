@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CellString should display the text as is 1`] = `
+<td>
+  
+  Lorem ipsum
+  
+</td>
+`;

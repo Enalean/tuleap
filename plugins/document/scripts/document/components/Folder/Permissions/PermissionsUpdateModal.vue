@@ -36,8 +36,9 @@
                 class="document-permissions-update-container"
             >
                 <permissions-for-groups-selector
-                    v-bind:project_ugroups="project_ugroups"
+                    v-bind:project_ugroups="project_ugroups ? project_ugroups : []"
                     v-model="updated_permissions"
+                    v-bind:value="updated_permissions"
                 />
                 <permissions-update-folder-sub-items
                     v-bind:item="item"

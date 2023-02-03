@@ -22,13 +22,7 @@
         v-on:error-modal-hidden="bubbleErrorModalHidden"
         v-bind:body_class="'document-uploads-files-list'"
     >
-        <translate
-            slot="modal-title"
-            v-bind:translate-n="reasons.length"
-            translate-plural="Oops… Unable to upload files"
-        >
-            Oops… Unable to upload file
-        </translate>
+        <span slot="modal-title"> {{ error_message }}</span>
 
         <div
             v-for="reason of sorted_reasons"
@@ -49,8 +43,11 @@
 import ErrorModal from "./ErrorModal.vue";
 import type { Reason } from "../../../type";
 import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ reasons: Array<Reason> }>();
+
+const { $ngettext } = useGettext();
 
 const sorted_reasons = computed(() => {
     return [...props.reasons].sort((a: Reason, b: Reason): number => {
@@ -68,4 +65,12 @@ const emit = defineEmits<{
 function bubbleErrorModalHidden(): void {
     emit("error-modal-hidden");
 }
+
+const error_message = computed((): string => {
+    return $ngettext(
+        "Oops… Unable to upload file",
+        "Oops… Unable to upload files",
+        props.reasons.length
+    );
+});
 </script>

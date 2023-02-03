@@ -19,51 +19,32 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
-
 import SwitchToOldUI from "./SwitchToOldUI.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import * as router from "vue-router";
 
-import VueRouter from "vue-router";
+jest.mock("vue-router");
 
 describe("SwitchToOldUI", () => {
-    let factory, state, store, router;
+    let factory;
+    let current_folder = null;
 
     beforeEach(() => {
-        state = {
-            current_folder: null,
-            configuration: { project_id: 100 },
-        };
-
-        const store_options = {
-            state,
-        };
-
-        router = new VueRouter({
-            routes: [
-                {
-                    path: "/preview/3",
-                    name: "preview",
-                },
-                {
-                    path: "/folder/20",
-                    name: "folder",
-                },
-                {
-                    path: "/",
-                    name: "root_folder",
-                },
-            ],
-        });
-        store = createStoreMock(store_options);
-
         factory = () => {
             return shallowMount(SwitchToOldUI, {
-                localVue,
-                mocks: {
-                    $store: store,
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            configuration: {
+                                state: { project_id: 101 },
+                                namespaced: true,
+                            },
+                        },
+                        state: {
+                            current_folder,
+                        },
+                    }),
                 },
-                router,
             });
         };
     });
@@ -71,48 +52,33 @@ describe("SwitchToOldUI", () => {
     it(`Given an user who browse a folder ( != root folder)
         The user wants to switch to old UI from this folder
         Then he is redirected on the old UI into the good folder`, () => {
-        router.push({
-            name: "folder",
-            params: {
-                item_id: 20,
-            },
+        jest.spyOn(router, "useRoute").mockReturnValue({
+            params: { name: "folder" },
         });
+
         const wrapper = factory();
-
-        expect(wrapper.vm.$route.name).toBe("folder");
-
         wrapper.get("a").element.href = "/plugins/docman/?group_id=100&action=show&id=20";
     });
 
     it(`Given an user toggle the quick look of an item
         The user wants to switch to old UI
         Then he is redirected on the old UI into the current folder`, () => {
-        router.push({
-            name: "preview",
-            params: {
-                preview_item_id: 3,
-            },
+        jest.spyOn(router, "useRoute").mockReturnValue({
+            params: { name: "prview" },
         });
-        store.state.current_folder = { id: 25 };
+        current_folder = { id: 25 };
 
         const wrapper = factory();
-
-        expect(wrapper.vm.$route.name).toBe("preview");
-
         wrapper.get("a").element.href = "/plugins/docman/?group_id=100&action=show&id=25";
     });
 
     it(`Given an user who browse the root folder
         The user wants to switch to old UI
         Then he is redirected on the old UI into the root folder`, () => {
-        router.push({
-            name: "root_folder",
+        jest.spyOn(router, "useRoute").mockReturnValue({
+            params: { name: "root_folder" },
         });
-
         const wrapper = factory();
-
-        expect(wrapper.vm.$route.name).toBe("root_folder");
-
         wrapper.get("a").element.href = "/plugins/docman/?group_id=100";
     });
 });

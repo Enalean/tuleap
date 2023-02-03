@@ -1,3 +1,5 @@
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+
 /**
  * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
@@ -35,7 +37,6 @@ import HistoryVersionsEmptyState from "./HistoryVersionsEmptyState.vue";
 import HistoryVersionsContent from "./HistoryVersionsContent.vue";
 import HistoryVersionsContentForLink from "./HistoryVersionsContentForLink.vue";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
 import type {
     Embedded,
     EmbeddedFileVersion,
@@ -44,16 +45,17 @@ import type {
     Link,
     LinkVersion,
 } from "../../type";
+import { nextTick } from "vue";
 
 describe("HistoryVersions", () => {
     it("should display a loading state", () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            localVue,
             propsData: {
                 item: { id: 42 } as ItemFile,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(true);
@@ -66,13 +68,14 @@ describe("HistoryVersions", () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            localVue,
             propsData: {
                 item: { id: 42 } as ItemFile,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);
@@ -84,13 +87,14 @@ describe("HistoryVersions", () => {
         getAllFileVersionHistory.mockReturnValue(errAsync(Error("You cannot!")));
 
         const wrapper = shallowMount(HistoryVersions, {
-            localVue,
             propsData: {
                 item: { id: 42 } as ItemFile,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(true);
@@ -102,13 +106,14 @@ describe("HistoryVersions", () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([{} as FileHistory]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            localVue,
             propsData: {
                 item: { id: 42, type: "file" } as ItemFile,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);
@@ -120,13 +125,14 @@ describe("HistoryVersions", () => {
         getAllLinkVersionHistory.mockReturnValue(okAsync([{} as LinkVersion]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            localVue,
             propsData: {
                 item: { id: 42, type: "link" } as Link,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);
@@ -138,13 +144,14 @@ describe("HistoryVersions", () => {
         getAllEmbeddedFileVersionHistory.mockReturnValue(okAsync([{} as EmbeddedFileVersion]));
 
         const wrapper = shallowMount(HistoryVersions, {
-            localVue,
             propsData: {
                 item: { id: 42, type: "embedded" } as Embedded,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
+        await nextTick();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);

@@ -39,7 +39,7 @@
 import type { SearchCriterionText } from "../../../type";
 import { computed } from "vue";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { interpolate, $gettext } = useGettext();
 

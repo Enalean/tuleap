@@ -19,26 +19,31 @@
 
 <template>
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
-        <translate
-            tag="p"
-            v-bind:translate-params="{ nb: max_files_dragndrop }"
-            v-bind:translate-n="max_files_dragndrop"
-            translate-plural="You are not allowed to drag 'n drop more than %{ nb } files at once."
-        >
-            You are not allowed to drag 'n drop more than %{ nb } file at once.
-        </translate>
-        <translate tag="p">Please start again.</translate>
+        <p>{{ error_message }}</p>
+        <p>{{ $gettext("Please start again.") }}</p>
     </error-modal>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import ErrorModal from "./ErrorModal.vue";
+import { useGettext } from "vue3-gettext";
+
+const { interpolate, $ngettext } = useGettext();
 
 export default {
     components: { ErrorModal },
     computed: {
         ...mapState("configuration", ["max_files_dragndrop"]),
+        error_message() {
+            const translated = $ngettext(
+                "You are not allowed to drag 'n drop more than %{ nb } file at once.",
+                "You are not allowed to drag 'n drop more than %{ nb } files at once.",
+                this.max_files_dragndrop
+            );
+
+            return interpolate(translated, { nb: this.max_files_dragndrop });
+        },
     },
     methods: {
         bubbleErrorModalHidden() {

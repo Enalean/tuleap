@@ -26,10 +26,10 @@
             <item-permission-error-svg />
         </div>
         <h1 class="empty-state-title">
-            <translate>You don't have read permission for this item</translate>
+            {{ $gettext("You don't have read permission for this item") }}
         </h1>
-        <p class="empty-state-text" v-translate>
-            You may only access documents you are granted read permission on.
+        <p class="empty-state-text">
+            {{ $gettext("You may only access documents you are granted read permission on.") }}
         </p>
         <form
             v-bind:action="`/plugins/document/PermissionDeniedRequestMessage/${project_id}`"
@@ -43,10 +43,11 @@
                     <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token" />
                     <div class="tlp-form-element">
                         <label class="tlp-label" for="msg_private_project">
-                            <translate>
-                                Write your message below and click on the button to send your
-                                request to the project administrators
-                            </translate>
+                            {{
+                                $gettext(
+                                    "Write your message below and click on the button to send your request to the project administrators"
+                                )
+                            }}
                             <i class="fa-solid fa-asterisk"></i>
                         </label>
                         <textarea
@@ -59,15 +60,19 @@
                             required
                         ></textarea>
                         <input type="hidden" name="groupId" v-bind:value="project_id" />
-                        <p v-if="error !== ''" v-translate class="tlp-text-danger">
-                            Please enter a reason for why you need to access this document.
+                        <p v-if="error !== ''" class="tlp-text-danger">
+                            {{
+                                $gettext(
+                                    "Please enter a reason for why you need to access this document."
+                                )
+                            }}
                         </p>
                     </div>
                 </section>
                 <section class="tlp-pane-section tlp-pane-section-submit">
                     <button type="button" class="tlp-button-primary" v-on:click="submit">
                         <i class="fa-regular fa-envelope tlp-button-icon"></i>
-                        <translate>Send mail</translate>
+                        {{ $gettext("Send mail") }}
                     </button>
                 </section>
             </div>
@@ -77,7 +82,7 @@
 <script setup lang="ts">
 import ItemPermissionErrorSvg from "../../svg/error/ItemPermissionErrorSvg.vue";
 import { computed, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 

@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DownloadFile from "./DownloadFile.vue";
-import localVue from "../../../helpers/local-vue";
 import { TYPE_FILE } from "../../../constants";
 import type { FileProperties, ItemFile } from "../../../type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("DownloadFile", () => {
-    function getWrapper(item: ItemFile): Wrapper<DownloadFile> {
+    function getWrapper(item: ItemFile): VueWrapper<InstanceType<typeof DownloadFile>> {
         return shallowMount(DownloadFile, {
-            localVue,
             propsData: { item },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 
@@ -43,7 +43,7 @@ describe("DownloadFile", () => {
 
         const wrapper = getWrapper(item);
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it(`Given file_properties is set

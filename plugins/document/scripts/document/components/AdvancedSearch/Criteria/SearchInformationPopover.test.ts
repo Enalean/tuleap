@@ -20,20 +20,20 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
-import localVue from "../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 jest.mock("@tuleap/tlp-popovers");
 
 describe("SearchInformationPopover", () => {
     it("should display a popover content", () => {
         const wrapper = shallowMount(SearchInformationPopover, {
-            localVue,
             propsData: {
                 criterion: "Cars",
                 description: "Cars go brrrrrr",
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
-        expect(wrapper).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
     });
 });

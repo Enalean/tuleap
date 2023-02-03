@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import DropDownButton from "./DropDownButton.vue";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import emitter from "../../../helpers/emitter";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 jest.mock("../../../helpers/emitter");
 
@@ -45,10 +45,10 @@ describe("DropDownButton", () => {
         isInQuickLookMode: boolean,
         isInLargeMode: boolean,
         isInFolderEmptyState: boolean
-    ): Wrapper<DropDownButton> {
+    ): VueWrapper<InstanceType<typeof DropDownButton>> {
         return shallowMount(DropDownButton, {
-            localVue,
             propsData: { isAppended, isInQuickLookMode, isInLargeMode, isInFolderEmptyState },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 
@@ -102,7 +102,7 @@ describe("DropDownButton", () => {
     it(`Hide the dropdown
         When component is destroyed`, () => {
         const wrapper = createWrapper(true, true, true, false);
-        wrapper.destroy();
+        wrapper.unmount();
 
         expect(fake_dropdown_object.addEventListener).toHaveBeenCalledTimes(2);
         expect(document.addEventListener).toHaveBeenCalledTimes(1);

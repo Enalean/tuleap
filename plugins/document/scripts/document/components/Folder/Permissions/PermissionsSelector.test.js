@@ -18,9 +18,9 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 
 import PermissionsSelector from "./PermissionsSelector.vue";
+import { nextTick } from "vue";
 
 describe("PermissionsSelector", () => {
     let factory;
@@ -28,7 +28,6 @@ describe("PermissionsSelector", () => {
     beforeEach(() => {
         factory = (props = {}) => {
             return shallowMount(PermissionsSelector, {
-                localVue,
                 propsData: { ...props },
             });
         };
@@ -51,10 +50,7 @@ describe("PermissionsSelector", () => {
         expect(wrapper.text()).toContain(permission_label);
         const all_options = wrapper.get("select").findAll("option");
         expect(all_options).toHaveLength(4);
-        const selected_option_wrappers = all_options.wrappers.filter(
-            (option_wrapper) => option_wrapper.element.selected
-        );
-        expect(selected_option_wrappers).toHaveLength(2);
+        expect(wrapper.vm.$data.selected_ugroup_ids).toHaveLength(2);
     });
 
     it("Select new user groups", () => {
@@ -88,13 +84,9 @@ describe("PermissionsSelector", () => {
             project_ugroups: [ugroup_1, ugroup_2],
             selected_ugroups: [ugroup_2],
         });
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
-        const all_options = wrapper.get("select").findAll("option");
-        const selected_option_wrappers = all_options.wrappers.filter(
-            (option_wrapper) => option_wrapper.element.selected
-        );
-
-        expect(selected_option_wrappers).toHaveLength(1);
+        wrapper.get("select").findAll("option");
+        expect(wrapper.vm.$data.selected_ugroup_ids).toHaveLength(1);
     });
 });

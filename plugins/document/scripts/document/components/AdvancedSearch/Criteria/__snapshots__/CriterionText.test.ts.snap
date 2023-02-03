@@ -13,12 +13,10 @@ exports[`CriterionText should render the component 1`] = `
     >
       Title
     </label>
-     
     <search-information-popover-stub
       description="Search in the 'Title' property of the document."
     />
   </div>
-   
   <input
     class="tlp-input"
     data-test="document-criterion-text-title"

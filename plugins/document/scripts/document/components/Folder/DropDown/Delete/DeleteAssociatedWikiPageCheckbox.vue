@@ -27,13 +27,14 @@
                     data-test="delete-associated-wiki-page-checkbox"
                     v-on:click="processInput"
                 />
-                <span v-translate>Propagate deletion to wiki service</span>
+                <span>{{ $gettext("Propagate deletion to wiki service") }}</span>
             </label>
             <p class="tlp-text-warning">
-                <translate>
-                    Please note that if you check this option, the referenced wiki page will no
-                    longer exist in the wiki service too.
-                </translate>
+                {{
+                    $gettext(
+                        "Please note that if you check this option, the referenced wiki page will no longer exist in the wiki service too."
+                    )
+                }}
             </p>
         </div>
         <div
@@ -64,7 +65,7 @@ import type { ItemPath } from "../../../../store/actions-helpers/build-parent-pa
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ item: Wiki; wikiPageReferencers: Array<ItemPath> }>();
 

@@ -26,11 +26,11 @@
         <section class="tlp-popover popover-search" ref="popover_content">
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
-                <h1 class="tlp-popover-title" v-translate>Search help</h1>
+                <h1 class="tlp-popover-title">{{ $gettext("Search help") }}</h1>
             </div>
             <div class="tlp-popover-body">
                 <p>{{ props.description }}</p>
-                <p v-translate>Search allowed pattern:</p>
+                <p>{{ $gettext("Search allowed pattern:") }}</p>
                 <ul>
                     <li>{{ exact_message_pattern }}</li>
                     <li>{{ starting_message_pattern }}</li>
@@ -46,7 +46,7 @@
 import type { Popover } from "@tuleap/tlp-popovers";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 

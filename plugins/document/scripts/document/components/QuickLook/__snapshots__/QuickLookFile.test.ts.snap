@@ -8,7 +8,6 @@ exports[`QuickLookFile renders quick look for file document with a CTA to downlo
     class="tlp-button-primary tlp-button-small"
     item="[object Object]"
   />
-   
   <drop-down-quick-look-stub
     item="[object Object]"
   />

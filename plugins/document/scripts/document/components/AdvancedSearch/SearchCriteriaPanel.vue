@@ -27,14 +27,17 @@
             <section class="tlp-pane-section search-criteria-panel-criteria-container">
                 <search-criteria-breadcrumb v-if="!is_in_root_folder" />
                 <div class="document-search-criteria" v-if="new_query">
-                    <criterion-global-text v-model="new_query.global_search" />
+                    <criterion-global-text
+                        v-model="new_query.global_search"
+                        v-bind:value="new_query.global_search"
+                    />
                     <component
                         v-for="criterion in criteria"
                         v-bind:key="criterion.name"
                         v-bind:is="`criterion-${criterion.type}`"
                         v-bind:criterion="criterion"
                         v-model="new_query[criterion.name]"
-                        v-bind:data-test="`criterion-${criterion.name}`"
+                        v-bind:value="new_query[criterion.name]"
                     />
                 </div>
             </section>

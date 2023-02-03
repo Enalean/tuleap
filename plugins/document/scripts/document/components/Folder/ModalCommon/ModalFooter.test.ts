@@ -18,16 +18,15 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 
 import ModalFooter from "./ModalFooter.vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ModalFooter", () => {
-    function createWrapper(isLoading: boolean): Wrapper<ModalFooter> {
+    function createWrapper(isLoading: boolean): VueWrapper<InstanceType<typeof ModalFooter>> {
         return shallowMount(ModalFooter, {
-            localVue,
             propsData: {
                 isLoading: isLoading,
                 ariaLabelledBy: "label",
@@ -35,6 +34,7 @@ describe("ModalFooter", () => {
                 iconSubmitButtonClass: "",
                 submitButtonLabel: "Submit",
             },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
     it(`Given: the footer is not loading

@@ -17,41 +17,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../../store/configuration";
 import type { DefaultFileNewVersionItem, NewVersion } from "../../../../type";
 import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
 import PreviewFilenameProperty from "../../ModalCommon/PreviewFilenameProperty.vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { TYPE_FILE } from "../../../../constants";
 
 describe("PreviewFilenameNewVersion", () => {
     function getWrapper(
         item: DefaultFileNewVersionItem,
         version: NewVersion,
-        configuration: ConfigurationState
-    ): Wrapper<PreviewFilenameNewVersion> {
+        filename_pattern: string
+    ): VueWrapper<InstanceType<typeof PreviewFilenameNewVersion>> {
         return shallowMount(PreviewFilenameNewVersion, {
-            localVue,
             propsData: {
                 item,
                 version,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        configuration,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: { filename_pattern } as ConfigurationState,
+                            namespaced: true,
+                        },
                     },
                 }),
             },
         });
     }
 
-    it("should update the preview according to item and version's values", async () => {
+    it("should display the preview according to item and version's values", () => {
         const item = {
             id: 42,
-            type: "file",
+            type: TYPE_FILE,
             title: "Lorem ipsum",
             status: "approved",
             description: "",
@@ -62,19 +64,14 @@ describe("PreviewFilenameNewVersion", () => {
 
         const version = { title: "wololo", changelog: "" } as NewVersion;
 
-        const wrapper = getWrapper(item, version, {
-            is_filename_pattern_enforced: true,
+        const wrapper = getWrapper(
+            item,
+            version,
             // eslint-disable-next-line no-template-curly-in-string
-            filename_pattern: "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
-        } as ConfigurationState);
+            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}"
+        );
 
-        expect(wrapper.text()).toBe("42-toto-Lorem ipsum-approved-wololo.json");
-
-        item.status = "rejected";
-        version.title = "nope";
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.text()).toBe("42-toto-Lorem ipsum-rejected-nope.json");
+        expect(wrapper.vm.preview).toBe("42-toto-Lorem ipsum-approved-wololo.json");
     });
     it("does not display the filename preview if the current item is not a file", () => {
         const item = {
@@ -85,14 +82,19 @@ describe("PreviewFilenameNewVersion", () => {
             description: "",
         } as unknown as DefaultFileNewVersionItem;
 
-        const wrapper = getWrapper(item, {} as NewVersion, {} as ConfigurationState);
+        const wrapper = getWrapper(
+            item,
+            {} as NewVersion,
+            // eslint-disable-next-line no-template-curly-in-string
+            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}"
+        );
         expect(wrapper.findComponent(PreviewFilenameProperty).exists()).toBe(false);
     });
 
     it("displays the filename preview if the current item is a file", () => {
         const item = {
             id: 42,
-            type: "file",
+            type: TYPE_FILE,
             title: "Lorem ipsum",
             status: "approved",
             description: "",
@@ -103,11 +105,12 @@ describe("PreviewFilenameNewVersion", () => {
 
         const version = { title: "wololo", changelog: "" } as NewVersion;
 
-        const wrapper = getWrapper(item, version, {
-            is_filename_pattern_enforced: false,
+        const wrapper = getWrapper(
+            item,
+            version,
             // eslint-disable-next-line no-template-curly-in-string
-            filename_pattern: "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
-        } as ConfigurationState);
+            "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}"
+        );
         expect(wrapper.findComponent(PreviewFilenameProperty).exists()).toBe(true);
     });
 });

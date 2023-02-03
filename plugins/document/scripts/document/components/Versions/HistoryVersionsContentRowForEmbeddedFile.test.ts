@@ -36,13 +36,13 @@ jest.mock("../../api/version-rest-querier", () => {
 
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
 import HistoryVersionsContentRowForEmbeddedFile from "./HistoryVersionsContentRowForEmbeddedFile.vue";
 import type { RestUser } from "../../api/rest-querier";
 import type { EmbeddedFileVersion, User } from "../../type";
 import { FEEDBACK } from "../../injection-keys";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     let location: Pick<Location, "reload">;
@@ -52,9 +52,8 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     function getWrapper(
         item: User,
         has_more_than_one_version: boolean
-    ): Wrapper<HistoryVersionsContentRowForEmbeddedFile> {
+    ): VueWrapper<InstanceType<typeof HistoryVersionsContentRowForEmbeddedFile>> {
         return shallowMount(HistoryVersionsContentRowForEmbeddedFile, {
-            localVue,
             propsData: {
                 item,
                 has_more_than_one_version,
@@ -70,8 +69,11 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
                 location,
                 loadVersions,
             },
-            provide: {
-                [FEEDBACK as symbol]: { success },
+            global: {
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [FEEDBACK as symbol]: { success },
+                },
             },
         });
     }

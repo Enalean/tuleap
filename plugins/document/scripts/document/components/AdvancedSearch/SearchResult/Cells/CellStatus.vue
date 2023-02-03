@@ -26,7 +26,7 @@
 import CellString from "./CellString.vue";
 import type { ItemSearchResult } from "plugins/document/scripts/document/type";
 import { computed } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 
@@ -45,5 +45,9 @@ const status = computed((): string => {
         default:
             return "";
     }
+});
+
+defineExpose({
+    status,
 });
 </script>

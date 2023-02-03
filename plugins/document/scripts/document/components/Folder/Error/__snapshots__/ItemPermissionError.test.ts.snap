@@ -10,29 +10,16 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
   >
     <item-permission-error-svg-stub />
   </div>
-   
   <h1
     class="empty-state-title"
   >
-    <translate-stub
-      tag="span"
-    >
-      You don't have read permission for this item
-    </translate-stub>
+    You don't have read permission for this item
   </h1>
-   
   <p
     class="empty-state-text"
-    data-current-language="en_US"
-    data-msgid="
-        You may only access documents you are granted read permission on.
-    "
   >
-    
-        You may only access documents you are granted read permission on.
-    
+    You may only access documents you are granted read permission on.
   </p>
-   
   <form
     action="/plugins/document/PermissionDeniedRequestMessage/101"
     class="tlp-pane document-request-permission-pane"
@@ -49,7 +36,6 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
           name="challenge"
           type="hidden"
         />
-         
         <div
           class="tlp-form-element"
         >
@@ -57,39 +43,27 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
             class="tlp-label"
             for="msg_private_project"
           >
-            <translate-stub
-              tag="span"
-            >
-              
-                            Write your message below and click on the button to send your
-                            request to the project administrators
-                        
-            </translate-stub>
-             
+            Write your message below and click on the button to send your request to the project administrators 
             <i
               class="fa-solid fa-asterisk"
             />
           </label>
-           
           <textarea
             class="tlp-textarea"
             id="msg_private_project"
             name="msg_private_project"
             placeholder="Please write something meaningful for the admin."
-            required="required"
+            required=""
             rows="5"
           />
-           
           <input
             name="groupId"
             type="hidden"
             value="101"
           />
-           
-          <!---->
+          <!--v-if-->
         </div>
       </section>
-       
       <section
         class="tlp-pane-section tlp-pane-section-submit"
       >
@@ -100,12 +74,7 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
           <i
             class="fa-regular fa-envelope tlp-button-icon"
           />
-           
-          <translate-stub
-            tag="span"
-          >
-            Send mail
-          </translate-stub>
+           Send mail
         </button>
       </section>
     </div>

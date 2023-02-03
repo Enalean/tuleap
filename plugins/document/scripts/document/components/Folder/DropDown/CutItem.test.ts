@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { Store } from "vuex";
 
 const emitMock = jest.fn();
 jest.mock("../../../helpers/emitter", () => {
@@ -25,22 +25,25 @@ jest.mock("../../../helpers/emitter", () => {
         emit: emitMock,
     };
 });
+const mocked_store = { store: { dispatch: jest.fn() } } as unknown as Store<RootState>;
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import CutItem from "./CutItem.vue";
 import type { Item } from "../../../type";
 import { useClipboardStore } from "../../../stores/clipboard";
 import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
+import type { ConfigurationState } from "../../../store/configuration";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import type { RootState } from "../../../type";
 
 describe("CutItem", () => {
     let pinia: TestingPinia;
     let store: ReturnType<typeof useClipboardStore>;
 
-    function createWrapper(item: Item, pasting_in_progress: boolean): Wrapper<CutItem> {
+    function createWrapper(item: Item, pasting_in_progress: boolean): VueWrapper<CutItem> {
         pinia = createTestingPinia({
             initialState: {
                 clipboard: {
@@ -49,18 +52,26 @@ describe("CutItem", () => {
                 },
             },
         });
-        const vuex_state = {
-            configuration: {
-                user_id: "1",
-                project_id: "1",
-            },
-        };
-        store = useClipboardStore("1", "1", pinia);
+
+        store = useClipboardStore(mocked_store, "1", "1", pinia);
         return shallowMount(CutItem, {
-            pinia,
-            localVue: localVue,
+            global: {
+                ...getGlobalTestOptions(
+                    {
+                        modules: {
+                            configuration: {
+                                state: {
+                                    user_id: "1",
+                                    project_id: "1",
+                                } as ConfigurationState,
+                                namespaced: true,
+                            },
+                        },
+                    },
+                    pinia
+                ),
+            },
             propsData: { item },
-            mocks: { $store: createStoreMock({ state: vuex_state }) },
         });
     }
 
@@ -70,7 +81,7 @@ describe("CutItem", () => {
 
     it(`Given item is cut
         Then the store is updated accordingly
-        And the menu closed`, () => {
+        And the menu closed`, async () => {
         const item = {
             id: 147,
             type: "item_type",
@@ -81,6 +92,7 @@ describe("CutItem", () => {
         const wrapper = createWrapper(item, false);
 
         wrapper.trigger("click");
+        await nextTick();
 
         expect(store.cutItem).toHaveBeenCalledWith(item);
         expect(emitMock).toHaveBeenCalledWith("hide-action-menu");
@@ -98,7 +110,7 @@ describe("CutItem", () => {
         } as Item;
         const wrapper = createWrapper(item, true);
 
-        expect(wrapper.attributes().disabled).toBeTruthy();
+        expect(wrapper.attributes().disabled).toBe("");
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
 
         wrapper.trigger("click");
@@ -117,7 +129,7 @@ describe("CutItem", () => {
         } as Item;
         const wrapper = createWrapper(item, false);
 
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 
     it(`Given the item is not writable
@@ -131,6 +143,6 @@ describe("CutItem", () => {
         } as Item;
         const wrapper = createWrapper(item, false);
 
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
 });

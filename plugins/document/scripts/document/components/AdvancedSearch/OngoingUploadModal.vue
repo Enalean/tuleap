@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import GlobalUploadProgressBar from "../Folder/ProgressBar/GlobalUploadProgressBar.vue";
 import { useState } from "vuex-composition-helpers";

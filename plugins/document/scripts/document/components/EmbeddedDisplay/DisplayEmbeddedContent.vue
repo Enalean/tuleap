@@ -58,11 +58,7 @@
             data-test="display-embedded-content"
         >
             <div class="tlp-pane-container">
-                <section
-                    class="tlp-pane-section"
-                    v-dompurify-html="content_to_display"
-                    data-test="content"
-                ></section>
+                <section class="tlp-pane-section" v-dompurify-html="content_to_display"></section>
             </div>
         </section>
 
@@ -96,7 +92,7 @@ import { computed, onBeforeMount, onUnmounted, ref } from "vue";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { Embedded } from "../../type";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const is_modal_shown = ref(false);
 const show_confirm_deletion_modal = ref(false);

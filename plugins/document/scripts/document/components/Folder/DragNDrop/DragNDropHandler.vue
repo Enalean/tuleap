@@ -79,7 +79,9 @@ export default {
         },
         error_modal_name() {
             if (!this.error_modal_shown) {
-                return "";
+                return () => {
+                    return "";
+                };
             }
 
             if (this.error_modal_shown === this.MAX_SIZE_ERROR) {
@@ -176,6 +178,7 @@ export default {
         async ondrop(event) {
             event.preventDefault();
             event.stopPropagation();
+
             if (this.isDragNDropingOnAModal(event)) {
                 return;
             }

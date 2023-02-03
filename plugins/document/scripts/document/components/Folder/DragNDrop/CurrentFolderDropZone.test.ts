@@ -17,41 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../../store/configuration";
 
 describe("CurrentFolderDropZone", () => {
-    let current_folder_drop_zone_factory: (
-        props: Record<string, unknown>
-    ) => Wrapper<CurrentFolderDropZone>;
+    let current_folder_drop_zone_factory: (props: Record<string, unknown>) => VueWrapper;
 
     beforeEach(() => {
-        const state = {
-            configuration: {
-                max_files_dragndrop: 10,
-                max_size_upload: 10000,
-            },
-        };
-
-        const getters = {
-            current_folder_title: "My folder",
-        };
-
-        const store_options = {
-            state,
-            getters,
-        };
-
-        const store = createStoreMock(store_options);
-
-        current_folder_drop_zone_factory = (props = {}): Wrapper<CurrentFolderDropZone> => {
+        current_folder_drop_zone_factory = (
+            props = {}
+        ): VueWrapper<InstanceType<typeof CurrentFolderDropZone>> => {
             return shallowMount(CurrentFolderDropZone, {
-                localVue,
                 propsData: { ...props },
-                mocks: { $store: store },
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            configuration: {
+                                state: {
+                                    max_files_dragndrop: 10,
+                                    max_size_upload: 10000,
+                                } as unknown as ConfigurationState,
+                                namespaced: true,
+                            },
+                        },
+                        getters: {
+                            current_folder_title: () => "My folder title",
+                        },
+                    }),
+                },
             });
         };
     });

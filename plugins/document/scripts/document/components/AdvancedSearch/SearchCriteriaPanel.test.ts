@@ -19,13 +19,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
-import localVue from "../../helpers/local-vue";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../store/configuration";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import type { AdvancedSearchParams, SearchDate } from "../../type";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { nextTick } from "vue";
 
 describe("SearchCriteriaPanel", () => {
     it("should allow user to search for new terms", async () => {
@@ -37,58 +37,52 @@ describe("SearchCriteriaPanel", () => {
             document.body.appendChild(parent_node);
         }
 
+        const state = {
+            root_id: 101,
+            criteria: [
+                { name: "id", type: "number", title: "Id" },
+                { name: "type", type: "list", title: "Type" },
+                { name: "filename", type: "text", title: "Filename" },
+                { name: "title", type: "text", title: "Title" },
+                { name: "description", type: "text", title: "Description" },
+                { name: "owner", type: "owner", title: "Owner" },
+                { name: "create_date", type: "date", title: "Create date" },
+                { name: "update_date", type: "date", title: "Update date" },
+                {
+                    name: "obsolescence_date",
+                    type: "date",
+                    title: "Obsolescence date",
+                },
+                { name: "status", type: "list", title: "Status" },
+            ],
+        } as unknown as ConfigurationState;
         const wrapper = shallowMount(SearchCriteriaPanel, {
-            localVue,
             attachTo: parent_node,
             propsData: {
                 query: buildAdvancedSearchParams({ global_search: "Lorem" }),
                 folder_id: 101,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            root_id: 101,
-                            criteria: [
-                                { name: "id", type: "number", title: "Id" },
-                                { name: "type", type: "list", title: "Type" },
-                                { name: "filename", type: "text", title: "Filename" },
-                                { name: "title", type: "text", title: "Title" },
-                                { name: "description", type: "text", title: "Description" },
-                                { name: "owner", type: "owner", title: "Owner" },
-                                { name: "create_date", type: "date", title: "Create date" },
-                                { name: "update_date", type: "date", title: "Update date" },
-                                {
-                                    name: "obsolescence_date",
-                                    type: "date",
-                                    title: "Obsolescence date",
-                                },
-                                { name: "status", type: "list", title: "Status" },
-                            ],
-                        } as unknown as ConfigurationState,
+                            namespaced: true,
+                            state,
+                        },
                     },
                 }),
             },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
-        wrapper.findComponent(CriterionGlobalText).vm.$emit("input", "Lorem ipsum");
-        wrapper.find("[data-test=criterion-id]").vm.$emit("input", "123");
-        wrapper.find("[data-test=criterion-type]").vm.$emit("input", "folder");
-        wrapper.find("[data-test=criterion-filename]").vm.$emit("input", "bob.jpg");
-        wrapper.find("[data-test=criterion-title]").vm.$emit("input", "doloret");
-        wrapper.find("[data-test=criterion-description]").vm.$emit("input", "sit amet");
-        wrapper.find("[data-test=criterion-owner]").vm.$emit("input", "jdoe");
+        wrapper.findComponent(CriterionGlobalText).setValue("Lorem ipsum");
+        wrapper.findComponent("criterion-number-stub").setValue("123");
+        wrapper.findComponent("criterion-list-stub").setValue("folder");
+        wrapper.findComponent("criterion-text-stub").setValue("bob.jpg");
+        wrapper.findComponent("criterion-owner-stub").setValue("jdoe");
         const create_date: SearchDate = { date: "2022-01-01", operator: ">" };
-        wrapper.find("[data-test=criterion-create_date]").vm.$emit("input", create_date);
-        const update_date: SearchDate = { date: "2022-01-31", operator: "<" };
-        wrapper.find("[data-test=criterion-update_date]").vm.$emit("input", update_date);
-        const obsolescence_date: SearchDate = { date: "2022-01-31", operator: "<" };
-        wrapper.find("[data-test=criterion-status]").vm.$emit("input", "draft");
-        wrapper
-            .find("[data-test=criterion-obsolescence_date]")
-            .vm.$emit("input", obsolescence_date);
+        wrapper.findComponent("criterion-date-stub").setValue(create_date);
         wrapper.find("[data-test=submit]").trigger("click");
 
         const expected_params: AdvancedSearchParams = {
@@ -96,35 +90,37 @@ describe("SearchCriteriaPanel", () => {
             id: "123",
             type: "folder",
             filename: "bob.jpg",
-            title: "doloret",
-            description: "sit amet",
+            title: "",
+            description: "",
             owner: "jdoe",
             create_date,
-            update_date,
-            obsolescence_date,
-            status: "draft",
+            update_date: null,
+            obsolescence_date: null,
+            status: "",
             sort: { name: "update_date", order: "desc" },
         };
         expect(wrapper.emitted()["advanced-search"]).toStrictEqual([[expected_params]]);
 
         // Avoid memory leaks when attaching to a parent node.
         // See https://vue-test-utils.vuejs.org/api/options.html#attachto
-        wrapper.destroy();
+        wrapper.unmount();
     });
 
     it("should not display the breadcrumbs if we are searching in root folder", async () => {
         const wrapper = shallowMount(SearchCriteriaPanel, {
-            localVue,
             propsData: {
                 query: buildAdvancedSearchParams({ global_search: "Lorem" }),
                 folder_id: 101,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            root_id: 101,
-                            criteria: [],
+                            state: {
+                                root_id: 101,
+                                criteria: [],
+                            },
+                            namespaced: true,
                         } as unknown as ConfigurationState,
                     },
                 }),

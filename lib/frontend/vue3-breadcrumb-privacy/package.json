@@ -1,0 +1,37 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/vue3-breadcrumb-privacy",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "module": "dist/vue3-breadcrumb-privacy.js",
+  "main": "dist/vue3-breadcrumb-privacy.umd.cjs",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/vue3-breadcrumb-privacy.js",
+      "require": "./dist/vue3-breadcrumb-privacy.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "@tuleap/project-privacy-helper": "workspace:*",
+    "@tuleap/tlp-popovers": "workspace:*",
+    "@tuleap/vue3-gettext-init": "workspace:*",
+    "vue3-gettext": "2.2.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.47"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@vue/test-utils": "^2.0.0",
+    "vue": "^3.2.47"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}

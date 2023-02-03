@@ -18,10 +18,10 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
 import { TYPE_FOLDER, TYPE_EMPTY } from "../../../constants";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("PermissionsUpdateFolderSubItems", () => {
     let factory;
@@ -29,8 +29,8 @@ describe("PermissionsUpdateFolderSubItems", () => {
     beforeEach(() => {
         factory = (props = {}) => {
             return shallowMount(PermissionsUpdateFolderSubItems, {
-                localVue,
                 propsData: { ...props },
+                global: { ...getGlobalTestOptions({}) },
             });
         };
     });
@@ -48,6 +48,6 @@ describe("PermissionsUpdateFolderSubItems", () => {
             item: { type: TYPE_EMPTY },
         });
 
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 });

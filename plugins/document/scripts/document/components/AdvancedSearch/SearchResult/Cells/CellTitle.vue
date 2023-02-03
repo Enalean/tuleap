@@ -192,4 +192,6 @@ function onDropdownShown(): void {
 function onDropdownHidden(): void {
     is_dropdown_shown.value = false;
 }
+
+defineExpose({ in_app_link });
 </script>

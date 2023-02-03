@@ -20,10 +20,10 @@
 
 import { shallowMount } from "@vue/test-utils";
 import QuickLookFile from "./QuickLookFile.vue";
-import localVue from "../../helpers/local-vue";
 import { TYPE_FILE } from "../../constants";
 import type { ItemFile } from "../../type";
 import type { FileProperties } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookFile", () => {
     it("renders quick look for file document with a CTA to download the file", () => {
@@ -41,8 +41,8 @@ describe("QuickLookFile", () => {
         } as ItemFile;
 
         const wrapper = shallowMount(QuickLookFile, {
-            localVue,
             propsData: { item: item },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -62,8 +62,8 @@ describe("QuickLookFile", () => {
         } as ItemFile;
 
         const wrapper = shallowMount(QuickLookFile, {
-            localVue,
             propsData: { item: item },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         const cta = wrapper.find<HTMLAnchorElement>(

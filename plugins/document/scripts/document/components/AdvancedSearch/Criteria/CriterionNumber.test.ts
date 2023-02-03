@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, mount } from "@vue/test-utils";
 import CriterionNumber from "./CriterionNumber.vue";
-import localVue from "../../../helpers/local-vue";
+import { nextTick } from "vue";
 
 describe("CriterionNumber", () => {
     it("should render the component", async () => {
         const wrapper = shallowMount(CriterionNumber, {
-            localVue,
             propsData: {
                 criterion: {
                     name: "id",
@@ -34,14 +33,13 @@ describe("CriterionNumber", () => {
             },
         });
 
-        await wrapper.vm.$nextTick();
+        await nextTick();
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
     it("should warn parent component when user is changing text", () => {
-        const wrapper = shallowMount(CriterionNumber, {
-            localVue,
+        const wrapper = mount(CriterionNumber, {
             propsData: {
                 criterion: {
                     name: "id",
@@ -52,6 +50,6 @@ describe("CriterionNumber", () => {
         });
 
         wrapper.find("[data-test=document-criterion-number-id]").setValue("256");
-        expect(wrapper.emitted().input).toStrictEqual([["256"]]);
+        expect(wrapper.emitted().input[0]).toStrictEqual(["256"]);
     });
 });

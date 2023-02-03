@@ -16,10 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import ClipboardContentInformation from "./ClipboardContentInformation.vue";
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
 import { useClipboardStore } from "../../../stores/clipboard";
@@ -27,9 +25,11 @@ import type { ClipboardState } from "../../../stores/types";
 import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
 import { ref } from "vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../../store/configuration";
 
 let pinia: TestingPinia;
+const mocked_store = { dispatch: jest.fn() };
 
 function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformation> {
     pinia = createTestingPinia({
@@ -37,21 +37,26 @@ function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformat
             clipboard,
         },
     });
-    useClipboardStore("1", "1", pinia);
-    const vuex_state = {
-        configuration: {
-            user_id: "1",
-            project_id: "1",
-        },
-    };
-
+    useClipboardStore(mocked_store, "1", "1", pinia);
     return shallowMount(ClipboardContentInformation, {
-        localVue,
-        pinia,
-        mocks: { $store: createStoreMock({ state: vuex_state }) },
+        global: {
+            ...getGlobalTestOptions(
+                {
+                    modules: {
+                        configuration: {
+                            state: {
+                                user_id: "1",
+                                project_id: "1",
+                            } as ConfigurationState,
+                            namespaced: true,
+                        },
+                    },
+                },
+                pinia
+            ),
+        },
     });
 }
-
 describe("ClipboardContentInformation", () => {
     it(`Given there is no item in the clipboard
         Then no information is displayed`, () => {
@@ -62,41 +67,45 @@ describe("ClipboardContentInformation", () => {
             operation_type: ref(null),
             pasting_in_progress: ref(false),
         });
-
-        expect(wrapper.html()).toBeFalsy();
+        expect(wrapper.html()).toBe("<!--v-if-->");
     });
+    it.each([
+        [CLIPBOARD_OPERATION_CUT, "You are currently moving"],
+        [CLIPBOARD_OPERATION_COPY, "You are currently copying"],
+    ])(
+        "Given there is an item in the clipboard  Then information is displayed for %s",
+        (operation_type: string, expected_message: string) => {
+            const clipboard = {
+                item_id: ref(123),
+                item_type: ref("folder"),
+                item_title: ref("My item"),
+                operation_type: ref(operation_type),
+                pasting_in_progress: ref(false),
+            };
+            const wrapper = getWrapper(clipboard);
 
-    it(`Given there is an item in the clipboard
-        Then information is displayed`, async () => {
-        const wrapper = getWrapper({
-            item_id: ref(123),
-            item_type: ref("folder"),
-            item_title: ref("My item"),
-            operation_type: ref(CLIPBOARD_OPERATION_COPY),
-            pasting_in_progress: ref(false),
-        });
+            const result_copy = wrapper.html();
+            expect(result_copy).toContain(expected_message);
+        }
+    );
 
-        const result_copy = wrapper.html();
-        expect(result_copy).toBeTruthy();
+    it.each([
+        [CLIPBOARD_OPERATION_CUT, "is being moved…"],
+        [CLIPBOARD_OPERATION_COPY, "is being copied…"],
+    ])(
+        "Given pasting is in progress Then information is displayed for %s",
+        (operation_type: string, expected_message: string) => {
+            const clipboard = {
+                item_id: ref(123),
+                item_type: ref("folder"),
+                item_title: ref("My item"),
+                operation_type: ref(operation_type),
+                pasting_in_progress: ref(true),
+            };
+            const wrapper = getWrapper(clipboard);
 
-        pinia.state.value.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
-        await wrapper.vm.$nextTick();
-        const result_cut = wrapper.html();
-        expect(result_cut).toBeTruthy();
-        expect(result_cut).not.toStrictEqual(result_copy);
-
-        pinia.state.value.clipboard.operation_type = CLIPBOARD_OPERATION_COPY;
-        pinia.state.value.clipboard.pasting_in_progress = true;
-        await wrapper.vm.$nextTick();
-        const result_copy_paste = wrapper.html();
-        expect(result_copy_paste).toBeTruthy();
-        expect(result_copy_paste).not.toStrictEqual(result_copy);
-
-        pinia.state.value.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
-        await wrapper.vm.$nextTick();
-        const result_cut_paste = wrapper.html();
-        expect(result_cut_paste).toBeTruthy();
-        expect(result_cut_paste).not.toStrictEqual(result_cut);
-        expect(result_cut_paste).not.toStrictEqual(result_copy_paste);
-    });
+            const result_copy = wrapper.html();
+            expect(result_copy).toContain(expected_message);
+        }
+    );
 });

@@ -33,6 +33,7 @@
             v-if="project_ugroups !== null"
             v-bind:project_ugroups="project_ugroups"
             v-model="permissions_for_groups"
+            v-bind:value="permissions_for_groups"
             data-test="document-creation-permissions-section-selector"
         />
     </div>

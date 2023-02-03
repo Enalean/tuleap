@@ -35,7 +35,7 @@ import type { ApprovableDocument } from "../../../type";
 import type { ApprovalTableBadge } from "../../../helpers/approval-table-helper";
 import type { Ref } from "vue";
 import { watch, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
     item: ApprovableDocument;

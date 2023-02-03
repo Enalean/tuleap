@@ -22,9 +22,9 @@ import NewItemDropdown from "./NewItemDropdown.vue";
 import type { Item } from "../../../../type";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
-import localVue from "../../../../helpers/local-vue";
 import { TYPE_FOLDER } from "../../../../constants";
 import { ItemType } from "../../../../type";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 jest.mock("@tuleap/tlp-dropdown");
 
 describe("NewItemDropdown", function () {
@@ -46,7 +46,7 @@ describe("NewItemDropdown", function () {
                     user_can_write: true,
                 } as Item,
             },
-            localVue,
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(createDropdown).toHaveBeenCalled();
@@ -62,7 +62,6 @@ describe("NewItemDropdown", function () {
                         user_can_write: true,
                     } as Item,
                 },
-                localVue,
             });
 
             expect(wrapper.findAll("*")).toHaveLength(0);
@@ -77,7 +76,6 @@ describe("NewItemDropdown", function () {
                     user_can_write: false,
                 } as Item,
             },
-            localVue,
         });
 
         expect(wrapper.findAll("*")).toHaveLength(0);

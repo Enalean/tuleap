@@ -18,19 +18,19 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import VersionTitleProperty from "./VersionTitleProperty.vue";
 import emitter from "../../../../helpers/emitter";
-import localVue from "../../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 jest.mock("../../../../helpers/emitter");
 
 describe("VersionTitleProperty", () => {
-    function createWrapper(): Wrapper<VersionTitleProperty> {
+    function createWrapper(): VueWrapper<InstanceType<typeof VersionTitleProperty>> {
         return shallowMount(VersionTitleProperty, {
-            localVue,
             propsData: { value: "a title" },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 

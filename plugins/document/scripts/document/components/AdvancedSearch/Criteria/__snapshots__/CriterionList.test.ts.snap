@@ -10,7 +10,6 @@ exports[`CriterionList should render the component 1`] = `
   >
     Type
   </label>
-   
   <select
     class="tlp-select"
     id="document-criterion-list-type"
@@ -20,31 +19,26 @@ exports[`CriterionList should render the component 1`] = `
     >
       Any
     </option>
-     
+    
     <option
       data-test="option-"
       value=""
     >
-      
-            Any
-        
+      Any
     </option>
     <option
       data-test="option-folder"
       value="folder"
     >
-      
-            Folder
-        
+      Folder
     </option>
     <option
       data-test="option-wiki"
       value="wiki"
     >
-      
-            Wiki
-        
+      Wiki
     </option>
+    
   </select>
 </div>
 `;

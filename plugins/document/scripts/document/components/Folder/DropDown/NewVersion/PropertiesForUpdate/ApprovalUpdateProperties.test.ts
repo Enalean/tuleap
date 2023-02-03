@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ApprovalUpdateProperties from "./ApprovalUpdateProperties.vue";
-import localVue from "../../../../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 
 describe("ApprovalUpdateProperties", () => {
-    function instantiateComponent(): Wrapper<ApprovalUpdateProperties> {
-        return shallowMount(ApprovalUpdateProperties, {
-            localVue,
-        });
+    function instantiateComponent(): VueWrapper<InstanceType<typeof ApprovalUpdateProperties>> {
+        return shallowMount(ApprovalUpdateProperties, { global: { ...getGlobalTestOptions({}) } });
     }
 
     it(`Given the copy action of an approval table

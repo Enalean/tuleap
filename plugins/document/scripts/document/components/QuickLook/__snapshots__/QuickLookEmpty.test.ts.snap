@@ -7,7 +7,6 @@ exports[`QuickLookEmpty Component can be rendered for empty 1`] = `
   <new-version-empty-dropdown-stub
     item="[object Object]"
   />
-   
   <drop-down-quick-look-stub
     item="[object Object]"
   />

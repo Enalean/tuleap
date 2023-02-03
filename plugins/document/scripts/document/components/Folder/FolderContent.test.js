@@ -18,53 +18,50 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import VueRouter from "vue-router";
-import localVue from "../../helpers/local-vue";
-
 import FolderContent from "./FolderContent.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("FolderContent", () => {
-    let factory, state, store, item;
+    let factory,
+        state = {},
+        item;
+
+    const mockRoute = {
+        params: {
+            id: 1,
+        },
+    };
+    const replace = jest.fn();
+    const mockRouter = {
+        replace,
+    };
+    let update_currently_previewed_item_mock = jest.fn();
+    let toggle_quick_look_mock = jest.fn();
 
     beforeEach(() => {
-        state = {};
-
-        const store_options = {
-            state,
-        };
-
-        store = createStoreMock(store_options);
-
-        const router = new VueRouter({
-            mode: "abstract",
-            routes: [
-                {
-                    path: "/preview/42",
-                    name: "preview",
-                },
-                {
-                    path: "/folder/100",
-                    name: "folder",
-                },
-                {
-                    path: "/",
-                    name: "root_folder",
-                },
-            ],
-        });
-
         factory = () => {
+            replace.mockReset();
             return shallowMount(FolderContent, {
-                localVue,
-                mocks: { $store: store },
-                router,
+                global: {
+                    ...getGlobalTestOptions({
+                        state,
+                        mutations: {
+                            updateCurrentlyPreviewedItem: update_currently_previewed_item_mock,
+                            toggleQuickLook: toggle_quick_look_mock,
+                        },
+                    }),
+                    mocks: {
+                        $route: mockRoute,
+                        $router: mockRouter,
+                    },
+                },
             });
         };
 
         item = {
             id: 42,
             title: "my item title",
+            parent_id: 0,
         };
     });
 
@@ -77,31 +74,30 @@ describe("FolderContent", () => {
 
     describe("toggleQuickLook", () => {
         it(`Given no item is currently previewed, then it directly displays quick look`, async () => {
-            store.state.currently_previewed_item = null;
-            store.state.current_folder = item;
+            state.currently_previewed_item = null;
+            state.current_folder = item;
 
             const wrapper = factory();
             const event = {
                 details: { item },
             };
 
-            expect(wrapper.vm.$route.path).toBe("/");
-
             await wrapper.vm.toggleQuickLook(event);
 
-            expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
-            expect(store.commit).toHaveBeenCalledWith("toggleQuickLook", true);
-
-            expect(wrapper.vm.$route.path).toBe("/preview/42");
+            expect(update_currently_previewed_item_mock).toHaveBeenCalledWith(
+                expect.anything(),
+                item
+            );
+            expect(toggle_quick_look_mock).toHaveBeenCalledWith(expect.anything(), true);
         });
 
         it(`Given user toggle quicklook from an item to an other, the it displays the quick look of new item`, async () => {
-            store.state.currently_previewed_item = {
+            state.currently_previewed_item = {
                 id: 105,
                 title: "my previewed item",
             };
 
-            store.state.current_folder = item;
+            state.current_folder = item;
 
             const wrapper = factory();
             const event = {
@@ -109,16 +105,18 @@ describe("FolderContent", () => {
             };
             await wrapper.vm.toggleQuickLook(event);
 
-            expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
-            expect(store.commit).toHaveBeenCalledWith("toggleQuickLook", true);
-            expect(wrapper.vm.$route.path).toBe("/preview/42");
+            expect(update_currently_previewed_item_mock).toHaveBeenCalledWith(
+                expect.anything(),
+                item
+            );
+            expect(toggle_quick_look_mock).toHaveBeenCalledWith(expect.anything(), true);
         });
 
         it(`Given user toggle quick look, then it open quick look`, async () => {
-            store.state.currently_previewed_item = item;
+            state.currently_previewed_item = item;
 
-            store.state.current_folder = item;
-            store.state.toggle_quick_look = false;
+            state.current_folder = item;
+            state.toggle_quick_look = false;
 
             const wrapper = factory();
             const event = {
@@ -126,16 +124,18 @@ describe("FolderContent", () => {
             };
             await wrapper.vm.toggleQuickLook(event);
 
-            expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
-            expect(store.commit).toHaveBeenCalledWith("toggleQuickLook", true);
-            expect(wrapper.vm.$route.path).toBe("/preview/42");
+            expect(update_currently_previewed_item_mock).toHaveBeenCalledWith(
+                expect.anything(),
+                item
+            );
+            expect(toggle_quick_look_mock).toHaveBeenCalledWith(expect.anything(), true);
         });
 
         it(`Given user toggle quick look on a previewed item, then it closes quick look`, async () => {
-            store.state.currently_previewed_item = item;
+            state.currently_previewed_item = item;
 
-            store.state.current_folder = item;
-            store.state.toggle_quick_look = true;
+            state.current_folder = item;
+            state.toggle_quick_look = true;
 
             const wrapper = factory();
             const event = {
@@ -143,38 +143,41 @@ describe("FolderContent", () => {
             };
             await wrapper.vm.toggleQuickLook(event);
 
-            expect(store.commit).not.toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
-            expect(store.commit).toHaveBeenCalledWith("toggleQuickLook", false);
+            expect(update_currently_previewed_item_mock).toHaveBeenCalledWith(
+                expect.anything(),
+                item
+            );
+            expect(toggle_quick_look_mock).toHaveBeenCalledWith(expect.anything(), false);
         });
     });
 
     describe("closeQuickLook", () => {
         it(`Given closed quick look is called on root_folder, then it calls the "root_folder" route`, () => {
-            store.state.current_folder = {
+            state.current_folder = {
                 id: 25,
                 parent_id: 0,
             };
 
-            store.state.currently_previewed_item = item;
+            state.currently_previewed_item = item;
 
             const wrapper = factory();
             wrapper.vm.closeQuickLook();
 
-            expect(wrapper.vm.$route.path).toBe("/");
+            expect(replace).toHaveBeenCalledWith({ name: "root_folder" });
         });
 
         it(`Given closed quick look is called on a subtree item, then it calls the parent folder route`, () => {
-            store.state.current_folder = {
+            state.current_folder = {
                 id: 25,
                 parent_id: 100,
             };
 
-            store.state.currently_previewed_item = item;
+            state.currently_previewed_item = item;
 
             const wrapper = factory();
             wrapper.vm.closeQuickLook();
 
-            expect(wrapper.vm.$route.path).toBe("/folder/100");
+            expect(replace).toHaveBeenCalledWith({ name: "folder", params: { item_id: 25 } });
         });
     });
 });

@@ -20,7 +20,6 @@
 
 import { shallowMount } from "@vue/test-utils";
 import QuickLookFolder from "./QuickLookFolder.vue";
-import localVue from "../../helpers/local-vue";
 import { TYPE_FOLDER } from "../../constants";
 import type { Item } from "../../type";
 
@@ -32,7 +31,6 @@ describe("QuickLookFolder", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookFolder, {
-            localVue,
             propsData: { item: item },
         });
 

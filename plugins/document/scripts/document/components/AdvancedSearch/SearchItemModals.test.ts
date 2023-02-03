@@ -24,21 +24,36 @@ jest.mock("@tuleap/tlp-modal", () => {
         createModal: (): Modal =>
             ({
                 addEventListener: jest.fn(),
+                show: jest.fn(),
+                removeEventListener: jest.fn(),
             } as unknown as Modal),
     };
 });
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SearchItemModals from "./SearchItemModals.vue";
-import localVue from "../../helpers/local-vue";
 import OngoingUploadModal from "./OngoingUploadModal.vue";
 import emitter from "../../helpers/emitter";
+import { nextTick } from "vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { ItemFile, RootState } from "../../type";
+import type { FakeItem } from "../../type";
 
 describe("SearchItemModals", () => {
-    function getWrapper(): Wrapper<SearchItemModals> {
+    function getWrapper(): VueWrapper<InstanceType<typeof SearchItemModals>> {
         return shallowMount(SearchItemModals, {
-            localVue,
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        files_uploads_list: [] as Array<ItemFile | FakeItem>,
+                    } as RootState,
+                }),
+                stubs: {
+                    "create-new-item-version-modal": true,
+                    "update-properties-modal": true,
+                },
+            },
         });
     }
 
@@ -53,7 +68,7 @@ describe("SearchItemModals", () => {
             const wrapper = getWrapper();
 
             emitter.emit("item-is-being-uploaded");
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             expect(wrapper.findComponent(OngoingUploadModal).exists()).toBe(true);
         });
@@ -62,17 +77,17 @@ describe("SearchItemModals", () => {
             const wrapper = getWrapper();
 
             emitter.emit("item-is-being-uploaded");
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             const modal = wrapper.findComponent(OngoingUploadModal);
             expect(modal.exists()).toBe(true);
             modal.vm.$emit("close");
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             expect(wrapper.findComponent(OngoingUploadModal).exists()).toBe(false);
 
             emitter.emit("item-is-being-uploaded");
-            await wrapper.vm.$nextTick();
+            await nextTick();
 
             expect(wrapper.findComponent(OngoingUploadModal).exists()).toBe(true);
         });

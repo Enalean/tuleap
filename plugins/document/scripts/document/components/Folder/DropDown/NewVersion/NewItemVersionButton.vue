@@ -33,7 +33,7 @@
             class="fa-solid fa-spin fa-circle-notch"
         ></i>
         <i v-else v-bind:class="iconClasses"></i>
-        <translate>Create new version</translate>
+        {{ $gettext("Create new version") }}
     </button>
 </template>
 <script setup lang="ts">
@@ -41,7 +41,7 @@ import { isLink, isWiki } from "../../../../helpers/type-check-helper";
 import { computed, ref } from "vue";
 import type { Item } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { useActions } from "vuex-composition-helpers";
 import type { RootActionsRetrieve } from "../../../../store/actions-retrieve";
 

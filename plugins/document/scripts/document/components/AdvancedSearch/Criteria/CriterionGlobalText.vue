@@ -21,7 +21,10 @@
 <template>
     <div class="tlp-form-element document-search-criterion document-search-criterion-text">
         <div class="document-search-criterion-with-popover">
-            <label class="tlp-label" for="document-global-search" v-translate>Global search</label>
+            <label class="tlp-label" for="document-global-search">
+                {{ $gettext("Global search") }}
+            </label>
+
             <search-information-popover v-bind:description="popover_description" />
         </div>
 
@@ -38,7 +41,7 @@
 
 <script setup lang="ts">
 import SearchInformationPopover from "./SearchInformationPopover.vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { computed } from "vue";
 
 const { $gettext } = useGettext();

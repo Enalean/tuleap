@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import localVue from "../../../../../helpers/local-vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyComponentTypeRenderer from "./CustomPropertyComponentTypeRenderer.vue";
 import type { Property } from "../../../../../type";
 
 describe("CustomPropertyComponentTypeRenderer", () => {
-    function createWrapper(item_property: Property): Wrapper<CustomPropertyComponentTypeRenderer> {
+    function createWrapper(
+        item_property: Property
+    ): VueWrapper<InstanceType<typeof CustomPropertyComponentTypeRenderer>> {
         return shallowMount(CustomPropertyComponentTypeRenderer, {
-            localVue,
             propsData: { itemProperty: item_property },
         });
     }

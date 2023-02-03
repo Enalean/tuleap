@@ -18,17 +18,17 @@
  */
 
 import type { FileProperties, ItemFile } from "../../type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DownloadButton from "./DownloadButton.vue";
-import localVue from "../../helpers/local-vue";
 import { TYPE_FILE } from "../../constants";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("DownloadButton", () => {
-    function getWrapper(item: ItemFile): Wrapper<DownloadButton> {
+    function getWrapper(item: ItemFile): VueWrapper<InstanceType<typeof DownloadButton>> {
         return shallowMount(DownloadButton, {
-            localVue,
             propsData: { item },
+            global: { ...getGlobalTestOptions({}) },
         });
     }
 
@@ -43,7 +43,7 @@ describe("DownloadButton", () => {
 
         const wrapper = getWrapper(item);
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);
     });
 
     it(`Given file_properties is set

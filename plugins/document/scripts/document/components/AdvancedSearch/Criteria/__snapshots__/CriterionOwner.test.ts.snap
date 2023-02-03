@@ -10,21 +10,15 @@ exports[`CriterionOwner should render the component with an already selected use
   >
     Owner
   </label>
-   
   <select
     class="tlp-input"
-    data-test="document-criterion-owner-owner"
     id="document-criterion-owner-owner"
   >
-    <option
-      selected="selected"
-      value=""
-    >
-      
-            John Doe
-        
+    <option>
+      John Doe
     </option>
-     
+    
+    
   </select>
 </div>
 `;

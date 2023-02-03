@@ -17,36 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK } from "../../constants";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Embedded, Item, ItemFile, Link } from "../../type";
-import localVue from "../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { RootState } from "../../type";
 
 describe("QuickLookDocumentPreview", () => {
-    let store = {};
-
     function createWrapper(
         currently_previewed_item: Item,
         icon_class: string,
         is_loading_currently_previewed_item: boolean
-    ): Wrapper<QuickLookDocumentPreview> {
-        const store_options = {
-            state: {
-                currently_previewed_item,
-                is_loading_currently_previewed_item,
-            },
-        };
-        store = createStoreMock(store_options);
-
+    ): VueWrapper<InstanceType<typeof QuickLookDocumentPreview>> {
         return shallowMount(QuickLookDocumentPreview, {
-            localVue,
             propsData: {
                 iconClass: icon_class,
             },
-            mocks: { $store: store },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        currently_previewed_item,
+                        is_loading_currently_previewed_item,
+                    } as RootState,
+                }),
+                directives: {
+                    "dompurify-html": jest.fn(),
+                },
+            },
         });
     }
     it("Renders an image if the item is an image", () => {

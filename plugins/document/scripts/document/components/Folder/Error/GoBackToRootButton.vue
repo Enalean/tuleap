@@ -21,7 +21,7 @@
     <router-link
         class="empty-state-action tlp-button-primary"
         v-bind:to="{ name: 'root_folder' }"
-        v-if="$route.name !== 'root_folder'"
+        v-if="route.name !== 'root_folder'"
         data-test="item-can-go-to-root-button"
     >
         <i class="fa-solid fa-arrow-right-long tlp-button-icon"></i>
@@ -29,4 +29,10 @@
     </router-link>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
+import { useRoute } from "vue-router";
+
+const { $gettext } = useGettext();
+const route = useRoute();
+</script>

@@ -19,14 +19,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import UserBadge from "./UserBadge.vue";
-import localVue from "../../helpers/local-vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("UserBadge", () => {
     it(`Given user has avatar
         When we display the user badge
         Then its avatar is displayed`, () => {
         const wrapper = shallowMount(UserBadge, {
-            localVue,
             propsData: {
                 user: {
                     id: 1,
@@ -35,6 +34,7 @@ describe("UserBadge", () => {
                     is_anonymous: false,
                 },
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper.find("[data-test=document-user-avatar]").exists()).toBeTruthy();
@@ -44,7 +44,6 @@ describe("UserBadge", () => {
         When we display the user badge
         Then whe should not display it`, () => {
         const wrapper = shallowMount(UserBadge, {
-            localVue,
             propsData: {
                 user: {
                     id: 1,

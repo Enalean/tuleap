@@ -19,15 +19,11 @@
  */
 
 import LinkCellTitle from "./LinkCellTitle.vue";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { TYPE_LINK } from "../../../constants";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import Vuex from "vuex";
-import type { Link, RootState } from "../../../type";
+import type { Link } from "../../../type";
 import type { ConfigurationState } from "../../../store/configuration";
-
-const localVue = createLocalVue();
-localVue.use(Vuex);
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("LinkCellTitle", () => {
     it(`should render link title`, () => {
@@ -38,24 +34,18 @@ describe("LinkCellTitle", () => {
             type: TYPE_LINK,
         } as Link;
 
-        const component_options = {
-            localVue,
-            propsData: {
-                item,
-            },
-        };
-
-        const configuration = { project_id: 101 } as unknown as ConfigurationState;
-        const state = { configuration: configuration } as RootState;
-
-        const store_options = {
-            state,
-        };
-
-        const store = createStoreMock(store_options);
         const wrapper = shallowMount(LinkCellTitle, {
-            mocks: { $store: store },
-            ...component_options,
+            propsData: { item },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        configuration: {
+                            state: { project_id: 101 } as unknown as ConfigurationState,
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();

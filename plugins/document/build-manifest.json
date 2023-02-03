@@ -1,6 +1,6 @@
 {
     "name": "document",
-    "gettext-vue": {
+    "gettext-vue3": {
         "document": {
             "src": "scripts/document",
             "po": "scripts/document/po"

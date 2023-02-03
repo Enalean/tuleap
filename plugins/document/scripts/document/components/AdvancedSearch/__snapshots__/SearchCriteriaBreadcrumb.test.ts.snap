@@ -9,43 +9,38 @@ exports[`SearchCriteriaBreadcrumb should display a link to each ascendant folder
   >
     Searching in
   </span>
-   
-  <!---->
-   
+  
+  
+  
+  <!--v-if-->
   <a
     class="document-search-breadcrumbs-crumb tlp-badge-secondary tlp-badge-outline"
   >
-    
-                Foo
-            
+    Foo
   </a>
+  
+  
   <i
     aria-hidden="true"
     class="fa-solid fa-chevron-right document-search-breadcrumbs-separator"
   />
-   
   <a
     class="document-search-breadcrumbs-crumb tlp-badge-secondary tlp-badge-outline"
   >
-    
-                Bar
-            
+    Bar
   </a>
-   
+  
+  
   <span
     class="document-search-breadcrumbs-final-separator"
   >
     .
   </span>
-   
   <a>
-    
-            Search in whole project documentation
-        
+    Search in whole project documentation
   </a>
+   . 
   
-        .
-    
 </p>
 `;
 
@@ -58,7 +53,6 @@ exports[`SearchCriteriaBreadcrumb should display a spinner while ascendant hiera
   >
     Searching in
   </span>
-   
   <i
     aria-hidden="true"
     class="fa-solid fa-circle-notch fa-spin"

@@ -2,43 +2,43 @@
 
 exports[`CellLocation should display path via the router link and the folder separators 1`] = `
 <td>
+  
+  
   <router-link-stub
     ariacurrentvalue="page"
     custom="true"
     data-test="document-cell-location-parent-item-title"
-    event="click"
-    tag="a"
+    replace="false"
     to="[object Object]"
   />
-   
   <span>
-    
-            /
-            
+     / 
+    <!---->
   </span>
+  
+  
   <router-link-stub
     ariacurrentvalue="page"
     custom="true"
     data-test="document-cell-location-parent-item-title"
-    event="click"
-    tag="a"
+    replace="false"
     to="[object Object]"
   />
-   
   <span>
-    
-            /
-            
+     / 
+    <!---->
   </span>
+  
+  
   <router-link-stub
     ariacurrentvalue="page"
     custom="true"
     data-test="document-cell-location-parent-item-title"
-    event="click"
-    tag="a"
+    replace="false"
     to="[object Object]"
   />
-   
-  <!---->
+  <!--v-if-->
+  
+  
 </td>
 `;

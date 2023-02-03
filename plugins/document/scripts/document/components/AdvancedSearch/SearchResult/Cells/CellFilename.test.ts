@@ -20,12 +20,10 @@
 import { shallowMount } from "@vue/test-utils";
 import type { FileProperties, ItemSearchResult } from "../../../../type";
 import CellFilename from "./CellFilename.vue";
-import localVue from "../../../../helpers/local-vue";
 
 describe("CellFilename", () => {
     it("should display the filename of a File document", () => {
         const wrapper = shallowMount(CellFilename, {
-            localVue,
             propsData: {
                 item: {
                     id: 123,
@@ -47,7 +45,6 @@ describe("CellFilename", () => {
         "should display empty string if document is not a File",
         (type: string): void => {
             const wrapper = shallowMount(CellFilename, {
-                localVue,
                 propsData: {
                     item: {
                         id: 123,

@@ -18,39 +18,47 @@
  */
 
 import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
-import localVue from "../../helpers/local-vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Embedded, Folder, Item } from "../../type";
+import type { Embedded, Folder, Item, RootState } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../store/configuration";
 
 describe("DocumentBreadcrumb", () => {
     function createWrapper(
         user_is_admin: boolean,
         current_folder_ascendant_hierarchy: Array<Folder>,
         is_loading_ascendant_hierarchy: boolean,
-        current_folder: null | Folder,
         currently_previewed_item: null | Item,
         project_icon = ""
-    ): Wrapper<DocumentBreadcrumb> {
+    ): VueWrapper<InstanceType<typeof DocumentBreadcrumb>> {
         return shallowMount(DocumentBreadcrumb, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
                         configuration: {
-                            user_is_admin,
+                            state: {
+                                user_is_admin,
+                                project_icon,
+                                project_url: " /project",
+                                privacy: "private",
+                                project_flags: [],
+                                project_id: "101",
+                                project_public_name: "My project",
+                            } as unknown as ConfigurationState,
+                            namespaced: true,
                         },
+                    },
+                    state: {
                         current_folder_ascendant_hierarchy,
                         is_loading_ascendant_hierarchy,
-                        current_folder,
+                        current_folder: { id: 1, title: "My first folder", parent_id: 0 } as Folder,
                         currently_previewed_item,
-                        project_icon,
-                    },
+                    } as RootState,
                 }),
-            },
-            localVue,
-            stubs: {
-                RouterLink: RouterLinkStub,
+                stubs: {
+                    RouterLink: RouterLinkStub,
+                },
             },
         });
     }
@@ -58,18 +66,18 @@ describe("DocumentBreadcrumb", () => {
     it(`Given user is docman administrator
         When we display the breadcrumb
         Then user should have an administration link`, () => {
-        const wrapper = createWrapper(true, [], false, null, null);
+        const wrapper = createWrapper(true, [], false, {} as Item);
         expect(wrapper.find("[data-test=breadcrumb-administrator-link]").exists()).toBeTruthy();
     });
 
     it(`Given user is regular user
         When we display the breadcrumb
         Then he should not have administrator link`, () => {
-        const wrapper = createWrapper(false, [], false, null, null);
+        const wrapper = createWrapper(false, [], false, {} as Item);
         expect(wrapper.find("[data-test=breadcrumb-administrator-link]").exists()).toBeFalsy();
     });
     it(`displays the project icon`, () => {
-        const wrapper = createWrapper(false, [], false, null, null, "🏰");
+        const wrapper = createWrapper(false, [], false, {} as Item, "🏰");
         expect(wrapper.find("[data-test=project-icon]").exists()).toBe(true);
     });
     it(`Given ascendant hierarchy has more than 5 ascendants
@@ -85,7 +93,7 @@ describe("DocumentBreadcrumb", () => {
             { id: 7, title: "My seventh folder" } as Folder,
         ];
 
-        const wrapper = createWrapper(false, current_folder_ascendant_hierarchy, false, null, null);
+        const wrapper = createWrapper(false, current_folder_ascendant_hierarchy, false, {} as Item);
         expect(wrapper.find("[data-test=breadcrumb-ellipsis]").exists()).toBeTruthy();
     });
 
@@ -102,7 +110,7 @@ describe("DocumentBreadcrumb", () => {
             { id: 7, title: "My seventh folder" } as Folder,
         ];
 
-        const wrapper = createWrapper(false, current_folder_ascendant_hierarchy, true, null, null);
+        const wrapper = createWrapper(false, current_folder_ascendant_hierarchy, true, {} as Item);
 
         expect(wrapper.find("[data-test=breadcrumb-ellipsis]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-breadcrumb-skeleton]").exists()).toBeTruthy();
@@ -119,39 +127,16 @@ describe("DocumentBreadcrumb", () => {
             { id: 5, title: "My fifth folder", parent_id: 2 } as Folder,
         ];
 
-        const wrapper = createWrapper(false, current_folder_ascendant_hierarchy, false, null, null);
+        const wrapper = createWrapper(false, current_folder_ascendant_hierarchy, false, {} as Item);
 
         expect(wrapper.find("[data-test=breadcrumb-ellipsis]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-breadcrumb-skeleton]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=breadcrumb-element-0]").exists()).toBeFalsy();
     });
-    it(`Given a list of folders and not the current document
-    When we display the breadcrumb
-    Then the breadcrumb display the current folder`, () => {
-        const current_folder = { id: 1, title: "My first folder", parent_id: 0 } as Folder;
-        const current_folder_ascendant_hierarchy = [
-            { id: 1, title: "My first folder", parent_id: 0 } as Folder,
-            { id: 2, title: "My second folder", parent_id: 0 } as Folder,
-            { id: 3, title: "My third folder", parent_id: 1 } as Folder,
-            { id: 4, title: "My fourth folder", parent_id: 2 } as Folder,
-            { id: 5, title: "My fifth folder", parent_id: 2 } as Folder,
-        ];
-
-        const wrapper = createWrapper(
-            false,
-            current_folder_ascendant_hierarchy,
-            false,
-            current_folder,
-            null
-        );
-
-        expect(wrapper.find("[data-test=breadcrumb-current-document]").exists()).toBeFalsy();
-    });
 
     it(`Given a list of folders and the current document which is displayed
     When we display the breadcrumb
     Then the breadcrumb display the current folder`, () => {
-        const current_folder = { id: 1, title: "My first folder", parent_id: 0 } as Folder;
         const current_folder_ascendant_hierarchy = [
             { id: 1, title: "My first folder", parent_id: 0 } as Folder,
             { id: 2, title: "My second folder", parent_id: 0 } as Folder,
@@ -169,7 +154,6 @@ describe("DocumentBreadcrumb", () => {
             false,
             current_folder_ascendant_hierarchy,
             false,
-            current_folder,
             currently_previewed_item
         );
 

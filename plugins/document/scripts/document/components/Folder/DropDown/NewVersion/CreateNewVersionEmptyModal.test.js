@@ -19,23 +19,44 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 import CreateNewVersionEmptyModal from "./CreateNewVersionEmptyModal.vue";
 import { TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../../../../constants";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp_modal from "@tuleap/tlp-modal";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("CreateNewVersionEmptyModal", () => {
-    let factory, store;
+    let factory;
+    let create_new_version = jest.fn();
+    let reset_error_modal = jest.fn();
 
     beforeEach(() => {
-        store = createStoreMock({}, { project_ugroups: null, error: {} });
-
         factory = (props) => {
             return shallowMount(CreateNewVersionEmptyModal, {
-                localVue,
                 propsData: { ...props },
-                mocks: { $store: store },
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            error: {
+                                state: {
+                                    has_modal_error: false,
+                                },
+                                mutations: {
+                                    resetModalError: reset_error_modal,
+                                },
+                                namespaced: true,
+                            },
+                            configuration: {
+                                state: {
+                                    project_id: 101,
+                                },
+                                namespaced: true,
+                            },
+                        },
+                        actions: {
+                            createNewVersionFromEmpty: create_new_version,
+                        },
+                    }),
+                },
             });
         };
 
@@ -48,24 +69,31 @@ describe("CreateNewVersionEmptyModal", () => {
 
     it("Default type for creation of new link version of an empty document is file", () => {
         const wrapper = factory({
-            item: { id: 10, type: TYPE_EMPTY },
+            item: {
+                id: 10,
+                type: TYPE_EMPTY,
+                link_properties: {},
+                embedded_properties: {},
+                file_properties: {},
+            },
         });
 
         expect(wrapper.vm.new_item_version.type).toBe(TYPE_FILE);
     });
     it("should create a new link version from an empty document", () => {
         const wrapper = factory({
-            item: { id: 10, type: TYPE_EMPTY },
+            item: {
+                id: 10,
+                type: TYPE_EMPTY,
+                link_properties: {},
+                embedded_properties: {},
+                file_properties: {},
+            },
         });
         wrapper.setData({
             new_item_version: {
                 type: TYPE_LINK,
             },
-        });
-        store.dispatch.mockImplementation((actionMethodName) => {
-            if (actionMethodName === "createNewVersionFromEmpty") {
-                store.state.error.has_modal_error = false;
-            }
         });
         wrapper.get("form").trigger("submit.prevent");
         expect(wrapper.vm.is_loading).toBe(true);

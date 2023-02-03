@@ -24,3 +24,8 @@
 .document-dropdown-menu-for-new-item-button {
     transform: translate(-15px, 14px);
 }
+
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+}

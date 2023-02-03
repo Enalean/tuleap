@@ -18,65 +18,82 @@
  *
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { RouterViewStub, shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 
-import localVue from "../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import VueRouter from "vue-router";
 import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/Error/PermissionError.vue";
 import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
 import LoadingError from "./Folder/Error/LoadingError.vue";
 import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
+import { getGlobalTestOptions } from "../helpers/global-options-for-test";
 
 describe("App", () => {
-    let factory, state, store, store_options, router;
-    beforeEach(() => {
-        router = new VueRouter({});
+    let factory;
+    const set_root_title = jest.fn();
+    let has_folder_permission_error,
+        has_folder_loading_error,
+        has_document_permission_error,
+        has_document_loading_error,
+        has_document_lock_error,
+        can_user_switch_to_old_ui;
 
+    beforeEach(() => {
         const default_prop = {
             csrf_token: "challenge_value",
             csrf_token_name: "challenge_name",
         };
 
-        factory = (state = {}) => {
-            store_options = {
-                state,
-            };
-            store = createStoreMock(store_options);
+        has_folder_permission_error = false;
+        has_folder_loading_error = false;
+        has_document_permission_error = false;
+        has_document_loading_error = false;
+        has_document_lock_error = false;
+        can_user_switch_to_old_ui = false;
 
-            // eslint-disable-next-line jest/prefer-spy-on
-            store.watch = jest.fn();
-            jest.spyOn(store, "watch").mockImplementation((watchFunction, callback) =>
-                callback(true)
-            );
-
+        factory = () => {
             return shallowMount(App, {
-                localVue,
                 propsData: default_prop,
-                mocks: { $store: store },
-                router,
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            error: {
+                                state: {
+                                    has_folder_permission_error,
+                                    has_folder_loading_error,
+                                    has_document_permission_error,
+                                    has_document_loading_error,
+                                    has_document_lock_error,
+                                },
+                                namespaced: true,
+                            },
+                            configuration: {
+                                state: {
+                                    user_id: 1,
+                                    project_id: 101,
+                                    can_user_switch_to_old_ui,
+                                },
+                                namespaced: true,
+                            },
+                        },
+                        getters: {
+                            is_uploading: () => false,
+                        },
+                        mutations: {
+                            setRootTitle: set_root_title,
+                        },
+                    }),
+                    stubs: {
+                        RouterView: RouterViewStub,
+                    },
+                },
             });
         };
     });
 
     it(`Displays folder permission error if user can't access to a folder`, () => {
-        state = {
-            error: {
-                has_folder_permission_error: true,
-                has_folder_loading_error: false,
-                has_document_permission_error: false,
-                has_document_loading_error: false,
-                has_document_lock_error: false,
-            },
-            configuration: {
-                user_id: 1,
-                project_id: 101,
-            },
-        };
-
-        const wrapper = factory(state);
+        has_folder_permission_error = true;
+        const wrapper = factory();
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeFalsy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeTruthy();
@@ -85,21 +102,8 @@ describe("App", () => {
     });
 
     it(`Displays loading error if folder fails to load itself`, () => {
-        state = {
-            error: {
-                has_folder_permission_error: false,
-                has_folder_loading_error: true,
-                has_document_permission_error: false,
-                has_document_loading_error: false,
-                has_document_lock_error: false,
-            },
-            configuration: {
-                user_id: 1,
-                project_id: 101,
-            },
-        };
-
-        const wrapper = factory(state);
+        has_folder_loading_error = true;
+        const wrapper = factory();
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
@@ -108,21 +112,8 @@ describe("App", () => {
     });
 
     it(`Displays item permission error if user can't access to a document`, () => {
-        state = {
-            error: {
-                has_folder_permission_error: false,
-                has_folder_loading_error: false,
-                has_document_permission_error: true,
-                has_document_loading_error: false,
-                has_document_lock_error: false,
-            },
-            configuration: {
-                user_id: 1,
-                project_id: 101,
-            },
-        };
-
-        const wrapper = factory(state);
+        has_document_permission_error = true;
+        const wrapper = factory();
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
@@ -131,21 +122,8 @@ describe("App", () => {
     });
 
     it(`Displays item loading error if document load fails`, () => {
-        state = {
-            error: {
-                has_folder_permission_error: false,
-                has_folder_loading_error: false,
-                has_document_permission_error: false,
-                has_document_loading_error: true,
-                has_document_lock_error: false,
-            },
-            configuration: {
-                user_id: 1,
-                project_id: 101,
-            },
-        };
-
-        const wrapper = factory(state);
+        has_document_loading_error = true;
+        const wrapper = factory(false, false, false, true, false, false);
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
@@ -154,21 +132,8 @@ describe("App", () => {
     });
 
     it(`Displays item loading error if document is locked`, () => {
-        state = {
-            error: {
-                has_folder_permission_error: false,
-                has_folder_loading_error: false,
-                has_document_permission_error: false,
-                has_document_loading_error: false,
-                has_document_lock_error: true,
-            },
-            configuration: {
-                user_id: 1,
-                project_id: 101,
-            },
-        };
-
-        const wrapper = factory(state);
+        has_document_lock_error = true;
+        const wrapper = factory();
 
         expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
         expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
@@ -177,42 +142,15 @@ describe("App", () => {
     });
 
     it(`Does not display link back to old UI if user is not allowed to`, () => {
-        state = {
-            error: {
-                has_folder_permission_error: false,
-                has_folder_loading_error: false,
-                has_document_permission_error: false,
-                has_document_loading_error: false,
-                has_document_lock_error: false,
-            },
-            configuration: {
-                can_user_switch_to_old_ui: false,
-                project_id: 101,
-            },
-        };
-
-        const wrapper = factory(state);
+        const wrapper = factory();
 
         expect(wrapper.findComponent(SwitchToOldUI).exists()).toBeFalsy();
     });
 
     it(`Displays a switch back link if user is allowed to`, () => {
-        state = {
-            error: {
-                has_folder_permission_error: false,
-                has_folder_loading_error: false,
-                has_document_permission_error: false,
-                has_document_loading_error: false,
-                has_document_lock_error: false,
-            },
-            configuration: {
-                can_user_switch_to_old_ui: true,
-                project_id: 101,
-            },
-        };
+        can_user_switch_to_old_ui = true;
+        const wrapper = factory();
 
-        const wrapper = factory(state);
-
-        expect(wrapper.findComponent(SwitchToOldUI).exists()).toBeTruthy();
+        expect(wrapper.vm.can_user_switch).toBeTruthy();
     });
 });

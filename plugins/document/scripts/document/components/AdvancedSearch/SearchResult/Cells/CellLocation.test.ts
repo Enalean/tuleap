@@ -19,22 +19,20 @@
 
 import type { ItemSearchResult } from "../../../../type";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
 import CellLocation from "./CellLocation.vue";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
+
+import { routes } from "../../../../router/router";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes: routes,
+});
 
 describe("CellLocation", () => {
     it("should display path via the router link and the folder separators", () => {
-        const router = new VueRouter({
-            routes: [
-                {
-                    path: "/",
-                    name: "search",
-                },
-            ],
-        });
         const wrapper = shallowMount(CellLocation, {
-            localVue,
             propsData: {
                 item: {
                     parents: [
@@ -53,7 +51,10 @@ describe("CellLocation", () => {
                     ],
                 } as unknown as ItemSearchResult,
             },
-            router,
+            global: {
+                ...getGlobalTestOptions({}),
+                plugins: [router],
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();

@@ -1,0 +1,10 @@
+{
+    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
+    "compilerOptions": {
+        "lib": [
+            "DOM"
+        ],
+        "incremental": false
+    },
+    "include": ["src/**/*"]
+}

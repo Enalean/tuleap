@@ -20,7 +20,6 @@
 
 import { shallowMount } from "@vue/test-utils";
 import QuickLookEmpty from "./QuickLookEmpty.vue";
-import localVue from "../../helpers/local-vue";
 import { TYPE_EMPTY } from "../../constants";
 import type { Item } from "../../type";
 import NewVersionEmptyDropdown from "../Folder/DropDown/NewVersion/NewVersionEmptyDropdown.vue";
@@ -33,7 +32,6 @@ describe("QuickLookEmpty", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookEmpty, {
-            localVue,
             propsData: { item: item },
         });
 
@@ -47,7 +45,6 @@ describe("QuickLookEmpty", () => {
         } as Item;
 
         const wrapper = shallowMount(QuickLookEmpty, {
-            localVue,
             propsData: { item: item },
         });
 

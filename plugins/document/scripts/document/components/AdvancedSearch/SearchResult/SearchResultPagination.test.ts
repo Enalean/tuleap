@@ -17,62 +17,63 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, RouterLinkStub, shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
+import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import SearchResultPagination from "./SearchResultPagination.vue";
-import VueRouter from "vue-router";
-import GettextPlugin from "vue-gettext";
-import VueDOMPurifyHTML from "vue-dompurify-html";
 import type { Dictionary } from "vue-router/types/router";
+import * as router from "vue-router";
+import type { RouteLocationNormalizedLoaded } from "vue-router";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+
+jest.mock("vue-router");
 
 describe("SearchResultPagination", () => {
     const total = 172;
     const limit = 50;
+    let query: Dictionary<string>;
 
-    function getPagination(from: number, to: number): Wrapper<SearchResultPagination> {
-        // We don't use localVue from helpers since the inclusion of VueRouter via localVue.use()
-        // prevents us to properly test and mock stuff here.
-        const localVue = createLocalVue();
-        localVue.use(VueDOMPurifyHTML);
-        localVue.use(GettextPlugin, {
-            translations: {},
-            silent: true,
-        });
-
-        const query: Dictionary<string> = {
+    beforeEach(() => {
+        query = {
             q: "Lorem ipsum",
         };
+        jest.spyOn(router, "useRoute").mockReturnValue({
+            params: {},
+            query,
+        } as unknown as RouteLocationNormalizedLoaded);
+    });
+
+    function getPagination(
+        from: number,
+        to: number
+    ): VueWrapper<InstanceType<typeof SearchResultPagination>> {
         if (from !== 0) {
             query.offset = String(from);
         }
-
         return shallowMount(SearchResultPagination, {
-            localVue,
             propsData: {
                 from,
                 to,
                 total,
                 limit,
             },
-            mocks: {
-                $route: {
-                    params: {
-                        folder_id: 101,
-                    },
-                    query,
+            global: {
+                ...getGlobalTestOptions({}),
+                stubs: {
+                    RouterLink: RouterLinkStub,
                 },
-                $router: new VueRouter(),
-            },
-            stubs: {
-                RouterLink: RouterLinkStub,
+                directives: {
+                    "dompurify-html": jest.fn(),
+                },
             },
         });
     }
 
-    it("should display pages in human readable numbers", () => {
+    it("should display pages", () => {
         const wrapper = getPagination(0, 49);
 
-        expect(wrapper.find("[data-test=pages]").text()).toBe("1 – 50 of 172");
+        expect(wrapper.vm.pages).toBe(
+            '<span class="tlp-pagination-number">1</span> – <span class="tlp-pagination-number">50</span> of <span class="tlp-pagination-number">172</span>'
+        );
     });
 
     describe("disabled buttons", () => {
@@ -119,8 +120,9 @@ describe("SearchResultPagination", () => {
             (from: number) => {
                 const wrapper = getPagination(from, from + limit - 1);
 
-                expect(wrapper.find("[data-test=begin]").props().to.query).toStrictEqual({
-                    q: "Lorem ipsum",
+                expect(wrapper.vm.begin_to).toStrictEqual({
+                    params: {},
+                    query: { q: "Lorem ipsum" },
                 });
             }
         );
@@ -130,8 +132,9 @@ describe("SearchResultPagination", () => {
             (from: number) => {
                 const wrapper = getPagination(from, from + limit - 1);
 
-                expect(wrapper.find("[data-test=previous]").props().to.query).toStrictEqual({
-                    q: "Lorem ipsum",
+                expect(wrapper.vm.to_previous).toStrictEqual({
+                    params: {},
+                    query: { q: "Lorem ipsum" },
                 });
             }
         );
@@ -144,9 +147,12 @@ describe("SearchResultPagination", () => {
             (from: number, expected_offset: number) => {
                 const wrapper = getPagination(from, from + limit - 1);
 
-                expect(wrapper.find("[data-test=previous]").props().to.query).toStrictEqual({
-                    q: "Lorem ipsum",
-                    offset: String(expected_offset),
+                expect(wrapper.vm.to_previous).toStrictEqual({
+                    params: {},
+                    query: {
+                        q: "Lorem ipsum",
+                        offset: String(expected_offset),
+                    },
                 });
             }
         );
@@ -160,9 +166,12 @@ describe("SearchResultPagination", () => {
             (from: number, expected_offset: number) => {
                 const wrapper = getPagination(from, from + limit - 1);
 
-                expect(wrapper.find("[data-test=next]").props().to.query).toStrictEqual({
-                    q: "Lorem ipsum",
-                    offset: String(expected_offset),
+                expect(wrapper.vm.to_next).toStrictEqual({
+                    params: {},
+                    query: {
+                        q: "Lorem ipsum",
+                        offset: String(expected_offset),
+                    },
                 });
             }
         );
