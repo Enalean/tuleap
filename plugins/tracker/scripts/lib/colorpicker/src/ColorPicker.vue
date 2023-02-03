@@ -52,6 +52,7 @@
             </p>
 
             <color-picker-switch
+                v-if="is_old_palette_enabled"
                 v-bind:is-switch-disabled="is_switch_disabled"
                 v-bind:is-old-palette-shown="is_old_palette_shown"
                 v-on:switch-palette="switchPalettes"
@@ -91,15 +92,18 @@ export default {
         inputId: String,
         currentColor: String,
         isSwitchDisabled: String,
+        isOldPaletteEnabled: String,
     },
     data() {
         const is_hexa_color = this.currentColor.includes("#");
         const show_old_preview = this.currentColor.length === 0 || is_hexa_color;
         const is_switch_disabled = Boolean(this.isSwitchDisabled);
-        const is_old_palette_shown = is_hexa_color && !is_switch_disabled;
+        const is_old_palette_enabled = Boolean(this.isOldPaletteEnabled);
+        const is_old_palette_shown = is_old_palette_enabled && is_hexa_color && !is_switch_disabled;
 
         return {
             color: this.currentColor,
+            is_old_palette_enabled,
             is_old_palette_shown,
             show_old_preview,
             is_switch_disabled,
@@ -117,10 +121,11 @@ export default {
             this.show_old_preview = !color.length || this.isHexaColor;
         },
         switchPalettes() {
-            this.is_old_palette_shown = !this.is_old_palette_shown;
+            this.is_old_palette_shown = this.is_old_palette_enabled && !this.is_old_palette_shown;
         },
         showRightPalette() {
-            this.is_old_palette_shown = this.isHexaColor && !this.is_switch_disabled;
+            this.is_old_palette_shown =
+                this.is_old_palette_enabled && this.isHexaColor && !this.is_switch_disabled;
         },
     },
 };
