@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initModalAddBot();
     initModalsWithId();
 
-    function initModalAddBot() {
+    function initModalAddBot(): void {
         const modal_element = document.getElementById("modal-add-bot");
         if (!modal_element) {
             throw new Error("Bad reference to an unknown modal element");
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function initModalsWithId() {
+    function initModalsWithId(): void {
         const modal_buttons = document.querySelectorAll("[data-modal-id]");
         [].forEach.call(modal_buttons, function (button: HTMLElement) {
             if (!button.dataset.modalId) {
