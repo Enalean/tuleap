@@ -1,0 +1,4 @@
+{
+    "name": "botmattermost_git",
+    "components": ["./"]
+}

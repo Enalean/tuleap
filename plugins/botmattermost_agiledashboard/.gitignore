@@ -1,0 +1,11 @@
+*.css
+*.css.map
+/www/assets/*
+nbproject
+node_modules/
+*.pot
+site-content/*/LC_MESSAGES/*.mo
+vendor
+*.po~
+.turbo/
+frontend-assets/

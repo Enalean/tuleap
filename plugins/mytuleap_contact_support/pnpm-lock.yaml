@@ -1,0 +1,57 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@tuleap/build-system-configurator': workspace:*
+  '@tuleap/tlp-fetch': workspace:*
+  '@tuleap/tlp-modal': workspace:*
+  '@types/bootstrap': ^4.5.0
+  '@types/dompurify': ^2.3.2
+  dompurify: ^2.3.6
+
+dependencies:
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
+  dompurify: 2.3.6
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@types/bootstrap': 4.5.0
+  '@types/dompurify': 2.3.2
+
+packages:
+
+  /@types/bootstrap/4.5.0:
+    resolution: {integrity: sha512-AWu7D+Cduyic75YptSRiXuCIy1c3SsmYk/9ixS68Ft2eAgg2wRj5U2M+7PK5zpakk4gTgfrWHeGxJqkSjttwyQ==}
+    dependencies:
+      '@types/jquery': 3.5.1
+      popper.js: 1.16.1
+    dev: true
+
+  /@types/dompurify/2.3.2:
+    resolution: {integrity: sha512-iht/O0jie/hDur39Z1NzjfOT/O9Kn2aWY99aqOn7lwsjSttEoMyGWvZIuAzZy0cNvAZdjmqySp7Z4d3GfBEGQw==}
+    dependencies:
+      '@types/trusted-types': 2.0.1
+    dev: true
+
+  /@types/jquery/3.5.1:
+    resolution: {integrity: sha512-Tyctjh56U7eX2b9udu3wG853ASYP0uagChJcQJXLUXEU6C/JiW5qt5dl8ao01VRj1i5pgXPAf8f1mq4+FDLRQg==}
+    dependencies:
+      '@types/sizzle': 2.3.2
+    dev: true
+
+  /@types/sizzle/2.3.2:
+    resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
+    dev: true
+
+  /@types/trusted-types/2.0.1:
+    resolution: {integrity: sha512-TmhE+/eI8PP7EwT9EbK8i74F1ryNn0LToCyEaLpN+X+A3LS1j4CpsCk9Jwq6Y2Uu7w9wdrKl6bujdj5LSsDKKA==}
+    dev: true
+
+  /dompurify/2.3.6:
+    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
+    dev: false
+
+  /popper.js/1.16.1:
+    resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
+    deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
+    dev: true

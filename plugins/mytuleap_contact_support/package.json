@@ -1,0 +1,19 @@
+{
+  "name": "@tuleap/plugin-mytuleap_contact_support",
+  "private": true,
+  "dependencies": {
+    "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-modal": "workspace:*",
+    "dompurify": "^2.3.6"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@types/bootstrap": "^4.5.0",
+    "@types/dompurify": "^2.3.2"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch"
+  }
+}
