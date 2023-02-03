@@ -23,39 +23,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UserPermissionsDao;
 
 class AddProjectMember
 {
-    /**
-     * @var UserPermissionsDao
-     */
-    private $dao;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-    /**
-     * @var \ProjectHistoryDao
-     */
-    private $history_dao;
-    /**
-     * @var \UGroupBinding
-     */
-    private $ugroup_binding;
-
-    public function __construct(UserPermissionsDao $dao, \UserManager $user_manager, \EventManager $event_manager, \ProjectHistoryDao $history_dao, \UGroupBinding $ugroup_binding)
-    {
-        $this->dao            = $dao;
-        $this->user_manager   = $user_manager;
-        $this->event_manager  = $event_manager;
-        $this->history_dao    = $history_dao;
-        $this->ugroup_binding = $ugroup_binding;
+    public function __construct(
+        private UserPermissionsDao $dao,
+        private \UserManager $user_manager,
+        private \EventManager $event_manager,
+        private \ProjectHistoryDao $history_dao,
+        private \UGroupBinding $ugroup_binding,
+        private MembershipDelegationDao $membership_delegation_dao,
+    ) {
     }
 
     public static function build(): self
@@ -68,7 +49,8 @@ class AddProjectMember
             new \UGroupBinding(
                 new \UGroupUserDao(),
                 new \UGroupManager()
-            )
+            ),
+            new MembershipDelegationDao(),
         );
     }
 
@@ -80,7 +62,7 @@ class AddProjectMember
         if ($this->dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
             throw new AlreadyProjectMemberException(_('User is already member of the project'));
         }
-        if (! $project_admin->isAdmin((int) $project->getID())) {
+        if (! $project_admin->isAdmin((int) $project->getID()) && ! $this->membership_delegation_dao->doesUserHasMembershipDelegation($project_admin->getId(), $project->getID())) {
             throw new NotProjectAdminException();
         }
 
