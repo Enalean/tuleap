@@ -38,7 +38,7 @@ use Tuleap\User\RequestFromAutocompleter;
 class Tracker_NotificationsManager
 {
     /** @var Tracker */
-    protected $tracker;
+    private $tracker;
 
     /**
      * @var UsersToNotifyDao
@@ -496,16 +496,6 @@ class Tracker_NotificationsManager
                 $dao->updateAddressById($notification_id, $updated_addresses);
             }
         }
-    }
-
-    protected function getWatcherDao()
-    {
-        return new Tracker_WatcherDao();
-    }
-
-    protected function getNotificationDao()
-    {
-        return new Tracker_NotificationDao();
     }
 
     protected function getGlobalNotificationsAddressesBuilder()
