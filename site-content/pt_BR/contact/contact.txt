@@ -1,0 +1,15 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-envelope-o tlp-pane-title-icon"></i>
+                Contact us
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>All inquiries should be directed to the
+                <a href="mailto:<?php echo \ForgeConfig::get('sys_email_contact'); ?>"><?php echo \ForgeConfig::get('sys_email_contact'); ?></a>.
+            </p>
+        </section>
+    </div>
+</section>

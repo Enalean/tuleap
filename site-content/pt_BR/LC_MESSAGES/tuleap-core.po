@@ -23,8 +23,8 @@ msgid ""
 "\"%s\" label already exists. If you save your modifications, both labels "
 "will be merged."
 msgstr ""
-"O rótulo \"%s\" já existe. Se você salvar suas modificações, ambas os "
-"rótulos serão fundidos."
+"O rótulo \"%s\" já existe. Se você salvar suas modificações, os "
+"rótulos serão unidos."
 
 #, php-format
 msgid "\"%s\" label already exists. Please choose another one."
@@ -54,8 +54,8 @@ msgstr[1] "%d Projetos agregados"
 #, php-format
 msgid "%d Parent project"
 msgid_plural "%d Parent projects"
-msgstr[0] "%d Projeto pai"
-msgstr[1] "%d Projetos pai"
+msgstr[0] "%d Projeto Pai"
+msgstr[1] "%d Projetos Pai"
 
 #, php-format
 msgid "%d does not belong to %s (%d) category hierarchy"
@@ -95,7 +95,7 @@ msgstr "%s atrás"
 
 #, php-format
 msgid "%s full project listing"
-msgstr "%s listagem completa de projetos"
+msgstr "%s lista completa de projetos"
 
 #, php-format
 msgid "%s has multiple corresponding users."
@@ -119,11 +119,11 @@ msgstr "%s novos projetos"
 
 #, php-format
 msgid "%s news"
-msgstr "%s notícias"
+msgstr "%s novidades"
 
 #, php-format
 msgid "%s project news highlights"
-msgstr "cabeçalhos do %s notícias do projeto"
+msgstr "destaques nas %s novidades do projeto"
 
 msgid "%s with email %s created an account on %s."
 msgstr "%s com o email %s criou uma conta em %s."
@@ -149,7 +149,7 @@ msgstr ""
 
 #, php-format
 msgid "- The team at %1$s."
-msgstr "- A equipe em %1$s."
+msgstr "- A equipe %1$s."
 
 msgid "-- None --"
 msgstr "-- Nenhum --"
@@ -235,7 +235,7 @@ msgid "<strong>Monitor this thread</strong>"
 msgstr "<forte>Monitore esta discussão</strong>"
 
 msgid "A deleted project can not be restored."
-msgstr "Um projeto apagado não pode ser restaurado."
+msgstr "Um projeto excluído não pode ser restaurado."
 
 #, php-format
 msgid ""
@@ -285,14 +285,14 @@ msgid ""
 "A non available service cannot be enabled. To enable this service, switch it "
 "to available before."
 msgstr ""
-"Um serviço não disponível não pode ser ativado. Para ativar este serviço, "
+"Um serviço não disponibilizado não pode ser ativado. Para ativar este serviço, "
 "mude-o para Disponível antes."
 
 msgid ""
 "A parameter is missing, please press the \"Back\" button and complete the "
 "form"
 msgstr ""
-"Falta um parâmetro, por favor pressione o botão \"Voltar\" e preencha o "
+"Falta um parâmetro, por favor pressione o botão \"Voltar\" e complete o "
 "formulário"
 
 #, php-format
@@ -425,7 +425,7 @@ msgid "Account must be active to change password"
 msgstr "A conta deve estar ativa para alterar a senha"
 
 msgid "Account status"
-msgstr "Conta"
+msgstr "Situação da conta"
 
 msgid "Action required"
 msgstr ""
@@ -443,7 +443,7 @@ msgid "Active"
 msgstr "Ativo"
 
 msgid "Active sessions browser statistics"
-msgstr "Estatísticas das sessões ativas do navegador"
+msgstr "Estatísticas das sessões ativas de navegador"
 
 msgid "Add"
 msgstr "Adicionar"
@@ -558,13 +558,13 @@ msgstr ""
 "Todos os usuários, independentemente das suas preferências (%1$s usuários)"
 
 msgid "Allow for all projects"
-msgstr "Permitir em todos os projetos"
+msgstr "Permitir para todos os projetos"
 
 msgid ""
 "Allow the app to access resources on your behalf for an extended period of "
 "time even while you are disconnected"
 msgstr ""
-"Permitir ao app acessar recursos em seu nome por um período estendido de "
+"Permitir o app acessar recursos em seu nome por um período estendido de "
 "tempo, mesmo enquanto você estiver desconectado"
 
 msgid "Allow to connect to apps and services using your account"
@@ -1687,7 +1687,7 @@ msgid "Headline"
 msgstr "Cabeçalho"
 
 msgid "Heartbeat"
-msgstr "Ritmo do projeto"
+msgstr "Cadência do projeto"
 
 msgid "Hello"
 msgstr "Olá"
@@ -2866,7 +2866,7 @@ msgstr "Configurações do projeto"
 
 #, php-format
 msgid "Project shortname is invalid. The reason is: %s"
-msgstr "O nome curto do projeto é inválido. A razão é: %s"
+msgstr "O nome curto do projeto é inválido. O motivo é: %s"
 
 msgid "Project templates"
 msgstr "Modelos de projetos"
@@ -2897,7 +2897,7 @@ msgid "Projects in category"
 msgstr "Projetos na categoria"
 
 msgid "Projects statistics"
-msgstr "Estatísticas de projetos"
+msgstr "Estatísticas dos projetos"
 
 msgid "Projects visibility"
 msgstr "Visibilidade dos projetos"
@@ -2923,7 +2923,7 @@ msgid "Public incl. restricted"
 msgstr "Público incl. restrito"
 
 msgid "Public including restricted"
-msgstr "Público, incluindo restrito"
+msgstr "Público, incluindo restritos"
 
 msgid "Public information"
 msgstr "Informação pública"
@@ -2936,7 +2936,7 @@ msgstr ""
 "arquivos são públicos"
 
 msgid "Public project categories"
-msgstr "Categorias de projeto públicos"
+msgstr "Categorias públicas de projeto"
 
 msgid "Public?"
 msgstr "Público?"
@@ -2951,7 +2951,7 @@ msgid "REST"
 msgstr "REST"
 
 msgid "REST Read only administrator"
-msgstr "REST Apenas Leitura - Administração"
+msgstr "REST Administrador do modo apenas leitura"
 
 msgid "REST projects management"
 msgstr "Gestão de projetos REST"
@@ -4117,7 +4117,7 @@ msgid "Tracker email format"
 msgstr "Formato de email do tracker"
 
 msgid "Trackers"
-msgstr "Rastreadores"
+msgstr "Trackers"
 
 msgid "Trackers v3 import"
 msgstr "Importação de Tracker v3"
@@ -4139,7 +4139,7 @@ msgid ""
 "easier.\n"
 "Here you plan, track, code, and collaborate on software projects."
 msgstr ""
-"Tuleap ajuda às equipes produzirem aplicações fantásticas, melhores, mais "
+"Tuleap ajuda as equipes produzirem aplicações fantásticas, melhores e mais "
 "rápidas com facilidade.\n"
 "Aqui você pode planejar, acompanhar, programar e colaborar em projetos de "
 "software."

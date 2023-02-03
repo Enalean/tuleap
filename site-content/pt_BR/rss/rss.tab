@@ -1,0 +1,11 @@
+#/**
+#  *
+#  * export scripts message catalog (English)
+#  *
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  *
+#  *
+#  */
+#
+rss	copyright	Copyright (c) $1, $2 Team, 2001-$3. All Rights Reserved
+
