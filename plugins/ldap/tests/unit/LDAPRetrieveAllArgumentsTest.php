@@ -52,6 +52,10 @@ class LDAPRetrieveAllArgumentsTest extends \Tuleap\Test\PHPUnit\TestCase
     ];
 
     private $logger;
+    /**
+     * @var Mockery\MockInterface&LDAP
+     */
+    private $ldap;
 
     protected function setUp(): void
     {

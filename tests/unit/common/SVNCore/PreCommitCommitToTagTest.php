@@ -37,6 +37,18 @@ class PreCommitCommitToTagTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var SVN_Immutable_Tags_Handler */
     protected $handler;
+    private string $repo;
+    private string $commit_message;
+    private string $transaction;
+    /**
+     * @var \Mockery\MockInterface&SVN_Hooks
+     */
+    private $svn_hook;
+    /**
+     * @var SVN_CommitMessageValidator&\Mockery\MockInterface
+     */
+    private $commit_message_validator;
+    private SVN_Hook_PreCommit $pre_commit;
 
     protected function setUp(): void
     {

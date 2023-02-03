@@ -35,6 +35,10 @@ class Wiki_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     /** @var WikiPage */
     private $wiki_page;
+    /**
+     * @var \Mockery\MockInterface&Project
+     */
+    private $project;
 
     protected function setUp(): void
     {

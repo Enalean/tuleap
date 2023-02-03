@@ -35,6 +35,10 @@ final class ThreadCommentColorRetrieverTest extends TestCase
      */
     private $thread_global;
     private ThreadCommentColorRetriever $color_assigner;
+    /**
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $comment_searcher;
 
     protected function setUp(): void
     {
