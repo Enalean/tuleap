@@ -2,7 +2,7 @@
 
 import { describe, beforeEach, it, expect } from 'vitest';
 
-var Executions = require('../../../backend/modules/executions');
+var Executions = require('./executions');
 var executions = new Executions();
 
 describe("Module Executions", function() {

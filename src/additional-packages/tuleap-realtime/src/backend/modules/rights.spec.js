@@ -2,10 +2,10 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 
-var Rooms = require('../../../backend/modules/rooms');
+var Rooms = require('./rooms');
 var rooms = new Rooms();
 
-var Rights = require('../../../backend/modules/rights');
+var Rights = require('./rights');
 var rights = new Rights();
 
 describe("Module Rights", function() {

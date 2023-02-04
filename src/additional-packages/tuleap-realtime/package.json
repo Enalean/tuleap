@@ -2,8 +2,8 @@
   "author": "Enalean Team",
   "name": "tuleap-realtime",
   "version": "1.12.0",
-  "main": "server.js",
-  "bin": "server.js",
+  "main": "src/server.js",
+  "bin": "src/server.js",
   "dependencies": {
     "body-parser": "1.14.1",
     "console-stamp": "0.2.6",
