@@ -149,8 +149,13 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '';
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
-    {
+    public function fetchChangesetValue(
+        int $artifact_id,
+        int $changeset_id,
+        mixed $value,
+        ?Tracker_Report $report = null,
+        ?int $from_aid = null,
+    ): string {
         $crossref_fact = $this->getCrossReferencesFactory($artifact_id);
 
         if ($crossref_fact->getNbReferences()) {

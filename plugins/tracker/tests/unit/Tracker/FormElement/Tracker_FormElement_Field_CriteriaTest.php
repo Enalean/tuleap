@@ -159,8 +159,14 @@ class Tracker_FormElement_Field_CriteriaTest extends \Tuleap\Test\PHPUnit\TestCa
             {
             }
 
-            public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null)
-            {
+            public function fetchChangesetValue(
+                int $artifact_id,
+                int $changeset_id,
+                mixed $value,
+                ?\Tracker_Report $report = null,
+                ?int $from_aid = null,
+            ): string {
+                return '';
             }
         };
 

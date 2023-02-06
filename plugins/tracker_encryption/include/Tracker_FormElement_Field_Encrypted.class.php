@@ -333,17 +333,14 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return $changeset_value;
     }
 
-    /**
-     * @param int $artifact_id
-     * @param int $changeset_id
-     * @param mixed $value
-     * @param int $report_id
-     *
-     * @return string
-     */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null)
-    {
-        return $value;
+    public function fetchChangesetValue(
+        int $artifact_id,
+        int $changeset_id,
+        mixed $value,
+        ?Tracker_Report $report = null,
+        ?int $from_aid = null,
+    ): string {
+        return (string) $value;
     }
 
     public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
