@@ -103,7 +103,7 @@ class MemberAdditionController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project      = $this->project_retriever->getProjectFromId($variables['id']);
+        $project      = $this->project_retriever->getProjectFromId($variables['project_id']);
         $current_user = $request->getCurrentUser();
         $this->administrator_checker->checkUserIsProjectAdministrator($current_user, $project);
 

@@ -83,7 +83,7 @@ class DeleteController implements DispatchableWithRequest
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->project_retriever->getProjectFromId($variables['id']);
+        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
 
         $this->csrf_token->check(IndexController::getUrl($project));

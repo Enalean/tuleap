@@ -108,7 +108,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturnFalse();
 
         $this->expectException(ForbiddenException::class);
-        $this->controller->process($request, M::mock(BaseLayout::class), ['id' => '102']);
+        $this->controller->process($request, M::mock(BaseLayout::class), ['project_id' => '102']);
     }
 
     public function testItThrowsWhenProjectIsNotActiveAndCurrentUserIsNotSiteAdmin(): void
@@ -136,6 +136,6 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($current_user, $project);
 
         $this->expectException(ForbiddenException::class);
-        $this->controller->process($request, M::mock(BaseLayout::class), ['id' => '102']);
+        $this->controller->process($request, M::mock(BaseLayout::class), ['project_id' => '102']);
     }
 }

@@ -197,7 +197,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->project_retriever->getProjectFromId($variables['id']);
+        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
         $user    = $request->getCurrentUser();
         try {
             $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);

@@ -97,7 +97,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
 
         $this->layout_helper->renderInProjectAdministrationLayout(
             $request,
-            $variables['id'],
+            $variables['project_id'],
             $title,
             NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
             $callback

@@ -1111,7 +1111,7 @@ class RouteCollector
         $r->get('/toggler.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/toggler.php'));
         $r->post('/help_menu_opened', [self::class, 'postHelpMenuOpened']);
 
-        $r->addGroup('/project/{id:\d+}/admin', function (FastRoute\RouteCollector $r) {
+        $r->addGroup('/project/{project_id:\d+}/admin', function (FastRoute\RouteCollector $r) {
             $r->get('/categories', [self::class, 'getProjectAdminIndexCategories']);
             $r->post('/categories', [self::class, 'getProjectAdminUpdateCategories']);
 
