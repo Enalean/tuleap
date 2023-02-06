@@ -48,6 +48,7 @@ final class PUTHandler
         private RetrieveReverseLinks $reverse_links_retriever,
         private HandleUpdateArtifact $artifact_update_handler,
         private DBTransactionExecutor $transaction_executor,
+        private CheckArtifactRestUpdateConditions $check_artifact_rest_update_conditions,
     ) {
     }
 
@@ -58,6 +59,7 @@ final class PUTHandler
     public function handle(array $values, Artifact $artifact, \PFUser $submitter, ?NewChangesetCommentRepresentation $comment): void
     {
         try {
+            $this->check_artifact_rest_update_conditions->checkIfArtifactUpdateCanBePerformedThroughREST($submitter, $artifact);
             $changeset_values        = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $submitter);
             $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getSubmittedReverseLinks();
 

@@ -122,6 +122,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
@@ -378,7 +379,11 @@ class CampaignsResource
             )
         );
 
-        $this->artifact_updater = new ArtifactUpdater($fields_data_builder, $changeset_creator);
+        $this->artifact_updater = new ArtifactUpdater(
+            $fields_data_builder,
+            $changeset_creator,
+            new ArtifactRestUpdateConditionsChecker(),
+        );
 
         $this->campaign_updater = new CampaignUpdater(
             $this->artifact_updater,

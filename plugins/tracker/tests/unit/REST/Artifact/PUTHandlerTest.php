@@ -39,6 +39,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Stub\CheckArtifactRestUpdateConditionsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveReverseLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -60,10 +61,11 @@ final class PUTHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->artifact_updater  = $this->createMock(ArtifactUpdater::class);
-        $this->artifact_linker   = HandleUpdateArtifactStub::build();
-        $this->field_retriever   = RetrieveUsedFieldsStub::withNoFields();
-        $this->artifact_unlinker = HandleUpdateArtifactStub::build();
+        $this->artifact_updater                      = $this->createMock(ArtifactUpdater::class);
+        $this->artifact_linker                       = HandleUpdateArtifactStub::build();
+        $this->field_retriever                       = RetrieveUsedFieldsStub::withNoFields();
+        $this->artifact_unlinker                     = HandleUpdateArtifactStub::build();
+        $this->check_artifact_rest_update_conditions = CheckArtifactRestUpdateConditionsStub::allowArtifactUpdate();
     }
 
     /**
@@ -84,7 +86,8 @@ final class PUTHandlerTest extends TestCase
             $this->artifact_updater,
             RetrieveReverseLinksStub::withLinks(new CollectionOfReverseLinks([])),
             $this->artifact_unlinker,
-            new DBTransactionExecutorPassthrough()
+            new DBTransactionExecutorPassthrough(),
+            $this->check_artifact_rest_update_conditions,
         );
         $put_handler->handle($values, $artifact, $user, null);
     }
@@ -170,5 +173,13 @@ final class PUTHandlerTest extends TestCase
         $this->handle($values);
         self::assertSame(1, $this->artifact_unlinker->getUnlinkReverseArtifactMethodCallCount());
         self::assertSame(1, $this->artifact_unlinker->getLinkReverseArtifactMethodCallCount());
+    }
+
+    public function testItThrowsARestExceptionWhenTheArtifactCannotBeUpdated(): void
+    {
+        $this->check_artifact_rest_update_conditions = CheckArtifactRestUpdateConditionsStub::disallowArtifactUpdate();
+
+        $this->expectException(RestException::class);
+        $this->handle([]);
     }
 }

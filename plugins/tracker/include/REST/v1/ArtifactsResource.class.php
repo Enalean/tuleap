@@ -113,6 +113,7 @@ use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
@@ -737,7 +738,7 @@ class ArtifactsResource extends AuthenticatedResource
             )
         );
 
-        $fields_data_builder = new FieldsDataBuilder(
+        $fields_data_builder       = new FieldsDataBuilder(
             $this->formelement_factory,
             new NewArtifactLinkChangesetValueBuilder(
                 new ArtifactForwardLinksRetriever(
@@ -748,9 +749,11 @@ class ArtifactsResource extends AuthenticatedResource
             ),
             new NewArtifactLinkInitialChangesetValueBuilder()
         );
-        $updater             = new ArtifactUpdater(
+        $update_conditions_checker = new ArtifactRestUpdateConditionsChecker();
+        $updater                   = new ArtifactUpdater(
             $fields_data_builder,
-            $changeset_creator
+            $changeset_creator,
+            $update_conditions_checker,
         );
 
         $artifact_factory =  Tracker_ArtifactFactory::instance();
@@ -779,7 +782,8 @@ class ArtifactsResource extends AuthenticatedResource
             $updater,
             $reverse_link_retriever,
             $artifact_from_rest_updater,
-            $transaction_executor
+            $transaction_executor,
+            $update_conditions_checker,
         );
         $put_handler->handle($values, $artifact, $user, $comment);
 
