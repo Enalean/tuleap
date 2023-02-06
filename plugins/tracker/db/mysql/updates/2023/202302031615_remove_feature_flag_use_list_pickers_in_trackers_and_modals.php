@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\Renderer;
-
-final class ListFieldsIncluder
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202302031615_remove_feature_flag_use_list_pickers_in_trackers_and_modals extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public static function includeListFieldsAssets(int $tracker_id): void
+    public function description(): string
     {
-        $include_assets = new \Tuleap\Layout\IncludeAssets(
-            __DIR__ . '/../../../../frontend-assets',
-            '/assets/trackers'
-        );
+        return "Remove feature_flag_use_list_pickers_in_trackers_and_modals from forgeconfig";
+    }
 
-        // List picker must be included **before** field dependencies execution
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('list-fields.js'));
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('run-field-dependencies.js'));
+    public function up(): void
+    {
+        $this->api->dbh->exec("DELETE FROM forgeconfig WHERE name='feature_flag_use_list_pickers_in_trackers_and_modals'");
     }
 }

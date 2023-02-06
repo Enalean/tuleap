@@ -28,7 +28,6 @@
             <select
                 id="workflow-configuration-permission"
                 multiple
-                v-bind:class="{ 'tlp-select': !is_list_picker_enabled }"
                 class="tracker-workflow-transition-modal-authorized-ugroups"
                 v-bind:disabled="is_modal_save_running"
                 v-model="authorized_user_group_ids"
@@ -50,30 +49,8 @@
             <label for="workflow-configuration-not-empty-fields" class="tlp-label" v-translate>
                 Field(s) that must not be empty
             </label>
-            <multi-select
-                v-if="!is_list_picker_enabled"
-                id="workflow-configuration-not-empty-fields"
-                class="tlp-select"
-                v-bind:configuration="{
-                    width: '100%',
-                    placeholder: $gettext('Choose a field'),
-                }"
-                v-model="not_empty_field_ids"
-                v-bind:disabled="is_modal_save_running"
-                data-test="not-empty-field-select"
-                v-on:input="updateNotEmptyFieldIds"
-            >
-                <option
-                    v-for="field in writable_fields"
-                    v-bind:key="field.field_id"
-                    v-bind:value="field.field_id"
-                >
-                    {{ field.label }}
-                </option>
-            </multi-select>
 
             <select
-                v-else
                 id="workflow-configuration-not-empty-fields"
                 multiple
                 v-model="not_empty_field_ids"
@@ -116,7 +93,6 @@ import {
     READ_ONLY_FIELDS,
     STRUCTURAL_FIELDS,
 } from "@tuleap/plugin-tracker-constants";
-import MultiSelect from "./MultiSelect.vue";
 import PreConditionsSection from "./PreConditionsSection.vue";
 import { compare } from "../../support/string.js";
 import { createListPicker } from "@tuleap/list-picker";
@@ -125,7 +101,7 @@ const fields_blacklist = [...STRUCTURAL_FIELDS, ...READ_ONLY_FIELDS, COMPUTED_FI
 
 export default {
     name: "FilledPreConditionsSection",
-    components: { PreConditionsSection, MultiSelect },
+    components: { PreConditionsSection },
     data() {
         return {
             authorized_user_group_ids: [],
@@ -139,7 +115,6 @@ export default {
             "current_transition",
             "user_groups",
             "is_modal_save_running",
-            "is_list_picker_enabled",
         ]),
         ...mapGetters("transitionModal", ["is_transition_from_new_artifact"]),
         ...mapState({
@@ -169,32 +144,25 @@ export default {
             this.authorized_user_group_ids = this.current_transition.authorized_user_group_ids;
             this.not_empty_field_ids = this.current_transition.not_empty_field_ids;
         }
-        if (this.is_list_picker_enabled) {
-            this.configuration_permission_list_picker = createListPicker(
-                this.$refs.workflow_configuration_permission,
-                {
-                    locale: document.body.dataset.userLocale,
-                    is_filterable: true,
-                }
-            );
-            this.not_empty_fields_list_picker = createListPicker(
-                this.$refs.workflow_configuration_not_empty_fields,
-                {
-                    locale: document.body.dataset.userLocale,
-                    is_filterable: true,
-                    placeholder: this.$gettext("Choose a field"),
-                }
-            );
-        }
+        this.configuration_permission_list_picker = createListPicker(
+            this.$refs.workflow_configuration_permission,
+            {
+                locale: document.body.dataset.userLocale,
+                is_filterable: true,
+            }
+        );
+        this.not_empty_fields_list_picker = createListPicker(
+            this.$refs.workflow_configuration_not_empty_fields,
+            {
+                locale: document.body.dataset.userLocale,
+                is_filterable: true,
+                placeholder: this.$gettext("Choose a field"),
+            }
+        );
     },
     beforeDestroy() {
-        if (this.configuration_permission_list_picker) {
-            this.configuration_permission_list_picker.destroy();
-        }
-
-        if (this.not_empty_fields_list_picker) {
-            this.not_empty_fields_list_picker.destroy();
-        }
+        this.configuration_permission_list_picker.destroy();
+        this.not_empty_fields_list_picker.destroy();
     },
     methods: {
         updateAuthorizedUserGroupIds() {

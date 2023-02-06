@@ -45,7 +45,6 @@
 <script>
 import { mapGetters } from "vuex";
 import { createListPicker } from "@tuleap/list-picker";
-import { isListPickerEnabled } from "../from-tracker-presenter.js";
 
 export default {
     name: "TrackerSelector",
@@ -74,18 +73,14 @@ export default {
         },
     },
     mounted() {
-        if (isListPickerEnabled()) {
-            this.list_picker = createListPicker(this.$refs.move_artifact_tracker_selector, {
-                locale: document.body.dataset.userLocale,
-                is_filterable: true,
-                placeholder: this.$gettext("Choose tracker..."),
-            });
-        }
+        this.list_picker = createListPicker(this.$refs.move_artifact_tracker_selector, {
+            locale: document.body.dataset.userLocale,
+            is_filterable: true,
+            placeholder: this.$gettext("Choose tracker..."),
+        });
     },
     beforeDestroy() {
-        if (this.list_picker) {
-            this.list_picker.destroy();
-        }
+        this.list_picker.destroy();
     },
 };
 </script>
