@@ -188,6 +188,7 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileDataStore;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadCanceler;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
@@ -2644,6 +2645,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
+                new TextValueValidator(),
             )
         );
 

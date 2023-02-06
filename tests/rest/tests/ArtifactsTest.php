@@ -73,6 +73,17 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         return $artifact_reference['id'];
     }
 
+    public function testPostArtifactMustFailWithTooBigTextContent(): void
+    {
+        $post_body = $this->buildPOSTBodyContentWithTooBigTextContent();
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('POST', 'artifacts')
+                ->withBody($this->stream_factory->createStream($post_body))
+        );
+        self::assertEquals(400, $response->getStatusCode());
+    }
+
     public function testComputedFieldsCalculation()
     {
         $this->checkComputedFieldValueForArtifactId(
@@ -635,6 +646,26 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals('Please see my comment', $changesets[4]['last_comment']['body']);
 
         return $artifact_id;
+    }
+
+    /**
+     * @depends testPutArtifactId
+     */
+    public function testPutArtifactCommentMustFailIfCommentContentIsTooBig($artifact_id)
+    {
+        $put_resource = json_encode([
+            'values' => [],
+            'comment' => [
+                'format' => 'text',
+                'body'   => str_repeat('a', 70000),
+            ],
+        ]);
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PUT', 'artifacts/' . $artifact_id)
+                ->withBody($this->stream_factory->createStream($put_resource))
+        );
+        self::assertEquals(400, $response->getStatusCode());
     }
 
     public function testPutArtifactWithNatures()

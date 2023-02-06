@@ -31,6 +31,7 @@ use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AllLinksToLinksKeyValuesConverter;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveReverseLinks;
 use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
@@ -77,7 +78,11 @@ final class PUTHandler
                 $values_with_links_key = AllLinksToLinksKeyValuesConverter::convertIfNeeded($values);
                 $this->artifact_updater->update($submitter, $artifact, $values_with_links_key, $comment);
             }
-        } catch (Tracker_FormElement_InvalidFieldException | Tracker_FormElement_InvalidFieldValueException $exception) {
+        } catch (
+            Tracker_FormElement_InvalidFieldException |
+            Tracker_FormElement_InvalidFieldValueException |
+            CommentContentNotValidException $exception
+        ) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             //Do nothing

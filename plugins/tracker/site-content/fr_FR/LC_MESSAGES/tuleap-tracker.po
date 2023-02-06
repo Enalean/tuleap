@@ -947,6 +947,10 @@ msgstr ""
 msgid "Comment"
 msgstr "Commentaire"
 
+#, php-format
+msgid "Comment content can not contain more than %1$s characters."
+msgstr "Un commentaire ne peut pas contenir plus de %1$s caractères."
+
 msgid "Comment has been cleared"
 msgstr "Commentaire effacé"
 
