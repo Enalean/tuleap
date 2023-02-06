@@ -99,4 +99,26 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
         self::assertEquals('jane@example.com', $presenter->invitations[0]->email);
         self::assertEquals('john@example.com', $presenter->invitations[1]->email);
     }
+
+    public function testItGroupsInvitationByEmailAndKeepTheNewestOne(): void
+    {
+        $configuration = $this->createMock(InviteBuddyConfiguration::class);
+        $configuration->method('isFeatureEnabled')->willReturn(true);
+
+        $builder = new ListOfPendingInvitationsPresenterBuilder(
+            $configuration,
+            PendingInvitationsForProjectRetrieverStub::with(
+                InvitationTestBuilder::aSentInvitation(1)->to('jane@example.com')->withCreatedOn(1234567890)->build(),
+                InvitationTestBuilder::aSentInvitation(1)->to('john@example.com')->withCreatedOn(1234567891)->build(),
+                InvitationTestBuilder::aSentInvitation(2)->to('jane@example.com')->withCreatedOn(2345678901)->build(),
+            ),
+            new TlpRelativeDatePresenterBuilder(),
+        );
+
+        $presenter = $builder->getPendingInvitationsPresenter($this->project, $this->user);
+        self::assertCount(2, $presenter->invitations);
+        self::assertEquals('john@example.com', $presenter->invitations[0]->email);
+        self::assertEquals('jane@example.com', $presenter->invitations[1]->email);
+        self::assertTrue($presenter->invitations[0]->date->date < $presenter->invitations[1]->date->date);
+    }
 }

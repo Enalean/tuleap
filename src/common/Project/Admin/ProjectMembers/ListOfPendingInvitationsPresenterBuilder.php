@@ -36,24 +36,42 @@ final class ListOfPendingInvitationsPresenterBuilder
     ) {
     }
 
-    public function getPendingInvitationsPresenter(\Project $project, \PFUser $current_user): ?ListOfPendingInvitationsPresenter
-    {
+    public function getPendingInvitationsPresenter(
+        \Project $project,
+        \PFUser $current_user,
+    ): ?ListOfPendingInvitationsPresenter {
         if (! $this->invite_buddy_configuration->isFeatureEnabled()) {
             return null;
         }
 
-        $pending_invitations = array_map(
-            fn (Invitation $invitation): PendingInvitationPresenter => new PendingInvitationPresenter(
+        $pending_invitations_with_possible_duplicate_emails = array_map(
+            fn(Invitation $invitation): PendingInvitationPresenter => new PendingInvitationPresenter(
                 $invitation->to_email,
-                $this->date_presenter_builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable('@' . $invitation->created_on), $current_user)
+                $this->date_presenter_builder->getTlpRelativeDatePresenterInInlineContext(
+                    new \DateTimeImmutable('@' . $invitation->created_on),
+                    $current_user
+                )
             ),
             $this->invitation_dao->searchPendingInvitationsForProject((int) $project->getID()),
         );
 
-        if (! $pending_invitations) {
+        $deduplicated_pending_invitations = array_reduce(
+            $pending_invitations_with_possible_duplicate_emails,
+            static function (array $pending_invitations, PendingInvitationPresenter $invitation): array {
+                if (isset($pending_invitations[$invitation->email])) {
+                    unset($pending_invitations[$invitation->email]);
+                }
+                $pending_invitations[$invitation->email] = $invitation;
+
+                return $pending_invitations;
+            },
+            [],
+        );
+
+        if (! $deduplicated_pending_invitations) {
             return null;
         }
 
-        return new ListOfPendingInvitationsPresenter($pending_invitations);
+        return new ListOfPendingInvitationsPresenter(array_values($deduplicated_pending_invitations));
     }
 }
