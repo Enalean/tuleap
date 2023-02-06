@@ -23,37 +23,14 @@ namespace Tuleap\Tracker\Colorpicker;
 /**
  * @psalm-immutable
  */
-class ColorpickerMountPointPresenter
+final class ColorpickerMountPointPresenter
 {
-    /**
-     * @var string
-     */
-    public $input_name;
-
-    /**
-     * @var string
-     */
-    public $input_id;
-
-    /**
-     * @var bool
-     */
-    public $is_switch_disabled;
-
-    /**
-     * @var string
-     */
-    public $current_color;
-
     public function __construct(
-        $current_color,
-        $field_name,
-        $field_id,
-        $is_field_used_in_semantic,
+        public readonly string $current_color,
+        public readonly string $input_name,
+        public readonly string $input_id,
+        public readonly bool $is_switch_disabled,
+        public readonly bool $is_old_palette_enabled,
     ) {
-        $this->current_color      = ($current_color) ? $current_color : '';
-        $this->input_name         = $field_name;
-        $this->input_id           = $field_id;
-        $this->is_switch_disabled = $is_field_used_in_semantic;
     }
 }

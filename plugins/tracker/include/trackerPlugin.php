@@ -133,6 +133,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
+use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenterBuilder;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
@@ -2487,6 +2488,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(\Tuleap\Tracker\Creation\JiraImporter\ClientWrapper::class);
         $event->addConfigClass(ReverseLinksFeatureFlag::class);
         $event->addConfigClass(Tracker_ReportDao::class);
+        $event->addConfigClass(ColorpickerMountPointPresenterBuilder::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder
