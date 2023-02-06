@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "75a6c42d14cfc2899a63c882554baaf3",
+    "content-hash": "a5bd64798fa4e6817c1d2b77f7491dde",
     "packages": [
         {
             "name": "composer/installers",
@@ -380,16 +380,16 @@
         },
         {
             "name": "mediawiki/tuleap-skin",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "3c1f738c60e0015ed5a3303de9aae9db3d07238f"
+                "reference": "f1c1632e5d9e85fe7ab14a18fb79e6f1591539a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/3c1f738c60e0015ed5a3303de9aae9db3d07238f",
-                "reference": "3c1f738c60e0015ed5a3303de9aae9db3d07238f",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/f1c1632e5d9e85fe7ab14a18fb79e6f1591539a3",
+                "reference": "f1c1632e5d9e85fe7ab14a18fb79e6f1591539a3",
                 "shasum": ""
             },
             "require": {
@@ -424,9 +424,9 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.3"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.4"
             },
-            "time": "2023-01-31T11:59:41+00:00"
+            "time": "2023-02-06T10:56:34+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
