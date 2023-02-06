@@ -37,6 +37,7 @@
                 {{ ugroup.label }}
             </option>
         </select>
+        <slot name="permission-information"></slot>
     </div>
 </template>
 <script>
