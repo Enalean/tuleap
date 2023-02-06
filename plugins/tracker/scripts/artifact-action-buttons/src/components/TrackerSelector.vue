@@ -27,7 +27,7 @@
             id="move-artifact-tracker-selector"
             name="move-artifact-tracker-selector"
             data-test="move-artifact-tracker-selector"
-            v-model="selected_tracker"
+            v-model="selected_tracker.tracker_id"
             ref="move_artifact_tracker_selector"
         >
             <option
