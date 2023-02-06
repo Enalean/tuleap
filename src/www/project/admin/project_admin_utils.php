@@ -110,6 +110,7 @@ function get_history_entries()
         'event_user' =>       ['changed_personal_email_notif',
             'added_user',
             'removed_user',
+            \Tuleap\InviteBuddy\InvitationHistoryEntry::InvitationWithdrawn->value,
         ],
         'event_others' =>     ['changed_bts_form_message',
             'changed_bts_allow_anon',

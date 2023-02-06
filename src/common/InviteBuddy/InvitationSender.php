@@ -65,11 +65,14 @@ class InvitationSender
 
             $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
+            $to_project_id = null;
+
             $invitation_id = $this->dao->create(
                 $now,
                 (int) $current_user->getId(),
                 $email,
                 $recipient->getUserId(),
+                $to_project_id,
                 $custom_message,
                 $secret,
             );

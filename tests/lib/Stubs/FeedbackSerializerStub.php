@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Layout\Feedback;
+namespace Tuleap\Test\Stubs;
 
-class FeedbackSerializer implements ISerializeFeedback
+use Tuleap\Layout\Feedback\ISerializeFeedback;
+use Tuleap\Layout\Feedback\NewFeedback;
+
+final class FeedbackSerializerStub implements ISerializeFeedback
 {
     /**
-     * @var \FeedbackDao
+     * @var NewFeedback[]
      */
-    private $dao;
+    private array $captured_feedbacks = [];
 
-    public function __construct(\FeedbackDao $feedback_dao)
+    public function __construct()
     {
-        $this->dao = $feedback_dao;
+    }
+
+    public static function buildSelf(): self
+    {
+        return new self();
     }
 
     public function serialize(\PFUser $user, NewFeedback $feedback): void
     {
-        $logs = [
-            [
-                'level'  => $feedback->getLevel(),
-                'msg'    => $feedback->getMessage(),
-                'purify' => CODENDI_PURIFIER_CONVERT_HTML,
-            ],
-        ];
-        $this->dao->create($user->getSessionId(), $logs);
+        $this->captured_feedbacks[] = $feedback;
+    }
+
+    /**
+     * @return NewFeedback[]
+     */
+    public function getCapturedFeedbacks(): array
+    {
+        return $this->captured_feedbacks;
     }
 }

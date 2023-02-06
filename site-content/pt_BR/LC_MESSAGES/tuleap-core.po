@@ -1845,6 +1845,9 @@ msgstr ""
 msgid "Invalid project was passed in."
 msgstr "O projeto inválido foi aprovado."
 
+msgid "Invalid request"
+msgstr ""
+
 msgid "Invalid selection of categories"
 msgstr "Seleção inválida de categorias"
 
@@ -1856,6 +1859,9 @@ msgstr "O convite não pôde ser enviado para:"
 
 msgid "Invitation has been successfully sent to:"
 msgstr "Convite enviado com sucesso para:"
+
+msgid "Invitation has been withdrawn"
+msgstr ""
 
 msgid "Invitation sent for project %1$s on %2$s"
 msgstr ""
@@ -3649,6 +3655,11 @@ msgid "The header background has been successfully changed"
 msgstr "O fundo do cabeçalho foi alterado com sucesso"
 
 msgid ""
+"The invitation you want to withdraw cannot be found. Maybe it has already "
+"been removed?"
+msgstr ""
+
+msgid ""
 "The key will expire at the end of the selected date. Keep it empty if you "
 "don't want that this key will expire."
 msgstr ""
@@ -4487,6 +4498,12 @@ msgstr "Disponibilidade de widgets"
 msgid "Wiki"
 msgstr "Wiki"
 
+msgid "Withdraw invitation"
+msgstr ""
+
+msgid "Withdrawn invitation"
+msgstr ""
+
 msgid "Without any action from you,"
 msgstr "Sem nenhuma ação da sua parte,"
 
@@ -4821,6 +4838,9 @@ msgstr "Você não tem nenhum painel"
 
 msgid "You don't have permission to access administration of this project."
 msgstr "Você não tem permissão para acessar a administração deste projeto."
+
+msgid "You don't have permission to manage members of this project."
+msgstr ""
 
 msgid "You don't have permissions to see user groups."
 msgstr "Você não tem permissão para visualizar os grupos de usuários."

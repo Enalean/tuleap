@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectMembers;
 
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\InviteBuddy\Invitation;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PendingInvitationsForProjectRetriever;
+use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
+use Tuleap\Project\Admin\Invitations\ManageProjectInvitationsController;
 
 final class ListOfPendingInvitationsPresenterBuilder
 {
@@ -33,6 +36,7 @@ final class ListOfPendingInvitationsPresenterBuilder
         private InviteBuddyConfiguration $invite_buddy_configuration,
         private PendingInvitationsForProjectRetriever $invitation_dao,
         private TlpRelativeDatePresenterBuilder $date_presenter_builder,
+        private CSRFSynchronizerTokenProvider $token_provider,
     ) {
     }
 
@@ -46,6 +50,7 @@ final class ListOfPendingInvitationsPresenterBuilder
 
         $pending_invitations_with_possible_duplicate_emails = array_map(
             fn(Invitation $invitation): PendingInvitationPresenter => new PendingInvitationPresenter(
+                $invitation->id,
                 $invitation->to_email,
                 $this->date_presenter_builder->getTlpRelativeDatePresenterInInlineContext(
                     new \DateTimeImmutable('@' . $invitation->created_on),
@@ -72,6 +77,10 @@ final class ListOfPendingInvitationsPresenterBuilder
             return null;
         }
 
-        return new ListOfPendingInvitationsPresenter(array_values($deduplicated_pending_invitations));
+        return new ListOfPendingInvitationsPresenter(
+            ManageProjectInvitationsController::getUrl($project),
+            CSRFSynchronizerTokenPresenter::fromToken($this->token_provider->getCSRF($project)),
+            array_values($deduplicated_pending_invitations),
+        );
     }
 }

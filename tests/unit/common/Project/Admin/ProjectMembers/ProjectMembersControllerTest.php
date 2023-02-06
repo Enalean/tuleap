@@ -30,6 +30,7 @@ use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PendingInvitationsForProjectRetrieverStub;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
@@ -71,6 +72,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->createStub(InviteBuddyConfiguration::class),
                 PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
                 $this->createStub(TlpRelativeDatePresenterBuilder::class),
+                $this->createMock(CSRFSynchronizerTokenProvider::class),
             )
         );
     }

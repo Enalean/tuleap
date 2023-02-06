@@ -4,12 +4,16 @@
         <h2>{{# gettext }}Pending invitations{{/ gettext }}</h2>
         <section class="tlp-pane">
             <div class="tlp-pane-container">
-                <section class="tlp-pane-section">
+                <form method="post" action="{{ manage_invitations_url }}" class="tlp-pane-section">
+                    {{# csrf }}
+                        {{> csrf_token_input }}
+                    {{/ csrf }}
                     <table class="tlp-table">
                         <thead>
                             <tr>
                                 <th>{{# gettext }}Email{{/ gettext }}</th>
                                 <th>{{# gettext }}Date of the invitation{{/ gettext }}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -25,11 +29,17 @@
                                         </div>
                                     </td>
                                     <td>{{# date }}{{> tlp_relative_date }}{{/ date }}</td>
+                                    <td class="tlp-table-cell-actions">
+                                        <button type="submit" class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline" name="withdraw-invitation" value="{{ id }}">
+                                            <i class="tlp-button-icon fa-regular fa-trash-can" aria-hidden="true"></i>
+                                            {{# gettext }}Withdraw invitation{{/ gettext }}
+                                        </a>
+                                    </td>
                                 </tr>
                             {{/ invitations }}
                         </tbody>
                     </table>
-                </section>
+                </form>
             </div>
         </section>
     {{/ pending_invitations }}

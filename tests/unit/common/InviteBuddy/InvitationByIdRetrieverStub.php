@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Layout\Feedback;
+namespace Tuleap\InviteBuddy;
 
-class FeedbackSerializer implements ISerializeFeedback
+class InvitationByIdRetrieverStub implements InvitationByIdRetriever
 {
-    /**
-     * @var \FeedbackDao
-     */
-    private $dao;
-
-    public function __construct(\FeedbackDao $feedback_dao)
+    private function __construct(private ?Invitation $invitation)
     {
-        $this->dao = $feedback_dao;
     }
 
-    public function serialize(\PFUser $user, NewFeedback $feedback): void
+    public static function withMatchingInvitation(Invitation $invitation): self
     {
-        $logs = [
-            [
-                'level'  => $feedback->getLevel(),
-                'msg'    => $feedback->getMessage(),
-                'purify' => CODENDI_PURIFIER_CONVERT_HTML,
-            ],
-        ];
-        $this->dao->create($user->getSessionId(), $logs);
+        return new self($invitation);
+    }
+
+    public static function withoutMatchingInvitation(): self
+    {
+        return new self(null);
+    }
+
+    public function searchById(int $id): Invitation
+    {
+        if ($this->invitation) {
+            return $this->invitation;
+        }
+
+        throw new InvitationNotFoundException();
     }
 }

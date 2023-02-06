@@ -27,9 +27,11 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\InviteBuddy\InvitationTestBuilder;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PendingInvitationsForProjectRetrieverStub;
+use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
 class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
 {
@@ -58,6 +60,7 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
             $configuration,
             PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
             new TlpRelativeDatePresenterBuilder(),
+            $this->createMock(CSRFSynchronizerTokenProvider::class),
         );
 
         self::assertNull(
@@ -74,6 +77,7 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
             $configuration,
             PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
             new TlpRelativeDatePresenterBuilder(),
+            $this->createMock(CSRFSynchronizerTokenProvider::class),
         );
 
         self::assertNull(
@@ -86,6 +90,10 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
         $configuration = $this->createMock(InviteBuddyConfiguration::class);
         $configuration->method('isFeatureEnabled')->willReturn(true);
 
+        $token          = CSRFSynchronizerTokenStub::buildSelf();
+        $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
+        $token_provider->method('getCSRF')->willReturn($token);
+
         $builder = new ListOfPendingInvitationsPresenterBuilder(
             $configuration,
             PendingInvitationsForProjectRetrieverStub::with(
@@ -93,17 +101,22 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
                 InvitationTestBuilder::aSentInvitation(2)->to('john@example.com')->withCreatedOn(2345678901)->build(),
             ),
             new TlpRelativeDatePresenterBuilder(),
+            $token_provider,
         );
 
         $presenter = $builder->getPendingInvitationsPresenter($this->project, $this->user);
         self::assertEquals('jane@example.com', $presenter->invitations[0]->email);
         self::assertEquals('john@example.com', $presenter->invitations[1]->email);
+        self::assertEquals($token->getToken(), $presenter->csrf->getToken());
     }
 
     public function testItGroupsInvitationByEmailAndKeepTheNewestOne(): void
     {
         $configuration = $this->createMock(InviteBuddyConfiguration::class);
         $configuration->method('isFeatureEnabled')->willReturn(true);
+
+        $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
+        $token_provider->method('getCSRF')->willReturn(CSRFSynchronizerTokenStub::buildSelf());
 
         $builder = new ListOfPendingInvitationsPresenterBuilder(
             $configuration,
@@ -113,6 +126,7 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
                 InvitationTestBuilder::aSentInvitation(2)->to('jane@example.com')->withCreatedOn(2345678901)->build(),
             ),
             new TlpRelativeDatePresenterBuilder(),
+            $token_provider,
         );
 
         $presenter = $builder->getPendingInvitationsPresenter($this->project, $this->user);

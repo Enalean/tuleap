@@ -30,8 +30,9 @@ use Tuleap\Date\TlpRelativeDatePresenter;
 final class PendingInvitationPresenter
 {
     public function __construct(
-        public string $email,
-        public TlpRelativeDatePresenter $date,
+        public readonly int $id,
+        public readonly string $email,
+        public readonly TlpRelativeDatePresenter $date,
     ) {
     }
 }

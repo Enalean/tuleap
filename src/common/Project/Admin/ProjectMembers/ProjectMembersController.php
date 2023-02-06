@@ -42,6 +42,7 @@ use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
@@ -191,6 +192,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 new InviteBuddyConfiguration($event_manager),
                 new InvitationDao(new SplitTokenVerificationStringHasher()),
                 new TlpRelativeDatePresenterBuilder(),
+                new CSRFSynchronizerTokenProvider(),
             ),
         );
     }
