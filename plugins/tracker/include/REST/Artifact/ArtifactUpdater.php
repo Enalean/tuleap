@@ -38,6 +38,7 @@ class ArtifactUpdater
     public function __construct(
         private FieldsDataBuilder $fields_data_builder,
         private NewChangesetCreator $changeset_creator,
+        private CheckArtifactRestUpdateConditions $check_artifact_rest_update_conditions,
     ) {
     }
 
@@ -52,7 +53,7 @@ class ArtifactUpdater
         array $values,
         ?NewChangesetCommentRepresentation $comment = null,
     ): void {
-        $this->checkArtifact($user, $artifact);
+        $this->check_artifact_rest_update_conditions->checkIfArtifactUpdateCanBePerformedThroughREST($user, $artifact);
         $changeset_values = $this->fields_data_builder->getFieldsDataOnUpdate($values, $artifact, $user);
 
         $comment_body   = '';
@@ -77,49 +78,5 @@ class ArtifactUpdater
             $new_changeset,
             PostCreationContext::withNoConfig(true)
         );
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function checkArtifact(\PFUser $user, Artifact $artifact): void
-    {
-        if (! $artifact->userCanUpdate($user)) {
-            throw new RestException(403, 'You have not the permission to update this card');
-        }
-
-        if ($this->clientWantsToUpdateLatestVersion() && ! $this->isUpdatingLatestVersion($artifact)) {
-            throw new RestException(
-                412,
-                'Artifact has been modified since you last requested it. Please edit the latest version'
-            );
-        }
-    }
-
-    private function clientWantsToUpdateLatestVersion(): bool
-    {
-        return (isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_MATCH']));
-    }
-
-    private function isUpdatingLatestVersion(Artifact $artifact): bool
-    {
-        $valid_unmodified = true;
-        $valid_match      = true;
-
-        if (isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE'])) {
-            $client_version = strtotime($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);
-            $last_version   = $artifact->getLastUpdateDate();
-
-            $valid_unmodified = ($last_version == $client_version);
-        }
-
-        if (isset($_SERVER['HTTP_IF_MATCH'])) {
-            $client_version = $_SERVER['HTTP_IF_MATCH'];
-            $last_version   = $artifact->getVersionIdentifier();
-
-            $valid_match = ($last_version == $client_version);
-        }
-
-        return ($valid_unmodified && $valid_match);
     }
 }
