@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Layout\Feedback;
+namespace Tuleap\InviteBuddy;
 
-class FeedbackSerializer implements ISerializeFeedback
+final class PendingInvitationsWithdrawerStub implements PendingInvitationsWithdrawer
 {
-    /**
-     * @var \FeedbackDao
-     */
-    private $dao;
+    private bool $has_been_called = false;
 
-    public function __construct(\FeedbackDao $feedback_dao)
+    private function __construct()
     {
-        $this->dao = $feedback_dao;
     }
 
-    public function serialize(\PFUser $user, NewFeedback $feedback): void
+    public static function buildSelf(): self
     {
-        $logs = [
-            [
-                'level'  => $feedback->getLevel(),
-                'msg'    => $feedback->getMessage(),
-                'purify' => CODENDI_PURIFIER_CONVERT_HTML,
-            ],
-        ];
-        $this->dao->create($user->getSessionId(), $logs);
+        return new self();
+    }
+
+    public function withdrawPendingInvitationsForProject(string $to_email, int $project_id): void
+    {
+        $this->has_been_called = true;
+    }
+
+    public function hasBeenCalled(): bool
+    {
+        return $this->has_been_called;
     }
 }

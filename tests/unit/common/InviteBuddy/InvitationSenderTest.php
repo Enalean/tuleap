@@ -145,8 +145,8 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::exactly(2))
             ->method('create')
             ->withConsecutive(
-                [$this->anything(), 123, "john@example.com", null, "A custom message", $this->anything()],
-                [$this->anything(), 123, "doe@example.com", 1001, "A custom message", $this->anything()]
+                [$this->anything(), 123, "john@example.com", null, null, "A custom message", $this->anything()],
+                [$this->anything(), 123, "doe@example.com", 1001, null, "A custom message", $this->anything()]
             );
 
         $this->instrumentation

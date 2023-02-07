@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Layout\Feedback;
+namespace Tuleap\Project\Admin\Invitations;
 
-class FeedbackSerializer implements ISerializeFeedback
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
+
+class CSRFSynchronizerTokenProvider
 {
-    /**
-     * @var \FeedbackDao
-     */
-    private $dao;
-
-    public function __construct(\FeedbackDao $feedback_dao)
+    public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
     {
-        $this->dao = $feedback_dao;
-    }
-
-    public function serialize(\PFUser $user, NewFeedback $feedback): void
-    {
-        $logs = [
-            [
-                'level'  => $feedback->getLevel(),
-                'msg'    => $feedback->getMessage(),
-                'purify' => CODENDI_PURIFIER_CONVERT_HTML,
-            ],
-        ];
-        $this->dao->create($user->getSessionId(), $logs);
+        return ManageProjectInvitationsController::getCSRFToken($project);
     }
 }

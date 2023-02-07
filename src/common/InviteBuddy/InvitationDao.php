@@ -29,7 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DataAccessObject;
 
-class InvitationDao extends DataAccessObject implements InvitationByTokenRetriever, UsedInvitationRetriever, InvitationPurger, PendingInvitationsForProjectRetriever
+class InvitationDao extends DataAccessObject implements InvitationByIdRetriever, InvitationByTokenRetriever, UsedInvitationRetriever, InvitationPurger, PendingInvitationsForProjectRetriever, PendingInvitationsWithdrawer
 {
     public function __construct(private SplitTokenVerificationStringHasher $hasher)
     {
@@ -41,6 +41,7 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
         int $from_user_id,
         string $to_email,
         ?int $to_user_id,
+        ?int $to_project_id,
         ?string $custom_message,
         SplitTokenVerificationString $verifier,
     ): int {
@@ -51,11 +52,22 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
                 'from_user_id'   => $from_user_id,
                 'to_email'       => $to_email,
                 'to_user_id'     => $to_user_id,
+                'to_project_id'  => $to_project_id,
                 'custom_message' => $custom_message,
                 'status'         => Invitation::STATUS_CREATING,
                 'verifier'       => $this->hasher->computeHash($verifier),
             ]
         );
+    }
+
+    public function searchById(int $id): Invitation
+    {
+        $row = $this->getDB()->row("SELECT * FROM invitations WHERE id = ?", $id);
+        if (! $row) {
+            throw new InvitationNotFoundException();
+        }
+
+        return $this->instantiateFromRow($row);
     }
 
     public function markAsSent(int $id): void
@@ -116,8 +128,11 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
         );
     }
 
-    public function saveJustCreatedUserThanksToInvitation(string $to_email, int $just_created_user_id, ?int $used_invitation_id): void
-    {
+    public function saveJustCreatedUserThanksToInvitation(
+        string $to_email,
+        int $just_created_user_id,
+        ?int $used_invitation_id,
+    ): void {
         $this->getDB()->run(
             "UPDATE invitations
                 SET created_user_id = ?,
@@ -240,6 +255,19 @@ class InvitationDao extends DataAccessObject implements InvitationByTokenRetriev
                 $project_id,
                 Invitation::STATUS_SENT
             )
+        );
+    }
+
+    public function withdrawPendingInvitationsForProject(string $to_email, int $project_id): void
+    {
+        $this->getDB()->delete(
+            'invitations',
+            [
+                'to_project_id'   => $project_id,
+                'to_email'        => $to_email,
+                'created_user_id' => null,
+                'status'          => Invitation::STATUS_SENT,
+            ]
         );
     }
 

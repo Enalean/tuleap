@@ -84,6 +84,7 @@ use Tuleap\HelpDropdown\HelpMenuOpenedController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\AccountCreationFeedback;
@@ -94,6 +95,7 @@ use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InvitationInstrumentation;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -127,6 +129,9 @@ use Tuleap\Platform\RobotsTxtController;
 use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\Admin\Export\ProjectXmlExportController;
+use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
+use Tuleap\Project\Admin\Invitations\ManageProjectInvitationsController;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
@@ -135,6 +140,7 @@ use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationC
 use Tuleap\Project\Admin\Reference\Browse\LegacyReferenceAdministrationBrowsingRenderer;
 use Tuleap\Project\Admin\Reference\Browse\ReferenceAdministrationBrowseController;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\Admin\Routing\RejectNonProjectMembersAdministratorMiddleware;
 use Tuleap\Project\Banner\BannerAdministrationController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
@@ -679,6 +685,22 @@ class RouteCollector
         return ProjectMembersController::buildSelf();
     }
 
+    public static function getManageProjectInvitationsController(): DispatchableWithRequest
+    {
+        $invitation_dao = new InvitationDao(new SplitTokenVerificationStringHasher());
+
+        return new ManageProjectInvitationsController(
+            new CSRFSynchronizerTokenProvider(),
+            new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new FeedbackSerializer(new \FeedbackDao())),
+            $invitation_dao,
+            $invitation_dao,
+            new ProjectHistoryDao(),
+            new SapiEmitter(),
+            new ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new RejectNonProjectMembersAdministratorMiddleware(\UserManager::instance(), new MembershipDelegationDao()),
+        );
+    }
+
     public static function getAdminHelpDropdownController(): AdminReleaseNoteLinkController
     {
         return AdminReleaseNoteLinkController::buildSelf();
@@ -1116,6 +1138,8 @@ class RouteCollector
             $r->post('/categories', [self::class, 'getProjectAdminUpdateCategories']);
 
             $r->addRoute(['GET', 'POST'], '/members', [self::class, 'getProjectAdminMembersController']);
+
+            $r->post('/invitations', [self::class, 'getManageProjectInvitationsController']);
 
             $r->post('/change-synchronized-project-membership', [self::class, 'getPostSynchronizedMembershipActivation']);
             $r->post('/user-group/{user-group-id:\d+}/add', [self::class, 'getPostUserGroupIdAdd']);

@@ -48,19 +48,22 @@ class InvitationDaoTest extends TestCase
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "jdoe@example.com", null, null, $verifier);
+        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "jdoe@example.com", null, null, null, $verifier);
 
         $invitation = $this->dao->searchBySplitToken(new SplitToken($id, $verifier));
         self::assertEquals($id, $invitation->id);
         self::assertEquals(101, $invitation->from_user_id);
         self::assertEquals('jdoe@example.com', $invitation->to_email);
+
+        $same_invitation = $this->dao->searchById($invitation->id);
+        self::assertEquals($same_invitation, $invitation);
     }
 
     public function testExceptionWhenTokenCannotBeVerified(): void
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "jdoe@example.com", null, null, $verifier);
+        $id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "jdoe@example.com", null, null, null, $verifier);
 
         $invalid_verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
@@ -77,6 +80,15 @@ class InvitationDaoTest extends TestCase
         $this->expectException(InvitationNotFoundException::class);
 
         $this->dao->searchBySplitToken(new SplitToken($unknown_invitation_id, $verifier));
+    }
+
+    public function testExceptionWhenInvitationCannotBeFoundById(): void
+    {
+        $unknown_invitation_id = -1;
+
+        $this->expectException(InvitationNotFoundException::class);
+
+        $this->dao->searchById($unknown_invitation_id);
     }
 
     public function testSaveJustCreatedUserThanksToInvitationWhenNoSpecificInvitationIsUsed(): void
@@ -185,9 +197,9 @@ class InvitationDaoTest extends TestCase
         $verifier_2 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $verifier_3 = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
-        $first_invitation_to_alice_id  = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "alice@example.com", null, null, $verifier_1);
-        $first_invitation_to_bob_id    = $this->dao->create(self::CREATED_ON_TIMESTAMP, 102, "bob@example.com", null, null, $verifier_2);
-        $second_invitation_to_alice_id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 103, "alice@example.com", null, null, $verifier_3);
+        $first_invitation_to_alice_id  = $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "alice@example.com", null, null, null, $verifier_1);
+        $first_invitation_to_bob_id    = $this->dao->create(self::CREATED_ON_TIMESTAMP, 102, "bob@example.com", null, null, null, $verifier_2);
+        $second_invitation_to_alice_id = $this->dao->create(self::CREATED_ON_TIMESTAMP, 103, "alice@example.com", null, null, null, $verifier_3);
 
         $this->dao->markAsSent($first_invitation_to_alice_id);
         $this->dao->markAsSent($first_invitation_to_bob_id);
@@ -226,6 +238,64 @@ class InvitationDaoTest extends TestCase
         self::assertCount(1, $purged_invitations);
         self::assertEquals('bob@example.com', $purged_invitations[0]->to_email);
         self::assertEquals(2, $this->getNumberOfRemainingInvitations());
+    }
+
+    public function testWithdrawPendingInvitationsForProject(): void
+    {
+        $first_to_be_removed_id   = $this->dao->create(
+            self::CREATED_ON_TIMESTAMP,
+            101,
+            'alice@example.com',
+            null,
+            101,
+            null,
+            SplitTokenVerificationString::generateNewSplitTokenVerificationString(),
+        );
+        $another_user_invit_id    = $this->dao->create(
+            self::CREATED_ON_TIMESTAMP,
+            101,
+            'bob@example.com',
+            null,
+            101,
+            null,
+            SplitTokenVerificationString::generateNewSplitTokenVerificationString(),
+        );
+        $another_project_invit_id = $this->dao->create(
+            self::CREATED_ON_TIMESTAMP,
+            101,
+            'alice@example.com',
+            null,
+            102,
+            null,
+            SplitTokenVerificationString::generateNewSplitTokenVerificationString(),
+        );
+        $second_to_be_removed_id  = $this->dao->create(
+            self::CREATED_ON_TIMESTAMP,
+            102,
+            'alice@example.com',
+            null,
+            101,
+            null,
+            SplitTokenVerificationString::generateNewSplitTokenVerificationString(),
+        );
+        $this->dao->markAsSent($first_to_be_removed_id);
+        $this->dao->markAsSent($another_user_invit_id);
+        $this->dao->markAsSent($another_project_invit_id);
+        $this->dao->markAsSent($second_to_be_removed_id);
+
+        self::assertEquals(
+            ['alice@example.com', 'bob@example.com', 'alice@example.com', 'alice@example.com'],
+            $this->getStoredEmails(),
+        );
+
+        $this->dao->withdrawPendingInvitationsForProject('alice@example.com', 101);
+
+        self::assertEquals(
+            ['bob@example.com', 'alice@example.com'],
+            $this->getStoredEmails(),
+        );
+        self::assertEquals('bob@example.com', $this->dao->searchById($another_user_invit_id)->to_email);
+        self::assertEquals('alice@example.com', $this->dao->searchById($another_project_invit_id)->to_email);
     }
 
     private function getNumberOfRemainingInvitations(): int

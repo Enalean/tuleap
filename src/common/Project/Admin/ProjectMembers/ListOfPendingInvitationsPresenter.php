@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectMembers;
 
+use Tuleap\CSRFSynchronizerTokenPresenter;
+
 /**
  * @psalm-immutable
  */
@@ -30,7 +32,10 @@ final class ListOfPendingInvitationsPresenter
     /**
      * @param PendingInvitationPresenter[] $invitations
      */
-    public function __construct(public array $invitations)
-    {
+    public function __construct(
+        public readonly string $manage_invitations_url,
+        public CSRFSynchronizerTokenPresenter $csrf,
+        public readonly array $invitations,
+    ) {
     }
 }
