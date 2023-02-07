@@ -98,7 +98,7 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('104')
             ->once()
             ->andReturn($project);
-        $variables = ['id' => '104'];
+        $variables = ['project_id' => '104'];
         $this->request->shouldReceive('get')
             ->with('activation')
             ->once()
@@ -131,7 +131,7 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('104')
             ->once()
             ->andReturn($project);
-        $variables = ['id' => '104'];
+        $variables = ['project_id' => '104'];
         $this->request->shouldReceive('get')
             ->with('activation')
             ->once()

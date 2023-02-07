@@ -69,7 +69,7 @@ class EditController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         try {
-            $project = $this->project_retriever->getValidProjectById((int) $variables['id']);
+            $project = $this->project_retriever->getValidProjectById((int) $variables['project_id']);
         } catch (\Project_NotFoundException $exception) {
             throw new NotFoundException(gettext('Project does not exist'));
         }

@@ -73,7 +73,7 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->csrf_token,
             new \EventManager(),
         );
-        $controller->process($request, $response, ['id' => '102']);
+        $controller->process($request, $response, ['project_id' => '102']);
     }
 
     public function testItRedirectsWhenServiceDataIsInvalid(): void
@@ -101,7 +101,7 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->csrf_token,
             new \EventManager(),
         );
-        $controller->process($request, $response, ['id' => '102']);
+        $controller->process($request, $response, ['project_id' => '102']);
 
         self::assertEquals('error', $inspector->getFeedback()[0]['level']);
         self::assertNotNull($inspector->getRedirectUrl());
@@ -161,7 +161,7 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $request_builder->build(),
             $response,
             [
-                'id' => '120',
+                'project_id' => '120',
             ]
         );
 
