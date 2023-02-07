@@ -42,19 +42,12 @@ class Validator
 
         if ($request->existAndNonEmpty('group_id')) {
             if ($this->validId($request->get('group_id'))) {
-                switch ($action) {
-                    case 'add':
-                        return $this->isValidAddAction($request);
-                        break;
-                    case 'edit':
-                        return $this->isValidEditAction($request);
-                        break;
-                    case 'delete':
-                        return true;
-                        break;
-                    default:
-                        return false;
-                }
+                return match ($action) {
+                    'add'    => $this->isValidAddAction($request),
+                    'edit'   => $this->isValidEditAction($request),
+                    'delete' => true,
+                    default  => false,
+                };
             }
         }
 

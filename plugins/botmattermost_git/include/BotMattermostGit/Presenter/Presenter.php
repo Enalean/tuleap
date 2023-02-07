@@ -45,8 +45,6 @@ class Presenter
     public bool $has_system_bots;
     public bool $has_project_bots;
 
-    private $repository;
-
     /**
      * @param Bot[] $system_bots
      * @param Bot[] $project_bots
@@ -59,13 +57,12 @@ class Presenter
         array $bot_assigned,
     ) {
         $this->csrf_token   = $csrf_token;
-        $this->repository   = $repository;
         $this->system_bots  = $system_bots;
         $this->project_bots = $project_bots;
         $this->bot_assigned = $bot_assigned;
 
-        $this->project_id    = $this->repository->getProjectId();
-        $this->repository_id = $this->repository->getId();
+        $this->project_id    = $repository->getProjectId();
+        $this->repository_id = $repository->getId();
 
         $this->has_bots         = ! empty($system_bots) || ! empty($project_bots);
         $this->has_system_bots  = ! empty($system_bots);
