@@ -28,6 +28,7 @@
         <directory name="tests/unit/common/NeverThrow/" />
         <directory name="tests/unit/common/xml/" />
         <directory name="tests/integration/tests/SVNCore/" />
+        <directory name="tests/integration/tests/InviteBuddy/" />
         <ignoreFiles>
             <directory name="tests/unit/Tuleap/Tools"/>
             <directory name="src/common/wiki/phpwiki/"/>

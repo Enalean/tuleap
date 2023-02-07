@@ -39,7 +39,9 @@ use TemplateRendererFactory;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationInstrumentation;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
@@ -190,7 +192,10 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             new MembershipDelegationDao(),
             new ListOfPendingInvitationsPresenterBuilder(
                 new InviteBuddyConfiguration($event_manager),
-                new InvitationDao(new SplitTokenVerificationStringHasher()),
+                new InvitationDao(
+                    new SplitTokenVerificationStringHasher(),
+                    new InvitationInstrumentation(Prometheus::instance()),
+                ),
                 new TlpRelativeDatePresenterBuilder(),
                 new CSRFSynchronizerTokenProvider(),
             ),

@@ -126,7 +126,10 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             $newstatus = 'V';
         }
 
-        $invitation_dao           = new InvitationDao(new SplitTokenVerificationStringHasher());
+        $invitation_dao           = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+        );
         $nb_asked_to_be_validated = count($users_array);
 
         $users_array = array_reduce(
@@ -215,7 +218,10 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
     } elseif ($action_select === 'resend_email') {
         $csrf_token->check();
         $user_manager   = UserManager::instance();
-        $invitation_dao = new InvitationDao(new SplitTokenVerificationStringHasher());
+        $invitation_dao = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+        );
         foreach ($users_array as $user_id) {
             $user = $user_manager->getUserById($user_id);
             if ($user === null) {

@@ -33,10 +33,15 @@ class InvitationDaoTest extends TestCase
     private const CREATED_ON_TIMESTAMP = 1234567890;
 
     private InvitationDao $dao;
+    private \PHPUnit\Framework\MockObject\MockObject&InvitationInstrumentation $instrumentation;
 
     protected function setUp(): void
     {
-        $this->dao = new InvitationDao(new SplitTokenVerificationStringHasher());
+        $this->instrumentation = $this->createMock(InvitationInstrumentation::class);
+        $this->dao             = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            $this->instrumentation,
+        );
     }
 
     protected function tearDown(): void
@@ -132,7 +137,7 @@ class InvitationDaoTest extends TestCase
         self::assertEquals(
             [101, 103],
             array_map(
-                static fn (array $row) => $row['from_user_id'],
+                static fn (array $row): int => $row['from_user_id'],
                 $this->dao->searchByCreatedUserId(201),
             ),
         );
@@ -288,6 +293,11 @@ class InvitationDaoTest extends TestCase
             $this->getStoredEmails(),
         );
 
+        $this->instrumentation
+            ->expects(self::once())
+            ->method('incrementExpiredInvitations')
+            ->with(2);
+
         $this->dao->withdrawPendingInvitationsForProject('alice@example.com', 101);
 
         self::assertEquals(
@@ -296,6 +306,70 @@ class InvitationDaoTest extends TestCase
         );
         self::assertEquals('bob@example.com', $this->dao->searchById($another_user_invit_id)->to_email);
         self::assertEquals('alice@example.com', $this->dao->searchById($another_project_invit_id)->to_email);
+    }
+
+    public function testRemovePendingInvitationsMadeByUser(): void
+    {
+        $a_sent_invitation_to_be_removed_id = $this->dao->create(
+            self::CREATED_ON_TIMESTAMP,
+            101,
+            'alice@example.com',
+            null,
+            null,
+            null,
+            SplitTokenVerificationString::generateNewSplitTokenVerificationString(),
+        );
+        $this->dao->markAsSent($a_sent_invitation_to_be_removed_id);
+
+        $another_sent_invitation_to_be_removed_id = $this->dao->create(
+            self::CREATED_ON_TIMESTAMP,
+            101,
+            'bob@example.com',
+            null,
+            null,
+            null,
+            SplitTokenVerificationString::generateNewSplitTokenVerificationString(),
+        );
+        $this->dao->markAsSent($another_sent_invitation_to_be_removed_id);
+
+        $a_used_invitation_that_should_not_be_removed = $this->dao->create(
+            self::CREATED_ON_TIMESTAMP,
+            101,
+            'charlie@example.com',
+            null,
+            null,
+            null,
+            SplitTokenVerificationString::generateNewSplitTokenVerificationString(),
+        );
+        $this->dao->markAsSent($a_used_invitation_that_should_not_be_removed);
+
+        $an_invitation_that_is_kept_in_sent_status_for_a_registered_user_and_should_not_be_removed = $this->dao->create(
+            self::CREATED_ON_TIMESTAMP,
+            101,
+            'charlie@example.com',
+            null,
+            null,
+            null,
+            SplitTokenVerificationString::generateNewSplitTokenVerificationString(),
+        );
+        $this->dao->markAsSent($an_invitation_that_is_kept_in_sent_status_for_a_registered_user_and_should_not_be_removed);
+
+        $this->dao->saveJustCreatedUserThanksToInvitation('charlie@example.com', 201, $a_used_invitation_that_should_not_be_removed);
+
+        $this->instrumentation
+            ->expects(self::once())
+            ->method('incrementExpiredInvitations')
+            ->with(2);
+
+        $this->dao->removePendingInvitationsMadeByUser(101);
+
+        self::assertEquals(
+            [
+                $a_used_invitation_that_should_not_be_removed,
+                $an_invitation_that_is_kept_in_sent_status_for_a_registered_user_and_should_not_be_removed,
+            ],
+            DBFactory::getMainTuleapDBConnection()->getDB()->column("SELECT id FROM invitations ORDER BY id"),
+        );
     }
 
     private function getNumberOfRemainingInvitations(): int

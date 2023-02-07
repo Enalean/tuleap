@@ -31,8 +31,10 @@ use Tuleap\DB\DataAccessObject;
 
 class InvitationDao extends DataAccessObject implements InvitationByIdRetriever, InvitationByTokenRetriever, UsedInvitationRetriever, InvitationPurger, PendingInvitationsForProjectRetriever, PendingInvitationsWithdrawer
 {
-    public function __construct(private SplitTokenVerificationStringHasher $hasher)
-    {
+    public function __construct(
+        private SplitTokenVerificationStringHasher $hasher,
+        private InvitationInstrumentation $instrumentation,
+    ) {
         parent::__construct();
     }
 
@@ -240,6 +242,21 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         );
     }
 
+    public function removePendingInvitationsMadeByUser(int $user_id): void
+    {
+        $nb_deleted = $this->getDB()->delete(
+            'invitations',
+            [
+                'from_user_id'    => $user_id,
+                'status'          => Invitation::STATUS_SENT,
+                'created_user_id' => null,
+            ]
+        );
+        if ($nb_deleted > 0) {
+            $this->instrumentation->incrementExpiredInvitations($nb_deleted);
+        }
+    }
+
     public function searchPendingInvitationsForProject(int $project_id): array
     {
         return array_map(
@@ -260,7 +277,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
 
     public function withdrawPendingInvitationsForProject(string $to_email, int $project_id): void
     {
-        $this->getDB()->delete(
+        $nb_deleted = $this->getDB()->delete(
             'invitations',
             [
                 'to_project_id'   => $project_id,
@@ -269,6 +286,9 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
                 'status'          => Invitation::STATUS_SENT,
             ]
         );
+        if ($nb_deleted > 0) {
+            $this->instrumentation->incrementExpiredInvitations($nb_deleted);
+        }
     }
 
     private function instantiateFromRow(array $row): Invitation

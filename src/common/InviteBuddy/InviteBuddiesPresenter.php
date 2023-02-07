@@ -62,7 +62,10 @@ class InviteBuddiesPresenter
     {
         $event_manager              = \EventManager::instance();
         $limit_checker              = new InvitationLimitChecker(
-            new InvitationDao(new SplitTokenVerificationStringHasher()),
+            new InvitationDao(
+                new SplitTokenVerificationStringHasher(),
+                new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+            ),
             new InviteBuddyConfiguration($event_manager)
         );
         $invite_buddy_configuration = new InviteBuddyConfiguration(EventManager::instance());
