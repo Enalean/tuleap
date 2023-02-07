@@ -24,8 +24,6 @@ use Psr\Log\NullLogger;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 class SenderTest extends TestCase
 {
     /**

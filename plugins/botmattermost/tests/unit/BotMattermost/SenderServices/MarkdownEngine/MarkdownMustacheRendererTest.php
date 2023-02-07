@@ -23,8 +23,6 @@ namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 final class MarkdownMustacheRendererTest extends TestCase
 {
     public function testItVerifiesThatMarkdownEngineConvertSpecialCharactersIntoHtmlEntities(): void

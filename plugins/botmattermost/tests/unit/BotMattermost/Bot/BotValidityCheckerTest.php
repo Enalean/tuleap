@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\BotMattermost\Bot;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use Tuleap\BotMattermost\Exception\BotCannotBeUsedInProjectException;
 use Tuleap\Test\PHPUnit\TestCase;
 

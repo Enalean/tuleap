@@ -20,8 +20,6 @@
 
 namespace Tuleap\BotMattermost\SenderServices;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\Test\PHPUnit\TestCase;
 
