@@ -60,19 +60,12 @@ class Validator
 
         if ($request->existAndNonEmpty('repository_id')) {
             if ($this->validId($request->get('repository_id'))) {
-                switch ($action) {
-                    case 'add':
-                        return $this->isValidAddAction($request, $repository);
-                        break;
-                    case 'edit':
-                        return $this->isValidEditAction($request);
-                        break;
-                    case 'delete':
-                        return true;
-                        break;
-                    default:
-                        return false;
-                }
+                return match ($action) {
+                    'add'    => $this->isValidAddAction($request, $repository),
+                    'edit'   => $this->isValidEditAction($request),
+                    'delete' => true,
+                    default  => false,
+                };
             }
         }
 

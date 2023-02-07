@@ -380,7 +380,6 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             new FRSFileFactory($this->logger),
             $this->user_finder,
             $this->ugroup_manager,
-            new XMLImportHelper($this->user_manager),
             $this->frs_permissions_creator,
             $this->uploaded_links_updater
         );

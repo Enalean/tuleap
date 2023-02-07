@@ -69,7 +69,6 @@ class FRSXMLImporter
         FRSFileFactory $file_factory,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         UGroupManager $ugroup_manager,
-        private XMLImportHelper $xml_import_helper,
         FRSPermissionCreator $permission_creator,
         UploadedLinksUpdater $links_updater,
         ?FRSProcessorDao $processor_dao = null,

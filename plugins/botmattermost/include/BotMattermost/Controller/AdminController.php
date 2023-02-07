@@ -20,8 +20,6 @@
 
 namespace Tuleap\BotMattermost\Controller;
 
-use BaseLanguage;
-use EventManager;
 use Exception;
 use HTTPRequest;
 use CSRFSynchronizerToken;
@@ -47,26 +45,16 @@ class AdminController
 {
     private $csrf;
     private $bot_factory;
-    private $event_manager;
-
-    /**
-     * @var BaseLanguage
-     */
-    private $language;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         BotFactory $bot_factory,
-        EventManager $event_manager,
-        BaseLanguage $language,
         private BotDeletor $bot_deletor,
         private BotEditor $bot_editor,
         private BotCreator $bot_creator,
     ) {
-        $this->csrf          = $csrf;
-        $this->bot_factory   = $bot_factory;
-        $this->event_manager = $event_manager;
-        $this->language      = $language;
+        $this->csrf        = $csrf;
+        $this->bot_factory = $bot_factory;
     }
 
     public function displayIndex(BaseLayout $response)

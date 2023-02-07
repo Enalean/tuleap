@@ -150,7 +150,6 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->file_factory,
             $this->user_finder,
             new UGroupManager($this->ugroup_dao),
-            $this->xml_import_helper,
             $this->frs_permission_creator,
             $links_updater,
             $this->processor_dao,
