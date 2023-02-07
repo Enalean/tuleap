@@ -223,12 +223,14 @@ endif
 phpunit:
 	$(PHP) -dzend.assertions=1 src/vendor/bin/phpunit -c tests/unit/phpunit.xml --do-not-cache-result --random-order $(RANDOM_ORDER_SEED_ARGUMENT) $(FILES)
 
+.PHONY:psalm
 psalm: ## Run Psalm (PHP static analysis tool). Use FILES variables to execute on a given set of files or directories.
-	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false -c={config_path} $(FILES)
+	$(PHP) ./src/vendor/bin/psalm --show-info=false -c=tests/psalm/psalm.xml $(FILES)
 
+.PHONY:psalm-with-info
 psalm-with-info: ## Run Psalm (PHP static analysis tool) with INFO findings. Use FILES variables to execute on a given set of files or directories.
 	$(eval THREADS ?= 2)
-	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=true -c={config_path} $(FILES)
+	$(PHP) ./src/vendor/bin/psalm --show-info=true -c=tests/psalm/psalm.xml $(FILES)
 
 .PHONY:psalm-taint-analysis
 psalm-taint-analysis: ## Run Psalm (PHP static analysis tool) taint analysis. Use FILES variables to execute on a given set of files or directories.
@@ -236,29 +238,16 @@ psalm-taint-analysis: ## Run Psalm (PHP static analysis tool) taint analysis. Us
 
 .PHONY:psalm-unused-code
 psalm-unused-code: ## Run Psalm (PHP static analysis tool) detection of unused code. Use FILES variables to execute on a given set of files or directories.
-	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --find-unused-code -c={config_path} $(FILES)
+	$(PHP) ./src/vendor/bin/psalm --find-unused-code -c=tests/psalm/psalm.xml $(FILES)
 
+.PHONY:psalm-baseline-update
 psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis tool).
-	$(eval TMPPSALM := $(shell mktemp -d))
-	git worktree add --detach "$(TMPPSALM)/"
-	$(MAKE) -C "$(TMPPSALM)/" composer js-build
-	pushd "$(TMPPSALM)"; \
-	$(PHP) ./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline; \
-	popd
-	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
-	git worktree remove -f "$(TMPPSALM)/"
+	$(PHP) ./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline
 
+.PHONY:psalm-baseline-create-from-scratch
 psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch, should only be used when needed when upgrading Psalm.
-	$(eval TMPPSALM := $(shell mktemp -d))
-	git worktree add --detach "$(TMPPSALM)/"
-	rm "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml
-	$(MAKE) -C "$(TMPPSALM)/" composer js-build
-	pushd "$(TMPPSALM)"; \
 	$(PHP) -d display_errors=1 -d display_startup_errors=1 -d memory_limit=-1 \
-	    ./src/vendor/bin/psalm --no-cache --use-ini-defaults --set-baseline=./tests/psalm/tuleap-baseline.xml -c=./tests/psalm/psalm.xml; \
-	popd
-	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
-	git worktree remove -f "$(TMPPSALM)/"
+	    ./src/vendor/bin/psalm --no-cache --use-ini-defaults --set-baseline=./tests/psalm/tuleap-baseline.xml -c=./tests/psalm/psalm.xml
 
 phpcs: ## Execute PHPCS with the "strict" ruleset. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
