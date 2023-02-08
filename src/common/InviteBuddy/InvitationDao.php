@@ -52,7 +52,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
             [
                 'created_on'     => $created_on,
                 'from_user_id'   => $from_user_id,
-                'to_email'       => $to_email,
+                'to_email'       => $to_user_id ? '' : $to_email,
                 'to_user_id'     => $to_user_id,
                 'to_project_id'  => $to_project_id,
                 'custom_message' => $custom_message,
