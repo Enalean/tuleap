@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Link;
 
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_Exception;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_NoChangeException;
@@ -43,6 +44,7 @@ use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
@@ -52,6 +54,7 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
         private CreateNewChangeset $changeset_creator,
         private RetrieveUsedArtifactLinkFields $form_element_factory,
         private RetrieveViewableArtifact $artifact_retriever,
+        private EventDispatcherInterface $event,
     ) {
     }
 
@@ -63,10 +66,9 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
     private function updateArtifact(
         Artifact $artifact_to_update,
         PFUser $submitter,
-        NewArtifactLinkChangesetValue $artifact_link_changeset_value,
+        ChangesetValuesContainer $changeset_values_container,
         ?NewChangesetCommentRepresentation $comment = null,
     ): void {
-        $container      = new ChangesetValuesContainer([], $artifact_link_changeset_value);
         $comment_body   = '';
         $comment_format = \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT;
         if ($comment) {
@@ -76,7 +78,7 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
 
         $new_changeset = NewChangeset::fromFieldsDataArray(
             $artifact_to_update,
-            $container->getFieldsData(),
+            $changeset_values_container->getFieldsData(),
             $comment_body,
             CommentFormatIdentifier::fromFormatString($comment_format),
             [],
@@ -111,7 +113,15 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
                                 $artifact_link_field->getId(),
                                 $source_artifact_link_to_be_removed
                             );
-                            $this->updateArtifact($source_artifact, $submitter, $new_changeset_value, $comment);
+
+                            $container           = new ChangesetValuesContainer([], $new_changeset_value);
+                            $validate_link_event = $this->event->dispatch(
+                                ValidateArtifactLinkValueEvent::buildFromSubmittedValues($source_artifact, $container->getFieldsData()[$artifact_link_field->getId()])
+                            );
+                            if ($validate_link_event->isValid() === false) {
+                                return Result::ok(null);
+                            }
+                            $this->updateArtifact($source_artifact, $submitter, $container, $comment);
                             return Result::ok(null);
                         },
                         static fn(Fault $fault) => Result::err($fault)
@@ -151,7 +161,8 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
                                 $artifact_link_field->getId(),
                                 $source_artifact_link_to_be_added
                             );
-                            $this->updateArtifact($source_artifact, $submitter, $new_changeset_value, $comment);
+                            $container           = new ChangesetValuesContainer([], $new_changeset_value);
+                            $this->updateArtifact($source_artifact, $submitter, $container, $comment);
                             return Result::ok(null);
                         },
                         static fn(Fault $fault) => Result::err($fault)
@@ -164,6 +175,20 @@ final class ArtifactUpdateHandler implements HandleUpdateArtifact
             }
         }
         return $result;
+    }
+
+    /**
+     * @throws FieldValidationException
+     * @throws Tracker_NoChangeException
+     * @throws Tracker_Exception
+     */
+    public function updateForwardLinks(
+        Artifact $current_artifact,
+        PFUser $submitter,
+        ChangesetValuesContainer $changeset_values_container,
+        ?NewChangesetCommentRepresentation $comment = null,
+    ): void {
+        $this->updateArtifact($current_artifact, $submitter, $changeset_values_container, $comment);
     }
 
     /**

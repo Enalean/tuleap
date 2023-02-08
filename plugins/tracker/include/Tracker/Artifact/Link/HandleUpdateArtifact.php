@@ -23,11 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Link;
 
 use PFUser;
+use Tracker_Exception;
+use Tracker_NoChangeException;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
@@ -58,4 +61,16 @@ interface HandleUpdateArtifact
         CollectionOfReverseLinks $added_reverse_link,
         ?NewChangesetCommentRepresentation $comment = null,
     ): Ok|Err;
+
+    /**
+     * @throws FieldValidationException
+     * @throws Tracker_NoChangeException
+     * @throws Tracker_Exception
+     */
+    public function updateForwardLinks(
+        Artifact $current_artifact,
+        PFUser $submitter,
+        ChangesetValuesContainer $changeset_values_container,
+        ?NewChangesetCommentRepresentation $comment = null,
+    ): void;
 }
