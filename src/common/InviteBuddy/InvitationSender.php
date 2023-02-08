@@ -85,7 +85,7 @@ class InvitationSender
                 new SplitToken($invitation_id, $secret)
             );
 
-            if ($this->email_notifier->send($current_user, $recipient, $custom_message, $token)) {
+            if ($this->email_notifier->send($current_user, $recipient, $custom_message, $token, $project)) {
                 $this->instrumentation->incrementPlatformInvitation();
                 $this->dao->markAsSent($invitation_id);
             } else {

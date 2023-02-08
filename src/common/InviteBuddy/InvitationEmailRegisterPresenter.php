@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy;
 
 use ForgeConfig;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 
 class InvitationEmailRegisterPresenter
 {
@@ -51,11 +52,17 @@ class InvitationEmailRegisterPresenter
      */
     public $recipient_name;
 
-    public function __construct(\PFUser $current_user, string $register_url, ?string $custom_message)
+    public readonly ?string $project_name;
+
+    public function __construct(\PFUser $current_user, string $register_url, ?string $custom_message, ?\Project $project)
     {
         $this->register_url       = $register_url;
         $this->custom_message     = (string) $custom_message;
         $this->has_custom_message = $custom_message && trim($custom_message) !== "";
+
+        $this->project_name = $project
+            ? EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()) . ' ' . $project->getPublicName()
+            : null;
 
         $this->current_user_real_name = $current_user->getRealName();
         $this->instance_name          = (string) ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
