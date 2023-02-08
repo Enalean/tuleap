@@ -281,17 +281,21 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $body_class[] = 'has-visible-platform-banner';
         }
 
+        $project_presenters_builder = new \Tuleap\Project\CachedProjectPresentersBuilder(
+            new ProjectPresentersBuilder()
+        );
+
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user->user,
             $this->getNotificationPlaceholder(),
             $help_dropdown_presenter,
             $body_class,
             $this->detected_browser->isACompletelyBrokenBrowser(),
-            InviteBuddiesPresenter::build($current_user->user),
+            InviteBuddiesPresenter::build($current_user->user, $project, $project_presenters_builder),
             $platform_banner,
         ));
 
-        $this->navbar($params, $current_user, $project, $banner, $platform_banner);
+        $this->navbar($params, $current_user, $project, $banner, $platform_banner, $project_presenters_builder);
     }
 
     private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class)
@@ -315,6 +319,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         ?Project $project,
         ?BannerDisplay $project_banner,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
+        \Tuleap\Project\ListOfProjectPresentersBuilder $project_presenters_builder,
     ) {
         $csrf_logout_token = new CSRFSynchronizerToken('logout_action');
         $event_manager     = EventManager::instance();
@@ -342,7 +347,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         );
 
         $switch_to_presenter_builder = new SwitchToPresenterBuilder(
-            new ProjectPresentersBuilder(),
+            $project_presenters_builder,
             new \Tuleap\Layout\SearchFormPresenterBuilder($event_manager, HTTPRequest::instance())
         );
 
@@ -368,7 +373,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            InviteBuddiesPresenter::build($current_user->user),
+            InviteBuddiesPresenter::build($current_user->user, $project, $project_presenters_builder),
             $platform_banner
         ));
 

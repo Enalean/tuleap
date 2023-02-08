@@ -34,8 +34,10 @@ use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
+use Tuleap\InviteBuddy\MustBeProjectAdminToInvitePeopleInProjectException;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\InviteBuddy\UnableToSendInvitationsException;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -98,12 +100,24 @@ class InvitationsResource extends AuthenticatedResource
             \BackendLogger::getDefaultLogger(),
             new InvitationInstrumentation(Prometheus::instance()),
             new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+            new MembershipDelegationDao(),
         );
 
+
         try {
-            $failures = $sender->send($current_user, array_filter($invitation->emails), $invitation->custom_message);
+            $project  = $invitation->project_id
+                ? \ProjectManager::instance()->getValidProjectById($invitation->project_id)
+                : null;
+            $failures = $sender->send(
+                $current_user,
+                array_filter($invitation->emails),
+                $project,
+                $invitation->custom_message
+            );
 
             return new InvitationPOSTResultRepresentation($failures);
+        } catch (\Project_NotFoundException | MustBeProjectAdminToInvitePeopleInProjectException) {
+            throw new RestException(404);
         } catch (InvitationSenderGateKeeperException $e) {
             throw new I18NRestException(400, $e->getMessage());
         } catch (UnableToSendInvitationsException $e) {

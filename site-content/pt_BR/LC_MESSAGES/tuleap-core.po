@@ -1989,6 +1989,11 @@ msgstr "Usado pela última vez por"
 msgid "Last used on"
 msgstr "Usado pela última vez em"
 
+msgid ""
+"Leave it blank to invite people to the platform without making them project "
+"member."
+msgstr ""
+
 msgid "Leave project"
 msgstr "Sair do projeto"
 
@@ -2528,6 +2533,10 @@ msgstr "Usuários pendentes"
 
 msgid "People in this group will be able to manage project members."
 msgstr "Pessoas neste grupo serão capazes de gerenciar os membros do projeto."
+
+msgid ""
+"People will be member of the project when they will accept your invitation."
+msgstr ""
 
 msgid "Per activities"
 msgstr "Por atividades"
@@ -3405,6 +3414,9 @@ msgstr ""
 
 msgid "Source code management"
 msgstr "Gestão do código fonte"
+
+msgid "Specific project"
+msgstr ""
 
 msgid "Specify the nature of the reference, or Other if any."
 msgstr "Especifique a natureza da referência, ou Outra, se houver."

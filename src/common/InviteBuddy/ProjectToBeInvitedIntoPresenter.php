@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\InviteBuddy\REST\v1;
+namespace Tuleap\InviteBuddy;
 
 /**
  * @psalm-immutable
  */
-class InvitationPOSTRepresentation
+final class ProjectToBeInvitedIntoPresenter
 {
-    /**
-     * @var string[] {@type string} {@required true} {@min 1}
-     */
-    public $emails;
-
-    /**
-     * @var string {@type string} {@required false}
-     */
-    public $custom_message;
-
-    /**
-     * @var int {@type int} {@required false}
-     */
-    public $project_id;
+    public function __construct(public int $id, public string $icon, public string $name, public bool $is_selected)
+    {
+    }
 }

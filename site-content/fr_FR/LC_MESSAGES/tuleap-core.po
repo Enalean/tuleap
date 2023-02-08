@@ -2008,6 +2008,13 @@ msgstr "Utilisée pour la dernière fois par"
 msgid "Last used on"
 msgstr "Utilisée pour la dernière fois le"
 
+msgid ""
+"Leave it blank to invite people to the platform without making them project "
+"member."
+msgstr ""
+"Laissez vide si vous comptez seulement inviter les personnes sur la "
+"plateforme."
+
 msgid "Leave project"
 msgstr "Quitter le project"
 
@@ -2549,6 +2556,12 @@ msgstr "Utilisateurs en attente"
 msgid "People in this group will be able to manage project members."
 msgstr ""
 "Les personnes dans ce groupe seront capables de gérer les membres du projet."
+
+msgid ""
+"People will be member of the project when they will accept your invitation."
+msgstr ""
+"Les personnes seront membres du projet quand elles accepteront votre "
+"invitation."
 
 msgid "Per activities"
 msgstr "Utilisateurs actifs"
@@ -3440,6 +3453,9 @@ msgstr ""
 
 msgid "Source code management"
 msgstr "Gestion de code source"
+
+msgid "Specific project"
+msgstr "Projet spécifique"
 
 msgid "Specify the nature of the reference, or Other if any."
 msgstr "pécifiez la nature de la référence, ou Autre sinon."

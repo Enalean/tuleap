@@ -36,6 +36,7 @@ use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;
+use Tuleap\Project\ListOfProjectPresentersBuilder;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
@@ -105,6 +106,8 @@ class HeaderPresenterBuilder
         ThemeVariation $theme_variation,
         array $javascript_assets,
         ?InProjectWithoutSidebar $in_project_without_sidebar,
+        ListOfProjectPresentersBuilder $project_presenters_builder,
+        ?\Project $project,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->imgroot                  = $imgroot;
@@ -148,7 +151,7 @@ class HeaderPresenterBuilder
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            InviteBuddiesPresenter::build($current_user->user),
+            InviteBuddiesPresenter::build($current_user->user, $project, $project_presenters_builder),
             $platform_banner,
             $detected_browser->isACompletelyBrokenBrowser()
         );

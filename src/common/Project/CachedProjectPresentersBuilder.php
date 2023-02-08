@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2023 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\InviteBuddy\REST\v1;
+namespace Tuleap\Project;
 
-/**
- * @psalm-immutable
- */
-class InvitationPOSTRepresentation
+use PFUser;
+
+final class CachedProjectPresentersBuilder implements ListOfProjectPresentersBuilder
 {
     /**
-     * @var string[] {@type string} {@required true} {@min 1}
+     * @var array<int, ProjectPresenter[]>
      */
-    public $emails;
+    private array $cache = [];
+
+    public function __construct(private ListOfProjectPresentersBuilder $builder)
+    {
+    }
 
     /**
-     * @var string {@type string} {@required false}
+     * @return ProjectPresenter[]
      */
-    public $custom_message;
+    public function getProjectPresenters(PFUser $current_user): array
+    {
+        if (! isset($this->cache[(int) $current_user->getId()])) {
+            $this->cache[(int) $current_user->getId()] = $this->builder->getProjectPresenters($current_user);
+        }
 
-    /**
-     * @var int {@type int} {@required false}
-     */
-    public $project_id;
+        return $this->cache[(int) $current_user->getId()];
+    }
 }

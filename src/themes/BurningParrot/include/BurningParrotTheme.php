@@ -52,6 +52,7 @@ use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
+use Tuleap\Project\CachedProjectPresentersBuilder;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
@@ -224,8 +225,9 @@ class BurningParrotTheme extends BaseLayout
             )
         );
 
+        $project_presenters_builder  = new CachedProjectPresentersBuilder(new ProjectPresentersBuilder());
         $switch_to_presenter_builder = new SwitchToPresenterBuilder(
-            new ProjectPresentersBuilder(),
+            $project_presenters_builder,
             new SearchFormPresenterBuilder($this->event_manager, $this->request)
         );
 
@@ -260,6 +262,8 @@ class BurningParrotTheme extends BaseLayout
             $this->theme_variation,
             $this->javascript_assets,
             $in_project_without_sidebar,
+            $project_presenters_builder,
+            $project,
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
