@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
 
 final class IDisplayConfirmationPageStub implements IDisplayConfirmationPage
@@ -40,7 +41,7 @@ final class IDisplayConfirmationPageStub implements IDisplayConfirmationPage
         return new self();
     }
 
-    public function displayConfirmationForAdmin(BaseLayout $layout, \HTTPRequest $request): void
+    public function displayConfirmationForAdmin(BaseLayout $layout, \PFUser $new_user, ConcealedString $password): void
     {
         $this->has_confirmation_for_admin_been_displayed = true;
     }
@@ -50,12 +51,12 @@ final class IDisplayConfirmationPageStub implements IDisplayConfirmationPage
         $this->has_confirmation_link_error_been_displayed = true;
     }
 
-    public function displayConfirmationLinkSent(BaseLayout $layout, \HTTPRequest $request): void
+    public function displayConfirmationLinkSent(BaseLayout $layout, \PFUser $new_user): void
     {
         $this->has_confirmation_link_sent_been_displayed = true;
     }
 
-    public function displayWaitForApproval(BaseLayout $layout, \HTTPRequest $request): void
+    public function displayWaitForApproval(BaseLayout $layout, \PFUser $new_user): void
     {
         $this->has_wait_for_approvale_been_displayed = true;
     }

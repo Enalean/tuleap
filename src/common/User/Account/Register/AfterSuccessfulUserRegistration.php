@@ -75,12 +75,12 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
                 }
             }
 
-            $this->confirmation_page->displayConfirmationForAdmin($layout, $request);
+            $this->confirmation_page->displayConfirmationForAdmin($layout, $new_user, new ConcealedString((string) $request->get('form_pw')));
             return;
         }
 
         if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL)) {
-            $this->confirmation_page->displayWaitForApproval($layout, $request);
+            $this->confirmation_page->displayWaitForApproval($layout, $new_user);
             return;
         }
 
@@ -100,7 +100,7 @@ final class AfterSuccessfulUserRegistration implements AfterSuccessfulUserRegist
             return;
         }
 
-        $this->confirmation_page->displayConfirmationLinkSent($layout, $request);
+        $this->confirmation_page->displayConfirmationLinkSent($layout, $new_user);
     }
 
     private function automagicallyLogUser(
