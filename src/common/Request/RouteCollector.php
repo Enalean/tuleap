@@ -687,7 +687,10 @@ class RouteCollector
 
     public static function getManageProjectInvitationsController(): DispatchableWithRequest
     {
-        $invitation_dao = new InvitationDao(new SplitTokenVerificationStringHasher());
+        $invitation_dao = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+        );
 
         return new ManageProjectInvitationsController(
             new CSRFSynchronizerTokenProvider(),
@@ -1016,7 +1019,10 @@ class RouteCollector
             ),
             $event_manager,
             new InvitationToEmailRequestExtractor(
-                new InvitationDao(new SplitTokenVerificationStringHasher()),
+                new InvitationDao(
+                    new SplitTokenVerificationStringHasher(),
+                    new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+                ),
                 new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
             ),
         );
@@ -1042,7 +1048,10 @@ class RouteCollector
             self::getRegisterFormProcessor(),
             \EventManager::instance(),
             new InvitationToEmailRequestExtractor(
-                new InvitationDao(new SplitTokenVerificationStringHasher()),
+                new InvitationDao(
+                    new SplitTokenVerificationStringHasher(),
+                    new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+                ),
                 new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
             ),
         );
@@ -1065,7 +1074,10 @@ class RouteCollector
         $renderer_factory       = TemplateRendererFactory::build();
         $include_core_assets    = new IncludeCoreAssets();
         $timezones_collection   = new \Account_TimezonesCollection();
-        $invitation_dao         = new InvitationDao(new SplitTokenVerificationStringHasher());
+        $invitation_dao         = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+        );
         $mail_renderer          = $renderer_factory->getRenderer(
             \ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
         );

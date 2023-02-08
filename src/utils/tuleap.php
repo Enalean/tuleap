@@ -186,14 +186,22 @@ $CLI_command_collector->addCommand(
                 new MailPresenterFactory(),
                 TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/mail/'),
                 new Codendi_Mail(),
-                new UserSuspensionDao(),
+                new UserSuspensionDao(
+                    new InvitationDao(
+                        new SplitTokenVerificationStringHasher(),
+                        new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+                    ),
+                ),
                 $user_manager,
                 new BaseLanguageFactory(),
                 BackendLogger::getDefaultLogger('usersuspension_syslog'),
                 $locale_switcher
             ),
             new InvitationCleaner(
-                new InvitationDao(new SplitTokenVerificationStringHasher()),
+                new InvitationDao(
+                    new SplitTokenVerificationStringHasher(),
+                    new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+                ),
                 $locale_switcher,
                 TemplateRendererFactory::build(),
                 static function (Codendi_Mail $mail) {

@@ -134,7 +134,10 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                     ),
                     Codendi_HTMLPurifier::instance(),
                     new FirstTimerPresenterBuilder(
-                        new InvitationDao(new SplitTokenVerificationStringHasher()),
+                        new InvitationDao(
+                            new SplitTokenVerificationStringHasher(),
+                            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+                        ),
                         UserManager::instance(),
                     ),
                 ),

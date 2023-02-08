@@ -84,7 +84,7 @@ class InvitationsResource extends AuthenticatedResource
         $user_manager = \UserManager::instance();
         $current_user = $user_manager->getCurrentUser();
 
-        $dao                        = new InvitationDao(new SplitTokenVerificationStringHasher());
+        $dao                        = new InvitationDao(new SplitTokenVerificationStringHasher(), new InvitationInstrumentation(Prometheus::instance()));
         $invite_buddy_configuration = new InviteBuddyConfiguration(\EventManager::instance());
         $sender                     = new InvitationSender(
             new InvitationSenderGateKeeper(

@@ -81,7 +81,10 @@ $router                     = new UserDashboardRouter(
             new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($core_assets, 'dashboards-style')])
         ),
         new \Tuleap\Dashboard\User\FirstTimerPresenterBuilder(
-            new \Tuleap\InviteBuddy\InvitationDao(new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher()),
+            new \Tuleap\InviteBuddy\InvitationDao(
+                new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher(),
+                new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+            ),
             UserManager::instance(),
         ),
     ),
