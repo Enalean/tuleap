@@ -21,7 +21,7 @@ import "./tuleap-artifact-modal.tpl.html";
 import TuleapArtifactModalController from "./tuleap-artifact-modal-controller.js";
 
 import _ from "lodash";
-import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.js";
+import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.ts";
 import {
     getArtifactWithCompleteTrackerStructure,
     getTracker,

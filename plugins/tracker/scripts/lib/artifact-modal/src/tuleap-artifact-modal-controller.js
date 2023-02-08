@@ -18,7 +18,7 @@
  */
 
 import { loadTooltips } from "@tuleap/tooltip";
-import { isInCreationMode } from "./modal-creation-mode-state.js";
+import { isInCreationMode } from "./modal-creation-mode-state.ts";
 import { getErrorMessage, hasError, setError } from "./rest/rest-error-state";
 import { isDisabled } from "./adapters/UI/fields/disabled-field-detector";
 import {
