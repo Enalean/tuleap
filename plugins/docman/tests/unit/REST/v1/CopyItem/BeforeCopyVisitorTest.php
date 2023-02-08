@@ -102,7 +102,7 @@ final class BeforeCopyVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function dataProviderProcessableItemClasses(): ?\Generator
+    public static function dataProviderProcessableItemClasses(): ?\Generator
     {
         foreach (self::VISITOR_PROCESSABLE_CLASSES as $processable_class) {
             yield [$processable_class];

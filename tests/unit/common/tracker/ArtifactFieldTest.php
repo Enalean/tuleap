@@ -35,7 +35,7 @@ final class ArtifactFieldTest extends \Tuleap\Test\PHPUnit\TestCase
         }
     }
 
-    public function artifactFieldProvider(): array
+    public static function artifactFieldProvider(): array
     {
         $field_artifact_id             = new ArtifactField();
         $field_artifact_id->field_name = 'artifact_id';

@@ -114,7 +114,7 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->assertEquals($expected, $this->presenter_builder->buildSiteAdministration($csrf_token));
     }
 
-    public function dataProviderLastCreatedApp(): array
+    public static function dataProviderLastCreatedApp(): array
     {
         return [
             'No app has just been created' => [null, null],

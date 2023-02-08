@@ -109,7 +109,7 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->verifier->getUser($this->access_key, \Mockery::mock(AuthenticationScope::class), '2001:db8::1777');
     }
 
-    public function lastAccessValuesProvider(): array
+    public static function lastAccessValuesProvider(): array
     {
         return [
             [ // Different IP and last seen outside of the last access resolution

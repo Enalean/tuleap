@@ -70,7 +70,7 @@ My <b>test<br>
         $this->assertSame($expected_attachments, $attachments);
     }
 
-    public function sampleMailProvider()
+    public static function sampleMailProvider()
     {
         $fixture_path_base = __DIR__ . '/_fixtures/samples';
         return [

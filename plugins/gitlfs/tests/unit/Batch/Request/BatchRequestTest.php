@@ -76,7 +76,7 @@ JSON;
         BatchRequest::buildFromJSONString($json_string);
     }
 
-    public function providerIncorrectJSONBatchRequest()
+    public static function providerIncorrectJSONBatchRequest()
     {
         return [
             ['{bad_json'],

@@ -48,7 +48,7 @@ class SelectedDateDisplayPreferenceValidatorTest extends \Tuleap\Test\PHPUnit\Te
         );
     }
 
-    public function dataProviderValidAndInvalidUserPreferences(): array
+    public static function dataProviderValidAndInvalidUserPreferences(): array
     {
         return [
             'PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP is valid' => [

@@ -52,7 +52,7 @@ final class LargestObjectSizeGitRepositoryTest extends \Tuleap\Test\PHPUnit\Test
         $this->assertSame($is_over_the_limit, $repository_with_largest_object_size->isOverTheObjectSizeLimit());
     }
 
-    public function providerObjectSize(): array
+    public static function providerObjectSize(): array
     {
         return [
             [0, false],

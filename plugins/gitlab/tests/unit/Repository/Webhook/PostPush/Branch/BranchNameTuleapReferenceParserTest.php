@@ -49,7 +49,7 @@ class BranchNameTuleapReferenceParserTest extends TestCase
         }
     }
 
-    public function branchNamesProvider(): array
+    public static function branchNamesProvider(): array
     {
         return [
             ["dev", false],

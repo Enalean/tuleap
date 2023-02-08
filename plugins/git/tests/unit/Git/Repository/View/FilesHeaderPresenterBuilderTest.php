@@ -466,7 +466,7 @@ final class FilesHeaderPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->assertFalse($presenter->can_display_selector);
     }
 
-    public function provideActionsThatShouldNotDisplayTheSelector()
+    public static function provideActionsThatShouldNotDisplayTheSelector()
     {
         return [
             ['commit'],

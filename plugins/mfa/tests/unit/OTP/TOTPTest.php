@@ -47,7 +47,7 @@ class TOTPTest extends \Tuleap\Test\PHPUnit\TestCase
      * @see https://tools.ietf.org/html/rfc6238#appendix-B
      * @see https://www.rfc-editor.org/errata_search.php?eid=2866
      */
-    public function RFCVectorsProvider()
+    public static function RFCVectorsProvider()
     {
         return [
             ['12345678901234567890', 'sha1', '59', '94287082'],

@@ -78,7 +78,7 @@ final class UserPermissionsBuilderTest extends TestCase
         self::assertEquals($is_admin, $user_permissions->is_admin);
     }
 
-    public function getAdminTestData(): iterable
+    public static function getAdminTestData(): iterable
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
@@ -247,7 +247,7 @@ final class UserPermissionsBuilderTest extends TestCase
         self::assertEquals($is_admin, $user_permissions->is_admin);
     }
 
-    public function getReadersTestData(): iterable
+    public static function getReadersTestData(): iterable
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 

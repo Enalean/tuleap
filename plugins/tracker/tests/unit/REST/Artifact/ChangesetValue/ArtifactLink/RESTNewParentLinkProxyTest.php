@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 final class RESTNewParentLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function dataProviderValidPayloads(): array
+    public static function dataProviderValidPayloads(): array
     {
         return [
             'id is an integer cast to string' => [['id' => '29']],
@@ -41,7 +41,7 @@ final class RESTNewParentLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame((int) $payload['id'], $parent->getParentArtifactId());
     }
 
-    public function dataProviderRejectedPayloads(): array
+    public static function dataProviderRejectedPayloads(): array
     {
         return [
             "Missing 'id' key"                         => [[]],
@@ -61,7 +61,7 @@ final class RESTNewParentLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         RESTNewParentLinkProxy::fromRESTPayload($payload);
     }
 
-    public function dataProviderInvalidIds(): array
+    public static function dataProviderInvalidIds(): array
     {
         return [
             [['id' => 0]],

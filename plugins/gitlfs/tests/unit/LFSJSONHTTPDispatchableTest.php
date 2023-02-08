@@ -52,7 +52,7 @@ class LFSJSONHTTPDispatchableTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function providerAcceptHeader(): array
+    public static function providerAcceptHeader(): array
     {
         return [
             ['application/vnd.git-lfs+json'],

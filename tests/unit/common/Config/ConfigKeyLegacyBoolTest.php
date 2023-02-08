@@ -36,7 +36,7 @@ final class ConfigKeyLegacyBoolTest extends TestCase
         assertEquals($expected . PHP_EOL, (new ConfigKeyLegacyBool())->getSerializedRepresentation('key', $value));
     }
 
-    public function getSerializationTests(): iterable
+    public static function getSerializationTests(): iterable
     {
         return [
             'true with string' => [

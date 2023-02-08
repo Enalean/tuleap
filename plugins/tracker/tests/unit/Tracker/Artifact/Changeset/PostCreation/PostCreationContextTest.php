@@ -29,7 +29,7 @@ use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 
 final class PostCreationContextTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function dataProviderSendNotifications(): array
+    public static function dataProviderSendNotifications(): array
     {
         return [
             'with notifications'    => [true],

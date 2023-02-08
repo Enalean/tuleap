@@ -56,7 +56,7 @@ final class ConfigDumpCommandTest extends TestCase
         );
     }
 
-    public function getTestData(): \Generator
+    public static function getTestData(): \Generator
     {
         yield 'one string variable' => [
             'variables_defined' => [

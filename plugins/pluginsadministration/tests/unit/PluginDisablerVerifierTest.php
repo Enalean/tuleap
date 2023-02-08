@@ -41,7 +41,7 @@ class PluginDisablerVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($plugin_disabler_verifier->canPluginBeDisabled($plugin_administration));
     }
 
-    public function providerOptionUntouchablePlugins()
+    public static function providerOptionUntouchablePlugins()
     {
         return [
             [false],

@@ -92,7 +92,7 @@ final class PUTHandlerTest extends TestCase
         $put_handler->handle($values, $artifact, $user, null);
     }
 
-    public function provideExceptions(): iterable
+    public static function provideExceptions(): iterable
     {
         yield 'Field is invalid' => [new \Tracker_FormElement_InvalidFieldException(), 400];
         yield 'Field value is invalid' => [new \Tracker_FormElement_InvalidFieldValueException(), 400];

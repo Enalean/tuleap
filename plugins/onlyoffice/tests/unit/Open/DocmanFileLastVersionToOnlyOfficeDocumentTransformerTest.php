@@ -100,7 +100,7 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
         self::assertSame($expected_can_be_edited, $result->unwrapOr(null)->can_be_edited);
     }
 
-    public function dataProviderHappyPath(): array
+    public static function dataProviderHappyPath(): array
     {
         return [
             'Editable document user can write' => ['spec.docx', true, true],

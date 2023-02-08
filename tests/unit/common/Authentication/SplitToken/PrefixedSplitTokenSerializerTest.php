@@ -78,7 +78,7 @@ final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCa
         $access_key_serializer->getSplitToken(new ConcealedString($incorrectly_formatted_identifier));
     }
 
-    public function incorrectlyFormattedIdentifierProvider(): array
+    public static function incorrectlyFormattedIdentifierProvider(): array
     {
         return [
             ['incorrect_identifier'],

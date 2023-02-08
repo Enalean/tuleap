@@ -111,7 +111,7 @@ class PackTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($expected, $pack->ContainsObject($object_reference));
     }
 
-    public function objectReferenceProvider()
+    public static function objectReferenceProvider()
     {
         $reference_tests = [
             ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', true],
@@ -151,7 +151,7 @@ class PackTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($type, $expected_type);
     }
 
-    public function objectProvider()
+    public static function objectProvider()
     {
         $object_tests = [
             ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', 'db098907ae9b166cb9c8078858ba284024649c971c37fb89c21d112d416264d2', Pack::OBJ_COMMIT],

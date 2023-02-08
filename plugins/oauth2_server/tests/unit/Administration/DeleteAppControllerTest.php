@@ -83,7 +83,7 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function dataProviderInvalidBody(): array
+    public static function dataProviderInvalidBody(): array
     {
         return [
             'No body' => [null],

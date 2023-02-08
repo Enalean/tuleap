@@ -47,7 +47,7 @@ EOF;
         $this->assertEquals($expected, $pwned_password_checker->isPasswordCompromised($password));
     }
 
-    public function passwordProvider(): array
+    public static function passwordProvider(): array
     {
         return [
             ['not_compromised_password', false],

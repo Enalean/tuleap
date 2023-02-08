@@ -39,7 +39,7 @@ class VersionNumberExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function dataProviderTuleapVersions(): array
+    public static function dataProviderTuleapVersions(): array
     {
         return [
             ['12.0', '12-0'],

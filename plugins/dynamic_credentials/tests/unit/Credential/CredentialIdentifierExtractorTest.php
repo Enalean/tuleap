@@ -45,7 +45,7 @@ class CredentialIdentifierExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $extractor->extract($username);
     }
 
-    public function incorrectlyFormattedUsernameProvider()
+    public static function incorrectlyFormattedUsernameProvider()
     {
         return [['forge__dynamic_credential-'], ['wrong_prefix-identifier']];
     }

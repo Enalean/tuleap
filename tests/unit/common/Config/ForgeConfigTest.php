@@ -82,7 +82,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         }
     }
 
-    public function getDefaultSequenceProvider(): iterable
+    public static function getDefaultSequenceProvider(): iterable
     {
         return [
             'The value comes from attributes' => [
@@ -382,7 +382,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         }
     }
 
-    public function getSetupSequenceProvider(): iterable
+    public static function getSetupSequenceProvider(): iterable
     {
         return [
             'Hostname is defined by the provided fqdn' => [

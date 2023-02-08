@@ -50,7 +50,7 @@ final class DetectedBrowserTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals($expected_browser_is_completely_broken, $detected_browser->isACompletelyBrokenBrowser());
     }
 
-    public function dataProviderBrowserUA(): array
+    public static function dataProviderBrowserUA(): array
     {
         return [
             'IE11' => [

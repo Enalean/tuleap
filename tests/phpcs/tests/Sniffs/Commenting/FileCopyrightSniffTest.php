@@ -36,7 +36,7 @@ final class FileCopyrightSniffTest extends TestCase
         self::assertNoSniffErrorInFile($report);
     }
 
-    public function providerValidFiles(): array
+    public static function providerValidFiles(): array
     {
         return [
             [__DIR__ . '/_fixtures/FileCopyright/Valid/OpenTagAndCopyrightDocCommentAtTheBeginning.php'],

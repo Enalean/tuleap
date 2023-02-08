@@ -31,23 +31,23 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class IsOpenRetrieverTest extends TestCase
 {
-    private function isUserStoryOpen(Artifact $artifact): bool
+    private static function isUserStoryOpen(Artifact $artifact): bool
     {
         $verifier = new IsOpenRetriever(RetrieveFullArtifactStub::withArtifact($artifact));
         return $verifier->isOpen(UserStoryIdentifierBuilder::withId(57));
     }
 
-    private function isFeatureOpen(Artifact $artifact): bool
+    private static function isFeatureOpen(Artifact $artifact): bool
     {
         $verifier = new IsOpenRetriever(RetrieveFullArtifactStub::withArtifact($artifact));
         return $verifier->isFeatureOpen(FeatureIdentifierBuilder::withId(58));
     }
 
-    public function dataProviderMethodUnderTest(): array
+    public static function dataProviderMethodUnderTest(): array
     {
         return [
-            ['User Story' => [$this, 'isUserStoryOpen']],
-            ['Feature' => [$this, 'isFeatureOpen']],
+            ['User Story' => [self::class, 'isUserStoryOpen']],
+            ['Feature' => [self::class, 'isFeatureOpen']],
         ];
     }
 
