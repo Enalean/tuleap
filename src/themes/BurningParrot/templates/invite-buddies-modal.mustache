@@ -49,6 +49,26 @@
                     <p class="tlp-text-info">{{# gettext }}Enter comma separated list of emails{{/ gettext }}</p>
                 </div>
 
+                {{# has_projects }}
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="invite-buddies-projects">
+                            {{# gettext }}Specific project{{/ gettext }}
+                        </label>
+                        <select id="invite-buddies-projects" class="tlp-select" name="invite_buddies_project">
+                            <option value=""></option>
+                            {{# projects }}
+                                <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>
+                                    {{ icon }} {{ name }}
+                                </option>
+                            {{/ projects }}
+                        </select>
+                        <p class="tlp-text-info">
+                            {{# gettext }}People will be member of the project when they will accept your invitation.{{/ gettext }}
+                            {{# gettext }}Leave it blank to invite people to the platform without making them project member.{{/ gettext }}
+                        </p>
+                    </div>
+                {{/ has_projects }}
+
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="invite-buddies-message">
                         {{# gettext }}Message{{/ gettext }}

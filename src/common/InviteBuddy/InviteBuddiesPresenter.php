@@ -24,41 +24,31 @@ namespace Tuleap\InviteBuddy;
 
 use EventManager;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Project\ListOfProjectPresentersBuilder;
+use Tuleap\Project\ProjectPresenter;
 
 /**
  * @psalm-immutable
  */
 class InviteBuddiesPresenter
 {
-    /**
-     * @var bool
-     */
-    public $can_buddies_be_invited;
-    /**
-     * @var bool
-     */
-    public $is_limit_reached;
-    /**
-     * @var string
-     */
-    public $instance_name;
-    /**
-     * @var int
-     */
-    public $max_limit_by_day;
+    public readonly string $instance_name;
+    public readonly bool $has_projects;
 
+    /**
+     * @param ProjectToBeInvitedIntoPresenter[] $projects
+     */
     public function __construct(
-        bool $can_buddies_be_invited,
-        bool $is_limit_reached,
-        int $max_limit_by_day,
+        public readonly bool $can_buddies_be_invited,
+        public readonly bool $is_limit_reached,
+        public readonly int $max_limit_by_day,
+        public readonly array $projects,
     ) {
-        $this->can_buddies_be_invited = $can_buddies_be_invited;
-        $this->is_limit_reached       = $is_limit_reached;
-        $this->instance_name          = (string) \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
-        $this->max_limit_by_day       = $max_limit_by_day;
+        $this->instance_name = (string) \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
+        $this->has_projects  = count($this->projects) > 0;
     }
 
-    public static function build(\PFUser $user): self
+    public static function build(\PFUser $user, ?\Project $current_project, ListOfProjectPresentersBuilder $project_presenters_builder): self
     {
         $event_manager              = \EventManager::instance();
         $limit_checker              = new InvitationLimitChecker(
@@ -70,6 +60,23 @@ class InviteBuddiesPresenter
         $is_limit_reached           = $limit_checker->isLimitReached($user);
         $max_limit_by_day           = $invite_buddy_configuration->getNbMaxInvitationsByDay();
 
-        return new self($can_buddies_be_invited, $is_limit_reached, $max_limit_by_day);
+        $projects_presenters = array_reduce(
+            $project_presenters_builder->getProjectPresenters($user),
+            static function (array $accumulator, ProjectPresenter $presenter) use ($current_project): array {
+                if ($presenter->is_current_user_admin) {
+                    $accumulator[] = new ProjectToBeInvitedIntoPresenter(
+                        $presenter->id,
+                        $presenter->icon,
+                        $presenter->project_name,
+                        $current_project && $presenter->id === (int) $current_project->getId(),
+                    );
+                }
+
+                return $accumulator;
+            },
+            []
+        );
+
+        return new self($can_buddies_be_invited, $is_limit_reached, $max_limit_by_day, $projects_presenters);
     }
 }

@@ -50,6 +50,10 @@ export async function sendNotifications(form: HTMLFormElement): Promise<void> {
         throw Error("Unable to find submit button");
     }
 
+    const project_select = form.querySelector("select[name=invite_buddies_project]");
+    const project_id =
+        project_select instanceof HTMLSelectElement ? Number(project_select.value) : null;
+
     const icon = form.querySelector("button[type=submit] > .tlp-button-icon");
     try {
         activateSpinner(icon);
@@ -63,6 +67,7 @@ export async function sendNotifications(form: HTMLFormElement): Promise<void> {
             body: JSON.stringify({
                 emails,
                 custom_message,
+                ...(project_id ? { project_id } : {}),
             }),
         });
 

@@ -27,6 +27,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 
 class InvitationSender
 {
@@ -38,6 +39,7 @@ class InvitationSender
         private LoggerInterface $logger,
         private InvitationInstrumentation $instrumentation,
         private SplitTokenFormatter $split_token_formatter,
+        private MembershipDelegationDao $delegation_dao,
     ) {
     }
 
@@ -48,9 +50,13 @@ class InvitationSender
      *
      * @throws InvitationSenderGateKeeperException
      * @throws UnableToSendInvitationsException
+     * @throws MustBeProjectAdminToInvitePeopleInProjectException
      */
-    public function send(PFUser $current_user, array $emails, ?string $custom_message): array
+    public function send(PFUser $current_user, array $emails, ?\Project $project, ?string $custom_message): array
     {
+        $to_project_id = $project ? (int) $project->getID() : null;
+        $this->checkUserCanInviteIntoProject($project, $current_user);
+
         $emails = array_filter($emails);
         $this->gate_keeper->checkNotificationsCanBeSent($current_user, $emails);
 
@@ -64,8 +70,6 @@ class InvitationSender
             );
 
             $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
-
-            $to_project_id = null;
 
             $invitation_id = $this->dao->create(
                 $now,
@@ -102,5 +106,25 @@ class InvitationSender
         }
 
         return $failures;
+    }
+
+    /**
+     * @throws MustBeProjectAdminToInvitePeopleInProjectException
+     */
+    private function checkUserCanInviteIntoProject(?\Project $project, PFUser $current_user): void
+    {
+        if (! $project) {
+            return;
+        }
+
+        if ($current_user->isAdmin((int) $project->getID())) {
+            return;
+        }
+
+        if ($this->delegation_dao->doesUserHasMembershipDelegation((int) $current_user->getId(), (int) $project->getID())) {
+            return;
+        }
+
+        throw new MustBeProjectAdminToInvitePeopleInProjectException();
     }
 }

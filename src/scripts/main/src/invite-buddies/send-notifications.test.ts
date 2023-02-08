@@ -92,6 +92,47 @@ describe("send-notifications", () => {
             expect(deactivateSpinner).toHaveBeenCalled();
         });
 
+        it("Creates invitation into a project and displays success feedback", async () => {
+            email_field.value = "peter@example.com, wendy@example.com";
+            message_field.value = "Lorem ipsum doloret";
+
+            const activateSpinner = jest.spyOn(spinner, "activateSpinner");
+            const deactivateSpinner = jest.spyOn(spinner, "deactivateSpinner");
+            const displaySuccess = jest.spyOn(feedback, "displaySuccess");
+            const handleError = jest.spyOn(error, "handleError");
+
+            const tlpPostMock = jest.spyOn(tlp, "post");
+            const response_body = { failures: [] };
+            mockFetchSuccess(tlpPostMock, { return_json: response_body });
+
+            const select = document.createElement("select");
+            select.name = "invite_buddies_project";
+            select.options.add(new Option("", ""));
+            select.options.add(new Option("MyProject", "101", true, true));
+            select.options.add(new Option("AnotherProject", "102"));
+            form.appendChild(select);
+
+            await sendNotifications(form);
+            expect(tlpPostMock).toHaveBeenCalledWith(`/api/v1/invitations`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    emails: ["peter@example.com", "wendy@example.com"],
+                    custom_message: "Lorem ipsum doloret",
+                    project_id: 101,
+                }),
+            });
+
+            expect(activateSpinner).toHaveBeenCalled();
+            expect(displaySuccess).toHaveBeenCalledWith(
+                ["peter@example.com", "wendy@example.com"],
+                response_body
+            );
+            expect(handleError).not.toHaveBeenCalled();
+            expect(deactivateSpinner).toHaveBeenCalled();
+        });
+
         it("Tries to create invitation and displays error", async () => {
             email_field.value = "peter@example.com, wendy@example.com";
             message_field.value = "Lorem ipsum doloret";

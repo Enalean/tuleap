@@ -38,6 +38,7 @@ class ProjectPresenter
     public bool $is_private_incl_restricted = false;
 
     public function __construct(
+        public int $id,
         string $project_name,
         string $project_uri,
         string $project_config_uri,
