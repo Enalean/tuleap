@@ -323,8 +323,6 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
         require_once __DIR__ . '/../../../../www/include/account.php';
         \account_add_user_to_group($project->getID(), $form_unix_name);
-
-        $this->user_group_bindings->reloadUgroupBindingInProject($project);
     }
 
     private function removeUserFromProject(HTTPRequest $request, Project $project)
