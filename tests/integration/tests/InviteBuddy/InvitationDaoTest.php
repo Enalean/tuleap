@@ -64,6 +64,19 @@ class InvitationDaoTest extends TestCase
         self::assertEquals($same_invitation, $invitation);
     }
 
+    public function testDoNotStoreEmailWhenWeTargetAnExistingUserToNotDuplicatePII(): void
+    {
+        $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+
+        $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "alice@example.com", 102, null, null, $verifier);
+        $this->dao->create(self::CREATED_ON_TIMESTAMP, 101, "bob@example.com", null, null, null, $verifier);
+
+        self::assertEquals(
+            ['', 'bob@example.com'],
+            $this->getStoredEmails(),
+        );
+    }
+
     public function testExceptionWhenTokenCannotBeVerified(): void
     {
         $verifier = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
