@@ -53,7 +53,7 @@ final class BackOffDelayFailedMessageTest extends \Tuleap\Test\PHPUnit\TestCase
         $backoff_delay->delay($this->buildMessage(0));
     }
 
-    public function dataProviderAttempts(): array
+    public static function dataProviderAttempts(): array
     {
         return [
             [1, 5],

@@ -41,7 +41,7 @@ final class NewArtifactLinkInitialChangesetValueBuilderTest extends \Tuleap\Test
         );
     }
 
-    public function dataProviderInvalidPayloads(): array
+    public static function dataProviderInvalidPayloads(): array
     {
         return [
             'Payload is empty'                      => [[]],

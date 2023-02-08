@@ -51,7 +51,7 @@ final class CollectLinkedProjectsTest extends TestCase
         self::assertTrue($event->getParentProjects()->isEmpty());
     }
 
-    public function dataProviderContext(): array
+    public static function dataProviderContext(): array
     {
         return [
             'In children projects context' => [true],

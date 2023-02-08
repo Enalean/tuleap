@@ -31,7 +31,7 @@ use Tuleap\Tracker\REST\FaultMapper;
 
 final class FaultMapperTest extends TestCase
 {
-    public function dataProviderFaults(): iterable
+    public static function dataProviderFaults(): iterable
     {
         yield 'Artifact does not exists' => [ArtifactDoesNotExistFault::build(10), 400];
         yield 'Artifact link field does not exist' => [ArtifactLinkFieldDoesNotExistFault::build(15), 400];

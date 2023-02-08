@@ -136,7 +136,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->create($comment);
     }
 
-    public function commentDataProvider(): array
+    public static function commentDataProvider(): array
     {
         $submitter = UserTestBuilder::aUser()->withId(self::SUBMITTER_USER_ID)->build();
         return [

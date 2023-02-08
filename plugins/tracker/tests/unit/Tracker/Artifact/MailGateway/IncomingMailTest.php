@@ -40,7 +40,7 @@ class IncomingMailTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function mailProvider()
+    public static function mailProvider()
     {
         return [
             [__DIR__ . '/_fixtures/reply-comment.plain.eml'],

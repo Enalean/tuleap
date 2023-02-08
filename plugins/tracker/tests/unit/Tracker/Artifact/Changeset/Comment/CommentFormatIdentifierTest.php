@@ -47,7 +47,7 @@ final class CommentFormatIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(\Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT, (string) $format);
     }
 
-    public function dataProviderFormat(): array
+    public static function dataProviderFormat(): array
     {
         return [
             'Text'       => [\Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,],

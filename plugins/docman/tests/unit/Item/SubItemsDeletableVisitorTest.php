@@ -30,7 +30,7 @@ class SubItemsDeletableVisitorTest extends TestCase
     /**
      * @return \Docman_Item[]
      */
-    public function getItems(): array
+    public static function getItems(): array
     {
         return [
             [new \Docman_Item()],

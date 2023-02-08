@@ -68,7 +68,7 @@ class ProcessAdminRegisterFormControllerTest extends TestCase
     /**
      * @return \PFUser[]
      */
-    public function getNonAdminUsers(): array
+    public static function getNonAdminUsers(): array
     {
         return [
             [UserTestBuilder::anActiveUser()->build()],

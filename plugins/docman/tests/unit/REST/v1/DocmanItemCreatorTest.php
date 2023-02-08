@@ -1173,7 +1173,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotNull($created_item_representation->file_properties);
     }
 
-    public function permissionsForGroupsSetRepresentationDataProvider(): array
+    public static function permissionsForGroupsSetRepresentationDataProvider(): array
     {
         return [
             [null],

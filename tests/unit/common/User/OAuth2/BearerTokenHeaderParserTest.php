@@ -54,7 +54,7 @@ final class BearerTokenHeaderParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_identifier, $extracted_token->getString());
     }
 
-    public function dataProviderValidHeaderLines(): array
+    public static function dataProviderValidHeaderLines(): array
     {
         $identifier = 'tlp-oauth2-at1-12.bde4f708ebda6fade1887c66867eceae95328e0d71dfc317c99e898fe802a4a0';
         return [
@@ -75,7 +75,7 @@ final class BearerTokenHeaderParserTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNull($parser->parseHeaderLine($header_line));
     }
 
-    public function dataProviderInvalidHeaderLinesLookingLikeABearerToken(): array
+    public static function dataProviderInvalidHeaderLinesLookingLikeABearerToken(): array
     {
         return [
             ['Bearer  a'],
@@ -84,7 +84,7 @@ final class BearerTokenHeaderParserTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    public function dataProviderInvalidHeaderLinesThatDoesNotEvenHaveABearerTag(): array
+    public static function dataProviderInvalidHeaderLinesThatDoesNotEvenHaveABearerTag(): array
     {
         return [
             ['Basic aaaaaaaaa'],

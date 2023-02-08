@@ -26,7 +26,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramIncrementLabelsTest extends TestCase
 {
-    public function dataProviderLabels(): array
+    public static function dataProviderLabels(): array
     {
         return [
             'both labels null'     => [null, null],

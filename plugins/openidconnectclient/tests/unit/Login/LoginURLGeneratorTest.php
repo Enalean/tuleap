@@ -42,7 +42,7 @@ final class LoginURLGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals($expected_url, $login_url_generator->getLoginURL(self::buildProvider(), $return_to));
     }
 
-    public function dataProviderReturnTo(): array
+    public static function dataProviderReturnTo(): array
     {
         return [
             'No return_to'           => [null, self::BASE_URL . '/login_to/' . self::PROVIDER_ID],

@@ -49,7 +49,7 @@ final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_password, $login_credential->getPassword()->getString());
     }
 
-    public function dataProviderValidAuthorizationHeaders(): array
+    public static function dataProviderValidAuthorizationHeaders(): array
     {
         $expected_username            = 'username';
         $expected_password            = 'password';
@@ -79,7 +79,7 @@ final class BasicAuthLoginExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNull($login_credential);
     }
 
-    public function dataProviderNotValidAuthorizationHeaders(): array
+    public static function dataProviderNotValidAuthorizationHeaders(): array
     {
         return [
             'No authorization header' => [''],

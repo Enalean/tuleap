@@ -259,7 +259,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
      * @return \string[][]
      * @psalm-return array<string, array{0: string}>
      */
-    public function dataProviderRepositoryPath(): array
+    public static function dataProviderRepositoryPath(): array
     {
         return [
             'Git LFS before 3.0.0' => ['foo/faa.git'],

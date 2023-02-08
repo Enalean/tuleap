@@ -89,7 +89,7 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_request"}', $response->getBody()->getContents());
     }
 
-    public function dataProviderInvalidBody(): array
+    public static function dataProviderInvalidBody(): array
     {
         return [
             'No body'  => [null],

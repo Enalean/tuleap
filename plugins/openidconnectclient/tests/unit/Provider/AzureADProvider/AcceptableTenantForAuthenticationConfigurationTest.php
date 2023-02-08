@@ -64,7 +64,7 @@ final class AcceptableTenantForAuthenticationConfigurationTest extends \Tuleap\T
         $this->assertEquals(['tenant_id'], $configuration->getAcceptableIssuerTenantIDs());
     }
 
-    public function providerSpecificTenantOrganizationsSetup(): array
+    public static function providerSpecificTenantOrganizationsSetup(): array
     {
         return [
             [AzureADTenantSetup::tenantSpecific()],

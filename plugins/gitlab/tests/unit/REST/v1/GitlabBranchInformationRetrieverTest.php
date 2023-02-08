@@ -134,7 +134,7 @@ final class GitlabBranchInformationRetrieverTest extends TestCase
         $this->branch_information_retriever->getBranchInformation($current_user, 1);
     }
 
-    public function dataProviderGitlabAPIFailures(): array
+    public static function dataProviderGitlabAPIFailures(): array
     {
         return [
             [GitlabRequestException::class],

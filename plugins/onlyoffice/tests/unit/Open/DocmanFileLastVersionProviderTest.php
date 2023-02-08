@@ -99,7 +99,7 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         self::assertSame($expected_can_be_edited, $result->unwrapOr(null)->can_be_edited);
     }
 
-    public function dataProviderLastVersionFileEdit(): array
+    public static function dataProviderLastVersionFileEdit(): array
     {
         return [
             'Document can be edited in ONLYOFFICE' => [true, FilenamePatternRetrieverStub::buildWithNoPattern(), false, false, true],

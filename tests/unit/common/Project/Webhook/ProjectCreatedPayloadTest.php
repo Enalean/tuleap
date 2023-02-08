@@ -69,7 +69,7 @@ final class ProjectCreatedPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function ownerDataProvider(): array
+    public static function ownerDataProvider(): array
     {
         return [
             [true],

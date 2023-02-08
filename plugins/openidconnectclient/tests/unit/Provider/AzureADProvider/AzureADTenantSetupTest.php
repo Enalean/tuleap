@@ -63,7 +63,7 @@ final class AzureADTenantSetupTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertNotEmpty($setup->getDescription());
     }
 
-    public function dataProviderAllPossibleSetups(): \Generator
+    public static function dataProviderAllPossibleSetups(): \Generator
     {
         foreach (AzureADTenantSetup::allPossibleSetups() as $setup) {
             yield [$setup];
