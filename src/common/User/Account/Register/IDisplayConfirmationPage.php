@@ -22,15 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
 
 interface IDisplayConfirmationPage
 {
-    public function displayConfirmationForAdmin(BaseLayout $layout, \HTTPRequest $request): void;
+    public function displayConfirmationForAdmin(BaseLayout $layout, \PFUser $new_user, ConcealedString $password): void;
 
-    public function displayConfirmationLinkSent(BaseLayout $layout, \HTTPRequest $request): void;
+    public function displayConfirmationLinkSent(BaseLayout $layout, \PFUser $new_user): void;
 
-    public function displayWaitForApproval(BaseLayout $layout, \HTTPRequest $request): void;
+    public function displayWaitForApproval(BaseLayout $layout, \PFUser $new_user): void;
 
     public function displayConfirmationLinkError(BaseLayout $layout): void;
 }

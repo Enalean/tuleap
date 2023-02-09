@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account\Register;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
@@ -36,7 +37,7 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
     ) {
     }
 
-    public function displayConfirmationForAdmin(BaseLayout $layout, \HTTPRequest $request): void
+    public function displayConfirmationForAdmin(BaseLayout $layout, \PFUser $new_user, ConcealedString $password): void
     {
         $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../../../templates/account/create/");
 
@@ -45,13 +46,13 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
             HeaderConfigurationBuilder::get(_('Register'))->build()
         );
         $renderer->renderToPage("confirmation-admin-creation", [
-            'login'    => $request->get('form_loginname'),
-            'password' => $request->get('form_pw'),
+            'login'    => $new_user->getUserName(),
+            'password' => $password->getString(),
         ]);
         $layout->footer(FooterConfiguration::withoutContent());
     }
 
-    public function displayConfirmationLinkSent(BaseLayout $layout, \HTTPRequest $request): void
+    public function displayConfirmationLinkSent(BaseLayout $layout, \PFUser $new_user): void
     {
         $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../../../templates/account/create/");
 
@@ -60,12 +61,12 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
             HeaderConfigurationBuilder::get(_('Register'))->build()
         );
         $renderer->renderToPage("confirmation-link-sent", [
-            'email' => $request->get('form_email'),
+            'email' => $new_user->getEmail(),
         ]);
         $layout->footer(FooterConfiguration::withoutContent());
     }
 
-    public function displayWaitForApproval(BaseLayout $layout, \HTTPRequest $request): void
+    public function displayWaitForApproval(BaseLayout $layout, \PFUser $new_user): void
     {
         $renderer = $this->renderer_factory->getRenderer(__DIR__ . "/../../../../templates/account/create/");
 
@@ -74,7 +75,7 @@ final class ConfirmationPageDisplayer implements IDisplayConfirmationPage
             HeaderConfigurationBuilder::get(_('Register'))->build()
         );
         $renderer->renderToPage("waiting-for-approval", [
-            'email' => $request->get('form_email'),
+            'email' => $new_user->getEmail(),
         ]);
         $layout->footer(FooterConfiguration::withoutContent());
     }
