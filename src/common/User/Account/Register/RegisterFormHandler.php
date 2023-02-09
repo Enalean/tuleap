@@ -74,7 +74,7 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
             return Result::err(RegisterFormValidationIssue::fromFieldName('form_pw', _('You must supply a password.')));
         }
 
-        $timezone = $request->get('timezone');
+        $timezone = (string) $request->get('timezone');
         if (! $this->timezones_collection->isValidTimezone($timezone)) {
             $GLOBALS['Response']->addFeedback('error', _('You must supply a timezone.'));
 
