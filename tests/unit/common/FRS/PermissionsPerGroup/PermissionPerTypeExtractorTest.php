@@ -32,14 +32,8 @@ use UGroupManager;
 
 final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var FRSPermission
-     */
-    private $ugroup_project_member;
-    /**
-     * @var FRSPermission
-     */
-    private $ugroup_project_admin;
+    private ProjectUGroup $ugroup_project_member;
+    private ProjectUGroup $ugroup_project_admin;
     /**
      * @var array
      */
@@ -130,20 +124,18 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
         $this->ugroup_manager->method('getProjectAdminsUGroup')->willReturn($this->ugroup_project_admin);
-        $this->ugroup_manager->method('getUGroup')->withConsecutive(
-            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS]
-        )->willReturnOnConsecutiveCalls(
+        $this->ugroup_manager->method('getUGroup')->with(
+            $this->equalTo($this->project),
+            (int) ProjectUGroup::PROJECT_MEMBERS
+        )->willReturn(
             $this->ugroup_project_member
         );
 
-        $this->formatter->method('formatGroup')->withConsecutive(
-            [$this->ugroup_project_admin],
-            [$this->ugroup_project_admin],
-            [$this->ugroup_project_member]
-        )->willReturnOnConsecutiveCalls(
-            $this->formatted_project_admin,
-            $this->formatted_project_admin,
-            $this->formatted_project_member
+        $this->formatter->method('formatGroup')->willReturnCallback(
+            fn (ProjectUGroup $permission): array => match ($permission) {
+                $this->ugroup_project_admin => $this->formatted_project_admin,
+                $this->ugroup_project_member => $this->formatted_project_member,
+            }
         );
 
         $this->url_builder->method('getGlobalAdminLink')->willReturn(
@@ -181,15 +173,16 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
             ]
         );
-        $this->ugroup_manager->method('getUGroup')->withConsecutive(
-            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS]
-        )->willReturnOnConsecutiveCalls(
+        $this->ugroup_manager->method('getUGroup')->with(
+            $this->equalTo($this->project),
+            ProjectUGroup::PROJECT_MEMBERS
+        )->willReturn(
             $this->ugroup_project_member
         );
 
-        $this->formatter->method('formatGroup')->withConsecutive(
-            [$this->ugroup_project_member]
-        )->willReturnOnConsecutiveCalls(
+        $this->formatter->method('formatGroup')->with(
+            $this->ugroup_project_member
+        )->willReturn(
             $this->formatted_project_member
         );
 

@@ -407,11 +407,12 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->email_notifier
             ->expects(self::exactly(2))
             ->method('send')
-            ->withConsecutive(
-                [$from_user, $new_user],
-                [$from_another_user, $new_user],
-            )
-            ->willReturnOnConsecutiveCalls(true, true);
+            ->willReturnCallback(
+                fn (\PFUser $send_from_user, \PFUser $send_just_created_user): bool => match (true) {
+                    $from_user === $send_from_user && $send_just_created_user === $new_user,
+                    $from_another_user === $send_from_user && $send_just_created_user === $new_user => true
+                }
+            );
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
