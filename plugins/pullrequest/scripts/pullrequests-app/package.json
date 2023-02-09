@@ -24,7 +24,7 @@
     "dompurify": "^2.3.6",
     "hybrids": "^8.1.8",
     "moment": "^2.29.4",
-    "neverthrow": "5.0.0",
+    "neverthrow": "6.0.0",
     "sprintf-js": "^1.1.2",
     "vue": "^3.2.41"
   },

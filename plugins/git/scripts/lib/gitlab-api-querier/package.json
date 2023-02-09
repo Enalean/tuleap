@@ -17,7 +17,7 @@
   "dependencies": {
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
-    "neverthrow": "^5.0.0"
+    "neverthrow": "^6.0.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

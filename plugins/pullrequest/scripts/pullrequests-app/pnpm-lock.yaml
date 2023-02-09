@@ -26,7 +26,7 @@ specifiers:
   hybrids: ^8.1.8
   jquery: ^3.6.0
   moment: ^2.29.4
-  neverthrow: 5.0.0
+  neverthrow: 6.0.0
   sprintf-js: ^1.1.2
   vue: ^3.2.41
   vue-loader: ^17.0.0
@@ -51,7 +51,7 @@ dependencies:
   dompurify: 2.4.0
   hybrids: 8.1.8
   moment: 2.29.4
-  neverthrow: 5.0.0
+  neverthrow: 6.0.0
   sprintf-js: 1.1.2
   vue: 3.2.41
 
@@ -339,8 +339,8 @@ packages:
     hasBin: true
     dev: false
 
-  /neverthrow/5.0.0:
-    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
+  /neverthrow/6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: false
 
   /picocolors/1.0.0:

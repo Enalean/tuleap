@@ -28,7 +28,7 @@
     "hybrids": "^8.1.8",
     "lodash": "2.4.0",
     "moment": "^2.29.4",
-    "neverthrow": "^5.0.0",
+    "neverthrow": "^6.0.0",
     "pretty-kibibytes": "^4.0.4",
     "sprintf-js": "^1.1.2",
     "tus-js-client": "^3.0.1"

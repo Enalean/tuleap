@@ -30,7 +30,7 @@
     "@vitejs/plugin-vue": "^2.0.0",
     "@vue/test-utils": "^2.0.2",
     "jquery": "^3.6.0",
-    "neverthrow": "^5.0.0"
+    "neverthrow": "^6.0.0"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
