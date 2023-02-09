@@ -56,8 +56,6 @@ declare global {
 
             regularUserLogin(): void;
 
-            heisenbergLogin(): void;
-
             userLogout(): void;
 
             switchProjectVisibility(visibility: string): void;

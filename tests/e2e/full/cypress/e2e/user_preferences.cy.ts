@@ -22,9 +22,30 @@ function assertFeedbackContainsMessage(expected_feedback_message: string): void 
 }
 
 describe("User preferences", () => {
+    const now = Date.now();
+    const password = "pwd_" + now;
+
     before(() => {
         cy.clearSessionCookie();
-        cy.heisenbergLogin();
+        cy.visit("/account/register.php");
+        const username = "test_prefs_" + now;
+        cy.get("[data-test=user-login]").type(username);
+        cy.get("[data-test=user-email]").type(username + "@localhost");
+        cy.get("[data-test=user-pw]").type(password);
+        cy.get("[data-test=user-pw2]").type(password);
+        cy.get("[data-test=user-prefs-site-updates]").click();
+        cy.get("[data-test=user-name]").type("Test Prefs " + now + "{enter}");
+
+        cy.platformAdminLogin();
+        cy.visit("/admin/approve_pending_users.php?page=pending");
+        cy.contains(".siteadmin-pending-user", username)
+            .find("[name=action_select][value=activate]")
+            .click();
+
+        cy.clearSessionCookie();
+        cy.visit("/");
+        cy.get("[data-test=form_loginname]").type(username);
+        cy.get("[data-test=form_pw]").type(`${password}{enter}`);
     });
 
     beforeEach(function () {
@@ -88,7 +109,7 @@ describe("User preferences", () => {
         });
 
         describe("change the password", () => {
-            const actual_password = "Correct Horse Battery Staple";
+            const actual_password = password;
             const temporary_password = "Blue-Meth-99-1%-pure";
 
             afterEach(() => {
@@ -285,7 +306,9 @@ describe("User preferences", () => {
                 cy.visit("/account/appearance");
 
                 cy.get("[data-test=user-preferences-accessibility-selector]").should("be.checked");
-                cy.get("[data-user-has-accessibility-mode]").contains(1);
+                cy.get("[data-user-has-accessibility-mode]")
+                    .invoke("attr", "data-user-has-accessibility-mode")
+                    .should("eq", "1");
             });
         });
 

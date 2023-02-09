@@ -20,6 +20,7 @@
                        required
                        autocomplete="email"
                        {{# is_disabled }}disabled{{/is_disabled}}
+                       data-test="user-email"
                 >
                 {{# has_error }}
                     <p class="tlp-text-danger">{{ error }}</p>
@@ -41,6 +42,7 @@
                        required
                        autocomplete="new-password"
                        data-password-validators="{{ json_password_strategy_keys }}"
+                       data-test="user-pw"
                 >
                 {{# has_error }}
                     <p class="tlp-text-danger">{{ error }}</p>
@@ -60,6 +62,7 @@
                        required
                        autocomplete="new-password"
                        data-password-validators="{{ json_password_strategy_keys }}"
+                       data-test="user-pw2"
                 >
             </div>
         {{/ form_pw }}
@@ -79,6 +82,7 @@
                        required
                        value="{{ value }}"
                        autocomplete="name"
+                       data-test="user-name"
                 >
                 {{# has_error }}
                     <p class="tlp-text-danger">{{ error }}</p>
@@ -104,7 +108,7 @@
         {{# form_mail_site }}
             <div class="tlp-form-element {{# has_error }}tlp-form-element-error{{/ has_error }}">
                 <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" name="form_mail_site" value="1" {{# value }}checked="checked"{{/ value }}>
+                    <input type="checkbox" name="form_mail_site" value="1" {{# value }}checked="checked"{{/ value }} data-test="user-prefs-site-updates">
                     {{# gettext }}Receive Email about Site Updates{{/ gettext }}
                 </label>
                 <p class="tlp-text-info">
