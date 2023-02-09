@@ -50,21 +50,14 @@ final class PUTHandlerTest extends TestCase
     use GlobalResponseMock;
     use ForgeConfigSandbox;
 
-
-    /**
-     * @var ArtifactUpdater&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $artifact_updater;
-    private HandleUpdateArtifactStub $artifact_linker;
+    private HandleUpdateArtifactStub $artifact_updater;
     private RetrieveUsedFieldsStub $field_retriever;
-    private HandleUpdateArtifactStub $artifact_unlinker;
+    private CheckArtifactRestUpdateConditionsStub $check_artifact_rest_update_conditions;
 
     protected function setUp(): void
     {
-        $this->artifact_updater                      = $this->createMock(ArtifactUpdater::class);
-        $this->artifact_linker                       = HandleUpdateArtifactStub::build();
+        $this->artifact_updater                      = HandleUpdateArtifactStub::build();
         $this->field_retriever                       = RetrieveUsedFieldsStub::withNoFields();
-        $this->artifact_unlinker                     = HandleUpdateArtifactStub::build();
         $this->check_artifact_rest_update_conditions = CheckArtifactRestUpdateConditionsStub::allowArtifactUpdate();
     }
 
@@ -83,9 +76,8 @@ final class PUTHandlerTest extends TestCase
                 ),
                 new NewArtifactLinkInitialChangesetValueBuilder()
             ),
-            $this->artifact_updater,
             RetrieveReverseLinksStub::withLinks(new CollectionOfReverseLinks([])),
-            $this->artifact_unlinker,
+            $this->artifact_updater,
             new DBTransactionExecutorPassthrough(),
             $this->check_artifact_rest_update_conditions,
         );
@@ -110,69 +102,97 @@ final class PUTHandlerTest extends TestCase
      */
     public function testItMapsExceptionsToRestExceptions(\Throwable $throwable, int $expected_status_code): void
     {
-        $this->artifact_updater->method('update')->willThrowException($throwable);
+        $this->artifact_updater = HandleUpdateArtifactStub::withException($throwable);
         $this->expectException(RestException::class);
         $this->expectExceptionCode($expected_status_code);
         $this->handle([]);
-        self::assertSame(0, $this->artifact_unlinker->getLinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_unlinker->getUnlinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
     }
 
     public function testItDoesNothingWhenNoChange(): void
     {
-        $this->artifact_updater->method('update')->willThrowException(new Tracker_NoChangeException(1, 'art #1'));
-        $this->artifact_updater->expects($this->once())->method('update');
+        $this->artifact_updater = HandleUpdateArtifactStub::withException(new Tracker_NoChangeException(1, 'art #1'));
         $this->handle([]);
-        self::assertSame(0, $this->artifact_unlinker->getLinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_unlinker->getUnlinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
     }
 
     public function testItThrows500WhenThereIsAnErrorFeedback(): void
     {
-        $this->artifact_updater->method('update')->willThrowException(new \Tracker_Exception());
+        $this->artifact_updater = HandleUpdateArtifactStub::withException(new \Tracker_Exception());
         $GLOBALS['Response']->method('feedbackHasErrors')->willReturn(true);
         $GLOBALS['Response']->method('getRawFeedback')->willReturn('Aaaah');
         $this->expectException(RestException::class);
         $this->expectExceptionCode(500);
         $this->handle([]);
-        self::assertSame(0, $this->artifact_unlinker->getLinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_unlinker->getUnlinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
     }
 
     public function testItUpdatesArtifactLikeBeforeWhenAllLinkKeyIsNotProvidedOrForwardDirectionIsProvidedInAllLinkKey(): void
     {
-        $this->artifact_updater->expects($this->once())->method('update');
+        $this->artifact_updater = HandleUpdateArtifactStub::build();
         $this->handle([]);
-        self::assertSame(0, $this->artifact_unlinker->getLinkReverseArtifactMethodCallCount());
-        self::assertSame(0, $this->artifact_unlinker->getUnlinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
     }
 
-    public function testItMakesTheReverseOfAnArtifact(): void
+    public function testItDoesNotMakesTheReverseOfAnArtifactIfTheParentKeyWasGiven(): void
     {
         \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
 
-
-        $this->artifact_updater->expects($this->never())->method('update');
         $this->field_retriever = RetrieveUsedFieldsStub::withFields(
             ArtifactLinkFieldBuilder::anArtifactLinkField(1)
                                     ->withTrackerId(20)
                                     ->build()
         );
 
-        $all_links            = new LinkWithDirectionRepresentation();
-        $all_links->id        = 12;
-        $all_links->type      = "";
-        $all_links->direction = "reverse";
+
+        $parent = ['id' => 12];
+
+        $value           = new ArtifactValuesRepresentation();
+        $value->parent   = $parent;
+        $value->field_id = 1;
+
+        $values[] = $value;
+
+        $this->handle($values);
+        self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
+    }
+
+    public function testItLinksTheArtifactWithForwardAndReverseLink(): void
+    {
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(1)
+                                    ->withTrackerId(20)
+                                    ->build()
+        );
+
+        $links_reverse            = new LinkWithDirectionRepresentation();
+        $links_reverse->id        = 12;
+        $links_reverse->type      = "";
+        $links_reverse->direction = "reverse";
+
+        $links_forward            = new LinkWithDirectionRepresentation();
+        $links_forward->id        = 15;
+        $links_forward->type      = "";
+        $links_forward->direction = "forward";
 
         $value            = new ArtifactValuesRepresentation();
-        $value->all_links = [$all_links];
+        $value->all_links = [$links_reverse, $links_forward];
         $value->field_id  = 1;
 
         $values[] = $value;
 
         $this->handle($values);
-        self::assertSame(1, $this->artifact_unlinker->getUnlinkReverseArtifactMethodCallCount());
-        self::assertSame(1, $this->artifact_unlinker->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(1, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
+        self::assertSame(1, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
     }
 
     public function testItThrowsARestExceptionWhenTheArtifactCannotBeUpdated(): void

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Link;
 
+use EventManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -30,6 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ValidateArtifactLinkValueEvent;
 use Tuleap\Tracker\Test\Builders\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
@@ -37,7 +40,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveUsedArtifactLinkFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveViewableArtifactStub;
 use Tuleap\Tracker\Test\Stub\ReverseLinkStub;
 
-final class ArtifactFromRestUpdaterTest extends TestCase
+final class ArtifactUpdateHandlerTest extends TestCase
 {
     private const CURRENT_ARTIFACT_ID = 10;
     private const SOURCE_ARTIFACT_ID  = 18;
@@ -45,6 +48,8 @@ final class ArtifactFromRestUpdaterTest extends TestCase
     private RetrieveUsedArtifactLinkFieldsStub $form_element_factory;
     private CreateNewChangesetStub $changeset_creator;
     private RetrieveViewableArtifactStub $artifact_retriever;
+
+    private EventManager|MockObject $event;
 
     protected function setUp(): void
     {
@@ -55,6 +60,7 @@ final class ArtifactFromRestUpdaterTest extends TestCase
         );
         $this->changeset_creator    = CreateNewChangesetStub::withNullReturnChangeset();
         $this->artifact_retriever   = RetrieveViewableArtifactStub::withNoArtifact();
+        $this->event                = $this->createMock(EventManager::class);
     }
 
     /**
@@ -70,7 +76,8 @@ final class ArtifactFromRestUpdaterTest extends TestCase
         $artifact_unlinker = new ArtifactUpdateHandler(
             $this->changeset_creator,
             $this->form_element_factory,
-            $this->artifact_retriever
+            $this->artifact_retriever,
+            $this->event
         );
         return $artifact_unlinker->removeReverseLinks($artifact, $user, $removed_reverse_links);
     }
@@ -100,9 +107,28 @@ final class ArtifactFromRestUpdaterTest extends TestCase
         $source_artifact          = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build();
         $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact);
 
+        $validate_artifact_link = ValidateArtifactLinkValueEvent::buildFromSubmittedValues($source_artifact, []);
+        $this->event->method('dispatch')->willReturn($validate_artifact_link);
+
         $result = $this->unlinkReverseArtifact();
 
         self::assertSame(1, $this->changeset_creator->getCallsCount());
+        self::assertTrue(Result::isOk($result));
+        self::assertNull($result->value);
+    }
+
+    public function testItDoesNotUnlinkTheSourceArtifactWithTheCurrentArtifactIfTheLinkCannotBeEdited(): void
+    {
+        $source_artifact          = ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build();
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts($source_artifact);
+
+        $validate_artifact_link = ValidateArtifactLinkValueEvent::buildFromSubmittedValues($source_artifact, []);
+        $validate_artifact_link->setIsNotValid();
+        $this->event->method('dispatch')->willReturn($validate_artifact_link);
+
+        $result = $this->unlinkReverseArtifact();
+
+        self::assertSame(0, $this->changeset_creator->getCallsCount());
         self::assertTrue(Result::isOk($result));
         self::assertNull($result->value);
     }
@@ -117,7 +143,8 @@ final class ArtifactFromRestUpdaterTest extends TestCase
         $artifact_unlinker = new ArtifactUpdateHandler(
             $this->changeset_creator,
             $this->form_element_factory,
-            $this->artifact_retriever
+            $this->artifact_retriever,
+            $this->createMock(EventManager::class)
         );
         return $artifact_unlinker->addReverseLink($artifact, $user, $removed_reverse_links);
     }

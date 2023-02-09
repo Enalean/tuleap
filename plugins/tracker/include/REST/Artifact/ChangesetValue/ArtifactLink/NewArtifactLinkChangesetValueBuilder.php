@@ -74,7 +74,7 @@ final class NewArtifactLinkChangesetValueBuilder
             return NewArtifactLinkChangesetValue::fromParts(
                 $link_field->getId(),
                 $this->forward_links_retriever->retrieve($submitter, $link_field, $artifact),
-                null,
+                $this->buildForward($payload),
                 null,
                 $this->buildReverse($payload)
             );
@@ -143,6 +143,17 @@ final class NewArtifactLinkChangesetValueBuilder
         }
 
         return AllLinkPayloadParser::buildLinksToUpdate($payload->all_links);
+    }
+
+    /**
+     * @throws \Tracker_FormElement_InvalidFieldValueException
+     */
+    private function buildForward(ArtifactValuesRepresentation $payload): CollectionOfForwardLinks
+    {
+        if ($payload->all_links === null) {
+            return new CollectionOfForwardLinks([]);
+        }
+        return AllLinkPayloadParser::buildForwardLinksToUpdate($payload->all_links);
     }
 
     private function doesPayloadHaveAllLinksKey(ArtifactValuesRepresentation $payload): bool

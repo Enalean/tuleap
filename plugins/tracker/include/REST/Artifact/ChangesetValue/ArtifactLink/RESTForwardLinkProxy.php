@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ForwardLink;
+use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
 
 /**
  * @psalm-immutable
@@ -46,8 +47,16 @@ final class RESTForwardLinkProxy implements ForwardLink
 
         return new self(
             (int) $link_payload[self::PAYLOAD_KEY_ID],
-            self::getLinkType($link_payload)
+            self::getLinkTypeFromLinksKey($link_payload)
         );
+    }
+
+    /**
+     * @throws Tracker_FormElement_InvalidFieldValueException
+     */
+    public static function fromAllLinksPayload(LinkWithDirectionRepresentation $all_links_payload): self
+    {
+        return new self($all_links_payload->id, self::getLinkTypeFromAllLinksKey($all_links_payload));
     }
 
     /**
@@ -62,7 +71,23 @@ final class RESTForwardLinkProxy implements ForwardLink
         }
     }
 
-    private static function getLinkType(array $link_payload): ?string
+    /**
+     * @throws Tracker_FormElement_InvalidFieldValueException
+     */
+    private static function getLinkTypeFromAllLinksKey(LinkWithDirectionRepresentation $all_link_payload): ?string
+    {
+        if (! is_string($all_link_payload->type)) {
+            throw new \Tracker_FormElement_InvalidFieldValueException(
+                'Artifact links "type" must be a string, use empty string for no type'
+            );
+        }
+        if ($all_link_payload->type === '') {
+            return null;
+        }
+        return $all_link_payload->type;
+    }
+
+    private static function getLinkTypeFromLinksKey(array $link_payload): ?string
     {
         if (! array_key_exists(self::PAYLOAD_KEY_TYPE, $link_payload) || ! is_string($link_payload[self::PAYLOAD_KEY_TYPE])) {
             return null;

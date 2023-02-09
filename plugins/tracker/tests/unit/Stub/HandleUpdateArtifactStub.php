@@ -23,11 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
+use Throwable;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfReverseLinks;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Link\HandleUpdateArtifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
@@ -35,16 +37,23 @@ final class HandleUpdateArtifactStub implements HandleUpdateArtifact
 {
     private int $unlink_reverse_artifact_method_call_count;
     private int $link_reverse_artifact_method_call_count;
+    private int $update_forward_artifact_method_call_count;
 
-    private function __construct()
+    private function __construct(private ?Throwable $exception)
     {
         $this->unlink_reverse_artifact_method_call_count = 0;
         $this->link_reverse_artifact_method_call_count   = 0;
+        $this->update_forward_artifact_method_call_count = 0;
     }
 
     public static function build(): self
     {
-        return new self();
+        return new self(null);
+    }
+
+    public static function withException(Throwable $exception): self
+    {
+        return new self($exception);
     }
 
     public function removeReverseLinks(Artifact $current_artifact, PFUser $submitter, CollectionOfReverseLinks $removed_reverse_links, ?NewChangesetCommentRepresentation $comment = null): Ok|Err
@@ -59,6 +68,15 @@ final class HandleUpdateArtifactStub implements HandleUpdateArtifact
         return Result::ok(null);
     }
 
+    public function updateForwardLinks(Artifact $current_artifact, PFUser $submitter, ChangesetValuesContainer $changeset_values_container, ?NewChangesetCommentRepresentation $comment = null,): void
+    {
+        $this->update_forward_artifact_method_call_count++;
+
+        if ($this->exception) {
+            throw $this->exception;
+        }
+    }
+
     public function getUnlinkReverseArtifactMethodCallCount(): int
     {
         return $this->unlink_reverse_artifact_method_call_count;
@@ -67,5 +85,10 @@ final class HandleUpdateArtifactStub implements HandleUpdateArtifact
     public function getLinkReverseArtifactMethodCallCount(): int
     {
         return $this->link_reverse_artifact_method_call_count;
+    }
+
+    public function getUpdateForwardArtifactMethodCallCount(): int
+    {
+        return $this->update_forward_artifact_method_call_count;
     }
 }

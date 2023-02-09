@@ -95,7 +95,6 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLi
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ReverseLinksRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
-use Tuleap\Tracker\Artifact\Link\ArtifactLinker;
 use Tuleap\Tracker\Artifact\Link\ArtifactUpdateHandler;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
@@ -763,23 +762,17 @@ class ArtifactsResource extends AuthenticatedResource
             $artifact_factory
         );
 
-        $artifact_linker = new ArtifactLinker(
-            $this->formelement_factory,
-            $changeset_creator,
-            new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), $artifact_factory),
-        );
-
         $artifact_from_rest_updater = new ArtifactUpdateHandler(
             $changeset_creator,
             $this->formelement_factory,
-            $artifact_factory
+            $artifact_factory,
+            $event_dispatcher
         );
 
         $this->sendAllowHeadersForArtifact();
 
         $put_handler = new PUTHandler(
             $fields_data_builder,
-            $updater,
             $reverse_link_retriever,
             $artifact_from_rest_updater,
             $transaction_executor,

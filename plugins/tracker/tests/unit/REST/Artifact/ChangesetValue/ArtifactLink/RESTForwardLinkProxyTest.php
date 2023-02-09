@@ -20,6 +20,9 @@
 
 namespace Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink;
 
+use Tracker_FormElement_InvalidFieldValueException;
+use Tuleap\Tracker\REST\v1\LinkWithDirectionRepresentation;
+
 final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testFromPayload()
@@ -41,5 +44,42 @@ final class RESTForwardLinkProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         $link = RESTForwardLinkProxy::fromPayload(['id' => 75]);
         self::assertSame(75, $link->getTargetArtifactId());
         self::assertNull($link->getType());
+    }
+
+    public function testItThrowsExceptionIfTheTypeKeyInAllLinksPayloadIsNotAString(): void
+    {
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
+
+        $all_link_payload            = new LinkWithDirectionRepresentation();
+        $all_link_payload->id        = 121;
+        $all_link_payload->direction = 'forward';
+
+        RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
+    }
+
+    public function testTheTypeAttributeIsNullWhenTheTypeKeyFromAllLinksPayloadIsAnEmptyString(): void
+    {
+        $all_link_payload            = new LinkWithDirectionRepresentation();
+        $all_link_payload->id        = 121;
+        $all_link_payload->direction = 'forward';
+        $all_link_payload->type      = '';
+
+        $forward_links = RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
+
+        self::assertSame(121, $forward_links->getTargetArtifactId());
+        self::assertNull($forward_links->getType());
+    }
+
+    public function testItReturnsTheProxyObjectWithTheIdAndType(): void
+    {
+        $all_link_payload            = new LinkWithDirectionRepresentation();
+        $all_link_payload->id        = 121;
+        $all_link_payload->direction = 'forward';
+        $all_link_payload->type      = '_is_child';
+
+        $forward_links = RESTForwardLinkProxy::fromAllLinksPayload($all_link_payload);
+
+        self::assertSame(121, $forward_links->getTargetArtifactId());
+        self::assertSame('_is_child', $forward_links->getType());
     }
 }
