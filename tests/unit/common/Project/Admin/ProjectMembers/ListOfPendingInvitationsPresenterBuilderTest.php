@@ -25,6 +25,8 @@ namespace Tuleap\Project\Admin\ProjectMembers;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\InviteBuddy\InvitationTestBuilder;
+use Tuleap\InviteBuddy\InviteBuddiesPresenter;
+use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PendingInvitationsForProjectRetrieverStub;
 use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
@@ -61,6 +63,7 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
             PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
             new TlpRelativeDatePresenterBuilder(),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
+            $this->createMock(InviteBuddiesPresenterBuilder::class),
         );
 
         self::assertNull(
@@ -78,6 +81,7 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
             PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
             new TlpRelativeDatePresenterBuilder(),
             $this->createMock(CSRFSynchronizerTokenProvider::class),
+            $this->createMock(InviteBuddiesPresenterBuilder::class),
         );
 
         self::assertNull(
@@ -94,6 +98,11 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')->willReturn($token);
 
+        $invite_buddies_presenter_builder = $this->createMock(InviteBuddiesPresenterBuilder::class);
+        $invite_buddies_presenter_builder
+            ->method('build')
+            ->willReturn($this->createMock(InviteBuddiesPresenter::class));
+
         $builder = new ListOfPendingInvitationsPresenterBuilder(
             $configuration,
             PendingInvitationsForProjectRetrieverStub::with(
@@ -102,6 +111,7 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
             ),
             new TlpRelativeDatePresenterBuilder(),
             $token_provider,
+            $invite_buddies_presenter_builder
         );
 
         $presenter = $builder->getPendingInvitationsPresenter($this->project, $this->user);
@@ -118,6 +128,11 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
         $token_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
         $token_provider->method('getCSRF')->willReturn(CSRFSynchronizerTokenStub::buildSelf());
 
+        $invite_buddies_presenter_builder = $this->createMock(InviteBuddiesPresenterBuilder::class);
+        $invite_buddies_presenter_builder
+            ->method('build')
+            ->willReturn($this->createMock(InviteBuddiesPresenter::class));
+
         $builder = new ListOfPendingInvitationsPresenterBuilder(
             $configuration,
             PendingInvitationsForProjectRetrieverStub::with(
@@ -127,6 +142,7 @@ class ListOfPendingInvitationsPresenterBuilderTest extends TestCase
             ),
             new TlpRelativeDatePresenterBuilder(),
             $token_provider,
+            $invite_buddies_presenter_builder,
         );
 
         $presenter = $builder->getPendingInvitationsPresenter($this->project, $this->user);

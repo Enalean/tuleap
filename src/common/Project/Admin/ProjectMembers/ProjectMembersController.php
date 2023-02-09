@@ -42,6 +42,8 @@ use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InvitationLimitChecker;
+use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
@@ -49,6 +51,7 @@ use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\ProjectPresentersBuilder;
 use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -160,10 +163,13 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $user_manager   = \UserManager::instance();
         $user_helper    = new UserHelper();
         $ugroup_manager = new UGroupManager();
-        $ugroup_binding = new UGroupBinding(
-            new UGroupUserDao(),
-            $ugroup_manager
+        $ugroup_binding = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
+        $configuration  = new InviteBuddyConfiguration($event_manager);
+        $invitation_dao = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new InvitationInstrumentation(Prometheus::instance()),
         );
+
         return new self(
             new ProjectMembersDAO(),
             $user_helper,
@@ -191,13 +197,18 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             ),
             new MembershipDelegationDao(),
             new ListOfPendingInvitationsPresenterBuilder(
-                new InviteBuddyConfiguration($event_manager),
-                new InvitationDao(
-                    new SplitTokenVerificationStringHasher(),
-                    new InvitationInstrumentation(Prometheus::instance()),
-                ),
+                $configuration,
+                $invitation_dao,
                 new TlpRelativeDatePresenterBuilder(),
                 new CSRFSynchronizerTokenProvider(),
+                new InviteBuddiesPresenterBuilder(
+                    new InvitationLimitChecker(
+                        $invitation_dao,
+                        $configuration
+                    ),
+                    $configuration,
+                    new ProjectPresentersBuilder(),
+                ),
             ),
         );
     }

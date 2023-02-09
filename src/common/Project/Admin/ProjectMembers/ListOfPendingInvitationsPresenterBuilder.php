@@ -25,6 +25,7 @@ namespace Tuleap\Project\Admin\ProjectMembers;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\InviteBuddy\Invitation;
+use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PendingInvitationsForProjectRetriever;
 use Tuleap\Project\Admin\Invitations\CSRFSynchronizerTokenProvider;
@@ -37,6 +38,7 @@ final class ListOfPendingInvitationsPresenterBuilder
         private PendingInvitationsForProjectRetriever $invitation_dao,
         private TlpRelativeDatePresenterBuilder $date_presenter_builder,
         private CSRFSynchronizerTokenProvider $token_provider,
+        private InviteBuddiesPresenterBuilder $invite_buddies_presenter_builder,
     ) {
     }
 
@@ -81,6 +83,7 @@ final class ListOfPendingInvitationsPresenterBuilder
             ManageProjectInvitationsController::getUrl($project),
             CSRFSynchronizerTokenPresenter::fromToken($this->token_provider->getCSRF($project)),
             array_values($deduplicated_pending_invitations),
+            $this->invite_buddies_presenter_builder->build($current_user, $project),
         );
     }
 }

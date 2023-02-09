@@ -1898,6 +1898,9 @@ msgstr "Configurações dos Convites atualizadas com sucesso."
 msgid "Invite"
 msgstr "Convidar"
 
+msgid "Invite a co-worker"
+msgstr ""
+
 msgid "Invite someone to join %s"
 msgstr "Convidar alguém para %s"
 

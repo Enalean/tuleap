@@ -27,6 +27,7 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PendingInvitationsForProjectRetrieverStub;
 use Tuleap\Layout\BaseLayout;
@@ -73,6 +74,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                 PendingInvitationsForProjectRetrieverStub::withoutInvitation(),
                 $this->createStub(TlpRelativeDatePresenterBuilder::class),
                 $this->createMock(CSRFSynchronizerTokenProvider::class),
+                $this->createMock(InviteBuddiesPresenterBuilder::class),
             )
         );
     }

@@ -26,6 +26,7 @@ use ProjectManager;
 use TemplateRendererFactory;
 use ThemeVariant;
 use ThemeVariantColor;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
@@ -36,6 +37,12 @@ use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\HelpDropdown\VersionNumberExtractor;
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InvitationLimitChecker;
+use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -233,6 +240,21 @@ class BurningParrotTheme extends BaseLayout
 
         $current_context_section = $this->getNewDropdownCurrentContextSectionFromParams($params);
 
+        $configuration                    = new InviteBuddyConfiguration($this->event_manager);
+        $invitation_dao                   = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new InvitationInstrumentation(Prometheus::instance()),
+        );
+        $invite_buddies_presenter_builder = new InviteBuddiesPresenterBuilder(
+            new InvitationLimitChecker(
+                $invitation_dao,
+                $configuration
+            ),
+            $configuration,
+            $project_presenters_builder,
+        );
+        $invite_buddies_presenter         = $invite_buddies_presenter_builder->build($this->current_user->user, $project);
+
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
             $this->current_user,
@@ -262,8 +284,7 @@ class BurningParrotTheme extends BaseLayout
             $this->theme_variation,
             $this->javascript_assets,
             $in_project_without_sidebar,
-            $project_presenters_builder,
-            $project,
+            $invite_buddies_presenter,
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
