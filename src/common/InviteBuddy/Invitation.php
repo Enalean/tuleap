@@ -44,6 +44,7 @@ final class Invitation
         public string $status,
         public int $created_on,
         public ?int $to_project_id,
+        public ?string $custom_message,
     ) {
     }
 }

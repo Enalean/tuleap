@@ -25,12 +25,13 @@ namespace Tuleap\InviteBuddy;
 
 final class InvitationTestBuilder
 {
-    private string $to_email      = 'jdoe@example.com';
-    private ?int $to_user_id      = null;
-    private int $from_user_id     = 101;
-    private int $created_on       = 1234567890;
-    private ?int $created_user_id = null;
-    private ?int $to_project_id   = null;
+    private string $to_email        = 'jdoe@example.com';
+    private ?int $to_user_id        = null;
+    private int $from_user_id       = 101;
+    private int $created_on         = 1234567890;
+    private ?int $created_user_id   = null;
+    private ?int $to_project_id     = null;
+    private ?string $custom_message = null;
 
     /**
      * @param Invitation::STATUS_* $status
@@ -107,6 +108,13 @@ final class InvitationTestBuilder
         return $this;
     }
 
+    public function withCustomMessage(string $custom_message): self
+    {
+        $this->custom_message = $custom_message;
+
+        return $this;
+    }
+
     public function build(): Invitation
     {
         return new Invitation(
@@ -118,6 +126,7 @@ final class InvitationTestBuilder
             $this->status,
             $this->created_on,
             $this->to_project_id,
+            $this->custom_message,
         );
     }
 }

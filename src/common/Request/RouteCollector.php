@@ -92,7 +92,12 @@ use Tuleap\InviteBuddy\AccountCreationFeedbackEmailNotifier;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
 use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationEmailNotifier;
 use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InvitationLimitChecker;
+use Tuleap\InviteBuddy\InvitationSender;
+use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
@@ -687,20 +692,40 @@ class RouteCollector
 
     public static function getManageProjectInvitationsController(): DispatchableWithRequest
     {
-        $invitation_dao = new InvitationDao(
+        $user_manager    = \UserManager::instance();
+        $instrumentation = new InvitationInstrumentation(Prometheus::instance());
+        $invitation_dao  = new InvitationDao(
             new SplitTokenVerificationStringHasher(),
-            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+            $instrumentation
         );
+
+        $invite_buddy_configuration = new InviteBuddyConfiguration(\EventManager::instance());
+
+        $delegation_dao = new MembershipDelegationDao();
 
         return new ManageProjectInvitationsController(
             new CSRFSynchronizerTokenProvider(),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new FeedbackSerializer(new \FeedbackDao())),
             $invitation_dao,
             $invitation_dao,
+            new InvitationSender(
+                new InvitationSenderGateKeeper(
+                    new \Valid_Email(),
+                    $invite_buddy_configuration,
+                    new InvitationLimitChecker($invitation_dao, $invite_buddy_configuration)
+                ),
+                new InvitationEmailNotifier(),
+                $user_manager,
+                $invitation_dao,
+                \BackendLogger::getDefaultLogger(),
+                $instrumentation,
+                new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
+                $delegation_dao,
+            ),
             new ProjectHistoryDao(),
             new SapiEmitter(),
             new ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
-            new RejectNonProjectMembersAdministratorMiddleware(\UserManager::instance(), new MembershipDelegationDao()),
+            new RejectNonProjectMembersAdministratorMiddleware($user_manager, $delegation_dao),
         );
     }
 
@@ -1021,7 +1046,7 @@ class RouteCollector
             new InvitationToEmailRequestExtractor(
                 new InvitationDao(
                     new SplitTokenVerificationStringHasher(),
-                    new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+                    new InvitationInstrumentation(Prometheus::instance())
                 ),
                 new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
             ),
@@ -1050,7 +1075,7 @@ class RouteCollector
             new InvitationToEmailRequestExtractor(
                 new InvitationDao(
                     new SplitTokenVerificationStringHasher(),
-                    new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+                    new InvitationInstrumentation(Prometheus::instance())
                 ),
                 new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
             ),
@@ -1076,7 +1101,7 @@ class RouteCollector
         $timezones_collection   = new \Account_TimezonesCollection();
         $invitation_dao         = new InvitationDao(
             new SplitTokenVerificationStringHasher(),
-            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+            new InvitationInstrumentation(Prometheus::instance())
         );
         $mail_renderer          = $renderer_factory->getRenderer(
             \ForgeConfig::get('codendi_dir') . '/src/templates/mail/'

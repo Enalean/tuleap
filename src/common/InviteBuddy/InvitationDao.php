@@ -96,15 +96,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
     public function searchBySplitToken(SplitToken $split_token): Invitation
     {
         $row = $this->getDB()->row(
-            'SELECT id,
-                to_email,
-                to_user_id,
-                from_user_id,
-                created_user_id,
-                status,
-                created_on,
-                to_project_id,
-                verifier
+            'SELECT *
             FROM invitations
             WHERE id = ?',
             $split_token->getID()
@@ -180,14 +172,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
     public function searchInvitationUsedToRegister(int $user_id): ?Invitation
     {
         $row = $this->getDB()->row(
-            'SELECT id,
-                    to_email,
-                    to_user_id,
-                    from_user_id,
-                    created_user_id,
-                    status,
-                    created_on,
-                    to_project_id
+            'SELECT *
                 FROM invitations
                 WHERE created_user_id = ?
                   AND status = ?',
@@ -209,14 +194,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($today, $nb_days): array {
                 $obsolete_invitations = $db->run(
-                    'SELECT id,
-                        to_email,
-                        to_user_id,
-                        from_user_id,
-                        created_user_id,
-                        status,
-                        created_on,
-                        to_project_id
+                    'SELECT *
                     FROM invitations
                     WHERE created_on < ?
                       AND created_user_id IS NULL
@@ -302,6 +280,7 @@ class InvitationDao extends DataAccessObject implements InvitationByIdRetriever,
             $row['status'],
             $row['created_on'],
             $row['to_project_id'],
+            $row['custom_message'],
         );
     }
 }

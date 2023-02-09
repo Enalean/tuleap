@@ -1880,6 +1880,9 @@ msgstr "Invitation terminée !"
 msgid "Invitation could not be sent to:"
 msgstr "L'invitation n'a pas pu être envoyée à :"
 
+msgid "Invitation has been resent"
+msgstr "L'invitation a été réenvoyée"
+
 msgid "Invitation has been successfully sent to:"
 msgstr "L'invitation a été envoyée à :"
 
@@ -3163,6 +3166,12 @@ msgid ""
 msgstr ""
 "La page demandée est en cours de chargement. Si ce n’est pas le cas, essayez "
 "<a href=\"%1$s\">%1$s</a>."
+
+msgid "Resend invitation"
+msgstr "Réenvoyer l'invitation"
+
+msgid "Resent invitation"
+msgstr "Invitation réenvoyée"
 
 msgid "Restricted user"
 msgstr "Utilisateur restreint"
