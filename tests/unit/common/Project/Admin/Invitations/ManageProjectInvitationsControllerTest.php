@@ -27,9 +27,13 @@ use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\InviteBuddy\InvitationByIdRetriever;
 use Tuleap\InviteBuddy\InvitationByIdRetrieverStub;
+use Tuleap\InviteBuddy\InvitationSender;
+use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
 use Tuleap\InviteBuddy\InvitationTestBuilder;
+use Tuleap\InviteBuddy\MustBeProjectAdminToInvitePeopleInProjectException;
 use Tuleap\InviteBuddy\PendingInvitationsWithdrawer;
 use Tuleap\InviteBuddy\PendingInvitationsWithdrawerStub;
+use Tuleap\InviteBuddy\UnableToSendInvitationsException;
 use Tuleap\Layout\Feedback\ISerializeFeedback;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\ForbiddenException;
@@ -53,7 +57,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
         $this->user    = UserTestBuilder::anActiveUser()->build();
     }
 
-    public function testErrorWhenRequestDoesNotTryToWithdrawAnInvitation(): void
+    public function testErrorWhenRequestDoesNotTryToWithdrawOrResendAnInvitation(): void
     {
         $token = CSRFSynchronizerTokenStub::buildSelf();
 
@@ -65,6 +69,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
             $feedback_serializer,
             InvitationByIdRetrieverStub::withoutMatchingInvitation(),
             $invitations_withdrawer,
+            $this->createMock(InvitationSender::class),
             $this->createMock(\ProjectHistoryDao::class),
         );
 
@@ -78,6 +83,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
         $controller->handle($request);
 
         self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
     }
 
     public function testErrorWhenTryingToRemoveAnUnknownInvitation(): void
@@ -92,6 +98,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
             $feedback_serializer,
             InvitationByIdRetrieverStub::withoutMatchingInvitation(),
             $invitations_withdrawer,
+            $this->createMock(InvitationSender::class),
             $this->createMock(\ProjectHistoryDao::class),
         );
 
@@ -107,6 +114,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
         $controller->handle($request);
 
         self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
     }
 
     public function testErrorWhenTryingToRemoveAnInvitationThatDoesNotBelongToProject(): void
@@ -126,6 +134,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
                     ->build()
             ),
             $invitations_withdrawer,
+            $this->createMock(InvitationSender::class),
             $this->createMock(\ProjectHistoryDao::class),
         );
 
@@ -141,6 +150,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
         $controller->handle($request);
 
         self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
     }
 
     public function testErrorWhenTryingToRemoveAnInvitationThatHasNotBeSentToAnEmail(): void
@@ -160,6 +170,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
                     ->build()
             ),
             $invitations_withdrawer,
+            $this->createMock(InvitationSender::class),
             $this->createMock(\ProjectHistoryDao::class),
         );
 
@@ -175,9 +186,10 @@ class ManageProjectInvitationsControllerTest extends TestCase
         $controller->handle($request);
 
         self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
     }
 
-    public function testHappyPath(): void
+    public function testWithdrawInvitation(): void
     {
         $token = CSRFSynchronizerTokenStub::buildSelf();
 
@@ -199,6 +211,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
                     ->build()
             ),
             $invitations_withdrawer,
+            $this->createMock(InvitationSender::class),
             $history_dao,
         );
 
@@ -212,6 +225,309 @@ class ManageProjectInvitationsControllerTest extends TestCase
         $response = $controller->handle($request);
 
         self::assertTrue($token->hasBeenChecked());
+        self::assertTrue($invitations_withdrawer->hasBeenCalled());
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertEquals('/project/111/admin/members', $response->getHeaderLine('Location'));
+        self::assertEquals(\Feedback::SUCCESS, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
+    }
+
+    public function testErrorWhenTryingToResendAnUnknownInvitation(): void
+    {
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
+        $feedback_serializer    = FeedbackSerializerStub::buildSelf();
+        $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
+
+        $controller = $this->buildController(
+            $token,
+            $feedback_serializer,
+            InvitationByIdRetrieverStub::withoutMatchingInvitation(),
+            $invitations_withdrawer,
+            $this->createMock(InvitationSender::class),
+            $this->createMock(\ProjectHistoryDao::class),
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $this->project)
+            ->withAttribute(\PFUser::class, $this->user)
+            ->withParsedBody([
+                'resend-invitation' => 42,
+            ]);
+
+        $this->expectException(NotFoundException::class);
+
+        $controller->handle($request);
+
+        self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
+    }
+
+    public function testErrorWhenTryingToResendAnInvitationThatDoesNotBelongToProject(): void
+    {
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
+        $feedback_serializer    = FeedbackSerializerStub::buildSelf();
+        $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
+
+        $controller = $this->buildController(
+            $token,
+            $feedback_serializer,
+            InvitationByIdRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(42)
+                    ->to('bob@example.com')
+                    ->toProjectId(112)
+                    ->build()
+            ),
+            $invitations_withdrawer,
+            $this->createMock(InvitationSender::class),
+            $this->createMock(\ProjectHistoryDao::class),
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $this->project)
+            ->withAttribute(\PFUser::class, $this->user)
+            ->withParsedBody([
+                'resend-invitation' => 42,
+            ]);
+
+        $this->expectException(NotFoundException::class);
+
+        $controller->handle($request);
+
+        self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
+    }
+
+    public function testErrorWhenTryingToResendAnInvitationThatHasNotBeSentToAnEmail(): void
+    {
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
+        $feedback_serializer    = FeedbackSerializerStub::buildSelf();
+        $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
+
+        $controller = $this->buildController(
+            $token,
+            $feedback_serializer,
+            InvitationByIdRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(42)
+                    ->to(102)
+                    ->toProjectId(111)
+                    ->build()
+            ),
+            $invitations_withdrawer,
+            $this->createMock(InvitationSender::class),
+            $this->createMock(\ProjectHistoryDao::class),
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $this->project)
+            ->withAttribute(\PFUser::class, $this->user)
+            ->withParsedBody([
+                'resend-invitation' => 42,
+            ]);
+
+        $this->expectException(NotFoundException::class);
+
+        $controller->handle($request);
+
+        self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
+    }
+
+    public function testResendInvitationThrowsErrorIfCurrentUserIsNotAllowedToResendInvitation(): void
+    {
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
+        $feedback_serializer    = FeedbackSerializerStub::buildSelf();
+        $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
+        $invitation_sender      = $this->createMock(InvitationSender::class);
+        $history_dao            = $this->createMock(\ProjectHistoryDao::class);
+
+        $history_dao
+            ->expects(self::never())
+            ->method('addHistory');
+
+        $invitation_sender
+            ->expects(self::once())
+            ->method('send')
+            ->willThrowException(new MustBeProjectAdminToInvitePeopleInProjectException());
+
+        $controller = $this->buildController(
+            $token,
+            $feedback_serializer,
+            InvitationByIdRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(42)
+                    ->to('bob@example.com')
+                    ->toProjectId(111)
+                    ->withCustomMessage('Viens on est bien')
+                    ->build()
+            ),
+            $invitations_withdrawer,
+            $invitation_sender,
+            $history_dao,
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $this->project)
+            ->withAttribute(\PFUser::class, $this->user)
+            ->withParsedBody([
+                'resend-invitation' => 42,
+            ]);
+
+        $this->expectException(ForbiddenException::class);
+        $controller->handle($request);
+
+        self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
+    }
+
+    public function testResendInvitationDisplaysErrorIfGateKeeperException(): void
+    {
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
+        $feedback_serializer    = FeedbackSerializerStub::buildSelf();
+        $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
+        $invitation_sender      = $this->createMock(InvitationSender::class);
+        $history_dao            = $this->createMock(\ProjectHistoryDao::class);
+
+        $history_dao
+            ->expects(self::never())
+            ->method('addHistory');
+
+        $invitation_sender
+            ->expects(self::once())
+            ->method('send')
+            ->willThrowException(new InvitationSenderGateKeeperException());
+
+        $controller = $this->buildController(
+            $token,
+            $feedback_serializer,
+            InvitationByIdRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(42)
+                    ->to('bob@example.com')
+                    ->toProjectId(111)
+                    ->withCustomMessage('Viens on est bien')
+                    ->build()
+            ),
+            $invitations_withdrawer,
+            $invitation_sender,
+            $history_dao,
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $this->project)
+            ->withAttribute(\PFUser::class, $this->user)
+            ->withParsedBody([
+                'resend-invitation' => 42,
+            ]);
+
+        $response = $controller->handle($request);
+
+        self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertEquals('/project/111/admin/members', $response->getHeaderLine('Location'));
+        self::assertEquals(\Feedback::ERROR, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
+    }
+
+    public function testResendInvitationDisplaysErrorIfUnableToSendInvitationsException(): void
+    {
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
+        $feedback_serializer    = FeedbackSerializerStub::buildSelf();
+        $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
+        $invitation_sender      = $this->createMock(InvitationSender::class);
+        $history_dao            = $this->createMock(\ProjectHistoryDao::class);
+
+        $history_dao
+            ->expects(self::never())
+            ->method('addHistory');
+
+        $invitation_sender
+            ->expects(self::once())
+            ->method('send')
+            ->willThrowException(new UnableToSendInvitationsException());
+
+        $controller = $this->buildController(
+            $token,
+            $feedback_serializer,
+            InvitationByIdRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(42)
+                    ->to('bob@example.com')
+                    ->toProjectId(111)
+                    ->withCustomMessage('Viens on est bien')
+                    ->build()
+            ),
+            $invitations_withdrawer,
+            $invitation_sender,
+            $history_dao,
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $this->project)
+            ->withAttribute(\PFUser::class, $this->user)
+            ->withParsedBody([
+                'resend-invitation' => 42,
+            ]);
+
+        $response = $controller->handle($request);
+
+        self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertEquals('/project/111/admin/members', $response->getHeaderLine('Location'));
+        self::assertEquals(\Feedback::ERROR, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
+    }
+
+    public function testResendInvitation(): void
+    {
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
+        $feedback_serializer    = FeedbackSerializerStub::buildSelf();
+        $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
+        $invitation_sender      = $this->createMock(InvitationSender::class);
+        $history_dao            = $this->createMock(\ProjectHistoryDao::class);
+
+        $history_dao
+            ->expects(self::once())
+            ->method('addHistory');
+
+        $invitation_sender
+            ->expects(self::once())
+            ->method('send')
+            ->with(
+                $this->user,
+                ['bob@example.com'],
+                $this->project,
+                null
+            );
+
+        $controller = $this->buildController(
+            $token,
+            $feedback_serializer,
+            InvitationByIdRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(42)
+                    ->to('bob@example.com')
+                    ->toProjectId(111)
+                    ->withCustomMessage('Viens on est bien')
+                    ->build()
+            ),
+            $invitations_withdrawer,
+            $invitation_sender,
+            $history_dao,
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $this->project)
+            ->withAttribute(\PFUser::class, $this->user)
+            ->withParsedBody([
+                'resend-invitation' => 42,
+            ]);
+
+        $response = $controller->handle($request);
+
+        self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
         self::assertEquals(302, $response->getStatusCode());
         self::assertEquals('/project/111/admin/members', $response->getHeaderLine('Location'));
         self::assertEquals(\Feedback::SUCCESS, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
@@ -222,6 +538,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
         ISerializeFeedback $feedback_serializer,
         InvitationByIdRetriever $invitation_by_id_retriever,
         PendingInvitationsWithdrawer $invitations_withdrawer,
+        InvitationSender $invitation_sender,
         \ProjectHistoryDao $history_dao,
     ): ManageProjectInvitationsController {
         $csrf_provider = $this->createMock(CSRFSynchronizerTokenProvider::class);
@@ -235,6 +552,7 @@ class ManageProjectInvitationsControllerTest extends TestCase
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $invitation_by_id_retriever,
             $invitations_withdrawer,
+            $invitation_sender,
             $history_dao,
             new NoopSapiEmitter(),
         );

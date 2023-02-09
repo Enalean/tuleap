@@ -30,6 +30,10 @@
                                     </td>
                                     <td>{{# date }}{{> tlp_relative_date }}{{/ date }}</td>
                                     <td class="tlp-table-cell-actions">
+                                        <button type="submit" class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" name="resend-invitation" value="{{ id }}">
+                                            <i class="tlp-button-icon fa-regular fa-trash-can" aria-hidden="true"></i>
+                                            {{# gettext }}Resend invitation{{/ gettext }}
+                                        </a>
                                         <button type="submit" class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline" name="withdraw-invitation" value="{{ id }}">
                                             <i class="tlp-button-icon fa-regular fa-trash-can" aria-hidden="true"></i>
                                             {{# gettext }}Withdraw invitation{{/ gettext }}

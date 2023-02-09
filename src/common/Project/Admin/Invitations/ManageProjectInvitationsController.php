@@ -27,10 +27,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
+use Tuleap\InviteBuddy\Invitation;
 use Tuleap\InviteBuddy\InvitationByIdRetriever;
 use Tuleap\InviteBuddy\InvitationHistoryEntry;
 use Tuleap\InviteBuddy\InvitationNotFoundException;
+use Tuleap\InviteBuddy\InvitationSender;
+use Tuleap\InviteBuddy\InvitationSenderGateKeeperException;
+use Tuleap\InviteBuddy\MustBeProjectAdminToInvitePeopleInProjectException;
 use Tuleap\InviteBuddy\PendingInvitationsWithdrawer;
+use Tuleap\InviteBuddy\UnableToSendInvitationsException;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
@@ -44,6 +49,7 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         private InvitationByIdRetriever $invitation_retriever,
         private PendingInvitationsWithdrawer $invitations_withdrawer,
+        private InvitationSender $invitation_sender,
         private \ProjectHistoryDao $history_dao,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
@@ -66,24 +72,16 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
             return $this->withdrawInvitation((int) $query_params['withdraw-invitation'], $project, $user);
         }
 
+        if (isset($query_params['resend-invitation'])) {
+            return $this->resendInvitation((int) $query_params['resend-invitation'], $project, $user);
+        }
+
         throw new ForbiddenException(_('Invalid request'));
     }
 
     private function withdrawInvitation(int $invitation_id, \Project $project, \PFUser $user): ResponseInterface
     {
-        try {
-            $invitation = $this->invitation_retriever->searchById($invitation_id);
-        } catch (InvitationNotFoundException $e) {
-            throw new NotFoundException(_('The invitation you want to withdraw cannot be found. Maybe it has already been removed?'));
-        }
-
-        if ($invitation->to_project_id !== (int) $project->getID()) {
-            throw new NotFoundException();
-        }
-
-        if (! $invitation->to_email) {
-            throw new NotFoundException();
-        }
+        $invitation = $this->getInvitation($invitation_id, $project);
 
         $this->invitations_withdrawer->withdrawPendingInvitationsForProject($invitation->to_email, (int) $project->getID());
         $this->history_dao->addHistory(
@@ -99,6 +97,57 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
             \Feedback::SUCCESS,
             _('Invitation has been withdrawn')
         ));
+    }
+
+    private function resendInvitation(int $invitation_id, \Project $project, \PFUser $user): ResponseInterface
+    {
+        $invitation = $this->getInvitation($invitation_id, $project);
+
+        try {
+            $this->invitation_sender->send($user, [$invitation->to_email], $project, null);
+        } catch (MustBeProjectAdminToInvitePeopleInProjectException) {
+            throw new ForbiddenException(
+                _("You don't have permission to manage members of this project.")
+            );
+        } catch (UnableToSendInvitationsException | InvitationSenderGateKeeperException $exception) {
+            return $this->createResponseForUser($user, $project, new NewFeedback(
+                \Feedback::ERROR,
+                $exception->getMessage(),
+            ));
+        }
+
+        $this->history_dao->addHistory(
+            $project,
+            $user,
+            new \DateTimeImmutable('now'),
+            InvitationHistoryEntry::InvitationResent->value,
+            '',
+            [],
+        );
+
+        return $this->createResponseForUser($user, $project, new NewFeedback(
+            \Feedback::SUCCESS,
+            _('Invitation has been resent')
+        ));
+    }
+
+    private function getInvitation(int $invitation_id, \Project $project): Invitation
+    {
+        try {
+            $invitation = $this->invitation_retriever->searchById($invitation_id);
+        } catch (InvitationNotFoundException $e) {
+            throw new NotFoundException(_('The invitation you want to withdraw cannot be found. Maybe it has already been removed?'));
+        }
+
+        if ($invitation->to_project_id !== (int) $project->getID()) {
+            throw new NotFoundException();
+        }
+
+        if (! $invitation->to_email) {
+            throw new NotFoundException();
+        }
+
+        return $invitation;
     }
 
     private function createResponseForUser(\PFUser $user, \Project $project, NewFeedback $feedback): ResponseInterface

@@ -25,11 +25,13 @@ namespace Tuleap\InviteBuddy;
 enum InvitationHistoryEntry: string
 {
     case InvitationWithdrawn = 'invitation_withdrawn';
+    case InvitationResent    = 'invitation_resent';
 
     public function getLabel(): string
     {
         return match ($this) {
             self::InvitationWithdrawn => _('Withdrawn invitation'),
+            self::InvitationResent => _('Resent invitation'),
         };
     }
 }
