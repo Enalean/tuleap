@@ -25,6 +25,7 @@ namespace Tuleap\InviteBuddy;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -72,12 +73,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
+        $user_manager              = RetrieveUserByIdStub::withNoUser();
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withNoUser(),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWithoutProject(),
-            $this->createMock(ProjectMemberAdder::class),
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWithoutProject(),
+                $this->createMock(MembershipDelegationDao::class),
+                $this->createMock(ProjectMemberAdder::class),
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -104,12 +112,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
+        $user_manager              = RetrieveUserByIdStub::withNoUser();
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withNoUser(),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWithoutProject(),
-            $this->createMock(ProjectMemberAdder::class),
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWithoutProject(),
+                $this->createMock(MembershipDelegationDao::class),
+                $this->createMock(ProjectMemberAdder::class),
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -132,7 +147,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(111)->build();
 
-        $new_user = UserTestBuilder::aUser()
+        $new_user = UserTestBuilder::anActiveUser()
             ->withId(104)
             ->withEmail('doe@example.com')
             ->build();
@@ -154,12 +169,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
         $this->invitation_instrumentation->expects(self::once())->method('incrementProjectInvitation');
 
+        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $project_admin);
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withUsers($new_user, $project_admin),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWith($project),
-            $project_member_adder,
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWith($project),
+                $this->createMock(MembershipDelegationDao::class),
+                $project_member_adder,
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -183,7 +205,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(111)->build();
 
-        $new_user = UserTestBuilder::aUser()
+        $new_user = UserTestBuilder::anActiveUser()
             ->withId(104)
             ->withEmail('doe@example.com')
             ->build();
@@ -207,12 +229,22 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('error')
             ->with("User #104 has been invited by user #102 to project #111, but user #102 is not project admin");
 
+        $delegation_dao = $this->createMock(MembershipDelegationDao::class);
+        $delegation_dao->method('doesUserHasMembershipDelegation')->willReturn(false);
+
+        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $not_anymore_a_project_admin);
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withUsers($new_user, $not_anymore_a_project_admin),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWith($project),
-            $project_member_adder,
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWith($project),
+                $delegation_dao,
+                $project_member_adder,
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -236,7 +268,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(111)->build();
 
-        $new_user = UserTestBuilder::aUser()
+        $new_user = UserTestBuilder::anActiveUser()
             ->withId(104)
             ->withEmail('doe@example.com')
             ->build();
@@ -261,12 +293,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('error')
             ->with("User #104 has been invited by user #102 to project #111, but user #102 is not active nor restricted");
 
+        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $not_anymore_a_project_admin);
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withUsers($new_user, $not_anymore_a_project_admin),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWith($project),
-            $project_member_adder,
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWith($project),
+                $this->createMock(MembershipDelegationDao::class),
+                $project_member_adder,
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -290,7 +329,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project = ProjectTestBuilder::aProject()->withId(111)->build();
 
-        $new_user = UserTestBuilder::aUser()
+        $new_user = UserTestBuilder::anActiveUser()
             ->withId(104)
             ->withEmail('doe@example.com')
             ->build();
@@ -310,12 +349,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('error')
             ->with("User #104 has been invited by user #102 to project #111, but we cannot find user #102");
 
+        $user_manager              = RetrieveUserByIdStub::withUsers($new_user);
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withUsers($new_user),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWith($project),
-            $project_member_adder,
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWith($project),
+                $this->createMock(MembershipDelegationDao::class),
+                $project_member_adder,
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -357,12 +403,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
+        $user_manager              = RetrieveUserByIdStub::withNoUser();
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withNoUser(),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWithoutProject(),
-            $this->createMock(ProjectMemberAdder::class),
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWithoutProject(),
+                $this->createMock(MembershipDelegationDao::class),
+                $this->createMock(ProjectMemberAdder::class),
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -416,12 +469,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
+        $user_manager              = RetrieveUserByIdStub::withUsers($new_user, $from_user, $from_another_user);
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withUsers($new_user, $from_user, $from_another_user),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWithoutProject(),
-            $this->createMock(ProjectMemberAdder::class),
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWithoutProject(),
+                $this->createMock(MembershipDelegationDao::class),
+                $this->createMock(ProjectMemberAdder::class),
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -461,12 +521,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
+        $user_manager              = RetrieveUserByIdStub::withNoUser();
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withNoUser(),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWithoutProject(),
-            $this->createMock(ProjectMemberAdder::class),
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWithoutProject(),
+                $this->createMock(MembershipDelegationDao::class),
+                $this->createMock(ProjectMemberAdder::class),
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -511,12 +578,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
+        $user_manager              = RetrieveUserByIdStub::withUsers($from_user);
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withUsers($from_user),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWithoutProject(),
-            $this->createMock(ProjectMemberAdder::class),
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWithoutProject(),
+                $this->createMock(MembershipDelegationDao::class),
+                $this->createMock(ProjectMemberAdder::class),
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );
@@ -562,12 +636,19 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->invitation_instrumentation->expects(self::once())->method('incrementUsedInvitation');
 
+        $user_manager              = RetrieveUserByIdStub::withUsers($from_user);
         $account_creation_feedback = new AccountCreationFeedback(
             $this->dao,
-            RetrieveUserByIdStub::withUsers($from_user),
+            $user_manager,
             $this->email_notifier,
-            ProjectByIDFactoryStub::buildWithoutProject(),
-            $this->createMock(ProjectMemberAdder::class),
+            new ProjectMemberAccordingToInvitationAdder(
+                $user_manager,
+                ProjectByIDFactoryStub::buildWithoutProject(),
+                $this->createMock(MembershipDelegationDao::class),
+                $this->createMock(ProjectMemberAdder::class),
+                $this->invitation_instrumentation,
+                $this->logger,
+            ),
             $this->invitation_instrumentation,
             $this->logger,
         );

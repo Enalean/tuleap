@@ -47,9 +47,6 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
     private LoggerInterface|MockObject $logger;
     private InvitationInstrumentation&MockObject $instrumentation;
     private MockObject&MembershipDelegationDao $delegation_dao;
-    /**
-     * @var MockObject|\ProjectHistoryDao|(\ProjectHistoryDao&MockObject)
-     */
     private \ProjectHistoryDao&MockObject $history_dao;
 
     protected function setUp(): void

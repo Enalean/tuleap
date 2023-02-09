@@ -22,8 +22,13 @@
  */
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
@@ -106,6 +111,41 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                usleep(250000);
         }
 
+        $logger                     = \BackendLogger::getDefaultLogger();
+        $user_manager               = \UserManager::instance();
+        $project_manager            = ProjectManager::instance();
+        $invitation_instrumentation = new InvitationInstrumentation(Prometheus::instance());
+        $invitation_dao             = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            $invitation_instrumentation
+        );
+
+        $project_member_adder = new ProjectMemberAccordingToInvitationAdder(
+            $user_manager,
+            $project_manager,
+            new MembershipDelegationDao(),
+            ProjectMemberAdderWithStatusCheckAndNotifications::build(),
+            $invitation_instrumentation,
+            $logger
+        );
+
+        foreach ($users_array as $user_id) {
+            $invitation = $invitation_dao->searchInvitationUsedToRegister($user_id);
+            if (! $invitation || $invitation->to_user_id) {
+                continue;
+            }
+
+            $just_created_user = $user_manager->getUserById($user_id);
+            if (! $just_created_user) {
+                continue;
+            }
+
+            $project_member_adder->addUserToProjectAccordingToInvitation(
+                $just_created_user,
+                $invitation,
+            );
+        }
+
         if (count($users_array) > 1) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
@@ -128,7 +168,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
 
         $invitation_dao           = new InvitationDao(
             new SplitTokenVerificationStringHasher(),
-            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+            new InvitationInstrumentation(Prometheus::instance())
         );
         $nb_asked_to_be_validated = count($users_array);
 
@@ -220,7 +260,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         $user_manager   = UserManager::instance();
         $invitation_dao = new InvitationDao(
             new SplitTokenVerificationStringHasher(),
-            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
+            new InvitationInstrumentation(Prometheus::instance())
         );
         foreach ($users_array as $user_id) {
             $user = $user_manager->getUserById($user_id);

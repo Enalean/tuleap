@@ -315,9 +315,9 @@ class UserDao extends \Tuleap\DB\DataAccessObject
      * @todo: define a global time object that would give the same time to all
      * actions on an execution.
      */
-    public function storeLoginSuccess($user_id, $time): void
+    public function storeLoginSuccess($user_id, $time): bool
     {
-        $this->getDB()->tryFlatTransaction(function (\ParagonIE\EasyDB\EasyDB $db) use ($user_id, $time) {
+        return $this->getDB()->tryFlatTransaction(function (\ParagonIE\EasyDB\EasyDB $db) use ($user_id, $time): bool {
             $this->flagUserAsFirstTimerIfItIsTheirFirstLogin((int) $user_id);
             $sql = 'UPDATE user_access
                 SET nb_auth_failure = 0,
@@ -326,6 +326,7 @@ class UserDao extends \Tuleap\DB\DataAccessObject
                     last_access_date = ?
                 WHERE user_id = ?';
             $this->getDB()->run($sql, $time, $time, $user_id);
+            return 1 === $this->getDB()->cell("SELECT is_first_timer FROM user WHERE user_id = ?", $user_id);
         });
     }
 
