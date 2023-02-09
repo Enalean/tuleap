@@ -45,7 +45,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
 
-class ManageProjectInvitationsControllerTest extends TestCase
+final class ManageProjectInvitationsControllerTest extends TestCase
 {
     private const PROJECT_ID = 111;
     private \Project $project;
@@ -488,10 +488,6 @@ class ManageProjectInvitationsControllerTest extends TestCase
         $invitation_sender      = $this->createMock(InvitationSender::class);
         $history_dao            = $this->createMock(\ProjectHistoryDao::class);
 
-        $history_dao
-            ->expects(self::once())
-            ->method('addHistory');
-
         $invitation_sender
             ->expects(self::once())
             ->method('send')
@@ -499,7 +495,8 @@ class ManageProjectInvitationsControllerTest extends TestCase
                 $this->user,
                 ['bob@example.com'],
                 $this->project,
-                null
+                null,
+                true
             );
 
         $controller = $this->buildController(

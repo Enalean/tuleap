@@ -3297,6 +3297,9 @@ msgstr "Enviar pré-visualização"
 msgid "Send to"
 msgstr "Enviar para"
 
+msgid "Sent invitation"
+msgstr ""
+
 msgid "Service is not allowed in project."
 msgstr "O serviço não é permitido no projeto."
 

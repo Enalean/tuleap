@@ -721,6 +721,7 @@ class RouteCollector
                 $instrumentation,
                 new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
                 $delegation_dao,
+                new \ProjectHistoryDao(),
             ),
             new ProjectHistoryDao(),
             new SapiEmitter(),
