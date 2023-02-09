@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
@@ -31,7 +32,13 @@ use Tuleap\HelpDropdown\HelpDropdownPresenterBuilder;
 use Tuleap\HelpDropdown\ReleaseLinkDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\HelpDropdown\VersionNumberExtractor;
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\InviteBuddy\InvitationDao;
+use Tuleap\InviteBuddy\InvitationInstrumentation;
+use Tuleap\InviteBuddy\InvitationLimitChecker;
 use Tuleap\InviteBuddy\InviteBuddiesPresenter;
+use Tuleap\InviteBuddy\InviteBuddiesPresenterBuilder;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
@@ -281,9 +288,23 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $body_class[] = 'has-visible-platform-banner';
         }
 
-        $project_presenters_builder = new \Tuleap\Project\CachedProjectPresentersBuilder(
+        $project_presenters_builder       = new \Tuleap\Project\CachedProjectPresentersBuilder(
             new ProjectPresentersBuilder()
         );
+        $configuration                    = new InviteBuddyConfiguration($this->getEventManager());
+        $invitation_dao                   = new InvitationDao(
+            new SplitTokenVerificationStringHasher(),
+            new InvitationInstrumentation(Prometheus::instance()),
+        );
+        $invite_buddies_presenter_builder = new InviteBuddiesPresenterBuilder(
+            new InvitationLimitChecker(
+                $invitation_dao,
+                $configuration
+            ),
+            $configuration,
+            $project_presenters_builder,
+        );
+        $invite_buddies_presenter         = $invite_buddies_presenter_builder->build($current_user->user, $project);
 
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user->user,
@@ -291,11 +312,19 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $help_dropdown_presenter,
             $body_class,
             $this->detected_browser->isACompletelyBrokenBrowser(),
-            InviteBuddiesPresenter::build($current_user->user, $project, $project_presenters_builder),
+            $invite_buddies_presenter,
             $platform_banner,
         ));
 
-        $this->navbar($params, $current_user, $project, $banner, $platform_banner, $project_presenters_builder);
+        $this->navbar(
+            $params,
+            $current_user,
+            $project,
+            $banner,
+            $platform_banner,
+            $project_presenters_builder,
+            $invite_buddies_presenter,
+        );
     }
 
     private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class)
@@ -320,6 +349,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         ?BannerDisplay $project_banner,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
         \Tuleap\Project\ListOfProjectPresentersBuilder $project_presenters_builder,
+        InviteBuddiesPresenter $invite_buddies_presenter,
     ) {
         $csrf_logout_token = new CSRFSynchronizerToken('logout_action');
         $event_manager     = EventManager::instance();
@@ -373,7 +403,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            InviteBuddiesPresenter::build($current_user->user, $project, $project_presenters_builder),
+            $invite_buddies_presenter,
             $platform_banner
         ));
 

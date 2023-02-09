@@ -1918,6 +1918,9 @@ msgstr "La configuration des invitations a été sauvegardée avec succès."
 msgid "Invite"
 msgstr "Inviter"
 
+msgid "Invite a co-worker"
+msgstr "Inviter un collaborateur"
+
 msgid "Invite someone to join %s"
 msgstr "Inviter quelqu'un à rejoindre %s"
 

@@ -8,6 +8,23 @@
                     {{# csrf }}
                         {{> csrf_token_input }}
                     {{/ csrf }}
+                    {{# invite_buddies_presenter }}
+                        {{# can_buddies_be_invited }}
+                            <div class="tlp-table-actions">
+                                <button
+                                    type="button"
+                                    class="tlp-button-primary tlp-button-outline invite-buddies-button tlp-table-actions-element"
+                                    {{# is_limit_reached }}
+                                    disabled
+                                    title="{{# gettext }} You can no longer invite people to use %s you have reached the limit of %s invitations by day.| {{ instance_name }} | {{ max_limit_by_day }} {{/ gettext }}"
+                                    {{/ is_limit_reached }}
+                                >
+                                    <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
+                                    {{# gettext }}Invite a co-worker{{/ gettext }}
+                                </button>
+                            </div>
+                        {{/ can_buddies_be_invited }}
+                    {{/ invite_buddies_presenter }}
                     <table class="tlp-table">
                         <thead>
                             <tr>
