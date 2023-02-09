@@ -46,7 +46,7 @@ class AccountCreationFeedbackEmailNotifier
             'instance_name' => ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
         ];
         $mail->setBodyHtml($renderer->renderToString('account-creation-feedback', $presenter));
-        $mail->setBodyHtml($renderer->renderToString('account-creation-feedback-text', $presenter));
+        $mail->setBodyText($renderer->renderToString('account-creation-feedback-text', $presenter));
 
         return $mail->send();
     }
