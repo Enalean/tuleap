@@ -104,7 +104,7 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
         $invitation = $this->getInvitation($invitation_id, $project);
 
         try {
-            $this->invitation_sender->send($user, [$invitation->to_email], $project, null);
+            $this->invitation_sender->send($user, [$invitation->to_email], $project, null, true);
         } catch (MustBeProjectAdminToInvitePeopleInProjectException) {
             throw new ForbiddenException(
                 _("You don't have permission to manage members of this project.")
@@ -115,15 +115,6 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
                 $exception->getMessage(),
             ));
         }
-
-        $this->history_dao->addHistory(
-            $project,
-            $user,
-            new \DateTimeImmutable('now'),
-            InvitationHistoryEntry::InvitationResent->value,
-            '',
-            [],
-        );
 
         return $this->createResponseForUser($user, $project, new NewFeedback(
             \Feedback::SUCCESS,

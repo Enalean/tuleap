@@ -40,6 +40,7 @@ class InvitationSender
         private InvitationInstrumentation $instrumentation,
         private SplitTokenFormatter $split_token_formatter,
         private MembershipDelegationDao $delegation_dao,
+        private \ProjectHistoryDao $history_dao,
     ) {
     }
 
@@ -52,8 +53,13 @@ class InvitationSender
      * @throws UnableToSendInvitationsException
      * @throws MustBeProjectAdminToInvitePeopleInProjectException
      */
-    public function send(PFUser $current_user, array $emails, ?\Project $project, ?string $custom_message): array
-    {
+    public function send(
+        PFUser $current_user,
+        array $emails,
+        ?\Project $project,
+        ?string $custom_message,
+        bool $is_resent,
+    ): array {
         $to_project_id = $project ? (int) $project->getID() : null;
         $this->checkUserCanInviteIntoProject($project, $current_user);
 
@@ -86,7 +92,21 @@ class InvitationSender
             );
 
             if ($this->email_notifier->send($current_user, $recipient, $custom_message, $token, $project)) {
-                $this->instrumentation->incrementPlatformInvitation();
+                if ($project) {
+                    $this->instrumentation->incrementProjectInvitation();
+                    $this->history_dao->addHistory(
+                        $project,
+                        $current_user,
+                        new \DateTimeImmutable(),
+                        $is_resent
+                            ? InvitationHistoryEntry::InvitationResent->value
+                            : InvitationHistoryEntry::InvitationSent->value,
+                        '',
+                        [],
+                    );
+                } else {
+                    $this->instrumentation->incrementPlatformInvitation();
+                }
                 $this->dao->markAsSent($invitation_id);
             } else {
                 $this->logger->error("Unable to send invitation from user #{$current_user->getId()} to $email");

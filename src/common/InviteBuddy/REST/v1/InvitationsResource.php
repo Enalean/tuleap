@@ -101,6 +101,7 @@ class InvitationsResource extends AuthenticatedResource
             new InvitationInstrumentation(Prometheus::instance()),
             new PrefixedSplitTokenSerializer(new PrefixTokenInvitation()),
             new MembershipDelegationDao(),
+            new \ProjectHistoryDao(),
         );
 
 
@@ -112,7 +113,8 @@ class InvitationsResource extends AuthenticatedResource
                 $current_user,
                 array_filter($invitation->emails),
                 $project,
-                $invitation->custom_message
+                $invitation->custom_message,
+                false,
             );
 
             return new InvitationPOSTResultRepresentation($failures);
