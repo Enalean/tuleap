@@ -63,10 +63,6 @@ Cypress.Commands.add("regularUserLogin", () => {
     loginThroughWebUI("RegularUser", "Correct Horse Battery Staple");
 });
 
-Cypress.Commands.add("heisenbergLogin", () => {
-    loginThroughWebUI("heisenberg", "Correct Horse Battery Staple");
-});
-
 Cypress.Commands.add("secondProjectAdministratorLogin", () => {
     loginThroughWebUI("SecondProjectAdministrator", "Correct Horse Battery Staple");
 });
