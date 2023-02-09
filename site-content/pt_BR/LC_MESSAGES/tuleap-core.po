@@ -37,6 +37,12 @@ msgstr "## Algumas notas"
 msgid "%1$s Password Verification"
 msgstr "%1$s Verificação de senha"
 
+msgid "%1$s invited you to register to %2$s and join the project %3$s."
+msgstr ""
+
+msgid "%1$s invited you to register to %2$s."
+msgstr "%1$s convidou você para registrar-se em %2$s."
+
 #, php-format
 msgid "%1$s message(s) deleted"
 msgstr "Mensagem(s) de %1$s excluída(s)"
@@ -103,9 +109,6 @@ msgstr "%s tem vários usuários correspondentes."
 
 msgid "%s invited you to %s."
 msgstr "%s convidou você para %s."
-
-msgid "%s invited you to register to %s."
-msgstr "%s convidou você para registrar-se em %s."
 
 msgid "%s invited you, so you’re now a fresh member of this platform."
 msgstr ""

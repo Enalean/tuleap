@@ -37,6 +37,13 @@ msgstr "## Du contenu en Markdown"
 msgid "%1$s Password Verification"
 msgstr "Vérification du mot de passe de %1$s"
 
+msgid "%1$s invited you to register to %2$s and join the project %3$s."
+msgstr ""
+"%1$s vous invite à vous enregistrer sur %1$s pour rejoindre le projet %3$s."
+
+msgid "%1$s invited you to register to %2$s."
+msgstr "%1$s vous invite à vous enregistrer sur %1$s."
+
 #, php-format
 msgid "%1$s message(s) deleted"
 msgstr "%1$s message(s) détruit(s)"
@@ -103,9 +110,6 @@ msgstr "%s a plusieurs utilisateurs associés."
 
 msgid "%s invited you to %s."
 msgstr "%s vous a invité sur %s."
-
-msgid "%s invited you to register to %s."
-msgstr "%s vous invite à vous enregistrer sur %s."
 
 msgid "%s invited you, so you’re now a fresh member of this platform."
 msgstr ""

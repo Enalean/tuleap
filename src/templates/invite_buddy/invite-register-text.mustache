@@ -1,10 +1,20 @@
 {{# gettext }}Hello,{{/ gettext }}
 
+{{# project_name }}
 {{# gettext }}
-    %s invited you to register to %s. |
+    %1$s invited you to register to %2$s and join the project %3$s. |
+    {{ current_user_real_name }} |
+    {{ instance_name }} |
+    {{ project_name }}
+{{/ gettext }}
+{{/project_name}}
+{{^ project_name }}
+{{# gettext }}
+    %1$s invited you to register to %2$s. |
     {{ current_user_real_name }} |
     {{ instance_name }}
 {{/ gettext }}
+{{/ project_name }}
 
 
 To sign up:

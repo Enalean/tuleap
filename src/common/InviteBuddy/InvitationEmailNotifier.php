@@ -43,8 +43,13 @@ class InvitationEmailNotifier
         $this->template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates/invite_buddy");
     }
 
-    public function send(\PFUser $current_user, InvitationRecipient $recipient, ?string $custom_message, ConcealedString $token): bool
-    {
+    public function send(
+        \PFUser $current_user,
+        InvitationRecipient $recipient,
+        ?string $custom_message,
+        ConcealedString $token,
+        ?\Project $project,
+    ): bool {
         $mail = new Codendi_Mail();
         $mail->setLookAndFeelTemplate(new TemplateWithoutFooter());
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
@@ -53,7 +58,7 @@ class InvitationEmailNotifier
         if ($recipient->user) {
             $this->askToLogin($mail, $current_user, $recipient->user, $custom_message);
         } else {
-            $this->askToRegister($mail, $current_user, $recipient->email, $custom_message, $token);
+            $this->askToRegister($mail, $current_user, $recipient->email, $custom_message, $token, $project);
         }
 
         return $mail->send();
@@ -84,13 +89,14 @@ class InvitationEmailNotifier
         string $external_email,
         ?string $custom_message,
         ConcealedString $token,
+        ?\Project $project,
     ): void {
         $mail->setTo($external_email);
         $mail->setSubject(sprintf(_('Invitation to register to %s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
 
         $register_url = ServerHostname::HTTPSUrl() . '/account/register.php?invitation-token=' . $token->getString();
 
-        $presenter = new InvitationEmailRegisterPresenter($current_user, $register_url, $custom_message);
+        $presenter = new InvitationEmailRegisterPresenter($current_user, $register_url, $custom_message, $project);
         $body      = $this->template_renderer->renderToString("invite-register", $presenter);
         $body_text = $this->template_renderer->renderToString("invite-register-text", $presenter);
 
