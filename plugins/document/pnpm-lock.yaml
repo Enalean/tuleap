@@ -30,7 +30,7 @@ specifiers:
   moment: ^2.29.4
   moment-timezone: ^0.5.34
   moment-timezone-data-webpack-plugin: ^1.5.1
-  neverthrow: 5.0.0
+  neverthrow: 6.0.0
   pretty-kibibytes: ^4.0.4
   sprintf-js: ^1.1.2
   tus-js-client: ^2.3.1
@@ -90,7 +90,7 @@ devDependencies:
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.7.8
   moment-timezone-data-webpack-plugin: 1.5.1_moment-timezone@0.5.34
-  neverthrow: 5.0.0
+  neverthrow: 6.0.0
   vue-class-component: 7.2.6_vue@2.7.8
   vue-frag: 1.4.1_vue@2.7.8
   vue-property-decorator: 9.1.2_chk7q7rgeabwy64hfqmb36krqe
@@ -427,8 +427,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /neverthrow/5.0.0:
-    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
+  /neverthrow/6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: true
 
   /nopt/5.0.0:

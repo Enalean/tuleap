@@ -19,7 +19,7 @@
     "@tuleap/fault": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/sprintf-js": "^1.1.2",
-    "neverthrow": "^5.0.0"
+    "neverthrow": "^6.0.0"
   },
   "scripts": {
     "build": "vite build",

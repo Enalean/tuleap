@@ -28,7 +28,7 @@ specifiers:
   hybrids: ^8.1.8
   lodash: 2.4.0
   moment: ^2.29.4
-  neverthrow: ^5.0.0
+  neverthrow: ^6.0.0
   pretty-kibibytes: ^4.0.4
   sprintf-js: ^1.1.2
   tus-js-client: ^3.0.1
@@ -55,7 +55,7 @@ dependencies:
   hybrids: 8.1.8
   lodash: 2.4.0
   moment: 2.29.4
-  neverthrow: 5.0.0
+  neverthrow: 6.0.0
   pretty-kibibytes: 4.0.4
   sprintf-js: 1.1.2
   tus-js-client: 3.0.1
@@ -178,8 +178,8 @@ packages:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
-  /neverthrow/5.0.0:
-    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
+  /neverthrow/6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
     dev: false
 
   /pretty-kibibytes/4.0.4:
