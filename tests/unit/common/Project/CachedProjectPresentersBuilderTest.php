@@ -58,18 +58,16 @@ final class CachedProjectPresentersBuilderTest extends TestCase
         $builder
             ->expects(self::exactly(2))
             ->method('getProjectPresenters')
-            ->withConsecutive(
-                [$current_user],
-                [$another_user],
-            )
-            ->willReturnOnConsecutiveCalls(
-                [
-                    $this->createMock(ProjectPresenter::class),
-                    $this->createMock(ProjectPresenter::class),
-                ],
-                [
-                    $this->createMock(ProjectPresenter::class),
-                ],
+            ->willReturnCallback(
+                fn (\PFUser $user): array => match ($user) {
+                    $current_user => [
+                        $this->createMock(ProjectPresenter::class),
+                        $this->createMock(ProjectPresenter::class),
+                    ],
+                    $another_user => [
+                        $this->createMock(ProjectPresenter::class),
+                    ],
+                }
             );
 
         $cache = new CachedProjectPresentersBuilder($builder);
