@@ -60,6 +60,9 @@ function account_redirect_after_login(PFUser $user, string $return_to): void
             } else {
                 $url = '/my/index.php';
             }
+        } elseif (preg_match('%^/projects/' . Rule_ProjectName::PATTERN_PROJECT_NAME . '$%', $returnToToken['path'] ?? '')) {
+            $url       = $return_to;
+            $return_to = '';
         } else {
             $url = '/my/redirect.php';
         }
@@ -68,6 +71,22 @@ function account_redirect_after_login(PFUser $user, string $return_to): void
             $url = '/my/index.php?pv=2';
         } else {
             $url = '/my/index.php';
+        }
+    }
+
+    if ($user->isFirstTimer() && ($url === '/my/' || $url === '/my/index.php')) {
+        $invitation_dao = new \Tuleap\InviteBuddy\InvitationDao(
+            new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher(),
+            new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance()),
+        );
+        $invitation     = $invitation_dao->searchInvitationUsedToRegister((int) $user->getId());
+        if ($invitation && $invitation->to_project_id) {
+            try {
+                $project = ProjectManager::instance()->getValidProjectById($invitation->to_project_id);
+                $url     = '/projects/' . urlencode($project->getUnixNameMixedCase());
+            } catch (Project_NotFoundException) {
+                // Not anymore valid project, redirect to /my/
+            }
         }
     }
 

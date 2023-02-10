@@ -99,6 +99,7 @@ use Tuleap\InviteBuddy\InvitationSender;
 use Tuleap\InviteBuddy\InvitationSenderGateKeeper;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\PrefixTokenInvitation;
+use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\IncludeCoreAssets;
@@ -1092,19 +1093,21 @@ class RouteCollector
 
     private static function getRegisterFormProcessor(): RegisterFormProcessor
     {
-        $event_manager          = EventManager::instance();
-        $user_manager           = \UserManager::instance();
-        $project_manager        = ProjectManager::instance();
-        $locale_switcher        = new LocaleSwitcher();
-        $mail_presenter_factory = new \MailPresenterFactory();
-        $renderer_factory       = TemplateRendererFactory::build();
-        $include_core_assets    = new IncludeCoreAssets();
-        $timezones_collection   = new \Account_TimezonesCollection();
-        $invitation_dao         = new InvitationDao(
+        $logger                     = \BackendLogger::getDefaultLogger();
+        $event_manager              = EventManager::instance();
+        $user_manager               = \UserManager::instance();
+        $project_manager            = ProjectManager::instance();
+        $locale_switcher            = new LocaleSwitcher();
+        $mail_presenter_factory     = new \MailPresenterFactory();
+        $renderer_factory           = TemplateRendererFactory::build();
+        $include_core_assets        = new IncludeCoreAssets();
+        $timezones_collection       = new \Account_TimezonesCollection();
+        $invitation_instrumentation = new InvitationInstrumentation(Prometheus::instance());
+        $invitation_dao             = new InvitationDao(
             new SplitTokenVerificationStringHasher(),
-            new InvitationInstrumentation(Prometheus::instance())
+            $invitation_instrumentation
         );
-        $mail_renderer          = $renderer_factory->getRenderer(
+        $mail_renderer              = $renderer_factory->getRenderer(
             \ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
         );
 
@@ -1118,10 +1121,16 @@ class RouteCollector
                         $invitation_dao,
                         $user_manager,
                         new AccountCreationFeedbackEmailNotifier(),
-                        $project_manager,
-                        ProjectMemberAdderWithStatusCheckAndNotifications::build(),
-                        new InvitationInstrumentation(Prometheus::instance()),
-                        \BackendLogger::getDefaultLogger(),
+                        new ProjectMemberAccordingToInvitationAdder(
+                            $user_manager,
+                            $project_manager,
+                            new MembershipDelegationDao(),
+                            ProjectMemberAdderWithStatusCheckAndNotifications::build(),
+                            $invitation_instrumentation,
+                            $logger
+                        ),
+                        $invitation_instrumentation,
+                        $logger,
                     )
                 ),
                 $timezones_collection,

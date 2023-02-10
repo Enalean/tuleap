@@ -608,7 +608,12 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $this->warnUserAboutAuthenticationAttempts($user);
             $this->warnUserAboutAdminReadOnlyPermission($user);
 
-            $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp());
+            $user->setIsFirstTimer(
+                $this->getDao()->storeLoginSuccess(
+                    $user->getId(),
+                    $_SERVER['REQUEST_TIME'] ?? (new DateTimeImmutable())->getTimestamp()
+                )
+            );
 
             \Tuleap\User\LoginInstrumentation::increment('success');
             $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user));

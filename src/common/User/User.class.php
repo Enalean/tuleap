@@ -1600,4 +1600,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         return $this->is_first_timer;
     }
+
+    public function setIsFirstTimer(bool $value): void
+    {
+        $this->is_first_timer = $value;
+    }
 }
