@@ -163,6 +163,31 @@ final class PUTHandlerTest extends TestCase
         self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
     }
 
+    public function testItDoesNotMakesTheReverseOfAnArtifactIfTheLinksKeyIsGiven(): void
+    {
+        \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
+
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(1)
+                                    ->withTrackerId(20)
+                                    ->build()
+        );
+
+
+        $links = ['id' => 12, 'type' => ''];
+
+        $value           = new ArtifactValuesRepresentation();
+        $value->links    = [$links];
+        $value->field_id = 1;
+
+        $values[] = $value;
+
+        $this->handle($values);
+        self::assertSame(0, $this->artifact_updater->getUnlinkReverseArtifactMethodCallCount());
+        self::assertSame(0, $this->artifact_updater->getLinkReverseArtifactMethodCallCount());
+        self::assertSame(1, $this->artifact_updater->getUpdateForwardArtifactMethodCallCount());
+    }
+
     public function testItLinksTheArtifactWithForwardAndReverseLink(): void
     {
         \ForgeConfig::setFeatureFlag(ReverseLinksFeatureFlag::FEATURE_FLAG_KEY, 1);
