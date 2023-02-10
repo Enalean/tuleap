@@ -38,6 +38,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Account\Register\AddAdditionalFieldUserRegistration;
 use Tuleap\User\Account\Register\BeforeRegisterFormValidationEvent;
+use Tuleap\User\Account\Register\RegisterFormValidationIssue;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -88,7 +89,10 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
                 return;
             }
             $site_key  = $configuration->getSiteKey();
-            $presenter = new Presenter($site_key);
+            $presenter = new Presenter(
+                $site_key,
+                $event->validation_issue?->getFieldError('captcha')
+            );
             $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
             $event->appendAdditionalFieldsInHtml($renderer->renderToString('user-registration', $presenter));
             $event->getLayout()->includeFooterJavascriptFile('https://www.google.com/recaptcha/api.js');
@@ -128,11 +132,12 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         $is_captcha_valid = $recaptcha_client->verify($challenge, $request->getIPAddress());
 
         if (! $is_captcha_valid) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-captcha', 'We have not been able to assert that you are not a robot, please try again')
+            $event->addValidationError(
+                RegisterFormValidationIssue::fromFieldName(
+                    'captcha',
+                    dgettext('tuleap-captcha', 'We have not been able to assert that you are not a robot, please try again'),
+                )
             );
-            $event->invalidateRegistration();
         }
     }
 

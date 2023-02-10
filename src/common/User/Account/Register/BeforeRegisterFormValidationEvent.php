@@ -28,7 +28,7 @@ final class BeforeRegisterFormValidationEvent implements Dispatchable
 {
     public const NAME = 'beforeRegisterFormValidationEvent';
 
-    private bool $is_registration_valid = true;
+    private ?RegisterFormValidationIssue $validation_error = null;
 
     public function __construct(private \HTTPRequest $request)
     {
@@ -39,13 +39,13 @@ final class BeforeRegisterFormValidationEvent implements Dispatchable
         return $this->request;
     }
 
-    public function invalidateRegistration(): void
+    public function addValidationError(RegisterFormValidationIssue $validation_error): void
     {
-        $this->is_registration_valid = false;
+        $this->validation_error = $validation_error;
     }
 
-    public function isRegistrationValid(): bool
+    public function getValidationError(): ?RegisterFormValidationIssue
     {
-        return $this->is_registration_valid;
+        return $this->validation_error;
     }
 }

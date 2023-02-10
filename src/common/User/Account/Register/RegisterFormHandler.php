@@ -24,6 +24,7 @@ namespace Tuleap\User\Account\Register;
 
 use ForgeConfig;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Rule_UserName;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\NeverThrow\Err;
@@ -39,6 +40,7 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
     public function __construct(
         private AccountRegister $account_register,
         private \Account_TimezonesCollection $timezones_collection,
+        private readonly EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -159,6 +161,12 @@ final class RegisterFormHandler implements IValidateFormAndCreateUser
             $date_list        = preg_split("/-/D", $request->get('form_expiry'), 3);
             $unix_expiry_time = mktime(0, 0, 0, (int) $date_list[1], (int) $date_list[2], (int) $date_list[0]);
             $expiry_date      = $unix_expiry_time;
+        }
+
+        $validation_error = $this->event_dispatcher->dispatch(new BeforeRegisterFormValidationEvent($request))->getValidationError();
+
+        if ($validation_error !== null) {
+            return Result::err($validation_error);
         }
 
         $status = 'P';

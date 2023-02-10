@@ -29,8 +29,11 @@ final class AddAdditionalFieldUserRegistration implements \Tuleap\Event\Dispatch
     public const NAME                         = 'addAdditionalFieldUserRegistration';
     private string $additional_fields_in_html = '';
 
-    public function __construct(private BaseLayout $layout, private \Codendi_Request $request)
-    {
+    public function __construct(
+        private BaseLayout $layout,
+        private \Codendi_Request $request,
+        public readonly ?RegisterFormValidationIssue $validation_issue,
+    ) {
     }
 
     public function getLayout(): BaseLayout

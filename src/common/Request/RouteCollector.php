@@ -1125,6 +1125,7 @@ class RouteCollector
                     )
                 ),
                 $timezones_collection,
+                $event_manager,
             ),
             new \Tuleap\User\MailConfirmationCodeGenerator(
                 $user_manager,

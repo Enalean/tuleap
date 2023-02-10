@@ -86,7 +86,7 @@ final class RegisterFormPresenterBuilder
         $form_register_purpose_error = $this->getFieldError('form_register_purpose', $form_validation_issue);
 
         $extra_plugin_field = $this->event_dispatcher
-            ->dispatch(new AddAdditionalFieldUserRegistration($layout, $request))
+            ->dispatch(new AddAdditionalFieldUserRegistration($layout, $request, $form_validation_issue))
             ->getAdditionalFieldsInHtml();
 
 
