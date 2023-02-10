@@ -67,22 +67,15 @@ class ProjectPermissionsSaverTest extends TestCase
         $history_dao
             ->expects(self::exactly(3))
             ->method('groupAddHistory')
-            ->withConsecutive(
-                [
-                    'perm_granted_for_mediawiki_standalone_readers',
-                    'ugroup_project_members_name_key,Developers',
-                    self::PROJECT_ID,
-                ],
-                [
-                    'perm_granted_for_mediawiki_standalone_writers',
-                    'Developers',
-                    self::PROJECT_ID,
-                ],
-                [
-                    'perm_granted_for_mediawiki_standalone_admins',
-                    'Developers',
-                    self::PROJECT_ID,
-                ],
+            ->willReturnCallback(
+                function (string $field_name, string $value, int $project_id): void {
+                    match (true) {
+                        $field_name === 'perm_granted_for_mediawiki_standalone_readers' && $value === 'ugroup_project_members_name_key,Developers' && $project_id === self::PROJECT_ID,
+                            $field_name === 'perm_granted_for_mediawiki_standalone_writers' && $value === 'Developers' && $project_id === self::PROJECT_ID,
+                            $field_name === 'perm_granted_for_mediawiki_standalone_admins' && $value === 'Developers' && $project_id === self::PROJECT_ID => true,
+                        default => throw new \LogicException(sprintf('Not expected call to groupAddHistory (%s | %s | %d)', $field_name, $value, $project_id))
+                    };
+                }
             );
 
         $saver->save(

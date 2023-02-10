@@ -90,24 +90,50 @@ final class ACLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSetsACLOnDirectoryWhenNoReaders(): void
     {
         $this->backend->method('resetacl');
-        $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,u:httpuser:rwx,g:gpig-ftp_writers:rwx', $this->path]);
+        $modify_acl_called_with_expected_values = false;
+        $this->backend->method('modifyacl')->willReturnCallback(
+            function (string $acl, string $path) use (&$modify_acl_called_with_expected_values): void {
+                if ($acl === 'd:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,u:httpuser:rwx,g:gpig-ftp_writers:rwx' && $path === $this->path) {
+                    $modify_acl_called_with_expected_values = true;
+                }
+            }
+        );
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, '');
+
+        self::assertTrue($modify_acl_called_with_expected_values);
     }
 
     public function testItSetsACLOnDirectoryWhenNoWriters(): void
     {
         $this->backend->method('resetacl');
-        $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_readers:rx', $this->path]);
+        $modify_acl_called_with_expected_values = false;
+        $this->backend->method('modifyacl')->willReturnCallback(
+            function (string $acl, string $path) use (&$modify_acl_called_with_expected_values): void {
+                if ($acl === 'd:u:httpuser:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_readers:rx' && $path === $this->path) {
+                    $modify_acl_called_with_expected_values = true;
+                }
+            }
+        );
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', $this->readers);
+
+        self::assertTrue($modify_acl_called_with_expected_values);
     }
 
     public function testItSetsACLOnDirectoryWhenNoReadersNorWriters(): void
     {
         $this->backend->method('resetacl');
-        $this->backend->expects($this->atLeastOnce())->method('modifyacl')->withConsecutive(['d:u:httpuser:rwx,u:httpuser:rwx', $this->path]);
+        $modify_acl_called_with_expected_values = false;
+        $this->backend->method('modifyacl')->willReturnCallback(
+            function (string $acl, string $path) use (&$modify_acl_called_with_expected_values): void {
+                if ($acl === 'd:u:httpuser:rwx,u:httpuser:rwx' && $path === $this->path) {
+                    $modify_acl_called_with_expected_values = true;
+                }
+            }
+        );
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', '');
+        self::assertTrue($modify_acl_called_with_expected_values);
     }
 }

@@ -138,9 +138,13 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
 
         $this->logger
             ->method('info')
-            ->withConsecutive(
-                ['1 Tuleap references found in merge request 2'],
-                ['|_ Reference to Tuleap artifact #42 found, cross-reference will be added in project the GitLab repository is integrated in.'],
+            ->willReturnCallback(
+                function (string $message): void {
+                    match ($message) {
+                        '1 Tuleap references found in merge request 2',
+                        '|_ Reference to Tuleap artifact #42 found, cross-reference will be added in project the GitLab repository is integrated in.' => true,
+                    };
+                }
             );
         $this->logger
             ->expects(self::once())
@@ -189,9 +193,13 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
 
         $this->logger
             ->method('info')
-            ->withConsecutive(
-                ['1 Tuleap references found in merge request 2'],
-                ['|_ Reference to Tuleap artifact #42 found, cross-reference will be added in project the GitLab repository is integrated in.']
+            ->willReturnCallback(
+                function (string $message): void {
+                    match ($message) {
+                        '1 Tuleap references found in merge request 2',
+                        '|_ Reference to Tuleap artifact #42 found, cross-reference will be added in project the GitLab repository is integrated in.' => true,
+                    };
+                }
             );
 
         $this->logger
@@ -267,41 +275,35 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
         $this->reference_manager
             ->expects(self::exactly(2))
             ->method('insertCrossReference')
-            ->withConsecutive(
-                [
-                    $this->callback(
-                        function (\CrossReference $cross_reference) {
-                            return $cross_reference->getRefSourceId() === 'root/repo01/2'
-                                && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
-                                && $cross_reference->getRefSourceKey() === 'gitlab_mr'
-                                && $cross_reference->getRefSourceGid() === 101
-                                && $cross_reference->getRefTargetId() === 42
-                                && $cross_reference->getRefTargetGid() === 110;
-                        }
-                    ),
-                ],
-                [
-                    $this->callback(
-                        function (\CrossReference $cross_reference) {
-                            return $cross_reference->getRefSourceId() === 'root/repo01/2'
-                                && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
-                                && $cross_reference->getRefSourceKey() === 'gitlab_mr'
-                                && $cross_reference->getRefSourceGid() === 101
-                                && $cross_reference->getRefTargetId() === 66
-                                && $cross_reference->getRefTargetGid() === 110;
-                        }
-                    ),
-                ]
+            ->willReturnCallback(
+                fn (\CrossReference $cross_reference): bool => match (true) {
+                    $cross_reference->getRefSourceId() === 'root/repo01/2'
+                        && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
+                        && $cross_reference->getRefSourceKey() === 'gitlab_mr'
+                        && $cross_reference->getRefSourceGid() === 101
+                        && $cross_reference->getRefTargetId() === 42
+                        && $cross_reference->getRefTargetGid() === 110,
+                    $cross_reference->getRefSourceId() === 'root/repo01/2'
+                        && $cross_reference->getRefSourceType() === 'plugin_gitlab_mr'
+                        && $cross_reference->getRefSourceKey() === 'gitlab_mr'
+                        && $cross_reference->getRefSourceGid() === 101
+                        && $cross_reference->getRefTargetId() === 66
+                        && $cross_reference->getRefTargetGid() === 110 => true
+                }
             );
 
         $this->logger
             ->method('info')
-            ->withConsecutive(
-                ['2 Tuleap references found in merge request 2'],
-                ['|_ Reference to Tuleap artifact #42 found, cross-reference will be added in project the GitLab repository is integrated in.'],
-                ['|  |_ Tuleap artifact #42 found'],
-                ['|_ Reference to Tuleap artifact #66 found, cross-reference will be added in project the GitLab repository is integrated in.'],
-                ['|  |_ Tuleap artifact #66 found'],
+            ->willReturnCallback(
+                function (string $message): void {
+                    match ($message) {
+                        '2 Tuleap references found in merge request 2',
+                        '|_ Reference to Tuleap artifact #42 found, cross-reference will be added in project the GitLab repository is integrated in.',
+                        '|  |_ Tuleap artifact #42 found',
+                        '|_ Reference to Tuleap artifact #66 found, cross-reference will be added in project the GitLab repository is integrated in.',
+                        '|  |_ Tuleap artifact #66 found' => true,
+                    };
+                }
             );
 
         $this->creator->createCrossReferencesFromMergeRequest($webhook_data, $integration);

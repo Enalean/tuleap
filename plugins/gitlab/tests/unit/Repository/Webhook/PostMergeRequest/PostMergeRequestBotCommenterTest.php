@@ -189,11 +189,14 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willThrowException(new GitlabRequestException(404, "not found"));
 
         $this->logger
-            ->expects(self::exactly(2))
             ->method('error')
-            ->withConsecutive(
-                ["An error occurred during automatically comment merge request #42"],
-                ["|  |_Error returned by the GitLab server: not found"],
+            ->willReturnCallback(
+                function (string $message): void {
+                    match ($message) {
+                        "An error occurred during automatically comment merge request #42",
+                        "|  |_Error returned by the GitLab server: not found" => true,
+                    };
+                }
             );
 
         $this->commenter->addCommentOnMergeRequest(

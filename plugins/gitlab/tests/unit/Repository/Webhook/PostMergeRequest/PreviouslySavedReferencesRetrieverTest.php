@@ -273,9 +273,10 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
         $this->tuleap_reference_retriever
             ->expects(self::exactly(2))
             ->method('retrieveTuleapReference')
-            ->withConsecutive(
-                [8],
-                [58]
+            ->willReturnCallback(
+                fn (int $artifact_id): \Reference => match ($artifact_id) {
+                    8, 58 => $this->createStub(\Reference::class)
+                }
             );
 
         self::assertEquals(

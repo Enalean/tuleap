@@ -101,8 +101,13 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $foobar_scope    = $this->buildFooBarScopeDefinition();
         $typevalue_scope = $this->buildTypeValueScopeDefinition();
         $this->authorized_scope_factory->method('getAuthorizedScopes')
-            ->withConsecutive([$user, $jenkins_app], [$user, $custom_app], [$user, $site_level_app])
-            ->willReturnOnConsecutiveCalls([$foobar_scope], [$foobar_scope, $typevalue_scope], [$foobar_scope]);
+            ->willReturnCallback(
+                fn (\PFUser $received_user, OAuth2App $app): array => match (true) {
+                    $received_user === $user && $app === $jenkins_app => [$foobar_scope],
+                    $received_user === $user && $app === $custom_app => [$foobar_scope, $typevalue_scope],
+                    $received_user === $user && $app === $site_level_app => [$foobar_scope],
+                }
+            );
         $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(AccountAppsController::getCSRFToken());
 
         $this->assertEquals(
