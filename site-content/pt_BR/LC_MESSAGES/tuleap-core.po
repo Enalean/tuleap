@@ -4191,6 +4191,10 @@ msgstr "Tipo"
 msgid "URL pointed by the reference"
 msgstr "URL apontada pela referência"
 
+#, php-format
+msgid "Unable to add %s as project member"
+msgstr ""
+
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Não foi possível obter as últimas atividades do projeto"
 
@@ -4209,6 +4213,12 @@ msgid "Unauthorized action for anonymous"
 msgstr "Ação não autorizada para usuários anônimos"
 
 msgid "Understood"
+msgstr ""
+
+msgid ""
+"Unfortunately we couldn't add %1$s as project member because they have "
+"restricted status and the project is configured to not accept restricted "
+"users."
 msgstr ""
 
 msgid "Unix Group Name"
@@ -4900,6 +4910,11 @@ msgstr ""
 "%s%s\n"
 "\n"
 "-- A Equipe %s"
+
+msgid ""
+"You invited %1$s with email %2$s to register to %3$s and join the project "
+"%4$s."
+msgstr ""
 
 msgid ""
 "You may have seen the invitation before but %s just sent you a reminder to "

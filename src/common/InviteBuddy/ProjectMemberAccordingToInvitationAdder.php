@@ -43,6 +43,7 @@ final class ProjectMemberAccordingToInvitationAdder
         private ProjectMemberAdder $project_member_adder,
         private InvitationInstrumentation $invitation_instrumentation,
         private LoggerInterface $logger,
+        private InvitationEmailNotifier $email_notifier,
     ) {
     }
 
@@ -77,6 +78,14 @@ final class ProjectMemberAccordingToInvitationAdder
 
         try {
             $project = $this->project_retriever->getValidProjectById($invitation_to_email->to_project_id);
+        } catch (\Project_NotFoundException $e) {
+            $this->logger->error(
+                "User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id}, but it appears that this project is not valid."
+            );
+            return;
+        }
+
+        try {
             $this->project_member_adder->addProjectMember($just_created_user, $project, $from_user);
             $this->invitation_instrumentation->incrementProjectInvitation();
         } catch (NotProjectAdminException) {
@@ -92,6 +101,11 @@ final class ProjectMemberAccordingToInvitationAdder
             $this->logger->error(
                 "Unable to add restricted user #{$just_created_user->getId()} to project #{$invitation_to_email->to_project_id}.",
             );
+            $this->email_notifier->informThatCannotAddRestrictedUserToProjectNotAllowingRestricted(
+                $from_user,
+                $just_created_user,
+                $project
+            );
         } catch (AlreadyProjectMemberException) {
             // I don't know how we can end up in this situation
             // but we don't need to do anything. This is fine.
@@ -99,10 +113,6 @@ final class ProjectMemberAccordingToInvitationAdder
             $this->logger->error(
                 "User that have been invited by email does not have an email. This should not happen.",
                 ['exception' => $e]
-            );
-        } catch (\Project_NotFoundException) {
-            $this->logger->error(
-                "User #{$just_created_user->getId()} has been invited to project #{$invitation_to_email->to_project_id}, but it appears that this project is not valid."
             );
         } catch (\Exception $e) {
             $this->logger->error("Got an unexpected error while adding an invited user to a project", ['exception' => $e]);
