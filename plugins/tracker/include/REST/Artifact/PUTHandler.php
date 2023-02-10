@@ -65,7 +65,7 @@ final class PUTHandler
                     $reverse_link_collection = $changeset_values->getArtifactLinkValue()?->getSubmittedReverseLinks();
 
                     $stored_reverse_links = $this->reverse_links_retriever->retrieveReverseLinks($artifact, $submitter);
-                    if ($reverse_link_collection !== null && $changeset_values->getArtifactLinkValue()?->getParent() === null) {
+                    if ($reverse_link_collection !== null && $changeset_values->getArtifactLinkValue()?->getParent() === null && ! $this->isLinkKeyUsed($values)) {
                         $this->artifact_update_handler->addReverseLink($artifact, $submitter, $reverse_link_collection->differenceById($stored_reverse_links), $comment)
                                                       ->map(function () use ($artifact, $submitter, $reverse_link_collection, $stored_reverse_links, $comment) {
                                                                 $this->artifact_update_handler->removeReverseLinks($artifact, $submitter, $stored_reverse_links->differenceById($reverse_link_collection), $comment);
@@ -95,5 +95,15 @@ final class PUTHandler
         } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
+    }
+
+    private function isLinkKeyUsed(array $values): bool
+    {
+        foreach ($values as $value) {
+            if (is_array($value->links)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
