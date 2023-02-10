@@ -4901,6 +4901,11 @@ msgstr ""
 "\n"
 "-- A Equipe %s"
 
+msgid ""
+"You may have seen the invitation before but %s just sent you a reminder to "
+"join."
+msgstr ""
+
 msgid "You may only have access to private projects you are member of."
 msgstr "Você pode acessar projetos privados apenas se for membro deles."
 

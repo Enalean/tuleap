@@ -42,7 +42,7 @@ class InvitationEmailRegisterPresenter
     /**
      * @var string
      */
-    public $current_user_real_name;
+    public $from_user_real_name;
     /**
      * @var string
      */
@@ -53,9 +53,15 @@ class InvitationEmailRegisterPresenter
     public $recipient_name;
 
     public readonly ?string $project_name;
+    public readonly ?string $resent_user_real_name;
 
-    public function __construct(\PFUser $current_user, string $register_url, ?string $custom_message, ?\Project $project)
-    {
+    public function __construct(
+        \PFUser $from_user,
+        string $register_url,
+        ?string $custom_message,
+        ?\Project $project,
+        ?\PFUser $resent_from_user,
+    ) {
         $this->register_url       = $register_url;
         $this->custom_message     = (string) $custom_message;
         $this->has_custom_message = $custom_message && trim($custom_message) !== "";
@@ -64,7 +70,11 @@ class InvitationEmailRegisterPresenter
             ? EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()) . ' ' . $project->getPublicName()
             : null;
 
-        $this->current_user_real_name = $current_user->getRealName();
-        $this->instance_name          = (string) ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
+        $this->from_user_real_name = $from_user->getRealName();
+        $this->instance_name       = (string) ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
+
+        $this->resent_user_real_name = $resent_from_user && (int) $resent_from_user->getId() !== (int) $from_user->getId()
+            ? $resent_from_user->getRealName()
+            : null;
     }
 }
