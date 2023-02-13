@@ -705,6 +705,7 @@ class RouteCollector
         $delegation_dao = new MembershipDelegationDao();
 
         return new ManageProjectInvitationsController(
+            $user_manager,
             new CSRFSynchronizerTokenProvider(),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new FeedbackSerializer(new \FeedbackDao())),
             $invitation_dao,

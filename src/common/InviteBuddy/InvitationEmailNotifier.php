@@ -44,21 +44,30 @@ class InvitationEmailNotifier
     }
 
     public function send(
-        \PFUser $current_user,
+        \PFUser $from_user,
         InvitationRecipient $recipient,
         ?string $custom_message,
         ConcealedString $token,
         ?\Project $project,
+        ?\PFUser $resent_from_user,
     ): bool {
         $mail = new Codendi_Mail();
         $mail->setLookAndFeelTemplate(new TemplateWithoutFooter());
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
-        $mail->addAdditionalHeader('Reply-To', $current_user->getEmail());
+        $mail->addAdditionalHeader('Reply-To', $from_user->getEmail());
 
         if ($recipient->user) {
-            $this->askToLogin($mail, $current_user, $recipient->user, $custom_message);
+            $this->askToLogin($mail, $from_user, $recipient->user, $custom_message);
         } else {
-            $this->askToRegister($mail, $current_user, $recipient->email, $custom_message, $token, $project);
+            $this->askToRegister(
+                $mail,
+                $from_user,
+                $recipient->email,
+                $custom_message,
+                $token,
+                $project,
+                $resent_from_user,
+            );
         }
 
         return $mail->send();
@@ -66,7 +75,7 @@ class InvitationEmailNotifier
 
     public function askToLogin(
         Codendi_Mail $mail,
-        \PFUser $current_user,
+        \PFUser $from_user,
         PFUser $recipient_user,
         ?string $custom_message,
     ): void {
@@ -75,7 +84,7 @@ class InvitationEmailNotifier
 
         $login_url = ServerHostname::HTTPSUrl() . '/account/login.php';
 
-        $presenter = new InvitationEmailLoginPresenter($current_user, $recipient_user, $login_url, $custom_message);
+        $presenter = new InvitationEmailLoginPresenter($from_user, $recipient_user, $login_url, $custom_message);
         $body      = $this->template_renderer->renderToString("invite-login", $presenter);
         $body_text = $this->template_renderer->renderToString("invite-login-text", $presenter);
 
@@ -85,18 +94,25 @@ class InvitationEmailNotifier
 
     public function askToRegister(
         Codendi_Mail $mail,
-        \PFUser $current_user,
+        \PFUser $from_user,
         string $external_email,
         ?string $custom_message,
         ConcealedString $token,
         ?\Project $project,
+        ?\PFUser $resent_from_user,
     ): void {
         $mail->setTo($external_email);
         $mail->setSubject(sprintf(_('Invitation to register to %s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
 
         $register_url = ServerHostname::HTTPSUrl() . '/account/register.php?invitation-token=' . $token->getString();
 
-        $presenter = new InvitationEmailRegisterPresenter($current_user, $register_url, $custom_message, $project);
+        $presenter = new InvitationEmailRegisterPresenter(
+            $from_user,
+            $register_url,
+            $custom_message,
+            $project,
+            $resent_from_user,
+        );
         $body      = $this->template_renderer->renderToString("invite-register", $presenter);
         $body_text = $this->template_renderer->renderToString("invite-register-text", $presenter);
 

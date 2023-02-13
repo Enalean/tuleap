@@ -24,7 +24,7 @@ namespace Tuleap\InviteBuddy;
 
 use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
+use Psr\Log\Test\TestLogger;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
@@ -44,7 +44,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
     private InvitationEmailNotifier|MockObject $email_notifier;
     private UserManager|MockObject $user_manager;
     private InvitationDao|MockObject $dao;
-    private LoggerInterface|MockObject $logger;
+    private TestLogger $logger;
     private InvitationInstrumentation&MockObject $instrumentation;
     private MockObject&MembershipDelegationDao $delegation_dao;
     private \ProjectHistoryDao&MockObject $history_dao;
@@ -58,7 +58,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->email_notifier  = $this->createMock(InvitationEmailNotifier::class);
         $this->user_manager    = $this->createMock(UserManager::class);
         $this->dao             = $this->createMock(InvitationDao::class);
-        $this->logger          = $this->createMock(LoggerInterface::class);
+        $this->logger          = new TestLogger();
         $this->instrumentation = $this->createMock(InvitationInstrumentation::class);
         $this->delegation_dao  = $this->createMock(MembershipDelegationDao::class);
         $this->history_dao     = $this->createMock(\ProjectHistoryDao::class);
@@ -90,7 +90,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->method('markAsSent');
         $this->instrumentation->method('incrementPlatformInvitation');
 
-        $this->sender->send($this->current_user, ["john@example.com"], null, null, false);
+        $this->sender->send($this->current_user, ["john@example.com"], null, null, null);
     }
 
     public function testItDoesNothingIfAllConditionsAreNotOk(): void
@@ -103,7 +103,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvitationSenderGateKeeperException::class);
 
-        $this->sender->send($this->current_user, ["john@example.com"], null, null, false, false);
+        $this->sender->send($this->current_user, ["john@example.com"], null, null, null);
     }
 
     public function testItSendAnInvitationForEachEmailAndLogStatus(): void
@@ -173,7 +173,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('markAsSent');
 
         self::assertEmpty(
-            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, "A custom message", false)
+            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, "A custom message", null)
         );
     }
 
@@ -256,7 +256,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('markAsSent');
 
         self::assertEmpty(
-            $this->sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", false)
+            $this->sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null)
         );
     }
 
@@ -340,7 +340,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('markAsSent');
 
         self::assertEmpty(
-            $this->sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", false)
+            $this->sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null)
         );
     }
 
@@ -367,7 +367,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(MustBeProjectAdminToInvitePeopleInProjectException::class);
 
-        $this->sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", false);
+        $this->sender->send($current_user, ["john@example.com", "doe@example.com"], $project, "A custom message", null);
     }
 
     public function testItIgnoresEmptyEmails(): void
@@ -405,7 +405,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->expects(self::once())
             ->method('incrementPlatformInvitation');
 
-        self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"], null, null, false));
+        self::assertEmpty($this->sender->send($this->current_user, ["", null, "doe@example.com"], null, null, null));
     }
 
     public function testItReturnsEmailsInFailureAndLogStatus(): void
@@ -457,17 +457,16 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->instrumentation
             ->expects(self::once())
             ->method('incrementPlatformInvitation');
-        $this->logger
-            ->expects(self::once())
-            ->method('error')
-            ->with("Unable to send invitation from user #123 to john@example.com");
 
         $this->dao->expects(self::once())->method('markAsError');
         $this->dao->expects(self::once())->method('markAsSent');
 
         self::assertEquals(
             ["john@example.com"],
-            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, null, false)
+            $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, null, null)
+        );
+        self::assertTrue(
+            $this->logger->hasError("Unable to send invitation from user #123 to john@example.com")
         );
     }
 
@@ -512,24 +511,19 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             );
 
-        $this->logger
-            ->expects(self::exactly(2))
-            ->method('error')
-            ->willReturnCallback(
-                function (string $message): void {
-                    match ($message) {
-                        "Unable to send invitation from user #123 to john@example.com",
-                        "Unable to send invitation from user #123 to doe@example.com" => true
-                    };
-                }
-            );
-
         $this->dao
             ->expects(self::exactly(2))
             ->method('markAsError');
 
         $this->expectException(UnableToSendInvitationsException::class);
 
-        $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, null, false);
+        $this->sender->send($this->current_user, ["john@example.com", "doe@example.com"], null, null, null);
+
+        self::assertTrue(
+            $this->logger->hasError("Unable to send invitation from user #123 to john@example.com")
+        );
+        self::assertTrue(
+            $this->logger->hasError("Unable to send invitation from user #123 to doe@example.com")
+        );
     }
 }

@@ -114,7 +114,7 @@ class InvitationsResource extends AuthenticatedResource
                 array_filter($invitation->emails),
                 $project,
                 $invitation->custom_message,
-                false,
+                null,
             );
 
             return new InvitationPOSTResultRepresentation($failures);

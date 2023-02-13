@@ -54,17 +54,17 @@ class InvitationSender
      * @throws MustBeProjectAdminToInvitePeopleInProjectException
      */
     public function send(
-        PFUser $current_user,
+        PFUser $from_user,
         array $emails,
         ?\Project $project,
         ?string $custom_message,
-        bool $is_resent,
+        ?PFUser $resent_from_user,
     ): array {
         $to_project_id = $project ? (int) $project->getID() : null;
-        $this->checkUserCanInviteIntoProject($project, $current_user);
+        $this->checkUserCanInviteIntoProject($project, $from_user);
 
         $emails = array_filter($emails);
-        $this->gate_keeper->checkNotificationsCanBeSent($current_user, $emails);
+        $this->gate_keeper->checkNotificationsCanBeSent($from_user, $emails);
 
         $now = (new \DateTimeImmutable())->getTimestamp();
 
@@ -79,7 +79,7 @@ class InvitationSender
 
             $invitation_id = $this->dao->create(
                 $now,
-                (int) $current_user->getId(),
+                (int) $from_user->getId(),
                 $email,
                 $recipient->getUserId(),
                 $to_project_id,
@@ -91,14 +91,22 @@ class InvitationSender
                 new SplitToken($invitation_id, $secret)
             );
 
-            if ($this->email_notifier->send($current_user, $recipient, $custom_message, $token, $project)) {
+            $successfully_sent = $this->email_notifier->send(
+                $from_user,
+                $recipient,
+                $custom_message,
+                $token,
+                $project,
+                $resent_from_user,
+            );
+            if ($successfully_sent) {
                 if ($project) {
                     $this->instrumentation->incrementProjectInvitation();
                     $this->history_dao->addHistory(
                         $project,
-                        $current_user,
+                        $from_user,
                         new \DateTimeImmutable(),
-                        $is_resent
+                        $resent_from_user
                             ? InvitationHistoryEntry::InvitationResent->value
                             : InvitationHistoryEntry::InvitationSent->value,
                         '',
@@ -109,7 +117,7 @@ class InvitationSender
                 }
                 $this->dao->markAsSent($invitation_id);
             } else {
-                $this->logger->error("Unable to send invitation from user #{$current_user->getId()} to $email");
+                $this->logger->error("Unable to send invitation from user #{$from_user->getId()} to $email");
                 $this->dao->markAsError($invitation_id);
                 $failures[] = $email;
             }
@@ -131,17 +139,17 @@ class InvitationSender
     /**
      * @throws MustBeProjectAdminToInvitePeopleInProjectException
      */
-    private function checkUserCanInviteIntoProject(?\Project $project, PFUser $current_user): void
+    private function checkUserCanInviteIntoProject(?\Project $project, PFUser $from_user): void
     {
         if (! $project) {
             return;
         }
 
-        if ($current_user->isAdmin((int) $project->getID())) {
+        if ($from_user->isAdmin((int) $project->getID())) {
             return;
         }
 
-        if ($this->delegation_dao->doesUserHasMembershipDelegation((int) $current_user->getId(), (int) $project->getID())) {
+        if ($this->delegation_dao->doesUserHasMembershipDelegation((int) $from_user->getId(), (int) $project->getID())) {
             return;
         }
 

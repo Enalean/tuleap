@@ -4976,6 +4976,13 @@ msgstr ""
 "\n"
 "-- L'équipe %s"
 
+msgid ""
+"You may have seen the invitation before but %s just sent you a reminder to "
+"join."
+msgstr ""
+"Vous avez peut-être déjà vu cette invitation précédemment mais %s vous "
+"envoie un rappel pour vous inscrire."
+
 msgid "You may only have access to private projects you are member of."
 msgstr ""
 "Vous pouvez seulement accéder aux projets privés dont vous êtes membre."

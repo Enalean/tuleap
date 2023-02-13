@@ -44,6 +44,8 @@ use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\User\RetrieveUserById;
 
 final class ManageProjectInvitationsControllerTest extends TestCase
 {
@@ -65,6 +67,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withNoUser(),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withoutMatchingInvitation(),
@@ -94,6 +97,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withNoUser(),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withoutMatchingInvitation(),
@@ -125,6 +129,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withNoUser(),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withMatchingInvitation(
@@ -161,6 +166,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withNoUser(),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withMatchingInvitation(
@@ -202,6 +208,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
             ->method('addHistory');
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withNoUser(),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withMatchingInvitation(
@@ -239,6 +246,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withNoUser(),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withoutMatchingInvitation(),
@@ -270,6 +278,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withNoUser(),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withMatchingInvitation(
@@ -306,6 +315,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withNoUser(),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withMatchingInvitation(
@@ -336,6 +346,8 @@ final class ManageProjectInvitationsControllerTest extends TestCase
 
     public function testResendInvitationThrowsErrorIfCurrentUserIsNotAllowedToResendInvitation(): void
     {
+        $from_user = UserTestBuilder::anActiveUser()->withId(101)->build();
+
         $token = CSRFSynchronizerTokenStub::buildSelf();
 
         $feedback_serializer    = FeedbackSerializerStub::buildSelf();
@@ -348,11 +360,12 @@ final class ManageProjectInvitationsControllerTest extends TestCase
             ->method('addHistory');
 
         $invitation_sender
-            ->expects(self::once())
+            ->expects(self::exactly(2))
             ->method('send')
             ->willThrowException(new MustBeProjectAdminToInvitePeopleInProjectException());
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withUser($from_user),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withMatchingInvitation(
@@ -383,6 +396,8 @@ final class ManageProjectInvitationsControllerTest extends TestCase
 
     public function testResendInvitationDisplaysErrorIfGateKeeperException(): void
     {
+        $from_user = UserTestBuilder::anActiveUser()->withId(101)->build();
+
         $token = CSRFSynchronizerTokenStub::buildSelf();
 
         $feedback_serializer    = FeedbackSerializerStub::buildSelf();
@@ -395,11 +410,12 @@ final class ManageProjectInvitationsControllerTest extends TestCase
             ->method('addHistory');
 
         $invitation_sender
-            ->expects(self::once())
+            ->expects(self::exactly(2))
             ->method('send')
             ->willThrowException(new InvitationSenderGateKeeperException());
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withUser($from_user),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withMatchingInvitation(
@@ -432,6 +448,8 @@ final class ManageProjectInvitationsControllerTest extends TestCase
 
     public function testResendInvitationDisplaysErrorIfUnableToSendInvitationsException(): void
     {
+        $from_user = UserTestBuilder::anActiveUser()->withId(101)->build();
+
         $token = CSRFSynchronizerTokenStub::buildSelf();
 
         $feedback_serializer    = FeedbackSerializerStub::buildSelf();
@@ -449,6 +467,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
             ->willThrowException(new UnableToSendInvitationsException());
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withUser($from_user),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withMatchingInvitation(
@@ -479,8 +498,154 @@ final class ManageProjectInvitationsControllerTest extends TestCase
         self::assertEquals(\Feedback::ERROR, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
     }
 
+    public function testResendInvitationFallbackToCurrentUserIfFormerUserIsNoMoreProjectAdmin(): void
+    {
+        $from_user = UserTestBuilder::anActiveUser()->withId(101)->build();
+
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
+        $feedback_serializer    = FeedbackSerializerStub::buildSelf();
+        $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
+        $invitation_sender      = $this->createMock(InvitationSender::class);
+        $history_dao            = $this->createMock(\ProjectHistoryDao::class);
+
+        $invitation_sender
+            ->expects(self::exactly(2))
+            ->method('send')
+            ->willReturnCallback(
+                function (
+                    \PFUser $arg_from_user,
+                    array $arg_emails,
+                    ?\Project $arg_project,
+                    ?string $arg_custom_message,
+                    ?\PFUser $arg_resent_from_user,
+                ) use ($from_user): array {
+                    if ((int) $arg_from_user->getId() === (int) $from_user->getId()) {
+                        throw new MustBeProjectAdminToInvitePeopleInProjectException();
+                    }
+
+                    if (
+                        (int) $arg_from_user->getId() === (int) $this->user->getId()
+                        && $arg_emails === ['bob@example.com']
+                        && $arg_project === $this->project
+                        && $arg_custom_message === null
+                        && (int) $arg_resent_from_user->getId() === (int) $this->user->getId()
+                    ) {
+                        return [];
+                    }
+
+                    throw new \Exception('Unexpected call te send()');
+                }
+            );
+
+        $controller = $this->buildController(
+            RetrieveUserByIdStub::withUser($from_user),
+            $token,
+            $feedback_serializer,
+            InvitationByIdRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(42)
+                    ->to('bob@example.com')
+                    ->toProjectId(111)
+                    ->withCustomMessage('Viens on est bien')
+                    ->build()
+            ),
+            $invitations_withdrawer,
+            $invitation_sender,
+            $history_dao,
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $this->project)
+            ->withAttribute(\PFUser::class, $this->user)
+            ->withParsedBody([
+                'resend-invitation' => 42,
+            ]);
+
+        $response = $controller->handle($request);
+
+        self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertEquals('/project/111/admin/members', $response->getHeaderLine('Location'));
+        self::assertEquals(\Feedback::SUCCESS, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
+    }
+
+    public function testResendInvitationFallbackToCurrentUserIfFormerUserSentTooMuchInvitations(): void
+    {
+        $from_user = UserTestBuilder::anActiveUser()->withId(101)->build();
+
+        $token = CSRFSynchronizerTokenStub::buildSelf();
+
+        $feedback_serializer    = FeedbackSerializerStub::buildSelf();
+        $invitations_withdrawer = PendingInvitationsWithdrawerStub::buildSelf();
+        $invitation_sender      = $this->createMock(InvitationSender::class);
+        $history_dao            = $this->createMock(\ProjectHistoryDao::class);
+
+        $invitation_sender
+            ->expects(self::exactly(2))
+            ->method('send')
+            ->willReturnCallback(
+                function (
+                    \PFUser $arg_from_user,
+                    array $arg_emails,
+                    ?\Project $arg_project,
+                    ?string $arg_custom_message,
+                    ?\PFUser $arg_resent_from_user,
+                ) use ($from_user): array {
+                    if ((int) $arg_from_user->getId() === (int) $from_user->getId()) {
+                        throw new InvitationSenderGateKeeperException();
+                    }
+
+                    if (
+                        (int) $arg_from_user->getId() === (int) $this->user->getId()
+                        && $arg_emails === ['bob@example.com']
+                        && $arg_project === $this->project
+                        && $arg_custom_message === null
+                        && (int) $arg_resent_from_user->getId() === (int) $this->user->getId()
+                    ) {
+                        return [];
+                    }
+
+                    throw new \Exception('Unexpected call te send()');
+                }
+            );
+
+        $controller = $this->buildController(
+            RetrieveUserByIdStub::withUser($from_user),
+            $token,
+            $feedback_serializer,
+            InvitationByIdRetrieverStub::withMatchingInvitation(
+                InvitationTestBuilder::aSentInvitation(42)
+                    ->to('bob@example.com')
+                    ->toProjectId(111)
+                    ->withCustomMessage('Viens on est bien')
+                    ->build()
+            ),
+            $invitations_withdrawer,
+            $invitation_sender,
+            $history_dao,
+        );
+
+        $request = (new NullServerRequest())
+            ->withAttribute(\Project::class, $this->project)
+            ->withAttribute(\PFUser::class, $this->user)
+            ->withParsedBody([
+                'resend-invitation' => 42,
+            ]);
+
+        $response = $controller->handle($request);
+
+        self::assertTrue($token->hasBeenChecked());
+        self::assertFalse($invitations_withdrawer->hasBeenCalled());
+        self::assertEquals(302, $response->getStatusCode());
+        self::assertEquals('/project/111/admin/members', $response->getHeaderLine('Location'));
+        self::assertEquals(\Feedback::SUCCESS, $feedback_serializer->getCapturedFeedbacks()[0]->getLevel());
+    }
+
     public function testResendInvitation(): void
     {
+        $from_user = UserTestBuilder::anActiveUser()->withId(101)->build();
+
         $token = CSRFSynchronizerTokenStub::buildSelf();
 
         $feedback_serializer    = FeedbackSerializerStub::buildSelf();
@@ -492,14 +657,15 @@ final class ManageProjectInvitationsControllerTest extends TestCase
             ->expects(self::once())
             ->method('send')
             ->with(
-                $this->user,
+                $from_user,
                 ['bob@example.com'],
                 $this->project,
-                null,
-                true
+                'Viens on est bien',
+                $this->user,
             );
 
         $controller = $this->buildController(
+            RetrieveUserByIdStub::withUser($from_user),
             $token,
             $feedback_serializer,
             InvitationByIdRetrieverStub::withMatchingInvitation(
@@ -531,6 +697,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
     }
 
     private function buildController(
+        RetrieveUserById $user_manager,
         CSRFSynchronizerTokenInterface $token,
         ISerializeFeedback $feedback_serializer,
         InvitationByIdRetriever $invitation_by_id_retriever,
@@ -545,6 +712,7 @@ final class ManageProjectInvitationsControllerTest extends TestCase
             ->willReturn($token);
 
         return new ManageProjectInvitationsController(
+            $user_manager,
             $csrf_provider,
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             $invitation_by_id_retriever,

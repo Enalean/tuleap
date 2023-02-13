@@ -2,7 +2,7 @@
 
     {{# pending_invitations }}
         <h2>{{# gettext }}Pending invitations{{/ gettext }}</h2>
-        <section class="tlp-pane">
+        <section class="tlp-pane project-admin-pending-invitation-pane">
             <div class="tlp-pane-container">
                 <form method="post" action="{{ manage_invitations_url }}" class="tlp-pane-section">
                     {{# csrf }}
@@ -19,7 +19,7 @@
                                     title="{{# gettext }} You can no longer invite people to use %s you have reached the limit of %s invitations by day.| {{ instance_name }} | {{ max_limit_by_day }} {{/ gettext }}"
                                     {{/ is_limit_reached }}
                                 >
-                                    <i class="fa fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
+                                    <i class="fa-solid fa-paper-plane tlp-button-icon" aria-hidden="true"></i>
                                     {{# gettext }}Invite a co-worker{{/ gettext }}
                                 </button>
                             </div>
@@ -48,7 +48,7 @@
                                     <td>{{# date }}{{> tlp_relative_date }}{{/ date }}</td>
                                     <td class="tlp-table-cell-actions">
                                         <button type="submit" class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" name="resend-invitation" value="{{ id }}">
-                                            <i class="tlp-button-icon fa-regular fa-trash-can" aria-hidden="true"></i>
+                                            <i class="tlp-button-icon fa-solid fa-share" aria-hidden="true"></i>
                                             {{# gettext }}Resend invitation{{/ gettext }}
                                         </a>
                                         <button type="submit" class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline" name="withdraw-invitation" value="{{ id }}">

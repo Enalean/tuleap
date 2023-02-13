@@ -41,10 +41,12 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\RetrieveUserById;
 
 final class ManageProjectInvitationsController extends DispatchablePSR15Compatible
 {
     public function __construct(
+        private RetrieveUserById $user_manager,
         private CSRFSynchronizerTokenProvider $token_provider,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         private InvitationByIdRetriever $invitation_retriever,
@@ -103,8 +105,32 @@ final class ManageProjectInvitationsController extends DispatchablePSR15Compatib
     {
         $invitation = $this->getInvitation($invitation_id, $project);
 
+        $from_user = $this->user_manager->getUserById($invitation->from_user_id);
+        if (! $from_user) {
+            throw new \Exception("Unable to find the user #{$invitation->from_user_id} of the invitation #{$invitation_id}");
+        }
+
         try {
-            $this->invitation_sender->send($user, [$invitation->to_email], $project, null, true);
+            $this->invitation_sender->send($from_user, [$invitation->to_email], $project, $invitation->custom_message, $user);
+        } catch (MustBeProjectAdminToInvitePeopleInProjectException | InvitationSenderGateKeeperException) {
+            return $this->fallbackInvitationFromCurrentUser($invitation, $project, $user);
+        } catch (UnableToSendInvitationsException $exception) {
+            return $this->createResponseForUser($user, $project, new NewFeedback(
+                \Feedback::ERROR,
+                $exception->getMessage(),
+            ));
+        }
+
+        return $this->createResponseForUser($user, $project, new NewFeedback(
+            \Feedback::SUCCESS,
+            _('Invitation has been resent')
+        ));
+    }
+
+    private function fallbackInvitationFromCurrentUser(Invitation $invitation, \Project $project, \PFUser $user): ResponseInterface
+    {
+        try {
+            $this->invitation_sender->send($user, [$invitation->to_email], $project, null, $user);
         } catch (MustBeProjectAdminToInvitePeopleInProjectException) {
             throw new ForbiddenException(
                 _("You don't have permission to manage members of this project.")
